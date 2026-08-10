@@ -7,7 +7,7 @@
    linhas que uma etapa inteira de refatoracao nao conseguiu desmontar. */
 
 import { createState, reduce } from "./src/state/state.mjs";
-import { graphSvg } from "./src/ui/screens/graph-backdrop.mjs";
+import { auroraSvg } from "./src/ui/screens/aurora-backdrop.mjs";
 import { railNavHtml } from "./src/ui/shared/rail.mjs";
 import { approvalHtml, contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
 
@@ -34,9 +34,9 @@ function must(id) {
 }
 
 /* O substrato e montado UMA vez: ele e estatico por decisao (ver
-   `graph-backdrop.mjs`), e remonta-lo a cada turno reintroduziria justamente o
+   `aurora-backdrop.mjs`), e remonta-lo a cada turno reintroduziria justamente o
    fundo em movimento que o material nao suporta. */
-el.backdrop.innerHTML = graphSvg();
+el.backdrop.innerHTML = auroraSvg();
 
 /* O RAIL TAMBEM E MONTADO UMA VEZ. Ele nao depende do estado: a secao corrente
    e a unica coisa que muda nele, e enquanto houver uma tela so nao ha o que

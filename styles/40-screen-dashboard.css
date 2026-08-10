@@ -63,6 +63,9 @@
     position: fixed;
     inset: 0;
     z-index: -2;
+    /* O chao da aurora. As manchas sao translucidas e precisam pousar em algo
+       mais fundo que o fundo do documento, senao a mais escura delas some. */
+    background: var(--bg-deep);
     /* O gel abaixo usa `mix-blend-mode`. Sem contexto proprio ele misturaria com
        o que estiver atras do substrato inteiro, e nao com o grafo. */
     isolation: isolate;
@@ -74,25 +77,45 @@
     filter: saturate(1.5);
   }
 
-  .graph {
+  /* ── A AURORA ───────────────────────────────────────────────────────────────
+     Duas camadas com trabalhos diferentes: o CAMPO da luminancia e matiz
+     variando pela tela, e o GRAO da o detalhe que o desfoque apaga. Sem o
+     segundo, o material desfoca um gradiente suave e devolve o mesmo gradiente
+     suave — e ai nao existe a diferenca entre nitido e borrado que faz o olho
+     ler vidro. Ver a prosa de `aurora-backdrop.mjs`. */
+  .aurora {
     position: absolute;
     inset: -4%;
     width: 108%;
     height: 108%;
   }
 
-  .graph__edge {
-    stroke: rgba(var(--stable-rgb), 0.5);
-    stroke-width: 1;
-    fill: none;
+  /* AS TRES SAO PAPEIS, e nao "mais tres azuis": a fria e a cor de ambiente, a
+     clara e a FONTE DE LUZ da sala, e a contraria quebra a monocromia para o
+     vidro ter matiz a refratar e nao so claro e escuro. Ambar fica de fora: a
+     marca e a cor do que se pressiona, e gasta-la no fundo enfraqueceria o
+     unico lugar onde ela precisa funcionar sem concorrencia.
+     ⚠ A contraria usa hoje o VERDE de crescimento, que ja tem significado na
+     paleta. Vale a decisao: fundo verde pode ser lido como sinal de alta. */
+  .aurora__blob[data-tone="cool"] {
+    fill: rgba(var(--stable-rgb), 0.55);
   }
 
-  .graph__node {
-    fill: rgba(var(--ink-rgb), 0.5);
+  .aurora__blob[data-tone="light"] {
+    fill: rgba(var(--ink-rgb), 0.16);
   }
 
-  .graph__halo {
-    fill: rgba(var(--stable-rgb), 0.24);
+  .aurora__blob[data-tone="counter"] {
+    fill: rgba(var(--growth-rgb), 0.2);
+  }
+
+  /* `overlay` e nao opacidade chapada, pela mesma razao do gel: chapado soma o
+     mesmo em cada pixel e cinza o campo inteiro; overlay MODULA, entao o grao
+     aparece onde ha luz e recua onde ha sombra — que e como grao se comporta. */
+  .aurora__grain {
+    filter: url(#aurora-grain);
+    opacity: 0.34;
+    mix-blend-mode: overlay;
   }
 
   /* O GEL. Ele NAO tem opacidade uniforme e nao pinta: modula o que ja esta
