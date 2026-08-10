@@ -119,15 +119,24 @@
     color: var(--ink);
   }
 
-  /* A cor da marca entra como TINTA sobre o mesmo vidro, e nao como
-     preenchimento chapado nem como filtro proprio: `brightness` no
-     `backdrop-filter` criaria um segundo material na tela, que e exatamente o
-     que o sistema proibe. */
+  /* A MARCA E A LAMINA, e nao uma demao sobre a lamina neutra. A versao antiga
+     empilhava `rgba(--brand, .46)` sobre `--glass-action-bg` e compunha
+     rgb(119, 91, 52) — ambar no matiz e terracota no olho, porque o que faltava
+     era LUMINOSIDADE e nao cor. Ver a prosa de `--glass-brand-bg`.
+     O filtro continua sendo o mesmo `var(--glass-blur)` de toda a tela: o que
+     muda entre os niveis e a densidade do fundo, nunca o material. */
   .action--primary {
-    border-color: rgba(var(--brand-rgb), 0.55);
-    background:
-      linear-gradient(0deg, rgba(var(--brand-rgb), 0.46), rgba(var(--brand-rgb), 0.46)),
-      var(--glass-action-bg);
+    /* A aresta acompanha a lamina. Borda azul em volta de superficie ambar
+       denuncia uma peca pintada de ambar, e nao uma peca de ambar. */
+    border-color: rgba(var(--brand-rgb), 0.72);
+    background: var(--glass-brand-bg);
+    /* A tinta escurece PORQUE a lamina clareou — e a mesma razao que poe preto
+       sobre amarelo em sinalizacao de transito. */
+    color: var(--bg-deep);
+  }
+
+  .action--primary .action__hint {
+    color: var(--bg-deep);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -144,8 +153,8 @@
     }
     .action--primary:hover {
       background:
-        linear-gradient(0deg, rgba(var(--brand-rgb), 0.58), rgba(var(--brand-rgb), 0.58)),
-        var(--glass-action-bg);
+        linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
+        var(--glass-brand-bg);
     }
   }
 

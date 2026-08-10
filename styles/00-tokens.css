@@ -126,6 +126,25 @@
       linear-gradient(var(--light-angle), rgba(34, 46, 68, 0.22), rgba(14, 20, 31, 0.34)),
       var(--glass-base);
 
+    /* A LAMINA AMBAR — uma lamina PROPRIA, e nao a neutra com tinta por cima.
+       O botao primario passou quatro rodadas terracota no projeto anterior, e a
+       conta diz por que: `rgba(--brand, .46)` sobre a lamina azul compunha
+       rgb(119, 91, 52). O MATIZ estava certo o tempo todo — 35 graus, ambar —,
+       e o que estava errado era a LUMINOSIDADE: 33,5%. Marrom e laranja escuro,
+       e tinta translucida sobre fundo escuro so sabe escurecer.
+       Subir a densidade do ambar compoe rgb(193, 137, 55): mesmo matiz, 48,6%
+       de luminosidade, e ai a peca lê ambar. E a saida certa porque vidro ambar
+       real amostra a luz de tras e a devolve TINGIDA — ele nao e vidro neutro
+       com uma demao em cima.
+       `brightness` no `backdrop-filter` resolveria e esta PROIBIDO: seria um
+       segundo material, e a guarda `material` recusa. A luz tem de vir da
+       propria lamina. */
+    --glass-brand-bg: linear-gradient(
+      var(--light-angle),
+      rgba(var(--brand-rgb), 0.82),
+      rgba(var(--brand-rgb), 0.62)
+    );
+
     /* ELEVACAO EM TRES PARTES, e cada uma faz uma coisa: a sombra de CONTATO
        diz onde a peca toca o chao, a LARGA a descola do fundo (com spread quase
        inteiro — spread negativo demais come o borrao e o resultado lê como
