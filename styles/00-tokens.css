@@ -220,5 +220,9 @@
        sistema sem ser um, porque muda-la exige achar cada consumidor. */
     --column: 560px;
     --column-wide: 780px;
+    /* A largura do rail. Ela cabe o rotulo mais longo da navegacao sem quebrar,
+       e e o rotulo que manda: rail dimensionado pelo icone obriga o texto a
+       abreviar, e abreviacao e onde um menu comeca a precisar ser decorado. */
+    --rail: 216px;
   }
 }

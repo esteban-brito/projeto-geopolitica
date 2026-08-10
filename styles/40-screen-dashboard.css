@@ -22,23 +22,50 @@
        nao pinta nada. */
 
 @layer screens {
-  .dashboard {
+  /* ── A CASCA ────────────────────────────────────────────────────────────────
+     Rail a esquerda, conteudo a direita. Ela vive neste arquivo enquanto houver
+     UMA tela; quando a segunda chegar, casca e substrato saem para uma folha
+     propria, porque ai passam a ser de todas e nao desta. */
+  .shell {
     position: relative;
     isolation: isolate;
     min-height: 100dvh;
+    display: grid;
+    /* RAIL · CONTEUDO · RAIL. As duas trilhas de fora sao `auto` e recebem a
+       MESMA peca, entao a simetria nao depende de ninguem lembrar de manter dois
+       numeros iguais: ela e consequencia de haver uma largura so, `--rail`.
+       `minmax(0, 1fr)` no meio e nao `1fr`. Uma trilha `1fr` tem minimo
+       AUTOMATICO igual ao conteudo, entao ela cresce para caber o filho em vez
+       de obrigar o filho a se virar — e um `overflow: auto` la dentro nunca
+       chega a valer. Foi isso que pos o rail em 658px numa janela de 390px. */
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .dashboard {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0;
     padding: var(--space-8) clamp(24px, 5vw, 64px);
+    /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela:
+       `1fr` num grid tem minimo automatico igual ao conteudo, e sem esta linha
+       a peca central de 780px cria rolagem horizontal no tablet. */
+    min-width: 0;
   }
 
-  /* ── O SUBSTRATO ────────────────────────────────────────────────────────── */
-  .dashboard__backdrop {
-    position: absolute;
+  /* ── O SUBSTRATO ────────────────────────────────────────────────────────────
+     Ele cobre a JANELA e nao a area de conteudo: o rail tambem e vidro, e vidro
+     sobre nada nao refrata. `fixed` para que o grafo nao deslize quando o
+     conteudo rolar — fundo em movimento sob `backdrop-filter` e a condicao dos
+     31 fps, e aqui ele nao se move nem quando a pagina rola. */
+  .backdrop {
+    position: fixed;
     inset: 0;
     z-index: -2;
+    /* O gel abaixo usa `mix-blend-mode`. Sem contexto proprio ele misturaria com
+       o que estiver atras do substrato inteiro, e nao com o grafo. */
+    isolation: isolate;
     overflow: hidden;
     pointer-events: none;
     /* A saturacao amplifica o croma da situacao onde o scrim ja derrubou a
@@ -70,7 +97,7 @@
 
   /* O GEL. Ele NAO tem opacidade uniforme e nao pinta: modula o que ja esta
      atras dele, e a mascara decide onde. */
-  .dashboard__backdrop::after {
+  .backdrop::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -96,10 +123,11 @@
   }
 
   /* SCRIM. Densidade onde ha leitura, e nao densidade uniforme: escurecer a
-     tela inteira custaria o substrato que o vidro precisa. */
-  .dashboard::before {
+     tela inteira custaria o substrato que o vidro precisa.
+     Ele mora na CASCA e nao no painel porque o rail tambem lê por cima dele. */
+  .shell::before {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
@@ -226,20 +254,88 @@
     width: min(var(--column), 100%);
   }
 
+  /* ── QUANDO O RAIL NAO CABE ─────────────────────────────────────────────────
+     Abaixo de 900px a lateral vira uma FAIXA no topo. Ela nao encolhe para uma
+     tira de icones sem rotulo: icone sozinho e o que obriga a decorar um menu, e
+     o rail foi dimensionado pelo rotulo justamente para nao chegar nisso.
+     A faixa rola na horizontal por DENTRO — o estouro fica preso nela, e a
+     janela nunca ganha rolagem lateral. */
+  @media (max-width: 900px) {
+    .shell {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* A lamina continua COLUNA e so perde a altura da janela. Vira-la em linha
+       poria marca, seis secoes e duas acoes na mesma faixa, e ai o botao de
+       turno cai abaixo do alvo de toque. */
+    .rail {
+      position: static;
+      width: auto;
+      height: auto;
+      /* Item de grid tambem nasce com minimo automatico. Sem esta linha a trilha
+         ja liberada volta a ser esticada por dentro, pelo proprio rail. */
+      min-width: 0;
+      margin: var(--space-3);
+      padding: var(--space-3);
+    }
+
+    .rail__mark {
+      padding: 0 var(--space-2) var(--space-2);
+    }
+
+    /* A LISTA e que deita, e rola por DENTRO. `min-width: 0` e o que permite
+       ela encolher abaixo do conteudo: sem isso o minimo automatico de um item
+       de flex e o proprio conteudo, e o estouro sai pela janela. */
+    .rail__list,
+    .strip--stacked {
+      flex-direction: row;
+      min-width: 0;
+      overflow-x: auto;
+    }
+
+    /* Deitada de novo, a faixa volta a ser a faixa: separador vertical e
+       conteudo centrado, como no rail em pe ela nao era. */
+    .strip--stacked .chip {
+      align-items: center;
+    }
+
+    .strip--stacked .chip + .chip {
+      box-shadow:
+        -1px 0 0 rgba(255, 255, 255, 0.13),
+        -1px 0 0 rgba(0, 0, 0, 0.22) inset;
+    }
+
+    /* Sem isto cada item pede 100% da faixa — seis vezes a largura inteira, que
+       era a origem da rolagem horizontal no tablet e no celular. */
+    .rail__item {
+      width: auto;
+    }
+
+    .rail__foot {
+      margin-top: var(--space-3);
+      flex-direction: row;
+    }
+
+    .rail__foot .action {
+      flex: 1 1 0;
+      width: auto;
+    }
+  }
+
   /* No celular a coluna e uma so, e ai TODA aresta vertical tem de bater. */
   @media (max-width: 640px) {
     .dashboard {
       padding: var(--space-6) var(--space-4);
     }
+
     .dashboard__frame,
     .stage,
-    .verdict,
-    .actions {
+    .verdict {
       width: 100%;
     }
-    .action {
-      flex: 1 1 100%;
-      min-width: 0;
+
+    .rail__foot {
+      flex-direction: column;
     }
   }
 }

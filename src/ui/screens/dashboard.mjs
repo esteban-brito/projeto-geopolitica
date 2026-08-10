@@ -13,6 +13,17 @@ import { monthLabel } from "../../state/state.mjs";
 /** @typedef {import("../../state/state.mjs").Situation} Situation */
 
 /**
+ * O TURNO, no alto do rail da direita. Ele sai da faixa de contexto e vira
+ * cabecalho por simetria: a esquerda abre com a marca, a direita abre com a
+ * data — que e exatamente onde o Football Manager poe a dela.
+ *
+ * @param {GameState} state
+ */
+export function turnHtml(state) {
+  return escapeHtml(monthLabel(state.month));
+}
+
+/**
  * A faixa de contexto: todo item e o MESMO objeto, e a diferenca entre eles e
  * so enfase. Forma diferente para informacao do mesmo nivel e o que faz uma
  * faixa parecer bagunçada por mais alinhada que esteja.
@@ -21,7 +32,6 @@ import { monthLabel } from "../../state/state.mjs";
  */
 export function contextHtml(state) {
   const items = [
-    { label: UI.context.month, value: monthLabel(state.month), alert: false },
     {
       label: UI.context.mandate,
       value: `${Math.floor(state.month / 48) + 1}º · ano 1`,

@@ -82,6 +82,34 @@
     color: var(--crisis);
   }
 
+  /* A FAIXA EM PE, para quando ela mora num rail. E a MESMA peca: mesmo chip,
+     mesma tipografia, mesma hierarquia rotulo/valor — muda o eixo, e so.
+     Um segundo componente de "indicador" para dizer o que o chip ja diz seria a
+     primeira divergencia da paleta de formas, e e disso que este arquivo cuida. */
+  .strip--stacked {
+    flex-direction: column;
+    align-items: stretch;
+    /* Ele nao estica para preencher o rail: quem empurra o rodape para baixo e
+       o `margin-top: auto` de la, e nao uma faixa inflada. */
+    flex: 0 1 auto;
+    overflow: auto;
+  }
+
+  .strip--stacked .chip {
+    flex: 0 0 auto;
+    align-items: flex-start;
+    min-width: 0;
+    padding: var(--space-3);
+  }
+
+  /* O separador vira o fio HORIZONTAL, pela mesma razao de sempre: a luz vem de
+     cima, entao a aresta acesa fica na borda de cima e a sombra na de baixo. */
+  .strip--stacked .chip + .chip {
+    box-shadow:
+      0 -1px 0 rgba(255, 255, 255, 0.13),
+      0 -1px 0 rgba(0, 0, 0, 0.22) inset;
+  }
+
   /* ── ACAO ───────────────────────────────────────────────────────────────────
      AS DUAS ACOES SAO A MESMA PECA. Mesma caixa, mesmo corpo, mesmo material,
      mesma construcao — a unica diferenca e a COR, e a primaria acrescenta
@@ -156,6 +184,121 @@
         linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
         var(--glass-brand-bg);
     }
+  }
+
+  /* ── O RAIL ─────────────────────────────────────────────────────────────────
+     Navegacao primaria na estrutura do FM2020: lateral fixa, icone a esquerda,
+     rotulo ao lado, item corrente destacado, bloco ancorado no rodape.
+
+     Ele e uma LAMINA FLUTUANTE e nao uma barra colada na borda — margem em
+     volta, raio nos quatro cantos. Barra sangrada ate a borda perde as duas
+     quinas de fora, e quina e onde a espessura do vidro aparece: sem elas a
+     peca lê como um retangulo mais escuro, nao como material. */
+  .rail {
+    position: sticky;
+    top: var(--space-4);
+    align-self: start;
+    width: var(--rail);
+    height: calc(100dvh - 2 * var(--space-4));
+    margin: var(--space-4);
+    padding: var(--space-4) var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .rail__mark {
+    padding: var(--space-2) var(--space-3) var(--space-4);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-body);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .rail__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+    /* O rail rola por DENTRO quando a lista nao cabe. Sem isto o estouro sai
+       pela janela e vira rolagem horizontal no celular, que a suite acusa. */
+    overflow: auto;
+  }
+
+  .rail__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-piece);
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    font-weight: 600;
+    text-align: left;
+    color: var(--ink-soft);
+    transition:
+      background var(--dur-touch) linear,
+      color var(--dur-touch) linear;
+  }
+
+  /* ITEM DESLIGADO E ITEM QUE DIZ QUE ESTA DESLIGADO. Cinco das seis secoes tem
+     contrato de motor e nenhuma tela; oferece-las como se abrissem ensinaria a
+     desconfiar do menu inteiro. */
+  .rail__item[disabled] {
+    color: var(--ink-dim);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* O item corrente e o UNICO lugar do rail que recebe ambar, e ele o recebe
+     como tinta rasa — a marca e a cor do que se PRESSIONA, e gasta-la cheia num
+     rotulo de navegacao enfraqueceria o botao de turno logo abaixo. */
+  .rail__item--active {
+    background: rgba(var(--brand-rgb), 0.16);
+    color: var(--ink);
+  }
+
+  .rail__icon {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+  }
+
+  .rail__item--active .rail__icon {
+    color: var(--brand);
+  }
+
+  .rail__label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .rail__item:not([disabled]):not(.rail__item--active):hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--ink);
+    }
+  }
+
+  /* O RODAPE ANCORADO. `margin-top: auto` o empurra para baixo sem posicao
+     absoluta, entao ele continua no fluxo e a lista acima e quem cede espaco. */
+  .rail__foot {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  /* A acao herda a peca inteira e cede so a largura: dentro do rail ela e
+     governada pela coluna, e nao pelo proprio minimo. */
+  .rail__foot .action {
+    min-width: 0;
+    width: 100%;
+    padding: var(--space-3) var(--space-3);
   }
 
   /* ── MEDIDOR SEGMENTADO ─────────────────────────────────────────────────────

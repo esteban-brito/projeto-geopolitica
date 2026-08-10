@@ -8,12 +8,15 @@
 
 import { createState, reduce } from "./src/state/state.mjs";
 import { graphSvg } from "./src/ui/screens/graph-backdrop.mjs";
-import { approvalHtml, contextHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
+import { railNavHtml } from "./src/ui/shared/rail.mjs";
+import { approvalHtml, contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
 
 const el = {
   backdrop: must("backdrop"),
+  railNav: must("railNav"),
+  turn: must("turn"),
   context: must("context"),
   stage: must("stage"),
   verdict: must("verdict"),
@@ -35,6 +38,11 @@ function must(id) {
    fundo em movimento que o material nao suporta. */
 el.backdrop.innerHTML = graphSvg();
 
+/* O RAIL TAMBEM E MONTADO UMA VEZ. Ele nao depende do estado: a secao corrente
+   e a unica coisa que muda nele, e enquanto houver uma tela so nao ha o que
+   trocar. Quando a segunda chegar, isto vira parametro e nao mais constante. */
+el.railNav.innerHTML = railNavHtml("dashboard");
+
 let state = createState();
 /** @type {GameState | null} */
 let painted = null;
@@ -47,6 +55,10 @@ let painted = null;
    a tela inteira teria de ser redesenhada a cada turno. */
 function paint() {
   const previous = painted;
+
+  if (!previous || previous.month !== state.month) {
+    el.turn.textContent = turnHtml(state);
+  }
 
   if (!previous || previous.month !== state.month || previous.situation !== state.situation) {
     el.context.innerHTML = contextHtml(state);

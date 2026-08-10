@@ -38,36 +38,58 @@
   </head>
 
   <body>
-    <!-- ═══ PAINEL DO MES — a tela de referencia ═══════════════════════════
-         O grafo e o substrato: ele fica ATRAS do vidro, e nao numa tela
-         separada que se visita. Sem conteudo estruturado atras, o material
-         nao tem o que refratar. -->
-    <main class="dashboard" id="dashboard">
-      <div class="dashboard__backdrop" id="backdrop" aria-hidden="true"></div>
+    <!-- O GRAFO E O SUBSTRATO, e agora ele cobre a JANELA inteira e nao so a
+         area de conteudo: o rail tambem e vidro, e vidro sobre nada nao refrata.
+         Sem conteudo estruturado atras, `backdrop-filter` vira custo de GPU sem
+         imagem. -->
+    <div class="backdrop" id="backdrop" aria-hidden="true"></div>
 
-      <!-- ── Moldura: o contexto do turno ─────────────────────────────── -->
-      <div class="dashboard__frame">
-        <div class="strip glass-support" id="context"></div>
-      </div>
+    <div class="shell">
+      <!-- ═══ O RAIL — navegacao primaria, na estrutura do FM2020 ═══════════
+           Icone a esquerda, rotulo ao lado, item corrente destacado, e um bloco
+           ancorado no rodape. As acoes de turno vivem nesse rodape: no FM o
+           `Continue` fica no canto superior direito, e a divergencia e o pedido
+           explicito de botao a esquerda. -->
+      <nav class="rail glass-support" aria-label="Seções do governo">
+        <p class="rail__mark">Planalto</p>
+        <ul class="rail__list" id="railNav"></ul>
 
-      <!-- ── A peca central: o dado dramatico do momento ──────────────── -->
-      <section class="stage glass-stage" id="stage" aria-live="polite"></section>
+        <div class="rail__foot">
+          <button class="action glass-action" id="inspect" type="button">
+            Abrir o evento
+            <span class="action__hint">demonstra o padrão de diálogo</span>
+          </button>
+        </div>
+      </nav>
 
-      <!-- ── A segunda leitura: a frase que diz o que esta em jogo ────── -->
-      <p class="verdict glass-support" id="verdict"></p>
+      <!-- ═══ PAINEL DO MES — a tela de referencia ═══════════════════════ -->
+      <main class="dashboard" id="dashboard">
+        <!-- ── A peca central: o dado dramatico do momento ──────────────── -->
+        <section class="stage glass-stage" id="stage" aria-live="polite"></section>
 
-      <!-- ── As acoes: a mesma peca, diferenca so de enfase ───────────── -->
-      <div class="actions">
-        <button class="action action--primary glass-action" id="advance" type="button">
-          Avançar o mês
-          <span class="action__hint">resolve o turno e propaga os efeitos</span>
-        </button>
-        <button class="action glass-action" id="inspect" type="button">
-          Abrir o evento
-          <span class="action__hint">demonstra o padrão de diálogo</span>
-        </button>
-      </div>
-    </main>
+        <!-- ── A segunda leitura: a frase que diz o que esta em jogo ────── -->
+        <p class="verdict glass-support" id="verdict"></p>
+      </main>
+
+      <!-- ═══ O RAIL DA DIREITA — a MESMA peca, espelhada ═══════════════════
+           Mesma largura, mesma lamina, mesma margem, mesmo raio, mesmo rodape
+           ancorado. So o CONTEUDO difere: a esquerda navega, a direita lê e
+           avanca. Duas laminas com construcao diferente seriam dois materiais,
+           e o sistema inteiro existe para impedir isso.
+           E aqui a referencia volta ao lugar: no FM2020 a data fica no canto
+           superior direito e o `Continue` ao lado dela. -->
+      <aside class="rail glass-support" aria-label="Indicadores do mês">
+        <p class="rail__mark" id="turn"></p>
+        <div class="strip strip--stacked" id="context"></div>
+
+        <div class="rail__foot">
+          <button class="action action--primary glass-action" id="advance" type="button">
+            Avançar o mês
+            <span class="action__hint">resolve o turno e propaga os efeitos</span>
+          </button>
+        </div>
+      </aside>
+    </div>
 
     <!-- O <dialog> NATIVO. Foco, inercia do fundo, Escape e camada superior sao
          do navegador. Nao ha laco de foco escrito a mao, nao ha `inert` aplicado

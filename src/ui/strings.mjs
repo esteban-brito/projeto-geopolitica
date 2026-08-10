@@ -6,6 +6,19 @@
    camada de i18n agora. */
 
 export const UI = {
+  mark: "Planalto",
+  /* AS SECOES SAO A TABELA DE MOTORES, e nao uma lista de telas desejadas. Cada
+     uma que ainda nao existe entra DESLIGADA e diz isso — menu que oferece o que
+     nao abre ensina o jogador a desconfiar do menu inteiro. */
+  nav: {
+    dashboard: "Painel",
+    congress: "Congresso",
+    economy: "Economia",
+    budget: "Orçamento",
+    opinion: "Opinião",
+    graph: "Rede",
+    pending: "ainda não existe",
+  },
   approvalLabel: "Aprovação do governo",
   approvalParts: {
     good: "Ótimo/bom",
