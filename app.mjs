@@ -7,14 +7,12 @@
    linhas que uma etapa inteira de refatoracao nao conseguiu desmontar. */
 
 import { createState, reduce } from "./src/state/state.mjs";
-import { auroraSvg } from "./src/ui/screens/aurora-backdrop.mjs";
 import { railNavHtml } from "./src/ui/shared/rail.mjs";
 import { approvalHtml, contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
 
 const el = {
-  backdrop: must("backdrop"),
   railNav: must("railNav"),
   turn: must("turn"),
   context: must("context"),
@@ -33,12 +31,12 @@ function must(id) {
   return node;
 }
 
-/* O substrato e montado UMA vez: ele e estatico por decisao (ver
-   `aurora-backdrop.mjs`), e remonta-lo a cada turno reintroduziria justamente o
-   fundo em movimento que o material nao suporta. */
-el.backdrop.innerHTML = auroraSvg();
+/* O SUBSTRATO NAO PASSA MAIS POR AQUI. Ele virou CSS puro — gradiente resolvido
+   na resolucao do dispositivo, sem SVG escalado no meio —, entao o entrypoint
+   deixou de precisar montar coisa nenhuma no fundo. Menos wiring e exatamente a
+   direcao que este arquivo tem de seguir. */
 
-/* O RAIL TAMBEM E MONTADO UMA VEZ. Ele nao depende do estado: a secao corrente
+/* O RAIL E MONTADO UMA VEZ. Ele nao depende do estado: a secao corrente
    e a unica coisa que muda nele, e enquanto houver uma tela so nao ha o que
    trocar. Quando a segunda chegar, isto vira parametro e nao mais constante. */
 el.railNav.innerHTML = railNavHtml("dashboard");

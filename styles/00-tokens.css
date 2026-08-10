@@ -73,11 +73,6 @@
     --stable: #6f8cb0;
     --stable-rgb: 111, 140, 176;
     --growth: #4fbf87;
-    /* A forma `-rgb` do crescimento nasce agora porque nasceu o consumidor: a
-       mancha morna da aurora precisa dele translucido. E o que o comentario
-       abaixo ja previa — token de translucidez entra quando alguem pede, e nao
-       antes, senao ele fica orfao e a guarda recusa. */
-    --growth-rgb: 79, 191, 135;
 
     /* SINAL de variacao — aliases, nao cores novas. Um indicador que sobe usa
        exatamente o verde de crescimento; duas cores para o mesmo conceito e

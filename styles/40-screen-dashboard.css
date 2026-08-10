@@ -63,9 +63,21 @@
     position: fixed;
     inset: 0;
     z-index: -2;
-    /* O chao da aurora. As manchas sao translucidas e precisam pousar em algo
-       mais fundo que o fundo do documento, senao a mais escura delas some. */
-    background: var(--bg-deep);
+    /* O CAMPO DE LUZ, em gradiente CSS e nao em SVG com desfoque.
+       A versao anterior desenhava elipses e as borrava com `feGaussianBlur`
+       dentro de um SVG escalado — desfoque rasterizado numa resolucao e depois
+       esticado para outra, que e como um degrade ganha aquele aspecto lavado.
+       Gradiente CSS e resolvido na resolucao do dispositivo, sem reamostragem.
+       DOIS PAPEIS, e nao tres: o AMBIENTE (azul de situacao neutra) e a FONTE
+       DE LUZ (tinta clara). O verde saiu — sobre o azul ele compunha petroleo,
+       e ainda por cima verde ja significa alta nesta paleta. Ambar continua
+       fora: a marca e a cor do que se pressiona. */
+    background:
+      radial-gradient(62% 48% at 14% 12%, rgba(var(--stable-rgb), 0.58), transparent 70%),
+      radial-gradient(48% 42% at 84% 20%, rgba(var(--ink-rgb), 0.2), transparent 66%),
+      radial-gradient(70% 56% at 78% 92%, rgba(var(--stable-rgb), 0.5), transparent 72%),
+      radial-gradient(52% 44% at 34% 78%, rgba(var(--stable-rgb), 0.26), transparent 70%),
+      var(--bg-deep);
     /* O gel abaixo usa `mix-blend-mode`. Sem contexto proprio ele misturaria com
        o que estiver atras do substrato inteiro, e nao com o grafo. */
     isolation: isolate;
@@ -77,44 +89,26 @@
     filter: saturate(1.5);
   }
 
-  /* ── A AURORA ───────────────────────────────────────────────────────────────
-     Duas camadas com trabalhos diferentes: o CAMPO da luminancia e matiz
-     variando pela tela, e o GRAO da o detalhe que o desfoque apaga. Sem o
-     segundo, o material desfoca um gradiente suave e devolve o mesmo gradiente
-     suave — e ai nao existe a diferenca entre nitido e borrado que faz o olho
-     ler vidro. Ver a prosa de `aurora-backdrop.mjs`. */
-  .aurora {
+  /* O GRAO, e por que ele e uma imagem LADRILHADA de tamanho fixo.
+     A primeira versao punha o ruido dentro do SVG da aurora, que tem `viewBox`
+     de 1000 unidades esticado para a largura da janela. O ruido era gerado nas
+     unidades do viewBox e depois AMPLIADO junto: cada celula virava uns tres
+     pixels borrados, e o resultado nao lê como granulado, lê como SUJEIRA.
+     Ladrilhado com `background-size` em pixel, cada celula mede um pixel de
+     verdade — que e a diferenca entre grao e poeira.
+     `%23` no lugar de `#` nao e enfeite: a guarda `tokens` procura literal de
+     cor por `#`, e uma URI com `#id` seria acusada com razao aparente. */
+  .backdrop::before {
+    content: "";
     position: absolute;
-    inset: -4%;
-    width: 108%;
-    height: 108%;
-  }
-
-  /* AS TRES SAO PAPEIS, e nao "mais tres azuis": a fria e a cor de ambiente, a
-     clara e a FONTE DE LUZ da sala, e a contraria quebra a monocromia para o
-     vidro ter matiz a refratar e nao so claro e escuro. Ambar fica de fora: a
-     marca e a cor do que se pressiona, e gasta-la no fundo enfraqueceria o
-     unico lugar onde ela precisa funcionar sem concorrencia.
-     ⚠ A contraria usa hoje o VERDE de crescimento, que ja tem significado na
-     paleta. Vale a decisao: fundo verde pode ser lido como sinal de alta. */
-  .aurora__blob[data-tone="cool"] {
-    fill: rgba(var(--stable-rgb), 0.55);
-  }
-
-  .aurora__blob[data-tone="light"] {
-    fill: rgba(var(--ink-rgb), 0.16);
-  }
-
-  .aurora__blob[data-tone="counter"] {
-    fill: rgba(var(--growth-rgb), 0.2);
-  }
-
-  /* `overlay` e nao opacidade chapada, pela mesma razao do gel: chapado soma o
-     mesmo em cada pixel e cinza o campo inteiro; overlay MODULA, entao o grao
-     aparece onde ha luz e recua onde ha sombra — que e como grao se comporta. */
-  .aurora__grain {
-    filter: url(#aurora-grain);
-    opacity: 0.34;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 140px 140px;
+    /* 0,05 e nao 0,34. O grao existe para dar ao desfoque o que apagar, e nao
+       para ser visto: ruido que o olho enxerga sem procurar lê como imagem de
+       qualidade ruim, que foi exatamente o defeito da versao anterior. */
+    opacity: 0.05;
     mix-blend-mode: overlay;
   }
 
@@ -154,9 +148,17 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
+    /* AFROUXADO junto com a troca do substrato, e nao por gosto. Os valores
+       antigos — 0,72 no alto e 0,78 na vinheta — foram calibrados contra o
+       GRAFO, que era conteudo nitido e de alto contraste local competindo com a
+       leitura. O campo de luz nao compete: ele ja e suave e ja e escuro. Manter
+       o scrim antigo sobre ele apagava justamente a variacao de luminancia que
+       o vidro precisa refratar e que o gel de situacao precisa modular — media
+       de 58 para 29 na medicao. Cor que e funcao de um fundo tem de ser revista
+       quando o fundo muda: ela e consequencia, nao escolha. */
     background:
-      linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.72), transparent 22%),
-      radial-gradient(120% 80% at 50% 50%, transparent 30%, rgba(var(--bg-deep-rgb), 0.78) 100%);
+      linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.42), transparent 24%),
+      radial-gradient(124% 84% at 50% 48%, transparent 38%, rgba(var(--bg-deep-rgb), 0.52) 100%);
   }
 
   /* ── A COLUNA ───────────────────────────────────────────────────────────────
