@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Planalto — painel do mês</title>
+    <meta name="color-scheme" content="dark" />
+    <!-- Icone embutido como data URI: sem ele o navegador pede `/favicon.ico` e
+         toma um 404 — que a suite de custo acusa, e com razao. Filtro de ruido
+         numa guarda de console e como um 404 real sobrevive meses. -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090d15'/%3E%3Cpath d='M16 6l9 10-9 10-9-10z' fill='%23e8a33d'/%3E%3C/svg%3E"
+    />
+    <meta
+      name="description"
+      content="Simulador de presidência: política, economia e opinião pública em um grafo de causas e efeitos."
+    />
+
+    <!-- A ORDEM DESTAS TAGS IMPORTA POR UM MOTIVO SO, e nao pelo que se imagina.
+         A precedencia entre as camadas e declarada por `@layer` dentro de
+         `00-tokens.css`, entao uma regra de `components` nunca vence uma de
+         `screens` por acidente de carregamento. Mas a ORDEM DAS CAMADAS e
+         fixada pela primeira vez em que sao mencionadas — se outro arquivo
+         chegasse antes do de tokens, ele registraria a propria camada primeiro
+         e inverteria a hierarquia inteira.
+         Por isso `00-tokens.css` vem primeiro, e por isso a numeracao existe:
+         ela e a ordem verdadeira, visivel no nome do arquivo.
+         `tests/guards/cascade.mjs` prova as quatro coisas: o primeiro link e o
+         de tokens, ele declara a ordem, os arquivos estao em sequencia, e
+         nenhuma regra do projeto vive fora de uma camada. -->
+    <link rel="stylesheet" href="styles/00-tokens.css" />
+    <link rel="stylesheet" href="styles/10-base.css" />
+    <link rel="stylesheet" href="styles/20-material.css" />
+    <link rel="stylesheet" href="styles/30-components.css" />
+    <link rel="stylesheet" href="styles/40-screen-dashboard.css" />
+    <link rel="stylesheet" href="styles/90-motion.css" />
+  </head>
+
+  <body>
+    <!-- ═══ PAINEL DO MES — a tela de referencia ═══════════════════════════
+         O grafo e o substrato: ele fica ATRAS do vidro, e nao numa tela
+         separada que se visita. Sem conteudo estruturado atras, o material
+         nao tem o que refratar. -->
+    <main class="dashboard" id="dashboard">
+      <div class="dashboard__backdrop" id="backdrop" aria-hidden="true"></div>
+
+      <!-- ── Moldura: o contexto do turno ─────────────────────────────── -->
+      <div class="dashboard__frame">
+        <div class="strip glass-support" id="context"></div>
+      </div>
+
+      <!-- ── A peca central: o dado dramatico do momento ──────────────── -->
+      <section class="stage glass-stage" id="stage" aria-live="polite"></section>
+
+      <!-- ── A segunda leitura: a frase que diz o que esta em jogo ────── -->
+      <p class="verdict glass-support" id="verdict"></p>
+
+      <!-- ── As acoes: a mesma peca, diferenca so de enfase ───────────── -->
+      <div class="actions">
+        <button class="action action--primary glass-action" id="advance" type="button">
+          Avançar o mês
+          <span class="action__hint">resolve o turno e propaga os efeitos</span>
+        </button>
+        <button class="action glass-action" id="inspect" type="button">
+          Abrir o evento
+          <span class="action__hint">demonstra o padrão de diálogo</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- O <dialog> NATIVO. Foco, inercia do fundo, Escape e camada superior sao
+         do navegador. Nao ha laco de foco escrito a mao, nao ha `inert` aplicado
+         por JavaScript e nao ha listener de tecla: era exatamente esse conjunto
+         que, feito a mao no projeto anterior, produziu quatro barreiras de
+         acessibilidade e tres regras permanentes de documentacao. -->
+    <dialog id="eventDialog" aria-labelledby="eventDialogTitle">
+      <div class="glass-stage dialog-card">
+        <h2 id="eventDialogTitle" class="dialog-card__title">Padrão de diálogo</h2>
+        <p class="dialog-card__body">
+          Este é o <code>&lt;dialog&gt;</code> nativo: foco, inércia do fundo, Escape e camada
+          superior vêm do navegador, não de JavaScript escrito à mão.
+        </p>
+        <button class="action glass-action" id="eventDialogClose" type="button">Entendi</button>
+      </div>
+    </dialog>
+
+    <script type="module" src="app.mjs"></script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOVIMENTO — a rede que faz `prefers-reduced-motion` valer para telas que
+   ainda nem foram escritas.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   POR QUE UMA REDE, E NAO UMA GUARDA POR ANIMACAO. Honrar a preferencia bloco a
+   bloco depende de quem escreve cada bloco lembrar — e no projeto anterior isso
+   deixou TRINTA declaracoes de `animation` descobertas, quatro delas infinitas.
+   Pior: a lacuna chegou a INVERTER o sinal. Uma tela tinha uma animacao que so
+   existia sob `no-preference`; com a preferencia LIGADA aquela regra sumia,
+   outra deixava de ser atropelada, e a preferencia de acessibilidade passava a
+   LIGAR uma animacao em vez de desliga-la. Defeito que nao aparece em captura
+   nem em prova funcional: ele so existe para quem tem a preferencia ligada.
+
+   ── AS TRES DECISOES TECNICAS DESTA REDE, E O PORQUE DE CADA UMA ────────────
+
+   1. DURACAO DESPREZIVEL, NUNCA `animation: none`.
+      Varias animacoes carregam o estado FINAL no `fill-mode` (`both`,
+      `forwards`). Com `none` o elemento volta ao estilo base e o quadro final
+      se perde — quem pediu menos movimento receberia a tela incompleta, e nao
+      a tela parada.
+
+   2. `animation-iteration-count` JUNTO. `animation-duration` sozinha nao
+      desarma animacao infinita: ela continua repetindo, so que instantaneamente.
+
+   3. SEM `!important`, e isto e uma decisao de cascata, nao de estilo.
+      Em CSS com `@layer`, declaracoes NORMais respeitam a ordem das camadas —
+      `motion` e a ultima, entao ela vence todas. Mas declaracoes `!important`
+      tem a ordem das camadas INVERTIDA: um `!important` aqui passaria a PERDER
+      para um `!important` escrito em `tokens`. A rede e mais forte sem ele.
+
+      O corolario e a unica coisa que pode fura-la: regra escrita FORA de
+      qualquer `@layer` vence toda regra dentro de camadas, e estilo inline
+      vence as duas. Por isso `tests/guards/cascade.mjs` prova que todo CSS do
+      projeto esta dentro de uma camada, e a guarda de fronteiras proibe injetar
+      animacao por `style` inline. A rede so e uma rede enquanto essas duas
+      coisas forem verdade. */
+
+@layer motion {
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms;
+      animation-iteration-count: 1;
+      transition-duration: 0.001ms;
+      scroll-behavior: auto;
+    }
+
+    /* Os pseudo-elementos de View Transition vivem no `:root` e NAO sao
+       alcancados por `*`, `*::before` ou `*::after` — eles precisam ser
+       nomeados. Sem estas tres linhas, a troca de tela continuaria animando
+       para quem pediu movimento reduzido. */
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation-duration: 0.001ms;
+      animation-iteration-count: 1;
+    }
+  }
+}

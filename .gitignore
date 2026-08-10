@@ -1,0 +1,9 @@
+node_modules/
+*.log
+
+# Artefatos de medicao e capturas — evidencia, nao fonte.
+tmp/
+captures/
+
+# Material de origem de assets, como no draft9-0: entra grande, sai otimizado.
+assets-source/

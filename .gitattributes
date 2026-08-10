@@ -1,0 +1,7 @@
+# LF em tudo que e texto. O draft9-0 pagou uma migracao de 37 arquivos CRLF->LF
+# por nao ter isto desde o inicio.
+* text=auto eol=lf
+
+*.png binary
+*.webp binary
+*.woff2 binary

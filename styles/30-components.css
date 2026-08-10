@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENTES — as pecas reutilizaveis, e so elas.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Uma peca so entra aqui quando existe em mais de uma tela. Enquanto e de uma
+   tela so, ela vive no arquivo daquela tela — senao este arquivo vira o deposito
+   onde tudo acaba, que e o oposto de organizado.
+
+   REGRA DE FORMA: informacoes do mesmo nivel usam o MESMO objeto, e a diferenca
+   entre elas e so ENFASE. Forma diferente para conteudo equivalente e o que faz
+   uma faixa parecer bagunçada por mais alinhada que esteja. */
+
+@layer components {
+  /* ── FAIXA DE CONTEXTO ──────────────────────────────────────────────────────
+     UMA superficie com varios campos, e nao varias caixas enfileiradas. Cada
+     informacao com moldura propria significa cinco bordas e cinco fundos para
+     dizer coisas que pertencem a mesma frase — caixa e peso, e peso repetido e
+     ruido.
+     O separador e um VAO de 1px que deixa o fundo da propria faixa passar: uma
+     `border-left` fica pendurada no nada quando a faixa quebra de linha. */
+  .strip {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .chip {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    flex: 1 0 auto;
+    min-width: 92px;
+    padding: var(--space-2) var(--space-4);
+  }
+
+  /* Acima do celular a faixa nunca quebra, entao o separador pode ser LUZ — um
+     fio de duas paradas, clara em cima e escura embaixo, que e como uma aresta
+     de vidro real se comporta. `box-shadow` nao ocupa espaco, entao nenhuma
+     medida de caixa muda. */
+  @media (min-width: 641px) {
+    .chip + .chip {
+      box-shadow:
+        -1px 0 0 rgba(255, 255, 255, 0.13),
+        -1px 0 0 rgba(0, 0, 0, 0.22) inset;
+    }
+  }
+
+  .chip__label {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    /* NAO usa `--ink-dim`: aquele tom e calibrado para painel escuro solido, e
+       aqui a faixa pousa sobre o grafo. Cor que e funcao de um fundo precisa ser
+       revista quando o fundo muda — ela e consequencia, nao escolha. */
+    color: var(--ink-soft);
+    line-height: 1;
+  }
+
+  .chip__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-body);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .chip--alert {
+    background: rgba(var(--crisis-rgb), 0.16);
+  }
+  .chip--alert .chip__value {
+    color: var(--crisis);
+  }
+
+  /* ── ACAO ───────────────────────────────────────────────────────────────────
+     AS DUAS ACOES SAO A MESMA PECA. Mesma caixa, mesmo corpo, mesmo material,
+     mesma construcao — a unica diferenca e a COR, e a primaria acrescenta
+     exatamente uma coisa: uma camada de tinta sobre o mesmo vidro.
+     Botoes irmaos que herdam corpo de bases diferentes divergem em silencio: no
+     projeto anterior dois deles mediam 14,72px e 12,16px, 21% de diferenca, e
+     nenhuma guarda olhava tipografia de botao. Por isso o corpo e declarado
+     AQUI, e nao herdado. */
+  .action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 240px;
+    padding: var(--space-4) var(--space-6);
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: var(--ink);
+    border-radius: var(--radius-piece);
+    transition:
+      transform var(--dur-touch) var(--ease-enter),
+      background var(--dur-touch) linear;
+  }
+
+  .action__hint {
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: none;
+    color: var(--ink);
+  }
+
+  /* A cor da marca entra como TINTA sobre o mesmo vidro, e nao como
+     preenchimento chapado nem como filtro proprio: `brightness` no
+     `backdrop-filter` criaria um segundo material na tela, que e exatamente o
+     que o sistema proibe. */
+  .action--primary {
+    border-color: rgba(var(--brand-rgb), 0.55);
+    background:
+      linear-gradient(0deg, rgba(var(--brand-rgb), 0.46), rgba(var(--brand-rgb), 0.46)),
+      var(--glass-action-bg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .action:hover {
+      transform: translateY(-2px);
+    }
+    /* O hover so CLAREIA: cada um sobe a propria tinta um degrau. Trocar o
+       gradiente no hover e trocar de MATERIAL, e ai a peca vira outra coisa
+       quando o mouse encosta. */
+    .action:hover {
+      background:
+        linear-gradient(0deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),
+        var(--glass-action-bg);
+    }
+    .action--primary:hover {
+      background:
+        linear-gradient(0deg, rgba(var(--brand-rgb), 0.58), rgba(var(--brand-rgb), 0.58)),
+        var(--glass-action-bg);
+    }
+  }
+
+  /* ── MEDIDOR SEGMENTADO ─────────────────────────────────────────────────────
+     Tres segmentos que somam 100%. O que separa um do outro e um vao, nunca uma
+     borda: dois tons proximos encostados viram uma faixa continua, e o medidor
+     perde justamente a informacao que existe para dar. */
+  .meter {
+    display: flex;
+    gap: 2px;
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .meter__part {
+    height: 100%;
+    background: var(--part-color, var(--ink-dim));
+    transition: flex-grow var(--dur-piece) var(--ease-move);
+  }
+
+  .meter__part[data-part="good"] {
+    --part-color: var(--growth);
+  }
+  .meter__part[data-part="fair"] {
+    --part-color: var(--stable);
+  }
+  .meter__part[data-part="poor"] {
+    --part-color: var(--crisis);
+  }
+
+  /* ── CARTAO DE DIALOGO ──────────────────────────────────────────────────────
+     O <dialog> nativo nao recebe estilo de caixa: ele e so a camada superior.
+     Quem tem forma e o cartao dentro dele, que usa o MESMO nivel de vidro da
+     peca central — um dialogo e a peca central do momento em que aparece. */
+  .dialog-card {
+    width: min(var(--column), calc(100vw - 2 * var(--space-6)));
+    padding: var(--space-6);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  /* O titulo do dialogo usa o degrau de TITULO, e nao o de rotulo: a peca
+     central do momento em que aparece merece a segunda maior tipografia da
+     escala. */
+  .dialog-card__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-title);
+    line-height: 1.15;
+  }
+
+  .dialog-card__body {
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .dialog-card code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+
+  /* ── VARIACAO ───────────────────────────────────────────────────────────────
+     O sinal e carregado por DUAS coisas — a seta e a cor — porque cor sozinha
+     nao e canal suficiente. */
+  .trend {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    font-weight: 700;
+  }
+
+  .trend[data-direction="up"] {
+    color: var(--signal-up);
+  }
+  .trend[data-direction="down"] {
+    color: var(--signal-down);
+  }
+  .trend[data-direction="flat"] {
+    color: var(--ink-soft);
+  }
+}

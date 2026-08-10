@@ -1,0 +1,29 @@
+{
+  /* TIPOS SEM BUILD — a decisao da Etapa 2.
+     O TypeScript roda aqui apenas como CHECADOR (`tsc --noEmit`): nenhum arquivo
+     e transformado, nada e emitido, e o navegador continua recebendo os `.mjs`
+     exatamente como estao no disco. Os tipos vivem em JSDoc.
+     E a mesma escolha que o time do Svelte fez no proprio codigo-fonte em 2023:
+     a seguranca do TypeScript sem a cerimonia de um pipeline de build. */
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true,
+    "types": ["node"],
+    /* O checador olha o codigo do PROJETO. Sem estas duas linhas ele desce em
+       `node_modules` e reporta erro de dependencia — ruido que nao e nosso e que
+       nao podemos corrigir, e ruido numa guarda e como ela deixa de ser lida. */
+    "skipLibCheck": true,
+    "maxNodeModuleJsDepth": 0
+  },
+  "include": ["app.mjs", "src/**/*.mjs", "tests/**/*.mjs", "tools/**/*.mjs"],
+  "exclude": ["node_modules", "vendor"]
+}
