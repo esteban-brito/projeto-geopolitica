@@ -44,7 +44,13 @@
    ── ONDE ENTRA A LEALDADE ────────────────────────────────────────────────────
    Ideologia diz para onde a bancada tende; lealdade diz se ela aparece. Abaixo
    do limiar de ruptura ela passa a jogar contra — que e o estado em que o
-   governo perde votacao que a matematica ideologica dizia ganha. */
+   governo perde votacao que a matematica ideologica dizia ganha.
+
+   E ELA NAO E CONSTANTE. Enquanto a lealdade so entrava como numero fixo, a
+   medicao mostrava tres das seis pautas passando sem um centavo: a tensao do
+   jogo vinha inteira de um parametro que nunca se movia. `settle` e a metade que
+   faltava — a lealdade decai sozinha, sobe com verba PAGA, e desaba quando o
+   governo prometeu e nao entregou. */
 
 import { unit } from "../../state/random.mjs";
 
@@ -78,8 +84,41 @@ const SPREAD = 16;
    entrega de forma menos previsivel. */
 const DISSIDENCE = 0.07;
 
-/* Abaixo disto a bancada entra em ruptura e passa a votar contra de proposito. */
+/* OS DOIS ESTADOS DE DESCONTENTAMENTO, e eles sao degraus e nao uma rampa.
+   A curva de `faith` ja cobra a insatisfacao de forma continua; estes limiares
+   existem para o comportamento QUALITATIVO mudar de nome num ponto que o jogador
+   consegue enxergar no painel — "a base obstrui" e "a base rompeu" sao duas
+   situacoes politicas distintas, e nao dois pontos de uma reta.
+
+   OBSTRUCAO — a bancada ainda e base, mas para de trabalhar pelo governo:
+               aparece menos, atrasa, esvazia sessao;
+   RUPTURA   — ela passa a votar contra de proposito. E aqui que o governo perde
+               votacao que a matematica ideologica dizia ganha.
+
+   Os dois se compoem abaixo de 20, e isso e proposital: quem rompeu passou pela
+   obstrucao antes. */
+const OBSTRUCTION = 50;
+const OBSTRUCTION_TOLL = 0.6;
 const RUPTURE = 20;
+const RUPTURE_TOLL = 0.15;
+
+/* ── O ASSENTAMENTO DA LEALDADE, mes a mes ──────────────────────────────────
+   Tres forcas, e a terceira e a que liga este motor ao orcamento.
+
+   DECAIMENTO  — atencao politica e perecivel. Base a que nao se paga nada
+                 escorrega sozinha, e e isso que impede o jogador de comprar o
+                 Congresso uma vez e viver de renda;
+   AFAGO       — verba PAGA levanta. Paga, e nao prometida: a distincao e o
+                 acoplamento inteiro;
+   TRAICAO     — o buraco entre o que foi prometido e o que chegou. Ele pesa MUITO
+                 mais que o afago, e a assimetria e o ponto: prometer 1,0 e
+                 entregar 0 custa mais do que dois meses de afago cheio
+                 devolvem. E assim que contingenciamento — que nao e escolha do
+                 jogador, e aritmetica do teto — vira crise politica sem que
+                 exista um evento roteirizado dizendo "sua base se revoltou". */
+const DECAY = 1.5;
+const PATRONAGE = 12;
+const BETRAYAL = 25;
 
 /**
  * @typedef {object} PartyForecast
@@ -158,13 +197,13 @@ export function whipCount({ bill, parties, funding, loyalty }) {
        perfeitamente satisfeita perdia 18% do voto sem razao nenhuma. O efeito
        so aparecia somado ao resto, e o sintoma era o plenario inteiro entregar
        menos do que qualquer leitura da tabela sugeria. */
-    const faith = clamp01((loyalty[party.id] ?? 0) / 100);
+    const mood = loyalty[party.id] ?? 0;
+    const faith = clamp01(mood / 100);
     adherence *= 0.5 + 0.5 * faith;
 
-    /* RUPTURA e o estado em que a bancada joga CONTRA de proposito, e nao
-       apenas se ausenta. E aqui que o governo perde votacao que a matematica
-       ideologica dizia ganha. */
-    if ((loyalty[party.id] ?? 0) < RUPTURE) adherence *= 0.15;
+    /* Os dois degraus, na ordem em que a base os desce. */
+    if (mood < OBSTRUCTION) adherence *= OBSTRUCTION_TOLL;
+    if (mood < RUPTURE) adherence *= RUPTURE_TOLL;
 
     return {
       partyId: party.id,
@@ -228,4 +267,50 @@ export function vote({ bill, parties, funding, loyalty, stream, majority }) {
     passed: votes >= majority,
     stream: current,
   };
+}
+
+/**
+ * O QUE O MES DEIXOU NA BASE. Deterministico e sem sorteio: o humor da bancada e
+ * consequencia do que o governo fez, e nao do dado. O que e aleatorio na
+ * negociacao ja foi sorteado em `vote`.
+ *
+ * ⚠ A DERROTA NAO CUSTA LEALDADE AQUI, e isto e omissao declarada e nao
+ * esquecimento. Perder votacao desgasta o governo, mas o desgaste e de opiniao
+ * publica antes de ser de bancada — e opiniao publica e outro motor, que ainda
+ * nao existe. Escrever a penalidade agora seria fixar em numero uma relacao que
+ * o motor certo vai ter de refazer.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty - o humor de entrada, de 0 a 100
+ * @param {Record<string, number>} input.promised - verba prometida, de 0 a 1
+ * @param {Record<string, number>} input.paid - verba que o caixa realmente honrou
+ * @returns {Record<string, number>} o humor de saida
+ */
+export function settle({ parties, loyalty, promised, paid }) {
+  /** @type {Record<string, number>} */
+  const next = {};
+
+  for (const party of parties) {
+    const before = loyalty[party.id] ?? 0;
+    const honoured = clamp01(paid[party.id] ?? 0);
+    /* O buraco nunca e negativo: pagar MAIS do que se prometeu e generosidade, e
+       generosidade ja esta paga pelo afago. Sem este `max` uma sobra de caixa
+       viraria credito de traicao, e o jogador poderia estocar boa vontade
+       prometendo pouco de proposito. */
+    const broken = Math.max(0, clamp01(promised[party.id] ?? 0) - honoured);
+
+    next[party.id] = clamp(before - DECAY + PATRONAGE * honoured - BETRAYAL * broken, 0, 100);
+  }
+
+  return next;
+}
+
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ */
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }
