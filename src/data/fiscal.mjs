@@ -30,8 +30,10 @@ export const FISCAL_SCHEMA = {
   taxLoad: { kind: "number", min: 0, max: 1 },
   mandatoryGrowth: { kind: "number", min: 0, max: 0.2 },
   expenseGrowthShare: { kind: "number", min: 0, max: 1 },
+  seatPrice: { kind: "number", min: 0, max: 10 },
   initialGdp: { kind: "number", min: 1 },
   initialMandatory: { kind: "number", min: 1 },
+  initialDiscretionary: { kind: "number", min: 0 },
   initialDebtRatio: { kind: "number", min: 0, max: 3 },
 };
 
@@ -40,8 +42,11 @@ export const FISCAL_SCHEMA = {
  * @property {number} taxLoad - carga tributaria como fracao do PIB
  * @property {number} mandatoryGrowth - crescimento vegetativo real ao ano
  * @property {number} expenseGrowthShare - o teto do arcabouco
+ * @property {number} seatPrice - custo MENSAL de manter uma cadeira a verba cheia
  * @property {number} initialGdp - PIB anual inicial, em bilhoes
  * @property {number} initialMandatory - despesa obrigatoria anual inicial, em bilhoes
+ * @property {number} initialDiscretionary - discricionario anual inicial; com a
+ *   obrigatoria ele forma a ancora de despesa do primeiro exercicio
  * @property {number} initialDebtRatio - divida bruta sobre PIB
  */
 
@@ -50,7 +55,19 @@ export const FISCAL = {
   taxLoad: 0.33,
   mandatoryGrowth: 0.025,
   expenseGrowthShare: 0.7,
+  /* O PRECO DA CADEIRA e o cambio entre os dois motores: ele traduz "verba
+     oferecida", que a votacao entende como fracao de 0 a 1, em bilhoes que saem
+     do discricionario. Sem ele os dois motores ficariam em moedas diferentes e o
+     acoplamento seria uma regra escrita a mao em vez de uma conta.
+
+     O NUMERO SAI DE UMA RAZAO, e nao de gosto: o discricionario nasce perto de
+     27 bilhoes por mes, e comprar as 513 cadeiras a verba cheia tem de ser
+     IMPOSSIVEL — senao existe uma jogada dominante e a escolha de a quem pagar
+     deixa de ser escolha. A 0,09 o plenario inteiro custa 46,2, quase o dobro do
+     que cabe no mes; o centrao sozinho custa 18,5, que cabe e doi. */
+  seatPrice: 0.09,
   initialGdp: 11000,
   initialMandatory: 3270,
+  initialDiscretionary: 330,
   initialDebtRatio: 0.78,
 };
