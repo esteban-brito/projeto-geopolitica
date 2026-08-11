@@ -5,8 +5,8 @@
    serializar o estado. Nao existe campo que ficou de fora". Promessa que
    ninguem executa e comentario, entao aqui ela vira funcao e a suite a cobra.
 
-   ELE E BARATO AGORA E CARO DEPOIS. O estado tem cinco campos; escrever a
-   serializacao e a migracao com cinco campos custa este arquivo. Com sete
+   ELE E BARATO AGORA E CARO DEPOIS. O estado tem sete campos; escrever a
+   serializacao e a migracao com sete campos custa este arquivo. Com sete
    motores dentro dele, custa uma sessao — e a migracao teria de ser inventada
    para um formato que ja existe no disco de alguem.
 
@@ -16,11 +16,16 @@
    nao tem relacao nenhuma com a causa. Formato incompativel e recusa explicita:
    melhor um erro no ato de carregar que um defeito tres telas adiante.
 
-   ── O QUE ELE NAO FAZ ────────────────────────────────────────────────────────
-   Nao migra. Quando a versao 3 existir, a migracao da 2 para a 3 entra aqui como
-   funcao declarada, e nao como um `if` espalhado. Enquanto nao ha o que migrar,
-   escrever o mecanismo seria inventar forma para um problema que ainda nao tem
-   formato conhecido. */
+   ── O QUE ELE NAO FAZ, e agora com um caso concreto ──────────────────────────
+   Nao migra, e a versao 3 ja existe: um save da 2 e RECUSADO em vez de
+   convertido. A decisao se sustenta enquanto ninguem tiver uma partida em
+   disco — o projeto nunca foi publicado, entao o unico save da versao 2 do mundo
+   e um que alguem gerou testando. No dia em que houver jogador, a migracao entra
+   aqui como funcao declarada por par de versoes, e nao como um `if` espalhado.
+   O que NAO pode acontecer e a recusa virar conversao silenciosa: um save da 2
+   nao tem lealdade nem posicao orcamentaria, e completa-lo com zeros abriria a
+   partida com o Congresso inteiro em ruptura — um estado de jogo valido, e por
+   isso indistinguivel de um defeito. */
 
 import { SCHEMA_VERSION } from "./state.mjs";
 
@@ -76,7 +81,7 @@ export function deserialize(text) {
     };
   }
 
-  for (const field of ["seed", "month", "approval", "situation", "streams"]) {
+  for (const field of ["seed", "month", "approval", "situation", "loyalty", "fiscal", "streams"]) {
     if (candidate[field] === undefined) {
       return { ok: false, reason: `o save nao tem o campo "${field}"` };
     }

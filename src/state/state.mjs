@@ -16,6 +16,7 @@
    o custo e desprezivel, e uma mutacao acidental que so falha em producao e
    exatamente o defeito que isto existe para impedir. */
 
+import { CATALOG } from "../data/catalog.mjs";
 import { streamFrom } from "./random.mjs";
 
 /**
@@ -32,20 +33,40 @@ import { streamFrom } from "./random.mjs";
  * @property {Stream} events - o fluxo de TEMPORAL
  * @property {Stream} congress - o fluxo de ECLUSA
  *
+ * @typedef {object} Fiscal
+ * @property {number} gdp - PIB anualizado corrente, em bilhoes
+ * @property {number} mandatory - despesa obrigatoria anualizada, ja crescida
+ * @property {number} anchorRevenue - receita do exercicio anterior; a ancora da regra
+ * @property {number} anchorExpense - despesa total do exercicio anterior
+ * @property {number} debt - divida bruta
+ *
  * @typedef {object} GameState
  * @property {number} schemaVersion - versao do formato do save
  * @property {number} seed - a semente da partida; com ela e as acoes, tudo se refaz
  * @property {number} month - meses decorridos desde a posse (0 = janeiro do ano 1)
  * @property {Approval} approval
  * @property {Situation} situation
+ * @property {Record<string, number>} loyalty - o humor de cada bancada, de 0 a 100
+ * @property {Fiscal} fiscal - a posicao orcamentaria que atravessa os meses
  * @property {Streams} streams
  */
 
 /* Versao do save. Toda mudanca de forma exige uma migracao explicita.
    SUBIU PARA 2 quando a semente e os fluxos entraram no estado: um save da
    versao 1 nao tem como sortear nada, e carrega-lo produziria um jogo que
-   parece funcionar ate o primeiro evento. */
-export const SCHEMA_VERSION = 2;
+   parece funcionar ate o primeiro evento.
+   SUBIU PARA 3 quando lealdade e posicao orcamentaria entraram. Um save da
+   versao 2 nao sabe quanto o governo deve nem quem ainda esta com ele — e o
+   sintoma seria pior que um erro: a partida abriria com a base zerada e o
+   Congresso inteiro em ruptura, que e um estado de jogo valido e portanto
+   indistinguivel de um defeito. */
+export const SCHEMA_VERSION = 3;
+
+/* O HUMOR DE ABERTURA da base. Uniforme de proposito nesta fase: uma coalizao
+   recem-formada por rateio de ministerio nao tem historia com o governo, e
+   diferenciar as bancadas aqui seria contar uma que ninguem escreveu. Elas
+   divergem a partir do primeiro mes, e divergem pelo que o jogador fizer. */
+export const INITIAL_LOYALTY = 70;
 
 /* A semente de uma partida sem semente escolhida. Ela e CONSTANTE de proposito:
    um padrao tirado do relogio faria duas partidas "iguais" divergirem, e a
@@ -77,16 +98,37 @@ function deepFreeze(value) {
  * afirmacao sobre o Brasil — e essa e a diferenca entre um numero provisorio
  * declarado e um numero inventado que vira dividia silenciosa.
  *
+ * A POSICAO ORCAMENTARIA, ao contrario, NAO e andaime: ela sai do catalogo, que
+ * declara a ficcao dele em `src/data/fiscal.mjs`. O catalogo entra por parametro
+ * com o real por padrao — e assim a calibragem consegue abrir uma partida com
+ * outra tabela sem editar arquivo nenhum.
+ *
  * @param {number} [seed] a semente da partida
+ * @param {typeof CATALOG} [catalog] o catalogo de onde sai a posicao inicial
  * @returns {GameState}
  */
-export function createState(seed = DEFAULT_SEED) {
+export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
+  const { fiscal, parties } = catalog;
   return deepFreeze({
     schemaVersion: SCHEMA_VERSION,
     seed,
     month: 2,
     approval: { good: 31, fair: 34, poor: 35 },
     situation: /** @type {Situation} */ ("stable"),
+    loyalty: Object.fromEntries(parties.map(party => [party.id, INITIAL_LOYALTY])),
+    fiscal: {
+      gdp: fiscal.initialGdp,
+      mandatory: fiscal.initialMandatory,
+      /* A ANCORA E O EXERCICIO ANTERIOR, e por isso ela nasce com a receita e a
+         despesa de quem entregou o governo — nao com as deste mes. No primeiro
+         mes as duas coincidem, e o teto do arcabouco fica exatamente onde a
+         despesa herdada esta: crescimento zero de receita, crescimento zero de
+         teto. O aperto que vem depois e a obrigatoria subindo contra um teto
+         parado, que e a armadilha inteira. */
+      anchorRevenue: fiscal.initialGdp * fiscal.taxLoad,
+      anchorExpense: fiscal.initialMandatory + fiscal.initialDiscretionary,
+      debt: fiscal.initialGdp * fiscal.initialDebtRatio,
+    },
     /* UM FLUXO POR MOTOR QUE SORTEIA, e os dois derivados do NOME. Fluxo unico
        compartilhado faria um evento a mais deslocar o indice e mudar o
        resultado de uma votacao sem relacao nenhuma com ele — e ai calibrar a
@@ -99,7 +141,18 @@ export function createState(seed = DEFAULT_SEED) {
 }
 
 /**
- * @typedef {{ type: "advanceMonth" }} Action
+ * ⚠ A ACAO `monthResolved` CHEGA COM A CONTA JA FEITA, e essa e a divisao de
+ * trabalho que mantem este arquivo pequeno. Quem compoe os motores e resolve o
+ * mes e `src/application/turn.mjs`; o que chega aqui e o RESULTADO, e o reducer
+ * so o dobra no estado. Sem isso, a composicao dos sete motores acabaria dentro
+ * deste `switch` — que e exatamente como o entrypoint do projeto anterior chegou
+ * a 1.715 linhas.
+ *
+ * @typedef {{ type: "advanceMonth" }
+ *   | { type: "monthResolved",
+ *       loyalty: Record<string, number>,
+ *       fiscal: Fiscal,
+ *       stream: Stream }} Action
  */
 
 /**
@@ -131,6 +184,22 @@ export function reduce(state, action) {
         situation: situationFor(good, poor),
       });
     }
+
+    case "monthResolved": {
+      /* A APROVACAO NAO SE MEXE AQUI, e isto e omissao declarada. Quem produz
+         aprovacao e SONDA, que ainda nao existe; escrever uma reacao qualquer
+         neste ponto criaria um numero que a tela mostraria com toda a confianca
+         e que nenhum motor sustenta. O turno resolvido move o que TEM motor:
+         orcamento, base e o fluxo que a votacao consumiu. */
+      return deepFreeze({
+        ...state,
+        month: state.month + 1,
+        loyalty: action.loyalty,
+        fiscal: action.fiscal,
+        streams: { ...state.streams, congress: action.stream },
+      });
+    }
+
     default:
       return state;
   }

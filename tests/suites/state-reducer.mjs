@@ -22,6 +22,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
+import { PARTIES } from "../../src/data/parties.mjs";
 import { SCHEMA_VERSION, createState, monthLabel, reduce } from "../../src/state/state.mjs";
 
 /** @typedef {import("../../src/state/state.mjs").GameState} GameState */
@@ -50,6 +51,26 @@ const anyStream = fc.record({
   draws: fc.nat({ max: 5000 }),
 });
 
+/* A BASE em qualquer humor, uma entrada por bancada do catalogo. */
+const anyLoyalty = fc
+  .array(fc.double({ min: 0, max: 100, noNaN: true }), {
+    minLength: PARTIES.length,
+    maxLength: PARTIES.length,
+  })
+  .map(values => Object.fromEntries(PARTIES.map((party, i) => [party.id, values[i] ?? 0])));
+
+/* Posicoes orcamentarias por todo o percurso, e nao so a de abertura: o estado
+   que chega aqui pode vir de um save do mes 40, com a divida ja em outro
+   patamar. As faixas sao largas de proposito — o reducer nao pode ter opiniao
+   sobre valor de campo que ele apenas carrega. */
+const anyFiscal = fc.record({
+  gdp: fc.double({ min: 1000, max: 30000, noNaN: true }),
+  mandatory: fc.double({ min: 0, max: 12000, noNaN: true }),
+  anchorRevenue: fc.double({ min: 1, max: 12000, noNaN: true }),
+  anchorExpense: fc.double({ min: 0, max: 12000, noNaN: true }),
+  debt: fc.double({ min: 0, max: 60000, noNaN: true }),
+});
+
 const anyState = fc.record({
   schemaVersion: fc.constant(SCHEMA_VERSION),
   seed: fc.integer({ min: 0, max: 4294967295 }),
@@ -57,6 +78,8 @@ const anyState = fc.record({
   month: fc.integer({ min: 0, max: 47 }),
   approval: anyApproval,
   situation: fc.constantFrom("crisis", "stable", "growth"),
+  loyalty: anyLoyalty,
+  fiscal: anyFiscal,
   streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 
@@ -150,6 +173,50 @@ test("PROVA SINTETICA: o invariante acusa um reducer que larga o resto", () => {
   assert.throws(
     () => fc.assert(fc.property(anyState, state => assertApprovalInvariant(broken(state)))),
     "o invariante nao acusou uma aprovacao que soma 102 — a assercao nao consegue falhar",
+  );
+});
+
+/* ── A ACAO QUE VEM DA CAMADA DE APLICACAO ──────────────────────────────────
+   `monthResolved` chega com a conta ja feita; o que se prova aqui e o DOBRAR,
+   e nao o calculo — o calculo tem suite propria em `turn.mjs`. */
+
+/**
+ * @param {import("../../src/state/state.mjs").GameState} state
+ * @returns {Action}
+ */
+function resolutionOf(state) {
+  return {
+    type: "monthResolved",
+    loyalty: state.loyalty,
+    fiscal: state.fiscal,
+    stream: state.streams.congress,
+  };
+}
+
+test("o mes resolvido tambem anda exatamente um, e sai congelado", () => {
+  fc.assert(
+    fc.property(anyState, state => {
+      const next = reduce(state, resolutionOf(state));
+      assert.equal(next.month, state.month + 1);
+      assert.ok(Object.isFrozen(next), "a raiz saiu destravada");
+      assert.ok(Object.isFrozen(next.fiscal), "a posicao orcamentaria saiu destravada");
+    }),
+  );
+});
+
+test("o mes resolvido PRESERVA A REFERENCIA do que ele nao toca", () => {
+  /* O contrato de render por identidade, cobrado na acao nova. A aprovacao nao
+     tem motor que a mova hoje, entao `anterior.approval === atual.approval` tem
+     de continuar respondendo "esta parte da tela nao mudou". Um spread que
+     recriasse o objeto passaria em qualquer deepEqual e mandaria a tela
+     redesenhar o painel inteiro todo mes — defeito silencioso, e caro
+     exatamente na peca que usa filtro. */
+  fc.assert(
+    fc.property(anyState, state => {
+      const next = reduce(state, resolutionOf(state));
+      assert.equal(next.approval, state.approval, "a aprovacao foi recriada sem ter mudado");
+      assert.equal(next.streams.events, state.streams.events, "o fluxo de eventos foi recriado");
+    }),
   );
 });
 
