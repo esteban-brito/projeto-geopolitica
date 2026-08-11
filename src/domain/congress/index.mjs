@@ -1,14 +1,231 @@
-/* ECLUSA — o Congresso: deixa passar, ao preco da negociacao.
+/* ECLUSA — congresso.
    ══════════════════════════════════════════════════════════════════════════════
-   recebe   bancadas, proposta, moeda oferecida (cargos, emendas), historico de
-            barganha, fluxo de aleatoriedade proprio
-   devolve  votos por bancada, resultado, custo pago, ressentimento acumulado
+   recebe   bancadas, proposta, moeda oferecida, historico de barganha
+   devolve  votos por bancada, resultado, custo pago, ressentimento
 
-   INVARIANTE: nenhum modulo desta camada pode ler NOME de partido. O
-   comportamento sai de atributos — ideologia, fisiologismo, bancadas tematicas —
-   e a guarda prova isso por dois lados: varre o codigo atras de nome proprio e
-   exige que trocar todas as siglas nao mova nenhum resultado.
-   Sem isso, o dia em que o jogador renomear os partidos o motor muda de
-   comportamento. */
+   ── A SEPARACAO QUE FAZ A MECANICA ───────────────────────────────────────────
+   Duas funcoes, e a divisao entre elas E o jogo:
 
-export {};
+     `whipCount`  — a PREVISAO. Deterministica, sem sorteio nenhum. E o que a
+                    tela mostra enquanto o jogador negocia: quanto cada bancada
+                    tende a entregar com a verba oferecida ate agora;
+     `vote`       — o DIA. Aplica a dissidencia individual sobre a previsao e
+                    devolve o placar.
+
+   O jogador sabe a TENDENCIA e nunca sabe o PLACAR. Comprar mais verba estreita
+   a margem de erro sem nunca zera-la. Sem essa separacao o motor viraria
+   planilha: bastaria descobrir que 32,4% da verba garante a lei, e a votacao
+   deixaria de ter risco — que e a unica coisa que ela existe para ter.
+
+   ── A RESISTENCIA, E OS DOIS TERMOS ──────────────────────────────────────────
+     R_ef = R × (1 − venalidade × verba)  +  ameaca × venalidade × PESO_AMEACA
+            └── negociavel ──────────────┘    └── inegociavel ──────────────┘
+
+   PRIMEIRO TERMO. `R` e a distancia euclidiana no plano de posicoes, e a
+   venalidade e o quanto ela CEDE a dinheiro — nao o tamanho dela. O dossie de
+   origem multiplicava a resistencia pela venalidade, o que deixava a bancada
+   mais ideologica com um decimo da resistencia, comprada de graca. E o oposto
+   do comportamento pretendido.
+
+   A venalidade usada e a do EIXO QUE DOMINA a distancia, ponderada pelo quadrado
+   de cada componente. Uma pauta que se afasta so na economia cobra o preco
+   economico; uma que se afasta so em liberdades cobra o outro. E o que faz "o
+   preco depende do assunto" sair da tabela e chegar na conta.
+
+   SEGUNDO TERMO, e ele inverte a relacao. Numa pauta que ataca a maquina, ser
+   fisiologico AUMENTA a resistencia, porque o que esta sob ataque e a propria
+   moeda da barganha — e por isso verba nenhuma reduz este termo. Sem ele, a
+   medicao mostrou o centrao como o bloco mais proximo e mais barato de uma lei
+   anticorrupcao: ele votaria pela propria extincao por preco modico.
+
+   Isto NAO e um muro. A pauta segue votavel; ela exige a coalizao de quem nao
+   vive da maquina, e essa coalizao existe. Fica cara, nao proibida.
+
+   ── ONDE ENTRA A LEALDADE ────────────────────────────────────────────────────
+   Ideologia diz para onde a bancada tende; lealdade diz se ela aparece. Abaixo
+   do limiar de ruptura ela passa a jogar contra — que e o estado em que o
+   governo perde votacao que a matematica ideologica dizia ganha. */
+
+import { unit } from "../../state/random.mjs";
+
+/**
+ * @typedef {import("../../data/parties.mjs").Party} Party
+ * @typedef {import("../../data/bills.mjs").Bill} Bill
+ * @typedef {import("../../state/random.mjs").Stream} Stream
+ */
+
+/* Quanto a ameaca pesa, em unidades de resistencia. Calibrado contra a maior
+   distancia possivel no plano, que e `hypot(100, 100)` ≈ 141: uma pauta de
+   ameaca total contra um bloco totalmente fisiologico tem de produzir
+   resistencia acima disso — ou seja, inegociavel para ELE, e nao para o
+   plenario. */
+const THREAT_WEIGHT = 85;
+
+/* A curva que traduz resistencia em adesao. Logistica e nao linear: perto do
+   pivo pequenas concessoes mudam muito, e nos extremos quase nada — que e como
+   negociacao real se comporta. `PIVOT` e a resistencia de cara ou coroa.
+
+   O PIVO SAIU DE MEDICAO, e nao de gosto. Com 42 a curva era severa demais para
+   as distancias que este catalogo realmente produz — as bancadas ficam de 6 a 78
+   de distancia entre si, e um pivo de 42 punha a pauta MEDIANA em cara ou coroa.
+   O sintoma: quatro das seis pautas nao passavam nem comprando todas as bancadas
+   com lealdade cheia, ou seja, o jogo virava um muro com aparencia de preco. */
+const PIVOT = 58;
+const SPREAD = 16;
+
+/* Dissidencia maxima, em fracao da bancada, quando a lealdade esta cheia. Ela
+   DOBRA com a lealdade no chao: bancada insatisfeita nao so entrega menos, ela
+   entrega de forma menos previsivel. */
+const DISSIDENCE = 0.07;
+
+/* Abaixo disto a bancada entra em ruptura e passa a votar contra de proposito. */
+const RUPTURE = 20;
+
+/**
+ * @typedef {object} PartyForecast
+ * @property {string} partyId
+ * @property {number} distance - a distancia ideologica crua
+ * @property {number} venality - a venalidade do eixo que domina a distancia
+ * @property {number} resistance - ja com verba e ameaca
+ * @property {number} adherence - fracao da bancada que tende a votar sim
+ * @property {number} votes - a previsao em cadeiras
+ *
+ * @typedef {object} Forecast
+ * @property {PartyForecast[]} parties
+ * @property {number} votes - a soma prevista
+ *
+ * @typedef {object} PartyTally
+ * @property {string} partyId
+ * @property {number} votes
+ * @property {number} drift - quantas cadeiras fugiram da previsao
+ *
+ * @typedef {object} Tally
+ * @property {PartyTally[]} parties
+ * @property {number} votes
+ * @property {number} expected
+ * @property {boolean} passed
+ * @property {Stream} stream
+ */
+
+/** @param {number} value */
+function clamp01(value) {
+  return Math.min(1, Math.max(0, value));
+}
+
+/**
+ * A venalidade que vale para ESTA pauta: a do eixo que domina a distancia.
+ *
+ * O peso e o quadrado de cada componente porque e o quadrado que compoe a
+ * distancia euclidiana — usar o valor absoluto daria peso demais ao eixo curto.
+ *
+ * @param {Party} party
+ * @param {number} dx
+ * @param {number} dy
+ */
+function venalityFor(party, dx, dy) {
+  const total = dx * dx + dy * dy;
+  if (total === 0) return (party.venalityEconomic + party.venalityLiberty) / 2;
+  return (dx * dx * party.venalityEconomic + dy * dy * party.venalityLiberty) / total;
+}
+
+/**
+ * A PREVISAO. Deterministica: nenhuma chamada a fluxo de aleatoriedade.
+ *
+ * @param {object} input
+ * @param {Bill} input.bill
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.funding - verba por bancada, de 0 a 1
+ * @param {Record<string, number>} input.loyalty - lealdade por bancada, de 0 a 100
+ * @returns {Forecast}
+ */
+export function whipCount({ bill, parties, funding, loyalty }) {
+  const forecasts = parties.map(party => {
+    const dx = party.economic - bill.economic;
+    const dy = party.liberty - bill.liberty;
+    const distance = Math.hypot(dx, dy);
+    const venality = venalityFor(party, dx, dy);
+    const paid = clamp01(funding[party.id] ?? 0);
+
+    const resistance = distance * (1 - venality * paid) + bill.threat * venality * THREAT_WEIGHT;
+
+    /* A logistica devolve adesao alta para resistencia baixa e vice-versa. */
+    let adherence = 1 / (1 + Math.exp((resistance - PIVOT) / SPREAD));
+
+    /* LEALDADE nao muda a direcao, muda o comparecimento. Bancada satisfeita
+       entrega o que a ideologia manda; insatisfeita entrega menos.
+       LEALDADE CHEIA NAO COBRA PEDAGIO — o fator vai a 1. A primeira versao
+       parava em 0,4 + 0,6, e entao mesmo uma bancada perfeitamente alinhada e
+       perfeitamente satisfeita perdia 18% do voto sem razao nenhuma. O efeito
+       so aparecia somado ao resto, e o sintoma era o plenario inteiro entregar
+       menos do que qualquer leitura da tabela sugeria. */
+    const faith = clamp01((loyalty[party.id] ?? 0) / 100);
+    adherence *= 0.5 + 0.5 * faith;
+
+    /* RUPTURA e o estado em que a bancada joga CONTRA de proposito, e nao
+       apenas se ausenta. E aqui que o governo perde votacao que a matematica
+       ideologica dizia ganha. */
+    if ((loyalty[party.id] ?? 0) < RUPTURE) adherence *= 0.15;
+
+    return {
+      partyId: party.id,
+      distance,
+      venality,
+      resistance,
+      adherence: clamp01(adherence),
+      votes: Math.round(party.seats * clamp01(adherence)),
+    };
+  });
+
+  return {
+    parties: forecasts,
+    votes: forecasts.reduce((sum, forecast) => sum + forecast.votes, 0),
+  };
+}
+
+/**
+ * O DIA DA VOTACAO. Aplica dissidencia individual sobre a previsao.
+ *
+ * Um saque POR BANCADA, do fluxo do congresso. Um saque unico para todas faria
+ * as quatro traírem juntas, o que parece evento e e defeito de modelagem.
+ *
+ * @param {object} input
+ * @param {Bill} input.bill
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.funding
+ * @param {Record<string, number>} input.loyalty
+ * @param {Stream} input.stream
+ * @param {number} input.majority - votos necessarios
+ * @returns {Tally}
+ */
+export function vote({ bill, parties, funding, loyalty, stream, majority }) {
+  const forecast = whipCount({ bill, parties, funding, loyalty });
+  let current = stream;
+
+  const tallies = forecast.parties.map((prediction, index) => {
+    const party = parties[index];
+    const seats = party?.seats ?? 0;
+    const drawn = unit(current);
+    current = drawn.stream;
+
+    /* A margem de erro cresce quando a lealdade cai: bancada insatisfeita
+       entrega menos E de forma menos previsivel. */
+    const faith = clamp01((loyalty[prediction.partyId] ?? 0) / 100);
+    const spread = DISSIDENCE * (2 - faith);
+
+    const drift = (drawn.value - 0.5) * 2 * spread;
+    const actual = clamp01(prediction.adherence + drift);
+    const votes = Math.round(seats * actual);
+
+    return { partyId: prediction.partyId, votes, drift: votes - prediction.votes };
+  });
+
+  const votes = tallies.reduce((sum, tally) => sum + tally.votes, 0);
+
+  return {
+    parties: tallies,
+    votes,
+    expected: forecast.votes,
+    passed: votes >= majority,
+    stream: current,
+  };
+}

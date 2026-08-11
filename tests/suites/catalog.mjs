@@ -45,7 +45,7 @@ test("A VENALIDADE POR EIXO FAZ ALGUMA COISA: ao menos um bloco e assimetrico", 
      antigo por outro nome, e a distincao morreria sem nenhuma prova ficar
      vermelha — que e a pior forma de perder uma decisao de modelagem. */
   const asymmetric = PARTIES.filter(
-    party => Math.abs(party.venalityEconomic - party.venalityCultural) >= 0.2,
+    party => Math.abs(party.venalityEconomic - party.venalityLiberty) >= 0.2,
   );
   assert.ok(
     asymmetric.length > 0,
@@ -61,11 +61,11 @@ test("o preco depende do assunto, e em sentidos opostos", () => {
   const centrao = PARTIES.find(party => party.id === "centrao");
   assert.ok(liberal && centrao);
   assert.ok(
-    liberal.venalityCultural > liberal.venalityEconomic,
+    liberal.venalityLiberty > liberal.venalityEconomic,
     "a direita liberal devia negociar costumes e nao economia",
   );
   assert.ok(
-    centrao.venalityEconomic > centrao.venalityCultural,
+    centrao.venalityEconomic > centrao.venalityLiberty,
     "o centrao devia ceder mais em economia que em costumes",
   );
 });
@@ -75,7 +75,7 @@ test("nenhum bloco esta inteiramente a venda", () => {
      bancada deixa de ter posicao — vira uma funcao do orcamento. */
   for (const party of PARTIES) {
     assert.ok(party.venalityEconomic < 1, `${party.id} se vende por inteiro em economia`);
-    assert.ok(party.venalityCultural < 1, `${party.id} se vende por inteiro em costumes`);
+    assert.ok(party.venalityLiberty < 1, `${party.id} se vende por inteiro em costumes`);
   }
 });
 
@@ -127,7 +127,7 @@ test("todo numero fora da faixa declarada e acusado", () => {
   fc.assert(
     fc.property(
       fc.double({ min: 1.0001, max: 1000, noNaN: true }),
-      fc.constantFrom("venalityEconomic", "venalityCultural", "economic", "cultural"),
+      fc.constantFrom("venalityEconomic", "venalityLiberty", "economic", "liberty"),
       (excess, field) => {
         const rule = PARTY_SCHEMA[field];
         assert.ok(rule);

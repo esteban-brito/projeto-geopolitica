@@ -11,12 +11,14 @@
    assunto, ao lado do esquema que o descreve — e `tests/guards/schema.mjs`
    prova que nenhum esquema fica de fora da validacao daqui. */
 
+import { BILLS, BILL_SCHEMA } from "./bills.mjs";
 import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
 import { PARTIES, PARTY_SCHEMA } from "./parties.mjs";
 import { collectionViolations, violations } from "./schema.mjs";
 
 export const CATALOG = {
   parties: PARTIES,
+  bills: BILLS,
   fiscal: FISCAL,
 };
 
@@ -33,6 +35,7 @@ export const CATALOG = {
 export function catalogViolations() {
   return [
     ...collectionViolations(PARTY_SCHEMA, PARTIES, "parties"),
+    ...collectionViolations(BILL_SCHEMA, BILLS, "bills"),
     ...violations(FISCAL_SCHEMA, FISCAL, "fiscal"),
   ];
 }

@@ -18,13 +18,22 @@
    Duas dimensoes independentes, cada uma de 0 a 100:
 
      `economic` — pauta economica. 0 e maxima intervencao, 100 e maximo mercado;
-     `cultural` — pauta de costumes. 0 e maximo conservadorismo, 100 e maximo
-                  progressismo.
+     `liberty`  — liberdades individuais. 0 e maximo controle sobre a pessoa,
+                  100 e maxima liberdade pessoal.
 
    Duas dimensoes e nao uma porque o eixo unico esquerda-direita nao consegue
    representar o caso mais comum do Congresso brasileiro: a bancada liberal na
-   economia e conservadora nos costumes. Num eixo so ela teria de ficar em algum
+   economia e restritiva nos costumes. Num eixo so ela teria de ficar em algum
    lugar do meio, que e onde ela justamente nao esta.
+
+   O SEGUNDO EIXO E LIBERDADE, E NAO "COSTUMES", e a distincao ja se pagou duas
+   vezes nesta bancada. Chamado de costumes, ele so acomoda pauta moral, e entao
+   nao existe onde por um governo economicamente liberal e politicamente
+   autoritario — censura a imprensa e proibicao de droga cairiam em eixos
+   diferentes. Chamado de liberdade pessoal, que e o eixo Y do Nolan original,
+   os dois casos caem no MESMO lugar: restringir o que a pessoa pode fazer.
+   A bancada de fe e o governo autoritario discordam do MOTIVO e concordam da
+   POSICAO — e posicao e a unica coisa que a votacao precisa saber.
 
    ── A VENALIDADE ─────────────────────────────────────────────────────────────
    Venalidade (0 a 1) e o quanto a distancia ideologica CEDE a dinheiro — nao o
@@ -53,9 +62,9 @@ export const PARTY_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
   economic: { kind: "number", min: 0, max: 100 },
-  cultural: { kind: "number", min: 0, max: 100 },
+  liberty: { kind: "number", min: 0, max: 100 },
   venalityEconomic: { kind: "number", min: 0, max: 1 },
-  venalityCultural: { kind: "number", min: 0, max: 1 },
+  venalityLiberty: { kind: "number", min: 0, max: 1 },
   seats: { kind: "number", min: 0, max: 513 },
 };
 
@@ -64,9 +73,9 @@ export const PARTY_SCHEMA = {
  * @property {string} id
  * @property {string} label - o nome que a interface mostra; ATRIBUTO, nao identidade
  * @property {number} economic
- * @property {number} cultural
+ * @property {number} liberty
  * @property {number} venalityEconomic - o preco de ceder em pauta economica
- * @property {number} venalityCultural - o preco de ceder em pauta de costumes
+ * @property {number} venalityLiberty - o preco de ceder em liberdades individuais
  * @property {number} seats
  */
 
@@ -88,36 +97,36 @@ export const PARTIES = [
     id: "esquerda",
     label: "Esquerda",
     economic: 20,
-    cultural: 80,
+    liberty: 80,
     venalityEconomic: 0.2,
-    venalityCultural: 0.1,
+    venalityLiberty: 0.1,
     seats: 108,
   },
   {
     id: "centro-esquerda",
     label: "Centro-esquerda",
     economic: 45,
-    cultural: 70,
+    liberty: 70,
     venalityEconomic: 0.45,
-    venalityCultural: 0.3,
+    venalityLiberty: 0.3,
     seats: 96,
   },
   {
     id: "centrao",
     label: "Centrão",
     economic: 70,
-    cultural: 35,
+    liberty: 35,
     venalityEconomic: 0.95,
-    venalityCultural: 0.6,
+    venalityLiberty: 0.6,
     seats: 205,
   },
   {
     id: "direita-liberal",
     label: "Direita liberal",
     economic: 92,
-    cultural: 60,
+    liberty: 60,
     venalityEconomic: 0.08,
-    venalityCultural: 0.4,
+    venalityLiberty: 0.4,
     seats: 104,
   },
 ];
