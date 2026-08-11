@@ -11,6 +11,7 @@
    assunto, ao lado do esquema que o descreve — e `tests/guards/schema.mjs`
    prova que nenhum esquema fica de fora da validacao daqui. */
 
+import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
 import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
 import { PARTIES, PARTY_SCHEMA } from "./parties.mjs";
@@ -18,6 +19,7 @@ import { collectionViolations, violations } from "./schema.mjs";
 
 export const CATALOG = {
   parties: PARTIES,
+  areas: AREAS,
   bills: BILLS,
   fiscal: FISCAL,
 };
@@ -35,7 +37,21 @@ export const CATALOG = {
 export function catalogViolations() {
   return [
     ...collectionViolations(PARTY_SCHEMA, PARTIES, "parties"),
+    ...collectionViolations(AREA_SCHEMA, AREAS, "areas"),
     ...collectionViolations(BILL_SCHEMA, BILLS, "bills"),
     ...violations(FISCAL_SCHEMA, FISCAL, "fiscal"),
+    /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. Acao apontando
+       para area que nao existe nao quebra nada na carga — ela simplesmente
+       desaparece da tela da area, e o sintoma e "sumiu uma lei", tres telas longe
+       da causa, que e um id digitado errado aqui. */
+    ...danglingAreas(),
   ];
+}
+
+/** @returns {string[]} */
+function danglingAreas() {
+  const known = new Set(AREAS.map(area => area.id));
+  return BILLS.filter(bill => !known.has(bill.area)).map(
+    bill => `bills: "${bill.id}" aponta para a area "${bill.area}", que nao existe`,
+  );
 }

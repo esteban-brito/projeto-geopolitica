@@ -27,6 +27,15 @@ const NODE = {
 
 export default [
   {
+    /* O QUE NAO E FONTE. A lista e a mesma do `.prettierignore`, e ela tinha de
+       ser: sem isto as duas ferramentas discordam sobre o que e codigo do
+       projeto, e a discordancia aparece como erro de lint num arquivo que o
+       `.gitignore` ja declarou como artefato de medicao. Aconteceu com um script
+       de captura em `tmp/`, e a correcao e igualar as duas listas, nao silenciar
+       o arquivo. */
+    ignores: ["vendor/**", "tmp/**", "captures/**"],
+  },
+  {
     files: ["**/*.mjs"],
     languageOptions: {
       ecmaVersion: 2023,

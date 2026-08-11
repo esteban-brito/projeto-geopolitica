@@ -136,3 +136,15 @@ export const SEATS = 513;
 
 /** Votos necessarios para maioria simples, com o plenario cheio. */
 export const SIMPLE_MAJORITY = Math.floor(SEATS / 2) + 1;
+
+/* TRES QUINTOS, o quorum de emenda constitucional. Ele obriga a trazer gente que
+   nao gosta de voce, e e por isso que a emenda e o lugar natural das moedas que
+   nao sao dinheiro.
+
+   O NUMERO SE SUSTENTA NA ENTREGA, e nao na aritmetica de cadeiras — a distincao
+   custou uma prova vermelha. Duas duplas SOMAM mais de 308 no papel: esquerda
+   mais centrao dao 313, centrao mais direita liberal dao 309. O que nenhuma dupla
+   consegue e ENTREGAR 308, porque adesao de bancada nunca e integral nem com
+   verba cheia e lealdade cheia. Quem confundir as duas coisas vai concluir que
+   uma dupla basta, e vai calibrar o jogo errado. */
+export const QUALIFIED_MAJORITY = Math.ceil((SEATS * 3) / 5);

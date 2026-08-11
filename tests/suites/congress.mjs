@@ -12,9 +12,14 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
 import { vote, whipCount } from "../../src/domain/congress/index.mjs";
-import { BILLS } from "../../src/data/bills.mjs";
-import { PARTIES, SIMPLE_MAJORITY } from "../../src/data/parties.mjs";
+import { BILLS, quorumOf } from "../../src/data/bills.mjs";
+import { PARTIES, QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "../../src/data/parties.mjs";
 import { streamFrom } from "../../src/state/random.mjs";
+
+/* O QUE VAI A PLENARIO. Decreto nao vota, entao ele nao entra em nenhuma prova
+   de quorum — inclui-lo faria as provas passarem por um motivo errado, ja que
+   quorum zero e sempre alcancado. */
+const VOTABLE = BILLS.filter(bill => bill.instrument !== "decree");
 
 /** @param {number} level */
 function everyone(level) {
@@ -201,18 +206,23 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
   assert.ok(bought.adherence < 0.5, `o centrao entregou ${(bought.adherence * 100).toFixed(0)}%`);
 });
 
-test("NENHUMA PAUTA E INVOTAVEL: toda pauta do catalogo PASSA em alguma configuracao", () => {
-  /* A prova mais importante do arquivo, e a primeira versao dela era fraca
-     demais: exigia apenas `votos > 0`, e passou verde enquanto o fim do foro
-     privilegiado estava travado em 56 de 257 — ou seja, um muro com aparencia
-     de preco. Prova que nao consegue distinguir "caro" de "impossivel" nao
-     cobra o principio que existe para cobrar.
-     Agora ela exige o que o projeto promete: tudo tem um jeito de ser feito.
-     Se ficar vermelha, alguma pauta virou parede e a calibragem quebrou. */
+test("NENHUMA PAUTA E INVOTAVEL: toda acao PASSA no PROPRIO quorum", () => {
+  /* A prova mais importante do arquivo, e ela ja foi fraca duas vezes.
+
+     A primeira versao exigia apenas `votos > 0`, e passou verde enquanto o fim
+     do foro privilegiado estava travado em 56 de 257 — um muro com aparencia de
+     preco. A SEGUNDA fraqueza apareceu quando a emenda constitucional entrou no
+     catalogo: a prova continuou cobrando 257 de todo mundo, entao uma emenda que
+     alcanca 300 passava aqui e era impossivel no jogo. Prova que cobra o quorum
+     errado nao cobra nada.
+
+     Agora ela exige o que o projeto promete, contra o quorum DE CADA ACAO: tudo
+     tem um jeito de ser feito. Se ficar vermelha, alguma acao virou parede. */
   const generous = everyone(1);
   const devoted = everyone(100);
 
-  for (const bill of BILLS) {
+  for (const bill of VOTABLE) {
+    const quorum = quorumOf(bill);
     const forecast = whipCount({
       bill,
       parties: PARTIES,
@@ -220,25 +230,71 @@ test("NENHUMA PAUTA E INVOTAVEL: toda pauta do catalogo PASSA em alguma configur
       loyalty: devoted,
     });
     assert.ok(
-      forecast.votes >= SIMPLE_MAJORITY,
-      `${bill.id} nao passa nem com verba cheia e lealdade cheia: ` +
-        `${forecast.votes} de ${SIMPLE_MAJORITY} — isso e muro, e nao preco`,
+      forecast.votes >= quorum,
+      `${bill.id} (${bill.instrument}) nao passa nem com verba cheia e lealdade cheia: ` +
+        `${forecast.votes} de ${quorum} — isso e muro, e nao preco`,
     );
   }
 });
 
-test("mas o caminho facil NAO existe: nenhuma pauta passa de graca e sem base", () => {
+test("mas o caminho facil NAO existe: nenhuma acao passa de graca e sem base", () => {
   /* O contrapeso da prova acima. Se tudo passasse sem verba e sem lealdade, o
      jogo nao teria negociacao — e as duas provas juntas e que definem a faixa
      onde ele acontece. */
   const broke = everyone(0);
   const cold = everyone(30);
 
-  const easy = BILLS.filter(
+  const easy = VOTABLE.filter(
     bill =>
-      whipCount({ bill, parties: PARTIES, funding: broke, loyalty: cold }).votes >= SIMPLE_MAJORITY,
+      whipCount({ bill, parties: PARTIES, funding: broke, loyalty: cold }).votes >= quorumOf(bill),
   );
   assert.equal(easy.length, 0, `passaram de graca: ${easy.map(bill => bill.id).join(", ")}`);
+});
+
+test("A EMENDA E OUTRO JOGO: duas bancadas nao ENTREGAM tres quintos", () => {
+  /* O que justifica a emenda existir como via separada: ela obriga a trazer
+     gente que nao gosta de voce. Se uma dupla fechasse 308, o quorum qualificado
+     seria so um numero maior, e nao uma exigencia de coalizao ampla.
+
+     ⚠ A PRIMEIRA VERSAO DESTA PROVA ESTAVA ERRADA, e ela mesma acusou. Eu tinha
+     escrito que nenhuma dupla SOMA 308 em cadeiras — e duas somam: esquerda mais
+     centrao dao 313, centrao mais direita liberal dao 309. A afirmacao verdadeira
+     e sobre ENTREGA, e nao sobre assento: adesao nunca e 100%, entao a dupla que
+     soma 313 no papel entrega bem menos no plenario. A prova agora mede o que o
+     motor realmente produz, no melhor cenario possivel para a dupla. */
+  const generous = everyone(1);
+  const devoted = everyone(100);
+  const amendments = BILLS.filter(bill => bill.instrument === "amendment");
+  assert.ok(amendments.length > 0, "o catalogo perdeu as emendas");
+
+  /** @type {string[]} */
+  const enough = [];
+
+  for (const bill of amendments) {
+    const forecast = whipCount({ bill, parties: PARTIES, funding: generous, loyalty: devoted });
+    for (const [i, first] of forecast.parties.entries()) {
+      for (const second of forecast.parties.slice(i + 1)) {
+        const delivered = first.votes + second.votes;
+        if (delivered >= QUALIFIED_MAJORITY) {
+          enough.push(`${bill.id}: ${first.partyId} + ${second.partyId} = ${delivered}`);
+        }
+      }
+    }
+  }
+
+  assert.equal(enough.length, 0, `duplas que fecham 308 sozinhas:\n  ${enough.join("\n  ")}`);
+});
+
+test("o quorum sai do instrumento, e nao de um numero digitado por acao", () => {
+  for (const bill of BILLS) {
+    const expected =
+      bill.instrument === "amendment"
+        ? QUALIFIED_MAJORITY
+        : bill.instrument === "decree"
+          ? 0
+          : SIMPLE_MAJORITY;
+    assert.equal(quorumOf(bill), expected, `${bill.id} tem quorum fora do seu instrumento`);
+  }
 });
 
 test("a adesao fica sempre entre 0 e 1, e os votos dentro da bancada", () => {
