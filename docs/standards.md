@@ -36,7 +36,7 @@ src/application/            turno, persistência, efeitos
 src/public/                 a composição que todo consumidor usa
 src/ui/                     views puras: recebem dado, devolvem string
 tests/                      run.mjs · lib/ · guards/ · suites/ · golden/
-tools/                      geradores, servidor, build de assets
+tools/                      geradores, servidor, simulador de mandato
 docs/                       handoff.md (um ponto de retomada) · adr/ · cycles/
 ```
 
@@ -58,6 +58,13 @@ aleatoriedade, cada um com fluxo próprio derivado da seed da partida.
 O codinome é como o responsável cita o motor. Ele vive no cabeçalho do módulo e
 nesta tabela, e **não** aparece em código executável — no código existe um nome
 só, o funcional. `codenames` prova a correspondência 1:1 nas duas direções.
+
+**Motor nenhum chama outro motor.** Quem os compõe é `src/application/turn.mjs`,
+e a ordem em que ele os chama é a mecânica do jogo, não detalhe de organização:
+o orçamento resolve antes da votação porque a votação usa a verba **paga**, e uma
+ordem invertida faria promessa comprar voto — o que transforma o orçamento num
+placar que o jogador só lê depois de já ter decidido. A camada de aplicação
+compõe e devolve o resultado pronto; o reducer apenas o dobra no estado.
 
 ## 4. O sistema visual
 

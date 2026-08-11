@@ -7,6 +7,7 @@ dependência de runtime.
 ```bash
 npm ci
 npm run serve      # http://127.0.0.1:5173/
+npm run simulate   # roda um mandato inteiro no terminal, sem tela
 npm run validate   # guardas + tipos + lint + formato + testes
 ```
 
@@ -34,7 +35,35 @@ DELTA     ── deriva a rede legível do que acabou de acontecer contrato
 ```
 
 O espaço discricionário de LASTRO é a moeda com que ECLUSA paga: os dois se
-acoplam pelo orçamento, e não por uma regra escrita para isso.
+acoplam pelo orçamento, e não por uma regra escrita para isso. Quem os compõe é
+[`src/application/turn.mjs`](src/application/turn.mjs), na ordem que **é** a
+mecânica: primeiro o teto diz quanto cabe, depois a promessa é confrontada com o
+que cabe, e só então o Congresso vota — **com a verba que foi paga, não com a que
+foi falada**. Promessa não honrada derruba a lealdade, e como o teto pode fechar
+sozinho por aritmética, existe um caminho em que o governo promete de boa fé, não
+entrega e perde a base sem que nenhum evento roteirizado exista.
+
+## Simulação
+
+`npm run simulate` roda um mandato inteiro em milissegundos e imprime a série
+temporal — mês, pauta, previsão, placar, verba prometida contra verba paga, folga
+do discricionário, dívida sobre o PIB e o humor da base.
+
+```bash
+npm run simulate -- --policy promessa --months 48
+npm run simulate -- --seed 7 --gdp-growth -0.02 --quiet
+```
+
+Ele existe porque a calibragem foi girada contra os testes, e **prova verde diz
+que a regra vale, não que o número é bom**. A pergunta que faltava instrumento —
+"como esta partida se comporta ao longo de 48 meses?" — não se responde apertando
+um botão quarenta e oito vezes no navegador.
+
+As quatro políticas são **sondas, e não adversários**: cada uma exagera um
+comportamento para isolar um efeito. `parado` mede a queda natural, `base` mede o
+custo de apenas continuar governando, `agenda` joga com prudência fiscal e
+`promessa` oferece verba cheia sem olhar o caixa — a distância entre as duas
+últimas é o preço da imprudência, medido em meses de base.
 
 ## Validação
 
