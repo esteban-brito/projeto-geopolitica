@@ -16,6 +16,8 @@
    o custo e desprezivel, e uma mutacao acidental que so falha em producao e
    exatamente o defeito que isto existe para impedir. */
 
+import { streamFrom } from "./random.mjs";
+
 /**
  * @typedef {"crisis" | "stable" | "growth"} Situation
  *
@@ -24,15 +26,32 @@
  * @property {number} fair - "regular"
  * @property {number} poor - "ruim/pessimo"
  *
+ * @typedef {import("./random.mjs").Stream} Stream
+ *
+ * @typedef {object} Streams
+ * @property {Stream} events - o fluxo de TEMPORAL
+ * @property {Stream} congress - o fluxo de ECLUSA
+ *
  * @typedef {object} GameState
  * @property {number} schemaVersion - versao do formato do save
+ * @property {number} seed - a semente da partida; com ela e as acoes, tudo se refaz
  * @property {number} month - meses decorridos desde a posse (0 = janeiro do ano 1)
  * @property {Approval} approval
  * @property {Situation} situation
+ * @property {Streams} streams
  */
 
-/** Versao do save. Toda mudanca de forma exige uma migracao explicita. */
-export const SCHEMA_VERSION = 1;
+/* Versao do save. Toda mudanca de forma exige uma migracao explicita.
+   SUBIU PARA 2 quando a semente e os fluxos entraram no estado: um save da
+   versao 1 nao tem como sortear nada, e carrega-lo produziria um jogo que
+   parece funcionar ate o primeiro evento. */
+export const SCHEMA_VERSION = 2;
+
+/* A semente de uma partida sem semente escolhida. Ela e CONSTANTE de proposito:
+   um padrao tirado do relogio faria duas partidas "iguais" divergirem, e a
+   primeira coisa que se perde num jogo assim e a capacidade de reproduzir um
+   defeito relatado. Quem quiser variedade passa a semente. */
+export const DEFAULT_SEED = 20270101;
 
 /**
  * Congela em profundidade. O estado e uma arvore rasa de objetos simples.
@@ -58,14 +77,24 @@ function deepFreeze(value) {
  * afirmacao sobre o Brasil — e essa e a diferenca entre um numero provisorio
  * declarado e um numero inventado que vira dividia silenciosa.
  *
+ * @param {number} [seed] a semente da partida
  * @returns {GameState}
  */
-export function createState() {
+export function createState(seed = DEFAULT_SEED) {
   return deepFreeze({
     schemaVersion: SCHEMA_VERSION,
+    seed,
     month: 2,
     approval: { good: 31, fair: 34, poor: 35 },
     situation: /** @type {Situation} */ ("stable"),
+    /* UM FLUXO POR MOTOR QUE SORTEIA, e os dois derivados do NOME. Fluxo unico
+       compartilhado faria um evento a mais deslocar o indice e mudar o
+       resultado de uma votacao sem relacao nenhuma com ele — e ai calibrar a
+       frequencia de eventos mexeria em todas as votacoes do jogo de uma vez. */
+    streams: {
+      events: streamFrom(seed, "events"),
+      congress: streamFrom(seed, "congress"),
+    },
   });
 }
 

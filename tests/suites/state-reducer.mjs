@@ -42,12 +42,22 @@ const anyApproval = fc
   .filter(({ good, poor }) => good + poor <= 100)
   .map(({ good, poor }) => ({ good, fair: 100 - good - poor, poor }));
 
+/* Fluxos em QUALQUER ponto do percurso, e nao so zerados: um save carregado no
+   turno 40 chega com contadores altos, e o reducer tem de tratar isso como
+   trata o comeco. */
+const anyStream = fc.record({
+  seed: fc.integer({ min: 0, max: 4294967295 }),
+  draws: fc.nat({ max: 5000 }),
+});
+
 const anyState = fc.record({
   schemaVersion: fc.constant(SCHEMA_VERSION),
+  seed: fc.integer({ min: 0, max: 4294967295 }),
   /* 48 turnos por mandato — a decisao fechada. */
   month: fc.integer({ min: 0, max: 47 }),
   approval: anyApproval,
   situation: fc.constantFrom("crisis", "stable", "growth"),
+  streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 
 /* Acao que o reducer NAO conhece. O molde de tipo so admite "advanceMonth", e a
