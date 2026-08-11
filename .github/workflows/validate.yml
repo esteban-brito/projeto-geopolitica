@@ -1,0 +1,38 @@
+# O portao. Ele roda exatamente `npm run validate` — as mesmas guardas, tipos,
+# lint, formato e suites que rodam na maquina de quem escreve.
+#
+# `npm run screen` NAO entra aqui, e nao e esquecimento: ele abre um Chromium
+# COM JANELA e mede fps contra a taxa do monitor. Num runner sem GPU os dois
+# bracos caem juntos e o numero mente — foi por medir assim que a primeira
+# versao da suite deu o material 8 fps mais rapido que o controle. Medicao de
+# tela continua sendo local, com GPU, e por decisao.
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # A mesma versao do `.nvmrc`, para o CI nao provar coisa diferente do
+          # que a maquina de quem escreve prova.
+          node-version-file: .nvmrc
+          cache: npm
+
+      # `ci` e nao `install`: ele instala do lock e falha se o lock divergir do
+      # package.json, que e a unica forma de o CI garantir a mesma arvore.
+      - run: npm ci
+
+      - run: npm run validate

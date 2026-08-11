@@ -20,7 +20,17 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { ROOT, readProject } from "./lib/project.mjs";
 
-const EXPECTED = ["boundaries", "cascade", "codenames", "material", "motion", "naming", "tokens"];
+const EXPECTED = [
+  "boundaries",
+  "cascade",
+  "codenames",
+  "identity",
+  "material",
+  "motion",
+  "naming",
+  "schema",
+  "tokens",
+];
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";

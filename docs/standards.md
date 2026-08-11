@@ -20,7 +20,8 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 | cascata             | camadas declaradas por `@layer`                      | regra fora de camada; `!important`     | `cascade`                   |
 | movimento           | tokens de duração e curva + rede global              | `animation: none`; animação inline     | `motion`                    |
 | aleatoriedade       | fluxo injetado, próprio de cada motor que sorteia    | `Math.random` no domínio               | `boundaries`                |
-| identidade          | separada dos atributos; motor compara por `id`       | comparação por nome                    | `identity` (pendente)       |
+| identidade          | separada dos atributos; motor compara por `id`       | comparação por nome                    | `identity`                  |
+| dado editável       | esquema ao lado da coleção, validado por `catalog`   | esquema fora de `src/data/`            | `schema` + suite            |
 
 ## 2. Estrutura
 
@@ -92,6 +93,8 @@ juntos e o número não diz nada.
 | `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; dependência de teste vazando     |
 | `naming`     | `.js`; nome fora do padrão; CommonJS; `export default`; identificador acentuado                             |
 | `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                  |
+| `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                     |
+| `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                |
 
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.
@@ -104,10 +107,12 @@ Declarado para não ser confundido com cobertura:
   regra inglês/português depende de revisão. Um casador honesto não existe — ele
   acusaria `selic` e `ipca`, que são nomes próprios e ficam no original por
   decisão;
-- **`identity` e `schema`** — a separação identidade/atributos e a fronteira de
-  validação de dado editável. Elas nascem junto do catálogo; escrevê-las antes
-  seria uma guarda sem objeto de prova;
 - **`orphans` e `contrast`** — precisam do DOM real, e portanto de mais de uma
   tela para valerem a pena. Entram no ciclo da segunda tela;
+- **o VALOR de um dado do catálogo.** `identity` prova que todo registro tem
+  identidade própria e que nenhuma se repete; `schema` prova que todo esquema
+  existe e é validado; a suite prova que os registros obedecem ao esquema.
+  Nenhuma das três sabe dizer se `0,95` é a venalidade certa do Centrão — isso é
+  calibração, é revisão humana, e não existe casador honesto para intenção;
 - **escala de raio, espaço e corpo** — a derivação está no arquivo de tokens e é
   cobrada por revisão, não por máquina.

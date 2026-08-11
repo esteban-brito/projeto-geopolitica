@@ -1,0 +1,102 @@
+/* SUITE · O CATALOGO — o dado de verdade, conferido valor a valor.
+   ══════════════════════════════════════════════════════════════════════════════
+
+   A guarda `schema` prova que todo esquema existe e e citado pelo indice; ela lê
+   TEXTO e nao executa nada. Quem confere se os registros obedecem ao esquema e
+   esta suite, que importa o catalogo de verdade.
+
+   A divisao nao e burocracia: guarda que tentasse ler valor precisaria
+   interpretar JavaScript por regex, e regex sobre codigo e frageis demais para
+   virar prova. Cada instrumento cobre o que ele consegue provar. */
+
+import assert from "node:assert/strict";
+import test from "node:test";
+import fc from "fast-check";
+import { CATALOG, catalogViolations } from "../../src/data/catalog.mjs";
+import { PARTIES, PARTY_SCHEMA, SEATS, SIMPLE_MAJORITY } from "../../src/data/parties.mjs";
+import { collectionViolations, violations } from "../../src/data/schema.mjs";
+
+test("o catalogo do projeto esta integro", () => {
+  assert.deepEqual(catalogViolations(), []);
+});
+
+test("as cadeiras das bancadas somam a Camara inteira", () => {
+  /* Soma que nao fecha nao e erro de digitacao inofensivo: e uma votacao cujo
+     quorum nunca bate, e o defeito apareceria como "a lei nunca passa". */
+  const total = PARTIES.reduce((sum, party) => sum + party.seats, 0);
+  assert.equal(total, SEATS, `as bancadas somam ${total} e a Camara tem ${SEATS}`);
+  assert.ok(SIMPLE_MAJORITY > SEATS / 2);
+});
+
+test("nenhuma bancada sozinha tem maioria simples", () => {
+  /* Se uma tivesse, o resto do motor de votacao seria decoracao — bastaria
+     comprar uma bancada e nenhuma barganha existiria. */
+  for (const party of PARTIES) {
+    assert.ok(
+      party.seats < SIMPLE_MAJORITY,
+      `${party.id} tem ${party.seats} cadeiras e a maioria e ${SIMPLE_MAJORITY}`,
+    );
+  }
+});
+
+test("o catalogo expoe as bancadas e os parametros fiscais", () => {
+  assert.equal(CATALOG.parties, PARTIES);
+  assert.ok(CATALOG.fiscal.taxLoad > 0);
+});
+
+/* ── AS PROVAS SINTETICAS DO VALIDADOR ──────────────────────────────────────
+   O catalogo passar nao prova nada sobre o validador: ele passaria igual se
+   `violations` devolvesse lista vazia sempre. Cada prova abaixo reintroduz um
+   defeito e exige acusacao, que e a mesma exigencia das guardas. */
+
+test("PROVA SINTETICA: campo faltando e acusado", () => {
+  const broken = { id: "centrao", label: "Centrão", economic: 70, cultural: 35, venality: 0.95 };
+  const found = violations(PARTY_SCHEMA, broken, "teste");
+  assert.equal(found.length, 1);
+  assert.match(found[0] ?? "", /seats/);
+});
+
+test("PROVA SINTETICA: campo a mais e acusado", () => {
+  const broken = { ...(PARTIES[0] ?? {}), sobrando: 1 };
+  const found = violations(PARTY_SCHEMA, broken, "teste");
+  assert.match(found.join(" "), /sobrando/);
+});
+
+test("PROVA SINTETICA: id fora do kebab-case e acusado", () => {
+  const broken = { ...(PARTIES[0] ?? {}), id: "Centrão Puro" };
+  assert.match(violations(PARTY_SCHEMA, broken, "teste").join(" "), /kebab-case/);
+});
+
+test("PROVA SINTETICA: id repetido e acusado", () => {
+  const first = PARTIES[0];
+  assert.ok(first);
+  const found = collectionViolations(PARTY_SCHEMA, [first, first], "teste");
+  assert.match(found.join(" "), /mais de uma vez/);
+});
+
+test("todo numero fora da faixa declarada e acusado", () => {
+  /* Propriedade e nao exemplo: o que precisa ser provado nao e que 1.5 de
+     venalidade e recusado, e que NENHUM valor fora da faixa passa. */
+  fc.assert(
+    fc.property(
+      fc.double({ min: 1.0001, max: 1000, noNaN: true }),
+      fc.constantFrom("venality", "economic", "cultural"),
+      (excess, field) => {
+        const rule = PARTY_SCHEMA[field];
+        assert.ok(rule);
+        const max = rule.max ?? 0;
+        const broken = { ...(PARTIES[0] ?? {}), [field]: max + excess };
+        assert.match(violations(PARTY_SCHEMA, broken, "teste").join(" "), /acima do maximo/);
+      },
+    ),
+  );
+});
+
+test("o validador nao conserta nem preenche, so relata", () => {
+  /* Validador que conserta esconde o erro em vez de mostrar. A prova de que ele
+     nao mexe e o registro sair identico ao que entrou. */
+  const record = { ...(PARTIES[0] ?? {}), venality: 9 };
+  const before = JSON.stringify(record);
+  violations(PARTY_SCHEMA, record, "teste");
+  assert.equal(JSON.stringify(record), before);
+});
