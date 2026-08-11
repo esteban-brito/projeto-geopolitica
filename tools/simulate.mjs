@@ -29,8 +29,8 @@
 import { parseArgs } from "node:util";
 import { costOf, discretionaryRoom, playMonth } from "../src/application/turn.mjs";
 import { whipCount } from "../src/domain/congress/index.mjs";
+import { quorumOf } from "../src/data/bills.mjs";
 import { CATALOG } from "../src/data/catalog.mjs";
-import { SIMPLE_MAJORITY } from "../src/data/parties.mjs";
 import { createState, monthLabel } from "../src/state/state.mjs";
 
 /**
@@ -46,6 +46,23 @@ import { createState, monthLabel } from "../src/state/state.mjs";
    continua certo quando alguem as recalibrar. Se fosse um numero solto, a
    politica `base` viraria mentira silenciosa no dia seguinte a calibragem. */
 const UPKEEP = 1.5 / 12;
+
+/* Quanto custa, por mes, apenas SEGURAR cada area onde ela esta: o decaimento
+   dividido pelo rendimento. Mesma logica do de cima — sai do catalogo, e nao de
+   um numero digitado. Somado, o catalogo de hoje cobra pouco mais de 4 bilhoes
+   por mes para o pais nao piorar sozinho, contra os cerca de 27 que o
+   discricionario abre. Manter e barato; melhorar e que custa. */
+const HOLD = Object.fromEntries(CATALOG.areas.map(area => [area.id, area.decay / area.yield]));
+
+/** @param {number} share o quanto do necessario para segurar, de 0 em diante */
+function holding(share) {
+  return Object.fromEntries(CATALOG.areas.map(area => [area.id, (HOLD[area.id] ?? 0) * share]));
+}
+
+/** @param {Record<string, number>} allocation */
+function totalOf(allocation) {
+  return Object.values(allocation).reduce((sum, value) => sum + value, 0);
+}
 
 /**
  * @typedef {object} Memory o que a politica lembra entre os meses
@@ -96,6 +113,12 @@ function affordableLevel(state) {
  * @returns {number | null} nulo quando nem verba cheia aprova
  */
 function priceOfPassage(bill, loyalty) {
+  /* CONTRA O QUORUM DA ACAO, e nao contra 257 sempre. A primeira versao usava a
+     maioria simples para tudo, e por isso mandava emenda a plenario achando que
+     bastavam 257 — a politica levava a voto o que nao tinha como passar, e a
+     serie media a ingenuidade dela em vez do modelo. */
+  const quorum = quorumOf(bill);
+
   for (let level = 0; level <= 1.0001; level += 0.05) {
     const forecast = whipCount({
       bill,
@@ -103,7 +126,7 @@ function priceOfPassage(bill, loyalty) {
       funding: everyone(Math.min(1, level)),
       loyalty,
     });
-    if (forecast.votes >= SIMPLE_MAJORITY) return Math.min(1, level);
+    if (forecast.votes >= quorum) return Math.min(1, level);
   }
   return null;
 }
@@ -119,16 +142,21 @@ function nextBill(memory) {
 
 /** @type {Record<string, Policy>} */
 const POLICIES = {
-  /* O CONTROLE. Ninguem pauta nada, ninguem paga nada — e a serie mostra a
-     queda livre: quantos meses a base leva para obstruir sozinha, e em que mes
-     a obrigatoria fura o teto sem ajuda de ninguem. */
-  parado: () => ({ billId: null, funding: everyone(0) }),
+  /* O CONTROLE. Ninguem pauta nada, ninguem paga nada, ninguem aloca nada — e a
+     serie mostra a queda livre: quantos meses a base leva para obstruir sozinha,
+     em que mes a obrigatoria fura o teto sem ajuda de ninguem, e quanto o pais
+     inteiro apodrece quando o governo simplesmente nao governa. */
+  parado: () => ({ billId: null, funding: everyone(0), allocation: holding(0) }),
 
   /* SO A MANUTENCAO. Paga o suficiente para a lealdade nao cair e nao pauta
      nada. Mede o custo de simplesmente CONTINUAR governando — e o mes em que
      esse custo deixa de caber e a resposta que este simulador foi feito para
      dar. */
-  base: state => ({ billId: null, funding: everyone(Math.min(UPKEEP, affordableLevel(state))) }),
+  base: state => ({
+    billId: null,
+    funding: everyone(Math.min(UPKEEP, affordableLevel(state))),
+    allocation: holding(1),
+  }),
 
   /* O GOVERNO PRUDENTE. Varre a fila inteira todo mes e leva a voto a PRIMEIRA
      pauta que a previsao aprova e que cabe no caixa; se nenhuma couber, recua
@@ -142,16 +170,31 @@ const POLICIES = {
   agenda: (state, memory) => {
     const room = discretionaryRoom(state);
 
+    /* A MANUTENCAO VEM PRIMEIRO, e o que sobra e que compra voto. E a ordem que
+       um governo prudente segue: hospital aberto antes de emenda paga. O caixa
+       disponivel para o Congresso ja desconta o que as areas levaram. */
+    const allocation = holding(1);
+    const left = Math.max(0, room - totalOf(allocation));
+
     for (const bill of CATALOG.bills) {
       if (memory.passed.has(bill.id)) continue;
+      /* Decreto nao passa pelo Congresso: sai de graca em voto, e por isso a
+         politica prudente o executa assim que ele aparece na fila. */
+      if (bill.instrument === "decree")
+        return { billId: bill.id, funding: everyone(0), allocation };
+
       const level = priceOfPassage(bill, state.loyalty);
       if (level === null) continue;
       const funding = everyone(level);
-      if (costOf(funding, CATALOG.parties, CATALOG.fiscal.seatPrice) > room) continue;
-      return { billId: bill.id, funding };
+      if (costOf(funding, CATALOG.parties, CATALOG.fiscal.seatPrice) > left) continue;
+      return { billId: bill.id, funding, allocation };
     }
 
-    return { billId: null, funding: everyone(Math.min(UPKEEP, affordableLevel(state))) };
+    return {
+      billId: null,
+      funding: everyone(Math.min(UPKEEP, affordableLevel(state))),
+      allocation,
+    };
   },
 
   /* O GOVERNO QUE PROMETE. Pauta e oferece verba cheia todo mes, sem olhar o
@@ -159,7 +202,7 @@ const POLICIES = {
      e o buraco entre o falado e o pago desaba sobre a lealdade mes a mes. */
   promessa: (state, memory) => {
     const bill = nextBill(memory);
-    return { billId: bill?.id ?? null, funding: everyone(1) };
+    return { billId: bill?.id ?? null, funding: everyone(1), allocation: holding(1) };
   },
 };
 
@@ -269,7 +312,11 @@ for (let i = 0; i < months; i++) {
   const orders = policy(state, memory);
   const played = playMonth(state, orders, { gdpGrowth });
 
-  if (played.report.bill && played.report.tally?.passed) {
+  /* `enacted` E NAO `tally.passed`. Decreto nao produz placar — ele nao vai a
+     plenario —, entao a versao anterior nunca o registrava como feito e a
+     politica redecretava o mesmo ato todos os meses, parando de pautar o resto
+     do catalogo. Cinco acoes aprovadas em 48 meses, com o caixa sobrando. */
+  if (played.report.bill && played.report.enacted) {
     memory.passed.add(played.report.bill.id);
   }
 
@@ -298,9 +345,10 @@ if (!values.quiet) {
       padLeft("folga", 8) +
       padLeft("div/PIB", 9) +
       padLeft("base", 6) +
+      padLeft("pais", 6) +
       "  nota\n",
   );
-  out.write("-".repeat(112) + "\n");
+  out.write("-".repeat(118) + "\n");
 
   for (const report of history) {
     const tally = report.tally;
@@ -314,6 +362,7 @@ if (!values.quiet) {
         padLeft(num(report.room), 8) +
         padLeft(`${num(report.budget.debtRatio * 100)}%`, 9) +
         padLeft(num(averageLoyalty(report.loyalty), 0), 6) +
+        padLeft(num(averageLoyalty(report.capacity.index), 0), 6) +
         "  " +
         flagsOf(report) +
         "\n",
@@ -352,10 +401,25 @@ out.write(
   `  divida sobre o PIB  ${num((opening.fiscal.debt / opening.fiscal.gdp) * 100)}%` +
     ` → ${num((last?.budget.debtRatio ?? 0) * 100)}%\n`,
 );
+out.write(
+  `  alocacao            ${num(history.reduce((sum, report) => sum + report.allocatedTotal, 0))} nas areas\n`,
+);
 out.write(`  base ao fim\n`);
 for (const party of CATALOG.parties) {
   const value = state.loyalty[party.id] ?? 0;
   const mood = value < 20 ? "ruptura" : value < 50 ? "obstrucao" : "com o governo";
   out.write(`    ${pad(party.label, 18)}${padLeft(num(value, 0), 4)}   ${mood}\n`);
+}
+
+out.write(`  o pais ao fim\n`);
+for (const area of CATALOG.areas) {
+  const before = area.initial;
+  const after = state.capacity.index[area.id] ?? 0;
+  const delta = after - before;
+  out.write(
+    `    ${pad(area.label, 14)}${pad(area.index, 14)}` +
+      `${padLeft(num(before, 0), 4)} → ${padLeft(num(after, 0), 3)}` +
+      `   ${delta >= 0 ? "+" : ""}${num(delta, 0)}\n`,
+  );
 }
 out.write("\n");
