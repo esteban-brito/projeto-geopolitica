@@ -19,17 +19,22 @@ npm run validate   # guardas + tipos + lint + formato + testes
 
 ## Os motores
 
-Um turno é um mês. Apenas TEMPORAL e ECLUSA consomem aleatoriedade.
+Um turno é um mês. Apenas TEMPORAL e ECLUSA consomem aleatoriedade, cada um do
+seu próprio fluxo — fluxo único faria um evento a mais deslocar o índice e mudar
+o resultado de uma votação sem relação com ele.
 
 ```
-TEMPORAL  ── o mês traz um choque?
-ECLUSA    ── o que estava na pauta é votado, e a que preço
-CASCATA   ── efeitos vigentes viram deltas, com defasagem
-CORRENTE  ── o passo macroeconômico do mês
-LASTRO    ── receita, despesa, saldo, dívida
-SONDA     ── o que foi divulgado vira aprovação por segmento
-DELTA     ── deriva a rede legível do que acabou de acontecer
+TEMPORAL  ── o mês traz um choque?                          contrato
+ECLUSA    ── o que estava na pauta é votado, e a que preço  IMPLEMENTADO
+CASCATA   ── efeitos vigentes viram deltas, com defasagem   contrato
+CORRENTE  ── o passo macroeconômico do mês                  contrato
+LASTRO    ── receita, despesa, saldo, dívida                IMPLEMENTADO
+SONDA     ── o que foi divulgado vira aprovação por segmento contrato
+DELTA     ── deriva a rede legível do que acabou de acontecer contrato
 ```
+
+O espaço discricionário de LASTRO é a moeda com que ECLUSA paga: os dois se
+acoplam pelo orçamento, e não por uma regra escrita para isso.
 
 ## Validação
 
