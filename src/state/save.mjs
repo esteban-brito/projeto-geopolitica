@@ -81,7 +81,18 @@ export function deserialize(text) {
     };
   }
 
-  for (const field of ["seed", "month", "approval", "situation", "loyalty", "fiscal", "streams"]) {
+  const required = [
+    "seed",
+    "month",
+    "approval",
+    "situation",
+    "loyalty",
+    "fiscal",
+    "capacity",
+    "streams",
+  ];
+
+  for (const field of required) {
     if (candidate[field] === undefined) {
       return { ok: false, reason: `o save nao tem o campo "${field}"` };
     }

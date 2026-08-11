@@ -47,10 +47,12 @@
      isso entra aqui como PREMISSA explicita de quem chama — com zero por padrao.
      Um crescimento inventado neste arquivo viraria modelo macro clandestino. */
 
-import { step } from "../domain/budget/index.mjs";
+import { step as budgetStep } from "../domain/budget/index.mjs";
+import { pressureOf, step as capacityStep } from "../domain/capacity/index.mjs";
 import { settle, vote } from "../domain/congress/index.mjs";
+import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
+import { quorumOf } from "../data/bills.mjs";
 import { CATALOG } from "../data/catalog.mjs";
-import { SIMPLE_MAJORITY } from "../data/parties.mjs";
 import { reduce } from "../state/state.mjs";
 
 /**
@@ -65,8 +67,9 @@ const MONTHS_PER_YEAR = 12;
 
 /**
  * @typedef {object} Orders as ordens do mes
- * @property {string | null} [billId] a pauta levada a voto, ou nada
+ * @property {string | null} [billId] a acao levada a voto ou decretada, ou nada
  * @property {Record<string, number>} [funding] verba PROMETIDA por bancada, de 0 a 1
+ * @property {Record<string, number>} [allocation] bilhoes pedidos por area
  *
  * @typedef {object} Options
  * @property {typeof CATALOG} [catalog]
@@ -75,13 +78,18 @@ const MONTHS_PER_YEAR = 12;
  * @typedef {object} Report o que o mes deixou, para a tela ou para o terminal
  * @property {number} month o mes que acabou de ser resolvido
  * @property {Bill | null} bill
+ * @property {boolean} enacted se a acao virou realidade — votada e aprovada, ou decretada
  * @property {BudgetOutput} budget
+ * @property {import("../domain/capacity/index.mjs").Outcome} capacity
  * @property {number} room o discricionario que cabia NO MES, em bilhoes
- * @property {number} promisedCost quanto a promessa custaria
- * @property {number} paidCost quanto o caixa honrou
+ * @property {number} promisedCost quanto a promessa de emenda custaria
+ * @property {number} paidCost quanto o caixa honrou de emenda
+ * @property {number} allocatedTotal quanto o caixa honrou de alocacao
  * @property {Record<string, number>} promised
  * @property {Record<string, number>} paid
- * @property {Tally | null} tally
+ * @property {Record<string, number>} asked bilhoes pedidos por area
+ * @property {Record<string, number>} allocated bilhoes que chegaram, por area
+ * @property {Tally | null} tally nulo quando nao houve votacao — decreto ou mes parado
  * @property {Record<string, number>} loyalty o humor depois do mes
  */
 
@@ -95,12 +103,25 @@ function clamp(value, min, max) {
 }
 
 /**
- * A posicao com que o orcamento entra no mes.
+ * A posicao com que o orcamento entra no mes, ja com a capacidade do Estado
+ * pesando nela.
+ *
+ * A PRESSAO VEM DO HISTORICO QUE CHEGOU, e nao do mes que esta sendo resolvido.
+ * A ordem nao e detalhe: se a alocacao deste mes ja melhorasse a arrecadacao
+ * deste mes, o jogador financiaria a alocacao com a receita que ela mesma vai
+ * gerar — dinheiro nascendo de si proprio. O atraso de cada area e o que impede
+ * isso, e ele so vale se a leitura for feita antes.
  *
  * @param {GameState} state
  * @param {typeof CATALOG} catalog
  */
 function positionOf(state, catalog) {
+  const pressure = pressureOf({
+    areas: catalog.areas,
+    history: state.capacity.history,
+    neutral: NEUTRAL,
+  });
+
   return {
     gdp: state.fiscal.gdp,
     mandatory: state.fiscal.mandatory,
@@ -108,6 +129,8 @@ function positionOf(state, catalog) {
     anchorExpense: state.fiscal.anchorExpense,
     debt: state.fiscal.debt,
     parameters: catalog.fiscal,
+    revenueFactor: pressure.revenue,
+    mandatoryFactor: pressure.mandatory,
   };
 }
 
@@ -125,7 +148,7 @@ function positionOf(state, catalog) {
  * @returns {number}
  */
 export function discretionaryRoom(state, catalog = CATALOG) {
-  return step({ ...positionOf(state, catalog), spent: 0 }).allowance / MONTHS_PER_YEAR;
+  return budgetStep({ ...positionOf(state, catalog), spent: 0 }).allowance / MONTHS_PER_YEAR;
 }
 
 /**
@@ -159,7 +182,7 @@ export function costOf(funding, parties, seatPrice) {
  */
 export function playMonth(state, orders = {}, options = {}) {
   const catalog = options.catalog ?? CATALOG;
-  const { parties, bills, fiscal } = catalog;
+  const { areas, parties, bills, fiscal } = catalog;
   const gdpGrowth = options.gdpGrowth ?? 0;
 
   /* A promessa, normalizada. Bancada que o jogador nao citou prometeu zero, e
@@ -172,6 +195,15 @@ export function playMonth(state, orders = {}, options = {}) {
     promised[party.id] = clamp(orders.funding?.[party.id] ?? 0, 0, 1);
   }
 
+  /* A alocacao pedida, em bilhoes e nao em fracao: area nao tem "verba cheia". */
+  /** @type {Record<string, number>} */
+  const asked = {};
+  let askedTotal = 0;
+  for (const area of areas) {
+    asked[area.id] = Math.max(0, orders.allocation?.[area.id] ?? 0);
+    askedTotal += asked[area.id] ?? 0;
+  }
+
   const position = positionOf(state, catalog);
 
   /* 1 — QUANTO CABE. O empenho ainda e zero porque e justamente isto que decide
@@ -179,47 +211,82 @@ export function playMonth(state, orders = {}, options = {}) {
      mensal, e a divisao por doze mora em `discretionaryRoom`. */
   const room = discretionaryRoom(state, catalog);
 
-  /* 2 — QUANTO CUSTA. O preco da cadeira e o cambio entre os dois motores. */
+  /* 2 — QUANTO CUSTA. Emenda e ministerio saem da MESMA bolsa, e essa e a
+     decisao de desenho mais importante desta funcao: se cada um tivesse a sua,
+     comprar o Congresso nao custaria saude, e a escolha central do jogo — a quem
+     pagar — deixaria de existir. O preco da cadeira e o cambio que poe as duas
+     na mesma moeda. */
   const promisedCost = costOf(promised, parties, fiscal.seatPrice);
+  const demand = promisedCost + askedTotal;
 
-  /* 3 — QUANTO O CAIXA HONRA, rateado quando falta. */
-  const ratio = promisedCost <= room ? 1 : room <= 0 ? 0 : room / promisedCost;
+  /* 3 — QUANTO O CAIXA HONRA, rateado quando falta. O corte e o MESMO para
+     emenda e para area: prometer demais ao Congresso encolhe o hospital no
+     mesmo mes, e e assim que o jogador descobre que as duas contas eram uma. */
+  const ratio = demand <= room ? 1 : room <= 0 ? 0 : room / demand;
   /** @type {Record<string, number>} */
   const paid = {};
   for (const party of parties) {
     paid[party.id] = (promised[party.id] ?? 0) * ratio;
   }
+  /** @type {Record<string, number>} */
+  const allocated = {};
+  for (const area of areas) {
+    allocated[area.id] = (asked[area.id] ?? 0) * ratio;
+  }
   const paidCost = promisedCost * ratio;
+  const allocatedTotal = askedTotal * ratio;
 
-  /* 4 — A VOTACAO, com a verba que chegou e nao com a que foi falada. */
+  /* 4 — A VOTACAO, com a verba que chegou e nao com a que foi falada, e contra
+     o quorum DO INSTRUMENTO: 257 para lei, 308 para emenda. Decreto nao vota. */
   const bill = orders.billId ? (bills.find(item => item.id === orders.billId) ?? null) : null;
-  const tally = bill
-    ? vote({
-        bill,
-        parties,
-        funding: paid,
-        loyalty: state.loyalty,
-        stream: state.streams.congress,
-        majority: SIMPLE_MAJORITY,
-      })
-    : null;
+  const decreed = bill?.instrument === "decree";
+  const tally =
+    bill && !decreed
+      ? vote({
+          bill,
+          parties,
+          funding: paid,
+          loyalty: state.loyalty,
+          stream: state.streams.congress,
+          majority: quorumOf(bill),
+        })
+      : null;
 
   /* 5 — O QUE SOBROU NA BASE. */
   const loyalty = settle({ parties, loyalty: state.loyalty, promised, paid });
 
-  /* 6 — O ORCAMENTO FECHA com o que de fato saiu. */
-  const budget = step({ ...position, spent: paidCost });
+  /* 6 — A CAPACIDADE DO ESTADO. Decreto vale sem votacao; lei e emenda so movem
+     o indice se tiverem passado. */
+  const enacted = decreed || tally?.passed === true;
+  const capacity = capacityStep({
+    areas,
+    index: state.capacity.index,
+    history: state.capacity.history,
+    allocation: allocated,
+    impacts: enacted && bill ? { [bill.area]: bill.impact } : {},
+    neutral: NEUTRAL,
+    capacityTarget: CAPACITY_TARGET,
+  });
+
+  /* 7 — O ORCAMENTO FECHA com tudo o que de fato saiu do discricionario. */
+  const budget = budgetStep({ ...position, spent: paidCost + allocatedTotal });
 
   return {
     state: reduce(state, {
       type: "monthResolved",
       loyalty,
-      fiscal: nextPosition(state, budget, tally, bill, gdpGrowth),
+      fiscal: nextPosition(state, budget, enacted, bill, gdpGrowth),
+      capacity: { index: capacity.index, history: capacity.history },
       stream: tally?.stream ?? state.streams.congress,
     }),
     report: {
       month: state.month,
       bill,
+      enacted,
+      capacity,
+      asked,
+      allocated,
+      allocatedTotal,
       budget,
       room,
       promisedCost,
@@ -251,24 +318,30 @@ export function playMonth(state, orders = {}, options = {}) {
  *
  * @param {GameState} state
  * @param {BudgetOutput} budget
- * @param {Tally | null} tally
+ * @param {boolean} enacted
  * @param {Bill | null} bill
  * @param {number} gdpGrowth
  * @returns {import("../state/state.mjs").Fiscal}
  */
-function nextPosition(state, budget, tally, bill, gdpGrowth) {
-  /* Pauta aprovada muda a despesa obrigatoria PARA SEMPRE, e e por isso que ela
-     e a decisao mais pesada do jogo: o custo politico se paga uma vez e o efeito
-     fiscal fica nos 48 meses. O sinal segue o catalogo — positivo poupa. */
-  const relief = tally?.passed && bill ? bill.fiscalImpact : 0;
-  const mandatory = Math.max(0, budget.mandatory - relief);
+function nextPosition(state, budget, enacted, bill, gdpGrowth) {
+  /* Acao que virou realidade muda a despesa obrigatoria PARA SEMPRE, e e por
+     isso que ela e a decisao mais pesada do jogo: o custo politico se paga uma
+     vez e o efeito fiscal fica nos 48 meses. O sinal segue o catalogo — positivo
+     poupa. Decreto conta aqui igual a lei: o que separa os dois e o rito, e nao
+     a consequencia. */
+  const relief = enacted && bill ? bill.fiscalImpact : 0;
+
+  /* A BASE, e nao o valor mostrado. O fator de capacidade e leitura do mes e nao
+     mudanca de estado — guardar o valor multiplicado faria o fator incidir sobre
+     si mesmo todo mes. Ver o comentario em `src/domain/budget/`. */
+  const mandatory = Math.max(0, budget.mandatoryBase - relief);
 
   const closesYear = (state.month + 1) % MONTHS_PER_YEAR === 0;
 
   return {
     gdp: state.fiscal.gdp * (1 + gdpGrowth) ** (1 / MONTHS_PER_YEAR),
     mandatory,
-    anchorRevenue: closesYear ? budget.revenue : state.fiscal.anchorRevenue,
+    anchorRevenue: closesYear ? budget.revenueBase : state.fiscal.anchorRevenue,
     anchorExpense: closesYear ? budget.ceiling : state.fiscal.anchorExpense,
     debt: budget.debt,
   };

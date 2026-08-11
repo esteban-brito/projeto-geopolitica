@@ -22,6 +22,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
+import { AREAS } from "../../src/data/areas.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
 import { SCHEMA_VERSION, createState, monthLabel, reduce } from "../../src/state/state.mjs";
 
@@ -71,6 +72,24 @@ const anyFiscal = fc.record({
   debt: fc.double({ min: 0, max: 60000, noNaN: true }),
 });
 
+/* A CAPACIDADE em qualquer ponto do percurso, incluindo o historico pela metade:
+   uma area de atraso longo passa dois anos com o buffer incompleto, e o reducer
+   nao pode ter opiniao sobre isso. */
+const anyCapacity = fc.record({
+  index: fc
+    .array(fc.double({ min: 0, max: 100, noNaN: true }), {
+      minLength: AREAS.length,
+      maxLength: AREAS.length,
+    })
+    .map(values => Object.fromEntries(AREAS.map((area, i) => [area.id, values[i] ?? 0]))),
+  history: fc
+    .array(fc.array(fc.double({ min: 0, max: 100, noNaN: true }), { maxLength: 25 }), {
+      minLength: AREAS.length,
+      maxLength: AREAS.length,
+    })
+    .map(values => Object.fromEntries(AREAS.map((area, i) => [area.id, values[i] ?? []]))),
+});
+
 const anyState = fc.record({
   schemaVersion: fc.constant(SCHEMA_VERSION),
   seed: fc.integer({ min: 0, max: 4294967295 }),
@@ -80,6 +99,7 @@ const anyState = fc.record({
   situation: fc.constantFrom("crisis", "stable", "growth"),
   loyalty: anyLoyalty,
   fiscal: anyFiscal,
+  capacity: anyCapacity,
   streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 
@@ -189,6 +209,7 @@ function resolutionOf(state) {
     type: "monthResolved",
     loyalty: state.loyalty,
     fiscal: state.fiscal,
+    capacity: state.capacity,
     stream: state.streams.congress,
   };
 }

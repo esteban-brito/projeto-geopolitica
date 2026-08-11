@@ -17,6 +17,7 @@
    exatamente o defeito que isto existe para impedir. */
 
 import { CATALOG } from "../data/catalog.mjs";
+import { opening } from "../domain/capacity/index.mjs";
 import { streamFrom } from "./random.mjs";
 
 /**
@@ -40,6 +41,10 @@ import { streamFrom } from "./random.mjs";
  * @property {number} anchorExpense - despesa total do exercicio anterior
  * @property {number} debt - divida bruta
  *
+ * @typedef {object} Capacity
+ * @property {Record<string, number>} index - o indice corrente de cada area
+ * @property {Record<string, number[]>} history - o passado que o atraso consome
+ *
  * @typedef {object} GameState
  * @property {number} schemaVersion - versao do formato do save
  * @property {number} seed - a semente da partida; com ela e as acoes, tudo se refaz
@@ -48,6 +53,7 @@ import { streamFrom } from "./random.mjs";
  * @property {Situation} situation
  * @property {Record<string, number>} loyalty - o humor de cada bancada, de 0 a 100
  * @property {Fiscal} fiscal - a posicao orcamentaria que atravessa os meses
+ * @property {Capacity} capacity - a capacidade do Estado de entregar, por area
  * @property {Streams} streams
  */
 
@@ -59,8 +65,13 @@ import { streamFrom } from "./random.mjs";
    versao 2 nao sabe quanto o governo deve nem quem ainda esta com ele — e o
    sintoma seria pior que um erro: a partida abriria com a base zerada e o
    Congresso inteiro em ruptura, que e um estado de jogo valido e portanto
-   indistinguivel de um defeito. */
-export const SCHEMA_VERSION = 3;
+   indistinguivel de um defeito.
+   SUBIU PARA 4 quando a capacidade do Estado entrou. Um save da 3 nao tem
+   indice de area nenhum, e o mesmo argumento vale com mais forca: abri-lo com
+   zeros daria um pais com saude, educacao e seguranca no chao, que e uma
+   partida dificil e valida — e portanto impossivel de distinguir de um save
+   corrompido. */
+export const SCHEMA_VERSION = 4;
 
 /* O HUMOR DE ABERTURA da base. Uniforme de proposito nesta fase: uma coalizao
    recem-formada por rateio de ministerio nao tem historia com o governo, e
@@ -108,7 +119,7 @@ function deepFreeze(value) {
  * @returns {GameState}
  */
 export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
-  const { fiscal, parties } = catalog;
+  const { areas, fiscal, parties } = catalog;
   return deepFreeze({
     schemaVersion: SCHEMA_VERSION,
     seed,
@@ -129,6 +140,13 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
       anchorExpense: fiscal.initialMandatory + fiscal.initialDiscretionary,
       debt: fiscal.initialGdp * fiscal.initialDebtRatio,
     },
+    /* O HISTORICO NASCE VAZIO, e nao preenchido com o indice inicial repetido.
+       A diferenca aparece no primeiro mes de uma area com atraso: com o
+       historico vazio, o motor devolve o indice de abertura como valor efetivo,
+       que e a leitura certa — a capacidade herdada ja estava em vigor antes da
+       posse. Preenchido a mao, seria a mesma coisa com mais bytes no save e uma
+       chance a mais de divergir do motor. */
+    capacity: opening(areas),
     /* UM FLUXO POR MOTOR QUE SORTEIA, e os dois derivados do NOME. Fluxo unico
        compartilhado faria um evento a mais deslocar o indice e mudar o
        resultado de uma votacao sem relacao nenhuma com ele — e ai calibrar a
@@ -152,6 +170,7 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
  *   | { type: "monthResolved",
  *       loyalty: Record<string, number>,
  *       fiscal: Fiscal,
+ *       capacity: Capacity,
  *       stream: Stream }} Action
  */
 
@@ -196,6 +215,7 @@ export function reduce(state, action) {
         month: state.month + 1,
         loyalty: action.loyalty,
         fiscal: action.fiscal,
+        capacity: action.capacity,
         streams: { ...state.streams, congress: action.stream },
       });
     }
