@@ -61,8 +61,15 @@ export const AREA_SCHEMA = {
   decay: { kind: "number", min: 0, max: 5 },
   yield: { kind: "number", min: 0, max: 5 },
   feeds: { kind: "text" },
+  force: { kind: "number", min: -10, max: 10 },
   lag: { kind: "number", min: 0, max: 48 },
 };
+
+/* O PONTO NEUTRO. Acima dele o indice ajuda, abaixo ele cobra — e nao existe
+   area que "so ajuda". Fixo em 50 e nao por area de proposito: se cada uma
+   tivesse o seu, comparar dois indices na faixa da Mesa deixaria de significar
+   coisa alguma, e a faixa e justamente para comparar. */
+export const NEUTRAL = 50;
 
 /**
  * @typedef {object} Area
@@ -73,8 +80,24 @@ export const AREA_SCHEMA = {
  * @property {number} decay - quanto o indice cai por mes sem alocacao nenhuma
  * @property {number} yield - quanto o indice sobe por bilhao alocado no mes
  * @property {string} feeds - o canal de realimentacao; um de `CHANNELS`
+ * @property {number} force - com que forca o indice age no canal, COM SINAL
  * @property {number} lag - meses ate o efeito chegar ao canal
  */
+
+/* O SINAL DE `force` CARREGA A DIRECAO, e sem ele o molde nao fecharia. Duas
+   areas do mesmo canal empurram para lados opostos, e isso nao e inconsistencia
+   — e o mundo:
+
+     SAUDE e SEGURANCA no canal `mandatory` tem forca NEGATIVA: servico bom
+     REDUZ a obrigatoria, porque fila vira judicializacao e desordem vira
+     presidio. Abandonar cobra;
+     PREVIDENCIA no MESMO canal tem forca POSITIVA: cobertura boa AUMENTA a
+     obrigatoria, porque beneficio pago e despesa. Cuidar cobra.
+
+   A alternativa era um campo `direction` separado, que seria a mesma
+   informacao em dois lugares. A unidade de `force` depende do canal, e isso
+   esta declarado: fracao da receita em `revenue`, fracao da obrigatoria em
+   `mandatory`, e PONTOS DE INDICE POR MES em `capacity`. */
 
 /* A CALIBRAGEM E PRIMEIRO CHUTE e esta declarada como tal, igual a de ECLUSA.
    O que NAO e chute e a RAZAO entre os numeros, e ela carrega o desenho:
@@ -99,6 +122,7 @@ export const AREAS = [
     decay: 0.4,
     yield: 0.8,
     feeds: "revenue",
+    force: 0.25,
     lag: 0,
   },
   {
@@ -109,6 +133,7 @@ export const AREAS = [
     decay: 0.5,
     yield: 0.6,
     feeds: "revenue",
+    force: 0.2,
     /* Obra nao vira PIB no mes em que o cheque e assinado. Seis meses e o
        intervalo curto do catalogo, e existe para a Producao nao ser um botao de
        receita instantanea — se fosse, ela dominaria a Fazenda. */
@@ -122,6 +147,7 @@ export const AREAS = [
     decay: 0.3,
     yield: 0.5,
     feeds: "mandatory",
+    force: 0.3,
     lag: 0,
   },
   {
@@ -132,6 +158,7 @@ export const AREAS = [
     decay: 0.6,
     yield: 0.7,
     feeds: "mandatory",
+    force: -0.18,
     lag: 3,
   },
   {
@@ -142,6 +169,7 @@ export const AREAS = [
     decay: 0.3,
     yield: 0.4,
     feeds: "capacity",
+    force: 6,
     /* DOIS ANOS. O numero e o desenho: um mandato tem 48 meses, entao investir
        em educacao no segundo ano so paga no quarto, e investir no terceiro nao
        paga nunca — para quem investiu. */
@@ -155,6 +183,7 @@ export const AREAS = [
     decay: 0.7,
     yield: 0.9,
     feeds: "mandatory",
+    force: -0.14,
     lag: 3,
   },
 ];

@@ -49,6 +49,7 @@ aleatoriedade, cada um com fluxo próprio derivado da seed da partida.
 | ------------ | ------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- |
 | **TEMPORAL** | `src/domain/events/`      | estado do turno, catálogo, fluxo de RNG                    | evento disparado, com efeitos e duração                 |
 | **ECLUSA**   | `src/domain/congress/`    | bancadas, proposta, moeda oferecida, histórico de barganha | votos por bancada, resultado, custo pago, ressentimento |
+| **MALHA**    | `src/domain/capacity/`    | índices por área, alocação do mês, impacto das aprovações  | índices novos, histórico, pressão em receita e despesa  |
 | **CASCATA**  | `src/domain/propagation/` | efeitos vigentes com defasagem, estado atual               | delta do mês por indicador                              |
 | **CORRENTE** | `src/domain/economy/`     | estado macro, deltas, política monetária                   | PIB, inflação, juros, câmbio, desemprego                |
 | **LASTRO**   | `src/domain/budget/`      | receita e despesa, obrigatório × discricionário            | saldo, dívida/PIB, espaço discricionário                |

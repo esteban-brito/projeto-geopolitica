@@ -27,6 +27,7 @@ o resultado de uma votação sem relação com ele.
 ```
 TEMPORAL  ── o mês traz um choque?                          contrato
 ECLUSA    ── o que estava na pauta é votado, e a que preço  IMPLEMENTADO
+MALHA     ── a capacidade do Estado de entregar             IMPLEMENTADO
 CASCATA   ── efeitos vigentes viram deltas, com defasagem   contrato
 CORRENTE  ── o passo macroeconômico do mês                  contrato
 LASTRO    ── receita, despesa, saldo, dívida                IMPLEMENTADO

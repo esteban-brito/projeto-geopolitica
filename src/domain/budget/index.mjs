@@ -53,10 +53,14 @@ const MONTHS_PER_YEAR = 12;
  * @property {number} debt - divida bruta
  * @property {number} spent - discricionario efetivamente empenhado NO MES
  * @property {FiscalParameters} parameters
+ * @property {number} [revenueFactor] - o quanto a maquina de arrecadar rende hoje
+ * @property {number} [mandatoryFactor] - o quanto o servico publico encarece a obrigatoria
  *
  * @typedef {object} BudgetOutput
- * @property {number} revenue - receita anualizada
- * @property {number} mandatory - obrigatoria anualizada, ja crescida deste mes
+ * @property {number} revenue - receita anualizada, ja com o fator
+ * @property {number} mandatory - obrigatoria anualizada, ja crescida e ja com o fator
+ * @property {number} revenueBase - receita SEM o fator
+ * @property {number} mandatoryBase - obrigatoria crescida SEM o fator
  * @property {number} cash - receita menos obrigatoria: quanto EXISTE
  * @property {number} ceiling - o teto de despesa que o arcabouco permite
  * @property {number} allowance - quanto se pode empenhar: o MENOR entre caixa e regra
@@ -122,8 +126,33 @@ export function ceilingOf(anchorExpense, anchorRevenue, revenue, share) {
 export function step(input) {
   const { parameters } = input;
 
-  const revenue = revenueOf(input.gdp, parameters.taxLoad);
-  const mandatory = growMandatory(input.mandatory, parameters.mandatoryGrowth);
+  /* OS DOIS FATORES ENTRAM POR PARAMETRO e valem 1 quando ninguem os passa.
+     Eles sao a porta por onde a capacidade do Estado chega ao orcamento:
+     arrecadacao ruim nao muda a aliquota nem o PIB, muda quanto do que e devido
+     efetivamente entra; e servico publico ruim nao muda a regra da despesa
+     obrigatoria, muda quanto ela custa na pratica — fila vira judicializacao,
+     desordem vira presidio.
+
+     PADRAO 1 E DELIBERADO. Este motor foi escrito antes de existir motor de
+     capacidade, e continua valendo sozinho: quem nao passa fator nenhum tem o
+     orcamento que sempre teve, e a suite antiga continua descrevendo a verdade. */
+  /* ⚠ A BASE E DEVOLVIDA SEPARADA, e isso nao e conveniencia — e a correcao de
+     um defeito que a simulacao pegou com a divida em 1066% do PIB.
+
+     O fator e uma LEITURA do mes, e nao uma mudanca de estado. Quem guardou
+     `mandatory` de volta na posicao do mes seguinte estava guardando o valor JA
+     MULTIPLICADO, e no mes seguinte o fator incidia outra vez sobre ele. Doze
+     meses de 6% viram 100%; quarenta e oito viram outro planeta. O sintoma
+     aparecia longe da causa: contingenciamento permanente a partir do quarto mes,
+     como se a regra fiscal estivesse errada.
+
+     Quem avanca o estado usa `mandatoryBase` e `revenueBase`. Quem mostra numero
+     na tela usa os de cima. */
+  const revenueBase = revenueOf(input.gdp, parameters.taxLoad);
+  const mandatoryBase = growMandatory(input.mandatory, parameters.mandatoryGrowth);
+
+  const revenue = revenueBase * (input.revenueFactor ?? 1);
+  const mandatory = mandatoryBase * (input.mandatoryFactor ?? 1);
 
   const cash = revenue - mandatory;
   const ceiling = ceilingOf(
@@ -151,6 +180,8 @@ export function step(input) {
   return {
     revenue,
     mandatory,
+    revenueBase,
+    mandatoryBase,
     cash,
     ceiling,
     allowance,
