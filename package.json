@@ -9,6 +9,7 @@
   },
   "scripts": {
     "serve": "node tools/serve-static.mjs",
+    "simulate": "node tools/simulate.mjs",
     "check": "node tests/run.mjs",
     "types": "tsc -p jsconfig.json",
     "lint": "eslint .",
