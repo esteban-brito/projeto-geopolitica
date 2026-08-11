@@ -39,6 +39,46 @@ test("nenhuma bancada sozinha tem maioria simples", () => {
   }
 });
 
+test("A VENALIDADE POR EIXO FAZ ALGUMA COISA: ao menos um bloco e assimetrico", () => {
+  /* Como a propriedade da armadilha em LASTRO, esta exige que algo POSSA
+     acontecer. Dois numeros iguais em toda a tabela devolveriam o escalar
+     antigo por outro nome, e a distincao morreria sem nenhuma prova ficar
+     vermelha — que e a pior forma de perder uma decisao de modelagem. */
+  const asymmetric = PARTIES.filter(
+    party => Math.abs(party.venalityEconomic - party.venalityCultural) >= 0.2,
+  );
+  assert.ok(
+    asymmetric.length > 0,
+    "nenhum bloco cobra preco diferente por assunto — a divisao por eixo virou enfeite",
+  );
+});
+
+test("o preco depende do assunto, e em sentidos opostos", () => {
+  /* O caso que motivou a mudanca: a bancada liberal nao entrega a pauta
+     economica e negocia costumes; o centrao faz o contrario. Se os dois
+     andassem para o mesmo lado, um eixo so bastaria. */
+  const liberal = PARTIES.find(party => party.id === "direita-liberal");
+  const centrao = PARTIES.find(party => party.id === "centrao");
+  assert.ok(liberal && centrao);
+  assert.ok(
+    liberal.venalityCultural > liberal.venalityEconomic,
+    "a direita liberal devia negociar costumes e nao economia",
+  );
+  assert.ok(
+    centrao.venalityEconomic > centrao.venalityCultural,
+    "o centrao devia ceder mais em economia que em costumes",
+  );
+});
+
+test("nenhum bloco esta inteiramente a venda", () => {
+  /* Venalidade 1 significa que dinheiro anula a ideologia por completo, e ai a
+     bancada deixa de ter posicao — vira uma funcao do orcamento. */
+  for (const party of PARTIES) {
+    assert.ok(party.venalityEconomic < 1, `${party.id} se vende por inteiro em economia`);
+    assert.ok(party.venalityCultural < 1, `${party.id} se vende por inteiro em costumes`);
+  }
+});
+
 test("o catalogo expoe as bancadas e os parametros fiscais", () => {
   assert.equal(CATALOG.parties, PARTIES);
   assert.ok(CATALOG.fiscal.taxLoad > 0);
@@ -50,7 +90,14 @@ test("o catalogo expoe as bancadas e os parametros fiscais", () => {
    defeito e exige acusacao, que e a mesma exigencia das guardas. */
 
 test("PROVA SINTETICA: campo faltando e acusado", () => {
-  const broken = { id: "centrao", label: "Centrão", economic: 70, cultural: 35, venality: 0.95 };
+  /* Um registro real MENOS um campo: assim a prova mede a falta e nada mais.
+     Escrito por filtro e nao por desestruturacao com resto, que deixaria uma
+     variavel morta so para dar nome ao campo descartado. */
+  const complete = PARTIES[0];
+  assert.ok(complete);
+  const broken = Object.fromEntries(
+    Object.entries(complete).filter(([field]) => field !== "seats"),
+  );
   const found = violations(PARTY_SCHEMA, broken, "teste");
   assert.equal(found.length, 1);
   assert.match(found[0] ?? "", /seats/);
@@ -80,7 +127,7 @@ test("todo numero fora da faixa declarada e acusado", () => {
   fc.assert(
     fc.property(
       fc.double({ min: 1.0001, max: 1000, noNaN: true }),
-      fc.constantFrom("venality", "economic", "cultural"),
+      fc.constantFrom("venalityEconomic", "venalityCultural", "economic", "cultural"),
       (excess, field) => {
         const rule = PARTY_SCHEMA[field];
         assert.ok(rule);
@@ -95,7 +142,7 @@ test("todo numero fora da faixa declarada e acusado", () => {
 test("o validador nao conserta nem preenche, so relata", () => {
   /* Validador que conserta esconde o erro em vez de mostrar. A prova de que ele
      nao mexe e o registro sair identico ao que entrou. */
-  const record = { ...(PARTIES[0] ?? {}), venality: 9 };
+  const record = { ...(PARTIES[0] ?? {}), venalityEconomic: 9 };
   const before = JSON.stringify(record);
   violations(PARTY_SCHEMA, record, "teste");
   assert.equal(JSON.stringify(record), before);
