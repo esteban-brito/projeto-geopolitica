@@ -102,6 +102,13 @@ const OBSTRUCTION_TOLL = 0.6;
 const RUPTURE = 20;
 const RUPTURE_TOLL = 0.15;
 
+/* OS LIMIARES SAO EXPORTADOS porque a tela precisa dizer em que estado a bancada
+   esta, e ela nao pode redigitar os numeros: dois lugares com o mesmo limiar e
+   um lugar que vai divergir na primeira recalibragem, e o sintoma seria a
+   interface chamando de "obstruindo" uma bancada que o motor ja trata como
+   rompida. O motor e a fonte; a tela pergunta. */
+export const THRESHOLDS = { obstruction: OBSTRUCTION, rupture: RUPTURE };
+
 /* ── O ASSENTAMENTO DA LEALDADE, mes a mes ──────────────────────────────────
    Tres forcas, e a terceira e a que liga este motor ao orcamento.
 
@@ -267,6 +274,39 @@ export function vote({ bill, parties, funding, loyalty, stream, majority }) {
     passed: votes >= majority,
     stream: current,
   };
+}
+
+/**
+ * A LARGURA DA INCERTEZA, em cadeiras. Deterministica: ela descreve o sorteio
+ * sem sacar dele.
+ *
+ * Ela existe para a tela poder dizer `241 ± 14` em vez de `241`. A diferenca nao
+ * e cosmetica — `241` afirma um placar que o motor nao promete, e o jogador que
+ * confia nele aprende a desconfiar da tela na primeira vez que perder por tres
+ * votos. Com a banda, a tela diz a verdade: a tendencia e conhecida, o dia nao.
+ *
+ * ⚠ NAO E O PIOR CASO. Somar o desvio maximo de cada bancada daria a banda de
+ * "as quatro traem juntas, todas no limite", que num catalogo de 513 cadeiras
+ * passa de 45 e faz a previsao parecer inutil. O que se compoe aqui e o DESVIO
+ * PADRAO: cada bancada saca do proprio fluxo, entao os erros sao independentes e
+ * se somam em quadratura. Para um sorteio uniforme em [-s, s], o desvio e
+ * s/raiz(3).
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty
+ * @returns {number} cadeiras, arredondado
+ */
+export function dispersion({ parties, loyalty }) {
+  let variance = 0;
+
+  for (const party of parties) {
+    const faith = clamp01((loyalty[party.id] ?? 0) / 100);
+    const reach = party.seats * DISSIDENCE * (2 - faith);
+    variance += (reach * reach) / 3;
+  }
+
+  return Math.round(Math.sqrt(variance));
 }
 
 /**

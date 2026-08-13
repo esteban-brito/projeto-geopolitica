@@ -54,6 +54,7 @@ import { streamFrom } from "./random.mjs";
  * @property {Record<string, number>} loyalty - o humor de cada bancada, de 0 a 100
  * @property {Fiscal} fiscal - a posicao orcamentaria que atravessa os meses
  * @property {Capacity} capacity - a capacidade do Estado de entregar, por area
+ * @property {ReadonlyArray<string>} enacted - o que ja virou realidade, na ordem
  * @property {Streams} streams
  */
 
@@ -70,8 +71,12 @@ import { streamFrom } from "./random.mjs";
    indice de area nenhum, e o mesmo argumento vale com mais forca: abri-lo com
    zeros daria um pais com saude, educacao e seguranca no chao, que e uma
    partida dificil e valida — e portanto impossivel de distinguir de um save
-   corrompido. */
-export const SCHEMA_VERSION = 4;
+   corrompido.
+   SUBIU PARA 5 quando a lista do que ja esta em vigor entrou. Sem ela o jogo nao
+   sabe que uma lei ja passou, e o sintoma seria o jogador aprovando a mesma
+   reforma seis vezes e colhendo o efeito fiscal seis vezes — um exploit que a
+   tela nem precisaria esconder, porque ela nao teria como saber. */
+export const SCHEMA_VERSION = 5;
 
 /* O HUMOR DE ABERTURA da base. Uniforme de proposito nesta fase: uma coalizao
    recem-formada por rateio de ministerio nao tem historia com o governo, e
@@ -147,6 +152,11 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
        posse. Preenchido a mao, seria a mesma coisa com mais bytes no save e uma
        chance a mais de divergir do motor. */
     capacity: opening(areas),
+    /* O que o governo herdou de leis em vigor NAO entra aqui: a lista e do que
+       ESTE mandato fez. O pais herdado ja esta nos indices de abertura e na
+       despesa obrigatoria inicial — registrar a legislacao anterior seria contar
+       duas vezes a mesma coisa. */
+    enacted: [],
     /* UM FLUXO POR MOTOR QUE SORTEIA, e os dois derivados do NOME. Fluxo unico
        compartilhado faria um evento a mais deslocar o indice e mudar o
        resultado de uma votacao sem relacao nenhuma com ele — e ai calibrar a
@@ -171,6 +181,7 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
  *       loyalty: Record<string, number>,
  *       fiscal: Fiscal,
  *       capacity: Capacity,
+ *       enacted: ReadonlyArray<string>,
  *       stream: Stream }} Action
  */
 
@@ -216,6 +227,7 @@ export function reduce(state, action) {
         loyalty: action.loyalty,
         fiscal: action.fiscal,
         capacity: action.capacity,
+        enacted: action.enacted,
         streams: { ...state.streams, congress: action.stream },
       });
     }

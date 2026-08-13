@@ -89,6 +89,7 @@ export function deserialize(text) {
     "loyalty",
     "fiscal",
     "capacity",
+    "enacted",
     "streams",
   ];
 

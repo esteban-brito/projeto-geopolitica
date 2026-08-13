@@ -35,9 +35,6 @@
    promete menos as outras no mes seguinte.
 
    ── O QUE ESTA DECLARADO COMO SIMPLIFICACAO ──────────────────────────────────
-   · O QUORUM e sempre maioria simples. Emenda constitucional exige tres quintos,
-     e o catalogo de pautas ainda nao carrega o tipo do projeto. Enquanto nao
-     carregar, a PEC do catalogo passa mais barato do que deveria;
    · O IMPACTO FISCAL de uma pauta aprovada cai na despesa OBRIGATORIA, inclusive
      quando o texto e de receita. E a unica linha permanente que o orcamento
      carrega hoje — a receita e funcao do PIB e de mais nada. O sinal e o
@@ -168,22 +165,28 @@ export function costOf(funding, parties, seatPrice) {
 }
 
 /**
- * Resolve um mes.
+ * O RATEIO DO MES — o que foi prometido, e o que o caixa de fato honra.
  *
- * E funcao PURA: mesmo estado, mesmas ordens e mesmo catalogo devolvem
- * exatamente o mesmo par. O unico sorteio do turno sai do fluxo que vive dentro
- * do estado, e ele volta avancado no estado devolvido — que e o que faz um
- * mandato inteiro ser reproduzivel a partir da semente e da lista de ordens.
+ * ⚠ ELA E EXPORTADA PARA A TELA, e a razao e um defeito visto na propria tela.
+ * A Mesa previa o placar com a verba PROMETIDA enquanto o turno vota com a
+ * PAGA. Enquanto a promessa cabia no mes as duas eram a mesma coisa e nada
+ * aparecia; no instante em que o jogador prometia demais — que e justamente o
+ * momento em que ele precisa da previsao — a tela anunciava um placar que o
+ * turno nao ia produzir, e podia anunciar "acima do quorum" numa votacao que o
+ * corte derrubava. Refazer o rateio por fora seria a mesma conta em dois
+ * lugares, e conta refeita por fora e conta que diverge.
+ *
+ * O corte e o MESMO para emenda e para area: prometer demais ao Congresso
+ * encolhe o hospital no mesmo mes, e e assim que o jogador descobre que as duas
+ * contas eram uma. Ele tambem e PROPORCIONAL — o governo nao escolhe quem trair
+ * quando o teto fecha.
  *
  * @param {GameState} state
  * @param {Orders} [orders]
- * @param {Options} [options]
- * @returns {{ state: GameState, report: Report }}
+ * @param {typeof CATALOG} [catalog]
  */
-export function playMonth(state, orders = {}, options = {}) {
-  const catalog = options.catalog ?? CATALOG;
-  const { areas, parties, bills, fiscal } = catalog;
-  const gdpGrowth = options.gdpGrowth ?? 0;
+export function settlement(state, orders = {}, catalog = CATALOG) {
+  const { areas, parties, fiscal } = catalog;
 
   /* A promessa, normalizada. Bancada que o jogador nao citou prometeu zero, e
      valor fora da faixa e cortado em vez de recusado: ordens vem de politica de
@@ -204,25 +207,21 @@ export function playMonth(state, orders = {}, options = {}) {
     askedTotal += asked[area.id] ?? 0;
   }
 
-  const position = positionOf(state, catalog);
-
-  /* 1 — QUANTO CABE. O empenho ainda e zero porque e justamente isto que decide
-     o empenho. `allowance` e anualizado, como toda a regra fiscal; o turno e
+  /* QUANTO CABE. O empenho ainda e zero porque e justamente isto que decide o
+     empenho. `allowance` e anualizado, como toda a regra fiscal; o turno e
      mensal, e a divisao por doze mora em `discretionaryRoom`. */
   const room = discretionaryRoom(state, catalog);
 
-  /* 2 — QUANTO CUSTA. Emenda e ministerio saem da MESMA bolsa, e essa e a
-     decisao de desenho mais importante desta funcao: se cada um tivesse a sua,
-     comprar o Congresso nao custaria saude, e a escolha central do jogo — a quem
-     pagar — deixaria de existir. O preco da cadeira e o cambio que poe as duas
-     na mesma moeda. */
+  /* QUANTO CUSTA. Emenda e ministerio saem da MESMA bolsa, e essa e a decisao de
+     desenho mais importante deste arquivo: se cada um tivesse a sua, comprar o
+     Congresso nao custaria saude, e a escolha central do jogo — a quem pagar —
+     deixaria de existir. O preco da cadeira e o cambio que poe as duas na mesma
+     moeda. */
   const promisedCost = costOf(promised, parties, fiscal.seatPrice);
   const demand = promisedCost + askedTotal;
 
-  /* 3 — QUANTO O CAIXA HONRA, rateado quando falta. O corte e o MESMO para
-     emenda e para area: prometer demais ao Congresso encolhe o hospital no
-     mesmo mes, e e assim que o jogador descobre que as duas contas eram uma. */
   const ratio = demand <= room ? 1 : room <= 0 ? 0 : room / demand;
+
   /** @type {Record<string, number>} */
   const paid = {};
   for (const party of parties) {
@@ -233,12 +232,58 @@ export function playMonth(state, orders = {}, options = {}) {
   for (const area of areas) {
     allocated[area.id] = (asked[area.id] ?? 0) * ratio;
   }
-  const paidCost = promisedCost * ratio;
-  const allocatedTotal = askedTotal * ratio;
+
+  return {
+    promised,
+    asked,
+    room,
+    demand,
+    ratio,
+    paid,
+    allocated,
+    promisedCost,
+    paidCost: promisedCost * ratio,
+    allocatedTotal: askedTotal * ratio,
+  };
+}
+
+/**
+ * Resolve um mes.
+ *
+ * E funcao PURA: mesmo estado, mesmas ordens e mesmo catalogo devolvem
+ * exatamente o mesmo par. O unico sorteio do turno sai do fluxo que vive dentro
+ * do estado, e ele volta avancado no estado devolvido — que e o que faz um
+ * mandato inteiro ser reproduzivel a partir da semente e da lista de ordens.
+ *
+ * @param {GameState} state
+ * @param {Orders} [orders]
+ * @param {Options} [options]
+ * @returns {{ state: GameState, report: Report }}
+ */
+export function playMonth(state, orders = {}, options = {}) {
+  const catalog = options.catalog ?? CATALOG;
+  const { areas, parties, bills } = catalog;
+  const gdpGrowth = options.gdpGrowth ?? 0;
+
+  const position = positionOf(state, catalog);
+
+  /* 1, 2 e 3 — QUANTO CABE, QUANTO CUSTA e QUANTO O CAIXA HONRA. */
+  const { promised, asked, room, paid, allocated, promisedCost, paidCost, allocatedTotal } =
+    settlement(state, orders, catalog);
 
   /* 4 — A VOTACAO, com a verba que chegou e nao com a que foi falada, e contra
      o quorum DO INSTRUMENTO: 257 para lei, 308 para emenda. Decreto nao vota. */
-  const bill = orders.billId ? (bills.find(item => item.id === orders.billId) ?? null) : null;
+  const ordered = orders.billId ? (bills.find(item => item.id === orders.billId) ?? null) : null;
+
+  /* O QUE JA ESTA EM VIGOR NAO VOLTA A PAUTA, e a guarda tem de ser AQUI.
+     A primeira versao dela vivia na lista do estado, que se recusava a guardar o
+     mesmo id duas vezes — e isso resolvia so o sintoma visivel. O mes continuava
+     votando: a pauta ia a plenario de novo, o impacto no indice da area entrava
+     de novo, e o impacto fiscal era somado a despesa obrigatoria MAIS UMA VEZ.
+     Uma reforma aprovada seis vezes cobrava seis vezes, com a lista mostrando
+     uma linha so — o pior formato possivel, porque nenhuma tela denunciaria.
+     Recusar a ordem inteira e o unico ponto que fecha os tres de uma vez. */
+  const bill = ordered && !state.enacted.includes(ordered.id) ? ordered : null;
   const decreed = bill?.instrument === "decree";
   const tally =
     bill && !decreed
@@ -277,6 +322,12 @@ export function playMonth(state, orders = {}, options = {}) {
       loyalty,
       fiscal: nextPosition(state, budget, enacted, bill, gdpGrowth),
       capacity: { index: capacity.index, history: capacity.history },
+      /* A lista so cresce, e sem repetido — mas a garantia de nao repetir NAO
+         mora aqui: mora na recusa da ordem, la em cima. Uma segunda checagem
+         neste ponto nao acrescentaria seguranca nenhuma e daria a impressao de
+         que a duplicidade e um problema de lista, que foi exatamente o engano
+         que deixou o efeito fiscal dobrando. */
+      enacted: enacted && bill ? [...state.enacted, bill.id] : state.enacted,
       stream: tally?.stream ?? state.streams.congress,
     }),
     report: {

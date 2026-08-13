@@ -13,7 +13,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-import { costOf, discretionaryRoom, playMonth } from "../../src/application/turn.mjs";
+import { costOf, discretionaryRoom, playMonth, settlement } from "../../src/application/turn.mjs";
 import { CATALOG } from "../../src/data/catalog.mjs";
 import { BILLS } from "../../src/data/bills.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
@@ -262,4 +262,104 @@ test("o preco da cadeira traduz verba em bilhoes, e o total fecha", () => {
     full > discretionaryRoom(createState(1)),
     `o plenario inteiro custa ${full.toFixed(1)} e cabe no mes — nao ha o que escolher`,
   );
+});
+
+/* ── O QUE JA VIROU REALIDADE ────────────────────────────────────────────────
+   `state.enacted` e a memoria do mandato: o que este governo fez, na ordem em
+   que fez. Ela existe porque sem ela o jogo nao sabe que uma lei ja passou — e
+   as duas provas abaixo cobram os dois lados dessa frase. */
+
+test("O QUE JA ESTA EM VIGOR NAO VOLTA A PAUTA, e nem cobra duas vezes", () => {
+  const housing = BILLS.find(bill => bill.id === "programa-habitacional");
+  assert.ok(housing && housing.fiscalImpact < 0, "o catalogo perdeu a pauta que CUSTA");
+
+  const orders = { billId: housing.id, funding: everyone(1) };
+  const first = playMonth(createState(13), orders);
+  assert.ok(first.report.tally?.passed, "a pauta escolhida para esta prova nao passou");
+  assert.deepEqual(first.state.enacted, [housing.id]);
+
+  /* A MESMA ORDEM, DE NOVO. A tela nunca oferece isso — a area filtra o que ja
+     esta em vigor —, mas o motor nao pode depender de a tela lembrar. */
+  const again = playMonth(first.state, orders);
+
+  assert.deepEqual(again.state.enacted, [housing.id], "a lei entrou duas vezes na lista");
+  assert.ok(again.report.bill === null, "a pauta ja em vigor voltou ao plenario");
+
+  /* O EFEITO FISCAL E O QUE IMPORTA AQUI, e era ele que dobrava: a lista se
+     recusava a repetir o id e a despesa obrigatoria era somada assim mesmo.
+     A comparacao e contra um mes PARADO partindo do mesmo estado — a obrigatoria
+     cresce sozinha todo mes, e sem esse controle a prova mediria o crescimento
+     vegetativo em vez do impacto. */
+  const idle = playMonth(first.state, { billId: null, funding: everyone(1) });
+  assert.ok(
+    Math.abs(again.state.fiscal.mandatory - idle.state.fiscal.mandatory) < EPSILON,
+    "repautar uma lei em vigor cobrou o impacto fiscal outra vez",
+  );
+
+  /* E o indice da area tambem nao pode subir de novo: o impacto de uma reforma
+     e o degrau de uma vez, e nao um bonus mensal que se renova pedindo. */
+  assert.deepEqual(again.state.capacity.index, idle.state.capacity.index);
+
+  /* Nem o fluxo pode andar: votacao que nao aconteceu nao saca. */
+  assert.equal(again.state.streams.congress.draws, first.state.streams.congress.draws);
+});
+
+test("a lista guarda o que PASSOU, e so isso", () => {
+  /* O fim do foro privilegiado exige lealdade acima da de abertura, entao ele e
+     a pauta que a partida nao aprova no primeiro mes nem com verba cheia. */
+  const state = createState(5);
+  const lost = playMonth(state, { billId: "fim-do-foro-privilegiado", funding: everyone(1) });
+
+  assert.equal(lost.report.tally?.passed, false, "a pauta desta prova passou — recalibrar");
+  assert.deepEqual(lost.state.enacted, [], "uma derrota entrou na lista de vigentes");
+
+  /* E um mes sem pauta nenhuma preserva a lista POR REFERENCIA: o estado nao
+     inventa um array novo a cada mes so para guardar o mesmo conteudo. */
+  const idle = playMonth(lost.state, { billId: null, funding: everyone(0) });
+  assert.equal(idle.state.enacted, lost.state.enacted);
+});
+
+test("A TELA E O TURNO FAZEM A MESMA CONTA: o rateio previsto e o rateio executado", () => {
+  /* `settlement` existe para a Mesa poder mostrar, enquanto o jogador arrasta, o
+     que o mes vai fazer. O valor dela depende inteiramente de ela nao divergir
+     do turno — e divergencia entre previsao e execucao e o tipo de defeito que
+     so aparece no caso extremo, que aqui e justamente o caso interessante: o mes
+     em que a promessa estoura o caixa. */
+  fc.assert(
+    fc.property(anyOrders, fc.integer({ min: 1, max: 40 }), (orders, seed) => {
+      const state = createState(seed);
+      const previewed = settlement(state, orders);
+      const played = playMonth(state, orders);
+
+      assert.equal(played.report.room, previewed.room);
+      assert.deepEqual(played.report.promised, previewed.promised);
+      assert.deepEqual(played.report.paid, previewed.paid);
+      assert.deepEqual(played.report.allocated, previewed.allocated);
+      assert.equal(played.report.promisedCost, previewed.promisedCost);
+      assert.equal(played.report.paidCost, previewed.paidCost);
+      assert.equal(played.report.allocatedTotal, previewed.allocatedTotal);
+    }),
+  );
+});
+
+test("e o corte aparece: promessa que nao cabe entrega MENOS voto do que promete", () => {
+  /* A prova de que a previsao da tela precisa usar o pago. Com o caixa apertado,
+     a mesma promessa vale menos — e uma Mesa que previsse com o prometido
+     anunciaria o placar de cima enquanto o turno produz o de baixo. */
+  const state = createState(9);
+  /* Um quinto para cada bancada cabe no mes de abertura; a verba cheia nao cabe
+     nem no catalogo real, e e por isso que ela nao serve de controle aqui. */
+  const orders = { billId: "abertura-comercial", funding: everyone(0.2), allocation: {} };
+
+  const rich = settlement(state, orders);
+  /* O estado tambem nasce apertado: a obrigatoria de abertura e do catalogo, e
+     um estado normal lido com parametros apertados seria outra coisa. */
+  const poor = settlement(createState(9, SQUEEZED), orders, SQUEEZED);
+
+  assert.equal(rich.ratio, 1, "a promessa modesta deixou de caber — reveja a prova");
+  assert.ok(poor.ratio < 1, "o catalogo apertado tinha de cortar");
+
+  for (const party of PARTIES) {
+    assert.ok((poor.paid[party.id] ?? 0) < (poor.promised[party.id] ?? 0));
+  }
 });

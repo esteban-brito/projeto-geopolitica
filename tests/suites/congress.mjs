@@ -11,7 +11,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-import { vote, whipCount } from "../../src/domain/congress/index.mjs";
+import { dispersion, vote, whipCount } from "../../src/domain/congress/index.mjs";
 import { BILLS, quorumOf } from "../../src/data/bills.mjs";
 import { PARTIES, QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "../../src/data/parties.mjs";
 import { streamFrom } from "../../src/state/random.mjs";
@@ -340,5 +340,88 @@ test("o placar do dia tambem respeita o tamanho das bancadas", () => {
         assert.equal(result.passed, result.votes >= SIMPLE_MAJORITY);
       },
     ),
+  );
+});
+
+/* ── A BANDA ─────────────────────────────────────────────────────────────────
+   `dispersion` e a unica funcao deste motor que descreve o sorteio SEM sacar
+   dele, e e por isso que ela precisa de prova propria: ela e uma afirmacao sobre
+   o comportamento de `vote`, escrita em outro lugar. Duas coisas podem
+   apodrecer sem que nada quebre — a banda deixar de bater com o que o dia
+   produz, e alguem "corrigi-la" para o pior caso. */
+
+test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
+  /* Seiscentas votacoes com semente declarada. Nao ha aleatoriedade nesta prova:
+     `streamFrom` e funcao pura da semente, entao a amostra e sempre a mesma e um
+     dia ruim de sorte nao existe aqui. */
+  const bill = billOf("abertura-comercial");
+
+  for (const level of [20, 50, 70, 95]) {
+    const loyalty = everyone(level);
+    const band = dispersion({ parties: PARTIES, loyalty });
+
+    const drifts = [];
+    for (let seed = 1; seed <= 600; seed++) {
+      const tally = vote({
+        bill,
+        parties: PARTIES,
+        funding: NO_MONEY,
+        loyalty,
+        stream: streamFrom(seed, "congress"),
+        majority: quorumOf(bill),
+      });
+      drifts.push(tally.votes - tally.expected);
+    }
+
+    const mean = drifts.reduce((sum, value) => sum + value, 0) / drifts.length;
+    const sigma = Math.sqrt(
+      drifts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / drifts.length,
+    );
+
+    /* 20% de folga cobre o arredondamento em cadeiras (a banda e inteira, o
+       desvio nao) e o corte da adesao em 0 e 1. E estreita o bastante para
+       acusar uma banda que virasse pior caso, que erraria por quase tres vezes. */
+    assert.ok(
+      Math.abs(sigma - band) <= band * 0.2,
+      `lealdade ${level}: a banda anuncia ${band} e o dia entrega ${sigma.toFixed(2)}`,
+    );
+  }
+});
+
+test("A BANDA NAO E O PIOR CASO: erros independentes somam em QUADRATURA", () => {
+  /* Quatro bancadas iguais, cada uma sacando do proprio fluxo. Somar os desvios
+     maximos daria quatro vezes a banda de uma — a banda de "as quatro traem
+     juntas, todas no limite", que num plenario de 513 cadeiras passa de 45 e faz
+     a previsao parecer inutil. Somando em quadratura, da o DOBRO: raiz de 4. */
+  const one = PARTIES[0];
+  assert.ok(one);
+
+  const clones = [0, 1, 2, 3].map(index => ({ ...one, id: `bancada-${index}` }));
+  const loyalty = Object.fromEntries(clones.map(party => [party.id, 60]));
+
+  const single = dispersion({ parties: [clones[0] ?? one], loyalty });
+  const four = dispersion({ parties: clones, loyalty });
+
+  assert.ok(single > 0, "uma bancada com dissidencia tinha de ter banda");
+  assert.ok(
+    Math.abs(four - 2 * single) <= 1,
+    `quatro bancadas iguais deram ${four} contra ${single} de uma — o esperado e o dobro`,
+  );
+  assert.ok(four < 4 * single, "a banda virou o pior caso: soma linear em vez de quadratura");
+});
+
+test("base insatisfeita e base IMPREVISIVEL: menos lealdade nunca estreita a banda", () => {
+  fc.assert(
+    fc.property(anyLoyalty, fc.double({ min: 0, max: 100, noNaN: true }), (loyalty, lift) => {
+      const raised = Object.fromEntries(
+        Object.entries(loyalty).map(([id, level]) => [id, Math.min(100, level + lift)]),
+      );
+
+      assert.ok(
+        dispersion({ parties: PARTIES, loyalty: raised }) <=
+          dispersion({ parties: PARTIES, loyalty }),
+        "levantar a base alargou a banda",
+      );
+    }),
   );
 });

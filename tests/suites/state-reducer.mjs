@@ -23,6 +23,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
 import { AREAS } from "../../src/data/areas.mjs";
+import { BILLS } from "../../src/data/bills.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
 import { SCHEMA_VERSION, createState, monthLabel, reduce } from "../../src/state/state.mjs";
 
@@ -100,6 +101,7 @@ const anyState = fc.record({
   loyalty: anyLoyalty,
   fiscal: anyFiscal,
   capacity: anyCapacity,
+  enacted: fc.uniqueArray(fc.constantFrom(...BILLS.map(bill => bill.id)), { maxLength: 12 }),
   streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 
@@ -210,6 +212,7 @@ function resolutionOf(state) {
     loyalty: state.loyalty,
     fiscal: state.fiscal,
     capacity: state.capacity,
+    enacted: state.enacted,
     stream: state.streams.congress,
   };
 }
