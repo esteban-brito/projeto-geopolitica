@@ -42,9 +42,12 @@ import { benchReadHtml, capacityStripHtml, mesaHtml, tallyHtml } from "./src/ui/
    a desconfiar de todos os numeros da tela — que e mais caro do que a ausencia.
    Ela volta com o motor. */
 import { contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
+import { reportHtml } from "./src/ui/screens/report.mjs";
+import { UI } from "./src/ui/strings.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
 /** @typedef {import("./src/public/index.mjs").Orders} Orders */
+/** @typedef {import("./src/public/index.mjs").Report} Report */
 
 const el = {
   railNav: must("railNav"),
@@ -53,9 +56,10 @@ const el = {
   main: must("main"),
   verdict: must("verdict"),
   advance: must("advance"),
-  dialog: /** @type {HTMLDialogElement} */ (must("eventDialog")),
-  inspect: must("inspect"),
-  dialogClose: must("eventDialogClose"),
+  review: /** @type {HTMLButtonElement} */ (must("review")),
+  dialog: /** @type {HTMLDialogElement} */ (must("monthDialog")),
+  reportSlot: must("monthReport"),
+  dialogClose: must("monthDialogClose"),
 };
 
 /** @param {string} id */
@@ -68,6 +72,14 @@ function must(id) {
 let state = createState();
 let screen = "mesa";
 let orders = blankOrders();
+
+/* O ULTIMO MES RESOLVIDO, com o que ele precisa para se comparar com o mes
+   anterior. Ele NAO e estado de jogo e nao entra no save: e a memoria de uma
+   tela, e uma partida retomada comeca sem relatorio anterior porque de fato nao
+   houve um nesta sessao. */
+/** @type {{ report: Report, quorum: number, loyaltyBefore: Record<string, number>,
+ *           indexBefore: Record<string, number> } | null} */
+let last = null;
 
 /** As ordens de um mes que ainda nao comecou. */
 function blankOrders() {
@@ -254,12 +266,25 @@ function refresh() {
 
 /* ── OS GESTOS ────────────────────────────────────────────────────────────── */
 
-/* A troca de tela passa pela View Transition quando ela existe, e degrada para
-   uma pintura direta quando nao — o `?.` e a degradacao inteira. */
-function transition() {
+/**
+ * A troca de tela passa pela View Transition quando ela existe, e degrada para
+ * uma pintura direta quando nao — o `?.` e a degradacao inteira.
+ *
+ * O `depois` existe por causa do relatorio: abrir um modal no meio da transicao
+ * poe um cartao na camada superior enquanto o que esta atras dele ainda esta
+ * sendo trocado, e o resultado lê como duas telas discutindo. Ele espera a
+ * transicao terminar — e no navegador sem transicao, roda em seguida.
+ *
+ * @param {() => void} [depois]
+ */
+function transition(depois) {
   const start = document.startViewTransition?.bind(document);
-  if (start) start(paint);
-  else paint();
+  if (!start) {
+    paint();
+    depois?.();
+    return;
+  }
+  start(paint).finished.then(() => depois?.());
 }
 
 document.addEventListener("click", event => {
@@ -302,24 +327,76 @@ document.addEventListener("input", event => {
 });
 
 el.advance.addEventListener("click", () => {
+  /* O ESTADO DE ANTES FICA GUARDADO porque o relatorio compara: lealdade e
+     indice sao valores de agora, e "de 70 para 72" e uma informacao que nenhum
+     dos dois carrega sozinho. O turno devolve o depois; o antes so existe aqui,
+     no instante anterior a troca. */
+  const before = state;
   const played = playMonth(state, orders, { catalog: CATALOG });
   state = played.state;
+
+  last = {
+    report: played.report,
+    quorum: played.report.bill ? quorumOf(played.report.bill) : 0,
+    loyaltyBefore: before.loyalty,
+    indexBefore: before.capacity.index,
+  };
+
   /* O RASCUNHO MORRE COM O MES. Carregar a verba do mes passado para o proximo
      faria o jogador pagar de novo sem ter decidido — e o motor cobraria, porque
      ele nao sabe distinguir promessa nova de promessa esquecida na tela. */
   orders = blankOrders();
-  transition();
+  transition(openReport);
 });
 
 /* `showModal()` entrega foco, inercia do fundo, Escape e camada superior. Nada
    disso e escrito aqui — e essa e a diferenca entre o padrao nativo e a versao
    manual, que no projeto anterior custou uma sessao inteira de correcao de
    acessibilidade e tres regras permanentes de documentacao. */
-el.inspect.addEventListener("click", () => el.dialog.showModal());
+function openReport() {
+  if (!last) return;
+
+  el.reportSlot.innerHTML = reportHtml({
+    report: last.report,
+    quorum: last.quorum,
+    parties: CATALOG.parties,
+    areas: CATALOG.areas,
+    loyaltyBefore: last.loyaltyBefore,
+    indexBefore: last.indexBefore,
+  });
+  el.review.disabled = false;
+  el.dialog.showModal();
+}
+
+el.review.addEventListener("click", openReport);
 el.dialogClose.addEventListener("click", () => el.dialog.close());
 
 /* O ponto neutro e do catalogo e nao da tela; ele chega aqui so para a faixa de
    indices saber onde fica a linha d'agua. */
 document.documentElement.style.setProperty("--neutral", String(NEUTRAL));
+
+/**
+ * O TEXTO DOS BOTOES SAI DO ARQUIVO DE TEXTOS, e nao do documento. O `<button>`
+ * no HTML e a caixa; a frase e dado de interface, e frase escrita em dois
+ * lugares e frase que diverge no primeiro ajuste.
+ *
+ * `textContent` e nao `innerHTML`: nao ha marcacao nenhuma nestes textos, e
+ * montar o filho pelo DOM dispensa escapar qualquer coisa.
+ *
+ * @param {HTMLElement} node
+ * @param {string} text
+ * @param {string} hint
+ */
+function label(node, text, hint) {
+  node.textContent = text;
+  const small = document.createElement("span");
+  small.className = "action__hint";
+  small.textContent = hint;
+  node.append(small);
+}
+
+label(el.advance, UI.actions.advance, UI.actions.advanceHint);
+label(el.review, UI.actions.review, UI.actions.reviewHint);
+el.dialogClose.textContent = UI.actions.close;
 
 paint();

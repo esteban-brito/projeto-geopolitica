@@ -105,15 +105,38 @@ export const UI = {
     stable: "Governo em equilíbrio instável",
     growth: "Capital político em alta; a janela não fica aberta muito tempo",
   },
+  /* O RELATÓRIO DO MÊS. Ele é a única tela em que a banda da previsão prova que
+     era honesta: a Mesa promete uma faixa, e aqui aparece o número que saiu. */
+  report: {
+    noBill: "Mês sem pauta",
+    passed: "Aprovada",
+    rejected: "Rejeitada",
+    decreed: "Decretada",
+    against: "contra",
+    forecastWas: "a previsão era",
+    dayGave: "o dia deu",
+    benches: "As bancadas",
+    paid: "pago",
+    votes: "votos",
+    drift: "no dia",
+    money: "O dinheiro",
+    promised: "prometeu",
+    honoured: "o caixa honrou",
+    room: "cabia",
+    cut: "o rateio cortou",
+    cutWhy: "a promessa não cabia no mês",
+    contingency: "o teto fechou: a obrigatória sozinha já fura o arcabouço",
+    country: "O país",
+  },
   actions: {
     advance: "Avançar o mês",
     advanceHint: "resolve o turno e propaga os efeitos",
-    inspect: "Abrir o evento",
-    inspectHint: "demonstra o padrão de diálogo",
-  },
-  dialog: {
-    title: "Padrão de diálogo",
-    body: "Este é o <dialog> nativo: foco, inércia do fundo, Escape e camada superior vêm do navegador, não de JavaScript escrito à mão.",
+    /* O BOTÃO DO EVENTO VIROU O BOTÃO DO MÊS PASSADO. O diálogo nativo deixou de
+       demonstrar um padrão e passou a carregar o relatório — e um botão que abre
+       uma demonstração ao lado de um jogo que funciona é andaime pedindo para
+       ser confundido com funcionalidade. */
+    review: "O mês passado",
+    reviewHint: "reabre o relatório do último turno",
     close: "Entendi",
   },
   trend: {

@@ -72,7 +72,7 @@
      passaria a mexer na coluna — que e o tipo de instabilidade que ninguem
      atribui a causa certa. */
   .board > * {
-    width: min(var(--column-wide), 100%);
+    width: min(var(--column), 100%);
   }
 
   /* ── O SUBSTRATO ────────────────────────────────────────────────────────────

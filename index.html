@@ -58,10 +58,13 @@
         <ul class="rail__list" id="railNav"></ul>
 
         <div class="rail__foot">
-          <button class="action glass-action" id="inspect" type="button">
-            Abrir o evento
-            <span class="action__hint">demonstra o padrão de diálogo</span>
-          </button>
+          <!-- O TEXTO DOS BOTOES VEM DE `src/ui/strings.mjs`, e nao daqui: a
+               mesma frase em dois lugares é a frase que diverge no primeiro
+               ajuste, e o arquivo de textos existe justamente para não haver o
+               segundo lugar. O que fica no documento é a CAIXA.
+               Ele nasce desligado porque no primeiro mês não existe relatório
+               anterior — botão que abre o vazio ensina a desconfiar do menu. -->
+          <button class="action glass-action" id="review" type="button" disabled></button>
         </div>
       </nav>
 
@@ -92,10 +95,7 @@
         <p class="verdict" id="verdict"></p>
 
         <div class="rail__foot">
-          <button class="action action--primary glass-action" id="advance" type="button">
-            Avançar o mês
-            <span class="action__hint">resolve o turno e propaga os efeitos</span>
-          </button>
+          <button class="action action--primary glass-action" id="advance" type="button"></button>
         </div>
       </aside>
     </div>
@@ -105,14 +105,15 @@
          por JavaScript e nao ha listener de tecla: era exatamente esse conjunto
          que, feito a mao no projeto anterior, produziu quatro barreiras de
          acessibilidade e tres regras permanentes de documentacao. -->
-    <dialog id="eventDialog" aria-labelledby="eventDialogTitle">
+    <dialog id="monthDialog" aria-labelledby="monthDialogTitle">
       <div class="glass-stage dialog-card">
-        <h2 id="eventDialogTitle" class="dialog-card__title">Padrão de diálogo</h2>
-        <p class="dialog-card__body">
-          Este é o <code>&lt;dialog&gt;</code> nativo: foco, inércia do fundo, Escape e camada
-          superior vêm do navegador, não de JavaScript escrito à mão.
-        </p>
-        <button class="action glass-action" id="eventDialogClose" type="button">Entendi</button>
+        <!-- O TITULO VEM DE DENTRO. `aria-labelledby` aponta para um `id` que a
+             view escreve, e não para um título fixo aqui: o cartão inteiro é
+             substituído a cada mês, e um título parado no documento passaria a
+             descrever o mês anterior para quem lê por leitor de tela — a única
+             pessoa que não veria a diferença. -->
+        <div class="report" id="monthReport"></div>
+        <button class="action glass-action" id="monthDialogClose" type="button"></button>
       </div>
     </dialog>
 

@@ -217,9 +217,14 @@
     /* ── MEDIDAS DA COLUNA ──────────────────────────────────────────────────
        Declaradas como token, nunca como fallback de `var()`: variavel que so
        existe no segundo argumento de um `var()` parece ponto de ajuste do
-       sistema sem ser um, porque muda-la exige achar cada consumidor. */
-    --column: 560px;
-    --column-wide: 780px;
+       sistema sem ser um, porque muda-la exige achar cada consumidor.
+
+       ERAM DUAS, e viraram uma. A estreita existia para a moldura de contexto da
+       tela de painel — peca central mais larga, contexto mais estreito — e a
+       moldura saiu junto com aquela tela. Manter o token sem consumidor e
+       exatamente o que a guarda proibe, e o dia em que a segunda largura voltar
+       a ter dono ela nasce junto com ele. */
+    --column: 780px;
     /* A largura do rail. Ela cabe o rotulo mais longo da navegacao sem quebrar,
        e e o rotulo que manda: rail dimensionado pelo icone obriga o texto a
        abreviar, e abreviacao e onde um menu comeca a precisar ser decorado. */

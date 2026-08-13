@@ -67,6 +67,12 @@
     color: inherit;
     max-width: none;
     max-height: none;
+    /* ELE PRECISA DE `margin: auto` DE VOLTA. O navegador centra um dialogo modal
+       justamente por essa margem, e o reset la em cima zera a margem de TUDO —
+       entao o cartao nascia colado na quina superior esquerda da janela. Passou
+       despercebido enquanto o dialogo so demonstrava um padrao e ninguem o
+       olhou numa captura. */
+    margin: auto;
   }
 
   /* O BACKDROP NAO LEVA `backdrop-filter`, e a guarda foi quem decidiu isto.

@@ -159,13 +159,52 @@ try {
   );
   await page.screenshot({ path: join(OUT, "walk-mesa-estourada.png"), fullPage: true });
 
-  /* 7 — O MES ANDA, e o que passou vira lei em vigor na area. */
+  /* 7 — O MES ANDA, E ELE PRESTA CONTAS. O relatorio abre sozinho: e a
+     consequencia do botao, e nao um lugar que se visita. Enquanto ele esta
+     aberto, nada atras dele e clicavel — o `<dialog>` nativo entrega inercia do
+     fundo, e o passeio tem de fechar antes de continuar, como o jogador faz. */
   const title = await page.locator(".mesa__title").innerText();
-  for (let month = 0; month < 3; month++) {
+
+  await page.click("#advance");
+  await page.waitForTimeout(700);
+
+  expect(
+    await page.locator("#monthDialog").evaluate(node => node.hasAttribute("open")),
+    "[relatorio] o mes foi resolvido e o relatorio nao abriu",
+  );
+  const verdict = await page.locator(".report__verdict").innerText();
+  expect(
+    /aprovada|rejeitada|decretada/i.test(verdict),
+    `[relatorio] o veredito veio como "${verdict}"`,
+  );
+  expect(
+    (await page.locator(".report__table tbody tr").count()) === 4,
+    "[relatorio] a tabela nao trouxe as quatro bancadas",
+  );
+  await page.screenshot({ path: join(OUT, "walk-relatorio.png") });
+  await page.click("#monthDialogClose");
+  await page.waitForTimeout(200);
+
+  /* E ele fica guardado: o botao do rail reabre o ultimo mes. */
+  expect(
+    !(await page.locator("#review").isDisabled()),
+    "[relatorio] o botao de reabrir continuou desligado depois do primeiro mes",
+  );
+  await page.click("#review");
+  await page.waitForTimeout(200);
+  expect(
+    await page.locator("#monthDialog").evaluate(node => node.hasAttribute("open")),
+    "[relatorio] reabrir o ultimo mes nao abriu nada",
+  );
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(200);
+
+  for (let month = 0; month < 2; month++) {
     await page.click("#advance");
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(700);
+    await page.click("#monthDialogClose");
+    await page.waitForTimeout(150);
   }
-  await page.waitForTimeout(600);
   await page.click('[data-section="health"]');
   await page.waitForTimeout(600);
   await checkOverflow("area depois do mes");
