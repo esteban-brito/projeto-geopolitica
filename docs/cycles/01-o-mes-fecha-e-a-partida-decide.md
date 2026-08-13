@@ -21,9 +21,85 @@ sessão, mas o número escolhido é decisão do responsável, e nenhum se gira s
 | 1.6 A lista de ações vira tabela | não começado                  |
 | Parte 2 inteira                  | não começada                  |
 
-> **Parada pedida em 13/08/2026**, com o 1.1 fechado: há um plano externo a ser
-> avaliado antes de seguir. O que está commitado está verde — `validate`, `walk` e
+> **Parada pedida em 13/08/2026**, com o 1.1 fechado: havia um plano externo a
+> avaliar antes de seguir. O que está commitado está verde — `validate`, `walk` e
 > `screen` — e nada ficou pela metade na árvore.
+
+---
+
+## O norte, declarado na conversa de 13/08
+
+O plano externo avaliado (uma arquitetura de seis módulos de botões) foi
+**adotado como mapa de destino, e recusado como ordem de execução**: ele constrói
+interface na frente de motor, e cerca de 30% dos efeitos que ele promete são
+atribuídos a motores que hoje são só contrato. Uns 40% dele já existe com outro
+nome — a Mesa é o módulo do Congresso dele, e a MALHA é o módulo de investimento.
+
+O que o responsável declarou como norte, e que passa a valer acima do plano:
+
+**Criatividade infinita, com preço.** O jogador tenta a jogada que quiser —
+comunista, ultracapitalista, anarquista, monarquista, a jogada Lee Kuan Yew — e o
+mundo responde. Não é norte novo: é o princípio que o projeto já declarava
+(_"tudo tem um jeito de ser feito; o que separa o possível do impossível é o
+preço"_), agora com um alvo explícito de **ampliar o leque de jogadas**.
+
+**Realismo = consequência, não bloqueio.** Nenhuma trava artificial de interface
+ou de regra. As leis limitam — e as leis são mexíveis durante a partida.
+
+**O regime também será jogável, mas não agora.** "Alpha da alpha." Monarquista e
+anarquista não são posições de política, são mudanças de regime, e o modelo hoje
+tem um regime cravado. A providência barata que vale desde já: **as regras do
+regime nascem como DADO, e não como constante espalhada** — 513 cadeiras, 48
+meses e o arcabouço num lugar só. Torná-las mutáveis passa a ser uma sessão, e
+não uma refundação.
+
+**O que é "vencer" ainda não fechou**, e a direção apontada foi: um **modo
+infinito** e um **modo de objetivos aleatórios**. Os dois passam pela SONDA — modo
+infinito sem reeleição é só continuar apertando o botão depois do mês 48, e
+reeleição é opinião pública.
+
+### O que isso muda nas decisões anteriores
+
+1. **A decisão "pautas prontas e não vetores livres" está REABERTA.** Arquétipo
+   não é escolher itens de uma lista: é ocupar uma posição e sustentá-la. Um
+   catálogo discreto põe teto na radicalidade. A saída desenhada foi pauta
+   **parametrizada** (faixas em vez de constantes, resolvidas antes de chegar ao
+   ECLUSA, que não muda), com um passo além: **a posição do GOVERNO passa a ser
+   emergente**, calculada do que ele fez — e aí coerência tem preço, e a mesma
+   pauta custa diferente conforme quem a propõe;
+
+2. **A ordem dos motores inverteu: SONDA → tensão institucional → CORRENTE.**
+   O argumento que virou a mesa está na própria retomada: _"o jogador pode ser
+   tão autoritário quanto for popular"_. O escudo é popularidade — então **sem
+   SONDA não existe teto para autoritarismo**, e sem teto a jogada radical não
+   tem risco. Some-se que a SONDA dá preço imediato a alavancas fiscais sem
+   precisar de CORRENTE, e que a dívida sem juros tem remendo barato (a premissa
+   declarada do item 2.4).
+   **O risco assumido:** SONDA sem CORRENTE pode virar uma população que julga o
+   rótulo da política em vez do resultado. A defesa é dura — **ela só se alimenta
+   de estado real** (os seis índices da MALHA e a posição fiscal), e os canais que
+   faltam ficam declarados como ausentes;
+
+3. **Realinhamento das bancadas entra no radar**, e não precisa de IA: posição de
+   partido deixa de ser constante e passa a derivar da distância acumulada até o
+   governo, com inércia; racha é variância interna passando de um limiar;
+
+4. **A IA está decidida** em [`../adr/0001-a-ia-fica-fora-do-turno.md`](../adr/0001-a-ia-fica-fora-do-turno.md):
+   fora do turno, e dentro de três lugares — geração de catálogo offline, veredito
+   de fim de mandato e narração;
+
+5. **Das três ideias roubadas do plano externo**, duas sobem de prioridade
+   (loteamento de ministérios e MP com prazo — as duas separam estilo de governo)
+   e a terceira (alíquota como parâmetro vivo) deixa de esperar CORRENTE e passa a
+   esperar **SONDA**, que já lhe dá preço.
+
+### O critério que unifica tudo isso
+
+> **Um botão entra quando o preço dele já existe no modelo.**
+
+É o que impede "criatividade infinita" de virar "infinitas maneiras de dizer sim"
+— que é exatamente o estado medido hoje: 26 votações, 26 aprovações, e fazer tudo
+sendo fiscalmente melhor do que não fazer nada.
 
 ---
 
