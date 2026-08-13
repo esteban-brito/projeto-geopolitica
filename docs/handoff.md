@@ -4,167 +4,175 @@
 > leia este arquivo e depois `docs/standards.md`. O nome deste arquivo é estável
 > de propósito: ponteiro com data envelhece e obriga a mover arquivo.
 
-## Estado em 11/08/2026
+## Estado em 13/08/2026
 
-Quarta sessão. **O jogo agora roda um mandato inteiro sem tela nenhuma.** Os dois
-motores existentes deixaram de ser peças soltas: eles se acoplam pelo orçamento,
-a lealdade decai e responde, e um simulador de terminal produz a série temporal
-de 48 meses em milissegundos. Tudo commitado em
-`https://github.com/esteban-brito/projeto-geopolitica` (branch `main`).
+Quinta sessão. **O jogo saiu do terminal.** A Mesa e as seis áreas existem, são
+navegáveis, e um mês inteiro se decide com o mouse: escolher a ação, comprar
+bancada, alocar verba, avançar. O que a tela mostra enquanto o jogador decide sai
+das **mesmas funções** que o turno vai executar — nenhuma conta é refeita por
+fora.
 
-| verificação        | estado                                                |
-| ------------------ | ----------------------------------------------------- |
-| `npm run validate` | **verde de ponta a ponta**                            |
-| `npm run check`    | 9 guardas · 36 provas sintéticas · verde              |
-| `npm test`         | **81 propriedades** · verde (eram 68)                 |
-| `npm run simulate` | mandato de 48 meses, quatro políticas                 |
-| `npm run screen`   | **não foi rodado nesta sessão** — ver achado 9        |
-| fps do material    | 240,3 × 240,3 do controle — medido na sessão passada  |
-| CI                 | GitHub Actions rodando `npm run validate` a cada push |
+| verificação        | estado                                                           |
+| ------------------ | ---------------------------------------------------------------- |
+| `npm run validate` | **verde de ponta a ponta**                                       |
+| `npm run check`    | 9 guardas · 36 provas sintéticas · 75 arquivos · verde           |
+| `npm test`         | **105 propriedades** · verde (eram 81)                           |
+| `npm run simulate` | mandato de 48 meses, quatro políticas-sonda                      |
+| `npm run screen`   | **rodado** · console limpo nos três viewports, sem rolagem       |
+| fps do material    | 240,3 × 226,5 do controle — os dois no teto de 240 Hz do monitor |
+| `npm run walk`     | **novo, e verde** — a tela usada como se joga                    |
+| CI                 | GitHub Actions rodando `npm run validate` a cada push            |
 
 ## O que mudou nesta sessão
 
-**ECLUSA ficou inteiro.** Faltava a metade que o handoff anterior cobrava:
+**A tela virou o jogo.** `app.mjs` deixou de despachar `advanceMonth` de andaime e
+passa a chamar `playMonth`. O rail lista as **áreas de governo**, e não motores:
+quem quer mexer na saúde entra em Saúde, e o instrumento — lei, emenda, caneta —
+virou etiqueta na linha da ação.
 
-- **obstrução** (<50) e **ruptura** (<20) como dois degraus declarados — "a base
-  obstrui" e "a base rompeu" são situações políticas distintas, e não dois pontos
-  de uma reta;
-- **`settle`**, o assentamento mensal da lealdade: decaimento de 1,5, afago de
-  12 × verba **paga**, e traição de 25 × o buraco entre prometido e pago. A
-  assimetria é o ponto — prometer 1,0 e entregar 0 custa mais do que dois meses
-  de afago cheio devolvem.
+**A Mesa** mostra a pauta, as quatro bancadas com humor e controle de verba, e o
+resumo: `312 ± 14 · precisa de 257`. A **banda** é a peça mais importante dessa
+tela — `312` sozinho afirma um placar que o motor não promete, e o jogador que
+confia nele aprende a desconfiar da tela na primeira derrota por três votos.
 
-**O acoplamento está ligado**, em `src/application/turn.mjs` — a camada de
-aplicação, que nasceu nesta sessão. A ordem em que ele chama os motores **é** a
-mecânica: o teto diz quanto cabe, a promessa é confrontada com o que cabe, e a
-votação acontece com a verba **paga**. Prometer não move voto nenhum. Como o
-contingenciamento é aritmética e não escolha, existe agora um caminho em que o
-governo promete de boa fé, não entrega e perde a base — crise política sem evento
-roteirizado, que era o buraco declarado desde a segunda sessão.
+**A área** tem os três verbos na ordem do custo de executar: alocar não precisa de
+ninguém, pautar precisa do Congresso, vigente já foi decidido e só cobra. A linha
+que a faz virar decisão é `R$ 26,9 bi disponíveis · R$ 18,1 bi já prometidos às
+outras áreas` — sem ela seriam seis controles independentes.
 
-**O estado cresceu e virou versão 3**: `loyalty` e `fiscal` são campos
-serializados. Save da versão 2 é **recusado**, e a recusa está justificada em
-`src/state/save.mjs` — completá-lo com zeros abriria a partida com o Congresso
-inteiro em ruptura, que é um estado de jogo válido e portanto indistinguível de
-um defeito.
+**`settlement` nasceu**, e é o que impede a tela de mentir: a previsão da Mesa
+vota com a verba que o caixa **honra**, e não com a prometida. Enquanto a promessa
+cabe no mês as duas são a mesma coisa; quando estoura, a Mesa anunciava um placar
+que o turno não produzia — e podia dizer "acima do quórum" numa votação que o
+rateio derrubava.
 
-**O catálogo fiscal ganhou duas entradas**: `seatPrice` (0,09 — o câmbio entre os
-dois motores, que traduz "verba de 0 a 1" em bilhões) e `initialDiscretionary`
-(330, que com a obrigatória forma a âncora do arcabouço).
+**O que já está em vigor não volta à pauta.** A sessão passada tinha uma guarda na
+lista do estado, que se recusava a guardar o mesmo id duas vezes. Ela resolvia só
+o sintoma visível: o mês continuava votando, o índice da área subia de novo e o
+**impacto fiscal era somado outra vez**. Uma reforma aprovada seis vezes cobrava
+seis, com a lista mostrando uma linha só. A recusa agora é da ordem inteira, e a
+prova falha se alguém a remover.
 
-**`npm run simulate`** roda o mandato sob quatro políticas-sonda.
+**Três defeitos que só a tela em uso mostrou**, e por isso `npm run walk` existe:
+
+- o controle de alocação abria no **meio** de uma faixa de 0 a 100. `max="25,04"`
+  com vírgula é valor inválido, e o navegador descarta o atributo em silêncio.
+  Node não lê atributo — nenhuma prova de unidade podia ver. Agora existe `attr`,
+  e `tests/suites/screens.mjs` confere todo atributo numérico de toda tela;
+- a legenda das colunas se sobrepunha: cabeçalho e linha mediam colunas em `ch`
+  com fontes de tamanhos diferentes, então `10ch` valia 55px numa e 85px na outra;
+- a coluna dizia **despesa/ano** e mostrava o sinal do **resultado**. No catálogo,
+  positivo poupa — então `−48` aparecia como corte de gasto, sendo gasto novo.
+
+**A folha do dashboard virou três**, como a prosa dela mesma mandava: `40-shell`
+(a casca e o substrato, agora de todas as telas), `50-screen-mesa`,
+`60-screen-area`. A aprovação ficou estacionada em `70-screen-approval`, com a
+razão escrita: quem a produz é SONDA, que não existe, e um indicador congelado em
+31% ao lado de controles que funcionam ensina a desconfiar da tela inteira.
 
 ## Achados fechados
 
-Os itens **2** e **3** da lista anterior deixaram de existir: a lealdade decai, e
-emenda paga sai do discricionário com o contingenciamento zerando a entrega.
+Os itens **7** (quórum sempre maioria simples) e **9** (`npm run screen` não
+rodado) deixaram de existir. O quórum sai do instrumento — 257 para lei, 308 para
+emenda, zero para caneta — e a tela foi medida em navegador de verdade.
 
 ## Achados abertos — o que EU veria primeiro na próxima sessão
 
-Os quatro primeiros são **medidos**, e o instrumento que os mediu está no repo.
+Os quatro primeiros são **medidos nesta sessão**, e os dois primeiros são graves.
 
-1. **Quatro das seis pautas passam sem um centavo na lealdade de abertura.** Com
-   verba zero e lealdade 70, contra os 257 necessários: reforma administrativa
-   295, programa habitacional 286, abertura comercial 273, PEC da segurança 259.
-   A consequência aparece na simulação — a política `agenda` aprova **5 de 6 nos
-   primeiros sete meses** e depois passa 41 meses sem ter o que fazer. O primeiro
-   ano do mandato não tem negociação nenhuma. É o achado mais grave da lista;
+1. **O catálogo inteiro passa.** Na política `promessa`, **26 votações e 26
+   aprovações** — as 36 ações do catálogo viram realidade em 48 meses. Na
+   `agenda`, 35 de 36. Um mandato em que dá para aprovar tudo não tem escassez de
+   capital político, só de dinheiro e de meses. Na abertura, **13 das 26 pautas
+   votáveis passam sem um centavo**, e só uma não passa nem com verba cheia;
 
-2. **O fim do foro privilegiado exige lealdade 75, e a partida começa em 70 e
-   decai.** Nem com verba cheia ele passa na abertura: só abre se o jogador
-   construir lealdade **acima do ponto de partida**. Isso pode ser um bom desenho
-   — a pauta que ataca a máquina exige capital político acumulado — mas hoje é
-   acidente de calibragem, e não decisão. Vale transformar em decisão;
+2. **Fazer tudo é fiscalmente MELHOR do que não fazer nada, e isso inverte a
+   tensão do jogo.** `parado` termina com dívida em **79,5%** e 18 meses de
+   contingenciamento; `agenda`, que aprova 35 pautas, termina em **59,5%** e
+   nenhum mês de aperto. A armadilha fiscal está punindo a inação e premiando a
+   agenda cheia. A causa é conhecida e some quando CORRENTE existir — LASTRO não
+   cobra juros —, mas o desenho precisa ser escolhido, e não descoberto;
 
-3. **A dívida não é pressão nenhuma.** Ela CAI em todas as quatro políticas
-   (78% → entre 71% e 77%). A causa é conhecida e está declarada: LASTRO não
-   cobra juros, porque juros dependem da Selic, que é CORRENTE. Enquanto isso não
-   existir, o resultado primário é estruturalmente positivo e a dívida desce
-   sozinha. Nenhum número de dívida na tela significa coisa alguma hoje;
+3. **O fim do foro privilegiado é a única pauta impossível na abertura**: 251
+   votos com verba cheia contra 257 exigidos. Pode ser bom desenho — a pauta que
+   ataca a máquina exige capital acumulado —, mas continua sendo acidente de
+   calibragem e não decisão;
 
-4. **A armadilha fiscal fecha tarde, e o decaimento da lealdade é o relógio que
-   manda.** Com PIB parado, o contingenciamento chega em abr/2030 na política
-   `agenda` e jan/2031 na `parado` — ou seja, no fim do mandato. Já a base sai de
-   70 e chega a zero por decaimento puro no mês 47, o que é quase exatamente a
-   duração do mandato: coincidência de calibragem, não desenho. Os dois relógios
-   precisam ser escolhidos, e não descobertos.
-   **O que funciona bem:** aprovar o programa habitacional (−140/ano) antecipa o
-   contingenciamento em **11 meses**. A cadeia causal é legível e sai da
-   aritmética;
+4. **A calibragem de ECLUSA continua sendo um primeiro chute** — `PIVOT 58`,
+   `SPREAD 16`, `THREAT_WEIGHT 85`. Agora há dois instrumentos para conferir
+   contra comportamento: o simulador e a tela;
 
-5. **A calibragem de ECLUSA continua sendo um primeiro chute**, como já estava
-   declarado: `PIVOT 58`, `SPREAD 16`, `THREAT_WEIGHT 85` e os seis `threat`.
-   Agora existe instrumento para conferir contra comportamento de mandato, e não
-   só contra testes;
+5. **A aprovação não existe na tela**, e é a peça que falta para o mês fechar como
+   ciclo. Ela volta com SONDA. A view e os estilos estão estacionados juntos, de
+   propósito: separá-los faria o retorno vir sem forma;
 
-6. **`seatPrice` 0,09 tem razão declarada e nenhuma validação.** Ele saiu de uma
-   razão — comprar as 513 cadeiras custa 46,2 e no mês cabem 26,9, então o
-   plenário inteiro é inalcançável e há o que escolher. A prova
-   `o preco da cadeira traduz verba em bilhoes` em `tests/suites/turn.mjs` cobra
-   que continue inalcançável se alguém mexer no número;
+6. **A lista de ações deveria ser uma tabela de verdade.** Hoje ela é `<ul>` com
+   grade, e a legenda das colunas é um parágrafo antes da lista — quem lê por
+   leitor de tela ouve `308 · −140 · +8` sem cabeçalho por célula. `<table>` com
+   `<th>` resolve, e é a próxima versão dessa lista;
 
-7. **O quórum é sempre maioria simples.** O catálogo não carrega o tipo do
-   projeto, então a PEC da segurança pública passa por 257 quando deveria exigir 308. É uma linha no esquema de pautas e uma no turno;
+7. **`tools/simulate.mjs` guarda a própria memória do que passou** (`memory.passed`),
+   e agora isso duplica `state.enacted`. Duas fontes para o mesmo fato;
 
 8. **A fonte é `system-ui`**, provisória — herdado, não tocado nesta sessão;
 
-9. **`npm run screen` não foi rodado nesta sessão.** `src/state/state.mjs` passou
-   a importar o catálogo, o que muda o grafo de módulos que o navegador carrega.
-   O que **foi** verificado: o grafo inteiro da tela resolve em Node e as quatro
-   views ainda renderizam. O que **não** foi: navegador de verdade, console limpo,
-   rolagem horizontal e fps. Rodar é o primeiro passo da próxima sessão que
-   tocar na tela;
-
-10. **O benchmark de fps continua não medindo nada** — os dois braços ficam no
-    teto de 240 Hz do monitor. Herdado da sessão anterior.
+9. **O benchmark de fps continua não medindo nada** — os dois braços batem no teto
+   de 240 Hz do monitor. Herdado.
 
 ## O que existe
 
 ### A tela
 
-Inalterada nesta sessão. Casca com dois rails na estrutura do Football Manager
-2020, sistema de vidro em três níveis (`stage` · `action` · `support`), substrato
-de aurora em CSS puro, e cinco itens do rail desligados de propósito.
+Casca com dois rails na estrutura do Football Manager 2020, vidro em três níveis
+(`stage` · `action` · `support`), substrato de aurora em CSS puro. **Sete telas**:
+a Mesa e as seis áreas. Dois itens do rail seguem desligados de propósito —
+Opinião e Rede têm contrato de motor e nenhuma tela.
 
-**A tela ainda não sabe nada do que foi construído nesta sessão.** Ela mostra
-aprovação e situação — que são andaime — e o botão de turno chama `advanceMonth`,
-que é o reducer de andaime. O mandato jogável existe só no terminal.
+Regras que a sessão fixou e que valem para toda tela nova: **uma lâmina por
+tela**, a tela **pergunta** ao motor em vez de refazer a conta, número que vai
+para atributo passa por `attr`, toda view traz o próprio elemento de fora, e
+**ausência não é resultado** — sem pauta não há placar nem veredito colorido.
 
 ### Os dados (`src/data/`)
 
-Quatro blocos partidários no plano de Nolan, venalidade **por eixo**, seis pautas
-com posição, `threat` e impacto fiscal, parâmetros fiscais com o preço da cadeira,
-e um validador de esquema que não conserta nada.
+Quatro blocos partidários no plano de Nolan, venalidade por eixo, **36 ações** em
+seis áreas com instrumento, posição, `threat` e impacto fiscal, parâmetros fiscais
+com o preço da cadeira, e um validador de esquema que não conserta nada.
 
 ### Os motores
 
 - **LASTRO** (`src/domain/budget/`) — receita do PIB, obrigatória crescendo em
-  valor absoluto, teto do arcabouço e gatilho de contingenciamento. Duas
-  restrições independentes (caixa e regra) e o menor manda;
+  valor absoluto, teto do arcabouço e gatilho de contingenciamento;
 - **ECLUSA** (`src/domain/congress/`) — `whipCount` determinístico, `vote` com
-  dissidência no dia, `settle` com decaimento, afago e traição. Obstrução e
-  ruptura como degraus.
+  dissidência no dia, `settle` com decaimento, afago e traição, `dispersion` para
+  a banda da previsão. Obstrução e ruptura como degraus declarados;
+- **MALHA** (`src/domain/capacity/`) — índices por área, decaimento, rendimento da
+  alocação e a pressão que volta para receita e despesa.
 
 ### A composição
 
-- **`src/application/turn.mjs`** — resolve um mês. É onde os dois motores se
-  encontram, e onde estão declaradas as três simplificações vivas: quórum único,
-  impacto fiscal caindo sempre na despesa obrigatória, e PIB que só anda se quem
-  chamar passar a premissa;
-- **`tools/simulate.mjs`** — o mandato no terminal, com quatro políticas-sonda.
+- **`src/application/turn.mjs`** — `settlement` (o rateio, que a tela consulta) e
+  `playMonth` (o mês, que o botão executa);
+- **`src/public/index.mjs`** — a fachada: a única porta do entrypoint, e a guarda
+  `boundaries` prova que ele não alcança domínio nem aplicação por fora dela;
+- **`tools/simulate.mjs`** — o mandato no terminal, quatro políticas-sonda.
 
-### A infraestrutura
+### A verificação
 
-Fluxo de aleatoriedade contado (o valor é função pura de semente e índice), save
-versão 3 que recusa em vez de lançar, nove guardas com provas sintéticas.
+Nove guardas com provas sintéticas, 105 propriedades, o custo do material medido
+com GPU (`npm run screen`) e o **passeio** (`npm run walk`), que usa a tela como
+se joga e confere console, rolagem, o controle de alocação, o placar reagindo à
+verba, a linha de caixa acusando o estouro e a lei aprovada aparecendo em vigor —
+em desktop e em celular.
 
 ## O que ainda não existe
 
 - **TEMPORAL, CASCATA, CORRENTE, SONDA, DELTA** — só os contratos;
 - **tensão institucional** — decidido que será variável de estado e não motor
-  novo: `risco = f(tensão − escudo)`, o jogador pode ser tão autoritário quanto
-  for popular;
-- **`orphans` e `contrast`** — precisam de DOM real e de mais de uma tela;
+  novo: `risco = f(tensão − escudo)`;
+- **`orphans` e `contrast`** — a condição que os adiava caiu (há sete telas e DOM
+  real), e o que entrou no lugar foi o passeio. As duas guardas seguem por
+  escrever;
 - **`d3-force`** — entra quando DELTA existir, em Worker;
 - **GitHub Pages** — decidido ficar só com o CI por enquanto.
 
@@ -174,27 +182,30 @@ Fase 1 só o Brasil · turno mensal (48 por mandato) · tudo fictício com inspi
 na realidade · inglês no código e português na prosa · seis camadas de estilo ·
 codinomes de motor · zero build e zero dependência de runtime (exceção:
 `d3-force` vendorizado) · pautas prontas e não vetores livres · lealdade é estado
-serializado, não recálculo.
+serializado · motor nenhum chama outro motor · o Congresso responde ao que foi
+PAGO · o rateio da falta é proporcional · a âncora do arcabouço é o TETO que
+vigorou.
 
 **Fechadas nesta sessão:**
 
-- **motor nenhum chama outro motor.** Quem compõe é a camada de aplicação, e a
-  ordem em que ela chama é a mecânica;
-- **o Congresso responde ao que foi PAGO**, nunca ao que foi prometido. Ordem
-  invertida faria promessa comprar voto, e o orçamento viraria placar;
-- **o rateio da falta é proporcional.** O governo não escolhe quem trair quando o
-  teto fecha — escolher exigiria uma prioridade que o jogador nunca declarou;
-- **a âncora do arcabouço é o TETO que vigorou, e não a despesa realizada.** A
-  primeira versão usava o realizado, e a simulação mostrou na hora por que estava
-  errado: um governo que gastou pouco via o teto do ano seguinte desabar para o
-  próprio gasto — a regra punia a economia. Isso é catraca, não arcabouço.
+- **a tela não refaz conta do motor — ela pergunta.** Conta refeita por fora
+  diverge, e diverge justamente no caso extremo, que é o caso em que o jogador
+  precisava do número;
+- **a previsão usa o que será pago, nunca o prometido.** É a mesma regra do
+  acoplamento, vista do lado da interface;
+- **o rail lista áreas de governo**, e não motores nem instrumentos. Um menu de
+  motores tem formato de código; um de instrumentos obriga a saber o rito antes
+  de achar o assunto;
+- **escolher uma ação leva à Mesa.** A área é onde se escolhe; a Mesa é onde se
+  negocia — emendar sem ver o placar seria negociar no escuro;
+- **o rascunho morre com o mês.** Carregar a verba do mês passado para o próximo
+  faria o jogador pagar de novo sem ter decidido.
 
 **Princípio de design:** _tudo tem um jeito de ser feito._ Nenhuma jogada é
 bloqueada por regra artificial — o que separa o possível do impossível é o
 **preço**. A prova `NENHUMA PAUTA E INVOTAVEL` em `tests/suites/congress.mjs`
-existe para cobrar isso. O achado 2 acima é justamente a tensão entre esse
-princípio e a calibragem atual: hoje o fim do foro privilegiado é impossível _na
-abertura_, e só o preço em lealdade acumulada o abre.
+existe para cobrar isso, e o achado 3 acima é a tensão viva entre esse princípio
+e a calibragem atual.
 
 Referências de interface: **Geopolitical Simulator** e **Football Manager 2020**.
 Liquid glass é a base do design inteiro, não um efeito de algumas telas.

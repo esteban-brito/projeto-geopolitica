@@ -6,9 +6,10 @@ dependência de runtime.
 
 ```bash
 npm ci
-npm run serve      # http://127.0.0.1:5173/
+npm run serve      # http://127.0.0.1:5173/ — a Mesa e as seis areas, jogaveis
 npm run simulate   # roda um mandato inteiro no terminal, sem tela
 npm run validate   # guardas + tipos + lint + formato + testes
+npm run walk       # usa a tela como se joga, num navegador de verdade
 ```
 
 ## Onde ler
@@ -80,3 +81,12 @@ que sua asserção central consegue falhar.
 `npm run screen` abre a tela com GPU e mede o custo do material contra um braço
 de controle sem filtro. Ele vive em `tests/browser/` e **fora** do `validate`:
 abre navegador com janela, e `validate` precisa rodar rápido e sem tela.
+
+`npm run walk` faz o que nenhum dos dois faz: **usa** a tela. Ele entra numa área,
+arrasta a alocação, pauta uma ação, compra bancada, estoura o caixa, avança o mês
+e confere que a lei aprovada aparece em vigor — em desktop e em celular. Ele
+nasceu porque três defeitos atravessaram tipo verde, guarda verde e 99 provas
+verdes: um `max="25,04"` que o navegador descartava calado, duas grades que
+mediam colunas em `ch` com fontes diferentes, e uma previsão que usava a verba
+prometida enquanto o turno votava com a paga. O que ele acha vira propriedade em
+`tests/suites/screens.mjs` — o passeio encontra, a suíte prende.

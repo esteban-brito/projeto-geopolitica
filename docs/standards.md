@@ -35,7 +35,7 @@ src/state/                  estado imutável e o reducer
 src/application/            turno, persistência, efeitos
 src/public/                 a composição que todo consumidor usa
 src/ui/                     views puras: recebem dado, devolvem string
-tests/                      run.mjs · lib/ · guards/ · suites/ · golden/
+tests/                      run.mjs · lib/ · guards/ · suites/ · browser/ · golden/
 tools/                      geradores, servidor, simulador de mandato
 docs/                       handoff.md (um ponto de retomada) · adr/ · cycles/
 ```
@@ -90,7 +90,36 @@ material a uma tela nova, meça o fps dela com braço de controle sem filtro —
 com GPU e vsync ligados, porque em rasterização por software os dois braços caem
 juntos e o número não diz nada.
 
-## 5. As guardas
+**Uma lâmina por tela.** As peças de dentro são linhas e seções, não cartões: um
+contorno por informação é peso repetido, e peso repetido é ruído. Vidro dentro de
+vidro são dois materiais empilhados para dizer uma coisa só.
+
+## 5. A tela
+
+**A tela não refaz conta do motor — ela pergunta.** Toda leitura que a interface
+mostra enquanto o jogador decide sai da mesma função que o turno vai executar
+(`settlement`, `whipCount`, `dispersion`). Conta refeita por fora é conta que
+diverge, e a divergência aparece justamente no caso extremo, que é o caso em que
+o jogador precisava do número.
+
+**A previsão usa o que será PAGO, nunca o prometido.** É a mesma regra do
+acoplamento, do outro lado: se a Mesa prevê com a promessa, ela anuncia um placar
+que o turno não produz no mês em que o caixa não cobre.
+
+**Número que vai para dentro de atributo não passa pela função de leitura.**
+`num` escreve vírgula decimal; vírgula em `max`, `min`, `value` ou `step` é valor
+inválido, e o navegador descarta o atributo **em silêncio** e usa o padrão dele.
+Para atributo existe `attr`, e `tests/suites/screens.mjs` cobra isso em toda tela.
+
+**Toda view traz o próprio elemento de fora.** O entrypoint concatena e aplica;
+ele não decide forma. Quem desenha uma tela não precisa saber que a lâmina dela
+mora em outro arquivo.
+
+**Ausência não é resultado.** Sem pauta não há placar, e não há veredito verde ou
+vermelho: mostrar `—` no maior degrau da escala ocupa a tela inteira para dizer
+"nada", e vestir uma instrução de aprovada ensina o sinal errado.
+
+## 6. As guardas
 
 | guarda       | impede                                                                                                      |
 | ------------ | ----------------------------------------------------------------------------------------------------------- |
@@ -107,7 +136,7 @@ juntos e o número não diz nada.
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.
 
-## 6. O que ainda NÃO tem guarda
+## 7. O que ainda NÃO tem guarda
 
 Declarado para não ser confundido com cobertura:
 
@@ -115,8 +144,11 @@ Declarado para não ser confundido com cobertura:
   regra inglês/português depende de revisão. Um casador honesto não existe — ele
   acusaria `selic` e `ipca`, que são nomes próprios e ficam no original por
   decisão;
-- **`orphans` e `contrast`** — precisam do DOM real, e portanto de mais de uma
-  tela para valerem a pena. Entram no ciclo da segunda tela;
+- **`orphans` e `contrast`** — continuam sem existir, e agora a condição que os
+  adiava caiu: há sete telas e DOM real. O que entrou no lugar foi
+  `npm run walk`, que usa a tela como se joga e achou três defeitos que tipo,
+  guarda e 99 provas não achavam. Ele não é guarda: não roda em `validate`, e o
+  que ele acha vira prova em `tests/suites/screens.mjs`;
 - **o VALOR de um dado do catálogo.** `identity` prova que todo registro tem
   identidade própria e que nenhuma se repete; `schema` prova que todo esquema
   existe e é validado; a suite prova que os registros obedecem ao esquema.
