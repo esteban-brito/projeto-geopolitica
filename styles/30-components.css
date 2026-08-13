@@ -301,10 +301,130 @@
     padding: var(--space-3) var(--space-3);
   }
 
+  /* ── O VEREDITO ─────────────────────────────────────────────────────────────
+     A unica frase que diz o que esta em jogo. Ela morava embaixo da peca central
+     e subiu para o rail quando o tabuleiro passou a ser repintado por inteiro:
+     la dentro ela seria destruida a cada troca de tela, e ela nao e de tela
+     nenhuma — e do MES.
+
+     AQUI ELA NAO E UMA LAMINA. Perdeu a classe de vidro que tinha na tela
+     anterior porque o rail JA e vidro, e vidro dentro de vidro sao dois
+     materiais empilhados para exibir uma frase. O que sobrou e a mesma aresta de
+     luz que separa os campos da faixa logo acima: ela lê como mais um campo do
+     rail, que e exatamente o que ela e. */
+  .verdict {
+    padding: var(--space-3);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-verdict);
+    line-height: 1.4;
+    color: var(--ink-soft);
+    box-shadow:
+      0 -1px 0 rgba(255, 255, 255, 0.13),
+      0 -1px 0 rgba(0, 0, 0, 0.22) inset;
+  }
+
+  /* ── ETIQUETA DE INSTRUMENTO ────────────────────────────────────────────────
+     Lei, emenda ou caneta. UMA forma para as tres, e a razao e a regra de forma
+     no alto deste arquivo: o rito e o quorum ja estao escritos por extenso na
+     mesma linha, entao tres cores aqui seriam um segundo canal repetindo o que o
+     texto diz — e gastariam paleta num rotulo que ninguem pressiona.
+
+     A CANETA E A UNICA EXCECAO, e nao por enfase: ela e a unica que nao vai a
+     plenario. Isso e diferenca de categoria, e nao de grau — e diferenca de
+     categoria e a unica coisa que merece cor propria. */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.07);
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .badge[data-instrument="decree"] {
+    background: rgba(var(--stable-rgb), 0.3);
+    color: var(--ink);
+  }
+
+  /* ── O CONTROLE DESLIZANTE ──────────────────────────────────────────────────
+     Duas telas o usam — verba por bancada na Mesa, bilhoes por area nas areas —,
+     e por isso ele mora aqui. UMA construcao para os dois: pista rasa e o polegar
+     em AMBAR, porque ele e a unica coisa da tela que se arrasta e ambar e a cor
+     do que se pressiona.
+
+     `appearance: none` desliga o controle nativo, e desligar o nativo obriga a
+     devolver tudo o que ele dava. O foco visivel ja volta pela regra de
+     `10-base.css`; pista e polegar estao aqui, e em DOIS DIALETOS separados:
+     `::-webkit-slider-*` e `::-moz-range-*` nao podem dividir um seletor, porque
+     um seletor com pseudo-elemento desconhecido e descartado INTEIRO pelo
+     navegador — a regra some para os dois lados em vez de valer para um.
+
+     NAO HA PISTA PREENCHIDA. O Firefox sabe pintar o trecho percorrido e o
+     Chromium nao, e igualar os dois exigiria escrever o valor num token a cada
+     quadro do arrasto. O numero ao lado do controle ja diz onde ele esta, e
+     diz melhor: ele e a verba, e nao a fracao. */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 20px;
+    background: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: var(--bevel-fine);
+  }
+
+  input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: var(--bevel-fine);
+  }
+
+  /* O polegar sobe 5px para centrar na pista de 6: no dialeto do WebKit ele e
+     posicionado pelo TOPO da pista, e nao pelo meio dela. */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    margin-top: -5px;
+    border-radius: 999px;
+    background: var(--brand);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: none;
+    border-radius: 999px;
+    background: var(--brand);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
   /* ── MEDIDOR SEGMENTADO ─────────────────────────────────────────────────────
      Tres segmentos que somam 100%. O que separa um do outro e um vao, nunca uma
      borda: dois tons proximos encostados viram uma faixa continua, e o medidor
-     perde justamente a informacao que existe para dar. */
+     perde justamente a informacao que existe para dar.
+
+     ⚠ ELE ATENDE HOJE UMA PECA SO, e ela esta estacionada: a aprovacao, em
+     `70-screen-approval.css`. Continua aqui — e nao la — porque um medidor de
+     partes que somam o todo e o oposto de especifico, e o dia em que a
+     composicao do Congresso ou a fatia de cada bancada precisar de um, e este. */
   .meter {
     display: flex;
     gap: 2px;

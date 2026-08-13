@@ -1,0 +1,426 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TELA · A MESA — onde o mes se resolve.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   TRES BLOCOS, E A ORDEM E A DA DECISAO: o que esta em pauta, quanto cada
+   bancada entrega pela verba oferecida, e se o caixa cobre o que foi prometido.
+   Quem lê de cima para baixo lê a pergunta, a negociacao e a resposta.
+
+   ── O QUE E CERTEZA E O QUE E RISCO, na hierarquia visual ────────────────────
+   A distincao e do modelo e a tela tem de carrega-la. O RATEIO e deterministico:
+   dada a promessa e a folga, o corte e uma conta — e o resumo o afirma sem
+   ressalva, em tipo pequeno e cor de texto. O PLACAR e sorteado no dia — e ele
+   aparece no maior degrau da escala, com a banda colada no numero. Trocar os
+   dois de lugar ensinaria o jogador a duvidar do que e certo e a confiar no que
+   e incerto.
+
+   ── UMA LAMINA, E UMA FAIXA ─────────────────────────────────────────────────
+   A tela tem duas superficies e nao seis: a faixa de indices (nivel `support`,
+   porque ela informa) e a mesa (nivel `stage`, porque ela e o assunto). As
+   bancadas dentro dela sao linhas de uma tabela, e nao cartoes — cada bancada
+   com moldura propria seriam quatro pesos para dizer quatro coisas do mesmo
+   nivel, que e o ruido que a regra de forma dos componentes existe para impedir.
+
+   ── A COR DA BASE ───────────────────────────────────────────────────────────
+   Tres humores, tres tratamentos, e nenhum deles e ambar: a marca e a cor do que
+   se pressiona, e uma bancada nao se pressiona. Com o governo lê VERDE, e os
+   dois degraus de baixo leem VERMELHO — mas nao o mesmo vermelho de mesma
+   forma. Obstrucao tinge a linha; ruptura tinge mais e acende uma barra na
+   quina esquerda, porque obstruir e romper sao situacoes politicas distintas e
+   nao dois pontos de uma reta. Diferenca de categoria pede forma diferente. */
+
+@layer screens {
+  /* ── A FAIXA DE INDICES ─────────────────────────────────────────────────────
+     Seis medidores, uma superficie so. O separador e o mesmo fio de duas paradas
+     da faixa de contexto: clara em cima, escura embaixo, porque a luz vem de
+     cima. `box-shadow` nao ocupa espaco, entao nenhuma medida de caixa muda. */
+  .gauges {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    overflow: hidden;
+  }
+
+  .gauge {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    text-align: left;
+    transition: background var(--dur-touch) linear;
+  }
+
+  .gauge:not(:first-child) {
+    box-shadow:
+      -1px 0 0 rgba(255, 255, 255, 0.13),
+      -1px 0 0 rgba(0, 0, 0, 0.22) inset;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .gauge:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  .gauge__label {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .gauge__read {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .gauge__value {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-title);
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  /* A escada de blocos e texto, e por isso ela desce pela linha de base junto
+     com o numero. O aperto negativo cola os degraus: com o espaco normal entre
+     caracteres, seis blocos leem como seis simbolos e nao como uma curva. */
+  .gauge__trend {
+    font-size: 0.72rem;
+    line-height: 1;
+    letter-spacing: -0.08em;
+    color: var(--ink-dim);
+  }
+
+  /* A BARRA E A LINHA D'AGUA. Os dois unicos numeros desta folha que nao sao
+     decisao visual: `--index` e o indice daquela area, escrito pela view em
+     estilo inline, e `--neutral` e o ponto neutro do catalogo, injetado pelo
+     entrypoint. Ambos sao DADO, e por isso estao declarados na lista de excecoes
+     da guarda de tokens em vez de virarem valor de paleta. */
+  .gauge__track {
+    position: relative;
+    height: 4px;
+    margin-top: var(--space-1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .gauge__track::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(1% * var(--index));
+    background: var(--ink-soft);
+  }
+
+  /* A linha d'agua e um VAO escuro sobre o preenchimento, e nao um traco claro:
+     traco claro sobre barra clara desaparece justamente no caso que importa —
+     o da area que passou do ponto neutro. */
+  .gauge__track::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(1% * var(--neutral));
+    width: 2px;
+    background: rgba(0, 0, 0, 0.65);
+  }
+
+  /* ── A MESA ─────────────────────────────────────────────────────────────── */
+  .mesa {
+    display: grid;
+    gap: var(--space-4);
+    padding: clamp(20px, 3vw, 28px);
+  }
+
+  .mesa__head {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .mesa__eyebrow {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .mesa__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-title);
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  /* A LINHA DE FICHA TECNICA: instrumento, area, rito, quorum e impacto fiscal.
+     Ela e deliberadamente cinza e pequena — e o que a pauta E, e nao o que o
+     jogador tem de decidir. */
+  .mesa__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    margin-top: var(--space-1);
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+  }
+
+  /* TROCAR e a unica coisa pressionavel desta linha, e por isso e a unica
+     ambar. Ela leva de volta a area de onde a pauta veio. */
+  .mesa__swap {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 800;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--brand);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .mesa__swap:hover {
+      text-decoration: underline;
+    }
+  }
+
+  /* ── AS BANCADAS ────────────────────────────────────────────────────────────
+     Quatro linhas, quatro colunas: quem e, como esta, quanto recebe, o que
+     entrega. As colunas sao FIXAS de proposito — com largura automatica cada
+     linha se alinharia sozinha e a coluna de numeros deixaria de ser coluna. */
+  .mesa__benches {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .bench {
+    display: grid;
+    grid-template-columns: minmax(96px, 1fr) auto minmax(120px, 1.4fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-piece);
+    background: rgba(255, 255, 255, 0.04);
+    transition: background var(--dur-piece) linear;
+  }
+
+  .bench__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* O HUMOR CARREGA A COR EM DOIS CANAIS: o numero e um ponto. Cor sozinha nao e
+     canal suficiente, e o `title` que a view escreve diz por extenso o que o
+     ponto significa. */
+  .bench__mood {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .bench__mood i {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .bench[data-mood="loyal"] .bench__mood {
+    color: var(--signal-up);
+  }
+
+  .bench[data-mood="obstructing"] {
+    background: rgba(var(--crisis-rgb), 0.1);
+  }
+
+  .bench[data-mood="obstructing"] .bench__mood {
+    color: var(--signal-down);
+  }
+
+  /* RUPTURA NAO E OBSTRUCAO COM MAIS TINTA. A barra na quina esquerda e a forma
+     que separa as duas: uma e a base reclamando, a outra e a base fora. */
+  .bench[data-mood="broken"] {
+    background: rgba(var(--crisis-rgb), 0.2);
+    box-shadow: inset 3px 0 0 var(--crisis);
+  }
+
+  .bench[data-mood="broken"] .bench__mood {
+    color: var(--signal-down);
+  }
+
+  /* A LEITURA: fracao, custo e cadeiras. Colunas de largura declarada em `ch`
+     para os numeros baterem entre as quatro linhas — com `auto`, cada linha se
+     alinharia sozinha e a comparacao de relance sumiria. */
+  .bench__read {
+    display: grid;
+    grid-template-columns: 4ch 10ch 9ch;
+    align-items: baseline;
+    justify-items: end;
+    gap: var(--space-3);
+  }
+
+  .bench__share {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .bench__cost {
+    color: var(--ink-soft);
+  }
+
+  .bench__votes {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .bench__votes small {
+    font-size: 0.78em;
+    font-weight: 400;
+    color: var(--ink-dim);
+  }
+
+  /* ── O RESUMO ───────────────────────────────────────────────────────────────
+     O placar previsto recebe o maior degrau da escala porque e o dado dramatico
+     desta tela: e o numero que decide se o mes vale a pena. */
+  .tally {
+    display: grid;
+    gap: var(--space-1);
+    padding-top: var(--space-3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .tally__forecast {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-hero);
+    line-height: 0.95;
+    color: var(--ink);
+  }
+
+  /* A BANDA E MENOR QUE O PLACAR E MAIOR QUE O RESTO — ela e a segunda coisa
+     mais importante da tela, e nao um adendo entre parenteses. */
+  .tally__band {
+    font-size: 0.36em;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+
+  .tally__forecast small {
+    font-size: 0.24em;
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-left: 0.4em;
+  }
+
+  /* O VEREDITO NASCE NEUTRO. Verde e vermelho sao respostas a uma pergunta que
+     so existe quando ha votacao — sem pauta na mesa, a frase e instrucao e nao
+     resultado, e vesti-la de aprovada ensina o sinal errado. */
+  .tally__verdict {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-verdict);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .tally__verdict[data-passes="true"] {
+    color: var(--signal-up);
+  }
+
+  .tally__verdict[data-passes="false"] {
+    color: var(--signal-down);
+  }
+
+  /* O DINHEIRO VEM SEM RESSALVA porque o rateio e uma conta, e nao um sorteio.
+     Quando ele nao cabe, a linha inteira vira vermelha: o corte ja esta
+     decidido, e a tela nao tem o que negociar com o jogador. */
+  .tally__cash {
+    color: var(--ink-soft);
+  }
+
+  .tally__cash b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .tally__cash[data-fits="false"],
+  .tally__cash[data-fits="false"] b {
+    color: var(--crisis);
+  }
+
+  /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
+     A faixa passa de seis colunas para tres, e o fio muda de lugar junto: com
+     duas fileiras, o separador tem de sumir no inicio de cada uma, senao ele
+     pende no vazio da quina esquerda. */
+  @media (max-width: 900px) {
+    .gauges {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .gauge:not(:first-child) {
+      box-shadow: none;
+    }
+
+    .gauge:not(:nth-child(3n + 1)) {
+      box-shadow:
+        -1px 0 0 rgba(255, 255, 255, 0.13),
+        -1px 0 0 rgba(0, 0, 0, 0.22) inset;
+    }
+
+    .gauge:nth-child(n + 4) {
+      box-shadow:
+        -1px 0 0 rgba(255, 255, 255, 0.13),
+        -1px 0 0 rgba(0, 0, 0, 0.22) inset,
+        0 1px 0 rgba(255, 255, 255, 0.13) inset;
+    }
+
+    .gauge:nth-child(4) {
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13);
+    }
+  }
+
+  /* No celular a bancada vira DUAS linhas: nome e humor em cima, controle e
+     leitura embaixo. Quatro colunas num aparelho de 390px poriam o controle
+     deslizante em 60px de largura, e ai o passo de 5% deixa de ser alcancavel
+     com o polegar. */
+  @media (max-width: 640px) {
+    .bench {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-2) var(--space-3);
+    }
+
+    .bench__slider {
+      grid-column: 1;
+    }
+
+    .bench__read {
+      grid-column: 2;
+      grid-template-columns: 4ch 9ch;
+      row-gap: 0;
+    }
+
+    /* As cadeiras sobem para a primeira coluna da leitura e ficam sozinhas na
+       segunda fileira: e o numero que o jogador esta comprando. */
+    .bench__votes {
+      grid-column: 1 / -1;
+      justify-self: end;
+    }
+  }
+}

@@ -31,8 +31,22 @@ export const name = "tokens";
 const TOKENS_FILE = "styles/00-tokens.css";
 
 /* Injetados em runtime por JavaScript ou pelo proprio navegador: nao terem
-   declaracao no arquivo de tokens e correto, e acusa-los seria falso positivo. */
-const RUNTIME = new Set(["--part-color"]);
+   declaracao no arquivo de tokens e correto, e acusa-los seria falso positivo.
+
+   ⚠ ESTA LISTA E UM BURACO NA GUARDA, e por isso cada entrada precisa de razao.
+   Um token daqui deixa de ser conferido: se ninguem o injetar, a declaracao que
+   o consome fica invalida em silencio — exatamente o defeito que o item 4 desta
+   guarda existe para pegar. Entra aqui so o que e DADO, e nao valor visual:
+
+     --part-color  a cor de um segmento do medidor, declarada na regra do
+                   proprio segmento em `30-components.css`;
+     --neutral     o ponto neutro do indice de area, que vem do CATALOGO e nao
+                   da paleta — 50 e regra de jogo, e duplica-lo no arquivo de
+                   tokens criaria um segundo lugar para ele divergir;
+     --index       o indice corrente de uma area, escrito em estilo inline pela
+                   propria faixa de medidores: e um numero por elemento, e nao
+                   um valor do sistema. */
+const RUNTIME = new Set(["--part-color", "--neutral", "--index"]);
 
 /**
  * @param {Map<string, string>} files

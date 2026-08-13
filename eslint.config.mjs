@@ -14,6 +14,10 @@ const BROWSER = {
   Image: "readonly",
   HTMLDialogElement: "readonly",
   HTMLElement: "readonly",
+  /* Os gestos da tela chegam por DELEGACAO — um listener no documento, e nao um
+     por controle —, e delegacao obriga a perguntar o que foi tocado. `instanceof
+     HTMLInputElement` e essa pergunta para os controles deslizantes. */
+  HTMLInputElement: "readonly",
 };
 
 const NODE = {

@@ -33,7 +33,10 @@
     <link rel="stylesheet" href="styles/10-base.css" />
     <link rel="stylesheet" href="styles/20-material.css" />
     <link rel="stylesheet" href="styles/30-components.css" />
-    <link rel="stylesheet" href="styles/40-screen-dashboard.css" />
+    <link rel="stylesheet" href="styles/40-shell.css" />
+    <link rel="stylesheet" href="styles/50-screen-mesa.css" />
+    <link rel="stylesheet" href="styles/60-screen-area.css" />
+    <link rel="stylesheet" href="styles/70-screen-approval.css" />
     <link rel="stylesheet" href="styles/90-motion.css" />
   </head>
 
@@ -62,14 +65,15 @@
         </div>
       </nav>
 
-      <!-- ═══ PAINEL DO MES — a tela de referencia ═══════════════════════ -->
-      <main class="dashboard" id="dashboard">
-        <!-- ── A peca central: o dado dramatico do momento ──────────────── -->
-        <section class="stage glass-stage" id="stage" aria-live="polite"></section>
-
-        <!-- ── A segunda leitura: a frase que diz o que esta em jogo ────── -->
-        <p class="verdict glass-support" id="verdict"></p>
-      </main>
+      <!-- ═══ O TABULEIRO — a tela corrente, e ela inteira ═══════════════════
+           Ele nasce VAZIO e e substituido por completo a cada pintura: a Mesa e
+           as seis areas sao conteudos deste mesmo lugar, e nao paineis que se
+           escondem um atras do outro.
+           A consequencia esta escrita aqui porque ela ja custou caro: NADA que
+           precise sobreviver a troca de tela pode morar dentro deste elemento.
+           O veredito morava, e por isso desceu para o rail da direita — de la
+           ele atravessa a troca sem ser reconstruido. -->
+      <main class="board" id="main"></main>
 
       <!-- ═══ O RAIL DA DIREITA — a MESMA peca, espelhada ═══════════════════
            Mesma largura, mesma lamina, mesma margem, mesmo raio, mesmo rodape
@@ -81,6 +85,11 @@
       <aside class="rail glass-support" aria-label="Indicadores do mês">
         <p class="rail__mark" id="turn"></p>
         <div class="strip strip--stacked" id="context"></div>
+
+        <!-- A SEGUNDA LEITURA: a unica frase que diz o que esta em jogo. Aqui
+             ela perde a lamina que tinha na tela anterior — o rail JA e vidro,
+             e vidro sobre vidro sao dois materiais empilhados no lugar de um. -->
+        <p class="verdict" id="verdict"></p>
 
         <div class="rail__foot">
           <button class="action action--primary glass-action" id="advance" type="button">

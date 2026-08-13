@@ -1,0 +1,354 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TELA · AREA — um molde, seis instancias.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   TRES VERBOS, SEMPRE NESTA ORDEM, e a ordem e o CUSTO DE EXECUTAR cada um:
+   alocar nao precisa de ninguem, pautar precisa do Congresso, e vigente ja foi
+   decidido e so cobra. Quem lê de cima para baixo lê da acao mais barata para a
+   mais cara, e termina na conta que as decisoes passadas continuam mandando todo
+   mes.
+
+   UMA LAMINA, TRES SECOES. Os blocos sao separados por ESPACO e por um rotulo,
+   nunca por moldura: eles disputam a mesma bolsa, e tres cartoes independentes
+   desmanchariam justamente a relacao que a tela existe para mostrar. A regra de
+   espaco vale ao pe da letra — dentro de um grupo, 8 a 12; entre grupos, 24 e
+   mais.
+
+   O QUE ESTA TELA NAO FAZ: ela nao decide. Escolher uma acao aqui leva a Mesa,
+   porque emendar sem ver o placar seria negociar no escuro. O unico controle que
+   se resolve aqui e a alocacao — e ele se resolve aqui porque nao depende de
+   voto nenhum. */
+
+@layer screens {
+  .area {
+    display: grid;
+    gap: var(--space-6);
+    padding: clamp(20px, 3vw, 28px);
+  }
+
+  /* ── O INDICE ───────────────────────────────────────────────────────────────
+     Nivel a esquerda, tendencia a direita. O numero sozinho nao diz nada: `61`
+     e bom ou pessimo dependendo de onde estava ha um ano, e e por isso que a
+     variacao de doze meses tem peso proprio na mesma linha. */
+  .area__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .area__eyebrow {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .area__value {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-hero);
+    line-height: 0.95;
+    color: var(--ink);
+  }
+
+  /* A ESCADA E PEQUENA DE PROPOSITO. Em 0,26em ela media 19px de altura e os
+     blocos, que sao retangulos solidos e se ladrilham, colavam num tarjao unico
+     ao lado do indice — uma serie estavel virava o que parece um retangulo de
+     carregamento. No tamanho de rotulo ela volta a ser o que e: uma marca de
+     tendencia, e nao um segundo indicador competindo com o numero. */
+  .area__spark {
+    font-size: 0.18em;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    color: var(--ink-dim);
+  }
+
+  /* A VARIACAO herda cor e sinal da peca `.trend`; daqui sai so o tamanho. */
+  .area__delta {
+    font-size: var(--text-title);
+    line-height: 1.2;
+  }
+
+  .area__delta small {
+    font-size: 0.5em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* ── OS BLOCOS ────────────────────────────────────────────────────────────── */
+  .area__block {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .area__legend {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .area__total {
+    color: var(--ink);
+  }
+
+  .area__empty {
+    color: var(--ink-dim);
+  }
+
+  /* ── ALOCAR ─────────────────────────────────────────────────────────────────
+     Controle a esquerda, leitura a direita, e a leitura NAO fica embaixo do
+     controle: quem arrasta cobre com a mao o que estiver abaixo do dedo, e o
+     numero que muda e justamente o que ele esta tentando ler. */
+  .allot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .allot__read {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+
+  .allot__value {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-title);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* `61 → 63` em cima e `parado: 60` embaixo. O contrafactual e a metade que
+     importa: sem ele o jogador ve o indice subir e conclui que investir
+     "funciona"; com ele, ve quanto do dinheiro esta so segurando o decaimento. */
+  .allot__projection {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .allot__projection small {
+    font-size: 0.82em;
+    color: var(--ink-dim);
+  }
+
+  /* A LINHA QUE FAZ A TELA VIRAR DECISAO: o que sobra no mes e o que ja foi
+     prometido as outras areas. Sem ela seriam seis controles independentes, e
+     mover um nao significaria nada. */
+  .allot__pool {
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+  }
+
+  .allot__pool b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* ── PAUTAR E VIGENTE ───────────────────────────────────────────────────────
+     A mesma linha nas duas listas, com uma diferenca de tinta: o que ja esta em
+     vigor nao se pressiona, entao ele perde o botao e recua um tom.
+
+     AS COLUNAS SAO FIXAS em `ch` para os numeros baterem entre as linhas —
+     coluna de numero que se alinha sozinha por linha deixa de ser coluna, e a
+     comparacao de relance e o unico motivo de a lista ser uma lista. */
+  /* AS COLUNAS SAO EM `rem`, E NAO EM `ch`, e a diferenca derrubou o primeiro
+     desenho. `ch` e a largura do zero NA FONTE DO PROPRIO ELEMENTO: a legenda
+     roda no degrau de rotulo, de 10px, e as linhas no corpo de 13,6px — as
+     mesmas `10ch` viravam 55px numa e 85px na outra, e as duas grades nunca
+     chegaram a se alinhar. As legendas se sobrepunham porque cada uma ocupava
+     uma coluna mais estreita que ela mesma.
+     `rem` sai do documento e vale igual nas duas. A largura e ditada pelo
+     ROTULO, que e a carga maior: "despesa/ano" nao cabe onde "−140" cabe. */
+  .action-head,
+  .action-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 3.2rem 5.4rem 3.4rem auto;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  /* A LEGENDA das tres colunas de numero. Ela nao repete as duas primeiras: o
+     nome da acao e a etiqueta do instrumento se explicam sozinhos. */
+  .action-head {
+    padding-bottom: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    /* Menos aperto que o rotulo padrao: o de sistema e calibrado para uma ou
+       duas palavras isoladas, e aqui sao tres rotulos disputando uma linha. */
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .action-head .action-row__quorum {
+    grid-column: 3;
+  }
+  .action-head .action-row__fiscal {
+    grid-column: 4;
+  }
+  .action-head .action-row__lift {
+    grid-column: 5;
+  }
+
+  .action-list {
+    display: grid;
+    gap: var(--space-1);
+    list-style: none;
+  }
+
+  .action-row {
+    border-radius: var(--radius-piece);
+    background: rgba(255, 255, 255, 0.04);
+    transition: background var(--dur-touch) linear;
+  }
+
+  .action-row__name {
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .action-row__quorum,
+  .action-row__fiscal,
+  .action-row__lift {
+    text-align: right;
+    color: var(--ink-soft);
+  }
+
+  /* O IMPACTO NO INDICE E A UNICA COLUNA COM SINAL DE COR, e a distincao e do
+     modelo e nao de gosto: `+8` no indice de saude e inequivocamente melhora, e
+     `−140` de despesa nao e bom nem ruim — e um governo que gasta menos numa
+     area onde talvez precisasse gastar. Pintar as duas de verde e vermelho
+     ensinaria que economizar e sempre certo. */
+  .action-row__lift {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* ── A ACAO EM PAUTA ────────────────────────────────────────────────────────
+     A linha corrente recebe ambar rasa e uma barra na quina, do mesmo jeito que
+     o item corrente do rail — e pela mesma razao: a marca e a cor do que se
+     pressiona, e gasta-la cheia numa linha de lista enfraqueceria os botoes de
+     verdade da tela. */
+  .action-row--live {
+    background: rgba(var(--brand-rgb), 0.14);
+    box-shadow: inset 2px 0 0 var(--brand);
+  }
+
+  .action-row__live {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 800;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    text-align: right;
+    color: var(--brand);
+  }
+
+  .action-row__pick {
+    padding: 4px var(--space-3);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 800;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--brand);
+    background: rgba(var(--brand-rgb), 0.14);
+    transition: background var(--dur-touch) linear;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .action-row:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .action-row--live:hover {
+      background: rgba(var(--brand-rgb), 0.14);
+    }
+
+    .action-row__pick:hover {
+      background: rgba(var(--brand-rgb), 0.28);
+    }
+  }
+
+  /* ── O QUE JA ESTA EM VIGOR ─────────────────────────────────────────────────
+     Tres colunas em vez de seis: nome, instrumento e a conta que ele cobra todo
+     ano. Quorum e impacto no indice sairam porque ja aconteceram — mostrar o
+     quorum de uma lei aprovada e mostrar uma pergunta ja respondida. */
+  .action-list--done .action-row {
+    grid-template-columns: minmax(0, 1fr) auto 6rem;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .action-list--done .action-row__name {
+    color: var(--ink-soft);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .action-list--done .action-row:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  }
+
+  /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
+     No celular a acao vira DUAS fileiras: nome e etiqueta em cima, numeros e
+     botao embaixo. A legenda de colunas sai — ela so faz sentido enquanto as
+     colunas existem, e uma legenda apontando para lugar nenhum e pior que
+     nenhuma. */
+  @media (max-width: 640px) {
+    .action-head {
+      display: none;
+    }
+
+    .action-row {
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      gap: var(--space-2) var(--space-3);
+    }
+
+    .action-row__name {
+      grid-column: 1;
+    }
+
+    .action-row__quorum {
+      grid-column: 1;
+      text-align: left;
+    }
+
+    .action-list--done .action-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .allot {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+
+    .allot__read {
+      justify-content: space-between;
+    }
+  }
+}

@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TELA · APROVACAO — a peca ESTACIONADA.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   ⚠ NADA AQUI ESTA MONTADO HOJE. `approvalHtml` existe, e pura e continua
+   correta, mas o entrypoint deixou de chama-la: quem produz o numero da
+   aprovacao e SONDA, que ainda nao existe, e um indicador congelado em 31% ao
+   lado de controles que funcionam ensina o jogador a desconfiar de todos os
+   numeros da tela. A razao inteira esta em `app.mjs`, na linha que retirou o
+   import.
+
+   POR QUE OS ESTILOS FICAM JUNTO DA VIEW, e nao sao apagados. Separar os dois
+   nao economiza nada e cria uma regressao silenciosa: no dia em que SONDA
+   entrar, a view volta a renderizar e volta SEM FORMA — e o sintoma aparece na
+   tela, longe da causa, que foi uma limpeza feita meses antes. Enquanto os dois
+   estao parados juntos, o retorno e uma linha de `import`.
+
+   O QUE ISTO NAO E: uma tela. Nao existe rota, item de rail nem gesto que
+   chegue aqui. Se SONDA der outra casa a aprovacao — um medidor na faixa, um
+   campo no rail —, este arquivo morre com o desenho antigo, e morrer inteiro e
+   mais barato do que continuar meio vivo. */
+
+@layer screens {
+  /* A PECA CENTRAL do desenho anterior: uma superficie, um numero grande. */
+  .stage {
+    width: min(var(--column-wide), 100%);
+    padding: clamp(28px, 4.4vw, 46px) clamp(24px, 3.4vw, 40px);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    text-align: center;
+  }
+
+  .stage__label {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* O DADO DRAMATICO recebe o maior degrau da escala. Ele nao e decoracao de
+     tamanho: e a grandeza que resolve a leitura da tela inteira. */
+  .stage__hero {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-hero);
+    line-height: 0.95;
+    color: var(--ink);
+  }
+
+  .stage__hero span {
+    font-size: 0.42em;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-left: 0.08em;
+  }
+
+  .stage__meter {
+    width: min(100%, 520px);
+    margin-top: var(--space-2);
+  }
+
+  .stage__legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-6);
+    list-style: none;
+  }
+
+  .stage__legend li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .stage__legend i {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--part-color);
+  }
+  .stage__legend li[data-part="good"] {
+    --part-color: var(--growth);
+  }
+  .stage__legend li[data-part="fair"] {
+    --part-color: var(--stable);
+  }
+  .stage__legend li[data-part="poor"] {
+    --part-color: var(--crisis);
+  }
+
+  .stage__legend b {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+}

@@ -1,37 +1,40 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   TELA · PAINEL DO MES — a tela de REFERENCIA do projeto.
+   A CASCA E O SUBSTRATO — o que existe embaixo de toda tela.
    ═══════════════════════════════════════════════════════════════════════════
 
-   As outras telas herdam desta, uma por vez. O que ela estabelece:
+   ESTE ARQUIVO NASCEU POR ORDEM DO ANTERIOR. `40-screen-dashboard.css` dizia, na
+   propria prosa: a casca e o substrato vivem aqui "enquanto houver UMA tela;
+   quando a segunda chegar, casca e substrato saem para uma folha propria, porque
+   ai passam a ser de todas e nao desta". Chegaram sete — a Mesa e as seis areas.
 
-     · o GRAFO e o substrato, e nao um lugar que se visita. Vidro precisa de
-       conteudo estruturado atras — o olho nao lê material pelo desfoque, lê
+   O que ele estabelece continua valendo palavra por palavra:
+
+     · o CAMPO DE LUZ e o substrato, e nao um lugar que se visita. Vidro precisa
+       de conteudo estruturado atras — o olho nao lê material pelo desfoque, lê
        pela diferenca entre a coisa nitida e a mesma coisa borrada. Sobre um
        gradiente liso, `backdrop-filter` nao tem o que distorcer e vira custo de
        GPU sem imagem;
      · a SITUACAO do pais veste o ambiente por um GEL, nunca por uma camada
        chapada de cor. Camada chapada soma o mesmo em cada pixel, entao governa
        duas grandezas em sentidos opostos: mais forte identifica a situacao e
-       apaga o grafo, mais fraca faz o inverso. Nao existe valor que resolva os
+       apaga o fundo, mais fraca faz o inverso. Nao existe valor que resolva os
        dois, porque o conflito e estrutural. `mix-blend-mode: overlay` deixa de
        somar e passa a MODULAR — onde o fundo e escuro ele multiplica, onde e
        claro ele clareia —, e as duas medidas sobem juntas;
      · a MASCARA do gel decide ONDE ele existe: transparente no miolo, opaca nas
        bordas. A cor identifica a situacao na periferia e recua de onde o
-       conteudo vive. Uma camada a mais pintaria tinta sobre o grafo; mascara
-       nao pinta nada. */
+       conteudo vive. Uma camada a mais pintaria tinta sobre o fundo; mascara nao
+       pinta nada. */
 
 @layer screens {
   /* ── A CASCA ────────────────────────────────────────────────────────────────
-     Rail a esquerda, conteudo a direita. Ela vive neste arquivo enquanto houver
-     UMA tela; quando a segunda chegar, casca e substrato saem para uma folha
-     propria, porque ai passam a ser de todas e nao desta. */
+     Rail a esquerda, tabuleiro no meio, rail a direita. */
   .shell {
     position: relative;
     isolation: isolate;
     min-height: 100dvh;
     display: grid;
-    /* RAIL · CONTEUDO · RAIL. As duas trilhas de fora sao `auto` e recebem a
+    /* RAIL · TABULEIRO · RAIL. As duas trilhas de fora sao `auto` e recebem a
        MESMA peca, entao a simetria nao depende de ninguem lembrar de manter dois
        numeros iguais: ela e consequencia de haver uma largura so, `--rail`.
        `minmax(0, 1fr)` no meio e nao `1fr`. Uma trilha `1fr` tem minimo
@@ -41,22 +44,40 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
   }
 
-  .dashboard {
+  /* ── O TABULEIRO ────────────────────────────────────────────────────────────
+     A tela corrente inteira, trocada por completo a cada pintura.
+
+     ELE NAO CENTRA NA VERTICAL, e a tela anterior centrava. A diferenca e de
+     conteudo: com uma peca so, centrar era o certo; com uma faixa, uma lamina e
+     um resumo que mudam de altura conforme a pauta escolhida, centrar faria a
+     tela inteira DESLIZAR debaixo do ponteiro toda vez que o jogador trocasse de
+     acao. Conteudo que cresce cresce para baixo. */
+  .board {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0;
-    padding: var(--space-8) clamp(24px, 5vw, 64px);
+    gap: var(--space-4);
+    /* O RODAPE E MAIOR QUE O TOPO, e nao por simetria quebrada: a tela rola, e o
+       ultimo bloco de uma tela que rola precisa de folga embaixo para nao
+       parecer cortado pela borda da janela. */
+    padding: var(--space-8) clamp(24px, 5vw, 64px) var(--space-11);
     /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela:
-       `1fr` num grid tem minimo automatico igual ao conteudo, e sem esta linha
-       a peca central de 780px cria rolagem horizontal no tablet. */
+       `1fr` num grid tem minimo automatico igual ao conteudo, e sem esta linha a
+       peca de 780px cria rolagem horizontal no tablet. */
     min-width: 0;
+  }
+
+  /* A LARGURA E DO TABULEIRO, e nao de cada tela. Se cada peca declarasse a
+     propria, a Mesa e a area divergiriam em algum ajuste e a troca de tela
+     passaria a mexer na coluna — que e o tipo de instabilidade que ninguem
+     atribui a causa certa. */
+  .board > * {
+    width: min(var(--column-wide), 100%);
   }
 
   /* ── O SUBSTRATO ────────────────────────────────────────────────────────────
      Ele cobre a JANELA e nao a area de conteudo: o rail tambem e vidro, e vidro
-     sobre nada nao refrata. `fixed` para que o grafo nao deslize quando o
+     sobre nada nao refrata. `fixed` para que o fundo nao deslize quando o
      conteudo rolar — fundo em movimento sob `backdrop-filter` e a condicao dos
      31 fps, e aqui ele nao se move nem quando a pagina rola. */
   .backdrop {
@@ -79,7 +100,7 @@
       radial-gradient(52% 44% at 34% 78%, rgba(var(--stable-rgb), 0.26), transparent 70%),
       var(--bg-deep);
     /* O gel abaixo usa `mix-blend-mode`. Sem contexto proprio ele misturaria com
-       o que estiver atras do substrato inteiro, e nao com o grafo. */
+       o que estiver atras do substrato inteiro, e nao com o campo de luz. */
     isolation: isolate;
     overflow: hidden;
     pointer-events: none;
@@ -141,7 +162,8 @@
 
   /* SCRIM. Densidade onde ha leitura, e nao densidade uniforme: escurecer a
      tela inteira custaria o substrato que o vidro precisa.
-     Ele mora na CASCA e nao no painel porque o rail tambem lê por cima dele. */
+     Ele mora na CASCA e nao no tabuleiro porque o rail tambem lê por cima
+     dele. */
   .shell::before {
     content: "";
     position: fixed;
@@ -161,124 +183,6 @@
       radial-gradient(124% 84% at 50% 48%, transparent 38%, rgba(var(--bg-deep-rgb), 0.52) 100%);
   }
 
-  /* ── A COLUNA ───────────────────────────────────────────────────────────────
-     Duas larguras, e a diferenca e deliberada: a peca central e mais larga
-     porque e o assunto da tela; a moldura e mais estreita porque e contexto.
-     Os vaos vivem como margem nos proprios blocos, e nao num `gap` unico: gap
-     unico da a mesma distancia entre tudo, e distancia igual significa que nada
-     pertence a nada. */
-  .dashboard__frame {
-    width: min(var(--column), 100%);
-    margin-bottom: var(--space-8);
-  }
-
-  /* ── A PECA CENTRAL ─────────────────────────────────────────────────────── */
-  .stage {
-    width: min(var(--column-wide), 100%);
-    padding: clamp(28px, 4.4vw, 46px) clamp(24px, 3.4vw, 40px);
-    display: grid;
-    justify-items: center;
-    gap: var(--space-3);
-    text-align: center;
-  }
-
-  .stage__label {
-    font-family: var(--font-display);
-    font-size: var(--text-label);
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-
-  /* O DADO DRAMATICO recebe o maior degrau da escala. Ele nao e decoracao de
-     tamanho: e a grandeza que resolve a leitura da tela inteira. */
-  .stage__hero {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: var(--text-hero);
-    line-height: 0.95;
-    color: var(--ink);
-  }
-
-  .stage__hero span {
-    font-size: 0.42em;
-    font-weight: 700;
-    color: var(--ink-soft);
-    margin-left: 0.08em;
-  }
-
-  .stage__meter {
-    width: min(100%, 520px);
-    margin-top: var(--space-2);
-  }
-
-  .stage__legend {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-2) var(--space-6);
-    list-style: none;
-  }
-
-  .stage__legend li {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: var(--text-label);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-
-  .stage__legend i {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    background: var(--part-color);
-  }
-  .stage__legend li[data-part="good"] {
-    --part-color: var(--growth);
-  }
-  .stage__legend li[data-part="fair"] {
-    --part-color: var(--stable);
-  }
-  .stage__legend li[data-part="poor"] {
-    --part-color: var(--crisis);
-  }
-
-  .stage__legend b {
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* ── O VEREDITO ─────────────────────────────────────────────────────────────
-     A segunda leitura da tela: a unica frase que diz o que esta em jogo. Ela
-     e a mesma peca da faixa de contexto, agora embaixo — mesmo material, mesmo
-     raio, mesma largura da peca central. */
-  .verdict {
-    width: min(var(--column-wide), 100%);
-    margin-top: var(--space-2);
-    margin-bottom: var(--space-11);
-    padding: var(--space-2) var(--space-4);
-    text-align: center;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: var(--text-verdict);
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-
-  /* ── AS ACOES ───────────────────────────────────────────────────────────── */
-  .actions {
-    display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
-    width: min(var(--column), 100%);
-  }
-
   /* ── QUANDO O RAIL NAO CABE ─────────────────────────────────────────────────
      Abaixo de 900px a lateral vira uma FAIXA no topo. Ela nao encolhe para uma
      tira de icones sem rotulo: icone sozinho e o que obriga a decorar um menu, e
@@ -291,7 +195,7 @@
     }
 
     /* A lamina continua COLUNA e so perde a altura da janela. Vira-la em linha
-       poria marca, seis secoes e duas acoes na mesma faixa, e ai o botao de
+       poria marca, sete secoes e duas acoes na mesma faixa, e ai o botao de
        turno cai abaixo do alvo de toque. */
     .rail {
       position: static;
@@ -330,10 +234,17 @@
         -1px 0 0 rgba(0, 0, 0, 0.22) inset;
     }
 
-    /* Sem isto cada item pede 100% da faixa — seis vezes a largura inteira, que
+    /* Sem isto cada item pede 100% da faixa — sete vezes a largura inteira, que
        era a origem da rolagem horizontal no tablet e no celular. */
     .rail__item {
       width: auto;
+    }
+
+    /* Deitado, o veredito perde a aresta de cima: ali ele nao esta mais embaixo
+       de campo nenhum, e um fio horizontal solto lê como corte. */
+    .verdict {
+      box-shadow: none;
+      text-align: center;
     }
 
     .rail__foot {
@@ -349,13 +260,11 @@
 
   /* No celular a coluna e uma so, e ai TODA aresta vertical tem de bater. */
   @media (max-width: 640px) {
-    .dashboard {
+    .board {
       padding: var(--space-6) var(--space-4);
     }
 
-    .dashboard__frame,
-    .stage,
-    .verdict {
+    .board > * {
       width: 100%;
     }
 
