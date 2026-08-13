@@ -17,6 +17,7 @@
     "format:fix": "prettier --write .",
     "test": "node --test \"tests/suites/*.mjs\"",
     "screen": "node tests/browser/screen-cost.mjs",
+    "walk": "node tests/browser/walk.mjs",
     "validate": "npm run check && npm run types && npm run lint && npm run format && npm test"
   },
   "devDependencies": {
