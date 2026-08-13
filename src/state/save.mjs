@@ -85,7 +85,6 @@ export function deserialize(text) {
     "seed",
     "month",
     "approval",
-    "situation",
     "loyalty",
     "fiscal",
     "capacity",

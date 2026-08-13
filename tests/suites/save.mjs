@@ -7,11 +7,19 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-import { SCHEMA_VERSION, createState, reduce } from "../../src/state/state.mjs";
+import { SCHEMA_VERSION, createState } from "../../src/state/state.mjs";
 import { deserialize, serialize } from "../../src/state/save.mjs";
+import { playMonth } from "../../src/application/turn.mjs";
 
-/** @type {import("../../src/state/state.mjs").Action} */
-const ADVANCE = { type: "advanceMonth" };
+/* O TURNO DE VERDADE, e nao mais a acao de andaime. Estas provas rodavam sobre
+   `advanceMonth`, que empurrava o mes e oscilava um numero — e provar replay
+   sobre um andaime prova o replay do andaime. Agora elas rodam sobre
+   `playMonth`: mes sem pauta e sem verba, mas com orcamento fechando, lealdade
+   decaindo e capacidade andando. A promessa de replay passa a valer sobre o que
+   o jogador de fato executa. */
+
+/** @param {import("../../src/state/state.mjs").GameState} state */
+const idle = state => playMonth(state).state;
 
 const anySeed = fc.integer({ min: 0, max: 4294967295 });
 
@@ -23,7 +31,7 @@ test("MESMA SEMENTE E MESMAS ACOES DAO O MESMO ESTADO, byte a byte", () => {
     fc.property(anySeed, fc.integer({ min: 0, max: 60 }), (seed, turns) => {
       const play = () => {
         let state = createState(seed);
-        for (let i = 0; i < turns; i++) state = reduce(state, ADVANCE);
+        for (let i = 0; i < turns; i++) state = idle(state);
         return serialize(state);
       };
       assert.equal(play(), play());
@@ -50,7 +58,7 @@ test("salvar e carregar devolve o estado identico", () => {
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 0, max: 60 }), (seed, turns) => {
       let state = createState(seed);
-      for (let i = 0; i < turns; i++) state = reduce(state, ADVANCE);
+      for (let i = 0; i < turns; i++) state = idle(state);
 
       const loaded = deserialize(serialize(state));
       assert.ok(loaded.ok, loaded.ok ? "" : loaded.reason);
@@ -66,16 +74,16 @@ test("a partida CONTINUA do save exatamente como continuaria sem ele", () => {
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 1, max: 24 }), (seed, turns) => {
       let direct = createState(seed);
-      for (let i = 0; i < turns; i++) direct = reduce(direct, ADVANCE);
+      for (let i = 0; i < turns; i++) direct = idle(direct);
 
       let interrupted = createState(seed);
       const half = Math.floor(turns / 2);
-      for (let i = 0; i < half; i++) interrupted = reduce(interrupted, ADVANCE);
+      for (let i = 0; i < half; i++) interrupted = idle(interrupted);
 
       const loaded = deserialize(serialize(interrupted));
       assert.ok(loaded.ok, loaded.ok ? "" : loaded.reason);
       let resumed = loaded.state;
-      for (let i = half; i < turns; i++) resumed = reduce(resumed, ADVANCE);
+      for (let i = half; i < turns; i++) resumed = idle(resumed);
 
       assert.equal(serialize(resumed), serialize(direct));
     }),

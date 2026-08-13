@@ -15,6 +15,7 @@ import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
 import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
 import { PARTIES, PARTY_SCHEMA } from "./parties.mjs";
+import { REGIME, REGIME_SCHEMA } from "./regime.mjs";
 import { collectionViolations, violations } from "./schema.mjs";
 
 export const CATALOG = {
@@ -40,12 +41,25 @@ export function catalogViolations() {
     ...collectionViolations(AREA_SCHEMA, AREAS, "areas"),
     ...collectionViolations(BILL_SCHEMA, BILLS, "bills"),
     ...violations(FISCAL_SCHEMA, FISCAL, "fiscal"),
+    ...violations(REGIME_SCHEMA, REGIME, "regime"),
     /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. Acao apontando
        para area que nao existe nao quebra nada na carga — ela simplesmente
        desaparece da tela da area, e o sintoma e "sumiu uma lei", tres telas longe
        da causa, que e um id digitado errado aqui. */
     ...danglingAreas(),
+    /* O PLENARIO TEM DE FECHAR. As bancadas somam cadeiras e o regime declara
+       quantas existem; se os dois divergirem, toda maioria do jogo passa a ser
+       medida contra um plenario que nao existe — e nenhuma tela denuncia, porque
+       cada lado esta certo sozinho. */
+    ...chamberMismatch(),
   ];
+}
+
+/** @returns {string[]} */
+function chamberMismatch() {
+  const seats = PARTIES.reduce((total, party) => total + party.seats, 0);
+  if (seats === REGIME.seats) return [];
+  return [`regime: as bancadas somam ${seats} cadeiras e o plenario tem ${REGIME.seats}`];
 }
 
 /** @returns {string[]} */

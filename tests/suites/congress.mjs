@@ -11,9 +11,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-import { dispersion, vote, whipCount } from "../../src/domain/congress/index.mjs";
+import {
+  THRESHOLDS,
+  baseCount,
+  dispersion,
+  vote,
+  whipCount,
+} from "../../src/domain/congress/index.mjs";
 import { BILLS, quorumOf } from "../../src/data/bills.mjs";
-import { PARTIES, QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "../../src/data/parties.mjs";
+import { PARTIES } from "../../src/data/parties.mjs";
+import { QUALIFIED_MAJORITY, SEATS, SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 import { streamFrom } from "../../src/state/random.mjs";
 
 /* O QUE VAI A PLENARIO. Decreto nao vota, entao ele nao entra em nenhuma prova
@@ -25,6 +32,10 @@ const VOTABLE = BILLS.filter(bill => bill.instrument !== "decree");
 function everyone(level) {
   return Object.fromEntries(PARTIES.map(party => [party.id, level]));
 }
+
+/* O limiar vem do motor: redigita-lo aqui seria a prova passar a testar o
+   numero que ela mesma escreveu. */
+const RUPTURE_EDGE = THRESHOLDS.rupture;
 
 const LOYAL = everyone(75);
 const NO_MONEY = everyone(0);
@@ -423,5 +434,60 @@ test("base insatisfeita e base IMPREVISIVEL: menos lealdade nunca estreita a ban
         "levantar a base alargou a banda",
       );
     }),
+  );
+});
+
+/* ── A BASE ──────────────────────────────────────────────────────────────────
+   `baseCount` responde "quantas cadeiras respondem ao governo hoje", sem pauta
+   nenhuma na mesa. Ela existe para a tela nao ter de inventar essa conta — e o
+   valor dela depende inteiramente de nao divergir da votacao. */
+
+test("NENHUMA VOTACAO ENTREGA MAIS QUE A BASE, em pauta nenhuma", () => {
+  /* A propriedade que torna a base honesta. A adesao de uma bancada e a
+     logistica da resistencia VEZES o fator de humor, e logistica nunca passa de
+     1 — entao o humor e o teto, e a base e a soma dos tetos. Se algum dia uma
+     votacao passar disso, a tela estara anunciando uma coalizao menor do que a
+     que vota, e o jogador vai achar que ganhou de graca.
+     A folga de tres cadeiras e o arredondamento: cada bancada arredonda o
+     proprio voto, e a base arredonda so o total. */
+  fc.assert(
+    fc.property(anyBill, anyFunding, anyLoyalty, (bill, funding, loyalty) => {
+      const base = baseCount({ parties: PARTIES, loyalty });
+      const forecast = whipCount({ bill, parties: PARTIES, funding, loyalty });
+      assert.ok(
+        forecast.votes <= base + 3,
+        `${bill.id}: a votacao entregou ${forecast.votes} e a base era ${base}`,
+      );
+    }),
+  );
+});
+
+test("a base cabe no plenario, e levantar a lealdade nunca a diminui", () => {
+  fc.assert(
+    fc.property(anyLoyalty, fc.double({ min: 0, max: 100, noNaN: true }), (loyalty, lift) => {
+      const base = baseCount({ parties: PARTIES, loyalty });
+      assert.ok(base >= 0 && base <= SEATS, `a base saiu em ${base} cadeiras`);
+
+      const raised = Object.fromEntries(
+        Object.entries(loyalty).map(([id, level]) => [id, Math.min(100, level + lift)]),
+      );
+      assert.ok(baseCount({ parties: PARTIES, loyalty: raised }) >= base);
+    }),
+  );
+});
+
+test("A RUPTURA E UM DEGRAU, e nao mais um passo da ladeira", () => {
+  /* O que separa "a base reclama" de "a base saiu". Um ponto de lealdade em
+     volta do limiar tem de custar mais que um ponto no meio da faixa — senao os
+     dois degraus declarados no motor sao decoracao. */
+  const at = (/** @type {number} */ level) =>
+    baseCount({ parties: PARTIES, loyalty: everyone(level) });
+
+  const overRupture = at(RUPTURE_EDGE + 1) - at(RUPTURE_EDGE - 1);
+  const midSlope = at(71) - at(69);
+
+  assert.ok(
+    overRupture > midSlope * 3,
+    `cruzar a ruptura custou ${overRupture} cadeiras e um passo qualquer custa ${midSlope}`,
   );
 });

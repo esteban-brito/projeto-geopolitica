@@ -175,6 +175,60 @@ function venalityFor(party, dx, dy) {
 }
 
 /**
+ * O QUANTO O HUMOR SOZINHO DEIXA A BANCADA ENTREGAR, de 0 a 1.
+ *
+ * Ele existe extraido porque DUAS coisas precisam dele e elas nao podem
+ * divergir: a previsao de uma votacao e a leitura da base. Se a segunda
+ * repetisse a formula, bastaria uma recalibragem em um dos dois lugares para a
+ * tela anunciar uma base que o plenario nao entrega — e o sintoma apareceria
+ * como "o Congresso nao bate com o painel", tres telas longe da causa.
+ *
+ * LEALDADE CHEIA NAO COBRA PEDAGIO: o fator vai a 1. A primeira versao parava em
+ * 0,4 + 0,6, e entao mesmo uma bancada perfeitamente alinhada e perfeitamente
+ * satisfeita perdia 18% do voto sem razao nenhuma. O efeito so aparecia somado
+ * ao resto, e o sintoma era o plenario inteiro entregar menos do que qualquer
+ * leitura da tabela sugeria.
+ *
+ * @param {number} mood a lealdade da bancada, de 0 a 100
+ * @returns {number}
+ */
+function moodFactor(mood) {
+  let factor = 0.5 + 0.5 * clamp01(mood / 100);
+
+  /* Os dois degraus, na ordem em que a base os desce. */
+  if (mood < OBSTRUCTION) factor *= OBSTRUCTION_TOLL;
+  if (mood < RUPTURE) factor *= RUPTURE_TOLL;
+
+  return factor;
+}
+
+/**
+ * A BASE, EM CADEIRAS — quantas o governo tem sem nada em pauta.
+ *
+ * ⚠ ELA NAO E A SOMA DAS BANCADAS QUE APOIAM. Uma coalizao de 300 cadeiras com a
+ * base em 40 nao entrega 300 votos, e anunciar 300 seria a tela prometendo o que
+ * o plenario nao faz. O que esta conta responde e outra pergunta: quantas
+ * cadeiras respondem ao governo HOJE, numa pauta sem atrito ideologico e sem um
+ * centavo de emenda — ou seja, o tamanho real da coalizao que a lealdade
+ * sustenta.
+ *
+ * Ela e o mesmo `moodFactor` que a votacao usa. Nao ha formula nova aqui, e e
+ * de proposito: a base mostrada e a base que vota.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty
+ * @returns {number} cadeiras, arredondado
+ */
+export function baseCount({ parties, loyalty }) {
+  let seats = 0;
+  for (const party of parties) {
+    seats += party.seats * clamp01(moodFactor(loyalty[party.id] ?? 0));
+  }
+  return Math.round(seats);
+}
+
+/**
  * A PREVISAO. Deterministica: nenhuma chamada a fluxo de aleatoriedade.
  *
  * @param {object} input
@@ -198,19 +252,9 @@ export function whipCount({ bill, parties, funding, loyalty }) {
     let adherence = 1 / (1 + Math.exp((resistance - PIVOT) / SPREAD));
 
     /* LEALDADE nao muda a direcao, muda o comparecimento. Bancada satisfeita
-       entrega o que a ideologia manda; insatisfeita entrega menos.
-       LEALDADE CHEIA NAO COBRA PEDAGIO — o fator vai a 1. A primeira versao
-       parava em 0,4 + 0,6, e entao mesmo uma bancada perfeitamente alinhada e
-       perfeitamente satisfeita perdia 18% do voto sem razao nenhuma. O efeito
-       so aparecia somado ao resto, e o sintoma era o plenario inteiro entregar
-       menos do que qualquer leitura da tabela sugeria. */
-    const mood = loyalty[party.id] ?? 0;
-    const faith = clamp01(mood / 100);
-    adherence *= 0.5 + 0.5 * faith;
-
-    /* Os dois degraus, na ordem em que a base os desce. */
-    if (mood < OBSTRUCTION) adherence *= OBSTRUCTION_TOLL;
-    if (mood < RUPTURE) adherence *= RUPTURE_TOLL;
+       entrega o que a ideologia manda; insatisfeita entrega menos. O fator e o
+       MESMO que a leitura da base usa — ver `moodFactor`. */
+    adherence *= moodFactor(loyalty[party.id] ?? 0);
 
     return {
       partyId: party.id,

@@ -6,7 +6,13 @@
 
 ## Estado em 13/08/2026
 
-Quinta sessão. **O jogo saiu do terminal.** A Mesa e as seis áreas existem, são
+Quinta sessão, segunda metade. **O mês fecha como ciclo, e nada na tela é
+inventado.** A Parte 1 do [ciclo 1](cycles/01-o-mes-fecha-e-a-partida-decide.md)
+está fechada: o turno presta contas num relatório, a partida atravessa o
+navegador fechado, e os três campos do rail que eram texto digitado passaram a
+sair de motor.
+
+Na primeira metade da sessão: **o jogo saiu do terminal.** A Mesa e as seis áreas existem, são
 navegáveis, e um mês inteiro se decide com o mouse: escolher a ação, comprar
 bancada, alocar verba, avançar. O que a tela mostra enquanto o jogador decide sai
 das **mesmas funções** que o turno vai executar — nenhuma conta é refeita por
@@ -70,11 +76,54 @@ prova falha se alguém a remover.
 razão escrita: quem a produz é SONDA, que não existe, e um indicador congelado em
 31% ao lado de controles que funcionam ensina a desconfiar da tela inteira.
 
+## O que a segunda metade da sessão fez
+
+**O mês presta contas.** `playMonth` sempre devolveu um relatório completo e o
+entrypoint jogava fora: o jogador apertava o botão e a tela trocava em silêncio.
+Agora o diálogo abre com o placar contra a previsão — `321 contra 257`, "a
+previsão era 329 · o dia deu −8" —, a deriva de cada bancada, o humor antes e
+depois, o rateio que cortou e o que a alocação moveu no país. É a única tela em
+que a banda da Mesa prova que era honesta.
+
+**A partida atravessa o navegador fechado.** `serialize`/`deserialize` existiam,
+provados desde a terceira sessão, e nenhuma linha os chamava. Save recusado não
+é apagado: muda de chave, e o jogador recebe a explicação num aviso em vez de ver
+o mandato sumir.
+
+**A situação saiu do estado e virou consequência.** Ela era um campo que nenhum
+motor movia desde que o turno passou a ser resolvido pela camada de aplicação —
+congelada em "Estável" para sempre, e com ela a cor de todo o ambiente da tela.
+Agora ela é composta de LASTRO e ECLUSA em `situationOf`, com **seis motivos**
+distintos: teto fechado, base rompida, minoria, obstrução, aperto e folga. Luz
+vermelha que não diz qual é a pane é luz vermelha que se aprende a ignorar.
+
+**A base aliada é real.** Era `"247 / 513"` digitado a mão ao lado de uma
+lealdade que o motor calcula. `baseCount` responde quantas cadeiras respondem ao
+governo hoje, e usa o **mesmo fator de humor** que a votação — extraído para uma
+função só, para que os dois não possam divergir. A prova que amarra isso é
+`NENHUMA VOTACAO ENTREGA MAIS QUE A BASE`.
+
+**O andaime saiu.** A ação `advanceMonth`, que empurrava o mês e oscilava a
+aprovação numa senoide, morreu — o botão chama o turno de verdade desde que a
+Mesa nasceu. As provas que rodavam nela foram **movidas** para a ação viva, e a
+suíte do save passou a provar replay sobre `playMonth` em vez de sobre o andaime.
+
+**As regras do regime viraram dado** (`src/data/regime.mjs`), com esquema e
+validação: 513 cadeiras, as duas maiorias, 48 meses de mandato, 12 de exercício.
+Estavam em três arquivos. É a providência barata que a jogada monarquista vai
+precisar — e o catálogo agora cobra que as bancadas somem exatamente o plenário.
+
+**A lista de ações virou tabela de verdade**, com `<th scope="col">` por coluna e
+`<th scope="row">` no nome: quem lê por leitor de tela ouvia quatro números sem
+nome. Ela rola por dentro no celular em vez de esconder coluna — esconder para
+caber é mentir por omissão.
+
 ## Achados fechados
 
-Os itens **7** (quórum sempre maioria simples) e **9** (`npm run screen` não
-rodado) deixaram de existir. O quórum sai do instrumento — 257 para lei, 308 para
-emenda, zero para caneta — e a tela foi medida em navegador de verdade.
+Os itens **5** (a aprovação não existe na tela — segue verdadeiro, mas a lacuna
+que importava era o mês não prestar contas), **7** (quórum sempre maioria
+simples), **6** (a lista deveria ser tabela) e **9** (`npm run screen` não
+rodado) deixaram de existir.
 
 ## Achados abertos — o que EU veria primeiro na próxima sessão
 

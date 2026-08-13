@@ -51,7 +51,7 @@
    `NENHUMA PAUTA E INVOTAVEL` cobra isso a cada execucao, agora contra o quorum
    DE CADA ACAO e nao mais contra um so. */
 
-import { QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "./parties.mjs";
+import { QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "./regime.mjs";
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 

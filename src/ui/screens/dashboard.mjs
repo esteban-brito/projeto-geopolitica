@@ -7,6 +7,7 @@
 import { escapeHtml } from "../shared/html.mjs";
 import { UI } from "../strings.mjs";
 import { monthLabel } from "../../state/state.mjs";
+import { MONTHS_PER_TERM, MONTHS_PER_YEAR } from "../../data/regime.mjs";
 
 /** @typedef {import("../../state/state.mjs").GameState} GameState */
 /** @typedef {import("../../state/state.mjs").Approval} Approval */
@@ -28,20 +29,41 @@ export function turnHtml(state) {
  * so enfase. Forma diferente para informacao do mesmo nivel e o que faz uma
  * faixa parecer bagunçada por mais alinhada que esteja.
  *
- * @param {GameState} state
+ * ⚠ OS TRES CAMPOS ERAM PARTE MENTIRA. O ano do mandato era o texto fixo
+ * "ano 1", que continuava dizendo ano 1 no quadragesimo mes. A base aliada era
+ * "247 / 513" digitado a mao, ao lado de uma lealdade que o motor calcula de
+ * verdade. E a situacao vinha de um campo do estado que nenhum motor movia desde
+ * que o turno passou a ser resolvido pela camada de aplicacao — congelada em
+ * "Estavel" para sempre, junto com a cor de todo o ambiente da tela.
+ * Agora os tres saem de estado real, e o unico numero digitado nesta funcao e o
+ * `+ 1` que transforma indice em ordinal.
+ *
+ * @param {object} input
+ * @param {GameState} input.state
+ * @param {{ level: Situation, reason: string, base: number }} input.standing
+ * @param {number} input.seats o tamanho do plenario
+ * @param {number} input.majority quantas cadeiras fazem maioria simples
  */
-export function contextHtml(state) {
+export function contextHtml({ state, standing, seats, majority }) {
   const items = [
     {
       label: UI.context.mandate,
-      value: `${Math.floor(state.month / 48) + 1}º · ano 1`,
+      value: `${Math.floor(state.month / MONTHS_PER_TERM) + 1}º · ano ${
+        Math.floor((state.month % MONTHS_PER_TERM) / MONTHS_PER_YEAR) + 1
+      }`,
       alert: false,
     },
-    { label: UI.context.congress, value: "247 / 513", alert: false },
+    {
+      label: UI.context.congress,
+      value: `${standing.base} / ${seats}`,
+      /* O ALERTA E A MAIORIA, e nao um numero bonito: abaixo dela o governo nao
+         passa nada sem comprar, e essa e a unica leitura que muda a decisao. */
+      alert: standing.base < majority,
+    },
     {
       label: UI.context.situation,
-      value: UI.situation[state.situation],
-      alert: state.situation === "crisis",
+      value: UI.situation[standing.level],
+      alert: standing.level === "crisis",
     },
   ];
   return items
@@ -100,7 +122,13 @@ function legendLabel(approval) {
   );
 }
 
-/** @param {Situation} situation */
-export function verdictHtml(situation) {
-  return escapeHtml(UI.verdict[situation]);
+/**
+ * A frase que diz o que esta em jogo. Ela e indexada pelo MOTIVO e nao pelo
+ * nivel: "crise" por teto fechado e "crise" por base rompida sao duas panes
+ * diferentes, e uma delas se resolve com dinheiro que nao existe.
+ *
+ * @param {string} reason
+ */
+export function verdictHtml(reason) {
+  return escapeHtml(UI.verdict[/** @type {keyof typeof UI.verdict} */ (reason)] ?? "");
 }

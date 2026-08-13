@@ -46,10 +46,11 @@
 
 import { step as budgetStep } from "../domain/budget/index.mjs";
 import { pressureOf, step as capacityStep } from "../domain/capacity/index.mjs";
-import { settle, vote } from "../domain/congress/index.mjs";
+import { THRESHOLDS, baseCount, settle, vote } from "../domain/congress/index.mjs";
 import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 import { quorumOf } from "../data/bills.mjs";
 import { CATALOG } from "../data/catalog.mjs";
+import { MONTHS_PER_YEAR, QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "../data/regime.mjs";
 import { reduce } from "../state/state.mjs";
 
 /**
@@ -59,8 +60,6 @@ import { reduce } from "../state/state.mjs";
  * @typedef {import("../domain/budget/index.mjs").BudgetOutput} BudgetOutput
  * @typedef {import("../domain/congress/index.mjs").Tally} Tally
  */
-
-const MONTHS_PER_YEAR = 12;
 
 /**
  * @typedef {object} Orders as ordens do mes
@@ -162,6 +161,50 @@ export function costOf(funding, parties, seatPrice) {
     total += clamp(funding[party.id] ?? 0, 0, 1) * party.seats * seatPrice;
   }
   return total;
+}
+
+/**
+ * A POSICAO DO GOVERNO — e nao a do pais, e muito menos a da opiniao publica.
+ *
+ * ⚠ ELA NAO E SONDA, e a distincao e o que torna esta funcao legitima. Aprovacao
+ * e o que a populacao acha, depende de motor que nao existe, e por isso saiu da
+ * tela. Isto aqui e outra coisa: e se o governo TEM COMO GOVERNAR — se o caixa
+ * responde e se a base responde. Um governo com o teto fechado e a base rompida
+ * esta em crise mesmo que ninguem tenha perguntado nada a populacao.
+ *
+ * Ela vive na camada de aplicacao porque compoe DOIS motores, e motor nenhum
+ * chama outro: LASTRO diz se sobrou orcamento, ECLUSA diz se sobrou base.
+ *
+ * A ORDEM DAS PERGUNTAS E A DA GRAVIDADE, e cada degrau devolve o proprio
+ * motivo — a tela precisa dizer QUAL crise, senao ela vira uma luz vermelha que
+ * o jogador aprende a ignorar.
+ *
+ * @param {GameState} state
+ * @param {typeof CATALOG} [catalog]
+ * @returns {{ level: "crisis" | "stable" | "growth", reason: string, base: number }}
+ */
+export function situationOf(state, catalog = CATALOG) {
+  const { parties } = catalog;
+  const budget = budgetStep({ ...positionOf(state, catalog), spent: 0 });
+  const base = baseCount({ parties, loyalty: state.loyalty });
+
+  const mood = (/** @type {Party} */ party) => state.loyalty[party.id] ?? 0;
+  const ruptured = parties.some(party => mood(party) < THRESHOLDS.rupture);
+  const obstructing = parties.some(party => mood(party) < THRESHOLDS.obstruction);
+
+  /* O teto fechado vem primeiro porque ele nao se negocia: sem discricionario
+     nao ha emenda, e sem emenda a base nao se compra de volta. */
+  if (budget.contingency) return { level: "crisis", reason: "contingency", base };
+  if (ruptured) return { level: "crisis", reason: "rupture", base };
+  if (base < SIMPLE_MAJORITY) return { level: "crisis", reason: "minority", base };
+
+  /* OBSTRUCAO SEGURA O GOVERNO EM "ESTAVEL" mesmo com a base grande, e isso e
+     desenho: um degrau que so aparece na crise seria um degrau que nunca
+     aparece, porque a queda da lealdade passa por ele em um mes. */
+  if (obstructing) return { level: "stable", reason: "obstruction", base };
+  if (base < QUALIFIED_MAJORITY) return { level: "stable", reason: "tight", base };
+
+  return { level: "growth", reason: "comfortable", base };
 }
 
 /**

@@ -23,14 +23,18 @@
    primeiro pixel. Entao enquanto o controle e movido, so as leituras trocam. */
 
 import { createState } from "./src/state/state.mjs";
+import { deserialize, serialize } from "./src/state/save.mjs";
 import {
   CATALOG,
   NEUTRAL,
   THRESHOLDS,
+  SEATS,
+  SIMPLE_MAJORITY,
   dispersion,
   playMonth,
   quorumOf,
   settlement,
+  situationOf,
   whipCount,
 } from "./src/public/index.mjs";
 import { railNavHtml } from "./src/ui/shared/rail.mjs";
@@ -42,7 +46,7 @@ import { benchReadHtml, capacityStripHtml, mesaHtml, tallyHtml } from "./src/ui/
    a desconfiar de todos os numeros da tela — que e mais caro do que a ausencia.
    Ela volta com o motor. */
 import { contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
-import { reportHtml } from "./src/ui/screens/report.mjs";
+import { noticeHtml, reportHtml } from "./src/ui/screens/report.mjs";
 import { UI } from "./src/ui/strings.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
@@ -57,6 +61,7 @@ const el = {
   verdict: must("verdict"),
   advance: must("advance"),
   review: /** @type {HTMLButtonElement} */ (must("review")),
+  restart: must("restart"),
   dialog: /** @type {HTMLDialogElement} */ (must("monthDialog")),
   reportSlot: must("monthReport"),
   dialogClose: must("monthDialogClose"),
@@ -69,7 +74,61 @@ function must(id) {
   return node;
 }
 
-let state = createState();
+/* ── A PARTIDA ATRAVESSA O NAVEGADOR FECHADO ────────────────────────────────
+   `serialize` e `deserialize` existem e sao provados desde a terceira sessao, e
+   nenhuma linha os chamava: fechar a aba perdia o mandato inteiro.
+
+   O ACESSO AO ARMAZENAMENTO MORA AQUI, no entrypoint, e nao em `src/state/`.
+   A serializacao e pura e testavel em Node; o armazenamento e efeito de
+   navegador, e a guarda de fronteiras existe para manter os dois separados.
+
+   TUDO ENVOLVIDO EM `try`: aba anonima, cota estourada e armazenamento
+   desligado por politica sao rotina, e nenhuma delas pode derrubar o jogo. Quem
+   nao consegue guardar joga assim mesmo — o que nao pode e travar na abertura. */
+const SAVE_KEY = "planalto:partida";
+const REFUSED_KEY = "planalto:partida-recusada";
+
+function persist() {
+  try {
+    window.localStorage.setItem(SAVE_KEY, serialize(state));
+  } catch {
+    /* Sem lugar para guardar. A partida continua na memoria. */
+  }
+}
+
+/**
+ * A partida guardada, ou nada — e o motivo fica guardado junto quando ela e
+ * recusada, para o jogador nao ver o mandato sumir sem explicacao.
+ *
+ * @returns {{ state: GameState, refused: boolean }}
+ */
+function resume() {
+  let text = null;
+  try {
+    text = window.localStorage.getItem(SAVE_KEY);
+  } catch {
+    return { state: createState(), refused: false };
+  }
+  if (!text) return { state: createState(), refused: false };
+
+  const read = deserialize(text);
+  if (read.ok) return { state: read.state, refused: false };
+
+  /* O SAVE RECUSADO NAO E APAGADO. Ele muda de chave e fica: uma versao futura
+     pode saber converte-lo, e apagar o mandato de alguem para limpar uma chave
+     de armazenamento e a decisao mais barata de tomar e a mais cara de sofrer. */
+  try {
+    window.localStorage.setItem(REFUSED_KEY, text);
+    window.localStorage.removeItem(SAVE_KEY);
+  } catch {
+    /* Se nem isso for possivel, comecar de novo ainda e o certo. */
+  }
+  return { state: createState(), refused: true };
+}
+
+const opening = resume();
+
+let state = opening.state;
 let screen = "mesa";
 let orders = blankOrders();
 
@@ -190,7 +249,13 @@ function areaInput(area) {
 /** @type {GameState | null} */
 let painted = null;
 
+/** A posicao do governo na ultima pintura, para saber o que repintar.
+ * @type {{ level: string, reason: string, base: number } | null} */
+let standing = null;
+
 function paint() {
+  const current = situationOf(state, CATALOG);
+
   el.railNav.innerHTML = railNavHtml(screen, CATALOG.areas);
 
   /* CADA VIEW TRAZ O PROPRIO ELEMENTO DE FORA, e o entrypoint so concatena. A
@@ -213,22 +278,33 @@ function paint() {
   }
 
   /* RENDER POR IDENTIDADE DE REFERENCIA no rail da direita. Como o estado e
-     imutavel, `anterior.approval === atual.approval` responde "esta parte mudou?"
-     com uma comparacao de ponteiro — sem diff de arvore e sem framework. */
+     imutavel, `anterior.month !== atual.month` responde "esta parte mudou?" com
+     uma comparacao direta — sem diff de arvore e sem framework.
+     A SITUACAO NAO E MAIS CAMPO DO ESTADO: ela e derivada, entao o que se compara
+     e o MOTIVO que ela devolveu. Comparar o nivel nao bastaria — passar de
+     "crise por teto fechado" para "crise por base rompida" nao muda o nivel e
+     muda a frase inteira. */
   const previous = painted;
+  const before = standing;
 
   if (!previous || previous.month !== state.month) {
     el.turn.textContent = turnHtml(state);
   }
-  if (!previous || previous.month !== state.month || previous.situation !== state.situation) {
-    el.context.innerHTML = contextHtml(state);
+  if (!previous || previous.month !== state.month || before?.base !== current.base) {
+    el.context.innerHTML = contextHtml({
+      state,
+      standing: current,
+      seats: SEATS,
+      majority: SIMPLE_MAJORITY,
+    });
   }
-  if (!previous || previous.situation !== state.situation) {
-    el.verdict.textContent = verdictHtml(state.situation);
-    document.documentElement.style.setProperty("--situation-tint", `var(--${state.situation})`);
+  if (before?.reason !== current.reason) {
+    el.verdict.textContent = verdictHtml(current.reason);
+    document.documentElement.style.setProperty("--situation-tint", `var(--${current.level})`);
   }
 
   painted = state;
+  standing = current;
 }
 
 /** So os numeros derivados, para o arrasto sobreviver. */
@@ -346,6 +422,7 @@ el.advance.addEventListener("click", () => {
      faria o jogador pagar de novo sem ter decidido — e o motor cobraria, porque
      ele nao sabe distinguir promessa nova de promessa esquecida na tela. */
   orders = blankOrders();
+  persist();
   transition(openReport);
 });
 
@@ -370,6 +447,50 @@ function openReport() {
 
 el.review.addEventListener("click", openReport);
 el.dialogClose.addEventListener("click", () => el.dialog.close());
+
+/**
+ * O cartao do dialogo carregando um aviso em vez de um mes.
+ *
+ * @param {string} title
+ * @param {string} body
+ */
+function openNotice(title, body) {
+  el.reportSlot.innerHTML = noticeHtml({ title, body });
+  el.dialog.showModal();
+}
+
+/* ── RECOMECAR, EM DOIS PASSOS ──────────────────────────────────────────────
+   O botao apaga um mandato e mora ao lado de um que se aperta toda hora. O
+   primeiro clique so troca o proprio rotulo; o segundo executa. E a confirmacao
+   expira sozinha, porque um botao que fica armado indefinidamente e uma
+   armadilha esperando o proximo clique distraido. */
+let arming = 0;
+
+function disarm() {
+  arming = 0;
+  label(el.restart, UI.actions.restart, UI.actions.restartHint);
+}
+
+el.restart.addEventListener("click", () => {
+  if (arming === 0) {
+    arming = window.setTimeout(disarm, 5000);
+    label(el.restart, UI.actions.restartConfirm, UI.actions.restartConfirmHint);
+    return;
+  }
+
+  window.clearTimeout(arming);
+  arming = 0;
+  state = createState();
+  last = null;
+  orders = blankOrders();
+  screen = "mesa";
+  el.review.disabled = true;
+  painted = null;
+  standing = null;
+  disarm();
+  persist();
+  transition();
+});
 
 /* O ponto neutro e do catalogo e nao da tela; ele chega aqui so para a faixa de
    indices saber onde fica a linha d'agua. */
@@ -397,6 +518,11 @@ function label(node, text, hint) {
 
 label(el.advance, UI.actions.advance, UI.actions.advanceHint);
 label(el.review, UI.actions.review, UI.actions.reviewHint);
+label(el.restart, UI.actions.restart, UI.actions.restartHint);
 el.dialogClose.textContent = UI.actions.close;
 
 paint();
+
+/* O AVISO VEM DEPOIS DA PRIMEIRA PINTURA, e nao antes: um dialogo modal sobre
+   uma tela em branco nao diz de onde ele veio. */
+if (opening.refused) openNotice(UI.save.refusedTitle, UI.save.refusedBody);

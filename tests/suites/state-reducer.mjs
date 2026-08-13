@@ -8,16 +8,17 @@
    executa e comentario, nao contrato.
 
    POR QUE PROPRIEDADE E NAO EXEMPLO. Um exemplo prova que `{31,34,35}` funciona.
-   O que precisa ser provado e diferente: que NENHUM estado valido produz uma
-   fatia negativa. O corpo do reducer chega a `fair` por subtracao, depois de
-   `good` e `poor` passarem por DOIS clamps independentes — e essa e exatamente a
-   forma de conta que fura numa borda que ninguem escolheria como exemplo.
+   O que precisa ser provado e diferente: que NENHUM estado valido quebra os
+   invariantes — e borda de faixa e exatamente o que ninguem escolhe como
+   exemplo.
 
-   ⚠ O CORPO DO REDUCER E ANDAIME e sai inteiro quando CASCATA, CORRENTE e SONDA
-   existirem. Estas propriedades nao descrevem o andaime: elas descrevem o que
-   tem de continuar verdadeiro depois que ele sair. Por isso nenhuma delas cita a
-   oscilacao de "sobe tres meses, desce dois" — repetir a implementacao num teste
-   nao prova nada, so obriga a editar dois lugares. */
+   ⚠ O ANDAIME JA SAIU, e estas provas continuaram. Havia aqui uma acao
+   `advanceMonth` que empurrava o mes e oscilava a aprovacao numa senoide
+   deterministica; ela morreu quando o botao da tela passou a chamar o turno de
+   verdade. As propriedades nunca descreveram aquele corpo — elas descrevem o que
+   tem de continuar verdadeiro depois que ele saisse —, e por isso foi possivel
+   apenas aponta-las para a acao viva. Prova amarrada a implementacao teria
+   morrido junto. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -30,8 +31,27 @@ import { SCHEMA_VERSION, createState, monthLabel, reduce } from "../../src/state
 /** @typedef {import("../../src/state/state.mjs").GameState} GameState */
 /** @typedef {import("../../src/state/state.mjs").Action} Action */
 
-/** @type {Action} */
-const ADVANCE = { type: "advanceMonth" };
+/* A UNICA acao que o reducer conhece. `advanceMonth` existia ao lado dela como
+   andaime — empurrava o mes e oscilava a aprovacao — e saiu quando o botao da
+   tela passou a chamar o turno de verdade. As provas que rodavam nele foram
+   MOVIDAS para ca, e nao apagadas: elas provam invariantes do reducer, e o
+   reducer continua existindo. Prova de invariante rodando em acao morta e
+   cobertura que nao cobre o caminho que roda. */
+
+/**
+ * @param {GameState} state
+ * @returns {Action}
+ */
+function resolutionOf(state) {
+  return {
+    type: "monthResolved",
+    loyalty: state.loyalty,
+    fiscal: state.fiscal,
+    capacity: state.capacity,
+    enacted: state.enacted,
+    stream: state.streams.congress,
+  };
+}
 
 /* ESTADOS VALIDOS, e nao objetos quaisquer. Gerar aprovacao com as tres fatias
    soltas produziria entradas que o jogo nunca constroi, e a falha resultante
@@ -97,7 +117,6 @@ const anyState = fc.record({
   /* 48 turnos por mandato — a decisao fechada. */
   month: fc.integer({ min: 0, max: 47 }),
   approval: anyApproval,
-  situation: fc.constantFrom("crisis", "stable", "growth"),
   loyalty: anyLoyalty,
   fiscal: anyFiscal,
   capacity: anyCapacity,
@@ -105,13 +124,13 @@ const anyState = fc.record({
   streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 
-/* Acao que o reducer NAO conhece. O molde de tipo so admite "advanceMonth", e a
+/* Acao que o reducer NAO conhece. O molde de tipo so admite "monthResolved", e a
    conversao dupla esta aqui para dizer em voz alta que a saida do tipo e
    proposital: e justamente o caso nao previsto que o `default` tem de aguentar,
    porque save antigo e codigo futuro chegam assim. */
 const anyUnknownAction = fc
   .string({ minLength: 1 })
-  .filter(type => type !== "advanceMonth")
+  .filter(type => type !== "monthResolved")
   .map(type => /** @type {Action} */ (/** @type {unknown} */ ({ type })));
 
 /**
@@ -142,7 +161,7 @@ test("reduce nunca muta o estado que recebe", () => {
          objeto divergem — e nenhum `Object.freeze` teria avisado, porque o
          estado que o jogo passa nem sempre vem congelado de fora. */
       const before = JSON.stringify(state);
-      reduce(state, ADVANCE);
+      reduce(state, resolutionOf(state));
       assert.equal(JSON.stringify(state), before);
     }),
   );
@@ -151,7 +170,7 @@ test("reduce nunca muta o estado que recebe", () => {
 test("o estado que sai esta congelado em profundidade", () => {
   fc.assert(
     fc.property(anyState, state => {
-      const next = reduce(state, ADVANCE);
+      const next = reduce(state, resolutionOf(state));
       assert.ok(Object.isFrozen(next), "a raiz saiu destravada");
       assert.ok(Object.isFrozen(next.approval), "a aprovacao saiu destravada");
     }),
@@ -173,13 +192,15 @@ test("acao desconhecida devolve a MESMA referencia, e nao uma copia igual", () =
 test("o mes anda exatamente um por turno, e so para frente", () => {
   fc.assert(
     fc.property(anyState, state => {
-      assert.equal(reduce(state, ADVANCE).month, state.month + 1);
+      assert.equal(reduce(state, resolutionOf(state)).month, state.month + 1);
     }),
   );
 });
 
 test("a aprovacao sempre soma 100 e nenhuma fatia fica negativa", () => {
-  fc.assert(fc.property(anyState, state => assertApprovalInvariant(reduce(state, ADVANCE))));
+  fc.assert(
+    fc.property(anyState, state => assertApprovalInvariant(reduce(state, resolutionOf(state)))),
+  );
 });
 
 test("PROVA SINTETICA: o invariante acusa um reducer que larga o resto", () => {
@@ -201,21 +222,6 @@ test("PROVA SINTETICA: o invariante acusa um reducer que larga o resto", () => {
 /* ── A ACAO QUE VEM DA CAMADA DE APLICACAO ──────────────────────────────────
    `monthResolved` chega com a conta ja feita; o que se prova aqui e o DOBRAR,
    e nao o calculo — o calculo tem suite propria em `turn.mjs`. */
-
-/**
- * @param {import("../../src/state/state.mjs").GameState} state
- * @returns {Action}
- */
-function resolutionOf(state) {
-  return {
-    type: "monthResolved",
-    loyalty: state.loyalty,
-    fiscal: state.fiscal,
-    capacity: state.capacity,
-    enacted: state.enacted,
-    stream: state.streams.congress,
-  };
-}
 
 test("o mes resolvido tambem anda exatamente um, e sai congelado", () => {
   fc.assert(
@@ -247,7 +253,8 @@ test("o mes resolvido PRESERVA A REFERENCIA do que ele nao toca", () => {
 test("reduce e deterministico: mesma entrada, mesma saida", () => {
   fc.assert(
     fc.property(anyState, state => {
-      assert.deepEqual(reduce(state, ADVANCE), reduce(state, ADVANCE));
+      const action = resolutionOf(state);
+      assert.deepEqual(reduce(state, action), reduce(state, action));
     }),
   );
 });

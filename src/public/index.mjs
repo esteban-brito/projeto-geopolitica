@@ -34,7 +34,7 @@
 export { CATALOG } from "../data/catalog.mjs";
 export { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 export { INSTRUMENTS, quorumOf } from "../data/bills.mjs";
-export { SEATS } from "../data/parties.mjs";
+export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../data/regime.mjs";
 
 /* A PREVISAO e a BANDA sao os dois numeros que a mesa de negociacao mostra ao
    vivo enquanto o jogador arrasta a verba. Eles vem do dominio porque sao a
@@ -46,4 +46,4 @@ export { whipCount, dispersion, THRESHOLDS } from "../domain/congress/index.mjs"
    elas dizem a mesma coisa em tempos diferentes: uma responde "o que aconteceria
    com estas ordens", a outra executa. A tela usa a primeira a cada movimento de
    controle justamente para nao ter de imitar a segunda. */
-export { playMonth, settlement } from "../application/turn.mjs";
+export { playMonth, settlement, situationOf } from "../application/turn.mjs";

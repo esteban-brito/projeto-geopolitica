@@ -171,57 +171,95 @@
      AS COLUNAS SAO FIXAS em `ch` para os numeros baterem entre as linhas —
      coluna de numero que se alinha sozinha por linha deixa de ser coluna, e a
      comparacao de relance e o unico motivo de a lista ser uma lista. */
-  /* AS COLUNAS SAO EM `rem`, E NAO EM `ch`, e a diferenca derrubou o primeiro
-     desenho. `ch` e a largura do zero NA FONTE DO PROPRIO ELEMENTO: a legenda
-     roda no degrau de rotulo, de 10px, e as linhas no corpo de 13,6px — as
-     mesmas `10ch` viravam 55px numa e 85px na outra, e as duas grades nunca
-     chegaram a se alinhar. As legendas se sobrepunham porque cada uma ocupava
-     uma coluna mais estreita que ela mesma.
-     `rem` sai do documento e vale igual nas duas. A largura e ditada pelo
-     ROTULO, que e a carga maior: "despesa/ano" nao cabe onde "−140" cabe. */
-  .action-head,
-  .action-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto 3.2rem 5.4rem 3.4rem auto;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-2) var(--space-3);
+  /* A GRADE VIROU TABELA, e as colunas continuam em `rem`. `ch` mede a largura
+     do zero NA FONTE DE CADA ELEMENTO — o cabecalho roda no degrau de rotulo, de
+     10px, e as linhas no corpo de 13,6px, entao as mesmas `10ch` valiam 55px num
+     e 85px no outro, e as duas grades nunca chegaram a se alinhar.
+
+     `border-collapse: separate` com espacamento vertical, e nao `collapse`: e o
+     que preserva o vao entre as linhas e o raio nas pontas — a linha continua
+     sendo uma pastilha, e nao uma celula de planilha. */
+  .action-list {
+    width: 100%;
+    min-width: 30rem;
+    border-collapse: separate;
+    border-spacing: 0 var(--space-1);
+    table-layout: fixed;
   }
 
-  /* A LEGENDA das tres colunas de numero. Ela nao repete as duas primeiras: o
-     nome da acao e a etiqueta do instrumento se explicam sozinhos. */
-  .action-head {
-    padding-bottom: 0;
+  /* A TABELA ROLA POR DENTRO no celular, e a pagina nunca rola de lado. Esconder
+     o cabecalho para caber seria pior do que parece: `display: none` tira o
+     elemento da arvore de acessibilidade tambem, e ai a associacao entre celula
+     e titulo — o unico motivo de isto ser uma tabela — morre junto. */
+  .action-scroll {
+    overflow-x: auto;
+  }
+
+  .action-list thead th {
+    padding: 0 var(--space-3) var(--space-1);
     font-family: var(--font-display);
     font-size: var(--text-label);
     font-weight: 700;
-    /* Menos aperto que o rotulo padrao: o de sistema e calibrado para uma ou
-       duas palavras isoladas, e aqui sao tres rotulos disputando uma linha. */
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    text-align: left;
     color: var(--ink-dim);
   }
 
-  .action-head .action-row__quorum {
-    grid-column: 3;
-  }
-  .action-head .action-row__fiscal {
-    grid-column: 4;
-  }
-  .action-head .action-row__lift {
-    grid-column: 5;
+  .action-list th.action-row__quorum,
+  .action-list th.action-row__fiscal,
+  .action-list th.action-row__lift {
+    text-align: right;
   }
 
-  .action-list {
-    display: grid;
-    gap: var(--space-1);
-    list-style: none;
+  /* TODA COLUNA DECLARA LARGURA, MENOS A DO NOME. Com `table-layout: fixed`, as
+     colunas sem largura RACHAM o que sobra em partes iguais — entao a etiqueta
+     de rito recebia tanto espaco quanto o nome da acao, e o nome era truncado
+     enquanto uma palavra de cinco letras nadava ao lado. Quem fica sem largura
+     e quem deve receber a sobra. */
+  .action-list th:nth-child(2) {
+    width: 5.5rem;
   }
 
-  .action-row {
-    border-radius: var(--radius-piece);
+  .action-list th:nth-child(3) {
+    width: 4.2rem;
+  }
+  .action-list th:nth-child(4) {
+    width: 6.4rem;
+  }
+  .action-list th:nth-child(5) {
+    width: 4.4rem;
+  }
+  .action-list th:nth-child(6) {
+    width: 6.5rem;
+  }
+
+  .action-list--done th:nth-child(3) {
+    width: 7rem;
+  }
+
+  .action-row > * {
+    padding: var(--space-2) var(--space-3);
+    vertical-align: middle;
+  }
+
+  /* O RAIO VIVE NAS PONTAS DA LINHA. Com celulas separadas, a pastilha e o
+     conjunto: primeira celula arredonda a esquerda, ultima a direita. */
+  .action-row > *:first-child {
+    border-radius: var(--radius-piece) 0 0 var(--radius-piece);
+  }
+
+  .action-row > *:last-child {
+    border-radius: 0 var(--radius-piece) var(--radius-piece) 0;
+  }
+
+  .action-row > * {
     background: rgba(255, 255, 255, 0.04);
     transition: background var(--dur-touch) linear;
+  }
+
+  .action-row__do {
+    text-align: right;
   }
 
   .action-row__name {
@@ -253,8 +291,11 @@
      o item corrente do rail — e pela mesma razao: a marca e a cor do que se
      pressiona, e gasta-la cheia numa linha de lista enfraqueceria os botoes de
      verdade da tela. */
-  .action-row--live {
+  .action-row--live > * {
     background: rgba(var(--brand-rgb), 0.14);
+  }
+
+  .action-row--live > *:first-child {
     box-shadow: inset 2px 0 0 var(--brand);
   }
 
@@ -282,11 +323,11 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .action-row:hover {
+    .action-row:hover > * {
       background: rgba(255, 255, 255, 0.07);
     }
 
-    .action-row--live:hover {
+    .action-row--live:hover > * {
       background: rgba(var(--brand-rgb), 0.14);
     }
 
@@ -299,8 +340,7 @@
      Tres colunas em vez de seis: nome, instrumento e a conta que ele cobra todo
      ano. Quorum e impacto no indice sairam porque ja aconteceram — mostrar o
      quorum de uma lei aprovada e mostrar uma pergunta ja respondida. */
-  .action-list--done .action-row {
-    grid-template-columns: minmax(0, 1fr) auto 6rem;
+  .action-list--done .action-row > * {
     background: rgba(255, 255, 255, 0.02);
   }
 
@@ -309,39 +349,16 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .action-list--done .action-row:hover {
+    .action-list--done .action-row:hover > * {
       background: rgba(255, 255, 255, 0.02);
     }
   }
 
   /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
-     No celular a acao vira DUAS fileiras: nome e etiqueta em cima, numeros e
-     botao embaixo. A legenda de colunas sai — ela so faz sentido enquanto as
-     colunas existem, e uma legenda apontando para lugar nenhum e pior que
-     nenhuma. */
+     A tabela rola por dentro, e nada e escondido. A alternativa seria esconder
+     colunas, e cada uma delas e o preco de uma decisao — esconder para caber e
+     mentir por omissao. */
   @media (max-width: 640px) {
-    .action-head {
-      display: none;
-    }
-
-    .action-row {
-      grid-template-columns: minmax(0, 1fr) auto auto auto;
-      gap: var(--space-2) var(--space-3);
-    }
-
-    .action-row__name {
-      grid-column: 1;
-    }
-
-    .action-row__quorum {
-      grid-column: 1;
-      text-align: left;
-    }
-
-    .action-list--done .action-row {
-      grid-template-columns: minmax(0, 1fr) auto;
-    }
-
     .allot {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--space-2);

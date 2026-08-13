@@ -21,6 +21,12 @@ import { opening } from "../domain/capacity/index.mjs";
 import { streamFrom } from "./random.mjs";
 
 /**
+ * A SITUACAO NAO MORA MAIS AQUI. Ela e funcao pura do teto do orcamento e do
+ * humor das bancadas — dois valores que o estado ja guarda —, e por isso vive em
+ * `src/application/turn.mjs`, que e a camada que enxerga os dois motores. O tipo
+ * fica declarado neste arquivo porque ele descreve uma forma do jogo, e nao um
+ * detalhe daquela funcao.
+ *
  * @typedef {"crisis" | "stable" | "growth"} Situation
  *
  * @typedef {object} Approval
@@ -50,7 +56,6 @@ import { streamFrom } from "./random.mjs";
  * @property {number} seed - a semente da partida; com ela e as acoes, tudo se refaz
  * @property {number} month - meses decorridos desde a posse (0 = janeiro do ano 1)
  * @property {Approval} approval
- * @property {Situation} situation
  * @property {Record<string, number>} loyalty - o humor de cada bancada, de 0 a 100
  * @property {Fiscal} fiscal - a posicao orcamentaria que atravessa os meses
  * @property {Capacity} capacity - a capacidade do Estado de entregar, por area
@@ -75,8 +80,14 @@ import { streamFrom } from "./random.mjs";
    SUBIU PARA 5 quando a lista do que ja esta em vigor entrou. Sem ela o jogo nao
    sabe que uma lei ja passou, e o sintoma seria o jogador aprovando a mesma
    reforma seis vezes e colhendo o efeito fiscal seis vezes — um exploit que a
-   tela nem precisaria esconder, porque ela nao teria como saber. */
-export const SCHEMA_VERSION = 5;
+   tela nem precisaria esconder, porque ela nao teria como saber.
+   SUBIU PARA 6 quando a SITUACAO saiu do estado. Ela e funcao pura do que ja
+   esta guardado — o teto do orcamento e o humor das bancadas —, e valor derivado
+   guardado e um segundo lugar para a mesma verdade divergir. E a mesma razao
+   que impediu a capacidade de nascer preenchida a mao. Um save da versao 5 e
+   recusado em vez de convertido: converter exigiria decidir se o campo antigo
+   vale mais que o calculo, e ele nao vale. */
+export const SCHEMA_VERSION = 6;
 
 /* O HUMOR DE ABERTURA da base. Uniforme de proposito nesta fase: uma coalizao
    recem-formada por rateio de ministerio nao tem historia com o governo, e
@@ -130,7 +141,6 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
     seed,
     month: 2,
     approval: { good: 31, fair: 34, poor: 35 },
-    situation: /** @type {Situation} */ ("stable"),
     loyalty: Object.fromEntries(parties.map(party => [party.id, INITIAL_LOYALTY])),
     fiscal: {
       gdp: fiscal.initialGdp,
@@ -176,8 +186,15 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
  * deste `switch` — que e exatamente como o entrypoint do projeto anterior chegou
  * a 1.715 linhas.
  *
- * @typedef {{ type: "advanceMonth" }
- *   | { type: "monthResolved",
+ * ── A ACAO DE ANDAIME SAIU ──────────────────────────────────────────────────
+ * Existia aqui um `advanceMonth` que empurrava o mes e oscilava a aprovacao numa
+ * senoide deterministica — "sobe tres meses, desce dois" —, escrito para a tela
+ * mudar quando o botao fosse apertado, antes de existir turno de verdade. Ele
+ * saiu por ter cumprido o prazo: o botao chama `playMonth` desde que a Mesa
+ * nasceu, e a unica coisa que ele ainda fazia era mover um numero que nenhum
+ * motor sustenta. Andaime que sobrevive ao predio vira parte do predio.
+ *
+ * @typedef {{ type: "monthResolved",
  *       loyalty: Record<string, number>,
  *       fiscal: Fiscal,
  *       capacity: Capacity,
@@ -188,33 +205,12 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
 /**
  * A UNICA forma de produzir um estado novo.
  *
- * ⚠ A transicao aqui e ANDAIME e nao pertence a nenhum motor: ela e uma funcao
- * deterministica sem RNG, escrita para a tela mudar quando o botao e apertado.
- * Quando CASCATA, CORRENTE e SONDA existirem, este corpo sai inteiro e a
- * assinatura permanece — que e o ponto de fixar a fronteira antes do conteudo.
- *
  * @param {GameState} state
  * @param {Action} action
  * @returns {GameState}
  */
 export function reduce(state, action) {
   switch (action.type) {
-    case "advanceMonth": {
-      const month = state.month + 1;
-      /* Oscilacao deterministica: sobe tres meses, desce dois. Serve para a
-         tela exercitar as tres situacoes sem inventar um modelo. */
-      const swing = month % 5 < 3 ? 2 : -3;
-      const good = clamp(state.approval.good + swing, 5, 80);
-      const poor = clamp(state.approval.poor - swing, 5, 80);
-      const fair = 100 - good - poor;
-      return deepFreeze({
-        ...state,
-        month,
-        approval: { good, fair, poor },
-        situation: situationFor(good, poor),
-      });
-    }
-
     case "monthResolved": {
       /* A APROVACAO NAO SE MEXE AQUI, e isto e omissao declarada. Quem produz
          aprovacao e SONDA, que ainda nao existe; escrever uma reacao qualquer
@@ -235,26 +231,6 @@ export function reduce(state, action) {
     default:
       return state;
   }
-}
-
-/**
- * @param {number} good
- * @param {number} poor
- * @returns {Situation}
- */
-function situationFor(good, poor) {
-  if (good - poor >= 8) return "growth";
-  if (poor - good >= 8) return "crisis";
-  return "stable";
-}
-
-/**
- * @param {number} value
- * @param {number} min
- * @param {number} max
- */
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
 }
 
 /**

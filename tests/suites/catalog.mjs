@@ -13,7 +13,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
 import { CATALOG, catalogViolations } from "../../src/data/catalog.mjs";
-import { PARTIES, PARTY_SCHEMA, SEATS, SIMPLE_MAJORITY } from "../../src/data/parties.mjs";
+import { PARTIES, PARTY_SCHEMA } from "../../src/data/parties.mjs";
+import { SEATS, SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 import { collectionViolations, violations } from "../../src/data/schema.mjs";
 
 test("o catalogo do projeto esta integro", () => {

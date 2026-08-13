@@ -33,6 +33,11 @@ export const UI = {
        `308 · −140 · +8`, que sao tres grandezas diferentes em tres unidades
        diferentes sem nada dizendo qual e qual — e o jogador que adivinha errado
        aprende o modelo errado. */
+    action: "ação",
+    instrument: "rito",
+    /* A COLUNA DO BOTÃO tem título só para quem lê por leitor de tela: na tela
+       ele seria um rótulo em cima de um botão que já diz o que faz. */
+    decide: "decidir",
     quorum: "quórum",
     /* RESULTADO, e não "despesa". O sinal do catálogo é o do RESULTADO — positivo
        poupa ou arrecada, negativo custa. Sob o título "despesa", o mesmo `−48`
@@ -100,10 +105,18 @@ export const UI = {
     stable: "Estável",
     growth: "Alta",
   },
+  /* O VEREDITO É POR MOTIVO, e não por nível. Três frases para três níveis
+     diziam "crise" de um jeito só, e crise por teto fechado não se resolve como
+     crise por base rompida — uma se paga com dinheiro que não existe, a outra
+     com dinheiro que existe. Luz vermelha que não diz qual é a pane é luz
+     vermelha que o jogador aprende a ignorar. */
   verdict: {
-    crisis: "A rua cobra resposta — e o Congresso sabe disso",
-    stable: "Governo em equilíbrio instável",
-    growth: "Capital político em alta; a janela não fica aberta muito tempo",
+    contingency: "O teto fechou: a obrigatória consome o orçamento, e não há emenda a pagar",
+    rupture: "Bancada rompida — ela vota contra por menos do que custa trazê-la de volta",
+    minority: "A base não chega à maioria; cada voto agora tem preço de leilão",
+    obstruction: "Há bancada obstruindo: o governo ainda passa, mas paga pedágio em tudo",
+    tight: "Governo em equilíbrio instável — maioria simples, e nada além dela",
+    comfortable: "Base folgada e caixa livre; a janela não fica aberta muito tempo",
   },
   /* O RELATÓRIO DO MÊS. Ele é a única tela em que a banda da previsão prova que
      era honesta: a Mesa promete uma faixa, e aqui aparece o número que saiu. */
@@ -137,7 +150,20 @@ export const UI = {
        ser confundido com funcionalidade. */
     review: "O mês passado",
     reviewHint: "reabre o relatório do último turno",
+    restart: "Nova partida",
+    restartHint: "apaga o mandato e recomeça do primeiro mês",
+    restartConfirm: "Apagar mesmo?",
+    restartConfirmHint: "clique de novo para confirmar",
     close: "Entendi",
+  },
+  /* A PARTIDA ATRAVESSA O FECHAR DO NAVEGADOR. E quando ela não atravessa, o
+     jogador merece saber por quê: save recusado em silêncio é um mandato que
+     desapareceu sem explicação. */
+  save: {
+    refusedTitle: "A partida anterior não pôde ser retomada",
+    refusedBody:
+      "O save guardado é de uma versão anterior do jogo e não pode ser convertido sem inventar o que faltava nele. " +
+      "Ele foi preservado no navegador, e esta partida começa do primeiro mês.",
   },
   trend: {
     up: "▲",

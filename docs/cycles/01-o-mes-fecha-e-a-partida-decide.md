@@ -11,19 +11,24 @@ sessão, mas o número escolhido é decisão do responsável, e nenhum se gira s
 
 ## Onde o ciclo parou
 
-| item                             | estado                        |
-| -------------------------------- | ----------------------------- |
-| 1.1 O relatório do mês           | **feito** · verde no passeio  |
-| 1.2 Salvar e continuar           | não começado                  |
-| 1.3 Base aliada de verdade       | não começado                  |
-| 1.4 Situação, veredito e o tinte | não começado · decisão em (b) |
-| 1.5 O ano do mandato             | não começado                  |
-| 1.6 A lista de ações vira tabela | não começado                  |
-| Parte 2 inteira                  | não começada                  |
+| item                             | estado                                     |
+| -------------------------------- | ------------------------------------------ |
+| 1.1 O relatório do mês           | **feito** · verde no passeio               |
+| 1.2 Salvar e continuar           | **feito** · o passeio recarrega e confere  |
+| 1.3 Base aliada de verdade       | **feito** · `baseCount` no ECLUSA          |
+| 1.4 Situação, veredito e o tinte | **feito** · na saída (b), com seis motivos |
+| 1.5 O ano do mandato             | **feito** · junto do regime como dado      |
+| 1.6 A lista de ações vira tabela | **feito** · `<th scope>` nas duas listas   |
+| 1.7 O passeio cresce junto       | **feito** · relatório, save e recomeço     |
+| **Parte 1**                      | **fechada**                                |
+| Parte 2 inteira                  | não começada                               |
 
-> **Parada pedida em 13/08/2026**, com o 1.1 fechado: havia um plano externo a
-> avaliar antes de seguir. O que está commitado está verde — `validate`, `walk` e
-> `screen` — e nada ficou pela metade na árvore.
+> **A Parte 1 fechou em 13/08/2026**, com 113 propriedades verdes, `walk` verde e
+> `screen` verde. Entrou junto uma providência que estava no norte e não na lista:
+> **as regras do regime viraram dado** (`src/data/regime.mjs`) — 513 cadeiras, as
+> duas maiorias, 48 meses de mandato e 12 de exercício, com esquema e validação
+> pelo catálogo. Elas estavam espalhadas por três arquivos, e reunidas passam a
+> ser o endereço único que a jogada monarquista vai precisar mexer.
 
 ---
 

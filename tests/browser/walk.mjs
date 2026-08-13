@@ -215,7 +215,39 @@ try {
   expect(!offered.includes(title), `[area] "${title}" ja esta em vigor e continua sendo oferecida`);
   await page.screenshot({ path: join(OUT, "walk-area-depois.png"), fullPage: true });
 
-  /* 8 — O CELULAR, com a mesma sequencia ja no estado avancado. */
+  /* 8 — A PARTIDA ATRAVESSA O NAVEGADOR. Recarregar a pagina tem de devolver o
+     mesmo mes: o save existia e nao era chamado por ninguem, e o sintoma era o
+     mandato inteiro desaparecendo ao fechar a aba. */
+  const monthBefore = await page.locator("#turn").innerText();
+  await page.reload({ waitUntil: "networkidle" });
+  await page.waitForTimeout(400);
+  const monthAfter = await page.locator("#turn").innerText();
+  expect(
+    monthBefore === monthAfter,
+    `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
+  );
+  expect(
+    (await page.locator(".action-list--done").count()) === 0 ||
+      (await page.locator(".action-list--done").innerText()).length > 0,
+    "[save] a tela retomada nao renderizou",
+  );
+
+  /* E RECOMECAR PEDE DOIS CLIQUES. O primeiro so arma o botao — um clique
+     distraido nao pode custar um mandato. */
+  await page.click("#restart");
+  await page.waitForTimeout(150);
+  expect(
+    (await page.locator("#turn").innerText()) === monthAfter,
+    "[recomecar] o primeiro clique ja apagou a partida",
+  );
+  await page.click("#restart");
+  await page.waitForTimeout(600);
+  expect(
+    (await page.locator("#turn").innerText()) !== monthAfter,
+    "[recomecar] o segundo clique nao recomecou a partida",
+  );
+
+  /* 9 — O CELULAR, com a mesma sequencia ja no estado avancado. */
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(400);
   await checkOverflow("celular · area");

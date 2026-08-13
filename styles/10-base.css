@@ -53,6 +53,20 @@
     letter-spacing: -0.015em;
   }
 
+  /* VISIVEL SO PARA QUEM NAO VE. `display: none` tiraria o elemento da arvore de
+     acessibilidade junto, e o objetivo aqui e o oposto: manter a informacao para
+     o leitor de tela e tira-la dos olhos. Existe para titulos de coluna que na
+     tela seriam rotulo em cima de um botao que ja diz o que faz. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   ::selection {
     background: rgba(var(--brand-rgb), 0.3);
     color: var(--ink);

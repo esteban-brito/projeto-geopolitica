@@ -41,6 +41,26 @@ function labelOf(table, key) {
 }
 
 /**
+ * UM AVISO no mesmo cartao do relatorio.
+ *
+ * Ele existe para o save recusado ter onde aparecer. Recusar em silencio e
+ * comecar uma partida nova sem dizer nada seria a pior forma de tratar o caso:
+ * o jogador veria o mandato dele desaparecer e nao teria como saber se foi
+ * defeito, engano dele ou decisao do jogo.
+ *
+ * @param {object} input
+ * @param {string} input.title
+ * @param {string} input.body
+ * @returns {string}
+ */
+export function noticeHtml({ title, body }) {
+  return (
+    `<h2 class="dialog-card__title" id="monthDialogTitle">${escapeHtml(title)}</h2>` +
+    `<p class="report__line">${escapeHtml(body)}</p>`
+  );
+}
+
+/**
  * O QUE O MES DEIXOU.
  *
  * @param {object} input

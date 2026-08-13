@@ -167,6 +167,35 @@
     color: var(--bg-deep);
   }
 
+  /* ── A ACAO DISCRETA ────────────────────────────────────────────────────────
+     Mesma peca, menos voz — e SEM LAMINA. Ela e a unica acao da tela que nao
+     recebe vidro, e nao por economia: o botao que apaga um mandato inteiro mora
+     ao lado do que avanca o mes, e dar a ele o mesmo material seria oferecer os
+     dois como caminhos equivalentes. Material tambem e hierarquia.
+     De quebra, some um `backdrop-filter` de uma superficie que ninguem olha. */
+  .action--quiet {
+    min-width: 0;
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-dim);
+    transition: color var(--dur-touch) linear;
+  }
+
+  .action--quiet .action__hint {
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-dim);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .action--quiet:hover {
+      transform: none;
+      background: none;
+      color: var(--ink-soft);
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .action:hover {
       transform: translateY(-2px);

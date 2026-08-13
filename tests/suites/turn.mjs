@@ -13,10 +13,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-import { costOf, discretionaryRoom, playMonth, settlement } from "../../src/application/turn.mjs";
+import {
+  costOf,
+  discretionaryRoom,
+  playMonth,
+  settlement,
+  situationOf,
+} from "../../src/application/turn.mjs";
 import { CATALOG } from "../../src/data/catalog.mjs";
 import { BILLS } from "../../src/data/bills.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
+import { SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
+import { UI } from "../../src/ui/strings.mjs";
 import { createState } from "../../src/state/state.mjs";
 
 /** @typedef {import("../../src/application/turn.mjs").Orders} Orders */
@@ -25,6 +33,11 @@ import { createState } from "../../src/state/state.mjs";
    suficiente para o arredondamento e estreita o suficiente para nao esconder um
    defeito: os valores do jogo estao na casa das dezenas de bilhoes. */
 const EPSILON = 1e-9;
+
+/* OS MOTIVOS QUE A TELA SABE DIZER. A prova le a tabela de textos em vez de
+   redigitar a lista: motivo novo sem frase e um veredito em branco no rail, e o
+   sintoma seria uma linha vazia que ninguem associa a esta funcao. */
+const UI_REASONS = new Set(Object.keys(UI.verdict));
 
 /** @param {number} level */
 function everyone(level) {
@@ -362,4 +375,61 @@ test("e o corte aparece: promessa que nao cabe entrega MENOS voto do que promete
   for (const party of PARTIES) {
     assert.ok((poor.paid[party.id] ?? 0) < (poor.promised[party.id] ?? 0));
   }
+});
+
+/* ── A POSICAO DO GOVERNO ────────────────────────────────────────────────────
+   `situationOf` compoe LASTRO e ECLUSA para responder se o governo TEM COMO
+   governar. Ela substituiu um campo do estado que nenhum motor movia — e o que
+   estas provas cobram e que ela continue sendo consequencia, e nao decoracao. */
+
+test("a partida abre com o governo de pe, e o motivo e dito", () => {
+  const standing = situationOf(createState(1));
+
+  assert.notEqual(standing.level, "crisis", "a posse ja comeca em crise — reveja a calibragem");
+  assert.ok(
+    standing.base > SIMPLE_MAJORITY,
+    `a base de abertura e ${standing.base}, abaixo da maioria simples`,
+  );
+  assert.ok(UI_REASONS.has(standing.reason), `motivo desconhecido: ${standing.reason}`);
+});
+
+test("O TETO FECHADO E CRISE, e ele vem antes de qualquer outra leitura", () => {
+  /* A ordem das perguntas e a da gravidade: sem discricionario nao ha emenda, e
+     sem emenda a base nao se compra de volta. Mesmo com o Congresso inteiro
+     satisfeito, o governo sem caixa esta em crise. */
+  const squeezed = createState(3, SQUEEZED);
+  const standing = situationOf(squeezed, SQUEEZED);
+
+  assert.equal(standing.level, "crisis");
+  assert.equal(standing.reason, "contingency");
+});
+
+test("bancada rompida e crise mesmo com o caixa livre", () => {
+  const state = createState(4);
+  const broken = { ...state, loyalty: { ...state.loyalty, [PARTIES[0]?.id ?? ""]: 5 } };
+
+  const standing = situationOf(broken);
+  assert.equal(standing.level, "crisis");
+  assert.equal(standing.reason, "rupture");
+});
+
+test("OBSTRUCAO SEGURA EM ESTAVEL: o degrau do meio existe de verdade", () => {
+  /* Se obstrucao caisse em crise, a tela iria de "alta" a "crise" num mes e o
+     nivel do meio nunca apareceria — indicador de tres nomes com dois estados
+     uteis e um indicador de dois nomes mal escrito. */
+  const state = createState(5);
+  const sour = { ...state, loyalty: { ...state.loyalty, [PARTIES[0]?.id ?? ""]: 45 } };
+
+  const standing = situationOf(sour);
+  assert.equal(standing.level, "stable");
+  assert.equal(standing.reason, "obstruction");
+});
+
+test("a base derretendo derruba o governo em minoria", () => {
+  const state = createState(6);
+  const abandoned = { ...state, loyalty: everyone(25) };
+
+  const standing = situationOf(abandoned);
+  assert.equal(standing.level, "crisis");
+  assert.equal(standing.reason, "minority");
 });

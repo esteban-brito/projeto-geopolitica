@@ -56,19 +56,25 @@ function labelOf(table, key) {
 function actionHtml({ bill, quorum, onTable }) {
   const verb = bill.instrument === "decree" ? "decretar" : "pautar";
 
+  /* O NOME E O CABECALHO DA LINHA, e nao mais uma celula qualquer. Numa tabela
+     de verdade, `<th scope="row">` e o que faz um leitor de tela anunciar
+     "Carreira medica federal, quorum, 257" em vez de recitar cinco numeros
+     soltos — e era exatamente isso que a versao em `<ul>` produzia. */
   return (
-    `<li class="action-row${onTable ? " action-row--live" : ""}">` +
-    `<span class="action-row__name">${escapeHtml(bill.label)}</span>` +
-    `<span class="badge" data-instrument="${escapeHtml(bill.instrument)}">` +
-    `${escapeHtml(labelOf(UI.instrument, bill.instrument))}</span>` +
-    `<span class="action-row__quorum" data-numeric>${quorum > 0 ? seats(quorum) : "—"}</span>` +
-    `<span class="action-row__fiscal" data-numeric>${signed(bill.fiscalImpact)}</span>` +
-    `<span class="action-row__lift" data-numeric>${signed(bill.impact)}</span>` +
+    `<tr class="action-row${onTable ? " action-row--live" : ""}">` +
+    `<th scope="row" class="action-row__name">${escapeHtml(bill.label)}</th>` +
+    `<td><span class="badge" data-instrument="${escapeHtml(bill.instrument)}">` +
+    `${escapeHtml(labelOf(UI.instrument, bill.instrument))}</span></td>` +
+    `<td class="action-row__quorum" data-numeric>${quorum > 0 ? seats(quorum) : "—"}</td>` +
+    `<td class="action-row__fiscal" data-numeric>${signed(bill.fiscalImpact)}</td>` +
+    `<td class="action-row__lift" data-numeric>${signed(bill.impact)}</td>` +
+    `<td class="action-row__do">` +
     (onTable
       ? `<span class="action-row__live">${escapeHtml(UI.mesa.onTable)}</span>`
       : `<button class="action-row__pick" type="button" data-bill="${escapeHtml(bill.id)}">` +
         `${escapeHtml(verb)}</button>`) +
-    `</li>`
+    `</td>` +
+    `</tr>`
   );
 }
 
@@ -169,29 +175,32 @@ export function areaHtml(input) {
     `</p>` +
     `</section>`;
 
-  /* AS TRES COLUNAS DE NUMERO PRECISAM DIZER O QUE SAO. Elas sao quorum em
-     cadeiras, despesa obrigatoria em bilhoes por ano e pontos de indice — tres
-     unidades diferentes, uma ao lado da outra. A legenda fica FORA da lista, e
-     nao como primeira linha dela: uma `<li>` de cabecalho seria um item de lista
-     que nao e um item, e quem lê por leitor de tela ouviria "acao 1 de 7".
-     Ela tambem NAO e `aria-hidden`. Fora da lista ela e lida logo antes dela, e
-     tres palavras na ordem das colunas e a unica pista que quem nao ve a tela
-     tem para decifrar `308 · −140 · +8`. A forma completa seria uma tabela de
-     verdade, com `<th>` por coluna — e ela e a proxima versao desta lista. */
+  /* A LISTA E UMA TABELA DE VERDADE, e a versao anterior era uma `<ul>` com
+     grade e uma legenda solta antes dela. A diferenca nao e semantica de
+     enfeite: numa `<ul>`, quem lê por leitor de tela ouve "Carreira medica
+     federal, 257, menos 48, mais 8" — quatro numeros sem nome, e a legenda que
+     passou tres itens atras ja saiu da memoria. Com `<th scope="col">` por
+     coluna e `<th scope="row">` no nome, cada celula e anunciada com o titulo
+     dela.
+     A grade continua sendo CSS; o que mudou e o esqueleto embaixo. */
   const columns =
-    `<p class="action-head">` +
-    `<span class="action-row__quorum">${escapeHtml(UI.area.quorum)}</span>` +
-    `<span class="action-row__fiscal">${escapeHtml(UI.area.fiscal)}</span>` +
-    `<span class="action-row__lift">${escapeHtml(UI.area.lift)}</span>` +
-    `</p>`;
+    `<thead><tr>` +
+    `<th scope="col">${escapeHtml(UI.area.action)}</th>` +
+    `<th scope="col">${escapeHtml(UI.area.instrument)}</th>` +
+    `<th scope="col" class="action-row__quorum">${escapeHtml(UI.area.quorum)}</th>` +
+    `<th scope="col" class="action-row__fiscal">${escapeHtml(UI.area.fiscal)}</th>` +
+    `<th scope="col" class="action-row__lift">${escapeHtml(UI.area.lift)}</th>` +
+    `<th scope="col"><span class="sr-only">${escapeHtml(UI.area.decide)}</span></th>` +
+    `</tr></thead>`;
 
   const actions =
     `<section class="area__block">` +
     `<h3 class="area__legend">${escapeHtml(UI.area.propose)}</h3>` +
     (input.available.length === 0
       ? `<p class="area__empty">${escapeHtml(UI.area.nothingLeft)}</p>`
-      : columns +
-        `<ul class="action-list">` +
+      : `<div class="action-scroll"><table class="action-list">` +
+        columns +
+        `<tbody>` +
         input.available
           .map(bill =>
             actionHtml({
@@ -201,7 +210,7 @@ export function areaHtml(input) {
             }),
           )
           .join("") +
-        `</ul>`) +
+        `</tbody></table></div>`) +
     `</section>`;
 
   const bill = input.standing.reduce((sum, item) => sum + item.fiscalImpact, 0);
@@ -216,20 +225,25 @@ export function areaHtml(input) {
     `</h3>` +
     (input.standing.length === 0
       ? `<p class="area__empty">${escapeHtml(UI.area.nothingStanding)}</p>`
-      : `<ul class="action-list action-list--done">` +
+      : `<div class="action-scroll"><table class="action-list action-list--done">` +
+        `<thead><tr>` +
+        `<th scope="col">${escapeHtml(UI.area.action)}</th>` +
+        `<th scope="col">${escapeHtml(UI.area.instrument)}</th>` +
+        `<th scope="col" class="action-row__fiscal">${escapeHtml(UI.area.fiscal)}</th>` +
+        `</tr></thead><tbody>` +
         input.standing
           .map(
             item =>
-              `<li class="action-row">` +
-              `<span class="action-row__name">${escapeHtml(item.label)}</span>` +
-              `<span class="badge" data-instrument="${escapeHtml(item.instrument)}">` +
-              `${escapeHtml(labelOf(UI.instrument, item.instrument))}</span>` +
-              `<span class="action-row__fiscal" data-numeric>` +
-              `${signed(item.fiscalImpact)}${escapeHtml(UI.area.perYear)}</span>` +
-              `</li>`,
+              `<tr class="action-row">` +
+              `<th scope="row" class="action-row__name">${escapeHtml(item.label)}</th>` +
+              `<td><span class="badge" data-instrument="${escapeHtml(item.instrument)}">` +
+              `${escapeHtml(labelOf(UI.instrument, item.instrument))}</span></td>` +
+              `<td class="action-row__fiscal" data-numeric>` +
+              `${signed(item.fiscalImpact)}${escapeHtml(UI.area.perYear)}</td>` +
+              `</tr>`,
           )
           .join("") +
-        `</ul>`) +
+        `</tbody></table></div>`) +
     `</section>`;
 
   /* UMA LAMINA POR TELA. Os tres verbos sao secoes DENTRO da mesma peca, e nao
