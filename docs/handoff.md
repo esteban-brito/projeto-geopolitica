@@ -41,15 +41,30 @@ saíram do catálogo para o estado.
 | verificação        | estado                                                 |
 | ------------------ | ------------------------------------------------------ |
 | `npm run validate` | **verde de ponta a ponta**                             |
-| `npm run check`    | 9 guardas · 36 provas sintéticas · 97 arquivos · verde |
+| `npm run check`    | 9 guardas · 36 provas sintéticas · 99 arquivos · verde |
 | `npm test`         | **152 propriedades** · verde (eram 105)                |
 | `npm run simulate` | mandato de 48 meses, **cinco** políticas-sonda         |
 | `npm run walk`     | verde — a tela usada como se joga, desktop e celular   |
 | `npm run screen`   | **não rodado desde a quinta sessão** — ver achado 4    |
 | CI                 | GitHub Actions rodando `npm run validate` a cada push  |
 
-⚠ **Nada disto está commitado.** São 32 arquivos modificados e 13 novos na árvore
-de trabalho, no branch `acoplamento-e-simulador`, acumulados em duas sessões.
+✔ **Tudo commitado** no branch `acoplamento-e-simulador`, em três commits:
+`Tudo vira alavanca…` (o código de duas sessões), `Registra a reformulação…` (o
+ciclo 4, os ADRs, a retomada) e `O Gabinete…` (a casca nova). Nada foi enviado ao
+remoto.
+
+## ▶ O PRÓXIMO PASSO, quando você retomar
+
+**Parte 1 do ciclo 4 — a gramática e o motor de normas.** É o que destrava todo o
+resto, e o caminho está preparado: `state.bands` de hoje **já é** o primeiro tipo
+de cláusula (`band`), e a migração para `state.norms` não perde nada.
+
+Comece lendo `cycles/04-a-republica-responde.md` — a seção _A gramática_ e a
+_Parte 1_. Duas coisas a decidir na implementação, e as duas estão listadas em
+_As decisões que restam_: a ordem entre normas contraditórias (proposta: mais nova
+vence, exceção vence regra geral, constitucional vence ordinária) e o invariante
+contra o exploit da exceção empilhada (R1 dos riscos) — que precisa de uma
+política-sonda `explorador` no simulador.
 
 ## O que a sexta sessão fez — o ciclo 2, e ele mudou a natureza do jogo
 
