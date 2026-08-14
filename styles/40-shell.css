@@ -59,8 +59,14 @@
     gap: var(--space-4);
     /* O RODAPE E MAIOR QUE O TOPO, e nao por simetria quebrada: a tela rola, e o
        ultimo bloco de uma tela que rola precisa de folga embaixo para nao
-       parecer cortado pela borda da janela. */
-    padding: var(--space-8) clamp(24px, 5vw, 64px) var(--space-11);
+       parecer cortado pela borda da janela.
+
+       A MARGEM LATERAL ENCOLHEU (era `clamp(24px, 5vw, 64px)`) porque ela estava
+       cobrando duas vezes: o tabuleiro ja vive entre dois rails de 216px, entao
+       os 64px de cada lado somavam 128px de vazio a uma peca que ja parava antes
+       da borda. Margem existe para a peca nao encostar na moldura — e a moldura
+       aqui e o rail, que ja e a distancia. */
+    padding: var(--space-8) clamp(16px, 2.5vw, 32px) var(--space-11);
     /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela:
        `1fr` num grid tem minimo automatico igual ao conteudo, e sem esta linha a
        peca de 780px cria rolagem horizontal no tablet. */

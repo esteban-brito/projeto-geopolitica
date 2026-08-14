@@ -24,8 +24,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
 import { AREAS } from "../../src/data/areas.mjs";
-import { BILLS } from "../../src/data/bills.mjs";
+import { PROGRAMS } from "../../src/data/programs.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
+import { OPINION, SEGMENTS } from "../../src/data/opinion.mjs";
+import { pollFrom } from "../../src/domain/opinion/index.mjs";
 import { SCHEMA_VERSION, createState, monthLabel, reduce } from "../../src/state/state.mjs";
 
 /** @typedef {import("../../src/state/state.mjs").GameState} GameState */
@@ -48,22 +50,24 @@ function resolutionOf(state) {
     loyalty: state.loyalty,
     fiscal: state.fiscal,
     capacity: state.capacity,
-    enacted: state.enacted,
+    macro: state.macro,
+    mood: state.mood,
+    series: state.series,
+    levels: state.levels,
+    bands: state.bands,
     stream: state.streams.congress,
   };
 }
 
-/* ESTADOS VALIDOS, e nao objetos quaisquer. Gerar aprovacao com as tres fatias
-   soltas produziria entradas que o jogo nunca constroi, e a falha resultante
-   falaria do gerador em vez do reducer. Aqui `fair` nasce como o resto — que e a
-   mesma definicao que o codigo de producao usa. */
-const anyApproval = fc
-  .record({
-    good: fc.integer({ min: 0, max: 100 }),
-    poor: fc.integer({ min: 0, max: 100 }),
+/* A SATISFACAO DE CADA SEGMENTO em qualquer ponto da escala, incluindo os
+   extremos: um governo adorado pela base e odiado pelo topo e um estado valido, e
+   e justamente o que a media nacional esconde. */
+const anyMood = fc
+  .array(fc.double({ min: 0, max: 100, noNaN: true }), {
+    minLength: SEGMENTS.length,
+    maxLength: SEGMENTS.length,
   })
-  .filter(({ good, poor }) => good + poor <= 100)
-  .map(({ good, poor }) => ({ good, fair: 100 - good - poor, poor }));
+  .map(values => Object.fromEntries(SEGMENTS.map((segment, i) => [segment.id, values[i] ?? 0])));
 
 /* Fluxos em QUALQUER ponto do percurso, e nao so zerados: um save carregado no
    turno 40 chega com contadores altos, e o reducer tem de tratar isso como
@@ -86,7 +90,6 @@ const anyLoyalty = fc
    patamar. As faixas sao largas de proposito — o reducer nao pode ter opiniao
    sobre valor de campo que ele apenas carrega. */
 const anyFiscal = fc.record({
-  gdp: fc.double({ min: 1000, max: 30000, noNaN: true }),
   mandatory: fc.double({ min: 0, max: 12000, noNaN: true }),
   anchorRevenue: fc.double({ min: 1, max: 12000, noNaN: true }),
   anchorExpense: fc.double({ min: 0, max: 12000, noNaN: true }),
@@ -111,16 +114,63 @@ const anyCapacity = fc.record({
     .map(values => Object.fromEntries(AREAS.map((area, i) => [area.id, values[i] ?? []]))),
 });
 
+const anyMacro = fc.record({
+  gdp: fc.double({ min: 1000, max: 30000, noNaN: true }),
+  potential: fc.double({ min: 1000, max: 30000, noNaN: true }),
+  inflation: fc.double({ min: -0.05, max: 0.5, noNaN: true }),
+  rate: fc.double({ min: 0, max: 0.5, noNaN: true }),
+  unemployment: fc.double({ min: 0.01, max: 0.4, noNaN: true }),
+  population: fc.double({ min: 100, max: 300, noNaN: true }),
+});
+
+/* A SERIE EM QUALQUER PONTO DO MANDATO, e a vazia entra junto: uma partida
+   recem-aberta nao tem mes guardado nenhum, e uma que atravessou o mandato tem
+   48. As linhas nao andam juntas por construcao — o reducer recebe o que lhe
+   derem e so carrega —, entao cada uma sorteia o proprio comprimento. */
+const anySeriesLine = fc.array(fc.double({ min: -1e4, max: 3e4, noNaN: true }), { maxLength: 48 });
+
+const anySeries = fc.record({
+  gdp: anySeriesLine,
+  inflation: anySeriesLine,
+  rate: anySeriesLine,
+  unemployment: anySeriesLine,
+  debtRatio: anySeriesLine,
+  primary: anySeriesLine,
+});
+
+/* AS LEIS DO PAIS EM QUALQUER CONFIGURACAO, e a faixa invertida entra junto: o
+   reducer nao tem opiniao sobre o conteudo de uma lei, ele so a carrega. Quem
+   recusa faixa impossivel e quem a compoe, e ha prova disso em `agenda.mjs`. */
+const anyBands = fc
+  .array(fc.tuple(fc.integer({ min: 0, max: 100 }), fc.integer({ min: 0, max: 100 })), {
+    minLength: PROGRAMS.length,
+    maxLength: PROGRAMS.length,
+  })
+  .map(pairs =>
+    Object.fromEntries(
+      PROGRAMS.map((program, i) => [
+        program.id,
+        { floor: pairs[i]?.[0] ?? 0, ceiling: pairs[i]?.[1] ?? 100 },
+      ]),
+    ),
+  );
+
 const anyState = fc.record({
   schemaVersion: fc.constant(SCHEMA_VERSION),
   seed: fc.integer({ min: 0, max: 4294967295 }),
   /* 48 turnos por mandato — a decisao fechada. */
   month: fc.integer({ min: 0, max: 47 }),
-  approval: anyApproval,
+  mood: anyMood,
   loyalty: anyLoyalty,
   fiscal: anyFiscal,
+  /* A POSICAO MACRO em qualquer ponto do percurso. Ela entrou na versao 8 do
+     save, e o reducer nao pode ter opiniao sobre valor de campo que ele apenas
+     carrega — inclusive um pais em recessao com juro de 40%. */
+  macro: anyMacro,
+  series: anySeries,
   capacity: anyCapacity,
-  enacted: fc.uniqueArray(fc.constantFrom(...BILLS.map(bill => bill.id)), { maxLength: 12 }),
+  levels: fc.constant(Object.fromEntries(PROGRAMS.map(p => [p.id, p.initial]))),
+  bands: anyBands,
   streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 
@@ -138,10 +188,15 @@ const anyUnknownAction = fc
  * ESTA verificacao e nao uma copia dela. Prova que exercita uma copia nao diz
  * nada sobre o casador que roda de verdade.
  *
- * @param {GameState} state
+ * ⚠ ELE MUDOU DE ALVO em 14/08/2026. A aprovacao deixou de ser campo do estado e
+ * passou a ser a CONVERSAO da satisfacao por segmento — entao o que se prova aqui
+ * e a saida de SONDA, e nao um campo carregado. O invariante e o mesmo: as tres
+ * fatias somam 100 e nenhuma e negativa.
+ *
+ * @param {import("../../src/domain/opinion/index.mjs").Approval} approval
  */
-function assertApprovalInvariant(state) {
-  const { good, fair, poor } = state.approval;
+function assertApprovalInvariant(approval) {
+  const { good, fair, poor } = approval;
   assert.equal(good + fair + poor, 100, `as tres fatias somam ${good + fair + poor}`);
   assert.ok(fair >= 0, `fair saiu negativo (${fair})`);
   assert.ok(good >= 0 && poor >= 0, `fatia negativa: good=${good} poor=${poor}`);
@@ -149,9 +204,9 @@ function assertApprovalInvariant(state) {
 
 test("o estado de abertura ja satisfaz o invariante e ja sai congelado", () => {
   const state = createState();
-  assertApprovalInvariant(state);
+  assertApprovalInvariant(pollFrom(state.mood, SEGMENTS, OPINION));
   assert.ok(Object.isFrozen(state));
-  assert.ok(Object.isFrozen(state.approval));
+  assert.ok(Object.isFrozen(state.mood));
 });
 
 test("reduce nunca muta o estado que recebe", () => {
@@ -172,7 +227,7 @@ test("o estado que sai esta congelado em profundidade", () => {
     fc.property(anyState, state => {
       const next = reduce(state, resolutionOf(state));
       assert.ok(Object.isFrozen(next), "a raiz saiu destravada");
-      assert.ok(Object.isFrozen(next.approval), "a aprovacao saiu destravada");
+      assert.ok(Object.isFrozen(next.mood), "a satisfacao saiu destravada");
     }),
   );
 });
@@ -199,7 +254,9 @@ test("o mes anda exatamente um por turno, e so para frente", () => {
 
 test("a aprovacao sempre soma 100 e nenhuma fatia fica negativa", () => {
   fc.assert(
-    fc.property(anyState, state => assertApprovalInvariant(reduce(state, resolutionOf(state)))),
+    fc.property(anyState, state =>
+      assertApprovalInvariant(pollFrom(reduce(state, resolutionOf(state)).mood, SEGMENTS, OPINION)),
+    ),
   );
 });
 
@@ -208,10 +265,10 @@ test("PROVA SINTETICA: o invariante acusa um reducer que larga o resto", () => {
      ser o resto e vira campo carregado adiante — que e o formato do erro quando
      alguem troca a conta por um spread durante uma refatoracao.
      Sem esta prova, "verde" nao distingue reducer correto de assercao frouxa. */
-  const broken = (/** @type {GameState} */ state) => ({
-    ...state,
-    approval: { ...state.approval, good: state.approval.good + 2 },
-  });
+  const broken = (/** @type {GameState} */ state) => {
+    const poll = pollFrom(state.mood, SEGMENTS, OPINION);
+    return { ...poll, good: poll.good + 2 };
+  };
 
   assert.throws(
     () => fc.assert(fc.property(anyState, state => assertApprovalInvariant(broken(state)))),
@@ -235,16 +292,18 @@ test("o mes resolvido tambem anda exatamente um, e sai congelado", () => {
 });
 
 test("o mes resolvido PRESERVA A REFERENCIA do que ele nao toca", () => {
-  /* O contrato de render por identidade, cobrado na acao nova. A aprovacao nao
-     tem motor que a mova hoje, entao `anterior.approval === atual.approval` tem
-     de continuar respondendo "esta parte da tela nao mudou". Um spread que
-     recriasse o objeto passaria em qualquer deepEqual e mandaria a tela
-     redesenhar o painel inteiro todo mes — defeito silencioso, e caro
-     exatamente na peca que usa filtro. */
+  /* O contrato de render por identidade, cobrado na acao nova. Um spread que
+     recriasse um objeto sem motivo passaria em qualquer deepEqual e mandaria a
+     tela redesenhar o painel inteiro todo mes — defeito silencioso, e caro
+     exatamente na peca que usa filtro.
+
+     ⚠ A APROVACAO SAIU DESTA PROVA porque ela deixou de ser campo, e a satisfacao
+     que a substituiu MUDA todo mes por construcao: SONDA sempre devolve um mapa
+     novo. O que continua valendo e o fluxo que a acao nao toca — e ele basta,
+     porque o defeito que a prova pega e o spread indiscriminado. */
   fc.assert(
     fc.property(anyState, state => {
       const next = reduce(state, resolutionOf(state));
-      assert.equal(next.approval, state.approval, "a aprovacao foi recriada sem ter mudado");
       assert.equal(next.streams.events, state.streams.events, "o fluxo de eventos foi recriado");
     }),
   );

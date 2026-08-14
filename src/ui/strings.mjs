@@ -12,6 +12,8 @@ export const UI = {
      nao abre ensina o jogador a desconfiar do menu inteiro. */
   nav: {
     mesa: "Mesa",
+    finance: "Finanças",
+    estado: "O Estado",
     opinion: "Opinião",
     graph: "Rede",
     pending: "ainda não existe",
@@ -20,12 +22,22 @@ export const UI = {
      custo de executar cada um: alocar nao precisa de ninguem, pautar precisa do
      Congresso, e vigente ja foi decidido e so cobra. */
   area: {
+    /* O ORÇAMENTO GRANULAR. "Alocar" e "Pautar" saíram: o jogador não escolhe
+       mais entre alocar verba e pautar uma lei — ele escreve o orçamento, e o
+       rito de cada linha é consequência de onde ele parou o controle. */
+    programs: "O orçamento",
+    thisArea: "esta área",
+    outlook: "Para onde vai",
+    /* O PISO É ANUNCIADO EM TODA LINHA, e não só quando é atravessado. Um limite
+       que só aparece depois de violado é um limite que o jogador descobre
+       errando — e o erro aqui custa a pauta do mês. */
+    floor: "piso",
     allocate: "Alocar",
     propose: "Pautar",
     standing: "Vigente",
     ofMonth: "do mês",
     available: "disponíveis",
-    committed: "já prometidos às outras áreas",
+    committed: "já comprometidos nas outras áreas",
     holding: "parado",
     perYear: "/ano",
     total: "total",
@@ -49,10 +61,41 @@ export const UI = {
     nothingStanding: "nada aprovado ainda nesta área",
     nothingLeft: "tudo desta área já foi feito",
   },
+  /* AS LEIS DA ÁREA — o segundo bloco, e o mais novo do jogo.
+     ⚠ NÃO HÁ VERBO NENHUM AQUI, e a ausência é o desenho. "Criar lei", "alterar"
+     e "excluir" existem no que o jogador faz, e não em botões: criar é tirar o
+     piso do zero, alterar é movê-lo, excluir é levá-lo de volta a zero. Um botão
+     de "excluir lei" ao lado de um controle que já faz isso ensinaria que são
+     duas coisas diferentes. */
+  laws: {
+    title: "As leis desta área",
+    hint: "o que elas obrigam, o que autorizam, e quem as protege",
+    obliges: "obriga",
+    allows: "autoriza até",
+    /* PISO ZERO NÃO É "PISO 0" — é a ausência de lei, e dizer o número esconderia
+       isso atrás de um algarismo que parece um valor escolhido. */
+    noFloor: "não obriga nada",
+    noCeiling: "sem teto",
+    /* QUEM PROTEGE A FAIXA. Ela é do catálogo e não muda: o jogador altera o que a
+       lei manda, nunca de que tipo ela é. */
+    guard: {
+      none: "sem lei",
+      law: "lei ordinária",
+      constitution: "constituição",
+    },
+    /* O QUE MUDA quando o jogador move uma faixa: ela deixa de ser a lei vigente e
+       passa a ser um texto em votação. */
+    proposed: "em votação",
+    was: "hoje",
+  },
   /* O INSTRUMENTO E ETIQUETA NA LINHA, e nao tela propria. Ele decide o quorum e
      o rito; nao decide onde a acao mora. Quem quer mexer na saude entra em
      Saude — nao precisa saber antes se aquilo e lei, emenda ou decreto. */
+  /* `budget` E O QUARTO RITO, e ele é a ausência de um: o orçamento que a lei já
+     autorizou, executado por quem foi eleito para executá-lo. Ele não está em
+     `INSTRUMENTS` de propósito — instrumento é o que vai a plenário. */
   instrument: {
+    budget: "Caneta",
     law: "lei",
     amendment: "emenda",
     decree: "caneta",
@@ -61,6 +104,57 @@ export const UI = {
     law: "maioria simples",
     amendment: "três quintos",
     decree: "sem votação",
+  },
+  estado: {
+    eyebrow: "a moldura",
+    title: "O Estado",
+    property: "O que a União possui",
+    power: "Quanto o Executivo decide sozinho",
+  },
+  /* FINANCAS — O PLACAR. Os rótulos aqui são mais secos que os do resto do jogo,
+     e é de propósito: quem entra nesta tela vem conferir número, e adjetivo em
+     painel de leitura é opinião com aparência de dado.
+     ⚠ NENHUM NÚMERO É ESCRITO NESTAS FRASES. A meta de inflação, o teto e a carga
+     vêm do catálogo e chegam à tela por parâmetro — número digitado aqui seria um
+     segundo lugar para a calibragem divergir, e o rótulo é quem sempre esquece de
+     ser atualizado. */
+  finance: {
+    eyebrow: "o placar",
+    title: "Finanças",
+    economy: "A economia",
+    gdp: "PIB",
+    perCapita: "PIB por habitante",
+    inflation: "Inflação",
+    target: "meta de",
+    rate: "Juro básico",
+    central: "decidido pelo Banco Central",
+    unemployment: "Desemprego",
+    gap: "Hiato do produto",
+    /* A NOTA E NEUTRA NO SINAL de propósito: o hiato é negativo na maior parte de
+       uma partida, e uma frase que só descreve o lado positivo — "acima do que o
+       país produz" — lê como erro justamente quando o número está abaixo de zero,
+       que é quando ele mais importa. */
+    gapNote: "distância até o que o país produz sem pressionar preço",
+    accounts: "As contas",
+    revenue: "Receita",
+    mandatory: "Despesa obrigatória",
+    ofRevenue: "da receita",
+    room: "Discricionário",
+    primary: "Resultado primário",
+    interest: "Juros da dívida",
+    /* A DISTINCAO QUE O ARCABOUCO FAZ, dita na linha: juro não disputa com
+       hospital — ele engorda a dívida. */
+    outsideCeiling: "fora do teto",
+    debt: "A dívida",
+    gross: "Dívida bruta",
+    overGdp: "Dívida sobre o PIB",
+    ceiling: "Teto do arcabouço",
+    headroom: "Folga até o teto",
+    untilCeiling: "o que o teto ainda deixa gastar",
+    squeezed: "a obrigatória sozinha já fura o teto",
+    country: "O país",
+    perYear: "/ano",
+    perMonth: "no mês",
   },
   mesa: {
     onTable: "Em pauta",
@@ -121,6 +215,11 @@ export const UI = {
   /* O RELATÓRIO DO MÊS. Ele é a única tela em que a banda da previsão prova que
      era honesta: a Mesa promete uma faixa, e aqui aparece o número que saiu. */
   report: {
+    panel: "O mês passado",
+    /* A ESPERA TEM DE SER DITA. O relatório é memória de tela e não entra no
+       save, então quem retoma a partida amanhã cai aqui — e um painel em branco
+       ao lado de controles que funcionam lê como defeito, não como ausência. */
+    waiting: "Nenhum mês resolvido nesta sessão. Avance para ver o que o turno fez.",
     noBill: "Mês sem pauta",
     passed: "Aprovada",
     rejected: "Rejeitada",
@@ -144,12 +243,9 @@ export const UI = {
   actions: {
     advance: "Avançar o mês",
     advanceHint: "resolve o turno e propaga os efeitos",
-    /* O BOTÃO DO EVENTO VIROU O BOTÃO DO MÊS PASSADO. O diálogo nativo deixou de
-       demonstrar um padrão e passou a carregar o relatório — e um botão que abre
-       uma demonstração ao lado de um jogo que funciona é andaime pedindo para
-       ser confundido com funcionalidade. */
-    review: "O mês passado",
-    reviewHint: "reabre o relatório do último turno",
+    /* O BOTÃO DO MÊS PASSADO SAIU. Ele reabria o relatório num diálogo; o
+       relatório agora é painel fixo da Mesa e está sempre à vista. Botão que
+       abre o que já está aberto é ruído com aparência de funcionalidade. */
     restart: "Nova partida",
     restartHint: "apaga o mandato e recomeça do primeiro mês",
     restartConfirm: "Apagar mesmo?",

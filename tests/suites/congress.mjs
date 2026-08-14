@@ -491,3 +491,47 @@ test("A RUPTURA E UM DEGRAU, e nao mais um passo da ladeira", () => {
     `cruzar a ruptura custou ${overRupture} cadeiras e um passo qualquer custa ${midSlope}`,
   );
 });
+
+test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
+  /* ⚠ E ESTA E A RAZAO DE SONDA EXISTIR PARA O MODELO, e nao so para a tela.
+     Parlamentar nao vota com governo que a rua odeia, e vota com governo que a rua
+     adora ate contra a propria ideologia — porque o que ele protege e a propria
+     reeleicao. Sem este acoplamento, a aprovacao seria um numero bonito que nao
+     decide nada, e o jogo teria um motor a mais sem ter uma consequencia a mais.
+
+     A prova cobra as duas pontas: a direcao (popular vale mais que impopular) e o
+     TAMANHO (a rua move a margem, e nao o centro — senao popularidade viraria
+     botao de aprovar tudo). */
+  const bill = BILLS.find(item => item.instrument === "law" && item.threat < 0.3);
+  assert.ok(bill, "o catalogo perdeu a lei mansa que esta prova usa");
+
+  const loyalty = everyone(70);
+  const funding = everyone(0.3);
+  const count = (/** @type {number | undefined} */ standing) =>
+    whipCount({ bill, parties: PARTIES, funding, loyalty, standing }).votes;
+
+  const hated = count(8);
+  const neutral = count(undefined);
+  const loved = count(70);
+
+  assert.ok(loved > neutral, `governo amado nao ganhou nada: ${neutral} → ${loved}`);
+  assert.ok(hated < neutral, `governo odiado nao perdeu nada: ${neutral} → ${hated}`);
+
+  /* O TAMANHO: a diferenca entre o extremo amado e o extremo odiado nao pode ser
+     maior que o plenario inteiro nem tao pequena que nunca mude uma votacao. */
+  const swing = loved - hated;
+  assert.ok(swing > 20, `a rua mudou so ${swing} votos entre os extremos — ela nao importa`);
+  assert.ok(swing < 250, `a rua mudou ${swing} votos — ela virou o botao de aprovar tudo`);
+});
+
+test("SEM A RUA, O MOTOR CONTINUA O MESMO: o padrao e neutro e nao zero", () => {
+  /* O contrato que mantem a suite antiga descrevendo a verdade. O ECLUSA nasceu
+     antes de existir opiniao publica, e quem nao passa `standing` tem de receber
+     exatamente o placar de antes — a mesma regra do LASTRO com os fatores da
+     MALHA. */
+  const bill = BILLS[0];
+  assert.ok(bill);
+  const input = { bill, parties: PARTIES, funding: everyone(0.4), loyalty: everyone(60) };
+
+  assert.equal(whipCount(input).votes, whipCount({ ...input, standing: 35 }).votes);
+});

@@ -1,0 +1,129 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TELA · FINANCAS — o placar, e a unica tela do jogo sem um controle.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   ELA E A UNICA DENSA, E ISSO E DELIBERADO. Em tela que decide, densidade e
+   ruido: cada numero a mais disputa atencao com a decisao, e o projeto ja gastou
+   uma sessao tirando numero de cima da Mesa por isso. Aqui nao ha decisao —
+   ninguem arrasta nada nesta tela —, e a comparacao lado a lado e justamente o
+   servico que ela presta. Dezenove linhas em quatro blocos cabem numa dobra, e e
+   isso que faz "a divida subiu enquanto o primario caiu" ser uma leitura de
+   relance em vez de uma navegacao.
+
+   A AUSENCIA DE CONTROLE PRECISA SER VISIVEL NO PRIMEIRO SEGUNDO. Se a linha
+   parecesse pressionavel, o jogador procuraria o botao, nao acharia, e concluiria
+   que a tela esta quebrada. Dai a forma de RAZAO CONTABIL e nao de pastilha: fio
+   de separacao em vez de fundo por linha, nenhum raio, nenhum hover, nenhuma
+   transicao. Toda peca pressionavel deste jogo tem fundo proprio e reage ao
+   ponteiro; esta nao tem nem uma coisa nem outra, e a diferenca lê antes de
+   qualquer texto ser lido.
+
+   AS QUATRO COLUNAS SAO SEMPRE AS MESMAS: o que e, quanto e, o que vem fazendo, e
+   o que aquilo significa. Numero em coluna fixa e o unico jeito de dezenove
+   grandezas diferentes serem comparaveis de relance — coluna que se alinha
+   sozinha por linha deixa de ser coluna. */
+
+@layer screens {
+  .ledger {
+    display: grid;
+  }
+
+  /* A NOTA RECEBE A SOBRA, e nao o rotulo: "Despesa obrigatória" cabe em pouco
+     mais de um palmo e nao cresce, enquanto "a obrigatória sozinha já fura o
+     teto" e a frase que explica o mes inteiro. A coluna do valor e fixa em `rem`
+     por licao paga: `ch` mede a largura do zero NA FONTE DE CADA ELEMENTO, e
+     duas colunas medidas assim em degraus tipograficos diferentes nunca se
+     alinham. */
+  .ledger__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7.5rem 4rem minmax(0, 1.2fr);
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .ledger__row:last-child {
+    border-bottom: 0;
+  }
+
+  .ledger__label {
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ledger__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* ── A ESCADA PRECISA DE AR ENTRE OS DEGRAUS ────────────────────────────────
+     Os blocos sao retangulos solidos e se LADRILHAM: encostados, seis deles viram
+     um tarjao unico, e uma serie estavel passa a parecer uma barra de
+     carregamento — foi assim que ela apareceu na primeira captura desta tela.
+     A escada do indice de area resolve encolhendo (a fonte lá é de 4rem); aqui a
+     linha e de corpo, e encolher mais tornaria o degrau invisivel. O que separa
+     os blocos e ESPACO ENTRE ELES, e por isso o `letter-spacing` e positivo — o
+     oposto do que a peca do indice faz, e pela mesma razao de fundo: a marca so
+     informa enquanto der para contar os degraus. */
+  .ledger__spark {
+    font-size: 0.5rem;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    color: var(--ink-dim);
+  }
+
+  .ledger__note {
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── O SINAL TINGE O NUMERO, E SO ELE ───────────────────────────────────────
+     A linha inteira colorida faria quatro linhas vermelhas seguidas parecerem um
+     alarme, e nenhuma delas e alarme: juro da divida e sempre "para baixo" e
+     sempre existiu. O que muda entre um mes e outro e a grandeza, entao e o
+     numero que carrega a cor.
+
+     E `flat` NAO E CINZA APAGADO, e sim a cor cheia do texto: um indicador dentro
+     da normalidade e informacao boa, e desbota-lo ensinaria a nao olhar
+     justamente para a linha que esta no lugar. */
+  .ledger__row[data-direction="up"] .ledger__value {
+    color: var(--signal-up);
+  }
+
+  .ledger__row[data-direction="down"] .ledger__value {
+    color: var(--signal-down);
+  }
+
+  /* ── NO CELULAR A LINHA VIRA DUAS ───────────────────────────────────────────
+     Quatro colunas em 390px poriam a nota em duas palavras por fileira e o valor
+     quebrado no meio. Rotulo e valor ficam na primeira fileira, porque sao o par
+     que se lê junto; a escada e a nota descem para a segunda. Nada e escondido:
+     esconder para caber e mentir por omissao, e numa tela que so informa a
+     omissao e a unica coisa que ela poderia fazer de errado. */
+  @media (max-width: 720px) {
+    .ledger__row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2px var(--space-3);
+      padding: var(--space-2) 0;
+    }
+
+    .ledger__spark {
+      grid-column: 1;
+      white-space: nowrap;
+    }
+
+    .ledger__note {
+      grid-column: 2;
+      text-align: right;
+    }
+  }
+}

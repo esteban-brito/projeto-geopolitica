@@ -92,7 +92,14 @@ export const BILL_SCHEMA = {
  * Declarado por acao, a primeira lei com 308 digitado a mao viraria uma regra
  * nova que ninguem escreveu.
  *
- * @param {Bill} bill
+ * ⚠ ELE PEDE O INSTRUMENTO, E NAO UMA `Bill` INTEIRA, e isso deixou de ser
+ * detalhe: a pauta do jogo passou a ser COMPOSTA do orcamento em
+ * `src/application/agenda.mjs`, e uma proposta derivada nao tem `impact` nem
+ * `id` de catalogo. Exigir a forma inteira aqui obrigaria quem compoe a fabricar
+ * campos so para satisfazer uma assinatura — e campo fabricado para agradar tipo
+ * e a origem de metade dos numeros que ninguem sabe explicar.
+ *
+ * @param {{ instrument: string }} bill
  * @returns {number}
  */
 export function quorumOf(bill) {
@@ -189,15 +196,24 @@ export const BILLS = [
     impact: 6,
   },
 
-  /* ── PRODUCAO ────────────────────────────────────────────────────────────
-     Infraestrutura, energia, industria e agro na mesma area de proposito: o
-     licenciamento expresso e a fiscalizacao ambiental disputam a MESMA verba na
-     MESMA tela, e assim o conflito com o agro deixa de ser dois menus e vira
-     uma escolha. */
+  /* ── INDUSTRIA E AGRO ───────────────────────────────────────────────────────
+     ⚠ ELAS ERAM UMA AREA SO, e o argumento escrito aqui era que o licenciamento
+     expresso e a fiscalizacao ambiental disputavam a MESMA verba na MESMA tela.
+     Em 14/08/2026 "Producao" virou duas — Agricultura, e Industria e
+     Infraestrutura —, e o argumento inverteu de sinal: o conflito passou a ser
+     ENTRE duas telas, que e onde ele acontece no Congresso. As duas pautas
+     ambientais ficaram do lado do agro de proposito, porque e a lavoura que elas
+     embargam.
+
+     ⚠ ESTE ARQUIVO INTEIRO E CATALOGO APOSENTADO. As pautas prontas morreram
+     quando o orcamento granular nasceu — a pauta agora e DERIVADA do que o
+     jogador moveu, em `src/application/agenda.mjs`. Ele sobrevive porque as
+     suites do Congresso e das telas montam casos com ele, e esta na lista de
+     achados do handoff para virar fixture de teste ou morrer. */
   {
     id: "abertura-comercial",
     label: "Abertura comercial",
-    area: "production",
+    area: "industry",
     instrument: "law",
     economic: 95,
     liberty: 58,
@@ -208,7 +224,7 @@ export const BILLS = [
   {
     id: "programa-habitacional",
     label: "Programa habitacional",
-    area: "production",
+    area: "industry",
     instrument: "law",
     economic: 26,
     liberty: 62,
@@ -219,7 +235,7 @@ export const BILLS = [
   {
     id: "marco-do-saneamento",
     label: "Marco legal do saneamento",
-    area: "production",
+    area: "industry",
     instrument: "law",
     economic: 82,
     liberty: 56,
@@ -230,7 +246,7 @@ export const BILLS = [
   {
     id: "reforma-trabalhista",
     label: "Reforma trabalhista",
-    area: "production",
+    area: "industry",
     instrument: "law",
     economic: 88,
     liberty: 54,
@@ -241,7 +257,7 @@ export const BILLS = [
   {
     id: "licenciamento-expresso",
     label: "Licenciamento ambiental expresso",
-    area: "production",
+    area: "agriculture",
     instrument: "amendment",
     economic: 80,
     liberty: 44,
@@ -252,7 +268,7 @@ export const BILLS = [
   {
     id: "fiscalizacao-ambiental",
     label: "Operação de fiscalização ambiental",
-    area: "production",
+    area: "agriculture",
     instrument: "decree",
     economic: 24,
     liberty: 56,

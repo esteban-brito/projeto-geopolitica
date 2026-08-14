@@ -110,6 +110,198 @@
     color: var(--ink-dim);
   }
 
+  /* ── O ORCAMENTO GRANULAR ───────────────────────────────────────────────────
+     Um controle por programa, e cada linha carrega quatro coisas: o que e, o que
+     o numero significa no mundo, onde ele esta, e quanto custa no mes.
+
+     ── ATRAVESSAR O PISO TINGE A LINHA INTEIRA, e nao so a etiqueta ───────────
+     O jogador precisa ver de relance quais dos trinta controles sao os caros,
+     sem ler etiqueta por etiqueta — e quando ele arrasta para baixo do piso, a
+     mudanca de cor da linha e a unica coisa que ele nota de canto de olho.
+
+     E EMENDA E OUTRA CATEGORIA, e nao lei com mais tinta: a mesma distincao que
+     separa obstrucao de ruptura na Mesa. Ambar tinge e vermelho tinge MAIS e
+     acende a barra na quina — diferenca de categoria pede forma diferente, e nao
+     so intensidade. */
+  .dials {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .dial {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 1.1fr) auto;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-piece);
+    background: rgba(255, 255, 255, 0.04);
+    transition: background var(--dur-piece) linear;
+  }
+
+  .dial[data-rite="law"] {
+    background: rgba(var(--brand-rgb), 0.12);
+  }
+
+  .dial[data-rite="amendment"] {
+    background: rgba(var(--crisis-rgb), 0.16);
+    box-shadow: inset 3px 0 0 var(--crisis);
+  }
+
+  .dial__head {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .dial__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* A UNIDADE E O QUE IMPEDE O CONTROLE DE SER ABSTRATO. "66" nao diz nada;
+     "66 · leitos, UTIs e cirurgias contratadas" diz o que o jogador esta
+     movendo, e e a diferenca entre escrever orcamento e girar um numero. */
+  .dial__unit {
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dial__slider {
+    width: 100%;
+  }
+
+  .dial__read {
+    display: grid;
+    grid-template-columns: 3ch 9ch minmax(72px, auto);
+    align-items: baseline;
+    justify-items: end;
+    gap: var(--space-3);
+  }
+
+  .dial__level {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .dial__cost {
+    color: var(--ink-soft);
+  }
+
+  .dial__rite {
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+
+  /* NO CELULAR A LINHA VIRA FILEIRAS. Trinta controles num aparelho de 390px com
+     o slider espremido em 60px poriam o passo de um ponto fora do alcance do
+     polegar — e o passo e a decisao. */
+  @media (max-width: 720px) {
+    .dial {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dial__read {
+      justify-items: start;
+    }
+  }
+
+  /* ── AS LEIS DA AREA ────────────────────────────────────────────────────────
+     Mesma pastilha do controle de orcamento, e de proposito: mudar quanto se
+     gasta e mudar quanto a lei OBRIGA a gastar sao o mesmo gesto com precos
+     diferentes, e uma forma diferente aqui sugeriria que sao naturezas
+     diferentes de coisa.
+
+     O QUE MUDA E A LINHA EM VOTACAO. Enquanto a faixa e a vigente, ela e uma
+     leitura calma; movida, ela vira um texto que precisa de plenario — e recebe a
+     mesma tinta ambar que a acao em pauta recebe na lista, pelo mesmo motivo. */
+  .laws {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .law {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(120px, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-piece);
+    background: rgba(255, 255, 255, 0.03);
+    transition: background var(--dur-piece) linear;
+  }
+
+  .law[data-moved="true"] {
+    background: rgba(var(--brand-rgb), 0.12);
+    box-shadow: inset 2px 0 0 var(--brand);
+  }
+
+  .law__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* OS DOIS CONTROLES EMPILHADOS, e nao lado a lado: um piso e um teto sao os
+     dois extremos da MESMA faixa, e ve-los um sobre o outro deixa a distancia
+     entre eles legivel de relance. */
+  .law__band {
+    display: grid;
+    gap: 2px;
+  }
+
+  .law__slider {
+    width: 100%;
+  }
+
+  .law__read {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+
+  .law__terms b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .law__terms small {
+    color: var(--ink-dim);
+  }
+
+  /* QUEM PROTEGE A FAIXA nao e uma etiqueta de acao — e uma propriedade da norma,
+     e por isso ela nao usa a pastilha de instrumento. Ela so aparece enquanto a
+     lei esta parada; movida, o lugar passa a ser do rito que ela vai custar. */
+  .law__guard {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .law {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
   /* ── ALOCAR ─────────────────────────────────────────────────────────────────
      Controle a esquerda, leitura a direita, e a leitura NAO fica embaixo do
      controle: quem arrasta cobre com a mao o que estiver abaixo do dedo, e o

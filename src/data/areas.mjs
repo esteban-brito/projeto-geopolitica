@@ -16,16 +16,19 @@
    decretar. O instrumento vira ETIQUETA na linha, e continua valendo tudo o que
    valia: e ele que decide se sao 257 votos, 308, ou nenhum.
 
-   ── SEIS, E ELAS SE ENCAIXAM ─────────────────────────────────────────────────
-   Nao sao seis paineis paralelos. Cada area empurra uma parte DIFERENTE do
+   ── OITO, E ELAS SE ENCAIXAM ─────────────────────────────────────────────────
+   Nao sao oito paineis paralelos. Cada area empurra uma parte DIFERENTE do
    modelo, e o desenho e uma cadeia fechada:
 
      Fazenda      financia todas as outras;
-     Producao     devolve para a Fazenda, via PIB;
+     Agricultura  devolve para a Fazenda, via PIB — e tem bancada propria;
+     Industria    devolve pela mesma porta, e e a que depende da Educacao;
      Previdencia  E a despesa obrigatoria, em pessoa;
      Saude        abandonada, faz a obrigatoria subir;
      Seguranca    idem, pelo sistema prisional;
-     Educacao     alimenta a capacidade da Producao — daqui a dois anos.
+     Educacao     alimenta a capacidade da Industria — daqui a dois anos;
+     Defesa       cuidada, encarece — e e o unico indice cujo motivo de existir
+                  ainda nao existe: ela vai ser o escudo contra a ruptura.
 
    O `lag` da educacao e 24 de proposito, e ele e o dilema politico mais honesto
    que este jogo consegue produzir: o retorno chega DEPOIS do mandato acabar.
@@ -125,17 +128,47 @@ export const AREAS = [
     force: 0.25,
     lag: 0,
   },
+  /* ── AGRICULTURA E INDUSTRIA, e elas eram UMA ────────────────────────────────
+     "Producao" carregava Plano Safra, BNDES, desoneracao, rodovia e ciencia na
+     mesma tela. O corte em duas nao e organizacional — e POLITICO, e a razao cabe
+     numa frase: a bancada ruralista e um bloco real no Congresso, e um modelo que
+     trata agro e industria como a mesma coisa nao consegue representa-la. Enquanto
+     as duas eram uma area, "cortar a Producao" era um gesto so; agora sao dois
+     gestos com dois inimigos diferentes.
+
+     ⚠ A SOMA DAS DUAS FORCAS E A FORCA QUE A PRODUCAO TINHA (0,20). Dividir uma
+     area em duas nao pode aumentar o efeito dela sobre a receita — se aumentasse,
+     a recalibragem teria acontecido de contrabando, dentro de uma mudanca que se
+     anunciava como organizacao.
+
+     OS INDICES DE ABERTURA SAO UMA AFIRMACAO SOBRE O PAIS: agro competitivo em 63,
+     parque industrial encolhido em 48. A media continua perto dos 57 de antes, e a
+     diferenca entre os dois e a heranca que o jogador recebe — um setor que rende
+     sem ele e outro que so anda se ele empurrar. */
   {
-    id: "production",
-    label: "Produção",
+    id: "agriculture",
+    label: "Agricultura",
+    index: "safra",
+    initial: 63,
+    /* DECAI DEVAGAR: a lavoura nao desaba no mes em que o crédito atrasa, e o
+       ciclo dela e anual e nao mensal. */
+    decay: 0.35,
+    yield: 0.6,
+    feeds: "revenue",
+    force: 0.08,
+    lag: 6,
+  },
+  {
+    id: "industry",
+    label: "Indústria e Infraestrutura",
     index: "capacidade",
-    initial: 57,
+    initial: 48,
     decay: 0.5,
     yield: 0.6,
     feeds: "revenue",
-    force: 0.2,
+    force: 0.12,
     /* Obra nao vira PIB no mes em que o cheque e assinado. Seis meses e o
-       intervalo curto do catalogo, e existe para a Producao nao ser um botao de
+       intervalo curto do catalogo, e existe para a area nao ser um botao de
        receita instantanea — se fosse, ela dominaria a Fazenda. */
     lag: 6,
   },
@@ -186,9 +219,49 @@ export const AREAS = [
     force: -0.14,
     lag: 3,
   },
+  /* ── DEFESA, a setima, e ela entra por uma razao que ainda nao esta no motor ─
+     Ela nasceu em 13/08/2026, e o argumento nao foi de completude: a folha
+     militar estava enterrada dentro de "pessoal do Executivo" e os projetos
+     estrategicos nao existiam em lugar nenhum — 130 bilhoes ao ano sem endereco.
+     Isso ja era motivo, mas nao o principal.
+
+     O PRINCIPAL E QUE ELA VAI SER O ESCUDO E A AMEACA. Quando a tensao
+     institucional entrar, o risco de ruptura depende de com quem as Forcas
+     Armadas estao — e "com quem elas estao" precisa ser um indice que o jogador
+     move com dinheiro ao longo de 48 meses, e nao um numero que aparece no mes em
+     que ele tenta a jogada radical. Escudo que so existe quando e usado nao e
+     escudo: e desculpa.
+
+     ⚠ POR ENQUANTO ELA ALIMENTA `mandatory`, e isso e endereco provisorio
+     declarado. Prontidao alta encarece a obrigatoria — 78% do orcamento militar e
+     folha e inativo, e cuidar dela cobra, exatamente como a previdencia. O canal
+     VERDADEIRO dela e o alinhamento, que nao tem motor. Ficar sem canal nenhum
+     seria pior: uma area cujo indice nao faz nada e uma tela que ensina o jogador
+     a nao olhar.
+
+     DECAI DEVAGAR E RENDE DEVAGAR, e e a unica assim: equipamento militar dura
+     decadas e leva uma para chegar. Abandonar a Defesa nao doi neste mandato — e
+     e por isso que quem precisar dela na hora do aperto vai descobrir que devia
+     ter comecado no primeiro ano. */
+  {
+    id: "defense",
+    label: "Defesa",
+    index: "prontidão",
+    initial: 51,
+    decay: 0.2,
+    yield: 0.3,
+    feeds: "mandatory",
+    force: 0.12,
+    lag: 12,
+  },
 ];
 
 /* PARA ONDE A CAPACIDADE DA EDUCACAO VAI. Declarado aqui, e nao dentro do
    motor: e uma afirmacao sobre o mundo do jogo — "gente formada faz o parque
-   produtivo render" —, e afirmacao sobre o mundo mora no catalogo. */
-export const CAPACITY_TARGET = "production";
+   produtivo render" —, e afirmacao sobre o mundo mora no catalogo.
+
+   ELA APONTA PARA A INDUSTRIA, e nao para a agricultura, e a escolha e de modelo:
+   o agro brasileiro rende com tecnologia embarcada e pouca gente, e a industria e
+   quem consome formacao em escala. Um pais que abandona a escola perde o parque
+   produtivo primeiro. */
+export const CAPACITY_TARGET = "industry";

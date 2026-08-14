@@ -42,8 +42,18 @@ export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../dat
    diverge da que decide. */
 export { whipCount, dispersion, THRESHOLDS } from "../domain/congress/index.mjs";
 
+/* `pollFrom` CONVERTE SATISFACAO EM PESQUISA, e ela passa pela porta pelo mesmo
+   motivo das duas acima: o estado guarda o humor de cada segmento, e a escala de
+   otimo/bom/regular e uma regra de SONDA. A tela pergunta; ela nao converte. */
+export { pollFrom } from "../domain/opinion/index.mjs";
+
 /* `settlement` E `playMonth` sao as duas unicas portas da camada de aplicacao, e
    elas dizem a mesma coisa em tempos diferentes: uma responde "o que aconteceria
    com estas ordens", a outra executa. A tela usa a primeira a cada movimento de
    controle justamente para nao ter de imitar a segunda. */
-export { playMonth, settlement, situationOf } from "../application/turn.mjs";
+/* `ledger` e a terceira, e ela e do mesmo tipo: a pergunta "como este mes fecha
+   em dinheiro". Financas mostraria numero de dois motores, e a alternativa era
+   abrir `budgetStep` e `carry` crus aqui — motor cru na fachada e a tela
+   remontando a posicao orcamentaria por fora. */
+export { ledger, playMonth, settlement, situationOf } from "../application/turn.mjs";
+export { compose, honour, spendOf } from "../application/agenda.mjs";

@@ -23,13 +23,13 @@
    ── USO ──────────────────────────────────────────────────────────────────────
      node tools/simulate.mjs
      node tools/simulate.mjs --policy promessa --months 48
-     node tools/simulate.mjs --seed 7 --gdp-growth -0.02
+     node tools/simulate.mjs --seed 7 --shock 0.02
      node tools/simulate.mjs --policy agenda --quiet          (so o resumo) */
 
 import { parseArgs } from "node:util";
 import { costOf, discretionaryRoom, playMonth } from "../src/application/turn.mjs";
+import { compose, spendOf } from "../src/application/agenda.mjs";
 import { whipCount } from "../src/domain/congress/index.mjs";
-import { quorumOf } from "../src/data/bills.mjs";
 import { CATALOG } from "../src/data/catalog.mjs";
 import { createState, monthLabel } from "../src/state/state.mjs";
 
@@ -47,21 +47,68 @@ import { createState, monthLabel } from "../src/state/state.mjs";
    politica `base` viraria mentira silenciosa no dia seguinte a calibragem. */
 const UPKEEP = 1.5 / 12;
 
-/* Quanto custa, por mes, apenas SEGURAR cada area onde ela esta: o decaimento
-   dividido pelo rendimento. Mesma logica do de cima — sai do catalogo, e nao de
-   um numero digitado. Somado, o catalogo de hoje cobra pouco mais de 4 bilhoes
-   por mes para o pais nao piorar sozinho, contra os cerca de 27 que o
-   discricionario abre. Manter e barato; melhorar e que custa. */
-const HOLD = Object.fromEntries(CATALOG.areas.map(area => [area.id, area.decay / area.yield]));
+/* ── O QUE "NAO FAZER NADA" PASSOU A SIGNIFICAR ─────────────────────────────
+   A distincao nasceu com o orcamento granular, e ela e a razao de este arquivo
+   ter sido reescrito em 13/08/2026. Antes, `allocation: {}` queria dizer "gastei
+   zero" — o governo nao alocava e o pais apodrecia de graca.
 
-/** @param {number} share o quanto do necessario para segurar, de 0 em diante */
-function holding(share) {
-  return Object.fromEntries(CATALOG.areas.map(area => [area.id, (HOLD[area.id] ?? 0) * share]));
+   Agora nao existe "gastar zero" sem decidir. A configuracao HERDADA e um gasto,
+   e um gasto grande: o antecessor deixou trinta e um programas rodando, e mante-
+   los custa mais do que o teto do arcabouco abre. Entao ha DOIS controles, e nao
+   um, porque sao duas perguntas diferentes:
+
+     `herdado` — o presidente nao toca em nada. Mede o que o pais faz sozinho, e
+                 mede tambem o rateio mordendo por aritmetica pura;
+     `piso`    — o presidente corta tudo ate o minimo legal. E o contrafactual
+                 mais barato que existe sem pedir voto a ninguem, e a diferenca
+                 entre os dois e o tamanho real da margem de manobra.
+
+   Confundir os dois era o que a versao anterior fazia sem saber. */
+
+/** Todo programa no piso: o minimo que a lei permite sem pedir voto a ninguem. */
+function atFloor() {
+  return Object.fromEntries(CATALOG.programs.map(program => [program.id, program.floor]));
 }
 
-/** @param {Record<string, number>} allocation */
-function totalOf(allocation) {
-  return Object.values(allocation).reduce((sum, value) => sum + value, 0);
+/**
+ * A configuracao vigente com a parte DISCRICIONARIA encolhida por um fator.
+ *
+ * Ela encolhe so o que esta acima do piso, porque so isso e escolha: o resto e a
+ * lei, e a lei nao se aperta com regua — se aperta com voto.
+ *
+ * @param {GameState} state
+ * @param {number} share de 0 (tudo no piso) a 1 (mantem como esta)
+ */
+function squeeze(state, share) {
+  return Object.fromEntries(
+    CATALOG.programs.map(program => {
+      const level = state.levels[program.id] ?? program.initial;
+      return [program.id, program.floor + Math.max(0, level - program.floor) * share];
+    }),
+  );
+}
+
+/**
+ * O MAIOR `share` QUE CABE, deixando `reserve` bilhoes livres para o Congresso.
+ *
+ * Busca binaria porque a relacao entre o fator e o custo e linear mas o teto nao
+ * e: `discretionaryRoom` depende da posicao fiscal, que nao muda com o fator.
+ * Vinte passos dao precisao de um milesimo, e sao baratos.
+ *
+ * @param {GameState} state
+ * @param {number} reserve
+ */
+function affordableShare(state, reserve) {
+  const room = Math.max(0, discretionaryRoom(state) - reserve);
+  let low = 0;
+  let high = 1;
+  for (let step = 0; step < 20; step++) {
+    const mid = (low + high) / 2;
+    const cost = spendOf({ programs: CATALOG.programs, levels: squeeze(state, mid) }).total;
+    if (cost > room) high = mid;
+    else low = mid;
+  }
+  return low;
 }
 
 /**
@@ -108,20 +155,21 @@ function affordableLevel(state) {
  * bem — existe para produzir uma serie comparavel entre execucoes. Uma politica
  * que negociasse bancada a bancada mediria a esperteza dela, e nao o modelo.
  *
- * @param {import("../src/data/bills.mjs").Bill} bill
+ * @param {import("../src/domain/congress/index.mjs").Motion} motion
+ * @param {number} quorum
  * @param {Record<string, number>} loyalty
  * @returns {number | null} nulo quando nem verba cheia aprova
  */
-function priceOfPassage(bill, loyalty) {
-  /* CONTRA O QUORUM DA ACAO, e nao contra 257 sempre. A primeira versao usava a
-     maioria simples para tudo, e por isso mandava emenda a plenario achando que
+function priceOfPassage(motion, quorum, loyalty) {
+  /* CONTRA O QUORUM DA PROPOSTA, e nao contra 257 sempre. A primeira versao usava
+     a maioria simples para tudo, e por isso mandava emenda a plenario achando que
      bastavam 257 — a politica levava a voto o que nao tinha como passar, e a
      serie media a ingenuidade dela em vez do modelo. */
-  const quorum = quorumOf(bill);
+  if (quorum <= 0) return 0;
 
   for (let level = 0; level <= 1.0001; level += 0.05) {
     const forecast = whipCount({
-      bill,
+      bill: motion,
       parties: CATALOG.parties,
       funding: everyone(Math.min(1, level)),
       loyalty,
@@ -132,77 +180,105 @@ function priceOfPassage(bill, loyalty) {
 }
 
 /**
- * A proxima pauta que ainda nao passou, na ordem do catalogo.
+ * A PROXIMA REFORMA DA FILA — o programa cujo piso ainda nao foi furado.
+ *
+ * ⚠ ELA SUBSTITUIU `nextBill`, e a diferenca e o ciclo inteiro: nao ha mais fila
+ * de pautas prontas. Uma "reforma" aqui e uma proposta COMPOSTA de um movimento
+ * so — furar o piso de um programa —, montada pela politica na hora. A fila e a
+ * ordem do catalogo apenas porque a politica precisa de alguma ordem estavel para
+ * a serie ser comparavel entre execucoes.
  *
  * @param {Memory} memory
  */
-function nextBill(memory) {
-  return CATALOG.bills.find(bill => !memory.passed.has(bill.id));
+function nextReform(memory) {
+  return CATALOG.programs.find(program => program.floor > 0 && !memory.passed.has(program.id));
+}
+
+/**
+ * O corte que uma reforma propoe: o piso derrubado em `depth` pontos.
+ *
+ * @param {import("../src/data/programs.mjs").Program} program
+ * @param {number} [depth]
+ */
+function reformOf(program, depth = 12) {
+  return { [program.id]: Math.max(0, program.floor - depth) };
 }
 
 /** @type {Record<string, Policy>} */
 const POLICIES = {
-  /* O CONTROLE. Ninguem pauta nada, ninguem paga nada, ninguem aloca nada — e a
-     serie mostra a queda livre: quantos meses a base leva para obstruir sozinha,
-     em que mes a obrigatoria fura o teto sem ajuda de ninguem, e quanto o pais
-     inteiro apodrece quando o governo simplesmente nao governa. */
-  parado: () => ({ billId: null, funding: everyone(0), allocation: holding(0) }),
+  /* O PRESIDENTE AUSENTE. Nao toca em controle nenhum e nao paga ninguem: o
+     orcamento do antecessor segue rodando, mes apos mes, ate o rateio decidir
+     sozinho o que cortar.
 
-  /* SO A MANUTENCAO. Paga o suficiente para a lealdade nao cair e nao pauta
-     nada. Mede o custo de simplesmente CONTINUAR governando — e o mes em que
-     esse custo deixa de caber e a resposta que este simulador foi feito para
-     dar. */
-  base: state => ({
-    billId: null,
-    funding: everyone(Math.min(UPKEEP, affordableLevel(state))),
-    allocation: holding(1),
-  }),
+     ⚠ ESTA E A POLITICA QUE MEDE O ACHADO DE 13/08/2026. Com o catalogo real, a
+     configuracao herdada custa MAIS do que o teto abre — entao esta politica nao
+     e passiva coisa nenhuma: ela e um governo prometendo um pais que nao cabe, e
+     a serie mostra o contingenciamento comendo por conta propria. */
+  herdado: () => ({ funding: everyone(0) }),
 
-  /* O GOVERNO PRUDENTE. Varre a fila inteira todo mes e leva a voto a PRIMEIRA
-     pauta que a previsao aprova e que cabe no caixa; se nenhuma couber, recua
-     para a manutencao.
+  /* O CORTE TOTAL. Todo programa no minimo legal, ninguem pago. E o contrafactual
+     mais barato que existe sem pedir voto, e a distancia entre ele e `herdado` e
+     a margem de manobra real de um presidente brasileiro — em bilhoes e em
+     pontos de indice. */
+  piso: () => ({ levels: atFloor(), funding: everyone(0) }),
 
-     VARRER A FILA INTEIRA, e nao parar na primeira, foi correcao que a propria
-     simulacao cobrou. Parando na primeira, o governo travava no fim do foro
-     privilegiado — que a ameaca torna caro de proposito — e ficava vinte e tres
-     meses sem pautar NADA, com o caixa sobrando. Uma politica que trava mede a
-     si mesma, e nao o modelo. */
-  agenda: (state, memory) => {
-    const room = discretionaryRoom(state);
-
-    /* A MANUTENCAO VEM PRIMEIRO, e o que sobra e que compra voto. E a ordem que
-       um governo prudente segue: hospital aberto antes de emenda paga. O caixa
-       disponivel para o Congresso ja desconta o que as areas levaram. */
-    const allocation = holding(1);
-    const left = Math.max(0, room - totalOf(allocation));
-
-    for (const bill of CATALOG.bills) {
-      if (memory.passed.has(bill.id)) continue;
-      /* Decreto nao passa pelo Congresso: sai de graca em voto, e por isso a
-         politica prudente o executa assim que ele aparece na fila. */
-      if (bill.instrument === "decree")
-        return { billId: bill.id, funding: everyone(0), allocation };
-
-      const level = priceOfPassage(bill, state.loyalty);
-      if (level === null) continue;
-      const funding = everyone(level);
-      if (costOf(funding, CATALOG.parties, CATALOG.fiscal.seatPrice) > left) continue;
-      return { billId: bill.id, funding, allocation };
-    }
-
+  /* SO A MANUTENCAO. Corta o orcamento ate ele caber, e usa a folga para segurar
+     a lealdade onde ela esta. Mede o custo de simplesmente CONTINUAR governando —
+     e o mes em que esse custo deixa de caber e a resposta que este simulador foi
+     feito para dar. */
+  base: state => {
+    const reserve = costOf(everyone(UPKEEP), CATALOG.parties, CATALOG.fiscal.seatPrice);
     return {
-      billId: null,
+      levels: squeeze(state, affordableShare(state, reserve)),
       funding: everyone(Math.min(UPKEEP, affordableLevel(state))),
-      allocation,
     };
   },
 
-  /* O GOVERNO QUE PROMETE. Pauta e oferece verba cheia todo mes, sem olhar o
-     caixa. E a sonda da traicao: o rateio corta a promessa no que o teto deixa,
-     e o buraco entre o falado e o pago desaba sobre a lealdade mes a mes. */
+  /* O GOVERNO PRUDENTE. Aperta o orcamento ate sobrar caixa, e usa o que sobrou
+     para comprar a PRIMEIRA reforma da fila que a previsao aprova e que cabe. Se
+     nenhuma couber, recua para a manutencao.
+
+     VARRER A FILA INTEIRA, e nao parar na primeira, foi correcao que a propria
+     simulacao cobrou numa sessao anterior: parando na primeira, o governo travava
+     na pauta cara e ficava vinte e tres meses sem pautar NADA com o caixa
+     sobrando. Uma politica que trava mede a si mesma, e nao o modelo. */
+  agenda: (state, memory) => {
+    /* A MANUTENCAO VEM PRIMEIRO, e o que sobra e que compra voto. E a ordem que
+       um governo prudente segue: hospital aberto antes de emenda paga. */
+    const reserve = costOf(everyone(UPKEEP), CATALOG.parties, CATALOG.fiscal.seatPrice);
+    const share = affordableShare(state, reserve);
+    const levels = squeeze(state, share);
+    const left = Math.max(
+      0,
+      discretionaryRoom(state) - spendOf({ programs: CATALOG.programs, levels }).total,
+    );
+
+    for (const program of CATALOG.programs) {
+      if (program.floor <= 0 || memory.passed.has(program.id)) continue;
+
+      const requested = { ...levels, ...reformOf(program) };
+      const agenda = compose({ programs: CATALOG.programs, levels: state.levels, requested });
+      if (!agenda.proposal) continue;
+
+      const level = priceOfPassage(agenda.proposal, agenda.quorum, state.loyalty);
+      if (level === null) continue;
+      const funding = everyone(level);
+      if (costOf(funding, CATALOG.parties, CATALOG.fiscal.seatPrice) > left) continue;
+      return { levels: requested, funding };
+    }
+
+    return { levels, funding: everyone(Math.min(UPKEEP, affordableLevel(state))) };
+  },
+
+  /* O GOVERNO QUE PROMETE. Pauta uma reforma e oferece verba cheia todo mes, sem
+     olhar o caixa. E a sonda da traicao: o rateio corta a promessa no que o teto
+     deixa, e o buraco entre o falado e o pago desaba sobre a lealdade mes a mes. */
   promessa: (state, memory) => {
-    const bill = nextBill(memory);
-    return { billId: bill?.id ?? null, funding: everyone(1), allocation: holding(1) };
+    const program = nextReform(memory);
+    return {
+      levels: program ? { ...state.levels, ...reformOf(program) } : { ...state.levels },
+      funding: everyone(1),
+    };
   },
 };
 
@@ -213,7 +289,7 @@ const { values } = parseArgs({
     seed: { type: "string", default: "20270101" },
     months: { type: "string", default: "48" },
     policy: { type: "string", default: "agenda" },
-    "gdp-growth": { type: "string", default: "0" },
+    shock: { type: "string", default: "0" },
     quiet: { type: "boolean", default: false },
   },
 });
@@ -231,12 +307,17 @@ if (!policy) {
 
 const seed = Number(values.seed);
 const months = Number(values.months);
-const gdpGrowth = Number(values["gdp-growth"]);
+/* ⚠ O CRESCIMENTO DO PIB DEIXOU DE SER PREMISSA. Ele era um argumento porque nao
+   havia motor macro: quem simulava declarava "suponha 2% ao ano" e o turno
+   obedecia. Com a CORRENTE, o PIB e consequencia — do juro, da carga e da
+   capacidade do Estado —, e o que sobrou de premissa e o CHOQUE de oferta, que e
+   a unica coisa que vem de fora da economia. */
+const shock = Number(values.shock);
 
 for (const [label, value] of [
   ["seed", seed],
   ["months", months],
-  ["gdp-growth", gdpGrowth],
+  ["shock", shock],
 ]) {
   if (!Number.isFinite(value)) {
     process.stderr.write(`--${String(label)} precisa ser um numero\n`);
@@ -310,14 +391,20 @@ const opening = state;
 
 for (let i = 0; i < months; i++) {
   const orders = policy(state, memory);
-  const played = playMonth(state, orders, { gdpGrowth });
+  const played = playMonth(state, orders, { shock });
 
-  /* `enacted` E NAO `tally.passed`. Decreto nao produz placar — ele nao vai a
-     plenario —, entao a versao anterior nunca o registrava como feito e a
-     politica redecretava o mesmo ato todos os meses, parando de pautar o resto
-     do catalogo. Cinco acoes aprovadas em 48 meses, com o caixa sobrando. */
-  if (played.report.bill && played.report.enacted) {
-    memory.passed.add(played.report.bill.id);
+  /* `enacted` E NAO `tally.passed`. Execucao orcamentaria nao produz placar — ela
+     nao vai a plenario —, entao registrar so o que o Congresso aprovou faria a
+     politica repropor o mesmo movimento todos os meses e nunca sair do lugar.
+
+     ⚠ E O QUE SE GUARDA E O ID DO PROGRAMA, e nao o rotulo da proposta. A
+     primeira versao guardava `proposal.label` e a fila consultava `program.id`:
+     nada nunca batia, a politica reproponha a mesma reforma nos 48 meses, e o
+     resumo dizia "1 aprovada" como se o modelo fosse duro. Nao era — o
+     instrumento e que estava cego, que e o defeito mais caro que uma ferramenta
+     de calibragem pode ter, porque ele parece resultado. */
+  if (played.report.enacted) {
+    for (const move of played.report.agenda.moves) memory.passed.add(move.program.id);
   }
 
   history.push(played.report);
@@ -330,7 +417,7 @@ const out = process.stdout;
 
 out.write(
   `\nMANDATO SIMULADO · politica "${policyName}" · semente ${seed} · ` +
-    `${months} meses · PIB ${gdpGrowth >= 0 ? "+" : ""}${num(gdpGrowth * 100)}% ao ano\n` +
+    `${months} meses · choque ${shock >= 0 ? "+" : ""}${num(shock * 100)} p.p.\n` +
     `valores em R$ bilhoes; "verba" e o mes, "folga" e o discricionario que cabia nele\n\n`,
 );
 
@@ -354,7 +441,7 @@ if (!values.quiet) {
     const tally = report.tally;
     out.write(
       pad(monthLabel(report.month).replace(" · ", "/"), 9) +
-        pad(report.bill?.label ?? "—", 26) +
+        pad(report.agenda.proposal?.label ?? "—", 26) +
         padLeft(tally ? String(tally.expected) : "—", 5) +
         padLeft(tally ? `${tally.votes} ${tally.passed ? "ok" : "x"}` : "—", 8) +
         padLeft(num(report.promisedCost), 9) +
@@ -380,11 +467,33 @@ const promisedTotal = history.reduce((sum, report) => sum + report.promisedCost,
 const paidTotal = history.reduce((sum, report) => sum + report.paidCost, 0);
 const last = history.at(-1);
 
+/* ── O RATEIO E A LINHA QUE FALTAVA NO RESUMO ───────────────────────────────
+   Ele nasceu em 13/08/2026 junto do achado que so a simulacao mostrou: com o
+   orcamento real, o rateio corta TODO MES sem o contingenciamento nunca
+   disparar. Sao duas coisas diferentes e o resumo mostrava so uma:
+
+     CONTINGENCIAMENTO  a obrigatoria SOZINHA ja fura o teto. Nao ha o que
+                        escolher, e o discricionario e zero;
+     RATEIO             o que o governo pediu nao cabe no que sobrou, e todos
+                        recebem menos na proporcao.
+
+   Um governo pode passar o mandato inteiro rateando sem nunca contingenciar — e
+   era exatamente o que `herdado` fazia enquanto o resumo dizia "0 meses" e
+   parecia folga. */
+const rationed = history.filter(
+  report =>
+    report.paidCost + report.allocatedTotal < report.room - 1e-6 ||
+    report.promisedCost + report.allocatedTotal > report.room + 1e-6,
+);
+
 out.write("RESUMO\n");
 out.write(`  votacoes            ${won.length} aprovadas de ${voted.length} levadas a voto\n`);
 out.write(
-  `  pautas aprovadas    ${memory.passed.size} de ${CATALOG.bills.length}` +
-    (memory.passed.size > 0 ? ` — ${[...memory.passed].join(", ")}` : "") +
+  `  reformas            ${memory.passed.size} programas movidos de ${CATALOG.programs.length}\n`,
+);
+out.write(
+  `  rateio              ${rationed.length} meses com corte` +
+    (rationed[0] ? ` — a partir de ${monthLabel(rationed[0].month)}` : "") +
     "\n",
 );
 out.write(
@@ -398,7 +507,7 @@ out.write(
     "\n",
 );
 out.write(
-  `  divida sobre o PIB  ${num((opening.fiscal.debt / opening.fiscal.gdp) * 100)}%` +
+  `  divida sobre o PIB  ${num((opening.fiscal.debt / opening.macro.gdp) * 100)}%` +
     ` → ${num((last?.budget.debtRatio ?? 0) * 100)}%\n`,
 );
 out.write(
@@ -412,12 +521,18 @@ for (const party of CATALOG.parties) {
 }
 
 out.write(`  o pais ao fim\n`);
+/* A COLUNA SE MEDE PELO NOME MAIS LONGO DO CATALOGO, e nao por uma largura
+   digitada. Com 14 fixos, "Indústria e Infraestrutura" era cortado no meio e
+   colava no indice ao lado — o resumo imprimia "Indústria e Incapacidade", que e
+   uma area que nao existe. Largura fixa e aposta em nome curto, e o catalogo
+   cresce. */
+const AREA_COLUMN = Math.max(...CATALOG.areas.map(area => area.label.length)) + 2;
 for (const area of CATALOG.areas) {
   const before = area.initial;
   const after = state.capacity.index[area.id] ?? 0;
   const delta = after - before;
   out.write(
-    `    ${pad(area.label, 14)}${pad(area.index, 14)}` +
+    `    ${pad(area.label, AREA_COLUMN)}${pad(area.index, 14)}` +
       `${padLeft(num(before, 0), 4)} → ${padLeft(num(after, 0), 3)}` +
       `   ${delta >= 0 ? "+" : ""}${num(delta, 0)}\n`,
   );

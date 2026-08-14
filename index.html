@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="styles/40-shell.css" />
     <link rel="stylesheet" href="styles/50-screen-mesa.css" />
     <link rel="stylesheet" href="styles/60-screen-area.css" />
+    <link rel="stylesheet" href="styles/65-screen-finance.css" />
     <link rel="stylesheet" href="styles/70-screen-approval.css" />
     <link rel="stylesheet" href="styles/90-motion.css" />
   </head>
@@ -62,9 +63,9 @@
                mesma frase em dois lugares é a frase que diverge no primeiro
                ajuste, e o arquivo de textos existe justamente para não haver o
                segundo lugar. O que fica no documento é a CAIXA.
-               Ele nasce desligado porque no primeiro mês não existe relatório
-               anterior — botão que abre o vazio ensina a desconfiar do menu. -->
-          <button class="action glass-action" id="review" type="button" disabled></button>
+               O BOTAO "O MES PASSADO" SAIU daqui: ele reabria o relatório num
+               diálogo, e o relatório agora é painel fixo da Mesa. Botão que
+               abre o que já está aberto é ruído com cara de funcionalidade. -->
           <!-- RECOMECAR PEDE CONFIRMACAO NO PROPRIO BOTAO. Ele apaga um mandato
                inteiro, e fica ao lado de um botao que se aperta toda hora: sem
                dois passos, o custo de errar o alvo e a partida. -->
@@ -93,6 +94,12 @@
         <p class="rail__mark" id="turn"></p>
         <div class="strip strip--stacked" id="context"></div>
 
+        <!-- A APROVACAO VOLTOU EM 14/08/2026, e ela esteve fora daqui por tres
+             sessoes com a razao escrita no entrypoint: "quem a produz e SONDA,
+             que nao existe". O motor nasceu, e com ele o numero deixou de ser
+             uma afirmacao que nada sustenta. -->
+        <div class="approval" id="approval"></div>
+
         <!-- A SEGUNDA LEITURA: a unica frase que diz o que esta em jogo. Aqui
              ela perde a lamina que tinha na tela anterior — o rail JA e vidro,
              e vidro sobre vidro sao dois materiais empilhados no lugar de um. -->
@@ -104,20 +111,26 @@
       </aside>
     </div>
 
-    <!-- O <dialog> NATIVO. Foco, inercia do fundo, Escape e camada superior sao
-         do navegador. Nao ha laco de foco escrito a mao, nao ha `inert` aplicado
-         por JavaScript e nao ha listener de tecla: era exatamente esse conjunto
-         que, feito a mao no projeto anterior, produziu quatro barreiras de
-         acessibilidade e tres regras permanentes de documentacao. -->
-    <dialog id="monthDialog" aria-labelledby="monthDialogTitle">
+    <!-- O <dialog> NATIVO, E AGORA SO PARA O AVISO. Foco, inercia do fundo,
+         Escape e camada superior sao do navegador. Nao ha laco de foco escrito a
+         mao, nao ha `inert` aplicado por JavaScript e nao ha listener de tecla:
+         era exatamente esse conjunto que, feito a mao no projeto anterior,
+         produziu quatro barreiras de acessibilidade e tres regras permanentes de
+         documentacao.
+
+         O RELATORIO DO MES SAIU DAQUI. Ele é informação que se consulta, e o
+         modal a transformava em pedágio: um clique por mês, 48 por mandato, e o
+         fundo inerte impedia comparar o relatório com a Mesa que o produziu.
+         Interrupção é para quando algo deu errado — que é o caso do aviso. -->
+    <dialog id="noticeDialog" aria-labelledby="noticeTitle">
       <div class="glass-stage dialog-card">
         <!-- O TITULO VEM DE DENTRO. `aria-labelledby` aponta para um `id` que a
              view escreve, e não para um título fixo aqui: o cartão inteiro é
-             substituído a cada mês, e um título parado no documento passaria a
-             descrever o mês anterior para quem lê por leitor de tela — a única
+             substituído a cada aviso, e um título parado no documento passaria a
+             descrever o aviso anterior para quem lê por leitor de tela — a única
              pessoa que não veria a diferença. -->
-        <div class="report" id="monthReport"></div>
-        <button class="action glass-action" id="monthDialogClose" type="button"></button>
+        <div class="report" id="noticeSlot"></div>
+        <button class="action glass-action" id="noticeClose" type="button"></button>
       </div>
     </dialog>
 

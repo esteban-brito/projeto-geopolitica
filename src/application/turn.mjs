@@ -46,10 +46,12 @@
 
 import { step as budgetStep } from "../domain/budget/index.mjs";
 import { pressureOf, step as capacityStep } from "../domain/capacity/index.mjs";
+import { carry, step as economyStep } from "../domain/economy/index.mjs";
+import { pollFrom, step as opinionStep } from "../domain/opinion/index.mjs";
 import { THRESHOLDS, baseCount, settle, vote } from "../domain/congress/index.mjs";
 import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
-import { quorumOf } from "../data/bills.mjs";
 import { CATALOG } from "../data/catalog.mjs";
+import { bandOf, compose, honour, spendOf } from "./agenda.mjs";
 import { MONTHS_PER_YEAR, QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "../data/regime.mjs";
 import { reduce } from "../state/state.mjs";
 
@@ -63,20 +65,25 @@ import { reduce } from "../state/state.mjs";
 
 /**
  * @typedef {object} Orders as ordens do mes
- * @property {string | null} [billId] a acao levada a voto ou decretada, ou nada
  * @property {Record<string, number>} [funding] verba PROMETIDA por bancada, de 0 a 1
- * @property {Record<string, number>} [allocation] bilhoes pedidos por area
+ * @property {Record<string, number>} [levels] a intensidade PEDIDA de cada programa
+ * @property {Record<string, import("../state/state.mjs").Band>} [bands] as leis PEDIDAS
  *
  * @typedef {object} Options
  * @property {typeof CATALOG} [catalog]
- * @property {number} [gdpGrowth] premissa de crescimento REAL ANUAL do PIB
+ * @property {number} [shock] choque de oferta do mes, em pontos de inflacao anual
  *
  * @typedef {object} Report o que o mes deixou, para a tela ou para o terminal
  * @property {number} month o mes que acabou de ser resolvido
- * @property {Bill | null} bill
- * @property {boolean} enacted se a acao virou realidade — votada e aprovada, ou decretada
+ * @property {import("./agenda.mjs").Agenda} agenda a pauta composta do orcamento
+ * @property {Record<string, number>} levels os niveis com que o mes fechou
+ * @property {Record<string, import("../state/state.mjs").Band>} bands as leis com que o mes fechou
+ * @property {boolean} enacted se a pauta virou realidade
  * @property {BudgetOutput} budget
  * @property {import("../domain/capacity/index.mjs").Outcome} capacity
+ * @property {import("../domain/economy/index.mjs").EconomyOutput} economy o mes macro
+ * @property {import("../domain/opinion/index.mjs").OpinionOutput} opinion a rua
+ * @property {number} interest o custo de carregar a divida no mes
  * @property {number} room o discricionario que cabia NO MES, em bilhoes
  * @property {number} promisedCost quanto a promessa de emenda custaria
  * @property {number} paidCost quanto o caixa honrou de emenda
@@ -118,16 +125,60 @@ function positionOf(state, catalog) {
     neutral: NEUTRAL,
   });
 
+  /* O DIVIDENDO DAS ESTATAIS ENTRA PELO FATOR DE RECEITA, e a razao e evitar um
+     campo novo no LASTRO por uma linha. O fator ja e "quanto do devido de fato
+     entra"; somar a ele a razao entre dividendo e receita-base da exatamente
+     `receita = base × pressao + dividendos`, sem o motor precisar aprender uma
+     fonte de receita nova.
+
+     ⚠ E ELE E PERMANENTE ENQUANTO A ESTATAL FOR DO ESTADO. Privatizar apaga esta
+     linha para sempre — e essa e a metade da conta que a receita de venda esconde
+     no mes em que ela entra. */
+  const base = state.macro.gdp * catalog.fiscal.taxLoad;
+  const dividends = catalog.rules.reduce(
+    (sum, rule) =>
+      sum + (rule.reach * rule.dividend * (state.levels[rule.id] ?? rule.initial)) / 100,
+    0,
+  );
+
   return {
-    gdp: state.fiscal.gdp,
+    gdp: state.macro.gdp,
     mandatory: state.fiscal.mandatory,
     anchorRevenue: state.fiscal.anchorRevenue,
     anchorExpense: state.fiscal.anchorExpense,
     debt: state.fiscal.debt,
     parameters: catalog.fiscal,
-    revenueFactor: pressure.revenue,
+    revenueFactor: pressure.revenue + (base > 0 ? dividends / base : 0),
     mandatoryFactor: pressure.mandatory,
   };
+}
+
+/**
+ * A RECEITA DE VENDA — o que entra no mes em que se privatiza.
+ *
+ * ⚠ ELA E A ARMADILHA MAIS BONITA DO MODELO, e ninguem a escreveu como
+ * armadilha. Ela entra UMA VEZ, engorda o resultado do exercicio, e por isso
+ * levanta a ancora do arcabouco do ano seguinte — `nextPosition` fecha o ano com
+ * o teto que vigorou. No ano depois ela nao se repete, o teto encolhe contra uma
+ * obrigatoria que continuou crescendo, e o governo descobre que financiou custeio
+ * permanente com caixa de uma vez. E aritmetica do LASTRO.
+ *
+ * @param {ReadonlyArray<import("../data/rules.mjs").Rule>} rules
+ * @param {Record<string, number>} before
+ * @param {Record<string, number>} after
+ * @returns {number} bilhoes, no mes
+ */
+function saleOf(rules, before, after) {
+  let total = 0;
+  for (const rule of rules) {
+    const sold = (before[rule.id] ?? rule.initial) - (after[rule.id] ?? rule.initial);
+    /* SO A VENDA ARRECADA. Estatizar CUSTA — comprar de volta e desembolso —, e
+       isso fica como omissao declarada: o preco de recompra depende de avaliacao
+       de mercado, que e CORRENTE. Por enquanto reestatizar sai de graca em caixa
+       e cobra em folha, que ja e metade da verdade. */
+    if (sold > 0) total += (rule.reach * rule.sale * sold) / 100;
+  }
+  return total;
 }
 
 /**
@@ -229,7 +280,12 @@ export function situationOf(state, catalog = CATALOG) {
  * @param {typeof CATALOG} [catalog]
  */
 export function settlement(state, orders = {}, catalog = CATALOG) {
-  const { areas, parties, fiscal } = catalog;
+  const { parties, fiscal, programs } = catalog;
+
+  /* O ORCAMENTO PEDIDO E O VIGENTE COM AS MUDANCAS POR CIMA. Programa que o
+     jogador nao citou continua onde estava — e nao volta a zero, que seria a
+     leitura de quem confunde "nao mexi" com "nao quero". */
+  const requested = { ...state.levels, ...(orders.levels ?? {}) };
 
   /* A promessa, normalizada. Bancada que o jogador nao citou prometeu zero, e
      valor fora da faixa e cortado em vez de recusado: ordens vem de politica de
@@ -241,14 +297,22 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     promised[party.id] = clamp(orders.funding?.[party.id] ?? 0, 0, 1);
   }
 
-  /* A alocacao pedida, em bilhoes e nao em fracao: area nao tem "verba cheia". */
-  /** @type {Record<string, number>} */
-  const asked = {};
-  let askedTotal = 0;
-  for (const area of areas) {
-    asked[area.id] = Math.max(0, orders.allocation?.[area.id] ?? 0);
-    askedTotal += asked[area.id] ?? 0;
-  }
+  /* A ALOCACAO NAO E MAIS PEDIDA — ELA E DERIVADA DO ORCAMENTO ESCRITO.
+     Antes o jogador arrastava um controle por area e dizia "quero 3 bilhoes na
+     saude"; agora ele diz em que intensidade cada programa vai rodar, e o custo
+     cai da conta. A diferenca nao e de interface: um numero em bilhoes nao diz o
+     que o dinheiro compra, e por isso nao tinha como o Congresso reagir a ele.
+
+     ⚠ SO A PARTE ACIMA DO PISO ENTRA AQUI. O gasto ate o piso e a lei sendo
+     cumprida e ja esta na despesa obrigatoria — cobra-lo de novo no
+     discricionario seria contar o mesmo real duas vezes. */
+  /* ⚠ O GASTO DO MES USA A LEI VIGENTE, e nunca a proposta. A faixa que o texto
+     pede so vale depois de o plenario votar — cobrar o discricionario contra ela
+     seria o governo executando um orcamento com base numa lei que ainda nao
+     existe, que e a definicao de gastar sem autorizacao. */
+  const wanted = spendOf({ programs, levels: requested, bands: state.bands });
+  const asked = wanted.byArea;
+  const askedTotal = wanted.total;
 
   /* QUANTO CABE. O empenho ainda e zero porque e justamente isto que decide o
      empenho. `allowance` e anualizado, como toda a regra fiscal; o turno e
@@ -270,11 +334,19 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   for (const party of parties) {
     paid[party.id] = (promised[party.id] ?? 0) * ratio;
   }
-  /** @type {Record<string, number>} */
-  const allocated = {};
-  for (const area of areas) {
-    allocated[area.id] = (asked[area.id] ?? 0) * ratio;
-  }
+  /* O CORTE EMPURRA CADA PROGRAMA DE VOLTA NA DIRECAO DO PISO, e nao multiplica
+     a alocacao por fora. A diferenca importa: multiplicar daria um numero de
+     bilhoes que nao corresponde a configuracao nenhuma, e o mes seguinte
+     comecaria de um estado que o jogador nao consegue ler. Empurrando o NIVEL, o
+     contingenciamento vira o que ele e no mundo — o Estado inteiro escorregando
+     para o minimo legal, sem ninguem ter escolhido qual programa sofre. */
+  const levels = honour({ programs, levels: requested, ratio, bands: state.bands });
+  const allocated = spendOf({ programs, levels, bands: state.bands }).byArea;
+
+  /* AS LEIS PEDIDAS ATRAVESSAM O RATEIO INTEIRAS, e nao ha o que ratear nelas:
+     faixa nao consome caixa. Elas passam por aqui so para quem consulta o rateio
+     — a tela e o turno — receber a proposta completa de uma vez. */
+  const requestedBands = { ...state.bands, ...(orders.bands ?? {}) };
 
   return {
     promised,
@@ -283,10 +355,65 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     demand,
     ratio,
     paid,
+    requested,
+    requestedBands,
+    levels,
     allocated,
     promisedCost,
     paidCost: promisedCost * ratio,
     allocatedTotal: askedTotal * ratio,
+  };
+}
+
+/**
+ * O PLACAR FISCAL DO MES — a leitura que a tela de Financas mostra.
+ *
+ * ⚠ ELA EXISTE PORQUE O PAINEL NAO PODE REFAZER A CONTA. Financas mostra dez
+ * numeros que sairiam de dois motores — LASTRO e CORRENTE —, e o entrypoint nao
+ * alcanca motor: a fachada so abre a camada de aplicacao, e a guarda de
+ * fronteiras cobra isso. Sem esta funcao, a saida seria expor `budgetStep` e
+ * `carry` crus na fachada, e a tela passaria a montar a posicao orcamentaria por
+ * fora — que e a definicao de conta que diverge. `settlement` fez o mesmo
+ * caminho, e pela mesma razao.
+ *
+ * ELA E A FOTO DO MES COMO ELE VAI FECHAR, e nao a do mes que passou. O empenho
+ * que entra e o que o caixa HONRA das ordens correntes, exatamente como no passo
+ * 7 do turno — inclusive a venda de estatal, que abate empenho. Um painel que
+ * ignorasse o mes corrente mostraria uma divida que so anda depois de o jogador
+ * avancar, e a decisao que a moveu ja teria saido da tela.
+ *
+ * O JURO E O DO ESTOQUE QUE CHEGOU, a taxa que vigorava no inicio do mes — a
+ * mesma regra do passo 9 —, e a divida que ela devolve ja o carrega, porque e
+ * assim que `nextPosition` fecha o mes. Duas verdades sobre o estoque seriam uma
+ * a mais.
+ *
+ * @param {GameState} state
+ * @param {Orders} [orders]
+ * @param {typeof CATALOG} [catalog]
+ * @returns {{ budget: BudgetOutput, interest: number, debt: number, debtRatio: number }}
+ */
+export function ledger(state, orders = {}, catalog = CATALOG) {
+  const share = settlement(state, orders, catalog);
+  const proceeds = saleOf(catalog.rules, state.levels, share.levels);
+
+  const budget = budgetStep({
+    ...positionOf(state, catalog),
+    spent: share.paidCost + share.allocatedTotal - proceeds,
+  });
+
+  const interest = carry({
+    debt: state.fiscal.debt,
+    rate: state.macro.rate,
+    parameters: catalog.macro,
+  });
+
+  const debt = budget.debt + interest;
+
+  return {
+    budget,
+    interest,
+    debt,
+    debtRatio: state.macro.gdp > 0 ? debt / state.macro.gdp : 0,
   };
 }
 
@@ -305,79 +432,231 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
  */
 export function playMonth(state, orders = {}, options = {}) {
   const catalog = options.catalog ?? CATALOG;
-  const { areas, parties, bills } = catalog;
-  const gdpGrowth = options.gdpGrowth ?? 0;
+  const { areas, parties, programs } = catalog;
 
   const position = positionOf(state, catalog);
 
   /* 1, 2 e 3 — QUANTO CABE, QUANTO CUSTA e QUANTO O CAIXA HONRA. */
-  const { promised, asked, room, paid, allocated, promisedCost, paidCost, allocatedTotal } =
-    settlement(state, orders, catalog);
+  const {
+    promised,
+    asked,
+    room,
+    paid,
+    requested,
+    levels: honoured,
+    allocated,
+    promisedCost,
+    paidCost,
+    allocatedTotal,
+    ratio,
+    requestedBands,
+  } = settlement(state, orders, catalog);
 
-  /* 4 — A VOTACAO, com a verba que chegou e nao com a que foi falada, e contra
-     o quorum DO INSTRUMENTO: 257 para lei, 308 para emenda. Decreto nao vota. */
-  const ordered = orders.billId ? (bills.find(item => item.id === orders.billId) ?? null) : null;
+  /* 4 — A VOTACAO, com a verba que chegou e nao com a que foi falada.
+     A PAUTA NAO E MAIS ESCOLHIDA DE UMA LISTA: ela e composta do orcamento que o
+     jogador escreveu, e o quorum sai do que o movimento derrubou. Remanejamento
+     dentro das faixas nao vai a plenario — a lei ja autorizou, e pedir voto para
+     executar o orcamento seria inventar um rito que nao existe. */
+  const agenda = compose({
+    programs,
+    rules: catalog.rules,
+    levels: state.levels,
+    requested,
+    power: state.levels["poder-do-executivo"] ?? 0,
+    bands: state.bands,
+    requestedBands,
+  });
 
-  /* O QUE JA ESTA EM VIGOR NAO VOLTA A PAUTA, e a guarda tem de ser AQUI.
-     A primeira versao dela vivia na lista do estado, que se recusava a guardar o
-     mesmo id duas vezes — e isso resolvia so o sintoma visivel. O mes continuava
-     votando: a pauta ia a plenario de novo, o impacto no indice da area entrava
-     de novo, e o impacto fiscal era somado a despesa obrigatoria MAIS UMA VEZ.
-     Uma reforma aprovada seis vezes cobrava seis vezes, com a lista mostrando
-     uma linha so — o pior formato possivel, porque nenhuma tela denunciaria.
-     Recusar a ordem inteira e o unico ponto que fecha os tres de uma vez. */
-  const bill = ordered && !state.enacted.includes(ordered.id) ? ordered : null;
-  const decreed = bill?.instrument === "decree";
+  /* ⚠ A RUA QUE PESA NA VOTACAO E A DO MES PASSADO, e nao a que SONDA vai apurar
+     no fim deste turno. O parlamentar vota com a pesquisa que ele ja leu — e usar
+     a de depois faria a decisao de hoje ser julgada por uma opiniao que ainda nao
+     existia, que e a mesma armadilha que o juro sobre a divida evita. */
+  const standing = pollFrom(state.mood, catalog.segments, catalog.opinion).good;
+
   const tally =
-    bill && !decreed
+    agenda.proposal && agenda.quorum > 0
       ? vote({
-          bill,
+          bill: agenda.proposal,
           parties,
           funding: paid,
           loyalty: state.loyalty,
           stream: state.streams.congress,
-          majority: quorumOf(bill),
+          majority: agenda.quorum,
+          standing,
         })
       : null;
 
   /* 5 — O QUE SOBROU NA BASE. */
   const loyalty = settle({ parties, loyalty: state.loyalty, promised, paid });
 
-  /* 6 — A CAPACIDADE DO ESTADO. Decreto vale sem votacao; lei e emenda so movem
-     o indice se tiverem passado. */
-  const enacted = decreed || tally?.passed === true;
+  /* 6 — A CAPACIDADE DO ESTADO. */
+  const enacted = agenda.proposal !== null && (agenda.quorum === 0 || tally?.passed === true);
+
+  /* ── O QUE ACONTECE QUANDO A REFORMA CAI ────────────────────────────────────
+     Nao e tudo ou nada, e a distincao e a mesma que separou os ritos. O que era
+     EXECUCAO ORCAMENTARIA acontece de qualquer jeito: ela nunca dependeu de voto,
+     e derrubar junto seria o Congresso vetando uma coisa que ninguem lhe
+     perguntou. So os movimentos que furaram parede voltam para onde estavam.
+
+     Sem isto, um pacote com dez remanejamentos triviais e uma emenda ambiciosa
+     custaria o mes inteiro por causa da parte ambiciosa — e o jogador aprenderia
+     a nunca juntar as duas coisas, que e o oposto do que o logrolling existe para
+     ensinar. */
+  const applied = enacted
+    ? honoured
+    : honour({
+        programs,
+        levels: Object.fromEntries(
+          programs.map(program => {
+            const move = agenda.moves.find(
+              item =>
+                item.program.id === program.id && item.kind !== "floor" && item.kind !== "ceiling",
+            );
+            const reverted = move && move.rite !== "budget";
+            const before = state.levels[program.id] ?? program.initial;
+            return [program.id, reverted ? before : (requested[program.id] ?? before)];
+          }),
+        ),
+        ratio,
+        bands: state.bands,
+      });
+
+  /* ── A LEI SO MUDA SE O PLENARIO DEIXAR, e nao ha meio-termo aqui ────────────
+     Movimento de faixa NUNCA e execucao orcamentaria: mexer no que a lei obriga
+     custa lei, no minimo. Entao a regra que separa o que sobrevive a derrota nao
+     tem trabalho nenhum deste lado — cai a pauta, cai a lei inteira, e o pais
+     continua com as faixas que tinha. */
+  const appliedBands = enacted ? requestedBands : state.bands;
+  /* O IMPACTO DIRETO NO INDICE SUMIU, e a omissao e proposital. Cada pauta do
+     catalogo antigo carregava um `impact` que empurrava o indice da area de uma
+     vez, por fora do dinheiro — uma lei aprovada "melhorava a saude" sem que um
+     real tivesse sido gasto. Com programa isso deixou de fazer sentido: o que
+     move o indice e a VERBA que chegou, e a reforma move o indice porque muda
+     quanto de verba passa a caber. Um empurrao extra estaria contando o mesmo
+     efeito duas vezes. */
   const capacity = capacityStep({
     areas,
     index: state.capacity.index,
     history: state.capacity.history,
     allocation: allocated,
-    impacts: enacted && bill ? { [bill.area]: bill.impact } : {},
+    impacts: {},
     neutral: NEUTRAL,
     capacityTarget: CAPACITY_TARGET,
   });
 
   /* 7 — O ORCAMENTO FECHA com tudo o que de fato saiu do discricionario. */
-  const budget = budgetStep({ ...position, spent: paidCost + allocatedTotal });
+  /* A VENDA ABATE O EMPENHO DO MES. Ela nao e "menos gasto": e caixa que entrou,
+     e o saldo do mes e o mesmo nos dois casos. Passa por aqui porque o LASTRO
+     raciocina em empenho liquido, e criar uma terceira porta para o mesmo real
+     seria duas contas para uma coisa. */
+  const proceeds = saleOf(catalog.rules, state.levels, applied);
+  const budget = budgetStep({ ...position, spent: paidCost + allocatedTotal - proceeds });
+
+  /* 8 — A ECONOMIA, e ela vem DEPOIS do orcamento porque le o que ele empenhou.
+     O impulso fiscal e o discricionario que de fato saiu, medido contra o PIB do
+     mes: e a unica forma de "gastar" chegar a inflacao sem ninguem escrever a
+     ligacao.
+
+     ⚠ A CAPACIDADE ENTRA COMO MEDIA DAS SETE AREAS contra o ponto neutro, e isso
+     e simplificacao declarada. O honesto seria so as areas que empurram o
+     potencial — educacao, infraestrutura —, mas o catalogo ja diz qual area
+     alimenta qual canal, e replicar esse mapa aqui seria a mesma verdade em dois
+     lugares. A media inteira e grossa e nao mente. */
+  const spread = areas.reduce(
+    (sum, area) => sum + ((capacity.index[area.id] ?? area.initial) - NEUTRAL) / NEUTRAL,
+    0,
+  );
+
+  const economy = economyStep({
+    macro: state.macro,
+    parameters: catalog.macro,
+    taxLoad: catalog.fiscal.taxLoad,
+    baseTaxLoad: catalog.fiscal.taxLoad,
+    capacity: clamp(spread / areas.length, -1, 1),
+    impulse: ((paidCost + allocatedTotal) * MONTHS_PER_YEAR) / Math.max(1, state.macro.gdp),
+    shock: options.shock ?? 0,
+  });
+
+  /* 9 — O QUE A DIVIDA CUSTA. Ela roda a taxa que vigorava no INICIO do mes, e
+     nao a que a CORRENTE acabou de decidir: juro se paga sobre o estoque ao preco
+     do dia, e usar a taxa nova aqui faria a decisao do Banco Central retroagir um
+     mes inteiro.
+
+     ⚠ ELE NAO ENTRA NO PRIMARIO, e essa e a distincao que o arcabouco faz e o
+     jogo tem de fazer junto: juro fica FORA do teto de despesa. Ele nao disputa
+     com hospital — ele engorda a divida, e a divida volta pelo premio de risco. */
+  const interest = carry({
+    debt: state.fiscal.debt,
+    rate: state.macro.rate,
+    parameters: catalog.macro,
+  });
+
+  /* 10 — A RUA, e ela e o ultimo passo de proposito: SONDA le tudo o que os
+     outros motores acabaram de produzir, e nao manda em nenhum deles neste mes.
+     A realimentacao existe e chega no mes SEGUINTE, pelo poder de barganha —
+     que e como funciona no mundo: popularidade de hoje compra voto amanha.
+
+     ⚠ O QUE ELA LE E O QUE JA FOI DIVULGADO, e nao o mes que acabou de ser
+     resolvido. A serie guarda o passado inteiro, entao a defasagem e um indice
+     nela — e nao uma fila nova para manter. Nos primeiros meses a serie e curta
+     e o valor mais antigo disponivel e o certo: um pais recem-empossado ainda
+     esta lendo os numeros do governo anterior, que e exatamente a verdade. */
+  const released = {
+    inflation: releasedFrom(state.series.inflation, catalog.opinion.release, state.macro.inflation),
+    unemployment: releasedFrom(
+      state.series.unemployment,
+      catalog.opinion.release,
+      state.macro.unemployment,
+    ),
+    growth: economy.growth,
+  };
+
+  /* SERVICO E ORDEM SAO LEITURAS DA MALHA, e a composicao mora aqui porque motor
+     nenhum chama outro motor. O que a rua sente por "servico publico" e a media
+     de saude e educacao; por "ordem", o indice de seguranca sozinho. */
+  const opinion = opinionStep({
+    mood: state.mood,
+    released,
+    services: mean([capacity.index["health"], capacity.index["education"]]),
+    safety: capacity.index["security"] ?? 50,
+    /* A FRACAO DA PROMESSA QUE O CAIXA NAO HONROU. Ela ja custava base no
+       Congresso; agora custa rua tambem, e pelo mesmo fato. */
+    betrayal: promisedCost > 0 ? 1 - paidCost / promisedCost : 0,
+    tenure: state.month,
+    segments: catalog.segments,
+    parameters: catalog.opinion,
+  });
 
   return {
     state: reduce(state, {
       type: "monthResolved",
       loyalty,
-      fiscal: nextPosition(state, budget, enacted, bill, gdpGrowth),
+      fiscal: nextPosition(state, budget, applied, catalog, interest, appliedBands),
+      macro: economy.macro,
+      mood: opinion.mood,
+      series: extend(state.series, {
+        gdp: economy.macro.gdp,
+        inflation: economy.macro.inflation,
+        rate: economy.macro.rate,
+        unemployment: economy.macro.unemployment,
+        debtRatio: budget.debtRatio,
+        primary: budget.balance,
+      }),
       capacity: { index: capacity.index, history: capacity.history },
-      /* A lista so cresce, e sem repetido — mas a garantia de nao repetir NAO
-         mora aqui: mora na recusa da ordem, la em cima. Uma segunda checagem
-         neste ponto nao acrescentaria seguranca nenhuma e daria a impressao de
-         que a duplicidade e um problema de lista, que foi exatamente o engano
-         que deixou o efeito fiscal dobrando. */
-      enacted: enacted && bill ? [...state.enacted, bill.id] : state.enacted,
+      levels: applied,
+      bands: appliedBands,
       stream: tally?.stream ?? state.streams.congress,
     }),
     report: {
       month: state.month,
-      bill,
+      agenda,
       enacted,
+      levels: applied,
+      bands: appliedBands,
       capacity,
+      economy,
+      opinion,
+      interest,
       asked,
       allocated,
       allocatedTotal,
@@ -391,6 +670,26 @@ export function playMonth(state, orders = {}, options = {}) {
       loyalty,
     },
   };
+}
+
+/* QUANTOS MESES A SERIE GUARDA. Um mandato inteiro, e nem um a mais: o painel
+   desenha o mandato, e um buffer que cresce para sempre e um save que engorda
+   para sempre — num jogo que ja atravessa o navegador fechado. */
+const SERIES_LENGTH = 48;
+
+/**
+ * Acrescenta um mes a cada serie e corta o excesso pelo comeco.
+ *
+ * @param {import("../state/state.mjs").Series} series
+ * @param {Record<string, number>} point
+ * @returns {import("../state/state.mjs").Series}
+ */
+function extend(series, point) {
+  const next = /** @type {Record<string, number[]>} */ ({});
+  for (const [key, past] of Object.entries(series)) {
+    next[key] = [...past, point[key] ?? 0].slice(-SERIES_LENGTH);
+  }
+  return /** @type {import("../state/state.mjs").Series} */ (/** @type {unknown} */ (next));
 }
 
 /**
@@ -412,18 +711,62 @@ export function playMonth(state, orders = {}, options = {}) {
  *
  * @param {GameState} state
  * @param {BudgetOutput} budget
- * @param {boolean} enacted
- * @param {Bill | null} bill
- * @param {number} gdpGrowth
+ * @param {Record<string, number>} applied os niveis com que o mes fechou
+ * @param {typeof CATALOG} catalog
+ * @param {number} interest o custo de carregar a divida NESTE mes
+ * @param {Record<string, import("../state/state.mjs").Band>} appliedBands as leis com que o mes fechou
  * @returns {import("../state/state.mjs").Fiscal}
  */
-function nextPosition(state, budget, enacted, bill, gdpGrowth) {
-  /* Acao que virou realidade muda a despesa obrigatoria PARA SEMPRE, e e por
-     isso que ela e a decisao mais pesada do jogo: o custo politico se paga uma
-     vez e o efeito fiscal fica nos 48 meses. O sinal segue o catalogo — positivo
-     poupa. Decreto conta aqui igual a lei: o que separa os dois e o rito, e nao
-     a consequencia. */
-  const relief = enacted && bill ? bill.fiscalImpact : 0;
+function nextPosition(state, budget, applied, catalog, interest, appliedBands) {
+  /* ── A ECONOMIA DA REFORMA DEIXOU DE SER ESCOLHIDA ──────────────────────────
+     Enquanto o jogo tinha catalogo de pautas, cada uma trazia um `fiscalImpact`
+     digitado a mao: a reforma da previdencia "poupava 48" porque alguem escreveu
+     48. O jogador via um numero mudar e nunca via O QUE mudou.
+
+     Agora ela e a conta do PISO QUE CAIU. O piso efetivo de um programa e o menor
+     entre o que a lei obriga e onde ele de fato esta — quem furou o piso com 308
+     votos passou a ter um piso novo, e essa e a definicao de reforma. A diferenca
+     entre a soma dos pisos de antes e a de agora e o alivio permanente.
+
+     E ELE E PERMANENTE NOS DOIS SENTIDOS, que e o que torna a decisao pesada: o
+     custo politico se paga uma vez e o efeito fiscal fica nos 48 meses. Furar o
+     piso para BAIXO alivia para sempre; ampliar um piso — o que so acontece por
+     lei — cobra para sempre.
+
+     ⚠ E A PARTIR DE 14/08/2026 O PISO TAMBEM SE MOVE. Enquanto ele era catalogo,
+     a unica forma de aliviar a obrigatoria era furar a parede e deixar o gasto
+     abaixo dela; agora a lei em si e movel, e a conta abaixo cobre as duas — ela
+     compara o piso EFETIVO de antes com o de agora, e nao importa se o que mudou
+     foi onde o programa esta ou onde a lei manda ele estar. Baixar o piso e
+     manter o gasto nao alivia nada, e essa e a leitura certa: desvincular sem
+     cortar nao economiza um real, so muda de qual bolso ele sai. */
+  const floorOf = (
+    /** @type {Record<string, number>} */ levels,
+    /** @type {Record<string, import("../state/state.mjs").Band>} */ bands,
+  ) =>
+    catalog.programs.reduce(
+      (sum, program) =>
+        sum +
+        (program.cost *
+          Math.min(bandOf(program, bands).floor, levels[program.id] ?? program.initial)) /
+          100,
+      0,
+    );
+
+  /* A FOLHA DAS ESTATAIS TAMBEM E OBRIGATORIA, e por isso ela entra na mesma
+     conta: privatizar tira gente da folha da Uniao para sempre, e esse alivio e
+     tao permanente quanto o de furar um piso. E o contrario tambem vale —
+     estatizar um setor traz a folha dele junto, e ninguem avisa. */
+  const payrollOf = (/** @type {Record<string, number>} */ levels) =>
+    catalog.rules.reduce(
+      (sum, rule) => sum + (rule.reach * rule.payroll * (levels[rule.id] ?? rule.initial)) / 100,
+      0,
+    );
+
+  const relief =
+    floorOf(state.levels, state.bands) -
+    floorOf(applied, appliedBands) +
+    (payrollOf(state.levels) - payrollOf(applied));
 
   /* A BASE, e nao o valor mostrado. O fator de capacidade e leitura do mes e nao
      mudanca de estado — guardar o valor multiplicado faria o fator incidir sobre
@@ -433,10 +776,37 @@ function nextPosition(state, budget, enacted, bill, gdpGrowth) {
   const closesYear = (state.month + 1) % MONTHS_PER_YEAR === 0;
 
   return {
-    gdp: state.fiscal.gdp * (1 + gdpGrowth) ** (1 / MONTHS_PER_YEAR),
     mandatory,
     anchorRevenue: closesYear ? budget.revenueBase : state.fiscal.anchorRevenue,
     anchorExpense: closesYear ? budget.ceiling : state.fiscal.anchorExpense,
-    debt: budget.debt,
+    /* ⚠ O JURO ENTRA AQUI, e so aqui. Ele nao passa pelo saldo primario — o
+       arcabouco o exclui, e o jogo tem de excluir junto — mas ele engorda o
+       estoque todo mes. E dai nasce a espiral que o Brasil conhece: gasto vira
+       divida, divida vira juro, juro vira mais divida, e nenhuma linha de codigo
+       diz "espiral". */
+    debt: budget.debt + interest,
   };
+}
+
+/**
+ * O INDICADOR QUE JA FOI DIVULGADO, `release` meses atras.
+ *
+ * ⚠ O PADRAO E O VALOR CORRENTE, e nao zero: nos primeiros meses a serie e curta
+ * demais para ter passado, e devolver zero faria a rua ler inflacao zero e
+ * desemprego zero — um paraiso de dois meses que nenhum jogador causou.
+ *
+ * @param {ReadonlyArray<number>} series
+ * @param {number} release
+ * @param {number} fallback
+ */
+function releasedFrom(series, release, fallback) {
+  if (series.length === 0) return fallback;
+  return series[Math.max(0, series.length - 1 - release)] ?? fallback;
+}
+
+/** @param {ReadonlyArray<number | undefined>} values */
+function mean(values) {
+  const known = values.filter(value => typeof value === "number");
+  if (known.length === 0) return 50;
+  return known.reduce((sum, value) => sum + value, 0) / known.length;
 }

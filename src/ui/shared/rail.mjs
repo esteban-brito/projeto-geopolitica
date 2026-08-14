@@ -38,8 +38,17 @@ import { UI } from "../strings.mjs";
    requisicao e um 404 em potencial, e a suite de custo acusa console sujo. */
 const ICONS = /** @type {Record<string, string>} */ ({
   mesa: '<path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/><circle cx="12" cy="11.5" r="1.6"/>',
+  /* Uma linha subindo dentro de uma moldura: o placar e uma serie, e nao um
+     cofre. O cofre ja e a Fazenda, que e onde o dinheiro se decide. */
+  finance:
+    '<rect x="2.5" y="2.5" width="11" height="11" rx="3"/><path d="m5 10.5 2.4-2.6 2 1.7 2.6-3"/>',
   treasury: '<rect x="2.5" y="4.5" width="11" height="8" rx="2"/><path d="M10 8.5h3.5"/>',
-  production: '<path d="M2.5 13.5h11"/><path d="M3.5 13.5V7l3.5 2.5V7l3.5 2.5V4.5h2v9"/>',
+  /* Um talo com duas folhas para a lavoura, e a silhueta de fabrica para o parque
+     produtivo. As duas eram um icone so ate a Producao virar duas areas. */
+  agriculture:
+    '<path d="M8 13.5V6"/><path d="M8 8.5C8 6 6 4.5 3.5 4.5 3.5 7 5.5 8.5 8 8.5z"/>' +
+    '<path d="M8 7.5c0-2.5 2-4 4.5-4 0 2.5-2 4-4.5 4z"/>',
+  industry: '<path d="M2.5 13.5h11"/><path d="M3.5 13.5V7l3.5 2.5V7l3.5 2.5V4.5h2v9"/>',
   welfare:
     '<path d="M8 13.5S2.5 10.2 2.5 6.6A2.6 2.6 0 0 1 8 5a2.6 2.6 0 0 1 5.5 1.6c0 3.6-5.5 6.9-5.5 6.9z"/>',
   health: '<path d="M8 3.5v9M3.5 8h9"/><rect x="2.5" y="2.5" width="11" height="11" rx="3"/>',
@@ -47,6 +56,7 @@ const ICONS = /** @type {Record<string, string>} */ ({
     '<path d="M8 3 14.5 6 8 9 1.5 6z"/><path d="M4.5 7.4v3.4c0 .9 1.6 1.7 3.5 1.7s3.5-.8 3.5-1.7V7.4"/>',
   security: '<path d="M8 2.5 13 4.5v4c0 3-2.2 4.6-5 5.5-2.8-.9-5-2.5-5-5.5v-4z"/>',
   opinion: '<path d="M13.5 9a2 2 0 0 1-2 2H6l-3.5 2.5V4.5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2z"/>',
+  estado: '<path d="M8 2.5 2.5 5.5v1h11v-1z"/><path d="M4 6.5v5M8 6.5v5M12 6.5v5M2 13.5h12"/>',
   graph:
     '<circle cx="4" cy="4.5" r="1.6"/><circle cx="12" cy="6.5" r="1.6"/>' +
     '<circle cx="7" cy="12" r="1.6"/><path d="m5.5 5 5 1.2M11 7.8 8.2 10.7M4.9 6l1.6 4.5"/>',
@@ -96,9 +106,21 @@ function itemHtml({ key, label, ready }, current) {
 export function railNavHtml(current, areas) {
   const mesa = itemHtml({ key: "mesa", label: UI.nav.mesa, ready: true }, current);
 
+  /* FINANCAS FICA JUNTO DA MESA, e nao entre as areas, porque ela tambem nao e um
+     assunto: e o placar do que os assuntos fizeram. Posta na fila das areas, ela
+     ensinaria que existe uma pasta de Financas para governar — e nao existe, ela
+     e a unica tela do jogo sem um controle. A Fazenda, que decide dinheiro, essa
+     sim e area e fica na fila. */
+  const finance = itemHtml({ key: "finance", label: UI.nav.finance, ready: true }, current);
+
   const government = areas
     .map(area => itemHtml({ key: area.id, label: area.label, ready: true }, current))
     .join("");
+
+  /* O ESTADO — o que a Uniao POSSUI e quanto poder o Executivo tem. Ele fica
+     depois das areas e antes do que nao existe, porque nao e um assunto de
+     governo: e a moldura dentro da qual os assuntos acontecem. */
+  const estado = itemHtml({ key: "estado", label: UI.nav.estado, ready: true }, current);
 
   const pending = [
     { key: "opinion", label: UI.nav.opinion, ready: false },
@@ -112,5 +134,5 @@ export function railNavHtml(current, areas) {
      ainda nao existe. */
   const rule = '<li class="rail__rule" aria-hidden="true"></li>';
 
-  return mesa + rule + government + rule + pending;
+  return mesa + finance + rule + government + rule + estado + rule + pending;
 }

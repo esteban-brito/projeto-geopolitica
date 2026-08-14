@@ -219,12 +219,25 @@
        existe no segundo argumento de um `var()` parece ponto de ajuste do
        sistema sem ser um, porque muda-la exige achar cada consumidor.
 
-       ERAM DUAS, e viraram uma. A estreita existia para a moldura de contexto da
-       tela de painel — peca central mais larga, contexto mais estreito — e a
-       moldura saiu junto com aquela tela. Manter o token sem consumidor e
-       exatamente o que a guarda proibe, e o dia em que a segunda largura voltar
-       a ter dono ela nasce junto com ele. */
-    --column: 780px;
+       ERAM DUAS, viraram uma, e voltaram a ser duas — como o comentario anterior
+       previu, no dia em que a segunda largura ganhasse dono. O dono chegou: o
+       cartao de AVISO. Ele carrega prosa corrida, e prosa a 1180px tem medida de
+       linha que ninguem lê de uma passada; a peca do tabuleiro carrega tabela e
+       controle, que querem o oposto.
+
+       A LARGA CRESCEU DE 780 PARA 1180, e o motivo foi medido na tela em uso: em
+       1440px de janela, o tabuleiro tem 1008px entre os dois rails, e a peca
+       parava em 780 — sobravam cem pixels mortos de cada lado enquanto as
+       bancadas apertavam o controle deslizante numa coluna de 120px. Peca alta e
+       estreita nao e escolha de composicao aqui: e um teto herdado de quando a
+       tela tinha uma coluna de texto no meio.
+
+       O NUMERO E TETO, E NAO LARGURA. Quem manda no dia a dia e o tabuleiro:
+       `min(--column, 100%)` entrega a largura disponivel ate 1180 e para ali,
+       porque em monitor ultralargo uma tabela de 2000px deixa de ser comparavel
+       de relance — o olho perde a linha entre a primeira coluna e a ultima. */
+    --column: 1180px;
+    --column-notice: 520px;
     /* A largura do rail. Ela cabe o rotulo mais longo da navegacao sem quebrar,
        e e o rotulo que manda: rail dimensionado pelo icone obriga o texto a
        abreviar, e abreviacao e onde um menu comeca a precisar ser decorado. */

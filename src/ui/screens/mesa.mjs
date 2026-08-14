@@ -32,7 +32,7 @@ import { UI } from "../strings.mjs";
 
 /**
  * @typedef {import("../../data/areas.mjs").Area} Area
- * @typedef {import("../../data/bills.mjs").Bill} Bill
+ * @typedef {import("../../application/agenda.mjs").Proposal} Bill
  * @typedef {import("../../data/parties.mjs").Party} Party
  * @typedef {import("../../domain/congress/index.mjs").Forecast} Forecast
  */

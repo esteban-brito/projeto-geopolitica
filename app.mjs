@@ -27,26 +27,36 @@ import { deserialize, serialize } from "./src/state/save.mjs";
 import {
   CATALOG,
   NEUTRAL,
+  pollFrom,
   THRESHOLDS,
   SEATS,
   SIMPLE_MAJORITY,
   dispersion,
+  ledger,
   playMonth,
-  quorumOf,
   settlement,
   situationOf,
   whipCount,
+  compose,
 } from "./src/public/index.mjs";
 import { railNavHtml } from "./src/ui/shared/rail.mjs";
-import { allotReadHtml, areaHtml } from "./src/ui/screens/area.mjs";
+import {
+  areaHtml,
+  estadoHtml,
+  lawReadHtml,
+  outlookHtml,
+  poolHtml,
+  programReadHtml,
+  riteOf,
+} from "./src/ui/screens/area.mjs";
 import { benchReadHtml, capacityStripHtml, mesaHtml, tallyHtml } from "./src/ui/screens/mesa.mjs";
-/* A APROVACAO SAIU DA TELA, e a omissao e deliberada. Quem a produz e SONDA, que
-   nao existe: o numero nao se move quando o mes e resolvido de verdade. Um
-   indicador congelado em 31% ao lado de controles que funcionam ensina o jogador
-   a desconfiar de todos os numeros da tela — que e mais caro do que a ausencia.
-   Ela volta com o motor. */
-import { contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
-import { noticeHtml, reportHtml } from "./src/ui/screens/report.mjs";
+import { financeHtml } from "./src/ui/screens/finance.mjs";
+/* A APROVACAO VOLTOU. Ela esteve fora da tela por tres sessoes com esta razao
+   escrita aqui: "quem a produz e SONDA, que nao existe". Em 14/08/2026 o motor
+   nasceu, e o numero passou a se mover quando o mes e resolvido de verdade —
+   que era a unica condicao. */
+import { approvalHtml, contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
+import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
 import { UI } from "./src/ui/strings.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
@@ -59,12 +69,15 @@ const el = {
   context: must("context"),
   main: must("main"),
   verdict: must("verdict"),
-  advance: must("advance"),
-  review: /** @type {HTMLButtonElement} */ (must("review")),
+  advance: /** @type {HTMLButtonElement} */ (must("advance")),
   restart: must("restart"),
-  dialog: /** @type {HTMLDialogElement} */ (must("monthDialog")),
-  reportSlot: must("monthReport"),
-  dialogClose: must("monthDialogClose"),
+  approval: must("approval"),
+  /* O `<dialog>` FICOU, E ENCOLHEU DE PAPEL: ele carregava o relatorio do mes e
+     agora carrega so o AVISO. A distincao e de natureza — informacao que se
+     consulta e painel, interrupcao porque algo deu errado e modal. */
+  dialog: /** @type {HTMLDialogElement} */ (must("noticeDialog")),
+  noticeSlot: must("noticeSlot"),
+  noticeClose: must("noticeClose"),
 };
 
 /** @param {string} id */
@@ -140,22 +153,41 @@ let orders = blankOrders();
  *           indexBefore: Record<string, number> } | null} */
 let last = null;
 
-/** As ordens de um mes que ainda nao comecou. */
+/* AS ORDENS DE UM MES QUE AINDA NAO COMECOU.
+   ⚠ OS NIVEIS NASCEM NOS VIGENTES, e nao em zero — e a diferenca entre as duas
+   leituras e o jogo inteiro. Zerados, "nao mexi em nada" significaria "quero o
+   Estado desligado", e o primeiro `avancar` sem tocar em nada desmontaria o pais.
+   Nos vigentes, nao mexer significa manter — que e o que nao mexer quer dizer. */
 function blankOrders() {
   return {
-    /** @type {string | null} */
-    billId: null,
     /** @type {Record<string, number>} */
     funding: Object.fromEntries(CATALOG.parties.map(party => [party.id, 0])),
     /** @type {Record<string, number>} */
-    allocation: Object.fromEntries(CATALOG.areas.map(area => [area.id, 0])),
+    levels: { ...state.levels },
+    /* AS LEIS TAMBEM NASCEM NAS VIGENTES, e pelo mesmo motivo dos niveis: o
+       rascunho comeca no pais como ele e. Nascer vazio faria "nao mexi em nada"
+       significar "revogo tudo", e o primeiro `avancar` sem tocar em nada seria a
+       maior desregulamentacao da historia do jogo. */
+    /** @type {Record<string, import("./src/state/state.mjs").Band>} */
+    bands: Object.fromEntries(Object.entries(state.bands).map(([id, band]) => [id, { ...band }])),
   };
 }
 
 /* ── O QUE A TELA PRECISA SABER, derivado e nunca guardado ────────────────── */
 
-function billOnTable() {
-  return CATALOG.bills.find(bill => bill.id === orders.billId) ?? null;
+/* A PAUTA NAO E MAIS ESCOLHIDA — ELA E COMPOSTA. O que esta em pauta e o que o
+   jogador escreveu no orcamento neste mes, e nada mais: se ele nao moveu nenhum
+   controle, nao ha pauta, e a Mesa diz isso em vez de inventar uma. */
+function agendaNow() {
+  return compose({
+    programs: CATALOG.programs,
+    rules: CATALOG.rules,
+    levels: state.levels,
+    requested: orders.levels,
+    power: state.levels["poder-do-executivo"] ?? 0,
+    bands: state.bands,
+    requestedBands: orders.bands,
+  });
 }
 
 /**
@@ -168,12 +200,12 @@ function billOnTable() {
  * que o turno vai chamar.
  *
  * @param {Record<string, number>} paid
+ * @param {import("./src/application/agenda.mjs").Agenda} agenda
  */
-function forecastNow(paid) {
-  const bill = billOnTable();
-  if (!bill || bill.instrument === "decree") return null;
+function forecastNow(paid, agenda) {
+  if (!agenda.proposal || agenda.quorum === 0) return null;
   return whipCount({
-    bill,
+    bill: agenda.proposal,
     parties: CATALOG.parties,
     funding: paid,
     loyalty: state.loyalty,
@@ -181,13 +213,14 @@ function forecastNow(paid) {
 }
 
 function mesaInput() {
-  const bill = billOnTable();
   const share = settlement(state, orders, CATALOG);
+  const agenda = agendaNow();
+  const bill = agenda.proposal;
 
   return {
     bill,
     areaLabel: CATALOG.areas.find(area => area.id === bill?.area)?.label ?? "",
-    quorum: bill ? quorumOf(bill) : 0,
+    quorum: agenda.quorum,
     parties: CATALOG.parties,
     loyalty: state.loyalty,
     /* A LINHA DA BANCADA MOSTRA A PROMESSA — a fracao e o custo do que o jogador
@@ -196,7 +229,7 @@ function mesaInput() {
        licao central do jogo: promessa nao move voto. A linha de caixa embaixo
        diz por que, com o numero. */
     funding: orders.funding,
-    forecast: forecastNow(share.paid),
+    forecast: forecastNow(share.paid, agenda),
     band: dispersion({ parties: CATALOG.parties, loyalty: state.loyalty }),
     seatPrice: CATALOG.fiscal.seatPrice,
     room: share.room,
@@ -206,12 +239,34 @@ function mesaInput() {
 }
 
 /**
+ * O PLACAR, e ele nao decide nada — por isso e o unico input que nao olha para
+ * `orders.funding` nem para nivel nenhum por conta propria: tudo o que o mes
+ * corrente ja comprometeu chega dentro do `ledger`, que faz a conta do turno.
+ */
+function financeInput() {
+  const { budget, interest, debt, debtRatio } = ledger(state, orders, CATALOG);
+
+  return {
+    macro: state.macro,
+    budget,
+    interest,
+    debt,
+    debtRatio,
+    series: state.series,
+    target: CATALOG.macro.inflationTarget,
+    areas: CATALOG.areas,
+    index: state.capacity.index,
+    history: state.capacity.history,
+  };
+}
+
+/**
  * @param {import("./src/public/index.mjs").Area} area
  */
 function areaInput(area) {
-  const allocation = orders.allocation[area.id] ?? 0;
   const value = state.capacity.index[area.id] ?? area.initial;
   const share = settlement(state, orders, CATALOG);
+  const spent = share.asked[area.id] ?? 0;
 
   /* A PROJECAO E A MESMA CONTA DO MOTOR, e nao uma aproximacao escrita aqui. Ela
      e curta o bastante para caber numa linha e importante o bastante para nao
@@ -224,23 +279,19 @@ function areaInput(area) {
     area,
     value,
     history: state.capacity.history[area.id] ?? [],
-    available: CATALOG.bills.filter(
-      bill => bill.area === area.id && !state.enacted.includes(bill.id),
-    ),
-    standing: CATALOG.bills.filter(
-      bill => bill.area === area.id && state.enacted.includes(bill.id),
-    ),
-    quorumOf,
-    onTable: orders.billId,
-    allocation,
+    programs: CATALOG.programs.filter(program => program.area === area.id),
+    levels: orders.levels,
+    spent,
     room: share.room,
-    /* O QUE JA FOI PROMETIDO FORA DAQUI: a demanda do mes inteira menos o que
-       esta area esta pedindo. Ela inclui a emenda para o Congresso, e tinha de
-       incluir — a bolsa e uma so, e e isso que faz mover este controle
-       significar nao mover outro. */
-    committed: share.demand - allocation,
-    projected: project(allocation),
+    /* O QUE JA FOI COMPROMETIDO FORA DAQUI: a demanda do mes inteira menos o que
+       esta area esta consumindo. Ela inclui a emenda para o Congresso, e tinha de
+       incluir — a bolsa e uma so, e e isso que faz mover um controle aqui
+       significar nao mover outro em outra area. */
+    committed: share.demand - spent,
+    projected: project(spent),
     idle: project(0),
+    bands: state.bands,
+    requestedBands: orders.bands,
   };
 }
 
@@ -264,16 +315,40 @@ function paint() {
      desenha a Mesa passaria a ter de lembrar que a lamina dela mora no
      entrypoint. */
   const area = CATALOG.areas.find(item => item.id === screen);
-  if (area) {
+  if (screen === "estado") {
+    el.main.innerHTML = estadoHtml({ rules: CATALOG.rules, levels: orders.levels });
+    el.main.dataset["screen"] = "estado";
+  } else if (screen === "finance") {
+    /* FINANCAS NAO ENTRA EM `refresh`, e e a unica tela assim. Ela nao tem
+       controle nenhum para o arrasto proteger — quando um numero dela muda, e
+       porque o mes virou ou porque o jogador mexeu em OUTRA tela, e nos dois
+       casos a pintura inteira ja aconteceu. */
+    el.main.innerHTML = financeHtml(financeInput());
+    el.main.dataset["screen"] = "finance";
+  } else if (area) {
     el.main.innerHTML = areaHtml(areaInput(area));
     el.main.dataset["screen"] = "area";
   } else {
+    /* O RELATORIO ENTRA AQUI, e nao num dialogo. Ele e repintado junto com a
+       Mesa porque `el.main` e substituido inteiro a cada pintura — e por isso
+       ele sobrevive a ir numa area e voltar, sem ninguem guarda-lo no DOM. */
     el.main.innerHTML =
       capacityStripHtml({
         areas: CATALOG.areas,
         index: state.capacity.index,
         history: state.capacity.history,
-      }) + mesaHtml(mesaInput());
+      }) +
+      mesaHtml(mesaInput()) +
+      reportPanelHtml(
+        last && {
+          report: last.report,
+          quorum: last.quorum,
+          parties: CATALOG.parties,
+          areas: CATALOG.areas,
+          loyaltyBefore: last.loyaltyBefore,
+          indexBefore: last.indexBefore,
+        },
+      );
     el.main.dataset["screen"] = "mesa";
   }
 
@@ -286,6 +361,16 @@ function paint() {
      muda a frase inteira. */
   const previous = painted;
   const before = standing;
+
+  /* A PESQUISA E DERIVADA, e o entrypoint pergunta em vez de guardar. O que o
+     estado carrega e a SATISFACAO por segmento; a conversao para otimo/bom e de
+     quem sabe converter, e refaze-la aqui seria a segunda copia de uma regra que
+     muda. */
+  const poll = pollFrom(state.mood, CATALOG.segments, CATALOG.opinion);
+  if (!previous || previous.mood !== state.mood) {
+    const past = previous ? pollFrom(previous.mood, CATALOG.segments, CATALOG.opinion) : poll;
+    el.approval.innerHTML = approvalHtml(poll, poll.good - past.good);
+  }
 
   if (!previous || previous.month !== state.month) {
     el.turn.textContent = turnHtml(state);
@@ -328,16 +413,73 @@ function refresh() {
     return;
   }
 
+  /* A TELA DO ESTADO REPINTA SO AS LINHAS, como a area — e pelo mesmo motivo de
+     gesto. Ela nao tem bolsa nem projecao: alavanca de regra nao consome caixa. */
+  if (el.main.dataset["screen"] === "estado") {
+    for (const rule of CATALOG.rules) {
+      const level = orders.levels[rule.id] ?? rule.initial;
+      const slot = el.main.querySelector(`[data-read="${rule.id}"]`);
+      if (slot) slot.innerHTML = programReadHtml({ program: rule, level });
+      const dial = el.main.querySelector(`.dial:has([data-program="${rule.id}"])`);
+      if (dial instanceof HTMLElement) dial.dataset["rite"] = riteOf(rule, level);
+    }
+    return;
+  }
+
   const area = CATALOG.areas.find(item => item.id === screen);
-  const read = document.getElementById("allotRead");
-  if (!area || !read) return;
+  if (!area) return;
   const input = areaInput(area);
-  read.innerHTML = allotReadHtml({
-    value: input.value,
-    allocation: input.allocation,
-    projected: input.projected,
-    idle: input.idle,
-  });
+
+  /* TRES LEITURAS SE REPINTAM, e nenhuma delas contem o controle: a linha de cada
+     programa, a bolsa do mes e a projecao do indice. O `<input type=range>` fica
+     de fora das tres — trocar o HTML dele no meio de um arrasto arranca o
+     elemento que o ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
+  for (const program of input.programs) {
+    const band = orders.bands[program.id];
+    const slot = el.main.querySelector(`[data-read="${program.id}"]`);
+    if (slot) {
+      slot.innerHTML = programReadHtml({
+        program,
+        level: orders.levels[program.id] ?? program.initial,
+        band,
+      });
+    }
+
+    /* A LEITURA DA LEI SE REPINTA JUNTO, e ela e a outra metade da mesma decisao:
+       mover o piso muda o que a linha do orcamento acima cobra. As duas leituras
+       trocam no mesmo quadro, e nenhum dos dois controles e reconstruido. */
+    const law = el.main.querySelector(`[data-law="${program.id}"]`);
+    if (law && band) {
+      law.innerHTML = lawReadHtml({ program, band: state.bands[program.id] ?? band, asked: band });
+    }
+
+    const row = el.main.querySelector(`.law:has([data-band="${program.id}"])`);
+    if (row instanceof HTMLElement && band) {
+      const now = state.bands[program.id];
+      row.dataset["moved"] = String(
+        now !== undefined && (band.floor !== now.floor || band.ceiling !== now.ceiling),
+      );
+    }
+  }
+
+  /* O RITO DA LINHA MORA NO PAI DO CONTROLE, e nao na leitura: e ele que tinge a
+     faixa inteira quando o jogador atravessa o piso. Repintar o pai destruiria o
+     controle, entao o que se troca e o atributo. */
+  for (const program of input.programs) {
+    const dial = el.main.querySelector(`.dial:has([data-program="${program.id}"])`);
+    if (dial instanceof HTMLElement) {
+      dial.dataset["rite"] = riteOf(
+        { ...program, ...(orders.bands[program.id] ?? {}) },
+        orders.levels[program.id] ?? program.initial,
+      );
+    }
+  }
+
+  const pool = document.getElementById("areaPool");
+  if (pool) pool.innerHTML = poolHtml(input);
+
+  const outlook = document.getElementById("areaOutlook");
+  if (outlook) outlook.innerHTML = outlookHtml(input);
 }
 
 /* ── OS GESTOS ────────────────────────────────────────────────────────────── */
@@ -374,14 +516,10 @@ document.addEventListener("click", event => {
     return;
   }
 
-  const pick = target.closest("[data-bill]");
-  if (pick instanceof HTMLElement && pick.dataset["bill"]) {
-    /* Escolher uma acao LEVA A MESA. A area e onde se escolhe; a mesa e onde se
-       negocia — e emendar sem ver o placar seria negociar no escuro. */
-    orders.billId = pick.dataset["bill"];
-    screen = "mesa";
-    transition();
-  }
+  /* O BOTAO "PAUTAR" SUMIU, e com ele o gesto que levava a Mesa. Nao ha mais o
+     que escolher: a pauta e o que o orcamento ficou, e ela existe no instante em
+     que um controle sai do lugar. Quem quiser ver o placar vai a Mesa pelo rail,
+     como vai a qualquer outra tela. */
 });
 
 document.addEventListener("input", event => {
@@ -395,14 +533,53 @@ document.addEventListener("input", event => {
     return;
   }
 
-  const area = target.dataset["area"];
-  if (area) {
-    orders.allocation[area] = Number(target.value);
+  /* O CONTROLE DE PROGRAMA E O UNICO GESTO DA AREA. Ele nao pede confirmacao e
+     nao trava em piso nenhum: arrastar abaixo da lei e permitido, e o que muda e
+     o rito que a linha passa a anunciar. */
+  const program = target.dataset["program"];
+  if (program) {
+    orders.levels[program] = Number(target.value);
+    refresh();
+    return;
+  }
+
+  /* ── MOVER UMA LEI ──────────────────────────────────────────────────────────
+     O mesmo gesto do controle de verba, e de propósito: mudar quanto se gasta e
+     mudar quanto a lei obriga a gastar são o mesmo movimento com preços
+     diferentes. O que muda é onde o número cai — em `levels` ou em `bands` — e o
+     preço aparece sozinho na Mesa, porque `compose` lê os dois.
+
+     ⚠ O PISO NÃO É TRAVADO PELO TETO, e a ausência de trava é a doutrina do
+     projeto: uma faixa invertida é um texto absurdo, e texto absurdo se derrota no
+     plenário — não se impede no controle. */
+  const band = target.dataset["band"];
+  const side = target.dataset["side"];
+  if (band && (side === "floor" || side === "ceiling")) {
+    const current = orders.bands[band] ?? state.bands[band];
+    if (current) orders.bands[band] = { ...current, [side]: Number(target.value) };
     refresh();
   }
 });
 
+/* ── O MES E REPETIVEL, E O QUE O SEGURA E O JOGO ───────────────────────────
+   Nao ha mais confirmacao entre um mes e o seguinte: quem quiser atravessar dez
+   meses sem decidir nada atravessa, e chega do outro lado com a base obstruindo
+   — a lealdade decai 1,5 ao mes e nao perdoa desatencao. Cobrar um clique de
+   "entendi" para proteger o jogador dele mesmo e regra artificial, que e
+   exatamente o que este jogo recusa.
+
+   O TRAVAMENTO NAO E RITMO, E CORRECAO. `playMonth` e sincrono, mas a pintura
+   passa por View Transition e a promessa dela demora alguns quadros; dois
+   cliques dentro dessa janela resolveriam DOIS meses sobre o MESMO estado, e o
+   segundo relatorio descreveria um mundo que ninguem viu. O botao desliga
+   enquanto a transicao corre e volta quando ela termina. */
+let resolving = false;
+
 el.advance.addEventListener("click", () => {
+  if (resolving) return;
+  resolving = true;
+  el.advance.disabled = true;
+
   /* O ESTADO DE ANTES FICA GUARDADO porque o relatorio compara: lealdade e
      indice sao valores de agora, e "de 70 para 72" e uma informacao que nenhum
      dos dois carrega sozinho. O turno devolve o depois; o antes so existe aqui,
@@ -413,7 +590,10 @@ el.advance.addEventListener("click", () => {
 
   last = {
     report: played.report,
-    quorum: played.report.bill ? quorumOf(played.report.bill) : 0,
+    /* O QUORUM VEM DA PAUTA COMPOSTA, e ele nao precisa mais ser recalculado: o
+       turno ja o decidiu quando compos a proposta, e refazer a conta aqui seria a
+       tela produzindo um segundo numero para a mesma pergunta. */
+    quorum: played.report.agenda.quorum,
     loyaltyBefore: before.loyalty,
     indexBefore: before.capacity.index,
   };
@@ -423,39 +603,31 @@ el.advance.addEventListener("click", () => {
      ele nao sabe distinguir promessa nova de promessa esquecida na tela. */
   orders = blankOrders();
   persist();
-  transition(openReport);
+  transition(() => {
+    resolving = false;
+    el.advance.disabled = false;
+  });
 });
 
-/* `showModal()` entrega foco, inercia do fundo, Escape e camada superior. Nada
-   disso e escrito aqui — e essa e a diferenca entre o padrao nativo e a versao
-   manual, que no projeto anterior custou uma sessao inteira de correcao de
-   acessibilidade e tres regras permanentes de documentacao. */
-function openReport() {
-  if (!last) return;
-
-  el.reportSlot.innerHTML = reportHtml({
-    report: last.report,
-    quorum: last.quorum,
-    parties: CATALOG.parties,
-    areas: CATALOG.areas,
-    loyaltyBefore: last.loyaltyBefore,
-    indexBefore: last.indexBefore,
-  });
-  el.review.disabled = false;
-  el.dialog.showModal();
-}
-
-el.review.addEventListener("click", openReport);
-el.dialogClose.addEventListener("click", () => el.dialog.close());
+el.noticeClose.addEventListener("click", () => el.dialog.close());
 
 /**
- * O cartao do dialogo carregando um aviso em vez de um mes.
+ * O AVISO — a unica coisa que ainda interrompe.
+ *
+ * `showModal()` entrega foco, inercia do fundo, Escape e camada superior. Nada
+ * disso e escrito aqui — e essa e a diferenca entre o padrao nativo e a versao
+ * manual, que no projeto anterior custou uma sessao inteira de correcao de
+ * acessibilidade e tres regras permanentes de documentacao.
+ *
+ * O relatorio do mes saiu daqui de proposito: ele e informacao que se consulta,
+ * e informacao consultavel nao trava o fundo. Um aviso trava porque algo deu
+ * errado e continuar sem ler seria continuar no escuro.
  *
  * @param {string} title
  * @param {string} body
  */
 function openNotice(title, body) {
-  el.reportSlot.innerHTML = noticeHtml({ title, body });
+  el.noticeSlot.innerHTML = noticeHtml({ title, body });
   el.dialog.showModal();
 }
 
@@ -484,7 +656,6 @@ el.restart.addEventListener("click", () => {
   last = null;
   orders = blankOrders();
   screen = "mesa";
-  el.review.disabled = true;
   painted = null;
   standing = null;
   disarm();
@@ -517,9 +688,8 @@ function label(node, text, hint) {
 }
 
 label(el.advance, UI.actions.advance, UI.actions.advanceHint);
-label(el.review, UI.actions.review, UI.actions.reviewHint);
 label(el.restart, UI.actions.restart, UI.actions.restartHint);
-el.dialogClose.textContent = UI.actions.close;
+el.noticeClose.textContent = UI.actions.close;
 
 paint();
 

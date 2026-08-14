@@ -101,28 +101,30 @@ try {
   await page.click('[data-section="health"]');
   await page.waitForTimeout(600);
   await checkOverflow("area");
-  expect((await page.locator(".action-row").count()) > 0, "[area] a lista de acoes veio vazia");
+  expect((await page.locator(".dial").count()) > 0, "[area] o orcamento veio sem programas");
 
-  /* 3 — O CONTROLE DE ALOCACAO. Doze passos de 0,1 sao R$ 1,2 bi, e nenhum
-     outro numero: se o atributo tiver formato errado, o navegador abre o
-     controle no meio da propria faixa e a leitura sai em dezenas. */
-  const allot = page.locator(".allot__slider");
-  await allot.focus();
-  for (let step = 0; step < 12; step++) await page.keyboard.press("ArrowRight");
-  await page.waitForTimeout(150);
-  const read = await page.locator("#allotRead").innerText();
+  /* 3 — O ORCAMENTO GRANULAR. O controle de cada programa vai de 0 a 100 e
+     ATRAVESSA o piso legal: o passeio arrasta um deles ate o fundo e confere que
+     a linha muda de rito em vez de travar. Travar seria a interface inventando um
+     limite que a Constituicao nao poe — ela poe PRECO. */
+  const dial = page.locator(".dial__slider").first();
+  await dial.focus();
+  for (let step = 0; step < 100; step++) await page.keyboard.press("ArrowLeft");
+  await page.waitForTimeout(200);
+
   expect(
-    read.includes("R$ 1,2 bi"),
-    `[area] doze passos do controle deram "${read.split("\n")[0]}" em vez de R$ 1,2 bi`,
+    (await page.locator('.dial[data-rite="law"], .dial[data-rite="amendment"]').count()) > 0,
+    "[area] furar o piso nao mudou o rito de nenhuma linha",
   );
   await page.screenshot({ path: join(OUT, "walk-area.png"), fullPage: true });
 
-  /* 4 — PAUTAR leva a Mesa com a acao escolhida. */
-  await page.locator(".action-row__pick").first().click();
+  /* 4 — E O ORCAMENTO VIRA PAUTA SOZINHO. Nao ha botao de "pautar": o que o
+     jogador escreveu aqui ja e a proposta, e a Mesa mostra o placar dela. */
+  await page.click('[data-section="mesa"]');
   await page.waitForTimeout(600);
   expect(
     (await page.locator(".mesa__title").count()) === 1,
-    "[mesa] escolher uma acao nao levou a Mesa",
+    "[mesa] o orcamento movido nao produziu pauta",
   );
   expect(
     (await page.locator(".tally__forecast").count()) === 1,
@@ -159,18 +161,24 @@ try {
   );
   await page.screenshot({ path: join(OUT, "walk-mesa-estourada.png"), fullPage: true });
 
-  /* 7 — O MES ANDA, E ELE PRESTA CONTAS. O relatorio abre sozinho: e a
-     consequencia do botao, e nao um lugar que se visita. Enquanto ele esta
-     aberto, nada atras dele e clicavel — o `<dialog>` nativo entrega inercia do
-     fundo, e o passeio tem de fechar antes de continuar, como o jogador faz. */
-  const title = await page.locator(".mesa__title").innerText();
+  /* 7 — O MES ANDA, E ELE PRESTA CONTAS SEM INTERROMPER. O relatorio e painel da
+     Mesa: ele aparece na tela junto do que o produziu, e nada precisa ser
+     fechado para continuar. A prova de que ele NAO e modal e direta — o fundo
+     segue clicavel, e o passeio confere isso avancando de novo em seguida. */
+
+  /* ANTES DO PRIMEIRO MES o painel diz que esta esperando, e nao fica em branco:
+     bloco vazio ao lado de controles que funcionam lê como defeito. */
+  expect(
+    (await page.locator(".report--waiting").count()) === 1,
+    "[relatorio] antes do primeiro mes o painel nao anunciou a espera",
+  );
 
   await page.click("#advance");
   await page.waitForTimeout(700);
 
   expect(
-    await page.locator("#monthDialog").evaluate(node => node.hasAttribute("open")),
-    "[relatorio] o mes foi resolvido e o relatorio nao abriu",
+    (await page.locator("#noticeDialog[open]").count()) === 0,
+    "[relatorio] o mes resolvido abriu um modal — ele tem de ser painel",
   );
   const verdict = await page.locator(".report__verdict").innerText();
   expect(
@@ -181,39 +189,70 @@ try {
     (await page.locator(".report__table tbody tr").count()) === 4,
     "[relatorio] a tabela nao trouxe as quatro bancadas",
   );
-  await page.screenshot({ path: join(OUT, "walk-relatorio.png") });
-  await page.click("#monthDialogClose");
-  await page.waitForTimeout(200);
+  await page.screenshot({ path: join(OUT, "walk-relatorio.png"), fullPage: true });
 
-  /* E ele fica guardado: o botao do rail reabre o ultimo mes. */
-  expect(
-    !(await page.locator("#review").isDisabled()),
-    "[relatorio] o botao de reabrir continuou desligado depois do primeiro mes",
-  );
-  await page.click("#review");
-  await page.waitForTimeout(200);
-  expect(
-    await page.locator("#monthDialog").evaluate(node => node.hasAttribute("open")),
-    "[relatorio] reabrir o ultimo mes nao abriu nada",
-  );
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(200);
-
-  for (let month = 0; month < 2; month++) {
+  /* 7b — O MES E REPETIVEL. Tres cliques seguidos sem nada entre eles: nenhum
+     "entendi", nenhum dialogo. E o mes tem de andar TRES vezes — se o
+     travamento de reentrada estivesse errado, ou ele engoliria cliques ou
+     resolveria dois meses sobre o mesmo estado. */
+  const beforeRun = await page.locator("#turn").innerText();
+  for (let month = 0; month < 3; month++) {
     await page.click("#advance");
     await page.waitForTimeout(700);
-    await page.click("#monthDialogClose");
-    await page.waitForTimeout(150);
   }
+  const afterRun = await page.locator("#turn").innerText();
+  expect(
+    beforeRun !== afterRun,
+    `[turno] tres cliques em "avancar" e o mes nao andou: ${beforeRun} → ${afterRun}`,
+  );
   await page.click('[data-section="health"]');
   await page.waitForTimeout(600);
   await checkOverflow("area depois do mes");
 
-  const standing = await page.locator(".action-list--done").innerText();
-  expect(standing.includes(title), `[area] "${title}" passou e nao apareceu em vigor`);
-  const offered = await page.locator(".action-list:not(.action-list--done)").innerText();
-  expect(!offered.includes(title), `[area] "${title}" ja esta em vigor e continua sendo oferecida`);
+  /* O QUE FOI DECIDIDO ESTA NO PROPRIO CONTROLE, e nao numa lista de leis em
+     vigor: a lista morreu junto com o catalogo de pautas, e a pergunta que ela
+     respondia — o que ja esta valendo? — passou a ser o numero do slider. */
+  expect((await page.locator(".dial").count()) > 0, "[area] o orcamento sumiu depois do mes");
   await page.screenshot({ path: join(OUT, "walk-area-depois.png"), fullPage: true });
+
+  /* 7c — O PLACAR, e ele so tem sentido AQUI, depois de quatro meses terem
+     acontecido: numa partida recem-aberta a serie esta vazia e o painel nao teria
+     tendencia nenhuma para desenhar — que e o estado em que uma escada quebrada
+     passa despercebida. */
+  await page.click('[data-section="finance"]');
+  await page.waitForTimeout(600);
+  await checkOverflow("financas");
+
+  expect(
+    (await page.locator(".ledger__row").count()) > 12,
+    "[financas] o painel abriu sem as linhas do placar",
+  );
+
+  /* A AUSENCIA DE CONTROLE E A INFORMACAO PRINCIPAL DA TELA, e ela e verificavel:
+     nenhum controle e nenhum botao dentro do palco. Se um entrasse por reuso de
+     componente, o jogador arrastaria algo que nao muda nada — e so descobriria
+     depois. */
+  expect(
+    (await page.locator("#main input, #main button").count()) === 0,
+    "[financas] o placar ofereceu algo para mexer",
+  );
+
+  /* E A ESCADA SUBIU DE VERDADE. Com a regua errada — a do indice de area, de 0 a
+     100 —, inflacao, juro e divida sobre PIB ficam no degrau do chao em toda
+     partida, e a coluna inteira desenha a mesma barra dizendo que nada nunca
+     acontece. Aqui basta um degrau diferente do outro para provar o contrario. */
+  const steps = await page.locator(".ledger__spark").allInnerTexts();
+  expect(
+    steps.some(spark => new Set(spark.trim()).size > 1),
+    `[financas] nenhuma serie variou na escada: ${steps.filter(Boolean).join(" ")}`,
+  );
+
+  /* A CAPTURA ESPERA A TRANSICAO ACABAR. A troca de tela passa por View
+     Transition, e uma foto tirada no meio dela pega as DUAS telas sobrepostas —
+     a imagem sai com aparencia de defeito de renderizacao sem que haja defeito
+     nenhum, e quem for olhar a captura amanha vai perseguir um fantasma. */
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: join(OUT, "walk-financas.png"), fullPage: true });
 
   /* 8 — A PARTIDA ATRAVESSA O NAVEGADOR. Recarregar a pagina tem de devolver o
      mesmo mes: o save existia e nao era chamado por ninguem, e o sintoma era o
@@ -226,11 +265,10 @@ try {
     monthBefore === monthAfter,
     `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
   );
-  expect(
-    (await page.locator(".action-list--done").count()) === 0 ||
-      (await page.locator(".action-list--done").innerText()).length > 0,
-    "[save] a tela retomada nao renderizou",
-  );
+  /* A TELA RETOMADA ABRE NA MESA, e nao na area em que se estava: `screen` e
+     memoria de sessao e nao entra no save. Entao o que se confere aqui e a faixa
+     de indices, que so existe quando a partida carregou de verdade. */
+  expect((await page.locator(".gauge").count()) > 0, "[save] a tela retomada nao renderizou");
 
   /* E RECOMECAR PEDE DOIS CLIQUES. O primeiro so arma o botao — um clique
      distraido nao pode custar um mandato. */
@@ -251,6 +289,12 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(400);
   await checkOverflow("celular · area");
+  /* O PLACAR E A TELA MAIS LARGA DO JOGO — quatro colunas de numero —, e por isso
+     ele e o candidato mais provavel a empurrar a pagina de lado num aparelho de
+     390px. */
+  await page.click('[data-section="finance"]');
+  await page.waitForTimeout(600);
+  await checkOverflow("celular · financas");
   await page.click('[data-section="mesa"]');
   await page.waitForTimeout(600);
   await checkOverflow("celular · mesa");

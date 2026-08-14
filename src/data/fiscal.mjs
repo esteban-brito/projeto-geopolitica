@@ -50,24 +50,67 @@ export const FISCAL_SCHEMA = {
  * @property {number} initialDebtRatio - divida bruta sobre PIB
  */
 
+/* ── A RECALIBRAGEM DE 13/08/2026, e o erro que ela conserta ─────────────────
+   Os valores anteriores descreviam um pais que nao existe, e o erro tinha uma
+   causa unica: `taxLoad` era 0,33 — a carga tributaria BRUTA do Brasil, que soma
+   Uniao, estados e municipios. O jogo cobrava tudo para a Uniao, e por isso o
+   orcamento federal dele nascia em 3.600 bilhoes contra os ~2.300 reais. Cinquenta
+   e seis por cento a mais, e nenhuma tela denunciava: cada numero era plausivel
+   sozinho.
+
+   Consequencia que so aparece na jogabilidade: o discricionario nascia em 330
+   bilhoes ao ano contra os 160 a 180 reais, ou seja, o jogador tinha o DOBRO do
+   dinheiro livre que um presidente tem. Comprar o Congresso era barato, e a
+   medicao da sessao anterior — 26 votacoes, 26 aprovacoes — era sintoma disto.
+
+   ⚠ AGORA ESTES NUMEROS CITAM FONTE, e a postura do catalogo mudou junto: eles
+   deixaram de ser ficcao inspirada e passaram a ser valores reais, datados. O que
+   segue ficcao e o que o MODELO faz com eles. Ver `docs/research/02-respostas-brasil-2026.md`. */
+
 /** @type {FiscalParameters} */
 export const FISCAL = {
-  taxLoad: 0.33,
+  /* RECEITA PRIMARIA DA UNIAO sobre o PIB — e nao a carga tributaria bruta do
+     pais. 12.000 × 0,20 = 2.400 bilhoes, que e a ordem da receita primaria
+     federal de 2025. Fonte: STN, Relatorio Resumido de Execucao Orcamentaria. */
+  taxLoad: 0.2,
   mandatoryGrowth: 0.025,
+  /* 70% do crescimento da receita — o numero do arcabouco de verdade.
+     Fonte: LC 200/2023. */
   expenseGrowthShare: 0.7,
   /* O PRECO DA CADEIRA e o cambio entre os dois motores: ele traduz "verba
      oferecida", que a votacao entende como fracao de 0 a 1, em bilhoes que saem
      do discricionario. Sem ele os dois motores ficariam em moedas diferentes e o
      acoplamento seria uma regra escrita a mao em vez de uma conta.
 
-     O NUMERO SAI DE UMA RAZAO, e nao de gosto: o discricionario nasce perto de
-     27 bilhoes por mes, e comprar as 513 cadeiras a verba cheia tem de ser
-     IMPOSSIVEL — senao existe uma jogada dominante e a escolha de a quem pagar
-     deixa de ser escolha. A 0,09 o plenario inteiro custa 46,2, quase o dobro do
-     que cabe no mes; o centrao sozinho custa 18,5, que cabe e doi. */
-  seatPrice: 0.09,
-  initialGdp: 11000,
-  initialMandatory: 3270,
-  initialDiscretionary: 330,
+     ⚠ ELE NAO E A EMENDA PARLAMENTAR, e a distincao passou a importar agora que o
+     resto do catalogo e real. A emenda individual impositiva vale ~R$ 38 mi por
+     deputado ao ano, o que daria 0,003 aqui — e a esse preco 6% do caixa compraria
+     o plenario inteiro, todo mes, para sempre. A razao e que emenda impositiva nao
+     e moeda: e DIREITO, e o deputado a recebe vote como votar. O que se negocia e
+     o empenho — quando sai —, e disso quem cuida e `settle`.
+
+     O QUE ESTE NUMERO REPRESENTA e o preco integral da lealdade de uma bancada:
+     emenda, ministerio, diretoria de estatal, relatoria, cargo de segundo e
+     terceiro escalao. O Executivo federal tem ~28 mil cargos de livre nomeacao e
+     ~150 estatais para lotear (fonte: Painel do Funcionalismo/MGI, Portal da
+     Transparencia); a emenda e so a parcela com valor publicado.
+
+     O NUMERO SAI DE UMA RAZAO, e nao de gosto: o discricionario nasce perto de 13
+     bilhoes por mes, e comprar as 513 cadeiras a verba cheia tem de ser IMPOSSIVEL
+     — senao existe jogada dominante e a escolha de a quem pagar deixa de ser
+     escolha. A 0,05 o plenario inteiro custa 25,7, quase o dobro do que cabe no
+     mes; o centrao sozinho custa 10,3, que cabe e doi. E a MESMA razao de antes:
+     quando a escala do orcamento caiu, este numero caiu junto, porque o que ele
+     descreve e uma proporcao e nao um valor. */
+  seatPrice: 0.05,
+  /* PIB nominal de 2025, arredondado. Fonte: IBGE. */
+  initialGdp: 12000,
+  /* A DESPESA OBRIGATORIA E A SOMA DOS PISOS DOS PROGRAMAS, e nao um numero
+     independente: `tests/suites/agenda.mjs` prova que os dois batem. Os valores
+     de referencia por rubrica (RGPS 982, pessoal 398, BPC 112, piso da saude 231,
+     piso da educacao 115 — PLOA 2025) estao em `programs.mjs`, item a item. */
+  initialMandatory: 2154,
+  initialDiscretionary: 176,
+  /* Divida bruta do governo geral sobre o PIB. Fonte: BCB. */
   initialDebtRatio: 0.78,
 };

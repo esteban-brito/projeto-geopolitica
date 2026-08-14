@@ -21,9 +21,11 @@ import test from "node:test";
 import { CATALOG } from "../../src/data/catalog.mjs";
 import { quorumOf } from "../../src/data/bills.mjs";
 import { THRESHOLDS, dispersion, whipCount } from "../../src/domain/congress/index.mjs";
-import { discretionaryRoom } from "../../src/application/turn.mjs";
+import { discretionaryRoom, ledger, playMonth } from "../../src/application/turn.mjs";
 import { createState } from "../../src/state/state.mjs";
+import { PROGRAMS } from "../../src/data/programs.mjs";
 import { areaHtml } from "../../src/ui/screens/area.mjs";
+import { financeHtml } from "../../src/ui/screens/finance.mjs";
 import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/mesa.mjs";
 
 const { areas, bills, parties, fiscal } = CATALOG;
@@ -63,10 +65,10 @@ function mesaOf(bill, funding = everyone(0.4)) {
  * Uma area como o entrypoint a monta.
  *
  * @param {import("../../src/data/areas.mjs").Area} area
- * @param {number} allocation
- * @param {ReadonlyArray<string>} enacted
+ * @param {number} spent bilhoes que esta area consome no mes
+ * @param {Record<string, number>} [levels] niveis fora do vigente, quando a prova quiser
  */
-function areaOf(area, allocation, enacted = []) {
+function areaOf(area, spent, levels = {}) {
   const state = createState(7);
   const value = state.capacity.index[area.id] ?? area.initial;
 
@@ -74,15 +76,39 @@ function areaOf(area, allocation, enacted = []) {
     area,
     value,
     history: state.capacity.history[area.id] ?? [],
-    available: bills.filter(bill => bill.area === area.id && !enacted.includes(bill.id)),
-    standing: bills.filter(bill => bill.area === area.id && enacted.includes(bill.id)),
-    quorumOf,
-    onTable: null,
-    allocation,
+    programs: PROGRAMS.filter(program => program.area === area.id),
+    levels: { ...state.levels, ...levels },
+    spent,
     room: discretionaryRoom(state),
     committed: 3.25,
-    projected: value - area.decay + area.yield * allocation,
+    projected: value - area.decay + area.yield * spent,
     idle: value - area.decay,
+  });
+}
+
+/**
+ * O painel de Financas como o entrypoint o monta.
+ *
+ * @param {number} months quantos meses correram antes de olhar o placar
+ * @param {Partial<import("../../src/state/state.mjs").Series>} [series] serie forjada
+ */
+function financeOf(months, series = {}) {
+  let state = createState(7);
+  for (let i = 0; i < months; i++) state = playMonth(state).state;
+
+  const { budget, interest, debt, debtRatio } = ledger(state);
+
+  return financeHtml({
+    macro: state.macro,
+    budget,
+    interest,
+    debt,
+    debtRatio,
+    series: { ...state.series, ...series },
+    target: CATALOG.macro.inflationTarget,
+    areas,
+    index: state.capacity.index,
+    history: state.capacity.history,
   });
 }
 
@@ -90,6 +116,10 @@ function areaOf(area, allocation, enacted = []) {
    NUMERO. Nenhum outro atributo do projeto entra aqui — `data-*` e `aria-*` sao
    texto por definicao. */
 const NUMERIC_ATTRIBUTE = /\s(?:min|max|step|value)="([^"]*)"/g;
+
+/* A COLUNA DE TENDENCIA do placar, com o conteudo — que pode ser vazio, e o vazio
+   e informacao: serie curta demais nao vira escada. */
+const SPARK = /class="ledger__spark"[^>]*>([^<]*)</g;
 
 /** @param {string} html @param {string} where */
 function assertNumericAttributes(html, where) {
@@ -168,6 +198,66 @@ test("o PLACAR so aparece quando existe votacao", () => {
 
   /* E o veredito so se veste de aprovado ou reprovado quando ha o que aprovar. */
   assert.ok(!mesaOf(null).includes("data-passes"), "a mesa vazia deu veredito de votacao");
+});
+
+test("O PLACAR NAO OFERECE NADA PARA MEXER, e essa e a informacao principal dele", () => {
+  /* A unica tela do jogo sem um controle, e a ausencia precisa ser verdadeira no
+     HTML e nao so na intencao: um `<input>` que entrasse aqui por reuso de
+     componente daria ao jogador um controle que nao muda nada — pior do que nao
+     ter, porque ele so descobre depois de arrastar. */
+  for (const months of [0, 1, 7]) {
+    const html = financeOf(months);
+    assert.ok(!html.includes("<input"), `o placar do mes ${months} emitiu um controle`);
+    assert.ok(!html.includes("<button"), `o placar do mes ${months} emitiu um botao`);
+    assert.equal(assertNumericAttributes(html, `financas mes ${months}`), 0);
+  }
+});
+
+test("NENHUM NUMERO DO PLACAR SAI QUEBRADO, em partida nova ou em andamento", () => {
+  /* `NaN`, `undefined` e `Infinity` atravessam template literal sem lancar e
+     chegam a tela como texto. Numa tela densa de dezenove linhas, um deles se
+     esconde entre os outros dezoito — e o painel e justamente a tela em que o
+     jogador nao tem como conferir nada por fora. */
+  for (const months of [0, 1, 12]) {
+    const html = financeOf(months);
+    for (const rot of ["NaN", "undefined", "Infinity"]) {
+      assert.ok(!html.includes(rot), `o placar do mes ${months} mostrou "${rot}"`);
+    }
+  }
+
+  /* A partida recem-aberta tem serie VAZIA, e o painel nao pode desenhar escada
+     nenhuma nela: um degrau solitario lê como sujeira de renderizacao, e seis
+     iguais afirmam uma estabilidade que ninguem observou ainda. */
+  const sparks = [...financeOf(0).matchAll(SPARK)].map(hit => hit[1] ?? "");
+  assert.ok(sparks.length > 0, "o painel parou de emitir a coluna de tendencia");
+  assert.ok(
+    sparks.every(spark => spark === ""),
+    "o painel desenhou tendencia sem passado",
+  );
+});
+
+test("A ESCADA LE CADA INDICADOR NA REGUA DELE, e nao na do indice de area", () => {
+  /* ⚠ ESTA PROVA PRENDE UM DEFEITO QUE JA ESTEVE NA TELA. `sparkline` nasceu para
+     indice de 0 a 100 e o painel passou a desenhar com ela inflacao (0,042), juro
+     (0,105) e divida sobre PIB (0,78): contra aquela regua, os tres viravam o
+     degrau do chao em toda partida, para sempre. A serie existia, o motor estava
+     certo, e a escada afirmava que nada nunca acontece — que e a mentira mais
+     cara possivel numa tela que so serve para mostrar o que aconteceu. */
+  const html = financeOf(0, {
+    inflation: [0.02, 0.035, 0.05, 0.07, 0.09, 0.12],
+    rate: [0.09, 0.1, 0.11, 0.13, 0.16, 0.19],
+    debtRatio: [0.7, 0.74, 0.78, 0.83, 0.89, 0.96],
+  });
+
+  const varied = [...html.matchAll(SPARK)]
+    .map(hit => hit[1] ?? "")
+    .filter(spark => new Set(spark).size > 1);
+
+  assert.equal(
+    varied.length,
+    3,
+    `${varied.length} das tres series macro subiram na escada — o resto ficou plano na regua errada`,
+  );
 });
 
 test("o rotulo do catalogo e ESCAPADO, e o catalogo e dado editavel", () => {

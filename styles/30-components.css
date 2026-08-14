@@ -483,12 +483,15 @@
      O <dialog> nativo nao recebe estilo de caixa: ele e so a camada superior.
      Quem tem forma e o cartao dentro dele, que usa o MESMO nivel de vidro da
      peca central — um dialogo e a peca central do momento em que aparece. */
-  /* A LARGURA E A DA PECA CENTRAL, e nao a da coluna de texto: o cartao carrega
-     hoje uma tabela de cinco colunas por bancada, e uma tabela espremida na
-     largura de um paragrafo deixa de ser comparavel — que e a unica razao de ela
-     ser uma tabela. */
+  /* A LARGURA VOLTOU A SER A DA COLUNA DE TEXTO, e a razao mudou junto com o
+     conteudo. Enquanto o cartao carregava o relatorio do mes — uma tabela de
+     cinco colunas por bancada — ele precisava da largura da peca central, porque
+     tabela espremida na largura de um paragrafo deixa de ser comparavel.
+     O relatorio virou painel da Mesa, e o que sobrou aqui e o AVISO: prosa
+     corrida, e prosa quer medida de linha curta. Herdar `--column` agora daria um
+     cartao de 1180px com tres frases dentro. */
   .dialog-card {
-    width: min(var(--column), calc(100vw - 2 * var(--space-6)));
+    width: min(var(--column-notice), calc(100vw - 2 * var(--space-6)));
     padding: var(--space-6);
     display: grid;
     justify-items: center;
@@ -507,10 +510,10 @@
   }
 
   /* ── O RELATORIO DO MES ─────────────────────────────────────────────────────
-     Ele mora dentro do cartao de diálogo, que é a peça central do momento em que
-     aparece. E ele NAO herda a centralizacao do cartao: a leitura aqui é
-     tabular — cinco colunas de número por bancada —, e número centrado não se
-     compara de relance. */
+     Ele e um BLOCO, e nao uma tela: hoje mora como painel da Mesa, e a mesma
+     forma serve o cartao de aviso. Por isso ele nao herda a centralizacao do
+     cartao — a leitura aqui é tabular, cinco colunas de número por bancada, e
+     número centrado não se compara de relance. */
   .report {
     display: grid;
     gap: var(--space-2);
@@ -520,10 +523,18 @@
 
   /* O MES E TRATADO COMO O RAIL O TRATA. `monthLabel` devolve "mar · 2027", e a
      mesma cadeia aparece em caixa alta no alto do rail da direita: duas formas
-     para a mesma informacao na mesma tela leem como dois dados diferentes. */
-  .report .dialog-card__title {
+     para a mesma informacao na mesma tela leem como dois dados diferentes.
+
+     E ELE E O DEGRAU DE TITULO, mas nao o do cartao: como painel, o relatorio
+     nao e a peca central da tela — a negociacao é. Um título do tamanho do
+     diálogo aqui competiria com o placar da Mesa, que é o que se está decidindo. */
+  .report__month {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-label);
     letter-spacing: var(--track-label);
     text-transform: uppercase;
+    color: var(--ink-soft);
   }
 
   .report__subject {

@@ -48,7 +48,7 @@ test("sementes diferentes produzem partidas com fluxos diferentes", () => {
       assert.notDeepEqual(first.streams, second.streams);
       /* Mas o resto do estado de abertura e o MESMO: a semente escolhe o
          futuro, e nao o ponto de partida. */
-      assert.deepEqual(first.approval, second.approval);
+      assert.deepEqual(first.mood, second.mood);
       assert.equal(first.month, second.month);
     }),
   );

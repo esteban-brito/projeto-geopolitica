@@ -81,14 +81,22 @@ export function deserialize(text) {
     };
   }
 
+  /* ⚠ A LISTA E DE CAMPOS QUE NAO TEM SUBSTITUTO, e `bands` entrou nela no dia em
+     que as faixas viraram estado. Sem `levels` o jogo nao sabe quanto o pais
+     gasta; sem `bands` ele nao sabe o que a lei manda gastar — e a segunda
+     ausencia e pior que a primeira, porque um estado sem faixa nenhuma abre com a
+     Constituicao inteira valendo zero, que e um pais valido e portanto
+     indistinguivel de um save quebrado. */
   const required = [
     "seed",
     "month",
-    "approval",
+    "mood",
     "loyalty",
     "fiscal",
+    "macro",
     "capacity",
-    "enacted",
+    "levels",
+    "bands",
     "streams",
   ];
 

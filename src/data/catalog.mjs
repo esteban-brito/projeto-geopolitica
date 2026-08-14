@@ -14,15 +14,24 @@
 import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
 import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
+import { MACRO, MACRO_SCHEMA } from "./macro.mjs";
+import { OPINION, OPINION_SCHEMA, SEGMENTS, SEGMENT_SCHEMA } from "./opinion.mjs";
 import { PARTIES, PARTY_SCHEMA } from "./parties.mjs";
+import { GUARDS, PROGRAMS, PROGRAM_SCHEMA } from "./programs.mjs";
 import { REGIME, REGIME_SCHEMA } from "./regime.mjs";
+import { RULES, RULE_SCHEMA } from "./rules.mjs";
 import { collectionViolations, violations } from "./schema.mjs";
 
 export const CATALOG = {
   parties: PARTIES,
   areas: AREAS,
   bills: BILLS,
+  programs: PROGRAMS,
+  rules: RULES,
   fiscal: FISCAL,
+  macro: MACRO,
+  segments: SEGMENTS,
+  opinion: OPINION,
 };
 
 /**
@@ -40,19 +49,45 @@ export function catalogViolations() {
     ...collectionViolations(PARTY_SCHEMA, PARTIES, "parties"),
     ...collectionViolations(AREA_SCHEMA, AREAS, "areas"),
     ...collectionViolations(BILL_SCHEMA, BILLS, "bills"),
+    ...collectionViolations(PROGRAM_SCHEMA, PROGRAMS, "programs"),
+    ...collectionViolations(RULE_SCHEMA, RULES, "rules"),
     ...violations(FISCAL_SCHEMA, FISCAL, "fiscal"),
+    ...violations(MACRO_SCHEMA, MACRO, "macro"),
+    ...collectionViolations(SEGMENT_SCHEMA, SEGMENTS, "segments"),
+    ...violations(OPINION_SCHEMA, OPINION, "opinion"),
     ...violations(REGIME_SCHEMA, REGIME, "regime"),
     /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. Acao apontando
        para area que nao existe nao quebra nada na carga — ela simplesmente
        desaparece da tela da area, e o sintoma e "sumiu uma lei", tres telas longe
        da causa, que e um id digitado errado aqui. */
     ...danglingAreas(),
+    /* PROGRAMA APONTANDO PARA AREA QUE NAO EXISTE tem sintoma pior que o da lei:
+       a lei some da tela, o programa some do ORCAMENTO — e o pais passa a gastar
+       menos do que gasta sem ninguem ter decidido nada. */
+    ...danglingPrograms(),
+    /* GUARDA DESCONHECIDA e o defeito silencioso deste catalogo: quem compoe a
+       pauta cai no padrao "lei" para uma guarda que ninguem reconhece, e um piso
+       constitucional digitado errado passaria a custar 257 votos em vez de 308.
+       O jogador nunca saberia — a tela mostraria um numero plausivel. */
+    ...unknownGuards(),
     /* O PLENARIO TEM DE FECHAR. As bancadas somam cadeiras e o regime declara
        quantas existem; se os dois divergirem, toda maioria do jogo passa a ser
        medida contra um plenario que nao existe — e nenhuma tela denuncia, porque
        cada lado esta certo sozinho. */
     ...chamberMismatch(),
+    /* A POPULACAO TEM DE FECHAR. As fatias dos segmentos somam a populacao
+       inteira; se somarem 0,9, a aprovacao nacional passa a ser a media de nove
+       decimos do pais — e o numero sai plausivel, so que errado, o que e a pior
+       combinacao possivel num indicador que decide o jogo. */
+    ...populationMismatch(),
   ];
+}
+
+/** @returns {string[]} */
+function populationMismatch() {
+  const share = SEGMENTS.reduce((total, segment) => total + segment.share, 0);
+  if (Math.abs(share - 1) < 1e-9) return [];
+  return [`segments: as fatias somam ${share.toFixed(3)} e a populacao e 1`];
 }
 
 /** @returns {string[]} */
@@ -67,5 +102,21 @@ function danglingAreas() {
   const known = new Set(AREAS.map(area => area.id));
   return BILLS.filter(bill => !known.has(bill.area)).map(
     bill => `bills: "${bill.id}" aponta para a area "${bill.area}", que nao existe`,
+  );
+}
+
+/** @returns {string[]} */
+function danglingPrograms() {
+  const known = new Set(AREAS.map(area => area.id));
+  return PROGRAMS.filter(program => !known.has(program.area)).map(
+    program => `programs: "${program.id}" aponta para a area "${program.area}", que nao existe`,
+  );
+}
+
+/** @returns {string[]} */
+function unknownGuards() {
+  const known = new Set(GUARDS);
+  return PROGRAMS.filter(program => !known.has(/** @type {never} */ (program.guard))).map(
+    program => `programs: "${program.id}" tem guarda "${program.guard}", que nao existe`,
   );
 }

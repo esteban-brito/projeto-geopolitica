@@ -103,12 +103,20 @@ test("PROVA SINTETICA: receita em queda encolhe o teto e fura a obrigatoria", ()
   /* O caso do dossie, montado a mao: o PIB decepciona, a receita cai abaixo da
      ancora, o teto do arcabouco ENCOLHE, e a obrigatoria — que cresceu no mesmo
      mes — passa por cima dele. Nenhum evento escrito; aritmetica. */
+  /* ⚠ ESTE CENARIO FOI REESCRITO em 13/08/2026, e a razao vale registrada porque
+     ela e o proprio aviso do comentario abaixo cumprindo o prazo. Os valores
+     antigos (PIB 11.000, obrigatoria 3.270, ancora 3.630) foram calibrados quando
+     `taxLoad` era 0,33 — a carga tributaria dos TRES niveis de governo, cobrada
+     inteira para a Uniao. Corrigido para 0,20, a receita deste mesmo cenario caia
+     de 3.630 para 2.200 contra uma ancora de 3.630, e o caso "calmo" nascia em
+     contingenciamento permanente: a prova falhava na PRIMEIRA linha, que e o
+     lugar certo para uma escala errada aparecer. */
   const base = {
-    gdp: 11000,
-    mandatory: 3270,
-    anchorRevenue: 3630,
-    anchorExpense: 3600,
-    debt: 8580,
+    gdp: 12000,
+    mandatory: 2140,
+    anchorRevenue: 2400,
+    anchorExpense: 2300,
+    debt: 9360,
     spent: 0,
     parameters: FISCAL,
   };
@@ -119,10 +127,13 @@ test("PROVA SINTETICA: receita em queda encolhe o teto e fura a obrigatoria", ()
 
   /* Mesma partida, PIB 15% menor. Nada mais muda.
      O LIMIAR E CALIBRACAO E VALE ESTAR ESCRITO: com estes parametros o gatilho
-     so dispara com queda de receita acima de 12,83%, porque e onde
-     `3600 × (1 + 0,7g)` cruza a obrigatoria ja crescida de 3276,73. Doze por
-     cento nao dispara — foi o primeiro numero que tentei, e ele passou raspando
-     por cima. Se a calibracao mudar, este numero muda junto. */
+     so dispara com queda de receita acima de 9,66%, porque e onde
+     `2300 × (1 + 0,7g)` cruza a obrigatoria ja crescida de 2144,4.
+
+     E REPARE QUE ELE FICOU MAIS SENSIVEL: antes eram 12,83%, agora sao 9,66%. Nao
+     foi ajuste de dificuldade — foi a escala real chegando. Um orcamento em que a
+     obrigatoria e 93% do gasto quebra com uma recessao menor do que um em que ela
+     e 91%, e o Brasil e o primeiro. Se a calibracao mudar, este numero muda junto. */
   const recessao = step({ ...base, gdp: base.gdp * 0.85 });
   assert.ok(recessao.revenue < calmo.revenue, "a receita tinha de cair");
   assert.ok(recessao.ceiling < calmo.ceiling, "o teto tinha de encolher junto");

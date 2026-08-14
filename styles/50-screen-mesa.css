@@ -34,9 +34,14 @@
      Seis medidores, uma superficie so. O separador e o mesmo fio de duas paradas
      da faixa de contexto: clara em cima, escura embaixo, porque a luz vem de
      cima. `box-shadow` nao ocupa espaco, entao nenhuma medida de caixa muda. */
+  /* SETE COLUNAS desde que a Defesa entrou. O numero esta escrito e nao derivado
+     de propósito: `auto-fit` deixaria a contagem de colunas variar com a largura,
+     e as regras de separador abaixo dependem de saber onde cada fileira comeca —
+     um fio pendurado no vazio da quina esquerda e o defeito que elas existem para
+     impedir. Area nova mexe aqui e na consulta de largura la embaixo. */
   .gauges {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     overflow: hidden;
   }
 
@@ -365,11 +370,38 @@
     color: var(--crisis);
   }
 
+  /* ── O RELATORIO DO MES, COMO PAINEL ────────────────────────────────────────
+     Terceira superficie da tela, e a mais leve das tres: `support`, o mesmo
+     nivel da faixa de indices. A hierarquia diz o que se decide e o que se
+     consulta — a Mesa e `stage` porque e o assunto de agora, e o mes passado e
+     contexto. Dar a ele o peso da peca central poria duas coisas disputando a
+     mesma atencao, e a que perderia seria a que ainda tem decisao dentro.
+
+     ELE FICA EMBAIXO, e nao em cima: quem abre a tela vem decidir o mes novo, e
+     nao reler o velho. Quem quer o relatorio rola — e rolar e o gesto certo para
+     o que se consulta por vontade propria. */
+  .board[data-screen="mesa"] .report {
+    padding: clamp(20px, 3vw, 28px);
+  }
+
+  /* A ESPERA E MAIS BAIXA que o painel cheio, e nao uma caixa da mesma altura
+     com texto no meio: bloco vazio do tamanho do cheio lê como carregamento
+     travado. */
+  .board[data-screen="mesa"] .report--waiting {
+    gap: var(--space-1);
+    color: var(--ink-dim);
+  }
+
   /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
      A faixa passa de seis colunas para tres, e o fio muda de lugar junto: com
      duas fileiras, o separador tem de sumir no inicio de cada uma, senao ele
      pende no vazio da quina esquerda. */
-  @media (max-width: 900px) {
+  /* A CONSULTA SUBIU DE 900 PARA 1180 quando a setima area entrou, e a conta e
+     direta: o tabuleiro vive entre dois rails de 216px, entao a faixa tem cerca
+     de `janela − 496` de largura util. A 1180 isso da 98px por medidor com sete
+     colunas, que e onde "PREVIDÊNCIA" para de caber e o rotulo comeca a virar
+     reticencia. Abaixo daqui a faixa quebra em tres. */
+  @media (max-width: 1180px) {
     .gauges {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }

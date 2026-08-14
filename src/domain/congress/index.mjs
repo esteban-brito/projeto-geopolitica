@@ -56,8 +56,26 @@ import { unit } from "../../state/random.mjs";
 
 /**
  * @typedef {import("../../data/parties.mjs").Party} Party
- * @typedef {import("../../data/bills.mjs").Bill} Bill
  * @typedef {import("../../state/random.mjs").Stream} Stream
+ */
+
+/**
+ * O QUE ESTE MOTOR PRECISA SABER DE UMA PROPOSTA, e nada alem disso.
+ *
+ * ⚠ ELE NAO PEDE UMA `Bill`, e a diferenca deixou de ser tipografica. Enquanto o
+ * jogo tinha catalogo de pautas prontas, `Bill` e "o que se vota" eram a mesma
+ * coisa; agora a pauta e COMPOSTA do orcamento em `src/application/agenda.mjs`, e
+ * uma proposta derivada nao tem `id` de catalogo nem `impact` de area.
+ *
+ * Pedir a forma inteira obrigaria quem compoe a fabricar campos so para
+ * satisfazer uma assinatura — e campo fabricado para agradar tipo e a origem de
+ * metade dos numeros que ninguem sabe explicar. Pedir os TRES que o motor
+ * realmente lê e o que fez a pauta derivada nascer sem o ECLUSA mudar uma linha.
+ *
+ * @typedef {object} Motion
+ * @property {number} economic - a posicao no eixo economico
+ * @property {number} liberty - a posicao no eixo de liberdades
+ * @property {number} threat - o quanto ela ataca a maquina
  */
 
 /* Quanto a ameaca pesa, em unidades de resistencia. Calibrado contra a maior
@@ -78,6 +96,23 @@ const THREAT_WEIGHT = 85;
    com lealdade cheia, ou seja, o jogo virava um muro com aparencia de preco. */
 const PIVOT = 58;
 const SPREAD = 16;
+
+/* ⚠ O CUSTO DA IMPOPULARIDADE, e ele e a razao de SONDA existir para o modelo e
+   nao so para a tela. Parlamentar nao vota com governo que a rua odeia, e vota
+   com governo que a rua adora ate contra a propria ideologia — porque o que ele
+   protege e a propria reeleicao, e ela e uma funcao da foto ao lado do
+   presidente.
+
+   A 25, um governo com 60% de otimo/bom derruba a resistencia em 5 pontos, e um
+   com 10% a levanta em 10. E o bastante para mudar votacao apertada sem
+   transformar popularidade em botao de aprovar tudo: 25 pontos e menos da metade
+   do PIVOT, entao a rua move a margem, e nao o centro. */
+const STANDING_WEIGHT = 25;
+
+/* O ponto neutro da rua: aprovacao acima disto ajuda, abaixo cobra. Ele NAO e 50
+   de proposito — 35% de otimo/bom e um governo mediano no Brasil, e nao um
+   governo em crise. Usar 50 faria todo governo realista nascer punido. */
+const STANDING_NEUTRAL = 35;
 
 /* Dissidencia maxima, em fracao da bancada, quando a lealdade esta cheia. Ela
    DOBRA com a lealdade no chao: bancada insatisfeita nao so entrega menos, ela
@@ -232,13 +267,23 @@ export function baseCount({ parties, loyalty }) {
  * A PREVISAO. Deterministica: nenhuma chamada a fluxo de aleatoriedade.
  *
  * @param {object} input
- * @param {Bill} input.bill
+ * @param {Motion} input.bill
  * @param {ReadonlyArray<Party>} input.parties
  * @param {Record<string, number>} input.funding - verba por bancada, de 0 a 1
  * @param {Record<string, number>} input.loyalty - lealdade por bancada, de 0 a 100
+ * @param {number} [input.standing] - a aprovacao do governo, em "otimo/bom"
  * @returns {Forecast}
  */
-export function whipCount({ bill, parties, funding, loyalty }) {
+export function whipCount({ bill, parties, funding, loyalty, standing }) {
+  /* A RUA ENTRA COMO DESLOCAMENTO DA RESISTENCIA, e nao como multiplicador da
+     adesao: multiplicar mexeria no comparecimento, que e o que a lealdade ja faz.
+     O que a popularidade muda e o CALCULO do parlamentar — o quanto ele resiste a
+     uma proposta que nao e a dele.
+
+     PADRAO NEUTRO quando ninguem passa: este motor foi escrito antes de existir
+     opiniao publica e continua valendo sozinho, como o LASTRO vale sem os fatores
+     da MALHA. Toda a suite antiga descreve a verdade sem tocar em nada. */
+  const street = ((standing ?? STANDING_NEUTRAL) - STANDING_NEUTRAL) / 100;
   const forecasts = parties.map(party => {
     const dx = party.economic - bill.economic;
     const dy = party.liberty - bill.liberty;
@@ -246,7 +291,10 @@ export function whipCount({ bill, parties, funding, loyalty }) {
     const venality = venalityFor(party, dx, dy);
     const paid = clamp01(funding[party.id] ?? 0);
 
-    const resistance = distance * (1 - venality * paid) + bill.threat * venality * THREAT_WEIGHT;
+    const resistance =
+      distance * (1 - venality * paid) +
+      bill.threat * venality * THREAT_WEIGHT -
+      street * STANDING_WEIGHT;
 
     /* A logistica devolve adesao alta para resistencia baixa e vice-versa. */
     let adherence = 1 / (1 + Math.exp((resistance - PIVOT) / SPREAD));
@@ -279,16 +327,17 @@ export function whipCount({ bill, parties, funding, loyalty }) {
  * as quatro traírem juntas, o que parece evento e e defeito de modelagem.
  *
  * @param {object} input
- * @param {Bill} input.bill
+ * @param {Motion} input.bill
  * @param {ReadonlyArray<Party>} input.parties
  * @param {Record<string, number>} input.funding
  * @param {Record<string, number>} input.loyalty
  * @param {Stream} input.stream
  * @param {number} input.majority - votos necessarios
+ * @param {number} [input.standing] - a aprovacao do governo, em "otimo/bom"
  * @returns {Tally}
  */
-export function vote({ bill, parties, funding, loyalty, stream, majority }) {
-  const forecast = whipCount({ bill, parties, funding, loyalty });
+export function vote({ bill, parties, funding, loyalty, stream, majority, standing }) {
+  const forecast = whipCount({ bill, parties, funding, loyalty, standing });
   let current = stream;
 
   const tallies = forecast.parties.map((prediction, index) => {

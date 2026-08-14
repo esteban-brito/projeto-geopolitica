@@ -55,8 +55,55 @@ function labelOf(table, key) {
  */
 export function noticeHtml({ title, body }) {
   return (
-    `<h2 class="dialog-card__title" id="monthDialogTitle">${escapeHtml(title)}</h2>` +
+    `<h2 class="dialog-card__title" id="noticeTitle">${escapeHtml(title)}</h2>` +
     `<p class="report__line">${escapeHtml(body)}</p>`
+  );
+}
+
+/**
+ * O RELATORIO COMO PAINEL DA MESA, e nao mais como cartao que interrompe.
+ *
+ * ⚠ ELE TRAZ O PROPRIO ELEMENTO DE FORA, como toda view deste projeto: o
+ * entrypoint concatena telas, e nao decide a forma delas.
+ *
+ * ── POR QUE SAIU DO `<dialog>` ───────────────────────────────────────────────
+ * O modal foi a forma certa de PROVAR que o relatorio existia — e virou pedagio.
+ * Um clique obrigatorio por mes, 48 por mandato, para dispensar uma leitura que
+ * cabia na tela. Pior: `showModal()` deixa o fundo inerte, entao o jogador nao
+ * podia comparar o relatorio com a Mesa que o produziu sem antes fechar um dos
+ * dois. O que era acessibilidade de graca virou parede.
+ *
+ * O `<dialog>` continua no documento e continua certo — para o AVISO, que e uma
+ * interrupcao legitima porque algo deu errado. Informacao consultavel e painel;
+ * interrupcao e modal. A diferenca e essa, e ela nao e de gosto.
+ *
+ * ── E A LAMINA E DE APOIO, e nao a central ───────────────────────────────────
+ * `glass-support`, o mesmo nivel da faixa de indices. A peca central da Mesa e a
+ * NEGOCIACAO — o que se decide agora. O mes passado e contexto, e contexto com o
+ * peso do protagonista disputa a atencao com ele.
+ *
+ * @param {Parameters<typeof reportHtml>[0] | null} input o ultimo mes, ou nada
+ * @returns {string}
+ */
+export function reportPanelHtml(input) {
+  /* PARTIDA NOVA — E TAMBEM PARTIDA RETOMADA. O relatorio nao entra no save
+     porque e memoria de tela e nao estado de jogo, entao quem volta ao jogo
+     amanha cai aqui tambem. Dizer "nenhum mes resolvido nesta sessao" e a
+     verdade; um painel vazio seria lido como defeito. */
+  if (!input) {
+    return (
+      `<section class="report report--waiting glass-support" ` +
+      `aria-label="${escapeHtml(UI.report.panel)}">` +
+      `<p class="report__legend">${escapeHtml(UI.report.panel)}</p>` +
+      `<p class="report__line">${escapeHtml(UI.report.waiting)}</p>` +
+      `</section>`
+    );
+  }
+
+  return (
+    `<section class="report glass-support" aria-label="${escapeHtml(UI.report.panel)}">` +
+    reportHtml(input) +
+    `</section>`
   );
 }
 
@@ -73,14 +120,14 @@ export function noticeHtml({ title, body }) {
  * @returns {string}
  */
 export function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore }) {
-  const { bill, tally } = report;
+  const { tally } = report;
+  const bill = report.agenda.proposal;
 
-  /* O TITULO CARREGA O `id` QUE O `<dialog>` APONTA em `aria-labelledby`. Ele e
-     escrito aqui e nao no documento porque o cartao inteiro e substituido a cada
-     mes — um titulo fixo no HTML ficaria descrevendo o mes anterior para quem lê
-     por leitor de tela, que e a unica pessoa que nao veria a diferenca. */
+  /* O TITULO E O MES, e ele nao carrega mais `id` de dialogo: o relatorio deixou
+     de ser um cartao que interrompe e virou painel da Mesa. Quem ainda usa o
+     `<dialog>` e o aviso, e e ele que leva o `id` agora — ver `noticeHtml`. */
   const head =
-    `<h2 class="dialog-card__title" id="monthDialogTitle">` +
+    `<h2 class="report__month">` +
     `${escapeHtml(monthLabel(report.month))}</h2>` +
     `<p class="report__subject">` +
     (bill
@@ -108,7 +155,7 @@ export function reportHtml({ report, quorum, parties, areas, loyaltyBefore, inde
  * @param {import("../../domain/congress/index.mjs").Tally | null} input.tally
  */
 function verdictBlock({ report, quorum, tally }) {
-  if (!report.bill) return "";
+  if (!report.agenda.proposal) return "";
 
   /* A CANETA NAO TEM PLACAR, e nao e um placar de zero: ela nao foi a plenario.
      Mostrar `0 de 257` para um decreto seria afirmar uma derrota que nao houve. */
