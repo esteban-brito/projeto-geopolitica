@@ -28,16 +28,17 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 ```
 index.html · app.mjs        entrypoint: composição e wiring, nunca cálculo
 styles/                     seis camadas, na ordem que o nome declara
-vendor/                     dependência de runtime vendorizada (só d3-force)
+vendor/                     dependência vendorizada — ainda VAZIO; nasce com d3-force
 src/data/                   catálogo; `catalog.mjs` indexa todo dado do projeto
 src/domain/                 os motores, funções puras
 src/state/                  estado imutável e o reducer
 src/application/            turno, persistência, efeitos
 src/public/                 a composição que todo consumidor usa
 src/ui/                     views puras: recebem dado, devolvem string
-tests/                      run.mjs · lib/ · guards/ · suites/ · browser/ · golden/
+tests/                      run.mjs · lib/ · guards/ · suites/ · browser/
 tools/                      geradores, servidor, simulador de mandato
-docs/                       handoff.md (um ponto de retomada) · adr/ · cycles/
+docs/                       handoff.md (o ponto de retomada) · adr/ · cycles/ · research/
+CLAUDE.md                   as regras que o agente lê antes de tudo
 ```
 
 ## 3. Os motores
@@ -51,7 +52,7 @@ aleatoriedade, cada um com fluxo próprio derivado da seed da partida.
 | **ECLUSA**   | `src/domain/congress/`    | bancadas, proposta, moeda oferecida, histórico de barganha | votos por bancada, resultado, custo pago, ressentimento |
 | **MALHA**    | `src/domain/capacity/`    | índices por área, alocação do mês, impacto das aprovações  | índices novos, histórico, pressão em receita e despesa  |
 | **CASCATA**  | `src/domain/propagation/` | efeitos vigentes com defasagem, estado atual               | delta do mês por indicador                              |
-| **CORRENTE** | `src/domain/economy/`     | estado macro, deltas, política monetária                   | PIB, inflação, juros, câmbio, desemprego                |
+| **CORRENTE** | `src/domain/economy/`     | estado macro, carga tributária, capacidade, impulso fiscal | PIB, potencial, inflação, juro, desemprego, população   |
 | **LASTRO**   | `src/domain/budget/`      | receita e despesa, obrigatório × discricionário            | saldo, dívida/PIB, espaço discricionário                |
 | **SONDA**    | `src/domain/opinion/`     | indicadores divulgados, eventos, histórico                 | aprovação por segmento                                  |
 | **DELTA**    | `src/domain/graph/`       | catálogo de ligações, estado, deltas                       | nós e arestas com peso e sinal                          |
@@ -119,6 +120,26 @@ mora em outro arquivo.
 vermelho: mostrar `—` no maior degrau da escala ocupa a tela inteira para dizer
 "nada", e vestir uma instrução de aprovada ensina o sinal errado.
 
+**Densidade é ruído onde há decisão, e serviço onde não há.** Toda tela que pede
+uma escolha é enxuta: cada número a mais disputa com a decisão. Finanças é a
+única densa do projeto, e pode ser porque ninguém decide nada nela — a ausência de
+controle é a informação principal dela, e a forma diz isso antes do texto (fio de
+separação em vez de pastilha, sem raio, sem hover, sem transição).
+
+**Toda escala de desenho é declarada, nunca derivada da série.** A escada de
+tendência recebe a régua por parâmetro: normalizar pelos próprios pontos desenha
+drama quando nada acontece, e usar a régua errada desenha calmaria quando tudo
+acontece — inflação e juro passaram semanas no degrau do chão porque eram lidos
+numa régua de 0 a 100.
+
+**Número que muda de ordem de grandeza muda de unidade.** `R$ 12227,1 bi` ao lado
+de `R$ 33,5 bi` obriga a contar dígitos; `money` vira para trilhão sozinha, com
+uma casa a mais para a troca não custar precisão.
+
+**Cor e texto contam a mesma história.** Onde a leitura arredondada mostra zero, o
+tom é neutro — um `−0,4` que imprime "0" e pinta de vermelho faz a cor negar o
+número ao lado dela.
+
 ## 6. As guardas
 
 | guarda       | impede                                                                                                      |
@@ -144,8 +165,8 @@ Declarado para não ser confundido com cobertura:
   regra inglês/português depende de revisão. Um casador honesto não existe — ele
   acusaria `selic` e `ipca`, que são nomes próprios e ficam no original por
   decisão;
-- **`orphans` e `contrast`** — continuam sem existir, e agora a condição que os
-  adiava caiu: há sete telas e DOM real. O que entrou no lugar foi
+- **`orphans` e `contrast`** — continuam sem existir, e a condição que os adiava
+  caiu há tempos: há onze telas e DOM real. O que entrou no lugar foi
   `npm run walk`, que usa a tela como se joga e achou três defeitos que tipo,
   guarda e 99 provas não achavam. Ele não é guarda: não roda em `validate`, e o
   que ele acha vira prova em `tests/suites/screens.mjs`;
@@ -155,4 +176,9 @@ Declarado para não ser confundido com cobertura:
   Nenhuma das três sabe dizer se `0,95` é a venalidade certa do Centrão — isso é
   calibração, é revisão humana, e não existe casador honesto para intenção;
 - **escala de raio, espaço e corpo** — a derivação está no arquivo de tokens e é
-  cobrada por revisão, não por máquina.
+  cobrada por revisão, não por máquina;
+- **nome real de pessoa no catálogo** (ADR 0003). Toda pessoa do jogo é fictícia,
+  e não existe casador honesto para isso: uma lista de nomes proibidos seria
+  incompleta por definição e acusaria sobrenomes comuns. Fica como regra declarada
+  em `CLAUDE.md` e cobrada em revisão — o que **tem** guarda é a identidade
+  (`identity`), que impede personagem sem `id` e `id` repetido.

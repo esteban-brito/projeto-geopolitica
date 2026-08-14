@@ -6,7 +6,7 @@ dependência de runtime.
 
 ```bash
 npm ci
-npm run serve      # http://127.0.0.1:5173/ — a Mesa e as seis areas, jogaveis
+npm run serve      # http://127.0.0.1:5173/ — onze telas, jogaveis
 npm run simulate   # roda um mandato inteiro no terminal, sem tela
 npm run validate   # guardas + tipos + lint + formato + testes
 npm run walk       # usa a tela como se joga, num navegador de verdade
@@ -15,9 +15,15 @@ npm run walk       # usa a tela como se joga, num navegador de verdade
 ## Onde ler
 
 - [`docs/handoff.md`](docs/handoff.md) — **comece aqui**: estado verificado,
-  achados abertos e o que ainda não existe;
+  achados abertos, e para onde o projeto vai;
 - [`docs/standards.md`](docs/standards.md) — as convenções travadas, a estrutura,
-  o sistema visual e a tabela de motores.
+  o sistema visual e a tabela de motores;
+- [`docs/cycles/`](docs/cycles/) — o que foi acordado fazer, e por quê. O mais
+  recente é o [ciclo 4](docs/cycles/04-a-republica-responde.md), que muda a natureza
+  do jogo: a lei deixa de ser um número e vira um texto;
+- [`docs/adr/`](docs/adr/) — as decisões que não se reabrem sem pedido;
+- [`docs/research/`](docs/research/) — os briefings de pesquisa e o que voltou
+  deles. É de lá que vêm as rubricas reais do catálogo.
 
 ## Os motores
 
@@ -26,12 +32,12 @@ seu próprio fluxo — fluxo único faria um evento a mais deslocar o índice e 
 o resultado de uma votação sem relação com ele.
 
 ```
-TEMPORAL  ── o mês traz um choque?                          contrato
-ECLUSA    ── o que estava na pauta é votado, e a que preço  IMPLEMENTADO
-MALHA     ── a capacidade do Estado de entregar             IMPLEMENTADO
-CASCATA   ── efeitos vigentes viram deltas, com defasagem   contrato
-CORRENTE  ── o passo macroeconômico do mês                  contrato
-LASTRO    ── receita, despesa, saldo, dívida                IMPLEMENTADO
+TEMPORAL  ── o mês traz um choque?                           contrato
+ECLUSA    ── o que estava na pauta é votado, e a que preço   IMPLEMENTADO
+MALHA     ── a capacidade do Estado de entregar              IMPLEMENTADO
+CASCATA   ── efeitos vigentes viram deltas, com defasagem    contrato
+CORRENTE  ── PIB, inflação, juro, desemprego e o custo da dívida  IMPLEMENTADO
+LASTRO    ── receita, despesa, saldo, dívida                 IMPLEMENTADO
 SONDA     ── o que foi divulgado vira aprovação por segmento contrato
 DELTA     ── deriva a rede legível do que acabou de acontecer contrato
 ```
@@ -53,7 +59,7 @@ do discricionário, dívida sobre o PIB e o humor da base.
 
 ```bash
 npm run simulate -- --policy promessa --months 48
-npm run simulate -- --seed 7 --gdp-growth -0.02 --quiet
+npm run simulate -- --seed 7 --shock 0.02 --quiet
 ```
 
 Ele existe porque a calibragem foi girada contra os testes, e **prova verde diz
@@ -61,11 +67,13 @@ que a regra vale, não que o número é bom**. A pergunta que faltava instrument
 "como esta partida se comporta ao longo de 48 meses?" — não se responde apertando
 um botão quarenta e oito vezes no navegador.
 
-As quatro políticas são **sondas, e não adversários**: cada uma exagera um
-comportamento para isolar um efeito. `parado` mede a queda natural, `base` mede o
-custo de apenas continuar governando, `agenda` joga com prudência fiscal e
-`promessa` oferece verba cheia sem olhar o caixa — a distância entre as duas
-últimas é o preço da imprudência, medido em meses de base.
+As cinco políticas são **sondas, e não adversários**: cada uma exagera um
+comportamento para isolar um efeito. `herdado` não toca em nada e mede o que o
+orçamento do antecessor faz sozinho, `piso` põe tudo no mínimo legal e mede a
+margem de manobra real, `base` mede o custo de apenas continuar governando,
+`agenda` joga com prudência fiscal e `promessa` oferece verba cheia sem olhar o
+caixa — a distância entre as duas últimas é o preço da imprudência, medido em
+meses de base.
 
 ## Validação
 
@@ -83,8 +91,8 @@ de controle sem filtro. Ele vive em `tests/browser/` e **fora** do `validate`:
 abre navegador com janela, e `validate` precisa rodar rápido e sem tela.
 
 `npm run walk` faz o que nenhum dos dois faz: **usa** a tela. Ele entra numa área,
-arrasta a alocação, pauta uma ação, compra bancada, estoura o caixa, avança o mês
-e confere que a lei aprovada aparece em vigor — em desktop e em celular. Ele
+arrasta o orçamento até furar um piso, compra bancada, estoura o caixa, avança o
+mês, confere o relatório e abre o placar de Finanças — em desktop e em celular. Ele
 nasceu porque três defeitos atravessaram tipo verde, guarda verde e 99 provas
 verdes: um `max="25,04"` que o navegador descartava calado, duas grades que
 mediam colunas em `ch` com fontes diferentes, e uma previsão que usava a verba

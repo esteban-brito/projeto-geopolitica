@@ -4,257 +4,335 @@
 > leia este arquivo e depois `docs/standards.md`. O nome deste arquivo é estável
 > de propósito: ponteiro com data envelhece e obriga a mover arquivo.
 
-## Estado em 13/08/2026
+## Estado em 14/08/2026
 
-Quinta sessão, segunda metade. **O mês fecha como ciclo, e nada na tela é
-inventado.** A Parte 1 do [ciclo 1](cycles/01-o-mes-fecha-e-a-partida-decide.md)
-está fechada: o turno presta contas num relatório, a partida atravessa o
-navegador fechado, e os três campos do rail que eram texto digitado passaram a
-sair de motor.
+Sétima sessão. **O orçamento é o jogo, a economia tem preço, o país tem placar, e
+a lei virou alavanca.** O [ciclo 2](cycles/02-tudo-e-uma-alavanca.md) aposentou o
+catálogo de pautas prontas — o presidente escreve o orçamento programa a programa
+e a pauta é **derivada** do que ele moveu. O
+[ciclo 3](cycles/03-a-lei-vira-alavanca.md) fechou quase inteiro: a CORRENTE
+existe, Finanças mostra o que ela faz, a Produção virou duas áreas e as faixas
+saíram do catálogo para o estado.
 
-Na primeira metade da sessão: **o jogo saiu do terminal.** A Mesa e as seis áreas existem, são
-navegáveis, e um mês inteiro se decide com o mouse: escolher a ação, comprar
-bancada, alocar verba, avançar. O que a tela mostra enquanto o jogador decide sai
-das **mesmas funções** que o turno vai executar — nenhuma conta é refeita por
-fora.
+> ## ⚠ O NORTE MUDOU no fim desta sessão — leia o ciclo 4 antes de retomar
+>
+> [`cycles/04-a-republica-responde.md`](cycles/04-a-republica-responde.md) é o
+> plano acordado, e ele **reformula o jogo**. Três coisas chegaram na mesma
+> sessão e viraram uma só:
+>
+> - **a lei vira texto** — gramática formal executável, com autor, tramitação,
+>   vigência e revogação, no lugar de faixas que só se movem;
+> - **a república ganha gente** — Congresso com pessoas, imprensa, STF,
+>   governadores e mercado. Todas **fictícias**, com arquétipo reconhecível e
+>   inspiração real: o mundo é real, as pessoas são inventadas;
+> - **o presidente pode cair** — impeachment, renúncia negociada e ruptura
+>   institucional. Sem derrota possível, "tudo tem preço" era só aritmética.
+>
+> A interface entra junto: sai o rail duplo com a Mesa, entra o **Gabinete** —
+> barra superior fixa, sidebar por poderes, e um dashboard cuja peça central é a
+> **Caixa de Entrada**, que é por onde o mundo passa a falar com o presidente.
+>
+> **As nove decisões abertas foram respondidas.** Os motores ficam; o que se refaz
+> é a camada de cima. O resto do ciclo 3 segue suspenso.
+>
+> **A Parte 6 (SONDA) já está feita** — ver abaixo. A próxima é a casca do
+> Gabinete, depois a gramática, o elenco, e só então a Caixa de Entrada.
 
-| verificação        | estado                                                           |
-| ------------------ | ---------------------------------------------------------------- |
-| `npm run validate` | **verde de ponta a ponta**                                       |
-| `npm run check`    | 9 guardas · 36 provas sintéticas · 75 arquivos · verde           |
-| `npm test`         | **105 propriedades** · verde (eram 81)                           |
-| `npm run simulate` | mandato de 48 meses, quatro políticas-sonda                      |
-| `npm run screen`   | **rodado** · console limpo nos três viewports, sem rolagem       |
-| fps do material    | 240,3 × 226,5 do controle — os dois no teto de 240 Hz do monitor |
-| `npm run walk`     | **novo, e verde** — a tela usada como se joga                    |
-| CI                 | GitHub Actions rodando `npm run validate` a cada push            |
+| verificação        | estado                                                 |
+| ------------------ | ------------------------------------------------------ |
+| `npm run validate` | **verde de ponta a ponta**                             |
+| `npm run check`    | 9 guardas · 36 provas sintéticas · 97 arquivos · verde |
+| `npm test`         | **152 propriedades** · verde (eram 105)                |
+| `npm run simulate` | mandato de 48 meses, **cinco** políticas-sonda         |
+| `npm run walk`     | verde — a tela usada como se joga, desktop e celular   |
+| `npm run screen`   | **não rodado desde a quinta sessão** — ver achado 4    |
+| CI                 | GitHub Actions rodando `npm run validate` a cada push  |
 
-## O que mudou nesta sessão
+⚠ **Nada disto está commitado.** São 32 arquivos modificados e 13 novos na árvore
+de trabalho, no branch `acoplamento-e-simulador`, acumulados em duas sessões.
 
-**A tela virou o jogo.** `app.mjs` deixou de despachar `advanceMonth` de andaime e
-passa a chamar `playMonth`. O rail lista as **áreas de governo**, e não motores:
-quem quer mexer na saúde entra em Saúde, e o instrumento — lei, emenda, caneta —
-virou etiqueta na linha da ação.
+## O que a sexta sessão fez — o ciclo 2, e ele mudou a natureza do jogo
 
-**A Mesa** mostra a pauta, as quatro bancadas com humor e controle de verba, e o
-resumo: `312 ± 14 · precisa de 257`. A **banda** é a peça mais importante dessa
-tela — `312` sozinho afirma um placar que o motor não promete, e o jogador que
-confia nele aprende a desconfiar da tela na primeira derrota por três votos.
+**Some o catálogo de pautas. Entra a alavanca.** O responsável usou a tela e
+recusou o desenho com uma frase que é o diagnóstico inteiro — _"pauta pronta é uma
+bosta, onde tem criatividade nisso e liberdade?"_. Um menu de seis pautas responde
+"qual dessas você quer?", e a pergunta do cargo é "quanto de cada coisa o país vai
+ter?".
 
-**A área** tem os três verbos na ordem do custo de executar: alocar não precisa de
-ninguém, pautar precisa do Congresso, vigente já foi decidido e só cobra. A linha
-que a faz virar decisão é `R$ 26,9 bi disponíveis · R$ 18,1 bi já prometidos às
-outras áreas` — sem ela seriam seis controles independentes.
+**`src/data/programs.mjs` — programas com números reais e
+datados: RGPS R$ 982,5 bi, pessoal R$ 398,1 bi, piso da saúde R$ 231 bi, piso da
+educação R$ 114,8 bi (PLOA 2025, CF art. 198 e 212). O catálogo deixou de ser
+"ficção com inspiração na realidade": o que segue ficção é o que o **modelo faz**
+com as rubricas.
 
-**`settlement` nasceu**, e é o que impede a tela de mentir: a previsão da Mesa
-vota com a verba que o caixa **honra**, e não com a prometida. Enquanto a promessa
-cabe no mês as duas são a mesma coisa; quando estoura, a Mesa anunciava um placar
-que o turno não produzia — e podia dizer "acima do quórum" numa votação que o
-rateio derrubava.
+**`src/data/rules.mjs` — a segunda família de alavancas.** Propriedade de estatal
+e poder do Executivo: elas não custam dinheiro, mudam **como os motores
+calculam**. Privatizar paga adiantado (receita de venda), apaga o dividendo para
+sempre e tira folha da União — e a armadilha é aritmética do LASTRO, não um evento
+escrito.
 
-**O que já está em vigor não volta à pauta.** A sessão passada tinha uma guarda na
-lista do estado, que se recusava a guardar o mesmo id duas vezes. Ela resolvia só
-o sintoma visível: o mês continuava votando, o índice da área subia de novo e o
-**impacto fiscal era somado outra vez**. Uma reforma aprovada seis vezes cobrava
-seis, com a lista mostrando uma linha só. A recusa agora é da ordem inteira, e a
-prova falha se alguém a remover.
+**`src/application/agenda.mjs` — o rito vira consequência.** `compose` lê o
+orçamento escrito contra o vigente e devolve a proposta: movimento dentro da faixa
+é caneta e não vai a plenário; furar um piso de `law` é lei; furar um de
+`constitution` é emenda. **O rito mais exigente manda no pacote inteiro** — é o
+logrolling existindo sem ninguém escrever "logrolling".
 
-**Três defeitos que só a tela em uso mostrou**, e por isso `npm run walk` existe:
+**A posição ideológica é sombra, e não controle.** O jogador nunca arrasta um
+cursor no plano `econômico × liberdades`: ele mexe em leitos e alíquotas, e a
+posição é calculada do que ele moveu. **Cortar espelha** — reduzir um programa de
+esquerda é ato de direita, e nenhuma linha diz isso.
 
-- o controle de alocação abria no **meio** de uma faixa de 0 a 100. `max="25,04"`
-  com vírgula é valor inválido, e o navegador descarta o atributo em silêncio.
-  Node não lê atributo — nenhuma prova de unidade podia ver. Agora existe `attr`,
-  e `tests/suites/screens.mjs` confere todo atributo numérico de toda tela;
-- a legenda das colunas se sobrepunha: cabeçalho e linha mediam colunas em `ch`
-  com fontes de tamanhos diferentes, então `10ch` valia 55px numa e 85px na outra;
-- a coluna dizia **despesa/ano** e mostrava o sinal do **resultado**. No catálogo,
-  positivo poupa — então `−48` aparecia como corte de gasto, sendo gasto novo.
+**A tela "O Estado"** nasceu para as alavancas de regra, e a área ganhou o
+orçamento granular: um controle por programa, com a unidade do mundo ao lado
+("66 · leitos, UTIs e cirurgias contratadas") e a linha tingida pelo rito quando o
+controle atravessa o piso.
 
-**A folha do dashboard virou três**, como a prosa dela mesma mandava: `40-shell`
-(a casca e o substrato, agora de todas as telas), `50-screen-mesa`,
-`60-screen-area`. A aprovação ficou estacionada em `70-screen-approval`, com a
-razão escrita: quem a produz é SONDA, que não existe, e um indicador congelado em
-31% ao lado de controles que funcionam ensina a desconfiar da tela inteira.
+## O que a sétima sessão fez — o ciclo 3, Partes 5 e 4
 
-## O que a segunda metade da sessão fez
+**CORRENTE (`src/domain/economy/`) — a economia que dá preço à alíquota.** Quatro
+equações, e são as que qualquer banco central usa para conversar consigo mesmo:
+hiato, Phillips, Taylor, Okun. Mais população com crescimento, sem a qual não
+existe PIB per capita.
 
-**O mês presta contas.** `playMonth` sempre devolveu um relatório completo e o
-entrypoint jogava fora: o jogador apertava o botão e a tela trocava em silêncio.
-Agora o diálogo abre com o placar contra a previsão — `321 contra 257`, "a
-previsão era 329 · o dia deu −8" —, a deriva de cada bancada, o humor antes e
-depois, o rateio que cortou e o que a alocação moveu no país. É a única tela em
-que a banda da Mesa prova que era honesta.
+Duas correções que a própria simulação cobrou, e as duas estão na prosa do motor:
 
-**A partida atravessa o navegador fechado.** `serialize`/`deserialize` existiam,
-provados desde a terceira sessão, e nenhuma linha os chamava. Save recusado não
-é apagado: muda de chave, e o jogador recebe a explicação num aviso em vez de ver
-o mandato sumir.
+- **o hiato tem de ser medido em termos reais.** Comparar PIB nominal com
+  potencial real fazia o hiato medir inflação acumulada em vez de aquecimento, e a
+  economia fugia sozinha: 1% no mês 6 virava 7,6% no mês 24, com o juro
+  perseguindo em 20% ao ano e ninguém tendo feito nada;
+- **o estoque inteiro paga juro, e não só a parte pós-fixada.** A âncora pública
+  (R$ 40 bi por ponto de Selic) mede a **sensibilidade**, não o custo total. Sem
+  `legacyRate`, a dívida crescia menos que o PIB nominal e o mandato terminava com
+  a razão caindo de 78% para 55% sem o jogador fazer nada.
 
-**A situação saiu do estado e virou consequência.** Ela era um campo que nenhum
-motor movia desde que o turno passou a ser resolvido pela camada de aplicação —
-congelada em "Estável" para sempre, e com ela a cor de todo o ambiente da tela.
-Agora ela é composta de LASTRO e ECLUSA em `situationOf`, com **seis motivos**
-distintos: teto fechado, base rompida, minoria, obstrução, aperto e folga. Luz
-vermelha que não diz qual é a pane é luz vermelha que se aprende a ignorar.
+**Finanças (`src/ui/screens/finance.mjs`) — o placar, e a única tela sem um
+controle.** Dezenove linhas em quatro blocos, e a ausência de controle é a
+informação principal: por isso ela tem forma de razão contábil e não de pastilha —
+sem raio, sem hover, sem transição. É também a única tela densa do projeto, porque
+densidade só é ruído onde há decisão.
 
-**A base aliada é real.** Era `"247 / 513"` digitado a mão ao lado de uma
-lealdade que o motor calcula. `baseCount` responde quantas cadeiras respondem ao
-governo hoje, e usa o **mesmo fator de humor** que a votação — extraído para uma
-função só, para que os dois não possam divergir. A prova que amarra isso é
-`NENHUMA VOTACAO ENTREGA MAIS QUE A BASE`.
+**`ledger` (`src/application/turn.mjs`)** é o que impede o painel de inventar
+número: ele faz a conta do turno — empenho honrado, venda de estatal abatida, juro
+sobre o estoque —, e `tests/suites/turn.mjs` prova que a dívida bruta que o painel
+mostra é exatamente com quanto o mês seguinte começa. Mesma doutrina de
+`settlement`: **a tela pergunta ao motor, não refaz a conta**.
 
-**O andaime saiu.** A ação `advanceMonth`, que empurrava o mês e oscilava a
-aprovação numa senoide, morreu — o botão chama o turno de verdade desde que a
-Mesa nasceu. As provas que rodavam nela foram **movidas** para a ação viva, e a
-suíte do save passou a provar replay sobre `playMonth` em vez de sobre o andaime.
+**Três defeitos que só a tela real mostrou** (a captura do passeio pegou os três):
 
-**As regras do regime viraram dado** (`src/data/regime.mjs`), com esquema e
-validação: 513 cadeiras, as duas maiorias, 48 meses de mandato, 12 de exercício.
-Estavam em três arquivos. É a providência barata que a jogada monarquista vai
-precisar — e o catálogo agora cobra que as bancadas somem exatamente o plenário.
+- a escada desenhava inflação (0,042) e juro (0,105) na régua do índice de área, 0
+  a 100 — as duas ficavam no degrau do chão **para sempre**, e a coluna afirmava
+  que nada nunca acontece. `sparkline` passou a receber a régua por parâmetro;
+- `R$ 12227,1 bi` ao lado de `R$ 33,5 bi`: `money` virou para trilhão, com uma casa
+  a mais para a troca de unidade não custar precisão;
+- linhas em vermelho dizendo `· 0` — o tom lia o valor cheio (−0,4) e o texto lia o
+  arredondado. Onde a tela mostra zero, ela mostra zero nas duas linguagens.
 
-**A lista de ações virou tabela de verdade**, com `<th scope="col">` por coluna e
-`<th scope="row">` no nome: quem lê por leitor de tela ouvia quatro números sem
-nome. Ela rola por dentro no celular em vez de esconder coluna — esconder para
-caber é mentir por omissão.
+**`tests/suites/state-reducer.mjs` estava com 18 erros de `tsc`** desde que a série
+entrou no estado: o gerador de estados e a ação sintética não acompanharam. `npm
+run types` estava vermelho antes de qualquer mudança desta sessão.
 
-## Achados fechados
+## SONDA — a rua existe, e ela decide votação
 
-Os itens **5** (a aprovação não existe na tela — segue verdadeiro, mas a lacuna
-que importava era o mês não prestar contas), **7** (quórum sempre maioria
-simples), **6** (a lista deveria ser tabela) e **9** (`npm run screen` não
-rodado) deixaram de existir.
+Primeira parte do ciclo 4, feita em 14/08/2026. A aprovação esteve **fora da tela
+por três sessões** com a razão escrita no entrypoint — "quem a produz é SONDA, que
+não existe" —, e voltou porque a condição foi cumprida.
+
+- `src/data/opinion.mjs` — três segmentos por renda com fatias reais (42/38/20) e
+  pesos declarados como julgamento. O que muda entre eles é **para onde vai a
+  atenção**: carestia domina embaixo, emprego no meio, economia em cima;
+- `src/domain/opinion/index.mjs` — satisfação como estoque com inércia, queda três
+  vezes mais rápida que a subida, desgaste do cargo por mês, defasagem de dois
+  meses lida da série que já existia;
+- **o acoplamento com ECLUSA**: `whipCount` recebe a aprovação e desloca a
+  resistência. Governo popular compra voto mais barato. Sem isso a pesquisa seria
+  enfeite.
+
+Duas calibragens que a medição cobrou: as âncoras foram apertadas (com carestia
+neutra em 6% ao ano o país de abertura ficava satisfeito por herança), e a escala
+de pesquisa passou de 1,35 para 1,8 — a primeira captura mostrou 23/19/58, e um
+"regular" de 19% denuncia o número, porque pesquisa nenhuma tem tão pouca gente em
+cima do muro.
+
+O que a série mostra hoje: um governo parado fica em ~21/42/37 o mandato inteiro;
+um que corta tudo ao mínimo legal termina em **7/31/62**.
+
+## O ciclo 3, e o que ainda falta dele
+
+Feito na sétima sessão: **Parte 5 (CORRENTE)** · **Parte 4 (Finanças)** ·
+**Produção virou duas áreas** · **Parte 1 (as faixas viraram estado)** ·
+**Parte 2 (a aba de legislação)**. Ficaram de fora a **Parte 3 — Fazenda vira
+impostos** e a **Parte 6 — o rename**, e as duas estão **suspensas de propósito**:
+a cláusula de tributo do ciclo 4 absorve a primeira por inteiro, e fazer as duas
+agora seria escrever a mesma coisa duas vezes.
+
+**Produção virou Agricultura e Indústria e Infraestrutura**, e o corte não é
+técnico: a bancada ruralista é um bloco real no Congresso, e enquanto agro e
+indústria dividiam a mesma tela, o modelo não conseguia representar um governo que
+agrada um e aperta o outro. Os cinco programas viraram doze, a soma das forças foi
+mantida em 0,20 — dividir uma área em duas não pode aumentar o efeito dela sobre a
+receita —, e `CAPACITY_TARGET` passou a apontar para a indústria.
+
+**A lei virou alavanca.** `state.bands` guarda a faixa `[piso, teto]` de cada
+alavanca; o catálogo passou a declarar a faixa **de abertura**, e a guarda continua
+imutável, porque ela é a natureza da norma e não o conteúdo dela. `compose` compara
+contra o estado e aceita movimento de faixa e de nível **no mesmo texto** — e aí
+aparece a jogada que não existia: derrubar o piso da saúde e baixar o gasto na
+mesma emenda, com a lei contendo a própria autorização.
+
+Os três verbos do pedido não viraram três botões: **alterar** é mover o controle,
+**criar** é tirá-lo do zero, **excluir** é levá-lo de volta ao zero. Mexer numa
+faixa custa, no mínimo, uma lei — inclusive onde não havia lei nenhuma, porque
+plantar uma vinculação onde não existia é criar uma.
+
+`schemaVersion` foi de 8 a **10** em duas paradas, e nenhuma delas converte: um
+save antigo não sabe repartir a capacidade da Produção entre lavoura e fábrica, e
+não sabe qual reforma aquele mandato já tinha aprovado.
 
 ## Achados abertos — o que EU veria primeiro na próxima sessão
 
-Os quatro primeiros são **medidos nesta sessão**, e os dois primeiros são graves.
+**1. O país se desendivida sozinho, e cortar tudo é o que faz a dívida subir.**
+Medido nesta sessão, com a CORRENTE já ligada:
 
-1. **O catálogo inteiro passa.** Na política `promessa`, **26 votações e 26
-   aprovações** — as 36 ações do catálogo viram realidade em 48 meses. Na
-   `agenda`, 35 de 36. Um mandato em que dá para aprovar tudo não tem escassez de
-   capital político, só de dinheiro e de meses. Na abertura, **13 das 26 pautas
-   votáveis passam sem um centavo**, e só uma não passa nem com verba cheia;
+| política   | o que ela faz                | dívida/PIB em 48 meses |
+| ---------- | ---------------------------- | ---------------------- |
+| `herdado`  | não toca em nada             | 78,0% → **68,4%**      |
+| `agenda`   | reforma o que cabe           | 78,0% → 70,4%          |
+| `base`     | só mantém a máquina          | 78,0% → 70,7%          |
+| `promessa` | promete verba cheia todo mês | 78,0% → 72,2%          |
+| `piso`     | tudo no mínimo legal         | 78,0% → **82,3%**      |
 
-2. **Fazer tudo é fiscalmente MELHOR do que não fazer nada, e isso inverte a
-   tensão do jogo.** `parado` termina com dívida em **79,5%** e 18 meses de
-   contingenciamento; `agenda`, que aprova 35 pautas, termina em **59,5%** e
-   nenhum mês de aperto. A armadilha fiscal está punindo a inação e premiando a
-   agenda cheia. A causa é conhecida e some quando CORRENTE existir — LASTRO não
-   cobra juros —, mas o desenho precisa ser escolhido, e não descoberto;
+O presidente ausente termina com a melhor dívida do quadro, e o governo que corta
+tudo termina com a pior. Isso é o inverso do mundo, e a causa está medida: a
+receita chega a **R$ 2.653 bi** contra os R$ 2.400 bi que `taxLoad × PIB` declara,
+porque o fator de arrecadação da MALHA e o dividendo das estatais a inflam ~10%.
+Contra uma obrigatória de R$ 2.188 bi, sobra um **superávit primário estrutural de
+~2,5% do PIB** que o Brasil não tem. O arcabouço segura o gasto em R$ 314 bi/ano,
+mas o caixa livre é R$ 465 bi — quase o triplo dos R$ 176 bi que `fiscal.mjs`
+declara como discricionário. **É recalibragem, e ela precisa ser decidida e não
+descoberta.**
 
-3. **O fim do foro privilegiado é a única pauta impossível na abertura**: 251
-   votos com verba cheia contra 257 exigidos. Pode ser bom desenho — a pauta que
-   ataca a máquina exige capital acumulado —, mas continua sendo acidente de
-   calibragem e não decisão;
+**2. O rateio corta desde o mês 3, em todas as cinco políticas.** "48 meses com
+corte — a partir de mar · 2027" aparece igual em todas, inclusive na que não
+promete nada a ninguém. A configuração herdada custa mais do que o teto abre, e
+isso já foi declarado como a armadilha funcionando — mas um corte que nunca some,
+em nenhuma política, deixa de ser armadilha e vira constante.
 
-4. **A calibragem de ECLUSA continua sendo um primeiro chute** — `PIVOT 58`,
-   `SPREAD 16`, `THREAT_WEIGHT 85`. Agora há dois instrumentos para conferir
-   contra comportamento: o simulador e a tela;
+**3. O contingenciamento nunca dispara** (0 meses em 48, nas cinco políticas). O
+gatilho existe e é provado em teste com catálogo apertado; com o catálogo real ele
+não é alcançável. Ou o desenho aceita isso, ou a calibragem precisa aproximar o
+teto da obrigatória.
 
-5. **A aprovação não existe na tela**, e é a peça que falta para o mês fechar como
-   ciclo. Ela volta com SONDA. A view e os estilos estão estacionados juntos, de
-   propósito: separá-los faria o retorno vir sem forma;
+**4. `npm run screen` não roda desde a quinta sessão.** Sete telas viraram onze
+desde então — O Estado, Finanças, Agricultura e Indústria nasceram sem o custo de
+material medido.
 
-6. **A lista de ações deveria ser uma tabela de verdade.** Hoje ela é `<ul>` com
-   grade, e a legenda das colunas é um parágrafo antes da lista — quem lê por
-   leitor de tela ouve `308 · −140 · +8` sem cabeçalho por célula. `<table>` com
-   `<th>` resolve, e é a próxima versão dessa lista;
+**5. `orphans` e `contrast` seguem por escrever.** Herdado.
 
-7. **`tools/simulate.mjs` guarda a própria memória do que passou** (`memory.passed`),
-   e agora isso duplica `state.enacted`. Duas fontes para o mesmo fato;
+**7. A calibragem de ECLUSA continua sendo um primeiro chute** — `PIVOT 58`,
+`SPREAD 16`, `THREAT_WEIGHT 85`. Agora há três instrumentos para conferir contra
+comportamento: o simulador, a tela e o passeio.
 
-8. **A fonte é `system-ui`**, provisória — herdado, não tocado nesta sessão;
+**8. `src/data/bills.mjs` é catálogo morto que ainda respira.** As 36 pautas
+prontas foram aposentadas pelo orçamento granular, e o arquivo continua no
+catálogo porque as suítes do Congresso e das telas montam casos com ele. Ele
+precisa virar fixture de teste ou morrer.
 
-9. **O benchmark de fps continua não medindo nada** — os dois braços batem no teto
-   de 240 Hz do monitor. Herdado.
+**9. A fonte é `system-ui`**, provisória — herdado.
+
+**10. O benchmark de fps continua não medindo nada** — os dois braços batem no teto
+de 240 Hz do monitor. Herdado.
 
 ## O que existe
 
 ### A tela
 
 Casca com dois rails na estrutura do Football Manager 2020, vidro em três níveis
-(`stage` · `action` · `support`), substrato de aurora em CSS puro. **Sete telas**:
-a Mesa e as seis áreas. Dois itens do rail seguem desligados de propósito —
-Opinião e Rede têm contrato de motor e nenhuma tela.
+(`stage` · `action` · `support`), substrato de aurora em CSS puro. **Onze telas**:
+a Mesa, Finanças, as oito áreas e O Estado. Dois itens do rail seguem desligados
+de propósito — Opinião e Rede têm contrato de motor e nenhuma tela.
 
-Regras que a sessão fixou e que valem para toda tela nova: **uma lâmina por
-tela**, a tela **pergunta** ao motor em vez de refazer a conta, número que vai
-para atributo passa por `attr`, toda view traz o próprio elemento de fora, e
-**ausência não é resultado** — sem pauta não há placar nem veredito colorido.
+Regras que valem para toda tela nova: **uma lâmina por tela**, a tela **pergunta**
+ao motor em vez de refazer a conta, número que vai para atributo passa por `attr`,
+toda view traz o próprio elemento de fora, e **ausência não é resultado**.
 
 ### Os dados (`src/data/`)
 
-Quatro blocos partidários no plano de Nolan, venalidade por eixo, **36 ações** em
-seis áreas com instrumento, posição, `threat` e impacto fiscal, parâmetros fiscais
-com o preço da cadeira, e um validador de esquema que não conserta nada.
+Quatro blocos partidários no plano de Nolan com venalidade por eixo; **38
+programas** em oito áreas com custo, faixa de abertura, guarda e posição; **6
+regras** de propriedade e poder; parâmetros fiscais, macroeconômicos e do regime; e um
+validador de esquema que não conserta nada.
+
+A âncora que amarra tudo: `tests/suites/agenda.mjs` prova que a soma dos programas
+bate com a posição fiscal de abertura, e que **a obrigatória é a soma dos pisos**.
+Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### Os motores
 
-- **LASTRO** (`src/domain/budget/`) — receita do PIB, obrigatória crescendo em
-  valor absoluto, teto do arcabouço e gatilho de contingenciamento;
+- **LASTRO** (`src/domain/budget/`) — receita do PIB, obrigatória em valor
+  absoluto, teto do arcabouço, gatilho de contingenciamento;
 - **ECLUSA** (`src/domain/congress/`) — `whipCount` determinístico, `vote` com
-  dissidência no dia, `settle` com decaimento, afago e traição, `dispersion` para
-  a banda da previsão. Obstrução e ruptura como degraus declarados;
+  dissidência no dia, `settle` com decaimento, afago e traição, `dispersion`;
 - **MALHA** (`src/domain/capacity/`) — índices por área, decaimento, rendimento da
-  alocação e a pressão que volta para receita e despesa.
+  alocação e a pressão que volta para receita e despesa;
+- **SONDA** (`src/domain/opinion/`) — a satisfação de cada segmento, a pesquisa que
+  ela vira, e o peso que a rua tem na votação;
+- **CORRENTE** (`src/domain/economy/`) — hiato, Phillips, Taylor, Okun, população,
+  e `carry`, que é o que faz gasto virar dívida e dívida virar juro.
 
 ### A composição
 
-- **`src/application/turn.mjs`** — `settlement` (o rateio, que a tela consulta) e
-  `playMonth` (o mês, que o botão executa);
-- **`src/public/index.mjs`** — a fachada: a única porta do entrypoint, e a guarda
-  `boundaries` prova que ele não alcança domínio nem aplicação por fora dela;
-- **`tools/simulate.mjs`** — o mandato no terminal, quatro políticas-sonda.
+- **`src/application/agenda.mjs`** — `compose` (o orçamento vira proposta),
+  `honour` (o rateio empurra o nível de volta ao piso), `spendOf`;
+- **`src/application/turn.mjs`** — `settlement`, `ledger`, `situationOf` e
+  `playMonth`, nesta ordem de escopo: as três primeiras respondem "o que
+  aconteceria", a última executa;
+- **`src/public/index.mjs`** — a fachada, e a guarda `boundaries` prova que o
+  entrypoint não alcança domínio nem aplicação por fora dela;
+- **`tools/simulate.mjs`** — o mandato no terminal, cinco políticas-sonda.
 
 ### A verificação
 
-Nove guardas com provas sintéticas, 105 propriedades, o custo do material medido
-com GPU (`npm run screen`) e o **passeio** (`npm run walk`), que usa a tela como
-se joga e confere console, rolagem, o controle de alocação, o placar reagindo à
-verba, a linha de caixa acusando o estouro e a lei aprovada aparecendo em vigor —
-em desktop e em celular.
+Nove guardas com provas sintéticas, **152 propriedades**, e o **passeio**
+(`npm run walk`), que usa a tela como se joga e confere console, rolagem, o
+controle de alocação, o placar reagindo à verba, a linha de caixa acusando o
+estouro, o rito mudando ao furar o piso e a escada de Finanças subindo — em
+desktop e em celular.
 
 ## O que ainda não existe
 
-- **TEMPORAL, CASCATA, CORRENTE, SONDA, DELTA** — só os contratos;
+- **TEMPORAL, CASCATA, DELTA** — só os contratos;
 - **tensão institucional** — decidido que será variável de estado e não motor
   novo: `risco = f(tensão − escudo)`;
-- **`orphans` e `contrast`** — a condição que os adiava caiu (há sete telas e DOM
-  real), e o que entrou no lugar foi o passeio. As duas guardas seguem por
-  escrever;
+- **`orphans` e `contrast`** — as duas guardas seguem por escrever;
 - **`d3-force`** — entra quando DELTA existir, em Worker;
 - **GitHub Pages** — decidido ficar só com o CI por enquanto.
 
 ## Decisões fechadas que não se reabrem sem pedido
 
-Fase 1 só o Brasil · turno mensal (48 por mandato) · tudo fictício com inspiração
-na realidade · inglês no código e português na prosa · seis camadas de estilo ·
-codinomes de motor · zero build e zero dependência de runtime (exceção:
-`d3-force` vendorizado) · pautas prontas e não vetores livres · lealdade é estado
+Fase 1 só o Brasil · turno mensal (48 por mandato) · inglês no código e português
+na prosa · seis camadas de estilo · codinomes de motor · zero build e zero
+dependência de runtime (exceção: `d3-force` vendorizado) · lealdade é estado
 serializado · motor nenhum chama outro motor · o Congresso responde ao que foi
 PAGO · o rateio da falta é proporcional · a âncora do arcabouço é o TETO que
-vigorou.
+vigorou · a tela pergunta ao motor e não refaz a conta · a previsão usa o que
+será pago, nunca o prometido · o rail lista áreas de governo · o rascunho morre
+com o mês.
 
-**Fechadas nesta sessão:**
+**Fechadas nos ciclos 2 e 3:**
 
-- **a tela não refaz conta do motor — ela pergunta.** Conta refeita por fora
-  diverge, e diverge justamente no caso extremo, que é o caso em que o jogador
-  precisava do número;
-- **a previsão usa o que será pago, nunca o prometido.** É a mesma regra do
-  acoplamento, vista do lado da interface;
-- **o rail lista áreas de governo**, e não motores nem instrumentos. Um menu de
-  motores tem formato de código; um de instrumentos obriga a saber o rito antes
-  de achar o assunto;
-- **escolher uma ação leva à Mesa.** A área é onde se escolhe; a Mesa é onde se
-  negocia — emendar sem ver o placar seria negociar no escuro;
-- **o rascunho morre com o mês.** Carregar a verba do mês passado para o próximo
-  faria o jogador pagar de novo sem ter decidido.
+- **tudo é uma alavanca, e toda alavanca tem preço.** Some o catálogo de pautas;
+- **a posição ideológica é calculada, nunca arrastada.** Não há cursor na tela;
+- **o rito é consequência do conteúdo**, e o mais exigente manda no pacote;
+- **o jogador não inventa substantivos** — ele compõe restrições sobre
+  substantivos que existem. É o que faz "liberdade quase infinita" ser computável,
+  e é onde a IA entra quando entrar: traduzir intenção em combinação de faixas;
+- **o catálogo cita fonte.** Número real e datado nos dados; a ficção é o que o
+  modelo faz com eles;
+- **o painel de Finanças não tem controle**, e mostra o mês como ele vai fechar.
 
 **Princípio de design:** _tudo tem um jeito de ser feito._ Nenhuma jogada é
 bloqueada por regra artificial — o que separa o possível do impossível é o
-**preço**. A prova `NENHUMA PAUTA E INVOTAVEL` em `tests/suites/congress.mjs`
-existe para cobrar isso, e o achado 3 acima é a tensão viva entre esse princípio
-e a calibragem atual.
+**preço**.
 
 Referências de interface: **Geopolitical Simulator** e **Football Manager 2020**.
 Liquid glass é a base do design inteiro, não um efeito de algumas telas.
@@ -264,5 +342,9 @@ Liquid glass é a base do design inteiro, não um efeito de algumas telas.
 O modelo político-econômico nasceu de um dossiê externo, revisado e corrigido. As
 correções estão registradas na prosa de cada arquivo: `src/data/parties.mjs`
 (venalidade), `src/data/fiscal.mjs` (despesa obrigatória absoluta),
-`src/domain/congress/index.mjs` (as duas parcelas da resistência) e
+`src/data/macro.mjs` (o juro do estoque inteiro),
+`src/domain/congress/index.mjs` (as duas parcelas da resistência),
+`src/domain/economy/index.mjs` (o hiato em termos reais) e
 `src/application/turn.mjs` (a ordem entre orçamento e votação).
+
+A pesquisa de campo que sustenta o catálogo real está em `docs/research/`.
