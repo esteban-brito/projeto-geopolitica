@@ -35,8 +35,8 @@ saíram do catálogo para o estado.
 > **As nove decisões abertas foram respondidas.** Os motores ficam; o que se refaz
 > é a camada de cima. O resto do ciclo 3 segue suspenso.
 >
-> **A Parte 6 (SONDA) já está feita** — ver abaixo. A próxima é a casca do
-> Gabinete, depois a gramática, o elenco, e só então a Caixa de Entrada.
+> **As Partes 6 (SONDA) e 10a (a casca do Gabinete) estão feitas** — ver abaixo.
+> A próxima é a gramática, depois o elenco, e só então a Caixa de Entrada.
 
 | verificação        | estado                                                 |
 | ------------------ | ------------------------------------------------------ |
@@ -155,6 +155,33 @@ cima do muro.
 
 O que a série mostra hoje: um governo parado fica em ~21/42/37 o mandato inteiro;
 um que corta tudo ao mínimo legal termina em **7/31/62**.
+
+## O Gabinete — a casca nova
+
+Segunda parte do ciclo 4, feita em 14/08/2026. Saiu o rail duplo; entraram:
+
+- **a barra superior** — data, quatro sinais vitais com tendência (PIB, inflação,
+  aprovação, base) e o botão de avançar. Ela absorveu o rail da direita inteiro, e
+  só pôde nascer agora: com a aprovação sem motor, um quarto do conteúdo dela
+  seria inventado;
+- **a sidebar por poderes** — Gabinete, Congresso & Leis, Finanças, Ministérios
+  (as oito áreas um nível abaixo), O Estado, e A Rua e Bastidor **desligados**
+  dizendo que estão;
+- **o Gabinete** — quatro cartões: a Caixa de Entrada com a espera declarada, o
+  arco do plenário, o cofre da União e o termômetro da rua por classe;
+- **a Mesa morreu.** A negociação virou a tela Congresso & Leis; o resumo do mês
+  virou o Gabinete. Era essa mistura que fazia quem abria o jogo cair no meio de
+  uma decisão sem antes saber como o país estava.
+
+⚠ **A tela de cartões é a exceção declarada** à regra de uma lâmina por tela: aqui
+os quatro assuntos não têm relação entre si, e nas outras telas as linhas disputam
+a mesma bolsa. Os cartões não são vidro — a lâmina é da tela.
+
+Duas correções que a captura cobrou: o cofre mostrava **"R$ 0,0 bi livre no mês"**
+na abertura (o número estava certo — o orçamento herdado consome tudo —, e a
+leitura, errada), e a partida abria com **14% de aprovação**, que é número de fim
+de mandato ruim e não de governo recém-eleito. A lua de mel entrou no catálogo: a
+abertura dá 44%, e um governo parado termina o primeiro ano em 24%.
 
 ## O ciclo 3, e o que ainda falta dele
 

@@ -28,20 +28,109 @@
 
 @layer screens {
   /* ── A CASCA ────────────────────────────────────────────────────────────────
-     Rail a esquerda, tabuleiro no meio, rail a direita. */
+     Barra em cima, sidebar a esquerda, tabuleiro no meio.
+
+     ⚠ ELA ERA SIMETRICA — rail, tabuleiro, rail — e deixou de ser em 14/08/2026.
+     O rail da direita carregava data, contexto, aprovacao, veredito e o botao de
+     avancar, e o problema nao era o conteudo: era que ele COMPETIA em largura com
+     a navegacao para mostrar coisas que nunca se navegam. Numa barra superior o
+     mesmo conteudo ocupa 72px de altura em vez de 216px de largura, e sobra
+     tabuleiro — que e onde o jogo acontece.
+
+     `minmax(0, 1fr)` na coluna do meio e nao `1fr`. Uma trilha `1fr` tem minimo
+     AUTOMATICO igual ao conteudo, entao ela cresce para caber o filho em vez de
+     obrigar o filho a se virar. Foi isso que pos o rail em 658px numa janela de
+     390px, e a licao continua valendo com uma coluna a menos. */
   .shell {
     position: relative;
     isolation: isolate;
     min-height: 100dvh;
     display: grid;
-    /* RAIL · TABULEIRO · RAIL. As duas trilhas de fora sao `auto` e recebem a
-       MESMA peca, entao a simetria nao depende de ninguem lembrar de manter dois
-       numeros iguais: ela e consequencia de haver uma largura so, `--rail`.
-       `minmax(0, 1fr)` no meio e nao `1fr`. Uma trilha `1fr` tem minimo
-       AUTOMATICO igual ao conteudo, entao ela cresce para caber o filho em vez
-       de obrigar o filho a se virar — e um `overflow: auto` la dentro nunca
-       chega a valer. Foi isso que pos o rail em 658px numa janela de 390px. */
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  /* ── A BARRA SUPERIOR ───────────────────────────────────────────────────────
+     Ela atravessa as duas colunas: o status do governo vale para a navegacao
+     tambem, e uma barra que comecasse depois da sidebar leria como parte do
+     tabuleiro. */
+  .topbar {
+    grid-column: 1 / -1;
+    display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 0 0 var(--radius-stage) var(--radius-stage);
+  }
+
+  .topbar__date {
+    display: grid;
+    font-family: var(--font-display);
+    line-height: 1.15;
+  }
+
+  .topbar__date b {
+    font-size: var(--text-title);
+    font-weight: 800;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .topbar__date small {
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* OS VITAIS ROLAM POR DENTRO quando a janela aperta, e nao quebram em duas
+     fileiras: uma barra que muda de altura empurra o tabuleiro inteiro para
+     baixo toda vez que um numero cresce um digito. */
+  .topbar__vitals {
+    display: flex;
+    justify-content: center;
+    gap: clamp(var(--space-3), 2vw, var(--space-8));
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .vital {
+    display: grid;
+    gap: 2px;
+    white-space: nowrap;
+  }
+
+  .vital__label {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .vital__value {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* O ALERTA TINGE O NUMERO, e nao o cartao: quatro cartoes acesos ao mesmo tempo
+     seriam quatro alarmes, e alarme que toca sempre e alarme que ninguem ouve. */
+  .vital--alert .vital__value {
+    color: var(--crisis);
+  }
+
+  .vital .trend {
+    font-size: 0.7em;
+  }
+
+  .topbar__act .action {
+    white-space: nowrap;
   }
 
   /* ── O TABULEIRO ────────────────────────────────────────────────────────────
@@ -200,6 +289,20 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
+    /* A BARRA VIRA DUAS FILEIRAS, e a data sai. Num aparelho estreito o mes ja
+       esta na tela do Gabinete, e o que nao pode sumir sao os quatro numeros e o
+       botao — o resto e contexto que se consulta. */
+    .topbar {
+      grid-template-columns: minmax(0, 1fr) auto;
+      row-gap: var(--space-2);
+    }
+
+    .topbar__vitals {
+      grid-column: 1 / -1;
+      order: 3;
+      justify-content: flex-start;
+    }
+
     /* A lamina continua COLUNA e so perde a altura da janela. Vira-la em linha
        poria marca, sete secoes e duas acoes na mesma faixa, e ai o botao de
        turno cai abaixo do alvo de toque. */
@@ -221,11 +324,26 @@
     /* A LISTA e que deita, e rola por DENTRO. `min-width: 0` e o que permite
        ela encolher abaixo do conteudo: sem isso o minimo automatico de um item
        de flex e o proprio conteudo, e o estouro sai pela janela. */
-    .rail__list,
-    .strip--stacked {
+    .rail__list {
       flex-direction: row;
       min-width: 0;
       overflow-x: auto;
+    }
+
+    /* O GRUPO DE MINISTERIOS DEITA JUNTO. Deitado, o titulo do grupo viraria uma
+       palavra solta no meio da fila — entao ele some, e as areas entram na mesma
+       fileira das outras secoes. A hierarquia de dois niveis e util na vertical e
+       ruido na horizontal. */
+    .rail__group {
+      display: contents;
+    }
+
+    .rail__legend {
+      display: none;
+    }
+
+    .rail__sub {
+      display: contents;
     }
 
     /* Deitada de novo, a faixa volta a ser a faixa: separador vertical e
@@ -244,13 +362,6 @@
        era a origem da rolagem horizontal no tablet e no celular. */
     .rail__item {
       width: auto;
-    }
-
-    /* Deitado, o veredito perde a aresta de cima: ali ele nao esta mais embaixo
-       de campo nenhum, e um fio horizontal solto lê como corte. */
-    .verdict {
-      box-shadow: none;
-      text-align: center;
     }
 
     .rail__foot {

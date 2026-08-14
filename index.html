@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="styles/20-material.css" />
     <link rel="stylesheet" href="styles/30-components.css" />
     <link rel="stylesheet" href="styles/40-shell.css" />
+    <link rel="stylesheet" href="styles/45-screen-cabinet.css" />
     <link rel="stylesheet" href="styles/50-screen-mesa.css" />
     <link rel="stylesheet" href="styles/60-screen-area.css" />
     <link rel="stylesheet" href="styles/65-screen-finance.css" />
@@ -49,66 +50,50 @@
     <div class="backdrop" id="backdrop" aria-hidden="true"></div>
 
     <div class="shell">
-      <!-- ═══ O RAIL — navegacao primaria, na estrutura do FM2020 ═══════════
-           Icone a esquerda, rotulo ao lado, item corrente destacado, e um bloco
-           ancorado no rodape. As acoes de turno vivem nesse rodape: no FM o
-           `Continue` fica no canto superior direito, e a divergencia e o pedido
-           explicito de botao a esquerda. -->
+      <!-- ═══ A BARRA SUPERIOR — o sinal vital, e ele nunca some ═════════════
+           A referencia e o Football Manager: status a esquerda, indicadores no
+           meio, e a acao de avancar a direita, sempre no mesmo lugar. Ela
+           substitui o rail da direita inteiro — que carregava data, contexto,
+           veredito e o botao — e ganha o que faltava: PIB e inflacao, que so
+           existiam dentro de Financas.
+
+           OS QUATRO INDICADORES TEM MOTOR. A aprovacao foi a ultima a ter, em
+           14/08/2026, e e por isso que esta barra so nasceu agora: com um quarto
+           do conteudo inventado, ela ensinaria a desconfiar dos outros tres. -->
+      <header class="topbar glass-support">
+        <div class="topbar__when">
+          <p class="topbar__date" id="turn"></p>
+        </div>
+
+        <div class="topbar__vitals" id="vitals"></div>
+
+        <div class="topbar__act">
+          <button class="action action--primary glass-action" id="advance" type="button"></button>
+        </div>
+      </header>
+
+      <!-- ═══ A SIDEBAR — poderes e lugares, e as areas um nivel abaixo ══════
+           Ela ja foi organizada por motor, por instrumento e por area de
+           governo. A quarta forma nao e uma volta atras: legislar deixou de ser
+           um RITO e virou uma ATIVIDADE, entao o Congresso deixa de ser o "como"
+           de uma decisao de saude e passa a ser um lugar onde se passa o mes. -->
       <nav class="rail glass-support" aria-label="Seções do governo">
         <p class="rail__mark">Planalto</p>
         <ul class="rail__list" id="railNav"></ul>
 
         <div class="rail__foot">
-          <!-- O TEXTO DOS BOTOES VEM DE `src/ui/strings.mjs`, e nao daqui: a
-               mesma frase em dois lugares é a frase que diverge no primeiro
-               ajuste, e o arquivo de textos existe justamente para não haver o
-               segundo lugar. O que fica no documento é a CAIXA.
-               O BOTAO "O MES PASSADO" SAIU daqui: ele reabria o relatório num
-               diálogo, e o relatório agora é painel fixo da Mesa. Botão que
-               abre o que já está aberto é ruído com cara de funcionalidade. -->
           <!-- RECOMECAR PEDE CONFIRMACAO NO PROPRIO BOTAO. Ele apaga um mandato
-               inteiro, e fica ao lado de um botao que se aperta toda hora: sem
-               dois passos, o custo de errar o alvo e a partida. -->
+               inteiro: sem dois passos, o custo de errar o alvo e a partida. -->
           <button class="action action--quiet" id="restart" type="button"></button>
         </div>
       </nav>
 
       <!-- ═══ O TABULEIRO — a tela corrente, e ela inteira ═══════════════════
-           Ele nasce VAZIO e e substituido por completo a cada pintura: a Mesa e
-           as seis areas sao conteudos deste mesmo lugar, e nao paineis que se
-           escondem um atras do outro.
-           A consequencia esta escrita aqui porque ela ja custou caro: NADA que
-           precise sobreviver a troca de tela pode morar dentro deste elemento.
-           O veredito morava, e por isso desceu para o rail da direita — de la
-           ele atravessa a troca sem ser reconstruido. -->
+           Ele nasce VAZIO e e substituido por completo a cada pintura.
+           ⚠ NADA que precise sobreviver a troca de tela pode morar aqui dentro.
+           O veredito morava, desceu para o rail da direita, e agora subiu para o
+           Gabinete — que e a tela do governo inteiro, e o lugar certo dele. -->
       <main class="board" id="main"></main>
-
-      <!-- ═══ O RAIL DA DIREITA — a MESMA peca, espelhada ═══════════════════
-           Mesma largura, mesma lamina, mesma margem, mesmo raio, mesmo rodape
-           ancorado. So o CONTEUDO difere: a esquerda navega, a direita lê e
-           avanca. Duas laminas com construcao diferente seriam dois materiais,
-           e o sistema inteiro existe para impedir isso.
-           E aqui a referencia volta ao lugar: no FM2020 a data fica no canto
-           superior direito e o `Continue` ao lado dela. -->
-      <aside class="rail glass-support" aria-label="Indicadores do mês">
-        <p class="rail__mark" id="turn"></p>
-        <div class="strip strip--stacked" id="context"></div>
-
-        <!-- A APROVACAO VOLTOU EM 14/08/2026, e ela esteve fora daqui por tres
-             sessoes com a razao escrita no entrypoint: "quem a produz e SONDA,
-             que nao existe". O motor nasceu, e com ele o numero deixou de ser
-             uma afirmacao que nada sustenta. -->
-        <div class="approval" id="approval"></div>
-
-        <!-- A SEGUNDA LEITURA: a unica frase que diz o que esta em jogo. Aqui
-             ela perde a lamina que tinha na tela anterior — o rail JA e vidro,
-             e vidro sobre vidro sao dois materiais empilhados no lugar de um. -->
-        <p class="verdict" id="verdict"></p>
-
-        <div class="rail__foot">
-          <button class="action action--primary glass-action" id="advance" type="button"></button>
-        </div>
-      </aside>
     </div>
 
     <!-- O <dialog> NATIVO, E AGORA SO PARA O AVISO. Foco, inercia do fundo,

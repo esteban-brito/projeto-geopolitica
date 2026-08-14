@@ -10,13 +10,49 @@ export const UI = {
   /* AS SECOES SAO A TABELA DE MOTORES, e nao uma lista de telas desejadas. Cada
      uma que ainda nao existe entra DESLIGADA e diz isso — menu que oferece o que
      nao abre ensina o jogador a desconfiar do menu inteiro. */
+  /* A NAVEGACAO E POR PODERES E LUGARES, e nao por area de governo. Ela ja foi
+     organizada por motor (menu com formato de codigo) e por instrumento (menu que
+     obriga a saber o rito antes do assunto); a terceira forma, por area, valeu
+     enquanto o jogo era so orcamento. Com legislar virando atividade propria, o
+     Congresso deixa de ser um instrumento e vira um LUGAR — e a regra antiga
+     sobrevive um nivel abaixo: quem quer mexer na saude entra em Ministerios. */
   nav: {
-    mesa: "Mesa",
+    cabinet: "Gabinete",
+    congress: "Congresso & Leis",
     finance: "Finanças",
+    ministries: "Ministérios",
     estado: "O Estado",
-    opinion: "Opinião",
-    graph: "Rede",
+    street: "A Rua",
+    backstage: "Bastidor",
     pending: "ainda não existe",
+  },
+  /* O GABINETE — a tela inicial, e a unica que so resume. */
+  cabinet: {
+    eyebrow: "o resumo da república",
+    title: "Gabinete",
+    inbox: "Caixa de entrada",
+    /* ⚠ A ESPERA E DITA, e nao escondida. A Caixa de Entrada e a peca central
+       desta tela e ela so tem o que dizer quando o Congresso, o relator e o
+       tribunal existirem para escrever. Um inbox com tres tipos de carta ensina a
+       ignorar a tela onde o jogo inteiro vai acontecer. */
+    inboxWaiting:
+      "Aqui chegam as cartas do mês: o alerta do Ministro da Fazenda, o líder que cobra a diretoria prometida, a lei que o relator devolveu mudada. Ela nasce quando o Congresso passar a escrever.",
+    congress: "O Congresso",
+    congressAction: "negociar",
+    vault: "O cofre da União",
+    vaultFree: "cabe no mês",
+    vaultLocked: "obrigatória",
+    vaultTaken: "o orçamento escrito já consome",
+    street: "A rua",
+    seats: "de 513",
+  },
+  /* A BARRA SUPERIOR — os sinais vitais, e eles nunca somem da tela. */
+  vitals: {
+    gdp: "PIB",
+    inflation: "Inflação",
+    approval: "Aprovação",
+    base: "Base",
+    advance: "Avançar",
   },
   /* OS TRES VERBOS DE GOVERNAR, e a ordem em que aparecem na tela de area e o
      custo de executar cada um: alocar nao precisa de ninguem, pautar precisa do

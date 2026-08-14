@@ -67,9 +67,11 @@ export const SEGMENTS = [
     id: "baixa",
     label: "Classe D/E",
     share: 0.42,
-    /* ELA COMECA MAIS SATISFEITA que a media, e isso e o retrato de quem acabou
-       de eleger o governo: a esperanca do primeiro ano e real e evapora rapido. */
-    initial: 38,
+    /* ⚠ A LUA DE MEL E REAL, e a primeira calibragem a esqueceu: com 38 de
+       satisfacao a partida abria com 14% de otimo/bom, que e numero de governo em
+       fim de mandato ruim — e nao de governo que acabou de ganhar a eleicao. Quem
+       elegeu comeca satisfeito, e o desgaste come isso em meses. */
+    initial: 70,
     /* CARESTIA DOMINA, e o numero e quase metade da atencao dela. Quem gasta 30%
        da renda com comida sente a inflacao antes de qualquer estatistica sair. */
     prices: 0.4,
@@ -84,7 +86,7 @@ export const SEGMENTS = [
     id: "media",
     label: "Classe C",
     share: 0.38,
-    initial: 31,
+    initial: 62,
     prices: 0.3,
     /* EMPREGO DOMINA. E o segmento que sobe e desce com o mercado formal, e o que
        mais perde quando a economia trava — ele tem o que perder. */
@@ -99,8 +101,8 @@ export const SEGMENTS = [
     share: 0.2,
     /* A MENOS SATISFEITA NA ABERTURA, e nao por gosto: ela paga a maior parte do
        imposto e usa a menor parte do servico publico, entao a conta que ela faz
-       do governo comeca negativa quase sempre. */
-    initial: 26,
+       do governo comeca mais fria — inclusive na lua de mel. */
+    initial: 52,
     prices: 0.15,
     jobs: 0.1,
     /* SERVICO PUBLICO QUASE NAO CONTA: quem tem plano de saude e escola privada

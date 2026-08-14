@@ -29,6 +29,8 @@
  * @typedef {import("../data/areas.mjs").Area} Area
  * @typedef {import("../data/bills.mjs").Bill} Bill
  * @typedef {import("../data/parties.mjs").Party} Party
+ * @typedef {import("../domain/opinion/index.mjs").Approval} Approval
+ * @typedef {import("../data/opinion.mjs").Segment} Segment
  */
 
 export { CATALOG } from "../data/catalog.mjs";

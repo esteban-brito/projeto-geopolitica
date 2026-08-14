@@ -13,15 +13,20 @@
    que e um menu com formato de regra: obriga a saber o rito antes de achar o
    assunto.
 
-   Agora ele lista AREAS DE GOVERNO, que e como um presidente pensa. Quem quer
-   mexer na saude entra em Saude. O instrumento virou etiqueta na linha da acao,
-   e continua valendo tudo o que valia — 257, 308, ou nenhum voto.
+   A TERCEIRA FORMA FOI POR AREA DE GOVERNO, e ela valeu enquanto o jogo era so
+   orcamento: toda decisao cabia dentro de uma area, e quem queria mexer na saude
+   entrava em Saude.
 
-   ── DUAS COISAS QUE NAO MUDARAM ──────────────────────────────────────────────
-   A MESA VEM PRIMEIRA e fica separada das areas por uma divisa: ela nao e um
-   assunto, e o lugar onde o mes se resolve. Um turno inteiro se decide sem sair
-   dela; as areas sao onde se vai quando se QUER olhar, e nao onde se precisa
-   passar.
+   ── A QUARTA, E A RAZAO DE ELA NAO SER UMA VOLTA ATRAS ──────────────────────
+   Agora ele lista PODERES E LUGARES. A diferenca em relacao ao menu de
+   instrumentos que foi recusado esta em uma palavra: legislar deixou de ser um
+   RITO e virou uma ATIVIDADE, com tramitacao, relator e adversario. O Congresso
+   nao e mais o "como" de uma decisao de saude — ele e um lugar onde se passa o
+   mes.
+
+   E a regra antiga sobrevive um nivel abaixo: quem quer mexer na saude entra em
+   Ministerios e acha Saude la dentro. O que se perde e um clique; o que se ganha
+   e endereco para tudo o que nao e area — a rua, o tribunal, o bastidor.
 
    ITEM QUE NAO ABRE ENTRA DESLIGADO E DIZ QUE ESTA DESLIGADO. Opiniao e Rede tem
    contrato declarado e nao tem tela; oferece-las como se abrissem ensinaria a
@@ -37,7 +42,13 @@ import { UI } from "../strings.mjs";
    nao tem build nem dependencia de runtime: um sprite externo seria uma
    requisicao e um 404 em potencial, e a suite de custo acusa console sujo. */
 const ICONS = /** @type {Record<string, string>} */ ({
-  mesa: '<path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/><circle cx="12" cy="11.5" r="1.6"/>',
+  cabinet:
+    '<rect x="2.5" y="4.5" width="11" height="9" rx="2"/><path d="M6 4.5V3.2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.3"/><path d="M2.5 8.5h11"/>',
+  congress: '<path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/><circle cx="12" cy="11.5" r="1.6"/>',
+  street:
+    '<circle cx="5" cy="5" r="1.8"/><circle cx="11" cy="5" r="1.8"/><path d="M2 13.5c0-2 1.3-3.2 3-3.2s3 1.2 3 3.2M8 13.5c0-2 1.3-3.2 3-3.2s3 1.2 3 3.2"/>',
+  backstage:
+    '<path d="M8 2.5l5.5 2.8v3.4c0 3-2.3 5-5.5 5.8-3.2-.8-5.5-2.8-5.5-5.8V5.3z"/><path d="M8 7v3"/>',
   /* Uma linha subindo dentro de uma moldura: o placar e uma serie, e nao um
      cofre. O cofre ja e a Fazenda, que e onde o dinheiro se decide. */
   finance:
@@ -104,35 +115,40 @@ function itemHtml({ key, label, ready }, current) {
  * @returns {string}
  */
 export function railNavHtml(current, areas) {
-  const mesa = itemHtml({ key: "mesa", label: UI.nav.mesa, ready: true }, current);
-
-  /* FINANCAS FICA JUNTO DA MESA, e nao entre as areas, porque ela tambem nao e um
-     assunto: e o placar do que os assuntos fizeram. Posta na fila das areas, ela
-     ensinaria que existe uma pasta de Financas para governar — e nao existe, ela
-     e a unica tela do jogo sem um controle. A Fazenda, que decide dinheiro, essa
-     sim e area e fica na fila. */
+  const cabinet = itemHtml({ key: "cabinet", label: UI.nav.cabinet, ready: true }, current);
+  const congress = itemHtml({ key: "congress", label: UI.nav.congress, ready: true }, current);
   const finance = itemHtml({ key: "finance", label: UI.nav.finance, ready: true }, current);
 
-  const government = areas
-    .map(area => itemHtml({ key: area.id, label: area.label, ready: true }, current))
-    .join("");
+  /* ⚠ A FAZENDA CONTINUA SENDO UMA AREA, e nao um item de primeiro nivel como o
+     plano de tela sugeria. Enquanto ela for orcamento — programas de fiscalizacao,
+     dividia ativa, tecnologia da arrecadacao — ela e uma pasta como as outras. Ela
+     sobe de nivel no dia em que virar impostos, que e a Parte 3 do ciclo 3 e esta
+     suspensa a espera da clausula de tributo. Promover a tela antes do conteudo
+     seria um menu prometendo o que a tela nao entrega. */
+  const ministries =
+    `<li class="rail__group">` +
+    `<p class="rail__legend">${escapeHtml(UI.nav.ministries)}</p>` +
+    `<ul class="rail__sub">` +
+    areas
+      .map(area => itemHtml({ key: area.id, label: area.label, ready: true }, current))
+      .join("") +
+    `</ul>` +
+    `</li>`;
 
-  /* O ESTADO — o que a Uniao POSSUI e quanto poder o Executivo tem. Ele fica
-     depois das areas e antes do que nao existe, porque nao e um assunto de
-     governo: e a moldura dentro da qual os assuntos acontecem. */
   const estado = itemHtml({ key: "estado", label: UI.nav.estado, ready: true }, current);
 
+  /* O QUE NAO EXISTE ENTRA DESLIGADO E DIZ QUE ESTA DESLIGADO. A Rua depende de
+     imprensa como ator; o Bastidor depende do STF, que nasce na Parte 8. Oferecer
+     as duas como se abrissem ensinaria a desconfiar do menu inteiro — e a
+     aprovacao, que ja tem motor, esta na barra de cima e no Gabinete. */
   const pending = [
-    { key: "opinion", label: UI.nav.opinion, ready: false },
-    { key: "graph", label: UI.nav.graph, ready: false },
+    { key: "street", label: UI.nav.street, ready: false },
+    { key: "backstage", label: UI.nav.backstage, ready: false },
   ]
     .map(section => itemHtml(section, current))
     .join("");
 
-  /* A DIVISA E SEMANTICA e nao decorativa: ela separa o lugar onde o mes se
-     resolve das areas onde ele se prepara, e depois separa o que existe do que
-     ainda nao existe. */
   const rule = '<li class="rail__rule" aria-hidden="true"></li>';
 
-  return mesa + finance + rule + government + rule + estado + rule + pending;
+  return cabinet + congress + finance + rule + ministries + rule + estado + rule + pending;
 }

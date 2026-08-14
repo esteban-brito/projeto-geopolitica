@@ -55,7 +55,8 @@ import { financeHtml } from "./src/ui/screens/finance.mjs";
    escrita aqui: "quem a produz e SONDA, que nao existe". Em 14/08/2026 o motor
    nasceu, e o numero passou a se mover quando o mes e resolvido de verdade —
    que era a unica condicao. */
-import { approvalHtml, contextHtml, turnHtml, verdictHtml } from "./src/ui/screens/dashboard.mjs";
+import { turnHtml, verdictHtml, vitalsHtml } from "./src/ui/screens/dashboard.mjs";
+import { cabinetHtml } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
 import { UI } from "./src/ui/strings.mjs";
 
@@ -66,12 +67,10 @@ import { UI } from "./src/ui/strings.mjs";
 const el = {
   railNav: must("railNav"),
   turn: must("turn"),
-  context: must("context"),
+  vitals: must("vitals"),
   main: must("main"),
-  verdict: must("verdict"),
   advance: /** @type {HTMLButtonElement} */ (must("advance")),
   restart: must("restart"),
-  approval: must("approval"),
   /* O `<dialog>` FICOU, E ENCOLHEU DE PAPEL: ele carregava o relatorio do mes e
      agora carrega so o AVISO. A distincao e de natureza — informacao que se
      consulta e painel, interrupcao porque algo deu errado e modal. */
@@ -142,7 +141,7 @@ function resume() {
 const opening = resume();
 
 let state = opening.state;
-let screen = "mesa";
+let screen = "cabinet";
 let orders = blankOrders();
 
 /* O ULTIMO MES RESOLVIDO, com o que ele precisa para se comparar com o mes
@@ -261,6 +260,47 @@ function financeInput() {
 }
 
 /**
+ * O GABINETE — quatro resumos, e nenhum controle. Tudo o que ele mostra ja existe
+ * em outra tela; o que ele faz e reunir e apontar para onde a decisao mora.
+ *
+ * @param {{ level: string, reason: string, base: number }} current
+ */
+function cabinetInput(current) {
+  const { budget } = ledger(state, orders, CATALOG);
+  const share = settlement(state, orders, CATALOG);
+
+  return {
+    situation: current.level,
+    verdict: verdictHtml(current.reason),
+    base: current.base,
+    seats: SEATS,
+    majority: SIMPLE_MAJORITY,
+    room: share.room,
+    committed: share.demand,
+    mandatory: budget.mandatory,
+    revenue: budget.revenue,
+    segments: CATALOG.segments,
+    street: pollBySegment(),
+  };
+}
+
+/** A pesquisa de cada segmento, que e o que o termometro da rua desenha. */
+function pollBySegment() {
+  /** @type {Record<string, import("./src/public/index.mjs").Approval>} */
+  const byId = {};
+  for (const segment of CATALOG.segments) {
+    /* UM SEGMENTO DE CADA VEZ, com a fatia dele valendo o pais inteiro: e assim
+       que `pollFrom` devolve a leitura daquele grupo isolado, sem a media. */
+    byId[segment.id] = pollFrom(
+      { [segment.id]: state.mood[segment.id] ?? segment.initial },
+      [{ ...segment, share: 1 }],
+      CATALOG.opinion,
+    );
+  }
+  return byId;
+}
+
+/**
  * @param {import("./src/public/index.mjs").Area} area
  */
 function areaInput(area) {
@@ -319,19 +359,20 @@ function paint() {
     el.main.innerHTML = estadoHtml({ rules: CATALOG.rules, levels: orders.levels });
     el.main.dataset["screen"] = "estado";
   } else if (screen === "finance") {
-    /* FINANCAS NAO ENTRA EM `refresh`, e e a unica tela assim. Ela nao tem
-       controle nenhum para o arrasto proteger — quando um numero dela muda, e
-       porque o mes virou ou porque o jogador mexeu em OUTRA tela, e nos dois
-       casos a pintura inteira ja aconteceu. */
+    /* FINANCAS NAO ENTRA EM `refresh`, e e a unica tela assim junto do Gabinete.
+       Nenhuma das duas tem controle para o arrasto proteger — quando um numero
+       delas muda, e porque o mes virou ou porque o jogador mexeu em OUTRA tela, e
+       nos dois casos a pintura inteira ja aconteceu. */
     el.main.innerHTML = financeHtml(financeInput());
     el.main.dataset["screen"] = "finance";
   } else if (area) {
     el.main.innerHTML = areaHtml(areaInput(area));
     el.main.dataset["screen"] = "area";
-  } else {
-    /* O RELATORIO ENTRA AQUI, e nao num dialogo. Ele e repintado junto com a
-       Mesa porque `el.main` e substituido inteiro a cada pintura — e por isso
-       ele sobrevive a ir numa area e voltar, sem ninguem guarda-lo no DOM. */
+  } else if (screen === "congress") {
+    /* O CONGRESSO E A ANTIGA MESA, e a peca de dentro continua se chamando mesa
+       porque ela E uma mesa de negociacao. O que mudou foi o endereco: ela deixou
+       de ser a tela inicial e passou a ser o lugar onde se negocia — e o resumo
+       do mes, que dividia a tela com ela, virou o Gabinete. */
     el.main.innerHTML =
       capacityStripHtml({
         areas: CATALOG.areas,
@@ -349,42 +390,45 @@ function paint() {
           indexBefore: last.indexBefore,
         },
       );
-    el.main.dataset["screen"] = "mesa";
+    el.main.dataset["screen"] = "congress";
+  } else {
+    el.main.innerHTML = cabinetHtml(cabinetInput(current));
+    el.main.dataset["screen"] = "cabinet";
   }
 
-  /* RENDER POR IDENTIDADE DE REFERENCIA no rail da direita. Como o estado e
+  /* RENDER POR IDENTIDADE DE REFERENCIA na barra superior. Como o estado e
      imutavel, `anterior.month !== atual.month` responde "esta parte mudou?" com
      uma comparacao direta — sem diff de arvore e sem framework.
-     A SITUACAO NAO E MAIS CAMPO DO ESTADO: ela e derivada, entao o que se compara
-     e o MOTIVO que ela devolveu. Comparar o nivel nao bastaria — passar de
-     "crise por teto fechado" para "crise por base rompida" nao muda o nivel e
-     muda a frase inteira. */
+
+     ⚠ A BARRA SUBSTITUIU O RAIL DA DIREITA, e com ele foram embora a faixa de
+     contexto e o veredito: os tres campos daquela faixa viraram dois vitais
+     (base e aprovacao) e o Gabinete. O que sobrou aqui e a data e os quatro
+     numeros, e a regra e a mesma de antes — repinta so o que mudou. */
   const previous = painted;
   const before = standing;
 
-  /* A PESQUISA E DERIVADA, e o entrypoint pergunta em vez de guardar. O que o
-     estado carrega e a SATISFACAO por segmento; a conversao para otimo/bom e de
-     quem sabe converter, e refaze-la aqui seria a segunda copia de uma regra que
-     muda. */
-  const poll = pollFrom(state.mood, CATALOG.segments, CATALOG.opinion);
-  if (!previous || previous.mood !== state.mood) {
-    const past = previous ? pollFrom(previous.mood, CATALOG.segments, CATALOG.opinion) : poll;
-    el.approval.innerHTML = approvalHtml(poll, poll.good - past.good);
+  if (!previous || previous.month !== state.month) {
+    el.turn.innerHTML = turnHtml(state);
   }
 
-  if (!previous || previous.month !== state.month) {
-    el.turn.textContent = turnHtml(state);
-  }
-  if (!previous || previous.month !== state.month || before?.base !== current.base) {
-    el.context.innerHTML = contextHtml({
-      state,
-      standing: current,
-      seats: SEATS,
+  if (!previous || previous !== state) {
+    const poll = pollFrom(state.mood, CATALOG.segments, CATALOG.opinion);
+    const past = previous ? previous : state;
+    el.vitals.innerHTML = vitalsHtml({
+      macro: state.macro,
+      approval: poll.good,
+      base: current.base,
       majority: SIMPLE_MAJORITY,
+      before: {
+        gdp: past.macro.gdp,
+        inflation: past.macro.inflation,
+        approval: pollFrom(past.mood, CATALOG.segments, CATALOG.opinion).good,
+        base: standing?.base ?? current.base,
+      },
     });
   }
+
   if (before?.reason !== current.reason) {
-    el.verdict.textContent = verdictHtml(current.reason);
     document.documentElement.style.setProperty("--situation-tint", `var(--${current.level})`);
   }
 
@@ -394,7 +438,7 @@ function paint() {
 
 /** So os numeros derivados, para o arrasto sobreviver. */
 function refresh() {
-  if (el.main.dataset["screen"] === "mesa") {
+  if (el.main.dataset["screen"] === "congress") {
     const input = mesaInput();
     const tally = document.getElementById("tally");
     if (tally) tally.innerHTML = tallyHtml(input);
@@ -655,7 +699,7 @@ el.restart.addEventListener("click", () => {
   state = createState();
   last = null;
   orders = blankOrders();
-  screen = "mesa";
+  screen = "cabinet";
   painted = null;
   standing = null;
   disarm();

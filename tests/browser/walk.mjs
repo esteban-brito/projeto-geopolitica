@@ -89,12 +89,28 @@ try {
   }
 
   await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
-  await checkOverflow("mesa vazia");
+  await checkOverflow("gabinete");
 
-  /* 1 — A MESA VAZIA nao anuncia placar nenhum. */
+  /* 1 — O GABINETE E A TELA INICIAL, e ele nao decide nada. Quatro cartoes, e
+     nenhum controle: a barra de cima carrega o unico gesto irreversivel. */
+  expect((await page.locator(".card").count()) === 4, "[gabinete] os quatro cartoes nao vieram");
+  expect(
+    (await page.locator("#main input, #main select").count()) === 0,
+    "[gabinete] a tela inicial ofereceu um controle",
+  );
+  expect(
+    (await page.locator(".vital").count()) === 4,
+    "[barra] os quatro sinais vitais nao vieram",
+  );
+  await page.screenshot({ path: join(OUT, "walk-gabinete.png"), fullPage: true });
+
+  /* 1b — E O CARTAO LEVA AO LUGAR DE DECIDIR. */
+  await page.click('.card__action[data-section="congress"]');
+  await page.waitForTimeout(600);
+  await checkOverflow("congresso");
   expect(
     (await page.locator(".tally__forecast").count()) === 0,
-    "[mesa vazia] a mesa sem pauta mostrou placar",
+    "[congresso] a mesa sem pauta mostrou placar",
   );
 
   /* 2 — UMA AREA, pelo rail. */
@@ -120,7 +136,7 @@ try {
 
   /* 4 — E O ORCAMENTO VIRA PAUTA SOZINHO. Nao ha botao de "pautar": o que o
      jogador escreveu aqui ja e a proposta, e a Mesa mostra o placar dela. */
-  await page.click('[data-section="mesa"]');
+  await page.click('[data-section="congress"]');
   await page.waitForTimeout(600);
   expect(
     (await page.locator(".mesa__title").count()) === 1,
@@ -265,10 +281,10 @@ try {
     monthBefore === monthAfter,
     `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
   );
-  /* A TELA RETOMADA ABRE NA MESA, e nao na area em que se estava: `screen` e
-     memoria de sessao e nao entra no save. Entao o que se confere aqui e a faixa
-     de indices, que so existe quando a partida carregou de verdade. */
-  expect((await page.locator(".gauge").count()) > 0, "[save] a tela retomada nao renderizou");
+  /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e
+     memoria de sessao e nao entra no save. Entao o que se confere aqui sao os
+     cartoes, que so existem quando a partida carregou de verdade. */
+  expect((await page.locator(".card").count()) === 4, "[save] a tela retomada nao renderizou");
 
   /* E RECOMECAR PEDE DOIS CLIQUES. O primeiro so arma o botao — um clique
      distraido nao pode custar um mandato. */
@@ -295,9 +311,9 @@ try {
   await page.click('[data-section="finance"]');
   await page.waitForTimeout(600);
   await checkOverflow("celular · financas");
-  await page.click('[data-section="mesa"]');
+  await page.click('[data-section="congress"]');
   await page.waitForTimeout(600);
-  await checkOverflow("celular · mesa");
+  await checkOverflow("celular · congresso");
   await page.screenshot({ path: join(OUT, "walk-celular.png"), fullPage: true });
 
   expect(noise.length === 0, `console sujo: ${noise.join(" | ")}`);

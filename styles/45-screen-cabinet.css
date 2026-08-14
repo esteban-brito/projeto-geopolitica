@@ -1,0 +1,218 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TELA · GABINETE — o resumo da república, em cartões.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   ELA SUBSTITUI A MESA, E NAO E A MESA COM OUTRO NOME. A Mesa misturava o resumo
+   do mes com a mesa de negociacao: quem abria o jogo caia no meio de uma decisao
+   — placar, bancadas e controles de verba — sem antes saber como o pais estava.
+   Aqui se ENTENDE; no Congresso se DECIDE.
+
+   ── POR QUE CARTAO AQUI, E LINHA EM TODA OUTRA TELA ─────────────────────────
+   O projeto tem uma regra dura: uma lamina por tela, e as pecas de dentro sao
+   linhas e secoes, nunca cartoes — um contorno por informacao e peso repetido.
+   Esta tela e a excecao, e a razao e o que ela mostra: quatro assuntos SEM
+   relacao entre si — o Congresso, o caixa, a rua e as cartas do mes. Nas outras
+   telas as linhas disputam a mesma bolsa, e agrupa-las em caixas desmancharia a
+   relacao; aqui nao ha relacao a desmanchar, e o cartao e o que impede o olho de
+   ler quatro assuntos como uma lista so.
+
+   ⚠ E ELES NAO SAO VIDRO. A lamina e da tela inteira; um cartao com material
+   proprio seria vidro dentro de vidro, que e o defeito que o sistema visual
+   inteiro existe para impedir. O que separa um cartao do outro e fundo rasoo e
+   espaco — nao um segundo material. */
+
+@layer screens {
+  .cabinet {
+    gap: var(--space-4);
+  }
+
+  /* O VEREDITO SUBIU PARA CA quando o rail da direita morreu, e este e o lugar
+     certo dele: ele fala do governo inteiro, e esta e a tela do governo inteiro.
+     A cor vem da situacao, como vinha antes. */
+  .cabinet__verdict {
+    max-width: 34ch;
+    text-align: right;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+
+  .cabinet__verdict[data-situation="crisis"] {
+    color: var(--crisis);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  /* A CAIXA DE ENTRADA OCUPA A LARGURA INTEIRA enquanto esta vazia. Meia tela em
+     branco ao lado de tres cartoes cheios leria como defeito de carregamento; a
+     largura inteira com a espera escrita lê como o que e — um lugar reservado,
+     com a data em que ele passa a ter conteudo. */
+  .card[data-span="wide"] {
+    grid-column: 1 / -1;
+  }
+
+  .card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-piece);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .card__title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* A ACAO RAPIDA LEVA AO LUGAR DE DECIDIR, e por isso ela e discreta: o cartao
+     informa, e o botao e a porta. Um botao com peso de acao primaria aqui
+     competiria com o de avancar o mes, que e o unico gesto irreversivel da tela. */
+  .card__action {
+    padding: 3px var(--space-3);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 800;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--brand);
+    background: rgba(var(--brand-rgb), 0.14);
+    transition: background var(--dur-touch) linear;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card__action:hover {
+      background: rgba(var(--brand-rgb), 0.28);
+    }
+  }
+
+  .card__body {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+  }
+
+  .card__hero {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-title);
+    color: var(--ink);
+  }
+
+  .card__hero small {
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .card__note {
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+  }
+
+  .card__note b {
+    color: var(--ink-soft);
+  }
+
+  /* A ESPERA E TEXTO CORRIDO, e nao um bloco vazio com um icone triste. Ela diz
+     o que vai aparecer ali e o que falta para isso — a mesma postura do item
+     desligado no rail. */
+  .card__waiting {
+    justify-self: stretch;
+    max-width: 66ch;
+    color: var(--ink-dim);
+    line-height: 1.45;
+  }
+
+  /* ── O ARCO DO PLENARIO ─────────────────────────────────────────────────────
+     Um medidor em forma de semicirculo, e nao um grafico de assentos: o modelo
+     tem quatro blocos e nao 513 deputados, e desenhar 513 pontos afirmaria uma
+     precisao que nao existe. */
+  .arch {
+    width: min(220px, 100%);
+    height: auto;
+  }
+
+  .arch__track {
+    stroke: rgba(255, 255, 255, 0.09);
+    stroke-linecap: round;
+  }
+
+  .arch__fill {
+    stroke: var(--brand);
+    stroke-linecap: round;
+    transition: stroke-dasharray var(--dur-piece) linear;
+  }
+
+  /* ALCANCAR A MAIORIA MUDA A COR, e nao so o tamanho: a diferenca entre 256 e
+     257 cadeiras e a diferenca entre nao governar e governar, e um arco que so
+     cresce nao diz isso. */
+  .arch__fill[data-majority="true"] {
+    stroke: var(--signal-up);
+  }
+
+  /* ── O TERMOMETRO DA RUA ────────────────────────────────────────────────────
+     Um medidor por classe, e nao a media. A media esconde o que decide o risco de
+     queda: apoio morno de todo mundo aguenta uma crise; adoracao de metade e odio
+     da outra nao aguenta nenhuma. */
+  .street {
+    justify-self: stretch;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .street__row {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr) 3rem;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .street__who {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .street__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: right;
+    color: var(--ink);
+  }
+
+  .meter--vault {
+    justify-self: stretch;
+  }
+
+  @media (max-width: 720px) {
+    .cards {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cabinet__verdict {
+      text-align: left;
+    }
+
+    .street__row {
+      grid-template-columns: 6rem minmax(0, 1fr) 2.6rem;
+    }
+  }
+}
