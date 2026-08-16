@@ -10,15 +10,32 @@
 intermediário, nenhuma prova está desligada e nenhum `TODO` foi deixado no código.
 `validate`, `walk` e `simulate` rodados no fim.
 
-⚠ **A nona sessão atravessou a virada do dia e continuou.** O que ela entregou, em
-ordem: a **tramitação** (ciclo 4 Parte 3), os **ciclos 5 e 6** inteiros, o **ciclo 9**
-(a carta pede resposta), a **Parte A do ciclo 7** (o vocabulário), e a **Parte 2 do
-ciclo 4** (o muro do caixa e a vinculação). Mais os ciclos 7, 8 e 10 escritos e não
-começados.
+⚠ **A nona sessão atravessou a virada do dia e continuou.** Ela entregou, em ordem: a
+**tramitação** (ciclo 4 Parte 3), os **ciclos 5 e 6** inteiros, o **ciclo 9** (a carta
+pede resposta), a **Parte A do ciclo 7** (o vocabulário), a **Parte 2 do ciclo 4** (o
+muro do caixa e a vinculação) e a **onda 1 do ciclo 10** (a CALDEIRA e a queda do
+presidente). Os ciclos 7, 8 e 10-onda-2 ficaram escritos e não começados.
 
-⚠ **Três coisas são mais fáceis de errar que o resto, e estão sinalizadas abaixo:**
-qual tabela de série é a de hoje (há quatro, e três são históricas); que o achado 1d
-**deixou de ser um problema fiscal**; e que o ciclo 10 é o centro de cinco documentos.
+✔ **TUDO COMMITADO** — três commits em `acoplamento-e-simulador`, o último é
+`219d820`. **Nada foi enviado ao remoto**, e isso continua sendo decisão do
+responsável.
+
+### ⚠ As quatro coisas mais fáceis de errar ao retomar
+
+1. **O achado 31 é o mais fundo do projeto, e ele é novo** — _o país se conserta
+   sozinho_. Ele **explica os achados 1d, 29 e 30**, e os três são sintoma dele.
+   ⚠ **Consertar os sintomas antes dele é trabalho jogado fora;**
+2. **há quatro tabelas de série neste arquivo, e três são históricas.** A de hoje está
+   em _A SÉRIE DE HOJE_, logo abaixo, e é a única que serve para calibrar;
+3. **o achado 1d deixou de ser um problema fiscal** — ver o 31;
+4. **o ciclo 10 é o centro de cinco documentos**, e os outros quatro apontam para ele.
+
+### Para pôr no ar
+
+```bash
+npm run serve      # http://127.0.0.1:5173/  — ele não sobe sozinho
+npm run validate   # verde de ponta a ponta é obrigatório antes de dizer "pronto"
+```
 
 ### Os ciclos, num quadro só
 
