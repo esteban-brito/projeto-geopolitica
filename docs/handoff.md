@@ -34,19 +34,27 @@ qual tabela de série é a de hoje (há quatro, e três são históricas); que o
 
 ### ▶ O QUE VEM AGORA
 
-**1. ⚠ A onda 2 do [ciclo 10](cycles/10-quem-derruba-um-presidente.md) — e ela fecha o
-que a onda 1 deixou aberto**, que é mais importante que começar coisa nova:
+⚠ **A ordem mudou em 16/08, e a razão é o achado 31.** Ele é o defeito mais fundo já
+medido aqui — **o país se conserta sozinho** — e ele **explica os achados 1d, 29 e 30
+de uma vez**. Consertar os três sem consertar ele seria tratar sintoma.
 
-- **a rua tem de cansar de quem não entrega** (achado 29). Hoje a SONDA pune o calote
-  e o serviço ruim, e não pune a AUSÊNCIA — um governo que nunca prometeu nada nunca
-  traiu ninguém. É por isso que o passivo ainda sobrevive;
-- **dois dos quatro lobbies nunca se movem** (achado 30) — e dois lobbies decorativos
-  numa tela que promete que eles derrubam presidentes é pior que não tê-los.
+E o conserto tem uma dependência que a tentativa de hoje revelou:
 
-**2. Recalibrar a tramitação** (achados 22 e 28), com o funil medido antes.
+**1. Achado 2 — o rateio corta em 41 de 48 meses.** Enquanto ele cortar quase sempre, o
+gasto efetivo fica abaixo de qualquer equilíbrio que se calcule, e recalibrar o
+decaimento derruba as áreas de `yield` alto a zero. **Medido: indústria a 0, segurança
+a 7.**
 
-**3. Achado 26** (receita corrente líquida) e **[ciclo 8](cycles/08-o-mapa-e-o-rastro.md)**
-(o mapa e o rastro).
+**2. Achado 31 — o decaimento por identidade.** `decay = yield × gasto_herdado`, para o
+orçamento herdado ser o **ponto de equilíbrio** em vez de uma melhora automática. O
+método está escrito no achado, com os números já calculados.
+
+**3. Onda 2 do [ciclo 10](cycles/10-quem-derruba-um-presidente.md)** — achados 29 e 30.
+⚠ **Reavalie os dois depois do 31:** é provável que o país parando de se consertar
+sozinho já mova os dois lobbies de capacidade e já faça a rua cansar do passivo.
+
+**4.** Recalibrar a tramitação (22 e 28), o achado 26 e o
+[ciclo 8](cycles/08-o-mapa-e-o-rastro.md).
 
 ### O que o ciclo 10 deixou pronto
 
@@ -1491,6 +1499,52 @@ de "legislar é caro".
 `agenda`: **4 aprovadas de 11** levadas a voto, contra 3 de 24 antes — a taxa de
 sucesso subiu de 12,5% para **36%**, porque a política parou de levar a plenário o que
 ela não conseguia pagar.
+
+**31. ⚠⚠ O PAÍS SE CONSERTA SOZINHO — e este é o defeito mais fundo já medido neste
+projeto.** Um governo que **não faz absolutamente nada** vê os oito índices SUBIREM em
+48 meses:
+
+| área        | 48 meses | área      | 48 meses |
+| ----------- | -------- | --------- | -------- |
+| indústria   | 48 → 100 | segurança | 38 → 71  |
+| previdência | 71 → 100 | fazenda   | 72 → 95  |
+| agricultura | 63 → 77  | defesa    | 51 → 62  |
+| saúde       | 61 → 67  | educação  | 44 → 49  |
+
+**Não fazer nada melhora TUDO.** Isso é indefensável num jogo sobre governar, e ele
+**explica os achados 1d, 29 e 30 de uma vez**: o passivo tem a melhor dívida porque os
+índices sobem e a arrecadação sobe; os dois lobbies de capacidade nunca se movem porque
+nunca há queixa.
+
+**A causa, medida:** o orçamento herdado produz empurrão POSITIVO em todas as oito
+áreas no mês 1 — `yield × gasto − decay > 0` em todas.
+
+```
+area          gasto/mes  decay  yield   empurrao
+industria         7,38    0,50  0,3580   +2,141
+seguranca         2,40    0,70  0,6358   +0,829
+previdencia     126,68    0,30  0,0096   +0,916
+fazenda          13,23    0,40  0,0674   +0,492
+```
+
+⚠ **E EU TENTEI CONSERTAR E REVERTI, com razão registrada.** O conserto é por
+IDENTIDADE, e não por gosto: `decay = yield × gasto_herdado`, para o herdado ser o
+**ponto de equilíbrio**. Aplicado, seis áreas ficaram estáveis — e **indústria foi a 0 e
+segurança a 7**.
+
+A causa disso é o **achado 2**: o rateio corta em 41 de 48 meses, então o gasto efetivo
+fica abaixo do equilíbrio calculado no mês 1, e as áreas de `yield` alto despencam.
+
+> **Calibrar o decaimento sobre um rateio que corta sempre é calibrar sobre base
+> quebrada.** A ordem é: achado 2 primeiro, decaimento depois — e o método do segundo
+> já está escrito aqui.
+
+⚠ **Uma hipótese foi TESTADA E DESCARTADA no caminho, e vale registrar:** achei que a
+causa fosse gasto NOMINAL contra régua fixa — a mesma família do hiato nominal que a
+CORRENTE já corrigiu. **É falso:** `spendOf` calcula `(nível/100) × custo` com custo fixo
+do catálogo, então o gasto **não cresce com a inflação**. Não há defeito de deflator
+aqui, e um deflator aplicado por cima do decaimento corrigido derrubava o país duas
+vezes.
 
 **29. A CALDEIRA NÃO RESOLVE O ACHADO 1d SOZINHA — e isto é resultado medido, e não
 calibragem frouxa.** O governo passivo continua sobrevivendo, e a causa é legítima:
