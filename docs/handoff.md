@@ -177,18 +177,13 @@ saíram do catálogo para o estado.
 | `npm run screen`   | verde — 240,4 fps com material × 240,1 sem (ver achado 4) |
 | CI                 | GitHub Actions rodando `npm run validate` a cada push     |
 
-⚠ **NADA DESTE TRABALHO ESTÁ COMMITADO, e isso é regra e não esquecimento.** O branch
-é `acoplamento-e-simulador`, o último commit é `2075602`, e **77 caminhos** estão na
-árvore de trabalho — verdes, em disco, nada enviado ao remoto. `CLAUDE.md` diz que
-commitar é decisão do responsável.
+✔ **COMMITADO em 16/08/2026**, a pedido do responsável: `267eabd` no branch
+`acoplamento-e-simulador` — 77 arquivos, +14.431/−1.108. **Nada foi enviado ao
+remoto.**
 
-Quando ele pedir, o que é **novo** (20 caminhos): três motores
-(`src/domain/norms/`, `src/domain/cast/`, e a vinculação dentro do primeiro), duas
-composições (`src/application/passage.mjs`, `mail.mjs`), o catálogo
-`src/data/cast.mjs`, cinco peças de interface (`src/ui/screens/inbox.mjs`,
-`src/ui/shared/head.mjs`, `hemicycle.mjs`, `sigil.mjs`, `trend.mjs`), três suítes
-(`norms.mjs`, `cast.mjs`, `mail.mjs`) e os documentos dos ciclos 5 a 10 mais
-`research/03`. Um arquivo foi **apagado**: `styles/70-screen-approval.css`.
+Um commit só porque as peças se atravessam: `turn.mjs`, `state.mjs` e esta retomada
+foram tocados por todas elas, e separá-las seria inventar uma fronteira que o código
+não tem.
 
 ## A nona sessão — a varredura de interface, antes da parte 2 do Gemini
 
