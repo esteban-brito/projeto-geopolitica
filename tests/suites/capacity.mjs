@@ -168,8 +168,11 @@ test("A PRESSAO TEM O SINAL DO CATALOGO, e o mesmo canal aceita os dois", () => 
   const only = (id, value) =>
     pressureOf({
       areas: AREAS,
-      history: settled(area => (area.id === id ? value : NEUTRAL)),
-      neutral: NEUTRAL,
+      /* AS OUTRAS AREAS FICAM NA ABERTURA, e nao no ponto neutro: desde que a
+         regua da pressao passou a ser o indice DE ABERTURA de cada area, deixa-las
+         em 50 nao as neutraliza — poe todas elas fora do lugar de uma vez, e a
+         prova mediria o catalogo inteiro em vez da area sob teste. */
+      history: settled(area => (area.id === id ? value : area.initial)),
     });
 
   assert.ok(only("health", 90).mandatory < only("health", 10).mandatory, "saude boa devia aliviar");
@@ -189,7 +192,7 @@ test("a pressao nunca vira multiplicador absurdo", () => {
         })
         .map(values => Object.fromEntries(AREAS.map((a, i) => [a.id, [values[i] ?? 0]]))),
       history => {
-        const pressure = pressureOf({ areas: AREAS, history, neutral: NEUTRAL });
+        const pressure = pressureOf({ areas: AREAS, history });
         assert.ok(pressure.revenue >= 0.25 && Number.isFinite(pressure.revenue));
         assert.ok(pressure.mandatory >= 0.25 && Number.isFinite(pressure.mandatory));
       },

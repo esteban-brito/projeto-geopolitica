@@ -161,7 +161,7 @@ export function step({ areas, index, history, allocation, impacts = {}, neutral,
     index: next,
     history: nextHistory,
     effective,
-    pressure: pressureOf({ areas, history: nextHistory, neutral }),
+    pressure: pressureOf({ areas, history: nextHistory }),
   };
 }
 
@@ -181,16 +181,31 @@ export function step({ areas, index, history, allocation, impacts = {}, neutral,
  * @param {object} input
  * @param {ReadonlyArray<Area>} input.areas
  * @param {Record<string, number[]>} input.history
- * @param {number} input.neutral
  * @returns {Pressure}
  */
-export function pressureOf({ areas, history, neutral }) {
+export function pressureOf({ areas, history }) {
   let revenue = 1;
   let mandatory = 1;
 
   for (const area of areas) {
     const value = delayed(history[area.id], area.initial, area.lag);
-    const push = ((value - neutral) / 100) * area.force;
+
+    /* ⚠ A REGUA E O INDICE DE ABERTURA DA AREA, E NAO O PONTO NEUTRO. A troca
+       conserta um defeito medido, e ele era o segundo termo do achado numero um do
+       handoff — o pais que se desendivida sozinho.
+
+       Com o ponto neutro como referencia, este motor AFIRMAVA que um pais em 50
+       arrecada exatamente `taxLoad × PIB`. Mas `taxLoad` foi calibrado contra o
+       Brasil REAL, que abre com a Fazenda em 72 e a Agricultura em 63 — entao o
+       fator nascia em 1,063 e o modelo cobrava 6,3% a mais de imposto do que o
+       proprio catalogo declara, todo mes, sem ninguem ter feito nada. O mesmo
+       valia para a obrigatoria, em 1,061.
+
+       Com a abertura como regua, o fator nasce em 1,000 e passa a medir o que ele
+       sempre disse medir: o que MUDOU desde a posse. Quem melhora a arrecadacao
+       colhe mais; quem a deixa apodrecer colhe menos. O nivel herdado ja esta
+       dentro do numero do catalogo, e cobra-lo de novo era conta em dobro. */
+    const push = ((value - area.initial) / 100) * area.force;
     if (area.feeds === "revenue") revenue += push;
     if (area.feeds === "mandatory") mandatory += push;
   }

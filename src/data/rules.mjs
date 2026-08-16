@@ -51,12 +51,16 @@
    o caminho em que concentrar poder derruba o governo pela porta do golpe ou do
    impeachment. Hoje o unico freio e o Congresso. */
 
+/* AS DUAS FAMILIAS DE REGRA, e o esquema as COBRA — ver `values` em `schema.mjs`.
+   Ela sobe para antes do esquema porque ele a le. */
+export const FAMILIES = /** @type {const} */ (["property", "power"]);
+
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
 /** @type {Schema} */
 export const RULE_SCHEMA = {
   id: { kind: "id" },
-  family: { kind: "text" },
+  family: { kind: "text", values: FAMILIES },
   label: { kind: "text" },
   unit: { kind: "text" },
   economic: { kind: "number", min: 0, max: 100 },
@@ -73,7 +77,6 @@ export const RULE_SCHEMA = {
 };
 
 /** As familias. `property` tem canal fiscal; `power` mexe no rito. */
-export const FAMILIES = /** @type {const} */ (["property", "power"]);
 
 /**
  * @typedef {object} Rule

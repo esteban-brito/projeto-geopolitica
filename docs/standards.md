@@ -46,16 +46,19 @@ CLAUDE.md                   as regras que o agente lê antes de tudo
 Ordem de resolução de um turno (mês). Apenas **TEMPORAL** e **ECLUSA** consomem
 aleatoriedade, cada um com fluxo próprio derivado da seed da partida.
 
-| codinome     | módulo                    | o que recebe                                               | o que devolve                                           |
-| ------------ | ------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- |
-| **TEMPORAL** | `src/domain/events/`      | estado do turno, catálogo, fluxo de RNG                    | evento disparado, com efeitos e duração                 |
-| **ECLUSA**   | `src/domain/congress/`    | bancadas, proposta, moeda oferecida, histórico de barganha | votos por bancada, resultado, custo pago, ressentimento |
-| **MALHA**    | `src/domain/capacity/`    | índices por área, alocação do mês, impacto das aprovações  | índices novos, histórico, pressão em receita e despesa  |
-| **CASCATA**  | `src/domain/propagation/` | efeitos vigentes com defasagem, estado atual               | delta do mês por indicador                              |
-| **CORRENTE** | `src/domain/economy/`     | estado macro, carga tributária, capacidade, impulso fiscal | PIB, potencial, inflação, juro, desemprego, população   |
-| **LASTRO**   | `src/domain/budget/`      | receita e despesa, obrigatório × discricionário            | saldo, dívida/PIB, espaço discricionário                |
-| **SONDA**    | `src/domain/opinion/`     | indicadores divulgados, eventos, histórico                 | aprovação por segmento                                  |
-| **DELTA**    | `src/domain/graph/`       | catálogo de ligações, estado, deltas                       | nós e arestas com peso e sinal                          |
+| codinome     | módulo                    | o que recebe                                                | o que devolve                                               |
+| ------------ | ------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| **TEMPORAL** | `src/domain/events/`      | estado do turno, catálogo, fluxo de RNG                     | evento disparado, com efeitos e duração                     |
+| **ECLUSA**   | `src/domain/congress/`    | bancadas, proposta, moeda oferecida, histórico de barganha  | votos por bancada, resultado, custo pago, ressentimento     |
+| **MALHA**    | `src/domain/capacity/`    | índices por área, alocação do mês, impacto das aprovações   | índices novos, histórico, pressão em receita e despesa      |
+| **CASCATA**  | `src/domain/propagation/` | efeitos vigentes com defasagem, estado atual                | delta do mês por indicador                                  |
+| **CORRENTE** | `src/domain/economy/`     | estado macro, carga tributária, capacidade, impulso fiscal  | PIB, potencial, inflação, juro, desemprego, população       |
+| **LASTRO**   | `src/domain/budget/`      | receita e despesa, obrigatório × discricionário             | saldo, dívida/PIB, espaço discricionário                    |
+| **SONDA**    | `src/domain/opinion/`     | indicadores divulgados, eventos, histórico                  | aprovação por segmento                                      |
+| **ESTRATO**  | `src/domain/norms/`       | as normas escritas, as alavancas, o mês, os indicadores     | a faixa vigente de cada alavanca; o que dorme, e por quê    |
+| **ELENCO**   | `src/domain/cast/`        | os blocos, os arquétipos, o vocabulário de nomes, a semente | as pessoas do mandato, a memória de cada uma e o preço dela |
+| **CALDEIRA** | `src/domain/pressure/`    | a pressão de cada grupo, o descontentamento do mês e a rua  | a pressão nova, e se as três rupturas estão abertas juntas  |
+| **DELTA**    | `src/domain/graph/`       | catálogo de ligações, estado, deltas                        | nós e arestas com peso e sinal                              |
 
 O codinome é como o responsável cita o motor. Ele vive no cabeçalho do módulo e
 nesta tabela, e **não** aparece em código executável — no código existe um nome
@@ -95,17 +98,108 @@ juntos e o número não diz nada.
 contorno por informação é peso repetido, e peso repetido é ruído. Vidro dentro de
 vidro são dois materiais empilhados para dizer uma coisa só.
 
+**Duas substâncias, e a fronteira é a regra inteira:**
+
+> **vidro** = a máquina do Estado · **papel** = o texto de registro
+
+Uma lei e uma carta não são superfícies da máquina: são o que ela **produz**. No dia
+em que o papel aparecer num cartão de resumo ou num botão, ele deixa de ser legenda e
+vira a segunda paleta que o sistema visual existe para impedir. Ele não é branco —
+pergaminho à meia luz, quente onde tudo é frio; papel branco em ambiente escuro é um
+buraco de luz.
+
+**Três famílias tipográficas, e três é o teto:**
+
+| token            | o que ela diz                           | exemplo                     |
+| ---------------- | --------------------------------------- | --------------------------- |
+| `--font-record`  | o que se **assina** — texto de registro | nome de norma, de pessoa    |
+| `--font-display` | o que se **mede** — valor               | placar, índice, sinal vital |
+| `--font-machine` | o que a máquina do Estado **carimba**   | selo de rito, etiqueta      |
+
+A serifa é **opt-in**, nunca padrão de corpo: implementada como herança, ela vaza
+para unidade de controle, nota de cartão e prosa de estado vazio, e metade da
+interface sai serifada sem ninguém pedir. `[data-numeric]` força `--font-display` em
+`10-base.css`, então um número é sans mesmo dentro de prosa serifada — convenção
+tipográfica que depende de alguém lembrar diverge no terceiro componente.
+
+**Uma medição de carimbo não é um carimbo.** Vestir um índice de mono porque a mono é
+bonita inverte a regra no dia em que ela nasce.
+
+**Todo tamanho de texto passa pela escala.** Um degrau novo digitado direto no
+componente parece inofensivo — são 0,02rem — e é assim que uma escala vira uma lista
+de exceções que ninguém consegue mais revisar. Exceção existe, e é **declarada na
+prosa do arquivo**: hoje há uma, a escada de Finanças, que é geometria e não texto.
+
+**A cor da marca é a cor do que se PRESSIONA** — uma cor, um lugar. Ela veste o botão
+de avançar, o selo de emenda, o anel de quem preside e a ação da carta. Gastá-la num
+controle que se **arrasta** a dilui, e diluída ela deixa de apontar. E **contraste se
+mede antes de fechar o tom**, no par renderizado e não no par teórico: se a medição
+reprovar, o conserto é clarear a **tinta** sobre a cor, não abandonar o tom —
+abandonar seria deixar a aritmética decidir a estética.
+
+**Dado que a tela escreve, a folha consome.** Uma custom property escrita inline por
+uma view é um **canal**: se nenhum seletor a lê, ela é dado morto, e o defeito é
+invisível — nada falha, a informação apenas não chega. É a família inversa da folha
+órfã, e custou o achado da régua legal.
+
+⚠ **E uma classe não vence um seletor de atributo.** `.dial__slider` é (0,1,0) e
+`input[type="range"]` é (0,1,1): a regra da classe perde, e perde **em silêncio**, sem
+erro em tipo, guarda ou prova. Ao estilizar um elemento que já tem regra por
+atributo, escreva `input[type="range"].minha-classe`.
+
 ## 5. A tela
 
 **A tela não refaz conta do motor — ela pergunta.** Toda leitura que a interface
 mostra enquanto o jogador decide sai da mesma função que o turno vai executar
-(`settlement`, `whipCount`, `dispersion`). Conta refeita por fora é conta que
+(`forecast`, `settlement`, `ledger`). Conta refeita por fora é conta que
 diverge, e a divergência aparece justamente no caso extremo, que é o caso em que
 o jogador precisava do número.
+
+⚠ **E oferecer a porta certa não basta: é preciso FECHAR a errada.** O defeito
+recorrente deste projeto — encontrado quatro vezes — é **dois lugares montando a
+mesma pergunta**, e enquanto a porta errada estiver na fachada, alguém entra por ela.
+Foi por isso que `whipCount` e `dispersion` saíram de `src/public/index.mjs`: a tela
+remontava uma câmara de quatro blocos enquanto o turno votava com onze bancadas, e
+**27,2% dos vereditos anunciados eram o inverso do que o mês produzia**.
 
 **A previsão usa o que será PAGO, nunca o prometido.** É a mesma regra do
 acoplamento, do outro lado: se a Mesa prevê com a promessa, ela anuncia um placar
 que o turno não produz no mês em que o caixa não cobre.
+
+**Informação que chega depois da decisão não é informação — é recibo.** O que muda o
+preço de uma jogada tem de estar legível **antes** de o jogador fazê-la: o trilho diz
+onde a lei para enquanto ele arrasta, e não depois de ele ter atravessado.
+
+**O que ESPERA é estado; o que FECHA é leitura.** A carta que pede resposta mora em
+`state.mail`, porque ela atravessa meses; o fechamento do mês não mora em lugar nenhum,
+porque ele se refaz do relatório. Guardar o segundo obrigaria o save a carregar 48
+relatórios para reescrever um texto que o turno já sabe produzir.
+
+**Guarda-se o FATO, nunca a prosa.** A carta no estado não tem texto — quem escreve é
+a view. Guardar o texto renderizado seria a quinta ocorrência de "dois lugares
+montando a mesma pergunta".
+
+**Decisão do jogador entre turnos é ORDEM, e não mutação à parte.** Responder uma carta
+não mexe no estado na hora do clique: ela entra em `orders` e o mês resolve. ⚠ A razão
+é concreta — **o vencimento acontece dentro do turno**, e uma resposta fora dele criaria
+dois caminhos mutando a mesma carta, com o resultado dependendo de qual chegasse
+primeiro no mês em que o prazo fecha.
+
+**O silêncio é uma resposta, e ela é anunciada antes.** Ignorar é uma jogada com preço,
+e nunca uma impossibilidade: **o turno não se bloqueia por nada**. Bloquear o avanço
+não torna a carta importante — torna-a obstáculo de fluxo, e mata a jogada de deixar
+uma vencer para cuidar de outra.
+
+**Custo se mostra, muro não se desenha.** _"Tudo tem preço, nada tem muro"_ vale
+também na tela: nada de hachura de perigo nem de zona bloqueada, porque um controle
+que **parece** travado ensina que a lei é um limite da interface.
+
+⚠ **E o muro também se escreve em ARITMÉTICA.** `spent <= cash` não parecia um `if
+(proibido) return`, e era: o empenho preso ao caixa fazia o saldo primário dar ZERO em
+toda jogada, e um governo que punha os 38 programas no máximo fechava o mês igual a um
+que não fazia nada. **Uma desigualdade sem lei atrás é um muro disfarçado de conta.**
+O teto do arcabouço ficou, e a distinção é a regra: ele é norma, com rito para mudar;
+o caixa não tinha nada atrás.
 
 **Número que vai para dentro de atributo não passa pela função de leitura.**
 `num` escreve vírgula decimal; vírgula em `max`, `min`, `value` ou `step` é valor
@@ -182,3 +276,53 @@ Declarado para não ser confundido com cobertura:
   incompleta por definição e acusaria sobrenomes comuns. Fica como regra declarada
   em `CLAUDE.md` e cobrada em revisão — o que **tem** guarda é a identidade
   (`identity`), que impede personagem sem `id` e `id` repetido.
+
+## 8. O que se aprendeu a não fazer
+
+Cada linha aqui é um defeito que aconteceu, e a data em que ele custou.
+
+**Dois lugares montando a mesma pergunta — CINCO ocorrências.** A tela remontou a
+câmara (27,2% dos vereditos invertidos); a Mesa previu com verba prometida enquanto o
+turno pagava a rateada; a tela remontou a legislação antes de `bandsOf`; havia dois
+`compose` em `turn.mjs`; e o **simulador** negociava contra os quatro blocos do
+catálogo sem a rua — este último o mais caro, porque quem errava era o instrumento de
+calibragem.
+
+> **Oferecer a porta certa não basta: é preciso FECHAR a errada.** `whipCount` e
+> `dispersion` saíram da fachada por isso. E `export` sem consumidor é uma porta
+> aberta — se só o próprio arquivo usa, ele não se exporta.
+
+**Ler o estado ANTES do passo que o turno acabou de dar — duas ocorrências.** A MALHA
+leu o nível pedido depois de a tramitação separar pedido de aplicado (achado 14); e
+`pending` leu a caixa de correio de antes do fechamento, o que **travou a tramitação
+inteira** com tudo verde.
+
+> ⚠ **Este defeito não produz resultado errado — produz AUSÊNCIA de resultado.** Nada
+> fica vermelho quando um sistema simplesmente para de acontecer, e nenhuma prova de
+> igualdade o alcança. Só medir o comportamento ao longo de meses o encontra.
+
+**Valor derivado guardado no estado.** A situação saiu; a faixa virou norma; a posição
+do governo nunca entrou. ⚠ **Mas o ARQUIVO é legítimo:** guardar a posição atual é
+duplicação, guardar o rastro dela é história — e história não se recalcula.
+
+**Número repetido à mão.** A semente padrão estava em seis lugares e o humor de
+abertura em três, com a constante exportada e ninguém a importando. Trocar o padrão
+faria o jogo e as provas divergirem em silêncio.
+
+**Lista declarada e não cobrada.** `CHANNELS` e `FAMILIES` existiam com a prosa
+dizendo "um de …" e nada verificava: um `feeds: "capacidde"` passaria por tipo, guarda
+e validação e sumiria dentro de um `switch` que não casa com nada.
+
+**Formatador errado.** `seats` no lugar de `money` imprimiu **"2166% da despesa é
+obrigatória"**. O formatador carrega a UNIDADE, e escolher o errado troca a unidade
+sem trocar o valor — o único erro de exibição que nenhuma prova de igualdade alcança.
+
+**Prova que codifica o defeito.** `allowance <= cash` era cobrado por uma propriedade,
+e a desigualdade era o último muro do jogo. Quando o muro caiu, a prova tinha de cair
+junto — e ela **não foi apagada**: passou a cobrar a restrição que sobrou, a única com
+lei atrás.
+
+**Desempate na granularidade errada.** O gerador recusava nome COMPLETO repetido, e com
+vocabulário largo produziu "Cláudio Espindola" ao lado de "Cláudio Itaparica". Numa
+Câmara de 513 dois Cláudios são verossímeis; entre as oito pessoas que o jogador
+precisa distinguir, não são.

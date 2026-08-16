@@ -47,8 +47,16 @@
 
   /* TODO NUMERO DE INDICADOR E TABULAR. Numero proporcional dança de largura a
      cada atualizacao, e num painel que muda a cada turno isso lê como a
-     interface tremendo. */
+     interface tremendo.
+
+     ⚠ E TODO NUMERO E SANS, e esta linha e o que torna a regra tipografica do
+     ciclo 5 EXECUTAVEL em vez de combinada: serifa e texto de registro, sans e
+     valor medido. Sem ela, um numero herdaria a serifa de qualquer prosa em que
+     caisse — e a regra passaria a depender de cada componente lembrar dela, que e
+     como uma convencao tipografica diverge no terceiro componente. Aqui ela vale
+     em toda a tela, inclusive dentro de uma carta ou de uma lei. */
   [data-numeric] {
+    font-family: var(--font-display);
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.015em;
   }

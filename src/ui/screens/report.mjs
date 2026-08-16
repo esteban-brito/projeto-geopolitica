@@ -90,21 +90,20 @@ export function reportPanelHtml(input) {
      porque e memoria de tela e nao estado de jogo, entao quem volta ao jogo
      amanha cai aqui tambem. Dizer "nenhum mes resolvido nesta sessao" e a
      verdade; um painel vazio seria lido como defeito. */
+  /* ⚠ O VIDRO E A LEGENDA SAIRAM em 15/08/2026. Ele era `glass-support` com um
+     rotulo proprio porque morava solto no tabuleiro, embaixo da mesa; agora ele e
+     um bloco dentro da lamina do Congresso, e quem diz "O mês passado" e a legenda
+     do bloco. Mantidos os dois, a tela repetiria o mesmo titulo duas vezes com dois
+     pesos diferentes — que e como uma tela comeca a parecer remendada. */
   if (!input) {
     return (
-      `<section class="report report--waiting glass-support" ` +
-      `aria-label="${escapeHtml(UI.report.panel)}">` +
-      `<p class="report__legend">${escapeHtml(UI.report.panel)}</p>` +
+      `<div class="report report--waiting">` +
       `<p class="report__line">${escapeHtml(UI.report.waiting)}</p>` +
-      `</section>`
+      `</div>`
     );
   }
 
-  return (
-    `<section class="report glass-support" aria-label="${escapeHtml(UI.report.panel)}">` +
-    reportHtml(input) +
-    `</section>`
-  );
+  return `<div class="report">${reportHtml(input)}</div>`;
 }
 
 /**
@@ -119,7 +118,7 @@ export function reportPanelHtml(input) {
  * @param {Record<string, number>} input.indexBefore os indices ANTES do mes
  * @returns {string}
  */
-export function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore }) {
+function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore }) {
   const { tally } = report;
   const bill = report.agenda.proposal;
 

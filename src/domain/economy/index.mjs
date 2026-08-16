@@ -177,6 +177,52 @@ export function step(input) {
 }
 
 /**
+ * O PREMIO DE RISCO — quanto o mercado cobra ACIMA da taxa basica.
+ *
+ * ⚠ ELE ESTAVA PROMETIDO NA PROSA E NAO EXISTIA. `turn.mjs` dizia, sobre o juro:
+ * "ele nao disputa com hospital — ele engorda a divida, e a divida volta PELO PREMIO
+ * DE RISCO". A segunda metade da frase era uma intenção: nada no modelo a cumpria.
+ *
+ * E ela ficou cara em 16/08/2026, quando o empenho deixou de ser limitado pelo caixa.
+ * Antes o governo nao conseguia gastar acima do que arrecadava, entao a divida so
+ * andava por juro e o premio seria decorativo. Agora ele PODE se endividar — e um
+ * pais que se endivida sem o juro reagir e um pais SEM CREDOR.
+ *
+ * ── POR QUE AQUI, E NAO NA TAYLOR ────────────────────────────────────────────────
+ * Um Banco Central nao sobe juro por risco fiscal: ele sobe por inflacao e hiato, que
+ * e o que a regra ja olha. Quem cobra a mais e o CREDOR DO TESOURO, e o que ele cobra
+ * e um spread sobre a basica. Somar isso a Taylor confundiria dois agentes com
+ * interesses diferentes, e o jogador nao teria como saber qual dos dois reagiu ao que
+ * ele fez.
+ *
+ * ── A FORMA E CONVEXA, E ISSO NAO E ENFEITE ──────────────────────────────────────
+ * O mercado nao cobra em linha reta: ele tolera, tolera, e entao foge. Um premio
+ * linear ensinaria que endividar-se custa sempre o mesmo por ponto, e a decisao de
+ * "mais um pouco" seria identica no comeco e na beira do abismo. Com o quadrado, o
+ * primeiro ponto e barato e o vigesimo nao — que e a diferença entre uma conta e um
+ * risco.
+ *
+ * ⚠ E A TOLERANCIA E A DIVIDA HERDADA, e nao um numero escolhido. O mercado JA
+ * precificou o pais que o presidente recebeu; o que ele cobra e a DETERIORACAO. Por
+ * isso o premio nasce em zero no mes 1 e a serie de abertura fica identica — o mesmo
+ * padrao que provou inerte a migracao das faixas para normas. E por isso a tolerancia
+ * entra por parametro em vez de morar no catalogo macro: ela ja existe, em
+ * `fiscal.initialDebtRatio`, e dois lugares com o mesmo numero e um lugar que vai
+ * divergir.
+ *
+ * @param {object} input
+ * @param {number} input.debtRatio - a divida sobre o PIB, hoje
+ * @param {number} input.tolerance - a razao que o mercado ja precificou
+ * @param {number} input.slope - quanto ele cobra por ponto ao quadrado
+ * @returns {number} pontos de juro ao ano, somados a basica
+ */
+export function premiumOf({ debtRatio, tolerance, slope }) {
+  const excess = debtRatio - tolerance;
+  if (excess <= 0) return 0;
+  return slope * excess * excess;
+}
+
+/**
  * O QUE A DIVIDA CUSTA NUM MES, em bilhoes.
  *
  * Separado de `step` porque o estoque da divida mora no LASTRO e nao aqui, e
@@ -187,16 +233,23 @@ export function step(input) {
  * ao Tesouro. Com divida perto de R$ 9,4 tri, isso implica 45% do estoque
  * atrelado a taxa — que e o que `floatingDebt` declara.
  *
+ * ⚠ O PREMIO INCIDE SOBRE O ESTOQUE INTEIRO, e nao so sobre a parte pos-fixada. E a
+ * mesma correcao que `legacyRate` ja carrega, pela mesma razao: quem rola divida rola
+ * o estoque todo, e quem desconfia do pais cobra mais para rolar qualquer pedaco dele.
+ * Aplicar o premio so na fatia flutuante diria que o credor do prefixado nao repara
+ * que o devedor piorou.
+ *
  * @param {object} input
  * @param {number} input.debt - o estoque bruto
  * @param {number} input.rate - a taxa basica nominal ao ano
+ * @param {number} [input.premium] - o spread que o mercado cobra, ao ano
  * @param {MacroParameters} input.parameters
  * @returns {number} bilhoes NO MES
  */
-export function carry({ debt, rate, parameters }) {
+export function carry({ debt, rate, premium = 0, parameters }) {
   const effective =
     parameters.floatingDebt * rate + (1 - parameters.floatingDebt) * parameters.legacyRate;
-  return (debt * effective) / MONTHS_PER_YEAR;
+  return (debt * (effective + premium)) / MONTHS_PER_YEAR;
 }
 
 /**

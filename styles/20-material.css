@@ -47,7 +47,19 @@
   /* O especular NAO e uma linha uniforme no topo: e um gradiente que corre pela
      superficie — aceso na quina superior esquerda, apagando no meio, pegando
      luz de novo na base. Uma linha branca de opacidade unica lê como borda;
-     um gradiente lê como reflexo. */
+     um gradiente lê como reflexo.
+
+     ⚠ ELE ESTAVA PARADO, e a prosa do PASSEIO DA LUZ la embaixo ja afirmava o
+     contrario — "o angulo de TODAS as superficies caminha junto". Nao caminhava:
+     o campo (`::before`) seguia `--light-angle` pelos tokens e o reflexo estava
+     preso em `140deg`. O resultado era a unica coisa que denuncia vidro falso —
+     a luz da sala se movia e o brilho da peca nao a acompanhava, que e o que
+     separa "material" de "retangulo com um reflexo pintado".
+
+     O reflexo corre 24 graus ADIANTE do campo, e nao junto. Angulo identico faria
+     o brilho ser uma segunda copia do gradiente de fundo, na mesma direcao: as
+     duas camadas somariam em vez de se cruzarem, e o efeito e uma superficie
+     chapada mais clara. O descolamento e o que da espessura ao vidro. */
   .glass-stage::after {
     content: "";
     position: absolute;
@@ -55,11 +67,11 @@
     z-index: 1;
     pointer-events: none;
     background: linear-gradient(
-      140deg,
-      rgba(255, 255, 255, 0.14),
+      calc(var(--light-angle) + 24deg),
+      rgba(255, 255, 255, 0.16),
       rgba(255, 255, 255, 0.02) 34%,
       rgba(255, 255, 255, 0) 62%,
-      rgba(255, 255, 255, 0.07)
+      rgba(255, 255, 255, 0.08)
     );
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);

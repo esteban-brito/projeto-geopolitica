@@ -12,6 +12,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
+/* A SEMENTE PADRAO VEM DO ESTADO, e nao repetida a mao: ela e a mesma que abre uma
+   partida sem semente escolhida, e dois lugares com o mesmo numero e um lugar que vai
+   divergir na primeira vez que alguem trocar o padrao. */
+import { DEFAULT_SEED } from "../../src/state/state.mjs";
 import { hash, integer, mix, streamFrom, take, unit } from "../../src/state/random.mjs";
 
 const anySeed = fc.integer({ min: 0, max: 4294967295 });
@@ -158,7 +162,7 @@ test("faixa invertida nao produz numero fora dela", () => {
    devolvesse 0,5 sempre passaria em todas as provas acima. */
 
 test("a distribuicao e plana: a media de dez mil saques fica perto de 0,5", () => {
-  const { values } = take(streamFrom(20270101, "congress"), 10000);
+  const { values } = take(streamFrom(DEFAULT_SEED, "congress"), 10000);
   const mean = values.reduce((a, b) => a + b, 0) / values.length;
   assert.ok(Math.abs(mean - 0.5) < 0.02, `media ${mean.toFixed(4)}`);
 

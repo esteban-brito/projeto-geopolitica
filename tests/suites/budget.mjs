@@ -61,15 +61,52 @@ test("caixa e sempre receita menos obrigatoria, e a conta fecha", () => {
   );
 });
 
-test("o que se pode empenhar nunca passa do caixa nem do teto", () => {
-  /* As duas restricoes sao independentes, e o menor manda. Uma implementacao que
-     olhasse so o caixa deixaria o jogador furar o arcabouco sem perceber. */
+test("o que se pode empenhar nunca passa do TETO — e o caixa NAO manda", () => {
+  /* ⚠ ESTA PROVA MUDOU DE LADO EM 16/08/2026, e a versao antiga estava CODIFICANDO
+     UM DEFEITO. Ela cobrava `allowance <= cash`, e essa desigualdade era o ultimo
+     muro do jogo: com o empenho preso ao caixa, o saldo primario dava ZERO em toda
+     jogada — medido em 48 meses, um governo que poe os 38 programas no maximo e paga
+     verba cheia fecha o mes igual a um que nao faz nada.
+
+     `spent <= cash` e `if (proibido) return` escrito em aritmetica, e a regra central
+     deste projeto e "tudo tem preco, nada tem muro". A prova cobrava a existencia do
+     muro, entao ela tinha de cair junto — e ela nao foi APAGADA: ela passou a cobrar
+     a restricao que sobrou, que e a unica com lei atras.
+
+     O TETO CONTINUA SENDO PROVADO, e a distincao e a razao de tudo: o arcabouco e
+     norma, e o jogador pode muda-la pelo rito; o caixa nao tinha nada atras. */
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
       assert.ok(out.allowance >= 0, `permitido negativo: ${out.allowance}`);
-      assert.ok(out.allowance <= Math.max(0, out.cash) + 1e-9);
       assert.ok(out.allowance <= Math.max(0, out.ceiling - out.mandatory) + 1e-9);
+    }),
+  );
+});
+
+test("GASTAR ACIMA DO CAIXA E POSSIVEL, e produz deficit — o muro caiu", () => {
+  /* A prova que o conserto exigia, e ela e o inverso exato da que existia aqui.
+     Enquanto o empenho estava preso ao caixa, esta afirmacao era falsa por
+     construcao: nao havia jogada que produzisse deficit primario.
+
+     ⚠ ELA COBRA A EXISTENCIA DO CAMINHO, e nao a frequencia dele. Um pais em que o
+     teto e mais generoso que a arrecadacao e o caso comum no Brasil — o arcabouco
+     autoriza deficit —, e o que se prova aqui e que o modelo sabe representa-lo. */
+  fc.assert(
+    fc.property(anyInput, input => {
+      const out = step(input);
+      if (out.contingency) return;
+
+      /* Empenhando tudo o que o teto autoriza, o saldo do mes e o caixa menos isso —
+         e ele e NEGATIVO sempre que o teto abre mais espaco do que o caixa tem. */
+      const full = step({ ...input, spent: out.allowance / 12 });
+      if (out.allowance > Math.max(0, out.cash)) {
+        assert.ok(
+          full.balance < 0,
+          `o teto abriu ${out.allowance.toFixed(1)} sobre um caixa de ${out.cash.toFixed(1)} e o saldo nao ficou negativo`,
+        );
+        assert.ok(full.debt > input.debt, "houve deficit e a divida nao subiu");
+      }
     }),
   );
 });

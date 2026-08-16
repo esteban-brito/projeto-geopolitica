@@ -110,6 +110,42 @@ function itemHtml({ key, label, ready }, current) {
 }
 
 /**
+ * DE QUEM E ESTE GOVERNO — o nome, e no que ele se tornou.
+ *
+ * ⚠ ELA E A PECA QUE FALTAVA PARA O JOGO SER UMA PRESIDENCIA. Todo simulador
+ * pesado diz ao jogador quem ele e — o Football Manager abre com "voce dirige o
+ * clube X" —, e o Planalto nao dizia: a barra anunciava o mes e o ano do mandato
+ * sem nunca dizer de quem ele era.
+ *
+ * ⚠ E A POSICAO E A DO CICLO 2 FINALMENTE APARECENDO. Ela nao e escolhida em lugar
+ * nenhum: ela e a leitura do que o jogador moveu no orcamento, contra o pais que
+ * ele recebeu, calculada pela MESMA funcao que compoe a pauta. E por isso o texto
+ * nao afirma uma ideologia — ele diz de quem o governo mais se APROXIMA, porque os
+ * quatro blocos sao os unicos pontos com nome que existem neste plano.
+ *
+ * ⚠ SEM MOVIMENTO, SEM POSICAO — e a frase muda em vez de sumir. Um presidente que
+ * ainda nao mexeu em nada nao e "de centro": ele nao exerceu ideologia nenhuma, e o
+ * que esta em vigor foi o antecessor que escreveu. Dizer isso e informacao; imprimir
+ * o centro do plano seria inventar uma.
+ *
+ * @param {object} input
+ * @param {{ name: string }} input.president
+ * @param {{ near: string, article: string } | null} input.stance
+ * @returns {string}
+ */
+export function railGovHtml({ president, stance }) {
+  return (
+    `<p class="rail__who">${escapeHtml(UI.gov.president)}</p>` +
+    `<p class="rail__president">${escapeHtml(president.name)}</p>` +
+    `<p class="rail__stance">` +
+    (stance
+      ? `${escapeHtml(UI.gov.nearest)} ${escapeHtml(stance.article)} <b>${escapeHtml(stance.near)}</b>`
+      : escapeHtml(UI.gov.untouched)) +
+    `</p>`
+  );
+}
+
+/**
  * @param {string} current chave da secao aberta
  * @param {ReadonlyArray<Area>} areas
  * @returns {string}

@@ -76,6 +76,8 @@ import { unit } from "../../state/random.mjs";
  * @property {number} economic - a posicao no eixo economico
  * @property {number} liberty - a posicao no eixo de liberdades
  * @property {number} threat - o quanto ela ataca a maquina
+ * @property {number} [spread] - o RAIO da nuvem de movimentos em torno do centroide;
+ *   zero, ou ausente, e um texto coeso. Ver a prosa dentro de `whipCount`.
  */
 
 /* Quanto a ameaca pesa, em unidades de resistencia. Calibrado contra a maior
@@ -264,6 +266,89 @@ export function baseCount({ parties, loyalty }) {
 }
 
 /**
+ * A MESMA BASE, REPARTIDA PELO ESTADO DE QUEM A ENTREGA.
+ *
+ * ── POR QUE ELA NAO E UMA CONTAGEM DE CADEIRAS ──────────────────────────────
+ * A tentacao obvia, quando se quer pintar o plenario por humor, e somar as
+ * cadeiras de cada bancada e reparti-las em tres cores. Isso produziria 513
+ * cadeiras divididas em tres — e a tela ja mostra 436, que e OUTRA grandeza: a
+ * base EFETIVA, cadeira ponderada pelo `moodFactor`. Duas verdades sobre o
+ * tamanho da base no mesmo cartao, e a segunda apareceria como um arco que nao
+ * bate com o numero embaixo dele.
+ *
+ * Entao o que se reparte e a propria base efetiva: cada bancada contribui com
+ * `cadeiras × moodFactor`, e a contribuicao dela e pintada pelo estado em que ela
+ * esta. As tres parcelas somam exatamente o que `baseCount` devolve, e o arco
+ * passa a dizer duas coisas de uma vez sem inventar nenhuma — o TAMANHO da base e
+ * a SAUDE dela.
+ *
+ * ⚠ E E POR ISSO QUE UMA BANCADA ROMPIDA QUASE SOME DO ARCO. O `RUPTURE_TOLL`
+ * corta a contribuicao dela a 15%, e essa e a leitura certa: quem rompeu nao
+ * entrega mais quase nada. A fatia vermelha e fina de proposito — ela nao mede
+ * quantos deputados romperam, mede quanto do governo ainda passa por eles.
+ *
+ * ⚠ NAO ARREDONDA. `baseCount` arredonda o total porque a tela mostra um inteiro;
+ * repartir arredondado faria a soma das partes divergir do total em ate uma
+ * cadeira, e o arco fecharia com uma fresta que ninguem consegue explicar.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty
+ * @returns {{ loyal: number, obstructing: number, ruptured: number }} cadeiras efetivas
+ */
+export function baseSplit({ parties, loyalty }) {
+  const split = { loyal: 0, obstructing: 0, ruptured: 0 };
+
+  for (const party of parties) {
+    const mood = loyalty[party.id] ?? 0;
+    const effective = party.seats * clamp01(moodFactor(mood));
+
+    /* A ORDEM E A DA GRAVIDADE, e ela espelha a de `moodFactor`: quem rompeu
+       passou pela obstrucao antes, entao a pergunta mais grave vem primeiro. */
+    if (mood < RUPTURE) split.ruptured += effective;
+    else if (mood < OBSTRUCTION) split.obstructing += effective;
+    else split.loyal += effective;
+  }
+
+  return split;
+}
+
+/**
+ * O PLENARIO CADEIRA A CADEIRA — quantas cada bancada tem, e quantas ela ENTREGA.
+ *
+ * ⚠ ELA EXISTE PARA O HEMICICLO, e a razao de ela viver aqui e a de sempre: quem
+ * sabe quanto uma bancada entrega e o motor. `baseSplit` ja fazia esta conta e
+ * devolvia so o total de cada estado — desenhar 513 cadeiras exige o detalhe, e a
+ * alternativa era a tela refazer `moodFactor` por fora. Ela erraria no dia seguinte
+ * a primeira recalibragem dos pedagios, e o sintoma seria um plenario desenhado que
+ * discorda do numero impresso ao lado dele.
+ *
+ * ⚠ AS DUAS FUNCOES LEEM O MESMO `moodFactor`, e nao duas copias dele. A soma de
+ * `delivered` aqui e exatamente o `loyal + obstructing + ruptured` de la — e ha uma
+ * prova cobrando isso, porque a hora em que as duas divergirem e a hora em que o
+ * desenho passa a mentir sobre o tamanho da base.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty
+ * @returns {{ id: string, label: string, economic: number, seats: number,
+ *   delivered: number, mood: "loyal" | "obstructing" | "ruptured" }[]}
+ */
+export function seating({ parties, loyalty }) {
+  return parties.map(party => {
+    const mood = loyalty[party.id] ?? 0;
+    return {
+      id: party.id,
+      label: party.label,
+      economic: party.economic,
+      seats: party.seats,
+      delivered: party.seats * clamp01(moodFactor(mood)),
+      mood: mood < RUPTURE ? "ruptured" : mood < OBSTRUCTION ? "obstructing" : "loyal",
+    };
+  });
+}
+
+/**
  * A PREVISAO. Deterministica: nenhuma chamada a fluxo de aleatoriedade.
  *
  * @param {object} input
@@ -287,7 +372,34 @@ export function whipCount({ bill, parties, funding, loyalty, standing }) {
   const forecasts = parties.map(party => {
     const dx = party.economic - bill.economic;
     const dy = party.liberty - bill.liberty;
-    const distance = Math.hypot(dx, dy);
+
+    /* ── A DISPERSAO DO TEXTO ENTRA COMO UM TERCEIRO EIXO ──────────────────────
+       ⚠ ELA CONSERTA O DEFEITO MEDIDO EM 14/08/2026: o preco de uma pauta nao
+       escalava com o TAMANHO dela. Um movimento de piso constitucional saia por
+       358 votos; oitenta e cinco movimentos saiam por 334 — e os dois passavam.
+       Nao havia razao para o jogador nao juntar tudo num texto so, e o logrolling
+       deixava de ser escolha para virar padrao.
+       A causa era a media: uma proposta que corta a saude E amplia a defesa tem
+       posicao MEDIA no centro do plano, e o centro nao incomoda ninguem. So que
+       ela incomoda a esquerda pela saude e a direita pela defesa — a media
+       escondia exatamente a informacao que decide o voto.
+
+       O QUE O PARLAMENTAR MEDE E A DISTANCIA ATE CADA MOVIMENTO, e nao ate o
+       centroide deles. E a identidade que torna isso barato — para a distancia
+       quadratica media, vale exatamente:
+
+           E[|p − m|²]  =  |p − centroide|²  +  E[|m − centroide|²]
+
+       ou seja, a distancia efetiva e a hipotenusa entre a distancia ao centro e o
+       RAIO da nuvem. Um texto coeso tem raio zero e nada muda; um pacote espalhado
+       afasta TODA bancada de uma vez, sem constante nova e sem tabela nova.
+       Por isso ela entra como terceiro argumento de `hypot`, e nao como um termo
+       somado a parte: ela e literalmente um terceiro eixo de desacordo.
+
+       E ELA CONTINUA COMPRAVEL: a dispersao esta dentro do fator de verba, junto
+       da distancia, porque dinheiro compra tolerancia com o que se detesta — e um
+       pacote confuso e caro de engolir, nao impossivel. */
+    const distance = Math.hypot(dx, dy, bill.spread ?? 0);
     const venality = venalityFor(party, dx, dy);
     const paid = clamp01(funding[party.id] ?? 0);
 

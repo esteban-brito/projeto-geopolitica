@@ -84,6 +84,18 @@ export const PROGRAM_SCHEMA = {
   floor: { kind: "number", min: 0, max: 100 },
   ceiling: { kind: "number", min: 0, max: 100 },
   guard: { kind: "text" },
+  /* ⚠ A VINCULACAO, e ela e OPCIONAL de proposito: a esmagadora maioria dos
+     programas obriga por PONTOS, e so tres obrigam por FRACAO DA RECEITA.
+
+     Quando ela existe, ela SUBSTITUI o piso — a norma herdada nasce com `share` em
+     vez de `floor`, e o piso em pontos passa a ser derivado da receita do mes. Ver
+     `inherited` em `src/domain/norms/`.
+
+     A DIFERENCA E QUE UM PISO VINCULADO ANDA. O pais cresce, a receita cresce, e a
+     conta da saude cresce sozinha; o pais encolhe e ela aperta sozinha. Um piso em
+     pontos nao faz nem uma coisa nem outra — ele fica onde esta enquanto o mundo se
+     move debaixo dele. */
+  bound: { kind: "number", min: 0, max: 1, optional: true },
   weight: { kind: "number", min: 0, max: 5 },
   lag: { kind: "number", min: 0, max: 48 },
 };
@@ -102,6 +114,8 @@ export const PROGRAM_SCHEMA = {
  * @property {number} floor - ate onde a caneta alcanca sem mudar a lei
  * @property {number} ceiling - o teto que a lei vigente permite
  * @property {string} guard - o que protege o piso; um de `GUARDS`
+ * @property {number} [bound] - a VINCULACAO, em fracao da receita. Ausente na maioria,
+ *   e a ausencia significa "obriga por pontos, e nao por fracao"
  * @property {number} weight - o peso dele no indice da area
  * @property {number} lag - meses ate o efeito chegar
  */
@@ -248,6 +262,15 @@ export const PROGRAMS = [
     floor: 63,
     ceiling: 100,
     guard: "constitution",
+    /* ⚠ VINCULADA — art. 198. A fracao NAO foi inventada: ela e a calibragem de
+       abertura relida em outra unidade, 63 pontos x R$ 189 bi / R$ 2.280 bi de
+       receita. Por isso o mes 1 fica IDENTICO ao que era antes de a vinculacao
+       existir, e a diferenca so aparece a partir do segundo mes — mesmo padrao que
+       provou inerte a migracao das faixas para normas.
+       Somada a atencao basica, a saude fecha em 8,0% da receita bruta. O numero
+       constitucional e 15% da RECEITA CORRENTE LIQUIDA, que e menor que a bruta; o
+       modelo ainda nao separa as duas, e a omissao esta declarada no achado 26. */
+    bound: 0.052224,
     weight: 1.2,
     lag: 1,
   },
@@ -264,6 +287,8 @@ export const PROGRAMS = [
     floor: 59,
     ceiling: 100,
     guard: "constitution",
+    /* VINCULADA — art. 198, a outra metade da saude. Ver a nota da media e alta. */
+    bound: 0.027947,
     weight: 1,
     lag: 6,
   },
@@ -339,6 +364,10 @@ export const PROGRAMS = [
     floor: 72,
     ceiling: 90,
     guard: "constitution",
+    /* ⚠ VINCULADA — art. 212. Ela e a unica da educacao, e o Fundeb e de fato a
+       parcela que a Uniao complementa por regra de receita; o resto da educacao
+       federal e discricionario, e continua sendo. */
+    bound: 0.020211,
     weight: 1.1,
     lag: 12,
   },

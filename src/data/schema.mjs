@@ -19,6 +19,26 @@
 /**
  * @typedef {object} Field
  * @property {"id" | "text" | "number"} kind
+ * @property {boolean} [optional] - o campo pode faltar, e faltar SIGNIFICA alguma
+ *   coisa. Ele nasceu com a VINCULACAO: tres programas obrigam por fracao da receita
+ *   e trinta e cinco obrigam por pontos, e exigir `bound: 0` nos trinta e cinco seria
+ *   afirmar que eles tem vinculacao de zero por cento — que e diferente de nao ter
+ *   vinculacao nenhuma. Ausencia declarada, e nao ausencia disfarcada, aplicada a
+ *   catalogo.
+ *
+ *   ⚠ ELE E RARO DE PROPOSITO. Campo opcional e a porta por onde um catalogo vira
+ *   um saco de chaves: se metade dos campos puder faltar, o esquema deixa de dizer
+ *   qual e a forma do dado. Cada `optional` novo precisa de uma frase dizendo o que a
+ *   AUSENCIA significa — se nao houver essa frase, o campo devia ser obrigatorio.
+ * @property {ReadonlyArray<string>} [values] - o VOCABULARIO fechado de um `text`.
+ *   Ele nasceu de uma promessa que ninguem cumpria: `areas.mjs` declarava
+ *   `CHANNELS` e escrevia na prosa "o canal de realimentacao; um de `CHANNELS`", e
+ *   NADA verificava isso — um `feeds: "capacidde"` passaria pelo validador, pelos
+ *   tipos e pelas guardas, e sumiria dentro de um `switch` que nao casa com nada.
+ *
+ *   ⚠ LISTA DECLARADA E LISTA NAO COBRADA E PIOR QUE LISTA NENHUMA, porque a
+ *   proxima pessoa confia nela. O mesmo raciocinio que governa a documentacao deste
+ *   projeto, aplicado ao catalogo.
  * @property {number} [min] - so para `number`, e inclusivo
  * @property {number} [max] - so para `number`, e inclusivo
  *
@@ -50,7 +70,7 @@ export function violations(schema, record, where) {
     const value = record[field];
 
     if (value === undefined) {
-      found.push(`${where}: falta o campo "${field}"`);
+      if (!rule.optional) found.push(`${where}: falta o campo "${field}"`);
       continue;
     }
 
@@ -75,6 +95,12 @@ export function violations(schema, record, where) {
 
     if (rule.kind === "id" && !ID.test(value)) {
       found.push(`${where}: o id "${value}" foge do kebab-case minusculo`);
+    }
+
+    if (rule.values && !rule.values.includes(value)) {
+      found.push(
+        `${where}: "${field}" e "${value}", fora do vocabulario [${rule.values.join(", ")}]`,
+      );
     }
   }
 

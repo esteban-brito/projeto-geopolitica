@@ -11,103 +11,118 @@
    uma faixa parecer bagunçada por mais alinhada que esteja. */
 
 @layer components {
-  /* ── FAIXA DE CONTEXTO ──────────────────────────────────────────────────────
-     UMA superficie com varios campos, e nao varias caixas enfileiradas. Cada
-     informacao com moldura propria significa cinco bordas e cinco fundos para
-     dizer coisas que pertencem a mesma frase — caixa e peso, e peso repetido e
-     ruido.
-     O separador e um VAO de 1px que deixa o fundo da propria faixa passar: uma
-     `border-left` fica pendurada no nada quando a faixa quebra de linha. */
-  .strip {
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1px;
-    width: 100%;
-    overflow: hidden;
-  }
+  /* ── A FAIXA DE CONTEXTO MORREU AQUI EM 15/08/2026 ─────────────────────────
+     `.strip`, `.chip`, `.chip__label`, `.chip__value`, `.chip--alert` e
+     `.strip--stacked` desenhavam a faixa de mandato/base/situacao. Ela deixou de
+     ser montada quando a barra superior absorveu os tres campos dela, na setima
+     sessao — e as regras ficaram, sem uma linha de HTML para pintar, por duas
+     sessoes: 99 linhas de folha que nenhum seletor alcancava.
 
-  .chip {
+     ⚠ ELAS SO FORAM ENCONTRADAS POR VARREDURA, e nao por leitura. Nada acusa CSS
+     orfa — a guarda `orphans` e justamente a que o projeto ainda nao escreveu (o
+     achado 5 da retomada), e este e o custo dela em numero. A folha inteira de
+     `70-screen-approval.css` caiu na mesma varredura, pela mesma razao.
+
+     O QUE SOBREVIVEU DA REGRA DE FORMA esta no comentario do topo deste arquivo, e
+     ela nao morreu com a peca: informacoes do mesmo nivel usam o mesmo objeto. */
+
+  /* ── O SINETE ───────────────────────────────────────────────────────────────
+     Iniciais num anel, e o anel e o ALCANCE — a fracao da bancada que aquela
+     pessoa de fato arrasta. Nao e enfeite: e o numero que decide se comprar aquele
+     sujeito resolve a votacao ou nao, e um medidor lê mais rapido que um numero
+     quando a pergunta e "muito ou pouco?".
+
+     ⚠ ELE NAO TEM COR DE PARTIDO, e a ausencia e decisao. O catalogo nao declara
+     cor de bloco, e inventar uma aqui colidiria com a paleta semantica: verde ja
+     significa ALTA e vermelho ja significa CRISE, entao pintar ideologia com os
+     mesmos tons faria um lado parecer bom e o outro parecer perigo. O bloco de cada
+     pessoa ja e dito pelo lugar dela na tela. */
+  .sigil {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-1);
-    flex: 1 0 auto;
-    min-width: 92px;
-    padding: var(--space-2) var(--space-4);
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
   }
 
-  /* Acima do celular a faixa nunca quebra, entao o separador pode ser LUZ — um
-     fio de duas paradas, clara em cima e escura embaixo, que e como uma aresta
-     de vidro real se comporta. `box-shadow` nao ocupa espaco, entao nenhuma
-     medida de caixa muda. */
-  @media (min-width: 641px) {
-    .chip + .chip {
-      box-shadow:
-        -1px 0 0 rgba(255, 255, 255, 0.13),
-        -1px 0 0 rgba(0, 0, 0, 0.22) inset;
-    }
+  .sigil svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
-  .chip__label {
+  .sigil__track {
+    stroke: rgba(255, 255, 255, 0.1);
+  }
+
+  .sigil__reach {
+    stroke: var(--ink-dim);
+    stroke-linecap: round;
+    transition: stroke-dasharray var(--dur-piece) var(--ease-move);
+  }
+
+  /* QUEM PRESIDE GANHA O ANEL ACESO, e so quem preside: o presidente da Camara e a
+     unica pessoa do jogo cujo cargo vai decidir se um texto existe — e quando a
+     tramitacao nascer, ele e o primeiro nome que o jogador precisa achar. */
+  .sigil[data-office="speaker"] .sigil__reach {
+    stroke: var(--brand);
+  }
+
+  .sigil__mark {
     font-family: var(--font-display);
-    font-size: var(--text-label);
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    /* NAO usa `--ink-dim`: aquele tom e calibrado para painel escuro solido, e
-       aqui a faixa pousa sobre o grafo. Cor que e funcao de um fundo precisa ser
-       revista quando o fundo muda — ela e consequencia, nao escolha. */
+    font-size: var(--text-note);
+    font-weight: 800;
+    letter-spacing: 0.02em;
     color: var(--ink-soft);
-    line-height: 1;
   }
 
-  .chip__value {
+  .sigil[data-office="speaker"] .sigil__mark {
+    color: var(--brand);
+  }
+
+  /* ── O ESTADO VAZIO, e ele e o mesmo em toda tela ──────────────────────────
+     A ESPERA E TEXTO, e nao um bloco vazio com um icone triste: ela diz o que vai
+     aparecer ali e o que falta para isso — a mesma postura do item desligado no
+     rail.
+
+     ⚠ ELA PRECISOU DE COMPOSICAO quando a Caixa de Entrada virou coluna.
+     Encostado no teto de uma coluna alta, um paragrafo solto deixa um vao enorme
+     embaixo e a tela lê como carregamento travado. Centrado, o vazio lê como lugar
+     reservado. A CHAMADA VEM ANTES DA EXPLICACAO porque ela responde a pergunta
+     que o olho faz primeiro ("isto esta quebrado?") em cinco palavras, e a prosa
+     abaixo responde a segunda ("por que?") para quem quiser.
+
+     ⚠ E ELA VIROU COMPONENTE em 15/08/2026, quando a segunda tela precisou dela. A
+     mesa sem pauta escrevia "Nada em pauta" com as classes do TITULO de uma pauta
+     real — a ausencia de assunto com o peso de um assunto —, e o Gabinete ja tinha
+     a forma certa do lado. Duas formas para o mesmo estado e como uma tela comeca
+     a parecer montada por duas pessoas diferentes.
+
+     A MEDIDA DE LINHA E CURTA de proposito: 46 caracteres numa coluna larga deixam
+     o texto no meio em vez de esticado de ponta a ponta, e prosa esticada e o que
+     faz um estado vazio parecer mensagem de erro. */
+  .empty {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: var(--space-2);
+    min-height: 100%;
+    padding: var(--space-6) var(--space-4);
+    text-align: center;
+  }
+
+  .empty__lead {
     font-family: var(--font-display);
+    font-size: var(--text-verdict);
     font-weight: 700;
-    font-size: var(--text-body);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink);
-    line-height: 1.1;
-    white-space: nowrap;
+    color: var(--ink-soft);
   }
 
-  .chip--alert {
-    background: rgba(var(--crisis-rgb), 0.16);
-  }
-  .chip--alert .chip__value {
-    color: var(--crisis);
-  }
-
-  /* A FAIXA EM PE, para quando ela mora num rail. E a MESMA peca: mesmo chip,
-     mesma tipografia, mesma hierarquia rotulo/valor — muda o eixo, e so.
-     Um segundo componente de "indicador" para dizer o que o chip ja diz seria a
-     primeira divergencia da paleta de formas, e e disso que este arquivo cuida. */
-  .strip--stacked {
-    flex-direction: column;
-    align-items: stretch;
-    /* Ele nao estica para preencher o rail: quem empurra o rodape para baixo e
-       o `margin-top: auto` de la, e nao uma faixa inflada. */
-    flex: 0 1 auto;
-    overflow: auto;
-  }
-
-  .strip--stacked .chip {
-    flex: 0 0 auto;
-    align-items: flex-start;
-    min-width: 0;
-    padding: var(--space-3);
-  }
-
-  /* O separador vira o fio HORIZONTAL, pela mesma razao de sempre: a luz vem de
-     cima, entao a aresta acesa fica na borda de cima e a sombra na de baixo. */
-  .strip--stacked .chip + .chip {
-    box-shadow:
-      0 -1px 0 rgba(255, 255, 255, 0.13),
-      0 -1px 0 rgba(0, 0, 0, 0.22) inset;
+  .empty__note {
+    max-width: 46ch;
+    color: var(--ink-dim);
+    line-height: 1.5;
   }
 
   /* ── ACAO ───────────────────────────────────────────────────────────────────
@@ -127,7 +142,7 @@
     min-width: 240px;
     padding: var(--space-4) var(--space-6);
     font-family: var(--font-display);
-    font-size: 0.86rem;
+    font-size: var(--text-body);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -137,6 +152,25 @@
     transition:
       transform var(--dur-touch) var(--ease-enter),
       background var(--dur-touch) linear;
+  }
+
+  /* ── A PRESSAO ──────────────────────────────────────────────────────────────
+     ⚠ ELA FALTAVA DESDE SEMPRE, e a ausencia estava escrita na propria regra
+     acima: a peca declarava `transform` na transicao e NADA nunca lhe dava um
+     `transform` fora do hover. O orcamento de movimento do clique existia,
+     reservado, e nunca foi gasto.
+
+     E e ela que decide se a tela parece rapida. Nenhuma reducao de duracao
+     conserta um botao que nao se move quando se aperta: o dedo espera uma
+     confirmacao FISICA, e sem ela o jogador atribui a demora a maquina — mesmo
+     quando a maquina ja respondeu. Encurtar `--dur-touch` sem isto seria deixar
+     o botao morto mais depressa.
+
+     O afundamento e menor que a subida do hover de proposito. Eles se somam: com
+     o ponteiro em cima a peca esta a −2px, e apertar a traz de volta para perto
+     de zero — o gesto inteiro le como "levantou, encostou". */
+  .action:active {
+    transform: translateY(0) scale(0.985);
   }
 
   .action__hint {
@@ -176,7 +210,7 @@
   .action--quiet {
     min-width: 0;
     padding: var(--space-2) var(--space-3);
-    font-size: 0.7rem;
+    font-size: var(--text-note);
     letter-spacing: 0.06em;
     color: var(--ink-dim);
     transition: color var(--dur-touch) linear;
@@ -237,13 +271,69 @@
   }
 
   .rail__mark {
-    padding: var(--space-2) var(--space-3) var(--space-4);
+    padding: var(--space-2) var(--space-3) var(--space-2);
     font-family: var(--font-display);
     font-weight: 800;
     font-size: var(--text-body);
     letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink);
+  }
+
+  /* ── DE QUEM É ESTE GOVERNO ─────────────────────────────────────────────────
+     ⚠ ELE ENTROU EM 15/08/2026, e o que ele conserta e o buraco mais fundo que a
+     auditoria externa apontou sem nomear: o jogador era a UNICA pessoa sem nome num
+     jogo em que sete outras tinham. A marca dizia "PLANALTO" e a barra dizia
+     "1º MANDATO · ANO 1" — o mandato de quem?
+
+     ELE FICA ABAIXO DA MARCA E ACIMA DA NAVEGACAO, e a ordem e a hierarquia: o jogo
+     se apresenta, depois o governo se apresenta, e so entao vem para onde ir. */
+  .rail__gov {
+    display: grid;
+    gap: 1px;
+    margin: 0 var(--space-3) var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .rail__who {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* O NOME EM SERIFA, como todo nome de gente neste jogo: serifa e texto de
+     REGISTRO, e uma pessoa e um registro. */
+  .rail__president {
+    font-family: var(--font-record);
+    font-size: var(--text-name);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  /* ── A POSIÇÃO QUE O GOVERNO SE TORNOU ──────────────────────────────────────
+     ⚠ ELA É A REGRA DO CICLO 2 FINALMENTE VISÍVEL. "A posição ideológica é sombra,
+     e nunca controle": o jogador nunca arrasta um cursor no plano — ele mexe em
+     leitos e alíquotas, e a posição é CALCULADA do que ele moveu. O cálculo existia
+     desde o ciclo 2, rodava todo mês dentro de `compose`, e morria dentro de uma
+     pauta sem nenhuma tela dizer o resultado.
+
+     O TOM É DISCRETO DE PROPÓSITO. Ela é consequência, e não painel: um destaque
+     aqui a faria parecer um controle — exatamente a leitura que o ciclo 2 recusou
+     quando recusou o cursor. */
+  .rail__stance {
+    font-size: var(--text-note);
+    line-height: 1.35;
+    color: var(--ink-dim);
+  }
+
+  .rail__stance b {
+    font-weight: 600;
+    color: var(--ink-soft);
   }
 
   .rail__list {
@@ -270,7 +360,15 @@
     color: var(--ink-soft);
     transition:
       background var(--dur-touch) linear,
-      color var(--dur-touch) linear;
+      color var(--dur-touch) linear,
+      transform var(--dur-touch) var(--ease-enter);
+  }
+
+  /* O rail afunda MENOS que a acao, e a diferenca e hierarquia: navegar nao e
+     decidir. Um item de menu que afunda como um botao de turno promete uma
+     consequencia que ele nao tem. */
+  .rail__item:not([disabled]):active {
+    transform: scale(0.99);
   }
 
   /* ITEM DESLIGADO E ITEM QUE DIZ QUE ESTA DESLIGADO. Cinco das seis secoes tem
@@ -362,24 +460,66 @@
      A CANETA E A UNICA EXCECAO, e nao por enfase: ela e a unica que nao vai a
      plenario. Isso e diferenca de categoria, e nao de grau — e diferenca de
      categoria e a unica coisa que merece cor propria. */
+  /* ── O SELO DO RITO ─────────────────────────────────────────────────────────
+     ⚠ ELE ERA UMA PASTILHA, E VIROU CARIMBO em 15/08/2026. A forma anterior — pílula
+     de cantos redondos, fundo cinza translúcido — é o vocabulário de etiqueta de
+     aplicativo, e dizia com peso de etiqueta a coisa mais cara do jogo: que aquele
+     movimento precisa de 308 votos porque a Constituição o protege.
+
+     O CARIMBO NÃO É DECORAÇÃO — ele devolve ao rótulo o peso que a MECÂNICA já tem.
+     Emenda custa mais que lei, que custa mais que caneta, e a tela dizia os três no
+     mesmo tom. Agora a moldura é um traço fino, o canto é reto e a cor sobe com a
+     exigência: quanto mais caro o rito, mais o selo se destaca.
+
+     ⚠ O CANTO RETO É A DECISÃO, e não o contorno. Todo o resto desta interface é
+     arredondado — pastilha, cartão, lâmina —, e é justamente por isso que um canto
+     reto lê como outra natureza de coisa: um documento carimbado, e não um elemento
+     de UI. É a mesma ideia da regra tipográfica do ciclo 5, aplicada à forma. */
   .badge {
     display: inline-flex;
     align-items: center;
-    padding: 2px var(--space-2);
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.07);
-    font-family: var(--font-display);
+    padding: 1px var(--space-2);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 2px;
+    background: transparent;
+    /* ⚠ MONOESPACADA, e ela e a terceira familia do projeto: o rito nao e nome nem
+       medicao — e o despacho que a maquina do Estado carimba sobre o papel. */
+    font-family: var(--font-machine);
     font-size: var(--text-label);
-    font-weight: 700;
-    letter-spacing: var(--track-label);
+    font-weight: 800;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     line-height: 1.5;
     color: var(--ink-soft);
     white-space: nowrap;
   }
 
+  /* CANETA NÃO LEVA SELO NENHUM na área — a linha só mostra o piso. Aqui ele
+     aparece nas telas que listam rito em coluna, e no tom mais apagado que existe:
+     executar o orçamento é o caso comum, e o comum não se carimba. */
+  .badge[data-instrument="budget"] {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--ink-dim);
+  }
+
+  /* LEI ORDINÁRIA — a primeira parede de verdade. */
+  .badge[data-instrument="law"] {
+    border-color: rgba(var(--stable-rgb), 0.55);
+    color: var(--stable);
+  }
+
+  /* ⚠ EMENDA LEVA A MARCA, e ela é a única coisa fora de um botão que a usa. O
+     âmbar é a cor do que se pressiona, e gastá-la aqui seria enfraquecê-la — a
+     exceção se paga porque furar cláusula protegida É a decisão mais cara que este
+     jogo oferece, e ela precisa ser reconhecível antes de ser lida. */
+  .badge[data-instrument="amendment"] {
+    border-color: rgba(var(--brand-rgb), 0.6);
+    color: var(--brand);
+  }
+
   .badge[data-instrument="decree"] {
-    background: rgba(var(--stable-rgb), 0.3);
+    border-color: rgba(var(--stable-rgb), 0.45);
+    background: rgba(var(--stable-rgb), 0.18);
     color: var(--ink);
   }
 
@@ -409,40 +549,121 @@
     cursor: pointer;
   }
 
+  /* ── A CALHA ESCULPIDA ──────────────────────────────────────────────────────
+     A pista era um fio de 6px com fundo translucido — o componente mais generico
+     da web moderna, e o mesmo que ajusta o volume de um fone. Agora ela e uma calha
+     ESCAVADA: mais espessa, escura, com a sombra vindo de dentro. Um sulco na mesa,
+     e nao uma linha desenhada sobre ela. */
   input[type="range"]::-webkit-slider-runnable-track {
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: var(--bevel-fine);
+    height: 10px;
+    border-radius: 2px;
+    background: var(--rail-costly);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.7),
+      0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   input[type="range"]::-moz-range-track {
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: var(--bevel-fine);
+    height: 10px;
+    border-radius: 2px;
+    background: var(--rail-costly);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.7),
+      0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  /* O polegar sobe 5px para centrar na pista de 6: no dialeto do WebKit ele e
-     posicionado pelo TOPO da pista, e nao pelo meio dela. */
+  /* ── O PINO DE METAL ────────────────────────────────────────────────────────
+     ⚠ ELE DEIXOU DE SER UMA BOLINHA em 15/08/2026, e a forma e a mensagem: um
+     circulo lê como controle de midia, e um retangulo com quinas lê como TRAVA que
+     se arrasta ao longo de uma regua. Cortar um bilhao de um hospital nao pode ter a
+     mesma gestualidade que baixar o brilho da tela.
+
+     ⚠ E ELE NAO E MAIS AMBAR. A marca e a cor do que se PRESSIONA — uma cor, um
+     lugar —, e um pino que se arrasta nao se pressiona: gasta-la em trinta e oito
+     controles por tela era exatamente a diluicao que a regra existe para impedir.
+     Metal escovado, com luz em cima e sombra embaixo, e o que um pegador e. */
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
-    margin-top: -5px;
-    border-radius: 999px;
-    background: var(--brand);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    width: 12px;
+    height: 22px;
+    margin-top: -6px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.55);
+    background: linear-gradient(
+      180deg,
+      var(--pin-light) 0%,
+      var(--pin-body) 55%,
+      var(--pin-shade) 100%
+    );
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
   input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border: none;
-    border-radius: 999px;
-    background: var(--brand);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    width: 12px;
+    height: 22px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.55);
+    background: linear-gradient(
+      180deg,
+      var(--pin-light) 0%,
+      var(--pin-body) 55%,
+      var(--pin-shade) 100%
+    );
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  /* ── AS TRES ZONAS DO TRILHO ────────────────────────────────────────────────
+     ⚠ ESTA E A REGRA QUE CONSOME O DADO QUE A VISTA SEMPRE ESCREVEU E NINGUEM LIA.
+     `--floor` e `--ceiling` sao a faixa vigente daquela alavanca, e com eles o
+     trilho deixa de ser um fio uniforme e passa a dizer, ANTES de o jogador
+     arrastar, o que cada trecho custa:
+
+       ate o piso        custa lei, ou emenda quando a guarda e constitucional;
+       do piso ao teto   caneta — e a lei ja autorizou;
+       acima do teto     custa de novo.
+
+     Ate 15/08/2026 a tela so dizia isso DEPOIS: a linha se tingia quando o
+     controle ja tinha atravessado. Informacao que chega depois da decisao nao e
+     informacao — e um recibo.
+
+     ⚠ AS MARCAS DE PISO E TETO SAO PARADAS DURAS no mesmo gradiente, e nao
+     pseudo-elementos: o trilho de um `<input type=range>` nao aceita filho, e um
+     segundo elemento posicionado por cima sairia de registro com a pista no
+     primeiro navegador que arredondasse diferente. Uma pintura so, uma verdade so.
+
+     ⚠ O SELETOR REPETE `input[type="range"]` DE PROPOSITO, e a razao e um defeito
+     medido: `.dial__slider` sozinho tem especificidade (0,1,0) e PERDE para a regra
+     generica acima, que e (0,1,1) — atributo mais tipo. A primeira versao pintou as
+     tres zonas e a tela continuou com o trilho liso, sem nenhum erro em lugar
+     nenhum. Uma classe nao vence um seletor de atributo, e este e o tipo de derrota
+     que nao aparece em teste de unidade nem em guarda: so na imagem. */
+  input[type="range"].dial__slider::-webkit-slider-runnable-track,
+  input[type="range"].law__slider::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      90deg,
+      var(--rail-costly) 0 calc(1% * var(--floor)),
+      var(--rail-mark) calc(1% * var(--floor)) calc(1% * var(--floor) + 2px),
+      var(--rail-free) calc(1% * var(--floor) + 2px) calc(1% * var(--ceiling)),
+      var(--rail-mark) calc(1% * var(--ceiling)) calc(1% * var(--ceiling) + 2px),
+      var(--rail-costly) calc(1% * var(--ceiling) + 2px) 100%
+    );
+  }
+
+  input[type="range"].dial__slider::-moz-range-track,
+  input[type="range"].law__slider::-moz-range-track {
+    background: linear-gradient(
+      90deg,
+      var(--rail-costly) 0 calc(1% * var(--floor)),
+      var(--rail-mark) calc(1% * var(--floor)) calc(1% * var(--floor) + 2px),
+      var(--rail-free) calc(1% * var(--floor) + 2px) calc(1% * var(--ceiling)),
+      var(--rail-mark) calc(1% * var(--ceiling)) calc(1% * var(--ceiling) + 2px),
+      var(--rail-costly) calc(1% * var(--ceiling) + 2px) 100%
+    );
   }
 
   /* ── MEDIDOR SEGMENTADO ─────────────────────────────────────────────────────

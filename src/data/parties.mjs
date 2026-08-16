@@ -61,6 +61,12 @@
 export const PARTY_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
+  /* ⚠ O ARTIGO E VOCABULARIO, e por isso ele mora no catalogo e nao no template.
+     A tela escreve "governa mais perto DO Centrao" e "DA Esquerda" — a contracao
+     pede genero, e genero e propriedade do nome. Montada na view, ela viraria uma
+     tabela de excecoes escondida numa string, e o quinto bloco que o catalogo
+     ganhasse sairia com a preposicao errada sem nada acusar. */
+  article: { kind: "text" },
   economic: { kind: "number", min: 0, max: 100 },
   liberty: { kind: "number", min: 0, max: 100 },
   venalityEconomic: { kind: "number", min: 0, max: 1 },
@@ -72,6 +78,11 @@ export const PARTY_SCHEMA = {
  * @typedef {object} Party
  * @property {string} id
  * @property {string} label - o nome que a interface mostra; ATRIBUTO, nao identidade
+ * @property {string} [article] - a contracao com que a prosa se refere a ele: `do`, `da`.
+ *   ⚠ OPCIONAL PORQUE UMA BANCADA NEM SEMPRE E UM BLOCO: desde o ELENCO, `benches`
+ *   monta bancadas a partir de PESSOAS, e uma pessoa se refere pelo nome — nao ha
+ *   contracao a fazer com "Onofre Bastos Quirino". O campo e do vocabulario dos
+ *   quatro blocos do catalogo, e `catalogViolations` cobra os quatro.
  * @property {number} economic
  * @property {number} liberty
  * @property {number} venalityEconomic - o preco de ceder em pauta economica
@@ -96,6 +107,7 @@ export const PARTIES = [
   {
     id: "esquerda",
     label: "Esquerda",
+    article: "da",
     economic: 20,
     liberty: 80,
     venalityEconomic: 0.2,
@@ -105,6 +117,7 @@ export const PARTIES = [
   {
     id: "centro-esquerda",
     label: "Centro-esquerda",
+    article: "da",
     economic: 45,
     liberty: 70,
     venalityEconomic: 0.45,
@@ -114,6 +127,7 @@ export const PARTIES = [
   {
     id: "centrao",
     label: "Centrão",
+    article: "do",
     economic: 70,
     liberty: 35,
     venalityEconomic: 0.95,
@@ -123,6 +137,7 @@ export const PARTIES = [
   {
     id: "direita-liberal",
     label: "Direita liberal",
+    article: "da",
     economic: 92,
     liberty: 60,
     venalityEconomic: 0.08,

@@ -155,7 +155,12 @@
        os 64px de cada lado somavam 128px de vazio a uma peca que ja parava antes
        da borda. Margem existe para a peca nao encostar na moldura — e a moldura
        aqui e o rail, que ja e a distancia. */
-    padding: var(--space-8) clamp(16px, 2.5vw, 32px) var(--space-11);
+    /* ⚠ O RESPIRO LATERAL ENCOLHEU DE NOVO em 15/08/2026 (era
+       `clamp(16px, 2.5vw, 32px)`), e agora ele e o UNICO limite entre a lamina e a
+       largura da janela: com `--column` em 100%, cada pixel daqui sai direto dos
+       80% que o responsavel pediu. Medido em 1440px: com 32px de cada lado a peca
+       fechava em 77,6% da janela; com 24px ela passa de 80%. */
+    padding: var(--space-8) clamp(12px, 1.5vw, 24px) var(--space-11);
     /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela:
        `1fr` num grid tem minimo automatico igual ao conteudo, e sem esta linha a
        peca de 780px cria rolagem horizontal no tablet. */
@@ -279,12 +284,20 @@
   }
 
   /* ── QUANDO O RAIL NAO CABE ─────────────────────────────────────────────────
-     Abaixo de 900px a lateral vira uma FAIXA no topo. Ela nao encolhe para uma
+     Abaixo de 1180px a lateral vira uma FAIXA no topo. Ela nao encolhe para uma
      tira de icones sem rotulo: icone sozinho e o que obriga a decorar um menu, e
      o rail foi dimensionado pelo rotulo justamente para nao chegar nisso.
      A faixa rola na horizontal por DENTRO — o estouro fica preso nela, e a
-     janela nunca ganha rolagem lateral. */
-  @media (max-width: 900px) {
+     janela nunca ganha rolagem lateral.
+
+     ⚠ O PONTO SUBIU DE 900 PARA 1180 em 15/08/2026, e ele deixou de ser "onde o
+     rail nao cabe" para ser "onde o rail sai caro DEMAIS". A conta e direta: com a
+     lamina preenchendo o tabuleiro, ela ocupa `janela − rail − respiro`, e o pedido
+     e que isso passe de 80% da janela. Entre 900 e 1180 nao existe largura de rail
+     que caiba "Congresso & Leis" em uma linha E deixe a lamina passar dos 80% —
+     medido, a 1024px o rail de 184px sozinho derrubava a peca para 77,7%. Deitado
+     no topo ele custa zero de largura, e a peca fecha em 96%. */
+  @media (max-width: 1180px) {
     .shell {
       grid-template-columns: minmax(0, 1fr);
     }
@@ -346,17 +359,9 @@
       display: contents;
     }
 
-    /* Deitada de novo, a faixa volta a ser a faixa: separador vertical e
-       conteudo centrado, como no rail em pe ela nao era. */
-    .strip--stacked .chip {
-      align-items: center;
-    }
-
-    .strip--stacked .chip + .chip {
-      box-shadow:
-        -1px 0 0 rgba(255, 255, 255, 0.13),
-        -1px 0 0 rgba(0, 0, 0, 0.22) inset;
-    }
+    /* AS DUAS REGRAS DE `.strip--stacked .chip` SAIRAM em 15/08/2026, junto com a
+       peca que elas ajustavam: a faixa de contexto nao e montada por ninguem desde
+       que a barra superior absorveu os campos dela. Ver `30-components.css`. */
 
     /* Sem isto cada item pede 100% da faixa — sete vezes a largura inteira, que
        era a origem da rolagem horizontal no tablet e no celular. */

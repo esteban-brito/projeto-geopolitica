@@ -26,7 +26,9 @@ import fc from "fast-check";
 import { AREAS } from "../../src/data/areas.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
+import { LOBBIES } from "../../src/data/lobbies.mjs";
 import { OPINION, SEGMENTS } from "../../src/data/opinion.mjs";
+import { inherited } from "../../src/domain/norms/index.mjs";
 import { pollFrom } from "../../src/domain/opinion/index.mjs";
 import { SCHEMA_VERSION, createState, monthLabel, reduce } from "../../src/state/state.mjs";
 
@@ -54,7 +56,13 @@ function resolutionOf(state) {
     mood: state.mood,
     series: state.series,
     levels: state.levels,
-    bands: state.bands,
+    norms: state.norms,
+    bills: state.bills,
+    mail: state.mail,
+    pressure: state.pressure,
+    impeachment: state.impeachment,
+    fallen: state.fallen,
+    memory: state.memory,
     stream: state.streams.congress,
   };
 }
@@ -136,24 +144,52 @@ const anySeries = fc.record({
   unemployment: anySeriesLine,
   debtRatio: anySeriesLine,
   primary: anySeriesLine,
+  /* ⚠ AS OITO AREAS COM COMPRIMENTOS DIFERENTES ENTRE SI, e nao a mesma linha oito
+     vezes: a serie de uma area comeca quando a area comeca a ser medida, e nada no
+     modelo garante que as oito tenham o mesmo tamanho. Um gerador que as fizesse
+     iguais deixaria de acusar o dia em que alguem indexasse uma pela outra. */
+  areas: fc
+    .array(anySeriesLine, { minLength: AREAS.length, maxLength: AREAS.length })
+    .map(lines => Object.fromEntries(AREAS.map((area, index) => [area.id, lines[index] ?? []]))),
 });
 
 /* AS LEIS DO PAIS EM QUALQUER CONFIGURACAO, e a faixa invertida entra junto: o
    reducer nao tem opiniao sobre o conteudo de uma lei, ele so a carrega. Quem
-   recusa faixa impossivel e quem a compoe, e ha prova disso em `agenda.mjs`. */
-const anyBands = fc
-  .array(fc.tuple(fc.integer({ min: 0, max: 100 }), fc.integer({ min: 0, max: 100 })), {
-    minLength: PROGRAMS.length,
-    maxLength: PROGRAMS.length,
-  })
-  .map(pairs =>
-    Object.fromEntries(
-      PROGRAMS.map((program, i) => [
-        program.id,
-        { floor: pairs[i]?.[0] ?? 0, ceiling: pairs[i]?.[1] ?? 100 },
-      ]),
-    ),
-  );
+   recusa faixa impossivel e quem a compoe, e ha prova disso em `agenda.mjs`.
+
+   ⚠ ELAS VIRARAM UMA PILHA DE NORMAS na versao 12 do save, e o gerador acompanhou:
+   um mandato de 48 meses reformando chega ao fim com dezenas de textos por cima
+   dos herdados, e o reducer tem de carregar isso do mesmo jeito que carregava um
+   par de numeros. A guarda vem do proprio programa porque ela e a natureza da
+   norma — o gerador pode inventar conteudo, e nao hierarquia. */
+const anyNorms = fc
+  .array(
+    fc.record({
+      lever: fc.integer({ min: 0, max: PROGRAMS.length - 1 }),
+      floor: fc.integer({ min: 0, max: 100 }),
+      ceiling: fc.integer({ min: 0, max: 100 }),
+      enactedAt: fc.integer({ min: 0, max: 47 }),
+    }),
+    { maxLength: 60 },
+  )
+  .map(written => {
+    /** @type {import("../../src/domain/norms/index.mjs").Norm[]} */
+    const pile = PROGRAMS.map(program => inherited(program));
+
+    written.forEach((item, index) => {
+      const program = PROGRAMS[item.lever];
+      if (!program) return;
+      pile.push({
+        ...inherited(program),
+        id: `escrita-${index}`,
+        floor: item.floor,
+        ceiling: item.ceiling,
+        enactedAt: item.enactedAt,
+      });
+    });
+
+    return pile;
+  });
 
 const anyState = fc.record({
   schemaVersion: fc.constant(SCHEMA_VERSION),
@@ -170,7 +206,63 @@ const anyState = fc.record({
   series: anySeries,
   capacity: anyCapacity,
   levels: fc.constant(Object.fromEntries(PROGRAMS.map(p => [p.id, p.initial]))),
-  bands: anyBands,
+  norms: anyNorms,
+  /* ⚠ A GAVETA EM QUALQUER PONTO DA TRAMITACAO, e os tres estagios entram. O
+     reducer nao pode ter opiniao sobre um texto parado na gaveta ha cinco meses
+     nem sobre um que ja esta no plenario: ele CARREGA, e a prova existe para
+     acusar o dia em que ele passar a decidir alguma coisa sobre o conteudo. */
+  bills: fc.array(
+    fc.record({
+      id: fc.string({ minLength: 1, maxLength: 12 }),
+      writtenAt: fc.integer({ min: 0, max: 47 }),
+      stage: fc.constantFrom("drawer", "rapporteur", "floor"),
+      since: fc.integer({ min: 0, max: 47 }),
+      label: fc.string({ maxLength: 24 }),
+      bands: fc.constant({}),
+      levels: fc.constant({}),
+      except: fc.array(fc.string({ maxLength: 8 }), { maxLength: 2 }),
+    }),
+    { maxLength: 4 },
+  ),
+  /* ⚠ A CAIXA DE ENTRADA COM AS DUAS NATUREZAS DENTRO, e as duas precisam estar
+     aqui: o AVISO (`due` nulo, ja fechado) e a PERGUNTA (com prazo, esperando ou
+     ja respondida). O reducer nao pode ter opiniao sobre nenhuma delas — ele
+     CARREGA —, e uma prova que so gerasse aviso deixaria de acusar o dia em que
+     alguem puser regra de prazo dentro do reducer, que e o lugar errado para ela. */
+  mail: fc.array(
+    fc.record({
+      id: fc.string({ minLength: 1, maxLength: 12 }),
+      kind: fc.constantFrom("posse", "tabled", "reported", "forgotten", "passed", "rejected"),
+      month: fc.integer({ min: 0, max: 47 }),
+      due: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
+      subject: fc.option(fc.string({ maxLength: 24 }), { nil: null }),
+      bill: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
+      except: fc.array(fc.string({ maxLength: 8 }), { maxLength: 2 }),
+      saved: fc.option(fc.string({ maxLength: 24 }), { nil: null }),
+      answer: fc.option(fc.constantFrom("accept", "block", "silence"), { nil: null }),
+      closedAt: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
+    }),
+    { maxLength: 5 },
+  ),
+  /* A MEMORIA EM QUALQUER PONTO DA ESCALA, incluindo os dois extremos: um sujeito
+     que o governo bancou o mandato inteiro e um que ele traiu no primeiro mes sao
+     estados validos, e o reducer nao pode ter opiniao sobre nenhum dos dois. */
+  /* A CALDEIRA EM QUALQUER TEMPERATURA, e as duas pontas entram: um governo que
+     agrada todo mundo e um em vespera de queda sao estados validos, e o reducer nao
+     pode ter opiniao sobre nenhum dos dois. */
+  pressure: fc
+    .array(fc.double({ min: 0, max: 100, noNaN: true }), {
+      minLength: LOBBIES.length,
+      maxLength: LOBBIES.length,
+    })
+    .map(values => Object.fromEntries(LOBBIES.map((l, i) => [l.id, values[i] ?? 0]))),
+  /* E O PROCESSO ABERTO OU NAO. Nulo e "nunca abriu", e nao "fechou" — processo
+     aberto nao se fecha, quem o encerra e o plenario. */
+  impeachment: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
+  fallen: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
+  memory: fc
+    .array(fc.double({ min: -100, max: 100, noNaN: true }), { maxLength: 12 })
+    .map(values => Object.fromEntries(values.map((value, index) => [`pessoa-${index}`, value]))),
   streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 

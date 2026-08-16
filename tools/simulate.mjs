@@ -27,11 +27,10 @@
      node tools/simulate.mjs --policy agenda --quiet          (so o resumo) */
 
 import { parseArgs } from "node:util";
-import { costOf, discretionaryRoom, playMonth } from "../src/application/turn.mjs";
+import { costOf, discretionaryRoom, forecast, playMonth } from "../src/application/turn.mjs";
 import { compose, spendOf } from "../src/application/agenda.mjs";
-import { whipCount } from "../src/domain/congress/index.mjs";
 import { CATALOG } from "../src/data/catalog.mjs";
-import { createState, monthLabel } from "../src/state/state.mjs";
+import { DEFAULT_SEED, createState, monthLabel } from "../src/state/state.mjs";
 
 /**
  * @typedef {import("../src/state/state.mjs").GameState} GameState
@@ -155,26 +154,43 @@ function affordableLevel(state) {
  * bem — existe para produzir uma serie comparavel entre execucoes. Uma politica
  * que negociasse bancada a bancada mediria a esperteza dela, e nao o modelo.
  *
- * @param {import("../src/domain/congress/index.mjs").Motion} motion
- * @param {number} quorum
- * @param {Record<string, number>} loyalty
+ * ⚠ E ELA PERGUNTA A `forecast`, QUE E A PORTA DA TELA — desde 16/08/2026, e o
+ * conserto e a QUINTA ocorrencia da familia mais cara deste projeto: DOIS LUGARES
+ * MONTANDO A MESMA PERGUNTA.
+ *
+ * Ate aqui esta funcao chamava `whipCount` a mao, com `CATALOG.parties` — os QUATRO
+ * blocos — e SEM a rua. E exatamente a camara fantasma que foi arrancada da fachada
+ * em 15/08 por inverter 27,2% dos vereditos anunciados: o turno vota com as ONZE
+ * bancadas do ELENCO, com a verba ja creditada de memoria e com `standing` dentro.
+ *
+ * ⚠ E AQUI O PRECO FOI MAIOR QUE NA TELA, porque quem errava era o INSTRUMENTO DE
+ * CALIBRAGEM. A politica calculava o preco contra um Congresso que nao existe,
+ * concluia que precisava de verba alta, prometia — e o rateio nao honrava. A memoria
+ * do presidente da Camara despencava, ele parava de pautar, e a serie de 48 meses
+ * media isso e chamava de "legislar e caro".
+ *
+ * Medido no funil da tramitacao, 48 meses, corte de 6 pontos abaixo do piso:
+ *
+ *     verba 0     48 escritos · 17 pautados · 25 mortos na gaveta ·  0 aprovados
+ *     verba 0,25   8 escritos ·  7 pautados ·  0 mortos na gaveta ·  2 aprovados
+ *     verba 1     48 escritos ·  2 pautados · 40 mortos na gaveta ·  0 aprovados
+ *
+ * PAGAR MAIS PIORA, e muito. Um instrumento que superestima o preco produz o pior
+ * dos mundos, e a serie inteira do projeto foi lida atraves dele.
+ *
+ * @param {GameState} state
+ * @param {Record<string, number>} requested o orcamento que este texto pede
  * @returns {number | null} nulo quando nem verba cheia aprova
  */
-function priceOfPassage(motion, quorum, loyalty) {
-  /* CONTRA O QUORUM DA PROPOSTA, e nao contra 257 sempre. A primeira versao usava
-     a maioria simples para tudo, e por isso mandava emenda a plenario achando que
-     bastavam 257 — a politica levava a voto o que nao tinha como passar, e a
-     serie media a ingenuidade dela em vez do modelo. */
-  if (quorum <= 0) return 0;
-
+function priceOfPassage(state, requested) {
   for (let level = 0; level <= 1.0001; level += 0.05) {
-    const forecast = whipCount({
-      bill: motion,
-      parties: CATALOG.parties,
-      funding: everyone(Math.min(1, level)),
-      loyalty,
-    });
-    if (forecast.votes >= quorum) return Math.min(1, level);
+    const funding = everyone(Math.min(1, level));
+    const seen = forecast(state, { levels: requested, funding }, CATALOG);
+
+    /* SEM PAUTA NAO HA PRECO, e zero e a resposta certa: um orcamento que nao move
+       nada nao precisa de voto nenhum. */
+    if (!seen.agenda.proposal || seen.agenda.quorum <= 0) return 0;
+    if (seen.whip && seen.whip.votes >= seen.agenda.quorum) return Math.min(1, level);
   }
   return null;
 }
@@ -260,7 +276,7 @@ const POLICIES = {
       const agenda = compose({ programs: CATALOG.programs, levels: state.levels, requested });
       if (!agenda.proposal) continue;
 
-      const level = priceOfPassage(agenda.proposal, agenda.quorum, state.loyalty);
+      const level = priceOfPassage(state, requested);
       if (level === null) continue;
       const funding = everyone(level);
       if (costOf(funding, CATALOG.parties, CATALOG.fiscal.seatPrice) > left) continue;
@@ -269,6 +285,35 @@ const POLICIES = {
 
     return { levels, funding: everyone(Math.min(UPKEEP, affordableLevel(state))) };
   },
+
+  /* O EXPLORADOR. Ele nao governa: ele tenta QUEBRAR o modelo, e nasceu do risco
+     numero um do ciclo 4 — "o jogador nao pode conseguir criar dinheiro infinito
+     empilhando uma excecao sobre um teto de gastos".
+
+     A jogada e a desregulamentacao total, todo mes: derruba TODO piso a zero,
+     levanta TODO teto a cem, poe todo programa em intensidade maxima e promete
+     verba cheia a todas as bancadas. Piso a zero e o ataque de verdade — ele joga
+     gasto do OBRIGATORIO para o DISCRICIONARIO, e discricionario maior e
+     `allowance` maior. Se houver um caminho em que a lei fabrica caixa, e por aqui
+     que ele aparece.
+
+     ⚠ ELE E CARO DE PROPOSITO E NAO DEVE PASSAR. Um texto que derruba trinta e
+     oito pisos, seis deles constitucionais, cobra 308 votos com verba cheia — e a
+     serie dele mede exatamente isso: quantas vezes o Congresso deixa. O mes em que
+     esta politica APROVAR alguma coisa e o mes que precisa ser olhado.
+
+     ⚠ O QUE ELE AINDA NAO ALCANCA, declarado: gatilho, excecao e revogacao. Elas
+     existem no motor e sao provadas em `tests/suites/norms.mjs`, que aplica pilhas
+     adversariais direto no estado — um adversario MAIS forte que este, porque nao
+     paga voto nenhum. O canal por onde o jogador escreveria esses modificadores e
+     a tramitacao, e ela e a Parte 3. */
+  explorador: () => ({
+    levels: Object.fromEntries(CATALOG.programs.map(program => [program.id, 100])),
+    bands: Object.fromEntries(
+      [...CATALOG.programs, ...CATALOG.rules].map(lever => [lever.id, { floor: 0, ceiling: 100 }]),
+    ),
+    funding: everyone(1),
+  }),
 
   /* O GOVERNO QUE PROMETE. Pauta uma reforma e oferece verba cheia todo mes, sem
      olhar o caixa. E a sonda da traicao: o rateio corta a promessa no que o teto
@@ -286,7 +331,7 @@ const POLICIES = {
 
 const { values } = parseArgs({
   options: {
-    seed: { type: "string", default: "20270101" },
+    seed: { type: "string", default: String(DEFAULT_SEED) },
     months: { type: "string", default: "48" },
     policy: { type: "string", default: "agenda" },
     shock: { type: "string", default: "0" },
@@ -512,6 +557,16 @@ out.write(
 );
 out.write(
   `  alocacao            ${num(history.reduce((sum, report) => sum + report.allocatedTotal, 0))} nas areas\n`,
+);
+/* O TAMANHO DO ARQUIVO LEGISLATIVO, e ele e o instrumento de dois riscos do ciclo
+   ao mesmo tempo: a "heranca maldita virando Diario Oficial" (quanto texto o
+   jogador tem de ler) e o custo do turno (quantas normas o motor resolve todo
+   mes). Um mandato que termina com centenas de normas e um mandato que precisa de
+   uma tela para elas — e um simulador que fica lento e para de servir de
+   instrumento. */
+out.write(
+  `  normas              ${state.norms.length} em arquivo` +
+    ` — ${state.norms.length - opening.norms.length} escritas neste mandato\n`,
 );
 out.write(`  base ao fim\n`);
 for (const party of CATALOG.parties) {

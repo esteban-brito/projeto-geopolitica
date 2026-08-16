@@ -40,18 +40,88 @@
     color: var(--crisis);
   }
 
+  /* ── A ASSINATURA ───────────────────────────────────────────────────────────
+     ⚠ ELA É O CONSERTO DO ITEM MAIS FUNDO DA AUDITORIA EXTERNA, e ele não era
+     sobre esta frase: era sobre NENHUMA tela do jogo se dirigir ao presidente.
+     Tudo era descrito em terceira pessoa, e a leitura do mês — a única frase
+     escrita PARA ele — chegava sem ninguém atrás dela, o que a auditoria leu como
+     "parece uma dica de carregamento". Assinada, ela deixa de ser um rótulo do
+     sistema e vira o que sempre quis ser: o conselho de quem trabalha para você.
+
+     O NOME EM SERIFA e o cargo abaixo, como em toda pessoa deste jogo. */
+  .cabinet__signature {
+    display: grid;
+    justify-items: end;
+    gap: 1px;
+    margin-top: var(--space-2);
+    font-family: var(--font-record);
+    font-size: var(--text-note);
+    color: var(--ink-dim);
+  }
+
+  .cabinet__signature b {
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .cabinet__signature small {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
   .cards {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-3);
   }
 
-  /* A CAIXA DE ENTRADA OCUPA A LARGURA INTEIRA enquanto esta vazia. Meia tela em
-     branco ao lado de tres cartoes cheios leria como defeito de carregamento; a
-     largura inteira com a espera escrita lê como o que e — um lugar reservado,
-     com a data em que ele passa a ter conteudo. */
-  .card[data-span="wide"] {
-    grid-column: 1 / -1;
+  /* ── A GRADE: A LISTA A ESQUERDA, OS RESUMOS EMPILHADOS A DIREITA ──────────
+     ⚠ ELA TEVE DUAS FORMAS POR MEIO DIA — faixa no topo enquanto vazia, coluna
+     quando houvesse carta — e a segunda venceu para valer. A razao da primeira era
+     evitar meia tela em branco; a razao de largar essa ideia e mais forte: o
+     layout e uma promessa, e uma tela que muda de esqueleto quando o conteudo
+     chega refaz o mapa debaixo do pe do jogador no mes em que ele mais precisa
+     dele.
+
+     3fr/2fr, e nao metade a metade: a lista carrega prosa e a coluna da direita
+     carrega numero. Prosa a 50% de 1180px tem medida de linha que ninguem lê de
+     uma passada.
+
+     `align-items: start` e o que impede os tres cartoes de esticarem para
+     acompanhar a altura da lista: tres resumos esticados a 700px viram tres
+     retangulos com um numero no meio e muito vazio em volta. */
+  .cards {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: start;
+    gap: var(--space-3);
+  }
+
+  .card[data-span="lead"] {
+    grid-column: 1;
+    /* ⚠ O CORPO PRECISA ESTICAR PARA O VAZIO CONSEGUIR SE CENTRAR. `.card` e uma
+       grade com `align-content: start`, entao as linhas medem o conteudo e o corpo
+       para na altura do texto — o estado vazio ficava encostado no teto de uma
+       coluna de 700px, que e exatamente o que ele existe para evitar. Com o titulo
+       em `auto` e o corpo em `1fr`, o corpo recebe o que sobra e centra dentro. */
+    grid-template-rows: auto 1fr;
+    align-content: stretch;
+    /* A COLUNA INTEIRA, e o numero de linhas segue o numero de cartoes de resumo.
+       Sem o `span`, a lista pararia na altura do primeiro cartao e os outros dois
+       subiriam para debaixo dela. */
+    grid-row: 1 / span 3;
+    /* Ela acompanha a altura da coluna da direita — e nao o contrario. Uma lista
+       vazia mais curta que os resumos ao lado deixaria um degrau no rodape da
+       tela; uma lista cheia empurra a propria coluna e os resumos ficam onde
+       estao. */
+    align-self: stretch;
+  }
+
+  .cards > .card:not([data-span="lead"]) {
+    grid-column: 2;
   }
 
   .card {
@@ -89,7 +159,9 @@
     text-transform: uppercase;
     color: var(--brand);
     background: rgba(var(--brand-rgb), 0.14);
-    transition: background var(--dur-touch) linear;
+    transition:
+      background var(--dur-touch) linear,
+      transform var(--dur-touch) var(--ease-enter);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -98,8 +170,32 @@
     }
   }
 
+  .card__action:active {
+    transform: scale(0.96);
+  }
+
+  /* ⚠ `align-content: start` E O CONSERTO DE UM DEFEITO QUE SO APARECEU COM A
+     SEGUNDA CARTA. O corpo do cartao-lista e uma linha `1fr` — e o que permite o
+     estado VAZIO se centrar em vez de ficar pendurado no teto de uma coluna alta —,
+     e com duas cartas dentro o mesmo `1fr` distribuia as duas pelos extremos da
+     coluna, com um vao de 200px entre elas. Lista se empilha; vazio se centra, e o
+     vazio ja se centra sozinho pelo `min-height: 100%` dele. */
+  /* ⚠ A BANDEJA ESCAVADA. O corpo da Caixa de Entrada era um bloco liso, e um
+     revisor externo pediu o afundamento com a razao certa: papel cai DENTRO de
+     alguma coisa. A sombra vem de dentro para o corpo ler como sulco na mesa, e nao
+     como retangulo desenhado sobre ela — e e ela que faz a carta parecer POUSADA.
+     So a coluna da lista ganha bandeja: os tres cartoes de resumo nao recebem papel,
+     e escavar um lugar onde nada cai seria forma sem funcao. */
+  .card[data-span="lead"] .card__body {
+    padding: var(--space-3);
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.22);
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.55);
+  }
+
   .card__body {
     display: grid;
+    align-content: start;
     gap: var(--space-3);
     justify-items: center;
   }
@@ -123,7 +219,7 @@
   }
 
   .card__note {
-    font-size: 0.78rem;
+    font-size: var(--text-note);
     color: var(--ink-dim);
   }
 
@@ -131,42 +227,408 @@
     color: var(--ink-soft);
   }
 
-  /* A ESPERA E TEXTO CORRIDO, e nao um bloco vazio com um icone triste. Ela diz
-     o que vai aparecer ali e o que falta para isso — a mesma postura do item
-     desligado no rail. */
-  .card__waiting {
-    justify-self: stretch;
-    max-width: 66ch;
-    color: var(--ink-dim);
-    line-height: 1.45;
+  /* ── O ESTOURO TEM COR ──────────────────────────────────────────────────────
+     O cartao dizia "cabe R$ 14,2 bi" e, uma linha abaixo, "ja consome R$ 14,5 bi"
+     — no mesmo tom cinza das outras leituras. O padrao do projeto e que cor e
+     texto contem a mesma historia, e aqui o texto contava um estouro e a cor,
+     calmaria. Quem decide se acende e a tela, comparando as duas LEITURAS e nao os
+     valores cheios: ver `cabinet.mjs`. */
+  /* ⚠ O ALVO E O ESTOURO, E NAO O PARAGRAFO. A primeira versao acendia a linha
+     inteira, e ai "obrigatoria 95%" — que e contexto, e nao perigo — saia no mesmo
+     tom do deficit: os dois viram fundo e o destaque desaparece. Vermelho que
+     cobre tudo nao destaca nada. */
+  .card__note [data-over="true"] {
+    color: var(--crisis);
+    font-weight: 700;
   }
 
-  /* ── O ARCO DO PLENARIO ─────────────────────────────────────────────────────
-     Um medidor em forma de semicirculo, e nao um grafico de assentos: o modelo
-     tem quatro blocos e nao 513 deputados, e desenhar 513 pontos afirmaria uma
-     precisao que nao existe. */
-  .arch {
-    width: min(220px, 100%);
+  /* ── O ESTADO VAZIO SAIU DAQUI em 15/08/2026 ────────────────────────────────
+     `.empty`, `.empty__lead` e `.empty__note` foram para `30-components.css`. A
+     peca deixou de ser do Gabinete no dia em que a mesa sem pauta passou a usa-la:
+     o "Nada em pauta" do Congresso vinha com as classes do TITULO de uma pauta
+     real, entao a ausencia de assunto saia com o peso de um assunto. Componente
+     que duas telas usam mora na camada de componentes; este arquivo cuida da
+     tela. */
+  /* ── A CARTA ────────────────────────────────────────────────────────────────
+     ⚠ ELA E DE PAPEL, e e a segunda consumidora da substancia nova depois da lei.
+     A fronteira e a mesma e continua declarada: papel so onde ha TEXTO DE REGISTRO.
+     Uma carta e um ofício — o registro do que aconteceu, assinado por alguém — e
+     desenhá-la com o vidro do painel a faria ler como mais um widget de resumo, que
+     é exatamente o que a auditoria externa chamou de "estética de SaaS".
+
+     O REMETENTE VEM ANTES DO ASSUNTO, e a ordem é a mecânica: "ih, carta do líder
+     do Centrão" só funciona se a cara chegar antes do texto. Sinete, nome, cargo — e
+     só então o que ele tem a dizer. */
+  /* ⚠ ELA NAO ESTICA, e a linha abaixo e a correcao de um defeito que a captura
+     pegou no dia em que a carta nasceu. A coluna da Caixa de Entrada estica de
+     proposito — e o que permite o estado VAZIO se centrar em vez de ficar
+     pendurado no teto de uma coluna de 700px. Com conteudo dentro, o mesmo
+     estiramento espalhava a carta pela coluna toda: sinete no topo, assunto no
+     meio do nada, e o botao virando um quadrado de 130px no rodape.
+     Vazio se centra; documento se lê de cima para baixo. */
+  /* A CARTA FLUTUA NA BANDEJA — sombra projetada, e nao so borda. Papel apoiado
+     tem sombra embaixo; `<div>` nao tem. */
+  .letter {
+    box-shadow:
+      0 4px 8px rgba(0, 0, 0, 0.4),
+      0 1px 2px rgba(0, 0, 0, 0.3);
+    align-self: start;
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border: 1px solid var(--paper-edge);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--paper-ink);
+    justify-items: start;
+    text-align: left;
+    width: 100%;
+  }
+
+  /* ── A TARJA DE GRAVIDADE ──────────────────────────────────────────────────
+     ⚠ ELA MEDE TEMPO, E NÃO IMPORTÂNCIA, e a distinção é a razão de ela existir:
+     um assunto grave com prazo largo não é urgente, e é isso que o jogador precisa
+     saber para escolher o que responder primeiro.
+
+     ELA SÓ EXISTE ONDE HÁ PRAZO. O ciclo 6 adiou a cor de propósito — uma tarja num
+     aviso seria decoração sem motor —, e ela só entrou quando `state.mail` passou a
+     ter um vencimento atrás dela.
+
+     ⚠ E O VERMELHO AQUI NÃO EDITORIALIZA NADA. Ele é o mesmo vermelho semântico do
+     resto do jogo, e o que ele já significa é CRISE: uma carta prestes a vencer é
+     crise. Não é cor nova, e é por isso que ela pode ser usada — a mesma razão que
+     recusou hachura vermelha na pesquisa da Rua, aplicada do outro lado. */
+  .letter[data-urgency] {
+    border-left-width: 3px;
+    padding-left: calc(var(--space-4) - 2px);
+  }
+
+  .letter[data-urgency="open"] {
+    border-left-color: rgba(var(--paper-ink-rgb), 0.35);
+  }
+
+  .letter[data-urgency="soon"] {
+    border-left-color: var(--brand);
+  }
+
+  .letter[data-urgency="now"] {
+    border-left-color: var(--crisis);
+  }
+
+  .letter__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+  }
+
+  /* O PRAZO FICA NA CABEÇA, à direita do remetente: é a segunda coisa que o olho
+     encontra, e a única que muda de mês para mês na mesma carta. */
+  .letter__due {
+    margin-left: auto;
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: rgba(var(--paper-ink-rgb), 0.6);
+  }
+
+  .letter[data-urgency="soon"] .letter__due {
+    color: var(--brand);
+  }
+
+  .letter[data-urgency="now"] .letter__due {
+    color: var(--crisis);
+  }
+
+  .letter__from {
+    display: grid;
+    gap: 1px;
+  }
+
+  .letter__name {
+    font-family: var(--font-record);
+    font-weight: 600;
+    color: var(--paper-ink);
+  }
+
+  .letter__role {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: rgba(var(--paper-ink-rgb), 0.6);
+  }
+
+  /* O ASSUNTO EM SERIFA e com peso de título de ofício: ele é a única linha da
+     carta que o jogador precisa ler para saber se abre ou não. */
+  .letter__subject {
+    font-family: var(--font-record);
+    font-size: var(--text-name);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--paper-ink);
+  }
+
+  .letter__lines {
+    display: grid;
+    gap: 2px;
+    font-size: var(--text-note);
+    color: rgba(var(--paper-ink-rgb), 0.78);
+  }
+
+  .letter__lines b {
+    color: var(--paper-ink);
+    font-weight: 700;
+  }
+
+  /* A AÇÃO LEVA AO LUGAR ONDE O ASSUNTO SE RESOLVE, como a ação de todo cartão do
+     Gabinete — e ela é discreta pela mesma razão: a carta informa, e o botão é a
+     porta. */
+  .letter__action {
+    padding: 3px var(--space-3);
+    border: 1px solid rgba(var(--brand-rgb), 0.45);
+    border-radius: 2px;
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 800;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--brand);
+    background: transparent;
+    transition:
+      background var(--dur-touch) linear,
+      transform var(--dur-touch) var(--ease-enter);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .letter__action:hover {
+      background: rgba(var(--brand-rgb), 0.16);
+    }
+  }
+
+  .letter__action:active {
+    transform: scale(0.96);
+  }
+
+  /* ── AS DUAS SAÍDAS ────────────────────────────────────────────────────────
+     ⚠ ELAS SÃO IRMÃS NA LARGURA E NO PESO, e isso é decisão. Destacar "aceitar"
+     como ação primária diria que aceitar é o caminho normal e travar é a exceção —
+     e o jogo não tem opinião sobre isso: as duas custam, e o custo de cada uma está
+     escrito embaixo dela. Um par assimétrico escolheria pelo jogador antes de ele
+     ler. */
+  .letter__choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+    width: 100%;
+  }
+
+  .letter__choice {
+    display: grid;
+    gap: 2px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid rgba(var(--paper-ink-rgb), 0.25);
+    border-radius: 2px;
+    background: rgba(var(--paper-ink-rgb), 0.04);
+    color: var(--paper-ink);
+    font-family: var(--font-display);
+    text-align: left;
+    transition:
+      border-color var(--dur-touch) linear,
+      background var(--dur-touch) linear,
+      transform var(--dur-touch) var(--ease-enter);
+  }
+
+  .letter__choice b {
+    font-size: var(--text-note);
+    font-weight: 700;
+  }
+
+  /* O PREÇO VEM COLADO NO BOTÃO, e é isso que faz a escolha ser escolha: um par
+     "aceitar / travar" sem custo ao lado obrigaria o jogador a descobrir o que
+     escolheu no mês seguinte, e informação que chega depois da decisão é recibo. */
+  .letter__cost {
+    font-size: var(--text-label);
+    line-height: 1.35;
+    color: rgba(var(--paper-ink-rgb), 0.62);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .letter__choice:hover {
+      border-color: rgba(var(--brand-rgb), 0.55);
+    }
+  }
+
+  .letter__choice:active {
+    transform: scale(0.98);
+  }
+
+  /* MARCADA, ELA É UMA DECISÃO TOMADA E AINDA NÃO EXECUTADA — o mesmo estado do
+     orçamento escrito e não avançado. Por isso ela usa a marca, que é a cor do que
+     se pressiona, e não o verde de resultado: nada aconteceu ainda. */
+  .letter__choice[aria-pressed="true"] {
+    border-color: var(--brand);
+    background: rgba(var(--brand-rgb), 0.16);
+  }
+
+  /* ── O HEMICICLO ────────────────────────────────────────────────────────────
+     513 cadeiras, agrupadas por bancada e assentadas da esquerda para a direita
+     pelo eixo economico — como um plenario de verdade se organiza, e como o modelo
+     ja sabe. Ele substituiu o arco em 15/08/2026: ver `src/ui/shared/hemicycle.mjs`
+     e a nota em `cabinet.mjs`, onde a recusa anterior esta registrada.
+
+     ⚠ A COR E A DA SAUDE, E NAO A DO PARTIDO. Cor de bancada foi recusada tres
+     vezes e a razao nao mudou: a paleta ja gasta verde em ALTA e vermelho em CRISE,
+     e pintar ideologia com os mesmos tons faria um bloco parecer bom e o outro
+     parecer perigo. A COMPOSICAO aparece pelo agrupamento — cada bancada e uma
+     cunha contigua com um vao antes da vizinha —, e nao pela tinta. */
+  .hemicycle {
+    width: min(300px, 100%);
     height: auto;
   }
 
-  .arch__track {
-    stroke: rgba(255, 255, 255, 0.09);
-    stroke-linecap: round;
+  /* ── A CADEIRA CHEIA E A VAZADA ─────────────────────────────────────────────
+     Cheia quando aquela cadeira esta ENTREGUE ao governo; vazada quando nao. A
+     conta e do motor (`seating`), e a fronteira dentro de cada cunha e a unica
+     coisa que a tela decide.
+
+     A VAZADA E CONTORNO E NAO CINZA CHEIO: um ponto cinza solido ao lado de um
+     colorido lê como uma terceira categoria, e nao como ausencia. Contorno lê como
+     lugar vago, que e o que ele e. */
+  .seat {
+    fill: var(--part-color, var(--ink-dim));
+    transition: fill var(--dur-piece) linear;
   }
 
-  .arch__fill {
-    stroke: var(--brand);
-    stroke-linecap: round;
-    transition: stroke-dasharray var(--dur-piece) linear;
+  .seat[data-held="false"] {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 0.6;
   }
 
-  /* ALCANCAR A MAIORIA MUDA A COR, e nao so o tamanho: a diferenca entre 256 e
-     257 cadeiras e a diferenca entre nao governar e governar, e um arco que so
-     cresce nao diz isso. */
-  .arch__fill[data-majority="true"] {
-    stroke: var(--signal-up);
+  .seat[data-mood="loyal"] {
+    --part-color: var(--growth);
   }
+  .seat[data-mood="obstructing"] {
+    --part-color: var(--stable);
+  }
+  .seat[data-mood="ruptured"] {
+    --part-color: var(--crisis);
+  }
+
+  /* ── QUEM TRAVA O ORCAMENTO ─────────────────────────────────────────────────
+     A resposta a "por que eu nao tenho dinheiro", e ela e uma lista de LEIS. O
+     ponto colorido antes de cada nome carrega a hierarquia da norma — e nao o
+     tamanho dela: o que decide se aquele real sai e o preco de mudar o texto, e
+     nao quantos bilhoes ele vale. */
+  .locked {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-3);
+    font-size: var(--text-note);
+    color: var(--ink-dim);
+  }
+
+  .locked__label {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+  }
+
+  .locked__item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+  }
+
+  .locked__item::before {
+    content: "";
+    align-self: center;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--part-color, var(--ink-dim));
+  }
+
+  /* CONSTITUICAO E A MARCA, e nao o vermelho de crise: mexer nela e caro, e nao
+     e um alarme. Vermelho aqui ensinaria que o piso da saude e um defeito. */
+  /* O NOME DA VARIAVEL LOCAL E `--part-color`, e nao um segundo nome para a mesma
+     coisa: ela ja e o canal por onde um `data-*` escolhe a cor de um pedaco, no
+     medidor segmentado e na legenda do arco. A guarda de tokens mantem uma lista
+     curta de locais permitidos justamente para essa lista nao crescer — um
+     `--guard-color` aqui seria a terceira forma de dizer "a cor deste pedaco". */
+  .locked__item[data-guard="constitution"] {
+    --part-color: var(--brand);
+  }
+  .locked__item[data-guard="law"] {
+    --part-color: var(--stable);
+  }
+
+  .locked__item b {
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  /* ── A LEGENDA DO ARCO ──────────────────────────────────────────────────────
+     O ponto de cor vem antes do numero e o rotulo vem depois, nesta ordem: o olho
+     casa a cor com o arco primeiro e so entao lê o que ela quer dizer. Invertido,
+     a legenda vira uma lista de numeros com uma bolinha no fim. */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-3);
+    font-size: var(--text-note);
+    color: var(--ink-dim);
+  }
+
+  .legend__item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+  }
+
+  .legend__item::before {
+    content: "";
+    align-self: center;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--part-color, var(--ink-dim));
+  }
+
+  .legend__item b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .legend__item[data-part="good"] {
+    --part-color: var(--growth);
+  }
+  .legend__item[data-part="fair"] {
+    --part-color: var(--stable);
+  }
+  .legend__item[data-part="poor"] {
+    --part-color: var(--crisis);
+  }
+
+  /* ── O VEREDITO GANHOU ROTULO ───────────────────────────────────────────────
+     A frase estava solta no canto superior direito, sem nada que justificasse a
+     existencia dela — uma revisao de fora a leu como "texto esquecido ali", e
+     estava certa. O rotulo responde a pergunta que vem antes de qualquer outra:
+     quem esta falando, e sobre o que.
+
+     ⚠ `.cabinet__reading` E `.cabinet__eyebrow` SAIRAM DAQUI em 15/08/2026. Elas
+     desenhavam o slot da direita da cabeca, e esse slot deixou de ser desta tela:
+     as cinco telas montam a cabeca com a mesma peca, e a leitura mora em
+     `.head__reading` / `.head__label`, em `60-screen-area.css`. O que sobrou aqui
+     e a unica coisa que de fato e do Gabinete — a COR do veredito, que segue a
+     situacao do governo. */
 
   /* ── O TERMOMETRO DA RUA ────────────────────────────────────────────────────
      Um medidor por classe, e nao a media. A media esconde o que decide o risco de
@@ -186,7 +648,7 @@
   }
 
   .street__who {
-    font-size: 0.8rem;
+    font-size: var(--text-note);
     color: var(--ink-soft);
     white-space: nowrap;
   }
@@ -198,13 +660,64 @@
     color: var(--ink);
   }
 
+  /* ── AS REGUAS DO COFRE ─────────────────────────────────────────────────────
+     A barra do cofre parecia progresso de download. As marcas verticais a
+     transformam em INSTRUMENTO: uma escala rigida com decimos marcados, que e como
+     um manometro ou uma regua de obra se apresentam. Elas nao medem nada de novo —
+     a leitura continua sendo a mesma —, mas mudam o que o olho entende que esta
+     olhando: uma medicao, e nao um carregamento. */
   .meter--vault {
+    position: relative;
     justify-self: stretch;
+  }
+
+  .meter--vault::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0 calc(10% - 1px),
+      rgba(0, 0, 0, 0.45) calc(10% - 1px) 10%
+    );
   }
 
   @media (max-width: 720px) {
     .cards {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* ── A COLOCACAO EXPLICITA SAI JUNTO COM A SEGUNDA COLUNA ──────────────────
+       ⚠ DEFEITO MEDIDO, e ele durou de 14/08/2026 ate a nona sessao em todo
+       aparelho de 720px para baixo. Encolher a grade para uma coluna NAO desfaz
+       `grid-column: 2` nos tres resumos: o navegador atende o pedido criando uma
+       coluna IMPLICITA, que e dimensionada por conteudo e portanto leva a largura
+       toda. A coluna declarada — a da Caixa de Entrada — sobrava com `1fr` de zero
+       e fechava em 0px, com 32px de recheio e 610px de altura, desenhada POR BAIXO
+       dos outros tres. Medido: `grid-template-columns: 0px 626.8px` a 720px, e as
+       tres sobreposicoes de 20px de largura que a captura mostrou.
+
+       O defeito atravessou tipo, guarda, 190 provas e o passeio, e a razao de o
+       passeio nao o pegar e dupla: ele nunca abria o Gabinete no celular, e
+       `checkOverflow` mede a pagina rolando de lado — cartao empilhado por cima de
+       cartao nao rola nada. As duas metades foram consertadas junto com esta.
+
+       `auto` nos dois eixos, e nao um `grid-column: 1` de resposta: quem manda no
+       fluxo de uma coluna e a ordem do documento, e reafirmar a coluna aqui seria
+       a mesma colocacao explicita que criou o problema, so que do outro lado. */
+    .card[data-span="lead"],
+    .cards > .card:not([data-span="lead"]) {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    /* O ESTICAMENTO ERA DA COLUNA ALTA, e ela nao existe mais aqui. Empilhada, a
+       Caixa de Entrada mede o proprio conteudo — e o vazio centrado dentro de um
+       cartao de altura natural para de reservar meia tela de nada no telefone. */
+    .card[data-span="lead"] {
+      grid-template-rows: auto;
+      align-content: start;
     }
 
     .cabinet__verdict {
@@ -214,5 +727,94 @@
     .street__row {
       grid-template-columns: 6rem minmax(0, 1fr) 2.6rem;
     }
+  }
+
+  /* ── A CALDEIRA ────────────────────────────────────────────────────────────
+     Quatro grupos, o que cada um cobra, e quanto ele já aguentou. Ela fica ao lado
+     do termômetro da Rua e NÃO se parece com ele de propósito: a Rua mede quem
+     aprova o governo em três fatias; esta mede uma coisa só, que sobe. */
+  .boiler {
+    justify-self: stretch;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .boiler__row {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr) 2.5rem;
+    grid-template-areas: "who meter value" "wants meter value";
+    align-items: center;
+    gap: 0 var(--space-3);
+  }
+
+  .boiler__who {
+    grid-area: who;
+    font-size: var(--text-note);
+    color: var(--ink);
+  }
+
+  /* O QUE ELE COBRA, embaixo do nome. Sem isto o cartão seria quatro barras com
+     rótulo — e o jogador não teria como saber o que fazer com nenhuma delas. */
+  .boiler__wants {
+    grid-area: wants;
+    font-size: var(--text-label);
+    line-height: 1.3;
+    color: var(--ink-soft);
+  }
+
+  .boiler .meter {
+    grid-area: meter;
+  }
+
+  /* ⚠ O TRECHO VAZIO PRECISA SER TRILHO, e esta regra é a correção de um defeito que
+     só a captura pegou: sem cor própria, `rest` herdava o fundo claro do medidor e a
+     barra em pressão ZERO lia como barra CHEIA. Um grupo satisfeito parecia um grupo
+     fervendo, que é o inverso exato da informação.
+
+     O medidor da Rua não tem esse problema porque as três fatias dele somam 100 e
+     todas têm cor — aqui uma delas é ausência, e ausência precisa parecer ausência. */
+  .boiler .meter__part[data-part="rest"] {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .boiler__value {
+    grid-area: value;
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: right;
+    color: var(--ink);
+  }
+
+  /* ⚠ FERVENDO USA O VERMELHO SEMÂNTICO, e aqui ele é literal: um grupo que ferveu
+     abandonou o governo, e isso é a definição de crise no modelo. Não é
+     editorialização — é o estado que o motor declara. */
+  .boiler__row[data-boiling="true"] .boiler__who,
+  .boiler__row[data-boiling="true"] .boiler__value {
+    color: var(--crisis);
+  }
+
+  .boiler__ruptures,
+  .boiler__siege {
+    margin-top: var(--space-2);
+    font-size: var(--text-label);
+    color: var(--ink-soft);
+  }
+
+  .boiler__ruptures b {
+    color: var(--crisis);
+  }
+
+  /* O CARIMBO DO CERCO — mono, porque é a máquina do Estado carimbando, e não uma
+     medição nem um nome. */
+  .boiler__siege .stamp {
+    display: inline-block;
+    margin-right: var(--space-2);
+    padding: 1px var(--space-2);
+    border: 1px solid var(--crisis);
+    border-radius: 2px;
+    font-family: var(--font-machine);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    color: var(--crisis);
   }
 }

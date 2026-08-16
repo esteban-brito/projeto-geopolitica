@@ -10,6 +10,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
+/* O HUMOR DE ABERTURA VEM DO ESTADO. Repetido a mao, ele vira uma segunda verdade
+   sobre como uma partida comeca. */
+import { INITIAL_LOYALTY } from "../../src/state/state.mjs";
 import { compose } from "../../src/application/agenda.mjs";
 import { FISCAL } from "../../src/data/fiscal.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
@@ -468,7 +471,7 @@ test("A PROPOSTA COMPOSTA CABE NO MOTOR DE VOTACAO sem conversao nenhuma", async
     bill: agenda.proposal,
     parties: PARTIES,
     funding: {},
-    loyalty: Object.fromEntries(PARTIES.map(party => [party.id, 70])),
+    loyalty: Object.fromEntries(PARTIES.map(party => [party.id, INITIAL_LOYALTY])),
   });
 
   assert.ok(Number.isFinite(forecast.votes));

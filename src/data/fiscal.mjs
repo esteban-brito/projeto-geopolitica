@@ -69,10 +69,28 @@ export const FISCAL_SCHEMA = {
 
 /** @type {FiscalParameters} */
 export const FISCAL = {
-  /* RECEITA PRIMARIA DA UNIAO sobre o PIB — e nao a carga tributaria bruta do
-     pais. 12.000 × 0,20 = 2.400 bilhoes, que e a ordem da receita primaria
-     federal de 2025. Fonte: STN, Relatorio Resumido de Execucao Orcamentaria. */
-  taxLoad: 0.2,
+  /* RECEITA PRIMARIA LIQUIDA DA UNIAO sobre o PIB — e nao a carga tributaria
+     bruta do pais, nem a receita antes das transferencias. 12.000 × 0,19 = 2.280
+     bilhoes. Fonte: STN, Relatorio Resumido de Execucao Orcamentaria.
+
+     ⚠ ERA 0,20 ATE 14/08/2026, e o 0,01 de diferenca decidia o SINAL do resultado
+     primario do pais. E o ultimo termo do achado numero um do handoff, e o unico
+     que e calibragem e nao mecanica:
+
+       receita 2.400 contra despesa 2.330  →  superavit de 70 bi/ano
+       receita 2.280 contra despesa 2.330  →  DEFICIT de 50 bi/ano
+
+     O Brasil roda deficit primario, e o modelo nao conseguia rodar nenhum — nao
+     por uma trava, mas porque a receita nascia acima da despesa e o teto do
+     arcabouco e uma ancora na DESPESA. Um governo que gastasse ate o limite legal
+     ainda sobrava dinheiro, todo mes, para sempre.
+
+     O que muda de fato e o denominador do que se chama receita: 0,20 e a receita
+     primaria ANTES das transferencias constitucionais a estados e municipios, e
+     quem paga a folha e a previdencia da Uniao e o que sobra DEPOIS delas. Os 49%
+     de IR e IPI que a Constituicao reparte nunca foram do Executivo federal — e
+     ate aqui o modelo os gastava. */
+  taxLoad: 0.19,
   mandatoryGrowth: 0.025,
   /* 70% do crescimento da receita — o numero do arcabouco de verdade.
      Fonte: LC 200/2023. */

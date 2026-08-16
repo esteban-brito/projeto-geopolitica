@@ -26,16 +26,59 @@
     padding: clamp(20px, 3vw, 28px);
   }
 
-  /* ── O INDICE ───────────────────────────────────────────────────────────────
-     Nivel a esquerda, tendencia a direita. O numero sozinho nao diz nada: `61`
-     e bom ou pessimo dependendo de onde estava ha um ano, e e por isso que a
-     variacao de doze meses tem peso proprio na mesma linha. */
+  /* ── A CABECA, E ELA E A MESMA NAS CINCO TELAS ──────────────────────────────
+     A esquerda, QUEM E A TELA: categoria em versalete e o nome embaixo. A
+     direita, o que ela tem a dizer de si AGORA — o indice na area, o veredito no
+     Gabinete —, e nada onde nao ha o que dizer.
+
+     ⚠ ELA SO VIROU UMA em 15/08/2026. Cada tela montava a sua, e elas nao eram
+     iguais: a area usava os dois slots para `nome do indice / NUMERO` e portanto
+     nunca dizia de qual ministerio era, e o Congresso nao tinha cabeca nenhuma.
+     Ver `src/ui/shared/head.mjs`, onde o levantamento das cinco esta escrito.
+
+     O NOME `area__*` FICOU, e a peca deixou de ser da area — e uma divida
+     declarada, nao um descuido: renomear para `screen__*` atravessa cinco views,
+     duas suites e quatro folhas, e o ganho e de leitura e nao de comportamento. */
   .area__head {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
     gap: var(--space-4);
+  }
+
+  /* A LEITURA DA DIREITA — o slot que era `cabinet__reading` e valia so para uma
+     tela. Duas classes para o mesmo lugar sao como uma paleta comeca a divergir:
+     a que ficar de fora do proximo ajuste vira o desenho errado. */
+  .head__reading {
+    display: grid;
+    justify-items: end;
+    gap: var(--space-1);
+    text-align: right;
+  }
+
+  .head__label {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* O INDICE DA AREA. Ele era o `area__value` — o slot do TITULO — e por isso a
+     tela nao tinha onde dizer o proprio nome. Aqui ele pesa menos que o nome da
+     tela e mais que o rotulo, que e a hierarquia certa: primeiro onde voce esta,
+     depois como esta. */
+  .head__value {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--text-title);
+    line-height: 1;
+    color: var(--ink);
   }
 
   .area__eyebrow {
@@ -46,11 +89,17 @@
     color: var(--ink-soft);
   }
 
+  /* ⚠ O TITULO DA TELA E SERIFA desde 15/08/2026, e ele foi o furo da regra do
+     ciclo 5: "Saude", "Gabinete", "Congresso & Leis" sao NOMES DE INSTITUICAO —
+     registro, pela minha propria definicao — e sairam em sans por seis telas. Uma
+     auditoria externa leu o titulo em sans grosso como "startup de tecnologia
+     medica", e leu certo: a fonte dizia aplicativo enquanto a palavra dizia
+     ministerio. */
   .area__value {
     display: flex;
     align-items: baseline;
     gap: var(--space-3);
-    font-family: var(--font-display);
+    font-family: var(--font-record);
     font-weight: 800;
     font-size: var(--text-hero);
     line-height: 0.95;
@@ -89,7 +138,19 @@
     gap: var(--space-3);
   }
 
+  /* ⚠ O FIO METALICO SOB A LEGENDA, e o que ele entrega nao e a linha: e a
+     REPETICAO dela. O que faz uma tela ler como grand strategy nao e o ouro do botao
+     — e o mesmo fio fino separando toda regiao, tela apos tela, ate o olho parar de
+     ver decoracao e passar a ver estrutura. Uma linha, oito blocos, cinco telas.
+
+     ELE E DE DUAS PARADAS, como o separador da faixa de indices: latao apagado em
+     cima e sombra embaixo. Um fio de uma cor so lê como borda de tabela; dois lê
+     como metal embutido, porque e assim que uma aresta se comporta sob luz. */
   .area__legend {
+    padding-bottom: var(--space-2);
+    box-shadow:
+      0 1px 0 rgba(var(--brand-rgb), 0.22),
+      0 2px 0 rgba(0, 0, 0, 0.35);
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -167,7 +228,7 @@
      "66 · leitos, UTIs e cirurgias contratadas" diz o que o jogador esta
      movendo, e e a diferenca entre escrever orcamento e girar um numero. */
   .dial__unit {
-    font-size: 0.72rem;
+    font-size: var(--text-note);
     color: var(--ink-dim);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -197,7 +258,7 @@
   }
 
   .dial__rite {
-    font-size: 0.72rem;
+    font-size: var(--text-note);
     color: var(--ink-dim);
     white-space: nowrap;
   }
@@ -229,26 +290,52 @@
     gap: var(--space-2);
   }
 
+  /* ── A LEI É DE PAPEL, e não de vidro ───────────────────────────────────────
+     ⚠ É AQUI QUE A SEGUNDA SUBSTÂNCIA APARECE, e este bloco é o único lugar do jogo
+     que a tem hoje. A razão está em `00-tokens.css`: uma lei não é uma superfície
+     da máquina do Estado — é o registro que a máquina produz. Desenhada com o mesmo
+     vidro do painel, ela lê como mais uma linha de configuração; e o bloco logo
+     acima dela, o do orçamento, É configuração. As duas coisas estavam idênticas.
+
+     O CANTO QUASE RETO acompanha o selo do rito, e pela mesma razão: tudo o mais
+     nesta interface é arredondado, então um canto duro lê como outra natureza de
+     coisa antes de qualquer palavra ser lida.
+
+     ⚠ O `data-moved` MANTÉM O ÂMBAR, e não ganha um tom de papel próprio. Ele não
+     diz "isto é uma lei" — diz "você mexeu nisto e ainda não pagou por isso", que é
+     estado de RASCUNHO e pertence ao vocabulário do controle, não ao do documento.
+     Duas linguagens na mesma linha é o que este arquivo inteiro evita. */
   .law {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(120px, 0.9fr) minmax(0, 1.1fr);
     align-items: center;
     gap: var(--space-2) var(--space-3);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-piece);
-    background: rgba(255, 255, 255, 0.03);
+    padding: var(--space-3);
+    border: 1px solid var(--paper-edge);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--paper-ink);
     transition: background var(--dur-piece) linear;
   }
 
   .law[data-moved="true"] {
-    background: rgba(var(--brand-rgb), 0.12);
+    /* A TINTA DO RASCUNHO ENTRA COMO CAMADA, e nao como cor misturada: `color-mix`
+       diverge de `rgba` em 1/255 na tela, e a guarda de tokens cobra isso. Um
+       gradiente de uma parada so e a forma que o projeto ja usa para deitar cor
+       sobre superficie sem trocar a superficie. */
+    background-image: linear-gradient(rgba(var(--brand-rgb), 0.16), rgba(var(--brand-rgb), 0.16));
     box-shadow: inset 2px 0 0 var(--brand);
   }
 
+  /* ⚠ O NOME DA LEI EM SERIFA, e é a regra tipográfica do ciclo 5 aplicada onde ela
+     mais importa: serifa é texto de REGISTRO, sans é valor MEDIDO. Este bloco é o
+     único da tela em que as duas convivem numa linha — o nome da norma é registro,
+     e "obriga 59" é medição —, e por isso ele é o melhor lugar para a regra ser
+     vista funcionando. */
   .law__name {
-    font-family: var(--font-display);
+    font-family: var(--font-record);
     font-weight: 600;
-    color: var(--ink);
+    color: var(--paper-ink);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -266,22 +353,30 @@
     width: 100%;
   }
 
+  /* AS LEITURAS DA LINHA HERDAM A TINTA DO PAPEL, e não a da tela. Um cinza
+     calibrado para vidro escuro fica turvo sobre pergaminho: cor que é função de um
+     fundo precisa ser revista quando o fundo muda — ela é consequência, não
+     escolha. É a mesma nota que o rótulo da faixa de contexto já carregava. */
   .law__read {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-2);
-    font-size: 0.78rem;
-    color: var(--ink-soft);
+    font-size: var(--text-note);
+    color: rgba(var(--paper-ink-rgb), 0.76);
   }
 
   .law__terms b {
-    color: var(--ink);
+    color: var(--paper-ink);
     font-weight: 700;
   }
 
   .law__terms small {
-    color: var(--ink-dim);
+    color: rgba(var(--paper-ink-rgb), 0.58);
+  }
+
+  .law__guard {
+    color: rgba(var(--paper-ink-rgb), 0.62);
   }
 
   /* QUEM PROTEGE A FAIXA nao e uma etiqueta de acao — e uma propriedade da norma,
@@ -313,20 +408,6 @@
     gap: var(--space-4);
   }
 
-  .allot__read {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-4);
-  }
-
-  .allot__value {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: var(--text-title);
-    color: var(--ink);
-    white-space: nowrap;
-  }
-
   /* `61 → 63` em cima e `parado: 60` embaixo. O contrafactual e a metade que
      importa: sem ele o jogador ve o indice subir e conclui que investir
      "funciona"; com ele, ve quanto do dinheiro esta so segurando o decaimento. */
@@ -346,9 +427,26 @@
   /* A LINHA QUE FAZ A TELA VIRAR DECISAO: o que sobra no mes e o que ja foi
      prometido as outras areas. Sem ela seriam seis controles independentes, e
      mover um nao significaria nada. */
+  /* ── A BOLSA, E ELA E A FRASE MAIS IMPORTANTE DA TELA ───────────────────────
+     "do mes R$ 9,5 bi disponiveis · R$ 13,5 bi ja comprometidos nas outras areas" e
+     o cobertor curto do orcamento inteiro dito em uma linha. Ela era texto solto no
+     escuro, abaixo dos controles, e uma revisao externa a leu como rodape esquecido.
+
+     AGORA ELA E UMA FITA: superficie propria, fio de latao em cima e embaixo, e
+     versalete espacado. Nao e enfeite — e o que a distingue de uma legenda e a poe
+     no mesmo peso das decisoes que ela governa.
+
+     ⚠ A COR CONTINUA VINDO DO `data-fits`, e nao de um fundo de alarme. Um banner
+     vermelho solido quando o mes estoura gritaria mais alto que o proprio numero, e
+     a tela ja diz o estouro no valor. Fita e moldura, e nao semaforo. */
   .allot__pool {
-    font-size: 0.78rem;
-    color: var(--ink-dim);
+    padding: var(--space-2) var(--space-3);
+    border-top: 1px solid rgba(var(--brand-rgb), 0.28);
+    border-bottom: 1px solid rgba(var(--brand-rgb), 0.28);
+    background: rgba(255, 255, 255, 0.03);
+    font-size: var(--text-note);
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
   }
 
   .allot__pool b {
@@ -363,188 +461,6 @@
      AS COLUNAS SAO FIXAS em `ch` para os numeros baterem entre as linhas —
      coluna de numero que se alinha sozinha por linha deixa de ser coluna, e a
      comparacao de relance e o unico motivo de a lista ser uma lista. */
-  /* A GRADE VIROU TABELA, e as colunas continuam em `rem`. `ch` mede a largura
-     do zero NA FONTE DE CADA ELEMENTO — o cabecalho roda no degrau de rotulo, de
-     10px, e as linhas no corpo de 13,6px, entao as mesmas `10ch` valiam 55px num
-     e 85px no outro, e as duas grades nunca chegaram a se alinhar.
-
-     `border-collapse: separate` com espacamento vertical, e nao `collapse`: e o
-     que preserva o vao entre as linhas e o raio nas pontas — a linha continua
-     sendo uma pastilha, e nao uma celula de planilha. */
-  .action-list {
-    width: 100%;
-    min-width: 30rem;
-    border-collapse: separate;
-    border-spacing: 0 var(--space-1);
-    table-layout: fixed;
-  }
-
-  /* A TABELA ROLA POR DENTRO no celular, e a pagina nunca rola de lado. Esconder
-     o cabecalho para caber seria pior do que parece: `display: none` tira o
-     elemento da arvore de acessibilidade tambem, e ai a associacao entre celula
-     e titulo — o unico motivo de isto ser uma tabela — morre junto. */
-  .action-scroll {
-    overflow-x: auto;
-  }
-
-  .action-list thead th {
-    padding: 0 var(--space-3) var(--space-1);
-    font-family: var(--font-display);
-    font-size: var(--text-label);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-align: left;
-    color: var(--ink-dim);
-  }
-
-  .action-list th.action-row__quorum,
-  .action-list th.action-row__fiscal,
-  .action-list th.action-row__lift {
-    text-align: right;
-  }
-
-  /* TODA COLUNA DECLARA LARGURA, MENOS A DO NOME. Com `table-layout: fixed`, as
-     colunas sem largura RACHAM o que sobra em partes iguais — entao a etiqueta
-     de rito recebia tanto espaco quanto o nome da acao, e o nome era truncado
-     enquanto uma palavra de cinco letras nadava ao lado. Quem fica sem largura
-     e quem deve receber a sobra. */
-  .action-list th:nth-child(2) {
-    width: 5.5rem;
-  }
-
-  .action-list th:nth-child(3) {
-    width: 4.2rem;
-  }
-  .action-list th:nth-child(4) {
-    width: 6.4rem;
-  }
-  .action-list th:nth-child(5) {
-    width: 4.4rem;
-  }
-  .action-list th:nth-child(6) {
-    width: 6.5rem;
-  }
-
-  .action-list--done th:nth-child(3) {
-    width: 7rem;
-  }
-
-  .action-row > * {
-    padding: var(--space-2) var(--space-3);
-    vertical-align: middle;
-  }
-
-  /* O RAIO VIVE NAS PONTAS DA LINHA. Com celulas separadas, a pastilha e o
-     conjunto: primeira celula arredonda a esquerda, ultima a direita. */
-  .action-row > *:first-child {
-    border-radius: var(--radius-piece) 0 0 var(--radius-piece);
-  }
-
-  .action-row > *:last-child {
-    border-radius: 0 var(--radius-piece) var(--radius-piece) 0;
-  }
-
-  .action-row > * {
-    background: rgba(255, 255, 255, 0.04);
-    transition: background var(--dur-touch) linear;
-  }
-
-  .action-row__do {
-    text-align: right;
-  }
-
-  .action-row__name {
-    color: var(--ink);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .action-row__quorum,
-  .action-row__fiscal,
-  .action-row__lift {
-    text-align: right;
-    color: var(--ink-soft);
-  }
-
-  /* O IMPACTO NO INDICE E A UNICA COLUNA COM SINAL DE COR, e a distincao e do
-     modelo e nao de gosto: `+8` no indice de saude e inequivocamente melhora, e
-     `−140` de despesa nao e bom nem ruim — e um governo que gasta menos numa
-     area onde talvez precisasse gastar. Pintar as duas de verde e vermelho
-     ensinaria que economizar e sempre certo. */
-  .action-row__lift {
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  /* ── A ACAO EM PAUTA ────────────────────────────────────────────────────────
-     A linha corrente recebe ambar rasa e uma barra na quina, do mesmo jeito que
-     o item corrente do rail — e pela mesma razao: a marca e a cor do que se
-     pressiona, e gasta-la cheia numa linha de lista enfraqueceria os botoes de
-     verdade da tela. */
-  .action-row--live > * {
-    background: rgba(var(--brand-rgb), 0.14);
-  }
-
-  .action-row--live > *:first-child {
-    box-shadow: inset 2px 0 0 var(--brand);
-  }
-
-  .action-row__live {
-    font-family: var(--font-display);
-    font-size: var(--text-label);
-    font-weight: 800;
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    text-align: right;
-    color: var(--brand);
-  }
-
-  .action-row__pick {
-    padding: 4px var(--space-3);
-    border-radius: var(--radius-pill);
-    font-family: var(--font-display);
-    font-size: var(--text-label);
-    font-weight: 800;
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    color: var(--brand);
-    background: rgba(var(--brand-rgb), 0.14);
-    transition: background var(--dur-touch) linear;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .action-row:hover > * {
-      background: rgba(255, 255, 255, 0.07);
-    }
-
-    .action-row--live:hover > * {
-      background: rgba(var(--brand-rgb), 0.14);
-    }
-
-    .action-row__pick:hover {
-      background: rgba(var(--brand-rgb), 0.28);
-    }
-  }
-
-  /* ── O QUE JA ESTA EM VIGOR ─────────────────────────────────────────────────
-     Tres colunas em vez de seis: nome, instrumento e a conta que ele cobra todo
-     ano. Quorum e impacto no indice sairam porque ja aconteceram — mostrar o
-     quorum de uma lei aprovada e mostrar uma pergunta ja respondida. */
-  .action-list--done .action-row > * {
-    background: rgba(255, 255, 255, 0.02);
-  }
-
-  .action-list--done .action-row__name {
-    color: var(--ink-soft);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .action-list--done .action-row:hover > * {
-      background: rgba(255, 255, 255, 0.02);
-    }
-  }
 
   /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
      A tabela rola por dentro, e nada e escondido. A alternativa seria esconder
@@ -554,10 +470,6 @@
     .allot {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--space-2);
-    }
-
-    .allot__read {
-      justify-content: space-between;
     }
   }
 }

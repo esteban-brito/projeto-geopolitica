@@ -42,7 +42,26 @@ export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../dat
    vivo enquanto o jogador arrasta a verba. Eles vem do dominio porque sao a
    mesma conta que a votacao vai fazer — refeita por fora, seria conta que
    diverge da que decide. */
-export { whipCount, dispersion, THRESHOLDS } from "../domain/congress/index.mjs";
+/* `baseSplit` passa pela porta pela mesma razao das duas acima, e com um agravante
+   proprio: o arco do Gabinete pinta a base por estado da bancada, e os limiares que
+   separam "com o governo" de "obstruindo" e de "rompido" sao calibragem de ECLUSA.
+   A tela que os redigitasse chamaria de obstrucao o que o motor ja trata como
+   ruptura no dia seguinte a primeira recalibragem. */
+/* ⚠ `whipCount` E `dispersion` SAIRAM DA FACHADA em 15/08/2026, e a saida delas e
+   o conserto de verdade — a prova nova so denuncia; isto IMPEDE.
+
+   Enquanto os dois estiveram aqui, o entrypoint podia montar a propria camara para
+   prever uma votacao, e foi exatamente o que ele fez: chamava `whipCount` com os
+   quatro blocos do catalogo enquanto o turno votava com as onze bancadas do ELENCO,
+   a verba com credito de memoria dentro e a aprovacao da rua. Ninguem quebrou nada
+   ao acrescentar esses motores; a tela simplesmente ficou para tras, e em 27,2% das
+   votacoes ela anunciava o veredito contrario ao que o mes produzia.
+
+   O padrao ja estava escrito tres vezes neste arquivo — `settlement`, `ledger` e
+   `bandsOf` existem para a tela PERGUNTAR em vez de remontar. A licao que faltava e
+   que nao basta oferecer a porta certa: enquanto a porta errada continuar aberta,
+   alguem entra por ela. Quem quiser prever uma votacao chama `forecast`. */
+export { baseSplit, THRESHOLDS } from "../domain/congress/index.mjs";
 
 /* `pollFrom` CONVERTE SATISFACAO EM PESQUISA, e ela passa pela porta pelo mesmo
    motivo das duas acima: o estado guarda o humor de cada segmento, e a escala de
@@ -57,5 +76,59 @@ export { pollFrom } from "../domain/opinion/index.mjs";
    em dinheiro". Financas mostraria numero de dois motores, e a alternativa era
    abrir `budgetStep` e `carry` crus aqui — motor cru na fachada e a tela
    remontando a posicao orcamentaria por fora. */
-export { ledger, playMonth, settlement, situationOf } from "../application/turn.mjs";
+/* `bandsOf` e a quarta, e ela nasceu com o motor de normas. A tela precisa saber
+   o que a lei manda enquanto o jogador arrasta o controle, e a lei deixou de ser
+   um campo do estado para virar a leitura de uma pilha de textos — com gatilho,
+   prazo e revogacao dentro. Sem esta porta, o entrypoint teria de montar as
+   alavancas e os indicadores por fora para chamar o motor: motor cru na fachada, e
+   a tela remontando a legislacao do pais. */
+/* `lockedBy` e a quinta porta, e ela responde a pergunta que o jogador faz antes
+   de qualquer outra: por que eu nao tenho dinheiro. A resposta e uma lista de
+   NORMAS, e quem sabe qual delas venceu a disputa de precedencia e o motor. */
+/* ⚠ `forecast` E A SEXTA, e ela nasceu de um defeito medido: a Mesa montava a
+   previsao a mao com os quatro blocos do catalogo enquanto o turno votava com as
+   onze bancadas do ELENCO, a verba com credito de memoria dentro e a aprovacao da
+   rua. Em 1.012 votacoes, o veredito saia INVERTIDO em 27,2% delas.
+   Ela e a porta que torna esse defeito impossivel de repetir: a tela nao tem mais
+   como montar uma camara, porque ela nao recebe as pecas — recebe a resposta. E o
+   mesmo movimento de `settlement` e de `bandsOf`, e pela terceira vez pela mesma
+   razao. */
+/* `governmentOf` e a setima porta, e ela responde a pergunta que o jogo nunca
+   respondeu: QUEM E VOCE. Ela devolve o nome do presidente, o conselheiro que
+   assina a leitura do mes, e a posicao que o governo se TORNOU — que `compose`
+   calcula desde o ciclo 2 e que morria dentro de uma pauta, sem nenhuma tela
+   dizer o resultado. */
+/* `passageOf` e a nona porta, e ela nasceu junto com a tramitacao: o texto que o
+   jogador escreve hoje vai para a GAVETA, e uma tela que continuasse anunciando o
+   placar do mes estaria prevendo uma votacao que nao vai acontecer. Ela devolve o
+   estagio de cada texto, ha quanto tempo ele espera e quanto falta para ele morrer
+   engavetado. */
+/* `chamberOf` e a oitava porta, e ela desenha o hemiciclo: quantas cadeiras cada
+   bancada tem e quantas delas respondem ao governo. A segunda conta e `moodFactor`,
+   calibragem de ECLUSA — refeita na tela, ela produziria um plenario desenhado que
+   discorda do numero impresso ao lado dele. */
+/* `boilerOf` e a decima primeira porta: a CALDEIRA como a tela precisa ve-la — os
+   quatro grupos de pressao, o que cada um cobra, e quais das tres rupturas ja estao
+   abertas. A tela nao remonta pressao nem redecide ruptura: refeitas por fora, elas
+   divergiriam no primeiro mes em que um limiar mudasse. */
+export {
+  bandsOf,
+  boilerOf,
+  chamberOf,
+  forecast,
+  governmentOf,
+  ledger,
+  lockedBy,
+  passageOf,
+  playMonth,
+  settlement,
+  situationOf,
+} from "../application/turn.mjs";
 export { compose, honour, spendOf } from "../application/agenda.mjs";
+/* `left` e a decima porta, e ela e uma linha — o que importa e ela ser a UNICA.
+   Quantos meses faltam para uma carta vencer parece conta trivial demais para ter
+   porta propria, e e exatamente por isso que ela precisa de uma: subtracao trivial
+   e o que a tela refaz sem pensar, e no dia em que o vencimento deixar de ser
+   `due - month` — prorrogacao, prazo em dias, feriado legislativo — a tarja de
+   gravidade passaria a mentir sem nada acusar. A tela pergunta. */
+export { left } from "../application/mail.mjs";

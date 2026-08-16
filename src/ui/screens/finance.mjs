@@ -24,6 +24,8 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, num, percent, seats, signed, sparkline } from "../shared/format.mjs";
+import { headHtml } from "../shared/head.mjs";
+import { trendOf, windowLabel } from "../shared/trend.mjs";
 import { UI } from "../strings.mjs";
 
 /**
@@ -114,6 +116,7 @@ function blockHtml({ title, rows }) {
  * @param {number} input.interest o servico da divida NO MES
  * @param {number} input.debt o estoque com que o mes fecha, juro incluido
  * @param {number} input.debtRatio o mesmo estoque sobre o PIB
+ * @param {number} input.premium o spread que o mercado cobra acima da basica, ao ano
  * @param {number} input.target a meta de inflacao, do catalogo
  * @param {ReadonlyArray<Area>} input.areas
  * @param {Record<string, number>} input.index
@@ -127,6 +130,7 @@ export function financeHtml({
   interest,
   debt,
   debtRatio,
+  premium,
   target,
   areas,
   index,
@@ -254,6 +258,17 @@ export function financeHtml({
         range: SCALE.debtRatio,
         tone: debtRatio > 0.8 ? "down" : "flat",
       }) +
+      (premium > 0
+        ? lineHtml({
+            label: UI.finance.premium,
+            value: percent(premium, 2),
+            note: UI.finance.premiumNote,
+            /* SEMPRE "down": um premio de risco que existe nunca e boa noticia. Ele so
+               aparece quando a divida passou da herdada, e ai ele JA e a deterioracao
+               sendo cobrada. */
+            tone: "down",
+          })
+        : "") +
       lineHtml({
         label: UI.finance.ceiling,
         value: money(budget.ceiling),
@@ -273,19 +288,36 @@ export function financeHtml({
       .map(area => {
         const value = index[area.id] ?? area.initial;
         const past = history[area.id] ?? [];
-        const moved = value - (past.length > 1 ? (past[0] ?? value) : value);
+
+        /* ⚠ A JANELA VARIA DE LINHA PARA LINHA, E POR ISSO ELA VAI ESCRITA. Esta
+           coluna subtraia `past[0]` — o valor mais antigo guardado —, e o
+           historico da capacidade tem o comprimento do ATRASO de cada area. O
+           resultado era uma coluna que punha 24 meses de Educacao, 12 de Defesa, 6
+           de Industria e 3 de Saude uma embaixo da outra, todas sem rotulo, lidas
+           como comparaveis.
+           E onde o atraso e zero — Fazenda e Previdencia — o historico guarda um
+           valor so, a subtracao dava zero, e as duas linhas imprimiam `· 0` em
+           todo mes de toda partida, sem escada ao lado. Um indicador morto ao lado
+           de indicadores vivos e o defeito que tirou a aprovacao desta tela por
+           tres sessoes; ele estava aqui, em duas das oito linhas. Medido no mes 16:
+           a Saude anunciava `· 0` com o indice ja tendo caido de 66 para 62.
+           Quem calcula agora e `trendOf`, e e a MESMA funcao que a tela de area
+           chama — as duas mostravam numeros diferentes para a mesma area. */
+        const moved = trendOf(value, past);
 
         /* O TOM LE O NUMERO ARREDONDADO, e nao o valor cheio. Uma queda de 0,4
            ponto imprime "0" e tingiria a linha de vermelho — e ai a cor afirma
            uma piora que o proprio numero ao lado nega. Onde a tela mostra zero,
            ela precisa mostrar zero nas duas linguagens. */
-        const shift = Number(moved.toFixed(0));
+        const shift = Number((moved?.delta ?? 0).toFixed(0));
 
         return lineHtml({
           label: area.label,
           value: seats(value),
           past,
-          note: `${area.index} · ${signed(moved)}`,
+          note: moved
+            ? `${area.index} · ${signed(moved.delta)} ${windowLabel(moved.months)}`
+            : area.index,
           tone: shift > 0 ? "up" : shift < 0 ? "down" : "flat",
         });
       })
@@ -294,10 +326,7 @@ export function financeHtml({
 
   return (
     `<section class="area glass-stage">` +
-    `<div class="area__head"><div>` +
-    `<p class="area__eyebrow">${escapeHtml(UI.finance.eyebrow)}</p>` +
-    `<p class="area__value">${escapeHtml(UI.finance.title)}</p>` +
-    `</div></div>` +
+    headHtml({ eyebrow: UI.finance.eyebrow, title: UI.finance.title }) +
     economy +
     accounts +
     stock +

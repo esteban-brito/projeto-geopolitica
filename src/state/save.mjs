@@ -81,11 +81,11 @@ export function deserialize(text) {
     };
   }
 
-  /* ⚠ A LISTA E DE CAMPOS QUE NAO TEM SUBSTITUTO, e `bands` entrou nela no dia em
-     que as faixas viraram estado. Sem `levels` o jogo nao sabe quanto o pais
-     gasta; sem `bands` ele nao sabe o que a lei manda gastar — e a segunda
-     ausencia e pior que a primeira, porque um estado sem faixa nenhuma abre com a
-     Constituicao inteira valendo zero, que e um pais valido e portanto
+  /* ⚠ A LISTA E DE CAMPOS QUE NAO TEM SUBSTITUTO, e `norms` entrou nela no dia em
+     que as faixas viraram texto. Sem `levels` o jogo nao sabe quanto o pais gasta;
+     sem `norms` ele nao sabe o que a lei manda gastar — e a segunda ausencia e
+     pior que a primeira, porque ausencia de norma e ausencia de restricao: o save
+     abriria com a Constituicao inteira revogada, que e um pais valido e portanto
      indistinguivel de um save quebrado. */
   const required = [
     "seed",
@@ -96,7 +96,8 @@ export function deserialize(text) {
     "macro",
     "capacity",
     "levels",
-    "bands",
+    "norms",
+    "memory",
     "streams",
   ];
 

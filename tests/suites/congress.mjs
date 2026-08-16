@@ -11,6 +11,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
+/* O HUMOR DE ABERTURA VEM DO ESTADO. Repetido a mao, ele vira uma segunda verdade
+   sobre como uma partida comeca. */
+import { INITIAL_LOYALTY } from "../../src/state/state.mjs";
 import {
   THRESHOLDS,
   baseCount,
@@ -505,7 +508,7 @@ test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
   const bill = BILLS.find(item => item.instrument === "law" && item.threat < 0.3);
   assert.ok(bill, "o catalogo perdeu a lei mansa que esta prova usa");
 
-  const loyalty = everyone(70);
+  const loyalty = everyone(INITIAL_LOYALTY);
   const funding = everyone(0.3);
   const count = (/** @type {number | undefined} */ standing) =>
     whipCount({ bill, parties: PARTIES, funding, loyalty, standing }).votes;

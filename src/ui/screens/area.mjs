@@ -36,6 +36,8 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { attr, money, seats, signed, sparkline } from "../shared/format.mjs";
+import { headHtml } from "../shared/head.mjs";
+import { trendOf, windowLabel } from "../shared/trend.mjs";
 import { UI } from "../strings.mjs";
 import { bandOf, riteFor, riteForBand } from "../../application/agenda.mjs";
 
@@ -132,11 +134,23 @@ export function programReadHtml({ program, level, band = bandOf(program) }) {
 function programHtml({ program, level, band = bandOf(program) }) {
   const rite = riteFor({ ...program, ...band }, level);
 
-  /* A MARCA DO PISO E POSICAO NO PROPRIO CONTROLE, escrita em estilo inline
-     porque ela e DADO — onde a lei para, naquele programa — e nao decisao de
-     paleta. E a mesma excecao declarada da faixa de indices na Mesa. */
+  /* A FAIXA VIGENTE VIRA POSICAO NO PROPRIO TRILHO, escrita em estilo inline porque
+     ela e DADO — onde a lei comeca e onde ela acaba, naquele programa — e nao decisao
+     de paleta. E a mesma excecao declarada da faixa de indices na Mesa.
+
+     ⚠ O PISO ERA ESCRITO E NUNCA DESENHADO. Ate 15/08/2026 esta linha passava
+     `--floor` ao CSS e NENHUMA regra o consumia: um canal de dado morto, a familia
+     inversa da folha orfa — dado sem consumidor, em vez de estilo sem seletor. O
+     efeito era que o controle mais importante do jogo nao carregava a unica
+     informacao que o distingue de um controle de volume, e uma auditoria externa leu
+     a tela inteira como "mesa de som" sem saber por que.
+
+     O TETO ENTRA JUNTO porque a faixa tem dois lados, e o preco existe nos dois: o
+     trilho passa a mostrar as TRES zonas — abaixo do piso custa lei, entre piso e
+     teto e caneta, acima do teto custa de novo. */
   return (
-    `<div class="dial" data-rite="${escapeHtml(rite)}" style="--floor:${attr(band.floor)}">` +
+    `<div class="dial" data-rite="${escapeHtml(rite)}" ` +
+    `style="--floor:${attr(band.floor)};--ceiling:${attr(band.ceiling)}">` +
     `<div class="dial__head">` +
     `<span class="dial__name">${escapeHtml(program.label)}</span>` +
     `<span class="dial__unit">${escapeHtml(program.unit)}</span>` +
@@ -236,7 +250,8 @@ function lawHtml({ program, band, asked }) {
     )}" />`;
 
   return (
-    `<div class="law" data-guard="${escapeHtml(program.guard)}" data-moved="${moved}">` +
+    `<div class="law" data-guard="${escapeHtml(program.guard)}" data-moved="${moved}" ` +
+    `style="--floor:${attr(asked.floor)};--ceiling:${attr(asked.ceiling)}">` +
     `<span class="law__name">${escapeHtml(program.label)}</span>` +
     `<span class="law__band">${slider("floor")}${slider("ceiling")}</span>` +
     `<span class="law__read" data-law="${escapeHtml(program.id)}">` +
@@ -255,7 +270,7 @@ function lawHtml({ program, band, asked }) {
  * @param {Record<string, import("../../state/state.mjs").Band>} input.requestedBands
  * @returns {string}
  */
-export function lawsHtml({ programs, bands, requestedBands }) {
+function lawsHtml({ programs, bands, requestedBands }) {
   const rows = programs
     .map(program => {
       const band = bandOf(program, bands);
@@ -294,25 +309,52 @@ export function lawsHtml({ programs, bands, requestedBands }) {
 export function areaHtml(input) {
   const { area, value, history, bands = {}, requestedBands = {} } = input;
 
-  /* A VARIACAO DE DOZE MESES, e nao a do mes: um passo de meio ponto e ruido, e
-     doze passos na mesma direcao sao uma politica. */
-  const past = history.length > 0 ? history : [value];
-  const twelve = value - (past.length >= 12 ? (past.at(-12) ?? area.initial) : area.initial);
+  /* A VARIACAO DE ATE DOZE MESES, e nao a do mes: um passo de meio ponto e ruido,
+     e doze passos na mesma direcao sao uma politica.
 
-  const head =
-    `<div class="area__head">` +
-    `<div>` +
-    `<p class="area__eyebrow">${escapeHtml(area.index)}</p>` +
-    `<p class="area__value" data-numeric>${seats(value)}` +
-    `<span class="area__spark" aria-hidden="true">${sparkline(past)}</span></p>` +
-    `</div>` +
-    /* A VARIACAO USA A PECA DE VARIACAO, e nao uma classe propria que repinta o
-       mesmo verde. Duas regras para o mesmo conceito e como uma paleta comeca a
-       divergir: a que ficar de fora do proximo ajuste vira a cor errada. */
-    `<p class="trend area__delta"` +
-    ` data-direction="${twelve > 0 ? "up" : twelve < 0 ? "down" : "flat"}"` +
-    ` data-numeric>${signed(twelve)} <small>em 12 meses</small></p>` +
-    `</div>`;
+     ⚠ "ATE" DOZE, E A JANELA E DITA. Esta linha chamava tudo de "em 12 meses" e
+     comparava contra `history.at(-12)`, com o indice de ABERTURA como reserva — e
+     o historico da capacidade guarda `lag + 1` valores, entao doze meses atras so
+     existe onde o atraso passa de onze. Em SEIS das oito areas a tela mostrava a
+     variacao desde a posse com rotulo de doze meses, e no mes 40 isso e uma frase
+     falsa. Agora a janela e a que o historico suporta, e ela vai escrita ao lado —
+     a mesma leitura que Financas mostra, do mesmo lugar. */
+  const past = history.length > 0 ? history : [value];
+  const moved = trendOf(value, past);
+
+  /* ⚠ A CABECA DIZ QUE TELA E ESTA, e ate 15/08/2026 ela nao dizia. O par era
+     `nome do indice / NUMERO` — "ATENDIMENTO 61" —, entao a tela de um ministerio
+     era a unica do jogo que nao se apresentava: para saber que aquilo era a Saude,
+     o jogador tinha de conferir qual item do rail estava aceso. Todas as outras
+     telas usam `categoria / nome`, e agora esta usa tambem.
+     O INDICE NAO PERDEU PESO — ele mudou de lado. Ele e o que esta tela tem a
+     dizer de si AGORA, que e exatamente o papel da leitura da direita, o mesmo que
+     o veredito ocupa no Gabinete. */
+  const head = headHtml({
+    eyebrow: UI.area.ministry,
+    title: area.label,
+    reading: {
+      label: area.index,
+      value:
+        `<p class="head__value" data-numeric>${seats(value)}` +
+        `<span class="area__spark" aria-hidden="true">${sparkline(past)}</span></p>` +
+        /* A VARIACAO USA A PECA DE VARIACAO, e nao uma classe propria que repinta o
+           mesmo verde. Duas regras para o mesmo conceito e como uma paleta comeca a
+           divergir: a que ficar de fora do proximo ajuste vira a cor errada.
+
+           ⚠ SEM PASSADO GUARDADO, NAO HA LINHA. Onde o atraso da area e zero —
+           Fazenda e Previdencia — o historico tem um valor so, e a variacao que a
+           tela imprimia era um zero inventado: "nao mudou" e uma afirmacao, e ela
+           era falsa, porque o indice podia ter andado e ninguem anotou. Ausencia
+           declarada, e nao ausencia disfarcada. */
+        (moved === null
+          ? ""
+          : `<p class="trend area__delta"` +
+            ` data-direction="${moved.delta > 0 ? "up" : moved.delta < 0 ? "down" : "flat"}"` +
+            ` data-numeric>${signed(moved.delta)} ` +
+            `<small>${escapeHtml(windowLabel(moved.months))}</small></p>`),
+    },
+  });
 
   const dials = input.programs
     .map(program =>
@@ -330,13 +372,19 @@ export function areaHtml(input) {
     `<span class="area__total" data-numeric>${escapeHtml(UI.area.thisArea)} ` +
     `${money(input.spent)}</span>` +
     `</h3>` +
-    `<div class="dials" id="areaDials">${dials}</div>` +
-    /* A LINHA DA BOLSA, e ela e a unica que transforma trinta controles numa
-       escolha. `id` proprio porque ela se repinta a cada arrasto sem o controle
-       ser reconstruido. */
+    /* ── A BOLSA SUBIU PARA CA em 15/08/2026 ────────────────────────────────
+       Ela e a unica linha que transforma trinta controles numa ESCOLHA — sem ela
+       seriam trinta numeros independentes, e mover um nao significaria nada.
+       ⚠ E ELA VIVIA EMBAIXO DOS CONTROLES, como rodape. Uma revisao externa a
+       descreveu como "texto solto espremido no vazio", e o defeito era pior do que
+       a diagramacao: posta DEPOIS, ela e a conclusao de uma decisao que o jogador ja
+       tomou. O cobertor curto precisa ser lido ANTES de se puxar a ponta dele.
+       `id` proprio porque ela se repinta a cada arrasto sem o controle ser
+       reconstruido. */
     `<p class="allot__pool" id="areaPool">` +
     poolHtml(input) +
     `</p>` +
+    `<div class="dials" id="areaDials">${dials}</div>` +
     `</section>`;
 
   const outlook =
@@ -415,16 +463,34 @@ export function outlookHtml({ value, projected, idle }) {
  * mostra vazio, porque ela nao consome discricionario. O preco dela e outro:
  * dividendo que some, folha que fica, e voto.
  *
+ * ⚠ ELA PERGUNTA A LEI AO MOTOR, e ate 15/08/2026 ela nao perguntava. `programHtml`
+ * sem `band` cai na faixa do CATALOGO — a de abertura —, entao esta tela anunciava
+ * o rito de cada alavanca de regra contra a lei do dia da posse, e nao contra a que
+ * esta em vigor. Hoje o defeito e latente, porque a tela nao oferece controle de
+ * faixa para regra e portanto nada as move; ele deixaria de ser latente no primeiro
+ * texto que mexesse numa delas, e apareceria como a tela cobrando "lei" numa jogada
+ * que o motor cobra como emenda. E o mesmo defeito que a prosa de `riteOf` narra ter
+ * custado uma hora na tela de area: aviso em comentario nao impede nada, uma fonte
+ * so impede.
+ *
  * @param {object} input
  * @param {ReadonlyArray<Dial>} input.rules
  * @param {Record<string, number>} input.levels
+ * @param {Record<string, import("../../state/state.mjs").Band>} [input.bands] as VIGENTES
+ * @param {Record<string, import("../../state/state.mjs").Band>} [input.requestedBands] as PEDIDAS
  * @returns {string}
  */
-export function estadoHtml({ rules, levels }) {
+export function estadoHtml({ rules, levels, bands = {}, requestedBands = {} }) {
   const groups = ["property", "power"].map(family => {
     const dials = rules
       .filter(rule => /** @type {{ family?: string }} */ (rule).family === family)
-      .map(rule => programHtml({ program: rule, level: levels[rule.id] ?? rule.initial }))
+      .map(rule =>
+        programHtml({
+          program: rule,
+          level: levels[rule.id] ?? rule.initial,
+          band: requestedBands[rule.id] ?? bandOf(rule, bands),
+        }),
+      )
       .join("");
 
     if (!dials) return "";
@@ -439,10 +505,7 @@ export function estadoHtml({ rules, levels }) {
 
   return (
     `<section class="area glass-stage">` +
-    `<div class="area__head"><div>` +
-    `<p class="area__eyebrow">${escapeHtml(UI.estado.eyebrow)}</p>` +
-    `<p class="area__value">${escapeHtml(UI.estado.title)}</p>` +
-    `</div></div>` +
+    headHtml({ eyebrow: UI.estado.eyebrow, title: UI.estado.title }) +
     groups.join("") +
     `</section>`
   );

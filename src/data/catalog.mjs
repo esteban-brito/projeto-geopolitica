@@ -13,6 +13,15 @@
 
 import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
+import {
+  AMBITIONS,
+  ARCHETYPES,
+  ARCHETYPE_SCHEMA,
+  CAST,
+  CAST_SCHEMA,
+  FIRST_NAMES,
+  SURNAMES,
+} from "./cast.mjs";
 import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
 import { MACRO, MACRO_SCHEMA } from "./macro.mjs";
 import { OPINION, OPINION_SCHEMA, SEGMENTS, SEGMENT_SCHEMA } from "./opinion.mjs";
@@ -20,6 +29,7 @@ import { PARTIES, PARTY_SCHEMA } from "./parties.mjs";
 import { GUARDS, PROGRAMS, PROGRAM_SCHEMA } from "./programs.mjs";
 import { REGIME, REGIME_SCHEMA } from "./regime.mjs";
 import { RULES, RULE_SCHEMA } from "./rules.mjs";
+import { LOBBIES, LOBBY_SCHEMA, PRESSURE, PRESSURE_SCHEMA } from "./lobbies.mjs";
 import { collectionViolations, violations } from "./schema.mjs";
 
 export const CATALOG = {
@@ -32,6 +42,13 @@ export const CATALOG = {
   macro: MACRO,
   segments: SEGMENTS,
   opinion: OPINION,
+  archetypes: ARCHETYPES,
+  cast: CAST,
+  lobbies: LOBBIES,
+  pressure: PRESSURE,
+  firstNames: FIRST_NAMES,
+  surnames: SURNAMES,
+  ambitions: AMBITIONS,
 };
 
 /**
@@ -56,6 +73,10 @@ export function catalogViolations() {
     ...collectionViolations(SEGMENT_SCHEMA, SEGMENTS, "segments"),
     ...violations(OPINION_SCHEMA, OPINION, "opinion"),
     ...violations(REGIME_SCHEMA, REGIME, "regime"),
+    ...collectionViolations(ARCHETYPE_SCHEMA, ARCHETYPES, "archetypes"),
+    ...violations(CAST_SCHEMA, CAST, "cast"),
+    ...collectionViolations(LOBBY_SCHEMA, LOBBIES, "lobbies"),
+    ...violations(PRESSURE_SCHEMA, PRESSURE, "pressure"),
     /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. Acao apontando
        para area que nao existe nao quebra nada na carga — ela simplesmente
        desaparece da tela da area, e o sintoma e "sumiu uma lei", tres telas longe
@@ -80,7 +101,41 @@ export function catalogViolations() {
        decimos do pais — e o numero sai plausivel, so que errado, o que e a pior
        combinacao possivel num indicador que decide o jogo. */
     ...populationMismatch(),
+    /* ARQUETIPO APONTANDO PARA BLOCO QUE NAO EXISTE some do elenco em silencio: a
+       pessoa simplesmente nao nasce, e o sintoma e um Congresso com um lider a
+       menos — que e um estado de jogo valido e portanto indistinguivel de um
+       defeito. E a mesma classe de `danglingPrograms`, do lado da gente. */
+    ...danglingArchetypes(),
+    /* NOME REPETIDO NO VOCABULARIO nao quebra nada e estreita o elenco em
+       silencio: duas entradas iguais viram uma, e o gerador passa a ter menos
+       combinacoes do que o catalogo aparenta oferecer. */
+    ...duplicateNames(),
   ];
+}
+
+/** @returns {string[]} */
+function danglingArchetypes() {
+  const known = new Set(PARTIES.map(party => party.id));
+  return ARCHETYPES.filter(archetype => !known.has(archetype.bloc)).map(
+    archetype => `archetypes: "${archetype.id}" sai do bloco "${archetype.bloc}", que nao existe`,
+  );
+}
+
+/** @returns {string[]} */
+function duplicateNames() {
+  /** @type {string[]} */
+  const found = [];
+  for (const [where, list] of /** @type {const} */ ([
+    ["firstNames", FIRST_NAMES],
+    ["surnames", SURNAMES],
+  ])) {
+    const seen = new Set();
+    for (const name of list) {
+      if (seen.has(name)) found.push(`cast: "${name}" aparece mais de uma vez em ${where}`);
+      seen.add(name);
+    }
+  }
+  return found;
 }
 
 /** @returns {string[]} */

@@ -52,6 +52,7 @@ const MONTHS_PER_YEAR = 12;
  * @property {number} anchorExpense - despesa total do exercicio anterior
  * @property {number} debt - divida bruta
  * @property {number} spent - discricionario efetivamente empenhado NO MES
+ * @property {number} [inflation] - ao ano; e ela que indexa a despesa obrigatoria
  * @property {FiscalParameters} parameters
  * @property {number} [revenueFactor] - o quanto a maquina de arrecadar rende hoje
  * @property {number} [mandatoryFactor] - o quanto o servico publico encarece a obrigatoria
@@ -88,11 +89,29 @@ export function revenueOf(gdp, taxLoad) {
  * ligeiramente MAIOR que a taxa declarada, e um erro de composicao que anda por
  * 48 turnos deixa de ser arredondamento.
  *
+ * ⚠ A INFLACAO ENTRA AQUI, E A AUSENCIA DELA ERA UM DEFEITO MEDIDO. O parametro
+ * `mandatoryGrowth` sempre se chamou "crescimento vegetativo REAL ao ano" na
+ * prosa do catalogo, e o codigo o aplicava sobre um valor NOMINAL sem corrigir
+ * por preco. O efeito era o oposto da armadilha que o arquivo promete:
+ *
+ *   obrigatoria crescia   2,5% ao ano
+ *   PIB nominal crescia   ~6% ao ano (2% real + 4% de inflacao)
+ *
+ * — ou seja, a despesa obrigatoria ENCOLHIA contra o PIB todo mes, sozinha, e o
+ * pais se desendividava sem ninguem governar. Era a causa raiz do achado numero
+ * um do handoff.
+ *
+ * Aposentadoria e salario sao indexados: eles sobem com a inflacao E crescem em
+ * cima disso. O composto dos dois e o que faz a obrigatoria correr ACIMA do PIB
+ * nominal, que e a armadilha fiscal brasileira em uma linha.
+ *
  * @param {number} mandatory
- * @param {number} annualRate
+ * @param {number} annualRate crescimento REAL ao ano
+ * @param {number} [inflation] ao ano, em fracao; zero reproduz o comportamento antigo
  */
-export function growMandatory(mandatory, annualRate) {
-  return mandatory * (1 + annualRate) ** (1 / MONTHS_PER_YEAR);
+export function growMandatory(mandatory, annualRate, inflation = 0) {
+  const nominal = (1 + annualRate) * (1 + inflation) - 1;
+  return mandatory * (1 + nominal) ** (1 / MONTHS_PER_YEAR);
 }
 
 /**
@@ -149,7 +168,11 @@ export function step(input) {
      Quem avanca o estado usa `mandatoryBase` e `revenueBase`. Quem mostra numero
      na tela usa os de cima. */
   const revenueBase = revenueOf(input.gdp, parameters.taxLoad);
-  const mandatoryBase = growMandatory(input.mandatory, parameters.mandatoryGrowth);
+  const mandatoryBase = growMandatory(
+    input.mandatory,
+    parameters.mandatoryGrowth,
+    input.inflation ?? 0,
+  );
 
   const revenue = revenueBase * (input.revenueFactor ?? 1);
   const mandatory = mandatoryBase * (input.mandatoryFactor ?? 1);
@@ -170,7 +193,36 @@ export function step(input) {
      e ECLUSA, porque emenda sai daqui. */
   const contingency = room < 0;
 
-  const allowance = contingency ? 0 : Math.max(0, Math.min(cash, room));
+  /* ⚠ O TETO MANDA, E O CAIXA NAO — e esta linha e a queda do ULTIMO MURO do jogo.
+     Ate 16/08/2026 ela era `min(cash, room)`, e a consequencia foi medida:
+
+       ratio   = room / demand                    quando demand > room
+       spent   = demand x ratio = min(cash, room) / 12
+       balance = cash / 12 - spent  ->  ZERO, sempre que o caixa aperta antes do teto
+
+     O empenho consumia EXATAMENTE o caixa livre, nem mais nem menos. Despesa total =
+     obrigatoria + caixa = receita, por construcao — e o saldo primario dava zero em
+     toda jogada. Medido em 48 meses: um governo que poe os 38 programas no MAXIMO e
+     paga verba cheia a todas as bancadas fecha o mes com o mesmo saldo de um que nao
+     faz nada. A divida so andava por JURO, e o orcamento — que o ciclo 2 declarou
+     ser o jogo — nao tinha consequencia fiscal nenhuma.
+
+     ⚠ E O ENQUADRAMENTO E O QUE IMPORTA: `spent <= cash` e `if (proibido) return`
+     escrito em aritmetica. Em todo lugar do Planalto a pergunta e QUANTO CUSTA;
+     aqui, e so aqui, ela era PODE?. Nenhum governo do mundo real respeita esse
+     limite, e o Brasil menos que a media.
+
+     ── O QUE FICA, E POR QUE ────────────────────────────────────────────────────
+     O TETO CONTINUA VALENDO, e ele nao e o mesmo tipo de coisa: o arcabouco e LEI,
+     com norma atras, e o jogador pode muda-la pelo rito que a guarda dela exigir. O
+     caixa nao tinha nada atras — era aritmetica se passando por regra.
+
+     A diferenca pratica: furar o teto continua exigindo mudar a lei; gastar mais do
+     que se arrecada passa a ser possivel, e custa DIVIDA. E o preco ja existe e nao
+     precisou ser inventado: divida maior -> juro maior -> menos discricionario no
+     ano seguinte. A espiral ja estava modelada; o que faltava era deixar o jogador
+     entrar nela. */
+  const allowance = contingency ? 0 : Math.max(0, room);
 
   /* O saldo e do MES: o caixa anualizado dividido por doze, menos o que foi
      efetivamente empenhado neste turno. */

@@ -88,12 +88,74 @@ try {
     expect(!overflow, `[${where}] a tela rola na horizontal`);
   }
 
+  /**
+   * PECA DESENHADA POR CIMA DE PECA — e este e um defeito que so a geometria pega.
+   *
+   * ⚠ ELE EXISTE POR UM DEFEITO MEDIDO, e o que mais custa nele e o que NAO o
+   * pegou. Os quatro cartoes do Gabinete se sobrepunham em todo aparelho de 720px
+   * para baixo: a grade encolhia para uma coluna e a colocacao explicita dos tres
+   * resumos continuava pedindo a coluna 2, o navegador criava uma coluna implicita
+   * com a largura toda, e a Caixa de Entrada fechava em 0px por baixo dos outros.
+   *
+   * `checkOverflow` nao via nada, e nao via com razao: nada rolava de lado, porque
+   * a sobreposicao acontece DENTRO do container. Tipo, guarda e 190 provas tambem
+   * nao viam — nenhum deles lê layout. O que viu foi a captura, e o que a captura
+   * ve uma vez, isto passa a ver toda vez.
+   *
+   * A TOLERANCIA E DE UM PIXEL de cada lado, e nao zero: cartoes vizinhos
+   * compartilham a fronteira com larguras fracionarias, e exigir separacao exata
+   * acusaria arredondamento de sub-pixel como defeito.
+   *
+   * @param {string} where
+   * @param {string} selector as pecas que nao podem se cruzar
+   */
+  async function checkNoOverlap(where, selector) {
+    const crossings = await page.$$eval(selector, nodes => {
+      const boxes = nodes.map(node => {
+        const box = node.getBoundingClientRect();
+        return {
+          name: (node.querySelector(".card__title")?.textContent ?? node.className)
+            .trim()
+            .slice(0, 24),
+          left: box.left,
+          top: box.top,
+          right: box.right,
+          bottom: box.bottom,
+        };
+      });
+
+      const found = [];
+      for (let a = 0; a < boxes.length; a++) {
+        for (let b = a + 1; b < boxes.length; b++) {
+          const one = boxes[a];
+          const other = boxes[b];
+          if (!one || !other) continue;
+          const across = Math.min(one.right, other.right) - Math.max(one.left, other.left);
+          const down = Math.min(one.bottom, other.bottom) - Math.max(one.top, other.top);
+          if (across > 1 && down > 1) {
+            found.push(`${one.name} × ${other.name} (${Math.round(across)}×${Math.round(down)}px)`);
+          }
+        }
+      }
+      return found;
+    });
+
+    expect(
+      crossings.length === 0,
+      `[${where}] pecas desenhadas uma por cima da outra: ${crossings.join(" | ")}`,
+    );
+  }
+
   await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
   await checkOverflow("gabinete");
+  await checkNoOverlap("gabinete", ".cards > .card");
 
   /* 1 — O GABINETE E A TELA INICIAL, e ele nao decide nada. Quatro cartoes, e
      nenhum controle: a barra de cima carrega o unico gesto irreversivel. */
-  expect((await page.locator(".card").count()) === 4, "[gabinete] os quatro cartoes nao vieram");
+  /* CINCO desde 16/08, quando a CALDEIRA entrou. O numero e cobrado em vez de "maior
+     que zero" de proposito: um cartao que some por erro de composicao nao quebra nada
+     — a tela apenas fica com um assunto a menos, e o defeito atravessa tudo calado. */
+  expect((await page.locator(".card").count()) === 5, "[gabinete] os cinco cartoes nao vieram");
   expect(
     (await page.locator("#main input, #main select").count()) === 0,
     "[gabinete] a tela inicial ofereceu um controle",
@@ -221,6 +283,65 @@ try {
     beforeRun !== afterRun,
     `[turno] tres cliques em "avancar" e o mes nao andou: ${beforeRun} → ${afterRun}`,
   );
+  /* 7b-bis — A CARTA QUE PERGUNTA, e ela e a razao de este trecho existir.
+     ⚠ ATE 16/08/2026 O PASSEIO NUNCA VIA UMA. Ele visitava o Gabinete no mes 1, onde
+     a caixa so tem a carta de posse, e a peca central do ciclo 9 — o prazo, a tarja
+     e as duas saidas — nao aparecia em captura nenhuma. Tela que nenhuma imagem pega
+     e tela que so quebra depois, e este projeto ja pagou isso quatro vezes.
+
+     A relatoria e o terceiro estagio de um texto, entao chegar ate ela custa meses:
+     avancamos ate a pergunta existir, com teto para o passeio nao virar simulador. */
+  for (let month = 0; month < 8; month++) {
+    if ((await page.locator(".letter__choices").count()) > 0) break;
+
+    /* ⚠ SEM PAGAR A BANCADA A MESA NUNCA PAUTA, e por isso este trecho compra antes
+       de avancar. Nao e conveniencia de teste: e a mecanica. O texto que ninguem
+       pauta morre na gaveta em seis meses sem nunca chegar ao relator, e um passeio
+       que so aperta "avancar" jamais veria a relatoria acontecer. */
+    /* ⚠ E O TEXTO PRECISA SER LEI, e nao remanejamento. Movimento DENTRO da faixa e
+       execucao orcamentaria — a lei ja autorizou —, e ele nao tramita: nao vai a
+       gaveta, nao vai ao relator, e nao produz pergunta nenhuma. O passeio tem de
+       FURAR O PISO para que exista um texto no sentido do ciclo 4. */
+    await page.click('[data-section="health"]');
+    await page.waitForTimeout(400);
+    const dials = page.locator(".dial__slider");
+    const count = await dials.count();
+    for (let index = 0; index < Math.min(count, 3); index++) {
+      await dials.nth(index).focus();
+      for (let step = 0; step < 30; step++) await page.keyboard.press("ArrowLeft");
+    }
+
+    await page.click('[data-section="congress"]');
+    await page.waitForTimeout(400);
+    const buy = page.locator(".bench__slider");
+    const seats = await buy.count();
+    for (let index = 0; index < seats; index++) {
+      await buy.nth(index).focus();
+      for (let step = 0; step < 10; step++) await page.keyboard.press("ArrowRight");
+    }
+    await page.click('[data-section="cabinet"]');
+    await page.waitForTimeout(300);
+    await page.click("#advance");
+    await page.waitForTimeout(700);
+  }
+
+  const asking = await page.locator(".letter__choices").count();
+  if (asking > 0) {
+    /* A TARJA SO EXISTE ONDE HA PRAZO, e a prova disso e geometrica: a carta que
+       pergunta tem `data-urgency`, e as outras nao tem nenhum. */
+    expect(
+      (await page.locator(".letter[data-urgency]").count()) > 0,
+      "[caixa] a carta que pergunta saiu sem tarja de gravidade",
+    );
+    expect(
+      (await page.locator(".letter__due").count()) > 0,
+      "[caixa] a carta que pergunta saiu sem prazo legivel",
+    );
+    await checkOverflow("caixa com pergunta");
+    await checkNoOverlap("caixa com pergunta", ".letter");
+    await page.screenshot({ path: join(OUT, "walk-carta-pergunta.png"), fullPage: true });
+  }
+
   await page.click('[data-section="health"]');
   await page.waitForTimeout(600);
   await checkOverflow("area depois do mes");
@@ -284,7 +405,7 @@ try {
   /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e
      memoria de sessao e nao entra no save. Entao o que se confere aqui sao os
      cartoes, que so existem quando a partida carregou de verdade. */
-  expect((await page.locator(".card").count()) === 4, "[save] a tela retomada nao renderizou");
+  expect((await page.locator(".card").count()) === 5, "[save] a tela retomada nao renderizou");
 
   /* E RECOMECAR PEDE DOIS CLIQUES. O primeiro so arma o botao — um clique
      distraido nao pode custar um mandato. */
@@ -305,6 +426,23 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(400);
   await checkOverflow("celular · area");
+
+  /* ⚠ O GABINETE ENTROU NESTA PERNA DEPOIS DE ELA DEIXAR PASSAR UM DEFEITO GRAVE.
+     A tela INICIAL do jogo — a primeira coisa que qualquer jogador de celular ve —
+     era a unica que o passeio nao abria no telefone: ele ia direto de uma area
+     para Financas e para o Congresso. E era justamente ela que estava quebrada,
+     com os quatro cartoes desenhados uns por cima dos outros em todo aparelho de
+     720px para baixo.
+
+     A licao nao e "faltava um clique": e que a perna do celular estava organizada
+     pelo que parecia ARRISCADO — o placar denso, a mesa larga — e nao pelo que o
+     jogador de fato ve. A tela mais provavel de quebrar nao e a mais complexa; e a
+     que ninguem conferiu. */
+  await page.click('[data-section="cabinet"]');
+  await page.waitForTimeout(600);
+  await checkOverflow("celular · gabinete");
+  await checkNoOverlap("celular · gabinete", ".cards > .card");
+  await page.screenshot({ path: join(OUT, "walk-celular-gabinete.png"), fullPage: true });
   /* O PLACAR E A TELA MAIS LARGA DO JOGO — quatro colunas de numero —, e por isso
      ele e o candidato mais provavel a empurrar a pagina de lado num aparelho de
      390px. */

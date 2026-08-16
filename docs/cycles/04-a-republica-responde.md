@@ -262,6 +262,18 @@ onde o Congresso deixa de ser quatro caixas e vira uma rede.
 
 ## A queda — e ela é a espinha
 
+> ⚠ **ELA GANHOU DESENHO E URGÊNCIA MEDIDA em 16/08:**
+> [ciclo 10 — quem derruba um presidente](10-quem-derruba-um-presidente.md).
+>
+> A frase abaixo ("sem a possibilidade de perder, tudo tem preço vira aritmética") era
+> uma convicção de desenho quando foi escrita. **Ela virou número:** com o orçamento
+> passando a rodar déficit, a política que **não toca em nada** termina o mandato com a
+> melhor dívida do quadro — 83,6% contra 84,4% de quem reforma e 89,1% de quem paga a
+> base. Governar custa, não governar não custa, e nada pode te derrubar.
+>
+> E o ciclo 10 traz o que faltava aqui: **o SUJEITO**. Impeachment movido por quem? Os
+> grupos de pressão são a resposta, e eles nascem no mesmo ciclo.
+
 Decidido em 14/08/2026: **o presidente pode cair**. Hoje toda partida chega ao mês
 48, e isso esvazia todas as outras decisões — sem a possibilidade de perder, "tudo
 tem preço" vira aritmética, e a jogada radical não tem contraparte.
@@ -345,7 +357,26 @@ Cada seta é uma decisão do jogador ou uma reação do mundo:
 | **9**  | o tempo político e o veredito de legado                | médio        | 3 e 6                  |
 | **10** | **a interface: o Gabinete**                            | grande       | casca: nada · inbox: 1 |
 
-### Parte 1 — a gramática e o motor de normas
+### Parte 1 — a gramática e o motor de normas · ✔ FEITA em 14/08/2026
+
+> Entregue na oitava sessão. `src/domain/norms/` (ESTRATO), `state.norms` no lugar
+> de `state.bands`, `schemaVersion` 12, 21 provas novas e a política `explorador`.
+> A migração está provada inerte: as cinco políticas do simulador devolvem série
+> **idêntica**. Ver a seção _A gramática_ em [`../handoff.md`](../handoff.md).
+>
+> **Três coisas que a implementação decidiu e o plano não previa:**
+>
+> 1. **especificidade vem antes de recência**, e isso é o brocardo _lei geral
+>    posterior não revoga lei especial anterior_. A primeira prova da suíte falhou
+>    afirmando o contrário, e o motor estava certo. A consequência é grande: uma
+>    norma de área só alcança quem ela **nomeia** revogar, e é isso que impede uma
+>    única norma de alcance `all` de apagar a legislação inteira de uma vez;
+> 2. **ausência de norma é ausência de restrição**, e não a faixa do catálogo.
+>    Fosse o catálogo o padrão, revogar uma vinculação a devolveria no mês seguinte;
+> 3. **a autoria de gatilho, exceção e revogação fica para a Parte 3.** A gramática
+>    inteira existe e é executada; o canal de ordens só carrega faixa, porque é o
+>    que a tela oferece. Cobrar por um texto que não muda nada hoje é uma decisão
+>    de preço, e o lugar dela é a tramitação.
 
 `state.norms: Norm[]`, e `state.bands` vira o caso mais simples: uma norma de tipo
 `band`. A migração é natural e nada do que existe se perde.
@@ -360,17 +391,150 @@ emergente: norma mais nova vence, exceção vence regra geral, e norma
 constitucional vence lei. Sem isso, duas leis que se cruzam produzem um estado que
 depende da ordem do array — e o jogador não teria como prever nada.
 
-### Parte 2 — vinculação e transferência
+### Parte 2 — vinculação e transferência · ✔ FEITA em 16/08/2026 (a transferência não)
 
 O que trava o orçamento de verdade. Ela sozinha refaz a calibragem fiscal inteira,
 e por isso vem cedo: enquanto ela não existir, todo número de `fiscal.mjs` é uma
 aproximação de um país mais folgado do que o Brasil.
 
-### Parte 3 — a tramitação
+#### ⚠ O diagnóstico, medido em 16/08 — e ele é pior do que o achado 1 dizia
+
+O achado 1 dizia _"o modelo não consegue rodar déficit primário"_. Medido agora, a
+verdade é outra e é mais grave: **o primário é sempre ZERO.**
+
+| jogada, 48 meses                | primário mínimo | meses em déficit |
+| ------------------------------- | --------------- | ---------------- |
+| manter tudo, sem pagar ninguém  | **0,00**        | 0/48             |
+| manter tudo, verba cheia        | **−0,00**       | 3/48             |
+| **tudo no máximo, verba cheia** | **0,00**        | 0/48             |
+| tudo no mínimo legal            | −0,19           | 2/48             |
+
+> **Um governo que põe os 38 programas no máximo e paga verba cheia a todas as
+> bancadas fecha o mês com exatamente o mesmo saldo de um que não faz nada.**
+
+#### A causa, e ela está em três linhas
+
+```
+ratio   = room / demand                 quando demand > room
+spent   = demand × ratio = room = min(cash, teto − obrigatória) / 12
+balance = cash / 12 − spent  →  ZERO, sempre que o caixa aperta antes do teto
+```
+
+O rateio **consome exatamente o caixa livre**, nem mais nem menos. Despesa total =
+obrigatória + caixa = receita, por construção. A dívida só anda por **juro**, e o
+orçamento — que o ciclo 2 declarou ser o jogo — não tem consequência fiscal nenhuma.
+
+#### ⚠ O ENQUADRAMENTO: o rateio é o último MURO do jogo
+
+> `spent ≤ allowance` é `if (proibido) return` escrito em aritmética.
+
+E a regra central do projeto é **"tudo tem preço, nada tem muro"**. Em todo lugar do
+Planalto a pergunta é _quanto custa_; aqui, e só aqui, ela é _pode?_. O governo não
+consegue gastar mais do que arrecada — o que nenhum governo do mundo real respeita,
+e o Brasil menos que a média.
+
+**Esta parte é onde esse muro cai.**
+
+#### O desenho
+
+**1. A receita se divide em TRÊS, e não em duas.** Hoje há obrigatória e o resto. O
+país real tem:
+
+| fatia              | o que é                                                      |
+| ------------------ | ------------------------------------------------------------ |
+| **transferida**    | o que sai antes de virar caixa da União — FPE, FPM, fundos   |
+| **vinculada**      | receita carimbada por norma: piso da saúde, MDE, previdência |
+| **discricionária** | o que sobra, e é a única sobre a qual a caneta manda         |
+
+⚠ **E a vinculação passa a ser NORMA, e não parâmetro.** ESTRATO já executa piso,
+teto, gatilho e exceção; uma vinculação é um piso expresso em **fração da receita** em
+vez de em pontos de um programa. Isso a torna **reformável pelo jogador**, com o rito
+que a guarda dela exigir — que é exatamente o que a DRU e as PECs de teto fazem no
+mundo real. Escrevê-la como número em `fiscal.mjs` a tornaria imutável, e um jogo
+sobre governar em que as vinculações são imutáveis é um jogo sobre administrar.
+
+**2. O empenho DEIXA de ser limitado pelo caixa.** O rateio para de ser teto e vira
+**preço**: gastar acima do caixa é possível, produz **déficit primário**, e o déficit
+vira dívida no mesmo mês. O que hoje é impossível passa a ser caro.
+
+⚠ **O que NÃO cai junto: o contingenciamento.** Quando nem a obrigatória cabe no
+teto, a regra fiscal manda contingenciar — e isso é lei, não muro do modelo. A
+diferença entre os dois é que o contingenciamento **tem norma atrás e o jogador pode
+mudá-la**; o `min(cash, room)` não tem nada atrás, é aritmética.
+
+**3. O preço do déficit é o que já existe, e não um castigo novo.** Dívida sobe →
+razão dívida/PIB sobe → CORRENTE cobra juro sobre estoque maior → o juro come o
+discricionário do ano seguinte. **A espiral já está modelada**; o que falta é deixar o
+jogador entrar nela.
+
+#### As três perguntas que a implementação precisa responder ANTES da primeira linha
+
+1. **quanto o mercado cobra por déficit?** Hoje o juro sai da regra de Taylor, que
+   olha inflação e hiato — e não risco fiscal. Um país que se endivida sem que o juro
+   reaja é um país sem credor. ⚠ Isto é modelagem nova em CORRENTE, e pode ficar para
+   depois **desde que a omissão seja declarada**;
+2. **a vinculação incide sobre qual receita?** No Brasil é a **receita corrente
+   líquida** — depois das transferências. Vincular sobre a receita bruta faria o piso
+   da saúde crescer com dinheiro que nem passa pela União;
+3. **o que acontece com a calibragem?** ⚠ **Toda a série muda**, e essa é a razão de
+   esta parte estar desenhada e não começada. É **decisão, e não descoberta**.
+
+### Parte 3 — a tramitação · ✔ FEITA em 15/08/2026
+
+> Entregue na nona sessão, e o desenho abaixo foi seguido inteiro: três estágios, a
+> Mesa sem fórmula própria, o relator escrevendo a exceção.
+>
+> **Uma decisão que o plano não previa:** o relator **NÃO pode esvaziar o texto**.
+> Com uma cláusula só não há o que emendar, e quem apaga a única cláusula rejeitou o
+> projeto em vez de relatá-lo — que é trabalho do plenário, e o mesmo raciocínio que
+> põe o limiar da Mesa abaixo de meio. Sem isso, **nenhuma emenda de alavanca única
+> sobrevivia à relatoria**, em nenhuma calibragem de verba: medido em 24 meses, cinco
+> níveis, zero votações.
 
 O texto deixa de ser instantâneo. Nascem as **pessoas**: presidente da Câmara,
 relator, líderes. O tempo entre propor e votar vira recurso — e a gaveta vira uma
 jogada, tanto do jogador quanto contra ele.
+
+> **O desenho abaixo foi escrito e medido na oitava sessão, e o código foi
+> descartado por não estar ligado ao turno** — módulo que ninguém chama é o
+> andaime que o projeto proíbe. O que sobreviveu é isto, que é onde plano mora.
+
+**A linha que separa o que espera do que não espera já existe, e é o RITO.**
+`budget` é execução orçamentária: a lei já autorizou, e pedir voto para executar
+o orçamento seria inventar um rito que não existe — continua imediato. `law` e
+acima viram **texto**, e texto tramita. Por isso a mudança não quebra o jogo que
+existe: o presidente que nunca legisla não sente diferença nenhuma.
+
+**Três estágios, um por mês** (`state.bills`, e `schemaVersion` sobe):
+
+1. **gaveta** — o presidente da Câmara decide se pauta. É o poder mais real do
+   sistema brasileiro e o jogo não o tem: um texto que a Mesa não quer **não perde
+   a votação, ele nunca acontece**, e o jogador descobre que perdeu sem nunca ter
+   perdido nada. Some da gaveta depois de 6 meses;
+2. **relatoria** — o texto volta mudado;
+3. **plenário** — a votação, que o jogo já sabe fazer.
+
+Um texto ordinário leva três meses da caneta ao efeito, e é isso que faz o mês 40
+ser diferente do mês 4: o que não foi protocolado a tempo não vira lei dentro do
+mandato.
+
+**Duas decisões de implementação que valem registradas, porque são o que impede
+esta parte de inventar preço novo:**
+
+- **a Mesa não ganha uma fórmula própria.** "Ele pauta?" é a mesma pergunta que
+  "ele votaria a favor?", resolvida com `whipCount` sobre uma bancada de **um só**
+  — o presidente da Câmara já tem posição, venalidade e memória como qualquer
+  bancada. Uma segunda fórmula criaria um preço que diverge do preço do voto dele,
+  e o jogador não teria como prever nenhum dos dois. O limiar fica **abaixo de
+  meio**: pautar não é apoiar, é deixar o plenário decidir, e isso custa menos que
+  assinar embaixo — sem isso a Mesa vira um segundo veto pelo mesmo preço;
+- **o relator escreve a EXCEÇÃO que a gramática já executa.** O `salvo` da Parte 1
+  existia sem ninguém para escrevê-lo. O relator é esse ator, e o que ele salva
+  não é sorteado: entre as alavancas que o texto machuca, ele protege **a mais
+  próxima dele no plano** — mesma distância euclidiana que ECLUSA usa, agora com
+  outro interesse. É o que torna o jabuti legível: o jogador olha o relator e
+  prevê qual pedaço volta intacto. E ele **não mexe no rito** — o preço vem do que
+  o texto ainda derruba.
 
 ### Parte 4 — o Congresso escreve
 
@@ -506,6 +670,33 @@ dela e continua fora.
 
 Item desligado **diz que está desligado** — é a informação correta sobre o estado
 do projeto, e é o que impede o jogador de aprender a desconfiar do menu inteiro.
+
+#### ⚠ OS DOIS ESTADOS VAZIOS DA CAIXA DE ENTRADA, e eles não são o mesmo
+
+Duas auditorias externas pediram, com razão, um _empty state_ de verdade no lugar
+do parágrafo explicativo — algo como _"Nenhuma crise na sua mesa este mês"_. A
+frase é a certa, **e hoje ela seria falsa**. São dois estados diferentes:
+
+| estado                                      | o que a tela pode dizer                                                                                                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **não há motor** (hoje)                     | descreve o que vai chegar e **o que falta para isso**. É a mesma postura do item desligado no rail e a mesma que manteve a aprovação fora da tela por três sessões |
+| **o motor rodou e não achou nada** (depois) | _"Nenhuma pendência na mesa"_ — agora é uma afirmação verdadeira, porque alguém checou                                                                             |
+
+Dizer a segunda enquanto vale a primeira é **afirmar que o sistema checou** quando
+não há sistema. Quando a tramitação existir, a troca é de uma linha — e aí a frase
+da auditoria entra sem ressalva.
+
+#### A barra do cofre tem de dizer quem a trava
+
+É a metade do risco **R2** que faltava, e ela deixou de ser intenção: com a
+Parte 1, `resolve` devolve as **normas ativas por alavanca**, então a tela consegue
+nomear exatamente qual texto prende cada real da obrigatória. Do real travado até a
+norma que o travou, em um gesto.
+
+⚠ **Ela não depende da tramitação nem do elenco**, e por isso é a melhor primeira
+carta que a Caixa de Entrada pode ter: uma mensagem que existe desde o mês 1,
+produzida por um motor que já roda, sobre a coisa que o jogador mais precisa
+entender — por que ele não tem dinheiro.
 
 ---
 
@@ -668,3 +859,76 @@ de telas escrito depois do motor descreve o motor e não o jogo. A Caixa de Entr
 tarde, porque antes da gramática e do elenco ela teria três tipos de carta e
 viraria mural de avisos — e mural que se ignora ensina a ignorar a tela onde o
 jogo inteiro vai acontecer.
+
+---
+
+## ANEXO — a Parte 2 executada, e o que ela ensinou
+
+### O muro caiu, e a medição de antes e depois
+
+`allowance = min(cash, room)` virou `allowance = room`. Uma linha, e ela era o último
+`if (proibido) return` do jogo.
+
+| jogada, 48 meses                | primário mínimo ANTES | **DEPOIS** | meses em déficit |
+| ------------------------------- | --------------------- | ---------- | ---------------- |
+| tudo no mínimo legal            | −0,19                 | **−3,27**  | 2 → **23**       |
+| manter tudo, sem pagar ninguém  | 0,00                  | **−4,17**  | 0 → **10**       |
+| manter tudo, verba cheia        | −0,00                 | **−9,65**  | 3 → **34**       |
+| **tudo no máximo, verba cheia** | 0,00                  | **−19,65** | 0 → **37**       |
+
+A ordenação passou a ser a do mundo: **quem gasta mais deve mais.**
+
+⚠ **E o teto continua valendo**, porque ele não é a mesma natureza de coisa: o
+arcabouço é lei, com norma atrás e rito para mudar. O caixa não tinha nada atrás — era
+aritmética se passando por regra.
+
+### A vinculação virou GRAMÁTICA, e não parâmetro
+
+`Norm` ganhou `share`: um piso dito em **fração da receita** em vez de em pontos.
+Três programas nasceram vinculados — as duas metades da saúde (art. 198) e o Fundeb
+(art. 212).
+
+**As frações não foram inventadas:** cada uma é a calibragem de abertura relida em
+outra unidade (63 pontos × R$ 189 bi / R$ 2.280 bi de receita = 5,2224%). Por isso o
+mês 1 fica idêntico ao que era — mesmo padrão que provou inerte a migração das faixas
+para normas —, e a diferença só aparece quando a receita anda.
+
+⚠ **Previdência, pessoal e militares NÃO foram vinculados**, e a exclusão é modelagem:
+eles são obrigatórios por **benefício devido**, e não por fração de receita. Vinculá-los
+faria a aposentadoria crescer com a arrecadação, que não é o que acontece.
+
+### ⚠ Três defeitos que só a medição pegou — e os três eram meus, do mesmo dia
+
+**1. A vinculação sumia em silêncio.** Sem receita ou sem custo, ela devolvia piso
+**zero** — e piso zero significa _"não há lei sobre isso"_, quando o que houve foi
+outra coisa: não havia como **calcular** a lei. O país abria sem piso constitucional
+nenhum e nada acusava. Agora ela fica **dormente por `unknown`**: ausência declarada, e
+não ausência disfarçada — a regra da tela, aplicada ao motor.
+
+**2. O piso que sobe por baixo virava proposta do presidente.** Medido: o piso da
+média e alta complexidade sobe de 63,00 para 64,60 em cinco meses enquanto o nível
+vigente cai de 66,00 para 65,60. Eles **cruzam** por volta do mês 12, e a partir daí
+`compose` lia _"o nível está abaixo do piso"_ e montava um projeto de lei **todo mês**,
+sem que ninguém tivesse pedido nada. A política `base` saiu de **zero** votações para
+**41 aprovadas de 42**.
+
+> **A distinção é entre MOVER e FICAR.** Quem baixa o controle abaixo do piso está
+> propondo derrubá-lo, e isso custa lei. Quem não mexeu e viu a lei subir por baixo
+> recebeu uma **conta**, e o que "obrigatório" significa é que ele vai pagá-la.
+
+**3. E o conserto do 2 criou o 3, que uma prova pegou na hora.** Elevando apenas o
+**pedido**, cumprir a lei virava um movimento de ampliação: o texto de "um movimento
+só" passou a ter dois, e o raio ideológico dele saiu de 0 para 0,06. **Os dois lados
+sobem juntos** — o pedido e o vigente efetivo —, e aí cumprir a lei não é jogada
+nenhuma.
+
+### O que NÃO foi feito, e está declarado
+
+**A TRANSFERÊNCIA.** A vinculação real incide sobre a **receita corrente líquida** —
+depois do que sai para estados e municípios —, e o modelo ainda tem uma receita só.
+A consequência é conhecida e está escrita no catálogo: **as frações deste jogo são
+menores que as constitucionais porque a base delas é maior.** É o achado 26.
+
+**O PREÇO DE MERCADO DO DÉFICIT.** O juro sai da regra de Taylor, que olha inflação e
+hiato — e não risco fiscal. Um país que se endivida sem o juro reagir é um país sem
+credor. É o achado 27, e ele é modelagem nova em CORRENTE.

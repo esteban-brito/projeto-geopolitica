@@ -43,6 +43,7 @@ export const MACRO_SCHEMA = {
   okun: { kind: "number", min: 0, max: 5 },
   floatingDebt: { kind: "number", min: 0, max: 1 },
   legacyRate: { kind: "number", min: 0, max: 0.5 },
+  riskPremium: { kind: "number", min: 0, max: 20 },
   initialInflation: { kind: "number", min: 0, max: 0.5 },
   initialRate: { kind: "number", min: 0, max: 0.5 },
   initialUnemployment: { kind: "number", min: 0, max: 0.5 },
@@ -68,6 +69,8 @@ export const MACRO_SCHEMA = {
  * @property {number} okun - quanto o hiato move o desemprego
  * @property {number} floatingDebt - fracao da divida atrelada a taxa basica
  * @property {number} legacyRate - o custo medio do estoque que NAO acompanha a taxa
+ * @property {number} riskPremium - a inclinacao do premio de risco, por ponto ao
+ *   quadrado de divida acima da herdada
  * @property {number} initialInflation
  * @property {number} initialRate
  * @property {number} initialUnemployment
@@ -141,6 +144,21 @@ export const MACRO = {
      com a razao caindo de 78% para 55% sem o jogador ter feito nada — um pais que
      se desendivida sozinho, que e o oposto do Brasil. */
   legacyRate: 0.09,
+
+  /* A INCLINACAO DO PREMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT
+     de ECLUSA e o TABLE da Mesa. O que NAO e chute e a forma: convexa, porque o
+     mercado tolera e depois foge. Ver `premiumOf` em `src/domain/economy/`.
+
+     O que este numero significa, em cima da divida herdada de 78%:
+
+       +10 p.p. de divida (88%)  ->  0,5 p.p. de juro a mais   — incomoda
+       +20 p.p. (98%)            ->  2,0 p.p.                  — doi
+       +50 p.p. (128%)           -> 12,5 p.p.                  — e uma crise
+
+     A progressao e o desenho: o primeiro ponto e barato e o vigesimo nao, e e isso
+     que separa uma conta de um risco. Um premio linear ensinaria que "mais um pouco"
+     custa igual no comeco e na beira do abismo. */
+  riskPremium: 0.5,
 
   initialInflation: 0.042,
   initialRate: 0.105,

@@ -38,7 +38,6 @@
     <link rel="stylesheet" href="styles/50-screen-mesa.css" />
     <link rel="stylesheet" href="styles/60-screen-area.css" />
     <link rel="stylesheet" href="styles/65-screen-finance.css" />
-    <link rel="stylesheet" href="styles/70-screen-approval.css" />
     <link rel="stylesheet" href="styles/90-motion.css" />
   </head>
 
@@ -79,6 +78,13 @@
            de uma decisao de saude e passa a ser um lugar onde se passa o mes. -->
       <nav class="rail glass-support" aria-label="Seções do governo">
         <p class="rail__mark">Planalto</p>
+        <!-- ⚠ QUEM É VOCÊ. Até 15/08/2026 o jogo nunca dizia de quem era o
+             mandato: a barra anunciava "1º MANDATO · ANO 1" e o jogador era a
+             única pessoa sem nome num jogo em que sete outras tinham. Aqui entram
+             o nome do presidente e a posição que o governo SE TORNOU — derivada do
+             que ele moveu, nunca escolhida, que é a regra do ciclo 2. O conteúdo
+             vem de `governmentOf`; este elemento é só o lugar. -->
+        <div class="rail__gov" id="railGov"></div>
         <ul class="rail__list" id="railNav"></ul>
 
         <div class="rail__foot">

@@ -16,8 +16,18 @@
  */
 export function num(value, digits = 1) {
   /* `-0` existe em ponto flutuante e imprime como "-0,0", que numa tabela de
-     orcamento parece defeito. O zero e zero. */
-  const safe = Object.is(value, -0) ? 0 : value;
+     orcamento parece defeito. O zero e zero.
+
+     ⚠ E NAO E SO O `-0` EXATO — foi o que a captura mostrou. O hiato do produto
+     saiu "-0,0%" no painel de Financas com um valor de -0,0002: ele nao e `-0`,
+     entao a comparacao com `Object.is` o deixava passar, e `toFixed` arredondava a
+     magnitude para zero mantendo o sinal. O resultado e um numero que afirma
+     "negativo" e mostra "zero" na mesma tinta.
+     Quem decide agora e a LEITURA, e nao o valor cheio: se o arredondado e zero, o
+     que se imprime e zero. E a mesma regra que ja governa o tom das linhas de
+     Financas e o vermelho do estouro no cofre — onde a tela mostra zero, ela
+     mostra zero nas duas linguagens. */
+  const safe = Number(value.toFixed(digits)) === 0 ? 0 : value;
   return safe.toFixed(digits).replace(".", ",");
 }
 
@@ -62,8 +72,13 @@ export function money(value, digits = 1) {
   /* UMA CASA A MAIS NO TRILHAO, para a troca de unidade nao custar precisao: com
      uma so, receita de 2653,5 bi e de 2749,9 bi imprimem as duas "R$ 2,7 tri", e
      o painel passa a mostrar dois meses diferentes como se fossem o mesmo. */
-  if (Math.abs(value) >= TRILLION) return `R$ ${num(value / TRILLION, digits + 1)} tri`;
-  return `R$ ${num(value, digits)} bi`;
+  /* ⚠ OS ESPACOS SAO INQUEBRAVEIS, e a razao apareceu numa captura: numa coluna
+     estreita a linha quebrava entre o numero e a unidade e sobrava um "bi" sozinho
+     no comeco da linha seguinte. Uma quantia partida ao meio deixa de ser uma
+     quantia — o olho lê "R$ 5,0" e "bi" como duas coisas, e por um instante o
+     numero perde a ordem de grandeza. Valor e unidade sao uma palavra so. */
+  if (Math.abs(value) >= TRILLION) return `R$ ${num(value / TRILLION, digits + 1)} tri`;
+  return `R$ ${num(value, digits)} bi`;
 }
 
 /**

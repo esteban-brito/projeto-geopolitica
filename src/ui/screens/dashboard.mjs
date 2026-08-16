@@ -104,103 +104,24 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
     .join("");
 }
 
-/**
- * A faixa de contexto: todo item e o MESMO objeto, e a diferenca entre eles e
- * so enfase. Forma diferente para informacao do mesmo nivel e o que faz uma
- * faixa parecer bagunçada por mais alinhada que esteja.
- *
- * ⚠ OS TRES CAMPOS ERAM PARTE MENTIRA. O ano do mandato era o texto fixo
- * "ano 1", que continuava dizendo ano 1 no quadragesimo mes. A base aliada era
- * "247 / 513" digitado a mao, ao lado de uma lealdade que o motor calcula de
- * verdade. E a situacao vinha de um campo do estado que nenhum motor movia desde
- * que o turno passou a ser resolvido pela camada de aplicacao — congelada em
- * "Estavel" para sempre, junto com a cor de todo o ambiente da tela.
- * Agora os tres saem de estado real, e o unico numero digitado nesta funcao e o
- * `+ 1` que transforma indice em ordinal.
- *
- * @param {object} input
- * @param {GameState} input.state
- * @param {{ level: Situation, reason: string, base: number }} input.standing
- * @param {number} input.seats o tamanho do plenario
- * @param {number} input.majority quantas cadeiras fazem maioria simples
- */
-export function contextHtml({ state, standing, seats, majority }) {
-  const items = [
-    {
-      label: UI.context.mandate,
-      value: `${Math.floor(state.month / MONTHS_PER_TERM) + 1}º · ano ${
-        Math.floor((state.month % MONTHS_PER_TERM) / MONTHS_PER_YEAR) + 1
-      }`,
-      alert: false,
-    },
-    {
-      label: UI.context.congress,
-      value: `${standing.base} / ${seats}`,
-      /* O ALERTA E A MAIORIA, e nao um numero bonito: abaixo dela o governo nao
-         passa nada sem comprar, e essa e a unica leitura que muda a decisao. */
-      alert: standing.base < majority,
-    },
-    {
-      label: UI.context.situation,
-      value: UI.situation[standing.level],
-      alert: standing.level === "crisis",
-    },
-  ];
-  return items
-    .map(
-      item =>
-        `<div class="chip${item.alert ? " chip--alert" : ""}">` +
-        `<span class="chip__label">${escapeHtml(item.label)}</span>` +
-        `<span class="chip__value">${escapeHtml(item.value)}</span>` +
-        `</div>`,
-    )
-    .join("");
-}
+/* ── DUAS VIEWS MORRERAM AQUI EM 15/08/2026, e o registro fica ───────────────
+   `contextHtml` desenhava a faixa de contexto — mandato, base e situacao — e
+   `approvalHtml` era a tela de aprovacao inteira, com o numero grande, o medidor
+   e a legenda. As duas eram puras, corretas, e ninguem as importava: a faixa
+   morreu quando a barra superior absorveu os tres campos dela, e a tela de
+   aprovacao morreu quando SONDA nasceu e deu outra casa ao numero — a propria
+   barra, e o cartao da Rua no Gabinete.
 
-/**
- * @param {Approval} approval
- * @param {number} delta variacao de "otimo/bom" contra o mes anterior
- */
-export function approvalHtml(approval, delta) {
-  const direction = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
-  const arrow = UI.trend[direction];
-  const sign = delta > 0 ? "+" : "";
-  const parts = /** @type {const} */ (["good", "fair", "poor"]);
+   ⚠ O ARQUIVO DE ESTILO DELAS DIZIA QUANDO ELAS DEVIAM MORRER, e a condicao ja
+   tinha sido cumprida sem ninguem reparar. `70-screen-approval.css` trazia
+   escrito: "se SONDA der outra casa a aprovacao, este arquivo morre com o desenho
+   antigo, e morrer inteiro e mais barato do que continuar meio vivo". SONDA nasceu
+   em 14/08/2026 e deu — entao o que restava eram duas views e uma folha inteira
+   esperando um dia que ja tinha passado. Sairam juntas, que e como o proprio
+   arquivo mandava.
 
-  return (
-    `<p class="stage__label">${escapeHtml(UI.approvalLabel)}</p>` +
-    `<p class="stage__hero" data-numeric>${approval.good}<span>%</span></p>` +
-    `<p class="trend" data-direction="${direction}" data-numeric>` +
-    `<span aria-hidden="true">${arrow}</span> ${sign}${delta.toFixed(1)} p.p.` +
-    `</p>` +
-    `<div class="meter stage__meter" role="img" aria-label="${escapeHtml(legendLabel(approval))}">` +
-    parts
-      .map(
-        part =>
-          `<span class="meter__part" data-part="${part}" style="flex-grow:${approval[part]}"></span>`,
-      )
-      .join("") +
-    `</div>` +
-    `<ul class="stage__legend">` +
-    parts
-      .map(
-        part =>
-          `<li data-part="${part}"><i aria-hidden="true"></i>` +
-          `${escapeHtml(UI.approvalParts[part])} <b data-numeric>${approval[part]}%</b></li>`,
-      )
-      .join("") +
-    `</ul>`
-  );
-}
-
-/** @param {Approval} approval */
-function legendLabel(approval) {
-  return (
-    `${UI.approvalParts.good} ${approval.good}%, ` +
-    `${UI.approvalParts.fair} ${approval.fair}%, ` +
-    `${UI.approvalParts.poor} ${approval.poor}%`
-  );
-}
+   Andaime que sobrevive ao predio vira parte do predio: e a mesma razao que tirou
+   `advanceMonth` do reducer. */
 
 /**
  * A frase que diz o que esta em jogo. Ela e indexada pelo MOTIVO e nao pelo

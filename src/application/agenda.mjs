@@ -84,6 +84,7 @@ const MONTHLY = 1 / MONTHS_PER_YEAR;
  * @property {number} economic
  * @property {number} liberty
  * @property {number} threat
+ * @property {number} spread - o RAIO ideologico do texto; zero e um texto coeso
  * @property {number} fiscalImpact - positivo POUPA, negativo custa
  *
  * @typedef {object} Agenda
@@ -410,14 +411,45 @@ export function compose({
      afirmacao sobre o mundo. */
   const area = Object.entries(byArea).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "";
 
+  const centreEconomic = economic / weightTotal;
+  const centreLiberty = liberty / weightTotal;
+
+  /* ── O RAIO DO TEXTO ────────────────────────────────────────────────────────
+     ⚠ SEM ELE O PRECO NAO ESCALA COM O TAMANHO DO PACOTE, e isso foi MEDIDO em
+     14/08/2026: um movimento de piso constitucional saia por 358 votos e oitenta e
+     cinco movimentos saiam por 334 — os dois passavam, no mesmo mes, com a mesma
+     verba. Nao havia razao para o jogador nao juntar tudo num texto so.
+
+     A causa esta duas linhas acima: a posicao da proposta e uma MEDIA ponderada, e
+     media de coisas opostas cai no centro. Um texto que corta a saude e amplia a
+     defesa aparecia para o Congresso como uma proposta centrista — quando ele
+     contraria a esquerda numa metade e a direita na outra.
+
+     O raio e o desvio quadratico medio dos movimentos em torno do centroide, na
+     MESMA unidade do plano. Ele nao e um preco novo nem uma penalidade digitada:
+     e a informacao que a media apagava, devolvida ao motor. Quem a usa e ECLUSA,
+     e a identidade que a torna exata esta na prosa de `whipCount`. */
+  let variance = 0;
+  for (const move of moves) {
+    const program = /** @type {Program & Partial<Rule>} */ (move.program);
+    const towards = move.delta > 0;
+    const positionEconomic = towards ? program.economic : 100 - program.economic;
+    const positionLiberty = towards ? program.liberty : 100 - program.liberty;
+    variance +=
+      move.weight *
+      ((positionEconomic - centreEconomic) ** 2 + (positionLiberty - centreLiberty) ** 2);
+  }
+  const spread = Math.sqrt(variance / weightTotal);
+
   const proposal = {
     id: "pauta-composta",
     label: labelOf(moves),
     area,
     instrument: rite,
-    economic: economic / weightTotal,
-    liberty: liberty / weightTotal,
+    economic: centreEconomic,
+    liberty: centreLiberty,
     threat: threat / weightTotal,
+    spread,
     /* O SINAL SEGUE A CONVENCAO DO CATALOGO: positivo POUPA. Gastar mais e
        `spend` positivo, e portanto impacto fiscal negativo. */
     fiscalImpact: -spend,
@@ -464,11 +496,14 @@ export function compose({
  * @param {ReadonlyArray<Program>} input.programs
  * @param {Record<string, number>} input.levels
  * @param {Record<string, Band>} [input.bands]
- * @returns {{ byArea: Record<string, number>, byProgram: Record<string, number>, total: number }}
+ * @returns {{ byArea: Record<string, number>, byProgram: Record<string, number>,
+ *   total: number, fullByArea: Record<string, number> }}
  */
 export function spendOf({ programs, levels, bands }) {
   /** @type {Record<string, number>} */
   const byArea = {};
+  /** @type {Record<string, number>} */
+  const fullByArea = {};
   /** @type {Record<string, number>} */
   const byProgram = {};
   let total = 0;
@@ -484,9 +519,29 @@ export function spendOf({ programs, levels, bands }) {
     byProgram[program.id] = monthly;
     byArea[program.area] = (byArea[program.area] ?? 0) + monthly;
     total += monthly;
+
+    /* ── O GASTO CHEIO, E POR QUE ELE PRECISOU EXISTIR ────────────────────────
+       ⚠ ELE CONSERTA O EXPLOIT QUE A POLITICA `explorador` MEDIU. Ate 14/08/2026
+       o que alimentava o indice da area era `byArea` — so a parte ACIMA do piso —,
+       e a consequencia so aparece quando alguem tenta quebrar o jogo: derrubar o
+       piso da saude a zero nao muda um real do que o pais gasta em saude, mas
+       move o gasto inteiro do balde "obrigatorio" para o balde "discricionario", e
+       de repente aquele mesmo dinheiro passa a COMPRAR indice. Desregulamentar
+       virava a jogada dominante — o mandato terminava com os oito indices em 100 e
+       a divida caindo vinte pontos.
+
+       O erro nao era do balde e sim da pergunta: o que constroi hospital e o
+       dinheiro que chega ao hospital, e nao o rotulo juridico dele. `fullByArea` e
+       o gasto TOTAL da area, e e ele que a capacidade consome.
+
+       Os dois convivem porque respondem a coisas diferentes, e nenhuma das duas
+       some: `byArea` e QUANTO O PRESIDENTE DECIDE (o que sai do discricionario e
+       disputa com a emenda), `fullByArea` e QUANTO O PAIS GASTA. */
+    fullByArea[program.area] =
+      (fullByArea[program.area] ?? 0) + (level / 100) * program.cost * MONTHLY;
   }
 
-  return { byArea, byProgram, total };
+  return { byArea, byProgram, total, fullByArea };
 }
 
 /**

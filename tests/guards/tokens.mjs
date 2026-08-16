@@ -45,8 +45,14 @@ const TOKENS_FILE = "styles/00-tokens.css";
                    tokens criaria um segundo lugar para ele divergir;
      --index       o indice corrente de uma area, escrito em estilo inline pela
                    propria faixa de medidores: e um numero por elemento, e nao
-                   um valor do sistema. */
-const RUNTIME = new Set(["--part-color", "--neutral", "--index"]);
+                   um valor do sistema;
+     --floor       onde a lei daquela alavanca comeca, e
+     --ceiling     onde ela acaba. Os dois sao a FAIXA VIGENTE, escrita em estilo
+                   inline pelo proprio controle: sao dois numeros por elemento e
+                   vem do motor de normas, nao da paleta. Eles desenham as tres
+                   zonas do trilho — abaixo do piso custa lei, dentro e caneta,
+                   acima do teto custa de novo. */
+const RUNTIME = new Set(["--part-color", "--neutral", "--index", "--floor", "--ceiling"]);
 
 /**
  * @param {Map<string, string>} files

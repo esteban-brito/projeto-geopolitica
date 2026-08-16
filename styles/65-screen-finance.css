@@ -71,6 +71,13 @@
      os blocos e ESPACO ENTRE ELES, e por isso o `letter-spacing` e positivo — o
      oposto do que a peca do indice faz, e pela mesma razao de fundo: a marca so
      informa enquanto der para contar os degraus. */
+  /* ⚠ O ÚNICO TAMANHO FORA DA ESCALA EM TODO O PROJETO, e a exceção é declarada:
+     a escada não é TEXTO, é um desenho feito de caracteres. O que este número
+     controla é a altura de um degrau — geometria —, e amarrá-lo a um degrau da
+     escala tipográfica faria a curva mudar de forma no dia em que alguém ajustasse
+     o corpo de uma nota. É a mesma natureza de `--index` e `--neutral`, que são
+     dado e não paleta. Todos os outros vinte e um tamanhos crus do projeto viraram
+     token em 15/08/2026. */
   .ledger__spark {
     font-size: 0.5rem;
     line-height: 1;
@@ -79,7 +86,7 @@
   }
 
   .ledger__note {
-    font-size: 0.78rem;
+    font-size: var(--text-note);
     color: var(--ink-dim);
     overflow: hidden;
     text-overflow: ellipsis;

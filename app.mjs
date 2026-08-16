@@ -31,15 +31,21 @@ import {
   THRESHOLDS,
   SEATS,
   SIMPLE_MAJORITY,
-  dispersion,
+  bandsOf,
+  baseSplit,
+  boilerOf,
+  lockedBy,
+  chamberOf,
+  forecast,
+  passageOf,
+  governmentOf,
   ledger,
+  left,
   playMonth,
   settlement,
   situationOf,
-  whipCount,
-  compose,
 } from "./src/public/index.mjs";
-import { railNavHtml } from "./src/ui/shared/rail.mjs";
+import { railGovHtml, railNavHtml } from "./src/ui/shared/rail.mjs";
 import {
   areaHtml,
   estadoHtml,
@@ -49,7 +55,14 @@ import {
   programReadHtml,
   riteOf,
 } from "./src/ui/screens/area.mjs";
-import { benchReadHtml, capacityStripHtml, mesaHtml, tallyHtml } from "./src/ui/screens/mesa.mjs";
+import {
+  benchReadHtml,
+  capacityStripHtml,
+  congressHtml,
+  mesaHtml,
+  passageHtml,
+  tallyHtml,
+} from "./src/ui/screens/mesa.mjs";
 import { financeHtml } from "./src/ui/screens/finance.mjs";
 /* A APROVACAO VOLTOU. Ela esteve fora da tela por tres sessoes com esta razao
    escrita aqui: "quem a produz e SONDA, que nao existe". Em 14/08/2026 o motor
@@ -58,6 +71,7 @@ import { financeHtml } from "./src/ui/screens/finance.mjs";
 import { turnHtml, verdictHtml, vitalsHtml } from "./src/ui/screens/dashboard.mjs";
 import { cabinetHtml } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
+import { mailHtml, monthLetterHtml } from "./src/ui/screens/inbox.mjs";
 import { UI } from "./src/ui/strings.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
@@ -66,6 +80,7 @@ import { UI } from "./src/ui/strings.mjs";
 
 const el = {
   railNav: must("railNav"),
+  railGov: must("railGov"),
   turn: must("turn"),
   vitals: must("vitals"),
   main: must("main"),
@@ -161,65 +176,64 @@ function blankOrders() {
   return {
     /** @type {Record<string, number>} */
     funding: Object.fromEntries(CATALOG.parties.map(party => [party.id, 0])),
+    /* AS RESPOSTAS AS CARTAS NASCEM VAZIAS, e vazio aqui quer dizer SILENCIO — que
+       e uma resposta, e nao a ausencia de uma. A carta que ninguem marcar vence
+       aceitando, e a propria carta diz isso antes. */
+    /** @type {Record<string, string>} */
+    mail: {},
     /** @type {Record<string, number>} */
     levels: { ...state.levels },
     /* AS LEIS TAMBEM NASCEM NAS VIGENTES, e pelo mesmo motivo dos niveis: o
        rascunho comeca no pais como ele e. Nascer vazio faria "nao mexi em nada"
        significar "revogo tudo", e o primeiro `avancar` sem tocar em nada seria a
-       maior desregulamentacao da historia do jogo. */
+       maior desregulamentacao da historia do jogo.
+
+       ⚠ E "AS VIGENTES" DEIXOU DE SER UM CAMPO. Desde que a lei virou texto, o que
+       vale hoje e o que o motor de normas lê da pilha — com gatilho e prazo
+       dentro —, e o rascunho copia essa LEITURA. Copiar do estado bruto seria o
+       entrypoint remontando a legislacao do pais por fora. */
     /** @type {Record<string, import("./src/state/state.mjs").Band>} */
-    bands: Object.fromEntries(Object.entries(state.bands).map(([id, band]) => [id, { ...band }])),
+    bands: Object.fromEntries(
+      Object.entries(bandsOf(state, CATALOG)).map(([id, band]) => [id, { ...band }]),
+    ),
   };
+}
+
+/* A LEI DE HOJE, perguntada ao motor. Ela e chamada onde antes se lia
+   `state.bands`, e nao guardada numa variavel de modulo: o resultado depende do
+   MES e dos indicadores, e uma copia guardada envelheceria exatamente no turno em
+   que uma clausula de gatilho ligasse — que e o turno em que ela importa. */
+function lawNow() {
+  return bandsOf(state, CATALOG);
 }
 
 /* ── O QUE A TELA PRECISA SABER, derivado e nunca guardado ────────────────── */
 
-/* A PAUTA NAO E MAIS ESCOLHIDA — ELA E COMPOSTA. O que esta em pauta e o que o
-   jogador escreveu no orcamento neste mes, e nada mais: se ele nao moveu nenhum
-   controle, nao ha pauta, e a Mesa diz isso em vez de inventar uma. */
-function agendaNow() {
-  return compose({
-    programs: CATALOG.programs,
-    rules: CATALOG.rules,
-    levels: state.levels,
-    requested: orders.levels,
-    power: state.levels["poder-do-executivo"] ?? 0,
-    bands: state.bands,
-    requestedBands: orders.bands,
-  });
-}
-
 /**
- * A PREVISAO AO VIVO, e ela vota com a verba que o caixa HONRA.
+ * A PREVISAO AO VIVO — e ela NAO e montada aqui.
  *
- * Nao com a prometida, e a diferenca so aparece no caso que importa: enquanto a
- * promessa cabe no mes, as duas sao a mesma coisa; quando ela estoura, o rateio
- * corta — e prever com o prometido faria a Mesa anunciar "acima do quorum" numa
- * votacao que o corte derruba. Quem faz a conta e a camada de aplicacao, a mesma
- * que o turno vai chamar.
+ * ⚠ ATE 15/08/2026 ESTE ARQUIVO MONTAVA A CAMARA A MAO, e por isso a Mesa mentia.
+ * Havia aqui um `forecastNow` que chamava `whipCount` com os QUATRO blocos do
+ * catalogo, a verba crua e a lealdade crua — e o turno vota, desde a oitava sessao,
+ * com as ONZE bancadas do ELENCO, a verba com o credito de memoria dentro e a
+ * aprovacao da rua deslocando a resistencia. Nenhum dos dois motores quebrou nada
+ * ao chegar; eles so chegaram, e esta funcao ficou para tras em silencio.
  *
- * @param {Record<string, number>} paid
- * @param {import("./src/application/agenda.mjs").Agenda} agenda
+ * Medido: em 1.012 votacoes, o veredito da Mesa saia INVERTIDO em 275 — 27,2% —, e
+ * a divergencia chegava a 35 votos. "Acima do quorum" numa pauta que o mes derruba.
+ *
+ * A pauta tambem era composta duas vezes, com argumentos diferentes. Agora ha uma
+ * porta so: `forecast` devolve a pauta, o placar, a banda e o que cada bloco
+ * entrega — tudo da mesma camara que `playMonth` vai usar.
  */
-function forecastNow(paid, agenda) {
-  if (!agenda.proposal || agenda.quorum === 0) return null;
-  return whipCount({
-    bill: agenda.proposal,
-    parties: CATALOG.parties,
-    funding: paid,
-    loyalty: state.loyalty,
-  });
-}
-
 function mesaInput() {
-  const share = settlement(state, orders, CATALOG);
-  const agenda = agendaNow();
-  const bill = agenda.proposal;
+  const seen = forecast(state, orders, CATALOG);
+  const bill = seen.agenda.proposal;
 
   return {
     bill,
     areaLabel: CATALOG.areas.find(area => area.id === bill?.area)?.label ?? "",
-    quorum: agenda.quorum,
+    quorum: seen.agenda.quorum,
     parties: CATALOG.parties,
     loyalty: state.loyalty,
     /* A LINHA DA BANCADA MOSTRA A PROMESSA — a fracao e o custo do que o jogador
@@ -228,11 +242,20 @@ function mesaInput() {
        licao central do jogo: promessa nao move voto. A linha de caixa embaixo
        diz por que, com o numero. */
     funding: orders.funding,
-    forecast: forecastNow(share.paid, agenda),
-    band: dispersion({ parties: CATALOG.parties, loyalty: state.loyalty }),
+    forecast: seen.whip,
+    /* O QUE CADA BLOCO ENTREGA ja vem somado do motor: um bloco e o resto da
+       bancada MAIS os lideres que sairam dela, e somar isso na tela seria esquecer
+       um lider no dia em que o elenco crescer. */
+    byBloc: seen.byBloc,
+    /* ⚠ A GENTE VEM MONTADA DO MOTOR. Casar pessoa com bancada, bancada com voto e
+       pessoa com memoria sao quatro junções — feitas aqui, elas errariam calado no
+       dia em que o elenco crescer, que e o defeito que este arquivo acabou de
+       pagar caro com a camara montada a mao. */
+    blocs: seen.blocs,
+    band: seen.band,
     seatPrice: CATALOG.fiscal.seatPrice,
-    room: share.room,
-    demand: share.demand,
+    room: seen.share.room,
+    demand: seen.share.demand,
     thresholds: THRESHOLDS,
   };
 }
@@ -243,7 +266,7 @@ function mesaInput() {
  * corrente ja comprometeu chega dentro do `ledger`, que faz a conta do turno.
  */
 function financeInput() {
-  const { budget, interest, debt, debtRatio } = ledger(state, orders, CATALOG);
+  const { budget, interest, debt, debtRatio, premium } = ledger(state, orders, CATALOG);
 
   return {
     macro: state.macro,
@@ -251,6 +274,7 @@ function financeInput() {
     interest,
     debt,
     debtRatio,
+    premium,
     series: state.series,
     target: CATALOG.macro.inflationTarget,
     areas: CATALOG.areas,
@@ -272,15 +296,73 @@ function cabinetInput(current) {
   return {
     situation: current.level,
     verdict: verdictHtml(current.reason),
+    /* QUEM ASSINA A LEITURA DO MES. Ele nao vota e nao tem cadeira — a funcao dele
+       e ser a unica voz do jogo que se dirige ao presidente. */
+    adviser: governmentOf(state, CATALOG).adviser,
     base: current.base,
     seats: SEATS,
     majority: SIMPLE_MAJORITY,
+    /* A BASE REPARTIDA PELO ESTADO DE QUEM A ENTREGA, e quem reparte e o motor:
+       os limiares que separam obstrucao de ruptura sao calibragem de ECLUSA. */
+    split: baseSplit({ parties: CATALOG.parties, loyalty: state.loyalty }),
+    /* AS ONZE BANCADAS, com o que cada uma entrega — e o hemiciclo desenha 513
+       cadeiras a partir disso. Quem conta e o motor. */
+    chamber: chamberOf(state, CATALOG),
+    /* ⚠ A PRIMEIRA CARTA DE VERDADE, e ela existia o tempo todo: o mes que fechou.
+       O relatorio do turno e produzido desde a quinta sessao e vivia enterrado num
+       bloco no rodape do Congresso — uma tela que o jogador pode nao visitar. O
+       resultado de uma decisao chegando onde talvez ninguem olhe e consequencia
+       invisivel, e o Gabinete e onde o mes COMECA.
+       As outras cartas — Congresso propondo, relator devolvendo, tribunal
+       derrubando — seguem sendo as Partes 3, 4 e 8, e a caixa continua dizendo o
+       que falta na nota do estado vazio. */
+    /* ⚠ A ORDEM E A DA URGENCIA, e nao a cronologica: as cartas da TRAMITACAO vem
+       primeiro porque elas pedem uma decisao — a Mesa pautou, o relator emendou, o
+       texto morreu na gaveta —, e o fechamento do mes so informa. Um inbox ordenado
+       por hora poe o aviso na frente do pedido, e ai o jogador aprende a rolar. */
+    /* ⚠ A CAIXA SAI DO ESTADO, e nao do ultimo relatorio. Ate 16/08/2026 ela lia
+       `last.report.events` — e por isso era um mural: o que chegava sumia no mes
+       seguinte. O que espera mora em `state.mail`, e e ele que tem prazo.
+
+       E A LEITURA DO MES CONTINUA VINDO DO RELATORIO, de proposito: ela nao e
+       correspondencia, e o fechamento do turno. Guarda-la faria o save carregar 48
+       relatorios para reescrever um texto que o turno ja sabe produzir. */
+    inbox: [
+      ...mailHtml({
+        mail: state.mail,
+        people: governmentOf(state, CATALOG).people,
+        left: letter => left(letter, state.month),
+        /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
+           impacto seria "95% da despesa e obrigatoria" — e a divisao que a produz
+           ja mora no cartao do Cofre, entao escreve-la aqui daria dois lugares
+           fazendo a mesma conta, que e o defeito recorrente numero um deste
+           projeto. Dois valores em reais dizem a mesma coisa sem abrir a segunda
+           porta. */
+        inherited: { mandatory: budget.mandatory, room: share.room },
+        answered: orders.mail,
+      }),
+      ...(last
+        ? [
+            monthLetterHtml({
+              report: last.report,
+              adviser: governmentOf(state, CATALOG).adviser,
+              approval: pollFrom(state.mood, CATALOG.segments, CATALOG.opinion).good,
+            }),
+          ]
+        : []),
+    ],
     room: share.room,
     committed: share.demand,
     mandatory: budget.mandatory,
     revenue: budget.revenue,
+    /* QUEM TRAVA O ORCAMENTO, perguntado ao motor de normas: a tela nao redescobre
+       qual lei venceu a disputa de precedencia — ela pergunta a quem julgou. */
+    locked: lockedBy(state, CATALOG),
     segments: CATALOG.segments,
     street: pollBySegment(),
+    /* A CALDEIRA, perguntada ao motor: a tela nao remonta pressao nem redecide
+       ruptura. */
+    boiler: boilerOf(state, CATALOG),
   };
 }
 
@@ -330,7 +412,7 @@ function areaInput(area) {
     committed: share.demand - spent,
     projected: project(spent),
     idle: project(0),
-    bands: state.bands,
+    bands: lawNow(),
     requestedBands: orders.bands,
   };
 }
@@ -349,6 +431,12 @@ function paint() {
 
   el.railNav.innerHTML = railNavHtml(screen, CATALOG.areas);
 
+  /* ⚠ DE QUEM E ESTE GOVERNO. Ele se repinta a cada pintura e nao so na abertura,
+     porque a POSICAO muda: ela e derivada do que o jogador moveu no orcamento, e
+     portanto anda junto com o mandato. O nome nao muda; a frase abaixo dele, sim. */
+  const gov = governmentOf(state, CATALOG);
+  el.railGov.innerHTML = railGovHtml({ president: gov.president, stance: gov.stance });
+
   /* CADA VIEW TRAZ O PROPRIO ELEMENTO DE FORA, e o entrypoint so concatena. A
      versao anterior montava aqui a `<div class="mesa">` que embrulha a tela — e
      isso e decisao de forma escrita no arquivo que nao pode ter nenhuma: quem
@@ -356,7 +444,15 @@ function paint() {
      entrypoint. */
   const area = CATALOG.areas.find(item => item.id === screen);
   if (screen === "estado") {
-    el.main.innerHTML = estadoHtml({ rules: CATALOG.rules, levels: orders.levels });
+    el.main.innerHTML = estadoHtml({
+      rules: CATALOG.rules,
+      levels: orders.levels,
+      /* A LEI VIGENTE ATRAVESSA, como na tela de area. Sem ela a tela lia a faixa
+         do catalogo — a do dia da posse — e anunciava o rito contra uma lei que
+         pode nao ser mais a que vale. */
+      bands: lawNow(),
+      requestedBands: orders.bands,
+    });
     el.main.dataset["screen"] = "estado";
   } else if (screen === "finance") {
     /* FINANCAS NAO ENTRA EM `refresh`, e e a unica tela assim junto do Gabinete.
@@ -373,14 +469,22 @@ function paint() {
        porque ela E uma mesa de negociacao. O que mudou foi o endereco: ela deixou
        de ser a tela inicial e passou a ser o lugar onde se negocia — e o resumo
        do mes, que dividia a tela com ela, virou o Gabinete. */
-    el.main.innerHTML =
-      capacityStripHtml({
+    /* ⚠ O EMBRULHO SAIU DAQUI em 15/08/2026, e ele nunca devia ter estado. Este
+       trecho concatenava TRES pecas de vidro soltas, o que fazia do Congresso a
+       unica tela do jogo montada no entrypoint — e portanto a unica cuja forma
+       morava no arquivo que nao pode ter forma nenhuma. Agora `congressHtml` traz a
+       lamina, a cabeca e os blocos, como toda outra view traz a dela. */
+    el.main.innerHTML = congressHtml({
+      gauges: capacityStripHtml({
         areas: CATALOG.areas,
         index: state.capacity.index,
         history: state.capacity.history,
-      }) +
-      mesaHtml(mesaInput()) +
-      reportPanelHtml(
+      }),
+      mesa: mesaHtml(mesaInput()),
+      /* A GAVETA. Quem a conta e o motor: o quorum de cada texto e recomposto
+         contra o pais de hoje, e nao contra o do dia em que ele foi assinado. */
+      passage: passageHtml(passageOf(state, CATALOG)),
+      report: reportPanelHtml(
         last && {
           report: last.report,
           quorum: last.quorum,
@@ -389,7 +493,8 @@ function paint() {
           loyaltyBefore: last.loyaltyBefore,
           indexBefore: last.indexBefore,
         },
-      );
+      ),
+    });
     el.main.dataset["screen"] = "congress";
   } else {
     el.main.innerHTML = cabinetHtml(cabinetInput(current));
@@ -446,10 +551,15 @@ function refresh() {
     for (const party of CATALOG.parties) {
       const slot = el.main.querySelector(`[data-read="${party.id}"]`);
       if (!slot) continue;
+      /* ⚠ OS VOTOS DA LINHA SAO OS DO BLOCO INTEIRO, e vem somados do motor. Esta
+         linha lia `forecast.parties.find(partyId === party.id)`, que depois do
+         ELENCO encontra so a bancada RESTANTE do bloco — o que sobrou dele depois
+         de os lideres saírem. As quatro linhas somavam menos que o placar logo
+         abaixo delas, e nada acusava. */
       slot.innerHTML = benchReadHtml({
         party,
         funding: orders.funding[party.id] ?? 0,
-        votes: input.forecast?.parties.find(item => item.partyId === party.id)?.votes ?? 0,
+        votes: input.byBloc[party.id] ?? 0,
         seatPrice: input.seatPrice,
         voting: input.quorum > 0 && input.forecast !== null,
       });
@@ -460,12 +570,20 @@ function refresh() {
   /* A TELA DO ESTADO REPINTA SO AS LINHAS, como a area — e pelo mesmo motivo de
      gesto. Ela nao tem bolsa nem projecao: alavanca de regra nao consome caixa. */
   if (el.main.dataset["screen"] === "estado") {
+    /* A LEI SE PERGUNTA UMA VEZ SO, e fora do laco — a mesma disciplina da tela de
+       area: resolver a pilha de normas por alavanca pagaria a mesma leitura seis
+       vezes a cada quadro de um arrasto. */
+    const law = lawNow();
+
     for (const rule of CATALOG.rules) {
       const level = orders.levels[rule.id] ?? rule.initial;
+      const band = orders.bands[rule.id] ?? law[rule.id];
       const slot = el.main.querySelector(`[data-read="${rule.id}"]`);
-      if (slot) slot.innerHTML = programReadHtml({ program: rule, level });
+      if (slot) slot.innerHTML = programReadHtml({ program: rule, level, ...(band && { band }) });
       const dial = el.main.querySelector(`.dial:has([data-program="${rule.id}"])`);
-      if (dial instanceof HTMLElement) dial.dataset["rite"] = riteOf(rule, level);
+      if (dial instanceof HTMLElement) {
+        dial.dataset["rite"] = riteOf({ ...rule, ...(band ?? {}) }, level);
+      }
     }
     return;
   }
@@ -478,6 +596,11 @@ function refresh() {
      programa, a bolsa do mes e a projecao do indice. O `<input type=range>` fica
      de fora das tres — trocar o HTML dele no meio de um arrasto arranca o
      elemento que o ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
+  /* A LEI SE PERGUNTA UMA VEZ, e nao uma por programa: ela e a mesma para os
+     trinta e oito, e resolver a pilha de normas dentro do laco pagaria a mesma
+     leitura a cada quadro de um arrasto. */
+  const law = lawNow();
+
   for (const program of input.programs) {
     const band = orders.bands[program.id];
     const slot = el.main.querySelector(`[data-read="${program.id}"]`);
@@ -492,14 +615,14 @@ function refresh() {
     /* A LEITURA DA LEI SE REPINTA JUNTO, e ela e a outra metade da mesma decisao:
        mover o piso muda o que a linha do orcamento acima cobra. As duas leituras
        trocam no mesmo quadro, e nenhum dos dois controles e reconstruido. */
-    const law = el.main.querySelector(`[data-law="${program.id}"]`);
-    if (law && band) {
-      law.innerHTML = lawReadHtml({ program, band: state.bands[program.id] ?? band, asked: band });
+    const lawSlot = el.main.querySelector(`[data-law="${program.id}"]`);
+    if (lawSlot && band) {
+      lawSlot.innerHTML = lawReadHtml({ program, band: law[program.id] ?? band, asked: band });
     }
 
     const row = el.main.querySelector(`.law:has([data-band="${program.id}"])`);
     if (row instanceof HTMLElement && band) {
-      const now = state.bands[program.id];
+      const now = law[program.id];
       row.dataset["moved"] = String(
         now !== undefined && (band.floor !== now.floor || band.ceiling !== now.ceiling),
       );
@@ -553,6 +676,25 @@ document.addEventListener("click", event => {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
 
+  /* ⚠ A RESPOSTA A UMA CARTA E ORDEM, e nao mutacao do estado — a razao esta em
+     `state.mjs`, e ela e concreta: o VENCIMENTO acontece dentro do turno, e uma
+     resposta que mudasse o estado aqui criaria dois caminhos para a mesma carta,
+     com o resultado dependendo de qual chegasse primeiro no mes em que o prazo
+     fecha. Marcar aqui e decidir; o mes e que resolve.
+
+     E ELA VEM ANTES DA NAVEGACAO de proposito: o botao de escolha vive dentro de
+     uma carta que tambem leva a uma tela, e a ordem inversa faria escolher navegar. */
+  const choice = target.closest("[data-letter]");
+  if (choice instanceof HTMLElement && choice.dataset["letter"] && choice.dataset["answer"]) {
+    const id = choice.dataset["letter"];
+    /* CLICAR DE NOVO NA MESMA SAIDA DESMARCA. Sem isso, uma carta respondida por
+       engano so se desfaria escolhendo a outra — e escolher o contrario do que se
+       quer para voltar atras nao e desfazer, e uma segunda decisao errada. */
+    orders.mail[id] = orders.mail[id] === choice.dataset["answer"] ? "" : choice.dataset["answer"];
+    paint();
+    return;
+  }
+
   const section = target.closest("[data-section]");
   if (section instanceof HTMLElement && section.dataset["section"]) {
     screen = section.dataset["section"];
@@ -599,7 +741,7 @@ document.addEventListener("input", event => {
   const band = target.dataset["band"];
   const side = target.dataset["side"];
   if (band && (side === "floor" || side === "ceiling")) {
-    const current = orders.bands[band] ?? state.bands[band];
+    const current = orders.bands[band] ?? lawNow()[band];
     if (current) orders.bands[band] = { ...current, [side]: Number(target.value) };
     refresh();
   }
@@ -621,6 +763,11 @@ let resolving = false;
 
 el.advance.addEventListener("click", () => {
   if (resolving) return;
+  /* ⚠ MANDATO INTERROMPIDO NAO E BLOQUEIO DE FLUXO, e a distincao importa porque o
+     ciclo 9 proibiu o oposto: bloquear o turno para FORCAR uma resposta. Aqui nao ha
+     turno para dar — o mandato acabou, e o botao para pela mesma razao que ele
+     pararia no mes 48. Quem quiser jogar de novo aperta "nova partida". */
+  if (state.fallen !== null) return;
   resolving = true;
   el.advance.disabled = true;
 
@@ -649,7 +796,7 @@ el.advance.addEventListener("click", () => {
   persist();
   transition(() => {
     resolving = false;
-    el.advance.disabled = false;
+    el.advance.disabled = state.fallen !== null;
   });
 });
 

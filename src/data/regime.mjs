@@ -26,6 +26,7 @@
  * @typedef {object} Regime
  * @property {number} seats - o tamanho do plenario
  * @property {number} qualifiedShare - a fracao que faz maioria qualificada
+ * @property {number} removalShare - a fracao que autoriza o afastamento do presidente
  * @property {number} monthsPerTerm - a duracao do mandato, em meses
  * @property {number} monthsPerYear - quantos meses fecham um exercicio
  * @property {number} firstYear - o ano civil em que a posse acontece
@@ -37,6 +38,7 @@
 export const REGIME_SCHEMA = {
   seats: { kind: "number", min: 1, max: 2000 },
   qualifiedShare: { kind: "number", min: 0.5, max: 1 },
+  removalShare: { kind: "number", min: 0.5, max: 1 },
   monthsPerTerm: { kind: "number", min: 1, max: 240 },
   monthsPerYear: { kind: "number", min: 1, max: 24 },
   firstYear: { kind: "number", min: 1900, max: 2999 },
@@ -46,6 +48,12 @@ export const REGIME_SCHEMA = {
 export const REGIME = {
   seats: 513,
   qualifiedShare: 3 / 5,
+  /* DOIS TERCOS DA CAMARA AUTORIZAM O PROCESSO contra o presidente — CF art. 86, e e
+     DADO COM FONTE, e nao calibragem. Em 513 cadeiras da 342, que e o numero que a
+     imprensa brasileira repete em toda crise.
+     ⚠ E ELE E MAIOR QUE O DA PEC (3/5 = 308) de proposito, porque a Constituicao o fez
+     maior: derrubar um presidente tem de custar mais que mudar a Constituicao. */
+  removalShare: 2 / 3,
   monthsPerTerm: 48,
   monthsPerYear: 12,
   firstYear: 2027,
@@ -64,6 +72,9 @@ export const SIMPLE_MAJORITY = Math.floor(SEATS / 2) + 1;
    lealdade cheia. Quem confundir as duas coisas vai concluir que uma dupla
    basta, e vai calibrar o jogo errado. */
 export const QUALIFIED_MAJORITY = Math.ceil(SEATS * REGIME.qualifiedShare);
+
+/* QUANTAS ASSINATURAS AFASTAM UM PRESIDENTE. 342 em 513. */
+export const REMOVAL_MAJORITY = Math.ceil(SEATS * REGIME.removalShare);
 
 /** Quantos meses cabem num mandato. */
 export const MONTHS_PER_TERM = REGIME.monthsPerTerm;
