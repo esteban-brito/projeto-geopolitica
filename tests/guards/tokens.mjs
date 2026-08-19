@@ -51,8 +51,16 @@ const TOKENS_FILE = "styles/00-tokens.css";
                    inline pelo proprio controle: sao dois numeros por elemento e
                    vem do motor de normas, nao da paleta. Eles desenham as tres
                    zonas do trilho — abaixo do piso custa lei, dentro e caneta,
-                   acima do teto custa de novo. */
-const RUNTIME = new Set(["--part-color", "--neutral", "--index", "--floor", "--ceiling"]);
+                   acima do teto custa de novo;
+     --mark        onde fica o LIMIAR de uma ruptura, escrito em estilo inline pela
+                   propria regua da Trindade. Ele e irmao de `--floor` e entra pela
+                   mesma razao: e um numero por elemento, vem da CALDEIRA — 20 para a
+                   rua, 50 para o capital, 80 para quem sustenta — e nao da paleta.
+                   ⚠ Ele nasceu consertando um medidor que MENTIA: sem a marca, a
+                   tela precisava normalizar "quanto falta para romper", e com a rua
+                   em 44 e o piso em 20 a barra aparecia 70% cheia num governo
+                   confortavel. */
+const RUNTIME = new Set(["--part-color", "--neutral", "--index", "--floor", "--ceiling", "--mark"]);
 
 /**
  * @param {Map<string, string>} files

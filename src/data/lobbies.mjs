@@ -142,6 +142,8 @@ export const PRESSURE_SCHEMA = {
   boil: { kind: "number", min: 0, max: 100 },
   streetFloor: { kind: "number", min: 0, max: 100 },
   brokerBoil: { kind: "number", min: 0, max: 100 },
+  demandAt: { kind: "number", min: 0, max: 100 },
+  spite: { kind: "number", min: 0, max: 1 },
 };
 
 /* A CALIBRAGEM DA CALDEIRA, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT de
@@ -174,10 +176,30 @@ export const PRESSURE_SCHEMA = {
    que uma presidencia brasileira perdeu sustentacao popular a ponto de o Congresso se
    mover. Ele e ordem de grandeza, e nao afirmacao — por isso esta aqui e nao numa
    tabela com fonte. */
+/* ── A CHANTAGEM, e os dois numeros dela ────────────────────────────────────
+   ⚠ `demandAt` TEM DE SER MENOR QUE `boil`, e isso NAO e chute: uma exigencia que so
+   chega depois de o grupo ja ter abandonado o governo e um RECIBO, e a regra do
+   projeto e que informacao depois da decisao nao e informacao. A chantagem existe
+   para o jogador poder agir ANTES — e por isso ela chega na metade do caminho.
+
+   TRINTA E A METADE DO CAMINHO ate o ponto de fervura, e o numero e essa frase e nao
+   uma escolha: o grupo aguentou metade do que aguentaria antes de abandonar o governo,
+   e ai falou. ⚠ Comecei em 35, sem razao nenhuma alem de gosto, e a medicao mostrou o
+   preco de um chute: DUAS exigencias em 48 meses, as duas depois do mes 45 — instrumento
+   que nunca dispara e o achado 3 deste projeto se repetindo.
+
+   `spite` e o que uma exigencia RECUSADA acrescenta a queixa do mes, e ele e a unica
+   coisa que a chantagem soma a CALDEIRA. ⚠ E ele nao precisa de memoria propria: a
+   pressao JA e um estoque com inercia, entao um mes de queixa alta continua doendo
+   nos meses seguintes sozinho. Guardar um rancor a parte seria a mesma verdade em
+   dois lugares — e o rancor de quem foi recusado e exatamente o que a caldeira
+   guarda. */
 export const PRESSURE = {
   rise: 0.18,
   cool: 0.06,
   boil: 60,
   streetFloor: 20,
   brokerBoil: 80,
+  demandAt: 30,
+  spite: 0.25,
 };

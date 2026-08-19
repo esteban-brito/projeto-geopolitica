@@ -245,9 +245,15 @@ try {
      segue clicavel, e o passeio confere isso avancando de novo em seguida. */
 
   /* ANTES DO PRIMEIRO MES o painel diz que esta esperando, e nao fica em branco:
-     bloco vazio ao lado de controles que funcionam lê como defeito. */
+     bloco vazio ao lado de controles que funcionam lê como defeito.
+
+     ⚠ O SELETOR MUDOU EM 18/08/2026, e o passeio pegou a troca no mesmo dia. A
+     espera tinha forma propria — `.report--waiting`, a terceira das quatro maneiras
+     que o jogo tinha de dizer "nao ha nada aqui" — e passou a usar a peca de
+     ausencia do resto do jogo, no peso discreto. O que se confere continua sendo o
+     mesmo: que o painel ANUNCIA a espera em vez de ficar em branco. */
   expect(
-    (await page.locator(".report--waiting").count()) === 1,
+    (await page.locator(".report.empty--quiet").count()) === 1,
     "[relatorio] antes do primeiro mes o painel nao anunciou a espera",
   );
 

@@ -95,6 +95,66 @@ export function amendment({ bill, month, except, saved }) {
     bill: bill.id,
     except,
     saved,
+    from: null,
+    lever: null,
+    level: null,
+    answer: null,
+    closedAt: null,
+  };
+}
+
+/**
+ * A CHANTAGEM — a segunda pergunta que o jogo faz, e a primeira que vem de FORA da
+ * tramitacao.
+ *
+ * ⚠ ELA EXISTE PORQUE QUATRO GRUPOS TINHAM PRESSAO E NENHUMA VOZ. A CALDEIRA nasceu no
+ * ciclo 10 com posicao no plano, memoria e um instrumento declarado em prosa —
+ * "o agronegocio para a safra, a Faria Lima precifica a divida" — e nenhum deles fazia
+ * nada alem de somar para a queda. Um lobby que so sabe derrubar presidente e um lobby
+ * que fica calado quarenta e sete meses.
+ *
+ * ── O QUE ELE EXIGE, E POR QUE NAO E DINHEIRO ───────────────────────────────
+ * ⚠ O DECIMO DOSSIE PROPUNHA UM PRECO EM BILHOES — "[Ceder: custa R$ 4 bi]" —, e isso
+ * seria uma SEGUNDA MOEDA. O ciclo 10 ja recusou uma: "o projeto tem uma bolsa de
+ * proposito, e e isso que faz comprar o Congresso custar saude".
+ *
+ * Ele exige uma ALAVANCA, e o preco dela ja existe: mover um nivel dentro da faixa e
+ * caneta — nao pede voto a ninguem — e sai do MESMO discricionario que paga a emenda.
+ * O jogador nao aprende um preco novo; ele descobre que a bolsa ficou menor.
+ *
+ * ── E O NIVEL EXIGIDO NAO E INVENTADO ───────────────────────────────────────
+ * E o nivel que aquele programa tinha NA POSSE. Um lobby nao pede um numero novo: ele
+ * pede DE VOLTA o que foi cortado. Isso tem tres consequencias que nenhuma delas
+ * precisou ser escrita:
+ *
+ *   · a exigencia so nasce quando o jogador de fato cortou, entao ela e consequencia
+ *     da jogada dele e nao um evento que caiu do ceu;
+ *   · ela e sempre pagavel, porque o pais ja gastou aquilo uma vez;
+ *   · e ela nunca pede mais do que o mundo suportava — nao ha inflacao de exigencia.
+ *
+ * @param {object} input
+ * @param {{ id: string }} input.lobby
+ * @param {{ id: string, label: string }} input.program
+ * @param {number} input.level - o nivel da posse
+ * @param {number} input.month
+ * @returns {Letter}
+ */
+export function demand({ lobby, program, level, month }) {
+  return {
+    /* O ID AMARRA GRUPO E ALAVANCA, e nao o mes: o mesmo grupo nao abre duas
+       exigencias sobre o mesmo programa. Se ele voltar a exigir depois de a primeira
+       fechar, o sufixo do mes e o que as distingue. */
+    id: `demand:${lobby.id}:${program.id}:${month}`,
+    kind: "demand",
+    month,
+    due: month + ANSWER_TIME,
+    subject: program.label,
+    bill: null,
+    except: [],
+    saved: null,
+    from: lobby.id,
+    lever: program.id,
+    level,
     answer: null,
     closedAt: null,
   };
@@ -120,9 +180,65 @@ export function notice({ kind, id, subject, month }) {
     bill: id,
     except: [],
     saved: null,
+    from: null,
+    lever: null,
+    level: null,
     /* O AVISO JA CHEGA FECHADO: nao ha o que responder, e por isso ele envelhece a
        partir do mes em que chegou. */
     answer: null,
+    closedAt: month,
+  };
+}
+
+/**
+ * O ALARME — o cerco falando, e ele nao fala de texto nenhum.
+ *
+ * ⚠ ELE NASCEU DE UMA MEDICAO, e ela e o achado mais desconfortavel desta sessao:
+ * num governo passivo chegam ZERO cartas em 44 meses. O processo de impeachment
+ * abre no mes 43 e ninguem escreve — o pais desmorona em silencio, com a aprovacao
+ * em 13%, dois grupos fora do governo e a Camara reunida para afastar o presidente.
+ * A unica noticia disso era uma barra num cartao da coluna da direita.
+ *
+ *   passivo        media 0,0 cartas por mes   ← e o processo abre no meio disso
+ *   paga a base    media 0,3
+ *   corta tudo     media 3,5
+ *
+ * A caixa nao estava quebrada: ela responde ao que o jogador FAZ, e quem nao
+ * legisla nao recebe correspondencia de tramitacao. O que faltava era o mundo
+ * escrever quando o mundo se mexe sozinho.
+ *
+ * ⚠ E ELE E AVISO, E NAO PERGUNTA — `due` nulo. A resposta ao cerco nao se da na
+ * carta: ela se da no Congresso, comprando a cadeira que agora custa o triplo. Um
+ * par de botoes aqui seria uma SEGUNDA porta para a mesma jogada, e o jogador
+ * escolheria sem ver o preco que so a outra tela mostra.
+ *
+ * ⚠ E O ID NAO CARREGA O MES. Ele e `alarme:social` e nao `alarme:social:12`,
+ * porque a ruptura que reabre depois de fechar nao e uma noticia nova — e a mesma
+ * ferida. Sem isso, uma pressao oscilando em volta do limiar escreveria uma carta
+ * por mes, e o inbox viraria o mural que este arquivo inteiro veio consertar.
+ *
+ * @param {object} input
+ * @param {"rupture" | "siege"} input.kind
+ * @param {string} input.id - qual ruptura, ou o cerco
+ * @param {string} input.subject
+ * @param {number} input.month
+ * @returns {Letter}
+ */
+export function alarm({ kind, id, subject, month }) {
+  return {
+    id: `${kind}:${id}`,
+    kind,
+    month,
+    due: null,
+    subject,
+    bill: null,
+    except: [],
+    saved: null,
+    from: null,
+    lever: null,
+    level: null,
+    answer: null,
+    /* JA CHEGA FECHADO, como todo aviso: nao ha o que responder aqui. */
     closedAt: month,
   };
 }

@@ -30,6 +30,8 @@ export const FISCAL_SCHEMA = {
   taxLoad: { kind: "number", min: 0, max: 1 },
   mandatoryGrowth: { kind: "number", min: 0, max: 0.2 },
   expenseGrowthShare: { kind: "number", min: 0, max: 1 },
+  expenseGrowthFloor: { kind: "number", min: 0, max: 0.2 },
+  expenseGrowthCap: { kind: "number", min: 0, max: 0.2 },
   seatPrice: { kind: "number", min: 0, max: 10 },
   initialGdp: { kind: "number", min: 1 },
   initialMandatory: { kind: "number", min: 1 },
@@ -42,6 +44,8 @@ export const FISCAL_SCHEMA = {
  * @property {number} taxLoad - carga tributaria como fracao do PIB
  * @property {number} mandatoryGrowth - crescimento vegetativo real ao ano
  * @property {number} expenseGrowthShare - o teto do arcabouco
+ * @property {number} expenseGrowthFloor - crescimento REAL minimo da despesa, ao ano
+ * @property {number} expenseGrowthCap - crescimento REAL maximo da despesa, ao ano
  * @property {number} seatPrice - custo MENSAL de manter uma cadeira a verba cheia
  * @property {number} initialGdp - PIB anual inicial, em bilhoes
  * @property {number} initialMandatory - despesa obrigatoria anual inicial, em bilhoes
@@ -91,10 +95,79 @@ export const FISCAL = {
      de IR e IPI que a Constituicao reparte nunca foram do Executivo federal — e
      ate aqui o modelo os gastava. */
   taxLoad: 0.19,
-  mandatoryGrowth: 0.025,
+  /* ── O CRESCIMENTO VEGETATIVO, e ele era uma MEDIA APLICADA A TUDO ──────────
+     ⚠ ERA 0,025 ATE 16/08/2026, e o erro nao e de calibragem: e de ESCOPO. O
+     parametro se chama "crescimento vegetativo real" e incide sobre a obrigatoria
+     INTEIRA — mas metade dela nao vegeta. Rubrica a rubrica, sobre os R$ 2.157 bi
+     que a soma dos pisos produz:
+
+       R$ 1.325 bi (61%)  aposentadoria urbana e rural, BPC, transferencia de renda,
+                          abono e seguro — estes SIM crescem sozinhos, ~3% real ao
+                          ano, por demografia e pela regra do salario minimo;
+       R$   398 bi (18%)  folha e inativos, civis e militares — ~0% real. Servidor
+                          nao ganha aumento por vegetacao: ganha por DECISAO, e uma
+                          decisao e uma jogada, nao um parametro;
+       R$   250 bi (12%)  os pisos de saude e educacao, que sao fracao da RECEITA e
+                          crescem com ela, ~2% real;
+       R$   184 bi  (9%)  o resto, ~1%.
+
+     A media ponderada disso e 2,16%, e nao 2,5%.
+
+     ⚠ E O MEIO PONTO DECIDIA O JOGO INTEIRO, medido em 60 meses depois do conserto do
+     achado 31 — com 2,5% a armadilha fecha DENTRO do mandato e o discricionario vai a
+     ZERO no quarto ano, entao TODO governo cai entre os meses 39 e 45, inclusive o que
+     reforma. O jogo virava um corredor. Com 2,16%:
+
+       promete tudo e nao paga     cai no mes 40
+       corta tudo ao piso          cai no mes 45
+       passivo, nao paga ninguem   cai no mes 46
+       mantem a maquina            cai no mes 52  — ATRAVESSA o mandato
+       reforma os pisos maiores    cai no mes 51  — ATRAVESSA o mandato
+
+     que e exatamente o criterio declarado no ciclo 10 antes de qualquer medicao:
+     alcancavel por um governo ruim, inalcancavel por um mediano.
+
+     ⚠ O NUMERO NAO FOI ESCOLHIDO PARA CABER. Ele saiu da ponderacao acima, feita
+     ANTES de rodar a serie; que ele tambem devolva a jogabilidade e a confirmacao de
+     que o defeito era de escopo, e nao de gosto. A correcao completa e outra e fica
+     REGISTRADA: separar a obrigatoria em parcelas com crescimentos proprios, e ai a
+     folha volta a so subir quando o presidente decidir. Enquanto isso nao existe, a
+     media ponderada e a melhor descricao honesta de uma taxa unica. */
+  mandatoryGrowth: 0.0216,
   /* 70% do crescimento da receita — o numero do arcabouco de verdade.
      Fonte: LC 200/2023. */
   expenseGrowthShare: 0.7,
+  /* ── A BANDA REAL, e ela era a OMISSAO DECLARADA no topo deste arquivo ───────
+     A LC 200/2023 nao repassa 70% da receita e pronto: ela limita o crescimento
+     REAL da despesa a uma banda de 0,6% a 2,5% ao ano. O modelo omitia a banda, e
+     o cabecalho dizia que omitia — "parametro omitido em silencio e o que faz a
+     proxima sessao achar que o modelo e fiel".
+
+     ⚠ E A OMISSAO NAO ERA NEUTRA: ela era a causa medida de a armadilha fiscal
+     fechar em QUATRO ANOS. Sem banda o teto crescia 70% da variacao NOMINAL da
+     receita — 4,2% ao ano com PIB nominal a 6% —, enquanto a obrigatoria cresce
+     2,5% REAL mais a inflacao, ou seja 6,6% nominal:
+
+       teto          4,2% nominal  =  0,2% real
+       obrigatoria   6,6% nominal  =  2,5% real
+       aperto                         2,3 p.p. reais por ano
+
+     A 2,3 p.p. ao ano, os R$ 176 bi de discricionario acabam no quarto exercicio —
+     dentro do mandato, e sem jogada nenhuma que o evite. Medido: com o achado 31
+     consertado, TODA politica convergia para a capacidade financiada pelo piso,
+     porque o presidente perdia a margem inteira antes do fim do mandato.
+
+     Com a banda, o repasse fica em 1,4% real (70% de um crescimento real de 2%),
+     dentro do piso e do teto, e o aperto cai para 1,1 p.p. ao ano. Ele continua
+     existindo — a armadilha e o desenho, e o Brasil a vive —, mas deixa de ser
+     fatal por aritmetica.
+
+     ⚠ O PISO E O QUE MAIS IMPORTA DOS DOIS, e ele e contraintuitivo: e ele que
+     garante que o teto seja CORRIGIDO PELA INFLACAO mesmo num ano de receita ruim.
+     Sem ele, um ano de receita fraca corta a despesa em termos reais, e dois anos
+     seguidos derrubam o Estado. Fonte: LC 200/2023, art. 4º. */
+  expenseGrowthFloor: 0.006,
+  expenseGrowthCap: 0.025,
   /* O PRECO DA CADEIRA e o cambio entre os dois motores: ele traduz "verba
      oferecida", que a votacao entende como fracao de 0 a 1, em bilhoes que saem
      do discricionario. Sem ele os dois motores ficariam em moedas diferentes e o

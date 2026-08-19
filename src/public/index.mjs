@@ -111,6 +111,17 @@ export { pollFrom } from "../domain/opinion/index.mjs";
    quatro grupos de pressao, o que cada um cobra, e quais das tres rupturas ja estao
    abertas. A tela nao remonta pressao nem redecide ruptura: refeitas por fora, elas
    divergiriam no primeiro mes em que um limiar mudasse. */
+/* ⚠ `outlook` e a decima segunda porta, e ela fechou a PORTA ERRADA que estava
+   aberta no entrypoint. Ele projetava o indice da area a mao — `value − decay +
+   yield × asked` — enquanto a MALHA consome o gasto CHEIO e ja rateado, e o
+   resultado era a seta apontando para o lado errado em CINCO das oito areas no mes 1.
+   Oferecer a porta certa nao basta: a copia saiu junto. */
+/* ⚠ `termOf` e a decima terceira porta, e ela guarda uma regra que estava PELA
+   METADE na tela. O entrypoint perguntava `state.fallen !== null` para desligar o
+   botao de avancar — o que pegava a queda e nao pegava o PRAZO: nada no jogo
+   terminava o mandato aos 48 meses, e quem atravessasse os quatro anos entrava num
+   "2o mandato" que nunca teve eleicao. Quem sabe quando um mandato acaba e o
+   regime, e nao a view. */
 export {
   bandsOf,
   boilerOf,
@@ -119,10 +130,12 @@ export {
   governmentOf,
   ledger,
   lockedBy,
+  outlook,
   passageOf,
   playMonth,
   settlement,
   situationOf,
+  termOf,
 } from "../application/turn.mjs";
 export { compose, honour, spendOf } from "../application/agenda.mjs";
 /* `left` e a decima porta, e ela e uma linha — o que importa e ela ser a UNICA.

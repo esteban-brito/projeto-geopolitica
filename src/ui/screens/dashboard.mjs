@@ -19,9 +19,29 @@ import { MONTHS_PER_TERM, MONTHS_PER_YEAR } from "../../data/regime.mjs";
  * cabecalho por simetria: a esquerda abre com a marca, a direita abre com a
  * data — que e exatamente onde o Football Manager poe a dela.
  *
+ * ⚠ ELA ANUNCIAVA UM SEGUNDO MANDATO QUE NUNCA TEVE ELEICAO. A conta do numero do
+ * mandato e `mes ÷ 48 + 1`, e ela nao sabia que o jogo acaba no primeiro: um
+ * presidente que atravessasse os quatro anos via a barra imprimir "2º MANDATO ·
+ * ANO 1" no mes seguinte, com o pais inteiro parado atras dela. E quem caia via
+ * a barra continuar contando o ano de um mandato que a Camara ja tinha
+ * interrompido.
+ *
+ * ⚠ E A DATA PASSA A SER A DO FIM, e nao a do mes corrente. Os dois divergem por
+ * um mes na queda — `fallen` marca novembro e o estado ja fechou dezembro —, e uma
+ * barra que datasse o repaint estaria contradizendo o carimbo do fecho na mesma
+ * tela. Quem manda e o motor.
+ *
  * @param {GameState} state
+ * @param {{ over: boolean, months: number }} closing o mandato, perguntado a `termOf`
  */
-export function turnHtml(state) {
+export function turnHtml(state, closing) {
+  if (closing.over) {
+    return (
+      `<b>${escapeHtml(monthLabel(closing.months))}</b>` +
+      `<small>${escapeHtml(UI.closing.ended)}</small>`
+    );
+  }
+
   const term = Math.floor(state.month / MONTHS_PER_TERM) + 1;
   const year = Math.floor((state.month % MONTHS_PER_TERM) / MONTHS_PER_YEAR) + 1;
 
@@ -92,6 +112,11 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
       const moved = Math.abs(item.delta) < 1e-9 ? 0 : item.delta * item.good;
       const direction = moved > 0 ? "up" : moved < 0 ? "down" : "flat";
 
+      /* ⚠ O ROTULO VEM ANTES DO VALOR, NA MESMA LINHA — Parte B do ciclo 11. Ele
+         ficava ACIMA, e rotulo em cima com numero embaixo e a celula de um ticker de
+         bolsa: quatro delas lado a lado sao o painel de que a auditoria reclamou por
+         quatro dossiês seguidos. Lado a lado com um fio entre as leituras, a mesma
+         informacao le como boletim. */
       return (
         `<div class="vital${item.alert ? " vital--alert" : ""}">` +
         `<span class="vital__label">${escapeHtml(item.label)}</span>` +

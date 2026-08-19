@@ -1,0 +1,252 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TELA · O FECHO DO MANDATO — a prestacao de contas, e ela e um DOCUMENTO.
+   ═══════════════════════════════════════════════════════════════════════════
+
+   POR QUE ELA EXISTE. Uma partida jogada ate o fim nao terminava: o governo
+   passivo cai no mes 47, e a unica noticia disso na tela era um selo de dez
+   pixels no canto de um cartao da coluna da direita. O botao AVANCAR O MES
+   continuava aceso, do mesmo tamanho e da mesma cor de sempre.
+
+   ⚠ ELA NAO E UMA TELA DE DERROTA, e a forma tem de dizer isso antes de qualquer
+   texto. Nao ha vermelho de fundo, nao ha selo gigante e nao ha placar: o
+   Planalto nao tem vitoria, entao um fecho que dramatizasse a queda inventaria um
+   objetivo que o jogo nunca teve. Quem cai e quem cumpre leem a MESMA tela — o
+   que muda e o carimbo e a data.
+
+   ── A FORMA E A DA RUBRICA, e ela e emprestada de Financas de proposito ──────
+   O ciclo 11 decidiu que o registro deste jogo e institucional e nao de
+   aplicativo: fio em vez de raio, numero em coluna, e a data mandando. Uma
+   prestacao de contas e o lugar onde isso importa mais — e por isso a linha daqui
+   tem a mesma anatomia da linha de la, com uma coluna a mais: de onde partiu,
+   onde chegou, e o quanto andou.
+
+   ⚠ E A COLUNA DA VARIACAO E A ULTIMA, e nao a primeira. Quem lê um fecho lê a
+   linha inteira antes de olhar o saldo dela; posta na frente, a variacao vira a
+   unica coisa que se lê, e as oito areas passam a ser oito numeros com sinal em
+   vez de oito historias. */
+
+@layer screens {
+  .closing__stamp {
+    margin-top: var(--space-4);
+    color: var(--ink-soft);
+    font-size: var(--text-body);
+  }
+
+  /* O CARIMBO — mono, e pela mesma razao dos outros dois do jogo: e a maquina do
+     Estado carimbando, e nao uma medicao nem um nome. Ele herda a moldura do
+     carimbo do cerco de proposito, porque e a mesma voz falando. */
+  .closing__stamp .stamp {
+    display: inline-block;
+    margin-right: var(--space-2);
+    padding: 1px var(--space-2);
+    border: 1px solid currentcolor;
+    border-radius: var(--radius-stamp);
+    font-family: var(--font-machine);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    color: var(--ink);
+  }
+
+  .closing__stamp time {
+    font-family: var(--font-machine);
+    color: var(--ink);
+  }
+
+  /* ⚠ A LEGENDA SAIU DAQUI: ela era a DECIMA forma de legenda do jogo, e repetia a
+     tipografia que `.block__legend` ja declara. O que sobrou e o unico ajuste que
+     este documento pede — o ar antes de cada secao, que num fecho e maior do que
+     numa tela de decisao porque aqui nada e clicavel e o olho lê em coluna. */
+  .closing .block__legend {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-2);
+  }
+
+  .closing__count {
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    color: var(--ink);
+  }
+
+  .closing__rows {
+    display: grid;
+  }
+
+  /* A ANATOMIA DA LINHA. O rotulo recebe a sobra porque e o unico campo que
+     cresce; os quatro numeros tem largura FIXA em `rem`, e a razao esta escrita
+     na folha de Financas: `ch` mede a largura do zero na fonte de CADA elemento,
+     e duas colunas medidas assim em degraus tipograficos diferentes nunca se
+     alinham. */
+  .closing__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 4rem 1.5rem 4rem 4rem;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .closing__row:last-child {
+    border-bottom: 0;
+  }
+
+  .closing__label {
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* O QUE A LINHA MEDE fica embaixo do nome e nao ao lado: "atendimento" explica
+     o 61 da Saude, e posto na mesma fileira ele disputaria a coluna com o rotulo
+     em toda area de nome longo — "Industria e Infraestrutura" ja gasta a coluna
+     inteira sozinha. */
+  .closing__label small {
+    display: block;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* ⚠ DE ONDE PARTIU E APAGADO, E ONDE CHEGOU E CHEIO. A leitura do fecho e o
+     valor de HOJE; o da posse esta ali para dar escala, e nao para disputar. Os
+     dois na mesma tinta fariam a linha inteira parecer um par de numeros sem
+     ordem de leitura. */
+  .closing__from {
+    color: var(--ink-soft);
+    opacity: 0.65;
+    text-align: right;
+  }
+
+  .closing__arrow {
+    color: var(--ink-soft);
+    opacity: 0.45;
+    text-align: center;
+  }
+
+  .closing__to {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+    text-align: right;
+  }
+
+  /* O SINAL VAI NA VARIACAO, e nao no valor. Em Financas o tom pinta o numero
+     porque la nao ha coluna de variacao; aqui ha, e pintar as duas faria a linha
+     acender duas vezes pela mesma informacao. */
+  .closing__delta {
+    text-align: right;
+    color: var(--ink-soft);
+  }
+
+  .closing__row[data-direction="up"] .closing__delta {
+    color: var(--signal-up);
+  }
+
+  .closing__row[data-direction="down"] .closing__delta {
+    color: var(--signal-down);
+  }
+
+  /* AS LEIS. Numeradas, porque a ordem em que foram escritas e parte do que elas
+     contam — um mandato que escreve tres leis no primeiro ano e nenhuma depois
+     nao e o mesmo que um que escreve uma por ano. */
+  .closing__laws {
+    display: grid;
+    margin: 0;
+    padding-left: 0;
+    color: var(--ink);
+    counter-reset: law;
+  }
+
+  /* ⚠ O NUMERO E UM CONTADOR E NAO O MARCADOR NATIVO, e a razao e mecanica: um
+     `<li>` com `display: flex` perde o `::marker` — o navegador nao desenha
+     marcador em item que deixou de ser `list-item`. A primeira versao desta folha
+     caiu nisso e a lista saiu sem numero nenhum, com a prosa ao lado afirmando que
+     a ordem importava.
+
+     De quebra o contador e MONO, como a data do outro lado da linha: os dois sao
+     carimbo de protocolo, e nao medicao. */
+  .closing__laws li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    counter-increment: law;
+  }
+
+  .closing__laws li::before {
+    flex: none;
+    width: var(--space-6);
+    content: counter(law) ".";
+    font-family: var(--font-machine);
+    font-size: var(--text-label);
+    color: var(--ink-soft);
+  }
+
+  /* O NOME RECEBE A SOBRA, para a data ficar encostada na direita em toda linha. */
+  .closing__law {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .closing__laws li:last-child {
+    border-bottom: 0;
+  }
+
+  .closing__when {
+    flex: none;
+    font-family: var(--font-machine);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .closing__abandoned {
+    margin-top: var(--space-4);
+    color: var(--ink-soft);
+    font-size: var(--text-body);
+  }
+
+  .closing__abandoned b {
+    color: var(--crisis);
+  }
+
+  /* ── NO CELULAR A LINHA VIRA DUAS ───────────────────────────────────────────
+     Cinco colunas em 390px poriam o rotulo em duas palavras por fileira. O nome
+     sobe sozinho e os quatro numeros descem em fileira propria, alinhados a
+     direita — nada e escondido, pela mesma razao da folha de Financas: esconder
+     para caber e mentir por omissao. */
+  @media (max-width: 720px) {
+    .closing__row {
+      grid-template-columns: 1fr auto auto auto auto;
+      grid-template-areas:
+        "label label label label label"
+        ". from arrow to delta";
+      gap: var(--space-2) var(--space-2);
+    }
+
+    .closing__label {
+      grid-area: label;
+      white-space: normal;
+    }
+
+    .closing__from {
+      grid-area: from;
+    }
+
+    .closing__arrow {
+      grid-area: arrow;
+    }
+
+    .closing__to {
+      grid-area: to;
+    }
+
+    .closing__delta {
+      grid-area: delta;
+    }
+  }
+}

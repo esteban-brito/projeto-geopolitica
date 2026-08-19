@@ -41,11 +41,14 @@ import {
   governmentOf,
   ledger,
   left,
+  outlook,
   playMonth,
   settlement,
   situationOf,
+  termOf,
 } from "./src/public/index.mjs";
 import { railGovHtml, railNavHtml } from "./src/ui/shared/rail.mjs";
+import { closingHtml } from "./src/ui/screens/closing.mjs";
 import {
   areaHtml,
   estadoHtml,
@@ -340,6 +343,14 @@ function cabinetInput(current) {
            porta. */
         inherited: { mandatory: budget.mandatory, room: share.room },
         answered: orders.mail,
+        /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
+           mora no catalogo. Uma tabela de nomes nesta view seria a segunda verdade
+           sobre quem sao os quatro. */
+        lobbies: CATALOG.lobbies,
+        /* ⚠ O CERCO SAI DO MOTOR, e a carta dele nao escreve numero proprio: o
+           triplo da cadeira e `SIEGE_PRICE`, e os 342 de 513 sao a CF art. 86 no
+           regime. Copiados na view, os dois mentiriam no dia em que mudassem. */
+        siege: boilerOf(state, CATALOG),
       }),
       ...(last
         ? [
@@ -390,12 +401,19 @@ function areaInput(area) {
   const share = settlement(state, orders, CATALOG);
   const spent = share.asked[area.id] ?? 0;
 
-  /* A PROJECAO E A MESMA CONTA DO MOTOR, e nao uma aproximacao escrita aqui. Ela
-     e curta o bastante para caber numa linha e importante o bastante para nao
-     divergir: se a tela prometer +2 e o turno entregar +1,4, o jogador para de
-     acreditar no controle. */
-  const project = (/** @type {number} */ spent) =>
-    Math.min(100, Math.max(0, value - area.decay + area.yield * spent));
+  /* ⚠ A PROJECAO PASSOU A SER PERGUNTADA em 16/08/2026, e antes disso ela era
+     REFEITA AQUI — com a prosa deste mesmo bloco afirmando o contrario, em
+     maiusculas: "a projecao e a mesma conta do motor, e nao uma aproximacao escrita
+     aqui". Ela era uma aproximacao escrita aqui, e estava errada.
+
+     A MALHA consome o gasto CHEIO da area, ja rateado (`funded`), e esta linha
+     projetava com `asked` — so a parte acima do piso. Na Previdencia sao R$ 2,4 bi
+     contra R$ 126,7 bi. Medido no mes 1: em CINCO das oito areas a seta apontava
+     para o lado errado.
+
+     E o entrypoint nao pode calcular — `boundaries` existe por isso, e aqui a regra
+     foi furada por uma linha que se anunciava como fiel. */
+  const ahead = outlook(state, orders, CATALOG);
 
   return {
     area,
@@ -410,8 +428,8 @@ function areaInput(area) {
        incluir — a bolsa e uma so, e e isso que faz mover um controle aqui
        significar nao mover outro em outra area. */
     committed: share.demand - spent,
-    projected: project(spent),
-    idle: project(0),
+    projected: ahead.index[area.id] ?? value,
+    idle: ahead.idle[area.id] ?? value,
     bands: lawNow(),
     requestedBands: orders.bands,
   };
@@ -428,6 +446,11 @@ let standing = null;
 
 function paint() {
   const current = situationOf(state, CATALOG);
+  /* ⚠ QUEM SABE SE O MANDATO ACABOU E O MOTOR. Ate 18/08/2026 esta pergunta era
+     `state.fallen !== null` escrita aqui, e ela estava PELA METADE: pegava a queda e
+     nao pegava o PRAZO — nada terminava o mandato aos 48 meses, e quem atravessasse
+     os quatro anos entrava num "2o mandato" que nunca teve eleicao. */
+  const term = termOf(state, CATALOG);
 
   el.railNav.innerHTML = railNavHtml(screen, CATALOG.areas);
 
@@ -496,6 +519,14 @@ function paint() {
       ),
     });
     el.main.dataset["screen"] = "congress";
+  } else if (term.over) {
+    /* ⚠ O FECHO OCUPA O ENDERECO DO GABINETE, e nao um item novo no rail. O
+       Gabinete e a tela do que se DECIDE neste mes, e depois do ultimo mes nao ha
+       mes para decidir: manter os dois lado a lado daria ao jogador uma tela de
+       decisao que nao decide nada, ao lado de uma que diz que acabou. As outras
+       continuam no rail de proposito — o pais que ele deixou e consultavel. */
+    el.main.innerHTML = closingHtml(term);
+    el.main.dataset["screen"] = "closing";
   } else {
     el.main.innerHTML = cabinetHtml(cabinetInput(current));
     el.main.dataset["screen"] = "cabinet";
@@ -513,7 +544,7 @@ function paint() {
   const before = standing;
 
   if (!previous || previous.month !== state.month) {
-    el.turn.innerHTML = turnHtml(state);
+    el.turn.innerHTML = turnHtml(state, term);
   }
 
   if (!previous || previous !== state) {
@@ -763,11 +794,12 @@ let resolving = false;
 
 el.advance.addEventListener("click", () => {
   if (resolving) return;
-  /* ⚠ MANDATO INTERROMPIDO NAO E BLOQUEIO DE FLUXO, e a distincao importa porque o
+  /* ⚠ MANDATO ACABADO NAO E BLOQUEIO DE FLUXO, e a distincao importa porque o
      ciclo 9 proibiu o oposto: bloquear o turno para FORCAR uma resposta. Aqui nao ha
-     turno para dar — o mandato acabou, e o botao para pela mesma razao que ele
-     pararia no mes 48. Quem quiser jogar de novo aperta "nova partida". */
-  if (state.fallen !== null) return;
+     turno para dar — o mandato acabou, e o botao para pela queda ou pelo PRAZO, que
+     e a metade que faltava ate 18/08/2026. Quem quiser jogar de novo aperta "nova
+     partida". */
+  if (termOf(state, CATALOG).over) return;
   resolving = true;
   el.advance.disabled = true;
 
@@ -794,9 +826,15 @@ el.advance.addEventListener("click", () => {
      ele nao sabe distinguir promessa nova de promessa esquecida na tela. */
   orders = blankOrders();
   persist();
+  /* ⚠ O FECHO PUXA A TELA PARA SI no mes em que o mandato acaba, e so nesse mes.
+     Sem isto o jogador que caisse estando em Financas continuaria em Financas, e a
+     unica noticia do fim seria um botao que parou de responder — que e exatamente o
+     defeito que este bloco existe para matar. */
+  if (termOf(state, CATALOG).over) screen = "cabinet";
+
   transition(() => {
     resolving = false;
-    el.advance.disabled = state.fallen !== null;
+    endLabel();
   });
 });
 
@@ -831,7 +869,7 @@ let arming = 0;
 
 function disarm() {
   arming = 0;
-  label(el.restart, UI.actions.restart, UI.actions.restartHint);
+  label(el.restart, UI.actions.restart, "");
 }
 
 el.restart.addEventListener("click", () => {
@@ -872,14 +910,33 @@ document.documentElement.style.setProperty("--neutral", String(NEUTRAL));
  */
 function label(node, text, hint) {
   node.textContent = text;
+  /* ⚠ A LEGENDA E OPCIONAL desde 16/08/2026, e o teste dela e um so: ela se paga
+     quando diz algo que o rotulo nao diz. "Avancar o mes" nao precisa de "resolve o
+     turno"; a CONFIRMACAO de apagar o mandato precisa, porque ela chega no momento em
+     que a informacao muda a decisao. */
+  if (!hint) return;
   const small = document.createElement("span");
   small.className = "action__hint";
   small.textContent = hint;
   node.append(small);
 }
 
-label(el.advance, UI.actions.advance, UI.actions.advanceHint);
-label(el.restart, UI.actions.restart, UI.actions.restartHint);
+/* ⚠ O BOTAO TEM DE DIZER QUE ACABOU, e nao so parar de responder. Ele ficava
+   aceso, do mesmo tamanho e da mesma cor de sempre, e clicar nele nao fazia nada e
+   nao explicava por que — a unica pista do fim do mandato era um selo de dez pixels
+   no canto de um cartao da coluna da direita. */
+function endLabel() {
+  const term = termOf(state, CATALOG);
+  el.advance.disabled = term.over;
+  label(
+    el.advance,
+    term.over ? UI.actions.ended : UI.actions.advance,
+    term.over ? UI.actions.endedHint : "",
+  );
+}
+
+endLabel();
+label(el.restart, UI.actions.restart, "");
 el.noticeClose.textContent = UI.actions.close;
 
 paint();

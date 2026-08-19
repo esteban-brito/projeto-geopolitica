@@ -50,7 +50,11 @@ import { benches as benchesOf, cast, offered, president, remember } from "../dom
 import { carry, premiumOf, step as economyStep } from "../domain/economy/index.mjs";
 import { heat, rupture } from "../domain/pressure/index.mjs";
 import { enact, resolve } from "../domain/norms/index.mjs";
-import { pollFrom, step as opinionStep } from "../domain/opinion/index.mjs";
+import {
+  opening as opinionOpening,
+  pollFrom,
+  step as opinionStep,
+} from "../domain/opinion/index.mjs";
 import {
   THRESHOLDS,
   baseCount,
@@ -64,15 +68,16 @@ import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 import { CATALOG } from "../data/catalog.mjs";
 import { bandOf, compose, honour, spendOf } from "./agenda.mjs";
 import { DRAWER_LIFE, forgotten, proposalOf, reports, tables } from "./passage.mjs";
-import { amendment, notice, pending, settle as settleMail } from "./mail.mjs";
+import { alarm, amendment, demand, notice, pending, settle as settleMail } from "./mail.mjs";
 import {
+  MONTHS_PER_TERM,
   MONTHS_PER_YEAR,
   QUALIFIED_MAJORITY,
   SIMPLE_MAJORITY,
   SEATS,
   REMOVAL_MAJORITY,
 } from "../data/regime.mjs";
-import { reduce } from "../state/state.mjs";
+import { OPENING_MONTH, reduce } from "../state/state.mjs";
 
 /**
  * @typedef {import("../state/state.mjs").GameState} GameState
@@ -112,6 +117,16 @@ import { reduce } from "../state/state.mjs";
  * @property {number} promisedCost quanto a promessa de emenda custaria
  * @property {number} paidCost quanto o caixa honrou de emenda
  * @property {number} allocatedTotal quanto o caixa honrou de alocacao
+ *
+ * ⚠ O RATEIO E UM FATO DO MES, E ELE PRECISOU SUBIR PARA CA em 16/08/2026. O
+ * simulador media "quantos meses o rateio cortou" com uma conta PROPRIA, montada dos
+ * campos vizinhos — e ela contava, para a politica `herdado`, exatamente os 41 meses
+ * em que NADA foi cortado. A serie inteira do projeto leu "o rateio corta em 41 de 48
+ * meses" de um instrumento que anunciava o complemento da verdade.
+ *
+ * E a causa e a familia mais cara deste projeto pela SEXTA vez: dois lugares montando
+ * a mesma pergunta. `settlement` ja sabia a resposta; quem quer saber, pergunta.
+ * @property {number} ratio a fracao do pedido que o caixa honrou; 1 e mes sem corte
  * @property {Record<string, number>} promised
  * @property {Record<string, number>} paid
  * @property {Record<string, number>} asked bilhoes pedidos por area
@@ -281,10 +296,12 @@ export function bandsOf(state, catalog = CATALOG) {
  * @param {number} input.debtRatio
  * @param {number} input.delivered - a verba que de fato CHEGOU as bancadas, 0 a 1
  * @param {Record<string, number>} input.index - o indice de cada area
+ * @param {ReadonlyArray<string>} [input.spurned] - os lobbies cuja exigencia foi
+ *   recusada ou deixada vencer NESTE mes
  * @param {typeof CATALOG} input.catalog
  * @returns {Record<string, number>} de 0 (satisfeito) a 1 (fervendo)
  */
-function grievanceOf({ debtRatio, delivered, index, catalog }) {
+function grievanceOf({ debtRatio, delivered, index, spurned = [], catalog }) {
   /** @type {Record<string, number>} */
   const want = {};
 
@@ -327,6 +344,20 @@ function grievanceOf({ debtRatio, delivered, index, catalog }) {
     }
     const mean = ids.reduce((sum, id) => sum + (index[id] ?? NEUTRAL), 0) / ids.length;
     want[lobby.id] = clamp((NEUTRAL - mean) / NEUTRAL, 0, 1);
+  }
+
+  /* ── O RANCOR DE QUEM FOI RECUSADO ──────────────────────────────────────────
+     ⚠ ELE E A UNICA COISA QUE A CHANTAGEM SOMA A CALDEIRA, e ele nao tem memoria
+     propria de proposito: a pressao JA e um estoque com inercia, entao um mes de
+     queixa alta continua doendo nos meses seguintes sozinho. Guardar um rancor a
+     parte seria a mesma verdade em dois lugares — e o que a caldeira guarda E o
+     rancor de quem foi recusado.
+
+     ⚠ E O SILENCIO CONTA COMO RECUSA, e nao como meio-termo. Aqui a omissao nao pode
+     ACEITAR, como aceita na emenda do relator: um lobby que exige e nao recebe
+     resposta nao entende que ganhou. A carta diz isso antes de vencer. */
+  for (const id of spurned) {
+    want[id] = clamp((want[id] ?? 0) + catalog.pressure.spite, 0, 1);
   }
 
   return want;
@@ -464,6 +495,26 @@ function positionOf(state, catalog) {
     mandatory: state.fiscal.mandatory,
     anchorRevenue: state.fiscal.anchorRevenue,
     anchorExpense: state.fiscal.anchorExpense,
+    /* ⚠ QUANTOS TURNOS CORRERAM DESDE A ANCORA, de 0 a 1 — e ele existe porque a
+       banda do arcabouco e ANUAL e o turno e MENSAL. Sem esta fracao, o piso da banda
+       entrega o crescimento de um ano inteiro no PRIMEIRO mes: medido, R$ 107 bi de
+       teto a mais na posse, sobre um discricionario de 176.
+
+       ⚠ E ELE CONTA TURNOS, E NAO O CALENDARIO, e a distincao custou uma prova
+       vermelha. A ancora rola em dezembro, mas a partida ABRE EM MARCO — e a
+       obrigatoria de abertura e um valor de marco que so cresce a partir do primeiro
+       turno jogado. Contando pelo calendario, o teto ganhava tres meses de correcao
+       que a obrigatoria nao tinha ganhado, e os dois relogios andavam separados: a
+       posicao apertada da suite deixava de apertar por R$ 42 bi que ninguem gastou.
+
+       O `+ 1` e porque `step` cresce a obrigatoria UMA vez por chamada: quando o teto
+       e lido, ela ja andou o mes que esta sendo resolvido. */
+    elapsed:
+      ((state.month < MONTHS_PER_YEAR
+        ? state.month - OPENING_MONTH
+        : state.month % MONTHS_PER_YEAR) +
+        1) /
+      MONTHS_PER_YEAR,
     debt: state.fiscal.debt,
     parameters: catalog.fiscal,
     revenueFactor: pressure.revenue + (base > 0 ? dividends / base : 0),
@@ -837,6 +888,129 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
    dentro de `settlement` — porque distinguir o que ESPERA do que EXECUTA e anterior
    a qualquer conta de dinheiro, e o rateio precisa dessa distincao para dividir o
    executavel em vez do sonhado. Quem quiser a pauta pergunta ao rateio. */
+
+/**
+ * QUEM EXIGE NESTE MES, E O QUE — a chantagem, e ela e DETERMINISTICA.
+ *
+ * ⚠ O GATILHO NAO PODE SER SORTEADO, e a razao esta escrita no ciclo 10: a queda tem
+ * de se ver chegar, e um evento aleatorio e o oposto disso. Um lobby exige quando a
+ * pressao dele cruza `demandAt` — e `demandAt` e MENOR que o ponto de fervura, porque
+ * uma exigencia que chega depois de o grupo ja ter abandonado o governo e um recibo.
+ *
+ * ── SO OS DOIS QUE LEEM A MALHA EXIGEM, e a limitacao e declarada ────────────
+ * Cada lobby cobra na moeda do canal que ele lê, e essa e a regra de exclusao mutua do
+ * catalogo. Os dois de capacidade cobram GASTO NUMA AREA, que e uma alavanca que o
+ * presidente move com a caneta. Os outros dois cobram coisas que ainda nao tem carta:
+ * o mercado quer que a divida pare de crescer — um TETO, e nao um piso — e o baixo
+ * clero quer verba para as bancadas, que nao e alavanca. **Fica registrado**: sao a
+ * proxima onda, e cada um precisa de um verbo proprio.
+ *
+ * ── E ELE EXIGE DE VOLTA O QUE FOI CORTADO ──────────────────────────────────
+ * O nivel exigido e o da POSSE, e por isso a exigencia so nasce quando o jogador de
+ * fato cortou. Entre os programas da area dele, o escolhido e o de maior QUEDA em
+ * dinheiro — o corte que mais pesou no mundo, e nao o maior em pontos de controle. E a
+ * mesma regua que a pauta usa para escolher o assunto dela.
+ *
+ * @param {GameState} state
+ * @param {Record<string, number>} pressure - a pressao DEPOIS do mes
+ * @param {typeof CATALOG} catalog
+ * @returns {import("../state/state.mjs").Letter[]}
+ */
+function demandsOf(state, pressure, catalog) {
+  /** @type {import("../state/state.mjs").Letter[]} */
+  const written = [];
+
+  for (const lobby of catalog.lobbies) {
+    if (lobby.reads !== "capacity") continue;
+    if ((pressure[lobby.id] ?? 0) < catalog.pressure.demandAt) continue;
+
+    /* ⚠ UMA EXIGENCIA ABERTA POR VEZ, POR GRUPO. Sem isto o mesmo lobby escreveria
+       todo mes enquanto a pressao dele estivesse alta, e a bandeja viraria a lista de
+       tarefas que o ciclo 9 recusou. */
+    if (state.mail.some(letter => letter.from === lobby.id && letter.answer === null)) continue;
+
+    const areas = new Set((lobby.areas ?? "").split(" ").filter(Boolean));
+
+    /* O CORTE QUE MAIS PESOU EM DINHEIRO. `cost` e o gasto anual cheio do programa,
+       entao `(posse − hoje)/100 × custo` e quanto o pais deixou de gastar ali. */
+    let worst = null;
+    let deepest = 0;
+    for (const program of catalog.programs) {
+      if (!areas.has(program.area)) continue;
+      const now = state.levels[program.id] ?? program.initial;
+      const cut = ((program.initial - now) / 100) * program.cost;
+      if (cut > deepest) {
+        deepest = cut;
+        worst = program;
+      }
+    }
+
+    /* NADA CORTADO, NADA A EXIGIR — e o silencio aqui e a informacao. Um grupo
+       insatisfeito que nao tem o que pedir continua esquentando pelo indice; ele so
+       nao tem uma carta para escrever. */
+    if (!worst) continue;
+
+    written.push(demand({ lobby, program: worst, level: worst.initial, month: state.month }));
+  }
+
+  return written;
+}
+
+/**
+ * PARA ONDE O INDICE DE CADA AREA VAI ESTE MES — e e a MESMA conta que o turno fara.
+ *
+ * ⚠ ELA NASCEU DE UM DEFEITO MEDIDO, e ele e a SETIMA ocorrencia da familia mais cara
+ * deste projeto. O entrypoint projetava o indice a mao:
+ *
+ *     value − area.decay + area.yield × share.asked[area.id]
+ *
+ * com a prosa ao lado afirmando, em maiusculas, que "a projecao e a mesma conta do
+ * motor, e nao uma aproximacao escrita aqui". **Nao era**, e por duas razoes somadas:
+ *
+ *   · a MALHA consome `funded` — o gasto CHEIO da area, piso incluido e ja rateado —
+ *     desde 14/08/2026, e `asked` e so a parte ACIMA DO PISO. Na Previdencia os dois
+ *     numeros sao R$ 2,4 bi e R$ 126,7 bi: a tela projetava com 2% do dinheiro;
+ *   · o canal `capacity`, que a educacao exerce sobre a industria, nao entrava.
+ *
+ * Medido no mes 1 da partida padrao: em CINCO das oito areas a seta apontava para o
+ * lado ERRADO. A tela dizia que a Saude cairia de 61,0 para 60,4; o mes a levou a 61,1.
+ *
+ * ⚠ E O DEFEITO NASCEU DE UMA MUDANCA QUE DEIXOU UMA COPIA PARA TRAS, que e como
+ * todas as sete nasceram: `funded` substituiu `asked` na alimentacao da MALHA, e a
+ * projecao do entrypoint ficou no numero antigo, em silencio.
+ *
+ * ── O CONTRAFACTUAL MUDOU DE PERGUNTA, e a razao e a mesma ────────────────────
+ * `idle` era "o indice sem alocacao nenhuma" — `value − decay` —, e essa e uma
+ * configuracao que a LEI NAO PERMITE: gastar zero numa area exige derrubar todos os
+ * pisos dela por emenda. Um contrafactual que descreve um mundo inalcancavel nao
+ * ajuda a decidir. Agora ele e o mes **sem as ordens do jogador**: o que acontece se
+ * ele nao mexer em nada, que e exatamente a alternativa a decisao que ele esta
+ * tomando enquanto olha a linha.
+ *
+ * @param {GameState} state
+ * @param {Orders} [orders]
+ * @param {typeof CATALOG} [catalog]
+ * @returns {{ index: Record<string, number>, idle: Record<string, number> }}
+ *   o indice de cada area no fim deste mes: com as ordens, e sem elas
+ */
+export function outlook(state, orders = {}, catalog = CATALOG) {
+  /** @param {Orders} given */
+  const project = given =>
+    capacityStep({
+      areas: catalog.areas,
+      index: state.capacity.index,
+      history: state.capacity.history,
+      /* O QUE A AREA RECEBE E O QUE O RATEIO HONRA, e quem sabe isso e `settlement`.
+         Perguntar aqui e a unica forma de a linha nao divergir no mes em que o caixa
+         apertar — que e justamente o mes em que o jogador precisa dela. */
+      allocation: settlement(state, given, catalog).funded,
+      impacts: {},
+      neutral: NEUTRAL,
+      capacityTarget: CAPACITY_TARGET,
+    }).index;
+
+  return { index: project(orders), idle: project({}) };
+}
 
 /**
  * A GAVETA COMO A TELA PRECISA VÊ-LA — o que esta andando, e ha quanto tempo.
@@ -1309,6 +1483,65 @@ function draft(agenda, month, bands, asked, requested) {
 const NOTICED = new Set(["tabled", "forgotten", "passed", "rejected"]);
 
 /**
+ * O QUE O CERCO ESCREVE — e ele so escreve quando alguma coisa MUDA.
+ *
+ * ⚠ ELA NASCEU DE UMA MEDICAO. Num governo passivo chegam ZERO cartas em 44 meses,
+ * e o processo de impeachment abre no mes 43 no meio desse silencio: o pais
+ * desmoronava e a unica noticia era uma barra num cartao da coluna da direita. A
+ * caixa nao estava quebrada — ela responde ao que o jogador FAZ, e quem nao legisla
+ * nao recebe correspondencia de tramitacao. O que faltava era o mundo escrever
+ * quando o mundo se mexe sozinho.
+ *
+ * ⚠ E ELA CUMPRE UMA REGRA QUE O MOTOR JA TINHA ESCRITO: "a queda tem de se ver
+ * chegar. Uma derrota que voce viu chegar e nao conseguiu evitar e uma historia; uma
+ * que chega sem aviso e um defeito percebido". As tres reguas do Gabinete ja diziam
+ * isso a quem olhasse; a carta e o que chega a quem nao estava olhando.
+ *
+ * ⚠ SO A TRANSICAO ESCREVE, e nao o estado. Uma carta por mes de ruptura aberta
+ * empilharia trinta avisos identicos ate o plenario votar — que e o mural que a
+ * caixa deixou de ser em 16/08/2026. E por isso ela precisa das rupturas de ANTES:
+ * elas nao estao no estado, entao a unica maneira de saber o que mudou e perguntar
+ * duas vezes, com o antes e com o depois.
+ *
+ * @param {GameState} state o mes ANTES do passo
+ * @param {ReturnType<typeof rupture>} now as rupturas depois dele
+ * @param {number | null} impeachment o mes em que o processo abriu, ja decidido
+ * @param {typeof CATALOG} catalog
+ * @returns {import("../state/state.mjs").Letter[]}
+ */
+function alarmsOf(state, now, impeachment, catalog) {
+  const before = rupture({
+    pressure: state.pressure,
+    lobbies: catalog.lobbies,
+    standing: pollFrom(state.mood, catalog.segments, catalog.opinion).good,
+    broker: BROKER,
+    parameters: catalog.pressure,
+  });
+
+  /** @type {import("../state/state.mjs").Letter[]} */
+  const written = [];
+
+  for (const id of /** @type {const} */ (["social", "economic", "political"])) {
+    if (before[id] || !now[id]) continue;
+    written.push(alarm({ kind: "rupture", id, subject: id, month: state.month }));
+  }
+
+  /* ⚠ O CERCO LE `impeachment`, E NAO `now.open`, e a diferenca importa: o processo
+     NAO SE FECHA quando uma das tres melhora — ele so termina no plenario. Escrito
+     contra as rupturas, este aviso chegaria de novo toda vez que a terceira delas
+     reabrisse, num processo que ja estava de pe havia meses. */
+  if (state.impeachment === null && impeachment !== null) {
+    written.push(alarm({ kind: "siege", id: "siege", subject: "siege", month: state.month }));
+  }
+
+  /* ⚠ A CAIXA MANDA NO ID. O alarme nao carrega o mes de proposito — a ferida que
+     reabre nao e uma noticia nova —, e sem esta linha uma pressao oscilando em volta
+     do limiar poria duas cartas de mesmo id na bandeja no mesmo mes. */
+  const held = new Set(state.mail.map(letter => letter.id));
+  return written.filter(letter => !held.has(letter.id));
+}
+
+/**
  * @param {ReadonlyArray<{ kind: string, label: string, detail: string | null, bill: string }>} events
  * @param {number} month
  * @returns {import("../state/state.mjs").Letter[]}
@@ -1627,6 +1860,29 @@ export function playMonth(state, orders = {}, options = {}) {
      respondeu no ultimo mes respondeu. */
   const post = settleMail({ mail: state.mail, orders: orders.mail ?? {}, month: state.month });
 
+  /* ── O QUE A CHANTAGEM PRODUZIU NESTE MES ───────────────────────────────────
+     Duas listas, e as duas saem das cartas que FECHARAM agora:
+
+       CEDIDO    a alavanca vai para o nivel exigido, e ela entra no orcamento do mes
+                 como qualquer outro movimento de caneta — sai da mesma bolsa;
+       RECUSADO  quem foi recusado, para a queixa dele subir. ⚠ E o SILENCIO conta
+                 como recusa, ao contrario da emenda do relator, onde ele aceita: um
+                 lobby que exige e nao recebe resposta nao entende que ganhou.
+
+     ⚠ O QUE SE CEDE E UM NIVEL, E NAO UM CHEQUE. O decimo dossie propunha cobrar em
+     bilhoes — uma segunda moeda, que o ciclo 10 ja recusou. Aqui o preco ja existe e o
+     jogador nao aprende nada novo: ele descobre que a bolsa ficou menor. */
+  /** @type {Record<string, number>} */
+  const conceded = {};
+  /** @type {string[]} */
+  const spurned = [];
+
+  for (const letter of post.resolved) {
+    if (letter.kind !== "demand" || letter.lever === null) continue;
+    if (letter.answer === "accept") conceded[letter.lever] = letter.level ?? 0;
+    else if (letter.from !== null) spurned.push(letter.from);
+  }
+
   const passage = advanceBills(state, {
     share: { benches, offeredPaid, chamberLoyalty, people, bands },
     standing,
@@ -1674,9 +1930,17 @@ export function playMonth(state, orders = {}, options = {}) {
      O QUE VOLTA A VALER e o texto APROVADO, e ele entra por cima: quando um projeto
      vence o plenario, os niveis que ele pedia passam a valer no mesmo mes — como
      valiam antes, so que tres meses depois de assinados. */
+  /* ⚠ O QUE FOI CEDIDO ENTRA POR CIMA, e depois do texto aprovado: se as duas coisas
+     tocarem a mesma alavanca no mesmo mes, quem manda e a exigencia — porque ela e a
+     que o jogador acabou de responder, e o texto foi assinado ha tres meses.
+
+     ⚠ E ELE PASSA PELO RATEIO como todo o resto. Ceder nao cria dinheiro: se o caixa
+     nao cobrir, o nivel cedido escorrega junto com os outros — e o lobby vai ver o que
+     de fato chegou, e nao o que foi prometido. E a mesma regra do Congresso, do outro
+     lado da mesa. */
   const applied = honour({
     programs,
-    levels: approved ? { ...held, ...approved.levels } : held,
+    levels: { ...(approved ? { ...held, ...approved.levels } : held), ...conceded },
     ratio,
     bands,
   });
@@ -1830,6 +2094,7 @@ export function playMonth(state, orders = {}, options = {}) {
           ? parties.reduce((sum, party) => sum + (offeredPaid[party.id] ?? 0), 0) / parties.length
           : 0,
       index: capacity.index,
+      spurned,
       catalog,
     }),
     parameters: catalog.pressure,
@@ -1934,7 +2199,22 @@ export function playMonth(state, orders = {}, options = {}) {
 
          Um inbox ordenado por hora poe o aviso na frente do pedido, e ai o jogador
          aprende a rolar — que e o comeco de ele parar de ler. */
-      mail: [...passage.asked, ...notices(passage.events, state.month), ...post.mail],
+      /* ⚠ A CHANTAGEM VEM DEPOIS DA PRESSAO SER CALCULADA, e por isso ela entra aqui e
+         nao antes: um lobby exige com base no que ele sente AGORA, e nao no que sentia
+         no mes passado. Ler `state.pressure` daria uma exigencia sempre um mes
+         atrasada — a familia do "ler o estado antes do passo que o turno acabou de
+         dar", que este projeto ja pagou duas vezes. */
+      /* ⚠ O ALARME VEM PRIMEIRO, e a ordem e a mesma regra do resto da bandeja: o
+         que exige leitura antes da proxima decisao fica no alto. Um processo de
+         impeachment aberto embaixo de tres avisos de tramitacao e um inbox que
+         ensina a rolar — e quem rola para de ler. */
+      mail: [
+        ...alarmsOf(state, rupturas, impeachment, catalog),
+        ...passage.asked,
+        ...demandsOf(state, pressure, catalog),
+        ...notices(passage.events, state.month),
+        ...post.mail,
+      ],
       pressure,
       impeachment,
       fallen,
@@ -1961,6 +2241,7 @@ export function playMonth(state, orders = {}, options = {}) {
       room,
       promisedCost,
       paidCost,
+      ratio,
       promised,
       paid,
       tally,
@@ -1995,7 +2276,7 @@ const BROKER = "fisiologismo";
    declarado. O que NAO e chute e ser MAIOR QUE UM: um processo que nao encarecesse
    nada seria um aviso, e nao um cerco — e a mecanica inteira depende de sobreviver
    ser caro o bastante para doer e barato o bastante para ser possivel. */
-const SIEGE_PRICE = 3;
+export const SIEGE_PRICE = 3;
 
 /**
  * Acrescenta um mes a cada serie e corta o excesso pelo comeco.
@@ -2162,6 +2443,17 @@ function mean(values) {
 export function boilerOf(state, catalog = CATALOG) {
   const standing = pollFrom(state.mood, catalog.segments, catalog.opinion).good;
 
+  /* UMA CHAMADA SO, e ela responde as duas leituras: o veredito que o turno usa e a
+     distancia que a tela mostra. Chamar o motor tres vezes daria o mesmo resultado e
+     ensinaria que ele e barato — e no dia em que ele deixar de ser, a tela paga. */
+  const broke = rupture({
+    pressure: state.pressure,
+    lobbies: catalog.lobbies,
+    standing,
+    broker: BROKER,
+    parameters: catalog.pressure,
+  });
+
   return {
     lobbies: catalog.lobbies.map(lobby => ({
       id: lobby.id,
@@ -2171,15 +2463,209 @@ export function boilerOf(state, catalog = CATALOG) {
       /* FERVENDO E UM ESTADO, e nao um adjetivo: e o mesmo limiar que a ruptura
          economica le, e por isso a tela nao pode ter o proprio. */
       boiling: (state.pressure[lobby.id] ?? 0) >= catalog.pressure.boil,
+      /* ⚠ O PONTO DE FERVURA VAI JUNTO, desde 16/08/2026. A barra de cada grupo
+         mostrava pressao de 0 a 100 e NAO dizia onde e a linha: um grupo em 55 e um
+         em 20 apareciam como "duas barras curtas", quando o primeiro esta a cinco
+         pontos de abandonar o governo. E a mesma cegueira que a regua da Trindade
+         acabou de consertar, e o limiar e do motor — a tela nao pode ter o proprio. */
+      boil: catalog.pressure.boil,
     })),
-    rupture: rupture({
-      pressure: state.pressure,
-      lobbies: catalog.lobbies,
-      standing,
-      broker: BROKER,
-      parameters: catalog.pressure,
-    }),
+    rupture: broke,
+    /* ── AS TRES RUPTURAS COM DISTANCIA, e nao so com o veredito ────────────────
+     * ⚠ A TELA PRECISA DO QUANTO FALTA, e nao do "sim ou nao". `rupture` devolve tres
+     * booleanos, que e o que o TURNO precisa para decidir se o processo abre; um
+     * medidor construido sobre booleano so sabe acender e apagar, e a regra do
+     * projeto e que informacao que chega depois da decisao e recibo.
+     *
+     * ⚠ E ELA NAO PODE CALCULAR ISSO POR FORA. O valor de cada ruptura e uma conta
+     * diferente — a social le a rua, a economica e uma media PONDERADA de quem
+     * ferveu, e a politica tem limiar proprio e mais alto —, e refeitas na tela as
+     * tres divergiriam no primeiro mes em que um peso mudasse. E a sexta e a setima
+     * ocorrencia da familia mais cara deste projeto, e as duas foram hoje.
+     *
+     * O SINAL DE CADA UMA E DECLARADO: a social rompe quando CAI abaixo do piso; as
+     * outras duas rompem quando SOBEM acima do limiar. Sem isto a tela teria de saber
+     * qual das tres se lê ao contrario, que e regra de motor morando na view. */
+    ruptures: [
+      {
+        id: "social",
+        value: standing,
+        threshold: catalog.pressure.streetFloor,
+        /* `below` quer dizer "rompe quando o valor fica ABAIXO do limiar". */
+        breaks: "below",
+        open: broke.social,
+      },
+      {
+        id: "economic",
+        /* A FRACAO PONDERADA DE QUEM ABANDONOU, na mesma escala de 0 a 100 das
+           outras duas — e ela e a MESMA conta de `rupture`, com o mesmo peso zero
+           excluido. Um grupo que nao financia campanha nao abandona o capital. */
+        value: weightedAbandon(state, catalog),
+        threshold: 50,
+        breaks: "above",
+        open: broke.economic,
+      },
+      {
+        id: "political",
+        value: state.pressure[BROKER] ?? 0,
+        threshold: catalog.pressure.brokerBoil,
+        breaks: "above",
+        open: broke.political,
+      },
+    ],
     impeachment: state.impeachment,
     fallen: state.fallen,
+    /* ⚠ O PRECO DO CERCO E O QUORUM DA QUEDA SAEM DAQUI, e nao de uma constante
+       copiada na view. A carta do cerco diz "cada cadeira custa o triplo" e "342 de
+       513", e os dois numeros sao do motor: escritos a mao na tela, eles mentiriam
+       no dia em que `SIEGE_PRICE` ou a Camara mudassem — e essa e a familia de
+       defeito mais cara deste projeto, com sete ocorrencias medidas. */
+    price: SIEGE_PRICE,
+    removal: REMOVAL_MAJORITY,
+    seats: SEATS,
+  };
+}
+
+/**
+ * QUANTO DO CAPITAL JA ABANDONOU, de 0 a 100 — a mesma conta que `rupture` faz.
+ *
+ * ⚠ ELA E UMA FUNCAO E NAO UMA LINHA SOLTA porque a ruptura economica e a unica das
+ * tres que nao tem um numero proprio no estado: ela e uma media ponderada de quem
+ * ferveu, e o peso de cada grupo mora no catalogo. Quem quiser o numero pergunta.
+ *
+ * @param {GameState} state
+ * @param {typeof CATALOG} catalog
+ * @returns {number}
+ */
+function weightedAbandon(state, catalog) {
+  let abandoned = 0;
+  let total = 0;
+  for (const lobby of catalog.lobbies) {
+    if (lobby.weight <= 0) continue;
+    total += lobby.weight;
+    if ((state.pressure[lobby.id] ?? 0) >= catalog.pressure.boil) abandoned += lobby.weight;
+  }
+  return total > 0 ? (abandoned / total) * 100 : 0;
+}
+
+/* ── O FECHO DO MANDATO ──────────────────────────────────────────────────────
+   ══════════════════════════════════════════════════════════════════════════════
+
+   POR QUE ELE EXISTE, e a resposta e uma partida jogada ate o fim. O mandato
+   passivo cai no mes 47, e a unica coisa que a tela dizia sobre isso era um selo
+   de dez pixels no canto de um cartao. O botao de avancar continuava aceso, do
+   mesmo tamanho e da mesma cor — clicar nele nao fazia nada e nao explicava por
+   que. E o mes 48 nao existia: nada no jogo terminava o mandato no prazo, entao
+   quem atravessasse os quatro anos entrava num "2o mandato" que nunca teve
+   eleicao.
+
+   ⚠ ELE NAO E UMA TELA DE DERROTA, e essa decisao ja estava escrita em
+   `state.mjs` antes desta funcao: "a partida JA E um mandato de 48 meses, sem
+   vitoria e sem placar, entao fim de jogo nao e o oposto de nada. Cair e o
+   mandato terminar antes, e o que muda e a DATA". Por isso ha um fecho so, e as
+   duas saidas dele diferem no motivo e no mes — nunca no tom.
+
+   ⚠ E ELE NAO INVENTA UM NUMERO SEQUER. Tudo o que o fecho mostra ja estava no
+   estado ou no catalogo com fonte: o indice de abertura de cada area e o
+   `initial` do catalogo, a divida herdada e `fiscal.initialDebtRatio`, as leis
+   sao as normas com `enactedAt` acima de zero, e a pressao de cada grupo e o
+   estoque da CALDEIRA. O que esta funcao faz e PERGUNTAR — ela nao refaz conta
+   nenhuma, pela mesma razao que nenhuma tela refaz.
+
+   ── POR QUE `over` MORA AQUI, E NAO NO ENTRYPOINT ────────────────────────────
+   Porque quem sabe quando um mandato acaba e o regime, e nao a tela. O
+   entrypoint ja perguntava `state.fallen !== null` para desligar o botao, e essa
+   pergunta estava PELA METADE: ela pegava a queda e nao pegava o prazo. Uma
+   metade de regra morando na view e como as sete ocorrencias mais caras deste
+   projeto comecaram. */
+
+/**
+ * @typedef {object} TermArea uma area, do dia da posse ao ultimo mes
+ * @property {string} id
+ * @property {string} label
+ * @property {string} index - o nome do que ela mede
+ * @property {number} from - o indice herdado, do catalogo
+ * @property {number} to - o indice do ultimo mes
+ *
+ * @typedef {object} TermLaw uma lei que o jogador escreveu
+ * @property {string} id
+ * @property {string} label - a alavanca que ela move
+ * @property {string} guard - a natureza dela: `none`, `law` ou `constitution`
+ * @property {number} month - o mes em que ela passou
+ *
+ * @typedef {object} Term o mandato visto de fora, no dia em que ele acaba
+ * @property {boolean} over - se acabou
+ * @property {"removed" | "served" | null} ending - como acabou; nulo enquanto corre
+ * @property {number} months - meses decorridos de mandato quando ele acabou
+ * @property {number} of - quantos ele tinha
+ * @property {{ from: number, to: number }} approval - "otimo/bom", da posse ao fim
+ * @property {{ from: number, to: number }} debt - a divida sobre o PIB
+ * @property {TermArea[]} areas - as oito, da posse ao fim
+ * @property {TermLaw[]} laws - o que ficou escrito
+ * @property {string[]} abandoned - os grupos que fervearam e nao voltaram
+ */
+
+/**
+ * O MANDATO VISTO DE FORA — e a tela pergunta a ele em vez de decidir sozinha.
+ *
+ * ⚠ ELA RESPONDE MESMO COM O MANDATO CORRENDO, e devolve `over: false`. Uma
+ * leitura que so existisse depois do fim obrigaria quem chama a saber quando o
+ * fim e — que e exatamente a regra que esta funcao existe para guardar.
+ *
+ * @param {GameState} state
+ * @param {typeof CATALOG} [catalog]
+ * @returns {Term}
+ */
+export function termOf(state, catalog = CATALOG) {
+  const removed = state.fallen !== null;
+  /* ⚠ O MES DA QUEDA MANDA, e nao o corrente. Os dois sao iguais hoje porque o
+     turno para no instante em que o plenario afasta; se um dia deixarem de ser,
+     o fecho tem de datar o afastamento e nao o ultimo repaint. */
+  const months = state.fallen ?? state.month;
+  const served = state.month >= MONTHS_PER_TERM;
+
+  const debtRatio = state.macro.gdp > 0 ? state.fiscal.debt / state.macro.gdp : 0;
+
+  /* AS ALAVANCAS INTEIRAS, para achar o rotulo de cada norma. A lei guarda o id
+     do que ela move, e o jogador escreveu sobre um nome — nao sobre um id. */
+  const levers = [...catalog.programs, ...catalog.rules];
+
+  return {
+    over: removed || served,
+    ending: removed ? "removed" : served ? "served" : null,
+    months,
+    of: MONTHS_PER_TERM,
+    /* ⚠ A APROVACAO DA POSSE NAO E DIGITADA: e o que a SONDA le do humor de
+       abertura do catalogo, que e o mesmo que `createState` usa. Um numero escrito
+       a mao aqui seria a segunda verdade sobre com quanta popularidade o
+       presidente entrou — e ela divergiria no dia em que um segmento mudasse. */
+    approval: {
+      from: pollFrom(opinionOpening(catalog.segments), catalog.segments, catalog.opinion).good,
+      to: pollFrom(state.mood, catalog.segments, catalog.opinion).good,
+    },
+    debt: { from: catalog.fiscal.initialDebtRatio, to: debtRatio },
+    areas: catalog.areas.map(area => ({
+      id: area.id,
+      label: area.label,
+      index: area.index,
+      from: area.initial,
+      to: state.capacity.index[area.id] ?? area.initial,
+    })),
+    /* ⚠ `enactedAt > 0` E O QUE SEPARA A LEI DO JOGADOR DA HERDADA, e o criterio
+       nao e desta funcao: `enact` grava o mes, e a posse grava zero. Contar a
+       pilha inteira daria ao presidente o credito pela Constituicao. */
+    laws: state.norms
+      .filter(norm => norm.enactedAt > 0)
+      .map(norm => ({
+        id: norm.id,
+        label: levers.find(lever => lever.id === norm.target.id)?.label ?? norm.target.id ?? "",
+        guard: norm.guard,
+        month: norm.enactedAt,
+      })),
+    /* QUEM FERVEU E NAO VOLTOU. E o mesmo limiar da ruptura economica, perguntado
+       ao catalogo — a tela nao pode ter o proprio, e nem este fecho. */
+    abandoned: catalog.lobbies
+      .filter(lobby => (state.pressure[lobby.id] ?? 0) >= catalog.pressure.boil)
+      .map(lobby => lobby.label),
   };
 }

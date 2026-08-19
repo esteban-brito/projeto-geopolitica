@@ -285,6 +285,39 @@
     --radius-piece: calc(var(--radius-stage) - var(--space-2));
     --radius-pill: var(--radius-piece);
 
+    /* ── OS TRES RAIOS DE PECA PEQUENA, e eles nao derivam da lamina ──────────
+       ⚠ ELES ENTRARAM EM 18/08/2026 PORQUE JA EXISTIAM ESCRITOS A MAO, em doze
+       lugares: `2px` em oito e `3px` em quatro. A divergencia nao era arbitraria —
+       levantados lado a lado, os `3px` sao todos PAPEL e os `2px` sao todos
+       CARIMBO —, e e exatamente por isso que ela precisava de nome: uma coerencia
+       que so existe na cabeca de quem escreveu dura ate o proximo bloco.
+
+       ELES NAO SAEM DE `--radius-stage`, e a excecao e declarada: a lamina e a
+       moldura da tela, e uma curva derivada dela num selo de dez pixels daria um
+       raio maior que a propria altura da peca. O que estes tres dizem e outra
+       coisa — que material aquilo e.
+
+       PAPEL   documento: carta, texto em tramitacao, lei escrita;
+       CARIMBO a maquina do Estado marcando — selo, distintivo, tarja;
+       PONTO   a pilula redonda de estado, e ela e redonda de verdade. */
+    --radius-paper: 3px;
+    --radius-stamp: 2px;
+    --radius-dot: 999px;
+
+    /* O DIAMETRO DO PONTO DE ESTADO. Ele era `6px` num lugar e `8px` em dois — a
+       mesma peca, tres vezes, com dois tamanhos. Oito ganhou por ser o que aparece
+       duas vezes e por bater com `--space-2`, e nao por gosto. */
+    --dot: 8px;
+
+    /* ── A MARCA NA BORDA ESQUERDA, e ela tem DOIS graus e nao tres ───────────
+       O gesto e um so em quatro lugares — "esta peca esta em tal estado" —, e ele
+       aparecia em `2px`, `3px` e `4px`. Duas larguras bastam, e cada uma diz uma
+       coisa: a marca NORMAL e a marca do grau MAXIMO, que hoje e a emenda
+       constitucional. Uma terceira largura no meio nao acrescenta grau nenhum —
+       ela so faz duas pecas parecerem diferentes sem motivo. */
+    --rule: 2px;
+    --rule-strong: 4px;
+
     /* ── ESPACO ─────────────────────────────────────────────────────────────
        Base 4. O valor nao e o ponto — o ponto e a RAZAO: dentro de um grupo,
        8 a 12; entre grupos, 32 a 44. Distancia igual entre tudo significa que

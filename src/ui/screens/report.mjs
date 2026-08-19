@@ -97,8 +97,13 @@ export function reportPanelHtml(input) {
      pesos diferentes — que e como uma tela comeca a parecer remendada. */
   if (!input) {
     return (
-      `<div class="report report--waiting">` +
-      `<p class="report__line">${escapeHtml(UI.report.waiting)}</p>` +
+      /* ⚠ A ESPERA USA A PECA DE AUSENCIA, e nao uma forma propria. Ela tinha
+         `.report--waiting` so para si — a terceira das quatro maneiras que o jogo
+         tinha de dizer "nao ha nada aqui". Aqui o peso e o DISCRETO: nenhum mes
+         resolvido nao e um problema a resolver, e uma chamada centrada daria a um
+         fato o peso de um defeito. */
+      `<div class="report empty empty--quiet">` +
+      `<p class="empty__note">${escapeHtml(UI.report.waiting)}</p>` +
       `</div>`
     );
   }

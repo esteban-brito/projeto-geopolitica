@@ -125,6 +125,33 @@
     line-height: 1.5;
   }
 
+  /* ── O SEGUNDO PESO, e ele existe porque o jogo tem DOIS tipos de ausencia ──
+     ⚠ ATE 18/08/2026 HAVIA QUATRO FORMAS para a mesma coisa: `.empty` com chamada
+     e prosa no Congresso, `.report--waiting` no relatorio, `.closing__empty` no
+     fecho, e uma frase solta no cartao da CALDEIRA. Quatro maneiras de dizer "nao
+     ha nada aqui" e o que faz uma tela parecer montada por quatro pessoas.
+
+     A DIFERENCA QUE SOBREVIVEU E DE PESO, e ela e real:
+
+       BLOCO   a secao inteira esta vazia e HA O QUE FAZER a respeito — "Nada em
+               pauta · escolha uma acao numa das areas". Chamada centrada e prosa
+               embaixo, porque o jogador precisa ser levado a algum lugar;
+       DISCRETO  a ausencia e um FATO consumado dentro de um documento — "nenhuma
+               lei foi escrita neste mandato". Uma linha, alinhada com o texto ao
+               redor, sem chamada: nao ha para onde levar ninguem, e uma chamada
+               centrada daria a um fato o peso de um problema.
+
+     ⚠ O DISCRETO NAO E O BLOCO DESBOTADO. Ele nao centraliza e nao reserva altura,
+     porque ele mora DENTRO da prosa — um bloco de altura minima no meio de um
+     documento abre um buraco onde o olho procura conteudo que nunca vem. */
+  .empty--quiet {
+    align-content: start;
+    justify-items: start;
+    min-height: 0;
+    padding: 0;
+    text-align: left;
+  }
+
   /* ── ACAO ───────────────────────────────────────────────────────────────────
      AS DUAS ACOES SAO A MESMA PECA. Mesma caixa, mesmo corpo, mesmo material,
      mesma construcao — a unica diferenca e a COR, e a primaria acrescenta
@@ -201,6 +228,31 @@
     color: var(--bg-deep);
   }
 
+  /* ⚠ ACAO DESLIGADA E ACAO QUE DIZ QUE ESTA DESLIGADA, e ate 18/08/2026 este
+     bloco nao existia. O botao do turno ficava `disabled` no fim do mandato com a
+     lamina ambar CHEIA — do mesmo tamanho, da mesma cor e com a mesma aresta de
+     sempre. Clicar nele nao fazia nada e nao explicava por que, e a unica pista do
+     fim da partida era um selo de dez pixels no canto de um cartao.
+
+     A REGRA E A MESMA DO RAIL, e ela ja estava escrita ali: oferecer como
+     pressionavel o que nao responde ensina a desconfiar de toda peca pressionavel
+     da tela. Aqui ela custa mais, porque este e O botao do jogo.
+
+     O AMBAR CAI E A TINTA VOLTA A SER TINTA DE TEXTO: sem lamina de marca, o
+     rotulo perderia o contraste que ele so tinha contra o fundo claro. */
+  .action[disabled] {
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.12);
+    background: none;
+    color: var(--ink-dim);
+    /* Nem o toque nem o hover: peca que nao responde nao pode ensaiar resposta. */
+    transform: none;
+  }
+
+  .action[disabled] .action__hint {
+    color: var(--ink-dim);
+  }
+
   /* ── A ACAO DISCRETA ────────────────────────────────────────────────────────
      Mesma peca, menos voz — e SEM LAMINA. Ela e a unica acao da tela que nao
      recebe vidro, e nao por economia: o botao que apaga um mandato inteiro mora
@@ -231,18 +283,18 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .action:hover {
+    .action:not([disabled]):hover {
       transform: translateY(-2px);
     }
     /* O hover so CLAREIA: cada um sobe a propria tinta um degrau. Trocar o
        gradiente no hover e trocar de MATERIAL, e ai a peca vira outra coisa
        quando o mouse encosta. */
-    .action:hover {
+    .action:not([disabled]):hover {
       background:
         linear-gradient(0deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),
         var(--glass-action-bg);
     }
-    .action--primary:hover {
+    .action--primary:not([disabled]):hover {
       background:
         linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
         var(--glass-brand-bg);
@@ -480,7 +532,7 @@
     align-items: center;
     padding: 1px var(--space-2);
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     background: transparent;
     /* ⚠ MONOESPACADA, e ela e a terceira familia do projeto: o rito nao e nome nem
        medicao — e o despacho que a maquina do Estado carimba sobre o papel. */
@@ -556,7 +608,7 @@
      e nao uma linha desenhada sobre ela. */
   input[type="range"]::-webkit-slider-runnable-track {
     height: 10px;
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     background: var(--rail-costly);
     box-shadow:
       inset 0 2px 4px rgba(0, 0, 0, 0.7),
@@ -565,7 +617,7 @@
 
   input[type="range"]::-moz-range-track {
     height: 10px;
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     background: var(--rail-costly);
     box-shadow:
       inset 0 2px 4px rgba(0, 0, 0, 0.7),
@@ -588,7 +640,7 @@
     width: 12px;
     height: 22px;
     margin-top: -6px;
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     border: 1px solid rgba(0, 0, 0, 0.55);
     background: linear-gradient(
       180deg,
@@ -604,7 +656,7 @@
   input[type="range"]::-moz-range-thumb {
     width: 12px;
     height: 22px;
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     border: 1px solid rgba(0, 0, 0, 0.55);
     background: linear-gradient(
       180deg,
@@ -666,10 +718,140 @@
     );
   }
 
+  /* ── A LINHA DE LEITURA — nome, medidor, valor. UMA gramatica so ────────────
+     ⚠ ELA NASCEU DE UM DEFEITO QUE O RESPONSAVEL VIU NA TELA, em 16/08/2026: "o
+     gabinete ta feio, despadronizado, assimetrico". Estava, e a causa era minha e do
+     mesmo dia.
+
+     A Parte C do ciclo 11 tirou a caixa dos cinco cartoes do Gabinete — e a caixa
+     estava ESCONDENDO que cada bloco tinha uma grade interna propria:
+
+       .street__row    7,5rem │ 1fr │ 3rem
+       .boiler__row    9rem   │ 1fr │ 2,5rem
+
+     Duas gramaticas empilhadas na MESMA coluna, uma embaixo da outra. As barras
+     comecavam em x diferentes e os valores terminavam em x diferentes, e o olho lê
+     isso como desalinho antes de conseguir nomear a causa. Com a caixa em volta, o
+     contorno dava a cada bloco uma moldura propria e o desencontro passava; sem ela,
+     ficou exposto.
+
+     ⚠ E O CONSERTO NAO PODE SER "IGUALAR OS NUMEROS NOS DOIS LUGARES" — isso e a
+     familia do numero repetido a mao, e os dois divergem de novo no primeiro ajuste.
+     Uma gramatica que duas telas usam mora na camada de componentes, como o estado
+     vazio mora desde 15/08. Aqui ela e uma so, e nao ha o que divergir. */
+  .reading {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr) 3rem;
+    align-items: center;
+    gap: 0 var(--space-3);
+  }
+
+  .reading__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: right;
+    color: var(--ink);
+  }
+
+  /* NO CELULAR O NOME OCUPA A LINHA e o medidor desce: 9rem de rotulo num aparelho
+     de 390px deixariam a barra com 80px, e uma barra de 80px nao mostra proporcao
+     nenhuma — ela vira um traco que muda de cor. */
+  @media (max-width: 640px) {
+    .reading {
+      grid-template-columns: minmax(0, 1fr) 3rem;
+    }
+  }
+
+  /* ── O PAPEL — e ele e UMA peca, e nao tres ─────────────────────────────────
+     ⚠ ATE 18/08/2026 ELE ERA TRES. As mesmas quatro declaracoes — borda, raio,
+     fundo e tinta — estavam escritas em `45-screen-cabinet.css` (a carta), em
+     `50-screen-mesa.css` (o texto em tramitacao) e em `60-screen-area.css` (a lei
+     escrita). Elas eram identicas, o que e pior do que serem diferentes: tres
+     copias iguais nao acusam nada enquanto ninguem mexe, e a primeira mudanca em
+     duas delas cria a divergencia sem ninguem decidir isso.
+
+     O QUE AS TRES SAO: documento. Tinta escura sobre superficie clara, num jogo em
+     que todo o resto e vidro escuro — e essa inversao e o vocabulario inteiro. Ela
+     diz "isto e papel de verdade, e nao mais um painel".
+
+     ⚠ O QUE NAO ENTRA AQUI E A GRADE DE CADA UMA. Carta, linha de tramitacao e lei
+     escrita tem colunas, vaos e recuos diferentes porque carregam coisas
+     diferentes — e forcar uma grade comum seria padronizar o que nao e o mesmo. O
+     que se compartilha e o MATERIAL, e so ele. */
+  .letter,
+  .passage__row,
+  .law {
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-paper);
+    background: var(--paper);
+    color: var(--paper-ink);
+  }
+
+  /* ── A REGUA — um valor na escala do motor, com o LIMIAR marcado ────────────
+     ⚠ ELA SUBSTITUI UM MEDIDOR QUE MENTIA, e a captura pegou no primeiro desenho. A
+     primeira versao normalizava "quanto do caminho ate a ruptura ja andou": com a rua
+     em 44 e o piso em 20, a conta dava 70% e a barra aparecia quase cheia e VERMELHA
+     num governo confortavel.
+
+     Normalizar por uma regua inventada desenha drama onde nao ha — e a mesma familia
+     da escada de tendencia, que passou semanas desenhando calmaria porque lia inflacao
+     numa regua de 0 a 100. A regua honesta e a que o motor usa, zero a cem, e o que o
+     jogador precisa saber e de que LADO da linha ele esta.
+
+     ⚠ E ELA GANHOU UM SEGUNDO CONSUMIDOR NO MESMO DIA, que e o que a trouxe para ca:
+     as quatro barras da CALDEIRA mostravam pressao de 0 a 100 e NAO diziam onde e o
+     ponto de fervura. Um grupo em 55 e um em 20 apareciam como "duas barras curtas",
+     quando o primeiro esta a cinco pontos de abandonar o governo. Mesma pergunta, e
+     uma das duas reguas sem a marca — era a divergencia comecando.
+
+     E O DESENHO NAO E NOVO NEM AQUI: e a regua legal do controle de verba, com a marca
+     do piso no proprio trilho. Um vocabulario, tres lugares. */
+  .gauge {
+    position: relative;
+    height: 8px;
+    border-radius: var(--radius-stamp);
+    background: linear-gradient(
+      90deg,
+      var(--stable) 0 calc(1% * var(--index)),
+      rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
+    );
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  /* A MARCA DO LIMIAR — dois pixels de latao, e ela e a unica coisa que a barra
+     precisa dizer alem do valor: onde e a linha. */
+  .gauge::after {
+    content: "";
+    position: absolute;
+    inset-block: -2px;
+    left: calc(1% * var(--mark));
+    width: 2px;
+    background: var(--brand);
+  }
+
+  /* DO LADO ERRADO DA LINHA, o preenchimento vira crise — e a cor troca com o ESTADO,
+     e nao com a proximidade: uma ruptura ou aconteceu ou nao aconteceu. */
+  .gauge[data-past="true"] {
+    background: linear-gradient(
+      90deg,
+      var(--crisis) 0 calc(1% * var(--index)),
+      rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
+    );
+  }
+
   /* ── MEDIDOR SEGMENTADO ─────────────────────────────────────────────────────
      Tres segmentos que somam 100%. O que separa um do outro e um vao, nunca uma
      borda: dois tons proximos encostados viram uma faixa continua, e o medidor
      perde justamente a informacao que existe para dar.
+
+     ⚠ ELE SOBREVIVE A REGUA, e a fronteira entre os dois e a Parte D do ciclo 11:
+     REGUA e um valor numa escala com um limiar; MEDIDOR e uma COMPOSICAO cujas partes
+     somam o todo. A pesquisa da Rua — otimo, regular, ruim — e composicao, e trocar as
+     tres fatias por um numero perderia a informacao. O cofre e composicao pelo mesmo
+     motivo: o que ele diz nao e "95%", e o obrigatorio ENGOLINDO o discricionario.
+
+     O que os dois passaram a compartilhar e a FORMA: mesma altura e mesmo canto. A
+     pastilha de 999px era o ultimo resto do dialeto de aplicativo nesta camada.
 
      ⚠ ELE ATENDE HOJE UMA PECA SO, e ela esta estacionada: a aprovacao, em
      `70-screen-approval.css`. Continua aqui — e nao la — porque um medidor de
@@ -679,8 +861,8 @@
     display: flex;
     gap: 2px;
     width: 100%;
-    height: 10px;
-    border-radius: 999px;
+    height: 8px;
+    border-radius: var(--radius-stamp);
     overflow: hidden;
   }
 
@@ -821,9 +1003,23 @@
     color: var(--crisis);
   }
 
+  /* ── A LEGENDA DE UMA SECAO, e ela e UMA peca em nove lugares ───────────────
+     ⚠ ATE 18/08/2026 ELA ERA DUAS, e a primeira tinha o nome errado. As mesmas seis
+     declaracoes tipograficas estavam escritas aqui e em `60-screen-area.css`, sob o
+     nome `.block__legend` — que era usado por SEIS telas e morava na folha de UMA.
+     Quem abrisse a folha da area para ajustar a legenda dela estaria mexendo no
+     Gabinete, em Financas, no Congresso e em O Estado sem saber.
+
+     ⚠ E ESSE E O DEFEITO QUE A GUARDA `orphans` DOCUMENTA, do outro lado: seletor
+     amarrado a um nome que nao descreve mais o que a peca e. Aqui ele nao matou
+     nenhuma regra — ele so escondeu o alcance dela, que e pior, porque nada acusa.
+
+     O QUE DIFERE ENTRE OS DOIS USOS E O FIO, e nada mais. A legenda de bloco de tela
+     leva o fio metalico embaixo; a do relatorio nao, porque ali ela ja esta DENTRO de
+     um painel — dois fios aninhados leem como tabela, e nao como estrutura. */
+  .block__legend,
   .report__legend,
   .report__table caption {
-    margin-top: var(--space-3);
     font-family: var(--font-display);
     font-size: var(--text-label);
     font-weight: 700;
@@ -831,6 +1027,11 @@
     text-transform: uppercase;
     text-align: left;
     color: var(--ink-soft);
+  }
+
+  .report__legend,
+  .report__table caption {
+    margin-top: var(--space-3);
   }
 
   .report__table {

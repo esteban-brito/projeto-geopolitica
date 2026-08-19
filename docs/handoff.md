@@ -4,31 +4,164 @@
 > leia este arquivo e depois `docs/standards.md`. O nome deste arquivo é estável
 > de propósito: ponteiro com data envelhece e obriga a mover arquivo.
 
-## ▶ COMECE AQUI — estado em 16/08/2026
+## ▶ COMECE AQUI — estado em 18/08/2026
+
+**A décima primeira sessão foi sobre uma coisa só, e ela foi pedida assim:** _"o que eu
+também realmente quero é que o jogo fique minimamente jogável hoje"_. Está verde —
+`validate` (**228 propriedades**), `walk` e as capturas rodados no fim.
+
+⚠ **O jogo TERMINAVA e não dizia.** O mandato passivo cai no mês 46, e a única notícia
+disso na tela era um selo de dez pixels no canto de um cartão. E o mês 48 não existia:
+**nada no jogo terminava o mandato no prazo** — quem atravessasse os quatro anos entrava
+num `2º MANDATO · ANO 1` que nunca teve eleição, e a barra superior imprimia isso.
+
+⚠ **E o mundo desmoronava CALADO.** Medido, cartas que chegam em 46 meses: o governo
+passivo recebe **0,0 por mês** — o processo de impeachment abre no mês 43 no meio desse
+silêncio. A caixa nunca esteve quebrada: ela responde ao que o jogador FAZ, e quem não
+legisla não recebe correspondência de tramitação. Faltava o mundo escrever quando o
+mundo se mexe sozinho.
+
+### E a varredura de padronização veio depois
+
+**Pedido do responsável:** _"deixe como está, apenas refine e padronize toda a UI"_. Ela
+foi **medida antes de mexida**, e achou **23 frases da interface escritas duas vezes** —
+uma delas dentro do mesmo objeto —, **quatro formas** de dizer "não há nada aqui", a peça
+"papel" escrita à mão **três vezes**, e uma legenda usada por **seis telas** morando na
+folha de **uma**. Entrou a décima primeira guarda, `vocabulary`. Ver a seção própria.
+
+### ⚠ E a tela do Congresso estava QUEBRADA havia duas sessões
+
+O responsável achou testando: _"a aba Congresso e leis tá bem feia e bugado"_. Eram
+**quatro defeitos somados**, e o primeiro é o mais caro do lote:
+
+1. ⚠ **COLISÃO DE NOMES DE CLASSE.** A régua do ciclo 11 nasceu como `.gauge` em
+   `30-components.css`, e a faixa de índices do Congresso **já usava `.gauge`** desde a
+   sétima sessão. O `height: 8px` da régua esmagava o medidor da faixa: rótulo com
+   altura **zero**, escada com tamanho zero, e a barra vazando para fora de um recorte
+   de 24px. A faixa mostrava oito números sem dizer de que área era cada um;
+2. ⚠ **`repeat(7)` para OITO áreas.** A Produção virou Agricultura e Indústria na quinta
+   sessão e este número ficou onde estava — a **Defesa** caía numa segunda fileira que o
+   `overflow: hidden` decapitava;
+3. ⚠ **A linha do caixa dizia o CONTRÁRIO do motor**: _"promete R$ 13,8 bi · não cabe —
+   o rateio vai cortar R$ 13,7 bi"_, e 13,7 é o que **cabe**. Lida ao pé da letra, ela
+   anunciava um corte de quase tudo num mês em que o corte era de R$ 0,1 bi;
+4. **`budget` em inglês na interface** — `instrumentHint` não tinha a entrada, e
+   `labelOf` cai no id cru de propósito.
+
+⚠ **Nada disso era visível para tipo, guarda ou prova**, e o `walk` passava verde. O que
+achou foi medir a geometria da faixa no navegador — `h: 48` contra `scrollH: 78`.
+
+### ⚠ E um defeito de cinco sessões apareceu de carona
+
+**A carta de posse nunca teve remetente.** A view procura `office === "chief-of-staff"`
+e o elenco produz `office === "chief"` — `chief-of-staff` é o **arquétipo**, não o
+cargo. A busca devolvia `undefined`, `letterHtml` aceita remetente nulo de propósito (a
+gaveta não tem remetente), e a primeira carta do jogo saía sem sigilo, sem nome e sem
+cargo. Está travado em prova.
+
+## O estado anterior — 16/08/2026
 
 **Está tudo verde e nada está pela metade.** Nenhum arquivo ficou num estado
 intermediário, nenhuma prova está desligada e nenhum `TODO` foi deixado no código.
-`validate`, `walk` e `simulate` rodados no fim.
+`validate` (**217 propriedades**), `walk` e `simulate` rodados no fim.
 
-⚠ **A nona sessão atravessou a virada do dia e continuou.** Ela entregou, em ordem: a
-**tramitação** (ciclo 4 Parte 3), os **ciclos 5 e 6** inteiros, o **ciclo 9** (a carta
-pede resposta), a **Parte A do ciclo 7** (o vocabulário), a **Parte 2 do ciclo 4** (o
-muro do caixa e a vinculação) e a **onda 1 do ciclo 10** (a CALDEIRA e a queda do
-presidente). Os ciclos 7, 8 e 10-onda-2 ficaram escritos e não começados.
+⚠ **A DÉCIMA SESSÃO MATOU O ACHADO 31 — o defeito mais fundo já medido aqui.** O país
+parou de se consertar sozinho, e com ele morreram os achados **2** e **29**. Três
+outros defeitos apareceram no caminho e foram consertados. **O motor mudou de forma em
+três lugares**, e os três estão com a conta escrita ao lado.
 
-✔ **TUDO COMMITADO** — três commits em `acoplamento-e-simulador`, o último é
-`219d820`. **Nada foi enviado ao remoto**, e isso continua sendo decisão do
-responsável.
+⚠ **NÃO ESTÁ COMMITADO.** A nona sessão terminou em `43662bf`; tudo o que veio depois
+está na árvore de trabalho, e commitar é decisão do responsável.
 
-### ⚠ As quatro coisas mais fáceis de errar ao retomar
+### ⚠ As cinco coisas mais fáceis de errar ao retomar
 
-1. **O achado 31 é o mais fundo do projeto, e ele é novo** — _o país se conserta
-   sozinho_. Ele **explica os achados 1d, 29 e 30**, e os três são sintoma dele.
-   ⚠ **Consertar os sintomas antes dele é trabalho jogado fora;**
-2. **há quatro tabelas de série neste arquivo, e três são históricas.** A de hoje está
+1. **`decay` mudou de NATUREZA**, e não de valor: era pontos por mês subtraídos, agora
+   é a **fração do estoque** que vaza. Quem ler um `decay: 0,0569` como "cai 0,06
+   pontos por mês" vai errar por um fator de mil;
+2. **os três números do motor saem de identidades, e há prova para cada uma.** Mexer
+   num `cost` de programa **quebra a identidade do achado 31** — a prova
+   `O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO` acusa, e é para isso que ela existe;
+3. **há cinco tabelas de série neste arquivo, e quatro são históricas.** A de hoje está
    em _A SÉRIE DE HOJE_, logo abaixo, e é a única que serve para calibrar;
-3. **o achado 1d deixou de ser um problema fiscal** — ver o 31;
-4. **o ciclo 10 é o centro de cinco documentos**, e os outros quatro apontam para ele.
+4. **o achado 1d sobrevive nos dois eixos** — o passivo termina com a melhor dívida
+   **e** a melhor capacidade. ⚠ **E isso deixou de ser um defeito:** ele agora **cai no
+   mês 46**, e a resposta à passividade é política, como o ciclo 10 decidiu;
+5. **o próximo bloco é a INTERFACE**, e não motor — ver _O QUE VEM AGORA_.
+
+### E ela entregou mais duas coisas depois disso
+
+✔ **A guarda `orphans` — o achado 5, aberto por seis sessões.** Ela achou **quatro
+regras órfãs no primeiro minuto**, uma delas criada na mesma sessão. ⚠ **Duas passadas
+foram necessárias**, e a segunda é a lição: o `.allot` do bloco principal saiu na
+primeira e o `@media` dele ficou, cinquenta linhas abaixo — quem apaga uma regra procura
+pelo nome onde ela mora.
+
+✔ **A CHANTAGEM — onda 2 do ciclo 10.** Os quatro lobbies tinham pressão e nenhuma voz.
+Agora os dois que leem a MALHA escrevem uma carta que pergunta, com duas saídas.
+
+> **O que ele exige é uma ALAVANCA, e não dinheiro.** O décimo dossiê propunha um preço
+> em bilhões — seria uma segunda moeda, e o ciclo 10 já recusou uma. Mover um nível é
+> caneta e sai da mesma bolsa: o jogador não aprende preço novo, ele descobre que a
+> bolsa ficou menor.
+
+⚠ **E o nível exigido não é inventado: é o da POSSE.** Um lobby pede **de volta o que
+foi cortado** — então a exigência só nasce quando o jogador cortou, ela é sempre pagável
+(o país já gastou aquilo), e nunca há inflação de exigência.
+
+| governo, 48 meses  | exigências | produtivo | ordem  |
+| ------------------ | ---------- | --------- | ------ |
+| passivo            | **0**      | 10        | 21     |
+| corta tudo, ignora | 9          | 43        | 49     |
+| corta tudo, cede   | 14         | 34        | **36** |
+| corta tudo, recusa | 14         | 45        | **53** |
+
+⚠ **O silêncio aqui RECUSA, e isso inverte a regra do ciclo 9.** Na emenda do relator o
+silêncio aceita, porque é assim que uma tramitação anda; aqui não: **um lobby que exige e
+não recebe resposta não entende que ganhou.** A prova `A CHANTAGEM EXISTE` trava as três
+saídas se separando.
+
+⚠ **Dois defeitos meus, e os dois medidos:** `demandAt` escolhido no olho em 35 deu
+**duas exigências em 48 meses, ambas depois do mês 45** — o achado 3 se repetindo. Com
+30 (metade do caminho até a fervura, que é uma frase e não um gosto) ela vive. E a carta
+imprimia _"se você não responder, a emenda vale"_ numa carta em que o silêncio recusa: a
+tela prometendo o inverso do motor.
+
+**O que ficou de fora, declarado:** os outros dois lobbies. O mercado quer um **teto** e
+não um piso; o baixo clero quer verba para as bancadas, que não é alavanca. Cada um
+precisa de um verbo próprio.
+
+### O que esta sessão mudou no motor, em três linhas
+
+| onde                 | era                              | é                                               |
+| -------------------- | -------------------------------- | ----------------------------------------------- |
+| `capacity/index.mjs` | `índice − decay + yield × gasto` | `índice × (1 − decay) + yield × gasto`          |
+| `budget/index.mjs`   | repasse nominal, sem banda       | banda real de 0,6% a 2,5% (LC 200/2023)         |
+| `fiscal.mjs`         | `mandatoryGrowth 2,5%`           | **2,16%** — a média ponderada rubrica a rubrica |
+
+### E o que ela mudou na TELA — o [ciclo 11](cycles/11-o-estado-nao-e-um-aplicativo.md)
+
+Pedido do responsável, com as palavras dele: _"tirar essa cara de site de
+investimentos"_. **É a quinta vez que a queixa chega** e as quatro anteriores vieram de
+fora — quatro fontes independentes descrevendo a mesma coisa é diagnóstico, e não gosto.
+
+⚠ **E o diagnóstico é medível, numa folha só:** `65-screen-finance.css` tem **zero**
+`border-radius` e as outras somam **trinta**. A única tela que não parece um painel de
+fintech é justamente a que o projeto já tinha chamado de outra coisa em prosa — _"forma
+de razão contábil e não de pastilha"_. O registro institucional foi inventado para uma
+tela, e as outras dez ficaram no dialeto de aplicativo sem ninguém ter decidido isso.
+
+| parte | o quê                                                                                      |
+| ----- | ------------------------------------------------------------------------------------------ |
+| **A** | a linha de rubrica — some o raio, entra o fio, e **os números caem em coluna**             |
+| **B** | a barra vira **uma linha de leituras com fio entre elas**, e a data volta a mandar         |
+| **C** | o Gabinete deixa de ser cinco cartões e vira cinco **blocos**, como as outras quatro telas |
+| **D** | a **régua** com o limiar marcado, e o medidor segmentado só onde há composição             |
+| **E** | a moldura passou a ter **um número só** — desnível zero e margens iguais                   |
+
+⚠ **A Parte B custou uma regressão minha, pega na captura do mesmo dia:** a forma de
+linha gasta o dobro da largura, e a 390px a faixa passou a **cortar a BASE fora da
+tela**. Como a tira rola por dentro de propósito, nada estourou e nada ficou vermelho —
+o quarto sinal vital simplesmente deixava de existir para quem não arrastasse.
 
 ### Para pôr no ar
 
@@ -39,39 +172,79 @@ npm run validate   # verde de ponta a ponta é obrigatório antes de dizer "pron
 
 ### Os ciclos, num quadro só
 
-| ciclo                                                                          | estado                                                                                            |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| **4** — a república responde                                                   | Partes 6, 10a, 10b, 1, 5, **3** e **2** feitas. Falta a **queda** (→ ciclo 10), a **4** e a **8** |
-| [**5** — a república ganha rosto](cycles/05-a-republica-ganha-rosto.md)        | **inteiro**                                                                                       |
-| [**6** — a sala de guerra](cycles/06-a-sala-de-guerra.md)                      | **inteiro** — o item que faltava virou o ciclo 9                                                  |
-| [**7** — o Congresso tem cara](cycles/07-o-congresso-tem-cara.md)              | ✔ **Parte A feita**; B e C não começadas                                                          |
-| [**8** — o mapa e o rastro](cycles/08-o-mapa-e-o-rastro.md)                    | ⚠ proposta · não começada                                                                         |
-| [**10** — quem derruba um presidente](cycles/10-quem-derruba-um-presidente.md) | ⭐ **proposta · é o centro de cinco documentos**                                                  |
-| [**9** — a carta pede resposta](cycles/09-a-carta-pede-resposta.md)            | ✔ **FEITO** — o jogador ganhou um verbo na tramitação                                             |
+| ciclo                                                                              | estado                                                                                            |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **4** — a república responde                                                       | Partes 6, 10a, 10b, 1, 5, **3** e **2** feitas. Falta a **queda** (→ ciclo 10), a **4** e a **8** |
+| [**5** — a república ganha rosto](cycles/05-a-republica-ganha-rosto.md)            | **inteiro**                                                                                       |
+| [**6** — a sala de guerra](cycles/06-a-sala-de-guerra.md)                          | **inteiro** — o item que faltava virou o ciclo 9                                                  |
+| [**7** — o Congresso tem cara](cycles/07-o-congresso-tem-cara.md)                  | ✔ **Parte A feita**; B e C não começadas                                                          |
+| [**8** — o mapa e o rastro](cycles/08-o-mapa-e-o-rastro.md)                        | ⚠ proposta · não começada                                                                         |
+| [**10** — quem derruba um presidente](cycles/10-quem-derruba-um-presidente.md)     | ✔ **onda 1 feita** · a onda 2 tem plano no ANEXO II                                               |
+| [**11** — o Estado não é um aplicativo](cycles/11-o-estado-nao-e-um-aplicativo.md) | ✔ **INTEIRO** (A–F) em 16/08 — a linha de rubrica, a barra, o Gabinete, a régua e a moldura       |
+| [**9** — a carta pede resposta](cycles/09-a-carta-pede-resposta.md)                | ✔ **FEITO** — o jogador ganhou um verbo na tramitação                                             |
 
-### ▶ O QUE VEM AGORA
+### ▶ O QUE VEM AGORA — em 18/08/2026
 
-⚠ **A ordem mudou em 16/08, e a razão é o achado 31.** Ele é o defeito mais fundo já
-medido aqui — **o país se conserta sozinho** — e ele **explica os achados 1d, 29 e 30
-de uma vez**. Consertar os três sem consertar ele seria tratar sintoma.
+**O responsável escolheu a ordem "as três, nessa ordem", e a terceira NÃO foi feita:**
 
-E o conserto tem uma dependência que a tentativa de hoje revelou:
+1. ✔ **o fecho da partida** — feito;
+2. ✔ **a Caixa de Entrada** — mediu-se que ela não estava quebrada, e o que entrou foi o
+   cerco falando. Ver a sessão acima;
+3. ▶ **FAZER O GABINETE CABER** — ele rola **1363px numa janela de 900**, pior que os
+   1253 registrados em 16/08. ⚠ **Cortar exige decidir o que SAI das cinco seções, e
+   isso é decisão do responsável.** O emparelhamento das listas já foi tentado e
+   revertido — ver a Parte F do ciclo 11, com o número que o mata;
+4. ▶ **a varredura de vocabulário** — a regra que matou _"as placas tectônicas"_ e
+   _"a rua"_ (rótulo nomeia a coisa, a metáfora mora na prosa) **ainda não passou nas
+   outras dez telas**. ⚠ **E agora há um caso concreto a mais**: `budget` saía em inglês
+   na tela do Congresso, e a varredura pega essa família;
+5. ▶ **os DOIS ESTADOS VAZIOS do Congresso** ocupam ~400px juntos numa tela de 1500 —
+   "Nada em pauta" e "Nada tramitando", cada um com título grande e três linhas de
+   explicação. Não é defeito: é decisão de peso, e ela nunca foi tomada de propósito.
 
-**1. Achado 2 — o rateio corta em 41 de 48 meses.** Enquanto ele cortar quase sempre, o
-gasto efetivo fica abaixo de qualquer equilíbrio que se calcule, e recalibrar o
-decaimento derruba as áreas de `yield` alto a zero. **Medido: indústria a 0, segurança
-a 7.**
+### ▶ O QUE VINHA ANTES — a ordem de 16/08
 
-**2. Achado 31 — o decaimento por identidade.** `decay = yield × gasto_herdado`, para o
-orçamento herdado ser o **ponto de equilíbrio** em vez de uma melhora automática. O
-método está escrito no achado, com os números já calculados.
+**A ordem foi acordada com o responsável em 16/08, e os dois primeiros passos estão
+feitos.** Ela está escrita no [ANEXO II do ciclo 10](cycles/10-quem-derruba-um-presidente.md).
 
-**3. Onda 2 do [ciclo 10](cycles/10-quem-derruba-um-presidente.md)** — achados 29 e 30.
-⚠ **Reavalie os dois depois do 31:** é provável que o país parando de se consertar
-sozinho já mova os dois lobbies de capacidade e já faça a rua cansar do passivo.
+✔ **1. Achado 2** — morto, e ele nunca foi um defeito de modelo: o instrumento contava
+o **complemento exato** da verdade.
 
-**4.** Recalibrar a tramitação (22 e 28), o achado 26 e o
-[ciclo 8](cycles/08-o-mapa-e-o-rastro.md).
+✔ **2. Achado 31** — morto, pelo decaimento proporcional com a taxa por identidade.
+Levou junto os achados **29** (o passivo agora cai) e **1d** (que deixou de ser
+problema fiscal e virou consequência política).
+
+✔ **3. A INTERFACE, bloco A** — o [ciclo 11](cycles/11-o-estado-nao-e-um-aplicativo.md),
+partes **A, B e C**. Pedido do responsável em 16/08: _"tirar essa cara de site de
+investimentos"_. **Nenhuma delas toca em motor.**
+
+✔ **4. A CHANTAGEM** — feita, para os dois lobbies que leem a MALHA. Ver acima.
+
+⚠ **E DUAS COISAS DA TELA FICARAM ABERTAS, as duas pedidas e nenhuma feita:**
+
+- **o Gabinete ainda rola** — 1253px numa janela de 900. O que sobrou não é folga, é
+  **volume de conteúdo**: cinco seções. Cortar mais exige decidir o que SAI da tela, e
+  isso é decisão do responsável e não minha. ⚠ **E o emparelhamento das listas já foi
+  tentado e revertido** — ver a Parte F do ciclo 11, com o número que o mata;
+- **a varredura de vocabulário parou nos dois casos que ele nomeou.** _"As placas
+  tectônicas"_ e _"a rua"_ saíram; a regra que os matou — rótulo nomeia a coisa, a
+  metáfora mora na prosa — **ainda não foi passada nas outras dez telas**.
+
+▶ **5. OS OUTROS DOIS LOBBIES exigem em moedas que ainda não têm verbo.** O mercado quer
+que a dívida pare de crescer — um **teto** de gasto, e não um piso — e o baixo clero quer
+verba para as bancadas, que não é alavanca. ⚠ **Não force os dois na carta que existe:**
+a exigência de piso funciona porque "devolva o que você cortou" tem um número derivado
+atrás; um teto e uma torneira não têm, e inventá-los seria o número inventado que este
+projeto recusa.
+
+**5. O bloco B da interface** — a Trindade, o clipping e a chantagem —, junto do achado
+30 (dois lobbies ainda decorativos). É a onda 2 do
+[ciclo 10](cycles/10-quem-derruba-um-presidente.md). ⚠ **Reavalie o achado 30 antes de
+começar:** o país passou a se degradar, então o setor produtivo e as forças de ordem
+podem já ter deixado de ser decorativos — foi o que aconteceu com o achado 29.
+
+**6.** Recalibrar a tramitação (22 e 28), o achado 26, os achados novos **32, 33, 35 e
+36**, e o [ciclo 8](cycles/08-o-mapa-e-o-rastro.md).
 
 ### O que o ciclo 10 deixou pronto
 
@@ -87,35 +260,218 @@ sozinho já mova os dois lobbies de capacidade e já faça a rua cansar do passi
 
 ### ▶ A SÉRIE DE HOJE — e ela é a ÚNICA que serve para calibrar
 
-⚠ **Há outras três tabelas de série neste arquivo, e as três são HISTÓRICAS.** Elas
+⚠ **Há outras quatro tabelas de série neste arquivo, e as quatro são HISTÓRICAS.** Elas
 medem o efeito de uma mudança específica no dia em que ela entrou, e cada uma foi
 superada pela seguinte. Estão marcadas onde aparecem. **Calibrar contra qualquer uma
 delas seria ajustar o parafuso contra um jogo que não existe mais.**
 
-| política     | dívida/PIB | votações     |
-| ------------ | ---------- | ------------ |
-| `herdado`    | **83,6%**  | 0 de 0       |
-| `agenda`     | 84,4%      | **16 de 32** |
-| `base`       | 84,9%      | 18 de 31     |
-| `piso`       | 86,8%      | 2 de 24      |
-| `explorador` | 87,8%      | 0 de 0       |
-| `promessa`   | **89,1%**  | 0 de 3       |
+| política     | dívida/PIB | votações     | indústria   | segurança   |
+| ------------ | ---------- | ------------ | ----------- | ----------- |
+| `herdado`    | **90,0%**  | 0 de 0       | 48 → **28** | 38 → **27** |
+| `agenda`     | 90,2%      | 14 de 43     | 48 → 20     | 38 → 20     |
+| `base`       | 90,7%      | **29 de 42** | 48 → 20     | 38 → 20     |
+| `piso`       | 90,8%      | 2 de 24      | 48 → **15** | 38 → **15** |
+| `explorador` | 92,0%      | 0 de 0       | 48 → 17     | 38 → 17     |
+| `promessa`   | **93,5%**  | 0 de 4       | 48 → 15     | 38 → 15     |
+
+⚠ **A dívida subiu ~6 pontos em TODAS as políticas, e isso é consequência e não
+regressão:** enquanto o país se consertava sozinho, a capacidade subia, a arrecadação
+subia atrás dela e a dívida era segurada por um ganho que ninguém pagou. Tirada a
+gratuidade, sobrou a conta.
 
 **E a queda, medida em 60 meses** — o critério foi declarado antes: alcançável por um
-governo ruim, inalcançável por um mediano.
+governo ruim, inalcançável por um mediano. **O mandato acaba no mês 49.**
 
-| governo                   | processo | queda      |
-| ------------------------- | -------- | ---------- |
-| passivo, não paga ninguém | nunca    | sobrevive  |
-| corta tudo e não paga     | nunca    | sobrevive  |
-| paga metade               | mês 48   | **mês 49** |
-| promete tudo e não honra  | mês 47   | **mês 48** |
+| governo                              | processo | queda                  |
+| ------------------------------------ | -------- | ---------------------- |
+| promete tudo e não honra             | mês 37   | **mês 40**             |
+| paga metade                          | mês 37   | **mês 40**             |
+| corta tudo ao piso                   | mês 42   | **mês 45**             |
+| passivo, não paga ninguém            | mês 43   | **mês 46**             |
+| mantém a máquina e paga a manutenção | mês 41   | mês 52 — **atravessa** |
+| reforma os pisos maiores             | mês 43   | mês 51 — **atravessa** |
 
-⚠ **O achado 1d SOBREVIVE, e agora com causa medida:** o presidente ausente ainda
-termina com a melhor dívida do quadro. A causa não é mais o muro do caixa — é a MALHA:
-cortar tudo destrói a capacidade do Estado, a capacidade derruba o fator de
-arrecadação, e a receita cai junto. Austeridade extrema quebrando a arrecadação é um
-fenômeno real; o que continua estranho é **não fazer nada** ser a melhor jogada fiscal.
+⚠ **O achado 29 MORREU, e por consequência e não por calibragem.** O governo passivo
+cai agora, e ninguém mexeu na CALDEIRA: o país deixou de se consertar sozinho, os
+índices caem, a rua cansa e o mercado vê a dívida subir. Era exatamente o que esta
+retomada previa ao mandar consertar o 31 antes dele.
+
+⚠ **E o achado 1d sobrevive nos DOIS eixos** — o passivo termina com a melhor dívida
+**e** a melhor capacidade, porque manter o orçamento herdado é, por identidade, o ponto
+de equilíbrio. **Isso deixou de ser um defeito**: ele paga no único lugar que importa,
+que é a cadeira. É a tese do ciclo 10 cumprida — _"não se conserta com número, se
+conserta com risco"_.
+
+## A varredura de padronização — 18/08/2026
+
+Pedido do responsável, com as palavras dele: _"deixe como está, apenas refine e padronize
+toda a UI do jogo"_. **Medida antes de mexida**, e o que ela achou não era gosto:
+
+| o que estava divergente                       | quanto                                  |
+| --------------------------------------------- | --------------------------------------- |
+| frases da interface escritas **duas vezes**   | **23**                                  |
+| formas diferentes de dizer "não há nada aqui" | **4**                                   |
+| a peça "papel" escrita à mão                  | **3 vezes**                             |
+| raios de peça pequena digitados               | **12** (`2px` em oito, `3px` em quatro) |
+| larguras da marca na borda esquerda           | **3** (2, 3 e 4px) para **dois** graus  |
+
+✔ **O VOCABULÁRIO GANHOU FONTE ÚNICA** — `TERMOS`, no topo de `strings.mjs`.
+⚠ **E havia uma divergência já consumada:** o estado de uma bancada rompida era
+**"rompida"** em `mood.broken` e **"em ruptura"** em `cabinet.archRuptured` — mesmo
+estado, mesmo motor, duas palavras, e um jogador procurando a diferença entre as duas não
+ia achar porque ela não existia. "Opinião pública" estava escrita duas vezes **dentro do
+mesmo objeto**.
+
+⚠ **E ENTROU GUARDA PARA ISSO** — `vocabulary`, a décima primeira. Ela conta **literais**,
+e não valores resolvidos, e a distinção é o conserto inteiro: depois que `nav.cabinet` e
+`cabinet.title` apontam para o mesmo termo, os dois valores continuam sendo "Gabinete" — e
+devem continuar. O que não pode voltar é a palavra estar **teclada** duas vezes.
+
+✔ **A LEGENDA DE SEÇÃO TINHA O NOME ERRADO, e o nome escondia o alcance.**
+`.area__legend` era usada por **seis telas** e morava em `60-screen-area.css` — a folha de
+**uma**. Quem abrisse a folha da área para ajustar "a legenda dela" estaria mexendo no
+Gabinete, em Finanças, no Congresso e em O Estado sem saber. Virou `.block__legend`, em
+`30-components.css`, e o relatório e o fecho — que tinham cada um a sua — usam a mesma.
+
+✔ **O PAPEL É UMA PEÇA.** Carta, texto em tramitação e lei escrita repetiam as mesmas
+quatro declarações de material. ⚠ **Cópias idênticas são piores do que cópias
+diferentes**: elas não acusam nada enquanto ninguém mexe, e a primeira mudança em duas
+delas cria a divergência sem ninguém ter decidido isso.
+
+✔ **OS ESTADOS VAZIOS VIRARAM UMA PEÇA COM DOIS PESOS DECLARADOS** — `BLOCO` quando a
+seção inteira está vazia e **há o que fazer** a respeito, `DISCRETO` quando a ausência é
+um **fato consumado** dentro de um documento. ⚠ **O discreto não é o bloco desbotado:**
+ele não centraliza e não reserva altura, porque um bloco de altura mínima no meio de uma
+prosa abre um buraco onde o olho procura conteúdo que nunca vem.
+
+✔ **SEIS TOKENS DE GEOMETRIA** — `--radius-paper`, `--radius-stamp`, `--radius-dot`,
+`--dot`, `--rule` e `--rule-strong`. ⚠ **A divergência dos raios não era arbitrária:**
+levantados lado a lado, os `3px` são todos **papel** e os `2px` todos **carimbo**. É
+justamente por isso que ela precisava de nome — coerência que só existe na cabeça de quem
+escreveu dura até o próximo bloco.
+
+✔ **DUAS SOBRANCELHAS DE TELA ERAM METÁFORA**, e a regra pendente da varredura de
+vocabulário diz o contrário — rótulo nomeia a coisa, a metáfora mora na prosa:
+_"a moldura"_ → **o patrimônio e o poder**; _"o placar"_ → **as contas da União**.
+
+⚠ **O PASSEIO PEGOU UMA REGRESSÃO MINHA NO MESMO DIA:** ele procurava
+`.report--waiting`, que era justamente uma das quatro formas de vazio que saíram. Nada
+quebrava na tela — só o passeio deixaria de conferir que o painel anuncia a espera, em
+silêncio, que é a família de defeito que ele existe para pegar.
+
+## A décima primeira sessão — o jogo passou a terminar, e o cerco passou a falar
+
+### O que ela entregou
+
+✔ **`termOf` — a 13ª porta da fachada.** O motor passou a saber quando o mandato acaba,
+e a regra estava **pela metade** no entrypoint: `state.fallen !== null` pegava a queda e
+não pegava o prazo. Quem sabe quando um mandato acaba é o **regime**, e não a view.
+
+✔ **O FECHO** (`src/ui/screens/closing.mjs` + `styles/70-screen-closing.css`) — a
+prestação de contas. ⚠ **E ele NÃO é uma tela de derrota**, o que não foi escolha desta
+sessão: `state.mjs` já escrevia que _"a partida JÁ é um mandato de 48 meses, sem vitória
+e sem placar, então fim de jogo não é o oposto de nada"_. **Quem cai e quem cumpre leem a
+mesma tela** — o que muda é o carimbo e a data, e há prova cobrando isso.
+
+⚠ **Nenhum número nasce ali:** o índice de posse é o `initial` do catálogo, a dívida
+herdada é `fiscal.initialDebtRatio` com fonte, e a aprovação da posse é a que a SONDA lê
+do humor de abertura. Um valor digitado seria a segunda verdade sobre com quanta
+popularidade o presidente entrou.
+
+✔ **O botão parou de mentir.** Ele ficava `disabled` com a lâmina âmbar **cheia** — do
+mesmo tamanho e da mesma cor de sempre. Agora perde o âmbar (`​.action[disabled]`, que
+não existia) e diz `O MANDATO ACABOU · nova partida, ao pé da coluna`.
+
+✔ **O CERCO FALA** — `alarm` em `mail.mjs`, `alarmsOf` no turno, dois `kind` novos.
+Medido num mandato passivo: **três rupturas e um cerco, e nem uma a mais**.
+
+| governo passivo                                  | quando                                                                       |
+| ------------------------------------------------ | ---------------------------------------------------------------------------- |
+| "A base rompeu"                                  | mês 9 — o fisiologismo é o primeiro a virar num governo que não paga ninguém |
+| "A rua rompeu"                                   | mês 21                                                                       |
+| "O capital rompeu" + **"O processo foi aberto"** | mês 44                                                                       |
+| o fecho                                          | mês 46                                                                       |
+
+⚠ **Só a TRANSIÇÃO escreve, e não o estado.** Uma carta por mês de ruptura aberta
+empilharia trinta avisos idênticos até o plenário votar — que é o mural que a caixa
+deixou de ser em 16/08. Por isso `alarmsOf` precisa das rupturas de **antes**: elas não
+estão no estado, então a única maneira de saber o que mudou é perguntar duas vezes.
+
+⚠ **E o cerco lê `impeachment`, e não `now.open`:** o processo **não se fecha** quando
+uma das três melhora. Escrito contra as rupturas, o aviso chegaria de novo toda vez que
+a terceira reabrisse num processo que já estava de pé havia meses.
+
+⚠ **As duas são AVISO, e não pergunta.** A resposta ao cerco não se dá na carta — ela se
+dá no Congresso, comprando a cadeira que agora custa o triplo. Um par de botões ali seria
+uma **segunda porta** para a mesma jogada, e o jogador escolheria sem ver o preço que só
+a outra tela mostra. A carta leva ao Congresso e para por aí.
+
+⚠ **`boilerOf` passou a devolver `price`, `removal` e `seats`.** A carta do cerco diz
+"342 de 513" e "3×", e os dois são do motor: copiados na view, mentiriam no dia em que
+`SIEGE_PRICE` ou a Câmara mudassem.
+
+### Os dois defeitos meus, pegos na captura
+
+- a lista de leis do fecho saiu **sem numeração** — um `<li>` com `display: flex` perde o
+  `::marker`, porque o navegador não desenha marcador em item que deixou de ser
+  `list-item`. Virou contador CSS, e mono como a data do outro lado da linha;
+- a barra ainda **datava o repaint** em vez do afastamento: `nov` no carimbo do fecho e
+  `dez` na barra, na mesma tela.
+
+### O que ela mediu, e vale mais que os consertos
+
+⚠ **A Caixa de Entrada não estava quebrada, e eu quase "consertei" o que estava certo.**
+O passeio que mostrou a coluna vazia era passivo; medindo por política, ela enche quando
+o jogador legisla:
+
+| governo     | cartas por mês | pico |
+| ----------- | -------------- | ---- |
+| passivo     | **0,0**        | 1    |
+| paga a base | 0,3            | 2    |
+| corta tudo  | **3,5**        | 8    |
+| gasta tudo  | 2,5            | 4    |
+
+**Medir antes de calibrar mudou a entrega**: o defeito não era a caixa, era o mundo não
+escrever quando se mexe sozinho. Sem a medição, teria saído um estado vazio bonito para
+um problema que não existia.
+
+## A décima sessão — o país parou de se consertar sozinho
+
+Ela começou pela retomada e por um **décimo dossiê externo**, que virou o
+[ANEXO II do ciclo 10](cycles/10-quem-derruba-um-presidente.md) por decisão do
+responsável: _"trate o dossiê como anexo do ciclo 10, onda 2"_. A ordem de execução
+saiu dessa conversa e é a que está em _O QUE VEM AGORA_.
+
+**O que ela entregou, em ordem:**
+
+1. **o achado 2 morreu, e ele nunca existiu como defeito de modelo.** O instrumento
+   contava o complemento exato da verdade — sexta ocorrência de "dois lugares montando
+   a mesma pergunta";
+2. **a projeção da tela de área** — sétima ocorrência da mesma família, e a pior delas
+   em consequência: a seta apontava para o lado errado em cinco das oito áreas;
+3. **o zero verde**, achado na captura do passeio;
+4. **o achado 31 morreu**, e por mudança de FORMA e não de valor;
+5. **a banda real do arcabouço** (achado 33), que era omissão declarada;
+6. **`mandatoryGrowth` corrigido de escopo** (achado 32), sem o qual o conserto do 31
+   transformava o jogo num corredor;
+7. **os achados 29 e 1d caíram junto**, de graça, pela ordem certa.
+
+### ⚠ O que ela ensinou, e vale mais que os consertos
+
+**Três hipóteses minhas foram medidas e desmentidas, e cada uma teria custado uma
+sessão se eu tivesse implementado em vez de medir:**
+
+- _"o rateio corta em 41 de 48 meses"_ — eram **7**, e o instrumento anunciava o
+  inverso;
+- _"o laço capacidade→receita→teto tem ganho maior que 1 e é o amplificador"_ — o ganho
+  uniforme é **0,14**, e com o laço desligado o país escorrega quase igual. ⚠ **O
+  responsável já tinha AUTORIZADO amortecer o laço** com base no meu número errado, e a
+  medição seguinte o desautorizou. Medir depois de decidir salvou a decisão;
+- _"a identidade `decay = yield × gasto_herdado` conserta o 31"_ — ela derruba a
+  indústria a 0 e a segurança a 7, porque o defeito era a **forma** da equação.
+
+> **A regra que sai daqui: hipótese sobre um laço se mede desligando o laço.** Foi o
+> único teste que separou causa de coincidência, e ele custou dois minutos.
 
 ### O que o ciclo 9 deixou pronto
 
@@ -192,15 +548,24 @@ saíram do catálogo para o estado.
 > feitas** — ver abaixo. A próxima é a **tramitação (Parte 3)**, cujo desenho já
 > está fechado dentro do ciclo, e só então a Caixa de Entrada.
 
-| verificação        | estado                                                    |
-| ------------------ | --------------------------------------------------------- |
-| `npm run validate` | **verde de ponta a ponta**                                |
-| `npm run check`    | 9 guardas · 36 provas sintéticas · 122 arquivos · verde   |
-| `npm test`         | **213 propriedades** · verde (eram 152)                   |
-| `npm run simulate` | as seis políticas — ver **A SÉRIE DE HOJE**, no topo      |
-| `npm run walk`     | verde — desktop e celular, **e o Gabinete no celular**    |
-| `npm run screen`   | verde — 240,4 fps com material × 240,1 sem (ver achado 4) |
-| CI                 | GitHub Actions rodando `npm run validate` a cada push     |
+| verificação        | estado                                                       |
+| ------------------ | ------------------------------------------------------------ |
+| `npm run validate` | **verde de ponta a ponta**                                   |
+| `npm run check`    | **10 guardas** · 40 provas sintéticas · 124 arquivos · verde |
+| `npm test`         | **218 propriedades** · verde (eram 213)                      |
+| `npm run simulate` | as seis políticas — ver **A SÉRIE DE HOJE**, no topo         |
+| `npm run walk`     | verde — desktop e celular, **e o Gabinete no celular**       |
+| `npm run screen`   | verde — 240,4 fps com material × 240,1 sem (ver achado 4)    |
+| CI                 | GitHub Actions rodando `npm run validate` a cada push        |
+
+**As quatro provas novas desta sessão**, e as quatro foram verificadas mordendo:
+
+| prova                                         | acusa, se revertida                                          |
+| --------------------------------------------- | ------------------------------------------------------------ |
+| `SOBRA NAO E CORTE`                           | um mês com folga contado como mês de rateio                  |
+| `A AREA E O TURNO PROJETAM O MESMO INDICE`    | _"a área prometeu um índice e o mês entregou outro"_         |
+| `O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO` | a identidade do achado 31 quebrada por um `cost` de programa |
+| `O ZERO DA AREA E NEUTRO`                     | _"um zero impresso saiu tingido: a cor negou o número"_      |
 
 ✔ **COMMITADO em 16/08/2026**, a pedido do responsável: `267eabd` no branch
 `acoplamento-e-simulador` — 77 arquivos, +14.431/−1.108. **Nada foi enviado ao
@@ -1269,6 +1634,110 @@ não sabe qual reforma aquele mandato já tinha aprovado.
 
 ## Achados abertos — o que EU veria primeiro na próxima sessão
 
+**34. ⚠ A TELA DA ÁREA PROJETAVA O ÍNDICE PARA O LADO ERRADO — RESOLVIDO em 16/08/2026,
+e é a SÉTIMA ocorrência da família mais cara deste projeto.** `app.mjs` refazia a
+equação da MALHA à mão:
+
+```js
+value - area.decay + area.yield * share.asked[area.id];
+```
+
+com a prosa ao lado afirmando, em maiúsculas, que _"a projeção é a mesma conta do motor,
+e não uma aproximação escrita aqui"_. **Era uma aproximação escrita ali, e estava
+errada**, por duas razões somadas: a MALHA consome `funded` — o gasto **cheio** da área,
+piso incluído e já rateado — desde 14/08, e `asked` é só a parte **acima do piso**; e o
+canal `capacity` da educação não entrava.
+
+| medido no mês 1 | a tela dizia | o mês fazia |
+| --------------- | ------------ | ----------- |
+| Saúde           | 61,0 → 60,4  | **61,1**    |
+| Previdência     | 71,0 → 70,7  | **71,9**    |
+| Fazenda         | 72,0 → 71,7  | **72,5**    |
+
+**Em cinco das oito áreas a seta apontava para o lado contrário**, e isto na tela onde o
+jogador decide quanto gastar por área. ⚠ **E o defeito nasceu de uma mudança que deixou
+uma cópia para trás** — que é como as sete nasceram. Entrou `outlook` como décima
+segunda porta da fachada, e a cópia morreu junto.
+
+⚠ **O contrafactual mudou de pergunta no mesmo conserto:** `idle` era "o índice sem
+alocação nenhuma", e gastar zero numa área exige derrubar todos os pisos dela por
+emenda. Um contrafactual que descreve um mundo que a lei não permite não ajuda a
+decidir. Agora ele é **o mês sem as ordens do jogador**.
+
+**33. ⚠ O ARCABOUÇO NÃO TINHA A BANDA REAL, e a omissão estava DECLARADA desde o
+primeiro dia — RESOLVIDO em 16/08/2026.** O cabeçalho de `fiscal.mjs` dizia: _"a versão
+real tem ainda uma banda de crescimento real mínimo e máximo; ela fica de fora por
+enquanto, e fica DECLARADO que fica — parâmetro omitido em silêncio é o que faz a
+próxima sessão achar que o modelo é fiel"_.
+
+**A omissão não era neutra.** Sem banda, o teto crescia 70% da variação **nominal** da
+receita — 4,2% ao ano com PIB nominal a 6%, que são **0,2% reais** — contra uma
+obrigatória de 2,5% reais. Aperto de 2,3 pontos reais ao ano, e os R$ 176 bi de
+discricionário morrem no quarto exercício.
+
+Enquanto o país se consertava sozinho ninguém via: a capacidade subia, a receita subia
+junto e o teto crescia atrás dela. **Consertado o achado 31, a armadilha passou a fechar
+dentro do mandato.** Entrou a banda de 0,6% a 2,5% reais (LC 200/2023, art. 4º).
+
+⚠ **E o piso da banda é o que mais importa, ao contrário do que o nome sugere:** é ele
+que garante ao teto a correção pela inflação num exercício de receita ruim. ⚠ **Duas
+provas mudaram de afirmação por causa dele** — "receita caindo encolhe o teto" deixou de
+ser verdade, e a prova passou a cobrar as duas metades da regra nova em vez de ser
+apagada.
+
+⚠ **E ele custou um defeito de escala meu, achado por prova vermelha:** a banda é
+**anual** e `ceilingOf` roda **mensal**. Aplicada inteira todo mês, ela dava o
+crescimento de um ano inteiro na posse — R$ 107 bi de teto a mais sobre um
+discricionário de 176. Entrou `elapsed`, e ⚠ **ele conta TURNOS e não o calendário**,
+porque a partida abre em **março** com a âncora de **janeiro**: contado pelo calendário,
+o teto ganhava três meses de correção que a obrigatória não tinha ganhado, e os dois
+relógios andavam separados.
+
+**32. ⚠ `mandatoryGrowth` ERA UMA MÉDIA APLICADA A TUDO — corrigido para 2,16% em
+16/08/2026, e o erro é de ESCOPO e não de calibragem.** O parâmetro se chama
+"crescimento vegetativo real" e incidia sobre a obrigatória inteira. Rubrica a rubrica,
+sobre os R$ 2.157 bi que a soma dos pisos produz:
+
+| parcela                                              | valor          | cresce   |
+| ---------------------------------------------------- | -------------- | -------- |
+| aposentadorias, BPC, transferência, abono e seguro   | R$ 1.325 (61%) | ~3% real |
+| folha e inativos, civis e militares                  | R$ 398 (18%)   | **~0%**  |
+| pisos de saúde e educação, que são fração da receita | R$ 250 (12%)   | ~2%      |
+| o resto                                              | R$ 184 (9%)    | ~1%      |
+
+A média ponderada é **2,16%**. ⚠ **E o meio ponto decidia o jogo inteiro:** com 2,5% o
+discricionário vai a **zero** no quarto ano e **todo governo cai entre os meses 39 e
+45**, inclusive o que reforma — o jogo virava um corredor, que é pior que o defeito que
+o achado 31 veio consertar.
+
+⚠ **O número não foi escolhido para caber**: ele saiu da ponderação, feita **antes** de
+rodar a série. Que ele também devolva a jogabilidade é a confirmação de que o defeito
+era de escopo.
+
+**A correção completa é outra e fica REGISTRADA:** separar a obrigatória em parcelas com
+crescimentos próprios, e aí a folha volta a só subir quando o presidente decidir — que é
+uma jogada, e não um parâmetro. Enquanto isso não existe, uma taxa única ponderada é a
+descrição honesta.
+
+**35. A IDENTIDADE DO ACHADO 31 COLIDE COM UMA AFIRMAÇÃO DE DESENHO, e a colisão é da
+SAÚDE.** `areas.mjs` diz em prosa que a saúde _"decai rápido porque fila e
+desabastecimento aparecem em semanas"_. A identidade a põe entre as **mais lentas**
+(meia-vida de 63 meses), porque no catálogo ela custa R$ 0,33 bi por ponto de índice —
+cinco vezes o preço de um ponto de segurança.
+
+Sete das oito ordens sobreviveram; esta não. **Uma das duas afirmações está errada**, e
+decidir qual é recalibragem de `yield` ou de `cost`, e não conserto de decaimento. ⚠ É
+achado, e o registro está na prosa do catálogo também.
+
+**36. A CATRACA DO RATEIO — `honour` grava o corte no estado e nada nunca o devolve.**
+Um mês de aperto encolhe o orçamento **para sempre**: medido antes desta sessão, o
+`herdado` perdia 11,5% da indústria em sete meses e terminava o mandato com R$ 70,7 bi
+de folga e o Estado ainda encolhido. A prosa de `settlement` declara a intenção — _"o
+Estado inteiro escorregando para o mínimo legal"_ —, mas **a permanência não está
+escrita em lugar nenhum**, e no mundo o contingenciamento é anual e se libera. ⚠ Hoje
+ela é visível e reversível pelo jogador (basta arrastar o controle de volta); deixa de
+ser no dia em que alguém automatizar a decisão.
+
 **1. ~~O MODELO NÃO CONSEGUE RODAR DÉFICIT PRIMÁRIO.~~ RESOLVIDO em 16/08/2026 pela
 Parte 2 do ciclo 4** — reaberto e morto no mesmo dia, e a medição tinha achado coisa
 PIOR do que estava escrito. Ele foi dado como resolvido na
@@ -1394,25 +1863,34 @@ declara como discricionário. **É recalibragem, e ela precisa ser decidida e n�
 descoberta** — mas repare que ela é o **sintoma**, e o achado 1 é a causa: mesmo
 com a receita corrigida, `spent ≤ cash` continuaria proibindo o déficit.
 
-**2. O rateio corta quase sempre — e ele DEIXOU DE SER CONSTANTE em 16/08.** Remedido
-depois de o muro do caixa cair:
+**2. ~~O rateio corta quase sempre.~~ ✔ MORTO em 16/08/2026 — e ele NUNCA foi um defeito
+de modelo. O instrumento contava o COMPLEMENTO EXATO da verdade.**
 
-| política  | meses com corte, de 48 | a partir de |
-| --------- | ---------------------- | ----------- |
-| `herdado` | **41**                 | out/2027    |
-| `piso`    | **44**                 | mar/2027    |
-| `base`    | 48                     | mar/2027    |
-| `agenda`  | 48                     | mar/2027    |
+`tools/simulate.mjs` media "quantos meses o rateio cortou" com uma conta própria —
+`pago + alocado < room || prometido + alocado > room` —, e a primeira metade acusava
+**sobra de caixa** como se fosse corte:
 
-Antes eram **48 em todas as cinco**, e a queixa original era exatamente essa: _"um
-corte que nunca some, em nenhuma política, deixa de ser armadilha e vira constante"_.
-Duas políticas passaram a ter meses sem corte, o que é a armadilha voltando a ser
-armadilha — mas 41 de 48 ainda é quase sempre.
+| política   | o filtro dizia | a verdade (`ratio < 1`) |
+| ---------- | -------------- | ----------------------- |
+| `herdado`  | 41             | **7**                   |
+| `piso`     | 44             | **0**                   |
+| `agenda`   | 48             | **0**                   |
+| `base`     | 48             | **1**                   |
+| `promessa` | 48             | 48 (acertou por acaso)  |
 
-⚠ **E a causa hoje é outra:** com o empenho limitado pelo TETO e não pelo caixa, o
-corte deixou de significar "não há dinheiro" e passa a significar "o arcabouço não
-autoriza". É uma afirmação fiscal muito mais defensável, e ela entra na recalibragem da
-tramitação (achado 22) e não antes.
+Duas confirmações fecham o diagnóstico: o `piso` gasta o mínimo e nunca rateia — os 44
+são os 48 meses menos os 4 contingenciados —, e no `herdado` o filtro é **exatamente o
+inverso**, porque nos sete meses em que o corte acontece `pago + alocado` dá
+precisamente `room` e nenhuma cláusula dispara. **41 = 48 − 7.**
+
+⚠ **É a SEXTA ocorrência de "dois lugares montando a mesma pergunta"**, e a mais cara
+delas em consequência: a frase "o rateio corta em 41 de 48 meses" atravessou este
+arquivo, virou este achado, e **chegou a bloquear o conserto do achado 31**. `ratio`
+subiu para o relatório e o instrumento pergunta. **A porta errada não existe mais**, e a
+prova `SOBRA NAO E CORTE` a mantém fechada.
+
+⚠ **Prova da inércia:** a série de dívida não mudou um decimal com o conserto (83,6 /
+86,8 / 84,9 / 84,4 / 89,1 / 87,8), que é como se sabe que só o instrumento mudou.
 
 **3. ~~O contingenciamento nunca dispara.~~ RESOLVIDO na oitava sessão:** com o
 fiscal corrigido, a política `piso` contingencia **4 meses a partir de set/2029**, e
@@ -1427,8 +1905,20 @@ medido** é aparelho móvel. O texto original ficou abaixo porque a razão dele
 continua de pé: sete telas viraram onze — O Estado, Finanças, Agricultura e Indústria nasceram sem o custo de
 material medido.
 
-**5. `orphans` e `contrast` seguem por escrever — e a varredura MANUAL de 16/08 mostra
-por quê.** Sem guarda, foi preciso caçar à mão e achou-se:
+**5. ~~`orphans` e `contrast` seguem por escrever.~~ ✔ `orphans` EXISTE desde 16/08/2026,
+e ela achou QUATRO regras órfãs no primeiro minuto** — `.sr-only`, `.mesa__eyebrow`,
+`.allot` (mais a media query dela, cinquenta linhas abaixo) e `.reading__value`, esta
+última **criada na mesma sessão**: eu fiz o componente para as duas listas do Gabinete
+usarem a mesma gramática e deixei as duas cópias antigas de pé — três declarações byte a
+byte iguais, que é a divergência que o componente existia para impedir.
+
+⚠ **Duas passadas foram necessárias**, e a segunda é a lição: o `.allot` do bloco
+principal saiu na primeira, e o `@media` dele ficou. **Quem apaga uma regra procura pelo
+nome onde ela mora, e não dentro de uma media query cinquenta linhas abaixo** — é
+exatamente a metade que a varredura à mão deixaria para trás.
+
+**`contrast` segue por escrever.** O texto original: A varredura MANUAL de 16/08 mostra
+por quê. Sem guarda, foi preciso caçar à mão e achou-se:
 
 - **201 linhas de CSS morto** — a família `.action-list` / `.action-row` inteira e
   `.allot__read` / `.allot__value`, sem uma linha de HTML para pintar desde que o
@@ -1517,9 +2007,49 @@ de "legislar é caro".
 sucesso subiu de 12,5% para **36%**, porque a política parou de levar a plenário o que
 ela não conseguia pagar.
 
-**31. ⚠⚠ O PAÍS SE CONSERTA SOZINHO — e este é o defeito mais fundo já medido neste
-projeto.** Um governo que **não faz absolutamente nada** vê os oito índices SUBIREM em
-48 meses:
+**31. ~~O PAÍS SE CONSERTA SOZINHO.~~ ✔ MORTO em 16/08/2026, e ele era o defeito mais
+fundo já medido aqui.** O conserto não foi o que este achado prescrevia, e a diferença
+é a lição:
+
+> **A causa não era o VALOR do decaimento — era a FORMA dele.**
+>
+> ```
+> antes   índice' = índice − decay + yield × gasto        (constante)
+> agora   índice' = índice × (1 − decay) + yield × gasto  (proporcional)
+> ```
+
+Com a subtração constante o índice é um **integrador puro**: não existe equilíbrio em
+lugar nenhum, e `yield × gasto − decay` decide um destino único para a partida inteira —
+ou sobe até 100, ou cai até 0. **Não havia calibragem possível**, e foi por isso que a
+tentativa anterior falhou: qualquer número maior trocava "sobe sempre" por "cai sempre".
+⚠ **Medido nas duas direções, e as duas foram medidas** — a identidade constante levava
+a indústria a 0 e a segurança a 7.
+
+Proporcional, a área ganha um **atrator**: `índice* = yield × gasto / decay`. E a taxa
+de cada área sai de uma identidade, com prova contra o catálogo:
+
+> `decay ≡ yield × gasto_cheio_herdado / índice_herdado`
+
+**Manter o orçamento herdado mantém o país parado.** Medido, política `herdado`: cinco
+das oito áreas ficam entre −1 e +2, e as três que caem são as de maior fatia
+discricionária — indústria (60% do gasto dela), segurança e agricultura —, porque o
+rateio as tira do presidente.
+
+⚠ **E ele não se resolvia sozinho: precisou de mais duas peças**, e as duas estão nos
+achados **32** e **33**. Sem elas, a armadilha fiscal fechava dentro do mandato e **todo
+governo caía entre os meses 39 e 45** — o jogo virava um corredor, que é pior que o
+defeito original.
+
+⚠ **UMA HIPÓTESE MINHA FOI MEDIDA E DESCARTADA no caminho, e vale registrada:** eu
+afirmei que o laço `capacidade → receita → teto → gasto` tinha ganho maior que 1 e era o
+amplificador. **É falso.** Medido de três formas — ganho uniforme **0,14**; ganho por
+área com a partilha do rateio, todos abaixo de 1; e o teste decisivo, com todas as
+`force` **zeradas**, em que o país ainda escorrega (indústria 48→28 contra 48→19 com o
+laço ligado). O laço responde por uns nove pontos de uma queda de vinte e nove. **Não
+amortecer foi a decisão certa, e ela veio de medir e não de argumentar.**
+
+O texto original, que continua sendo a melhor descrição do defeito: Um governo que
+**não faz absolutamente nada** via os oito índices SUBIREM em 48 meses:
 
 | área        | 48 meses | área      | 48 meses |
 | ----------- | -------- | --------- | -------- |
@@ -1563,8 +2093,24 @@ do catálogo, então o gasto **não cresce com a inflação**. Não há defeito 
 aqui, e um deflator aplicado por cima do decaimento corrigido derrubava o país duas
 vezes.
 
-**29. A CALDEIRA NÃO RESOLVE O ACHADO 1d SOZINHA — e isto é resultado medido, e não
-calibragem frouxa.** O governo passivo continua sobrevivendo, e a causa é legítima:
+**29. ~~A CALDEIRA NÃO RESOLVE O ACHADO 1d SOZINHA.~~ ✔ MORTO em 16/08/2026, por
+CONSEQUÊNCIA do achado 31 e sem ninguém tocar na CALDEIRA.**
+
+O governo passivo agora abre processo no mês 43 e **cai no mês 46**, dentro do mandato.
+O caminho é o que estava apontado aqui e não precisou de modelagem nova: o país deixou
+de se consertar sozinho, então os índices caem, a rua cansa, o mercado vê a dívida subir
+e as três rupturas passam a se abrir juntas.
+
+> ⚠ **A retomada previa isto por escrito** — _"reavalie os dois depois do 31: é provável
+> que o país parando de se consertar sozinho já mova os dois lobbies de capacidade e já
+> faça a rua cansar do passivo"_. É o registro funcionando: o achado certo, consertado
+> na ordem certa, matou dois sintomas de graça.
+
+⚠ **E o critério declarado foi verificado nas DUAS pontas**, que é a metade que nunca
+tinha prova: um governo mediano — mantém a máquina e paga a manutenção — cai no **mês
+52**, três meses depois de o mandato acabar. A prova `A QUEDA ACONTECE` cobra as duas.
+
+O texto original: O governo passivo continua sobrevivendo, e a causa é legítima:
 **não gastar agrada o mercado**, e o capital o abriga. Ele perde o baixo clero (pressão 100) e perde a rua, mas as três rupturas nunca se abrem juntas.
 
 | governo, 48 meses         | processo abre |
@@ -1580,7 +2126,21 @@ deveria cansar de quem não entrega**. Hoje a SONDA pune o calote e o serviço r
 não pune a AUSÊNCIA de entrega — um governo que nunca prometeu nada nunca traiu
 ninguém. É modelagem em SONDA, e é o passo seguinte do ciclo 10.
 
-**30. A CALDEIRA ESQUENTA POR DOIS CANAIS DE QUATRO.** Medido: o setor produtivo e as
+**30. ~~A CALDEIRA ESQUENTA POR DOIS CANAIS DE QUATRO.~~ ✔ MORTO em 16/08/2026, por
+CONSEQUÊNCIA do achado 31 — e medido antes de a Trindade ser desenhada.** Os dois
+lobbies de capacidade deixaram de ser decorativos porque o país passou a se degradar:
+
+| lobby              | antes | 48 meses, governo passivo |
+| ------------------ | ----- | ------------------------- |
+| o setor produtivo  | 0     | **33**                    |
+| as forças de ordem | 0     | **35**                    |
+
+⚠ **E eles ainda não FERVEM** — o ponto de fervura é 60, e os dois vivem na faixa 0–50.
+Isso não é o achado sobrevivendo: é a consequência de o `weight` das forças de ordem ser
+zero e de o produtivo ler duas áreas em que uma delas (agricultura) se segura. **O que
+morreu é "eles nunca se movem"**, que era o que os tornava decorativos. O texto original:
+
+**30-hist. A CALDEIRA ESQUENTA POR DOIS CANAIS DE QUATRO.** Medido: o setor produtivo e as
 forças de ordem ficam perto de ZERO em todo governo testado, porque leem índice de
 área e o orçamento herdado sustenta os índices. ⚠ **Dois lobbies que nunca se movem são
 dois lobbies decorativos** — e a decoração aqui é pior que em qualquer outro lugar,
@@ -1662,7 +2222,12 @@ Para voltar a medir "quebrar o orçamento", que foi o que encontrou o achado 1, 
 precisa **parar de prometer verba**. É mudança de INSTRUMENTO e não de modelo, e por
 isso está aqui e não foi feita sozinha.
 
-**20. A RUA PRECIFICA VOTO E MAIS NADA.** A aprovação da SONDA desloca a resistência
+**20. A RUA PRECIFICA VOTO E MAIS NADA — e METADE dele caiu em 16/08/2026.** A
+chantagem deu mão ao lobby: os dois grupos que leem a MALHA agora exigem, e ceder ou
+recusar move dinheiro e pressão. ⚠ **O que continua de pé é a outra metade**, e ela é a
+que o achado nomeia: a SONDA — a rua propriamente dita — segue sem tocar em índice, em
+receita ou em despesa. Um governo detestado ainda governa um país que funciona igual. O
+texto original: A aprovação da SONDA desloca a resistência
 da ECLUSA — e para no voto. Ela não toca em índice de área, em receita, em despesa
 nem em nada físico: **um governo detestado governa um país que funciona igual.** O
 buraco foi apontado de fora e procede; o desenho que veio junto (greve por categoria

@@ -92,13 +92,13 @@ export function capacityStripHtml({ areas, index, history }) {
       const trend = sparkline(past.length > 0 ? past : [value]);
 
       return (
-        `<button class="gauge" type="button" data-section="${escapeHtml(area.id)}">` +
-        `<span class="gauge__label">${escapeHtml(area.label)}</span>` +
-        `<span class="gauge__read">` +
-        `<span class="gauge__value" data-numeric>${seats(value)}</span>` +
-        `<span class="gauge__trend" aria-hidden="true">${trend}</span>` +
+        `<button class="capacity" type="button" data-section="${escapeHtml(area.id)}">` +
+        `<span class="capacity__label">${escapeHtml(area.label)}</span>` +
+        `<span class="capacity__read">` +
+        `<span class="capacity__value" data-numeric>${seats(value)}</span>` +
+        `<span class="capacity__trend" aria-hidden="true">${trend}</span>` +
         `</span>` +
-        `<span class="gauge__track" style="--index:${seats(value)}" aria-hidden="true"></span>` +
+        `<span class="capacity__track" style="--index:${seats(value)}" aria-hidden="true"></span>` +
         `</button>`
       );
     })
@@ -113,7 +113,7 @@ export function capacityStripHtml({ areas, index, history }) {
      lamina do Congresso, e vidro dentro de vidro e o defeito que o sistema visual
      inteiro existe para impedir. O que separa um bloco do outro e a legenda e o
      espaco, como em Financas e na area. */
-  return `<div class="gauges">${gauges}</div>`;
+  return `<div class="capacities">${gauges}</div>`;
 }
 
 /* ONDE A MEMORIA DEIXA DE SER RUIDO. Abaixo disto o saldo e um residuo de
@@ -172,10 +172,15 @@ function personHtml({ person, voting }) {
     `<span class="person__ambition">${escapeHtml(ambition)}${price}</span>` +
     `<span class="person__memory" data-tone="${memory.tone}">${escapeHtml(memory.text)}</span>` +
     `</span>` +
+    /* ⚠ SEM PAUTA ELA IMPRIMIA "de 76" — a segunda metade de uma frase cuja
+       primeira metade nao existe. `votes` so tem sentido contra um texto em
+       votacao, e num mes sem pauta a view largava o `de` pendurado sozinho na
+       coluna. O que sobra de verdadeiro e QUANTO aquela pessoa arrasta, e essa
+       informacao vale todo mes: e o peso politico dela, com ou sem votacao. */
     `<span class="person__votes" data-numeric>` +
     (voting
       ? `${seats(person.votes)} <small>${escapeHtml(UI.mesa.seats)} ${seats(person.seats)}</small>`
-      : `<small>${escapeHtml(UI.mesa.seats)} ${seats(person.seats)}</small>`) +
+      : `<small>${escapeHtml(UI.mesa.leads)}</small> ${seats(person.seats)}`) +
     `</span>` +
     `</div>`
   );
@@ -446,7 +451,7 @@ export function congressHtml({ gauges, mesa, report, passage }) {
      dizer "isto e uma secao desta tela". */
   const block = (/** @type {string} */ legend, /** @type {string} */ body) =>
     `<section class="area__block">` +
-    `<h3 class="area__legend">${escapeHtml(legend)}</h3>` +
+    `<h3 class="block__legend">${escapeHtml(legend)}</h3>` +
     body +
     `</section>`;
 

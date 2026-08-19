@@ -53,6 +53,9 @@ const MONTHS_PER_YEAR = 12;
  * @property {number} debt - divida bruta
  * @property {number} spent - discricionario efetivamente empenhado NO MES
  * @property {number} [inflation] - ao ano; e ela que indexa a despesa obrigatoria
+ * @property {number} [elapsed] - quanto do exercicio ja correu, de 0 a 1; a banda
+ *   do arcabouco e ANUAL e o turno e mensal, e sem isto o piso dela entrega o
+ *   crescimento de um ano inteiro no primeiro mes
  * @property {FiscalParameters} parameters
  * @property {number} [revenueFactor] - o quanto a maquina de arrecadar rende hoje
  * @property {number} [mandatoryFactor] - o quanto o servico publico encarece a obrigatoria
@@ -116,24 +119,89 @@ export function growMandatory(mandatory, annualRate, inflation = 0) {
 
 /**
  * O teto do arcabouco: a despesa nao cresce mais que `share` do crescimento da
- * receita.
+ * receita, e o resultado ainda passa por uma BANDA de crescimento REAL.
  *
  * O sinal e o ponto. Quando a receita CAI, `growth` e negativo e o teto
  * ENCOLHE — e como a obrigatoria cresceu no mesmo mes, ela pode furar um teto
  * que baixou. Nao ha evento nenhum escrito para isso acontecer; e aritmetica.
  *
+ * ── A BANDA REAL, e ela chegou em 16/08/2026 ─────────────────────────────────
+ * ⚠ ELA ERA UMA OMISSAO DECLARADA, e o cabecalho de `fiscal.mjs` a declarava desde
+ * o primeiro dia: "a versao real tem ainda uma banda de crescimento real minimo e
+ * maximo; ela fica de fora por enquanto, e fica DECLARADO que fica". A omissao nao
+ * era neutra, e o preco dela so ficou visivel quando o achado 31 foi consertado.
+ *
+ * Ate aqui a conta era NOMINAL de ponta a ponta: `share × (receita − ancora)/ancora`.
+ * Com PIB nominal a 6% ao ano isso da 4,2% de crescimento do teto — que sao 0,2%
+ * REAIS. E a obrigatoria cresce 2,5% reais, por catalogo. Aperto de 2,3 pontos reais
+ * ao ano, e os R$ 176 bi de discricionario morrem no quarto exercicio.
+ *
+ * Enquanto o pais se consertava sozinho, ninguem via: a capacidade subia, a receita
+ * subia junto, e o teto crescia atras dela. Consertado o achado 31, a armadilha
+ * passou a fechar DENTRO do mandato, e toda politica-sonda convergia para a
+ * capacidade financiada pelo piso — o jogo virava um corredor.
+ *
+ * ⚠ E O PISO DA BANDA E O QUE MAIS IMPORTA, ao contrario do que o nome sugere: e ele
+ * que garante ao teto a correcao pela INFLACAO num ano de receita ruim. Sem ele, dois
+ * exercicios fracos seguidos derrubam o Estado em termos reais sem ninguem decidir
+ * nada. Fonte: LC 200/2023, art. 4º — banda de 0,6% a 2,5% ao ano.
+ *
  * @param {number} anchorExpense
  * @param {number} anchorRevenue
  * @param {number} revenue
  * @param {number} share
+ * ⚠ E A BANDA E ANUAL ENQUANTO O TURNO E MENSAL, e ignorar isso foi um defeito
+ * medido na primeira versao desta funcao: com o piso aplicado inteiro todo mes, o
+ * teto ganhava o crescimento de um ano na POSSE — R$ 107 bi sobre um discricionario
+ * de 176, e a posicao apertada da suite deixou de apertar. Por isso `elapsed`: o
+ * crescimento se acumula ao longo do exercicio, exatamente como `growth` ja se
+ * acumula, e a composicao e a de sempre — raiz e nao divisao.
+ *
+ * @param {number} anchorExpense
+ * @param {number} anchorRevenue
+ * @param {number} revenue
+ * @param {number} share
+ * @param {number} [floor] crescimento REAL minimo ao ano; sem ele, a regra antiga
+ * @param {number} [cap] crescimento REAL maximo ao ano
+ * @param {number} [inflation] ao ano — o deflator que torna a banda REAL
+ * @param {number} [elapsed] quanto do exercicio ja correu, de 0 a 1
  */
-export function ceilingOf(anchorExpense, anchorRevenue, revenue, share) {
+export function ceilingOf(
+  anchorExpense,
+  anchorRevenue,
+  revenue,
+  share,
+  floor,
+  cap,
+  inflation = 0,
+  elapsed = 1,
+) {
   /* Ancora zerada nao existe em partida valida, mas divisao por zero produz
      `Infinity` que atravessa o motor inteiro sem lancar — e ai o defeito
      aparece como um teto absurdo tres telas adiante. */
   if (anchorRevenue <= 0) return anchorExpense;
   const growth = (revenue - anchorRevenue) / anchorRevenue;
-  return anchorExpense * (1 + share * growth);
+
+  /* SEM BANDA DECLARADA, A REGRA ANTIGA. Nao e cortesia com quem nao passou o
+     parametro: a suite do motor descreve o arcabouco SEM banda em tres asserts, e os
+     tres continuam verdadeiros sobre a regra que eles medem. Quem quer a regra cheia
+     passa a banda, e o catalogo passa. */
+  if (floor === undefined || cap === undefined) return anchorExpense * (1 + share * growth);
+
+  /* O REPASSE E SOBRE O CRESCIMENTO REAL, e a banda tambem e real. Deflacionar aqui e
+     o que faz "2,5% ao ano" significar o que a lei diz — comparar 70% de um
+     crescimento NOMINAL contra um limite REAL seria medir duas coisas com uma regua
+     so, que e a familia do hiato nominal que a CORRENTE ja pagou uma vez.
+
+     E O DEFLATOR TAMBEM E ACUMULADO: `growth` mede o que correu desde a ancora, entao
+     compara-lo com a inflacao de um ano inteiro faria o real nascer negativo em
+     janeiro e o piso mandar em todo mes de todo exercicio. */
+  const accrued = (1 + inflation) ** elapsed - 1;
+  const real = (1 + growth) / (1 + accrued) - 1;
+  const allowed = Math.min(cap, Math.max(floor, share * real));
+
+  /* E o teto volta a ser NOMINAL, porque a despesa se paga em dinheiro do ano. */
+  return anchorExpense * (1 + allowed) ** elapsed * (1 + accrued);
 }
 
 /**
@@ -183,6 +251,10 @@ export function step(input) {
     input.anchorRevenue,
     revenue,
     parameters.expenseGrowthShare,
+    parameters.expenseGrowthFloor,
+    parameters.expenseGrowthCap,
+    input.inflation ?? 0,
+    input.elapsed ?? 1,
   );
 
   /* O espaco que a REGRA abre, que nao e o mesmo que o caixa disponivel. */

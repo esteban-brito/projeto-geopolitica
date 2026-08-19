@@ -15,6 +15,9 @@ import test from "node:test";
 import fc from "fast-check";
 import { opening, pressureOf, step } from "../../src/domain/capacity/index.mjs";
 import { AREAS, CAPACITY_TARGET, NEUTRAL } from "../../src/data/areas.mjs";
+import { PROGRAMS } from "../../src/data/programs.mjs";
+import { spendOf } from "../../src/application/agenda.mjs";
+import { createState } from "../../src/state/state.mjs";
 
 /** @typedef {import("../../src/data/areas.mjs").Area} Area */
 
@@ -61,7 +64,10 @@ function settled(pick) {
 
 test("SEM VERBA O PAIS PIORA, na taxa que o catalogo declara", () => {
   /* O decaimento e o que impede o jogo de ter um estado final em que tudo esta
-     em 100 e nao ha mais o que decidir. */
+     em 100 e nao ha mais o que decidir.
+
+     ⚠ E ELE E PROPORCIONAL AO ESTOQUE desde 16/08/2026, e nao subtraido: a area
+     perde uma FRACAO do que tem, e nao um numero de pontos. Ver o achado 31. */
   const first = step(run({}));
 
   for (const area of AREAS) {
@@ -70,8 +76,50 @@ test("SEM VERBA O PAIS PIORA, na taxa que o catalogo declara", () => {
     if (area.id === CAPACITY_TARGET) continue;
     assert.equal(
       first.index[area.id],
-      area.initial - area.decay,
+      area.initial * (1 - area.decay),
       `${area.id} nao caiu o que devia`,
+    );
+  }
+});
+
+test("O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO — a identidade do achado 31", () => {
+  /* ⚠ ESTA E A ANCORA DO ACHADO 31, e ela e a irma da ancora fiscal de `agenda.mjs`:
+     la se prova que a obrigatoria e a soma dos pisos; aqui, que o decaimento de cada
+     area e exatamente o que o orcamento da posse sustenta.
+
+     Sem ela, os oito numeros de `decay` viram oito literais que ninguem sabe de onde
+     vieram — e a proxima sessao que mexer num `cost` de programa quebra a identidade
+     em silencio, porque nada liga o catalogo de programas ao de areas.
+
+     O defeito que ela fecha foi medido: com o decaimento CONSTANTE e abaixo do
+     equilibrio, um governo que nao fazia nada via os oito indices SUBIREM em 48 meses
+     — industria de 48 a 100. "Nao fazer nada melhora tudo" e indefensavel num jogo
+     sobre governar, e explicava os achados 1d, 29 e 30 de uma vez. */
+  const state = createState();
+  const inherited = spendOf({ programs: PROGRAMS, levels: state.levels }).fullByArea;
+
+  for (const area of AREAS) {
+    const spend = inherited[area.id] ?? 0;
+
+    /* A IDENTIDADE, escrita como ela e: o empurrao do gasto herdado empata com o
+       vazamento do indice herdado. A folga e de arredondamento do catalogo — os
+       `decay` sao escritos com seis casas. */
+    assert.ok(
+      Math.abs(area.yield * spend - area.decay * area.initial) < 1e-3,
+      `${area.id}: o gasto herdado empurra ${(area.yield * spend).toFixed(4)} contra um ` +
+        `vazamento de ${(area.decay * area.initial).toFixed(4)} — a posse deixou de ser o equilibrio`,
+    );
+  }
+
+  /* E O EQUILIBRIO E DE FATO ESTAVEL: um mes com o gasto herdado devolve o indice
+     herdado. E a mesma afirmacao pelo lado do motor, e nao da aritmetica — se um dia
+     `step` mudar de forma, esta linha acusa e a de cima nao. */
+  const held = step(run({ allocation: inherited }));
+  for (const area of AREAS) {
+    if (area.id === CAPACITY_TARGET) continue;
+    assert.ok(
+      Math.abs((held.index[area.id] ?? 0) - area.initial) < 1e-3,
+      `${area.id} saiu de ${area.initial} para ${held.index[area.id]} com o orcamento da posse`,
     );
   }
 });

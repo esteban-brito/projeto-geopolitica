@@ -11,6 +11,9 @@
 > [7](07-o-congresso-tem-cara.md) e [8](08-o-mapa-e-o-rastro.md), a queda do
 > presidente e a imprensa do [ciclo 4](04-a-republica-responde.md), e o achado 20
 > (a rua não tem consequência física) esperam todas pela mesma coisa. Ela está aqui.
+>
+> ▶ **A ONDA 2 tem plano, e ele é o ANEXO II** — o décimo dossiê, avaliado item a item,
+> com a ordem de execução acordada em 16/08. **Ela começa pelo motor, e não pela tela.**
 
 ## A tese, e ela não veio do dossiê
 
@@ -381,3 +384,183 @@ governo que nunca prometeu nada nunca traiu ninguém. É modelagem em SONDA, e �
 - **o vice** continua adiado, com a razão escrita acima;
 - **a chantagem e o clipping de imprensa** — os dois esperavam a CALDEIRA e agora têm
   base. São onda 2.
+
+---
+
+# ANEXO II — o décimo dossiê: "Arquitetura da Sala de Guerra"
+
+> Chegou em 16/08/2026, depois de a onda 1 estar de pé. Ele **não é um ciclo novo**, e
+> a decisão do responsável é esta: o que sobrevive dele é **onda 2 deste ciclo**, porque
+> a metade boa do documento pede exatamente as peças que a onda 1 destravou — a
+> chantagem, o clipping e a leitura das três rupturas.
+>
+> ⚠ **Ele repete o padrão dos nove anteriores, e agora com data:** lê bem a FORMA, erra
+> o MECANISMO, e propõe pela terceira vez a mesma coisa já recusada duas.
+
+## O veredito, item a item
+
+| #   | o que ele pede                                | veredito                                            |
+| --- | --------------------------------------------- | --------------------------------------------------- |
+| 1a  | timeline narrativa com prazo                  | ⭐ forma certa, conteúdo **sem motor**              |
+| 1b  | fileira de cinco KPIs                         | metade já existe; a troca proposta **piora**        |
+| 1c  | a dívida piscando **gera** pressão no mercado | ❌ a tela virando motor — mas o elo é real          |
+| 2   | a Trindade da Sobrevivência                   | ⭐⭐ **o melhor achado da série**, com uma correção |
+| 3a  | o botão de Avançar **bloqueado**              | ❌ **terceira recusa**, e a razão já está escrita   |
+| 3b  | botões com o preço na cara                    | ✔ entregue no ciclo 9 — para **uma** carta          |
+| 3c  | inbox de chantagens e dossiês                 | ⭐ é esta onda 2, e agora tem base                  |
+| 4a  | radar compacto no lugar do hemiciclo          | ⚠ queixa boa colada em decisão fechada              |
+| 4b  | clipping de imprensa                          | ✔ é a Parte 8 do ciclo 4 — **menos** o buff         |
+| 5   | o grid `15vh / 15vh / 70vh`                   | ❌ não fecha, e reintroduz um defeito medido        |
+
+## ✔ 1. A TRINDADE — **FEITA em 16/08/2026**, e o bloqueio dela durou meio dia
+
+O dossiê pede três medidores de pressão acima do conteúdo: Ruas, Máquina, Blindagem
+Parlamentar. **É a leitura que falta**, e a peça está pronta: `boilerOf` devolve
+`rupture: { social, economic, political }` desde a onda 1, e o processo só abre com as
+três juntas.
+
+Hoje o cartão da CALDEIRA mostra **quatro barras de pressão** e um rodapé nomeando as
+rupturas abertas. O jogador tem de inferir qual lobby alimenta qual ruptura — e a
+inferência é errada de propósito em dois casos, porque a ruptura econômica é
+**ponderada** e a política tem limiar próprio.
+
+> **O que a tela mede tem de ser o que derruba o presidente.** Quatro barras respondem
+> "quem está bravo"; três rupturas respondem "o que ainda me segura de pé" — e só a
+> segunda é acionável.
+
+### ⚠ E a trindade DELE não é a do modelo — a correção decide o desenho
+
+Ele propõe **Ruas · Máquina (burocracia + forças de ordem) · Blindagem**. Contra o
+catálogo:
+
+- **"burocracia" não existe**, e criá-la seria um quinto lobby sem motor. A regra da
+  exclusão mútua já está escrita: cada lobby parasita um motor diferente, e não sobrou
+  motor para um quinto;
+- **as forças de ordem têm `weight: 0`** — elas não entram na ruptura econômica, por
+  decisão registrada em `lobbies.mjs`: _"não financiam campanha nem precificam dívida"_.
+  Pô-las no medidor do meio diria que elas abandonam o governo quando elas não podem;
+- **o mercado e o setor produtivo somem** da trindade dele, e são eles que carregam a
+  ruptura econômica (0,35 cada).
+
+**A trindade que se desenha é a do motor**, e ela tem uma vantagem que a dele não tem:
+cada medidor diz **quanto falta**, porque cada ruptura tem um limiar declarado —
+`streetFloor` 20, `boil` 60 ponderado, `brokerBoil` 80.
+
+### ✔ O que foi feito, e por que o bloqueio dela durou meio dia
+
+Este anexo a agendou para depois dos achados 29 e 30, com a razão escrita: _"desenhar o
+medidor antes de o motor dizer a verdade é decoração"_. **Os dois morreram horas
+depois**, pelo conserto do achado 31 — e o segundo foi medido antes de começar:
+
+| lobby              | antes | 48 meses, governo passivo |
+| ------------------ | ----- | ------------------------- |
+| o setor produtivo  | 0     | **33**                    |
+| as forças de ordem | 0     | **35**                    |
+
+Os dois canais de capacidade deixaram de ser decorativos porque o país passou a se
+degradar. **A dependência que atrasava a Trindade era real e acabou** — e é isso que a
+ordem "motor primeiro" comprou.
+
+- **`boilerOf` passou a devolver `ruptures`** — valor, limiar, o lado em que cada uma
+  rompe, e se já rompeu. ⚠ **A tela não calcula nada disso:** a econômica é uma média
+  ponderada com o peso zero excluído, e a social se lê ao contrário das outras duas.
+  Refeitas na view, as três divergiriam no primeiro mês em que um peso mudasse;
+- **a faixa dá espinha à tela**, e esse era o outro problema: o Gabinete eram duas
+  colunas de alturas muito diferentes, e a assimetria foi a primeira coisa que o
+  responsável viu.
+
+⚠ **E o primeiro desenho da régua MENTIA.** Ele normalizava _"quanto do caminho até a
+ruptura já andou"_: com a rua em 44 e o piso em 20, a conta dava **70%** e a barra
+aparecia quase cheia e vermelha num governo confortável. Normalizar por uma régua
+inventada desenha drama onde não há — é a mesma família da escada de tendência, que
+passou semanas desenhando calmaria porque lia inflação numa régua de 0 a 100.
+
+**O conserto é o vocabulário que já existia:** valor na escala do motor, de 0 a 100, com
+o limiar marcado no próprio trilho — a régua legal do controle de verba, aplicada aqui.
+
+## ⭐ 2. A CHANTAGEM — o buraco mais concreto que o jogo tem hoje
+
+_"Bancada do Agro exige Veto na Lei Ambiental"_, com duas saídas e o preço em cada uma.
+
+Ela já estava listada como onda 2 no fim deste ciclo, e o dossiê acerta o **formato**:
+a chantagem não é um evento, é uma **carta que pergunta** — a mecânica que o ciclo 9
+entregou e que hoje serve a um caso só (a emenda do relator).
+
+⚠ **E é o achado 20 visto do lado do lobby.** Os quatro grupos têm posição no plano,
+memória e um instrumento **declarado em prosa que não faz nada**: hoje eles somam para a
+queda e mais nada. Um lobby que só sabe derrubar presidente é um lobby que fica calado
+47 meses.
+
+O preço não precisa ser inventado: a distância euclidiana de ECLUSA já precifica agradar
+uma posição, e o instrumento de cada um já tem endereço de motor.
+
+## ⚠ 3. O CLIPPING — ele narra, ele não decide
+
+A Parte 8 do ciclo 4 com outro nome, e ela cabe. **O que não entra é a segunda metade da
+frase:** _"cada manchete aplica buffs ou debuffs na sua Trindade para o turno seguinte"_.
+
+> Imprensa que move número é um **segundo motor de opinião** — duas verdades sobre a
+> mesma coisa, que é o defeito que este projeto encontrou **cinco vezes**.
+
+A regra que já existe para a IA vale igual para o jornal, e é o ADR 0002: **gera
+vocabulário, nunca efeito.** A manchete é a leitura do mês que a SONDA já produziu — o
+mesmo contrato da carta da Casa Civil, que não inventa uma frase para caso nenhum.
+
+Os veículos são fictícios com viés declarado, e o ADR 0003 vale para eles como vale para
+gente.
+
+## ❌ 4. O muro — e esta é a TERCEIRA vez
+
+> _"O botão de [Avançar o Mês] fica nativamente BLOQUEADO. Só após resolver as bombas da
+> mesa, o jogo permite virar o mês."_
+
+O oitavo dossiê pediu o mesmo, e a recusa está escrita acima, neste documento. O ciclo 9
+decidiu o contrário com motor atrás: **o silêncio ACEITA, e a carta diz isso antes de
+vencer.** `standards.md` §5 fecha: _"o turno não se bloqueia por nada"_.
+
+**A decisão do responsável, em 16/08:** _"o custo da inação deve ser pago em capital
+político, não travando a interface."_
+
+⚠ **E o medo por trás do pedido é legítimo, e ele é MEDÍVEL.** Ele teme que o jogador
+ignore o inbox. A resposta certa é fazer ignorar custar — e **ninguém mediu quanto custa
+hoje** deixar uma carta vencer. Isso é uma medição, e ela entra nesta onda antes de
+qualquer botão.
+
+## As recusas menores, com a razão
+
+- **a dívida piscando gerar pressão** — `lobby.reads === "debt"` já esquenta o mercado
+  com a deterioração, e `DEBT_SPAN` declara a escala. Se a tela gerasse a pressão, ela
+  seria motor. ⚠ **O que falta é a tela DIZER o elo**, e não criá-lo: hoje o vital da
+  dívida e a barra do mercado vivem em dois lugares sem uma palavra entre eles;
+- **trocar aprovação e base por desemprego, primário e dívida** — aprovação e base são os
+  dois números que precificam toda jogada; desemprego e primário já moram em Finanças.
+  **Dívida/PIB entra**, e ela sozinha: é o placar do achado 1d e é o que o mercado lê;
+- **substituir o hemiciclo por lista** — decisão do ciclo 5, parte D, com a razão escrita:
+  ele responde as duas perguntas do arco e mais uma. ⚠ **A queixa embaixo dela procede e
+  já estava registrada** no anexo do nono dossiê — e piorou desde então: o Gabinete tem
+  **cinco** cartões numa coluna, e não três. Compactar é legítimo; trocar o desenho por
+  uma lista de bancadas temáticas que **não existem** (ciclo 7, Parte B) é outra coisa;
+- **o grid `15vh / 15vh / 70vh`** — soma 100vh e não sobra nada para a casca; ignora
+  `--column` e a regra dos 80% pedida na nona sessão; e `vh` em celular é a barra de URL
+  comendo o layout. ⚠ Grade de altura fixa é a família do **defeito 1 da nona sessão** —
+  os quatro cartões se sobrepondo em todo aparelho ≤720px. A grade de hoje já é 3fr/2fr
+  (60/40) contra os 65/35 dele: não há refatoração aqui, há um número novo.
+
+## ⚠ A DEPENDÊNCIA que ordena esta onda, e ela é a razão de o anexo existir
+
+A Trindade promete na tela que três rupturas derrubam presidentes. Hoje:
+
+- **dois dos quatro lobbies nunca se movem** (achado 30);
+- **o governo passivo nunca cai** (achado 29);
+- e o país **se conserta sozinho** (achado 31), que é a causa dos dois.
+
+> **A forma segue a função.** Desenhar o medidor antes de o motor dizer a verdade é
+> decoração — e é exatamente o que este ciclo já se acusou de ter feito com os dois
+> lobbies decorativos.
+
+**A ordem acordada em 16/08/2026:**
+
+1. **achado 2**, reescrito pela medição do dia — o instrumento contava o inverso;
+2. **achado 31** — o decaimento por identidade, com a régua certa;
+3. **achados 29 e 30** — e é aqui que a **chantagem** entra, com motor atrás;
+4. **só então** a Trindade, a compactação do Gabinete e o clipping.

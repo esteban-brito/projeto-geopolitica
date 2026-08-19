@@ -44,9 +44,20 @@
      do Gabinete, e de proposito: o projeto ja tem uma forma para "superficie
      interna que agrupa" — `rgba(255,255,255,0.04)` com `--radius-piece` — e uma
      segunda forma seria a terceira maneira de dizer a mesma coisa. */
-  .gauges {
+  /* ⚠ A CONTAGEM NAO E DIGITADA, e ate 18/08/2026 ela era — `repeat(7)` para OITO
+     areas. A Producao virou Agricultura e Industria na quinta sessao, e este numero
+     ficou onde estava: a Defesa caia numa segunda fileira que o `overflow: hidden`
+     decapitava, e a faixa que existe para COMPARAR as oito mostrava sete.
+
+     `auto-fit` conta sozinho. O comentario acima ainda manda mexer aqui quando nascer
+     uma area — agora so na consulta de largura la embaixo, e nao mais aqui. */
+  .capacities {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    /* UMA FILEIRA, quantas areas houver. `grid-auto-columns` precisa ser declarado
+       junto: sem ele as colunas implicitas nascem `auto` e uma area de nome longo
+       ficaria mais larga que as outras — numa faixa que existe para COMPARAR. */
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
     overflow: hidden;
     border-radius: var(--radius-piece);
     background: rgba(255, 255, 255, 0.04);
@@ -68,10 +79,10 @@
   }
 
   .bench {
-    border-left: 2px solid rgba(var(--bordo-rgb), 0.4);
+    border-left: var(--rule) solid rgba(var(--bordo-rgb), 0.4);
   }
 
-  .gauge {
+  .capacity {
     display: grid;
     gap: var(--space-1);
     padding: var(--space-3);
@@ -79,19 +90,19 @@
     transition: background var(--dur-touch) linear;
   }
 
-  .gauge:not(:first-child) {
+  .capacity:not(:first-child) {
     box-shadow:
       -1px 0 0 rgba(255, 255, 255, 0.13),
       -1px 0 0 rgba(0, 0, 0, 0.22) inset;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .gauge:hover {
+    .capacity:hover {
       background: rgba(255, 255, 255, 0.06);
     }
   }
 
-  .gauge__label {
+  .capacity__label {
     font-family: var(--font-display);
     font-size: var(--text-label);
     letter-spacing: var(--track-label);
@@ -103,14 +114,14 @@
     text-overflow: ellipsis;
   }
 
-  .gauge__read {
+  .capacity__read {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-2);
   }
 
-  .gauge__value {
+  .capacity__value {
     font-family: var(--font-display);
     font-weight: 800;
     font-size: var(--text-title);
@@ -121,7 +132,7 @@
   /* A escada de blocos e texto, e por isso ela desce pela linha de base junto
      com o numero. O aperto negativo cola os degraus: com o espaco normal entre
      caracteres, seis blocos leem como seis simbolos e nao como uma curva. */
-  .gauge__trend {
+  .capacity__trend {
     font-size: var(--text-note);
     line-height: 1;
     letter-spacing: -0.08em;
@@ -133,16 +144,16 @@
      estilo inline, e `--neutral` e o ponto neutro do catalogo, injetado pelo
      entrypoint. Ambos sao DADO, e por isso estao declarados na lista de excecoes
      da guarda de tokens em vez de virarem valor de paleta. */
-  .gauge__track {
+  .capacity__track {
     position: relative;
     height: 4px;
     margin-top: var(--space-1);
-    border-radius: 999px;
+    border-radius: var(--radius-dot);
     background: rgba(255, 255, 255, 0.1);
     overflow: hidden;
   }
 
-  .gauge__track::before {
+  .capacity__track::before {
     content: "";
     position: absolute;
     inset: 0 auto 0 0;
@@ -153,7 +164,7 @@
   /* A linha d'agua e um VAO escuro sobre o preenchimento, e nao um traco claro:
      traco claro sobre barra clara desaparece justamente no caso que importa —
      o da area que passou do ponto neutro. */
-  .gauge__track::after {
+  .capacity__track::after {
     content: "";
     position: absolute;
     top: 0;
@@ -178,13 +189,11 @@
     gap: var(--space-1);
   }
 
-  .mesa__eyebrow {
-    font-family: var(--font-display);
-    font-size: var(--text-label);
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
+  /* ⚠ `.mesa__eyebrow` SAIU DAQUI em 16/08/2026, acusada pela guarda `orphans`. Ela
+     morreu na nona sessao, quando o "Nada em pauta" deixou de usar as classes do
+     TITULO de uma pauta real e passou a usar `.empty` — e a regra ficou. O nome dela
+     ainda aparece na prosa de `mesa.mjs`, explicando o conserto, e a guarda ignora
+     comentario de proposito: classe citada em prosa nao pinta nada. */
 
   .mesa__title {
     font-family: var(--font-display);
@@ -363,9 +372,9 @@
   }
 
   .bench__mood i {
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
+    width: var(--dot);
+    height: var(--dot);
+    border-radius: var(--radius-dot);
     background: currentColor;
   }
 
@@ -527,14 +536,6 @@
     background: rgba(255, 255, 255, 0.04);
   }
 
-  /* A ESPERA E MAIS BAIXA que o painel cheio, e nao uma caixa da mesma altura
-     com texto no meio: bloco vazio do tamanho do cheio lê como carregamento
-     travado. */
-  .report--waiting {
-    gap: var(--space-1);
-    color: var(--ink-dim);
-  }
-
   /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
      A faixa passa de seis colunas para tres, e o fio muda de lugar junto: com
      duas fileiras, o separador tem de sumir no inicio de cada uma, senao ele
@@ -566,10 +567,7 @@
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--paper-edge);
-    border-radius: 3px;
-    background: var(--paper);
-    color: var(--paper-ink);
+    /* O MATERIAL VEM DE `.letter, .passage__row, .law` em `30-components.css`. */
   }
 
   /* O ESTAGIO E A PRIMEIRA COLUNA porque e a pergunta que o jogador faz primeiro:
@@ -645,28 +643,33 @@
   }
 
   @media (max-width: 1180px) {
-    .gauges {
+    /* ⚠ E AQUI A FILEIRA VOLTA A SER GRADE. `grid-auto-flow` e herdado do bloco
+       acima, e sem desliga-lo as tres colunas desta consulta virariam tres colunas
+       com oito areas espremidas dentro — medido em 390px: o medidor fechava em
+       24px com o conteudo estourando 42. */
+    .capacities {
+      grid-auto-flow: row;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .gauge:not(:first-child) {
+    .capacity:not(:first-child) {
       box-shadow: none;
     }
 
-    .gauge:not(:nth-child(3n + 1)) {
+    .capacity:not(:nth-child(3n + 1)) {
       box-shadow:
         -1px 0 0 rgba(255, 255, 255, 0.13),
         -1px 0 0 rgba(0, 0, 0, 0.22) inset;
     }
 
-    .gauge:nth-child(n + 4) {
+    .capacity:nth-child(n + 4) {
       box-shadow:
         -1px 0 0 rgba(255, 255, 255, 0.13),
         -1px 0 0 rgba(0, 0, 0, 0.22) inset,
         0 1px 0 rgba(255, 255, 255, 0.13) inset;
     }
 
-    .gauge:nth-child(4) {
+    .capacity:nth-child(4) {
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13);
     }
   }

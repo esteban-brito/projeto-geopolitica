@@ -122,13 +122,33 @@ import { streamFrom } from "./random.mjs";
  *
  * @typedef {object} Letter
  * @property {string} id - deterministico, e por isso a mesma carta nao chega duas vezes
- * @property {"posse" | "tabled" | "reported" | "forgotten" | "passed" | "rejected"} kind
+ * @property {"posse" | "tabled" | "reported" | "forgotten" | "passed" | "rejected" | "demand"
+ *   | "rupture" | "siege"} kind
+ *
+ * ⚠ `rupture` E `siege` SAO O CERCO FALANDO, e as duas nao falam de texto nenhum:
+ * `bill` e `lever` ficam nulos. Elas entraram em 18/08/2026 por uma medicao — num
+ * governo passivo chegavam ZERO cartas em 44 meses, e o processo de impeachment
+ * abria no mes 43 no meio desse silencio.
  * @property {number} month - o mes em que ela chegou
  * @property {number | null} due - o mes em que ela vence; nulo no aviso
  * @property {string | null} subject - o assunto, guardado porque o texto pode morrer antes
  * @property {string | null} bill - o id do texto de que ela fala
  * @property {string[]} except - o que a emenda retira do texto; vazio fora da pergunta
  * @property {string | null} saved - o rotulo do que o relator salvou
+ *
+ * ── A CHANTAGEM, e ela e a segunda pergunta que o jogo faz ───────────────────
+ * ⚠ TRES CAMPOS, E NENHUM DELES E PROSA. O que se guarda e o FATO — quem exigiu, o
+ * que ele quer movido, e para onde. A frase que o jogador lê e escrita pela view, e
+ * guardar o texto renderizado seria a quinta ocorrencia de "dois lugares montando a
+ * mesma pergunta".
+ *
+ * @property {string | null} from - o id do lobby que exigiu; nulo em toda outra carta
+ * @property {string | null} lever - a alavanca que ele quer movida
+ * @property {number | null} level - o nivel que ele exige, e ele NAO e inventado:
+ *   e o nivel que aquele programa tinha na POSSE. Um lobby nao pede um numero novo,
+ *   ele pede DE VOLTA o que foi cortado — e por isso a exigencia so nasce quando o
+ *   jogador de fato cortou, o que a torna consequencia da jogada dele e nao um
+ *   evento que caiu do ceu
  * @property {"accept" | "block" | "silence" | null} answer - nulo enquanto ela espera
  * @property {number | null} closedAt - o mes em que ela deixou de esperar
  *
@@ -334,8 +354,12 @@ import { streamFrom } from "./random.mjs";
    com pressao ZERO entregaria um mandato de tres anos de descaso a um Congresso que
    esqueceu tudo — e abrir com pressao ALTA condenaria um governo que talvez tivesse
    entregue. O que os quatro grupos aguentaram naquele mandato nao esta em lugar
-   nenhum, porque nunca esteve. */
-export const SCHEMA_VERSION = 16;
+   nenhum, porque nunca esteve.
+
+   SUBIU PARA 17 quando o lobby passou a EXIGIR. Um save da 16 nao tem os tres campos
+   da chantagem, e uma carta sem `from` seria uma exigencia sem autor — a view nao teria
+   quem desenhar e o turno nao teria a quem cobrar. */
+export const SCHEMA_VERSION = 17;
 
 /* O HUMOR DE ABERTURA da base. Uniforme de proposito nesta fase: uma coalizao
    recem-formada por rateio de ministerio nao tem historia com o governo, e
@@ -351,7 +375,7 @@ export const INITIAL_LOYALTY = 70;
    Nao e zero porque a posse e em janeiro e o primeiro orcamento que o presidente
    assina e o de marco: janeiro e fevereiro sao do antecessor, e o jogo comeca onde
    a caneta comeca a valer. */
-const OPENING_MONTH = 2;
+export const OPENING_MONTH = 2;
 
 /* A semente de uma partida sem semente escolhida. Ela e CONSTANTE de proposito:
    um padrao tirado do relogio faria duas partidas "iguais" divergirem, e a
@@ -497,6 +521,9 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
         bill: null,
         except: [],
         saved: null,
+        from: null,
+        lever: null,
+        level: null,
         answer: null,
         closedAt: OPENING_MONTH,
       },

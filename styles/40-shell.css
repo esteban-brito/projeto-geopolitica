@@ -87,19 +87,46 @@
 
   /* OS VITAIS ROLAM POR DENTRO quando a janela aperta, e nao quebram em duas
      fileiras: uma barra que muda de altura empurra o tabuleiro inteiro para
-     baixo toda vez que um numero cresce um digito. */
+     baixo toda vez que um numero cresce um digito.
+
+     ⚠ ELES DEIXARAM DE SER FICHAS EM 16/08/2026 — Parte B do ciclo 11. Quatro
+     colunas `rotulo em cima / numero em baixo / seta ao lado`, centradas e
+     igualmente espacadas, sao a assinatura visual de um TICKER DE BOLSA, e foi essa
+     a queixa: "tirar essa cara de site de investimentos".
+
+     O CONTEUDO NAO MUDOU, e nao podia: os quatro tem motor, e a lista so ficou
+     honesta quando SONDA nasceu — a barra passou tres sessoes sem existir para nao
+     nascer com um quarto do conteudo inventado. O que mudou e a FORMA: as quatro
+     fichas viraram UMA LINHA de leituras separadas por fio, que e como um boletim
+     oficial imprime indicador. Um rotulo em caixa alta, o valor ao lado na mesma
+     base, e um fio vertical entre as leituras.
+
+     ⚠ E O FIO E O MESMO DE DUAS PARADAS das legendas de bloco — latao apagado e
+     sombra —, pelo motivo que o ciclo 6 registrou: o que faz uma tela ler como grand
+     strategy nao e o ouro do botao, e a REPETICAO do mesmo fio, tela apos tela, ate o
+     olho parar de ver decoracao e passar a ver estrutura. */
   .topbar__vitals {
     display: flex;
     justify-content: center;
-    gap: clamp(var(--space-3), 2vw, var(--space-8));
+    align-items: baseline;
+    gap: 0;
     overflow-x: auto;
     scrollbar-width: none;
   }
 
   .vital {
-    display: grid;
-    gap: 2px;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: 0 clamp(var(--space-3), 1.6vw, var(--space-6));
     white-space: nowrap;
+  }
+
+  /* O FIO SO ENTRE, E NUNCA NAS PONTAS: um fio pendurado na quina e o defeito que
+     `:first-child` existe para evitar, e a faixa de indices da Mesa ja o aprendeu. */
+  .vital + .vital {
+    border-left: 1px solid rgba(var(--brand-rgb), 0.16);
+    box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.35);
   }
 
   .vital__label {
@@ -110,12 +137,16 @@
     color: var(--ink-dim);
   }
 
+  /* ⚠ O PESO CAIU DE 700 PARA 600, e isso e o resto do conserto: quatro numeros em
+     800 disputando com a data em 800 nao formam hierarquia, formam quatro manchetes.
+     Numa barra de jogo de gestao quem manda e a DATA — e o que o Football Manager poe
+     ali —, e as leituras acompanham. */
   .vital__value {
     display: flex;
     align-items: baseline;
     gap: 4px;
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--ink);
   }
 
@@ -160,7 +191,25 @@
        largura da janela: com `--column` em 100%, cada pixel daqui sai direto dos
        80% que o responsavel pediu. Medido em 1440px: com 32px de cada lado a peca
        fechava em 77,6% da janela; com 24px ela passa de 80%. */
-    padding: var(--space-8) clamp(12px, 1.5vw, 24px) var(--space-11);
+    /* ⚠ E ELE PASSOU A SER O MESMO NUMERO DO RAIL em 16/08/2026, porque nunca tinha
+       sido comparado com ele. Pedido do responsavel: "o bloco central inteiro parece
+       assimetrico e descentralizado, e nao ta na mesma altura do menu vertical
+       esquerdo". Medido a 1440px, e ele estava certo nas duas:
+
+         vertical    rail y=106  ·  lamina y=122     →  16px de desnivel
+         horizontal  margem esquerda 16  ·  direita 21,6
+
+       O rail usa `--space-4` na margem — 16 em cima e 16 na esquerda —, e o tabuleiro
+       usava `--space-8` no topo e um `clamp` de ~21,6 nas laterais. Tres numeros para
+       a mesma moldura, escolhidos em dias diferentes e nunca postos lado a lado.
+
+       ⚠ E A ASSIMETRIA NAO ESTAVA EM NENHUM DOS TRES: estava na RELACAO entre eles, e
+       por isso nenhuma revisao de folha isolada a pegaria. So medindo a geometria
+       renderizada — que e o que a captura do passeio faz com o resto.
+
+       Agora e um numero so nos dois lados e no topo. O ritmo fica 16 | rail | 32 |
+       lamina | 16, com o vao interno valendo o dobro da margem externa. */
+    padding: var(--space-4) var(--space-4) var(--space-11);
     /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela:
        `1fr` num grid tem minimo automatico igual ao conteudo, e sem esta linha a
        peca de 780px cria rolagem horizontal no tablet. */
@@ -392,6 +441,23 @@
 
     .rail__foot {
       flex-direction: column;
+    }
+
+    /* ⚠ A LINHA DE LEITURAS VOLTA A SER COLUNA NO CELULAR, e isto e uma REGRESSAO
+       MINHA consertada na captura do mesmo dia. A forma de boletim — rotulo e valor na
+       mesma base, com fio entre as leituras — custa cerca do dobro da largura por
+       leitura, e num aparelho de 390px a faixa passou a cortar a BASE fora da tela. A
+       tira rola por dentro de proposito, entao nada estourava e nada ficava vermelho:
+       o quarto sinal vital simplesmente deixava de existir para quem nao arrastasse.
+
+       No telefone o empilhado nao e o defeito que a queixa nomeia: "cara de site de
+       investimentos" e sobre a tela larga, onde quatro fichas centradas com seta leem
+       como painel de mercado. Numa coluna estreita, rotulo em cima e valor embaixo e
+       so o jeito de caber. */
+    .vital {
+      display: grid;
+      gap: 0;
+      padding: 0 var(--space-3);
     }
   }
 }

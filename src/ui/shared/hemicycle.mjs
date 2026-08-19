@@ -149,7 +149,7 @@ export function hemicycleHtml({ benches, total }) {
   const held = benches.reduce((sum, bench) => sum + bench.delivered, 0);
 
   return (
-    `<svg class="hemicycle" viewBox="0 0 100 56" role="img" ` +
+    `<svg class="hemicycle" viewBox="0 0 100 56" preserveAspectRatio="xMinYMid meet" role="img" ` +
     `aria-label="${escapeHtml(
       `${Math.round(held)} de ${total} cadeiras respondem ao governo, ` +
         `em ${benches.length} bancadas`,

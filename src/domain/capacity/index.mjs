@@ -19,6 +19,42 @@
    pontual e permanente. Quem so aloca nunca sai do lugar contra o decaimento de
    uma area cara; quem so legisla ve o salto evaporar.
 
+   ── ⚠ O DECAIMENTO E PROPORCIONAL AO ESTOQUE, e ate 16/08/2026 ele era CONSTANTE
+   Esta linha e o achado 31, e ele foi o defeito mais fundo ja medido no projeto:
+   um governo que nao fazia ABSOLUTAMENTE NADA via os oito indices SUBIREM em 48
+   meses — industria de 48 a 100, previdencia de 71 a 100, segurança de 38 a 71.
+   "Nao fazer nada melhora tudo" e indefensavel num jogo sobre governar, e ele
+   explicava tres outros achados de uma vez: o presidente ausente com a melhor
+   divida (1d), os dois lobbies que nunca esquentam (30) e o passivo que nunca cai
+   (29).
+
+   A causa nao era o VALOR do decaimento — era a FORMA dele:
+
+     antes   indice' = indice − decay + yield × gasto        (constante)
+     agora   indice' = indice × (1 − decay) + yield × gasto  (proporcional)
+
+   Com a subtracao constante o indice e um INTEGRADOR PURO: nao existe equilibrio
+   em lugar nenhum, e `yield × gasto − decay` decide um unico destino para toda a
+   partida — ou sobe ate 100, ou cai ate 0. Nao ha ponto em que o pais fique parado,
+   e por isso nao havia calibragem possivel: qualquer numero maior que o de hoje
+   trocava "sobe sempre" por "cai sempre". Medido, e as duas coisas foram medidas.
+
+   Proporcional, a area ganha um ATRATOR: `indice* = yield × gasto / decay`. Gastar
+   mais levanta o patamar, gastar menos o abaixa, e parar de gastar leva a zero
+   assintoticamente em vez de linearmente — que e o que depreciacao faz no mundo,
+   porque maquina grande perde mais em valor absoluto do que maquina pequena.
+
+   ⚠ E O NUMERO DE CADA AREA SAI DE UMA IDENTIDADE, e nao de gosto — a mesma regra
+   que recalibrou `yield` em 14/08:
+
+       decay_area  ≡  yield_area × gasto_cheio_herdado_area / indice_herdado_area
+
+   Ela poe o ORCAMENTO DA POSSE exatamente no ponto de equilibrio de cada area. O
+   presidente que mantiver o que herdou mantem o pais onde ele esta; quem cortar, ve
+   cair; quem gastar mais, ve subir. Nenhuma das tres e de graca, e nenhuma e
+   proibida. Ver `src/data/areas.mjs`, onde os oito numeros estao com a conta ao lado,
+   e `tests/suites/capacity.mjs`, que prova a identidade contra o catalogo.
+
    ── O ATRASO, E POR QUE ELE E UM HISTORICO E NAO UMA FILA ────────────────────
    O indice muda HOJE; o efeito dele sobre o modelo chega `lag` meses depois. A
    forma obvia seria uma fila de efeitos agendados, e ela seria pior: um efeito
@@ -141,7 +177,14 @@ export function step({ areas, index, history, allocation, impacts = {}, neutral,
     const jump = impacts[area.id] ?? 0;
     const inherited = area.id === capacityTarget ? bonus : 0;
 
-    next[area.id] = clamp(before - area.decay + area.yield * spent + jump + inherited, 0, 100);
+    /* ⚠ PROPORCIONAL, E NAO SUBTRAIDO — ver o cabecalho. A diferenca nao e de
+       calibragem: com a subtracao constante nao existe equilibrio em lugar nenhum,
+       e o indice so sabe subir para sempre ou cair para sempre. */
+    next[area.id] = clamp(
+      before * (1 - area.decay) + area.yield * spent + jump + inherited,
+      0,
+      100,
+    );
 
     /* O historico guarda `lag + 1` valores: o de hoje e os `lag` anteriores.
        Com `lag` zero sobra um so, e o efetivo e o corrente — que e exatamente o

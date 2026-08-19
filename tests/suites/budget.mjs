@@ -136,7 +136,7 @@ test("A ARMADILHA EXISTE: ha entradas validas que disparam o contingenciamento",
   assert.ok(squeezed > 0, "nenhuma entrada apertou — a armadilha nao existe");
 });
 
-test("PROVA SINTETICA: receita em queda encolhe o teto e fura a obrigatoria", () => {
+test("PROVA SINTETICA: o PISO segura o teto na recessao, e a OBRIGATORIA ainda o fura", () => {
   /* O caso do dossie, montado a mao: o PIB decepciona, a receita cai abaixo da
      ancora, o teto do arcabouco ENCOLHE, e a obrigatoria — que cresceu no mesmo
      mes — passa por cima dele. Nenhum evento escrito; aritmetica. */
@@ -171,11 +171,34 @@ test("PROVA SINTETICA: receita em queda encolhe o teto e fura a obrigatoria", ()
      foi ajuste de dificuldade — foi a escala real chegando. Um orcamento em que a
      obrigatoria e 93% do gasto quebra com uma recessao menor do que um em que ela
      e 91%, e o Brasil e o primeiro. Se a calibracao mudar, este numero muda junto. */
+  /* ⚠ E A BANDA REAL REESCREVEU ESTA PROVA EM 16/08/2026, sem apaga-la — como o muro
+     do caixa reescreveu `allowance <= cash`. A afirmacao antiga era "receita caindo
+     ENCOLHE o teto", e ela era verdadeira sobre a regra sem banda. Com o piso de 0,6%
+     ao ano da LC 200/2023 ela deixa de ser: o piso existe justamente para o teto ser
+     corrigido num exercicio de receita ruim, e sem ele dois anos fracos seguidos
+     derrubam o Estado em termos reais sem ninguem decidir nada.
+
+     O que a prova cobra agora sao as DUAS metades da regra nova. */
   const recessao = step({ ...base, gdp: base.gdp * 0.85 });
   assert.ok(recessao.revenue < calmo.revenue, "a receita tinha de cair");
-  assert.ok(recessao.ceiling < calmo.ceiling, "o teto tinha de encolher junto");
-  assert.equal(recessao.contingency, true, "o gatilho tinha de disparar");
-  assert.equal(recessao.allowance, 0);
+
+  /* 1 — O PISO SEGURA. A recessao nao encolhe o teto abaixo do que a lei garante. */
+  assert.ok(
+    recessao.ceiling >= base.anchorExpense,
+    `o teto caiu para ${recessao.ceiling} numa recessao — o piso da banda nao segurou`,
+  );
+  assert.equal(recessao.contingency, false, "com o piso valendo, esta recessao nao aperta");
+
+  /* 2 — E O GATILHO CONTINUA ALCANCAVEL, que e a outra metade e a mais importante:
+     um contingenciamento que nunca dispara e um instrumento morto, e este projeto ja
+     pagou por isso uma vez (achado 3). O que aperta agora nao e a receita caindo — e a
+     OBRIGATORIA passando o teto, que e a armadilha que o arquivo do motor promete.
+
+     O limiar e calibracao e vale escrito: com estes parametros e sem inflacao, a
+     obrigatoria fura quando passa de `2300 × 1,006 = 2313,8` ja crescida de um mes. */
+  const pesada = step({ ...base, gdp: base.gdp * 0.85, mandatory: 2320 });
+  assert.equal(pesada.contingency, true, "a obrigatoria acima do teto tinha de apertar");
+  assert.equal(pesada.allowance, 0);
 });
 
 test("a divida sobe quando o saldo do mes e negativo, e so por isso", () => {

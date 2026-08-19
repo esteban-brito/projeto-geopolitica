@@ -23,7 +23,7 @@
 import { escapeHtml } from "../shared/html.mjs";
 import { headHtml } from "../shared/head.mjs";
 import { hemicycleHtml } from "../shared/hemicycle.mjs";
-import { money, percent, seats } from "../shared/format.mjs";
+import { attr, money, percent, seats } from "../shared/format.mjs";
 import { UI } from "../strings.mjs";
 
 /**
@@ -136,8 +136,10 @@ function legendHtml(split) {
  * @param {ReadonlyArray<Segment>} input.segments
  * @param {Record<string, Approval>} input.street a pesquisa de cada segmento
  * @param {{ lobbies: ReadonlyArray<{ id: string, label: string, wants: string,
- *   pressure: number, boiling: boolean }>,
+ *   pressure: number, boiling: boolean, boil: number }>,
  *   rupture: { social: boolean, economic: boolean, political: boolean, open: boolean },
+ *   ruptures: ReadonlyArray<{ id: string, value: number, threshold: number,
+ *     breaks: string, open: boolean }>,
  *   impeachment: number | null, fallen: number | null }} input.boiler a CALDEIRA, perguntada a `boilerOf`
  * @returns {string}
  */
@@ -350,7 +352,97 @@ export function cabinetHtml(input) {
   return (
     `<section class="area glass-stage cabinet">` +
     head +
-    `<div class="cards">${inbox}${congress}${vault}${boiler}${street}</div>` +
+    trinityHtml(input) +
+    /* ⚠ A COLUNA DA DIREITA E UM ELEMENTO, e nao quatro irmaos soltos na grade. Ate
+       16/08/2026 os cinco cartoes eram filhos diretos de `.cards`, e a Caixa de
+       Entrada dizia `grid-row: 1 / span 3` para acompanhar a altura deles.
+
+       O `span 3` foi escrito quando havia TRES resumos. O ciclo 10 acrescentou a
+       CALDEIRA, ninguem voltou aqui, e a coluna da esquerda passou a terminar uma
+       linha antes da direita — um degrau que so a captura mostra, porque nada falha:
+       o `span` continua sendo um span valido.
+
+       ⚠ E `1 / -1` NAO CONSERTA, o que me custou uma tentativa: `-1` conta a ultima
+       linha da grade EXPLICITA, e aqui todas as linhas sao implicitas. A bandeja
+       voltou a ocupar uma linha so.
+
+       Com a coluna dentro de um elemento, a grade tem duas celulas e ponto. Nao ha
+       contagem para manter em dia, e um sexto resumo nao reabre isto. */
+    `<div class="cards">${inbox}` +
+    `<div class="cards__side">${congress}${vault}${boiler}${street}</div>` +
+    `</div>` +
+    `</section>`
+  );
+}
+
+/**
+ * A TRINDADE — as tres rupturas que precisam acontecer JUNTAS para o processo abrir.
+ *
+ * ⚠ ELA E A MELHOR IDEIA DO DECIMO DOSSIE, e ficou parada meio dia por uma razao que
+ * caducou no mesmo dia: dois dos quatro lobbies nunca se moviam (achado 30), e
+ * desenhar um medidor que promete derrubar presidente sobre um motor que nao se mexe e
+ * a decoracao que o ciclo 10 se acusa de ter feito. Consertado o achado 31, o pais
+ * passou a se degradar e os dois passaram a andar — medido: o setor produtivo vai a 33
+ * e as forcas de ordem a 35 em 48 meses, contra ZERO antes.
+ *
+ * ⚠ E A TRINDADE DO DOSSIE NAO E A DO MODELO, e a correcao decide o desenho. Ele
+ * propunha Ruas / Maquina (burocracia + forcas de ordem) / Blindagem. A burocracia nao
+ * existe, e as forcas de ordem tem `weight: 0` — elas NAO entram na ruptura economica,
+ * por decisao registrada em `lobbies.mjs`. Quem a carrega e o mercado e o setor
+ * produtivo, que a trindade dele omite. O que se desenha e a trindade do MOTOR.
+ *
+ * ⚠ NENHUM NUMERO E CALCULADO AQUI. Valor, limiar e o lado em que cada uma rompe vem
+ * de `boilerOf` — a social se lê ao contrario das outras duas, e saber disso e regra de
+ * motor. A tela pergunta.
+ *
+ * @param {object} input
+ * @param {{ ruptures: ReadonlyArray<{ id: string, value: number, threshold: number,
+ *   breaks: string, open: boolean }> }} input.boiler
+ * @returns {string}
+ */
+function trinityHtml({ boiler }) {
+  const rows = boiler.ruptures
+    .map(item => {
+      const label = UI.cabinet.trinity[/** @type {"social"} */ (item.id)];
+
+      /* ⚠ A BARRA MOSTRA O VALOR NA ESCALA DELE, COM O LIMIAR MARCADO — e a primeira
+         versao normalizava "quanto do caminho ate a ruptura ja andou". Ela MENTIA, e a
+         captura pegou: com a rua em 44 e o piso em 20, a conta dava 70% e a barra
+         aparecia quase cheia e vermelha num governo confortavel.
+
+         O erro e de familia conhecida: normalizar por uma regua inventada desenha
+         drama onde nao ha. A regua honesta e a que o motor usa — zero a cem — e o que
+         o jogador precisa saber e de que LADO da linha ele esta. E o mesmo desenho da
+         regua legal do controle de verba, com a marca do piso no proprio trilho. */
+      const safe =
+        item.breaks === "below" ? item.value > item.threshold : item.value < item.threshold;
+
+      return (
+        `<div class="trinity__item"${item.open ? ' data-open="true"' : ""}>` +
+        `<span class="trinity__who">${escapeHtml(label)}</span>` +
+        `<span class="trinity__value" data-numeric>${seats(item.value)}` +
+        `<small>${escapeHtml(item.breaks === "below" ? UI.cabinet.trinityBelow : UI.cabinet.trinityAbove)} ` +
+        `${seats(item.threshold)}</small></span>` +
+        /* O VALOR E A MARCA SAO DADO, e por isso vao em estilo inline — a mesma
+           excecao declarada do `--floor` no trilho do orcamento. */
+        `<div class="gauge" role="img"${safe ? "" : ' data-past="true"'} ` +
+        `style="--index:${attr(Math.round(item.value))};--mark:${attr(item.threshold)}" ` +
+        `aria-label="${escapeHtml(`${label}: ${seats(item.value)}`)}"></div>` +
+        `</div>`
+      );
+    })
+    .join("");
+
+  /* ⚠ O RODAPE DIZ O QUE AINDA SEGURA O GOVERNO DE PE, e nao quantas romperam. Um
+     contador — "2 de 3" — mede o tamanho do perigo e esconde a unica coisa acionavel:
+     QUAL delas ainda nao rompeu. */
+  const holding = boiler.ruptures.filter(item => !item.open).length;
+
+  return (
+    `<section class="trinity"${boiler.ruptures.every(i => i.open) ? ' data-open="true"' : ""}>` +
+    `<h3 class="block__legend">${escapeHtml(UI.cabinet.trinityTitle)}` +
+    `<span>${escapeHtml(holding === 0 ? UI.cabinet.trinityNone : UI.cabinet.trinityHold)}</span></h3>` +
+    `<div class="trinity__row">${rows}</div>` +
     `</section>`
   );
 }
@@ -375,8 +467,12 @@ function cabinetStreetHtml({ segments, street }) {
       const poll = street[segment.id];
       if (!poll) return "";
 
+      /* ⚠ A LINHA E A MESMA DA CALDEIRA, e a peca comum e `.reading`. Ate 16/08/2026
+         cada uma tinha a propria grade — 7,5rem aqui, 9rem la —, e as duas moram uma
+         embaixo da outra na mesma coluna do Gabinete: as barras comecavam em pontos
+         diferentes e o olho lia desalinho sem conseguir nomear a causa. */
       return (
-        `<div class="street__row">` +
+        `<div class="street__row reading">` +
         `<span class="street__who">${escapeHtml(segment.label)}</span>` +
         `<div class="meter" role="img" ` +
         `aria-label="${escapeHtml(`${segment.label}: ${poll.good}% ótimo ou bom`)}">` +
@@ -387,7 +483,7 @@ function cabinetStreetHtml({ segments, street }) {
           )
           .join("") +
         `</div>` +
-        `<span class="street__value" data-numeric>${poll.good}%</span>` +
+        `<span class="reading__value" data-numeric>${poll.good}%</span>` +
         `</div>`
       );
     })
@@ -409,7 +505,7 @@ function cabinetStreetHtml({ segments, street }) {
  *
  * @param {object} input
  * @param {{ lobbies: ReadonlyArray<{ id: string, label: string, wants: string,
- *   pressure: number, boiling: boolean }>,
+ *   pressure: number, boiling: boolean, boil: number }>,
  *   rupture: { social: boolean, economic: boolean, political: boolean, open: boolean },
  *   impeachment: number | null, fallen: number | null }} input.boiler
  * @returns {string}
@@ -418,15 +514,17 @@ function boilerCardHtml({ boiler }) {
   const rows = boiler.lobbies
     .map(
       lobby =>
-        `<div class="boiler__row"${lobby.boiling ? ' data-boiling="true"' : ""}>` +
+        `<div class="boiler__row reading"${lobby.boiling ? ' data-boiling="true"' : ""}>` +
         `<span class="boiler__who">${escapeHtml(lobby.label)}</span>` +
         `<span class="boiler__wants">${escapeHtml(lobby.wants)}</span>` +
-        `<div class="meter" role="img" ` +
-        `aria-label="${escapeHtml(`${lobby.label}: ${Math.round(lobby.pressure)} ${UI.cabinet.boilerMeter}`)}">` +
-        `<span class="meter__part" data-part="poor" style="flex-grow:${lobby.pressure}"></span>` +
-        `<span class="meter__part" data-part="rest" style="flex-grow:${100 - lobby.pressure}"></span>` +
-        `</div>` +
-        `<span class="boiler__value" data-numeric>${Math.round(lobby.pressure)}</span>` +
+        /* ⚠ A BARRA VIROU REGUA em 16/08/2026, com a marca do PONTO DE FERVURA. Ela
+           mostrava pressao de 0 a 100 e nao dizia onde e a linha — e "55" e "20" liam
+           como duas barras curtas, quando o primeiro esta a cinco pontos de abandonar
+           o governo. O limiar vem de `boilerOf`: a tela nao tem o proprio. */
+        `<div class="gauge" role="img"${lobby.boiling ? ' data-past="true"' : ""} ` +
+        `style="--index:${attr(Math.round(lobby.pressure))};--mark:${attr(lobby.boil)}" ` +
+        `aria-label="${escapeHtml(`${lobby.label}: ${Math.round(lobby.pressure)} ${UI.cabinet.boilerMeter}`)}"></div>` +
+        `<span class="boiler__value reading__value" data-numeric>${Math.round(lobby.pressure)}</span>` +
         `</div>`,
     )
     .join("");

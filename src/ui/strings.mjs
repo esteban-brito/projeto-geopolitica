@@ -5,6 +5,64 @@
    alguem quiser outro idioma, a fronteira ja existe — sem que isso custe uma
    camada de i18n agora. */
 
+/* ── O VOCABULARIO COMPARTILHADO ──────────────────────────────────────────────
+   ══════════════════════════════════════════════════════════════════════════════
+
+   ⚠ ELE NASCEU DE UMA CONTAGEM, em 18/08/2026: **vinte e tres frases da interface
+   estavam escritas duas vezes**, e uma delas — "opinião pública" — duas vezes
+   DENTRO DO MESMO OBJETO. Copia duplicada nao acusa nada enquanto ninguem mexe; o
+   defeito nasce na primeira vez que alguem ajusta uma das duas, e a partir dali o
+   menu chama a tela de um nome e a tela se chama de outro.
+
+   ⚠ E NEM TODA REPETICAO ENTROU AQUI. O que entra e o que E A MESMA COISA e tem de
+   continuar sendo: o nome de uma tela no menu e no titulo dela, o nome de um estado
+   de bancada onde quer que ele apareca, o carimbo do afastamento. O que NAO entra e
+   o que hoje coincide e pode divergir por decisao — "Aprovada" no aviso da carta e
+   "Aprovada" no placar do relatorio sao a mesma palavra por acaso, e no dia em que
+   uma delas ganhar sujeito a outra nao muda junto.
+
+   O TESTE PARA ENTRAR: se as duas mudassem juntas OBRIGATORIAMENTE, e uma so. */
+const TERMOS = {
+  /* Os nomes das telas. O menu e o titulo tem de dizer a mesma coisa. */
+  cabinet: "Gabinete",
+  finance: "Finanças",
+  estado: "O Estado",
+
+  /* Os tres estados de uma bancada. Eles apareciam em `mood` e em `cabinet.arch*`
+     com as mesmas palavras em dois — e com palavras DIFERENTES no terceiro:
+     "rompida" contra "em ruptura", para o mesmo estado do mesmo motor. */
+  loyal: "com o governo",
+  obstructing: "obstruindo",
+  ruptured: "em ruptura",
+
+  /* As tres rupturas. Elas eram duas listas identicas dentro de `cabinet`. */
+  social: "Opinião pública",
+  economic: "Capital",
+  political: "Base no Congresso",
+
+  /* O carimbo do fim, e ele e o mesmo no cartao da CALDEIRA e no fecho. */
+  removed: "MANDATO INTERROMPIDO",
+  removedNote: "a Câmara autorizou o afastamento",
+
+  /* Unidades e grandezas, ditas uma vez. */
+  month: "mês",
+  months: "meses",
+  perYear: "/ano",
+  of: "de",
+  gdp: "PIB",
+  inflation: "Inflação",
+  approval: "Aprovação",
+  grossDebt: "Dívida bruta",
+  country: "O país",
+  onTable: "Em pauta",
+  delivers: "entrega",
+  /* ⚠ CANETA E UM RITO SO. `instrument.budget` saía com maiuscula e
+     `instrument.decree` com minuscula — a mesma palavra em duas grafias, e o CSS
+     faz caixa alta nos dois, entao a divergencia esperava um dia em que alguem
+     tirasse o `text-transform`. */
+  pen: "caneta",
+};
+
 export const UI = {
   mark: "Planalto",
   /* AS SECOES SAO A TABELA DE MOTORES, e nao uma lista de telas desejadas. Cada
@@ -17,11 +75,11 @@ export const UI = {
      Congresso deixa de ser um instrumento e vira um LUGAR — e a regra antiga
      sobrevive um nivel abaixo: quem quer mexer na saude entra em Ministerios. */
   nav: {
-    cabinet: "Gabinete",
+    cabinet: TERMOS.cabinet,
     congress: "Congresso & Leis",
-    finance: "Finanças",
+    finance: TERMOS.finance,
     ministries: "Ministérios",
-    estado: "O Estado",
+    estado: TERMOS.estado,
     street: "A Rua",
     backstage: "Bastidor",
     pending: "ainda não existe",
@@ -29,7 +87,7 @@ export const UI = {
   /* O GABINETE — a tela inicial, e a unica que so resume. */
   cabinet: {
     eyebrow: "o resumo da república",
-    title: "Gabinete",
+    title: TERMOS.cabinet,
     inbox: "Caixa de entrada",
     /* ⚠ A ESPERA E DITA, e nao escondida. A Caixa de Entrada e a peca central
        desta tela e ela so tem o que dizer quando o Congresso, o relator e o
@@ -60,15 +118,15 @@ export const UI = {
        abaixo de "cabe R$ 14,2 bi" obriga o jogador a subtrair de cabeca para
        descobrir a unica coisa que importa — e a subtracao e trabalho da tela. */
     vaultOver: "o orçamento escrito passa do que cabe em",
-    street: "A rua",
+    street: "Aprovação por renda",
     seats: "de 513",
     reading: "a leitura do mês",
     /* A LEGENDA DO ARCO. Tres cores sem chave e um grafico que so o autor lê —
        e este arco passou um dia inteiro assim, com as fatias certas e ninguem
        sabendo o que elas diziam. */
-    archLoyal: "com o governo",
-    archObstructing: "obstruindo",
-    archRuptured: "em ruptura",
+    archLoyal: TERMOS.loyal,
+    archObstructing: TERMOS.obstructing,
+    archRuptured: TERMOS.ruptured,
     /* ⚠ A RESPOSTA A PERGUNTA QUE O JOGADOR FAZ PRIMEIRO. Ele olha "obrigatória
        95%" e pergunta por quê; a resposta do Planalto e diferente da que ele
        espera — nao e falta de caixa, e excesso de TEXTO, e cada real preso tem uma
@@ -77,15 +135,46 @@ export const UI = {
     /* ── A CALDEIRA ────────────────────────────────────────────────────────────
        ⚠ ELA MEDE QUEM CONSEGUE TE DERRUBAR, e a Rua logo abaixo mede quem te
        aprova. São perguntas diferentes, e por isso são dois cartões e não um. */
-    boiler: "As placas tectônicas",
+    /* ⚠ ELE SE CHAMAVA "AS PLACAS TECTONICAS" ate 16/08/2026, e o responsavel matou a
+       metafora com uma frase: "expressoes que nao da pra entender nada, pura cara de
+       IA". Ele esta certo, e o defeito tem nome — a metafora estava fazendo o trabalho
+       que o SUBTITULO de cada linha ja faz: cada grupo diz o que quer, logo abaixo do
+       nome. O rotulo poetico so atrasava a leitura.
+
+       ⚠ E A REGRA QUE SAI DAQUI vale para toda tela: rotulo nomeia a COISA; a metafora,
+       se ela se paga, mora na prosa do arquivo e nao na interface. */
+    boiler: "Grupos de pressão",
     boiling: "fervendo",
     /* AS TRÊS RUPTURAS, e o processo só abre com as três juntas — presidentes não
        caem por um fator só. */
-    ruptureSocial: "a rua",
-    ruptureEconomic: "o capital",
-    rupturePolitical: "quem sustenta",
+    ruptureSocial: TERMOS.social,
+    ruptureEconomic: TERMOS.economic,
+    rupturePolitical: TERMOS.political,
     ruptureNone: "nenhuma ruptura aberta",
     rompeu: "rompeu:",
+    /* ── A TRINDADE, e ela é a leitura que faltava ─────────────────────────────
+       ⚠ ELA DIZ O QUE AINDA SEGURA O GOVERNO DE PÉ, e não quantas romperam. Um
+       contador — "2 de 3" — mede o tamanho do perigo e esconde a única coisa
+       acionável: QUAL delas ainda não rompeu.
+
+       Os três nomes são os mesmos de `ruptureSocial` e irmãs, e não uma segunda
+       tradução: dois nomes para a mesma ruptura é como um vocabulário começa a
+       divergir. Aqui o mapa é por id, porque quem os enumera é o motor. */
+    trinityTitle: "Risco de queda",
+    trinityHold: "as três, juntas",
+    trinityNone: "as três romperam",
+    /* OS TRES NOMES DIZEM QUEM ABANDONA, e nao uma imagem. "Quem sustenta" era o
+       fisiologismo por perifrase — o jogador tinha de deduzir de quem se falava. */
+    trinity: {
+      social: TERMOS.social,
+      economic: TERMOS.economic,
+      political: TERMOS.political,
+    },
+    /* O LADO EM QUE CADA UMA ROMPE, e ele vem do motor: a social rompe quando CAI,
+       as outras duas quando SOBEM. Sem dizer o lado, o número ao lado do limiar
+       não significa nada. */
+    trinityBelow: "rompe abaixo de",
+    trinityAbove: "rompe acima de",
     /* O rótulo do medidor, para leitor de tela. */
     boilerMeter: "de 100 de pressão",
     /* ⚠ E O CARIMBO DO CERCO. Ele é mono porque é a máquina do Estado carimbando —
@@ -95,8 +184,8 @@ export const UI = {
        Estado carimbando. E a frase é seca de propósito — o Planalto não tem tela de
        derrota nem placar, porque a partida JÁ é um mandato. Cair é o mandato
        terminar antes, e o que muda é a data. */
-    fallen: "MANDATO INTERROMPIDO",
-    fallenNote: "a Câmara autorizou o afastamento",
+    fallen: TERMOS.removed,
+    fallenNote: TERMOS.removedNote,
     siegeNote: "cada voto custa o triplo até o plenário decidir",
   },
   /* A JANELA DA TENDENCIA — e ela e dita porque ela VARIA.
@@ -108,8 +197,8 @@ export const UI = {
      Numero de variacao sem janela declarada nao e leitura: e adivinhacao. */
   window: {
     over: "em",
-    month: "mês",
-    months: "meses",
+    month: TERMOS.month,
+    months: TERMOS.months,
   },
   /* ── DE QUEM É ESTE GOVERNO ────────────────────────────────────────────────
      ⚠ O JOGADOR ERA A ÚNICA PESSOA SEM NOME num jogo em que sete outras tinham. A
@@ -141,6 +230,43 @@ export const UI = {
      resultado de uma decisão chegando onde talvez ninguém olhe é a definição de
      consequência invisível. */
   inbox: {
+    /* ── O CERCO FALANDO ──────────────────────────────────────────────────────
+       ⚠ ESTAS FRASES NASCERAM DE UMA MEDIÇÃO, e ela é o achado mais desconfortável
+       de 18/08/2026: num governo passivo chegavam ZERO cartas em 44 meses, e o
+       processo de impeachment abria no mês 43 no meio desse silêncio. O país
+       desmoronava — aprovação em 13%, dois grupos fora do governo, a Câmara reunida
+       para afastar o presidente — e a única notícia disso era uma barra num cartão
+       da coluna da direita.
+
+       ⚠ E NENHUMA DELAS INVENTA MECÂNICA. Cada uma diz o que ACONTECEU e o que
+       aquilo arma; os dois números do cerco vêm do motor, e a régua com o valor e o
+       limiar de cada ruptura já mora no Gabinete. A carta é o que chega a quem não
+       estava olhando para a régua. */
+    ruptureSubject: {
+      social: "A rua rompeu",
+      economic: "O capital rompeu",
+      political: "A base rompeu",
+    },
+    ruptureFallback: "Uma ruptura se abriu",
+    ruptureBody: {
+      social:
+        "A aprovação furou o piso, e a rua deixou de ser um custo político para virar uma das condições do afastamento.",
+      economic:
+        "Metade do capital que financia campanha abandonou o governo. Quem paga a conta de uma eleição está do outro lado.",
+      political:
+        "O fisiologismo concluiu que sustentar o senhor custa mais do que derrubá-lo — e ele é o último a virar, porque ganha dinheiro sustentando.",
+    },
+    /* ⚠ A FRASE COMUM É O QUE FAZ A CARTA VALER: uma ruptura sozinha não derruba
+       ninguém, e sem isso o aviso soaria como sentença. São três, e o processo só
+       abre com as três juntas — é isso que dá ao jogador o que fazer. */
+    ruptureNote: "São três, e o processo só abre com as três abertas ao mesmo tempo.",
+    siegeSubject: "O processo foi aberto",
+    siegeBody:
+      "As três rupturas se abriram juntas, e o pedido de afastamento foi protocolado. Ele não se fecha porque a rua melhorou: quem o encerra é o plenário.",
+    siegeVote: "A Câmara vota no mês que vem, e afastar exige",
+    siegeOf: TERMOS.of,
+    siegePrice: "Até lá cada cadeira custa",
+    siegeAction: "Ir ao Congresso",
     /* ⚠ PROTOCOLADO NAO E DERROTA, e a distincao nasceu de um defeito medido: a
        carta do mes dizia "derrubada" para um texto que tinha acabado de ser
        ESCRITO. Ela lia `enacted` — que desde a tramitacao significa "algum texto
@@ -181,10 +307,35 @@ export const UI = {
        ⚠ AS DUAS SAÍDAS CUSTAM, e a frase de cada uma diz o quê. Um par de botões
        genéricos — "sim" e "não" — obrigaria o jogador a descobrir o preço depois
        de pagar, e informação que chega depois da decisão é recibo. */
-    accept: "Aceitar a emenda",
-    acceptCost: "o texto vai a plenário sem o que ele salvou",
-    block: "Travar o texto",
-    blockCost: "ele volta para a gaveta, e o relógio dela não reinicia",
+    amendmentChoices: {
+      accept: "Aceitar a emenda",
+      acceptCost: "o texto vai a plenário sem o que ele salvou",
+      block: "Travar o texto",
+      blockCost: "ele volta para a gaveta, e o relógio dela não reinicia",
+    },
+    /* ── A CHANTAGEM ──────────────────────────────────────────────────────────
+       ⚠ AS DUAS SAÍDAS DIZEM ONDE DÓI, e são lugares DIFERENTES: ceder cobra no
+       caixa deste mês, recusar cobra na paciência do grupo. Um par que custasse na
+       mesma moeda não seria uma escolha, seria um preço com duas etiquetas.
+
+       E o texto não promete número que o motor não produz: "sai da mesma bolsa" é
+       verdade e é tudo o que se pode afirmar antes de o mês fechar — quanto sai
+       depende do rateio, e prometer um valor aqui seria a Mesa anunciando um placar
+       que o turno não entrega. */
+    demandBody: "quer o programa de volta em",
+    /* ⚠ O SILENCIO AQUI RECUSA, e essa frase e o inverso da irma dela na emenda. A
+       diferenca nao e de tom: um lobby que exige e nao recebe resposta NAO entende que
+       ganhou, e prometer o contrario faria o jogador aprender uma regra errada e jogar
+       contra ela por meses. */
+    spiteWarns: "Se você não responder, ele lê como recusa.",
+    conceded: "Você cedeu, e a verba volta neste mês.",
+    refused: "Você recusou, e ele não esquece depressa.",
+    demandChoices: {
+      accept: "Ceder",
+      acceptCost: "a verba volta, e ela sai da mesma bolsa deste mês",
+      block: "Recusar",
+      blockCost: "o grupo esquenta, e a caldeira não esfria depressa",
+    },
     /* ⚠ O PREÇO DO SILÊNCIO É DITO ANTES, e essa frase é a razão de o prazo ser
        mecânica em vez de relógio: é saber o que acontece se você não responder que
        transforma ignorar numa ESCOLHA. Um dossiê externo pediu o contrário — que a
@@ -193,8 +344,8 @@ export const UI = {
     silenceWarns: "Se você não responder, a emenda vale.",
     dueIn: "vence em",
     dueNow: "vence neste mês",
-    months: "meses",
-    month: "mês",
+    months: TERMOS.months,
+    month: TERMOS.month,
     /* O DESFECHO — e ele fica na bandeja um mês depois de fechado, porque um inbox
        que apaga o que você deixou vencer esconde justamente que você vem deixando
        vencer. */
@@ -215,9 +366,9 @@ export const UI = {
   },
   /* A BARRA SUPERIOR — os sinais vitais, e eles nunca somem da tela. */
   vitals: {
-    gdp: "PIB",
-    inflation: "Inflação",
-    approval: "Aprovação",
+    gdp: TERMOS.gdp,
+    inflation: TERMOS.inflation,
+    approval: TERMOS.approval,
     base: "Base",
     advance: "Avançar",
   },
@@ -247,7 +398,7 @@ export const UI = {
     available: "disponíveis",
     committed: "já comprometidos nas outras áreas",
     holding: "parado",
-    perYear: "/ano",
+    perYear: TERMOS.perYear,
     total: "total",
     /* OS TITULOS DAS TRES COLUNAS DE NUMERO. Sem eles a linha de uma acao mostra
        `308 · −140 · +8`, que sao tres grandezas diferentes em tres unidades
@@ -303,19 +454,25 @@ export const UI = {
      autorizou, executado por quem foi eleito para executá-lo. Ele não está em
      `INSTRUMENTS` de propósito — instrumento é o que vai a plenário. */
   instrument: {
-    budget: "Caneta",
+    budget: TERMOS.pen,
     law: "lei",
     amendment: "emenda",
-    decree: "caneta",
+    decree: TERMOS.pen,
   },
   instrumentHint: {
+    /* ⚠ `budget` FALTAVA AQUI, e o buraco imprimia INGLÊS na tela. `labelOf` cai no
+       id cru quando não acha a chave — o que é de propósito, para um instrumento
+       digitado errado no catálogo aparecer em vez de sumir —, e a linha da pauta
+       saía "CANETA · Saúde · budget · resultado −26,5/ano". Regra do projeto:
+       português na interface, inglês no código. */
+    budget: "o Congresso já autorizou",
     law: "maioria simples",
     amendment: "três quintos",
     decree: "sem votação",
   },
   estado: {
-    eyebrow: "a moldura",
-    title: "O Estado",
+    eyebrow: "o patrimônio e o poder",
+    title: TERMOS.estado,
     property: "O que a União possui",
     power: "Quanto o Executivo decide sozinho",
   },
@@ -327,12 +484,12 @@ export const UI = {
      segundo lugar para a calibragem divergir, e o rótulo é quem sempre esquece de
      ser atualizado. */
   finance: {
-    eyebrow: "o placar",
-    title: "Finanças",
+    eyebrow: "as contas da União",
+    title: TERMOS.finance,
     economy: "A economia",
-    gdp: "PIB",
+    gdp: TERMOS.gdp,
     perCapita: "PIB por habitante",
-    inflation: "Inflação",
+    inflation: TERMOS.inflation,
     target: "meta de",
     rate: "Juro básico",
     central: "decidido pelo Banco Central",
@@ -364,14 +521,14 @@ export const UI = {
        houve promessa. */
     premium: "Prêmio de risco",
     premiumNote: "o que o mercado cobra acima da básica",
-    gross: "Dívida bruta",
+    gross: TERMOS.grossDebt,
     overGdp: "Dívida sobre o PIB",
     ceiling: "Teto do arcabouço",
     headroom: "Folga até o teto",
     untilCeiling: "o que o teto ainda deixa gastar",
     squeezed: "a obrigatória sozinha já fura o teto",
-    country: "O país",
-    perYear: "/ano",
+    country: TERMOS.country,
+    perYear: TERMOS.perYear,
     perMonth: "no mês",
   },
   /* ⚠ O CONGRESSO GANHOU CABECA E VIROU UMA LAMINA SO em 15/08/2026. Ele era a
@@ -406,7 +563,7 @@ export const UI = {
     willFile: "este texto vai para a gaveta",
     forecastLater: "previsão para quando ele chegar ao plenário",
     country: "O que o país entrega",
-    agenda: "Em pauta",
+    agenda: TERMOS.onTable,
     /* ── A GENTE DO CONGRESSO ─────────────────────────────────────────────────
        ⚠ SETE PESSOAS DECIDIAM O PREÇO DE TODA VOTAÇÃO E NENHUMA APARECIA. O
        ELENCO gera nome, cargo, ambição e memória desde 14/08/2026; o jogador
@@ -440,10 +597,10 @@ export const UI = {
     memoryGood: "negocia como quem já recebeu",
     memoryBad: "cobra a promessa que você não pagou",
     memoryNone: "sem histórico com o seu governo",
-    delivers: "entrega",
+    delivers: TERMOS.delivers,
   },
   mesa: {
-    onTable: "Em pauta",
+    onTable: TERMOS.onTable,
     empty: "Nada em pauta",
     emptyHint: "escolha uma ação numa das áreas — ou avance o mês assim mesmo",
     swap: "trocar",
@@ -451,22 +608,39 @@ export const UI = {
     needs: "precisa de",
     promises: "promete",
     fits: "cabe",
-    over: "não cabe — o rateio vai cortar",
+    /* ⚠ ELA DIZIA O CONTRÁRIO DO MOTOR, e a captura pegou. O texto era "não cabe —
+       o rateio vai cortar", e o número impresso ao lado é o que CABE: "promete
+       R$ 13,8 bi · não cabe — o rateio vai cortar R$ 13,7 bi" lê-se como "vão cortar
+       quase tudo", quando o corte de verdade era de R$ 0,1 bi.
+
+       O verbo agora é o mesmo do relatório do mês — "o caixa honrou" —, e os dois
+       lados da frase voltam a comparar grandezas da mesma natureza: o que se promete
+       e o que se paga. Um vocabulário, dois lugares. */
+    over: "não cabe — o caixa honra",
     below: "abaixo do quórum",
     above: "acima do quórum",
     decree: "vale sem passar pelo plenário",
     bench: "bancada",
     mood: "humor",
     result: "resultado",
-    delivers: "entrega",
+    delivers: TERMOS.delivers,
     funding: "verba",
     cost: "custo",
-    seats: "de",
+    seats: TERMOS.of,
+    /* ⚠ O QUE A COLUNA DIZ NUM MES SEM PAUTA. Ela imprimia "de 76" — metade de uma
+       frase, com o antecedente faltando —, porque votos só existem contra um texto
+       em votação. Isto é o que continua verdadeiro todo mês: quantos aquela pessoa
+       arrasta. */
+    leads: "arrasta",
   },
+  /* ⚠ OS TRES SAIRAM DE `TERMOS`, e o terceiro estava DIVERGENTE: ele dizia
+     "rompida" enquanto o mesmo estado do mesmo motor era "em ruptura" no arco do
+     Gabinete. Duas palavras para um estado ensinam o jogador a procurar uma
+     diferenca que nao existe. */
   mood: {
-    loyal: "com o governo",
-    obstructing: "obstruindo",
-    broken: "rompida",
+    loyal: TERMOS.loyal,
+    obstructing: TERMOS.obstructing,
+    broken: TERMOS.ruptured,
   },
   approvalLabel: "Aprovação do governo",
   approvalParts: {
@@ -533,16 +707,32 @@ export const UI = {
     cut: "o rateio cortou",
     cutWhy: "a promessa não cabia no mês",
     contingency: "o teto fechou: a obrigatória sozinha já fura o arcabouço",
-    country: "O país",
+    country: TERMOS.country,
   },
   actions: {
+    /* ── AS LEGENDAS DE BOTAO SAIRAM em 16/08/2026 ─────────────────────────────
+       Pedido do responsavel: "tire esses textos, frases e palavras inuteis".
+
+       ⚠ A REGRA QUE SOBRA E O TESTE: uma legenda so se paga quando ela diz algo que o
+       ROTULO nao diz. "Avancar o mes" seguido de "resolve o turno e propaga os efeitos"
+       falha nos dois lados — repete o rotulo em jargao de motor ("propaga os efeitos" e
+       vocabulario de CASCATA, e nao de presidente) e ocupa a segunda linha do unico
+       botao que o jogador aperta todo mes.
+
+       ⚠ E A DO REINICIO ERA PIOR: ela explicava o obvio ANTES do perigo. O aviso de
+       verdade e a confirmacao — "Apagar mesmo?" —, e essa fica, porque ela chega no
+       momento em que a informacao muda a decisao. */
     advance: "Avançar o mês",
-    advanceHint: "resolve o turno e propaga os efeitos",
     /* O BOTÃO DO MÊS PASSADO SAIU. Ele reabria o relatório num diálogo; o
        relatório agora é painel fixo da Mesa e está sempre à vista. Botão que
        abre o que já está aberto é ruído com aparência de funcionalidade. */
+    /* ⚠ O BOTAO DO FIM DIZ O QUE ACONTECEU e aponta o que fazer, e a legenda aqui
+       se paga pela mesma regra do reinicio: ela chega no momento em que a
+       informacao muda a decisao — o jogador acabou de descobrir que nao ha mais
+       mes, e precisa saber que ha outra partida. */
+    ended: "O mandato acabou",
+    endedHint: "nova partida, ao pé da coluna",
     restart: "Nova partida",
-    restartHint: "apaga o mandato e recomeça do primeiro mês",
     restartConfirm: "Apagar mesmo?",
     restartConfirmHint: "clique de novo para confirmar",
     close: "Entendi",
@@ -555,6 +745,37 @@ export const UI = {
     refusedBody:
       "O save guardado é de uma versão anterior do jogo e não pode ser convertido sem inventar o que faltava nele. " +
       "Ele foi preservado no navegador, e esta partida começa do primeiro mês.",
+  },
+  /* ── O FECHO DO MANDATO ────────────────────────────────────────────────────
+     ⚠ AS DUAS SAÍDAS TÊM O MESMO TOM, e isso é decisão e não descuido. O Planalto
+     não tem tela de derrota — a partida JÁ é um mandato de 48 meses, sem vitória e
+     sem placar. Quem cai e quem cumpre leem a mesma tela; o que muda é o carimbo e
+     a data. Um "você perdeu" aqui inventaria um objetivo que o jogo nunca teve. */
+  closing: {
+    eyebrow: "a prestação de contas",
+    /* O QUE A BARRA SUPERIOR DIZ NO LUGAR DO ANO. Ela contava "2º mandato · ano 1"
+       para quem atravessava os quatro anos — um mandato que nunca teve eleição. */
+    ended: "mandato encerrado",
+    title: "O mandato",
+    months: "meses de mandato",
+    /* OS DOIS CARIMBOS. São mono pela mesma razão dos outros dois do jogo: é a
+       máquina do Estado carimbando, e não uma medição nem um nome. */
+    removed: TERMOS.removed,
+    removedNote: TERMOS.removedNote,
+    served: "MANDATO CUMPRIDO",
+    servedNote: "os quatro anos terminaram",
+    country: "O país que o senhor entrega",
+    approval: TERMOS.approval,
+    approvalNote: "ótimo e bom",
+    debt: TERMOS.grossDebt,
+    debtNote: "sobre o PIB",
+    written: "O que ficou escrito",
+    /* ⚠ AUSÊNCIA DECLARADA. Um mandato sem lei nenhuma é um fato sobre o governo, e
+       a frase diz isso — não deixa um espaço vazio que parece defeito de tela. */
+    noLaws:
+      "Nenhuma lei foi escrita neste mandato. O país terminou com as regras que o senhor recebeu.",
+    abandoned: "Abandonaram o governo:",
+    noneAbandoned: "Nenhum grupo abandonou o governo.",
   },
   trend: {
     up: "▲",

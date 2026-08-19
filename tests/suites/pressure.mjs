@@ -17,8 +17,11 @@ import fc from "fast-check";
 import { heat, rupture } from "../../src/domain/pressure/index.mjs";
 import { LOBBIES, PRESSURE } from "../../src/data/lobbies.mjs";
 import { CATALOG } from "../../src/data/catalog.mjs";
-import { createState } from "../../src/state/state.mjs";
-import { bandsOf, playMonth } from "../../src/application/turn.mjs";
+import { OPENING_MONTH, createState } from "../../src/state/state.mjs";
+import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
+import { PROGRAMS } from "../../src/data/programs.mjs";
+import { bandsOf, costOf, discretionaryRoom, playMonth } from "../../src/application/turn.mjs";
+import { spendOf } from "../../src/application/agenda.mjs";
 
 const cold = Object.fromEntries(LOBBIES.map(l => [l.id, 0]));
 const idle = Object.fromEntries(LOBBIES.map(l => [l.id, 0.6]));
@@ -161,15 +164,92 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
     return null;
   };
 
+  /* ── O GOVERNO MEDIANO, e ele e a outra ponta do criterio ───────────────────
+     Ele nao e bom: aperta o orcamento ate caber no teto e paga so a manutencao da
+     base — o minimo para continuar governando. E o contrafactual que separa "a queda
+     e alcancavel" de "a queda e inevitavel". */
+  const UPKEEP = 1.5 / 12;
+  const manutencao = () => {
+    let state = createState();
+    for (let month = 0; month < 60; month++) {
+      const reserve = costOf(
+        Object.fromEntries(CATALOG.parties.map(p => [p.id, UPKEEP])),
+        CATALOG.parties,
+        CATALOG.fiscal.seatPrice,
+      );
+      /* O MAIOR APERTO QUE CABE, deixando a reserva da base de fora. Busca binaria,
+         como no simulador: a relacao entre o fator e o custo e linear, o teto nao e. */
+      const room = Math.max(0, discretionaryRoom(state) - reserve);
+      let low = 0;
+      let high = 1;
+      for (let step = 0; step < 20; step++) {
+        const mid = (low + high) / 2;
+        const levels = Object.fromEntries(
+          PROGRAMS.map(p => [
+            p.id,
+            p.floor + Math.max(0, (state.levels[p.id] ?? p.initial) - p.floor) * mid,
+          ]),
+        );
+        if (spendOf({ programs: PROGRAMS, levels }).total > room) high = mid;
+        else low = mid;
+      }
+      const levels = Object.fromEntries(
+        PROGRAMS.map(p => [
+          p.id,
+          p.floor + Math.max(0, (state.levels[p.id] ?? p.initial) - p.floor) * low,
+        ]),
+      );
+
+      state = playMonth(
+        state,
+        {
+          levels,
+          funding: Object.fromEntries(CATALOG.parties.map(p => [p.id, UPKEEP])),
+          bands: bandsOf(state, CATALOG),
+          mail: {},
+        },
+        { catalog: CATALOG },
+      ).state;
+      if (state.fallen !== null) return state.fallen;
+    }
+    return null;
+  };
+
   /* Promete verba cheia a todo mundo e o caixa nao honra: a base derrete, a rua
      desaba, e o processo se abre. */
   const caiu = anos(1);
   assert.ok(caiu !== null, "um governo que promete tudo e nao paga atravessou o mandato");
 
-  /* ⚠ E O PASSIVO SOBREVIVE, e isso e um RESULTADO e nao uma falha: nao gastar
-     agrada o mercado, e o capital o abriga. Ele perde o baixo clero e perde a rua, e
-     ainda assim as tres rupturas nao se abrem juntas. Ver o achado 29. */
-  assert.equal(anos(0), null, "o governo passivo caiu — a calibragem mudou de sentido");
+  /* ⚠ E O PASSIVO CAI TAMBEM, DESDE 16/08/2026 — e esta linha era o INVERSO ate o
+     achado 31 ser consertado. Ela dizia "o passivo sobrevive, e isso e um resultado":
+     nao gastar agradava o mercado, e o capital o abrigava.
+
+     O que mudou nao foi a CALDEIRA, foi o pais deixar de se consertar sozinho. Com o
+     decaimento por identidade, quem nao alimenta as areas ve os indices cairem, a rua
+     cansar e o mercado ver a divida subir — e as tres rupturas passam a se abrir
+     juntas. O achado 29 morreu por consequencia, e nao por calibragem: era exatamente
+     o que a retomada previa ao mandar consertar o 31 antes dele.
+
+     ⚠ E A PROVA NAO FOI APAGADA — ela virou a outra metade do criterio, que e a que
+     de fato importa e nunca esteve escrita: a queda tem de ser alcancavel por um
+     governo RUIM e inalcancavel por um MEDIANO. Sem esta segunda linha, "todo mundo
+     cai" passaria verde, e um motor de derrota que derruba sempre e uma cutscene. */
+  const passivo = anos(0);
+  assert.ok(passivo !== null, "o governo passivo atravessou 60 meses sem consequencia");
+
+  /* ⚠ E O MEDIANO ATRAVESSA O MANDATO. Ele mantem a maquina no que o teto permite e
+     paga a manutencao da base — nao e um bom governo, e um governo comum. Medido: ele
+     cai no mes 52, tres meses DEPOIS de o mandato acabar.
+
+     Este assert e o que impede a calibragem de escorregar para o corredor: com
+     `mandatoryGrowth` em 2,5% — a media aplicada a obrigatoria inteira, que era o
+     valor ate 16/08 — TODO governo caía entre os meses 39 e 45, inclusive o que
+     reforma, e o jogo deixava de ter jogada. */
+  const mediano = manutencao();
+  assert.ok(
+    mediano === null || mediano > MONTHS_PER_TERM + OPENING_MONTH,
+    `um governo mediano caiu no mes ${mediano}, dentro do mandato — a queda virou corredor`,
+  );
 });
 
 test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {

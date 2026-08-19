@@ -72,11 +72,13 @@
     color: var(--ink-dim);
   }
 
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
+  /* ⚠ UMA REGRA `.cards` MORTA SAIU DAQUI EM 16/08/2026 — ela declarava
+     `repeat(2, minmax(0, 1fr))` e era sobrescrita INTEIRA pela regra de mesma
+     especificidade vinte linhas abaixo, que declara 3fr/2fr. Folha orfa da familia
+     mais barata de todas: nao quebrava nada, nao pintava nada, e continuaria ali ate
+     alguem editar a regra errada das duas e passar meia hora sem entender por que a
+     grade nao mudou. E o achado 5 outra vez — a guarda `orphans` continua por
+     escrever, e enquanto ela nao existir isto volta. */
 
   /* ── A GRADE: A LISTA A ESQUERDA, OS RESUMOS EMPILHADOS A DIREITA ──────────
      ⚠ ELA TEVE DUAS FORMAS POR MEIO DIA — faixa no topo enquanto vazia, coluna
@@ -93,12 +95,101 @@
      `align-items: start` e o que impede os tres cartoes de esticarem para
      acompanhar a altura da lista: tres resumos esticados a 700px viram tres
      retangulos com um numero no meio e muito vazio em volta. */
+  /* ⚠ A CALHA ABRIU em 16/08/2026, a pedido do responsavel: "diminua a largura um
+     pouco da caixa de entrada, para que tenha um pouco de espaco entre ela e o bloco
+     inteiro do lado direito". Com doze pixels entre uma bandeja escavada e uma coluna
+     de leituras, as duas encostavam e liam como uma peca so partida ao meio.
+
+     E o 3fr virou 2,6fr: a razao original — "a lista carrega prosa e a coluna da
+     direita carrega numero" — continua valendo, e a medida de linha da carta segue
+     confortavel. O que ela perde em largura, a calha ganha em separacao. */
   .cards {
     display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 2.6fr) minmax(0, 2fr);
     align-items: start;
-    gap: var(--space-3);
+    gap: var(--space-8);
   }
+
+  /* ── A TRINDADE — a faixa que dá espinha à tela ─────────────────────────────
+     ⚠ ELA E A MELHOR IDEIA DO DECIMO DOSSIE, e resolve dois problemas de uma vez: dá
+     ao jogador a leitura que decide a sobrevivencia dele, e dá ao Gabinete um eixo
+     horizontal. Sem ela a tela eram duas colunas de alturas muito diferentes, e a
+     assimetria foi a primeira coisa que o responsavel viu.
+
+     TRES LEITURAS DE LARGURA IGUAL, e a igualdade e a afirmacao: as tres rupturas
+     valem o mesmo, e o processo so abre com as tres juntas. Uma delas maior diria que
+     ha uma principal. */
+  .trinity {
+    display: grid;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .trinity__row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3) var(--space-6);
+  }
+
+  .trinity__item {
+    display: grid;
+    gap: var(--space-1);
+    align-content: start;
+  }
+
+  .trinity__who {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .trinity__value {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-name);
+    color: var(--ink);
+  }
+
+  .trinity__value small {
+    font-size: var(--text-note);
+    font-weight: 400;
+    color: var(--ink-dim);
+  }
+
+  /* ⚠ A REGUA SAIU DAQUI em 16/08/2026 e virou `.gauge`, em `30-components.css`. Ela
+     nasceu nesta tela e no mesmo dia ganhou um segundo consumidor: as barras da
+     CALDEIRA logo abaixo mostravam pressao sem dizer onde e o ponto de fervura. Duas
+     reguas com a mesma pergunta e uma delas sem a marca era a divergencia comecando. */
+
+  /* ── A COLUNA DA DIREITA E UM ELEMENTO ──────────────────────────────────────
+     Ver a prosa em `cabinet.mjs`: com os resumos soltos na grade, a Caixa de Entrada
+     precisava declarar quantas linhas atravessar, e o numero envelheceu no dia em que
+     a CALDEIRA nasceu. Agora sao duas celulas. */
+  .cards__side {
+    display: grid;
+    align-content: start;
+    grid-column: 2;
+  }
+
+  /* ⚠ O EMPARELHAMENTO DOS DOIS ULTIMOS BLOCOS FOI TENTADO E REVERTIDO em 16/08/2026,
+     no mesmo minuto, e a razao vale registrada porque a ideia continua tentadora.
+
+     A pagina tinha 1495px numa janela de 900 e por-los lado a lado economizava ~110.
+     Medido depois: a 1440px a coluna da direita tem 511px, entao cada metade fica com
+     240 — e a linha de leitura gasta 9rem de nome mais 3rem de valor. **O medidor
+     sobrou com 24 pixels.** Uma barra de 24px nao mostra proporcao nenhuma: ela vira um
+     traco que muda de cor, e a prosa que eu mesmo escrevi ao lado da mudanca ja dizia
+     isso, com o numero certo, antes de eu medir.
+
+     Ele funciona a partir de ~1700px de janela, e por isso ele nao entra: ganhar cem
+     pixels de rolagem num monitor grande as custas de matar o medidor no tamanho de
+     tela que o responsavel usa e uma troca ruim. O que sobrou de economia veio do teto
+     do hemiciclo e do respiro entre blocos. */
 
   .card[data-span="lead"] {
     grid-column: 1;
@@ -109,28 +200,57 @@
        em `auto` e o corpo em `1fr`, o corpo recebe o que sobra e centra dentro. */
     grid-template-rows: auto 1fr;
     align-content: stretch;
-    /* A COLUNA INTEIRA, e o numero de linhas segue o numero de cartoes de resumo.
-       Sem o `span`, a lista pararia na altura do primeiro cartao e os outros dois
-       subiriam para debaixo dela. */
-    grid-row: 1 / span 3;
-    /* Ela acompanha a altura da coluna da direita — e nao o contrario. Uma lista
-       vazia mais curta que os resumos ao lado deixaria um degrau no rodape da
-       tela; uma lista cheia empurra a propria coluna e os resumos ficam onde
-       estao. */
+    /* ⚠ A COLUNA INTEIRA, E O NUMERO DE LINHAS NAO SE DIGITA MAIS. Ate 16/08/2026
+       esta linha era `1 / span 3`, escrita quando havia TRES cartoes de resumo. O
+       ciclo 10 acrescentou a CALDEIRA e ninguem voltou aqui: a coluna da esquerda
+       passou a terminar uma linha antes da direita, e o rodape do Gabinete ficou com
+       um degrau que so a captura mostra. Nada falhou — o `span` continuou valido.
+       `1 / -1` conta as linhas que existirem, e um quinto cartao nao reabre isto. */
+    grid-row: 1;
+    /* ⚠ E O ESTIRAMENTO FICA — eu o TIREI e devolvi na mesma sessao, contra a
+       captura. A ideia era que a bandeja tivesse altura propria e parasse onde as
+       cartas acabam, para nao deixar setecentos pixels de vazio escuro ao lado de uma
+       coluna cheia. Medido na tela: fica PIOR. Uma bandeja curta com um vao enorme
+       embaixo dela lê como layout inacabado; uma bandeja que acompanha a coluna
+       vizinha lê como o objeto que ela e — uma caixa de entrada com espaco sobrando,
+       que e exatamente o que uma caixa de entrada de mes tranquilo tem.
+
+       A razao antiga era boa e continua sendo: um degrau no rodape da tela custa mais
+       que o vazio dentro de um contêiner que se anuncia como contêiner. */
     align-self: stretch;
   }
 
-  .cards > .card:not([data-span="lead"]) {
-    grid-column: 2;
-  }
+  /* ⚠ ESTA REGRA MORREU em 16/08/2026 — os resumos deixaram de ser filhos diretos de
+     `.cards` e passaram a morar em `.cards__side`, que e quem declara a coluna 2. */
 
+  /* ── O CARTAO VIROU BLOCO em 16/08/2026 — Parte C do ciclo 11 ───────────────
+     ⚠ O GABINETE ERA A ULTIMA TELA NO DIALETO DE CARTAO. As outras quatro ja tinham
+     sido padronizadas na nona sessao — "uma lamina com cabeca e blocos", com a razao
+     escrita: vidro dentro de vidro sao dois materiais empilhados para dizer uma coisa
+     so. Aqui sobraram CINCO retangulos com raio e preenchimento proprio, e cinco
+     retangulos numa grade sao a unidade visual de um dashboard.
+
+     ⚠ E A EXCECAO DECLARADA CONTINUA VALENDO, so que ela nunca foi sobre o CARTAO:
+     "aqui os quatro assuntos nao tem relacao entre si, e nas outras telas as linhas
+     disputam a mesma bolsa". Assuntos separados precisam de SEPARACAO, e nao de
+     caixa — e a tela de area prova isso ha duas sessoes com oito blocos que ninguem
+     confunde entre si, separados por um fio.
+
+     O QUE ENTRA NO LUGAR e a mesma peca das outras telas: legenda em caixa alta com o
+     FIO METALICO de duas paradas embaixo. O que ele entrega nao e a linha — e a
+     repeticao dela, tela apos tela, ate o olho parar de ver decoracao e ver
+     estrutura. Agora sao cinco telas usando a mesma. */
   .card {
     display: grid;
     align-content: start;
     gap: var(--space-3);
-    padding: var(--space-4);
-    border-radius: var(--radius-piece);
-    background: rgba(255, 255, 255, 0.04);
+    /* O RECUO SOBROU PARA SEPARAR OS BLOCOS EMPILHADOS, e ele e vertical: sem a
+       caixa, o que afasta um assunto do seguinte e o ar entre eles. */
+    padding: 0 0 var(--space-3);
+  }
+
+  .card:last-child {
+    padding-bottom: 0;
   }
 
   .card__title {
@@ -138,6 +258,10 @@
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-3);
+    padding-bottom: var(--space-2);
+    box-shadow:
+      0 1px 0 rgba(var(--brand-rgb), 0.22),
+      0 2px 0 rgba(0, 0, 0, 0.35);
     font-family: var(--font-display);
     font-size: var(--text-label);
     font-weight: 700;
@@ -188,17 +312,35 @@
      e escavar um lugar onde nada cai seria forma sem funcao. */
   .card[data-span="lead"] .card__body {
     padding: var(--space-3);
-    border-radius: 3px;
+    border-radius: var(--radius-paper);
     background: rgba(0, 0, 0, 0.22);
     box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.55);
   }
 
+  /* ⚠ O CORPO DEIXOU DE CENTRAR em 16/08/2026, e esta linha era a outra metade do
+     "despadronizado" que o responsavel viu. As legendas de bloco sao alinhadas a
+     ESQUERDA e carregam um fio da largura inteira; o conteudo delas estava CENTRADO.
+     Cabeca numa margem e corpo noutra e o que faz uma coluna parecer montada por
+     partes — cada bloco terminando num lugar diferente, sem nenhuma aresta comum.
+
+     Enquanto havia caixa em volta de cada cartao, o contorno dava a referencia e o
+     centro funcionava. Sem caixa, a unica referencia que sobra e a MARGEM, e ela
+     precisa ser uma so. */
   .card__body {
     display: grid;
     align-content: start;
     gap: var(--space-3);
-    justify-items: center;
+    justify-items: start;
   }
+
+  /* ⚠ E NADA CENTRA, NEM O DESENHO. A primeira versao deste conserto abriu uma
+     excecao para o hemiciclo — "figura se centra" — e ela recriava o defeito uma
+     linha abaixo: com o desenho no centro e o "436 DE 513" na margem, a coluna volta
+     a ter duas referencias. Ou tudo tem uma margem, ou nao ha margem.
+
+     O hemiciclo passa a ocupar a COLUNA INTEIRA. Ele e um SVG com `viewBox`, entao
+     ele escala sem custo e sem perder cadeira nenhuma — e o teto de 300px que ele
+     tinha era o que o deixava boiando no meio de uma coluna de 430. */
 
   .card__hero {
     display: flex;
@@ -276,10 +418,7 @@
     display: grid;
     gap: var(--space-2);
     padding: var(--space-4);
-    border: 1px solid var(--paper-edge);
-    border-radius: 3px;
-    background: var(--paper);
-    color: var(--paper-ink);
+    /* O MATERIAL VEM DE `.letter, .passage__row, .law` em `30-components.css`. */
     justify-items: start;
     text-align: left;
     width: 100%;
@@ -298,9 +437,13 @@
      resto do jogo, e o que ele já significa é CRISE: uma carta prestes a vencer é
      crise. Não é cor nova, e é por isso que ela pode ser usada — a mesma razão que
      recusou hachura vermelha na pesquisa da Rua, aplicada do outro lado. */
+  /* ⚠ ELA ERA A TERCEIRA LARGURA, e nao havia terceiro grau. O gesto da marca na
+     borda esquerda tem dois: a normal e a do grau maximo. Uma carta com prazo
+     correndo e o grau maximo — o que gradua os tres estagios dela e a COR, e nao a
+     espessura. O recuo compensa a borda que engrossou, para o texto nao andar. */
   .letter[data-urgency] {
-    border-left-width: 3px;
-    padding-left: calc(var(--space-4) - 2px);
+    border-left-width: var(--rule-strong);
+    padding-left: calc(var(--space-4) - var(--rule-strong) + 1px);
   }
 
   .letter[data-urgency="open"] {
@@ -389,7 +532,7 @@
   .letter__action {
     padding: 3px var(--space-3);
     border: 1px solid rgba(var(--brand-rgb), 0.45);
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     font-family: var(--font-display);
     font-size: var(--text-label);
     font-weight: 800;
@@ -430,7 +573,7 @@
     gap: 2px;
     padding: var(--space-2) var(--space-3);
     border: 1px solid rgba(var(--paper-ink-rgb), 0.25);
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     background: rgba(var(--paper-ink-rgb), 0.04);
     color: var(--paper-ink);
     font-family: var(--font-display);
@@ -484,9 +627,18 @@
      e pintar ideologia com os mesmos tons faria um bloco parecer bom e o outro
      parecer perigo. A COMPOSICAO aparece pelo agrupamento — cada bancada e uma
      cunha contigua com um vao antes da vizinha —, e nao pela tinta. */
+  /* ⚠ ELE GANHOU TETO DE ALTURA em 16/08/2026, e o motivo veio da tela: "tenho que
+     rolar muito para ver o Gabinete inteiro". Medido a 1440x900, a pagina tinha 1495px
+     numa janela de 900 — e o hemiciclo sozinho ocupava 268 deles, porque a largura
+     cheia que eu dei a ele horas antes o esticou de 300 para 470px de base.
+
+     A largura cheia existia por uma razao boa — um desenho centrado com texto na
+     margem da a mesma coluna duas referencias —, e ela sobrevive: `xMinYMid` encosta o
+     arco na margem ESQUERDA em vez de centra-lo dentro da caixa. Uma margem so, e cem
+     pixels a menos. */
   .hemicycle {
-    width: min(300px, 100%);
-    height: auto;
+    width: 100%;
+    height: 170px;
   }
 
   /* ── A CADEIRA CHEIA E A VAZADA ─────────────────────────────────────────────
@@ -523,11 +675,19 @@
      ponto colorido antes de cada nome carrega a hierarquia da norma — e nao o
      tamanho dela: o que decide se aquele real sai e o preco de mudar o texto, e
      nao quantos bilhoes ele vale. */
+  /* ⚠ ELA ERA UM FLUXO QUE QUEBRAVA LINHA, e virou LISTA em 16/08/2026. Tres travas
+     com nome e valor, embrulhando conforme a largura, davam uma mancha de texto com
+     tres valores em pontos imprevisiveis — e ela fica embaixo de um medidor de
+     largura cheia e em cima de duas listas alinhadas. Era o pedaco mais ragged da
+     coluna.
+
+     Agora e uma trava por linha, com o valor na margem direita, como todo o resto da
+     coluna. Continuam sendo TRES e nao a lista inteira: trinta e oito programas com o
+     valor de cada um seriam o Diario Oficial dentro de um resumo. */
   .locked {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-1) var(--space-3);
+    display: grid;
+    gap: var(--space-1);
+    width: 100%;
     font-size: var(--text-note);
     color: var(--ink-dim);
   }
@@ -540,18 +700,21 @@
     text-transform: uppercase;
   }
 
+  /* O PONTO DE COR, O NOME, E O VALOR NA MARGEM — a mesma gramatica de `.reading`,
+     com o ponto no lugar do medidor. */
   .locked__item {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: 6px minmax(0, 1fr) auto;
     align-items: baseline;
-    gap: var(--space-1);
+    gap: var(--space-2);
   }
 
   .locked__item::before {
     content: "";
     align-self: center;
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
+    width: var(--dot);
+    height: var(--dot);
+    border-radius: var(--radius-dot);
     background: var(--part-color, var(--ink-dim));
   }
 
@@ -581,7 +744,9 @@
   .legend {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    /* ⚠ ELA CENTRAVA, e passou a alinhar na margem em 16/08/2026: ver a nota em
+       `.card__body`. Uma coluna com uma unica margem e o que separa "montado" de
+       "montado por partes". */
     gap: var(--space-2) var(--space-3);
     font-size: var(--text-note);
     color: var(--ink-dim);
@@ -596,9 +761,9 @@
   .legend__item::before {
     content: "";
     align-self: center;
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
+    width: var(--dot);
+    height: var(--dot);
+    border-radius: var(--radius-dot);
     background: var(--part-color, var(--ink-dim));
   }
 
@@ -640,10 +805,11 @@
     gap: var(--space-2);
   }
 
+  /* ⚠ AS COLUNAS SAIRAM DAQUI em 16/08/2026 e viraram `.reading`, em
+     `30-components.css`. Elas eram `7,5rem | 1fr | 3rem` enquanto a CALDEIRA logo
+     acima usava `9rem | 1fr | 2,5rem` — duas gramaticas na mesma coluna, com as
+     barras comecando em x diferentes. Ver a prosa do componente. */
   .street__row {
-    display: grid;
-    grid-template-columns: 7.5rem minmax(0, 1fr) 3rem;
-    align-items: center;
     gap: var(--space-3);
   }
 
@@ -653,12 +819,12 @@
     white-space: nowrap;
   }
 
-  .street__value {
-    font-family: var(--font-display);
-    font-weight: 700;
-    text-align: right;
-    color: var(--ink);
-  }
+  /* ⚠ `.street__value` SAIU DAQUI em 16/08/2026, acusada pela guarda `orphans` no
+     primeiro minuto de vida dela — e o defeito era MEU, do mesmo dia. Eu criei
+     `.reading__value` no componente para as duas listas do Gabinete usarem a mesma
+     gramatica, e deixei as duas copias antigas de pe: tres declaracoes byte a byte
+     iguais para uma coisa so, que e exatamente a divergencia que o componente existia
+     para impedir. A guarda pegou porque a nova nasceu sem consumidor. */
 
   /* ── AS REGUAS DO COFRE ─────────────────────────────────────────────────────
      A barra do cofre parecia progresso de download. As marcas verticais a
@@ -739,12 +905,11 @@
     gap: var(--space-2);
   }
 
+  /* AS COLUNAS SAO AS DE `.reading`; o que esta linha acrescenta e a SEGUNDA
+     FILEIRA — o nome em cima e o que o grupo cobra embaixo, com o medidor e o valor
+     atravessando as duas. Ver a prosa do componente. */
   .boiler__row {
-    display: grid;
-    grid-template-columns: 9rem minmax(0, 1fr) 2.5rem;
     grid-template-areas: "who meter value" "wants meter value";
-    align-items: center;
-    gap: 0 var(--space-3);
   }
 
   .boiler__who {
@@ -762,27 +927,20 @@
     color: var(--ink-soft);
   }
 
-  .boiler .meter {
+  .boiler .gauge {
     grid-area: meter;
   }
 
-  /* ⚠ O TRECHO VAZIO PRECISA SER TRILHO, e esta regra é a correção de um defeito que
-     só a captura pegou: sem cor própria, `rest` herdava o fundo claro do medidor e a
-     barra em pressão ZERO lia como barra CHEIA. Um grupo satisfeito parecia um grupo
-     fervendo, que é o inverso exato da informação.
+  /* ⚠ A REGRA DO TRECHO VAZIO SAIU DAQUI em 16/08/2026, junto com o medidor. Ela
+     consertava um defeito que so a captura pegou — sem cor propria, `rest` herdava o
+     fundo claro e a barra em pressao ZERO lia como barra CHEIA —, e a regua ja nasce
+     com o trilho declarado, entao a correcao virou parte do componente. */
 
-     O medidor da Rua não tem esse problema porque as três fatias dele somam 100 e
-     todas têm cor — aqui uma delas é ausência, e ausência precisa parecer ausência. */
-  .boiler .meter__part[data-part="rest"] {
-    background: rgba(255, 255, 255, 0.07);
-  }
-
+  /* SO A POSICAO NA GRADE FICA AQUI — o resto e `.reading__value`, no componente.
+     A linha da CALDEIRA tem duas fileiras (nome em cima, o que ele cobra embaixo) e o
+     valor atravessa as duas; isso e da tela, e nao da gramatica. */
   .boiler__value {
     grid-area: value;
-    font-family: var(--font-display);
-    font-weight: 700;
-    text-align: right;
-    color: var(--ink);
   }
 
   /* ⚠ FERVENDO USA O VERMELHO SEMÂNTICO, e aqui ele é literal: um grupo que ferveu
@@ -811,7 +969,7 @@
     margin-right: var(--space-2);
     padding: 1px var(--space-2);
     border: 1px solid var(--crisis);
-    border-radius: 2px;
+    border-radius: var(--radius-stamp);
     font-family: var(--font-machine);
     font-size: var(--text-label);
     letter-spacing: var(--track-label);

@@ -61,7 +61,10 @@ export const AREA_SCHEMA = {
   label: { kind: "text" },
   index: { kind: "text" },
   initial: { kind: "number", min: 0, max: 100 },
-  decay: { kind: "number", min: 0, max: 5 },
+  /* FRACAO DO ESTOQUE POR MES, e nao pontos por mes — ver a prosa de `decay`
+     abaixo e o cabecalho da MALHA. O teto de 1 e a natureza da coisa: uma area que
+     perdesse mais que 100% do que tem por mes nao e uma area, e um erro de digitacao. */
+  decay: { kind: "number", min: 0, max: 1 },
   yield: { kind: "number", min: 0, max: 5 },
   feeds: { kind: "text", values: CHANNELS },
   force: { kind: "number", min: -10, max: 10 },
@@ -80,7 +83,32 @@ export const NEUTRAL = 50;
  * @property {string} label - o nome que a interface mostra; ATRIBUTO, nao identidade
  * @property {string} index - como se chama o indice desta area
  * @property {number} initial - o indice de abertura, de 0 a 100
- * @property {number} decay - quanto o indice cai por mes sem alocacao nenhuma
+ * @property {number} decay - a FRACAO do indice que vaza por mes
+ *
+ * ⚠ ELE MUDOU DE NATUREZA EM 16/08/2026, e a mudanca e o achado 31 — o defeito mais
+ * fundo ja medido aqui. Ate essa data ele era PONTOS por mes, subtraidos do indice, e
+ * com isso o indice era um integrador puro: nao existia equilibrio em lugar nenhum, e
+ * cada area tinha um destino unico para a partida inteira. Medido: um governo que nao
+ * fazia nada via os OITO indices subirem, industria de 48 a 100.
+ *
+ * ⚠ E OS OITO NUMEROS NAO FORAM ESCOLHIDOS NO OLHO — cada um sai da identidade que
+ * poe o ORCAMENTO DA POSSE no ponto de equilibrio da area:
+ *
+ *     decay ≡ yield × gasto_cheio_herdado / indice_herdado
+ *
+ * O equilibrio de uma area e `yield × gasto / decay`; substituindo, ele da exatamente
+ * o indice de abertura quando o gasto e o herdado. Manter o que se herdou mantem o
+ * pais parado — e essa e a afirmacao que o jogo precisava e nao tinha.
+ *
+ * ⚠ E ELA CUSTOU UMA AFIRMACAO DE DESENHO, declarada aqui em vez de escondida. A
+ * ordem "quem decai rapido" era escolhida a mao, e agora e DERIVADA: a velocidade de
+ * uma area passou a ser o inverso do custo por ponto dela (`gasto/indice`). Sete das
+ * oito ordens sobreviveram — seguranca e industria continuam as mais rapidas,
+ * educacao a mais lenta. **A saude nao**: a prosa de calibragem abaixo diz que ela
+ * "decai rapido porque fila e desabastecimento aparecem em semanas", e a identidade a
+ * poe entre as mais lentas, porque ela custa R$ 0,33 bi por ponto — cinco vezes o
+ * preco de um ponto de seguranca. A colisao e real e fica REGISTRADA: ou a saude e
+ * cara demais por ponto no catalogo, ou a frase envelheceu. E achado, e nao conserto.
  * @property {number} yield - quanto o indice sobe por bilhao GASTO no mes na area
  *
  * ⚠ O RENDIMENTO MUDOU DE REFERENCIA EM 14/08/2026, e os numeros cairam uma ordem
@@ -125,19 +153,33 @@ export const NEUTRAL = 50;
    esta declarado: fracao da receita em `revenue`, fracao da obrigatoria em
    `mandatory`, e PONTOS DE INDICE POR MES em `capacity`. */
 
-/* A CALIBRAGEM E PRIMEIRO CHUTE e esta declarada como tal, igual a de ECLUSA.
-   O que NAO e chute e a RAZAO entre os numeros, e ela carrega o desenho:
+/* ⚠ O DECAIMENTO DEIXOU DE SER CHUTE EM 16/08/2026 — ele e DERIVADO, area por area,
+   pela identidade escrita no `@property {number} decay` acima. O que segue chute e o
+   `yield`, o `force` e o `lag`, e eles continuam declarados como tal.
 
-     · SEGURANCA decai mais rapido (0,7) e rende mais rapido (0,9) que todas.
-       E a alavanca populista: some em meses e volta em meses, entao ela sempre
-       parece urgente e sempre parece resolvivel;
-     · EDUCACAO quase nao decai (0,3) e rende pouco (0,4), mas leva 24 meses
-       para pagar. Abandona-la nao doi neste mandato — e esse e o ponto;
-     · PREVIDENCIA tem `lag` zero porque ela nao "afeta" a obrigatoria: ela e a
+   O que a identidade produz, em meia-vida do estoque sem verba nenhuma:
+
+     industria    12 meses      previdencia   40 meses      defesa     78 meses
+     seguranca    16 meses      treasury      55 meses      educacao   79 meses
+                                agricultura   61 meses      saude      63 meses
+
+   E a leitura do desenho MUDOU DE LUGAR, porque a velocidade agora e consequencia do
+   custo por ponto de cada area (`gasto_herdado / indice`) e nao de uma escolha:
+
+     · SEGURANCA continua a alavanca populista, e agora com a razao explicita: ela
+       custa R$ 0,07 bi por ponto, o mais barato do catalogo. Some em meses e volta em
+       meses porque e barata, e nao porque alguem digitou 0,7;
+     · INDUSTRIA e a mais rapida das oito, e ela e o motivo: 60% do gasto dela e
+       discricionario, entao ela e a area que mais sente um aperto de caixa;
+     · EDUCACAO segue a mais lenta, e o `lag` de 24 meses continua sendo o dilema —
+       abandona-la nao doi neste mandato;
+     · PREVIDENCIA tem `lag` zero porque ela nao "afeta" a obrigatoria: ela E a
        obrigatoria. Mexeu, sentiu no mesmo mes;
-     · SAUDE decai rapido (0,6) porque fila e desabastecimento aparecem em
-       semanas, e o custo de abandona-la volta em 3 meses pela porta da
-       judicializacao e da emergencia. */
+     · ⚠ SAUDE e a colisao registrada. A frase antiga dizia que ela "decai rapido
+       porque fila e desabastecimento aparecem em semanas"; a identidade a poe entre as
+       mais lentas, porque no catalogo ela custa R$ 0,33 bi por ponto — cinco vezes o
+       preco de um ponto de seguranca. Uma das duas afirmacoes esta errada, e decidir
+       qual e recalibragem de `yield` ou de `cost`, e nao conserto de decaimento. */
 /** @type {ReadonlyArray<Area>} */
 export const AREAS = [
   {
@@ -145,7 +187,7 @@ export const AREAS = [
     label: "Fazenda",
     index: "arrecadação",
     initial: 72,
-    decay: 0.4,
+    decay: 0.012442,
     yield: 0.0674,
     feeds: "revenue",
     force: 0.25,
@@ -175,7 +217,7 @@ export const AREAS = [
     initial: 63,
     /* DECAI DEVAGAR: a lavoura nao desaba no mes em que o crédito atrasa, e o
        ciclo dela e anual e nao mensal. */
-    decay: 0.35,
+    decay: 0.01138,
     yield: 0.3054,
     feeds: "revenue",
     force: 0.08,
@@ -186,7 +228,7 @@ export const AREAS = [
     label: "Indústria e Infraestrutura",
     index: "capacidade",
     initial: 48,
-    decay: 0.5,
+    decay: 0.056913,
     yield: 0.358,
     feeds: "revenue",
     force: 0.12,
@@ -200,7 +242,7 @@ export const AREAS = [
     label: "Previdência",
     index: "cobertura",
     initial: 71,
-    decay: 0.3,
+    decay: 0.017147,
     yield: 0.0096,
     feeds: "mandatory",
     force: 0.3,
@@ -211,7 +253,7 @@ export const AREAS = [
     label: "Saúde",
     index: "atendimento",
     initial: 61,
-    decay: 0.6,
+    decay: 0.010983,
     yield: 0.0335,
     feeds: "mandatory",
     force: -0.18,
@@ -222,7 +264,7 @@ export const AREAS = [
     label: "Educação",
     index: "formação",
     initial: 44,
-    decay: 0.3,
+    decay: 0.008788,
     yield: 0.0356,
     feeds: "capacity",
     force: 6,
@@ -236,7 +278,7 @@ export const AREAS = [
     label: "Segurança",
     index: "ordem",
     initial: 38,
-    decay: 0.7,
+    decay: 0.041885,
     yield: 0.6358,
     feeds: "mandatory",
     force: -0.14,
@@ -271,7 +313,7 @@ export const AREAS = [
     label: "Defesa",
     index: "prontidão",
     initial: 51,
-    decay: 0.2,
+    decay: 0.0088,
     yield: 0.0415,
     feeds: "mandatory",
     force: 0.12,

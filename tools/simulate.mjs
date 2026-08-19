@@ -522,14 +522,34 @@ const last = history.at(-1);
      RATEIO             o que o governo pediu nao cabe no que sobrou, e todos
                         recebem menos na proporcao.
 
-   Um governo pode passar o mandato inteiro rateando sem nunca contingenciar — e
-   era exatamente o que `herdado` fazia enquanto o resumo dizia "0 meses" e
-   parecia folga. */
-const rationed = history.filter(
-  report =>
-    report.paidCost + report.allocatedTotal < report.room - 1e-6 ||
-    report.promisedCost + report.allocatedTotal > report.room + 1e-6,
-);
+   ⚠ E ELE PERGUNTA AO TURNO, DESDE 16/08/2026. Ate aqui esta linha montava a
+   propria conta a partir dos campos vizinhos:
+
+     pago + alocado < room   ||   prometido + alocado > room
+
+   A segunda metade estava certa e nunca disparava; a PRIMEIRA acusava SOBRA DE
+   CAIXA como se fosse corte. E o resultado nao foi um numero um pouco errado — foi
+   o COMPLEMENTO EXATO da verdade:
+
+     politica    o filtro dizia   a verdade (`ratio < 1`)
+     herdado           41                 7
+     piso              44                 0     (44 = os 48 meses menos os 4 contingenciados)
+     agenda            48                 0
+     base              48                 1
+     promessa          48                48     (esta acertou por coincidencia)
+
+   No `herdado`, nos sete meses em que o corte de fato acontece, `pago + alocado` da
+   EXATAMENTE `room` — entao nenhuma das duas clausulas dispara, e o filtro contava
+   os 41 meses em que nada foi cortado. A frase "o rateio corta em 41 de 48 meses"
+   atravessou o handoff, virou o achado 2 e chegou a bloquear o conserto do achado 31,
+   que e o defeito mais fundo do projeto.
+
+   ⚠ E A CAUSA E A FAMILIA MAIS CARA DAQUI, pela SEXTA vez: DOIS LUGARES MONTANDO A
+   MESMA PERGUNTA. `settlement` calcula `ratio` para executar o mes; este arquivo o
+   remontava para medir. Agora ele vem no relatorio, e a porta errada nao existe mais.
+
+   Um governo pode passar o mandato inteiro rateando sem nunca contingenciar. */
+const rationed = history.filter(report => report.ratio < 1 - 1e-9);
 
 out.write("RESUMO\n");
 out.write(`  votacoes            ${won.length} aprovadas de ${voted.length} levadas a voto\n`);

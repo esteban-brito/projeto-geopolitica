@@ -247,6 +247,7 @@ número ao lado dela.
 | `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                  |
 | `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                     |
 | `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                |
+| `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                    |
 
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.
@@ -259,8 +260,14 @@ Declarado para não ser confundido com cobertura:
   regra inglês/português depende de revisão. Um casador honesto não existe — ele
   acusaria `selic` e `ipca`, que são nomes próprios e ficam no original por
   decisão;
-- **`orphans` e `contrast`** — continuam sem existir, e a condição que os adiava
-  caiu há tempos: há onze telas e DOM real. O que entrou no lugar foi
+- ⚠ **`orphans` PASSOU A EXISTIR em 16/08/2026**, e ela achou **quatro regras órfãs no
+  primeiro minuto** — inclusive uma criada naquela mesma sessão. O achado 5 ficou aberto
+  por seis sessões e custou **500 linhas** medidas, em duas varreduras feitas à mão.
+  ⚠ **Ela mede uma direção só**: classe na folha sem produtor em `src/`, `app.mjs` ou
+  `index.html`. Classe no HTML sem regra **não** é acusada — ela é gancho legítimo para
+  o passeio e para a suíte de telas. E `data-*` fica de fora porque é ESTADO: um
+  `[data-boiling="true"]` pode passar meses sem acontecer e continuar correto;
+- **`contrast`** continua sem existir. O que entrou no lugar foi
   `npm run walk`, que usa a tela como se joga e achou três defeitos que tipo,
   guarda e 99 provas não achavam. Ele não é guarda: não roda em `validate`, e o
   que ele acha vira prova em `tests/suites/screens.mjs`;

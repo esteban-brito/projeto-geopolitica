@@ -93,7 +93,7 @@ function lineHtml({ label, value, past, range, note, tone }) {
 function blockHtml({ title, rows }) {
   return (
     `<section class="area__block">` +
-    `<h3 class="area__legend">${escapeHtml(title)}</h3>` +
+    `<h3 class="block__legend">${escapeHtml(title)}</h3>` +
     `<div class="ledger">${rows}</div>` +
     `</section>`
   );

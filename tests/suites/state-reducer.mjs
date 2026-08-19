@@ -232,13 +232,26 @@ const anyState = fc.record({
   mail: fc.array(
     fc.record({
       id: fc.string({ minLength: 1, maxLength: 12 }),
-      kind: fc.constantFrom("posse", "tabled", "reported", "forgotten", "passed", "rejected"),
+      kind: fc.constantFrom(
+        "posse",
+        "tabled",
+        "reported",
+        "forgotten",
+        "passed",
+        "rejected",
+        "demand",
+      ),
       month: fc.integer({ min: 0, max: 47 }),
       due: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
       subject: fc.option(fc.string({ maxLength: 24 }), { nil: null }),
       bill: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
       except: fc.array(fc.string({ maxLength: 8 }), { maxLength: 2 }),
       saved: fc.option(fc.string({ maxLength: 24 }), { nil: null }),
+      /* OS TRES CAMPOS DA CHANTAGEM, e o gerador os sorteia soltos de proposito: o
+         reducer nao pode depender de eles virem coerentes entre si. */
+      from: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
+      lever: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
+      level: fc.option(fc.integer({ min: 0, max: 100 }), { nil: null }),
       answer: fc.option(fc.constantFrom("accept", "block", "silence"), { nil: null }),
       closedAt: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
     }),

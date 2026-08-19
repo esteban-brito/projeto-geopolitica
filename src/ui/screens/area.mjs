@@ -280,7 +280,7 @@ function lawsHtml({ programs, bands, requestedBands }) {
 
   return (
     `<section class="area__block">` +
-    `<h3 class="area__legend">${escapeHtml(UI.laws.title)}` +
+    `<h3 class="block__legend">${escapeHtml(UI.laws.title)}` +
     `<span class="area__empty">${escapeHtml(UI.laws.hint)}</span>` +
     `</h3>` +
     `<div class="laws" id="areaLaws">${rows}</div>` +
@@ -322,6 +322,16 @@ export function areaHtml(input) {
   const past = history.length > 0 ? history : [value];
   const moved = trendOf(value, past);
 
+  /* ⚠ O TOM LE O NUMERO ARREDONDADO, e nao o valor cheio — o mesmo conserto que
+     Financas ja tinha e esta tela nao tinha. `signed` imprime com zero casas, entao
+     uma variacao de +0,4 saía como "0" pintado de VERDE: a cor afirmava uma melhora
+     que o numero ao lado dela negava. A captura do passeio o pegou em out/2027, com
+     a Saude anunciando um zero verde.
+
+     Cor e texto contam a mesma historia, e onde a tela mostra zero ela mostra zero
+     nas duas linguagens. */
+  const shift = Number((moved?.delta ?? 0).toFixed(0));
+
   /* ⚠ A CABECA DIZ QUE TELA E ESTA, e ate 15/08/2026 ela nao dizia. O par era
      `nome do indice / NUMERO` — "ATENDIMENTO 61" —, entao a tela de um ministerio
      era a unica do jogo que nao se apresentava: para saber que aquilo era a Saude,
@@ -350,7 +360,7 @@ export function areaHtml(input) {
         (moved === null
           ? ""
           : `<p class="trend area__delta"` +
-            ` data-direction="${moved.delta > 0 ? "up" : moved.delta < 0 ? "down" : "flat"}"` +
+            ` data-direction="${shift > 0 ? "up" : shift < 0 ? "down" : "flat"}"` +
             ` data-numeric>${signed(moved.delta)} ` +
             `<small>${escapeHtml(windowLabel(moved.months))}</small></p>`),
     },
@@ -368,7 +378,7 @@ export function areaHtml(input) {
 
   const budget =
     `<section class="area__block">` +
-    `<h3 class="area__legend">${escapeHtml(UI.area.programs)}` +
+    `<h3 class="block__legend">${escapeHtml(UI.area.programs)}` +
     `<span class="area__total" data-numeric>${escapeHtml(UI.area.thisArea)} ` +
     `${money(input.spent)}</span>` +
     `</h3>` +
@@ -389,7 +399,7 @@ export function areaHtml(input) {
 
   const outlook =
     `<section class="area__block">` +
-    `<h3 class="area__legend">${escapeHtml(UI.area.outlook)}</h3>` +
+    `<h3 class="block__legend">${escapeHtml(UI.area.outlook)}</h3>` +
     `<p class="allot__projection" id="areaOutlook" data-numeric>` +
     outlookHtml(input) +
     `</p>` +
@@ -497,7 +507,7 @@ export function estadoHtml({ rules, levels, bands = {}, requestedBands = {} }) {
 
     return (
       `<section class="area__block">` +
-      `<h3 class="area__legend">${escapeHtml(labelOf(UI.estado, family))}</h3>` +
+      `<h3 class="block__legend">${escapeHtml(labelOf(UI.estado, family))}</h3>` +
       `<div class="dials">${dials}</div>` +
       `</section>`
     );

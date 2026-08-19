@@ -28,8 +28,10 @@ const EXPECTED = [
   "material",
   "motion",
   "naming",
+  "orphans",
   "schema",
   "tokens",
+  "vocabulary",
 ];
 
 const GREEN = "\x1b[32m";

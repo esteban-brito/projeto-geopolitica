@@ -27,20 +27,30 @@ import {
   dispersion,
   whipCount,
 } from "../../src/domain/congress/index.mjs";
+import { alarm } from "../../src/application/mail.mjs";
+import { mailHtml } from "../../src/ui/screens/inbox.mjs";
 import {
+  boilerOf,
   chamberOf,
+  governmentOf,
   discretionaryRoom,
   ledger,
   lockedBy,
+  outlook,
   playMonth,
   settlement,
   situationOf,
+  termOf,
 } from "../../src/application/turn.mjs";
 import { createState } from "../../src/state/state.mjs";
+import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
+import { enact } from "../../src/domain/norms/index.mjs";
+import { closingHtml } from "../../src/ui/screens/closing.mjs";
+import { UI } from "../../src/ui/strings.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { areaHtml } from "../../src/ui/screens/area.mjs";
 import { financeHtml } from "../../src/ui/screens/finance.mjs";
-import { num, percent, signed } from "../../src/ui/shared/format.mjs";
+import { money, num, percent, signed } from "../../src/ui/shared/format.mjs";
 import { trendOf, windowLabel } from "../../src/ui/shared/trend.mjs";
 import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/mesa.mjs";
 import { cabinetHtml } from "../../src/ui/screens/cabinet.mjs";
@@ -110,6 +120,12 @@ function mesaOf(bill, funding = everyone(0.4)) {
 function areaOf(area, spent, levels = {}) {
   const state = createState(7);
   const value = state.capacity.index[area.id] ?? area.initial;
+  /* ⚠ A PROVA PERGUNTA, COMO O ENTRYPOINT PERGUNTA. Ate 16/08/2026 estas duas linhas
+     eram `value − decay + yield × spent` e `value − decay` — a copia da copia, e a
+     prova reproduzia fielmente um defeito que fazia a seta apontar para o lado errado
+     em cinco das oito areas. Uma prova que remonta a conta do entrypoint nao prova a
+     tela: prova que dois erros iguais sao iguais. */
+  const ahead = outlook(state, { levels: { ...state.levels, ...levels } });
 
   return areaHtml({
     area,
@@ -120,8 +136,8 @@ function areaOf(area, spent, levels = {}) {
     spent,
     room: discretionaryRoom(state),
     committed: 3.25,
-    projected: value - area.decay + area.yield * spent,
-    idle: value - area.decay,
+    projected: ahead.index[area.id] ?? value,
+    idle: ahead.idle[area.id] ?? value,
   });
 }
 
@@ -354,6 +370,11 @@ function cabinetOf(state, extra = {}) {
     boiler: {
       lobbies: [],
       rupture: { social: false, economic: false, political: false, open: false },
+      ruptures: [
+        { id: "social", value: 44, threshold: 20, breaks: "below", open: false },
+        { id: "economic", value: 0, threshold: 50, breaks: "above", open: false },
+        { id: "political", value: 0, threshold: 80, breaks: "above", open: false },
+      ],
       impeachment: null,
       fallen: null,
     },
@@ -578,4 +599,326 @@ test("A VARIACAO DE UM INDICE DIZ EM QUANTOS MESES, e cala onde nao ha passado",
     idle: 61,
   });
   assert.ok(!mute.includes("area__delta"), "a area sem historico desenhou uma variacao");
+});
+
+test("O ZERO DA AREA E NEUTRO: a cor da variacao le o numero que a tela imprime", () => {
+  /* ⚠ ACHADO NA CAPTURA DO PASSEIO em 16/08/2026, e ele e a MESMA familia que
+     Financas ja tinha consertado — sobreviveu aqui porque as duas telas escreviam a
+     regra cada uma por sua conta.
+
+     `signed` imprime com ZERO casas, e a direcao lia o valor CHEIO: uma variacao de
+     +0,4 saía como o texto "0" com `data-direction="up"`, que e verde. A cor
+     afirmava uma melhora que o numero ao lado dela negava — e o projeto ja escreveu
+     a regra: onde a tela mostra zero, ela mostra zero nas duas linguagens. */
+  const health = areas.find(area => area.id === "health");
+  assert.ok(health);
+
+  /** @param {ReadonlyArray<number>} history @param {number} value */
+  const deltaOf = (history, value) =>
+    areaHtml({
+      area: health,
+      value,
+      history,
+      programs: [],
+      levels: {},
+      spent: 0,
+      room: 10,
+      committed: 0,
+      projected: value,
+      idle: value,
+    });
+
+  /* +0,4 sobre a janela: a leitura arredonda para "0", e o tom tem de acompanhar. */
+  const quiet = deltaOf([61.6, 61.8, 62, 62], 62);
+  assert.ok(quiet.includes(">0 "), "a variacao arredondada deixou de imprimir zero");
+  assert.ok(
+    quiet.includes('data-direction="flat"'),
+    "um zero impresso saiu tingido: a cor negou o numero ao lado dela",
+  );
+
+  /* E o que a leitura de fato mostra continua tingido — a correcao nao pode apagar
+     o sinal de quem tem sinal. */
+  const moved = deltaOf([58, 59, 61, 62], 62);
+  assert.ok(moved.includes('data-direction="up"'), "uma alta de 4 pontos saiu neutra");
+});
+
+/* ── O FECHO DO MANDATO ────────────────────────────────────────────────────────
+   ══════════════════════════════════════════════════════════════════════════════
+
+   POR QUE ESTAS PROVAS EXISTEM, e o defeito foi achado JOGANDO. O mandato passivo
+   cai no mes 46, e a unica noticia disso na tela era um selo de dez pixels no canto
+   de um cartao da coluna da direita. O botao AVANCAR O MES continuava aceso, do
+   mesmo tamanho e da mesma cor de sempre — clicar nele nao fazia nada e nao
+   explicava por que.
+
+   ⚠ E A METADE QUE FALTAVA ERA PIOR QUE A QUE EXISTIA: nada no jogo terminava o
+   mandato no PRAZO. Quem atravessasse os quatro anos entrava num "2o mandato" que
+   nunca teve eleicao — a barra superior chegava a imprimir isso. As duas saidas sao
+   provadas aqui, e a do prazo e a que nenhuma partida jogada teria achado, porque
+   nenhum governo mediano atravessa. */
+
+test("O MANDATO ACABA PELAS DUAS PORTAS: a queda e o PRAZO", () => {
+  const opening = createState(7);
+  assert.equal(termOf(opening).over, false, "o mandato acabou no mes da posse");
+  assert.equal(termOf(opening).ending, null, "um mandato que corre ja tinha um desfecho");
+
+  /* A QUEDA. `fallen` e o mes em que o plenario afastou, e ele manda na data do
+     fecho — nao o mes corrente. */
+  const removed = { ...opening, month: 47, fallen: 46 };
+  assert.equal(termOf(removed).over, true, "o presidente caiu e o mandato continuou");
+  assert.equal(termOf(removed).ending, "removed");
+  assert.equal(termOf(removed).months, 46, "o fecho datou o repaint, e nao o afastamento");
+
+  /* O PRAZO, e ele e a metade que faltava. Ate 18/08/2026 esta linha passaria com
+     `over: false`, e o jogo seguiria para um quinto ano. */
+  const served = { ...opening, month: MONTHS_PER_TERM };
+  assert.equal(termOf(served).over, true, "o mandato passou dos 48 meses e nao acabou");
+  assert.equal(termOf(served).ending, "served");
+
+  /* E O ULTIMO MES AINDA E MANDATO. Um limiar escrito com `>` em vez de `>=`
+     erraria por um mes para o lado que ninguem ve. */
+  const last = { ...opening, month: MONTHS_PER_TERM - 1 };
+  assert.equal(termOf(last).over, false, "o ultimo mes do mandato foi dado como acabado");
+});
+
+test("O FECHO NAO INVENTA UM NUMERO: tudo que ele mostra vem do estado ou da fonte", () => {
+  const state = createState(7);
+  const term = termOf(state);
+
+  /* O INDICE DE ABERTURA E O `initial` DO CATALOGO, e nao um numero digitado na
+     view. No mes da posse os dois lados da linha tem de ser o MESMO valor — se
+     divergirem aqui, o fecho esta lendo de dois lugares. */
+  for (const area of term.areas) {
+    const source = CATALOG.areas.find(item => item.id === area.id);
+    assert.ok(source);
+    assert.equal(area.from, source.initial, `${area.id}: o fecho inventou o indice da posse`);
+    assert.equal(area.to, area.from, "o mes da posse ja mostrava movimento");
+  }
+
+  /* A DIVIDA HERDADA E A DO CATALOGO, com fonte. */
+  assert.equal(term.debt.from, CATALOG.fiscal.initialDebtRatio);
+
+  /* ⚠ A APROVACAO DA POSSE E A QUE A SONDA LE DO CATALOGO, e nao um numero escrito
+     a mao: um valor digitado seria a segunda verdade sobre com quanta popularidade
+     o presidente entrou, e divergiria no dia em que um segmento mudasse. */
+  assert.equal(term.approval.from, term.approval.to, "a aprovacao da posse nao e a da SONDA");
+});
+
+test("O FECHO SO CREDITA A LEI QUE O JOGADOR ESCREVEU", () => {
+  const state = createState(7);
+  /* ⚠ A PILHA DE ABERTURA NAO E VAZIA — a posse herda as vinculacoes do pais. Contar
+     a pilha inteira daria ao presidente o credito pela Constituicao. */
+  assert.ok(state.norms.length > 0, "a partida abriu sem lei nenhuma no pais");
+  assert.equal(termOf(state).laws.length, 0, "o fecho creditou a lei herdada ao jogador");
+
+  /* E a norma escrita DEPOIS da posse conta, com o mes em que passou e o nome da
+     alavanca que ela move — o jogador escreveu sobre um nome, e nao sobre um id. */
+  const health = CATALOG.programs[0];
+  assert.ok(health);
+  const written = {
+    ...state,
+    norms: [...state.norms, enact({ lever: health, month: 9, floor: 40 })],
+  };
+  const laws = termOf(written).laws;
+  assert.equal(laws.length, 1);
+  assert.equal(laws[0]?.month, 9);
+  assert.equal(laws[0]?.label, health.label, "a lei saiu rotulada com um id, e nao com o nome");
+});
+
+test("AS DUAS SAIDAS LEEM A MESMA TELA, e o que muda e o carimbo e a data", () => {
+  /* ⚠ ESTA PROVA GUARDA UMA DECISAO, e nao um comportamento. `state.mjs` escreveu
+     antes de o fecho existir: "a partida JA E um mandato de 48 meses, sem vitoria e
+     sem placar, entao fim de jogo nao e o oposto de nada". Um fecho que dramatizasse
+     a queda inventaria um objetivo que o jogo nunca teve — e a diferenca entre as
+     duas telas tem de caber no carimbo. */
+  const opening = createState(7);
+  const removed = closingHtml(termOf({ ...opening, month: 47, fallen: 46 }));
+  const served = closingHtml(termOf({ ...opening, month: MONTHS_PER_TERM }));
+
+  assert.ok(removed.includes(UI.closing.removed), "o fecho da queda nao carimbou a queda");
+  assert.ok(served.includes(UI.closing.served), "o fecho do prazo nao carimbou o prazo");
+  assert.ok(!served.includes(UI.closing.removed), "quem cumpriu o mandato foi dado como afastado");
+
+  /* A MESMA FORMA NOS DOIS: mesmas seccoes, mesmo numero de linhas de rubrica. */
+  const rows = (/** @type {string} */ html) => html.split('class="closing__row"').length;
+  assert.equal(rows(removed), rows(served), "as duas saidas desenharam tabelas diferentes");
+  assert.ok(served.includes(UI.closing.country), "o fecho do prazo perdeu o pais que ele entrega");
+});
+
+test("AUSENCIA DECLARADA NO FECHO: um mandato sem lei DIZ que nao teve lei", () => {
+  /* Regra do projeto, e ela tem lugar aqui: um mandato sem uma lei escrita e um
+     FATO sobre o governo, e nao uma falha da tela. Um espaco vazio no lugar da
+     lista pareceria defeito — e o passivo, que e uma partida inteira valida, e
+     exatamente quem cai nesse caso. */
+  const empty = closingHtml(termOf({ ...createState(7), month: MONTHS_PER_TERM }));
+  assert.ok(empty.includes(UI.closing.noLaws), "o mandato sem lei nenhuma nao disse isso");
+  assert.ok(!empty.includes("closing__laws"), "a lista de leis nasceu vazia em vez de ausente");
+});
+
+/* ── O CERCO FALANDO ──────────────────────────────────────────────────────────
+   ══════════════════════════════════════════════════════════════════════════════
+
+   POR QUE ESTAS PROVAS EXISTEM, e o achado foi MEDIDO e nao visto. Contadas as
+   cartas que chegam em 46 meses, por politica:
+
+     passivo        media 0,0 por mes   ← e o processo de impeachment abre no 43
+     paga a base    media 0,3
+     corta tudo     media 3,5
+
+   A caixa nunca esteve quebrada: ela responde ao que o jogador FAZ, e quem nao
+   legisla nao recebe correspondencia de tramitacao. O que faltava era o mundo
+   escrever quando o mundo se mexe SOZINHO — o pais desmoronava com a aprovacao em
+   13%, dois grupos fora do governo e a Camara reunida, e a unica noticia disso era
+   uma barra num cartao da coluna da direita. */
+
+test("O REMETENTE EXISTE: a carta da Casa Civil e assinada", () => {
+  /* ⚠ ESTE DEFEITO ATRAVESSOU CINCO SESSOES SEM SER VISTO, e ele estava na PRIMEIRA
+     carta do jogo. A view procurava `office === "chief-of-staff"` e o elenco produz
+     `office === "chief"` — `chief-of-staff` e o ARQUETIPO, e nao o cargo. A busca
+     devolvia `undefined`, `letterHtml` aceita remetente nulo de proposito (a gaveta
+     nao tem remetente), e a carta de posse saía sem sigilo, sem nome e sem cargo.
+
+     Nada podia ver: o tipo permite nulo, a guarda nao lê elenco, e a captura mostra
+     uma carta que PARECE inteira — o que falta nela e um bloco que voce so procura
+     se souber que ele deveria estar la. */
+  const state = createState(7);
+  const government = governmentOf(state, CATALOG);
+  const chief = government.people.find(person => person.office === "chief");
+  assert.ok(chief, "o elenco nao tem chefe da Casa Civil no cargo que a view procura");
+
+  const posse = mailHtml({
+    mail: state.mail,
+    people: government.people,
+    left: () => null,
+    inherited: { mandatory: 2166, room: 14.5 },
+    answered: {},
+    lobbies: CATALOG.lobbies,
+  }).join("");
+  assert.ok(posse.includes(chief.name), "a carta de posse chegou sem quem a assinou");
+});
+
+test("O CERCO ESCREVE, e ele nao inventa nenhum dos dois numeros", () => {
+  const state = createState(7);
+  const government = governmentOf(state, CATALOG);
+  const boiler = boilerOf(state, CATALOG);
+
+  /** @param {import("../../src/state/state.mjs").Letter[]} mail */
+  const render = mail =>
+    mailHtml({
+      mail,
+      people: government.people,
+      left: () => null,
+      inherited: { mandatory: 2166, room: 14.5 },
+      answered: {},
+      lobbies: CATALOG.lobbies,
+      siege: boiler,
+    }).join("");
+
+  const siege = render([alarm({ kind: "siege", id: "siege", subject: "siege", month: 40 })]);
+  assert.ok(siege.includes(UI.inbox.siegeSubject), "o processo abriu e a carta nao dizia isso");
+
+  /* ⚠ OS DOIS NUMEROS SAO DO MOTOR. `342 de 513` e a CF art. 86 e `3×` e o preco do
+     cerco: escritos a mao na view, mentiriam no dia em que qualquer um mudasse, e
+     essa e a familia de defeito mais cara deste projeto. A prova le o motor e cobra
+     o que a tela imprimiu. */
+  assert.ok(siege.includes(String(boiler.removal)), "a carta nao citou o quorum do afastamento");
+  assert.ok(siege.includes(String(boiler.seats)), "a carta nao citou o tamanho da Camara");
+  assert.ok(siege.includes(`${boiler.price}×`), "a carta nao citou o preco da cadeira no cerco");
+
+  /* E ELA APONTA PARA ONDE A JOGADA ACONTECE. O cerco e aviso e nao pergunta — a
+     resposta se da comprando cadeira, e nao clicando na carta. */
+  assert.ok(siege.includes('data-section="congress"'), "a carta do cerco nao leva ao Congresso");
+
+  /* AS TRES RUPTURAS TEM CADA UMA A SUA FRASE, e nenhuma cai no texto de reserva. */
+  for (const id of ["social", "economic", "political"]) {
+    const html = render([alarm({ kind: "rupture", id, subject: id, month: 12 })]);
+    assert.ok(html.includes(chiefName(government)), `a ruptura ${id} chegou sem remetente`);
+    assert.ok(
+      !html.includes(UI.inbox.ruptureFallback),
+      `a ruptura ${id} caiu no texto de reserva: falta a frase dela`,
+    );
+  }
+});
+
+/** @param {ReturnType<typeof governmentOf>} government */
+function chiefName(government) {
+  return government.people.find(person => person.office === "chief")?.name ?? "";
+}
+
+test("O ALARME NAO VIRA MURAL: so a TRANSICAO escreve, e o cerco escreve uma vez", () => {
+  /* ⚠ O RISCO AQUI E A INFLACAO, e nao a ausencia. Um aviso por MES de ruptura
+     aberta empilharia trinta cartas identicas ate o plenario votar — que e
+     exatamente o mural que a caixa deixou de ser em 16/08/2026. Medido num mandato
+     passivo inteiro: tres rupturas e um cerco, e nem uma a mais. */
+  let state = createState(7);
+  const written = new Map();
+  for (let month = 0; month < 46; month++) {
+    const before = new Set(state.mail.map(letter => letter.id));
+    state = playMonth(state, { funding: {} }, { catalog: CATALOG }).state;
+    for (const letter of state.mail) {
+      if (before.has(letter.id)) continue;
+      if (letter.kind !== "rupture" && letter.kind !== "siege") continue;
+      written.set(letter.id, (written.get(letter.id) ?? 0) + 1);
+    }
+    if (state.fallen !== null) break;
+  }
+
+  assert.ok(written.size >= 2, "o mandato inteiro desmoronou e o cerco nao escreveu nada");
+  for (const [id, times] of written) {
+    assert.equal(times, 1, `${id} escreveu ${times} vezes: o alarme virou mural`);
+  }
+  assert.equal(written.get("siege:siege"), 1, "o processo abriu e ninguem avisou");
+});
+
+test("A LINHA DO CAIXA NAO DIZ O CONTRARIO DO MOTOR", () => {
+  /* ⚠ ACHADO NA CAPTURA em 18/08/2026, e ele e da familia mais cara deste projeto —
+     a tela afirmando o oposto do que o turno faz. A frase era "promete R$ 13,8 bi ·
+     nao cabe — o rateio vai cortar R$ 13,7 bi", e o numero ao lado do verbo CORTAR e
+     `room`: o que CABE. Lida ao pe da letra, ela anunciava um corte de quase tudo num
+     mes em que o corte era de um decimo de bilhao.
+
+     A prova nao cobra o texto: ela cobra que o valor impresso seja o que o motor
+     chama de espaco, e que o verbo diga isso. */
+  /* `mesaOf` ja monta a Mesa como o entrypoint monta, com `demand` de 15,75 contra
+     um espaco menor — ou seja, exatamente o caso em que a frase aparece. */
+  const html = mesaOf(null);
+  const room = discretionaryRoom(createState(7));
+
+  assert.ok(html.includes(UI.mesa.over), "a linha nao acusou que a promessa nao cabe");
+  assert.ok(
+    html.includes(money(room)),
+    "o numero ao lado do veredito deixou de ser o espaco que o motor da",
+  );
+  assert.ok(
+    !UI.mesa.over.includes("cortar"),
+    "o verbo voltou a ser CORTAR ao lado do numero que e o que CABE",
+  );
+});
+
+test("NENHUM ROTULO DE INSTRUMENTO CAI NO ID CRU — e id cru aqui e INGLES", () => {
+  /* ⚠ ACHADO NA CAPTURA em 18/08/2026. `labelOf` devolve a chave quando nao acha a
+     entrada, e isso e DELIBERADO: um instrumento digitado errado no catalogo tem de
+     aparecer na tela em vez de sumir calado. O efeito colateral e que uma entrada
+     ESQUECIDA imprime o id, e os ids deste projeto sao em ingles — a linha da pauta
+     saía "CANETA · Saúde · budget · resultado −26,5/ano".
+
+     A prova varre os dois mapas contra todos os instrumentos que o jogo produz, e
+     nao contra uma lista escrita aqui: uma lista propria envelheceria junto com o
+     esquecimento que ela existe para pegar. */
+  const instruments = new Set(CATALOG.bills.map(bill => bill.instrument));
+  /* `budget` nao mora em `bills.mjs`: ele e a execucao do orcamento, que nao vai a
+     plenario e por isso nao e catalogo de pauta. Ele entra aqui porque a TELA o
+     mostra, que e o que este arquivo prova. */
+  instruments.add("budget");
+
+  for (const instrument of instruments) {
+    assert.ok(
+      Object.hasOwn(UI.instrument, instrument),
+      `o instrumento "${instrument}" nao tem nome em portugues: a tela imprime o id`,
+    );
+    assert.ok(
+      Object.hasOwn(UI.instrumentHint, instrument),
+      `o instrumento "${instrument}" nao tem rito em portugues: a tela imprime o id`,
+    );
+  }
 });

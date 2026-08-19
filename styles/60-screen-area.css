@@ -146,7 +146,10 @@
      ELE E DE DUAS PARADAS, como o separador da faixa de indices: latao apagado em
      cima e sombra embaixo. Um fio de uma cor so lê como borda de tabela; dois lê
      como metal embutido, porque e assim que uma aresta se comporta sob luz. */
-  .area__legend {
+  /* ⚠ A TIPOGRAFIA SAIU DAQUI em 18/08/2026 e foi para `30-components.css`, junto
+     com a legenda do relatorio: as seis declaracoes estavam escritas duas vezes. O
+     que fica aqui e o que so esta peca tem — o FIO e a repartição em duas pontas. */
+  .block__legend {
     padding-bottom: var(--space-2);
     box-shadow:
       0 1px 0 rgba(var(--brand-rgb), 0.22),
@@ -155,12 +158,6 @@
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-3);
-    font-family: var(--font-display);
-    font-size: var(--text-label);
-    font-weight: 700;
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    color: var(--ink-soft);
   }
 
   .area__total {
@@ -171,22 +168,46 @@
     color: var(--ink-dim);
   }
 
-  /* ── O ORCAMENTO GRANULAR ───────────────────────────────────────────────────
+  /* ── O ORCAMENTO GRANULAR — E ELE E UMA PECA, E NAO UM PAINEL ───────────────
      Um controle por programa, e cada linha carrega quatro coisas: o que e, o que
      o numero significa no mundo, onde ele esta, e quanto custa no mes.
 
-     ── ATRAVESSAR O PISO TINGE A LINHA INTEIRA, e nao so a etiqueta ───────────
-     O jogador precisa ver de relance quais dos trinta controles sao os caros,
-     sem ler etiqueta por etiqueta — e quando ele arrasta para baixo do piso, a
-     mudanca de cor da linha e a unica coisa que ele nota de canto de olho.
+     ⚠ ELE DEIXOU DE SER PASTILHA EM 16/08/2026, e esta e a Parte A do ciclo 11.
+     Pedido do responsavel — "tirar essa cara de site de investimentos" —, e e a
+     QUINTA vez que a queixa chega: duas auditorias externas ja tinham nomeado esta
+     tela, uma como "mesa de som" e outra como "um contador analisando planilhas".
 
-     E EMENDA E OUTRA CATEGORIA, e nao lei com mais tinta: a mesma distincao que
-     separa obstrucao de ruptura na Mesa. Ambar tinge e vermelho tinge MAIS e
-     acende a barra na quina — diferenca de categoria pede forma diferente, e nao
-     so intensidade. */
+     A causa e medivel, e ela estava numa folha so: `65-screen-finance.css` tem ZERO
+     `border-radius` e as outras somam trinta. A unica tela que nao parece um painel
+     de fintech e justamente a que o projeto ja tinha chamado de outra coisa em prosa
+     — "forma de razao contabil e nao de pastilha". O registro institucional foi
+     inventado para uma tela e as outras dez ficaram no dialeto de aplicativo, sem
+     ninguem ter decidido isso.
+
+     TRES COISAS MUDAM, e as tres sao forma e nenhuma e cor nova:
+
+       · SOME O RAIO E O PREENCHIMENTO. A unidade visual de um dashboard e o cartao,
+         e trinta e oito cartoes numa tela de orcamento sao uma mesa de som. Entra o
+         FIO, que e a peca que o sistema ja usa sob cada legenda de bloco;
+       · O RITO VIRA MARCA DE BORDA, e nao banho de cor na linha inteira. A cor e a
+         mesma de antes; o que muda e ela APONTAR em vez de tingir. E a mesma
+         correcao que o pino de metal levou no ciclo 6 — marca diluida em trinta e
+         oito linhas deixa de marcar;
+       · OS NUMEROS CAEM EM COLUNA, e esta e a metade que faz o efeito. Ver
+         `.dial__read`.
+
+     ── E O QUE SOBREVIVEU DA REGRA ANTIGA ─────────────────────────────────────
+     A prosa que estava aqui dizia: "atravessar o piso tinge a linha inteira, e nao
+     so a etiqueta — o jogador precisa ver de relance quais dos trinta controles sao
+     os caros". ⚠ A NECESSIDADE CONTINUA E A SOLUCAO MUDOU: a marca de borda e
+     visivel de relance na coluna esquerda, que e onde o olho varre uma lista, e ela
+     nao gasta a cor de marca em trinta e oito preenchimentos.
+
+     E EMENDA CONTINUA SENDO OUTRA CATEGORIA, e nao lei com mais tinta: a marca
+     engrossa e troca de cor. Diferenca de categoria pede forma diferente, e nao so
+     intensidade — a mesma distincao que separa obstrucao de ruptura na Mesa. */
   .dials {
     display: grid;
-    gap: var(--space-2);
   }
 
   .dial {
@@ -194,19 +215,32 @@
     grid-template-columns: minmax(0, 1fr) minmax(140px, 1.1fr) auto;
     align-items: center;
     gap: var(--space-2) var(--space-3);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-piece);
-    background: rgba(255, 255, 255, 0.04);
-    transition: background var(--dur-piece) linear;
+    /* O PADDING VERTICAL SEGURA A LINHA, e o horizontal recuou para dar lugar a
+       marca de rito: numa peca o texto comeca na margem, e nao dentro de uma caixa. */
+    padding: var(--space-2) 0 var(--space-2) var(--space-3);
+    /* ⚠ O FIO E A PECA, E NAO A LINHA. O que ele entrega nao e o traco — e a
+       REPETICAO dele, que e o que o ciclo 6 aprendeu com o fio sob as legendas.
+       E ELE E O MESMO DE FINANCAS, de proposito: a tela que ja lia como razao
+       contabil usa exatamente este valor entre linhas, e duas espessuras para o
+       mesmo papel seriam duas convencoes para uma coisa so. */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    /* A MARCA DO RITO MORA NA BORDA ESQUERDA, e ela e transparente enquanto o
+       movimento e caneta: uma linha que nao custa nada nao tem o que anunciar. */
+    border-left: var(--rule) solid transparent;
+    transition: border-color var(--dur-piece) linear;
+  }
+
+  .dial:last-child {
+    border-bottom: 0;
   }
 
   .dial[data-rite="law"] {
-    background: rgba(var(--brand-rgb), 0.12);
+    border-left-color: var(--brand);
   }
 
   .dial[data-rite="amendment"] {
-    background: rgba(var(--crisis-rgb), 0.16);
-    box-shadow: inset 3px 0 0 var(--crisis);
+    border-left-width: var(--rule-strong);
+    border-left-color: var(--crisis);
   }
 
   .dial__head {
@@ -239,9 +273,15 @@
     width: 100%;
   }
 
+  /* ⚠ AS TRES COLUNAS SAO FIXAS, e e isso que faz a peca ler como peca.
+     Ate 16/08/2026 a terceira era `minmax(72px, auto)`, entao a largura dela mudava
+     de linha para linha — "piso 59" e um selo de EMENDA nao ocupam o mesmo espaco —,
+     e cada linha terminava onde o texto dela tinha acabado. Uma tabela em que os
+     valores se alinham le como documento; uma em que cada linha para num lugar le
+     como uma lista de componentes empilhados, que e exatamente a queixa. */
   .dial__read {
     display: grid;
-    grid-template-columns: 3ch 9ch minmax(72px, auto);
+    grid-template-columns: 3ch 9ch 84px;
     align-items: baseline;
     justify-items: end;
     gap: var(--space-3);
@@ -311,10 +351,7 @@
     align-items: center;
     gap: var(--space-2) var(--space-3);
     padding: var(--space-3);
-    border: 1px solid var(--paper-edge);
-    border-radius: 3px;
-    background: var(--paper);
-    color: var(--paper-ink);
+    /* O MATERIAL VEM DE `.letter, .passage__row, .law` em `30-components.css`. */
     transition: background var(--dur-piece) linear;
   }
 
@@ -401,12 +438,13 @@
      Controle a esquerda, leitura a direita, e a leitura NAO fica embaixo do
      controle: quem arrasta cobre com a mao o que estiver abaixo do dedo, e o
      numero que muda e justamente o que ele esta tentando ler. */
-  .allot {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-4);
-  }
+  /* ⚠ `.allot` SAIU DAQUI em 16/08/2026, acusada pela guarda `orphans` — e ela e o
+     caso exato da terceira prova sintetica da guarda: O BLOCO MORREU E OS ELEMENTOS
+     SOBREVIVERAM. `.allot__pool` e `.allot__projection` continuam vivos e moram
+     direto dentro de `.area__block`; o contêiner de duas colunas que os agrupava
+     deixou de ser montado e ninguem reparou. A prosa dele dizia algo verdadeiro — "a
+     leitura nao fica embaixo do controle, porque quem arrasta cobre com a mao o que
+     estiver abaixo do dedo" —, e essa razao sobreviveu na ORDEM dos blocos. */
 
   /* `61 → 63` em cima e `parado: 60` embaixo. O contrafactual e a metade que
      importa: sem ele o jogador ve o indice subir e conclui que investir
@@ -462,14 +500,12 @@
      coluna de numero que se alinha sozinha por linha deixa de ser coluna, e a
      comparacao de relance e o unico motivo de a lista ser uma lista. */
 
-  /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
-     A tabela rola por dentro, e nada e escondido. A alternativa seria esconder
-     colunas, e cada uma delas e o preco de uma decisao — esconder para caber e
-     mentir por omissao. */
-  @media (max-width: 640px) {
-    .allot {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-2);
-    }
-  }
+  /* ⚠ A MEDIA QUERY DE `.allot` SAIU JUNTO em 16/08/2026, e ela e a metade que a
+     varredura a mao teria deixado para tras: quem apaga uma regra procura pelo nome
+     no bloco principal e nao dentro de um `@media` cinquenta linhas abaixo. A guarda
+     acusou as duas, e foi preciso duas passadas — a primeira consertou so a de cima.
+
+     O que a prosa dela dizia continua verdadeiro sobre a tabela e sobre nada mais:
+     "a tabela rola por dentro, e nada e escondido — esconder para caber e mentir por
+     omissao". Quem cumpre isso hoje e `.dial`, e a regra dele esta acima. */
 }

@@ -18,6 +18,7 @@ import {
   discretionaryRoom,
   forecast,
   ledger,
+  outlook,
   playMonth,
   settlement,
   situationOf,
@@ -134,6 +135,56 @@ test("a verba paga por bancada nunca passa da prometida, e o rateio e proporcion
       }
     }),
   );
+});
+
+test("SOBRA NAO E CORTE: o relatorio distingue folga de rateio", () => {
+  /* ⚠ ESTA PROVA NASCEU DE UM NUMERO ERRADO QUE ATRAVESSOU O PROJETO INTEIRO.
+
+     O simulador media "quantos meses o rateio cortou" com uma conta PROPRIA —
+     `pago + alocado < room || prometido + alocado > room` —, e a primeira metade
+     acusava SOBRA DE CAIXA como se fosse corte. Para a politica `herdado` ele
+     devolvia 41 de 48; a verdade e 7, e os 41 sao exatamente os meses em que NADA
+     foi cortado. O achado 2 do handoff foi escrito desse numero, e ele chegou a
+     bloquear o conserto do achado 31 — o defeito mais fundo do projeto.
+
+     Duas afirmacoes, e a primeira e a que morde:
+
+       gastar MENOS do que cabe nao e rateio, e sim FOLGA;
+       o rateio corta quando o PEDIDO nao cabe, e so entao. */
+  const state = createState(3);
+
+  /* O GOVERNO QUE PEDE POUCO: todo programa no piso e ninguem pago. Nao ha
+     discricionario pedido nem emenda prometida, entao o mes sobra por construcao. */
+  const floors = Object.fromEntries(PROGRAMS.map(program => [program.id, program.floor]));
+  const slack = playMonth(state, { levels: floors });
+
+  assert.ok(
+    slack.report.paidCost + slack.report.allocatedTotal < slack.report.room - EPSILON,
+    "o caso de folga nao tem folga: este mes gastou tudo o que cabia",
+  );
+  assert.equal(
+    slack.report.ratio,
+    1,
+    "um mes que gastou MENOS do que cabia foi contado como mes de corte",
+  );
+
+  /* O GOVERNO QUE PEDE DEMAIS: verba cheia a todas as bancadas, sem olhar o caixa. */
+  const funding = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
+  const squeezed = playMonth(state, { funding });
+  assert.ok(squeezed.report.ratio < 1, "verba cheia coube no mes, e o rateio nao cortou nada");
+
+  /* ── E A DEFINICAO FICA PINADA ───────────────────────────────────────────────
+     `ratio < 1` e exatamente "o pedido nao cabe", e nada mais. Enquanto esta linha
+     estiver verde, nenhum instrumento precisa remontar a pergunta — e remonta-la foi
+     a SEXTA ocorrencia da familia mais cara deste projeto. */
+  for (const orders of [{ levels: floors }, { funding }, {}]) {
+    const closed = settlement(state, orders);
+    assert.equal(
+      closed.ratio < 1 - EPSILON,
+      closed.demand > closed.room + EPSILON,
+      "o rateio deixou de significar 'o pedido nao cabe no que sobrou'",
+    );
+  }
 });
 
 test("CONTINGENCIAMENTO ENTREGA ZERO, por mais que se prometa", () => {
@@ -487,6 +538,49 @@ test("A TELA E O TURNO FAZEM A MESMA CONTA: o rateio previsto e o rateio executa
       assert.equal(played.report.paidCost, previewed.paidCost);
       assert.equal(played.report.allocatedTotal, previewed.allocatedTotal);
     }),
+  );
+});
+
+test("A AREA E O TURNO PROJETAM O MESMO INDICE: a seta nao aponta para o lado errado", () => {
+  /* ⚠ ESTA E A SETIMA OCORRENCIA DA MESMA FAMILIA, e a primeira em que o defeito
+     estava na tela onde o jogador DECIDE quanto gastar por area.
+
+     O entrypoint projetava o indice a mao — `value − decay + yield × asked` —, com a
+     prosa ao lado jurando ser "a mesma conta do motor". A MALHA consome o gasto CHEIO
+     ja rateado (`funded`), e `asked` e so a parte acima do piso: na Previdencia,
+     R$ 2,4 bi contra R$ 126,7 bi. E o canal `capacity` da educacao nao entrava.
+
+     Medido no mes 1 da partida padrao, ANTES do conserto: em CINCO das oito areas a
+     seta apontava para o lado errado. A tela dizia que a Saude cairia de 61,0 para
+     60,4; o mes a levou a 61,1. Fazenda, Previdencia, Educacao e Defesa, idem.
+
+     A igualdade e EXATA de proposito: as duas chamam `capacityStep` com a mesma
+     alocacao, entao qualquer tolerancia aqui esconderia uma segunda conta nascendo. */
+  fc.assert(
+    fc.property(anyOrders, fc.integer({ min: 1, max: 40 }), (orders, seed) => {
+      const state = createState(seed);
+      const ahead = outlook(state, orders);
+      const played = playMonth(state, orders);
+
+      assert.deepEqual(
+        ahead.index,
+        played.report.capacity.index,
+        "a area prometeu um indice e o mes entregou outro",
+      );
+    }),
+  );
+
+  /* ── E O CONTRAFACTUAL E O MES SEM AS ORDENS, e nao um mundo inalcancavel ──────
+     `idle` era `value − decay`: o indice se a area recebesse ZERO. Gastar zero numa
+     area exige derrubar todos os pisos dela por emenda — o contrafactual descrevia um
+     pais que a lei nao permite. Agora ele e o mes parado, que e a alternativa real a
+     decisao que o jogador esta tomando. */
+  const state = createState(9);
+  const quiet = playMonth(state, {});
+  assert.deepEqual(
+    outlook(state, { funding: Object.fromEntries(PARTIES.map(p => [p.id, 1])) }).idle,
+    quiet.report.capacity.index,
+    "o contrafactual da area nao e o mes sem ordens",
   );
 });
 
@@ -881,6 +975,80 @@ test("A MESA E O TURNO PREVEEM COM A MESMA CAMARA, e com a mesma rua", () => {
    A prova compara o mes de um corte que PRECISA DE LEI contra o mes em que nada foi
    pedido: enquanto o texto tramita, os dois tem de ser identicos em dinheiro e em
    capacidade, porque nos dois o pais executou exatamente a mesma coisa. */
+test("A CHANTAGEM EXISTE, e o SILENCIO nela RECUSA — ao contrario da emenda", () => {
+  /* ⚠ ESTA PROVA TRAVA A UNICA REGRA DA CHANTAGEM QUE INVERTE UMA JA ESCRITA. No
+     ciclo 9 ficou decidido que "o silencio ACEITA": prazo vencido sem resposta e a
+     emenda do relator vale, porque e assim que uma tramitacao real anda.
+
+     Aqui e o contrario, e a razao nao e simetria: um lobby que exige e nao recebe
+     resposta NAO ENTENDE QUE GANHOU. Ignorar uma cobranca e recusa-la devagar, e a
+     carta diz isso antes de vencer — que e o que transforma ignorar em ESCOLHA.
+
+     ⚠ E A PROVA COBRA AS TRES SAIDAS SE SEPARANDO, e nao so a existencia da carta.
+     Uma exigencia em que ceder e recusar dessem no mesmo lugar seria uma pergunta
+     decorativa — e o achado 30 deste projeto e exatamente isso do outro lado: dois
+     lobbies que nunca se moviam. */
+  const floors = Object.fromEntries(PROGRAMS.map(program => [program.id, program.floor]));
+
+  /** @param {"accept" | "block" | null} answer */
+  const run = answer => {
+    let state = createState(5);
+    let demands = 0;
+    for (let month = 0; month < 48; month++) {
+      /** @type {Record<string, string>} */
+      const mail = {};
+      for (const letter of state.mail) {
+        if (letter.kind === "demand" && letter.answer === null) {
+          demands++;
+          if (answer) mail[letter.id] = answer;
+        }
+      }
+      state = playMonth(state, { levels: floors, mail }).state;
+    }
+    return { state, demands };
+  };
+
+  /* 1 — ELA CHEGA. Um governo que corta tudo ao piso tira das areas dos dois grupos
+     de capacidade, e eles cobram de volta. Instrumento que nunca dispara e o achado 3
+     deste projeto se repetindo — e este numero ja foi 2 em 48 meses, com um limiar
+     escolhido no olho. */
+  const ignored = run(null);
+  assert.ok(
+    ignored.demands > 0,
+    "nenhum lobby exigiu nada em 48 meses de corte total — a chantagem nao dispara",
+  );
+
+  const ceded = run("accept");
+  const refused = run("block");
+
+  /* 2 — CEDER ALIVIA, E RECUSAR ESQUENTA, e o silencio fica com os que recusam. */
+  const heat = (/** @type {typeof ignored} */ run) =>
+    (run.state.pressure["ordem"] ?? 0) + (run.state.pressure["produtivo"] ?? 0);
+
+  assert.ok(
+    heat(ceded) < heat(ignored),
+    `ceder nao aliviou: ${heat(ceded).toFixed(1)} contra ${heat(ignored).toFixed(1)}`,
+  );
+  assert.ok(
+    heat(refused) > heat(ceded),
+    `recusar nao custou mais que ceder: ${heat(refused).toFixed(1)} contra ${heat(ceded).toFixed(1)}`,
+  );
+
+  /* 3 — E O SILENCIO FICA DO LADO DA RECUSA. Se ele aceitasse, o governo que ignora
+     terminaria tao aliviado quanto o que cede — e a carta estaria mentindo. */
+  assert.ok(
+    heat(ignored) > heat(ceded),
+    "o silencio aliviou como se fosse cessao — a carta promete o contrario",
+  );
+
+  /* 4 — E CEDER MOVE A ALAVANCA DE VERDADE. Sem isto a carta seria um botao que so
+     mexe num numero de pressao, e o lobby estaria cobrando por nada. */
+  const moved = PROGRAMS.some(
+    program => (ceded.state.levels[program.id] ?? 0) > (ignored.state.levels[program.id] ?? 0),
+  );
+  assert.ok(moved, "ceder a uma exigencia nao levantou nivel nenhum");
+});
+
 test("O QUE ESPERA NAO GASTA: o mes do protocolo executa o orcamento que ja valia", () => {
   const state = createState(31);
 

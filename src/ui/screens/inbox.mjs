@@ -208,11 +208,22 @@ export function monthLetterHtml({ report, adviser, approval }) {
  *   quantos meses faltam, perguntado a fachada
  * @param {{ mandatory: number, room: number }} input.inherited a heranca, para a posse
  * @param {Record<string, string>} input.answered o que o jogador ja MARCOU neste mes
+ * @param {ReadonlyArray<{ id: string, label: string }>} [input.lobbies] quem pode exigir
+ * @param {{ price: number, removal: number, seats: number }} [input.siege] o cerco,
+ *   perguntado a CALDEIRA. A carta do processo cita o quorum do afastamento e o
+ *   quanto a cadeira encareceu, e os dois sao do motor: escritos a mao nesta view,
+ *   mentiriam no dia em que qualquer um dos dois mudasse
  * @returns {string[]}
  */
-export function mailHtml({ mail, people, left, inherited, answered }) {
+export function mailHtml({ mail, people, left, inherited, answered, lobbies = [], siege }) {
   const by = (/** @type {string} */ office) =>
     people.find(person => person.office === office) ?? null;
+
+  /* O NOME DO GRUPO SAI DO CATALOGO, e nao de uma tabela nesta view: um quinto lobby
+     apareceria aqui como um id cru, e id cru na tela e o defeito que `identity` existe
+     para impedir do outro lado. */
+  const nameOf = (/** @type {string | null} */ id) =>
+    lobbies.find(lobby => lobby.id === id)?.label ?? "";
 
   return mail
     .map(letter => {
@@ -225,7 +236,7 @@ export function mailHtml({ mail, people, left, inherited, answered }) {
            alguem ENTREGAR isso ao presidente em vez de deixa-lo procurar. */
         case "posse":
           return letterHtml({
-            from: by("chief-of-staff"),
+            from: by("chief"),
             subject: UI.inbox.inauguration,
             body:
               `<div class="letter__lines">` +
@@ -282,6 +293,34 @@ export function mailHtml({ mail, people, left, inherited, answered }) {
                 : undefined,
           });
 
+        /* ── A CHANTAGEM — a segunda pergunta do jogo, e a primeira que vem de FORA
+           da tramitacao ─────────────────────────────────────────────────────────
+           ⚠ ELA NAO TEM SINETE, e a ausencia e a modelagem: um lobby nao e uma
+           PESSOA. O sinete identifica quem assina — iniciais num anel cujo raio e o
+           alcance daquele sujeito na Camara —, e um grupo de pressao nao tem cadeira
+           nem iniciais. Dar um a ele diria que ele vota, e ele nao vota: ele aperta.
+
+           O nome dele vem no assunto, que e onde o remetente aparece quando nao ha
+           quem assine — a mesma solucao da gaveta, do outro lado. */
+        case "demand":
+          return letterHtml({
+            from: null,
+            subject: `${escapeHtml(nameOf(letter.from))}: ${subject}`,
+            due: left(letter),
+            body:
+              `<div class="letter__lines">` +
+              /* O QUE ELE QUER, EM NUMERO. "Devolva o que voce cortou" sem dizer
+                 QUANTO seria a carta escondendo a unica coisa acionavel dela. */
+              `<span>${escapeHtml(UI.inbox.demandBody)} ` +
+              `<b data-numeric>${seats(letter.level ?? 0)}</b></span>` +
+              `<span>${escapeHtml(outcomeOf(letter))}</span>` +
+              `</div>`,
+            choices:
+              letter.answer === null
+                ? choicesHtml(letter.id, answered[letter.id] ?? "", UI.inbox.demandChoices)
+                : undefined,
+          });
+
         /* ⚠ A GAVETA NAO TEM REMETENTE, e a ausencia e a informacao: ninguem escreve
            para avisar que engavetou. O texto morreu de silencio, que e como projeto
            morre numa casa legislativa de verdade. */
@@ -300,11 +339,70 @@ export function mailHtml({ mail, people, left, inherited, answered }) {
             body: "",
           });
 
+        /* ── O CERCO FALANDO ────────────────────────────────────────────────
+           ⚠ AS DUAS SAO AVISO, e nao pergunta: a resposta ao cerco nao se da na
+           carta, ela se da no Congresso, comprando a cadeira que ficou mais cara.
+           Um par de botoes aqui seria uma SEGUNDA porta para a mesma jogada, e o
+           jogador escolheria sem ver o preco que so a outra tela mostra.
+
+           ⚠ E QUEM ASSINA E A CASA CIVIL, e nao ninguem. A gaveta nao tem
+           remetente porque ninguem escreve para avisar que engavetou; aqui alguem
+           escreve, e e a mesma pessoa que entrega o mes ao presidente. */
+        case "rupture":
+          return letterHtml({
+            from: by("chief"),
+            subject: ruptureText(UI.inbox.ruptureSubject, subject) ?? UI.inbox.ruptureFallback,
+            body:
+              `<div class="letter__lines">` +
+              `<span>${escapeHtml(ruptureText(UI.inbox.ruptureBody, subject) ?? "")}</span>` +
+              `<span>${escapeHtml(UI.inbox.ruptureNote)}</span>` +
+              `</div>`,
+          });
+
+        case "siege":
+          return letterHtml({
+            from: by("chief"),
+            subject: UI.inbox.siegeSubject,
+            body:
+              `<div class="letter__lines">` +
+              `<span>${escapeHtml(UI.inbox.siegeBody)}</span>` +
+              /* ⚠ OS DOIS NUMEROS VEM DO MOTOR, e a frase e montada em volta deles.
+                 O quorum e a CF art. 86 — dado com fonte —, e o preco e a
+                 calibragem do cerco: escritos a mao aqui, mentiriam no dia em que
+                 qualquer um dos dois mudasse. */
+              (siege
+                ? `<span>${escapeHtml(UI.inbox.siegeVote)} ` +
+                  `<b data-numeric>${seats(siege.removal)}</b> ` +
+                  `${escapeHtml(UI.inbox.siegeOf)} <b data-numeric>${seats(siege.seats)}</b>. ` +
+                  `${escapeHtml(UI.inbox.siegePrice)} ` +
+                  `<b data-numeric>${seats(siege.price)}×</b>.</span>`
+                : "") +
+              `</div>`,
+            action: UI.inbox.siegeAction,
+            target: "congress",
+          });
+
         default:
           return "";
       }
     })
     .filter(Boolean);
+}
+
+/**
+ * QUAL DAS TRES RUPTURAS ESCREVEU.
+ *
+ * ⚠ ELA E UMA FUNCAO E NAO UM INDICE DIRETO porque `subject` e uma string vinda do
+ * estado, e o mapa tem exatamente tres chaves: um acesso solto devolveria
+ * `undefined` sem nada acusar no dia em que uma quarta ruptura nascesse com o nome
+ * escrito diferente dos dois lados. Aqui o `undefined` tem um lugar para cair.
+ *
+ * @param {Record<string, string>} texts
+ * @param {string} id
+ * @returns {string | undefined}
+ */
+function ruptureText(texts, id) {
+  return Object.hasOwn(texts, id) ? texts[id] : undefined;
 }
 
 /**
@@ -319,15 +417,25 @@ export function mailHtml({ mail, people, left, inherited, answered }) {
  * @returns {string}
  */
 function outcomeOf(letter) {
+  /* ⚠ A CHANTAGEM INVERTE O SILENCIO, e a tela precisa saber disso — foi um defeito
+     medido no dia em que a carta nasceu: ela imprimia "se voce nao responder, a emenda
+     vale", que e a frase da tramitacao, numa carta em que o silencio RECUSA.
+
+     Uma tela que promete o contrario do que o turno faz e pior que uma tela feia: o
+     jogador aprende uma regra errada e joga contra ela por meses. E `settle` nao ajuda
+     a perceber — as duas cartas fecham com `answer: "silence"` pelo mesmo caminho; o
+     que muda e o que o TURNO faz com esse silencio. */
+  const spurns = letter.kind === "demand";
+
   switch (letter.answer) {
     case "accept":
-      return UI.inbox.accepted;
+      return spurns ? UI.inbox.conceded : UI.inbox.accepted;
     case "block":
-      return UI.inbox.blocked;
+      return spurns ? UI.inbox.refused : UI.inbox.blocked;
     case "silence":
-      return UI.inbox.silenced;
+      return spurns ? UI.inbox.refused : UI.inbox.silenced;
     default:
-      return UI.inbox.silenceWarns;
+      return spurns ? UI.inbox.spiteWarns : UI.inbox.silenceWarns;
   }
 }
 
@@ -346,7 +454,7 @@ function outcomeOf(letter) {
  * @param {string} chosen o que ja esta marcado, se algo estiver
  * @returns {string}
  */
-function choicesHtml(id, chosen) {
+function choicesHtml(id, chosen, texts = UI.inbox.amendmentChoices) {
   const button = (
     /** @type {string} */ answer,
     /** @type {string} */ label,
@@ -361,8 +469,8 @@ function choicesHtml(id, chosen) {
 
   return (
     `<div class="letter__choices">` +
-    button("accept", UI.inbox.accept, UI.inbox.acceptCost) +
-    button("block", UI.inbox.block, UI.inbox.blockCost) +
+    button("accept", texts.accept, texts.acceptCost) +
+    button("block", texts.block, texts.blockCost) +
     `</div>`
   );
 }
