@@ -70,8 +70,12 @@ parou de se consertar sozinho, e com ele morreram os achados **2** e **29**. Tr�
 outros defeitos apareceram no caminho e foram consertados. **O motor mudou de forma em
 três lugares**, e os três estão com a conta escrita ao lado.
 
-⚠ **NÃO ESTÁ COMMITADO.** A nona sessão terminou em `43662bf`; tudo o que veio depois
-está na árvore de trabalho, e commitar é decisão do responsável.
+✔ **ESTÁ COMMITADO** em `b565221`, na branch `acoplamento-e-simulador`. A árvore está
+limpa. Duas sessões inteiras — a décima e a décima primeira — estavam fora do git (40
+arquivos, ~3.900 linhas, cinco arquivos novos não rastreados) e foram num commit só: os
+arquivos se cruzam em `turn.mjs`, `strings.mjs`, `app.mjs` e três folhas de estilo, e
+separar produziria pontos intermediários que não compilam, porque `app.mjs` importa o
+fecho.
 
 ### ⚠ As cinco coisas mais fáceis de errar ao retomar
 
@@ -190,17 +194,33 @@ npm run validate   # verde de ponta a ponta é obrigatório antes de dizer "pron
 1. ✔ **o fecho da partida** — feito;
 2. ✔ **a Caixa de Entrada** — mediu-se que ela não estava quebrada, e o que entrou foi o
    cerco falando. Ver a sessão acima;
-3. ▶ **FAZER O GABINETE CABER** — ele rola **1363px numa janela de 900**, pior que os
-   1253 registrados em 16/08. ⚠ **Cortar exige decidir o que SAI das cinco seções, e
-   isso é decisão do responsável.** O emparelhamento das listas já foi tentado e
-   revertido — ver a Parte F do ciclo 11, com o número que o mata;
-4. ▶ **a varredura de vocabulário** — a regra que matou _"as placas tectônicas"_ e
-   _"a rua"_ (rótulo nomeia a coisa, a metáfora mora na prosa) **ainda não passou nas
-   outras dez telas**. ⚠ **E agora há um caso concreto a mais**: `budget` saía em inglês
-   na tela do Congresso, e a varredura pega essa família;
-5. ▶ **os DOIS ESTADOS VAZIOS do Congresso** ocupam ~400px juntos numa tela de 1500 —
-   "Nada em pauta" e "Nada tramitando", cada um com título grande e três linhas de
-   explicação. Não é defeito: é decisão de peso, e ela nunca foi tomada de propósito.
+3. ⛔ **O GABINETE FICA COMO ESTÁ — decisão dele, e ela FECHA o item.** Ele rola
+   **1363px numa janela de 900**, e cortar exigiria decidir o que sai das cinco seções.
+   As palavras dele em 18/08: _"deixe como está"_. **Não reabra sem ele pedir**;
+4. ✔ **a padronização da interface** — feita depois disso, a pedido dele. Ver a seção
+   _A varredura de padronização_.
+
+### ▶ E O QUE EU FARIA NA PRÓXIMA SESSÃO, nesta ordem
+
+1. ▶ **MEDIR O ACHADO 30 antes de tocar em qualquer lobby.** O país passou a se degradar
+   na décima sessão, e o setor produtivo e as forças de ordem podem ter deixado de ser
+   decorativos **sozinhos** — foi exatamente o que aconteceu com o achado 29. É medição
+   pura, quase sem edição de código, e o resultado decide o item seguinte;
+2. ▶ **os DOIS LOBBIES MUDOS.** O mercado quer um **teto** e o baixo clero quer verba de
+   bancada. ⚠ **Não force os dois na carta que existe:** a exigência de piso funciona
+   porque "devolva o que você cortou" tem um número derivado atrás; um teto e uma
+   torneira não têm, e inventá-los seria o número inventado que este projeto recusa.
+   Cada um precisa de verbo próprio;
+3. ▶ **terminar a varredura de vocabulário nas dez telas.** A regra que matou _"as placas
+   tectônicas"_ e _"a rua"_ — rótulo nomeia a coisa, a metáfora mora na prosa — passou em
+   três casos a mais em 18/08 (`budget` em inglês, _"a moldura"_, _"o placar"_), mas
+   **não foi passada sistematicamente**. É barata e não toca em motor;
+4. ▶ **os DOIS ESTADOS VAZIOS do Congresso** ocupam ~400px juntos numa tela de 1900 —
+   "Nada em pauta" e "Nada tramitando", cada um com chamada e três linhas. Não é defeito:
+   é decisão de peso, e ela nunca foi tomada de propósito;
+5. ▶ recalibrar a tramitação (achados **22** e **28**), e os achados **26**, **32**,
+   **33**, **35** e **36**; depois o [ciclo 8](cycles/08-o-mapa-e-o-rastro.md) e as
+   partes B e C do [ciclo 7](cycles/07-o-congresso-tem-cara.md).
 
 ### ▶ O QUE VINHA ANTES — a ordem de 16/08
 
