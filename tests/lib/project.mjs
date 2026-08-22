@@ -41,7 +41,7 @@ export function collect(guard) {
  * @param {string} [dir]
  * @returns {string[]} caminhos relativos, com "/" como separador em toda plataforma
  */
-export function listFiles(dir = ROOT) {
+function listFiles(dir = ROOT) {
   /** @type {string[]} */
   const out = [];
   for (const entry of readdirSync(dir)) {

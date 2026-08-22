@@ -32,6 +32,18 @@ seção de retomada. Custou uma sessão inteira de estudo achá-lo. **A seção 
   o Gabinete desenhava verde, azul e vermelho **sem legenda nenhuma**, e a legenda
   existia, escrita, a um caminho de distância. Ver
   [_A frase órfã ganhou guarda_](#a-frase-orfa-ganhou-guarda-e-ela-achou-49--22082026);
+- ✔ **A LIMPEZA DO CÓDIGO ACHOU SETE `export` SEM IMPORTADOR e DOIS SELETORES QUE SE
+  ANULAVAM** — e virou a **quarta cobrança da guarda `cascade`**: a mesma propriedade
+  declarada duas vezes no mesmo contexto. Ver
+  [_A limpeza_](#a-limpeza-e-as-quatro-coisas-que-ele-viu-na-bandeja--22082026);
+- ✔ **E A BANDEJA LEVOU QUATRO ACERTOS DE PADRONIZAÇÃO** — o rubor saiu e a tarja ficou, a
+  bolinha centrou, a última linha ganhou fio, e **todo o texto virou branco**;
+- ⚠ **E A TRANSLUCIDEZ DO OFÍCIO CUSTOU 9,7 fps**, que é a lição de `--glass-support-bg`
+  reintroduzida pelo ALFA em vez de pelo token. A luz voltou a ser pintada, e não emprestada;
+- ✔ **A CARTA DA APROVAÇÃO VIROU O MOLDE DE TODAS** — fio vertical que começava no meio da
+  tabela, última linha sem fio, tabela comprimida. E o **vocativo subiu para a carta**: três
+  das doze espécies o tinham, agora nenhuma pode nascer sem ele. Ver
+  [_O ofício virou padrão_](#o-ofício-virou-padrão-e-a-aprovação-foi-o-molde--22082026);
 - ⚠ **E TRÊS DEFEITOS ANTERIORES APARECERAM NO CAMINHO, e os três estavam consumados:**
   a carta que anuncia que a **sua lei passou** era uma folha em branco; o corpo do
   ofício **nunca subiu** para `--text-verdict` porque uma regra duplicada dez linhas
@@ -211,6 +223,148 @@ linha continue valendo"_. O preço era invisível porque quase nenhuma guarda re
 **`vocabulary` reporta**, e num arquivo em que a prosa é maior que o código toda acusação
 dela apontava para uma linha que não era a da frase — às vezes duzentas linhas acima.
 **A acusação estava certa e o endereço, errado**, que é a pior forma de estar certo.
+
+## O ofício virou padrão, e a Aprovação foi o molde — 22/08/2026
+
+Pedido dele: _"aprimore, padronize, simetria, centralize, estique… e quando finalizar, use
+essa mensagem sobre a Aprovação para todas as outras"_.
+
+**O que estava errado na carta da Aprovação, e os três eram de desenho:**
+
+- ⚠ **um fio vertical que começava no MEIO da tabela** — `border-left` numa célula de corpo,
+  sem o cabeçalho ter a dela. _"Essas linhas nada a ver"_, nas palavras dele. **Régua que
+  não atravessa a tabela inteira não separa coluna: ela suja.** A SOMA já se distingue por
+  peso e tinta cheia — cor e peso dizem HIERARQUIA, fio diz FRONTEIRA, e não há fronteira
+  entre a soma e as parcelas dela;
+- ⚠ **a última classe sem fio inferior** — a mesma exceção de `:last-child` que ele acusou
+  na bandeja, na mesma tarde, em outra peça;
+- **a tabela comprimida contra o texto**, com o recuo de quando a carta era um aviso.
+  ⚠ **E o recuo só podia subir na VERTICAL:** a primeira versão subiu os dois eixos e a
+  captura reprovou na hora — sete colunas em 401px não têm folga horizontal, e a coluna
+  SOMA saiu **cortada**. Nesta folha sobra altura; largura não sobra.
+
+### ⚠ E O ANEXO FOI PARA O PÉ E VOLTOU, no mesmo dia — a razão dele encerra a questão
+
+Eu tinha empurrado a tabela para o rodapé com `margin-top: auto`, e ele recusou: _"só não
+gostei de tudo ter ficado embaixo — tem que começar em cima e terminar embaixo, é melhor
+ficar um buraco embaixo do que no meio"_.
+
+⚠ **E ele está certo pela forma do objeto.** Um documento se lê de cima para baixo, e o olho
+que desce encontra a folga **depois** do conteúdo — ali ela é margem, que é o que toda folha
+tem. No meio, a mesma folga vira interrupção: o leitor chega ao fim do texto, atravessa cem
+pixels de nada e encontra **mais documento**. **A margem embaixo se ignora; o buraco no meio
+se lê.**
+
+### ✔ E O VOCATIVO SUBIU PARA A CARTA — três das doze o tinham
+
+_"Presidente,"_ existia só nas três de relatório. Ele agora nasce em `letterHtml`, como faixa
+própria da grade: **não há como escrever uma carta nova sem ele.** ⚠ Escrito dentro de cada
+caso seriam doze lugares para manter em dia — e foi exatamente assim que três tiveram e nove
+não. Medido nas sete cartas da bandeja: todas com sinete, remetente, data, assunto,
+vocativo, corpo, anexo quando há, ação quando há, e rodapé. **Mesma composição, sem exceção.**
+
+⚠ **O QUE CONTINUA DIFERENTE ENTRE ELAS É O ANEXO, e isso é motor:** três das doze espécies
+têm tabela; as outras nove abrem com duas frases e a folga vai toda para o pé. Encher isso
+exige dado que `notice` e `alarm` não guardam — ver a nota da carta `passed`.
+
+## A limpeza, e as quatro coisas que ele viu na bandeja — 22/08/2026
+
+Pedido dele depois do commit: _"faça uma boa limpeza em todo o código"_, e mais quatro
+observações sobre a Caixa de Entrada. **Tudo verde no fim** — `validate` (234 provas · 11
+guardas · **47 provas sintéticas**), `walk`, `screen` (**+4,7 fps**) e as capturas olhadas.
+
+### ✔ As quatro da bandeja, e as quatro são de padronização
+
+| o que ele viu                                           | o que estava errado                                                        |
+| ------------------------------------------------------- | -------------------------------------------------------------------------- |
+| _"retira a cor do fundo avermelhada, deixe só a barra"_ | duas marcas para um estado — a tarja **e** o rubor                         |
+| _"a bolinha mais centralizada no canto direito"_        | presa ao topo, numa linha que cresce para baixo                            |
+| _"por que a última fica sem a linha inferior?"_         | uma exceção de `:last-child` que supunha a lista encostando no fim         |
+| _"o texto fica puxado pro marrom"_                      | a tinta do papel — `--paper-ink` — dentro de uma caixa que ele quer branca |
+
+⚠ **O RUBOR REVERTE UM PEDIDO DELE MESMO, de 21/08 — e as duas decisões estão certas
+porque a BANDEJA mudou entre elas.** O fundo vermelho nasceu quando a linha era texto solto
+num painel transparente: ali ele era a única coisa que fazia o olho achar a carta pesada.
+Hoje a linha é figura fechada, com fio em cima e embaixo, dentro de um móvel com aresta — e
+a tarja de 3px já basta. **O canal sobrevive inteiro: o que se perdeu foi tinta, não
+resposta.**
+
+⚠ **E A EXCEÇÃO DO ÚLTIMO FIO TINHA UMA RAZÃO BOA E UMA PREMISSA FALSA.** Ela dizia que _"o
+vazio não é a próxima coisa: é onde o móvel acaba"_ — verdade numa lista que **termina onde
+o móvel termina**, e esta não termina: o índice fecha em 630px com ~527 de conteúdo, então a
+última linha tem cem pixels de coluna abaixo dela. O fio não separava a carta do fim: ele
+fechava a carta.
+
+⚠ **E A TINTA BRANCA É UMA REGRA, E NÃO TRINTA.** `--paper-ink` é a SUBSTÂNCIA — veste
+`.letter` inteira em `30-components.css`, e mais de trinta regras a usam com opacidades
+diferentes. O par inteiro (`--paper-ink` e `--paper-ink-rgb`) foi redefinido **no escopo
+`.tray`**, e o escopo é a decisão: `.law` e `.passage__row` continuam de pergaminho nas
+telas de área e do Congresso, onde a prosa dos tokens diz por quê.
+
+### ✔ E as barras de data ganharam tinta — revertendo uma regra de ontem, com a razão dela
+
+Pedido: _"que tal se o fundo for um pouco mais claro? aí dá pra diferenciar os retângulos
+das mensagens e das datas"_.
+
+⚠ **A REGRA DE 21/08 DIZIA O CONTRÁRIO — _"o conserto é ela não ter material NENHUM: o
+contraste passa a ser entre TER superfície e NÃO ter"_ — e ela valia enquanto a LINHA tinha
+superfície própria.** A linha perdeu a dela no mesmo dia, quando o vidro subiu para a
+coluna; a partir dali as duas não tinham nada, e o contraste que a regra prometia deixou de
+existir. **Foi a premissa que caducou, e não a regra.** Medido: luminância 24,9 na barra
+contra 14,9 na linha.
+
+### ⚠ E A TRANSLUCIDEZ DO OFÍCIO CUSTOU 9,7 fps — o mesmo defeito de ontem, com outra roupa
+
+`npm run screen` acusou logo depois. Quatro rodadas: **−6,6 · −9,1 · −10,8 · −12,4**, todas
+negativas — não era ruído.
+
+⚠ **A CAUSA É `--light-angle`, que INTERPOLA a cada quadro.** A lâmina se repinta sessenta
+vezes por segundo; uma superfície **opaca** em cima dela não paga nada por isso, e uma
+**translúcida de 451×630** recompõe junto, todo quadro. A lição estava escrita para
+`--glass-support-bg` (−28,3 fps) e eu a reintroduzi por outro caminho: **não pelo token,
+pelo alfa.**
+
+**O conserto não foi voltar ao marrom chapado.** O que ele aprovou é a luz cruzando a folha,
+e ela não precisa vir da lâmina: pintada no próprio ofício, em gradiente estático sobre base
+opaca, o olho vê a mesma coisa e o compositor não vê nada. As paradas foram escolhidas
+contra os pixels que a versão translúcida produzia. **Depois do conserto: −0,1 · +2,0 ·
+−2,1 · +4,7 — sinais misturados, que é o ruído da bancada.**
+
+⚠ **E `--paper-rgb` MORREU NO MESMO DIA EM QUE NASCEU**, sem consumidor — e quem o achou foi
+a guarda `tokens`, no primeiro `validate` depois do conserto.
+
+### ✔ A limpeza, e o que ela achou
+
+- **sete `export` que nenhum outro arquivo importa** — `SIEGE_PRICE`, `CHANNELS`, `OFFICES`,
+  `FAMILIES`, `TABLE`, `LAYER_ORDER`, `listFiles`. Todos perderam o `export`. ⚠ **A regra
+  já estava escrita:** _"`export` sem quem importe é uma porta aberta"_, e este projeto já
+  pagou cinco vezes por porta errada aberta;
+- ⚠ **e `OFFICES` estava morta INCLUSIVE dentro do próprio arquivo** — o `eslint` acusou
+  assim que o `export` saiu. Ela é o defeito que `standards.md` já nomeia por extenso,
+  _"lista declarada e não cobrada"_, com `CHANNELS` e `FAMILIES` citadas: as duas foram
+  ligadas ao esquema quando a lição foi escrita, e `OFFICES` ficou de fora. **Agora ela é
+  `values` de `office`** — um arquétipo com `office: "rapportuer"` passava por tipo, guarda
+  e validação, e sumia dentro de um `by(office)` que devolve `null` calado;
+- **treze seletores declarados duas vezes no mesmo arquivo**, dos quais **seis eram
+  `@media` legítimos** e **cinco aditivos**. ⚠ **Dois eram defeito de verdade:**
+  `.law__guard` pintava com a tinta do PAPEL e a segunda declaração, sete linhas abaixo,
+  com o cinza do VIDRO — sobre pergaminho; e `.bench` recebia a borda esquerda de bordô e
+  uma segunda, duzentas linhas abaixo, a punha transparente. **O carpete estava morto desde
+  que foi escrito.**
+
+### ⚠ E ISSO VIROU A QUARTA COBRANÇA DA GUARDA `cascade`
+
+Três ocorrências da mesma família em um dia — `.letter__lines`, `.law__guard`, `.bench` — e
+nenhuma guarda as alcançava: `orphans` acusa regra sem produtor e as duas tinham; `tokens`
+acusa token sem consumidor e os dois eram consumidos. **O defeito não está em nenhuma das
+duas regras: está no PAR.**
+
+⚠ **E O QUE SE ACUSA É A PROPRIEDADE, E NÃO O SELETOR REPETIDO.** Escrever o mesmo seletor
+duas vezes é autoria legítima aqui — `.tray__row { position: relative }` mora ao lado da
+regra do ponto de não lido porque existe **para** ela. O que nunca é legítimo é a mesma
+**propriedade** declarada duas vezes no mesmo contexto: ali uma das duas é, por construção,
+letra morta. `@media` e `@layer` entram na chave, senão a guarda brigaria com a forma como
+todo CSS responsivo se escreve.
 
 ## A carta que anuncia que a sua lei passou era uma folha em branco — 22/08/2026
 

@@ -187,7 +187,7 @@ export const SURNAMES = [
    próprio jogador, não vota, e a função dele é ser a voz que fala com o presidente.
    O que separa os dois grupos no modelo não é este rótulo, é o alcance: `benches`
    só conhece quem arrasta alguém. */
-export const OFFICES = ["speaker", "senate", "rapporteur", "leader", "chief"];
+const OFFICES = ["speaker", "senate", "rapporteur", "leader", "chief"];
 
 /* ── AS AMBICOES ─────────────────────────────────────────────────────────────
    O que a pessoa QUER, e e isso que a distingue de uma bancada. Uma bancada
@@ -221,7 +221,18 @@ export const ARCHETYPE_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
   bloc: { kind: "id" },
-  office: { kind: "text" },
+  /* ⚠ `values` ENTROU EM 22/08/2026, e a lista existia desde 15/08 SEM NINGUEM COBRA-LA.
+     `OFFICES` estava declarada logo acima, a prosa do tipo dizia "o cargo que ele ocupa;
+     UM DE `OFFICES`" — e nada verificava: um arquetipo com `office: "rapportuer"` passaria
+     por tipo, guarda e validacao, e sumiria dentro de um `by(office)` que nao casa com
+     nada. E o `by()` da Caixa de Entrada devolve `null` calado, entao a carta sairia sem
+     remetente em vez de falhar.
+
+     ⚠ E ESTE E O DEFEITO QUE `standards.md` JA NOMEIA — "lista declarada e nao cobrada" —,
+     com `CHANNELS` e `FAMILIES` citadas por nome. As duas foram ligadas ao esquema quando
+     a licao foi escrita; `OFFICES` ficou de fora e ninguem voltou. O que a achou foi a
+     limpeza: sem consumidor nenhum, ela e uma lista que o arquivo declara e esquece. */
+  office: { kind: "text", values: OFFICES },
   economicShift: { kind: "number", min: -40, max: 40 },
   libertyShift: { kind: "number", min: -40, max: 40 },
   venalityShift: { kind: "number", min: -0.5, max: 0.5 },

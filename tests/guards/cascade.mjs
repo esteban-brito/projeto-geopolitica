@@ -21,7 +21,7 @@ import { collect, stripCssComments } from "../lib/project.mjs";
 
 export const name = "cascade";
 
-export const LAYER_ORDER = ["tokens", "base", "material", "components", "screens", "motion"];
+const LAYER_ORDER = ["tokens", "base", "material", "components", "screens", "motion"];
 
 /**
  * @param {Map<string, string>} files
@@ -82,6 +82,26 @@ export function audit(files) {
           `camadas INVERTIDA, entao ele enfraquece a regra em vez de reforca-la`,
       );
     }
+
+    /* 3 — A MESMA PROPRIEDADE DUAS VEZES NO MESMO SELETOR E NO MESMO CONTEXTO.
+       Ver a prosa de `rules`, logo abaixo: uma das duas e letra morta por construcao. */
+    /** @type {Map<string, Map<string, number>>} */
+    const written = new Map();
+    for (const { key, props, line } of rules(css)) {
+      const before = written.get(key) ?? new Map();
+      for (const prop of props) {
+        const first = before.get(prop);
+        if (first !== undefined && first !== line) {
+          add(
+            `${path}:${first} e :${line} declaram \`${prop}\` no mesmo seletor e no mesmo ` +
+              `contexto — a ultima vence, e a outra e letra morta. Nao ha erro, nao ha ` +
+              `aviso, e a decisao que perdeu continua escrita como se valesse`,
+          );
+        }
+        before.set(prop, first ?? line);
+      }
+      written.set(key, before);
+    }
   }
 
   return list;
@@ -121,6 +141,86 @@ function outsideLayers(css) {
   return null;
 }
 
+/* ── O QUARTO PONTO CEGO: A MESMA PROPRIEDADE, DUAS VEZES ────────────────────
+   ⚠ ELE NASCEU DE TRES OCORRENCIAS MEDIDAS NO MESMO DIA, 22/08/2026, e as tres eram
+   decisoes de desenho que NUNCA CHEGARAM A TELA:
+
+     · `.tray__open .letter__lines` subia o corpo do oficio para `--text-verdict` e uma
+       segunda declaracao dez linhas abaixo o devolvia para `--text-body`. Medido no
+       navegador: 13,6px onde a prosa justificava 15,2 em quinze linhas;
+     · `.law__guard` pintava com a tinta do PAPEL e uma segunda, sete linhas abaixo,
+       com o cinza do VIDRO — sobre pergaminho;
+     · `.bench` recebia a borda esquerda de bordo e uma segunda, duzentas linhas
+       abaixo, a punha transparente. O carpete estava morto desde que foi escrito.
+
+   ⚠ E NENHUMA GUARDA ALCANCAVA. `orphans` acusa regra sem produtor, e as duas tinham;
+   `tokens` acusa token sem consumidor, e os dois eram consumidos. O defeito nao esta em
+   nenhuma das duas regras — esta no PAR, e so quem le as duas juntas o ve.
+
+   ⚠ E O QUE SE ACUSA E A PROPRIEDADE, E NAO O SELETOR REPETIDO. Escrever o mesmo seletor
+   duas vezes e autoria legitima neste projeto: `.tray__row { position: relative }` mora ao
+   lado da regra do ponto de nao lido porque ela existe PARA ele, e junta-la ao bloco
+   principal separaria a linha da razao dela. O que nunca e legitimo e a mesma propriedade
+   declarada duas vezes no mesmo contexto: ali uma das duas e, por construcao, letra morta. */
+
+/**
+ * OS BLOCOS DE REGRA, com contexto, seletor, propriedades e linha.
+ *
+ * @param {string} css ja sem comentarios
+ * @returns {Array<{ key: string, props: string[], line: number }>}
+ */
+function rules(css) {
+  /** @type {Array<{ key: string, props: string[], line: number }>} */
+  const out = [];
+  /** @type {string[]} */
+  const stack = [];
+  let line = 1;
+  let i = 0;
+
+  while (i < css.length) {
+    const ch = css[i];
+    if (ch === "\n") line++;
+
+    if (ch === "{") {
+      let start = i - 1;
+      while (start >= 0 && !"{};".includes(css[start] ?? "")) start--;
+      const selector = css
+        .slice(start + 1, i)
+        .trim()
+        .replace(/\s+/g, " ");
+
+      if (selector.startsWith("@")) {
+        /* ⚠ `@media` e `@layer` ENTRAM NA CHAVE, e nao sao ignorados: a mesma regra
+           dentro e fora de uma media query e o padrao normal de sobreposicao, e acusar
+           isso faria a guarda brigar com a forma como todo CSS responsivo se escreve. */
+        stack.push(selector);
+        i++;
+        continue;
+      }
+
+      const end = matchBrace(css, i);
+      if (end === -1) break;
+      const body = css.slice(i + 1, end);
+      /* so as declaracoes DESTE bloco: um `{` dentro seria regra aninhada, e o projeto
+         nao usa aninhamento — mas cortar no primeiro `{` mantem a leitura honesta. */
+      const flat = body.split("{")[0] ?? "";
+      const props = [...flat.matchAll(/(^|;)\s*(-{0,2}[a-zA-Z][\w-]*)\s*:/g)].map(m =>
+        (m[2] ?? "").toLowerCase(),
+      );
+      out.push({ key: `${stack.join(" › ")}|${selector}`, props, line });
+
+      for (let k = i; k <= end; k++) if (css[k] === "\n") line++;
+      i = end + 1;
+      continue;
+    }
+
+    if (ch === "}") stack.pop();
+    i++;
+  }
+
+  return out;
+}
+
 /**
  * @param {string} text
  * @param {number} open indice da `{` de abertura
@@ -137,6 +237,28 @@ function matchBrace(text, open) {
 
 export const synthetic = [
   {
+    /* ⚠ ESTA E A DE 22/08/2026, e ela reintroduz o defeito EXATO que a criou: o corpo do
+       oficio subia um degrau e uma segunda declaracao, dez linhas abaixo, o devolvia. */
+    label: "a mesma propriedade declarada duas vezes no mesmo seletor",
+    files: new Map([
+      ["index.html", '<link href="styles/00-tokens.css">'],
+      [
+        "styles/00-tokens.css",
+        `@layer ${LAYER_ORDER.join(", ")};\n@layer screens{\n` +
+          `.letter__lines{font-size:var(--text-verdict)}\n` +
+          `.letter__subject{font-size:var(--text-name)}\n` +
+          `.letter__lines{font-size:var(--text-body)}\n}`,
+      ],
+    ]),
+  },
+  {
+    /* ⚠ E ESTA COBRA O CONTRARIO, e sem ela o conserto obvio da acusacao falsa seria
+       afrouxar a guarda: o mesmo seletor escrito duas vezes com propriedades DIFERENTES e
+       autoria legitima, e este projeto a usa de proposito — a regra do `position: relative`
+       mora ao lado do ponto de nao lido porque ela existe para ele.
+       ⚠ Ela nao pode ser prova sintetica, porque o runner so sabe cobrar ACUSACAO. O que
+       prova o silencio e a folha REAL: `45-screen-cabinet.css` tem cinco pares assim e
+       passa verde. */
     label: "regra fora de qualquer camada",
     files: new Map([
       ["index.html", '<link href="styles/00-tokens.css">'],

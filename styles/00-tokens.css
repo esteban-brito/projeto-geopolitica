@@ -200,14 +200,16 @@
        lamina, ela diferia quase so em MATIZ, e nao em claridade. Um revisor externo
        leu o bloco de leis como "caixas de contorno fininho", sem perceber que havia
        papel ali. Substancia que so o autor enxerga nao e substancia. */
+    /* ⚠ A FORMA `-rgb` NASCEU E MORREU EM 22/08/2026, e quem a matou foi `npm run screen`.
+       Ela existiu por algumas horas para o oficio aberto ser um marrom TRANSLUCIDO — "da
+       pra ser marrom liquid glass o bloco da direita?" —, e a translucidez cobrou 9,7 fps
+       de media: uma superficie grande translucida sobre a lamina recompoe a cada quadro,
+       porque `--light-angle` interpola. A luz voltou a ser PINTADA no proprio oficio, em
+       gradiente estatico, e o par ficou sem consumidor no mesmo dia.
+       ⚠ E FOI A GUARDA `tokens` QUE O ACHOU, no primeiro `validate` depois do conserto. O
+       registro fica porque a licao nao e sobre o token: e sobre alfa grande sobre lamina
+       animada ser o mesmo defeito de `--glass-support-bg`, por outro caminho. */
     --paper: #2b241c;
-    /* ⚠ A FORMA `-rgb` NASCEU EM 21/08/2026, e o consumidor e o oficio aberto da Caixa de
-       Entrada. Pedido dele: "da pra ser marrom liquid glass o bloco da direita, e o da
-       esquerda so liquid glass? os dois igualmente padronizados?" — e a resposta e a mesma
-       gramatica que `--glass-base` ja usa, com outra tinta: uma demao TRANSLUCIDA sobre a
-       lamina, e nao uma cor chapada. Sem o par, o marrom so existe opaco, e opaco ele e
-       tinta e nao vidro. */
-    --paper-rgb: 43, 36, 28;
     --paper-edge: #4a3f31;
     --paper-ink: #d9cdbc;
     /* A forma `-rgb` existe porque a tinta do papel precisa de translucidez: as

@@ -458,6 +458,29 @@
      sem igualar o raio teria deixado o defeito de pe com os dois encostados, que e pior:
      as duas curvas passam a se tocar. */
   .tray {
+    /* ⚠ A TINTA DA CAIXA DE ENTRADA VIROU BRANCA EM 22/08/2026, e o pedido dele nomeia o
+       que ele viu: "parece que o marrom fica por cima do texto — quando eu nao clico o
+       texto fica branco, quando eu clico o fundo fica marrom e o texto tambem fica puxado
+       pro marrom; eu quero que todo o texto seja branco, nao importa o fundo".
+
+       ⚠ E O CONSERTO E UMA REGRA, E NAO TRINTA. A tinta do papel nao estava espalhada em
+       declaracoes soltas: ela e a SUBSTANCIA — `--paper-ink` veste `.letter` inteira em
+       `30-components.css`, e mais de trinta regras aqui a usam com opacidades diferentes.
+       Trocar uma a uma seria trinta lugares para manter em dia; trocar o TOKEN no escopo
+       da bandeja e um so, e ele alcanca tudo o que nascer aqui depois.
+
+       ⚠ E O PAR VAI JUNTO, obrigatoriamente. Metade das regras usa `var(--paper-ink)` e a
+       outra metade `rgba(var(--paper-ink-rgb), a)`; redefinir so um dos dois deixaria
+       metade do texto marrom e a outra branca — que e pior que o defeito original, porque
+       ali a divergencia teria virado desenho.
+
+       ⚠ E O ESCOPO E A BANDEJA, e nao o papel do projeto. `.letter` e a mesma peca no
+       fecho e no relatorio, e `.law` e `.passage__row` sao papel nas telas de area e do
+       Congresso: la a tinta de pergaminho continua sendo a certa, e a prosa dos tokens diz
+       por que — "um cinza calibrado para vidro escuro fica turvo sobre pergaminho". O que
+       ele pediu foi a Caixa de Entrada, e o pedido para aqui. */
+    --paper-ink: var(--ink);
+    --paper-ink-rgb: var(--ink-rgb);
     display: grid;
     grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
     gap: 0;
@@ -549,11 +572,21 @@
     min-width: 0;
   }
 
-  /* O ÚLTIMO NÃO TEM FIO. Um traço no rodapé da pilha separa a última carta do vazio, e
-     vazio não é a próxima coisa: é onde o móvel acaba, e quem diz isso é a aresta dele. */
-  .tray__list > li:last-child .tray__row {
-    border-bottom: 0;
-  }
+  /* ⚠ A EXCECAO DO ULTIMO MORREU EM 22/08/2026, e o pedido dele nomeia o defeito: "cada
+     mensagem e um retangulo, com linha em cima e embaixo, por que a ultima fica sem a
+     linha horizontal inferior? quero tudo padronizado, simetrico".
+
+     A razao antiga estava escrita aqui e era boa em tese — "um traco no rodape da pilha
+     separa a ultima carta do vazio, e vazio nao e a proxima coisa: e onde o movel acaba".
+     ⚠ **Ela vale para uma lista que TERMINA onde o movel termina, e esta nao termina.** O
+     indice fecha em 630px com ~527 de conteudo, entao a ultima linha tem cem pixels de
+     coluna abaixo dela: o fio nao separa a carta do fim do movel — ele fecha a carta. Sem
+     ele, a ultima e a UNICA figura aberta da pilha, e o olho encontra a assimetria antes
+     de encontrar a razao dela.
+
+     ⚠ E A REGRA GERAL E A LICAO: excecao de borda em `:last-child` supoe que a lista
+     encosta no fim do continente. Quando ela nao encosta, a excecao inventa um caso
+     especial visivel para resolver um problema que nao existe. */
 
   /* ── UMA LINHA DO ÍNDICE ─────────────────────────────────────────────────────
      ⚠ ELA É BOTÃO, e não linha clicável: o que ela faz é trocar o documento aberto,
@@ -658,13 +691,28 @@
     padding-right: var(--space-4);
   }
 
+  /* ⚠ O PONTO CENTROU NA VERTICAL EM 22/08/2026, a pedido dele: "a bolinha amarela de
+     mensagem nao lida, quero que voce coloque ela mais centralizada ali no canto direito".
+
+     Ele estava preso ao TOPO com o mesmo recuo do texto, o que fazia sentido enquanto a
+     linha tinha uma altura so. Ela nao tem: um assunto que quebra em duas linhas mede 70px
+     contra 51, e o ponto ficava colado no teto de uma caixa que crescia para baixo — a
+     marca cada vez mais longe do centro da peca a que ela pertence. Centrado, ele fica no
+     mesmo lugar RELATIVO em toda linha, que e o que "padronizado" quer dizer numa lista de
+     itens de altura variavel.
+
+     ⚠ E O `translate` E ESTATICO, e nao movimento: ele desloca metade do proprio diametro
+     para que o CENTRO do ponto caia na metade da linha. `top: 50%` sozinho poria a QUINA
+     dele ali, e o erro seria de meio ponto — visivel exatamente numa peca cujo trabalho e
+     estar no lugar certo. */
   .tray__row[data-unread="true"]::after {
     content: "";
     position: absolute;
-    top: var(--space-2);
+    top: 50%;
     right: var(--space-3);
     width: var(--dot);
     height: var(--dot);
+    transform: translateY(-50%);
     border-radius: var(--radius-dot);
     background: var(--brand);
   }
@@ -697,29 +745,24 @@
      uma declaração única APAGARIA o material — e a carta pesada seria a única do índice
      sem contorno de vidro, que é o oposto do que o destaque quer dizer. O rubor vem
      ANTES na pilha, ou seja, por cima. É a mesma correção que a linha aberta já exigiu. */
-  .tray__row[data-weight="high"] {
-    border-left-color: rgba(var(--crisis-rgb), 0.6);
-    background: linear-gradient(
-      90deg,
-      rgba(var(--crisis-rgb), 0.14),
-      rgba(var(--crisis-rgb), 0.06) 62%,
-      rgba(var(--crisis-rgb), 0.03)
-    );
-  }
+  /* ⚠ O RUBOR DE FUNDO MORREU EM 22/08/2026, E A TARJA FICOU. Pedido dele: "as mensagens
+     importantes estao com fundo avermelhado e tambem a barrinha vertical na esquerda
+     vermelha; retira a cor do fundo avermelhada e deixe so a barrinha".
 
-  /* ⚠ E A ABERTA PESADA PRECISA DAS DUAS COISAS. Sem esta regra a carta pesada perderia o
-     rubor no instante em que fosse aberta — o jogador veria a marca sumir debaixo do
-     próprio clique —, e a aberta perderia o papel, que é o que diz qual documento está ao
-     lado. O rubor vem ANTES na pilha de fundos, ou seja, por cima do marrom. */
-  .tray__row[data-weight="high"][aria-current="true"] {
-    background:
-      linear-gradient(
-        90deg,
-        rgba(var(--crisis-rgb), 0.16),
-        rgba(var(--crisis-rgb), 0.07) 62%,
-        rgba(var(--crisis-rgb), 0.04)
-      ),
-      var(--paper);
+     ⚠ E ISSO REVERTE UM PEDIDO DELE MESMO, de 21/08 — "um fundo de uma cor tipo um vermelho
+     clarinho" —, e as duas decisoes estao certas porque a BANDEJA mudou entre elas. O fundo
+     nasceu quando a linha era texto solto num painel transparente: ali o rubor era a unica
+     coisa que fazia o olho achar a carta pesada. Hoje a linha e uma figura fechada, com fio
+     em cima e embaixo, dentro de um movel com aresta — e nela a tarja de 3px ja e um sinal
+     que se acha de relance. O fundo virou a SEGUNDA marca da mesma coisa, e duas marcas
+     para um estado e o que faz a bandeja parecer pintada.
+
+     ⚠ E O CANAL SOBREVIVE INTEIRO: a tarja continua tendo dois donos — tempo numa carta com
+     prazo, peso numa sem — e nunca os dois na mesma carta. O que se perdeu foi tinta, e nao
+     resposta. Por isso a regra da ABERTA PESADA morreu junto: ela existia so para o rubor
+     nao sumir debaixo do papel, e sem rubor nao ha o que preservar. */
+  .tray__row[data-weight="high"] {
+    border-left-color: var(--crisis);
   }
 
   /* ── O DIVISOR DE MÊS ───────────────────────────────────────────────────────
@@ -770,7 +813,27 @@
        ser entre TER superfície e NÃO ter, que é o mais forte que existe. */
     padding: var(--space-3) var(--space-3) var(--space-1);
     border-bottom: 1px solid var(--glass-edge);
-    background: transparent;
+    /* ⚠ A TINTA VOLTOU EM 22/08/2026, e ela NAO desfaz a licao de 21/08 — e a mesma licao
+       com o objeto trocado. Pedido dele: "as barras que dividem com as datas no meio, que
+       tal se o fundo for um pouco mais claro? ai da pra diferenciar os retangulos das
+       mensagens e das datas".
+
+       ⚠ A REGRA ANTIGA DIZIA "o conserto e ela nao ter material NENHUM: o contraste passa a
+       ser entre TER superficie e NAO ter" — e ela valia enquanto a LINHA tinha superficie
+       propria. A linha perdeu a dela no mesmo dia, quando o vidro subiu para a coluna, e ai
+       as duas passaram a nao ter nada: o contraste que a regra prometia deixou de existir,
+       e so a tipografia separava um cabecalho de um item. **Foi a premissa que caducou, e
+       nao a regra.**
+
+       ⚠ E A TINTA E CHAPADA, obrigatoriamente. `--glass-support-bg` foi medido nesta mesma
+       coluna e custou 28,3 fps SEM filtro nenhum: ele segue `--light-angle`, que interpola
+       a cada quadro, e uma superficie de dentro que o use repinta sessenta vezes por
+       segundo. Uma demao de branco a 5% nao custa quadro nenhum.
+
+       ⚠ E ELA E PALIDA DE PROPOSITO. Acima de uns poucos por cento a barra vira BOTAO e
+       passa a competir com a linha aberta, que e a unica peca desta coluna com direito a
+       chamar atencao. O trabalho dela e dizer "aqui comeca outro mes", e nao ser lida. */
+    background: rgba(var(--ink-rgb), 0.05);
     font-family: var(--font-display);
     /* ⚠ ELA ENCOLHEU DE `--text-note` PARA `--text-label`, e isso desfaz pela metade um
        pedido anterior dele — "a data precisa ficar mais visível, um pouquinho menor que o
@@ -840,14 +903,19 @@
      que significa TEMPO. Um `background` e três lados não a tocam; um atalho de quatro
      lados venceria as regras de urgência acima — mesma especificidade, e esta vem depois —
      e o prazo sumiria exatamente da carta que o jogador está lendo. */
-  /* ⚠ E A DEMAO DA LINHA ACOMPANHA A DO OFICIO — 0,78, o mesmo numero medido la. Quando o documento virou
-     marrom TRANSLUCIDO, uma linha de marrom chapado ao lado dele deixaria de dizer "esta
-     linha E o documento": os dois estao encostados desde que a costura fechou, e duas
-     densidades da mesma cor a 0px de distancia leem como duas cores. A mesma demao, e a
-     identidade se mantem sozinha. */
+  /* ⚠ E A LINHA ACOMPANHA O OFICIO, e depois de 22/08 isso quer dizer o CONTRARIO do que
+     dizia de manha: os dois voltaram a ser opacos juntos. A regra por tras nao mudou —
+     eles estao encostados desde que a costura fechou, e duas densidades da mesma cor a 0px
+     de distancia leem como duas cores, o que apagaria a unica coisa que esta linha diz
+     ("este e o documento ao lado"). O que mudou foi qual densidade os dois usam, e a
+     medicao de fps decidiu. Ver a prosa de `.tray__open .letter`.
+
+     ⚠ E ELA NAO RECEBE O GRADIENTE DO OFICIO. Numa faixa de 51px de altura uma diagonal de
+     160deg nao tem distancia para virar luz: ela vira uma mancha. O que a folha ganha em
+     630px, a linha ganharia em ruido. */
   .tray__row[aria-current="true"] {
     border-bottom-color: var(--paper-edge);
-    background: rgba(var(--paper-rgb), 0.78);
+    background: var(--paper);
     /* ⚠ A ARESTA DE CIMA E A DA DIREITA SAO SOMBRA, E NAO BORDA, e a primeira versao
        provou por que: eu escrevi `border-top-color` numa linha cuja borda tem LARGURA
        ZERO — a linha perdeu a caixa quando o painel ganhou a dela —, e cor sem largura nao
@@ -1061,10 +1129,37 @@
   .tray__open .letter {
     gap: var(--space-3);
     padding: var(--space-6);
-    grid-template-rows: auto auto 1fr auto;
+    /* cabeca · assunto · vocativo · corpo (o que estica) · rodape */
+    grid-template-rows: auto auto auto 1fr auto;
     border-color: var(--glass-edge);
     border-radius: 0 var(--radius-piece) var(--radius-piece) 0;
-    background: rgba(var(--paper-rgb), 0.78);
+    /* ⚠ A LUZ E PINTADA, E NAO EMPRESTADA — corrigido em 22/08/2026, e `npm run screen`
+       foi quem pegou. A primeira versao era `rgba(var(--paper-rgb), 0.78)`, e ela deixava a
+       lamina atravessar de verdade: bonito, medido, e CARO. Quatro rodadas seguidas
+       cobraram −6,6, −9,1, −10,8 e −12,4 fps contra o braco de controle, media −9,7.
+
+       ⚠ E A CAUSA E A MESMA DE 21/08, com outra roupa: `--light-angle` INTERPOLA a cada
+       quadro, entao a lamina se repinta sessenta vezes por segundo. Uma superficie OPACA em
+       cima dela nao paga nada por isso; uma TRANSLUCIDA de 451×630 recompoe junto, todo
+       quadro. A licao estava escrita para `--glass-support-bg` e eu a reintroduzi por outro
+       caminho — nao pelo token, pelo alfa.
+
+       ⚠ E O CONSERTO NAO E VOLTAR AO MARROM CHAPADO. O que ele aprovou foi a luz cruzando a
+       folha, e ela nao precisa vir da lamina: pintada AQUI, em gradiente estatico sobre uma
+       base opaca, o olho ve a mesma coisa e o compositor nao ve nada. As paradas foram
+       escolhidas contra os pixels que a versao translucida produzia — 36,32,30 no topo e
+       44,37,35 na base —, entao o desenho e o mesmo e o custo e zero.
+
+       ⚠ E O ANGULO E 160deg, o mesmo sentido em que a luz da sala caminha. Um gradiente na
+       diagonal contraria seria a folha iluminada por uma segunda fonte que nao existe. */
+    background:
+      linear-gradient(
+        160deg,
+        rgba(var(--bg-rgb), 0.5),
+        rgba(var(--bg-rgb), 0.12) 45%,
+        rgba(var(--ink-rgb), 0.045)
+      ),
+      var(--paper);
     box-shadow: var(--bevel-fine);
   }
 
@@ -1075,6 +1170,48 @@
   .tray__open .letter__why {
     margin-top: auto;
   }
+
+  /* ── O ANEXO DESCE PARA O PE DA FOLHA — 22/08/2026 ──────────────────────────
+     ⚠ ELE FICAVA COLADO NO TEXTO com cem pixels de nada embaixo, e isso desenhava a folha
+     ao contrario: tudo empurrado para o teto, e o vazio no rodape. Num oficio o anexo E o
+     rodape do documento — a prosa diz o que houve, e a tabela fica embaixo para quem
+     quiser conferir. Com ele no pe, o vazio deixa de ser uma sobra no fim e vira o RESPIRO
+     entre duas coisas diferentes, que e o unico lugar onde espaco em branco trabalha.
+
+     ⚠ E A CAIXA PRECISOU VIRAR FLEX, e nao ficar em grade. `align-content: start` numa
+     grade recolhe a folga toda para o FIM da caixa, e ali `margin-top: auto` nao tem o que
+     empurrar — a regra existiria e nao faria nada, que e o defeito silencioso que este
+     projeto persegue. Em coluna flex a margem automatica come a folga e desloca a peca.
+
+     ⚠ E SO A BANDEJA FAZ ISSO. `.letter` e a mesma peca no fecho e no relatorio, e la ela
+     mede o proprio texto: uma margem automatica numa caixa sem altura sobrando nao empurra
+     nada, mas o escopo mantem a regra onde a razao dela existe. */
+  .tray__open .letter__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ⚠ O VOCATIVO E UMA FAIXA PROPRIA DA GRADE, e nao a primeira linha do corpo: ele nunca
+     cresce, nunca some e nunca divide espaco com o texto. Como linha do corpo, ele
+     participaria da distribuicao que empurra o anexo para o pe — e o "Presidente," subiria
+     junto com a tabela. */
+  .tray__open .letter__vocative {
+    margin: 0;
+    font-weight: 700;
+    color: var(--paper-ink);
+  }
+  /* ⚠ O ANEXO FOI PARA O PE E VOLTOU NO MESMO DIA, e a razao dele encerra a questao: "so
+     nao gostei de tudo ter ficado embaixo — tem que comecar em cima e terminar embaixo, e
+     melhor ficar um buraco embaixo do que no meio".
+
+     ⚠ E ELE ESTA CERTO PELA FORMA DO OBJETO. Um documento se le de cima para baixo, e o
+     olho que desce encontra a folga DEPOIS do conteudo — ali ela e margem, que e o que
+     toda folha tem. No meio, a mesma folga vira interrupcao: o leitor chega ao fim do
+     texto, atravessa cem pixels de nada e encontra MAIS documento. A margem embaixo se
+     ignora; o buraco no meio se le.
+
+     A caixa continua flex, e nao volta a ser grade: e ela que ancora o corpo no topo sem
+     distribuir. O que morreu foi so a margem automatica do anexo. */
 
   /* ⚠ E O CORPO CRESCEU UM DEGRAU — para `--text-verdict`, que JÁ EXISTE. Numa folha de
      630px, 13,6px é corpo de aviso e não de documento.
@@ -1322,9 +1459,18 @@
     font-size: var(--text-label);
   }
 
+  /* ⚠ O RECUO SUBIU EM 22/08/2026, e o espaco veio de graca: a folha tem 630px e o anexo
+     media 143. Tres pixels eram a medida de quando a carta era um aviso apertado; num
+     documento com cem pixels sobrando eles fazem a tabela parecer comprimida contra o
+     texto acima dela.
+
+     ⚠ E O GANHO E VERTICAL, E SO ELE — a primeira versao subiu os dois eixos e a captura
+     reprovou na hora: sete colunas em 410px nao tem folga horizontal nenhuma, e a coluna
+     SOMA saiu CORTADA pela rolagem lateral. O que sobra nesta folha e altura; largura nao
+     sobra, e recuo horizontal aqui nao e respiro — e a peca deixando de caber. */
   .annex__table th,
   .annex__table td {
-    padding: 3px var(--space-1);
+    padding: var(--space-1) var(--space-1);
     text-align: right;
     white-space: nowrap;
   }
@@ -1351,9 +1497,10 @@
     border-bottom: 1px solid rgba(var(--paper-ink-rgb), 0.08);
   }
 
-  .annex__table tbody tr:last-child td {
-    border-bottom: 0;
-  }
+  /* ⚠ A EXCECAO DO ULTIMO FIO SAIU EM 22/08/2026 — mesma queixa dele, mesmo dia, outra
+     peca: "cada mensagem e um retangulo com linha em cima e embaixo, por que a ultima fica
+     sem?". Numa tabela a resposta e ainda mais direta: a ultima classe FECHADA e o que faz
+     as tres lerem como uma grade, e nao como duas linhas mais uma sobra. */
 
   /* ⚠ A MAIOR DA LINHA É O QUE FAZ A TABELA LER DE RELANCE. Sem ela, cinco números por
      linha são cinco números; com ela, o olho lê "esta classe vive de carestia" sem ler
@@ -1363,8 +1510,15 @@
     font-weight: 700;
   }
 
+  /* ⚠ O FIO VERTICAL SAIU EM 22/08/2026, e ele era o defeito que ele nomeou como "essas
+     linhas nada a ver": uma borda esquerda numa celula de CORPO desenha um traco que
+     comeca no MEIO da tabela — o cabecalho nao a tinha, entao a coluna aparecia cortada
+     pela metade. Regua que nao atravessa a tabela inteira nao separa coluna: ela suja.
+
+     E a SOMA ja se distingue por peso e por tinta cheia, que e o canal certo para dizer
+     "esta coluna e o total". Cor e peso dizem HIERARQUIA; fio diz FRONTEIRA — e nao ha
+     fronteira aqui, porque a soma e da mesma linha que as parcelas. */
   .annex__sum {
-    border-left: 1px solid rgba(var(--paper-ink-rgb), 0.16);
     color: var(--paper-ink);
     font-weight: 600;
   }

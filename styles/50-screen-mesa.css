@@ -71,15 +71,22 @@
 
      ⚠ E ELE NÃO PINTA BANCADA. Cor de partido foi recusada três vezes, e a razão
      não mudou: o modelo não tem "oposição", e pintar um bloco de vermelho diria
-     que ele é perigo. O que recebe a cor é a CASA — o fio de cima da lâmina, e a
-     borda esquerda de cada bloco. A cor diz "você está na outra casa"; ela não diz
-     nada sobre quem senta lá. */
+     que ele é perigo. O que recebe a cor é a CASA — o fio de cima da lâmina. A cor
+     diz "você está na outra casa"; ela não diz nada sobre quem senta lá.
+
+     ⚠ E A BORDA ESQUERDA DA BANCADA SAIU DAQUI EM 22/08/2026, porque ela NUNCA chegou
+     à tela: havia um `.bench { border-left: ... bordô }` aqui e um segundo `.bench`
+     duzentas linhas abaixo declarando `border-left: ... transparent`. Mesma
+     especificidade, e a última vence — o bordô estava morto desde que foi escrito.
+
+     ⚠ E O CONSERTO É APAGAR, E NÃO MOVER PARA BAIXO. A quina esquerda da bancada é a
+     TARJA DE ESTADO — `[data-mood]` a pinta de crise quando a bancada obstrui e de crise
+     cheia quando ela rompe —, e é o mesmo canal da linha do índice da Caixa de Entrada.
+     Um canal com dois donos onde os dois aparecem ao mesmo tempo é o defeito que a tarja
+     da bandeja evita tendo donos que nunca coexistem. O carpete fica no fio de cima, que
+     é da CASA; a quina é de quem senta nela. */
   .board[data-screen="congress"] .area.glass-stage {
     border-top: 2px solid rgba(var(--bordo-rgb), 0.55);
-  }
-
-  .bench {
-    border-left: var(--rule) solid rgba(var(--bordo-rgb), 0.4);
   }
 
   .capacity {

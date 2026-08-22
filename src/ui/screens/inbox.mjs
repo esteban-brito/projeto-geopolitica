@@ -144,6 +144,17 @@ export function letterHtml({
     `</span>` +
     `</header>` +
     `<h4 class="letter__subject">${escapeHtml(subject)}</h4>` +
+    /* ⚠ O VOCATIVO SUBIU PARA CA EM 22/08/2026, e antes ele existia em TRES das doze
+       especies — as de relatorio. Pedido dele: "use essa mensagem sobre a Aprovacao para
+       todas as outras, tudo deve ser igualmente padronizado".
+       ⚠ E ELE E DA CARTA, E NAO DO CORPO. Escrito dentro de cada caso, ele seria doze
+       lugares para manter em dia e a decima terceira ocorrencia da familia de defeito mais
+       cara deste projeto — foi assim que tres das doze o tiveram e nove nao. Aqui ele nasce
+       com o oficio: nao ha como escrever uma carta nova sem ele.
+       ⚠ E ELE NAO E ENFEITE. Ele e a unica peca da tela que se dirige ao presidente em
+       segunda pessoa, e e ela que separa um OFICIO de uma leitura de dado — que foi
+       exatamente a queixa que reescreveu o corpo destas cartas em 21/08. */
+    `<p class="letter__vocative">${escapeHtml(UI.inbox.vocative)}</p>` +
     `<div class="letter__body">${body}</div>` +
     (choices ?? "") +
     (action && target
@@ -1008,7 +1019,6 @@ function reportBody(letter, segments, chamber) {
   if (letter.kind === "seats") {
     return (
       `<div class="letter__lines">` +
-      line(`<b>${escapeHtml(UI.inbox.vocative)}</b>`) +
       line(
         `${escapeHtml(UI.inbox.seatsBody)} <b data-numeric>${seats(now)}</b> ` +
           `${escapeHtml(UI.inbox.seatsOf)} <b data-numeric>${seats(chamber.majority)}</b>. ` +
@@ -1024,7 +1034,6 @@ function reportBody(letter, segments, chamber) {
   if (letter.kind === "vault") {
     return (
       `<div class="letter__lines">` +
-      line(`<b>${escapeHtml(UI.inbox.vocative)}</b>`) +
       line(
         `${escapeHtml(UI.inbox.vaultBody)} <b data-numeric>${money(now)}</b>, ` +
           `${escapeHtml(way.replace(".", ""))} <b data-numeric>${money(was)}</b>.`,
@@ -1066,7 +1075,6 @@ function reportBody(letter, segments, chamber) {
 
   return (
     `<div class="letter__lines">` +
-    line(`<b>${escapeHtml(UI.inbox.vocative)}</b>`) +
     line(
       `${escapeHtml(UI.inbox.pollClosed)} <b data-numeric>${seats(now)}%</b> ` +
         `${escapeHtml(UI.inbox.pollGood)} — <b data-numeric>${seats(moved)}</b> ` +

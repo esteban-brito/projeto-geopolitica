@@ -53,7 +53,7 @@
      mandatory — indice baixo EMPURRA a despesa obrigatoria para cima;
      capacity  — alimenta o indice de outra area, e por isso e o unico com
                  atraso longo. */
-export const CHANNELS = /** @type {const} */ (["revenue", "mandatory", "capacity"]);
+const CHANNELS = /** @type {const} */ (["revenue", "mandatory", "capacity"]);
 
 /** @type {Schema} */
 export const AREA_SCHEMA = {

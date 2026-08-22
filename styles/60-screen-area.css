@@ -424,19 +424,25 @@
     color: rgba(var(--paper-ink-rgb), 0.58);
   }
 
-  .law__guard {
-    color: rgba(var(--paper-ink-rgb), 0.62);
-  }
-
   /* QUEM PROTEGE A FAIXA nao e uma etiqueta de acao — e uma propriedade da norma,
      e por isso ela nao usa a pastilha de instrumento. Ela so aparece enquanto a
-     lei esta parada; movida, o lugar passa a ser do rito que ela vai custar. */
+     lei esta parada; movida, o lugar passa a ser do rito que ela vai custar.
+
+     ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA APAGAVA A TINTA DE PAPEL DA PRIMEIRA — medido e
+     consertado em 22/08/2026. Uma declarava `rgba(var(--paper-ink-rgb), 0.62)` e a outra,
+     sete linhas abaixo, `var(--ink-dim)`. Mesma especificidade, e a ultima vence: a
+     etiqueta saia com o CINZA DO VIDRO impresso sobre pergaminho.
+
+     ⚠ E ISSO NAO E DETALHE DE TOM — e a regra que a prosa dos tokens escreve com todas as
+     letras: "um cinza calibrado para vidro escuro fica turvo sobre pergaminho; cor que e
+     funcao de um fundo e consequencia, e nao escolha". `--paper-ink-rgb` existe exatamente
+     por isso, e a primeira regra estava certa. */
   .law__guard {
     font-family: var(--font-display);
     font-size: var(--text-label);
     letter-spacing: var(--track-label);
     text-transform: uppercase;
-    color: var(--ink-dim);
+    color: rgba(var(--paper-ink-rgb), 0.62);
     white-space: nowrap;
   }
 

@@ -254,4 +254,4 @@ export function forgotten(bill, month) {
   return bill.stage === "drawer" && month - bill.writtenAt >= DRAWER_LIFE;
 }
 
-export { TABLE, DRAWER_LIFE };
+export { DRAWER_LIFE };

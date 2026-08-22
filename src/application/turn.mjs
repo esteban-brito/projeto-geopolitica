@@ -2642,7 +2642,7 @@ const BROKER = "fisiologismo";
    declarado. O que NAO e chute e ser MAIOR QUE UM: um processo que nao encarecesse
    nada seria um aviso, e nao um cerco — e a mecanica inteira depende de sobreviver
    ser caro o bastante para doer e barato o bastante para ser possivel. */
-export const SIEGE_PRICE = 3;
+const SIEGE_PRICE = 3;
 
 /**
  * Acrescenta um mes a cada serie e corta o excesso pelo comeco.

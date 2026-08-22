@@ -53,7 +53,7 @@
 
 /* AS DUAS FAMILIAS DE REGRA, e o esquema as COBRA — ver `values` em `schema.mjs`.
    Ela sobe para antes do esquema porque ele a le. */
-export const FAMILIES = /** @type {const} */ (["property", "power"]);
+const FAMILIES = /** @type {const} */ (["property", "power"]);
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
