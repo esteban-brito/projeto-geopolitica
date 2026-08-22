@@ -374,7 +374,9 @@ try {
   /* ⚠ E O SEGUNDO CLIQUE ABRE A POSSE, e nao recomeca: desde 22/08/2026 o jogador escreve o
      proprio nome antes de o estado existir. A partida so troca quando o formulario fecha. */
   expect(
-    await page.locator("#swearDialog").evaluate(node => node.open),
+    await page
+      .locator("#swearDialog")
+      .evaluate(node => /** @type {HTMLDialogElement} */ (node).open),
     "[posse] o segundo clique nao abriu a posse",
   );
   expect(
