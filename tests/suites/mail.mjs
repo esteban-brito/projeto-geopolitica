@@ -1,14 +1,6 @@
-/* A CORRESPONDENCIA — o que esta suite cobra e que a carta SEJA uma decisao.
-   ══════════════════════════════════════════════════════════════════════════════
-   Nao e "as cartas aparecem": e que o prazo, o silencio e as duas saidas produzam
-   consequencia diferente uma da outra. Uma caixa de entrada em que responder e nao
-   responder dao no mesmo e um mural com botao.
-
-   ⚠ A PROVA MAIS IMPORTANTE DAQUI E A QUARTA, e ela existe por um defeito medido:
-   `pending` consultava a caixa de ANTES do fechamento do mes, entao a carta que o
-   jogador acabava de responder ainda constava como aberta e o texto esperava por ela
-   PARA SEMPRE. Oito meses de mandato, nas tres saidas, e nenhum texto saiu da
-   relatoria — com tudo verde. Ele nao derrubava nada: ele travava. */
+/* ⚠ A PROVA MAIS IMPORTANTE DAQUI E A QUARTA, e ela existe por um defeito medido: `pending`
+   consultava a caixa de ANTES do fechamento do mes, entao a carta que o jogador acabava de
+   responder ainda constava como aberta e o texto esperava por ela PARA SEMPRE. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -39,10 +31,7 @@ function question(month) {
 }
 
 test("O SILENCIO ACEITA — e a carta vencida NAO some", () => {
-  /* ⚠ AS DUAS METADES SAO A MESMA DECISAO. Se o vencimento nao resolvesse, o prazo
-     seria um relogio decorativo; se a carta vencida sumisse, o jogador perderia
-     justamente a informacao de que ele vem deixando vencer — e um inbox que apaga o
-     proprio historico de omissao esconde o padrao que ele existe para revelar. */
+  /* ⚠ AS DUAS METADES SAO A MESMA DECISAO. */
   fc.assert(
     fc.property(anyMonth, month => {
       const letter = question(month);
@@ -57,10 +46,9 @@ test("O SILENCIO ACEITA — e a carta vencida NAO some", () => {
 });
 
 test("A RESPOSTA GANHA DO RELOGIO no mes exato do vencimento", () => {
-  /* ⚠ ESTE E O UNICO MES EM QUE A ORDEM IMPORTA, e errar nele e o tipo de defeito
-     que faz um jogador desconfiar da interface para sempre: ele respondeu, viu a
-     carta marcada, avancou o mes e o jogo tratou como se ele nao tivesse respondido.
-     Quem responde no ultimo mes respondeu. */
+  /* ⚠ ESTE E O UNICO MES EM QUE A ORDEM IMPORTA, e errar nele e o tipo de defeito que faz um
+     jogador desconfiar da interface para sempre: ele respondeu, viu a carta marcada, avancou
+     o mes e o jogo tratou como se ele nao tivesse respondido. */
   fc.assert(
     fc.property(anyMonth, fc.constantFrom("accept", "block"), (month, answer) => {
       const letter = question(month);
@@ -77,8 +65,8 @@ test("A RESPOSTA GANHA DO RELOGIO no mes exato do vencimento", () => {
 });
 
 test("A PERGUNTA ABERTA NUNCA ENVELHECE; a fechada sai depois de KEEP meses", () => {
-  /* A assimetria e a mecanica: o que espera VOCE nao pode sumir por decurso de
-     prazo da bandeja — so por decurso do prazo DELA, que e outra coisa. */
+  /* A assimetria e a mecanica: o que espera VOCE nao pode sumir por decurso de prazo da
+     bandeja — so por decurso do prazo DELA, que e outra coisa. */
   fc.assert(
     fc.property(anyMonth, fc.integer({ min: 0, max: 40 }), (month, wait) => {
       const open = question(month);
@@ -97,12 +85,7 @@ test("A PERGUNTA ABERTA NUNCA ENVELHECE; a fechada sai depois de KEEP meses", ()
 });
 
 test("A PERGUNTA RESPONDIDA DEIXA DE SEGURAR O TEXTO — e este era o defeito", () => {
-  /* ⚠ A PROVA QUE FALTAVA, e o defeito que ela acusa nao derruba nada: ele TRAVA.
-     `pending` lia a caixa de ANTES do fechamento, entao a carta recem-respondida
-     ainda segurava o texto, e a tramitacao parava de existir com tudo verde.
-
-     A classe e conhecida — ler o estado ANTES do passo que o turno acabou de dar —,
-     e e a mesma familia do achado 14. */
+  /* ⚠ A PROVA QUE FALTAVA, e o defeito que ela acusa nao derruba nada: ele TRAVA. */
   fc.assert(
     fc.property(anyMonth, fc.constantFrom("accept", "block"), (month, answer) => {
       const letter = question(month);
@@ -121,9 +104,7 @@ test("A PERGUNTA RESPONDIDA DEIXA DE SEGURAR O TEXTO — e este era o defeito", 
 });
 
 test("O AVISO NAO TEM PRAZO, e a pergunta tem — e a tarja le isso", () => {
-  /* ⚠ E O QUE `left` DEVOLVE E A UNICA FONTE DA GRAVIDADE NA TELA. Se ela contasse
-     meses para um aviso, a bandeja teria contagem regressiva em papel que nao pede
-     nada — que e a ansiedade decorativa que este ciclo recusou por escrito. */
+  /* ⚠ E O QUE `left` DEVOLVE E A UNICA FONTE DA GRAVIDADE NA TELA. */
   fc.assert(
     fc.property(anyMonth, month => {
       const aviso = notice({ kind: "forgotten", id: "texto-1", subject: "Reforma", month });
@@ -133,9 +114,8 @@ test("O AVISO NAO TEM PRAZO, e a pergunta tem — e a tarja le isso", () => {
       const pergunta = question(month);
       assert.equal(left(pergunta, month), ANSWER_TIME, "a pergunta nasceu sem prazo legivel");
 
-      /* Respondida, ela para de contar: o relogio de uma decisao ja tomada nao e
-         informacao, e uma tarja que continuasse acesa mandaria o jogador responder
-         de novo. */
+      /* Respondida, ela para de contar: o relogio de uma decisao ja tomada nao e informacao,
+         e uma tarja que continuasse acesa mandaria o jogador responder de novo. */
       const closed = settle({ mail: [pergunta], orders: { [pergunta.id]: "accept" }, month });
       assert.equal(left(/** @type {Letter} */ (closed.mail[0]), month), null);
     }),
@@ -144,16 +124,7 @@ test("O AVISO NAO TEM PRAZO, e a pergunta tem — e a tarja le isso", () => {
 });
 
 test("O PRECO DE AVANCAR E O QUE O MES DECIDE SOZINHO — e nunca o que ja foi decidido", () => {
-  /* ⚠ ESTA PROVA EXISTE POR UMA RECUSA, e a recusa e doutrinaria. Um dossie externo
-     pediu que o botao de avancar o mes TRAVASSE enquanto houvesse pergunta urgente na
-     mesa. Este projeto nao tem muro: tudo tem preco. O botao passou a dizer quantas
-     perguntas este clique fecha sozinho, e `silences` e quem responde isso.
-
-     ⚠ E O QUE ELA PRENDE E A PROMESSA CONTRA O TURNO. O numero na barra de cima e uma
-     promessa sobre o que vai acontecer, e a unica forma de ela nao virar mentira e
-     `silences` SER `settle` filtrada, e nao uma segunda regra de vencimento escrita ao
-     lado. No dia em que o prazo mudar de forma, os dois mudam juntos ou esta prova
-     fica vermelha. */
+  /* ⚠ ESTA PROVA EXISTE POR UMA RECUSA, e a recusa e doutrinaria. */
   fc.assert(
     fc.property(anyMonth, month => {
       const pergunta = question(month);
@@ -171,10 +142,7 @@ test("O PRECO DE AVANCAR E O QUE O MES DECIDE SOZINHO — e nunca o que ja foi d
       assert.equal(quiet.length, 1, "o mes ia fechar uma pergunta e o botao nao disse");
       assert.equal(quiet[0]?.answer, "silence", "o que fechou nao fechou por silencio");
 
-      /* ⚠ RESPONDIDA, O PRECO SOME NO MESMO INSTANTE. Este e o meio da mecanica: a
-         barra de cima le as ORDENS do mes, e nao so o estado. Lendo so o estado, ela
-         continuaria anunciando uma consequencia que o turno nao vai executar — e o
-         jogador que acabou de responder veria o aviso de que nao respondeu. */
+      /* ⚠ RESPONDIDA, O PRECO SOME NO MESMO INSTANTE. */
       for (const answer of ["accept", "block"]) {
         assert.equal(
           silences({ mail: [pergunta], orders: { [pergunta.id]: answer }, month: vencendo }).length,
@@ -183,9 +151,8 @@ test("O PRECO DE AVANCAR E O QUE O MES DECIDE SOZINHO — e nunca o que ja foi d
         );
       }
 
-      /* O AVISO NUNCA ENTRA NA CONTA: ele nao tem prazo, e nao ha o que o silencio
-         decida nele. Um botao que contasse cartas em vez de PERGUNTAS anunciaria um
-         preco que o mes nao cobra. */
+      /* O AVISO NUNCA ENTRA NA CONTA: ele nao tem prazo, e nao ha o que o silencio decida
+         nele. */
       const aviso = notice({ kind: "forgotten", id: "texto-9", subject: "Reforma", month });
       assert.equal(
         silences({ mail: [aviso], orders: {}, month: month + ANSWER_TIME + KEEP + 1 }).length,

@@ -1,15 +1,4 @@
-/* O CATALOGO — o indice de todo dado do projeto.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   UM lugar sabe o que existe. Motor nao importa arquivo de dado direto: ele
-   recebe o que precisa por parametro, e quem monta o parametro parte daqui.
-   A razao e a mesma da fronteira de dominio — dado alcancado de qualquer lugar
-   vira dado alterado de qualquer lugar, e ai nao existe mais fronteira de
-   validacao, so um costume.
-
-   ESTE ARQUIVO NAO DECLARA DADO. Ele reune e valida. Quem declara e o modulo do
-   assunto, ao lado do esquema que o descreve — e `tests/guards/schema.mjs`
-   prova que nenhum esquema fica de fora da validacao daqui. */
+/* O CATALOGO — o indice de todo dado do projeto. */
 
 import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
@@ -52,12 +41,9 @@ export const CATALOG = {
 };
 
 /**
- * Confere o catalogo inteiro contra os esquemas declarados.
- *
- * Ele NAO roda sozinho na carga do modulo, e isso e decisao: validacao que
- * dispara no `import` quebra a tela no navegador por causa de um numero errado
- * no catalogo, e o lugar de descobrir isso e a suite, antes de publicar. Quem
- * quiser conferir em runtime chama; quem nao chamar tem a suite cobrindo.
+ * Ele NAO roda sozinho na carga do modulo, e isso e decisao: validacao que dispara no
+ * `import` quebra a tela no navegador por causa de um numero errado no catalogo, e o lugar de
+ * descobrir isso e a suite, antes de publicar.
  *
  * @returns {string[]} lista vazia quando o catalogo esta integro
  */
@@ -77,38 +63,29 @@ export function catalogViolations() {
     ...violations(CAST_SCHEMA, CAST, "cast"),
     ...collectionViolations(LOBBY_SCHEMA, LOBBIES, "lobbies"),
     ...violations(PRESSURE_SCHEMA, PRESSURE, "pressure"),
-    /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. Acao apontando
-       para area que nao existe nao quebra nada na carga — ela simplesmente
-       desaparece da tela da area, e o sintoma e "sumiu uma lei", tres telas longe
-       da causa, que e um id digitado errado aqui. */
+    /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. */
     ...danglingAreas(),
-    /* PROGRAMA APONTANDO PARA AREA QUE NAO EXISTE tem sintoma pior que o da lei:
-       a lei some da tela, o programa some do ORCAMENTO — e o pais passa a gastar
-       menos do que gasta sem ninguem ter decidido nada. */
+    /* PROGRAMA APONTANDO PARA AREA QUE NAO EXISTE tem sintoma pior que o da lei: a lei some
+       da tela, o programa some do ORCAMENTO — e o pais passa a gastar menos do que gasta sem
+       ninguem ter decidido nada. */
     ...danglingPrograms(),
-    /* GUARDA DESCONHECIDA e o defeito silencioso deste catalogo: quem compoe a
-       pauta cai no padrao "lei" para uma guarda que ninguem reconhece, e um piso
-       constitucional digitado errado passaria a custar 257 votos em vez de 308.
-       O jogador nunca saberia — a tela mostraria um numero plausivel. */
+    /* GUARDA DESCONHECIDA e o defeito silencioso deste catalogo: quem compoe a pauta cai no
+       padrao "lei" para uma guarda que ninguem reconhece, e um piso constitucional digitado
+       errado passaria a custar 257 votos em vez de 308. */
     ...unknownGuards(),
-    /* O PLENARIO TEM DE FECHAR. As bancadas somam cadeiras e o regime declara
-       quantas existem; se os dois divergirem, toda maioria do jogo passa a ser
-       medida contra um plenario que nao existe — e nenhuma tela denuncia, porque
-       cada lado esta certo sozinho. */
+    /* As bancadas somam cadeiras e o regime declara quantas existem; se os dois divergirem,
+       toda maioria do jogo passa a ser medida contra um plenario que nao existe — e nenhuma
+       tela denuncia, porque cada lado esta certo sozinho. */
     ...chamberMismatch(),
-    /* A POPULACAO TEM DE FECHAR. As fatias dos segmentos somam a populacao
-       inteira; se somarem 0,9, a aprovacao nacional passa a ser a media de nove
-       decimos do pais — e o numero sai plausivel, so que errado, o que e a pior
-       combinacao possivel num indicador que decide o jogo. */
+    /* A POPULACAO TEM DE FECHAR. */
     ...populationMismatch(),
-    /* ARQUETIPO APONTANDO PARA BLOCO QUE NAO EXISTE some do elenco em silencio: a
-       pessoa simplesmente nao nasce, e o sintoma e um Congresso com um lider a
-       menos — que e um estado de jogo valido e portanto indistinguivel de um
-       defeito. E a mesma classe de `danglingPrograms`, do lado da gente. */
+    /* ARQUETIPO APONTANDO PARA BLOCO QUE NAO EXISTE some do elenco em silencio: a pessoa
+       simplesmente nao nasce, e o sintoma e um Congresso com um lider a menos — que e um
+       estado de jogo valido e portanto indistinguivel de um defeito. */
     ...danglingArchetypes(),
-    /* NOME REPETIDO NO VOCABULARIO nao quebra nada e estreita o elenco em
-       silencio: duas entradas iguais viram uma, e o gerador passa a ter menos
-       combinacoes do que o catalogo aparenta oferecer. */
+    /* NOME REPETIDO NO VOCABULARIO nao quebra nada e estreita o elenco em silencio: duas
+       entradas iguais viram uma, e o gerador passa a ter menos combinacoes do que o catalogo
+       aparenta oferecer. */
     ...duplicateNames(),
   ];
 }

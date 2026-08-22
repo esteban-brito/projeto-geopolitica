@@ -1,61 +1,31 @@
-/* ESQUEMA — a fronteira de validacao do dado editavel.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   POR QUE UM DADO PRECISA DE FRONTEIRA. O catalogo vai ser editavel pelo jogador
-   mais adiante (a aba de edicao de nome e logo e decisao fechada), e dado
-   editavel que entra sem validacao vira defeito longe da origem: um campo com
-   texto onde deveria haver numero nao quebra na edicao, quebra tres motores
-   depois, num calculo que parece errado sem motivo.
-
-   O ESQUEMA E DADO, e nao codigo de validacao espalhado. Ele declara os campos
-   de uma colecao num objeto, e a mesma declaracao serve para tres coisas: a
-   guarda `schema` prova que toda colecao tem uma, a suite prova que todo
-   registro obedece a sua, e a edicao futura tem onde perguntar o que e valido.
-
-   O QUE ELE NAO FAZ, de proposito: nao converte, nao preenche padrao e nao
-   conserta. Validador que conserta esconde o erro em vez de mostrar — e o dado
-   que chega errado precisa parar na fronteira, nao seguir remendado. */
+/* O catalogo vai ser editavel pelo jogador mais adiante (a aba de edicao de nome e logo e
+   decisao fechada), e dado editavel que entra sem validacao vira defeito longe da origem: um
+   campo com texto onde deveria haver numero nao quebra na edicao, quebra tres motores depois,
+   num calculo que parece errado sem motivo. */
 
 /**
+ * ⚠ ELE E RARO DE PROPOSITO.
+ *
  * @typedef {object} Field
  * @property {"id" | "text" | "number"} kind
  * @property {boolean} [optional] - o campo pode faltar, e faltar SIGNIFICA alguma
- *   coisa. Ele nasceu com a VINCULACAO: tres programas obrigam por fracao da receita
- *   e trinta e cinco obrigam por pontos, e exigir `bound: 0` nos trinta e cinco seria
- *   afirmar que eles tem vinculacao de zero por cento — que e diferente de nao ter
- *   vinculacao nenhuma. Ausencia declarada, e nao ausencia disfarcada, aplicada a
- *   catalogo.
- *
- *   ⚠ ELE E RARO DE PROPOSITO. Campo opcional e a porta por onde um catalogo vira
- *   um saco de chaves: se metade dos campos puder faltar, o esquema deixa de dizer
- *   qual e a forma do dado. Cada `optional` novo precisa de uma frase dizendo o que a
- *   AUSENCIA significa — se nao houver essa frase, o campo devia ser obrigatorio.
+ * coisa. Ele nasceu com a VINCULACAO: tres programas obrigam por fracao da receita
+ * e trinta e cinco obrigam por pontos, e exigir `bound: 0` nos trinta e cinco seria
+ * afirmar que eles tem vinculacao de zero por cento — que e diferente de nao ter
+ * vinculacao nenhuma. Ausencia declarada, e nao ausencia disfarcada, aplicada a
+ * catalogo.
  * @property {ReadonlyArray<string>} [values] - o VOCABULARIO fechado de um `text`.
- *   Ele nasceu de uma promessa que ninguem cumpria: `areas.mjs` declarava
- *   `CHANNELS` e escrevia na prosa "o canal de realimentacao; um de `CHANNELS`", e
- *   NADA verificava isso — um `feeds: "capacidde"` passaria pelo validador, pelos
- *   tipos e pelas guardas, e sumiria dentro de um `switch` que nao casa com nada.
- *
- *   ⚠ LISTA DECLARADA E LISTA NAO COBRADA E PIOR QUE LISTA NENHUMA, porque a
- *   proxima pessoa confia nela. O mesmo raciocinio que governa a documentacao deste
- *   projeto, aplicado ao catalogo.
  * @property {number} [min] - so para `number`, e inclusivo
  * @property {number} [max] - so para `number`, e inclusivo
- *
  * @typedef {Record<string, Field>} Schema
  */
 
-/* IDENTIFICADOR E `kebab-case` MINUSCULO, como todo nome deste projeto. Nao e
-   preciosismo: id que difere so por caixa funciona no Windows e some no CI
-   Linux, e essa classe inteira de defeito desaparece com minusculas. */
+/* Nao e preciosismo: id que difere so por caixa funciona no Windows e some no CI Linux, e
+   essa classe inteira de defeito desaparece com minusculas. */
 const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /**
  * Confere UM registro contra um esquema e devolve os problemas.
- *
- * Devolve lista em vez de lancar porque quem chama quer saber TODOS os
- * problemas de uma vez: validador que morre no primeiro erro obriga a corrigir
- * um por execucao, e um catalogo com doze campos errados viraria doze rodadas.
  *
  * @param {Schema} schema
  * @param {Record<string, unknown>} record
@@ -104,9 +74,7 @@ export function violations(schema, record, where) {
     }
   }
 
-  /* CAMPO A MAIS TAMBEM E VIOLACAO. Um campo que ninguem declarou e um campo
-     que nenhum motor lê: ou o esquema esta incompleto, ou o dado tem lixo. As
-     duas leituras exigem decisao humana, e silenciar as duas e o pior caminho. */
+  /* CAMPO A MAIS TAMBEM E VIOLACAO. */
   for (const field of Object.keys(record)) {
     if (!(field in schema)) found.push(`${where}: o campo "${field}" nao existe no esquema`);
   }
@@ -127,9 +95,9 @@ export function collectionViolations(schema, records, where) {
     violations(schema, record, `${where}[${index}]`),
   );
 
-  /* ID REPETIDO E O DEFEITO MAIS CARO desta lista, porque ele nao aparece como
-     erro: o motor acha o primeiro, ignora o segundo, e uma bancada inteira
-     simplesmente deixa de votar sem nada quebrar. */
+  /* ID REPETIDO E O DEFEITO MAIS CARO desta lista, porque ele nao aparece como erro: o motor
+     acha o primeiro, ignora o segundo, e uma bancada inteira simplesmente deixa de votar sem
+     nada quebrar. */
   const seen = new Set();
   for (const record of records) {
     const id = record["id"];

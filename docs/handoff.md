@@ -4,51 +4,143 @@
 > leia este arquivo e depois `docs/standards.md`. O nome deste arquivo é estável
 > de propósito: ponteiro com data envelhece e obriga a mover arquivo.
 
-## ▶ COMECE AQUI — estado em 22/08/2026
+## ▶ COMECE AQUI — estado em 22/08/2026 · sessão 15
 
-⚠ **OS COMMITS SÃO `95681c3` (duas sessões atrasadas) e `52fae34` (a padronização da bandeja, a limpeza e o ofício-molde). Nada está pendente de commit.** O primeiro é descrito abaixo; ⚠ **o antigo texto**, e ele carrega **duas** sessões — a décima
-terceira estava só no disco desde 18/08. Nada mais está pendente de commit.
+⚠ **NADA COMMITADO.** O último commit é `ab76c8e`; esta sessão mexeu em quase todo o
+projeto e não commitou — ele decide quando.
 
-**A décima quarta sessão fechou o item que a retomada anterior deixou aberto, e a
-ordem dele é uma só:** _"nós temos que fechar a UI, design, css, e todo esse tipo de
-coisa primeiro, depois mexemos nos sistemas e motores e mecânicas do jogo"_. Está
-verde — `validate` (**234 provas · 11 guardas · 46 provas sintéticas**), `walk`,
-`screen` (**+5,5 fps**) e as capturas olhadas.
+**A ordem dele, e ela substitui a recomendação da sessão 14:** _"o nosso foco é no gabinete
+por enquanto"_, depois _"quanto mais minimalista e simples melhor, quanto menos lixo melhor,
+quanto mais padronizado melhor"_, e por fim _"limpar lixo e reorganizar todo o código"_.
 
-⚠ **E O ITEM QUE ELA VEIO FECHAR ESTAVA ENTERRADO NO MEIO DESTE ARQUIVO**, e não na
-seção de retomada. Custou uma sessão inteira de estudo achá-lo. **A seção de retomada
-é o topo, e nada que a próxima sessão precise fazer pode morar em outro lugar.**
+⚠ **E ELE RECUSOU A ETAPA QUE EU RECOMENDEI, com razão que fecha a questão:** _"eu ainda vou
+mudar muito o jeito que o jogo funciona — sistema, mecânicas, motores, tudo vai ser mexido"_.
+É o argumento do [achado 53](#achados-abertos--o-que-eu-veria-primeiro-na-próxima-sessão), e
+vale para conteúdo tanto quanto para calibragem: **carta escrita hoje é carta reescrita
+depois.** Fica suspensa a densidade da Caixa de Entrada, e com ela os achados 37, 46, 48 e 54.
 
-- ✔ **OS DOIS BLOCOS DA CAIXA DE ENTRADA VIRARAM UM MÓVEL SÓ** — pedido dele:
-  _"só quero que fique grudado os dois blocos da caixa de entrada, e os dois liquid
-  glass padronizados e simétricos"_. Costura **0px**, degrau **0**, raios
-  complementares. ⚠ **E o que quebrava a simetria não era o vão — eram os RAIOS**;
-- ✔ **E A TERCEIRA LEITURA É DELE, e é melhor que as duas que eu ofereci:** _"dá pra
-  ser marrom liquid glass o bloco da direita, e o da esquerda só liquid glass?"_. Eu
-  tinha posto a escolha como marrom **ou** vidro, e ela nunca foi excludente. Ver
-  [_O ofício virou vidro marrom_](#o-oficio-virou-vidro-marrom-e-a-densidade-e-medida--22082026);
-- ⚠ **NASCEU A SEGUNDA METADE DA GUARDA `vocabulary`: a FRASE ÓRFÃ — e ela achou 49.**
-  Entre elas `approvalParts`, que era a **chave das três cores** do termômetro da rua:
-  o Gabinete desenhava verde, azul e vermelho **sem legenda nenhuma**, e a legenda
-  existia, escrita, a um caminho de distância. Ver
-  [_A frase órfã ganhou guarda_](#a-frase-orfa-ganhou-guarda-e-ela-achou-49--22082026);
-- ✔ **A LIMPEZA DO CÓDIGO ACHOU SETE `export` SEM IMPORTADOR e DOIS SELETORES QUE SE
-  ANULAVAM** — e virou a **quarta cobrança da guarda `cascade`**: a mesma propriedade
-  declarada duas vezes no mesmo contexto. Ver
-  [_A limpeza_](#a-limpeza-e-as-quatro-coisas-que-ele-viu-na-bandeja--22082026);
-- ✔ **E A BANDEJA LEVOU QUATRO ACERTOS DE PADRONIZAÇÃO** — o rubor saiu e a tarja ficou, a
-  bolinha centrou, a última linha ganhou fio, e **todo o texto virou branco**;
-- ⚠ **E A TRANSLUCIDEZ DO OFÍCIO CUSTOU 9,7 fps**, que é a lição de `--glass-support-bg`
-  reintroduzida pelo ALFA em vez de pelo token. A luz voltou a ser pintada, e não emprestada;
-- ✔ **A CARTA DA APROVAÇÃO VIROU O MOLDE DE TODAS** — fio vertical que começava no meio da
-  tabela, última linha sem fio, tabela comprimida. E o **vocativo subiu para a carta**: três
-  das doze espécies o tinham, agora nenhuma pode nascer sem ele. Ver
-  [_O ofício virou padrão_](#o-ofício-virou-padrão-e-a-aprovação-foi-o-molde--22082026);
-- ⚠ **E TRÊS DEFEITOS ANTERIORES APARECERAM NO CAMINHO, e os três estavam consumados:**
-  a carta que anuncia que a **sua lei passou** era uma folha em branco; o corpo do
-  ofício **nunca subiu** para `--text-verdict` porque uma regra duplicada dez linhas
-  abaixo o revertia; e `stripJsComments` **não preservava as quebras de linha**, então
-  toda acusação da guarda `vocabulary` apontava para a linha errada.
+### ✔ 1 — UM FIO CLARO POR ARESTA, E ELE É A `border`
+
+Nasceu do olho dele, duas vezes: _"remova aquela linha vertical que separa os dois blocos"_ e
+_"tem duas linhas horizontais superiores no bloco direito"_. Medido no pixel, os dois eram
+**dois separadores para uma fronteira** — o defeito que já matou os cinco fios das legendas e
+o fio divisor da bandeja.
+
+| lugar            | antes                         | agora  |
+| ---------------- | ----------------------------- | ------ |
+| costura vertical | `74,63,49` + `64,61,58`       | um fio |
+| topo do ofício   | `77,72,66` + `78,77,75`       | um fio |
+| topo do índice   | `54,66,80` + `80,91,103`      | um fio |
+| `.glass-action`  | `177,153,108` + `184,171,149` | um fio |
+| `.glass-support` | `43,51,60` + `64,70,79`       | um fio |
+
+⚠ **E O DEFEITO ERA SISTÊMICO.** Toda peça de vidro declarava `border` **e** um bisel com
+realce de cima. `.glass-stage` tinha **três** camadas de luz no mesmo topo — borda 14%, bisel
+16% e o `::after` da lâmina a 42%. **Quatro tokens de sombra viraram um:** morreram
+`--glass-shadow`, `--glass-shadow-soft`, `--bevel` e `--bevel-fine`; ficou `--bevel-under`,
+que é só a sombra de baixo — a única que não duplica nada, porque embaixo o par é luz e
+sombra. Elevação saiu do token de propósito: sombra projetada é ALTURA, e foi empacotá-la
+junto que escondeu o realce dentro de `--glass-shadow-soft` por sessões.
+
+### ✔ 2 — A PROSA CAIU 56%, E NASCEU A GUARDA `prose`
+
+⚠ **A CAUSA ERA O `CLAUDE.md`, e é por isso que ele foi reescrito PRIMEIRO.** Ele mandava
+_"cada arquivo explica por que é assim"_ sem teto, e o resultado media-se: **15.961 linhas de
+prosa contra 15.737 de código**, com `state.mjs` a 85%. Consertar os arquivos sem consertar a
+instrução só faria a próxima sessão reproduzir o lixo.
+
+| pasta     | antes      | agora     | corte   |
+| --------- | ---------- | --------- | ------- |
+| `src/`    | 10.115     | 4.297     | 58%     |
+| `styles/` | 2.951      | 921       | 69%     |
+| `tests/`  | 2.581      | 1.353     | 48%     |
+| `tools/`  | 314        | 147       | 53%     |
+| **total** | **15.961** | **6.987** | **56%** |
+
+**A regra nova:** um comentário registra a alternativa testada e reprovada, com o número que
+a reprovou. Teto de **10 linhas por bloco**, 14 no cabeçalho. Linha de tipo não conta.
+
+⚠ **E A PRIMEIRA VERSÃO DA GUARDA MEDIA A COISA ERRADA — percentual do arquivo.** Ela punia o
+lugar errado: `format.mjs`, um utilitário pequeno com nove funções bem documentadas, dava 38%
+sem uma linha de diário dentro dele, enquanto um arquivo grande escondia um ensaio de 24
+linhas e passava. **O que atrapalha quem lê não é a soma — é o bloco em que ele tropeça.**
+
+### ⚠ 3 — O CORTE AUTOMÁTICO ERRA, E O REGISTRO É O QUE VALE PARA A PRÓXIMA VEZ
+
+Cinco defeitos meus, todos pegos por medição e nenhum por leitura:
+
+- ⚠ **a primeira regra guardava a PRIMEIRA frase de cada bloco, e nesse estilo a primeira
+  frase é o diário.** Resultado: **5 dos 6 números de fps foram perdidos** e o que sobreviveu
+  foi _"o pedido dele nomeia o defeito"_. Invertido o critério — pontuar frase com medição,
+  penalizar data e citação —, 5 dos 6 voltaram;
+- ⚠ **`:` foi tratado como fim de frase**, e comentários passaram a prometer o que tinha sido
+  cortado;
+- ⚠ **juntar blocos adjacentes movia `@param` entre funções** e o tipo quebrava em silêncio;
+- ⚠ **bloco que abre e fecha na MESMA linha não é bloco** — a limpeza de JSDoc duplicava a
+  linha, e o `prettier` transformava a cópia em chamada de função;
+- ⚠ **`@property` deduplicado através de `@typedef` diferentes** apagou propriedade legítima.
+
+**O que salvou foi a rede, e ela é o método:** todo corte passa por `node --check` e por
+contagem de delimitadores antes de ser aceito, e o arquivo é pulado se falhar. Três guardas
+com `/*` dentro de string foram puladas assim, corretamente.
+
+⚠ **E UM DETECTOR DE FRASE TRUNCADA ACHOU 11 BLOCOS QUEBRADOS**, reescritos à mão a partir do
+texto original. Se um corte novo rodar, **rode o detector depois**: bloco cuja última frase
+não termina em `.`, `!` ou `?`.
+
+### ✔ 4 — LIXO ANTIGO QUE APARECEU NO CAMINHO
+
+- **`input.chamber` declarado TRÊS vezes** e `input.adviser` duas em `cabinet.mjs`. Já estava
+  lá; nada acusava, porque o último vence em silêncio;
+- **23 `@typedef` duplicados** no projeto.
+
+### ⚠ O QUE VERIFICAR AO RETOMAR
+
+**Verde:** `validate` (**234 provas · 12 guardas · 50 provas sintéticas · 128 arquivos**),
+`walk`, e a captura do Gabinete olhada.
+
+⚠ **`npm run screen` OSCILA ~20 fps ENTRE RODADAS, e a primeira medida desta sessão ACUSOU
+FALSAMENTE** — deu `−11,5`, e medido em seguida lado a lado deu base `+10,3` × mudança
+`+9,6`. **Meça os dois braços na mesma rodada; um número solto dele não decide nada.**
+
+### ▶ O QUE EU FARIA AGORA
+
+**1. ▶ TERMINAR A PADRONIZAÇÃO DA COLUNA DA DIREITA — medida e não tocada**, porque cada item
+pode ser decisão dele já registrada:
+
+- **duas das quatro fichas abrem com número grande e botão** (Congresso, Cofre) e duas não
+  têm cabeça nenhuma (Caldeira, Rua). ⚠ Somar cabeça é o contrário de minimalismo;
+- **a fita do Congresso tem raio 0** contra `--radius-stamp` em toda outra barra. ⚠ Arredondar
+  só o cocho deixaria os blocos furando as pontas;
+- **duas larguras de barra**: 431,5px nas cheias, 191,5px nas recuadas.
+
+**2. ▶ PASSAR O DETECTOR DE FIO DUPLICADO NAS OUTRAS DEZ TELAS.** O conserto do material já
+alcançou todas (o token é global), mas fio escrito à mão dentro de uma folha de tela é outra
+história — foi o que a Caixa de Entrada tinha na costura. O detector varre colunas e linhas
+de pixel e aponta pares a ≤2px; rodado no Gabinete, as 16 acusações restantes eram todas
+haste de letra.
+
+**3. ▶ OS SEIS ZEROS DA ABERTURA — a medição desta sessão ENCOLHEU o item.**
+
+| régua                                             | passivo | piso  |
+| ------------------------------------------------- | ------- | ----- |
+| Base no Congresso · baixo clero · forças de ordem | mês 1   | mês 1 |
+| O mercado                                         | mês 3   | mês 3 |
+| Capital                                           | mês 6   | mês 6 |
+| O setor produtivo                                 | mês 33  | mês 7 |
+
+⚠ **OS SEIS EXISTEM NO MÊS 0 E EM MAIS NENHUM.** Não é legenda estática — é a tela de
+abertura, e é a mesma classe dos dois casos que o projeto já consertou trocando o zero por
+uma frase.
+
+⚠ **E EU QUASE REGISTREI UMA DIVERGÊNCIA QUE NÃO EXISTE:** no passivo o setor produtivo
+termina em 10 e as forças de ordem em 21, contra os 33 e 35 do
+[achado 39](#achados-abertos--o-que-eu-veria-primeiro-na-próxima-sessão). O achado está
+certo — aqueles números saem do governo que corta no piso, onde dão 43 e 49. **Medir só o mês
+calmo é o erro do achado 47, e eu o repeti.**
+
+**4. ⛔ NÃO ABRIR:** densidade da Caixa de Entrada (recusa dele), motor de qualquer espécie, o
+vazio de 430px dentro do ofício, o rubor vermelho do peso e a sparkline dos quatro vitais.
 
 ### ⚠ E A ÁRVORE QUE ESTE ARQUIVO DECLARAVA VERDE NÃO ESTAVA VERDE
 

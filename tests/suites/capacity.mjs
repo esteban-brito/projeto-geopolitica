@@ -1,14 +1,4 @@
-/* SUITE · A CAPACIDADE — o estoque que vaza.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   Quatro coisas precisam ser provadas, e a terceira e a que da sentido ao motor:
-
-     1. o indice CAI sozinho e nunca sai da faixa;
-     2. verba levanta, e reforma da salto;
-     3. o ATRASO e um atraso de verdade — o que o modelo consome hoje e o indice
-        de `lag` meses atras, e nao uma media nem um valor agendado;
-     4. a pressao tem o SINAL do catalogo, e duas areas do mesmo canal podem
-        empurrar para lados opostos. */
+/* SUITE · A CAPACIDADE — o estoque que vaza. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -50,11 +40,6 @@ const anyAllocation = fc
 /**
  * Um historico JA CHEIO, com o mesmo valor em todos os meses de cada area.
  *
- * Ele precisa estar cheio: com o buffer pela metade o motor devolve o indice de
- * abertura de proposito — a capacidade herdada ainda esta valendo —, e um teste
- * que montasse um historico de um mes so estaria medindo o `fallback` em vez do
- * valor que quis testar.
- *
  * @param {(area: Area) => number} pick
  * @returns {Record<string, number[]>}
  */
@@ -63,16 +48,13 @@ function settled(pick) {
 }
 
 test("SEM VERBA O PAIS PIORA, na taxa que o catalogo declara", () => {
-  /* O decaimento e o que impede o jogo de ter um estado final em que tudo esta
-     em 100 e nao ha mais o que decidir.
-
-     ⚠ E ELE E PROPORCIONAL AO ESTOQUE desde 16/08/2026, e nao subtraido: a area
-     perde uma FRACAO do que tem, e nao um numero de pontos. Ver o achado 31. */
+  /* O decaimento e o que impede o jogo de ter um estado final em que tudo esta em 100 e nao
+     ha mais o que decidir. */
   const first = step(run({}));
 
   for (const area of AREAS) {
-    /* A area alvo do canal de capacidade recebe um empurrao extra, entao a
-       igualdade exata so vale para as outras. */
+    /* A area alvo do canal de capacidade recebe um empurrao extra, entao a igualdade exata so
+       vale para as outras. */
     if (area.id === CAPACITY_TARGET) continue;
     assert.equal(
       first.index[area.id],
@@ -83,27 +65,17 @@ test("SEM VERBA O PAIS PIORA, na taxa que o catalogo declara", () => {
 });
 
 test("O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO — a identidade do achado 31", () => {
-  /* ⚠ ESTA E A ANCORA DO ACHADO 31, e ela e a irma da ancora fiscal de `agenda.mjs`:
-     la se prova que a obrigatoria e a soma dos pisos; aqui, que o decaimento de cada
-     area e exatamente o que o orcamento da posse sustenta.
-
-     Sem ela, os oito numeros de `decay` viram oito literais que ninguem sabe de onde
-     vieram — e a proxima sessao que mexer num `cost` de programa quebra a identidade
-     em silencio, porque nada liga o catalogo de programas ao de areas.
-
-     O defeito que ela fecha foi medido: com o decaimento CONSTANTE e abaixo do
-     equilibrio, um governo que nao fazia nada via os oito indices SUBIREM em 48 meses
-     — industria de 48 a 100. "Nao fazer nada melhora tudo" e indefensavel num jogo
-     sobre governar, e explicava os achados 1d, 29 e 30 de uma vez. */
+  /* Sem ela, os oito numeros de `decay` viram oito literais que ninguem sabe de onde vieram —
+     e a proxima sessao que mexer num `cost` de programa quebra a identidade em silencio,
+     porque nada liga o catalogo de programas ao de areas. */
   const state = createState();
   const inherited = spendOf({ programs: PROGRAMS, levels: state.levels }).fullByArea;
 
   for (const area of AREAS) {
     const spend = inherited[area.id] ?? 0;
 
-    /* A IDENTIDADE, escrita como ela e: o empurrao do gasto herdado empata com o
-       vazamento do indice herdado. A folga e de arredondamento do catalogo — os
-       `decay` sao escritos com seis casas. */
+    /* A IDENTIDADE, escrita como ela e: o empurrao do gasto herdado empata com o vazamento do
+       indice herdado. */
     assert.ok(
       Math.abs(area.yield * spend - area.decay * area.initial) < 1e-3,
       `${area.id}: o gasto herdado empurra ${(area.yield * spend).toFixed(4)} contra um ` +
@@ -111,9 +83,7 @@ test("O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO — a identidade do achado 31"
     );
   }
 
-  /* E O EQUILIBRIO E DE FATO ESTAVEL: um mes com o gasto herdado devolve o indice
-     herdado. E a mesma afirmacao pelo lado do motor, e nao da aritmetica — se um dia
-     `step` mudar de forma, esta linha acusa e a de cima nao. */
+  /* E O EQUILIBRIO E DE FATO ESTAVEL: um mes com o gasto herdado devolve o indice herdado. */
   const held = step(run({ allocation: inherited }));
   for (const area of AREAS) {
     if (area.id === CAPACITY_TARGET) continue;
@@ -168,9 +138,7 @@ test("reforma da um SALTO, e o salto nao depende de verba nenhuma", () => {
 });
 
 test("O ATRASO E ATRASO: o modelo consome o indice de `lag` meses atras", () => {
-  /* A prova central. Uma area de atraso longo tem de continuar entregando o
-     valor ANTIGO ao modelo mesmo depois de o indice corrente ter mudado — senao
-     o `lag` da educacao vira enfeite e o dilema politico dela desaparece. */
+  /* A prova central. */
   const slow = AREAS.find(area => area.lag > 0 && area.id !== CAPACITY_TARGET);
   assert.ok(slow, "o catalogo perdeu toda area com atraso");
 
@@ -185,8 +153,7 @@ test("O ATRASO E ATRASO: o modelo consome o indice de `lag` meses atras", () => 
     seen.push(outcome.effective[slow.id] ?? 0);
   }
 
-  /* Nos primeiros `lag` meses o efetivo ainda e o de abertura — o salto nao
-     chegou. Depois disso ele aparece. */
+  /* Nos primeiros `lag` meses o efetivo ainda e o de abertura — o salto nao chegou. */
   assert.equal(seen[0], slow.initial, "o salto chegou ao modelo no mesmo mes");
   assert.ok((seen[slow.lag] ?? 0) > slow.initial, `o salto nao chegou depois de ${slow.lag} meses`);
 });
@@ -202,10 +169,8 @@ test("sem atraso, o efetivo E o corrente", () => {
 });
 
 test("A PRESSAO TEM O SINAL DO CATALOGO, e o mesmo canal aceita os dois", () => {
-  /* Duas areas em `mandatory` empurram para lados opostos de proposito: servico
-     de saude bom REDUZ a obrigatoria, cobertura previdenciaria boa a AUMENTA.
-     Se esta prova ficar vermelha, alguem "consertou" a inconsistencia aparente e
-     quebrou o modelo. */
+  /* Duas areas em `mandatory` empurram para lados opostos de proposito: servico de saude bom
+     REDUZ a obrigatoria, cobertura previdenciaria boa a AUMENTA. */
   const health = AREAS.find(area => area.id === "health");
   const welfare = AREAS.find(area => area.id === "welfare");
   assert.ok(health && welfare);
@@ -216,10 +181,10 @@ test("A PRESSAO TEM O SINAL DO CATALOGO, e o mesmo canal aceita os dois", () => 
   const only = (id, value) =>
     pressureOf({
       areas: AREAS,
-      /* AS OUTRAS AREAS FICAM NA ABERTURA, e nao no ponto neutro: desde que a
-         regua da pressao passou a ser o indice DE ABERTURA de cada area, deixa-las
-         em 50 nao as neutraliza — poe todas elas fora do lugar de uma vez, e a
-         prova mediria o catalogo inteiro em vez da area sob teste. */
+      /* AS OUTRAS AREAS FICAM NA ABERTURA, e nao no ponto neutro: desde que a regua da
+         pressao passou a ser o indice DE ABERTURA de cada area, deixa-las em 50 nao as
+         neutraliza — poe todas elas fora do lugar de uma vez, e a prova mediria o catalogo
+         inteiro em vez da area sob teste. */
       history: settled(area => (area.id === id ? value : area.initial)),
     });
 
@@ -252,8 +217,7 @@ test("o canal `capacity` alimenta UMA area, e so ela", () => {
   const source = AREAS.find(area => area.feeds === "capacity");
   assert.ok(source, "o catalogo perdeu o canal de capacidade");
 
-  /* Duas partidas identicas, mudando so o indice da area fonte. So o alvo pode
-     divergir. */
+  /* So o alvo pode divergir. */
   const base = opening(AREAS);
   const low = step(run({ ...base, history: settled(a => (a.id === source.id ? 0 : a.initial)) }));
   const high = step(
@@ -281,8 +245,8 @@ test("um mes de capacidade e deterministico", () => {
 });
 
 test("o historico nao cresce sem fim", () => {
-  /* Ele vive no save. Um buffer que cresce um item por mes seria um save que
-     cresce para sempre, e o defeito so apareceria numa partida longa. */
+  /* Um buffer que cresce um item por mes seria um save que cresce para sempre, e o defeito so
+     apareceria numa partida longa. */
   let carried = opening(AREAS);
   for (let month = 0; month < 200; month++) {
     const outcome = step(run({ ...carried }));

@@ -1,46 +1,10 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   A CASCA E O SUBSTRATO — o que existe embaixo de toda tela.
-   ═══════════════════════════════════════════════════════════════════════════
-
-   ESTE ARQUIVO NASCEU POR ORDEM DO ANTERIOR. `40-screen-dashboard.css` dizia, na
-   propria prosa: a casca e o substrato vivem aqui "enquanto houver UMA tela;
-   quando a segunda chegar, casca e substrato saem para uma folha propria, porque
-   ai passam a ser de todas e nao desta". Chegaram sete — a Mesa e as seis areas.
-
-   O que ele estabelece continua valendo palavra por palavra:
-
-     · o CAMPO DE LUZ e o substrato, e nao um lugar que se visita. Vidro precisa
-       de conteudo estruturado atras — o olho nao lê material pelo desfoque, lê
-       pela diferenca entre a coisa nitida e a mesma coisa borrada. Sobre um
-       gradiente liso, `backdrop-filter` nao tem o que distorcer e vira custo de
-       GPU sem imagem;
-     · a SITUACAO do pais veste o ambiente por um GEL, nunca por uma camada
-       chapada de cor. Camada chapada soma o mesmo em cada pixel, entao governa
-       duas grandezas em sentidos opostos: mais forte identifica a situacao e
-       apaga o fundo, mais fraca faz o inverso. Nao existe valor que resolva os
-       dois, porque o conflito e estrutural. `mix-blend-mode: overlay` deixa de
-       somar e passa a MODULAR — onde o fundo e escuro ele multiplica, onde e
-       claro ele clareia —, e as duas medidas sobem juntas;
-     · a MASCARA do gel decide ONDE ele existe: transparente no miolo, opaca nas
-       bordas. A cor identifica a situacao na periferia e recua de onde o
-       conteudo vive. Uma camada a mais pintaria tinta sobre o fundo; mascara nao
-       pinta nada. */
+/* A CASCA E O SUBSTRATO — o que existe embaixo de toda tela. */
 
 @layer screens {
-  /* ── A CASCA ────────────────────────────────────────────────────────────────
-     Barra em cima, sidebar a esquerda, tabuleiro no meio.
-
-     ⚠ ELA ERA SIMETRICA — rail, tabuleiro, rail — e deixou de ser em 14/08/2026.
-     O rail da direita carregava data, contexto, aprovacao, veredito e o botao de
-     avancar, e o problema nao era o conteudo: era que ele COMPETIA em largura com
-     a navegacao para mostrar coisas que nunca se navegam. Numa barra superior o
-     mesmo conteudo ocupa 72px de altura em vez de 216px de largura, e sobra
-     tabuleiro — que e onde o jogo acontece.
-
-     `minmax(0, 1fr)` na coluna do meio e nao `1fr`. Uma trilha `1fr` tem minimo
-     AUTOMATICO igual ao conteudo, entao ela cresce para caber o filho em vez de
-     obrigar o filho a se virar. Foi isso que pos o rail em 658px numa janela de
-     390px, e a licao continua valendo com uma coluna a menos. */
+  /* Numa barra superior o mesmo conteudo ocupa 72px de altura em vez de 216px de largura, e
+     sobra tabuleiro — que e onde o jogo acontece.
+     Foi isso que pos o rail em 658px numa janela de 390px, e a licao continua valendo com uma
+     coluna a menos. */
   .shell {
     position: relative;
     isolation: isolate;
@@ -50,76 +14,36 @@
     grid-template-rows: auto minmax(0, 1fr);
   }
 
-  /* ⚠ E ELA TRAVA A ALTURA QUANDO O GABINETE ESTÁ ABERTO — 20/08/2026.
-     `min-height: 100dvh` diz "pelo menos a janela", e por isso a casca CRESCE com o
-     conteúdo: qualquer altura fixa que o Gabinete declarasse lá dentro media contra
-     uma casca que já tinha esticado, e o canvas nunca fechava. `height` no lugar de
-     `min-height` é o que faz a linha `minmax(0, 1fr)` valer exatamente o que sobra da
-     janela depois da barra.
-
-     ⚠ E O ESCOPO É O SELETOR, e não uma classe nova: `:has()` deixa a regra depender
-     da tela que está aberta sem que o entrypoint tenha de espelhar `data-screen` num
-     segundo elemento. As outras sete telas continuam com a casca elástica e a página
-     rolando, que é o certo enquanto o conteúdo delas não tiver teto medido.
-
-     ⚠ E ISTO SÓ É LEGÍTIMO PORQUE O CELULAR SAIU DE ESCOPO nesta sessão, por decisão
-     do responsável. Numa janela de 390px, travar a altura esconderia metade do
-     Gabinete atrás de uma dobra sem nada que avisasse. */
+  /* As outras sete telas continuam com a casca elástica e a página rolando, que é o certo
+     enquanto o conteúdo delas não tiver teto medido.
+     Numa janela de 390px, travar a altura esconderia metade do Gabinete atrás de uma dobra
+     sem nada que avisasse. */
   .shell:has(> .board[data-screen="cabinet"]) {
     height: 100dvh;
   }
 
-  /* ── O RAIL DENTRO DO CANVAS ────────────────────────────────────────────────
-     ⚠ DEFEITO ANTIGO, ACHADO PELA MEDIÇÃO DO CANVAS em 20/08/2026: o rail declara
-     `height: calc(100dvh - 2 * var(--space-4))` — **948px numa janela de 980** — e
-     mora na linha 2 da casca, que começa ABAIXO da barra superior e tem 904. Ele
-     sempre transbordou 44px, em toda tela, desde que foi escrito. Numa página que
-     rola isso é invisível: a página já rolava por outros motivos. No canvas ele é a
-     única coisa que impede a tela de fechar na dobra — e era ele que segurava os
-     últimos 60 pixels.
-
-     `align-self: stretch` troca o palpite pela medida: em vez de calcular a janela e
-     errar a barra, o rail passa a valer exatamente a linha em que ele está. A margem
-     dele sai de dentro dessa altura, e não por fora.
-
-     ⚠ E O CONSERTO É ESCOPADO À TELA, e não global, por uma razão de comportamento:
-     nas sete telas que ainda rolam, `stretch` faria o rail crescer junto com a página
-     — 1563px no Congresso — e aí `position: sticky` deixaria de segurá-lo à vista,
-     porque um elemento mais alto que a janela não gruda. Lá o palpite errado é
-     inofensivo; aqui ele é o defeito. */
+  /* ── O RAIL DENTRO DO CANVAS ──────────────────────────────────────────────── ⚠ DEFEITO
+     ANTIGO, ACHADO PELA MEDIÇÃO DO CANVAS : o rail declara `height: calc(100dvh - 2 *
+     var(--space-4))` — **948px numa janela de 980** — e mora na linha 2 da casca, que começa
+     ABAIXO da barra superior e tem 904.
+     Ele sempre transbordou 44px, em toda tela, desde que foi escrito. */
   .shell:has(> .board[data-screen="cabinet"]) .rail {
     height: auto;
     align-self: stretch;
   }
 
-  /* A LISTA ROLA POR DENTRO e o pé fica preso, que é a mesma regra da coluna da
-     direita do Gabinete: o que se corta é o meio, e nunca o gesto. "Nova partida" é
-     o único botão do rail, e um botão que desaparece por rolagem some sem avisar. */
+  /* A LISTA ROLA POR DENTRO e o pé fica preso, que é a mesma regra da coluna da direita do
+     Gabinete: o que se corta é o meio, e nunca o gesto. */
   .shell:has(> .board[data-screen="cabinet"]) .rail__list {
     min-height: 0;
     overflow-y: auto;
   }
 
-  /* ── O CERCO NA MOLDURA ─────────────────────────────────────────────────────
-     ⚠ ELE FALTAVA DESDE QUE O IMPEACHMENT EXISTE, e era o ultimo item aberto da Parte 3
-     do dossie da Sala de Guerra: com um processo correndo havia carimbo no bloco da
-     caldeira e frase na carta, e a tela — o objeto que o jogador olha o tempo todo —
-     continuava identica ao mes tranquilo.
-
-     ⚠ ELE E ARESTA, E NAO TINTA. O gel de situacao ja tinge tudo por crise/estavel/
-     crescimento, e um quarto tom ali competiria com a leitura que o gel existe para dar.
-     A aresta e um canal livre, e ela diz outra coisa: o gel responde "quao bem o pais
-     vai", e isto responde "ha uma gaveta aberta". Sao perguntas diferentes.
-
-     ⚠ E A COR E O BORDO DO CARIMBO. `--crisis` e a cor do que JA deu errado — teto
-     fechado, bancada rompida —, e aqui nada caiu ainda: a Camara autorizou e o mandato
-     continua. Bordo e a cor do despacho pendente, e e a mesma que o botao de avancar usa
-     quando o mes vai bater o carimbo por voce. Uma voz, uma cor.
-
-     ⚠ E ELE PULSA DEVAGAR, com um orcamento de movimento que o projeto ja reserva. Nove
-     segundos e o mesmo passo do passeio da luz — rapido o bastante para o olho pegar,
-     lento o bastante para nao competir com a leitura. Uma moldura parada em bordo vira
-     decoracao em dois meses; uma que respira continua sendo um estado. */
+  /* ── O CERCO NA MOLDURA ───────────────────────────────────────────────────── ⚠ ELE FALTAVA
+     DESDE QUE O IMPEACHMENT EXISTE, e era o ultimo item aberto da Parte 3 do dossie da Sala
+     de Guerra: com um processo correndo havia carimbo no bloco da caldeira e frase na carta,
+     e a tela — o objeto que o jogador olha o tempo todo — continuava identica ao mes
+     tranquilo. */
   .shell[data-siege="true"]::after {
     content: "";
     position: absolute;
@@ -133,8 +57,8 @@
     animation: siege-breath 9s ease-in-out infinite;
   }
 
-  /* ⚠ E QUEM PEDIU MENOS MOVIMENTO NAO RECEBE PULSO, e a moldura FICA — ela e
-     informacao, e nao enfeite. O que sai e a respiracao, e nao o estado. */
+  /* ⚠ E QUEM PEDIU MENOS MOVIMENTO NAO RECEBE PULSO, e a moldura FICA — ela e informacao, e
+     nao enfeite. */
   @media (prefers-reduced-motion: reduce) {
     .shell[data-siege="true"]::after {
       animation: none;
@@ -151,10 +75,9 @@
     }
   }
 
-  /* ── A BARRA SUPERIOR ───────────────────────────────────────────────────────
-     Ela atravessa as duas colunas: o status do governo vale para a navegacao
-     tambem, e uma barra que comecasse depois da sidebar leria como parte do
-     tabuleiro. */
+  /* ── A BARRA SUPERIOR ─────────────────────────────────────────────────────── Ela atravessa
+     as duas colunas: o status do governo vale para a navegacao tambem, e uma barra que
+     comecasse depois da sidebar leria como parte do tabuleiro. */
   .topbar {
     grid-column: 1 / -1;
     display: grid;
@@ -186,26 +109,14 @@
     color: var(--ink-dim);
   }
 
-  /* OS VITAIS ROLAM POR DENTRO quando a janela aperta, e nao quebram em duas
-     fileiras: uma barra que muda de altura empurra o tabuleiro inteiro para
-     baixo toda vez que um numero cresce um digito.
-
-     ⚠ ELES DEIXARAM DE SER FICHAS EM 16/08/2026 — Parte B do ciclo 11. Quatro
-     colunas `rotulo em cima / numero em baixo / seta ao lado`, centradas e
-     igualmente espacadas, sao a assinatura visual de um TICKER DE BOLSA, e foi essa
-     a queixa: "tirar essa cara de site de investimentos".
-
-     O CONTEUDO NAO MUDOU, e nao podia: os quatro tem motor, e a lista so ficou
+  /* OS VITAIS ROLAM POR DENTRO quando a janela aperta, e nao quebram em duas fileiras: uma
+     barra que muda de altura empurra o tabuleiro inteiro para baixo toda vez que um numero
+     cresce um digito.
      honesta quando SONDA nasceu — a barra passou tres sessoes sem existir para nao
      nascer com um quarto do conteudo inventado. O que mudou e a FORMA: as quatro
      fichas viraram UMA LINHA de leituras separadas por fio, que e como um boletim
      oficial imprime indicador. Um rotulo em caixa alta, o valor ao lado na mesma
-     base, e um fio vertical entre as leituras.
-
-     ⚠ E O FIO E O MESMO DE DUAS PARADAS das legendas de bloco — latao apagado e
-     sombra —, pelo motivo que o ciclo 6 registrou: o que faz uma tela ler como grand
-     strategy nao e o ouro do botao, e a REPETICAO do mesmo fio, tela apos tela, ate o
-     olho parar de ver decoracao e passar a ver estrutura. */
+     base, e um fio vertical entre as leituras. */
   .topbar__vitals {
     display: flex;
     justify-content: center;
@@ -223,8 +134,8 @@
     white-space: nowrap;
   }
 
-  /* O FIO SO ENTRE, E NUNCA NAS PONTAS: um fio pendurado na quina e o defeito que
-     `:first-child` existe para evitar, e a faixa de indices da Mesa ja o aprendeu. */
+  /* O FIO SO ENTRE, E NUNCA NAS PONTAS: um fio pendurado na quina e o defeito que `:first-
+     child` existe para evitar, e a faixa de indices da Mesa ja o aprendeu. */
   .vital + .vital {
     border-left: 1px solid rgba(var(--brand-rgb), 0.16);
     box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.35);
@@ -238,10 +149,8 @@
     color: var(--ink-dim);
   }
 
-  /* ⚠ O PESO CAIU DE 700 PARA 600, e isso e o resto do conserto: quatro numeros em
-     800 disputando com a data em 800 nao formam hierarquia, formam quatro manchetes.
-     Numa barra de jogo de gestao quem manda e a DATA — e o que o Football Manager poe
-     ali —, e as leituras acompanham. */
+  /* ⚠ O PESO CAIU DE 700 PARA 600, e isso e o resto do conserto: quatro numeros em 800
+     disputando com a data em 800 nao formam hierarquia, formam quatro manchetes. */
   .vital__value {
     display: flex;
     align-items: baseline;
@@ -251,16 +160,16 @@
     color: var(--ink);
   }
 
-  /* O ALERTA TINGE O NUMERO, e nao o cartao: quatro cartoes acesos ao mesmo tempo
-     seriam quatro alarmes, e alarme que toca sempre e alarme que ninguem ouve. */
+  /* O ALERTA TINGE O NUMERO, e nao o cartao: quatro cartoes acesos ao mesmo tempo seriam
+     quatro alarmes, e alarme que toca sempre e alarme que ninguem ouve. */
   .vital--alert .vital__value {
     color: var(--crisis);
   }
 
-  /* ⚠ `.vital__spark` NASCEU E MORREU EM 21/08/2026, e a razao esta em `dashboard.mjs`:
-     a fileira tem 248px por leitura e uma escada legivel pede 120 alem do rotulo. A
-     captura reprovou os dois tamanhos tentados — 0,5rem cabe e vira um traco, 0,85rem le
-     e empurra o rotulo do PIB para fora da barra. A guarda `orphans` acusaria a regra. */
+  /* ⚠ `.vital__spark` NASCEU E MORREU EM, e a razao esta em `dashboard.mjs`: a fileira tem
+     248px por leitura e uma escada legivel pede 120 alem do rotulo.
+     A captura reprovou os dois tamanhos tentados — 0,5rem cabe e vira um traco, 0,85rem le e
+     empurra o rotulo do PIB para fora da barra. */
 
   .vital .trend {
     font-size: 0.7em;
@@ -270,110 +179,66 @@
     white-space: nowrap;
   }
 
-  /* ── O TABULEIRO ────────────────────────────────────────────────────────────
-     A tela corrente inteira, trocada por completo a cada pintura.
-
-     ELE NAO CENTRA NA VERTICAL, e a tela anterior centrava. A diferenca e de
-     conteudo: com uma peca so, centrar era o certo; com uma faixa, uma lamina e
-     um resumo que mudam de altura conforme a pauta escolhida, centrar faria a
-     tela inteira DESLIZAR debaixo do ponteiro toda vez que o jogador trocasse de
-     acao. Conteudo que cresce cresce para baixo. */
+  /* ── O TABULEIRO ──────────────────────────────────────────────────────────── A tela
+     corrente inteira, trocada por completo a cada pintura. */
   .board {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--space-4);
-    /* O RODAPE E MAIOR QUE O TOPO, e nao por simetria quebrada: a tela rola, e o
-       ultimo bloco de uma tela que rola precisa de folga embaixo para nao
-       parecer cortado pela borda da janela.
-
-       A MARGEM LATERAL ENCOLHEU (era `clamp(24px, 5vw, 64px)`) porque ela estava
-       cobrando duas vezes: o tabuleiro ja vive entre dois rails de 216px, entao
-       os 64px de cada lado somavam 128px de vazio a uma peca que ja parava antes
-       da borda. Margem existe para a peca nao encostar na moldura — e a moldura
-       aqui e o rail, que ja e a distancia. */
-    /* ⚠ O RESPIRO LATERAL ENCOLHEU DE NOVO em 15/08/2026 (era
-       `clamp(16px, 2.5vw, 32px)`), e agora ele e o UNICO limite entre a lamina e a
-       largura da janela: com `--column` em 100%, cada pixel daqui sai direto dos
-       80% que o responsavel pediu. Medido em 1440px: com 32px de cada lado a peca
-       fechava em 77,6% da janela; com 24px ela passa de 80%. */
-    /* ⚠ E ELE PASSOU A SER O MESMO NUMERO DO RAIL em 16/08/2026, porque nunca tinha
-       sido comparado com ele. Pedido do responsavel: "o bloco central inteiro parece
-       assimetrico e descentralizado, e nao ta na mesma altura do menu vertical
-       esquerdo". Medido a 1440px, e ele estava certo nas duas:
-
-         vertical    rail y=106  ·  lamina y=122     →  16px de desnivel
-         horizontal  margem esquerda 16  ·  direita 21,6
-
-       O rail usa `--space-4` na margem — 16 em cima e 16 na esquerda —, e o tabuleiro
-       usava `--space-8` no topo e um `clamp` de ~21,6 nas laterais. Tres numeros para
-       a mesma moldura, escolhidos em dias diferentes e nunca postos lado a lado.
-
-       ⚠ E A ASSIMETRIA NAO ESTAVA EM NENHUM DOS TRES: estava na RELACAO entre eles, e
-       por isso nenhuma revisao de folha isolada a pegaria. So medindo a geometria
-       renderizada — que e o que a captura do passeio faz com o resto.
-
-       Agora e um numero so nos dois lados e no topo. O ritmo fica 16 | rail | 32 |
-       lamina | 16, com o vao interno valendo o dobro da margem externa. */
+    /* O RODAPE E MAIOR QUE O TOPO, e nao por simetria quebrada: a tela rola, e o ultimo bloco
+       de uma tela que rola precisa de folga embaixo para nao parecer cortado pela borda da
+       janela.
+       A MARGEM LATERAL ENCOLHEU (era `clamp(24px, 5vw, 64px)`) porque ela estava cobrando
+       duas vezes: o tabuleiro ja vive entre dois rails de 216px, entao os 64px de cada lado
+       somavam 128px de vazio a uma peca que ja parava antes da borda. */
+    /* Medido em 1440px: com 32px de cada lado a peca fechava em 77,6% da janela; com 24px ela
+       passa de 80%. */
+    /* Medido a 1440px, e ele estava certo nas duas: vertical  rail y=106 · lamina y=122   →
+       16px de desnivel horizontal margem esquerda 16 · direita 21,6 O rail usa `--space-4` na
+       margem — 16 em cima e 16 na esquerda —, e o tabuleiro usava `--space-8` no topo e um
+       `clamp` de ~21,6 nas laterais.
+       So medindo a geometria renderizada — que e o que a captura do passeio faz com o resto. */
     padding: var(--space-4) var(--space-4) var(--space-11);
-    /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela:
-       `1fr` num grid tem minimo automatico igual ao conteudo, e sem esta linha a
-       peca de 780px cria rolagem horizontal no tablet. */
+    /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela: `1fr` num
+       grid tem minimo automatico igual ao conteudo, e sem esta linha a peca de 780px cria
+       rolagem horizontal no tablet. */
     min-width: 0;
   }
 
-  /* A LARGURA E DO TABULEIRO, e nao de cada tela. Se cada peca declarasse a
-     propria, a Mesa e a area divergiriam em algum ajuste e a troca de tela
-     passaria a mexer na coluna — que e o tipo de instabilidade que ninguem
-     atribui a causa certa. */
+  /* A LARGURA E DO TABULEIRO, e nao de cada tela.
+     Se cada peca declarasse a propria, a Mesa e a area divergiriam em algum ajuste e a troca
+     de tela passaria a mexer na coluna — que e o tipo de instabilidade que ninguem atribui a
+     causa certa. */
   .board > * {
     width: min(var(--column), 100%);
   }
 
-  /* ── O SUBSTRATO ────────────────────────────────────────────────────────────
-     Ele cobre a JANELA e nao a area de conteudo: o rail tambem e vidro, e vidro
-     sobre nada nao refrata. `fixed` para que o fundo nao deslize quando o
-     conteudo rolar — fundo em movimento sob `backdrop-filter` e a condicao dos
-     31 fps, e aqui ele nao se move nem quando a pagina rola. */
+  /* ── O SUBSTRATO ──────────────────────────────────────────────────────────── Ele cobre a
+     JANELA e nao a area de conteudo: o rail tambem e vidro, e vidro sobre nada nao refrata.
+     `fixed` para que o fundo nao deslize quando o conteudo rolar — fundo em movimento sob
+     `backdrop-filter` e a condicao dos 31 fps, e aqui ele nao se move nem quando a pagina
+     rola. */
   .backdrop {
     position: fixed;
     inset: 0;
     z-index: -2;
-    /* O CAMPO DE LUZ, em gradiente CSS e nao em SVG com desfoque.
-       A versao anterior desenhava elipses e as borrava com `feGaussianBlur`
-       dentro de um SVG escalado — desfoque rasterizado numa resolucao e depois
-       esticado para outra, que e como um degrade ganha aquele aspecto lavado.
-       Gradiente CSS e resolvido na resolucao do dispositivo, sem reamostragem.
-       DOIS PAPEIS, e nao tres: o AMBIENTE (azul de situacao neutra) e a FONTE
-       DE LUZ (tinta clara). O verde saiu — sobre o azul ele compunha petroleo,
-       e ainda por cima verde ja significa alta nesta paleta. Ambar continua
-       fora: a marca e a cor do que se pressiona. */
+    /* O CAMPO DE LUZ, em gradiente CSS e nao em SVG com desfoque. */
     background:
       radial-gradient(62% 48% at 14% 12%, rgba(var(--stable-rgb), 0.58), transparent 70%),
       radial-gradient(48% 42% at 84% 20%, rgba(var(--ink-rgb), 0.2), transparent 66%),
       radial-gradient(70% 56% at 78% 92%, rgba(var(--stable-rgb), 0.5), transparent 72%),
       radial-gradient(52% 44% at 34% 78%, rgba(var(--stable-rgb), 0.26), transparent 70%),
       var(--bg-deep);
-    /* O gel abaixo usa `mix-blend-mode`. Sem contexto proprio ele misturaria com
-       o que estiver atras do substrato inteiro, e nao com o campo de luz. */
+    /* O gel abaixo usa `mix-blend-mode`. */
     isolation: isolate;
     overflow: hidden;
     pointer-events: none;
-    /* A saturacao amplifica o croma da situacao onde o scrim ja derrubou a
-       luminancia. Croma em sRGB escala com luminancia, entao sem isto a parte
-       baixa da tela perde a cor que identifica o estado do pais. */
+    /* A saturacao amplifica o croma da situacao onde o scrim ja derrubou a luminancia. */
     filter: saturate(1.5);
   }
 
-  /* O GRAO, e por que ele e uma imagem LADRILHADA de tamanho fixo.
-     A primeira versao punha o ruido dentro do SVG da aurora, que tem `viewBox`
-     de 1000 unidades esticado para a largura da janela. O ruido era gerado nas
-     unidades do viewBox e depois AMPLIADO junto: cada celula virava uns tres
-     pixels borrados, e o resultado nao lê como granulado, lê como SUJEIRA.
-     Ladrilhado com `background-size` em pixel, cada celula mede um pixel de
-     verdade — que e a diferenca entre grao e poeira.
-     `%23` no lugar de `#` nao e enfeite: a guarda `tokens` procura literal de
-     cor por `#`, e uma URI com `#id` seria acusada com razao aparente. */
+  /* O GRAO, e por que ele e uma imagem LADRILHADA de tamanho fixo. */
   .backdrop::before {
     content: "";
     position: absolute;
@@ -381,15 +246,14 @@
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 140px 140px;
-    /* 0,05 e nao 0,34. O grao existe para dar ao desfoque o que apagar, e nao
-       para ser visto: ruido que o olho enxerga sem procurar lê como imagem de
-       qualidade ruim, que foi exatamente o defeito da versao anterior. */
+    /* 0,05 e nao 0,34.
+       O grao existe para dar ao desfoque o que apagar, e nao para ser visto: ruido que o olho
+       enxerga sem procurar lê como imagem de qualidade ruim, que foi exatamente o defeito da
+       versao anterior. */
     opacity: 0.05;
     mix-blend-mode: overlay;
   }
 
-  /* O GEL. Ele NAO tem opacidade uniforme e nao pinta: modula o que ja esta
-     atras dele, e a mascara decide onde. */
   .backdrop::after {
     content: "";
     position: absolute;
@@ -415,51 +279,28 @@
     );
   }
 
-  /* SCRIM. Densidade onde ha leitura, e nao densidade uniforme: escurecer a
-     tela inteira custaria o substrato que o vidro precisa.
-     Ele mora na CASCA e nao no tabuleiro porque o rail tambem lê por cima
-     dele. */
   .shell::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    /* AFROUXADO junto com a troca do substrato, e nao por gosto. Os valores
-       antigos — 0,72 no alto e 0,78 na vinheta — foram calibrados contra o
-       GRAFO, que era conteudo nitido e de alto contraste local competindo com a
-       leitura. O campo de luz nao compete: ele ja e suave e ja e escuro. Manter
-       o scrim antigo sobre ele apagava justamente a variacao de luminancia que
-       o vidro precisa refratar e que o gel de situacao precisa modular — media
-       de 58 para 29 na medicao. Cor que e funcao de um fundo tem de ser revista
-       quando o fundo muda: ela e consequencia, nao escolha. */
+    /* AFROUXADO junto com a troca do substrato, e nao por gosto. */
     background:
       linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.42), transparent 24%),
       radial-gradient(124% 84% at 50% 48%, transparent 38%, rgba(var(--bg-deep-rgb), 0.52) 100%);
   }
 
-  /* ── QUANDO O RAIL NAO CABE ─────────────────────────────────────────────────
-     Abaixo de 1180px a lateral vira uma FAIXA no topo. Ela nao encolhe para uma
-     tira de icones sem rotulo: icone sozinho e o que obriga a decorar um menu, e
-     o rail foi dimensionado pelo rotulo justamente para nao chegar nisso.
-     A faixa rola na horizontal por DENTRO — o estouro fica preso nela, e a
-     janela nunca ganha rolagem lateral.
-
-     ⚠ O PONTO SUBIU DE 900 PARA 1180 em 15/08/2026, e ele deixou de ser "onde o
-     rail nao cabe" para ser "onde o rail sai caro DEMAIS". A conta e direta: com a
-     lamina preenchendo o tabuleiro, ela ocupa `janela − rail − respiro`, e o pedido
-     e que isso passe de 80% da janela. Entre 900 e 1180 nao existe largura de rail
-     que caiba "Congresso & Leis" em uma linha E deixe a lamina passar dos 80% —
-     medido, a 1024px o rail de 184px sozinho derrubava a peca para 77,7%. Deitado
-     no topo ele custa zero de largura, e a peca fecha em 96%. */
+  /* ── QUANDO O RAIL NAO CABE ───────────────────────────────────────────────── Abaixo de
+     1180px a lateral vira uma FAIXA no topo.
+     A conta e direta: com a lamina preenchendo o tabuleiro, ela ocupa `janela − rail −
+     respiro`, e o pedido e que isso passe de 80% da janela. */
   @media (max-width: 1180px) {
     .shell {
       grid-template-columns: minmax(0, 1fr);
     }
 
-    /* A BARRA VIRA DUAS FILEIRAS, e a data sai. Num aparelho estreito o mes ja
-       esta na tela do Gabinete, e o que nao pode sumir sao os quatro numeros e o
-       botao — o resto e contexto que se consulta. */
+    /* A BARRA VIRA DUAS FILEIRAS, e a data sai. */
     .topbar {
       grid-template-columns: minmax(0, 1fr) auto;
       row-gap: var(--space-2);
@@ -471,15 +312,12 @@
       justify-content: flex-start;
     }
 
-    /* A lamina continua COLUNA e so perde a altura da janela. Vira-la em linha
-       poria marca, sete secoes e duas acoes na mesma faixa, e ai o botao de
-       turno cai abaixo do alvo de toque. */
+    /* A lamina continua COLUNA e so perde a altura da janela. */
     .rail {
       position: static;
       width: auto;
       height: auto;
-      /* Item de grid tambem nasce com minimo automatico. Sem esta linha a trilha
-         ja liberada volta a ser esticada por dentro, pelo proprio rail. */
+      /* Item de grid tambem nasce com minimo automatico. */
       min-width: 0;
       margin: var(--space-3);
       padding: var(--space-3);
@@ -489,19 +327,14 @@
       padding: 0 var(--space-2) var(--space-2);
     }
 
-    /* A LISTA e que deita, e rola por DENTRO. `min-width: 0` e o que permite
-       ela encolher abaixo do conteudo: sem isso o minimo automatico de um item
-       de flex e o proprio conteudo, e o estouro sai pela janela. */
+    /* A LISTA e que deita, e rola por DENTRO. */
     .rail__list {
       flex-direction: row;
       min-width: 0;
       overflow-x: auto;
     }
 
-    /* O GRUPO DE MINISTERIOS DEITA JUNTO. Deitado, o titulo do grupo viraria uma
-       palavra solta no meio da fila — entao ele some, e as areas entram na mesma
-       fileira das outras secoes. A hierarquia de dois niveis e util na vertical e
-       ruido na horizontal. */
+    /* O GRUPO DE MINISTERIOS DEITA JUNTO. */
     .rail__group {
       display: contents;
     }
@@ -514,12 +347,8 @@
       display: contents;
     }
 
-    /* AS DUAS REGRAS DE `.strip--stacked .chip` SAIRAM em 15/08/2026, junto com a
-       peca que elas ajustavam: a faixa de contexto nao e montada por ninguem desde
-       que a barra superior absorveu os campos dela. Ver `30-components.css`. */
-
-    /* Sem isto cada item pede 100% da faixa — sete vezes a largura inteira, que
-       era a origem da rolagem horizontal no tablet e no celular. */
+    /* Sem isto cada item pede 100% da faixa — sete vezes a largura inteira, que era a origem
+       da rolagem horizontal no tablet e no celular. */
     .rail__item {
       width: auto;
     }
@@ -536,15 +365,8 @@
   }
 
   /* No celular a coluna e uma so, e ai TODA aresta vertical tem de bater. */
-  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
-     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
-     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
-     desktop; eu quero a perfeição no desktop, perfeição mesmo".
-
-     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
-     de rolar. Foi o corte que permitiu a tela fechar na dobra.
-
-     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
-     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
+  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
+     rolar.
+     O corte para em 640/720px, que é território de telefone. */
 }

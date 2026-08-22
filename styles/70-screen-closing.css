@@ -1,29 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   TELA · O FECHO DO MANDATO — a prestacao de contas, e ela e um DOCUMENTO.
-   ═══════════════════════════════════════════════════════════════════════════
-
-   POR QUE ELA EXISTE. Uma partida jogada ate o fim nao terminava: o governo
-   passivo cai no mes 47, e a unica noticia disso na tela era um selo de dez
-   pixels no canto de um cartao da coluna da direita. O botao AVANCAR O MES
-   continuava aceso, do mesmo tamanho e da mesma cor de sempre.
-
-   ⚠ ELA NAO E UMA TELA DE DERROTA, e a forma tem de dizer isso antes de qualquer
-   texto. Nao ha vermelho de fundo, nao ha selo gigante e nao ha placar: o
-   Planalto nao tem vitoria, entao um fecho que dramatizasse a queda inventaria um
-   objetivo que o jogo nunca teve. Quem cai e quem cumpre leem a MESMA tela — o
-   que muda e o carimbo e a data.
-
-   ── A FORMA E A DA RUBRICA, e ela e emprestada de Financas de proposito ──────
-   O ciclo 11 decidiu que o registro deste jogo e institucional e nao de
-   aplicativo: fio em vez de raio, numero em coluna, e a data mandando. Uma
-   prestacao de contas e o lugar onde isso importa mais — e por isso a linha daqui
-   tem a mesma anatomia da linha de la, com uma coluna a mais: de onde partiu,
-   onde chegou, e o quanto andou.
-
-   ⚠ E A COLUNA DA VARIACAO E A ULTIMA, e nao a primeira. Quem lê um fecho lê a
-   linha inteira antes de olhar o saldo dela; posta na frente, a variacao vira a
-   unica coisa que se lê, e as oito areas passam a ser oito numeros com sinal em
-   vez de oito historias. */
+/* TELA · O FECHO DO MANDATO — a prestacao de contas, e ela e um DOCUMENTO. */
 
 @layer screens {
   .closing__stamp {
@@ -32,9 +7,8 @@
     font-size: var(--text-body);
   }
 
-  /* O CARIMBO — mono, e pela mesma razao dos outros dois do jogo: e a maquina do
-     Estado carimbando, e nao uma medicao nem um nome. Ele herda a moldura do
-     carimbo do cerco de proposito, porque e a mesma voz falando. */
+  /* O CARIMBO — mono, e pela mesma razao dos outros dois do jogo: e a maquina do Estado
+     carimbando, e nao uma medicao nem um nome. */
   .closing__stamp .stamp {
     display: inline-block;
     margin-right: var(--space-2);
@@ -52,10 +26,6 @@
     color: var(--ink);
   }
 
-  /* ⚠ A LEGENDA SAIU DAQUI: ela era a DECIMA forma de legenda do jogo, e repetia a
-     tipografia que `.block__legend` ja declara. O que sobrou e o unico ajuste que
-     este documento pede — o ar antes de cada secao, que num fecho e maior do que
-     numa tela de decisao porque aqui nada e clicavel e o olho lê em coluna. */
   .closing .block__legend {
     margin-top: var(--space-8);
     margin-bottom: var(--space-2);
@@ -71,11 +41,7 @@
     display: grid;
   }
 
-  /* A ANATOMIA DA LINHA. O rotulo recebe a sobra porque e o unico campo que
-     cresce; os quatro numeros tem largura FIXA em `rem`, e a razao esta escrita
-     na folha de Financas: `ch` mede a largura do zero na fonte de CADA elemento,
-     e duas colunas medidas assim em degraus tipograficos diferentes nunca se
-     alinham. */
+  /* A ANATOMIA DA LINHA. */
   .closing__row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 4rem 1.5rem 4rem 4rem;
@@ -96,10 +62,6 @@
     white-space: nowrap;
   }
 
-  /* O QUE A LINHA MEDE fica embaixo do nome e nao ao lado: "atendimento" explica
-     o 61 da Saude, e posto na mesma fileira ele disputaria a coluna com o rotulo
-     em toda area de nome longo — "Industria e Infraestrutura" ja gasta a coluna
-     inteira sozinha. */
   .closing__label small {
     display: block;
     font-size: var(--text-label);
@@ -108,10 +70,7 @@
     opacity: 0.7;
   }
 
-  /* ⚠ DE ONDE PARTIU E APAGADO, E ONDE CHEGOU E CHEIO. A leitura do fecho e o
-     valor de HOJE; o da posse esta ali para dar escala, e nao para disputar. Os
-     dois na mesma tinta fariam a linha inteira parecer um par de numeros sem
-     ordem de leitura. */
+  /* ⚠ DE ONDE PARTIU E APAGADO, E ONDE CHEGOU E CHEIO. */
   .closing__from {
     color: var(--ink-soft);
     opacity: 0.65;
@@ -131,9 +90,7 @@
     text-align: right;
   }
 
-  /* O SINAL VAI NA VARIACAO, e nao no valor. Em Financas o tom pinta o numero
-     porque la nao ha coluna de variacao; aqui ha, e pintar as duas faria a linha
-     acender duas vezes pela mesma informacao. */
+  /* O SINAL VAI NA VARIACAO, e nao no valor. */
   .closing__delta {
     text-align: right;
     color: var(--ink-soft);
@@ -147,9 +104,6 @@
     color: var(--signal-down);
   }
 
-  /* AS LEIS. Numeradas, porque a ordem em que foram escritas e parte do que elas
-     contam — um mandato que escreve tres leis no primeiro ano e nenhuma depois
-     nao e o mesmo que um que escreve uma por ano. */
   .closing__laws {
     display: grid;
     margin: 0;
@@ -158,14 +112,11 @@
     counter-reset: law;
   }
 
-  /* ⚠ O NUMERO E UM CONTADOR E NAO O MARCADOR NATIVO, e a razao e mecanica: um
-     `<li>` com `display: flex` perde o `::marker` — o navegador nao desenha
-     marcador em item que deixou de ser `list-item`. A primeira versao desta folha
-     caiu nisso e a lista saiu sem numero nenhum, com a prosa ao lado afirmando que
-     a ordem importava.
-
-     De quebra o contador e MONO, como a data do outro lado da linha: os dois sao
-     carimbo de protocolo, e nao medicao. */
+  /* ⚠ O NUMERO E UM CONTADOR E NAO O MARCADOR NATIVO, e a razao e mecanica: um `<li>` com
+     `display: flex` perde o `::marker` — o navegador nao desenha marcador em item que deixou
+     de ser `list-item`.
+     De quebra o contador e MONO, como a data do outro lado da linha: os dois sao carimbo de
+     protocolo, e nao medicao. */
   .closing__laws li {
     display: flex;
     align-items: baseline;
@@ -214,20 +165,10 @@
     color: var(--crisis);
   }
 
-  /* ── NO CELULAR A LINHA VIRA DUAS ───────────────────────────────────────────
-     Cinco colunas em 390px poriam o rotulo em duas palavras por fileira. O nome
-     sobe sozinho e os quatro numeros descem em fileira propria, alinhados a
-     direita — nada e escondido, pela mesma razao da folha de Financas: esconder
-     para caber e mentir por omissao. */
-  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
-     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
-     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
-     desktop; eu quero a perfeição no desktop, perfeição mesmo".
-
-     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
-     de rolar. Foi o corte que permitiu a tela fechar na dobra.
-
-     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
-     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
+  /* ── NO CELULAR A LINHA VIRA DUAS ─────────────────────────────────────────── Cinco colunas
+     em 390px poriam o rotulo em duas palavras por fileira. */
+  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
+     rolar.
+     O corte para em 640/720px, que é território de telefone. */
 }

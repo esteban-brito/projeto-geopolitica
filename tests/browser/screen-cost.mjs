@@ -1,32 +1,4 @@
-/* CUSTO DA TELA — o fps do material, medido contra um braco de controle.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   POR QUE ESTA SUITE EXISTE ANTES DE QUALQUER SEGUNDA TELA.
-
-   `backdrop-filter` nao e gratuito, e o custo e por TELA e nao por efeito. No
-   projeto anterior ele derrubou uma tela EM MOVIMENTO para 31 fps e teve de ser
-   removido; a tela que o manteve media 61,2 contra 60,6 do controle, e a
-   diferenca entre os dois casos nao foi o filtro — foi a condicao: superficie
-   pequena sobre fundo estatico.
-
-   DUAS ARMADILHAS DE MEDICAO, as duas ja pagas la:
-
-     1. HEADLESS SEM GPU MEDE O APARELHO ERRADO. O Playwright rasteriza por
-        software por padrao, e nesse regime os DOIS bracos caem juntos — o
-        material chega a parecer 1,9 fps mais caro que um controle que nao custa
-        nada. Por isso esta suite abre o navegador COM GPU;
-     2. SEM BRACO DE CONTROLE, 60 fps nao diz nada. Ele nao distingue "esta bom"
-        de "a maquina nao passa de 60". A pergunta certa e se a tela SUSTENTA a
-        taxa do monitor, e ela so se responde comparando com a mesma tela sem o
-        filtro.
-
-   POR QUE ELA VIVE EM `tests/browser/` E NAO EM `tests/suites/`. Isto aqui nao e
-   um arquivo de `node:test`: e um script que sobe servidor, abre um Chromium
-   HEADED com GPU e sai com codigo proprio. Ele nao pode entrar em `npm run
-   validate`, que precisa ser rapido e rodar sem tela. Separar por diretorio, e
-   nao por sufixo no nome, e o que mantem `tests/suites/*` com um significado so.
-
-   Rode com: npm run screen */
+/* CUSTO DA TELA — o fps do material, medido contra um braco de controle. */
 
 import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -38,16 +10,9 @@ const PORT = 5199;
 const BASE = `http://127.0.0.1:${PORT}`;
 const OUT = join(ROOT, "captures");
 
-const VIEWPORTS = [
-  /* ⚠ TABLET E CELULAR SAIRAM EM 20/08/2026, por decisao de ESCOPO do responsavel —
-     ver a nota em `walk.mjs`. O que sobra e o desktop, e o numero e o que ele usa.
-     Medir fps num aparelho que ninguem vai usar nao e cobertura: e ruido com aparencia
-     de rigor, e ele custa dois navegadores por rodada. */
-  { name: "desktop", width: 1440, height: 900 },
-];
+const VIEWPORTS = [{ name: "desktop", width: 1440, height: 900 }];
 
-/* Desliga o material sem mexer no layout: mesma caixa, mesma cor, mesmo texto.
-   E o unico jeito de o delta medido ser do FILTRO e nao de outra coisa. */
+/* E o unico jeito de o delta medido ser do FILTRO e nao de outra coisa. */
 const CONTROL_ARM = `
   .glass-stage::after, .glass-action, .glass-support {
     backdrop-filter: none !important;
@@ -101,9 +66,7 @@ try {
   await waitForServer();
   mkdirSync(OUT, { recursive: true });
 
-  /* GPU LIGADA E VSYNC ATIVO. Sem `--disable-frame-rate-limit` o numero fica
-     preso na taxa do monitor, que e exatamente o que queremos saber: a tela
-     SUSTENTA os 60? Sem vsync o numero perde sentido no outro extremo. */
+  /* GPU LIGADA E VSYNC ATIVO. */
   const browser = await chromium.launch({
     headless: false,
     args: ["--enable-gpu", "--ignore-gpu-blocklist", "--enable-gpu-rasterization"],
@@ -125,8 +88,6 @@ try {
 
     await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
 
-    /* O console tem de estar limpo, e SEM filtro de ruido: no projeto anterior
-       um filtro para "Failed to load resource" escondeu 404 real por meses. */
     if (noise.length > 0) {
       failures++;
       report.push(`[${viewport.name}] console sujo: ${noise.join(" | ")}`);
@@ -143,11 +104,7 @@ try {
     await page.screenshot({ path: join(OUT, `${viewport.name}.png`) });
 
     if (viewport.name === "desktop") {
-      /* MEDIDA ALTERNADA, e nao uma de cada. A primeira versao mediu material e
-         depois controle, e o material saiu 8 fps MAIS RAPIDO — o que e
-         fisicamente impossivel e denuncia a ordem, nao o custo: a segunda
-         medicao pega o navegador em outro estado de aquecimento. Alternar e
-         tomar a mediana tira a ordem da conta. */
+      /* MEDIDA ALTERNADA, e nao uma de cada. */
       const glass = [];
       const control = [];
       for (let round = 0; round < 3; round++) {

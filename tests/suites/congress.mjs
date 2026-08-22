@@ -1,18 +1,9 @@
-/* SUITE · A VOTACAO — a previsao, o dia, e o termo que salva o Congresso de si.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   Tres coisas precisam ser provadas aqui, e a terceira e a que quase se perde:
-
-     1. a PREVISAO e deterministica, e o DIA nao — e a separacao entre as duas e
-        o que impede a votacao de virar planilha;
-     2. verba compra voto, e compra mais de quem se vende mais;
-     3. NENHUMA pauta e invotavel. O termo de ameaca encarece; ele nao proibe. */
+/* SUITE · A VOTACAO — a previsao, o dia, e o termo que salva o Congresso de si. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-/* O HUMOR DE ABERTURA VEM DO ESTADO. Repetido a mao, ele vira uma segunda verdade
-   sobre como uma partida comeca. */
+/* O HUMOR DE ABERTURA VEM DO ESTADO. */
 import { INITIAL_LOYALTY } from "../../src/state/state.mjs";
 import {
   THRESHOLDS,
@@ -26,9 +17,7 @@ import { PARTIES } from "../../src/data/parties.mjs";
 import { QUALIFIED_MAJORITY, SEATS, SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 import { streamFrom } from "../../src/state/random.mjs";
 
-/* O QUE VAI A PLENARIO. Decreto nao vota, entao ele nao entra em nenhuma prova
-   de quorum — inclui-lo faria as provas passarem por um motivo errado, ja que
-   quorum zero e sempre alcancado. */
+/* O QUE VAI A PLENARIO. */
 const VOTABLE = BILLS.filter(bill => bill.instrument !== "decree");
 
 /** @param {number} level */
@@ -36,8 +25,8 @@ function everyone(level) {
   return Object.fromEntries(PARTIES.map(party => [party.id, level]));
 }
 
-/* O limiar vem do motor: redigita-lo aqui seria a prova passar a testar o
-   numero que ela mesma escreveu. */
+/* O limiar vem do motor: redigita-lo aqui seria a prova passar a testar o numero que ela
+   mesma escreveu. */
 const RUPTURE_EDGE = THRESHOLDS.rupture;
 
 const LOYAL = everyone(75);
@@ -77,9 +66,7 @@ test("a PREVISAO e deterministica: nenhum sorteio entra nela", () => {
 });
 
 test("o DIA muda com a semente, e a previsao nao", () => {
-  /* A separacao inteira em uma prova: mesma entrada, mesma tendencia, placares
-     diferentes. Se a previsao mudasse junto, o jogador nao teria o que negociar;
-     se o placar nao mudasse, nao haveria risco. */
+  /* A separacao inteira em uma prova: mesma entrada, mesma tendencia, placares diferentes. */
   const bill = billOf("reforma-administrativa");
   const base = { bill, parties: PARTIES, funding: everyone(0.5), loyalty: LOYAL };
   const forecast = whipCount(base);
@@ -115,8 +102,8 @@ test("mesma semente e mesma entrada dao o mesmo placar", () => {
 });
 
 test("a votacao consome um saque POR BANCADA", () => {
-  /* Um saque unico faria as quatro traírem juntas, o que parece evento e e
-     defeito de modelagem. */
+  /* Um saque unico faria as quatro traírem juntas, o que parece evento e e defeito de
+     modelagem. */
   const start = streamFrom(1, "congress");
   const result = vote({
     bill: billOf("abertura-comercial"),
@@ -147,9 +134,7 @@ test("verba NUNCA reduz a adesao, e em geral aumenta", () => {
 });
 
 test("O PRECO DEPENDE DO ASSUNTO: a mesma verba compra bancadas diferentes", () => {
-  /* A razao de a venalidade ser uma por eixo. Numa pauta economica o centrao
-     cede muito mais que a direita liberal; se as duas reagissem igual, um eixo
-     so bastaria. */
+  /* A razao de a venalidade ser uma por eixo. */
   const bill = billOf("abertura-comercial");
   const dry = whipCount({ bill, parties: PARTIES, funding: NO_MONEY, loyalty: LOYAL });
   const paid = whipCount({ bill, parties: PARTIES, funding: everyone(1), loyalty: LOYAL });
@@ -180,9 +165,8 @@ test("lealdade no chao derruba a entrega, e a ruptura joga contra", () => {
   assert.ok(sour.votes > broken.votes, "a ruptura tinha de ser pior que o descontentamento");
 });
 
-/* ── O TERMO DE AMEACA ──────────────────────────────────────────────────────
-   O centro desta fatia. Sem ele a medicao mostrava o centrao como o bloco mais
-   proximo E mais barato de uma lei anticorrupcao. */
+/* ── O TERMO DE AMEACA ────────────────────────────────────────────────────── O centro desta
+   fatia. */
 
 test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem vive dela", () => {
   const threatening = billOf("fim-do-foro-privilegiado");
@@ -199,9 +183,8 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
     return found;
   };
 
-  /* O bloco mais fisiologico tem de sofrer MAIS com a ameaca que o menos
-     fisiologico — e a inversao da relacao habitual entre venalidade e
-     resistencia. */
+  /* O bloco mais fisiologico tem de sofrer MAIS com a ameaca que o menos fisiologico — e a
+     inversao da relacao habitual entre venalidade e resistencia. */
   const centraoPenalty =
     of(onThreat, "uniao-progressista").resistance - of(onHarmless, "uniao-progressista").resistance;
   const liberalPenalty =
@@ -222,17 +205,7 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
 });
 
 test("NENHUMA PAUTA E INVOTAVEL: toda acao PASSA no PROPRIO quorum", () => {
-  /* A prova mais importante do arquivo, e ela ja foi fraca duas vezes.
-
-     A primeira versao exigia apenas `votos > 0`, e passou verde enquanto o fim
-     do foro privilegiado estava travado em 56 de 257 — um muro com aparencia de
-     preco. A SEGUNDA fraqueza apareceu quando a emenda constitucional entrou no
-     catalogo: a prova continuou cobrando 257 de todo mundo, entao uma emenda que
-     alcanca 300 passava aqui e era impossivel no jogo. Prova que cobra o quorum
-     errado nao cobra nada.
-
-     Agora ela exige o que o projeto promete, contra o quorum DE CADA ACAO: tudo
-     tem um jeito de ser feito. Se ficar vermelha, alguma acao virou parede. */
+  /* A prova mais importante do arquivo, e ela ja foi fraca duas vezes. */
   const generous = everyone(1);
   const devoted = everyone(100);
 
@@ -253,9 +226,7 @@ test("NENHUMA PAUTA E INVOTAVEL: toda acao PASSA no PROPRIO quorum", () => {
 });
 
 test("mas o caminho facil NAO existe: nenhuma acao passa de graca e sem base", () => {
-  /* O contrapeso da prova acima. Se tudo passasse sem verba e sem lealdade, o
-     jogo nao teria negociacao — e as duas provas juntas e que definem a faixa
-     onde ele acontece. */
+  /* O contrapeso da prova acima. */
   const broke = everyone(0);
   const cold = everyone(30);
 
@@ -267,16 +238,8 @@ test("mas o caminho facil NAO existe: nenhuma acao passa de graca e sem base", (
 });
 
 test("A EMENDA E OUTRO JOGO: duas bancadas nao ENTREGAM tres quintos", () => {
-  /* O que justifica a emenda existir como via separada: ela obriga a trazer
-     gente que nao gosta de voce. Se uma dupla fechasse 308, o quorum qualificado
-     seria so um numero maior, e nao uma exigencia de coalizao ampla.
-
-     ⚠ A PRIMEIRA VERSAO DESTA PROVA ESTAVA ERRADA, e ela mesma acusou. Eu tinha
-     escrito que nenhuma dupla SOMA 308 em cadeiras — e duas somam: esquerda mais
-     centrao dao 313, centrao mais direita liberal dao 309. A afirmacao verdadeira
-     e sobre ENTREGA, e nao sobre assento: adesao nunca e 100%, entao a dupla que
-     soma 313 no papel entrega bem menos no plenario. A prova agora mede o que o
-     motor realmente produz, no melhor cenario possivel para a dupla. */
+  /* A afirmacao verdadeira e sobre ENTREGA, e nao sobre assento: adesao nunca e 100%, entao a
+     dupla que soma 313 no papel entrega bem menos no plenario. */
   const generous = everyone(1);
   const devoted = everyone(100);
   const amendments = BILLS.filter(bill => bill.instrument === "amendment");
@@ -358,17 +321,13 @@ test("o placar do dia tambem respeita o tamanho das bancadas", () => {
   );
 });
 
-/* ── A BANDA ─────────────────────────────────────────────────────────────────
-   `dispersion` e a unica funcao deste motor que descreve o sorteio SEM sacar
-   dele, e e por isso que ela precisa de prova propria: ela e uma afirmacao sobre
-   o comportamento de `vote`, escrita em outro lugar. Duas coisas podem
-   apodrecer sem que nada quebre — a banda deixar de bater com o que o dia
-   produz, e alguem "corrigi-la" para o pior caso. */
+/* ── A BANDA ───────────────────────────────────────────────────────────────── `dispersion` e
+   a unica funcao deste motor que descreve o sorteio SEM sacar dele, e e por isso que ela
+   precisa de prova propria: ela e uma afirmacao sobre o comportamento de `vote`, escrita em
+   outro lugar. */
 
 test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
-  /* Seiscentas votacoes com semente declarada. Nao ha aleatoriedade nesta prova:
-     `streamFrom` e funcao pura da semente, entao a amostra e sempre a mesma e um
-     dia ruim de sorte nao existe aqui. */
+  /* Seiscentas votacoes com semente declarada. */
   const bill = billOf("abertura-comercial");
 
   for (const level of [20, 50, 70, 95]) {
@@ -393,9 +352,8 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
       drifts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / drifts.length,
     );
 
-    /* 20% de folga cobre o arredondamento em cadeiras (a banda e inteira, o
-       desvio nao) e o corte da adesao em 0 e 1. E estreita o bastante para
-       acusar uma banda que virasse pior caso, que erraria por quase tres vezes. */
+    /* 20% de folga cobre o arredondamento em cadeiras (a banda e inteira, o desvio nao) e o
+       corte da adesao em 0 e 1. */
     assert.ok(
       Math.abs(sigma - band) <= band * 0.2,
       `lealdade ${level}: a banda anuncia ${band} e o dia entrega ${sigma.toFixed(2)}`,
@@ -404,10 +362,7 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
 });
 
 test("A BANDA NAO E O PIOR CASO: erros independentes somam em QUADRATURA", () => {
-  /* Quatro bancadas iguais, cada uma sacando do proprio fluxo. Somar os desvios
-     maximos daria quatro vezes a banda de uma — a banda de "as quatro traem
-     juntas, todas no limite", que num plenario de 513 cadeiras passa de 45 e faz
-     a previsao parecer inutil. Somando em quadratura, da o DOBRO: raiz de 4. */
+  /* Quatro bancadas iguais, cada uma sacando do proprio fluxo. */
   const one = PARTIES[0];
   assert.ok(one);
 
@@ -441,19 +396,11 @@ test("base insatisfeita e base IMPREVISIVEL: menos lealdade nunca estreita a ban
   );
 });
 
-/* ── A BASE ──────────────────────────────────────────────────────────────────
-   `baseCount` responde "quantas cadeiras respondem ao governo hoje", sem pauta
-   nenhuma na mesa. Ela existe para a tela nao ter de inventar essa conta — e o
-   valor dela depende inteiramente de nao divergir da votacao. */
+/* Ela existe para a tela nao ter de inventar essa conta — e o valor dela depende inteiramente
+   de nao divergir da votacao. */
 
 test("NENHUMA VOTACAO ENTREGA MAIS QUE A BASE, em pauta nenhuma", () => {
-  /* A propriedade que torna a base honesta. A adesao de uma bancada e a
-     logistica da resistencia VEZES o fator de humor, e logistica nunca passa de
-     1 — entao o humor e o teto, e a base e a soma dos tetos. Se algum dia uma
-     votacao passar disso, a tela estara anunciando uma coalizao menor do que a
-     que vota, e o jogador vai achar que ganhou de graca.
-     A folga de tres cadeiras e o arredondamento: cada bancada arredonda o
-     proprio voto, e a base arredonda so o total. */
+  /* A propriedade que torna a base honesta. */
   fc.assert(
     fc.property(anyBill, anyFunding, anyLoyalty, (bill, funding, loyalty) => {
       const base = baseCount({ parties: PARTIES, loyalty });
@@ -481,9 +428,6 @@ test("a base cabe no plenario, e levantar a lealdade nunca a diminui", () => {
 });
 
 test("A RUPTURA E UM DEGRAU, e nao mais um passo da ladeira", () => {
-  /* O que separa "a base reclama" de "a base saiu". Um ponto de lealdade em
-     volta do limiar tem de custar mais que um ponto no meio da faixa — senao os
-     dois degraus declarados no motor sao decoracao. */
   const at = (/** @type {number} */ level) =>
     baseCount({ parties: PARTIES, loyalty: everyone(level) });
 
@@ -497,15 +441,7 @@ test("A RUPTURA E UM DEGRAU, e nao mais um passo da ladeira", () => {
 });
 
 test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
-  /* ⚠ E ESTA E A RAZAO DE SONDA EXISTIR PARA O MODELO, e nao so para a tela.
-     Parlamentar nao vota com governo que a rua odeia, e vota com governo que a rua
-     adora ate contra a propria ideologia — porque o que ele protege e a propria
-     reeleicao. Sem este acoplamento, a aprovacao seria um numero bonito que nao
-     decide nada, e o jogo teria um motor a mais sem ter uma consequencia a mais.
-
-     A prova cobra as duas pontas: a direcao (popular vale mais que impopular) e o
-     TAMANHO (a rua move a margem, e nao o centro — senao popularidade viraria
-     botao de aprovar tudo). */
+  /* ⚠ E ESTA E A RAZAO DE SONDA EXISTIR PARA O MODELO, e nao so para a tela. */
   const bill = BILLS.find(item => item.instrument === "law" && item.threat < 0.3);
   assert.ok(bill, "o catalogo perdeu a lei mansa que esta prova usa");
 
@@ -521,16 +457,15 @@ test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
   assert.ok(loved > neutral, `governo amado nao ganhou nada: ${neutral} → ${loved}`);
   assert.ok(hated < neutral, `governo odiado nao perdeu nada: ${neutral} → ${hated}`);
 
-  /* O TAMANHO: a diferenca entre o extremo amado e o extremo odiado nao pode ser
-     maior que o plenario inteiro nem tao pequena que nunca mude uma votacao. */
+  /* O TAMANHO: a diferenca entre o extremo amado e o extremo odiado nao pode ser maior que o
+     plenario inteiro nem tao pequena que nunca mude uma votacao. */
   const swing = loved - hated;
   assert.ok(swing > 20, `a rua mudou so ${swing} votos entre os extremos — ela nao importa`);
   assert.ok(swing < 250, `a rua mudou ${swing} votos — ela virou o botao de aprovar tudo`);
 });
 
 test("SEM A RUA, O MOTOR CONTINUA O MESMO: o padrao e neutro e nao zero", () => {
-  /* O contrato que mantem a suite antiga descrevendo a verdade. O ECLUSA nasceu
-     antes de existir opiniao publica, e quem nao passa `standing` tem de receber
+  /* O contrato que mantem a suite antiga descrevendo a verdade.
      exatamente o placar de antes — a mesma regra do LASTRO com os fatores da
      MALHA. */
   const bill = BILLS[0];

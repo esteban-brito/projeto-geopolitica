@@ -1,48 +1,14 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   TELA · AREA — um molde, seis instancias.
-   ═══════════════════════════════════════════════════════════════════════════
-
-   TRES VERBOS, SEMPRE NESTA ORDEM, e a ordem e o CUSTO DE EXECUTAR cada um:
-   alocar nao precisa de ninguem, pautar precisa do Congresso, e vigente ja foi
-   decidido e so cobra. Quem lê de cima para baixo lê da acao mais barata para a
-   mais cara, e termina na conta que as decisoes passadas continuam mandando todo
-   mes.
-
-   UMA LAMINA, TRES SECOES. Os blocos sao separados por ESPACO e por um rotulo,
-   nunca por moldura: eles disputam a mesma bolsa, e tres cartoes independentes
-   desmanchariam justamente a relacao que a tela existe para mostrar. A regra de
-   espaco vale ao pe da letra — dentro de um grupo, 8 a 12; entre grupos, 24 e
-   mais.
-
-   O QUE ESTA TELA NAO FAZ: ela nao decide. Escolher uma acao aqui leva a Mesa,
-   porque emendar sem ver o placar seria negociar no escuro. O unico controle que
-   se resolve aqui e a alocacao — e ele se resolve aqui porque nao depende de
-   voto nenhum. */
+/* TELA · AREA — um molde, seis instancias. */
 
 @layer screens {
-  /* ⚠ `.area__eyebrow` MORREU EM 20/08/2026 nas CINCO telas de uma vez. O olho
-     imprimia uma categoria acima de um título que já dizia a mesma coisa numa palavra,
-     numa tela cujo menu já marca onde o jogador está. A razão está em `head.mjs`. */
-
   .area {
     display: grid;
     gap: var(--space-6);
     padding: clamp(20px, 3vw, 28px);
   }
 
-  /* ── A CABECA, E ELA E A MESMA NAS CINCO TELAS ──────────────────────────────
-     A esquerda, QUEM E A TELA: categoria em versalete e o nome embaixo. A
-     direita, o que ela tem a dizer de si AGORA — o indice na area, o veredito no
-     Gabinete —, e nada onde nao ha o que dizer.
-
-     ⚠ ELA SO VIROU UMA em 15/08/2026. Cada tela montava a sua, e elas nao eram
-     iguais: a area usava os dois slots para `nome do indice / NUMERO` e portanto
-     nunca dizia de qual ministerio era, e o Congresso nao tinha cabeca nenhuma.
-     Ver `src/ui/shared/head.mjs`, onde o levantamento das cinco esta escrito.
-
-     O NOME `area__*` FICOU, e a peca deixou de ser da area — e uma divida
-     declarada, nao um descuido: renomear para `screen__*` atravessa cinco views,
-     duas suites e quatro folhas, e o ganho e de leitura e nao de comportamento. */
+  /* ── A CABECA, E ELA E A MESMA NAS CINCO TELAS ────────────────────────────── A esquerda,
+     QUEM E A TELA: categoria em versalete e o nome embaixo. */
   .area__head {
     display: flex;
     flex-wrap: wrap;
@@ -51,9 +17,8 @@
     gap: var(--space-4);
   }
 
-  /* A LEITURA DA DIREITA — o slot que era `cabinet__reading` e valia so para uma
-     tela. Duas classes para o mesmo lugar sao como uma paleta comeca a divergir:
-     a que ficar de fora do proximo ajuste vira o desenho errado. */
+  /* Duas classes para o mesmo lugar sao como uma paleta comeca a divergir: a que ficar de
+     fora do proximo ajuste vira o desenho errado. */
   .head__reading {
     display: grid;
     justify-items: end;
@@ -70,10 +35,7 @@
     color: var(--ink-dim);
   }
 
-  /* O INDICE DA AREA. Ele era o `area__value` — o slot do TITULO — e por isso a
-     tela nao tinha onde dizer o proprio nome. Aqui ele pesa menos que o nome da
-     tela e mais que o rotulo, que e a hierarquia certa: primeiro onde voce esta,
-     depois como esta. */
+  /* O INDICE DA AREA. */
   .head__value {
     display: flex;
     align-items: baseline;
@@ -85,12 +47,6 @@
     color: var(--ink);
   }
 
-  /* ⚠ O TITULO DA TELA E SERIFA desde 15/08/2026, e ele foi o furo da regra do
-     ciclo 5: "Saude", "Gabinete", "Congresso & Leis" sao NOMES DE INSTITUICAO —
-     registro, pela minha propria definicao — e sairam em sans por seis telas. Uma
-     auditoria externa leu o titulo em sans grosso como "startup de tecnologia
-     medica", e leu certo: a fonte dizia aplicativo enquanto a palavra dizia
-     ministerio. */
   .area__value {
     display: flex;
     align-items: baseline;
@@ -102,15 +58,12 @@
     color: var(--ink);
   }
 
-  /* A ESCADA E PEQUENA DE PROPOSITO. Em 0,26em ela media 19px de altura e os
-     blocos, que sao retangulos solidos e se ladrilham, colavam num tarjao unico
-     ao lado do indice — uma serie estavel virava o que parece um retangulo de
-     carregamento. No tamanho de rotulo ela volta a ser o que e: uma marca de
-     tendencia, e nao um segundo indicador competindo com o numero. */
-  /* ⚠ `font-size: 0.18em` ERA A ESCADA DE BLOCOS ENCOLHIDA, e ela saiu em 21/08/2026 —
-     ver `sparkline`. Um corpo em `em` sobre um numero grande dava um glifo de ~4px, que
-     e o caso extremo do defeito que matou a escada: a esta altura, o degrau 1 nao tem
-     pixel nenhum para desenhar. */
+  /* A ESCADA E PEQUENA DE PROPOSITO.
+     Em 0,26em ela media 19px de altura e os blocos, que sao retangulos solidos e se
+     ladrilham, colavam num tarjao unico ao lado do indice — uma serie estavel virava o que
+     parece um retangulo de carregamento. */
+  /* Um corpo em `em` sobre um numero grande dava um glifo de ~4px, que e o caso extremo do
+     defeito que matou a escada: a esta altura, o degrau 1 nao tem pixel nenhum para desenhar. */
   .area__spark {
     color: var(--ink-dim);
   }
@@ -140,28 +93,7 @@
     gap: var(--space-3);
   }
 
-  /* ⚠ O FIO METALICO SOB A LEGENDA, e o que ele entrega nao e a linha: e a
-     REPETICAO dela. O que faz uma tela ler como grand strategy nao e o ouro do botao
-     — e o mesmo fio fino separando toda regiao, tela apos tela, ate o olho parar de
-     ver decoracao e passar a ver estrutura. Uma linha, oito blocos, cinco telas.
-
-     ELE E DE DUAS PARADAS, como o separador da faixa de indices: latao apagado em
-     cima e sombra embaixo. Um fio de uma cor so lê como borda de tabela; dois lê
-     como metal embutido, porque e assim que uma aresta se comporta sob luz. */
-  /* ⚠ A TIPOGRAFIA SAIU DAQUI em 18/08/2026 e foi para `30-components.css`, junto
-     com a legenda do relatorio: as seis declaracoes estavam escritas duas vezes. O
-     que fica aqui e o que so esta peca tem — o FIO e a repartição em duas pontas. */
-  /* ⚠ O FIO METÁLICO SAIU EM 20/08/2026, e a saída é um pedido direto do responsável:
-     "as barras pretas também que ficam embaixo das escritas". Ele era duas paradas —
-     latão apagado e sombra — e existia por uma razão que fica registrada, porque ela não
-     era boba: "o que faz uma tela ler como grand strategy não é o ouro do botão, e a
-     REPETIÇÃO do mesmo fio, tela após tela, até o olho parar de ver decoração e passar a
-     ver estrutura".
-
-     ⚠ E O QUE ELE DESCOBRIU USANDO A TELA é que a repetição virou peso: com onze blocos
-     numa página, onze fios não leem como estrutura, leem como formulário. O que separa um
-     bloco do seguinte passa a ser o ESPAÇO — que é o que separa parágrafo de parágrafo em
-     qualquer documento, e não cobra tinta nenhuma. */
+  /* ⚠ O FIO METALICO SOB A LEGENDA, e o que ele entrega nao e a linha: e a REPETICAO dela. */
   .block__legend {
     padding-bottom: var(--space-1);
     display: flex;
@@ -178,44 +110,9 @@
     color: var(--ink-dim);
   }
 
-  /* ── O ORCAMENTO GRANULAR — E ELE E UMA PECA, E NAO UM PAINEL ───────────────
-     Um controle por programa, e cada linha carrega quatro coisas: o que e, o que
-     o numero significa no mundo, onde ele esta, e quanto custa no mes.
-
-     ⚠ ELE DEIXOU DE SER PASTILHA EM 16/08/2026, e esta e a Parte A do ciclo 11.
-     Pedido do responsavel — "tirar essa cara de site de investimentos" —, e e a
-     QUINTA vez que a queixa chega: duas auditorias externas ja tinham nomeado esta
-     tela, uma como "mesa de som" e outra como "um contador analisando planilhas".
-
-     A causa e medivel, e ela estava numa folha so: `65-screen-finance.css` tem ZERO
-     `border-radius` e as outras somam trinta. A unica tela que nao parece um painel
-     de fintech e justamente a que o projeto ja tinha chamado de outra coisa em prosa
-     — "forma de razao contabil e nao de pastilha". O registro institucional foi
-     inventado para uma tela e as outras dez ficaram no dialeto de aplicativo, sem
-     ninguem ter decidido isso.
-
-     TRES COISAS MUDAM, e as tres sao forma e nenhuma e cor nova:
-
-       · SOME O RAIO E O PREENCHIMENTO. A unidade visual de um dashboard e o cartao,
-         e trinta e oito cartoes numa tela de orcamento sao uma mesa de som. Entra o
-         FIO, que e a peca que o sistema ja usa sob cada legenda de bloco;
-       · O RITO VIRA MARCA DE BORDA, e nao banho de cor na linha inteira. A cor e a
-         mesma de antes; o que muda e ela APONTAR em vez de tingir. E a mesma
-         correcao que o pino de metal levou no ciclo 6 — marca diluida em trinta e
-         oito linhas deixa de marcar;
-       · OS NUMEROS CAEM EM COLUNA, e esta e a metade que faz o efeito. Ver
-         `.dial__read`.
-
-     ── E O QUE SOBREVIVEU DA REGRA ANTIGA ─────────────────────────────────────
-     A prosa que estava aqui dizia: "atravessar o piso tinge a linha inteira, e nao
-     so a etiqueta — o jogador precisa ver de relance quais dos trinta controles sao
-     os caros". ⚠ A NECESSIDADE CONTINUA E A SOLUCAO MUDOU: a marca de borda e
-     visivel de relance na coluna esquerda, que e onde o olho varre uma lista, e ela
-     nao gasta a cor de marca em trinta e oito preenchimentos.
-
-     E EMENDA CONTINUA SENDO OUTRA CATEGORIA, e nao lei com mais tinta: a marca
-     engrossa e troca de cor. Diferenca de categoria pede forma diferente, e nao so
-     intensidade — a mesma distincao que separa obstrucao de ruptura na Mesa. */
+  /* ── O ORCAMENTO GRANULAR — E ELE E UMA PECA, E NAO UM PAINEL ─────────────── Um controle
+     por programa, e cada linha carrega quatro coisas: o que e, o que o numero significa no
+     mundo, onde ele esta, e quanto custa no mes. */
   .dials {
     display: grid;
   }
@@ -225,17 +122,13 @@
     grid-template-columns: minmax(0, 1fr) minmax(140px, 1.1fr) auto;
     align-items: center;
     gap: var(--space-2) var(--space-3);
-    /* O PADDING VERTICAL SEGURA A LINHA, e o horizontal recuou para dar lugar a
-       marca de rito: numa peca o texto comeca na margem, e nao dentro de uma caixa. */
+    /* O PADDING VERTICAL SEGURA A LINHA, e o horizontal recuou para dar lugar a marca de
+       rito: numa peca o texto comeca na margem, e nao dentro de uma caixa. */
     padding: var(--space-2) 0 var(--space-2) var(--space-3);
-    /* ⚠ O FIO E A PECA, E NAO A LINHA. O que ele entrega nao e o traco — e a
-       REPETICAO dele, que e o que o ciclo 6 aprendeu com o fio sob as legendas.
-       E ELE E O MESMO DE FINANCAS, de proposito: a tela que ja lia como razao
-       contabil usa exatamente este valor entre linhas, e duas espessuras para o
-       mesmo papel seriam duas convencoes para uma coisa so. */
+    /* ⚠ O FIO E A PECA, E NAO A LINHA. */
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    /* A MARCA DO RITO MORA NA BORDA ESQUERDA, e ela e transparente enquanto o
-       movimento e caneta: uma linha que nao custa nada nao tem o que anunciar. */
+    /* A MARCA DO RITO MORA NA BORDA ESQUERDA, e ela e transparente enquanto o movimento e
+       caneta: uma linha que nao custa nada nao tem o que anunciar. */
     border-left: var(--rule) solid transparent;
     transition: border-color var(--dur-piece) linear;
   }
@@ -268,9 +161,7 @@
     white-space: nowrap;
   }
 
-  /* A UNIDADE E O QUE IMPEDE O CONTROLE DE SER ABSTRATO. "66" nao diz nada;
-     "66 · leitos, UTIs e cirurgias contratadas" diz o que o jogador esta
-     movendo, e e a diferenca entre escrever orcamento e girar um numero. */
+  /* A UNIDADE E O QUE IMPEDE O CONTROLE DE SER ABSTRATO. */
   .dial__unit {
     font-size: var(--text-note);
     color: var(--ink-dim);
@@ -283,12 +174,7 @@
     width: 100%;
   }
 
-  /* ⚠ AS TRES COLUNAS SAO FIXAS, e e isso que faz a peca ler como peca.
-     Ate 16/08/2026 a terceira era `minmax(72px, auto)`, entao a largura dela mudava
-     de linha para linha — "piso 59" e um selo de EMENDA nao ocupam o mesmo espaco —,
-     e cada linha terminava onde o texto dela tinha acabado. Uma tabela em que os
-     valores se alinham le como documento; uma em que cada linha para num lugar le
-     como uma lista de componentes empilhados, que e exatamente a queixa. */
+  /* ⚠ AS TRES COLUNAS SAO FIXAS, e e isso que faz a peca ler como peca. */
   .dial__read {
     display: grid;
     grid-template-columns: 3ch 9ch 84px;
@@ -313,50 +199,25 @@
     white-space: nowrap;
   }
 
-  /* NO CELULAR A LINHA VIRA FILEIRAS. Trinta controles num aparelho de 390px com
-     o slider espremido em 60px poriam o passo de um ponto fora do alcance do
-     polegar — e o passo e a decisao. */
-  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
-     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
-     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
-     desktop; eu quero a perfeição no desktop, perfeição mesmo".
+  /* NO CELULAR A LINHA VIRA FILEIRAS.
+     Trinta controles num aparelho de 390px com o slider espremido em 60px poriam o passo de
+     um ponto fora do alcance do polegar — e o passo e a decisao. */
+  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
+     rolar.
+     O corte para em 640/720px, que é território de telefone. */
 
-     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
-     de rolar. Foi o corte que permitiu a tela fechar na dobra.
-
-     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
-     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
-
-  /* ── AS LEIS DA AREA ────────────────────────────────────────────────────────
-     Mesma pastilha do controle de orcamento, e de proposito: mudar quanto se
-     gasta e mudar quanto a lei OBRIGA a gastar sao o mesmo gesto com precos
-     diferentes, e uma forma diferente aqui sugeriria que sao naturezas
-     diferentes de coisa.
-
-     O QUE MUDA E A LINHA EM VOTACAO. Enquanto a faixa e a vigente, ela e uma
-     leitura calma; movida, ela vira um texto que precisa de plenario — e recebe a
-     mesma tinta ambar que a acao em pauta recebe na lista, pelo mesmo motivo. */
+  /* ── AS LEIS DA AREA ──────────────────────────────────────────────────────── Mesma
+     pastilha do controle de orcamento, e de proposito: mudar quanto se gasta e mudar quanto a
+     lei OBRIGA a gastar sao o mesmo gesto com precos diferentes, e uma forma diferente aqui
+     sugeriria que sao naturezas diferentes de coisa. */
   .laws {
     display: grid;
     gap: var(--space-2);
   }
 
-  /* ── A LEI É DE PAPEL, e não de vidro ───────────────────────────────────────
-     ⚠ É AQUI QUE A SEGUNDA SUBSTÂNCIA APARECE, e este bloco é o único lugar do jogo
-     que a tem hoje. A razão está em `00-tokens.css`: uma lei não é uma superfície
-     da máquina do Estado — é o registro que a máquina produz. Desenhada com o mesmo
-     vidro do painel, ela lê como mais uma linha de configuração; e o bloco logo
-     acima dela, o do orçamento, É configuração. As duas coisas estavam idênticas.
-
-     O CANTO QUASE RETO acompanha o selo do rito, e pela mesma razão: tudo o mais
-     nesta interface é arredondado, então um canto duro lê como outra natureza de
-     coisa antes de qualquer palavra ser lida.
-
-     ⚠ O `data-moved` MANTÉM O ÂMBAR, e não ganha um tom de papel próprio. Ele não
-     diz "isto é uma lei" — diz "você mexeu nisto e ainda não pagou por isso", que é
-     estado de RASCUNHO e pertence ao vocabulário do controle, não ao do documento.
-     Duas linguagens na mesma linha é o que este arquivo inteiro evita. */
+  /* ── A LEI É DE PAPEL, e não de vidro ─────────────────────────────────────── ⚠ É AQUI QUE
+     A SEGUNDA SUBSTÂNCIA APARECE, e este bloco é o único lugar do jogo que a tem hoje. */
   .law {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(120px, 0.9fr) minmax(0, 1.1fr);
@@ -368,19 +229,14 @@
   }
 
   .law[data-moved="true"] {
-    /* A TINTA DO RASCUNHO ENTRA COMO CAMADA, e nao como cor misturada: `color-mix`
-       diverge de `rgba` em 1/255 na tela, e a guarda de tokens cobra isso. Um
-       gradiente de uma parada so e a forma que o projeto ja usa para deitar cor
-       sobre superficie sem trocar a superficie. */
+    /* A TINTA DO RASCUNHO ENTRA COMO CAMADA, e nao como cor misturada: `color-mix` diverge de
+       `rgba` em 1/255 na tela, e a guarda de tokens cobra isso. */
     background-image: linear-gradient(rgba(var(--brand-rgb), 0.16), rgba(var(--brand-rgb), 0.16));
     box-shadow: inset 2px 0 0 var(--brand);
   }
 
-  /* ⚠ O NOME DA LEI EM SERIFA, e é a regra tipográfica do ciclo 5 aplicada onde ela
-     mais importa: serifa é texto de REGISTRO, sans é valor MEDIDO. Este bloco é o
-     único da tela em que as duas convivem numa linha — o nome da norma é registro,
-     e "obriga 59" é medição —, e por isso ele é o melhor lugar para a regra ser
-     vista funcionando. */
+  /* ⚠ O NOME DA LEI EM SERIFA, e é a regra tipográfica do ciclo 5 aplicada onde ela mais
+     importa: serifa é texto de REGISTRO, sans é valor MEDIDO. */
   .law__name {
     font-family: var(--font-record);
     font-weight: 600;
@@ -390,9 +246,9 @@
     white-space: nowrap;
   }
 
-  /* OS DOIS CONTROLES EMPILHADOS, e nao lado a lado: um piso e um teto sao os
-     dois extremos da MESMA faixa, e ve-los um sobre o outro deixa a distancia
-     entre eles legivel de relance. */
+  /* OS DOIS CONTROLES EMPILHADOS, e nao lado a lado: um piso e um teto sao os dois extremos
+     da MESMA faixa, e ve-los um sobre o outro deixa a distancia entre eles legivel de
+     relance. */
   .law__band {
     display: grid;
     gap: 2px;
@@ -402,10 +258,7 @@
     width: 100%;
   }
 
-  /* AS LEITURAS DA LINHA HERDAM A TINTA DO PAPEL, e não a da tela. Um cinza
-     calibrado para vidro escuro fica turvo sobre pergaminho: cor que é função de um
-     fundo precisa ser revista quando o fundo muda — ela é consequência, não
-     escolha. É a mesma nota que o rótulo da faixa de contexto já carregava. */
+  /* AS LEITURAS DA LINHA HERDAM A TINTA DO PAPEL, e não a da tela. */
   .law__read {
     display: flex;
     align-items: baseline;
@@ -424,19 +277,10 @@
     color: rgba(var(--paper-ink-rgb), 0.58);
   }
 
-  /* QUEM PROTEGE A FAIXA nao e uma etiqueta de acao — e uma propriedade da norma,
-     e por isso ela nao usa a pastilha de instrumento. Ela so aparece enquanto a
-     lei esta parada; movida, o lugar passa a ser do rito que ela vai custar.
-
+  /* QUEM PROTEGE A FAIXA nao e uma etiqueta de acao — e uma propriedade da norma, e por isso
+     ela nao usa a pastilha de instrumento.
      ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA APAGAVA A TINTA DE PAPEL DA PRIMEIRA — medido e
-     consertado em 22/08/2026. Uma declarava `rgba(var(--paper-ink-rgb), 0.62)` e a outra,
-     sete linhas abaixo, `var(--ink-dim)`. Mesma especificidade, e a ultima vence: a
-     etiqueta saia com o CINZA DO VIDRO impresso sobre pergaminho.
-
-     ⚠ E ISSO NAO E DETALHE DE TOM — e a regra que a prosa dos tokens escreve com todas as
-     letras: "um cinza calibrado para vidro escuro fica turvo sobre pergaminho; cor que e
-     funcao de um fundo e consequencia, e nao escolha". `--paper-ink-rgb` existe exatamente
-     por isso, e a primeira regra estava certa. */
+     consertado . */
   .law__guard {
     font-family: var(--font-display);
     font-size: var(--text-label);
@@ -446,21 +290,12 @@
     white-space: nowrap;
   }
 
-  /* ── ALOCAR ─────────────────────────────────────────────────────────────────
-     Controle a esquerda, leitura a direita, e a leitura NAO fica embaixo do
-     controle: quem arrasta cobre com a mao o que estiver abaixo do dedo, e o
-     numero que muda e justamente o que ele esta tentando ler. */
-  /* ⚠ `.allot` SAIU DAQUI em 16/08/2026, acusada pela guarda `orphans` — e ela e o
-     caso exato da terceira prova sintetica da guarda: O BLOCO MORREU E OS ELEMENTOS
-     SOBREVIVERAM. `.allot__pool` e `.allot__projection` continuam vivos e moram
-     direto dentro de `.area__block`; o contêiner de duas colunas que os agrupava
-     deixou de ser montado e ninguem reparou. A prosa dele dizia algo verdadeiro — "a
-     leitura nao fica embaixo do controle, porque quem arrasta cobre com a mao o que
-     estiver abaixo do dedo" —, e essa razao sobreviveu na ORDEM dos blocos. */
+  /* ── ALOCAR ───────────────────────────────────────────────────────────────── Controle a
+     esquerda, leitura a direita, e a leitura NAO fica embaixo do controle: quem arrasta cobre
+     com a mao o que estiver abaixo do dedo, e o numero que muda e justamente o que ele esta
+     tentando ler. */
 
-  /* `61 → 63` em cima e `parado: 60` embaixo. O contrafactual e a metade que
-     importa: sem ele o jogador ve o indice subir e conclui que investir
-     "funciona"; com ele, ve quanto do dinheiro esta so segurando o decaimento. */
+  /* `61 → 63` em cima e `parado: 60` embaixo. */
   .allot__projection {
     display: flex;
     flex-direction: column;
@@ -474,21 +309,11 @@
     color: var(--ink-dim);
   }
 
-  /* A LINHA QUE FAZ A TELA VIRAR DECISAO: o que sobra no mes e o que ja foi
-     prometido as outras areas. Sem ela seriam seis controles independentes, e
-     mover um nao significaria nada. */
-  /* ── A BOLSA, E ELA E A FRASE MAIS IMPORTANTE DA TELA ───────────────────────
-     "do mes R$ 9,5 bi disponiveis · R$ 13,5 bi ja comprometidos nas outras areas" e
-     o cobertor curto do orcamento inteiro dito em uma linha. Ela era texto solto no
-     escuro, abaixo dos controles, e uma revisao externa a leu como rodape esquecido.
-
-     AGORA ELA E UMA FITA: superficie propria, fio de latao em cima e embaixo, e
-     versalete espacado. Nao e enfeite — e o que a distingue de uma legenda e a poe
-     no mesmo peso das decisoes que ela governa.
-
-     ⚠ A COR CONTINUA VINDO DO `data-fits`, e nao de um fundo de alarme. Um banner
-     vermelho solido quando o mes estoura gritaria mais alto que o proprio numero, e
-     a tela ja diz o estouro no valor. Fita e moldura, e nao semaforo. */
+  /* A LINHA QUE FAZ A TELA VIRAR DECISAO: o que sobra no mes e o que ja foi prometido as
+     outras areas. */
+  /* ── A BOLSA, E ELA E A FRASE MAIS IMPORTANTE DA TELA ─────────────────────── "do mes R$
+     9,5 bi disponiveis · R$ 13,5 bi ja comprometidos nas outras areas" e o cobertor curto do
+     orcamento inteiro dito em uma linha. */
   .allot__pool {
     padding: var(--space-2) var(--space-3);
     border-top: 1px solid rgba(var(--brand-rgb), 0.28);
@@ -504,20 +329,7 @@
     font-weight: 700;
   }
 
-  /* ── PAUTAR E VIGENTE ───────────────────────────────────────────────────────
-     A mesma linha nas duas listas, com uma diferenca de tinta: o que ja esta em
-     vigor nao se pressiona, entao ele perde o botao e recua um tom.
-
-     AS COLUNAS SAO FIXAS em `ch` para os numeros baterem entre as linhas —
-     coluna de numero que se alinha sozinha por linha deixa de ser coluna, e a
-     comparacao de relance e o unico motivo de a lista ser uma lista. */
-
-  /* ⚠ A MEDIA QUERY DE `.allot` SAIU JUNTO em 16/08/2026, e ela e a metade que a
-     varredura a mao teria deixado para tras: quem apaga uma regra procura pelo nome
-     no bloco principal e nao dentro de um `@media` cinquenta linhas abaixo. A guarda
-     acusou as duas, e foi preciso duas passadas — a primeira consertou so a de cima.
-
-     O que a prosa dela dizia continua verdadeiro sobre a tabela e sobre nada mais:
-     "a tabela rola por dentro, e nada e escondido — esconder para caber e mentir por
-     omissao". Quem cumpre isso hoje e `.dial`, e a regra dele esta acima. */
+  /* ── PAUTAR E VIGENTE ─────────────────────────────────────────────────────── A mesma linha
+     nas duas listas, com uma diferenca de tinta: o que ja esta em vigor nao se pressiona,
+     entao ele perde o botao e recua um tom. */
 }

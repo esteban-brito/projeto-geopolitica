@@ -1,16 +1,6 @@
-/* SUITE · O ELENCO — a republica ganha gente, e a gente lembra.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   O que esta suite cobra nao e "os nomes saem bonitos": e que gerar gente da
-   semente nao quebre nenhuma das quatro coisas que o projeto inteiro se apoia —
-   o plenario fechar, o mandato se refazer, o motor nao sortear por fora e o
-   catalogo mandar no que se gera.
-
-   ⚠ A PROVA MAIS IMPORTANTE E A DO PLENARIO, e ela existe por um defeito medido:
-   a primeira versao nao normalizava os alcances, quatro pessoas do Centrao levavam
-   1,96 da propria bancada, e a Camara fechava com 730 cadeiras. Toda maioria do
-   jogo passaria a ser medida contra um plenario que nao existe — e nenhuma tela
-   denunciaria, porque cada bancada estava certa sozinha. */
+/* ⚠ A PROVA MAIS IMPORTANTE E A DO PLENARIO, e ela existe por um defeito medido: a primeira
+   versao nao normalizava os alcances, quatro pessoas do Centrao levavam 1,96 da propria
+   bancada, e a Camara fechava com 730 cadeiras. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -34,15 +24,11 @@ const castOf = seed =>
     ambitions: AMBITIONS,
   });
 
-/* MUITAS SEMENTES, e nao uma. E o padrao que o projeto ja usa para dado — gerar e
-   VALIDAR —, e e a resposta ao risco R4 da auditoria: o remedio para a semente
-   azarada nao e uma distribuicao mais bonita, e uma propriedade que valha para
-   TODA semente. */
+/* MUITAS SEMENTES, e nao uma. */
 const anySeed = fc.integer({ min: 0, max: 4294967295 });
 
 test("O PLENARIO FECHA, em qualquer semente", () => {
-  /* A prova do defeito medido. Ela nao olha a soma dos alcances nem a formula: ela
-     olha a Camara, que e o que decide toda votacao do jogo. */
+  /* A prova do defeito medido. */
   fc.assert(
     fc.property(anySeed, seed => {
       const people = castOf(seed);
@@ -56,9 +42,7 @@ test("O PLENARIO FECHA, em qualquer semente", () => {
       const total = chamber.reduce((sum, bench) => sum + bench.seats, 0);
       assert.equal(total, SEATS, `a camara fechou com ${total} cadeiras`);
 
-      /* E NENHUMA BANCADA NEGATIVA. Um resto negativo passaria despercebido na
-         soma se outra bancada tivesse a mais, e o sintoma seria uma bancada que
-         vota contra o proprio tamanho. */
+      /* E NENHUMA BANCADA NEGATIVA. */
       for (const bench of chamber) {
         assert.ok(bench.seats > 0, `${bench.label} entrou com ${bench.seats} cadeiras`);
       }
@@ -68,9 +52,7 @@ test("O PLENARIO FECHA, em qualquer semente", () => {
 });
 
 test("SOBRA BLOCO EM TODA SEMENTE: o Congresso nao vira sete individuos", () => {
-  /* O teto de alcance existe para o bloco continuar existindo. Ele e o unico
-     adversario que nao se compra pessoa a pessoa, e um Congresso reduzido aos
-     lideres seria trocar um modelo grosso por um menor. */
+  /* O teto de alcance existe para o bloco continuar existindo. */
   fc.assert(
     fc.property(anySeed, seed => {
       const { benches: chamber } = benches({
@@ -90,11 +72,9 @@ test("SOBRA BLOCO EM TODA SEMENTE: o Congresso nao vira sete individuos", () => 
 });
 
 test("EXISTE CENTRO PARA GOVERNAR, e ninguem tem maioria sozinho", () => {
-  /* A propriedade que a auditoria externa pediu por outro caminho, e que responde
-     ao risco R4 sem precisar de distribuicao normal nenhuma: para TODA semente,
-     nenhuma bancada isolada decide o plenario, e ha centro suficiente para montar
-     uma maioria. Um Congresso em que uma bancada manda sozinha nao e uma partida
-     dificil — e uma partida sem jogo. */
+  /* A propriedade que a auditoria externa pediu por outro caminho, e que responde ao risco R4
+     sem precisar de distribuicao normal nenhuma: para TODA semente, nenhuma bancada isolada
+     decide o plenario, e ha centro suficiente para montar uma maioria. */
   fc.assert(
     fc.property(anySeed, seed => {
       const { benches: chamber } = benches({
@@ -112,22 +92,9 @@ test("EXISTE CENTRO PARA GOVERNAR, e ninguem tem maioria sozinho", () => {
         );
       }
 
-      /* ── "EXISTE CENTRO PARA GOVERNAR" PRECISOU DE UMA DEFINICAO ────────────
-         ⚠ A PRIMEIRA VERSAO SOMAVA QUEM ESTA ENTRE 35 E 75 no eixo economico e
-         exigia maioria. Ela falhou por 241 contra 257 — e falhou com razao: a
-         faixa era invencao da prova, e "centro" nao tem definicao no modelo. Um
-         numero digitado num teste vira, em duas sessoes, uma afirmacao sobre o
-         jogo que ninguem decidiu.
-
-         A traducao honesta de "da para governar" e outra: existe uma coalizao
-         CONTIGUA no eixo economico que soma maioria sem juntar os extremos. Ela se
-         calcula, nao se declara — ordena as bancadas e procura a janela mais
-         estreita que fecha 257.
-
-         O TETO DE 45 SAIU DE MEDICAO, e nao de gosto: em 400 sementes a janela
-         mais estreita ficou entre 15,6 e 31,8 pontos, contra 72 de distancia entre
-         a esquerda e a direita liberal. Ele afirma o que interessa — nunca e
-         preciso juntar os dois extremos — com folga para o catalogo se mexer. */
+      /* O TETO DE 45 SAIU DE MEDICAO, e nao de gosto: em 400 sementes a janela mais estreita
+         ficou entre 15,6 e 31,8 pontos, contra 72 de distancia entre a esquerda e a direita
+         liberal. */
       const sorted = [...chamber].sort((a, b) => a.economic - b.economic);
       let narrowest = Infinity;
 
@@ -156,8 +123,7 @@ test("EXISTE CENTRO PARA GOVERNAR, e ninguem tem maioria sozinho", () => {
 });
 
 test("A MESMA SEMENTE DA A MESMA GENTE, e sementes diferentes dao gente diferente", () => {
-  /* A regra que sustenta save, simulador e calibragem. E o outro lado dela: se
-     duas sementes produzissem o mesmo elenco, gerar seria teatro. */
+  /* A regra que sustenta save, simulador e calibragem. */
   assert.deepEqual(castOf(DEFAULT_SEED), castOf(DEFAULT_SEED));
 
   const names = new Set();
@@ -172,19 +138,9 @@ test("A MESMA SEMENTE DA A MESMA GENTE, e sementes diferentes dao gente diferent
 });
 
 test("NINGUEM E HOMONIMO na mesma partida, NEM DE PRIMEIRO NOME, NEM DE SOBRENOME", () => {
-  /* Dois sujeitos com o mesmo nome num Congresso de sete pessoas nao e sabor
-     local: e um defeito que o jogador lê como bug, e que a identidade por `id`
-     esconderia do motor mas nao dos olhos.
-
-     ⚠ E A PROVA COBRA POR PEDACO desde 16/08/2026, porque cobrando o nome INTEIRO
-     ela media a coisa errada: quando o vocabulario deixou de ter um andar social
-     so, a semente 7 produziu "Claudio Espindola" e "Claudio Itaparica", e a 42
-     produziu "Adriano Espindola" ao lado de "Eurico Espindola". Nomes completos
-     distintos, prova verde, e o jogador lendo dois Claudios na mesma lista.
-
-     Numa Camara de 513 dois Claudios sao verossimeis. Estas sao OITO PESSOAS COM
-     NOME — as unicas que o jogador precisa distinguir —, e a tela as cita lado a
-     lado. Verossimilhanca estatistica nao paga confusao de leitura. */
+  /* Dois sujeitos com o mesmo nome num Congresso de sete pessoas nao e sabor local: e um
+     defeito que o jogador lê como bug, e que a identidade por `id` esconderia do motor mas
+     nao dos olhos. */
   fc.assert(
     fc.property(anySeed, seed => {
       const names = castOf(seed).map(person => person.name);
@@ -204,9 +160,7 @@ test("NINGUEM E HOMONIMO na mesma partida, NEM DE PRIMEIRO NOME, NEM DE SOBRENOM
 });
 
 test("A PESSOA NASCE ONDE O BLOCO ESTA, e nao num ponto qualquer do plano", () => {
-  /* O que a mantem reconhecivel. Um lider da esquerda gerado no quadrante liberal
-     seria um personagem que o jogador nao consegue prever, e imprevisibilidade sem
-     legibilidade e ruido. O desvio maximo e o do arquetipo mais o ruido. */
+  /* O que a mantem reconhecivel. */
   fc.assert(
     fc.property(anySeed, seed => {
       for (const person of castOf(seed)) {
@@ -230,8 +184,8 @@ test("A PESSOA NASCE ONDE O BLOCO ESTA, e nao num ponto qualquer do plano", () =
 /* ═══ A MEMORIA ══════════════════════════════════════════════════════════════ */
 
 test("A TRAICAO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
-  /* Sem ela o jogo ensinaria que da para queimar alguem e comprar de volta pelo
-     mesmo preco — e ai a memoria seria um numero que anda, e nao uma relacao. */
+  /* Sem ela o jogo ensinaria que da para queimar alguem e comprar de volta pelo mesmo preco —
+     e ai a memoria seria um numero que anda, e nao uma relacao. */
   const people = castOf(DEFAULT_SEED);
   const blocs = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
   const nothing = Object.fromEntries(PARTIES.map(party => [party.id, 0]));
@@ -251,17 +205,7 @@ test("A TRAICAO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
     parameters: CATALOG.cast,
   });
 
-  /* ⚠ SO QUEM ARRASTA BANCADA ENTRA NA CONTA, e a exclusao e o modelo e nao uma
-     folga. `remember` escala pelo ALCANCE porque memoria e verba JA PAGA — e verba
-     vai para bancada, nao para pessoa. Quem nao arrasta ninguem nao recebe nada, e
-     portanto nao acumula nada: com alcance zero, favor e traicao valem os dois zero,
-     e a assimetria entre eles deixa de ter sobre o que falar.
-     Isto passou a importar em 15/08/2026, quando o chefe da Casa Civil entrou no
-     elenco com alcance zero de proposito — ele aconselha e nao vota. A afirmacao da
-     prova nao mudou; o que mudou foi de quem ela fala.
-     ⚠ E A CONSEQUENCIA FICA REGISTRADA: a memoria do conselheiro e estruturalmente
-     inerte. Hoje isso e inofensivo porque ninguem a lê; no dia em que ele ganhar
-     mecanica, ou ele ganha alcance ou a memoria dele precisa de outro caminho. */
+  /* ⚠ SO QUEM ARRASTA BANCADA ENTRA NA CONTA, e a exclusao e o modelo e nao uma folga. */
   const bench = people.filter(person => person.reach > 0);
   assert.ok(bench.length > 0, "nenhuma pessoa arrasta bancada");
 
@@ -278,9 +222,9 @@ test("A TRAICAO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
 });
 
 test("A MEMORIA NAO ESTOURA O TETO, em nenhum dos dois lados", () => {
-  /* Ela e um estoque com limite, e o limite existe para o credito nao virar uma
-     segunda moeda infinita: sem teto, dois anos de verba cheia comprariam qualquer
-     votacao para sempre, e a barganha do quinto ano deixaria de existir. */
+  /* Ela e um estoque com limite, e o limite existe para o credito nao virar uma segunda moeda
+     infinita: sem teto, dois anos de verba cheia comprariam qualquer votacao para sempre, e a
+     barganha do quinto ano deixaria de existir. */
   const people = castOf(DEFAULT_SEED);
   const full = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
   const none = Object.fromEntries(PARTIES.map(party => [party.id, 0]));
@@ -313,10 +257,8 @@ test("A MEMORIA NAO ESTOURA O TETO, em nenhum dos dois lados", () => {
 });
 
 test("A MEMORIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
-  /* O credito chega a ECLUSA como dinheiro ja pago — e por isso o motor de votacao
-     continua sem saber que o elenco existe. E a ambicao de sucessao desconta a
-     verba reconhecida: quem disputa a vaga aceita o dinheiro e continua querendo o
-     cargo. */
+  /* O credito chega a ECLUSA como dinheiro ja pago — e por isso o motor de votacao continua
+     sem saber que o elenco existe. */
   const people = castOf(DEFAULT_SEED);
   const funding = Object.fromEntries(PARTIES.map(party => [party.id, 0.5]));
 
@@ -353,10 +295,8 @@ test("A MEMORIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
 });
 
 test("O TURNO E A TELA VEEM A MESMA CAMARA", () => {
-  /* A regra central do projeto, aplicada ao elenco: a previsao da tela e o
-     plenario do turno tem de sair da MESMA montagem. Montada dos dois lados, o
-     lider apareceria com um preco na Mesa e outro na votacao — e a divergencia so
-     apareceria no mes em que a memoria dele virasse o placar. */
+  /* A regra central do projeto, aplicada ao elenco: a previsao da tela e o plenario do turno
+     tem de sair da MESMA montagem. */
   const state = createState(7);
   const orders = { funding: Object.fromEntries(PARTIES.map(party => [party.id, 0.3])) };
 

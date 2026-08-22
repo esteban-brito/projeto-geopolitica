@@ -1,30 +1,8 @@
 /* O SIMULADOR DE MANDATO — o jogo rodando sem tela nenhuma.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   POR QUE ELE EXISTE ANTES DA INTERFACE. A calibragem de hoje foi girada contra
-   os testes: os limiares da votacao e os `threat` do catalogo foram escolhidos
-   ate as provas ficarem verdes, e prova verde diz que a regra vale, nao que o
-   numero e bom. A pergunta que faltava instrumento e outra — "como esta partida
-   se comporta ao longo de 48 meses?" —, e ela nao se responde apertando um botao
-   quarenta e oito vezes no navegador.
-
-   Entao aqui o mandato inteiro roda em milissegundos, sob uma politica declarada,
-   e devolve a serie temporal. O que se enxerga com isso e o que teste de
-   propriedade nao pega: em que mes a armadilha fiscal fecha, quantos meses de
-   verba a base aguenta, se existe uma politica dominante que ganha tudo sem
-   escolher nada.
-
-   ── AS POLITICAS SAO INSTRUMENTO, e nao adversario ───────────────────────────
    Nenhuma delas quer ser um jogador competente: elas sao SONDAS, cada uma
    exagerando um comportamento para isolar um efeito. `parado` mede a queda
    natural; `promessa` mede a traicao; a distancia entre `agenda` e `promessa` e o
-   preco da imprudencia fiscal, em meses de base.
-
-   ── USO ──────────────────────────────────────────────────────────────────────
-     node tools/simulate.mjs
-     node tools/simulate.mjs --policy promessa --months 48
-     node tools/simulate.mjs --seed 7 --shock 0.02
-     node tools/simulate.mjs --policy agenda --quiet          (so o resumo) */
+   preco da imprudencia fiscal, em meses de base. */
 
 import { parseArgs } from "node:util";
 import { costOf, discretionaryRoom, forecast, playMonth } from "../src/application/turn.mjs";
@@ -40,29 +18,8 @@ import { DEFAULT_SEED, createState, monthLabel } from "../src/state/state.mjs";
 
 /* ── AS POLITICAS ─────────────────────────────────────────────────────────── */
 
-/* Quanto de verba, por mes, apenas EMPATA o decaimento da lealdade. Ele nao e
-   digitado aqui: sai da razao entre as duas constantes do congresso, e por isso
-   continua certo quando alguem as recalibrar. Se fosse um numero solto, a
-   politica `base` viraria mentira silenciosa no dia seguinte a calibragem. */
+/* Quanto de verba, por mes, apenas EMPATA o decaimento da lealdade. */
 const UPKEEP = 1.5 / 12;
-
-/* ── O QUE "NAO FAZER NADA" PASSOU A SIGNIFICAR ─────────────────────────────
-   A distincao nasceu com o orcamento granular, e ela e a razao de este arquivo
-   ter sido reescrito em 13/08/2026. Antes, `allocation: {}` queria dizer "gastei
-   zero" — o governo nao alocava e o pais apodrecia de graca.
-
-   Agora nao existe "gastar zero" sem decidir. A configuracao HERDADA e um gasto,
-   e um gasto grande: o antecessor deixou trinta e um programas rodando, e mante-
-   los custa mais do que o teto do arcabouco abre. Entao ha DOIS controles, e nao
-   um, porque sao duas perguntas diferentes:
-
-     `herdado` — o presidente nao toca em nada. Mede o que o pais faz sozinho, e
-                 mede tambem o rateio mordendo por aritmetica pura;
-     `piso`    — o presidente corta tudo ate o minimo legal. E o contrafactual
-                 mais barato que existe sem pedir voto a ninguem, e a diferenca
-                 entre os dois e o tamanho real da margem de manobra.
-
-   Confundir os dois era o que a versao anterior fazia sem saber. */
 
 /** Todo programa no piso: o minimo que a lei permite sem pedir voto a ninguem. */
 function atFloor() {
@@ -71,9 +28,6 @@ function atFloor() {
 
 /**
  * A configuracao vigente com a parte DISCRICIONARIA encolhida por um fator.
- *
- * Ela encolhe so o que esta acima do piso, porque so isso e escolha: o resto e a
- * lei, e a lei nao se aperta com regua — se aperta com voto.
  *
  * @param {GameState} state
  * @param {number} share de 0 (tudo no piso) a 1 (mantem como esta)
@@ -89,10 +43,6 @@ function squeeze(state, share) {
 
 /**
  * O MAIOR `share` QUE CABE, deixando `reserve` bilhoes livres para o Congresso.
- *
- * Busca binaria porque a relacao entre o fator e o custo e linear mas o teto nao
- * e: `discretionaryRoom` depende da posicao fiscal, que nao muda com o fator.
- * Vinte passos dao precisao de um milesimo, e sao baratos.
  *
  * @param {GameState} state
  * @param {number} reserve
@@ -133,11 +83,6 @@ function everyone(level) {
 /**
  * O maior nivel UNIFORME que o mes consegue pagar de verdade.
  *
- * Ele existe para separar duas coisas que a primeira simulacao misturava: uma
- * politica que promete 5,8 e paga 0,3 esta medindo a propria imprudencia, e nao
- * o aperto. Governo prudente promete o que cabe; medir a traicao e trabalho da
- * politica que existe para isso.
- *
  * @param {GameState} state
  */
 function affordableLevel(state) {
@@ -147,37 +92,11 @@ function affordableLevel(state) {
 }
 
 /**
- * O menor nivel de verba UNIFORME que a previsao diz ser suficiente.
+ * E exatamente a camara fantasma que foi arrancada da fachada em 15/08 por inverter 27,2% dos
+ * vereditos anunciados: o turno vota com as ONZE ⚠ E AQUI O PRECO FOI MAIOR QUE NA TELA,
+ * porque quem errava era o INSTRUMENTO DE CALIBRAGEM.
  *
- * ⚠ UNIFORME E BURRO DE PROPOSITO: ele paga tambem a bancada que jamais votaria
- * a favor, e um jogador humano nao faz isso. A politica nao existe para jogar
- * bem — existe para produzir uma serie comparavel entre execucoes. Uma politica
- * que negociasse bancada a bancada mediria a esperteza dela, e nao o modelo.
- *
- * ⚠ E ELA PERGUNTA A `forecast`, QUE E A PORTA DA TELA — desde 16/08/2026, e o
- * conserto e a QUINTA ocorrencia da familia mais cara deste projeto: DOIS LUGARES
- * MONTANDO A MESMA PERGUNTA.
- *
- * Ate aqui esta funcao chamava `whipCount` a mao, com `CATALOG.parties` — os QUATRO
- * blocos — e SEM a rua. E exatamente a camara fantasma que foi arrancada da fachada
- * em 15/08 por inverter 27,2% dos vereditos anunciados: o turno vota com as ONZE
  * bancadas do ELENCO, com a verba ja creditada de memoria e com `standing` dentro.
- *
- * ⚠ E AQUI O PRECO FOI MAIOR QUE NA TELA, porque quem errava era o INSTRUMENTO DE
- * CALIBRAGEM. A politica calculava o preco contra um Congresso que nao existe,
- * concluia que precisava de verba alta, prometia — e o rateio nao honrava. A memoria
- * do presidente da Camara despencava, ele parava de pautar, e a serie de 48 meses
- * media isso e chamava de "legislar e caro".
- *
- * Medido no funil da tramitacao, 48 meses, corte de 6 pontos abaixo do piso:
- *
- *     verba 0     48 escritos · 17 pautados · 25 mortos na gaveta ·  0 aprovados
- *     verba 0,25   8 escritos ·  7 pautados ·  0 mortos na gaveta ·  2 aprovados
- *     verba 1     48 escritos ·  2 pautados · 40 mortos na gaveta ·  0 aprovados
- *
- * PAGAR MAIS PIORA, e muito. Um instrumento que superestima o preco produz o pior
- * dos mundos, e a serie inteira do projeto foi lida atraves dele.
- *
  * @param {GameState} state
  * @param {Record<string, number>} requested o orcamento que este texto pede
  * @returns {number | null} nulo quando nem verba cheia aprova
@@ -187,8 +106,8 @@ function priceOfPassage(state, requested) {
     const funding = everyone(Math.min(1, level));
     const seen = forecast(state, { levels: requested, funding }, CATALOG);
 
-    /* SEM PAUTA NAO HA PRECO, e zero e a resposta certa: um orcamento que nao move
-       nada nao precisa de voto nenhum. */
+    /* SEM PAUTA NAO HA PRECO, e zero e a resposta certa: um orcamento que nao move nada nao
+       precisa de voto nenhum. */
     if (!seen.agenda.proposal || seen.agenda.quorum <= 0) return 0;
     if (seen.whip && seen.whip.votes >= seen.agenda.quorum) return Math.min(1, level);
   }
@@ -197,12 +116,6 @@ function priceOfPassage(state, requested) {
 
 /**
  * A PROXIMA REFORMA DA FILA — o programa cujo piso ainda nao foi furado.
- *
- * ⚠ ELA SUBSTITUIU `nextBill`, e a diferenca e o ciclo inteiro: nao ha mais fila
- * de pautas prontas. Uma "reforma" aqui e uma proposta COMPOSTA de um movimento
- * so — furar o piso de um programa —, montada pela politica na hora. A fila e a
- * ordem do catalogo apenas porque a politica precisa de alguma ordem estavel para
- * a serie ser comparavel entre execucoes.
  *
  * @param {Memory} memory
  */
@@ -222,26 +135,13 @@ function reformOf(program, depth = 12) {
 
 /** @type {Record<string, Policy>} */
 const POLICIES = {
-  /* O PRESIDENTE AUSENTE. Nao toca em controle nenhum e nao paga ninguem: o
-     orcamento do antecessor segue rodando, mes apos mes, ate o rateio decidir
-     sozinho o que cortar.
-
-     ⚠ ESTA E A POLITICA QUE MEDE O ACHADO DE 13/08/2026. Com o catalogo real, a
-     configuracao herdada custa MAIS do que o teto abre — entao esta politica nao
-     e passiva coisa nenhuma: ela e um governo prometendo um pais que nao cabe, e
-     a serie mostra o contingenciamento comendo por conta propria. */
+  /* O PRESIDENTE AUSENTE. */
   herdado: () => ({ funding: everyone(0) }),
 
-  /* O CORTE TOTAL. Todo programa no minimo legal, ninguem pago. E o contrafactual
-     mais barato que existe sem pedir voto, e a distancia entre ele e `herdado` e
-     a margem de manobra real de um presidente brasileiro — em bilhoes e em
-     pontos de indice. */
+  /* O CORTE TOTAL. */
   piso: () => ({ levels: atFloor(), funding: everyone(0) }),
 
-  /* SO A MANUTENCAO. Corta o orcamento ate ele caber, e usa a folga para segurar
-     a lealdade onde ela esta. Mede o custo de simplesmente CONTINUAR governando —
-     e o mes em que esse custo deixa de caber e a resposta que este simulador foi
-     feito para dar. */
+  /* SO A MANUTENCAO. */
   base: state => {
     const reserve = costOf(everyone(UPKEEP), CATALOG.parties, CATALOG.fiscal.seatPrice);
     return {
@@ -250,17 +150,9 @@ const POLICIES = {
     };
   },
 
-  /* O GOVERNO PRUDENTE. Aperta o orcamento ate sobrar caixa, e usa o que sobrou
-     para comprar a PRIMEIRA reforma da fila que a previsao aprova e que cabe. Se
-     nenhuma couber, recua para a manutencao.
-
-     VARRER A FILA INTEIRA, e nao parar na primeira, foi correcao que a propria
-     simulacao cobrou numa sessao anterior: parando na primeira, o governo travava
-     na pauta cara e ficava vinte e tres meses sem pautar NADA com o caixa
-     sobrando. Uma politica que trava mede a si mesma, e nao o modelo. */
+  /* O GOVERNO PRUDENTE. */
   agenda: (state, memory) => {
-    /* A MANUTENCAO VEM PRIMEIRO, e o que sobra e que compra voto. E a ordem que
-       um governo prudente segue: hospital aberto antes de emenda paga. */
+    /* A MANUTENCAO VEM PRIMEIRO, e o que sobra e que compra voto. */
     const reserve = costOf(everyone(UPKEEP), CATALOG.parties, CATALOG.fiscal.seatPrice);
     const share = affordableShare(state, reserve);
     const levels = squeeze(state, share);
@@ -286,27 +178,7 @@ const POLICIES = {
     return { levels, funding: everyone(Math.min(UPKEEP, affordableLevel(state))) };
   },
 
-  /* O EXPLORADOR. Ele nao governa: ele tenta QUEBRAR o modelo, e nasceu do risco
-     numero um do ciclo 4 — "o jogador nao pode conseguir criar dinheiro infinito
-     empilhando uma excecao sobre um teto de gastos".
-
-     A jogada e a desregulamentacao total, todo mes: derruba TODO piso a zero,
-     levanta TODO teto a cem, poe todo programa em intensidade maxima e promete
-     verba cheia a todas as bancadas. Piso a zero e o ataque de verdade — ele joga
-     gasto do OBRIGATORIO para o DISCRICIONARIO, e discricionario maior e
-     `allowance` maior. Se houver um caminho em que a lei fabrica caixa, e por aqui
-     que ele aparece.
-
-     ⚠ ELE E CARO DE PROPOSITO E NAO DEVE PASSAR. Um texto que derruba trinta e
-     oito pisos, seis deles constitucionais, cobra 308 votos com verba cheia — e a
-     serie dele mede exatamente isso: quantas vezes o Congresso deixa. O mes em que
-     esta politica APROVAR alguma coisa e o mes que precisa ser olhado.
-
-     ⚠ O QUE ELE AINDA NAO ALCANCA, declarado: gatilho, excecao e revogacao. Elas
-     existem no motor e sao provadas em `tests/suites/norms.mjs`, que aplica pilhas
-     adversariais direto no estado — um adversario MAIS forte que este, porque nao
-     paga voto nenhum. O canal por onde o jogador escreveria esses modificadores e
-     a tramitacao, e ela e a Parte 3. */
+  /* O EXPLORADOR. */
   explorador: () => ({
     levels: Object.fromEntries(CATALOG.programs.map(program => [program.id, 100])),
     bands: Object.fromEntries(
@@ -315,27 +187,12 @@ const POLICIES = {
     funding: everyone(1),
   }),
 
-  /* ── AS DUAS SONDAS DA ESCOLHA ───────────────────────────────────────────────
-     ⚠ ELAS NASCERAM DO ACHADO MAIS CONSTRANGEDOR DE 21/08/2026, e ele e sobre o
-     INSTRUMENTO e nao sobre o jogo: as seis politicas que existiam **espalham tudo por
-     igual**, nos dois eixos — verba dividida entre as oito areas e emenda oferecida as
-     onze bancadas na mesma medida. Nenhuma delas ESCOLHE.
+  /* ── AS DUAS SONDAS DA ESCOLHA ─────────────────────────────────────────────── ⚠ ELAS
+     NASCERAM DO ACHADO MAIS CONSTRANGEDOR DE, e ele e sobre o INSTRUMENTO e nao sobre o jogo:
+     as seis politicas que existiam **espalham tudo por igual**, nos dois eixos — verba
+     dividida entre as oito areas e emenda oferecida as onze bancadas na mesma medida. */
 
-     E escolher e o jogo. Medido a mao, fora do simulador:
-
-       · concentrando verba numa area so, a Saude vai de 61 a 71,5 em 48 meses — e a
-         Industria desaba de 48 a 15 e a divida vai a 93% do PIB, que e o preco;
-       · pagando emenda a UMA bancada so, a amplitude de lealdade entre as onze vai a
-         66 pontos.
-
-     ⚠ E EU QUASE REGISTREI OS DOIS COMO DEFEITO DO MODELO — "o pais e inerte", "as
-     bancadas nao diferenciam" — antes de testar. As duas frases estavam erradas pelo
-     mesmo motivo: o instrumento nunca tinha feito a pergunta. Uma sonda que espalha mede
-     o espalhamento, e conclui que o mundo e plano. */
-
-  /* O CONCENTRADOR. Poe uma area em intensidade cheia e todas as outras no piso, e
-     troca de area a cada doze meses. E a sonda do "eu escolhi": ela mede quanto o pais
-     responde a quem aposta, e quanto custa a aposta nas areas abandonadas. */
+  /* O CONCENTRADOR. */
   concentra: state => {
     const alvos = ["health", "education", "industry", "security"];
     const alvo = alvos[Math.floor((state.month - 2) / 12) % alvos.length];
@@ -347,10 +204,7 @@ const POLICIES = {
     };
   },
 
-  /* OS FAVORITOS. Paga emenda cheia as TRES maiores bancadas e nada as outras oito.
-     ⚠ E TRES E O NUMERO DA MAIORIA, e nao um gosto: as tres maiores somam perto de 257
-     cadeiras, entao esta sonda mede a jogada que um governo real faz — comprar o minimo
-     que aprova, e deixar o resto falando. */
+  /* OS FAVORITOS. */
   favoritos: state => {
     const escolhidas = [...CATALOG.parties].sort((a, b) => b.seats - a.seats).slice(0, 3);
     const level = affordableLevel(state);
@@ -360,22 +214,9 @@ const POLICIES = {
     };
   },
 
-  /* O LEGISLADOR — e ele mede o NORTE DO PROJETO, que nenhuma outra sonda alcanca.
-     ⚠ ELE NASCEU DE UMA MEDICAO EM 21/08/2026, e ela e desconfortavel: as seis politicas
-     que existiam terminam um mandato de 48 meses com **ZERO normas escritas**. Todas.
-     Cinco delas so movem NIVEL — que e caneta, e caneta nao vira lei —, e a sexta, o
-     explorador, escreve uma lei impossivel de propósito e nunca chega a voto.
-
-     O resultado e que "a lei vira texto", que este projeto chama de norte desde 14/08,
-     nunca tinha sido rodada por 48 meses. Medido a mao, fora do simulador: uma lei
-     MODESTA — baixar um piso em cinco pontos — atravessa a tramitacao inteira em quatro
-     meses, gaveta → Mesa → relator → plenario → norma. **A mecanica funciona, e era
-     invisivel para o unico instrumento que olha o mandato inteiro.**
-
-     ⚠ E ELE PEDE UM PISO DE CADA VEZ, e nao trinta e oito: o explorador ja mede o pacote
-     impossivel, e uma segunda sonda medindo a mesma coisa nao acrescenta nada. O que
-     falta medir e o caminho que o jogador de verdade percorre — uma emenda por vez, paga
-     com o que sobra. */
+  /* Medido a mao, fora do simulador: uma lei MODESTA — baixar um piso em cinco pontos —
+     atravessa a tramitacao inteira em quatro meses, gaveta → Mesa → relator → plenario →
+     norma. */
   legislador: (state, memory) => {
     const program = CATALOG.programs.find(
       item => item.floor > 0 && !memory.passed.has(item.id) && (state.norms ?? []).length >= 0,
@@ -383,8 +224,7 @@ const POLICIES = {
     if (!program) return { levels: { ...state.levels }, funding: everyone(UPKEEP) };
 
     /* CINCO PONTOS DE PISO, e o numero e pequeno de proposito: o que se mede aqui e se o
-       CAMINHO existe, e nao qual o maior texto que passa. Um piso que desaba trinta
-       pontos cobraria quorum de emenda constitucional e mediria de novo o explorador. */
+       CAMINHO existe, e nao qual o maior texto que passa. */
     return {
       levels: { ...state.levels },
       bands: { [program.id]: { floor: Math.max(0, program.floor - 5), ceiling: 100 } },
@@ -392,9 +232,7 @@ const POLICIES = {
     };
   },
 
-  /* O GOVERNO QUE PROMETE. Pauta uma reforma e oferece verba cheia todo mes, sem
-     olhar o caixa. E a sonda da traicao: o rateio corta a promessa no que o teto
-     deixa, e o buraco entre o falado e o pago desaba sobre a lealdade mes a mes. */
+  /* O GOVERNO QUE PROMETE. */
   promessa: (state, memory) => {
     const program = nextReform(memory);
     return {
@@ -429,8 +267,7 @@ if (!policy) {
 
 const seed = Number(values.seed);
 const months = Number(values.months);
-/* ⚠ O CRESCIMENTO DO PIB DEIXOU DE SER PREMISSA. Ele era um argumento porque nao
-   havia motor macro: quem simulava declarava "suponha 2% ao ano" e o turno
+/* ⚠ O CRESCIMENTO DO PIB DEIXOU DE SER PREMISSA.
    obedecia. Com a CORRENTE, o PIB e consequencia — do juro, da carga e da
    capacidade do Estado —, e o que sobrou de premissa e o CHOQUE de oferta, que e
    a unica coisa que vem de fora da economia. */
@@ -481,8 +318,7 @@ function averageLoyalty(loyalty) {
 }
 
 /**
- * O que o mes tem de anormal, dito em uma coluna. Sem isto a tabela vira um
- * campo de numeros em que o mes decisivo passa despercebido.
+ * O que o mes tem de anormal, dito em uma coluna.
  *
  * @param {Report} report
  */
@@ -515,15 +351,7 @@ for (let i = 0; i < months; i++) {
   const orders = policy(state, memory);
   const played = playMonth(state, orders, { shock });
 
-  /* `enacted` E NAO `tally.passed`. Execucao orcamentaria nao produz placar — ela
-     nao vai a plenario —, entao registrar so o que o Congresso aprovou faria a
-     politica repropor o mesmo movimento todos os meses e nunca sair do lugar.
-
-     ⚠ E O QUE SE GUARDA E O ID DO PROGRAMA, e nao o rotulo da proposta. A
-     primeira versao guardava `proposal.label` e a fila consultava `program.id`:
-     nada nunca batia, a politica reproponha a mesma reforma nos 48 meses, e o
-     resumo dizia "1 aprovada" como se o modelo fosse duro. Nao era — o
-     instrumento e que estava cego, que e o defeito mais caro que uma ferramenta
+  /* Nao era — o instrumento e que estava cego, que e o defeito mais caro que uma ferramenta
      de calibragem pode ter, porque ele parece resultado. */
   if (played.report.enacted) {
     for (const move of played.report.agenda.moves) memory.passed.add(move.program.id);
@@ -589,43 +417,12 @@ const promisedTotal = history.reduce((sum, report) => sum + report.promisedCost,
 const paidTotal = history.reduce((sum, report) => sum + report.paidCost, 0);
 const last = history.at(-1);
 
-/* ── O RATEIO E A LINHA QUE FALTAVA NO RESUMO ───────────────────────────────
-   Ele nasceu em 13/08/2026 junto do achado que so a simulacao mostrou: com o
-   orcamento real, o rateio corta TODO MES sem o contingenciamento nunca
-   disparar. Sao duas coisas diferentes e o resumo mostrava so uma:
-
-     CONTINGENCIAMENTO  a obrigatoria SOZINHA ja fura o teto. Nao ha o que
-                        escolher, e o discricionario e zero;
-     RATEIO             o que o governo pediu nao cabe no que sobrou, e todos
-                        recebem menos na proporcao.
-
-   ⚠ E ELE PERGUNTA AO TURNO, DESDE 16/08/2026. Ate aqui esta linha montava a
-   propria conta a partir dos campos vizinhos:
-
-     pago + alocado < room   ||   prometido + alocado > room
-
-   A segunda metade estava certa e nunca disparava; a PRIMEIRA acusava SOBRA DE
-   CAIXA como se fosse corte. E o resultado nao foi um numero um pouco errado — foi
-   o COMPLEMENTO EXATO da verdade:
-
-     politica    o filtro dizia   a verdade (`ratio < 1`)
-     herdado           41                 7
-     piso              44                 0     (44 = os 48 meses menos os 4 contingenciados)
-     agenda            48                 0
-     base              48                 1
-     promessa          48                48     (esta acertou por coincidencia)
-
-   No `herdado`, nos sete meses em que o corte de fato acontece, `pago + alocado` da
-   EXATAMENTE `room` — entao nenhuma das duas clausulas dispara, e o filtro contava
-   os 41 meses em que nada foi cortado. A frase "o rateio corta em 41 de 48 meses"
-   atravessou o handoff, virou o achado 2 e chegou a bloquear o conserto do achado 31,
-   que e o defeito mais fundo do projeto.
-
-   ⚠ E A CAUSA E A FAMILIA MAIS CARA DAQUI, pela SEXTA vez: DOIS LUGARES MONTANDO A
-   MESMA PERGUNTA. `settlement` calcula `ratio` para executar o mes; este arquivo o
-   remontava para medir. Agora ele vem no relatorio, e a porta errada nao existe mais.
-
-   Um governo pode passar o mandato inteiro rateando sem nunca contingenciar. */
+/* E o resultado nao foi um numero um pouco errado — foi o COMPLEMENTO EXATO da verdade:
+   politica  o filtro dizia  a verdade (`ratio < 1`) herdado      41         7 piso       44
+   0   (44 = os 48 meses menos os 4 contingenciados) agenda      48         0 base       48
+   1 promessa     48        48   (esta acertou por coincidencia) No `herdado`, nos sete meses
+   em que o corte de fato acontece, `pago + alocado` da EXATAMENTE `room` — entao nenhuma das
+   duas clausulas dispara, e o filtro contava os 41 meses em que nada foi cortado. */
 const rationed = history.filter(report => report.ratio < 1 - 1e-9);
 
 out.write("RESUMO\n");
@@ -655,12 +452,6 @@ out.write(
 out.write(
   `  alocacao            ${num(history.reduce((sum, report) => sum + report.allocatedTotal, 0))} nas areas\n`,
 );
-/* O TAMANHO DO ARQUIVO LEGISLATIVO, e ele e o instrumento de dois riscos do ciclo
-   ao mesmo tempo: a "heranca maldita virando Diario Oficial" (quanto texto o
-   jogador tem de ler) e o custo do turno (quantas normas o motor resolve todo
-   mes). Um mandato que termina com centenas de normas e um mandato que precisa de
-   uma tela para elas — e um simulador que fica lento e para de servir de
-   instrumento. */
 out.write(
   `  normas              ${state.norms.length} em arquivo` +
     ` — ${state.norms.length - opening.norms.length} escritas neste mandato\n`,
@@ -673,11 +464,7 @@ for (const party of CATALOG.parties) {
 }
 
 out.write(`  o pais ao fim\n`);
-/* A COLUNA SE MEDE PELO NOME MAIS LONGO DO CATALOGO, e nao por uma largura
-   digitada. Com 14 fixos, "Indústria e Infraestrutura" era cortado no meio e
-   colava no indice ao lado — o resumo imprimia "Indústria e Incapacidade", que e
-   uma area que nao existe. Largura fixa e aposta em nome curto, e o catalogo
-   cresce. */
+/* A COLUNA SE MEDE PELO NOME MAIS LONGO DO CATALOGO, e nao por uma largura digitada. */
 const AREA_COLUMN = Math.max(...CATALOG.areas.map(area => area.label.length)) + 2;
 for (const area of CATALOG.areas) {
   const before = area.initial;

@@ -1,19 +1,5 @@
-/* O RUNNER DAS GUARDAS.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   Ele faz DUAS coisas em cada guarda, e a segunda e a que importa:
-
-     1. AUDITA o projeto real e imprime os achados;
-     2. roda as PROVAS SINTETICAS — versoes fabricadas do projeto que contem o
-        defeito de proposito — e exige que a guarda acuse cada uma.
-
-   Sem (2), uma guarda verde nao distingue "o projeto esta certo" de "o casador
-   nunca casa". Guarda que nunca falhou e cobertura presumida, e cobertura
-   presumida e pior que nenhuma: a proxima sessao confia nela.
-
-   As guardas sao descobertas por leitura do diretorio, mas o resultado e
-   comparado com a lista ESPERADA abaixo. Descobrir por glob sem lista e como um
-   arquivo renomeado vira cobertura ausente em silencio. */
+/* roda as PROVAS SINTETICAS — versoes fabricadas do projeto que contem o defeito de proposito
+   — e exige que a guarda acuse cada uma. */
 
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -29,6 +15,7 @@ const EXPECTED = [
   "motion",
   "naming",
   "orphans",
+  "prose",
   "schema",
   "tokens",
   "vocabulary",

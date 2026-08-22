@@ -1,21 +1,4 @@
-/* GUARDA · CASCATA — a precedencia e declarada, nunca emergente.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   A dor que isto resolve tem numero: numa folha sem camadas, 33 declaracoes
-   nunca chegavam a tela e uma media query inteira estava morta porque perdia por
-   ORDEM DE FONTE para uma regra de mesma especificidade escrita antes. Nada
-   disso e visivel lendo o seletor.
-
-   `@layer` troca isso por uma declaracao unica. Mas ela tem tres pontos cegos, e
-   os tres sao cobertos aqui:
-
-     · a ORDEM das camadas e fixada pela PRIMEIRA vez em que sao mencionadas. Se
-       outro arquivo carregasse antes do de tokens, registraria a propria camada
-       primeiro e inverteria a hierarquia. Dai o primeiro <link> ser cobrado;
-     · regra escrita FORA de qualquer camada vence TODA regra dentro de camadas.
-       Um unico bloco solto anula o sistema inteiro;
-     · `!important` INVERTE a ordem das camadas. Um `!important` na ultima camada
-       passa a perder para um na primeira — o oposto do que quem escreveu queria. */
+/* GUARDA · CASCATA — a precedencia e declarada, nunca emergente. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
 
@@ -83,8 +66,7 @@ export function audit(files) {
       );
     }
 
-    /* 3 — A MESMA PROPRIEDADE DUAS VEZES NO MESMO SELETOR E NO MESMO CONTEXTO.
-       Ver a prosa de `rules`, logo abaixo: uma das duas e letra morta por construcao. */
+    /* 3 — A MESMA PROPRIEDADE DUAS VEZES NO MESMO SELETOR E NO MESMO CONTEXTO. */
     /** @type {Map<string, Map<string, number>>} */
     const written = new Map();
     for (const { key, props, line } of rules(css)) {
@@ -109,8 +91,8 @@ export function audit(files) {
 
 /**
  * Devolve o primeiro trecho de CSS que nao esta dentro de `@layer` nem de
- * `@property`, ou `null` se tudo estiver coberto.
  *
+ * `@property`, ou `null` se tudo estiver coberto.
  * @param {string} css
  * @returns {string | null}
  */
@@ -141,27 +123,8 @@ function outsideLayers(css) {
   return null;
 }
 
-/* ── O QUARTO PONTO CEGO: A MESMA PROPRIEDADE, DUAS VEZES ────────────────────
-   ⚠ ELE NASCEU DE TRES OCORRENCIAS MEDIDAS NO MESMO DIA, 22/08/2026, e as tres eram
-   decisoes de desenho que NUNCA CHEGARAM A TELA:
-
-     · `.tray__open .letter__lines` subia o corpo do oficio para `--text-verdict` e uma
-       segunda declaracao dez linhas abaixo o devolvia para `--text-body`. Medido no
-       navegador: 13,6px onde a prosa justificava 15,2 em quinze linhas;
-     · `.law__guard` pintava com a tinta do PAPEL e uma segunda, sete linhas abaixo,
-       com o cinza do VIDRO — sobre pergaminho;
-     · `.bench` recebia a borda esquerda de bordo e uma segunda, duzentas linhas
-       abaixo, a punha transparente. O carpete estava morto desde que foi escrito.
-
-   ⚠ E NENHUMA GUARDA ALCANCAVA. `orphans` acusa regra sem produtor, e as duas tinham;
-   `tokens` acusa token sem consumidor, e os dois eram consumidos. O defeito nao esta em
-   nenhuma das duas regras — esta no PAR, e so quem le as duas juntas o ve.
-
-   ⚠ E O QUE SE ACUSA E A PROPRIEDADE, E NAO O SELETOR REPETIDO. Escrever o mesmo seletor
-   duas vezes e autoria legitima neste projeto: `.tray__row { position: relative }` mora ao
-   lado da regra do ponto de nao lido porque ela existe PARA ele, e junta-la ao bloco
-   principal separaria a linha da razao dela. O que nunca e legitimo e a mesma propriedade
-   declarada duas vezes no mesmo contexto: ali uma das duas e, por construcao, letra morta. */
+/* O defeito nao esta em nenhuma das duas regras — esta no PAR, e so quem le as duas juntas o
+   ve. */
 
 /**
  * OS BLOCOS DE REGRA, com contexto, seletor, propriedades e linha.
@@ -190,9 +153,9 @@ function rules(css) {
         .replace(/\s+/g, " ");
 
       if (selector.startsWith("@")) {
-        /* ⚠ `@media` e `@layer` ENTRAM NA CHAVE, e nao sao ignorados: a mesma regra
-           dentro e fora de uma media query e o padrao normal de sobreposicao, e acusar
-           isso faria a guarda brigar com a forma como todo CSS responsivo se escreve. */
+        /* ⚠ `@media` e `@layer` ENTRAM NA CHAVE, e nao sao ignorados: a mesma regra dentro e
+           fora de uma media query e o padrao normal de sobreposicao, e acusar isso faria a
+           guarda brigar com a forma como todo CSS responsivo se escreve. */
         stack.push(selector);
         i++;
         continue;
@@ -201,8 +164,8 @@ function rules(css) {
       const end = matchBrace(css, i);
       if (end === -1) break;
       const body = css.slice(i + 1, end);
-      /* so as declaracoes DESTE bloco: um `{` dentro seria regra aninhada, e o projeto
-         nao usa aninhamento — mas cortar no primeiro `{` mantem a leitura honesta. */
+      /* so as declaracoes DESTE bloco: um `{` dentro seria regra aninhada, e o projeto nao
+         usa aninhamento — mas cortar no primeiro `{` mantem a leitura honesta. */
       const flat = body.split("{")[0] ?? "";
       const props = [...flat.matchAll(/(^|;)\s*(-{0,2}[a-zA-Z][\w-]*)\s*:/g)].map(m =>
         (m[2] ?? "").toLowerCase(),
@@ -237,8 +200,8 @@ function matchBrace(text, open) {
 
 export const synthetic = [
   {
-    /* ⚠ ESTA E A DE 22/08/2026, e ela reintroduz o defeito EXATO que a criou: o corpo do
-       oficio subia um degrau e uma segunda declaracao, dez linhas abaixo, o devolvia. */
+    /* ⚠ ESTA E A DE, e ela reintroduz o defeito EXATO que a criou: o corpo do oficio subia um
+       degrau e uma segunda declaracao, dez linhas abaixo, o devolvia. */
     label: "a mesma propriedade declarada duas vezes no mesmo seletor",
     files: new Map([
       ["index.html", '<link href="styles/00-tokens.css">'],
@@ -252,13 +215,10 @@ export const synthetic = [
     ]),
   },
   {
-    /* ⚠ E ESTA COBRA O CONTRARIO, e sem ela o conserto obvio da acusacao falsa seria
-       afrouxar a guarda: o mesmo seletor escrito duas vezes com propriedades DIFERENTES e
-       autoria legitima, e este projeto a usa de proposito — a regra do `position: relative`
-       mora ao lado do ponto de nao lido porque ela existe para ele.
-       ⚠ Ela nao pode ser prova sintetica, porque o runner so sabe cobrar ACUSACAO. O que
-       prova o silencio e a folha REAL: `45-screen-cabinet.css` tem cinco pares assim e
-       passa verde. */
+    /* ⚠ E ESTA COBRA O CONTRARIO, e sem ela o conserto obvio da acusacao falsa seria afrouxar
+       a guarda: o mesmo seletor escrito duas vezes com propriedades DIFERENTES e autoria
+       legitima, e este projeto a usa de proposito — a regra do `position: relative` mora ao
+       lado do ponto de nao lido porque ela existe para ele. */
     label: "regra fora de qualquer camada",
     files: new Map([
       ["index.html", '<link href="styles/00-tokens.css">'],

@@ -1,30 +1,4 @@
-/* A MESA — onde o mes se resolve. Views PURAS.
-   ══════════════════════════════════════════════════════════════════════════════
-   Nenhuma funcao daqui toca o DOM, lê o relogio ou guarda estado. Elas recebem
-   dado e devolvem string. Quem aplica ao documento e `app.mjs`.
-
-   ── A TELA QUE NAO NAVEGA ────────────────────────────────────────────────────
-   Um turno inteiro se decide aqui. As areas sao onde se vai quando se QUER
-   olhar; a Mesa e onde se decide, e ela mostra de uma vez as tres coisas que a
-   decisao precisa: o que esta em pauta, quanto cada bancada entrega com a verba
-   oferecida ate agora, e se o caixa cobre o que foi prometido.
-
-   ── `241 ± 14`, E NAO `241` ──────────────────────────────────────────────────
-   A banda e a coisa mais importante desta tela. `241` afirma um placar que o
-   motor nao promete: a previsao e deterministica e o DIA nao e. O jogador que
-   confia no numero cru aprende a desconfiar da tela na primeira vez que perder
-   por tres votos — e aprender a desconfiar da tela e o pior que uma interface de
-   simulacao pode ensinar.
-
-   Com a banda, a tela diz exatamente o que o modelo sabe: a tendencia e
-   conhecida, o dia nao. E comprar mais verba ESTREITA a banda sem nunca zera-la,
-   o que da ao jogador uma segunda coisa para comprar alem de votos.
-
-   ── O QUE E CERTEZA E O QUE E RISCO ──────────────────────────────────────────
-   Distincao deliberada, e ela aparece na hierarquia visual. O rateio e
-   DETERMINISTICO: dada a promessa e a folga, o corte e uma conta, e a tela o
-   afirma sem ressalva. O placar e SORTEADO: a tela mostra a faixa. Mostrar o
-   rateio como "risco de 12%" inventaria incerteza que nao existe. */
+/* A MESA — onde o mes se resolve. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed, sparkline } from "../shared/format.mjs";
@@ -40,9 +14,7 @@ import { UI, labelOf } from "../strings.mjs";
  * @typedef {import("../../domain/congress/index.mjs").Forecast} Forecast
  */
 
-/* O estado de humor de uma bancada, como a tela o nomeia. Os limiares chegam do
-   motor: redigita-los aqui seria garantir que um dia a tela chame de
-   "obstruindo" quem o motor ja trata como rompida. */
+/* O estado de humor de uma bancada, como a tela o nomeia. */
 
 /**
  * @param {number} loyalty
@@ -57,16 +29,6 @@ function moodOf(loyalty, thresholds) {
 /**
  * A FAIXA DE INDICES — seis medidores, uma linha, sempre visivel.
  *
- * Ela existe para o jogador enxergar de relance a area que ele abandonou. Com
- * seis telas separadas, so se descobre clicando em seis lugares — e e assim que
- * um jogador deixa de olhar.
- *
- * TRES LEITURAS EM UM MEDIDOR, e cada uma responde uma pergunta diferente: o
- * NUMERO diz onde a area esta, a ESCADA diz para onde ela vem indo, e a BARRA
- * diz o que nenhum dos dois diz — de que lado do ponto neutro ela caiu. O ponto
- * neutro chega do catalogo pelo `--neutral`, que o entrypoint injeta: 50 e regra
- * de jogo, e nao valor de paleta.
- *
  * @param {object} input
  * @param {ReadonlyArray<Area>} input.areas
  * @param {Record<string, number>} input.index
@@ -78,9 +40,7 @@ export function capacityStripHtml({ areas, index, history }) {
     .map(area => {
       const value = index[area.id] ?? area.initial;
       const past = history[area.id] ?? [];
-      /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `shared/trend.mjs`.
-         Cada uma tinha a propria ate 21/08/2026, e a faixa do Congresso ficou com a
-         menor por omissao: `sparkline` tem 6 como padrao, e ninguem escolheu isso aqui. */
+      /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `shared/trend.mjs`. */
       const trend = sparkline(past.length > 0 ? past : [value], WINDOW);
 
       return (
@@ -96,56 +56,28 @@ export function capacityStripHtml({ areas, index, history }) {
     })
     .join("");
 
-  /* A FAIXA E UMA SUPERFICIE SO, com seis campos — e nao seis laminas
-     enfileiradas. Caixa e peso, e seis pesos para dizer coisas do mesmo nivel e
-     o ruido que a regra de forma dos componentes existe para impedir.
-
-     ⚠ E ELA DEIXOU DE SER VIDRO em 15/08/2026. Ela era `glass-support` porque
-     morava solta no tabuleiro, ao lado da mesa; agora ela e um BLOCO dentro da
-     lamina do Congresso, e vidro dentro de vidro e o defeito que o sistema visual
-     inteiro existe para impedir. O que separa um bloco do outro e a legenda e o
-     espaco, como em Financas e na area. */
+  /* Ela era `glass-support` porque morava solta no tabuleiro, ao lado da mesa; agora ela e um
+     BLOCO dentro da lamina do Congresso, e vidro dentro de vidro e o defeito que o sistema
+     visual inteiro existe para impedir. */
   return `<div class="capacities">${gauges}</div>`;
 }
 
-/* ONDE A MEMORIA DEIXA DE SER RUIDO. Abaixo disto o saldo e um residuo de
-   decaimento e nao uma relacao — anunciar "negocia como quem ja recebeu" por causa
-   de 0,02 ensinaria o jogador a ler significado onde nao ha nenhum. */
+/* ONDE A MEMORIA DEIXA DE SER RUIDO. */
 const MEMORY_FLOOR = 0.08;
 
 /**
  * UMA PESSOA DA BANCADA — e ela e a peca que faltava na tela inteira.
  *
- * ⚠ ELA NAO E UM CONTROLE. O jogador paga o BLOCO, e nao a pessoa: e o desenho do
- * ciclo 4, e mexer nisso seria inventar mecanica. O que esta linha faz e mostrar
- * PARA ONDE vai o que ele paga, e por que dois blocos com a mesma verba entregam
- * numeros diferentes — porque dentro deles ha gente com alcance, ambicao e
- * memoria distintos.
- *
  * @param {object} input
  * @param {{ id: string, name: string, office: string, role: string, ambition: string,
- *           seats: number, votes: number, reach: number, memory: number }} input.person
+ * seats: number, votes: number, reach: number, memory: number }} input.person
  * @param {boolean} input.voting
  * @returns {string}
  */
 function personHtml({ person, voting }) {
-  /* ── A MEMÓRIA SÓ FALA QUANDO TEM O QUE DIZER ───────────────────────────────
-     ⚠ ATÉ 20/08/2026 ELA IMPRIMIA "sem histórico com o seu governo" NO CASO NEUTRO, e
-     a prosa antiga defendia isso — "sem histórico é um estado, e não um zero". A
-     afirmação é verdadeira e a conclusão estava errada, e a captura mostrou por quê: no
-     mês 1 NINGUÉM tem histórico, e a mesma frase saía **sete vezes na mesma tela**, uma
-     debaixo da outra, sob sete pessoas diferentes.
-
-     ⚠ E A REGRA CONTRÁRIA JÁ ESTAVA ESCRITA DUAS VEZES NESTE PROJETO, nos dois lugares
-     em que ela foi aplicada: "uma legenda que lista 'em ruptura: 0' todo mês ensina o
-     olho a ignorar a linha inteira", na legenda do plenário, e "um 'prometeu R$ 0,0 bi'
-     todo mês ensina o olho a pular a linha", na carta do mês. Aqui ela não tinha sido
-     aplicada, e o custo é o mesmo: a linha que repete vira textura, e no mês em que
-     alguém DE FATO se lembrar de você, a frase aparece num lugar que o olho já
-     aprendeu a pular.
-
-     Ausência aqui não esconde nada: memória neutra é a falta de história, e a falta de
-     história se lê pela falta da linha. */
+  /* A afirmação é verdadeira e a conclusão estava errada, e a captura mostrou por quê: no mês
+     1 NINGUÉM tem histórico, e a mesma frase saía **sete vezes na mesma tela**, uma debaixo
+     da outra, sob sete pessoas diferentes. */
   const memory =
     person.memory > MEMORY_FLOOR
       ? { tone: "good", text: UI.congress.memoryGood }
@@ -154,10 +86,7 @@ function personHtml({ person, voting }) {
         : null;
 
   const ambition = labelOf(UI.congress.ambition, person.ambition);
-  /* ⚠ SO A SUCESSAO GANHA O PRECO ESCRITO AO LADO, porque so ela tem preco hoje.
-     Pendurar uma consequencia nas outras quatro seria a tela prometendo mecanica
-     que o motor nao tem — e e a mesma regra que manteve a aprovacao fora da tela
-     por tres sessoes. */
+  /* ⚠ SO A SUCESSAO GANHA O PRECO ESCRITO AO LADO, porque so ela tem preco hoje. */
   const price =
     person.ambition === "succession"
       ? ` <em>— ${escapeHtml(UI.congress.successionPrice)}</em>`
@@ -181,11 +110,6 @@ function personHtml({ person, voting }) {
       ? `<span class="person__memory" data-tone="${memory.tone}">${escapeHtml(memory.text)}</span>`
       : "") +
     `</span>` +
-    /* ⚠ SEM PAUTA ELA IMPRIMIA "de 76" — a segunda metade de uma frase cuja
-       primeira metade nao existe. `votes` so tem sentido contra um texto em
-       votacao, e num mes sem pauta a view largava o `de` pendurado sozinho na
-       coluna. O que sobra de verdadeiro e QUANTO aquela pessoa arrasta, e essa
-       informacao vale todo mes: e o peso politico dela, com ou sem votacao. */
     `<span class="person__votes" data-numeric>` +
     (voting
       ? `${seats(person.votes)} <small>${escapeHtml(UI.mesa.seats)} ${seats(person.seats)}</small>`
@@ -196,9 +120,7 @@ function personHtml({ person, voting }) {
 }
 
 /**
- * A LINHA DE UMA BANCADA. Ela carrega a historia inteira daquele bloco: humor,
- * estado, verba oferecida, custo, quantas cadeiras isso compra — e, desde
- * 15/08/2026, a GENTE que mora dentro dele.
+ * A LINHA DE UMA BANCADA.
  *
  * @param {object} input
  * @param {Party} input.party
@@ -213,19 +135,13 @@ function personHtml({ person, voting }) {
 function benchHtml({ party, loyalty, funding, votes, seatPrice, thresholds, voting, people = [] }) {
   const mood = moodOf(loyalty, thresholds);
 
-  /* O CONTROLE FICA FORA DA PARTE QUE SE REPINTA, e isso e requisito de gesto e
-     nao de organizacao: trocar o HTML de um `<input type=range>` no meio de um
-     arrasto ARRANCA o elemento que o ponteiro esta segurando, e o arrasto morre
-     no primeiro pixel. Por isso a leitura numerica vive num filho proprio, que e
-     o unico que a atualizacao ao vivo substitui. */
+  /* O CONTROLE FICA FORA DA PARTE QUE SE REPINTA, e isso e requisito de gesto e nao de
+     organizacao: trocar o HTML de um `<input type=range>` no meio de um arrasto ARRANCA o
+     elemento que o ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
   return (
     `<div class="bench" data-mood="${mood}" data-party="${escapeHtml(party.id)}">` +
-    /* ⚠ A SIGLA VEM PRIMEIRO E O NOME EMBAIXO, desde que a Camara ganhou legendas em
-       20/08/2026. "Partido Social Municipalista" numa coluna de 96px quebra em tres
-       linhas e empurra a linha inteira; a sigla cabe sempre e e como um Congresso de
-       verdade se cita. O nome fica logo abaixo, em corpo de nota — ninguem decora nove
-       siglas na primeira partida, e escondê-lo faria a tela falar uma lingua que o
-       jogador ainda nao tem. */
+    /* "Partido Social Municipalista" numa coluna de 96px quebra em tres linhas e empurra a
+       linha inteira; a sigla cabe sempre e e como um Congresso de verdade se cita. */
     `<span class="bench__name"><b>${escapeHtml(party.sigla)}</b>` +
     `<small>${escapeHtml(party.label)}</small></span>` +
     `<span class="bench__mood" data-numeric title="${escapeHtml(UI.mood[mood])}">` +
@@ -236,11 +152,8 @@ function benchHtml({ party, loyalty, funding, votes, seatPrice, thresholds, voti
     `<span class="bench__read" data-read="${escapeHtml(party.id)}">` +
     benchReadHtml({ party, funding, votes, seatPrice, voting }) +
     `</span>` +
-    /* ── A GENTE MORA DENTRO DO BLOCO, e a aninhagem e a mecanica ──────────────
-       Voce paga o BLOCO; o bloco e feito de gente; a gente entrega diferente. Uma
-       lista de onze bancadas irmas diria que o lider e o bloco sao a mesma coisa —
-       e o desenho do ciclo 4 e o oposto: uma pessoa e uma bancada de um so DENTRO
-       da dela, e o resto do bloco continua votando pela ideologia do bloco. */
+    /* ── A GENTE MORA DENTRO DO BLOCO, e a aninhagem e a mecanica ────────────── Voce paga o
+       BLOCO; o bloco e feito de gente; a gente entrega diferente. */
     (people.length > 0
       ? `<div class="bench__people">` +
         people.map(person => personHtml({ person, voting })).join("") +
@@ -286,8 +199,8 @@ export function benchReadHtml({ party, funding, votes, seatPrice, voting }) {
  * @param {Forecast | null} input.forecast
  * @param {Record<string, number>} input.byBloc votos que cada BLOCO entrega, ja somados
  * @param {ReadonlyArray<{ id: string,
- *   people: ReadonlyArray<Parameters<typeof personHtml>[0]["person"]> }>} input.blocs
- *   os blocos com a GENTE dentro, montados pela camada de aplicacao
+ * people: ReadonlyArray<Parameters<typeof personHtml>[0]["person"]> }>} input.blocs
+ * os blocos com a GENTE dentro, montados pela camada de aplicacao
  * @param {number} input.band
  * @param {number} input.seatPrice
  * @param {number} input.room o discricionario que cabe no mes
@@ -299,12 +212,8 @@ export function mesaHtml(input) {
   const { bill, forecast, quorum } = input;
   const voting = quorum > 0 && forecast !== null;
 
-  /* ⚠ O SOBRANCELHO "EM PAUTA" SAIU DAQUI em 15/08/2026, e ele saiu por um defeito
-     que a captura pegou no mesmo dia em que ele nasceu. Quando o Congresso virou
-     uma lamina so, a legenda do bloco passou a dizer "Em pauta" — e este parrafo
-     dizia a mesma coisa uma linha abaixo, em dois pesos diferentes. Titulo repetido
-     em dois tamanhos e a marca de uma tela remendada, e foi exatamente por isso que
-     o rotulo do relatorio saiu junto. Quem nomeia a secao e a secao. */
+  /* ⚠ O SOBRANCELHO "EM PAUTA" SAIU DAQUI e ele saiu por um defeito que a captura pegou no
+     mesmo dia em que ele nasceu. */
   const head = bill
     ? `<h2 class="mesa__title">${escapeHtml(bill.label)}</h2>` +
       `<p class="mesa__meta">` +
@@ -314,11 +223,6 @@ export function mesaHtml(input) {
       `<span>${escapeHtml(labelOf(UI.instrumentHint, bill.instrument))}` +
       (voting ? ` · ${seats(quorum)}` : "") +
       `</span>` +
-      /* O NUMERO VEM ANTES DA UNIDADE, e com o sinal explicito: a versao
-         anterior escrevia "/ano -34,0", que se lê como uma unidade seguida de um
-         numero solto. E o menos e o tipografico, o mesmo da coluna da area —
-         dois sinais de menos diferentes na mesma grandeza sao dois formatos de
-         numero na mesma tela. */
       `<span>${escapeHtml(UI.mesa.result)} ` +
       `${signed(bill.fiscalImpact, 1)}${escapeHtml(UI.area.perYear)}</span>` +
       `<button class="mesa__swap" type="button" data-section="${escapeHtml(bill.area)}">` +
@@ -335,11 +239,8 @@ export function mesaHtml(input) {
       `<p class="empty__note">${escapeHtml(UI.mesa.emptyHint)}</p>` +
       `</div>`;
 
-  /* ⚠ OS VOTOS DA LINHA VEM SOMADOS DO MOTOR. Esta linha procurava a bancada de
-     mesmo id que o bloco, e depois do ELENCO isso encontra apenas o RESTO do bloco
-     — o que sobrou dele depois de os lideres saírem com a fracao que arrastam. As
-     quatro linhas somavam menos que o placar impresso logo abaixo delas, e nada
-     acusava, porque cada linha estava certa sozinha. */
+  /* ⚠ OS VOTOS DA LINHA VEM SOMADOS DO MOTOR.
+     mesmo id que o bloco, e depois do ELENCO isso encontra apenas o RESTO do bloco */
   const peopleOf = new Map(input.blocs.map(bloc => [bloc.id, bloc.people]));
 
   const benches = input.parties
@@ -357,13 +258,8 @@ export function mesaHtml(input) {
     )
     .join("");
 
-  /* O RESUMO E UMA REGIAO VIVA, e por uma razao de teclado: quem move o controle
-     com as setas nao ve o placar mudar de canto de olho — ele precisa ouvir. Sao
-     tres linhas curtas, entao o anuncio cabe entre um passo e o seguinte. */
-  /* ⚠ ELA DEIXOU DE SER UMA LAMINA em 15/08/2026, e passou a ser o miolo de um
-     bloco. A mesa era `glass-stage` porque era a peca principal de uma tela feita
-     de tres vidros soltos; com o Congresso virando uma lamina so, ela e uma secao
-     como "As contas" em Financas. Quem embrulha agora e `congressHtml`. */
+  /* O RESUMO E UMA REGIAO VIVA, e por uma razao de teclado: quem move o controle com as setas
+     nao ve o placar mudar de canto de olho — ele precisa ouvir. */
   return (
     `<section class="mesa">` +
     `<div class="mesa__head">${head}</div>` +
@@ -376,18 +272,6 @@ export function mesaHtml(input) {
 /**
  * A TELA DO CONGRESSO INTEIRA — uma lamina, uma cabeca, tres blocos.
  *
- * ⚠ ELA NASCEU DE UMA REVISAO DE FORMA, e o desvio que ela corrige era o maior do
- * projeto: esta era a UNICA tela montada como tres pecas de vidro empilhadas no
- * tabuleiro — a faixa de indices, a mesa e o relatorio —, e a UNICA sem cabeca. As
- * outras quatro dizem quem sao ("o placar / Financas", "a moldura / O Estado"); a
- * tela onde o mes de fato se decide nao dizia nada, e o jogador so sabia onde
- * estava pelo item aceso no rail.
- *
- * O EMBRULHO MORA AQUI, E NAO NO ENTRYPOINT. `app.mjs` concatenava as tres pecas a
- * mao, o que punha decisao de forma no arquivo que nao pode ter nenhuma — quem
- * desenha o Congresso passaria a ter de lembrar que a lamina dele vive no wiring.
- * Toda view traz o proprio elemento de fora, e esta traz o dela.
- *
  * @param {object} input
  * @param {string} input.gauges a faixa de indices, ja montada
  * @param {string} input.mesa a mesa de negociacao, ja montada
@@ -397,18 +281,8 @@ export function mesaHtml(input) {
 /**
  * A GAVETA — o que esta andando, e ha quanto tempo.
  *
- * ⚠ ELA E A METADE VISIVEL DA TRAMITACAO, e sem ela a outra metade seria uma
- * mentira. Com o texto virando instantaneo, "em pauta" e "sendo votado" eram a
- * mesma coisa; agora o que o jogador escreve hoje vai para a gaveta e so vota daqui
- * a tres meses. Uma tela que nao mostrasse a fila deixaria o jogador escrevendo no
- * escuro — ele veria a lei sumir e reaparecer sem saber onde ela esteve.
- *
- * ⚠ O RELOGIO DA GAVETA E DITO. Um texto engavetado morre em seis meses, e sem o
- * numero na tela "na gaveta" seria um estado permanente aos olhos de quem joga —
- * quando na verdade ha uma contagem correndo contra ele.
- *
  * @param {ReadonlyArray<{ id: string, label: string, stage: string, waiting: number,
- *   expires: number | null, instrument: string, quorum: number, saved: string | null }>} bills
+ * expires: number | null, instrument: string, quorum: number, saved: string | null }>} bills
  * @returns {string}
  */
 export function passageHtml(bills) {
@@ -423,8 +297,6 @@ export function passageHtml(bills) {
 
   const rows = bills
     .map(bill => {
-      /* O RELOGIO SO APARECE NA GAVETA, e so quando ele ja apertou: um "morre em 6"
-         no mes em que o texto foi protocolado ensinaria o olho a ignorar a linha. */
       const clock =
         bill.expires !== null && bill.expires <= 3
           ? `<span class="passage__clock">${escapeHtml(UI.congress.expires)} ` +
@@ -462,9 +334,8 @@ export function passageHtml(bills) {
  * @param {string} input.passage
  */
 export function congressHtml({ gauges, mesa, report, passage }) {
-  /* A MESMA CASCA DE BLOCO DE FINANCAS E DA AREA, e nao uma terceira: legenda em
-     versalete e o corpo embaixo. Uma forma propria aqui seria a quarta maneira de
-     dizer "isto e uma secao desta tela". */
+  /* A MESMA CASCA DE BLOCO DE FINANCAS E DA AREA, e nao uma terceira: legenda em versalete e
+     o corpo embaixo. */
   const block = (/** @type {string} */ legend, /** @type {string} */ body) =>
     `<section class="area__block">` +
     `<h3 class="block__legend">${escapeHtml(legend)}</h3>` +
@@ -485,10 +356,6 @@ export function congressHtml({ gauges, mesa, report, passage }) {
 /**
  * O RESUMO — a parte que se repinta a cada movimento do controle.
  *
- * Ela separa CERTEZA de RISCO na propria hierarquia: a previsao vem com banda
- * porque o dia e sorteado; o dinheiro vem sem ressalva porque o rateio e uma
- * conta. Dizer "risco de rateio de 12%" inventaria incerteza que nao existe.
- *
  * @param {object} input
  * @param {Bill | null} input.bill
  * @param {number} input.quorum
@@ -501,20 +368,8 @@ export function congressHtml({ gauges, mesa, report, passage }) {
 export function tallyHtml({ bill, quorum, forecast, band, room, demand }) {
   const voting = quorum > 0 && forecast !== null;
 
-  /* SEM VOTACAO NAO HA PLACAR, e entao nao ha linha de placar. A primeira versao
-     punha um travessao no lugar do numero — no maior degrau da escala, um
-     travessao de 4,5rem que ocupava a tela inteira para dizer "nada". E o
-     veredito vinha marcado como APROVADO, entao "escolha uma acao numa das
-     areas" chegava em verde de vitoria. Ausencia de pauta nao e aprovacao nem
-     derrota: e ausencia, e a unica forma honesta de mostra-la e nao mostrar. */
-  /* ⚠ O PLACAR MUDOU DE TEMPO, E A TELA TEM DE DIZER ISSO. Ate 15/08/2026 este
-     numero era a previsao da votacao DESTE mes; com a tramitacao, o texto que o
-     jogador esta escrevendo vai para a gaveta e so vota daqui a tres meses.
-     Anunciar "acima do quorum" sem dizer QUANDO seria prometer um mes que nao e
-     este — e e exatamente a familia de defeito que esta sessao passou consertando:
-     a tela afirmando um resultado que o turno nao vai produzir.
-     O NUMERO CONTINUA CERTO, e continua vindo da mesma camara. O que ele deixou de
-     ser e uma previsao sobre agora. */
+  /* SEM VOTACAO NAO HA PLACAR, e entao nao ha linha de placar. */
+  /* ⚠ O PLACAR MUDOU DE TEMPO, E A TELA TEM DE DIZER ISSO. */
   const call = voting
     ? `<p class="tally__forecast" data-numeric>` +
       `${seats(forecast.votes)} <span class="tally__band">± ${seats(band)}</span> ` +

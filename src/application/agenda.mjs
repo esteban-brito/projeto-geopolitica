@@ -1,60 +1,13 @@
 /* A PAUTA DERIVADA — de quanto o jogador moveu para o que o Congresso vota.
-   ══════════════════════════════════════════════════════════════════════════════
-   recebe   os programas, o nivel vigente de cada um, e o nivel pedido
-   devolve  uma proposta com posicao no plano, ameaca, custo e RITO
-
-   ── POR QUE ELA NAO E MOTOR ──────────────────────────────────────────────────
-   Ela mora na camada de aplicacao pela mesma razao que `situationOf`: compoe
    CATALOGO e ESTADO, e motor nenhum chama outro motor. O ECLUSA recebe a
    proposta pronta e nao sabe de onde ela veio — e e justamente por nao saber que
-   ele nao precisou mudar uma linha para o catalogo de pautas prontas morrer.
-
-   ── A LEI CENTRAL: A POSICAO E SOMBRA, E NAO CONTROLE ────────────────────────
-   O jogador nunca arrasta um cursor no plano `economico × liberdades`. Ele mexe
-   em leitos, em vacinacao, em universidade — e a posicao da proposta e CALCULADA
-   do que ele moveu.
-
-   Isso responde a objecao que `bills.mjs` levantou, e que estava certa: controle
-   vetorial livre viraria problema de otimizacao, porque bastaria arrastar o
-   projeto ate o meio da maior bancada. Aqui nao ha atalho, porque nao ha cursor:
-   para empurrar a proposta ate o centrao e preciso FINANCIAR o que o centrao
-   quer, com dinheiro do mesmo caixa, mudando o pais de verdade. O vetor e a
-   fatura, e nao o volante.
-
-     Δ_p       = nivel_pedido − nivel_vigente
-     peso_p    = |Δ_p| × custo_p              ← o quanto o movimento pesa em dinheiro
-     posicao_p = Δ_p > 0 ? pos_p : (100 − pos_p)
-     economico = Σ peso_p × economico_p / Σ peso_p
-
-   ── O CORTE E O ESPELHO ──────────────────────────────────────────────────────
-   A linha do meio e o coracao da mecanica. Gastar mais num programa poe a
-   proposta ONDE O PROGRAMA ESTA; corta-lo poe no LADO OPOSTO. Cortar atencao
-   basica e uma proposta de direita, e ninguem escreveu isso em lugar nenhum —
-   cai da formula.
-
-   Sem o espelho, cortar e ampliar a saude produziriam a MESMA posicao, e as duas
-   bancadas votariam igual nas duas — que e o oposto de tudo o que se sabe sobre
-   como o Congresso se comporta.
-
-   ── O PESO E EM DINHEIRO, e nao em pontos de controle ───────────────────────
-   `|Δ| × custo`, e nao `|Δ|` sozinho. Mover a vacinacao de 58 para 20 e mover a
-   aposentadoria urbana de 78 para 40 sao dois movimentos de tamanho parecido no
-   controle e de tamanhos incomparaveis no pais: um vale 16 bilhoes e o outro 477.
-   Peso em pontos faria a vacinacao dominar a posicao de uma proposta que, no
-   mundo, e sobre previdencia.
-
-   ── O RITO SAI DO CONTEUDO ───────────────────────────────────────────────────
-   O jogador NUNCA escolhe "lei" ou "emenda". Ele move controles, e o rito e
-   consequencia de quais paredes o movimento derrubou. Um dial de intensidade que
-   deixasse o jogador escolher o rito seria o menu de pautas voltando com outro
-   nome — e o menu e exatamente o que este arquivo existe para aposentar. */
+   ele nao precisou mudar uma linha para o catalogo de pautas prontas morrer. */
 
 import { quorumOf } from "../data/bills.mjs";
 import { MONTHS_PER_YEAR } from "../data/regime.mjs";
 import { POWER_STEPS } from "../data/rules.mjs";
 
-/* O catalogo raciocina em ANO, porque orcamento e uma peca anual; o turno e um
-   mes. A divisao mora aqui e em nenhum outro lugar — o mesmo cuidado que o
+/* O catalogo raciocina em ANO, porque orcamento e uma peca anual; o turno e um mes.
    LASTRO toma com a regra fiscal. */
 const MONTHLY = 1 / MONTHS_PER_YEAR;
 
@@ -62,12 +15,10 @@ const MONTHLY = 1 / MONTHS_PER_YEAR;
  * @typedef {import("../data/programs.mjs").Program} Program
  * @typedef {import("../data/rules.mjs").Rule} Rule
  * @typedef {import("../state/state.mjs").Band} Band
- *
  * @typedef {object} Breach
  * @property {string} programId
  * @property {"floor" | "ceiling"} side - qual parede foi atravessada
  * @property {string} rite - o rito que ESTA parede exige
- *
  * @typedef {object} Move
  * @property {Program} program
  * @property {number} delta - pontos de intensidade, com sinal
@@ -75,7 +26,6 @@ const MONTHLY = 1 / MONTHS_PER_YEAR;
  * @property {number} spend - bilhoes/ano que este movimento acrescenta (ou poupa)
  * @property {string} rite - o rito que ESTE movimento sozinho exigiria
  * @property {"level" | "floor" | "ceiling"} [kind] - o que se moveu; nivel por padrao
- *
  * @typedef {object} Proposal
  * @property {string} id
  * @property {string} label
@@ -86,7 +36,6 @@ const MONTHLY = 1 / MONTHS_PER_YEAR;
  * @property {number} threat
  * @property {number} spread - o RAIO ideologico do texto; zero e um texto coeso
  * @property {number} fiscalImpact - positivo POUPA, negativo custa
- *
  * @typedef {object} Agenda
  * @property {Move[]} moves - so o que se moveu
  * @property {Breach[]} breaches
@@ -95,17 +44,10 @@ const MONTHLY = 1 / MONTHS_PER_YEAR;
  * @property {number} spend - bilhoes/ano que o conjunto acrescenta
  */
 
-/* O RITO DE CADA PAREDE, e a ordem e a da exigencia. `budget` nao e instrumento
-   de verdade: e a ausencia de um — o orcamento que a lei ja autoriza, executado
-   por quem foi eleito para executa-lo. */
+/* O RITO DE CADA PAREDE, e a ordem e a da exigencia. */
 const RITES = ["budget", "law", "amendment"];
 
-/* QUE RITO CADA GUARDA COBRA quando o piso e atravessado.
-
-   `none` NAO E DESCUIDO. Ha programa cujo piso nao e lei nenhuma — e apenas onde
-   o contrato esta hoje. Investimento, ciencia e tecnologia sao exatamente isso, e
-   contingencia-los ate o osso e uma jogada que presidente brasileiro faz sem
-   pedir licenca a ninguem. O modelo tem de deixar, porque o mundo deixa. */
+/* QUE RITO CADA GUARDA COBRA quando o piso e atravessado. */
 const FLOOR_RITE = { none: "budget", law: "law", constitution: "amendment" };
 
 /**
@@ -119,18 +61,6 @@ function harder(a, b) {
 
 /**
  * O RITO DEPOIS DO PODER DO EXECUTIVO — a janela de Overton, em uma funcao.
- *
- * Cada degrau de poder derruba UMA exigencia: emenda vira lei, lei vira caneta.
- * E isto que faz "o que e impossivel no mes 1 passa rindo no mes 40" ser
- * mecanica em vez de promessa — mas repare no que NAO acontece aqui: o preco nao
- * some, ele muda de lugar. Para chegar ao poder que derruba um rito, o jogador
- * teve de aprovar uma emenda de ameaca 0,95, que e a pauta mais cara que este
- * catalogo produz.
- *
- * ⚠ E ISTO E METADE DO PRECO, declarado. A outra metade e a tensao institucional
- * — o caminho em que concentrar poder derruba o governo por fora do Congresso.
- * Enquanto ela nao existir, um presidente com base folgada concentra poder e nao
- * sofre nada por isso, e esse e o buraco conhecido deste desenho.
  *
  * @param {string} rite
  * @param {number} power de 0 a 100
@@ -151,12 +81,6 @@ function clamp100(value) {
 /**
  * A FAIXA VIGENTE DE UMA ALAVANCA — a lei que a governa hoje.
  *
- * ⚠ O CATALOGO E O PADRAO, E NAO A VERDADE. Desde que as faixas viraram estado, o
- * que `programs.mjs` declara e a faixa DE ABERTURA: as leis que o presidente
- * encontra em vigor no dia da posse. Quem quiser saber o piso de hoje pergunta
- * aqui, e quem nao passar `bands` recebe o dia da posse — que e a resposta certa
- * para quem esta montando um caso de teste ou lendo o catalogo cru.
- *
  * @param {{ id: string, floor: number, ceiling: number }} lever
  * @param {Record<string, Band>} [bands]
  * @returns {Band}
@@ -172,17 +96,6 @@ export function bandOf(lever, bands) {
 /**
  * O RITO DE MEXER NA PROPRIA FAIXA — de LEGISLAR, e nao de gastar.
  *
- * ── POR QUE O MINIMO E LEI, INCLUSIVE ONDE NAO HA LEI NENHUMA ────────────────
- * Um programa de guarda `none` nao tem piso legal: o piso dele e so onde o
- * contrato esta hoje, e atravessa-lo custa caneta. Mas PLANTAR um piso ali nao e
- * atravessar coisa nenhuma — e criar uma vinculacao que nao existia, e vinculacao
- * se cria por lei. E o que o ciclo chamou de "criar uma lei": por uma faixa onde
- * nao havia. Um piso novo obriga o sucessor; um teto novo o proibe.
- *
- * Onde JA HA lei, o preco e o mesmo de atravessa-la — mexer numa faixa protegida
- * pela Constituicao custa os mesmos 308 votos que furar essa faixa custa hoje.
- * Nao ha tabela nova: a guarda ja dizia tudo.
- *
  * @param {string} guard
  * @returns {string}
  */
@@ -192,16 +105,6 @@ export function riteForBand(guard) {
 
 /**
  * O RITO QUE UMA ALAVANCA SOZINHA EXIGE naquele nivel.
- *
- * ⚠ ELA EXISTE PARA A TELA PARAR DE REDIGITAR A REGRA, e a divida que ela paga
- * durou menos de uma hora. `area.mjs` tinha uma copia desta logica para poder
- * marcar a linha cara enquanto o jogador arrasta; a copia ficou para tras quando
- * o teto passou a respeitar a guarda, e o resultado foi a tela anunciando "lei"
- * numa jogada que o motor cobrava como emenda. Levar o Executivo ao teto — que e
- * romper a divisao de poderes — aparecia por 257 votos.
- *
- * Nenhum aviso teria pego isso: os dois lados estavam certos sozinhos. A unica
- * correcao que fecha a classe inteira e nao haver dois lados.
  *
  * @param {{ id?: string, floor: number, ceiling: number, guard: string }} lever
  * @param {number} level
@@ -222,9 +125,6 @@ export function riteFor(lever, level, power = 0, bands) {
 
 /**
  * COMPOE A PAUTA a partir do que o jogador moveu.
- *
- * ⚠ FUNCAO PURA. Mesmos programas, mesmos niveis e mesmo pedido devolvem
- * exatamente a mesma pauta — nenhum sorteio, nenhum relogio, nenhum estado.
  *
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
@@ -260,12 +160,8 @@ export function compose({
   /** @type {Record<string, number>} */
   const byArea = {};
 
-  /* AS DUAS FAMILIAS ENTRAM NA MESMA VARREDURA, e essa e a decisao de desenho
-     que faz o resto funcionar. Um programa e uma regra sao a mesma primitiva com
-     moedas diferentes: `cost` mede quanto o movimento custa por ano, `reach` mede
-     quanto do pais ele toca. Os dois viram peso na mesma media ponderada, e por
-     isso privatizar a Petrobras e cortar a merenda podem ir no MESMO texto e o
-     Congresso ve uma proposta so — que e o logrolling existindo por construcao. */
+  /* AS DUAS FAMILIAS ENTRAM NA MESMA VARREDURA, e essa e a decisao de desenho que faz o resto
+     funcionar. */
   for (const lever of [...programs, ...rules]) {
     const program = /** @type {Program & Partial<Rule>} */ (lever);
     const size = program.cost ?? program.reach ?? 0;
@@ -273,27 +169,15 @@ export function compose({
     const to = clamp100(requested[program.id] ?? from);
     const delta = to - from;
 
-    /* ── A LEI DESTA ALAVANCA, ANTES E DEPOIS ─────────────────────────────────
-       `band` e o que vale hoje; `asked` e o que o texto propoe. Quando o jogador
-       nao toca na faixa, os dois sao o mesmo objeto e nada abaixo muda de
-       comportamento — que e a garantia de que trazer as leis para o estado nao
-       reescreveu o jogo que ja existia. */
+    /* ── A LEI DESTA ALAVANCA, ANTES E DEPOIS ───────────────────────────────── `band` e o
+       que vale hoje; `asked` e o que o texto propoe. */
     const band = bandOf(program, bands);
     const asked = requestedBands?.[program.id] ?? band;
 
     const floorDelta = asked.floor - band.floor;
     const ceilingDelta = asked.ceiling - band.ceiling;
 
-    /* ⚠ O NIVEL E JULGADO CONTRA A FAIXA PEDIDA, E NAO CONTRA A VIGENTE. E aqui
-       que a jogada nova aparece: derrubar o piso da saude de 59 para 30 E baixar o
-       gasto para 35 no MESMO texto. Julgado contra a faixa vigente, o segundo
-       movimento seria uma segunda violacao e o pacote pagaria duas vezes pela
-       mesma decisao; julgado contra a pedida, o texto e um so — a emenda que
-       derruba o piso ja contem a autorizacao para gastar abaixo dele.
-
-       E nao ha desconto escondido nisso: mexer na faixa custa, no minimo, o mesmo
-       que atravessa-la custava. O jogador nao economiza votos — ele deixa de
-       comprar duas vezes o mesmo voto. */
+    /* ⚠ O NIVEL E JULGADO CONTRA A FAIXA PEDIDA, E NAO CONTRA A VIGENTE. */
     for (const [side, moved] of /** @type {const} */ ([
       ["floor", floorDelta],
       ["ceiling", ceilingDelta],
@@ -303,10 +187,8 @@ export function compose({
       const weightOfBand = Math.abs(moved) * size;
       const towardsBand = moved > 0;
 
-      /* A FAIXA CARREGA A POSICAO DO PROGRAMA, com o mesmo espelho do nivel:
-         ampliar o que a lei obriga e um ato do lado do programa; soltar a
-         obrigacao e o ato oposto. Vincular receita a saude e uma proposta de
-         esquerda; desvincular e de direita, e ninguem escreveu isso. */
+      /* A FAIXA CARREGA A POSICAO DO PROGRAMA, com o mesmo espelho do nivel: ampliar o que a
+         lei obriga e um ato do lado do programa; soltar a obrigacao e o ato oposto. */
       economic += weightOfBand * (towardsBand ? program.economic : 100 - program.economic);
       liberty += weightOfBand * (towardsBand ? program.liberty : 100 - program.liberty);
       threat += weightOfBand * program.threat;
@@ -316,10 +198,8 @@ export function compose({
       const own = underPower(riteForBand(program.guard), power);
       rite = harder(rite, own);
 
-      /* ELE NAO GASTA NO MES, e a omissao e a verdade do modelo: mover um piso
-         nao empenha um real hoje. Ele muda quanto do orcamento passa a ser
-         OBRIGATORIO — e essa conta e permanente, e quem a faz e o turno, na
-         virada. Somar aqui contaria o mesmo efeito duas vezes. */
+      /* ELE NAO GASTA NO MES, e a omissao e a verdade do modelo: mover um piso nao empenha um
+         real hoje. */
       moves.push({
         program,
         delta: moved,
@@ -330,27 +210,18 @@ export function compose({
       });
     }
 
-    /* PARADO NAO E MOVIMENTO. Um programa que nao mudou nao entra na media com
-       peso zero — ele nao entra, ponto. Somar zeros e barato e engana: a lista de
-       `moves` passaria a ter 33 linhas todo mes, e a tela que a mostra deixaria
-       de dizer o que o jogador fez. */
+    /* PARADO NAO E MOVIMENTO. */
     if (delta === 0) continue;
 
     const weight = Math.abs(delta) * size;
-    /* REGRA NAO CUSTA DISCRICIONARIO. O efeito fiscal dela — dividendo, folha,
-       venda — nao e gasto do mes: e outra conta, e quem a faz e o turno. */
+    /* REGRA NAO CUSTA DISCRICIONARIO. */
     const contribution = program.cost === undefined ? 0 : (delta / 100) * program.cost;
 
-    /* O ESPELHO. Ver o cabecalho: cortar um programa e a proposta oposta a
-       amplia-lo, e nao a mesma proposta com sinal trocado no dinheiro. */
     const towards = delta > 0;
     economic += weight * (towards ? program.economic : 100 - program.economic);
     liberty += weight * (towards ? program.liberty : 100 - program.liberty);
 
-    /* A AMEACA NAO ESPELHA, e a assimetria e deliberada. Ameacar a maquina e
-       ameacar a maquina: cortar a Policia Federal nao "desameaca" ninguem — ela
-       simplesmente deixa de ser uma pauta sobre a maquina. O termo mede o quanto
-       o assunto TOCA a barganha, e tocar nao tem sinal. */
+    /* A AMEACA NAO ESPELHA, e a assimetria e deliberada. */
     threat += weight * program.threat;
 
     weightTotal += weight;
@@ -365,39 +236,21 @@ export function compose({
       own = harder(own, required);
     }
 
-    /* FURAR O TETO E LEI NO MINIMO, e a guarda pode cobrar mais. Piso e o que a
-       lei OBRIGA; teto e o que ela AUTORIZA. Gastar acima do autorizado exige
-       credito novo, e credito novo passa pelo Congresso — inclusive num programa
-       cujo piso nao e lei nenhuma.
-
-       ⚠ E A GUARDA PESA NOS DOIS LADOS, o que so ficou obvio quando a alavanca de
-       poder chegou. A primeira versao cobrava "lei" para todo teto furado, e com
-       isso levar o Executivo ao maximo — que e literalmente romper um limite
-       constitucional — custava 257 votos. O limite nao sabe de que lado ele foi
-       atravessado; quem sabe o preco e a Constituicao. */
+    /* FURAR O TETO E LEI NO MINIMO, e a guarda pode cobrar mais. */
     if (to > asked.ceiling) {
       const required = riteForBand(program.guard);
       breaches.push({ programId: program.id, side: "ceiling", rite: required });
       own = harder(own, required);
     }
 
-    /* O RITO DE CADA MOVIMENTO FICA GUARDADO NELE, e nao so o do pacote. E o que
-       permite o turno separar as duas naturezas quando a votacao cai: o que era
-       execucao orcamentaria acontece de qualquer jeito — a lei ja autorizava —, e
-       so o que dependia de voto morre com a derrota. Sem isto, um pacote de dez
-       remanejamentos triviais e uma reforma constitucional teria de ser tudo ou
-       nada, e o jogador perderia o mes inteiro por causa da parte ambiciosa. */
-    /* ⚠ O PODER QUE VALE E O VIGENTE, e nunca o pedido. Se a proposta pudesse
-       usar o poder que ela mesma cria, uma emenda que leva o Executivo a 85 se
-       autorizaria a passar por caneta — e o jogo teria uma jogada que se aprova
-       sozinha. O degrau so vale no mes seguinte, depois de o Congresso ter
-       concedido. */
+    /* O RITO DE CADA MOVIMENTO FICA GUARDADO NELE, e nao so o do pacote. */
+    /* ⚠ O PODER QUE VALE E O VIGENTE, e nunca o pedido. */
     own = underPower(own, power);
     rite = harder(rite, own);
     moves.push({ program, delta, weight, spend: contribution, rite: own, kind: "level" });
   }
 
-  /* NENHUM MOVIMENTO NAO VIRA PROPOSTA. A alternativa seria devolver um vetor em
+  /* NENHUM MOVIMENTO NAO VIRA PROPOSTA.
      (50, 50) — uma proposta centrista fantasma, que o ECLUSA votaria com prazer e
      que ninguem escreveu. Ausencia de pauta e ausencia, e a unica forma honesta
      de mostra-la e nao mostrar. */
@@ -405,28 +258,16 @@ export function compose({
     return { moves, breaches, proposal: null, quorum: 0, spend: 0 };
   }
 
-  /* O ASSUNTO E A AREA DE MAIOR PESO. Uma proposta que mexe em seis areas ainda
-     precisa de um endereco na tela, e o endereco honesto e onde o dinheiro se
-     moveu mais — nao a primeira da lista, que seria a ordem do catalogo virando
-     afirmacao sobre o mundo. */
+  /* O ASSUNTO E A AREA DE MAIOR PESO. */
   const area = Object.entries(byArea).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "";
 
   const centreEconomic = economic / weightTotal;
   const centreLiberty = liberty / weightTotal;
 
-  /* ── O RAIO DO TEXTO ────────────────────────────────────────────────────────
-     ⚠ SEM ELE O PRECO NAO ESCALA COM O TAMANHO DO PACOTE, e isso foi MEDIDO em
-     14/08/2026: um movimento de piso constitucional saia por 358 votos e oitenta e
-     cinco movimentos saiam por 334 — os dois passavam, no mesmo mes, com a mesma
-     verba. Nao havia razao para o jogador nao juntar tudo num texto so.
-
-     A causa esta duas linhas acima: a posicao da proposta e uma MEDIA ponderada, e
-     media de coisas opostas cai no centro. Um texto que corta a saude e amplia a
-     defesa aparecia para o Congresso como uma proposta centrista — quando ele
-     contraria a esquerda numa metade e a direita na outra.
-
-     O raio e o desvio quadratico medio dos movimentos em torno do centroide, na
-     MESMA unidade do plano. Ele nao e um preco novo nem uma penalidade digitada:
+  /* ── O RAIO DO TEXTO ──────────────────────────────────────────────────────── ⚠ SEM ELE O
+     PRECO NAO ESCALA COM O TAMANHO DO PACOTE, e isso foi MEDIDO : um movimento de piso
+     constitucional saia por 358 votos e oitenta e cinco movimentos saiam por 334 — os dois
+     passavam, no mesmo mes, com a mesma verba.
      e a informacao que a media apagava, devolvida ao motor. Quem a usa e ECLUSA,
      e a identidade que a torna exata esta na prosa de `whipCount`. */
   let variance = 0;
@@ -450,8 +291,7 @@ export function compose({
     liberty: centreLiberty,
     threat: threat / weightTotal,
     spread,
-    /* O SINAL SEGUE A CONVENCAO DO CATALOGO: positivo POUPA. Gastar mais e
-       `spend` positivo, e portanto impacto fiscal negativo. */
+    /* O SINAL SEGUE A CONVENCAO DO CATALOGO: positivo POUPA. */
     fiscalImpact: -spend,
   };
 
@@ -459,11 +299,7 @@ export function compose({
     moves,
     breaches,
     proposal,
-    /* O QUORUM SAI DA MESMA FUNCAO QUE O CATALOGO USAVA. `budget` nao esta na
-       lista de instrumentos dela e cai no padrao de maioria simples — por isso a
-       ausencia de votacao e decidida AQUI, e nao la: uma execucao orcamentaria
-       nao vai a plenario, e devolver 257 para ela seria a tela pedindo votos para
-       uma coisa que ninguem vota. */
+    /* O QUORUM SAI DA MESMA FUNCAO QUE O CATALOGO USAVA. */
     quorum: rite === "budget" ? 0 : quorumOf(proposal),
     spend,
   };
@@ -472,32 +308,15 @@ export function compose({
 /**
  * QUANTO UMA CONFIGURACAO CUSTA NO MES, em bilhoes, e SO A PARTE DISCRICIONARIA.
  *
- * ── A LINHA QUE SEPARA AS DUAS DESPESAS ──────────────────────────────────────
- * O gasto ate o PISO nao e escolha: e a lei sendo cumprida, e ele ja esta dentro
  * da despesa obrigatoria que o LASTRO recebe. O que este calculo devolve e so o
  * que esta ACIMA do piso — o dinheiro que o presidente decide, e o mesmo de onde
  * sai emenda para o Congresso.
- *
- * ⚠ E A DESCOBERTA MAIS DURA DO MODELO: com o catalogo real, a configuracao
- * HERDADA ja consome praticamente todo o discricionario do mes. O jogador nao
- * comeca com um cofre para distribuir; ele comeca com um orcamento inteiro ja
- * comprometido pelo antecessor. Para pagar uma bancada, ele tem de tirar de
- * alguma area — e essa e a primeira decisao de verdade que o jogo faz o jogador
- * tomar. Nao foi desenhado assim: caiu da aritmetica quando os numeros viraram
- * os do Brasil.
- *
- * ⚠ O PISO QUE VALE E O DA LEI VIGENTE, e nao o da posse. Desde que as faixas
- * viraram estado, uma reforma aprovada em marco muda esta conta em abril: piso
- * mais baixo joga gasto do OBRIGATORIO para o DISCRICIONARIO, e o mes seguinte
- * comeca com mais orcamento em disputa — que e exatamente o que desvincular
- * significa, e o oposto do que o jogador costuma esperar de "cortar uma lei".
- *
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
  * @param {Record<string, number>} input.levels
  * @param {Record<string, Band>} [input.bands]
  * @returns {{ byArea: Record<string, number>, byProgram: Record<string, number>,
- *   total: number, fullByArea: Record<string, number> }}
+ * total: number, fullByArea: Record<string, number> }}
  */
 export function spendOf({ programs, levels, bands }) {
   /** @type {Record<string, number>} */
@@ -510,9 +329,9 @@ export function spendOf({ programs, levels, bands }) {
 
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
-    /* Abaixo do piso o discricionario e ZERO, e nao negativo: cortar abaixo do
-       que a lei obriga nao devolve dinheiro para o caixa discricionario, devolve
-       para a despesa obrigatoria — que e outra conta, e quem a move e a reforma. */
+    /* Abaixo do piso o discricionario e ZERO, e nao negativo: cortar abaixo do que a lei
+       obriga nao devolve dinheiro para o caixa discricionario, devolve para a despesa
+       obrigatoria — que e outra conta, e quem a move e a reforma. */
     const above = Math.max(0, level - bandOf(program, bands).floor);
     const monthly = (above / 100) * program.cost * MONTHLY;
 
@@ -520,23 +339,8 @@ export function spendOf({ programs, levels, bands }) {
     byArea[program.area] = (byArea[program.area] ?? 0) + monthly;
     total += monthly;
 
-    /* ── O GASTO CHEIO, E POR QUE ELE PRECISOU EXISTIR ────────────────────────
-       ⚠ ELE CONSERTA O EXPLOIT QUE A POLITICA `explorador` MEDIU. Ate 14/08/2026
-       o que alimentava o indice da area era `byArea` — so a parte ACIMA do piso —,
-       e a consequencia so aparece quando alguem tenta quebrar o jogo: derrubar o
-       piso da saude a zero nao muda um real do que o pais gasta em saude, mas
-       move o gasto inteiro do balde "obrigatorio" para o balde "discricionario", e
-       de repente aquele mesmo dinheiro passa a COMPRAR indice. Desregulamentar
-       virava a jogada dominante — o mandato terminava com os oito indices em 100 e
-       a divida caindo vinte pontos.
-
-       O erro nao era do balde e sim da pergunta: o que constroi hospital e o
-       dinheiro que chega ao hospital, e nao o rotulo juridico dele. `fullByArea` e
-       o gasto TOTAL da area, e e ele que a capacidade consome.
-
-       Os dois convivem porque respondem a coisas diferentes, e nenhuma das duas
-       some: `byArea` e QUANTO O PRESIDENTE DECIDE (o que sai do discricionario e
-       disputa com a emenda), `fullByArea` e QUANTO O PAIS GASTA. */
+    /* ── O GASTO CHEIO, E POR QUE ELE PRECISOU EXISTIR ──────────────────────── ⚠ ELE
+       CONSERTA O EXPLOIT QUE A POLITICA `explorador` MEDIU. */
     fullByArea[program.area] =
       (fullByArea[program.area] ?? 0) + (level / 100) * program.cost * MONTHLY;
   }
@@ -546,12 +350,6 @@ export function spendOf({ programs, levels, bands }) {
 
 /**
  * O NIVEL QUE O CAIXA REALMENTE HONRA, depois do rateio.
- *
- * O corte empurra cada programa de volta na direcao do PISO, na proporcao do que
- * foi pedido acima dele. E a mesma regra do rateio da emenda, vista do lado do
- * ministerio — e ela e o contingenciamento existindo como mecanica em vez de como
- * palavra: quando falta dinheiro, o Estado inteiro escorrega para o minimo legal,
- * e ninguem escolheu qual programa sofre.
  *
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
@@ -573,10 +371,6 @@ export function honour({ programs, levels, ratio, bands }) {
 
 /**
  * O NOME DA PAUTA, montado do que ela faz.
- *
- * Ele existe porque a tela precisa chamar a proposta de alguma coisa, e "pauta
- * composta" repetido todo mes nao distingue um remanejamento de merenda de uma
- * reforma da previdencia. O criterio e o mesmo do assunto: manda quem pesa mais.
  *
  * @param {Move[]} moves
  * @returns {string}

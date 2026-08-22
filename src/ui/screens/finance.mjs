@@ -1,26 +1,10 @@
-/* FINANCAS — o placar do pais. View PURA, e a unica tela sem um controle.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   ── A AUSENCIA DE CONTROLE E A INFORMACAO PRINCIPAL ─────────────────────────
-   Toda outra tela deste jogo pede uma decisao. Esta nao pede nenhuma, e isso
-   precisa ser evidente no primeiro segundo — senao o jogador procura o botao,
-   nao acha, e conclui que a tela esta quebrada.
-
-   Por isso ela e a unica DENSA do projeto. Em tela que decide, densidade e ruido:
-   cada numero a mais disputa com a decisao. Em tela que so informa, densidade e o
-   servico — e a comparacao lado a lado e justamente o que ela existe para dar.
-
-   ── TODO NUMERO AQUI TEM MOTOR ATRAS ────────────────────────────────────────
+/* Esta nao pede nenhuma, e isso precisa ser evidente no primeiro segundo — senao o jogador
+   procura o botao, nao acha, e conclui que a tela esta quebrada.
    Nao ha um so valor digitado. PIB, inflacao, juro e desemprego saem da CORRENTE;
    receita, obrigatoria, teto e divida saem do LASTRO; os indices saem da MALHA. O
    projeto ja pagou para aprender que um indicador congelado ao lado de indicadores
    vivos ensina a desconfiar da tela inteira — foi por isso que a aprovacao ficou
-   fora dela ate a SONDA existir, e ela continua fora.
-
-   ── A SERIE E O QUE FAZ O NUMERO SIGNIFICAR ─────────────────────────────────
-   `9,4%` de inflacao nao diz nada sozinho. `9,4% ▁▂▃▅▇` diz que o jogador perdeu
-   o controle ha cinco meses. O painel mostra os dois em toda linha que tem
-   passado guardado. */
+   fora dela ate a SONDA existir, e ela continua fora. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, num, percent, seats, signed, sparkline } from "../shared/format.mjs";
@@ -33,15 +17,11 @@ import { UI } from "../strings.mjs";
  * @typedef {import("../../state/state.mjs").Series} Series
  */
 
-/* ⚠ `SCALE` MUDOU DE CASA EM 21/08/2026 e agora mora em `shared/trend.mjs`, junto com a
-   JANELA. A barra superior passou a desenhar a mesma escada, e copiar as reguas para o
-   segundo consumidor daria dois lugares afirmando em que faixa a inflacao vive — o
-   primeiro a ser recalibrado divergiria do outro. A prosa inteira foi junto.
+/* A barra superior passou a desenhar a mesma escada, e copiar as reguas para o segundo
+   consumidor daria dois lugares afirmando em que faixa a inflacao vive — o primeiro a ser
+   recalibrado divergiria do outro. */
 
-   O PIB CONTINUA SEM FAIXA FIXA, e a ancora dele e a propria serie: PIB nominal nao tem
-   teto natural, e o que se quer ver dele e a distancia percorrida desde a posse. */
-
-/* A BANDA DE TOLERANCIA DA META, para cada lado. Ela mora aqui e nao no catalogo
+/* A BANDA DE TOLERANCIA DA META, para cada lado.
    porque nenhum motor a consome: a CORRENTE persegue o CENTRO da meta, e a banda
    so existe para a tela saber quando acender o vermelho. */
 const TOLERANCE = 0.015;
@@ -64,11 +44,8 @@ function lineHtml({ label, value, past, range, note, tone }) {
     `<span class="ledger__label">${escapeHtml(label)}</span>` +
     `<span class="ledger__value" data-numeric>${value}</span>` +
     `<span class="ledger__spark" aria-hidden="true">` +
-    /* ⚠ A JANELA E `WINDOW`, e ela DOBROU em 21/08/2026 — era um 6 digitado aqui. A
-       tendencia escrita ao lado desta coluna ja conta doze meses; a linha contava seis, e
-       as duas mediam pedacos diferentes do passado dentro da mesma leitura. Medido num
-       mandato passivo de 20 meses, em unidades de traco (de 20 possiveis): o PIB sobe de
-       2,8 para 6,0 so por olhar mais para tras. Nao custa pixel: a caixa e a mesma. */
+    /* Medido num mandato passivo de 20 meses, em unidades de traco (de 20 possiveis): o PIB
+       sobe de 2,8 para 6,0 so por olhar mais para tras. */
     (past && past.length > 1 ? sparkline([...past], WINDOW, range) : "") +
     `</span>` +
     `<span class="ledger__note">${note ? escapeHtml(note) : ""}</span>` +
@@ -95,12 +72,6 @@ function blockHtml({ title, rows }) {
  * O painel inteiro.
  *
  * ⚠ ELE MOSTRA O MES CORRENTE COMO ELE VAI FECHAR, e nao a foto do mes passado.
- * Receita, obrigatoria e teto nao dependem do que o jogador esta decidindo agora;
- * primario e divida dependem, e vem do `ledger` da camada de aplicacao ja com o
- * empenho do mes dentro. E a mesma conta que o turno vai fazer — que e a unica
- * forma de o placar nao discordar do jogo no caso extremo, que e justamente o
- * caso em que o jogador veio olhar.
- *
  * @param {object} input
  * @param {import("../../domain/economy/index.mjs").MacroState} input.macro
  * @param {import("../../domain/budget/index.mjs").BudgetOutput} input.budget
@@ -129,9 +100,6 @@ export function financeHtml({
   history,
 }) {
   /* DUAS CONTAS SAO FEITAS AQUI, e as duas sao divisoes de uma linha.
-     O PER CAPITA nao existe em motor nenhum: PIB e populacao atravessam os meses
-     separados, e a razao entre eles e leitura.
-     O HIATO existe em motor — `EconomyOutput.gap` — mas ele nao e guardado no
      estado, e a razao entre PIB e potencial devolve o MESMO numero: a CORRENTE
      envelhece os dois com o mesmo fator de preco de proposito, justamente para
      que a razao entre eles siga sendo real. Refazer aqui nao diverge; nao poder
@@ -146,11 +114,7 @@ export function financeHtml({
         label: UI.finance.gdp,
         value: money(macro.gdp),
         past: series.gdp,
-        /* O PIB NOMINAL NAO TEM TETO NATURAL, entao a regua dele e a propria largada.
-           ⚠ ATE 21/08/2026 ELA IA ATE "METADE A MAIS", e o numero era um chute: medido
-           num mandato de 48 meses, o PIB usava CINCO dos oito degraus e a escada gastava
-           metade da altura numa faixa que a partida nunca visita. Quem decide agora e
-           `gdpRange`, e ele e o mesmo dos dois consumidores. */
+        /* O PIB NOMINAL NAO TEM TETO NATURAL, entao a regua dele e a propria largada. */
         range: gdpRange(series.gdp, macro.gdp),
         note: UI.finance.perYear,
       }) +
@@ -165,11 +129,8 @@ export function financeHtml({
         past: series.inflation,
         range: SCALE.inflation,
         note: `${UI.finance.target} ${percent(target, 0)}`,
-        /* A BANDA DA META, E NAO A META. O regime brasileiro tem tolerancia de
-           1,5 ponto para cada lado, e o alvo e o CENTRO — nao um teto. Pintar de
-           vermelho tudo o que passa de 3% acenderia o alarme em 3,1%, que e
-           inflacao dentro da meta, e um alarme que acende sempre e um alarme que
-           o jogador aprende a nao ver. */
+        /* O regime brasileiro tem tolerancia de 1,5 ponto para cada lado, e o alvo e o CENTRO
+           — nao um teto. */
         tone: macro.inflation > target + TOLERANCE ? "down" : "flat",
       }) +
       lineHtml({
@@ -178,9 +139,8 @@ export function financeHtml({
         past: series.rate,
         range: SCALE.rate,
         note: UI.finance.central,
-        /* O TOM DO JURO LE O JURO REAL, e nao o nominal. Selic de 12% com inflacao
-           de 10% e dinheiro barato; a mesma Selic com inflacao de 3% e um freio.
-           Um limiar nominal chamaria as duas de aperto. */
+        /* Selic de 12% com inflacao de 10% e dinheiro barato; a mesma Selic com inflacao de
+           3% e um freio. */
         tone: macro.rate - macro.inflation > 0.07 ? "down" : "flat",
       }) +
       lineHtml({
@@ -218,19 +178,15 @@ export function financeHtml({
         value: money(budget.allowance),
         note: UI.finance.perYear,
       }) +
-      /* O PRIMARIO NAO GANHA ESCADA, e a ausencia e escolha. Ele oscila com a
-         decisao de cada mes e nao tem faixa natural em bilhoes — desenha-lo contra
-         uma regua inventada seria a escada afirmando uma normalidade que ninguem
-         definiu. O sinal ja esta no tom, que e a informacao que ele carrega. */
+      /* O PRIMARIO NAO GANHA ESCADA, e a ausencia e escolha. */
       lineHtml({
         label: UI.finance.primary,
         value: money(budget.balance),
         note: UI.finance.perMonth,
         tone: budget.balance >= 0 ? "up" : "down",
       }) +
-      /* O SERVICO DA DIVIDA FICA NESTE BLOCO E FORA DO PRIMARIO, exatamente como o
-         arcabouco o trata. Po-lo junto do resultado sugeriria que ele disputa com
-         hospital, e ele nao disputa: ele engorda a divida. */
+      /* O SERVICO DA DIVIDA FICA NESTE BLOCO E FORA DO PRIMARIO, exatamente como o arcabouco
+         o trata. */
       lineHtml({
         label: UI.finance.interest,
         value: money(interest),
@@ -257,9 +213,6 @@ export function financeHtml({
             label: UI.finance.premium,
             value: percent(premium, 2),
             note: UI.finance.premiumNote,
-            /* SEMPRE "down": um premio de risco que existe nunca e boa noticia. Ele so
-               aparece quando a divida passou da herdada, e ai ele JA e a deterioracao
-               sendo cobrada. */
             tone: "down",
           })
         : "") +
@@ -283,26 +236,12 @@ export function financeHtml({
         const value = index[area.id] ?? area.initial;
         const past = history[area.id] ?? [];
 
-        /* ⚠ A JANELA VARIA DE LINHA PARA LINHA, E POR ISSO ELA VAI ESCRITA. Esta
-           coluna subtraia `past[0]` — o valor mais antigo guardado —, e o
-           historico da capacidade tem o comprimento do ATRASO de cada area. O
-           resultado era uma coluna que punha 24 meses de Educacao, 12 de Defesa, 6
-           de Industria e 3 de Saude uma embaixo da outra, todas sem rotulo, lidas
-           como comparaveis.
-           E onde o atraso e zero — Fazenda e Previdencia — o historico guarda um
-           valor so, a subtracao dava zero, e as duas linhas imprimiam `· 0` em
-           todo mes de toda partida, sem escada ao lado. Um indicador morto ao lado
-           de indicadores vivos e o defeito que tirou a aprovacao desta tela por
-           tres sessoes; ele estava aqui, em duas das oito linhas. Medido no mes 16:
-           a Saude anunciava `· 0` com o indice ja tendo caido de 66 para 62.
-           Quem calcula agora e `trendOf`, e e a MESMA funcao que a tela de area
-           chama — as duas mostravam numeros diferentes para a mesma area. */
+        /* O resultado era uma coluna que punha 24 meses de Educacao, 12 de Defesa, 6 de
+           Industria e 3 de Saude uma embaixo da outra, todas sem rotulo, lidas como
+           comparaveis. */
         const moved = trendOf(value, past);
 
-        /* O TOM LE O NUMERO ARREDONDADO, e nao o valor cheio. Uma queda de 0,4
-           ponto imprime "0" e tingiria a linha de vermelho — e ai a cor afirma
-           uma piora que o proprio numero ao lado nega. Onde a tela mostra zero,
-           ela precisa mostrar zero nas duas linguagens. */
+        /* O TOM LE O NUMERO ARREDONDADO, e nao o valor cheio. */
         const shift = Number((moved?.delta ?? 0).toFixed(0));
 
         return lineHtml({

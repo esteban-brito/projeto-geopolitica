@@ -1,16 +1,4 @@
-/* GUARDA · FRONTEIRAS — cada camada so alcanca o que lhe cabe.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   UI -> aplicacao -> dominio <- dados
-
-   O dominio nao conhece DOM, relogio nem aleatoriedade ambiente: ele recebe o
-   que precisa por parametro. E o entrypoint nao alcanca o dominio direto — ele
-   compoe pelas APIs publicas.
-
-   A razao do segundo item e concreta: no projeto anterior o entrypoint nasceu
-   como wiring, foi acumulando regra por conveniencia e virou 1.715 linhas que
-   uma etapa inteira de refatoracao nao conseguiu desmontar. A fronteira e barata
-   agora e impagavel depois. */
+/* GUARDA · FRONTEIRAS — cada camada so alcanca o que lhe cabe. */
 
 import { collect } from "../lib/project.mjs";
 

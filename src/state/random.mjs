@@ -1,42 +1,8 @@
 /* O FLUXO DE ALEATORIEDADE — semeado, contado e serializavel.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   O padrao travado diz: fluxo injetado, proprio de cada motor que sorteia. Este
-   arquivo e o fluxo. Sorteio ambiente esta proibido no dominio e a guarda
-   `boundaries` recusa — nao por purismo, mas porque replay determinstico e a
-   unica forma de depurar e balancear um jogo sistemico. Sem ele, "o Congresso
-   derrubou minha lei" nunca e reproduzivel, e portanto nunca e investigavel.
-
-   ── CONTADO, E NAO ENCADEADO ─────────────────────────────────────────────────
-   A escolha estrutural deste arquivo. Um gerador comum guarda estado interno e
-   avanca mutando-o; para salvar a partida seria preciso serializar esse estado
-   interno, que e detalhe de implementacao e muda quando o gerador muda.
-
-   Aqui o valor e FUNCAO PURA de (semente, indice). O fluxo inteiro e um par de
-   inteiros — semente e quantos saques ja houve —, e disso vem tudo:
-
-     · SALVAR e escrever dois numeros. Nao existe "estado interno esquecido";
-     · REPLAY e reexecutar do indice zero e obter exatamente a mesma sequencia;
-     · IMUTABILIDADE sai de graca: sacar devolve um fluxo NOVO, e o antigo
-       continua valido — que e o que permite o motor ser funcao pura;
-     · VOLTAR ATRAS e subtrair do contador.
-
-   ── UM FLUXO POR MOTOR, E POR QUE ISSO NAO E DETALHE ─────────────────────────
    TEMPORAL e ECLUSA sacam de fluxos INDEPENDENTES, derivados do nome. Com um
-   fluxo unico compartilhado, um evento a mais num turno deslocaria o indice e
-   MUDARIA O RESULTADO DE UMA VOTACAO que nao tem nada a ver com ele. Ao
-   balancear a frequencia de eventos, toda votacao do jogo mudaria junto — e a
-   sessao inteira de calibragem viraria ruido.
+   fluxo unico compartilhado, um evento a mais num turno deslocaria o indice e */
 
-   ── O MISTURADOR ─────────────────────────────────────────────────────────────
-   `splitmix32`: multiplicacao, deslocamento e ou-exclusivo. Ele nao e
-   criptografico e nao precisa ser — o que se exige aqui e avalanche (mudar um
-   bit da entrada muda metade dos bits da saida) e independencia entre indices
-   vizinhos, e a suite mede as duas. */
-
-/* A CONSTANTE DE WEYL, a parte fracionaria da razao aurea em 32 bits. Ela
-   incrementa o indice com passo irracional, que e o que impede indices vizinhos
-   de cairem em regioes vizinhas da saida. */
+/* A CONSTANTE DE WEYL, a parte fracionaria da razao aurea em 32 bits. */
 const GOLDEN = 0x9e3779b9;
 
 /**
@@ -47,10 +13,6 @@ const GOLDEN = 0x9e3779b9;
 
 /**
  * Mistura semente e indice num inteiro de 32 bits.
- *
- * `Math.imul` e obrigatorio: `*` em JavaScript promove para ponto flutuante de
- * 64 bits e PERDE os bits baixos numa multiplicacao de 32 bits, que sao
- * exatamente os bits que o misturador precisa preservar.
  *
  * @param {number} seed
  * @param {number} index
@@ -64,8 +26,7 @@ export function mix(seed, index) {
 }
 
 /**
- * Deriva um inteiro de 32 bits a partir de um texto. Usado para o NOME do fluxo
- * virar semente propria, e assim `events` e `congress` nunca coincidirem.
+ * Deriva um inteiro de 32 bits a partir de um texto.
  *
  * @param {string} text
  * @returns {number}
@@ -92,19 +53,15 @@ export function streamFrom(seed, name) {
 /**
  * Saca um numero em [0, 1).
  *
- * Devolve o fluxo AVANCADO em vez de mexer no recebido: quem saca precisa
- * continuar sendo funcao pura, e um gerador que muta por dentro contamina todo
- * motor que o toca.
- *
  * @param {Stream} stream
  * @returns {{ value: number, stream: Stream }}
  */
 export function unit(stream) {
   const raw = mix(stream.seed, stream.draws);
   return {
-    /* 2^32 e nao 2^32 - 1: dividir pelo maximo INCLUIRIA o 1,0, e um sorteio
-       que pode devolver exatamente 1 estoura toda faixa escrita como `[min,
-       max)` — o defeito aparece uma vez em quatro bilhoes e nunca se reproduz. */
+    /* 2^32 e nao 2^32 - 1: dividir pelo maximo INCLUIRIA o 1,0, e um sorteio que pode
+       devolver exatamente 1 estoura toda faixa escrita como `[min, max)` — o defeito aparece
+       uma vez em quatro bilhoes e nunca se reproduz. */
     value: raw / 4294967296,
     stream: { seed: stream.seed, draws: stream.draws + 1 },
   };
@@ -130,7 +87,6 @@ export function integer(stream, min, max) {
  * saque POR BANCADA, e encadear a mao o fluxo devolvido a cada passo e onde se
  * esquece de usar o fluxo novo — defeito que nao quebra nada e simplesmente faz
  * todas as bancadas sortearem o mesmo numero.
- *
  * @param {Stream} stream
  * @param {number} count
  * @returns {{ values: number[], stream: Stream }}

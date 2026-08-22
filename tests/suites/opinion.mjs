@@ -1,11 +1,4 @@
-/* SUITE · SONDA — a rua, e o que ela sente.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   O que estas provas cobram nao e "a conta bate": e que as PROPRIEDADES do
-   desenho sobrevivam a qualquer recalibragem. Um numero que mude em
-   `src/data/opinion.mjs` nao pode fazer a pesquisa somar 99, nem fazer a
-   popularidade subir tao rapido quanto cai, nem apagar a diferenca entre as
-   classes — que e a razao de o motor ter segmentos. */
+/* SUITE · SONDA — a rua, e o que ela sente. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -34,7 +27,7 @@ const anyMood = fc
 
 /**
  * @param {{ released: { inflation: number, unemployment: number, growth: number },
- *           services: number, safety: number, betrayal?: number }} month
+ * services: number, safety: number, betrayal?: number }} month
  * @param {Record<string, number>} mood
  */
 function run(month, mood) {
@@ -56,9 +49,9 @@ const BAD = {
 };
 
 test("A PESQUISA SEMPRE FECHA EM 100, em qualquer estado do pais", () => {
-  /* O invariante que a tela inteira presume: o medidor de tres partes desenha as
-     fatias como fracoes de uma barra, e uma soma de 99 aparece como um vao branco
-     que ninguem consegue explicar. */
+  /* O invariante que a tela inteira presume: o medidor de tres partes desenha as fatias como
+     fracoes de uma barra, e uma soma de 99 aparece como um vao branco que ninguem consegue
+     explicar. */
   fc.assert(
     fc.property(anyMonth, anyMood, (month, mood) => {
       const out = run(month, mood);
@@ -88,9 +81,8 @@ test("A SATISFACAO NUNCA SAI DA FAIXA, nem com o pais no chao ou no ceu", () => 
 });
 
 test("A OPINIAO NAO PULA: um mes nunca leva a satisfacao ao alvo", () => {
-  /* A inercia e o que separa historia de ruido. Sem ela, um mes de inflacao ruim
-     derrubaria o governo e o mes seguinte o devolveria — e a serie de 48 meses
-     deixaria de contar qualquer coisa. */
+  /* Sem ela, um mes de inflacao ruim derrubaria o governo e o mes seguinte o devolveria — e a
+     serie de 48 meses deixaria de contar qualquer coisa. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
   const after = run(GOOD, flat).mood;
 
@@ -102,9 +94,8 @@ test("A OPINIAO NAO PULA: um mes nunca leva a satisfacao ao alvo", () => {
 });
 
 test("ELA CAI MAIS RAPIDO DO QUE SOBE, e a assimetria e do mesmo tamanho declarado", () => {
-  /* O achado empirico mais consistente da literatura de opiniao publica, e a
-     razao de governos gastarem tanto para evitar crise pequena. Sem ele, o jogo
-     ensinaria que da para deixar a popularidade desabar e recuperar depois. */
+  /* O achado empirico mais consistente da literatura de opiniao publica, e a razao de
+     governos gastarem tanto para evitar crise pequena. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
 
   const up = (run(GOOD, flat).mood["media"] ?? 50) - 50;
@@ -118,11 +109,7 @@ test("ELA CAI MAIS RAPIDO DO QUE SOBE, e a assimetria e do mesmo tamanho declara
 });
 
 test("AS CLASSES NAO SENTEM A MESMA COISA: cortar servico publico separa o pais", () => {
-  /* A razao de existir dos segmentos. Quem tem plano de saude nao sente a fila, e
-     quem nao tem sente antes de qualquer estatistica sair — entao o mesmo corte
-     produz duas reacoes de tamanhos diferentes. Se as duas fossem iguais, o motor
-     poderia ser um numero so, e a polarizacao que ele existe para mostrar nao
-     existiria. */
+  /* A razao de existir dos segmentos. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
   const base = { ...GOOD, services: 80 };
   const cut = { ...GOOD, services: 10 };
@@ -154,8 +141,7 @@ test("A INFLACAO DOI MAIS EMBAIXO, e o PIB so e sentido em cima", () => {
 });
 
 test("PROMESSA QUEBRADA CUSTA RUA, e nao so base no Congresso", () => {
-  /* O outro lado de uma conta que ja existia. O rateio que corta emenda corta
-     obra inaugurada, e ate 14/08/2026 isso so aparecia na lealdade das bancadas. */
+  /* O outro lado de uma conta que ja existia. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
   const kept = run({ ...GOOD, betrayal: 0 }, flat).approval.good;
   const broke = run({ ...GOOD, betrayal: 1 }, flat).approval.good;
@@ -164,9 +150,8 @@ test("PROMESSA QUEBRADA CUSTA RUA, e nao so base no Congresso", () => {
 });
 
 test("A NACIONAL E A MEDIA PONDERADA, e nao a media simples", () => {
-  /* Um governo adorado pela classe A/B e odiado pela D/E nao tem 50% — ele tem o
-     que a populacao pesa. Sem a ponderacao, agradar 20% do pais valeria tanto
-     quanto agradar 42%, e a estrategia do jogo inverteria. */
+  /* Um governo adorado pela classe A/B e odiado pela D/E nao tem 50% — ele tem o que a
+     populacao pesa. */
   const skewed = { baixa: 0, media: 0, alta: 100 };
   const poll = pollFrom(skewed, SEGMENTS, OPINION);
   assert.ok(poll.good < 30, `o topo sozinho nao pode dar ${poll.good}% de otimo/bom`);
@@ -182,9 +167,8 @@ test("a abertura sai do catalogo, e o pais comeca dividido", () => {
   const start = opening(SEGMENTS);
   assert.equal(Object.keys(start).length, SEGMENTS.length);
 
-  /* A afirmacao do catalogo: quem acabou de eleger o governo comeca mais
-     satisfeito, e quem paga a conta comeca menos. Se um dia isso deixar de valer,
-     e decisao de calibragem — e esta prova obriga a decisao a ser consciente. */
+  /* A afirmacao do catalogo: quem acabou de eleger o governo comeca mais satisfeito, e quem
+     paga a conta comeca menos. */
   assert.ok(
     (start["baixa"] ?? 0) > (start["alta"] ?? 0),
     "a base da piramide deveria abrir mais satisfeita que o topo",

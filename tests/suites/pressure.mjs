@@ -1,12 +1,5 @@
-/* SUITE · A CALDEIRA — o que ela cobra e que a INACAO esquente.
-   ══════════════════════════════════════════════════════════════════════════════
-   ⚠ A PROVA MAIS IMPORTANTE E A PRIMEIRA, e ela existe por um risco de desenho, e
-   nao por um defeito medido. Se a pressao subisse so por ACAO CONTRARIA, este motor
-   trabalharia contra o proprio proposito: o jogador aprenderia que mexer e perigoso e
-   parar e seguro, e o projeto teria trocado "nao fazer nada e fiscalmente otimo" por
-   "nao fazer nada e politicamente seguro" — a mesma doenca com um motor novo
-   sustentando ela.
-
+/* ⚠ A PROVA MAIS IMPORTANTE E A PRIMEIRA, e ela existe por um risco de desenho, e nao por um
+   defeito medido.
    A CALDEIRA nasceu de um numero: a politica que nao toca em nada terminava o mandato
    com a melhor divida do quadro. Uma versao dela que premiasse a passividade seria
    pior que nao te-la. */
@@ -27,8 +20,8 @@ const cold = Object.fromEntries(LOBBIES.map(l => [l.id, 0]));
 const idle = Object.fromEntries(LOBBIES.map(l => [l.id, 0.6]));
 
 test("A INACAO ESQUENTA — e esta e a razao de este motor existir", () => {
-  /* Descontentamento constante e o que um governo parado produz: ninguem recebeu
-     nada, e ninguem esquece. Se a pressao nao subisse aqui, parar seria de graca. */
+  /* Descontentamento constante e o que um governo parado produz: ninguem recebeu nada, e
+     ninguem esquece. */
   let pressure = cold;
   for (let month = 0; month < 12; month++) {
     pressure = heat({ pressure, grievance: idle, parameters: PRESSURE });
@@ -43,8 +36,8 @@ test("A INACAO ESQUENTA — e esta e a razao de este motor existir", () => {
 });
 
 test("ELA SOBE MAIS RAPIDO DO QUE DESCE, e a assimetria e a mecanica", () => {
-  /* ⚠ Simetrica, a caldeira seria um pendulo: bastaria alternar quem se agrada para
-     nunca esquentar nada. Reputacao se perde mais rapido do que se recupera — e a
+  /* ⚠ Simetrica, a caldeira seria um pendulo: bastaria alternar quem se agrada para nunca
+     esquentar nada.
      mesma forma que SONDA usa para satisfacao. */
   const um = LOBBIES[0];
   assert.ok(um);
@@ -66,9 +59,7 @@ test("ELA SOBE MAIS RAPIDO DO QUE DESCE, e a assimetria e a mecanica", () => {
 });
 
 test("O PROCESSO SO ABRE COM AS TRES RUPTURAS JUNTAS", () => {
-  /* ⚠ PRESIDENTES NAO CAEM POR UM FATOR SO. As tres ja aconteceram separadas muitas
-     vezes na Republica sem derrubar ninguem, e um limiar unico daria um jogo em que
-     irritar muito um grupo derruba o governo. */
+  /* ⚠ PRESIDENTES NAO CAEM POR UM FATOR SO. */
   const fervendo = Object.fromEntries(LOBBIES.map(l => [l.id, 100]));
 
   /* As tres juntas: abre. */
@@ -104,9 +95,6 @@ test("O PROCESSO SO ABRE COM AS TRES RUPTURAS JUNTAS", () => {
 });
 
 test("QUEM NAO PESA NAO ABANDONA O CAPITAL, por mais que ferva", () => {
-  /* A ruptura economica e PONDERADA, e nao "qualquer um deles": as forcas de ordem
-     nao financiam campanha nem precificam divida, e o peso zero diz isso. Sem a
-     ponderacao, um lobby sem dinheiro derrubaria um governo por conta propria. */
   const soOrdem = Object.fromEntries(LOBBIES.map(l => [l.id, l.weight > 0 ? 0 : 100]));
   const nada = rupture({
     pressure: soOrdem,
@@ -140,12 +128,7 @@ test("A PRESSAO FICA ENTRE 0 E 100, com qualquer descontentamento", () => {
 });
 
 test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
-  /* ⚠ A PROVA QUE FECHA A MECANICA. Um motor de derrota que nunca derruba e um
-     instrumento morto — foi o achado 3 deste projeto, com o contingenciamento que
-     nao disparava —, e um que derruba sempre e uma cutscene.
-
-     O criterio foi declarado ANTES de medir: a queda tem de ser alcancavel por um
-     governo ruim e inalcancavel por um mediano. */
+  /* ⚠ A PROVA QUE FECHA A MECANICA. */
   const anos = (/** @type {number} */ pay) => {
     let state = createState();
     for (let month = 0; month < 60; month++) {
@@ -164,10 +147,9 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
     return null;
   };
 
-  /* ── O GOVERNO MEDIANO, e ele e a outra ponta do criterio ───────────────────
-     Ele nao e bom: aperta o orcamento ate caber no teto e paga so a manutencao da
-     base — o minimo para continuar governando. E o contrafactual que separa "a queda
-     e alcancavel" de "a queda e inevitavel". */
+  /* ── O GOVERNO MEDIANO, e ele e a outra ponta do criterio ─────────────────── Ele nao e
+     bom: aperta o orcamento ate caber no teto e paga so a manutencao da base — o minimo para
+     continuar governando. */
   const UPKEEP = 1.5 / 12;
   const manutencao = () => {
     let state = createState();
@@ -177,8 +159,7 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
         CATALOG.parties,
         CATALOG.fiscal.seatPrice,
       );
-      /* O MAIOR APERTO QUE CABE, deixando a reserva da base de fora. Busca binaria,
-         como no simulador: a relacao entre o fator e o custo e linear, o teto nao e. */
+      /* O MAIOR APERTO QUE CABE, deixando a reserva da base de fora. */
       const room = Math.max(0, discretionaryRoom(state) - reserve);
       let low = 0;
       let high = 1;
@@ -215,36 +196,20 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
     return null;
   };
 
-  /* Promete verba cheia a todo mundo e o caixa nao honra: a base derrete, a rua
-     desaba, e o processo se abre. */
+  /* Promete verba cheia a todo mundo e o caixa nao honra: a base derrete, a rua desaba, e o
+     processo se abre. */
   const caiu = anos(1);
   assert.ok(caiu !== null, "um governo que promete tudo e nao paga atravessou o mandato");
 
-  /* ⚠ E O PASSIVO CAI TAMBEM, DESDE 16/08/2026 — e esta linha era o INVERSO ate o
-     achado 31 ser consertado. Ela dizia "o passivo sobrevive, e isso e um resultado":
-     nao gastar agradava o mercado, e o capital o abrigava.
-
-     O que mudou nao foi a CALDEIRA, foi o pais deixar de se consertar sozinho. Com o
+  /* O que mudou nao foi a CALDEIRA, foi o pais deixar de se consertar sozinho. Com o
      decaimento por identidade, quem nao alimenta as areas ve os indices cairem, a rua
      cansar e o mercado ver a divida subir — e as tres rupturas passam a se abrir
      juntas. O achado 29 morreu por consequencia, e nao por calibragem: era exatamente
-     o que a retomada previa ao mandar consertar o 31 antes dele.
-
-     ⚠ E A PROVA NAO FOI APAGADA — ela virou a outra metade do criterio, que e a que
-     de fato importa e nunca esteve escrita: a queda tem de ser alcancavel por um
-     governo RUIM e inalcancavel por um MEDIANO. Sem esta segunda linha, "todo mundo
-     cai" passaria verde, e um motor de derrota que derruba sempre e uma cutscene. */
+     o que a retomada previa ao mandar consertar o 31 antes dele. */
   const passivo = anos(0);
   assert.ok(passivo !== null, "o governo passivo atravessou 60 meses sem consequencia");
 
-  /* ⚠ E O MEDIANO ATRAVESSA O MANDATO. Ele mantem a maquina no que o teto permite e
-     paga a manutencao da base — nao e um bom governo, e um governo comum. Medido: ele
-     cai no mes 52, tres meses DEPOIS de o mandato acabar.
-
-     Este assert e o que impede a calibragem de escorregar para o corredor: com
-     `mandatoryGrowth` em 2,5% — a media aplicada a obrigatoria inteira, que era o
-     valor ate 16/08 — TODO governo caía entre os meses 39 e 45, inclusive o que
-     reforma, e o jogo deixava de ter jogada. */
+  /* Medido: ele cai no mes 52, tres meses DEPOIS de o mandato acabar. */
   const mediano = manutencao();
   assert.ok(
     mediano === null || mediano > MONTHS_PER_TERM + OPENING_MONTH,
@@ -253,12 +218,9 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
 });
 
 test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {
-  /* ⚠ SEM O INTERVALO, A DERROTA NAO E JOGAVEL. Medido na primeira versao: aberto no
-     mes 47, caido no mes 47 — o que abriu o processo foi a base ja destruida, entao
-     os votos para sustentar nao existiam, e o leilao nunca acontecia.
-
-     Um mes e o mesmo desenho da tramitacao: um estagio por mes. E e ele que da ao
-     jogador o turno em que a cadeira vale o triplo e sobreviver ainda e possivel. */
+  /* Medido na primeira versao: aberto no mes 47, caido no mes 47 — o que abriu o processo foi
+     a base ja destruida, entao os votos para sustentar nao existiam, e o leilao nunca
+     acontecia. */
   let state = createState();
   let opened = null;
 
@@ -285,16 +247,7 @@ test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {
 });
 
 test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigencia tem SENTIDO", () => {
-  /* ⚠ ESTA PROVA PRENDE O DILEMA CENTRAL DO JOGO, e ele so passou a existir em
-     20/08/2026. Ate aqui todas as exigencias empurravam para o mesmo lado — gaste mais
-     —, e um jogo em que todo mundo quer a mesma coisa nao tem escolha dentro dele: bastava
-     ter dinheiro. Com o mercado escrevendo, a bandeja pode receber duas cartas que se
-     contradizem, e ceder as duas e impossivel.
-
-     ⚠ E O QUE ELA COBRA E O SENTIDO, e nao a existencia da carta. Uma exigencia com o
-     sentido invertido e pior que exigencia nenhuma: o jogador cede achando que gasta e
-     na verdade corta, aprende a regra ao contrario, e joga contra ela por meses. E o
-     defeito nao falha em lugar nenhum — a carta sai inteira, com numero e botao. */
+  /* E o defeito nao falha em lugar nenhum — a carta sai inteira, com numero e botao. */
 
   /** UM GOVERNO GASTADOR: sobe tudo o que a lei permite, todo mes. */
   const gastador = () => {
@@ -324,18 +277,15 @@ test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigencia tem S
   const programa = PROGRAMS.find(p => p.id === carta.lever);
   assert.ok(programa, `o mercado exigiu a alavanca ${carta.lever}, que nao e um programa`);
 
-  /* ⚠ O NIVEL EXIGIDO E O DA POSSE, e ele tem de ser MENOR que o de hoje: e isso que
-     faz a exigencia ser um CORTE. Maior, e ela seria um pedido de gasto assinado pelo
-     grupo que existe para cobrar o contrario. */
+  /* ⚠ O NIVEL EXIGIDO E O DA POSSE, e ele tem de ser MENOR que o de hoje: e isso que faz a
+     exigencia ser um CORTE. */
   assert.equal(carta.level, programa.initial, "o mercado nao pediu o nivel da posse");
   assert.ok(
     (carta.level ?? 0) < (state.levels[programa.id] ?? programa.initial),
     `o mercado pediu ${carta.level} e o programa esta em ${state.levels[programa.id]} — isso e gasto, e nao corte`,
   );
 
-  /* ⚠ E O SENTIDO DO OUTRO LADO CONTINUA VALENDO. Um governo que CORTA recebe a
-     exigencia inversa, do grupo de capacidade — e o nivel pedido fica ACIMA do de hoje.
-     Sem esta metade, a prova passaria com os dois grupos pedindo corte. */
+  /* ⚠ E O SENTIDO DO OUTRO LADO CONTINUA VALENDO. */
   let cortador = createState();
   let devolver = null;
   for (let month = 0; month < 40; month++) {

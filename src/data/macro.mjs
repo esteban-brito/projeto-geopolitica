@@ -1,27 +1,4 @@
-/* PARAMETROS MACROECONOMICOS — as constantes que CORRENTE consome.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   ⚠ NUMEROS REAIS, datados, como o resto do catalogo desde 13/08/2026. O que e
-   ficcao e o que o modelo FAZ com eles.
-
-   ── AS QUATRO EQUACOES, E POR QUE SAO ESSAS ─────────────────────────────────
-   Este e o menor motor macro que da PRECO ao imposto. Sem ele, subir aliquota e
-   receita de graca e existe uma jogada dominante: taxar tudo no maximo, pagar o
-   custo politico uma vez, e governar com dinheiro infinito para sempre.
-
-     HIATO      quanto o PIB esta acima ou abaixo do que o pais consegue produzir;
-     PHILLIPS   hiato positivo pressiona preco;
-     TAYLOR     inflacao acima da meta levanta juro;
-     OKUN       hiato positivo derruba desemprego.
-
-   Sao as quatro relacoes que qualquer banco central do mundo usa para conversar
-   consigo mesmo. Nao sao "o modelo certo" — sao o modelo COMUM, e usar o comum e
-   o que permite calibrar contra numero publicado em vez de contra intuicao.
-
-   ── O QUE ESTE MOTOR NAO FAZ, declarado ─────────────────────────────────────
-   Cambio, setor externo, expectativa de mercado formada por credibilidade, e
-   composicao setorial do PIB. Os quatro sao reais e nenhum deles e necessario
-   para o imposto ter preco — que e a razao de este motor existir agora. */
+/* PARAMETROS MACROECONOMICOS — as constantes que CORRENTE consome. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -70,7 +47,7 @@ export const MACRO_SCHEMA = {
  * @property {number} floatingDebt - fracao da divida atrelada a taxa basica
  * @property {number} legacyRate - o custo medio do estoque que NAO acompanha a taxa
  * @property {number} riskPremium - a inclinacao do premio de risco, por ponto ao
- *   quadrado de divida acima da herdada
+ * quadrado de divida acima da herdada
  * @property {number} initialInflation
  * @property {number} initialRate
  * @property {number} initialUnemployment
@@ -80,91 +57,56 @@ export const MACRO_SCHEMA = {
 
 /** @type {MacroParameters} */
 export const MACRO = {
-  /* Crescimento potencial do Brasil, que e baixo e e o problema do pais: a
-     economia nao consegue crescer muito sem inflacionar. Fonte: consenso de
-     estimativas de PIB potencial, na faixa de 1,5% a 2,5%. */
+  /* Fonte: consenso de estimativas de PIB potencial, na faixa de 1,5% a 2,5%. */
   potentialGrowth: 0.02,
-  /* A CAPACIDADE DO ESTADO LEVANTA O POTENCIAL, e e por aqui que educacao e
-     infraestrutura pagam. A 0,03, um pais com todos os indices no teto cresce
-     ~5% em vez de 2% — que e a distancia entre o Brasil e um pais que resolveu
-     seus gargalos. E como o `lag` da educacao e 24 meses, esse premio chega
-     depois do mandato de quem o pagou. */
+  /* A 0,03, um pais com todos os indices no teto cresce ~5% em vez de 2% — que e a distancia
+     entre o Brasil e um pais que resolveu seus gargalos. */
   capacityLift: 0.03,
-  /* ⚠ ESTA CONSTANTE E O PRECO DO IMPOSTO, e sem ela o jogo tem jogada dominante.
-     A 0,35, subir a carga em 1 ponto do PIB tira 0,35 ponto de crescimento — na
-     faixa das estimativas de multiplicador tributario para o Brasil, que ficam
-     entre 0,2 e 0,6 dependendo do tributo. */
+  /* A 0,35, subir a carga em 1 ponto do PIB tira 0,35 ponto de crescimento — na faixa das
+     estimativas de multiplicador tributario para o Brasil, que ficam entre 0,2 e 0,6
+     dependendo do tributo. */
   taxDrag: 0.35,
-  /* Juro real freia. A 0,25, cada ponto de juro real acima do neutro custa um
-     quarto de ponto de PIB — e e por isso que o jogador vai odiar o BC. */
+  /* Juro real freia. */
   rateDrag: 0.25,
-  /* Gasto publico estimula, e MENOS do que ele custa: multiplicador abaixo de 1 e
-     o consenso para gasto corrente em economia com juro alto. Investimento
-     multiplica mais, e essa distincao fica declarada como ausente. */
+  /* Gasto publico estimula, e MENOS do que ele custa: multiplicador abaixo de 1 e o consenso
+     para gasto corrente em economia com juro alto. */
   fiscalMultiplier: 0.6,
 
   /* Meta de inflacao continua, 3%. Fonte: CMN. */
   inflationTarget: 0.03,
-  /* ANCORAGEM PARCIAL. A 0,6, a expectativa e 60% meta e 40% inflacao passada —
-     um pais com credibilidade imperfeita, que e o caso. Ancoragem 1 faria a
-     inflacao voltar sozinha e o jogador nunca sentir consequencia; ancoragem 0
-     faria qualquer choque virar espiral. */
+  /* A 0,6, a expectativa e 60% meta e 40% inflacao passada — um pais com credibilidade
+     imperfeita, que e o caso. */
   anchoring: 0.6,
   phillips: 0.35,
 
   /* Juro real neutro. Fonte: estimativas do BCB, faixa de 4,5% a 5,5%. */
   neutralRate: 0.05,
-  /* Taylor: o BC reage mais a inflacao do que a hiato, e alisa o movimento.
-     Reagir 1,5 ao desvio e o principio de Taylor — abaixo de 1, subir juro nao
-     sobe o juro REAL e o modelo perde a ancora. */
+  /* Taylor: o BC reage mais a inflacao do que a hiato, e alisa o movimento. */
   taylorInflation: 1.5,
   taylorGap: 0.5,
   rateSmoothing: 0.7,
 
-  /* Desemprego que sobra com o PIB no potencial. Fonte: PNAD Continua, faixa
-     estrutural de 7% a 9%. */
+  /* Fonte: PNAD Continua, faixa estrutural de 7% a 9%. */
   naturalUnemployment: 0.08,
   okun: 0.4,
 
-  /* ⚠ A FRACAO DA DIVIDA QUE ACOMPANHA A SELIC, e ela e a peca que faz juro alto
-     virar crise fiscal. A ancora e publica e boa: cada 1 p.p. de Selic custa
-     cerca de R$ 40 bi ao ano. Com divida bruta perto de R$ 9,4 tri, isso da 45%
-     do estoque atrelado a taxa basica — que e a ordem de grandeza real do perfil
-     brasileiro. E o que torna "baixar o juro na canetada" uma tentacao com
-     consequencia, em vez de um botao sem preco. */
+  /* de Selic custa cerca de R$ 40 bi ao ano. */
   floatingDebt: 0.45,
-  /* ⚠ O RESTO DO ESTOQUE TAMBEM PAGA JURO, e esquecer isso foi o defeito que a
-     simulacao pegou. A ancora de R$ 40 bi por ponto de Selic mede a SENSIBILIDADE
-     — quanto a conta muda quando a taxa muda —, e nao o custo total. Prefixado e
-     indexado a inflacao nao reagem a decisao de hoje, mas cobram todo mes: juntos,
-     os dois canais dao perto de R$ 900 bi ao ano, ou 7,5% do PIB, que e a ordem
-     real do servico da divida brasileira.
-
-     Sem esta linha, a divida crescia menos que o PIB nominal e o mandato terminava
-     com a razao caindo de 78% para 55% sem o jogador ter feito nada — um pais que
-     se desendivida sozinho, que e o oposto do Brasil. */
+  /* ⚠ O RESTO DO ESTOQUE TAMBEM PAGA JURO, e esquecer isso foi o defeito que a simulacao
+     pegou. */
   legacyRate: 0.09,
 
-  /* A INCLINACAO DO PREMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT
+  /* A INCLINACAO DO PREMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT O que
+     este numero significa, em cima da divida herdada de 78%: +10 p.p.
      de ECLUSA e o TABLE da Mesa. O que NAO e chute e a forma: convexa, porque o
-     mercado tolera e depois foge. Ver `premiumOf` em `src/domain/economy/`.
-
-     O que este numero significa, em cima da divida herdada de 78%:
-
-       +10 p.p. de divida (88%)  ->  0,5 p.p. de juro a mais   — incomoda
-       +20 p.p. (98%)            ->  2,0 p.p.                  — doi
-       +50 p.p. (128%)           -> 12,5 p.p.                  — e uma crise
-
-     A progressao e o desenho: o primeiro ponto e barato e o vigesimo nao, e e isso
-     que separa uma conta de um risco. Um premio linear ensinaria que "mais um pouco"
-     custa igual no comeco e na beira do abismo. */
+     mercado tolera e depois foge. Ver `premiumOf` em `src/domain/economy/`. */
   riskPremium: 0.5,
 
   initialInflation: 0.042,
   initialRate: 0.105,
   initialUnemployment: 0.068,
-  /* Populacao em milhoes, e o crescimento que o IBGE projeta — desacelerando, e
-     e por isso que o bonus demografico acabou e a previdencia aperta. */
+  /* Populacao em milhoes, e o crescimento que o IBGE projeta — desacelerando, e e por isso
+     que o bonus demografico acabou e a previdencia aperta. */
   initialPopulation: 213,
   populationGrowth: 0.004,
 };

@@ -1,53 +1,13 @@
-/* GUARDA · ORFAS — nenhuma regra de estilo sem HTML para pintar.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   ⚠ ELA E O ACHADO 5 DA RETOMADA, e ele ficou aberto por seis sessoes. O custo
-   dele esta medido, em duas varreduras feitas A MAO:
-
-     nona sessao    299 linhas — `70-screen-approval.css` inteiro, a familia
-                    `.strip`/`.chip`, e duas regras de `.strip--stacked`;
-     decima sessao  201 linhas de CSS morto, mais uma regra `.cards` duplicada que
-                    era sobrescrita inteira pela irma vinte linhas abaixo.
-
-   **Quinhentas linhas que nenhum seletor alcancava**, e nenhuma delas foi achada
-   por leitura — as duas vezes foi varredura, e as duas vezes a retomada anotou a
-   mesma frase: "enquanto a guarda nao existir, isto volta". Voltou.
-
-   ── POR QUE ISSO NAO E SO SUJEIRA ───────────────────────────────────────────
-   Folha orfa nao quebra nada, e e exatamente por isso que ela e cara. Ela envelhece
-   junto com o resto: alguem ajusta a regra ERRADA das duas, nao ve efeito nenhum, e
-   passa meia hora procurando o defeito no lugar em que ele nao esta. Foi o que a
-   regra `.cards` duplicada fez em 16/08.
-
-   ⚠ E O PIOR CASO E O SELETOR AMARRADO A UM NOME QUE MUDOU. Na nona sessao,
-   `.board[data-screen="mesa"] .report` deixou de casar quando a Mesa virou Congresso:
-   duas regras mortas por uma renomeacao, e o painel do mes passado sem recheio nenhum
-   em toda captura, por duas sessoes. Nada falha; o estilo apenas deixa de existir.
-
-   ── O QUE ELA MEDE, E POR QUE SO ISSO ───────────────────────────────────────
-   Classe declarada em folha, contra classe PRODUZIDA por `src/`, `app.mjs` ou
-   `index.html`. So classe: `data-*` e pseudo-classe ficam de fora de proposito,
-   porque as duas sao ESTADO — um `[data-boiling="true"]` pode passar meses sem
-   acontecer numa partida e continuar correto.
-
-   ⚠ E A DIRECAO E UMA SO. Classe no HTML sem regra na folha NAO e acusada: ela e
-   um gancho legitimo para o passeio e para a suite de telas, que procuram elementos
-   por classe. A familia inversa — dado escrito pela tela que nenhum seletor lê —
-   tem outra guarda, `tokens`, e e la que ela mora.
-
-   ── O CASADOR E DE PALAVRA INTEIRA, e isso nao e detalhe ────────────────────
-   `card` nao pode ser dado como usado porque `card__title` existe. O `_` conta como
-   caractere de palavra em `\b`, entao `\bcard\b` NAO casa dentro de `card__title` —
-   e e isso que faz a guarda enxergar um bloco cujo elemento sobreviveu ao pai. */
+/* O custo dele esta medido, em duas varreduras feitas A MAO: nona sessao  299 linhas —
+   `70-screen-approval.css` inteiro, a familia `.strip`/`.chip`, e duas regras de `.strip--
+   stacked`; decima sessao 201 linhas de CSS morto, mais uma regra `.cards` duplicada que era
+   sobrescrita inteira pela irma vinte linhas abaixo. */
 
 import { collect, isGuardSource, stripCssComments, stripJsComments } from "../lib/project.mjs";
 
 export const name = "orphans";
 
-/* ONDE UMA CLASSE PODE NASCER. O passeio e as suites ficam de fora: eles CONSOMEM
-   classe para achar elemento, e contar um `querySelector` de teste como produtor
-   faria a guarda dar por viva qualquer regra que uma prova mencione — que e o
-   oposto do que ela existe para fazer. */
+/* ONDE UMA CLASSE PODE NASCER. */
 /**
  * @param {string} path
  */
@@ -58,10 +18,7 @@ function produces(path) {
 /**
  * AS CLASSES QUE UMA FOLHA DECLARA, com a linha em que cada uma aparece.
  *
- * O seletor e tudo o que vem antes de `{`, e dele saem os `.nome`. Regras de arroba
  * — `@media`, `@layer`, `@property` — nao declaram classe e caem fora pelo filtro do
- * `@`, que e mais barato e mais seguro do que tentar entender o bloco.
- *
  * @param {string} css
  * @returns {Map<string, number>}
  */
@@ -95,9 +52,7 @@ function declared(css) {
 export function audit(files) {
   const { list, add } = collect(name);
 
-  /* O QUE O JOGO PRODUZ, num texto so. Comentario sai fora: uma classe citada em
-     prosa — e esta base cita muitas — daria por viva uma regra que ninguem pinta,
-     e a guarda ficaria verde justamente onde ela precisa falar. */
+  /* O QUE O JOGO PRODUZ, num texto so. */
   let source = "";
   for (const [path, raw] of files) {
     if (isGuardSource(path) || !produces(path)) continue;
@@ -120,8 +75,8 @@ export function audit(files) {
   return list;
 }
 
-/* ── AS PROVAS SINTETICAS ────────────────────────────────────────────────────
-   Cada uma reintroduz um defeito real que o projeto ja pagou. */
+/* ── AS PROVAS SINTETICAS ──────────────────────────────────────────────────── Cada uma
+   reintroduz um defeito real que o projeto ja pagou. */
 export const synthetic = [
   {
     label: "uma folha inteira sem HTML para pintar",

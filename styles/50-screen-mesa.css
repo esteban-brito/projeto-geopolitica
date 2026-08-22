@@ -1,61 +1,17 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   TELA · A MESA — onde o mes se resolve.
-   ═══════════════════════════════════════════════════════════════════════════
-
-   TRES BLOCOS, E A ORDEM E A DA DECISAO: o que esta em pauta, quanto cada
-   bancada entrega pela verba oferecida, e se o caixa cobre o que foi prometido.
-   Quem lê de cima para baixo lê a pergunta, a negociacao e a resposta.
-
-   ── O QUE E CERTEZA E O QUE E RISCO, na hierarquia visual ────────────────────
-   A distincao e do modelo e a tela tem de carrega-la. O RATEIO e deterministico:
-   dada a promessa e a folga, o corte e uma conta — e o resumo o afirma sem
-   ressalva, em tipo pequeno e cor de texto. O PLACAR e sorteado no dia — e ele
-   aparece no maior degrau da escala, com a banda colada no numero. Trocar os
-   dois de lugar ensinaria o jogador a duvidar do que e certo e a confiar no que
-   e incerto.
-
-   ── UMA LAMINA, E UMA FAIXA ─────────────────────────────────────────────────
-   A tela tem duas superficies e nao seis: a faixa de indices (nivel `support`,
-   porque ela informa) e a mesa (nivel `stage`, porque ela e o assunto). As
-   bancadas dentro dela sao linhas de uma tabela, e nao cartoes — cada bancada
-   com moldura propria seriam quatro pesos para dizer quatro coisas do mesmo
-   nivel, que e o ruido que a regra de forma dos componentes existe para impedir.
-
-   ── A COR DA BASE ───────────────────────────────────────────────────────────
-   Tres humores, tres tratamentos, e nenhum deles e ambar: a marca e a cor do que
-   se pressiona, e uma bancada nao se pressiona. Com o governo lê VERDE, e os
-   dois degraus de baixo leem VERMELHO — mas nao o mesmo vermelho de mesma
-   forma. Obstrucao tinge a linha; ruptura tinge mais e acende uma barra na
-   quina esquerda, porque obstruir e romper sao situacoes politicas distintas e
-   nao dois pontos de uma reta. Diferenca de categoria pede forma diferente. */
+/* TELA · A MESA — onde o mes se resolve. */
 
 @layer screens {
-  /* ── A FAIXA DE INDICES ─────────────────────────────────────────────────────
-     Seis medidores, uma superficie so. O separador e o mesmo fio de duas paradas
-     da faixa de contexto: clara em cima, escura embaixo, porque a luz vem de
-     cima. `box-shadow` nao ocupa espaco, entao nenhuma medida de caixa muda. */
-  /* SETE COLUNAS desde que a Defesa entrou. O numero esta escrito e nao derivado
-     de propósito: `auto-fit` deixaria a contagem de colunas variar com a largura,
-     e as regras de separador abaixo dependem de saber onde cada fileira comeca —
-     um fio pendurado no vazio da quina esquerda e o defeito que elas existem para
-     impedir. Area nova mexe aqui e na consulta de largura la embaixo. */
-  /* ⚠ A FAIXA DEIXOU DE SER VIDRO em 15/08/2026 e virou um BLOCO da lamina do
-     Congresso. O fundo raso e o raio que ela ganhou aqui sao os MESMOS dos cartoes
-     do Gabinete, e de proposito: o projeto ja tem uma forma para "superficie
-     interna que agrupa" — `rgba(255,255,255,0.04)` com `--radius-piece` — e uma
-     segunda forma seria a terceira maneira de dizer a mesma coisa. */
-  /* ⚠ A CONTAGEM NAO E DIGITADA, e ate 18/08/2026 ela era — `repeat(7)` para OITO
-     areas. A Producao virou Agricultura e Industria na quinta sessao, e este numero
-     ficou onde estava: a Defesa caia numa segunda fileira que o `overflow: hidden`
-     decapitava, e a faixa que existe para COMPARAR as oito mostrava sete.
-
-     `auto-fit` conta sozinho. O comentario acima ainda manda mexer aqui quando nascer
-     uma area — agora so na consulta de largura la embaixo, e nao mais aqui. */
+  /* ── A FAIXA DE INDICES ───────────────────────────────────────────────────── Seis
+     medidores, uma superficie so.
+     `box-shadow` nao ocupa espaco, entao nenhuma medida de caixa muda. */
+  /* SETE COLUNAS desde que a Defesa entrou.
+     O numero esta escrito e nao derivado de propósito: `auto-fit` deixaria a contagem de
+     colunas variar com a largura, e as regras de separador abaixo dependem de saber onde cada
+     fileira comeca — um fio pendurado no vazio da quina esquerda e o defeito que elas existem
+     para impedir. */
   .capacities {
     display: grid;
-    /* UMA FILEIRA, quantas areas houver. `grid-auto-columns` precisa ser declarado
-       junto: sem ele as colunas implicitas nascem `auto` e uma area de nome longo
-       ficaria mais larga que as outras — numa faixa que existe para COMPARAR. */
+    /* UMA FILEIRA, quantas areas houver. */
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
     overflow: hidden;
@@ -63,28 +19,10 @@
     background: rgba(255, 255, 255, 0.04);
   }
 
-  /* ── O BORDÔ MARCA O LUGAR, e não quem está nele ────────────────────────────
-     ⚠ O CONGRESSO SAÍA NO MESMO AZUL-CINZA DE TODA OUTRA TELA. Num jogo sobre a
-     separação de poderes, o Executivo, o Legislativo e (um dia) o Judiciário eram
-     desenhados com a mesma tinta — e a auditoria externa leu isso, por outro
-     caminho, como falta de peso institucional.
-
-     ⚠ E ELE NÃO PINTA BANCADA. Cor de partido foi recusada três vezes, e a razão
-     não mudou: o modelo não tem "oposição", e pintar um bloco de vermelho diria
-     que ele é perigo. O que recebe a cor é a CASA — o fio de cima da lâmina. A cor
-     diz "você está na outra casa"; ela não diz nada sobre quem senta lá.
-
-     ⚠ E A BORDA ESQUERDA DA BANCADA SAIU DAQUI EM 22/08/2026, porque ela NUNCA chegou
-     à tela: havia um `.bench { border-left: ... bordô }` aqui e um segundo `.bench`
-     duzentas linhas abaixo declarando `border-left: ... transparent`. Mesma
-     especificidade, e a última vence — o bordô estava morto desde que foi escrito.
-
-     ⚠ E O CONSERTO É APAGAR, E NÃO MOVER PARA BAIXO. A quina esquerda da bancada é a
-     TARJA DE ESTADO — `[data-mood]` a pinta de crise quando a bancada obstrui e de crise
-     cheia quando ela rompe —, e é o mesmo canal da linha do índice da Caixa de Entrada.
-     Um canal com dois donos onde os dois aparecem ao mesmo tempo é o defeito que a tarja
-     da bandeja evita tendo donos que nunca coexistem. O carpete fica no fio de cima, que
-     é da CASA; a quina é de quem senta nela. */
+  /* ── O BORDÔ MARCA O LUGAR, e não quem está nele ──────────────────────────── ⚠ O CONGRESSO
+     SAÍA NO MESMO AZUL-CINZA DE TODA OUTRA TELA.
+     Um canal com dois donos onde os dois aparecem ao mesmo tempo é o defeito que a tarja da
+     bandeja evita tendo donos que nunca coexistem. */
   .board[data-screen="congress"] .area.glass-stage {
     border-top: 2px solid rgba(var(--bordo-rgb), 0.55);
   }
@@ -136,12 +74,9 @@
     color: var(--ink);
   }
 
-  /* A escada de blocos e texto, e por isso ela desce pela linha de base junto
-     com o numero. O aperto negativo cola os degraus: com o espaco normal entre
-     caracteres, seis blocos leem como seis simbolos e nao como uma curva. */
-  /* ⚠ A TIPOGRAFIA SAIU EM 21/08/2026 junto com a escada de blocos — ver `sparkline`.
-     A faixa e estreita e tem seis campos lado a lado, entao a linha aqui e mais curta
-     que a do painel de Financas: 2,5rem cabe ao lado do numero sem empurra-lo. */
+  /* A escada de blocos e texto, e por isso ela desce pela linha de base junto com o numero. */
+  /* A faixa e estreita e tem seis campos lado a lado, entao a linha aqui e mais curta que a
+     do painel de Financas: 2,5rem cabe ao lado do numero sem empurra-lo. */
   .capacity__trend {
     color: var(--ink-dim);
   }
@@ -151,11 +86,7 @@
     height: 0.75rem;
   }
 
-  /* A BARRA E A LINHA D'AGUA. Os dois unicos numeros desta folha que nao sao
-     decisao visual: `--index` e o indice daquela area, escrito pela view em
-     estilo inline, e `--neutral` e o ponto neutro do catalogo, injetado pelo
-     entrypoint. Ambos sao DADO, e por isso estao declarados na lista de excecoes
-     da guarda de tokens em vez de virarem valor de paleta. */
+  /* A BARRA E A LINHA D'AGUA. */
   .capacity__track {
     position: relative;
     height: 4px;
@@ -173,9 +104,9 @@
     background: var(--ink-soft);
   }
 
-  /* A linha d'agua e um VAO escuro sobre o preenchimento, e nao um traco claro:
-     traco claro sobre barra clara desaparece justamente no caso que importa —
-     o da area que passou do ponto neutro. */
+  /* A linha d'agua e um VAO escuro sobre o preenchimento, e nao um traco claro: traco claro
+     sobre barra clara desaparece justamente no caso que importa — o da area que passou do
+     ponto neutro. */
   .capacity__track::after {
     content: "";
     position: absolute;
@@ -187,10 +118,9 @@
   }
 
   /* ── A MESA ─────────────────────────────────────────────────────────────── */
-  /* ⚠ O RECHEIO SAIU em 15/08/2026. A mesa era uma lamina propria e pagava o
-     proprio respiro; agora ela e o miolo de um bloco dentro da lamina do
-     Congresso, que ja tem recheio — mantidos os dois, a mesa recuaria 28px a mais
-     que os outros dois blocos da mesma tela e a coluna deixaria de alinhar. */
+  /* A mesa era uma lamina propria e pagava o proprio respiro; agora ela e o miolo de um bloco
+     dentro da lamina do Congresso, que ja tem recheio — mantidos os dois, a mesa recuaria
+     28px a mais que os outros dois blocos da mesma tela e a coluna deixaria de alinhar. */
   .mesa {
     display: grid;
     gap: var(--space-4);
@@ -201,12 +131,6 @@
     gap: var(--space-1);
   }
 
-  /* ⚠ `.mesa__eyebrow` SAIU DAQUI em 16/08/2026, acusada pela guarda `orphans`. Ela
-     morreu na nona sessao, quando o "Nada em pauta" deixou de usar as classes do
-     TITULO de uma pauta real e passou a usar `.empty` — e a regra ficou. O nome dela
-     ainda aparece na prosa de `mesa.mjs`, explicando o conserto, e a guarda ignora
-     comentario de proposito: classe citada em prosa nao pinta nada. */
-
   .mesa__title {
     font-family: var(--font-display);
     font-weight: 800;
@@ -215,9 +139,7 @@
     color: var(--ink);
   }
 
-  /* A LINHA DE FICHA TECNICA: instrumento, area, rito, quorum e impacto fiscal.
-     Ela e deliberadamente cinza e pequena — e o que a pauta E, e nao o que o
-     jogador tem de decidir. */
+  /* A LINHA DE FICHA TECNICA: instrumento, area, rito, quorum e impacto fiscal. */
   .mesa__meta {
     display: flex;
     flex-wrap: wrap;
@@ -228,8 +150,7 @@
     color: var(--ink-dim);
   }
 
-  /* TROCAR e a unica coisa pressionavel desta linha, e por isso e a unica
-     ambar. Ela leva de volta a area de onde a pauta veio. */
+  /* TROCAR e a unica coisa pressionavel desta linha, e por isso e a unica ambar. */
   .mesa__swap {
     font-family: var(--font-display);
     font-size: var(--text-label);
@@ -245,42 +166,24 @@
     }
   }
 
-  /* ── AS BANCADAS ────────────────────────────────────────────────────────────
-     Quatro linhas, quatro colunas: quem e, como esta, quanto recebe, o que
-     entrega. As colunas sao FIXAS de proposito — com largura automatica cada
-     linha se alinharia sozinha e a coluna de numeros deixaria de ser coluna. */
+  /* ── AS BANCADAS ──────────────────────────────────────────────────────────── Quatro
+     linhas, quatro colunas: quem e, como esta, quanto recebe, o que entrega. */
   .mesa__benches {
     display: grid;
     gap: var(--space-2);
   }
 
-  /* ── A BANCADA DEIXOU DE SER CARTÃO EM 20/08/2026 ───────────────────────────
-     ⚠ ESTA TELA ERA A ÚLTIMA NO DIALETO QUE O GABINETE ABANDONOU. Lá, em 16/08, os
-     cinco cartões viraram blocos com a razão escrita: "vidro dentro de vidro são dois
-     materiais empilhados para dizer uma coisa só, e cinco retângulos numa grade são a
-     unidade visual de um dashboard". Aqui sobraram ONZE retângulos preenchidos, cada
-     um com OUTRO retângulo aninhado dentro — a lista de gente. Caixa dentro de caixa,
-     onze vezes, na tela que o responsável chamou de feia duas sessões seguidas.
-
-     O que separa uma bancada da seguinte passa a ser um FIO, que é o que separa tudo
-     o mais neste projeto. E o que diz que a gente pertence ao bloco continua sendo a
-     linha vertical do recuo — ela já fazia esse trabalho sozinha, e o preenchimento
-     só estava dizendo de novo o que a posição dizia.
-
-     ⚠ O CONTROLE ENCOLHEU DE ~400px PARA 180, e isso é conserto de uso e não de
-     estética: com `1.4fr`, o trilho comia o meio da linha e a LEITURA que ele muda
-     ficava a quatrocentos pixels dele. O jogador arrastava aqui e o número respondia
-     do outro lado da tela. Fixo, o trilho termina colado na leitura — e a folga vai
-     para o nome, que é o que tem texto de verdade para mostrar. */
+  /* ⚠ O CONTROLE ENCOLHEU DE ~400px PARA 180, e isso é conserto de uso e não de estética: com
+     `1.4fr`, o trilho comia o meio da linha e a LEITURA que ele muda ficava a quatrocentos
+     pixels dele. */
   .bench {
     display: grid;
     grid-template-columns: minmax(96px, 1fr) auto 180px auto;
     align-items: center;
     gap: var(--space-3);
-    /* A TARJA DE ESTADO OCUPA LUGAR MESMO NEUTRA — transparente, e não ausente:
-       sem ela, uma bancada em ruptura andaria três pixels para a direita em relação
-       às vizinhas, e a coluna dos nomes perderia a margem comum. É a mesma decisão
-       da linha do índice da Caixa de Entrada. */
+    /* A TARJA DE ESTADO OCUPA LUGAR MESMO NEUTRA — transparente, e não ausente: sem ela, uma
+       bancada em ruptura andaria três pixels para a direita em relação às vizinhas, e a
+       coluna dos nomes perderia a margem comum. */
     padding: var(--space-2) var(--space-3);
     border-left: var(--rule-strong) solid transparent;
     transition: border-color var(--dur-piece) linear;
@@ -303,23 +206,16 @@
     letter-spacing: 0.04em;
   }
 
-  /* O NOME INTEIRO EMBAIXO DA SIGLA, e ele pode quebrar: e a unica prosa da linha, e
-     cortá-la com reticências esconderia justamente o que ensina a sigla. */
+  /* O NOME INTEIRO EMBAIXO DA SIGLA, e ele pode quebrar: e a unica prosa da linha, e cortá-la
+     com reticências esconderia justamente o que ensina a sigla. */
   .bench__name small {
     font-size: var(--text-label);
     line-height: 1.25;
     color: var(--ink-dim);
   }
 
-  /* ── A GENTE DENTRO DO BLOCO ────────────────────────────────────────────────
-     ⚠ ELA E ANINHADA, E A ANINHAGEM E A MECANICA. O jogador paga o BLOCO; o bloco
-     e feito de gente; a gente entrega diferente. Uma lista de onze bancadas irmas
-     diria que o lider e o bloco sao a mesma coisa — e o desenho do ciclo 4 e o
-     oposto: uma pessoa e uma bancada de um so DENTRO da dela.
-
-     A LINHA VERTICAL A ESQUERDA e o que faz o olho ler "isto pertence aquilo" sem
-     nenhuma caixa nova: recuo sozinho lê como desalinhamento, e um segundo cartao
-     aqui seria peso repetido para dizer o que a posicao ja diz. */
+  /* ── A GENTE DENTRO DO BLOCO ──────────────────────────────────────────────── ⚠ ELA E
+     ANINHADA, E A ANINHAGEM E A MECANICA. */
   .bench__people {
     grid-column: 1 / -1;
     display: grid;
@@ -343,16 +239,9 @@
     min-width: 0;
   }
 
-  /* O NOME EM SERIFA — e esta e a primeira aplicacao da regra tipografica do ciclo
-     5: serifa e texto de REGISTRO, sans e valor MEDIDO. Nome de gente e registro.
-
-     ⚠ ELE QUEBRA, E NAO TRUNCA, e a diferenca aqui e de proposito e nao de estilo.
-     A primeira versao herdou o `text-overflow: ellipsis` da linha da bancada, e a
-     medicao pegou na hora: a 390px os SETE nomes saiam cortados — "Onofre Bastos
-     Quir…", "Prudêncio Arruda B…" —, o que anula a razao inteira desta peca
-     existir. Reticencia serve para texto secundario; o nome de uma pessoa E a
-     identidade, e identidade cortada nao identifica. Uma linha a mais e barata; um
-     Congresso de gente sem nome nao. */
+  /* O NOME EM SERIFA — e esta e a primeira aplicacao da regra tipografica do ciclo 5: serifa
+     e texto de REGISTRO, sans e valor MEDIDO.
+     ⚠ ELE QUEBRA, E NAO TRUNCA, e a diferenca aqui e de proposito e nao de estilo. */
   .person__name {
     font-family: var(--font-record);
     font-weight: 600;
@@ -379,17 +268,14 @@
     color: var(--ink-soft);
   }
 
-  /* A MEMORIA TEM TOM, e ela e a unica coisa desta linha que muda de mes para mes:
-     e o que o governo fez com aquele sujeito, e e ela que muda o preco dele. */
+  /* A MEMORIA TEM TOM, e ela e a unica coisa desta linha que muda de mes para mes: e o que o
+     governo fez com aquele sujeito, e e ela que muda o preco dele. */
   .person__memory[data-tone="good"] {
     color: var(--growth);
   }
   .person__memory[data-tone="poor"] {
     color: var(--crisis);
   }
-  /* ⚠ A REGRA DO TOM NEUTRO SAIU EM 20/08/2026 junto com a frase dele: memória
-     neutra deixou de imprimir linha, e regra de estilo sem HTML para pintar é
-     exatamente o que a guarda `orphans` existe para acusar. */
 
   .person__votes {
     font-family: var(--font-display);
@@ -403,13 +289,8 @@
     font-weight: 500;
     color: var(--ink-dim);
   }
-  /* O SINETE MUDOU DE ARQUIVO em 15/08/2026: ele passou a servir duas telas — a
-     bancada no Congresso e o remetente da carta no Gabinete — e componente que duas
-     telas usam mora na camada de componentes. Ver `30-components.css`. */
 
-  /* O HUMOR CARREGA A COR EM DOIS CANAIS: o numero e um ponto. Cor sozinha nao e
-     canal suficiente, e o `title` que a view escreve diz por extenso o que o
-     ponto significa. */
+  /* O HUMOR CARREGA A COR EM DOIS CANAIS: o numero e um ponto. */
   .bench__mood {
     display: inline-flex;
     align-items: center;
@@ -430,14 +311,6 @@
     color: var(--signal-up);
   }
 
-  /* ⚠ O ESTADO VIROU TARJA E DEIXOU DE SER PREENCHIMENTO, em 20/08/2026. Uma faixa
-     vermelha atrás de uma linha inteira empurra a cor para debaixo do texto, do
-     controle e de quatro números — e vermelho que cobre tudo não destaca nada, que é
-     a mesma lição que o cofre do Gabinete já tinha aprendido.
-
-     ⚠ E A TARJA NÃO É UM DESENHO NOVO: é a MESMA gramática da carta que vence e da
-     linha do índice da Caixa de Entrada — marca na quina esquerda, e a cor gradua. O
-     projeto passa a ter um jeito só de dizer "esta linha está em outro estado". */
   .bench[data-mood="obstructing"] {
     border-left-color: rgba(var(--crisis-rgb), 0.5);
   }
@@ -446,8 +319,7 @@
     color: var(--signal-down);
   }
 
-  /* RUPTURA NÃO É OBSTRUÇÃO COM MAIS TINTA. A tarja cheia é a forma que separa as
-     duas: uma é a base reclamando, a outra é a base fora. */
+  /* RUPTURA NÃO É OBSTRUÇÃO COM MAIS TINTA. */
   .bench[data-mood="broken"] {
     border-left-color: var(--crisis);
   }
@@ -456,9 +328,7 @@
     color: var(--signal-down);
   }
 
-  /* A LEITURA: fracao, custo e cadeiras. Colunas de largura declarada em `ch`
-     para os numeros baterem entre as quatro linhas — com `auto`, cada linha se
-     alinharia sozinha e a comparacao de relance sumiria. */
+  /* A LEITURA: fracao, custo e cadeiras. */
   .bench__read {
     display: grid;
     grid-template-columns: 4ch 10ch 9ch;
@@ -488,9 +358,9 @@
     color: var(--ink-dim);
   }
 
-  /* ── O RESUMO ───────────────────────────────────────────────────────────────
-     O placar previsto recebe o maior degrau da escala porque e o dado dramatico
-     desta tela: e o numero que decide se o mes vale a pena. */
+  /* ── O RESUMO ─────────────────────────────────────────────────────────────── O placar
+     previsto recebe o maior degrau da escala porque e o dado dramatico desta tela: e o numero
+     que decide se o mes vale a pena. */
   .tally {
     display: grid;
     gap: var(--space-1);
@@ -506,8 +376,8 @@
     color: var(--ink);
   }
 
-  /* A BANDA E MENOR QUE O PLACAR E MAIOR QUE O RESTO — ela e a segunda coisa
-     mais importante da tela, e nao um adendo entre parenteses. */
+  /* A BANDA E MENOR QUE O PLACAR E MAIOR QUE O RESTO — ela e a segunda coisa mais importante
+     da tela, e nao um adendo entre parenteses. */
   .tally__band {
     font-size: 0.36em;
     font-weight: 700;
@@ -523,9 +393,7 @@
     margin-left: 0.4em;
   }
 
-  /* O VEREDITO NASCE NEUTRO. Verde e vermelho sao respostas a uma pergunta que
-     so existe quando ha votacao — sem pauta na mesa, a frase e instrucao e nao
-     resultado, e vesti-la de aprovada ensina o sinal errado. */
+  /* O VEREDITO NASCE NEUTRO. */
   .tally__verdict {
     font-family: var(--font-display);
     font-weight: 700;
@@ -543,18 +411,13 @@
     color: var(--signal-down);
   }
 
-  /* ⚠ QUANDO O PLACAR ACONTECE, e nao so qual ele sera. A linha nasceu com a
-     tramitacao: o texto que o jogador esta escrevendo vai para a gaveta, e o numero
-     acima e a previsao de um plenario que fica a tres meses daqui. Sem ela a tela
-     anunciaria "acima do quorum" para um mes que nao e este. */
+  /* ⚠ QUANDO O PLACAR ACONTECE, e nao so qual ele sera. */
   .tally__when {
     font-size: var(--text-note);
     color: var(--ink-dim);
   }
 
-  /* O DINHEIRO VEM SEM RESSALVA porque o rateio e uma conta, e nao um sorteio.
-     Quando ele nao cabe, a linha inteira vira vermelha: o corte ja esta
-     decidido, e a tela nao tem o que negociar com o jogador. */
+  /* O DINHEIRO VEM SEM RESSALVA porque o rateio e uma conta, e nao um sorteio. */
   .tally__cash {
     color: var(--ink-soft);
   }
@@ -569,20 +432,10 @@
     color: var(--crisis);
   }
 
-  /* ── O RELATORIO DO MES ─────────────────────────────────────────────────────
-     ELE FICA EMBAIXO, e nao em cima: quem abre a tela vem decidir o mes novo, e
-     nao reler o velho. Quem quer o relatorio rola — e rolar e o gesto certo para
-     o que se consulta por vontade propria.
-
-     ⚠ AS DUAS REGRAS DAQUI ESTAVAM MORTAS, e ninguem tinha reparado. Elas eram
-     `.board[data-screen="mesa"] .report`, e `data-screen` deixou de valer "mesa"
-     na setima sessao, quando a Mesa virou Congresso — o entrypoint passou a
-     escrever "congress" e o seletor nunca mais casou. O resultado ficou na tela
-     desde entao: o painel do mes passado sem recheio nenhum, colado nas proprias
-     bordas, que e como ele aparece em toda captura desde a setima sessao.
-     E a licao vale alem daqui: seletor amarrado ao NOME de uma tela quebra no dia
-     em que a tela e renomeada, e quebra em silencio — nada falha, o estilo so
-     deixa de existir. Agora ele nao depende de nome nenhum. */
+  /* O resultado ficou na tela desde entao: o painel do mes passado sem recheio nenhum, colado
+     nas proprias bordas, que e como ele aparece em toda captura desde a setima sessao.
+     E a licao vale alem daqui: seletor amarrado ao NOME de uma tela quebra no dia em que a
+     tela e renomeada, e quebra em silencio — nada falha, o estilo so deixa de existir. */
   .report {
     display: grid;
     gap: var(--space-2);
@@ -591,26 +444,16 @@
     background: rgba(255, 255, 255, 0.04);
   }
 
-  /* ── QUANDO A LINHA NAO CABE ────────────────────────────────────────────────
-     A faixa passa de seis colunas para tres, e o fio muda de lugar junto: com
-     duas fileiras, o separador tem de sumir no inicio de cada uma, senao ele
-     pende no vazio da quina esquerda. */
-  /* A CONSULTA SUBIU DE 900 PARA 1180 quando a setima area entrou, e a conta e
-     direta: o tabuleiro vive entre dois rails de 216px, entao a faixa tem cerca
-     de `janela − 496` de largura util. A 1180 isso da 98px por medidor com sete
-     colunas, que e onde "PREVIDÊNCIA" para de caber e o rotulo comeca a virar
-     reticencia. Abaixo daqui a faixa quebra em tres. */
+  /* ── QUANDO A LINHA NAO CABE ──────────────────────────────────────────────── A faixa passa
+     de seis colunas para tres, e o fio muda de lugar junto: com duas fileiras, o separador
+     tem de sumir no inicio de cada uma, senao ele pende no vazio da quina esquerda. */
+  /* A CONSULTA SUBIU DE 900 PARA 1180 quando a setima area entrou, e a conta e direta: o
+     tabuleiro vive entre dois rails de 216px, entao a faixa tem cerca de `janela − 496` de
+     largura util.
+     Abaixo daqui a faixa quebra em tres. */
 
-  /* ── A GAVETA ───────────────────────────────────────────────────────────────
-     ⚠ ELA E A METADE VISIVEL DA TRAMITACAO, e sem ela a outra metade seria uma
-     mentira. Com o texto valendo no mes em que era escrito, "em pauta" e "sendo
-     votado" eram a mesma coisa; agora o que o jogador escreve hoje espera tres
-     meses, e uma tela sem a fila o deixaria escrevendo no escuro — ele veria a lei
-     sumir e reaparecer sem saber onde ela esteve.
-
-     ⚠ E ELA E DE PAPEL, como a lei e como a carta. Um projeto em tramitacao e texto
-     de registro: e a terceira consumidora da segunda substancia, e a fronteira
-     continua a mesma. */
+  /* ── A GAVETA ─────────────────────────────────────────────────────────────── ⚠ ELA E A
+     METADE VISIVEL DA TRAMITACAO, e sem ela a outra metade seria uma mentira. */
   .passage {
     display: grid;
     gap: var(--space-2);
@@ -625,8 +468,8 @@
     /* O MATERIAL VEM DE `.letter, .passage__row, .law` em `30-components.css`. */
   }
 
-  /* O ESTAGIO E A PRIMEIRA COLUNA porque e a pergunta que o jogador faz primeiro:
-     onde este texto esta. O assunto vem depois — ele ja sabe o que escreveu. */
+  /* O ESTAGIO E A PRIMEIRA COLUNA porque e a pergunta que o jogador faz primeiro: onde este
+     texto esta. */
   .passage__stage {
     font-family: var(--font-display);
     font-size: var(--text-label);
@@ -636,8 +479,8 @@
     color: rgba(var(--paper-ink-rgb), 0.62);
   }
 
-  /* QUEM ESTA NO PLENARIO ACENDE, e so ele: e o unico dos tres estagios em que o
-     mes seguinte decide alguma coisa. */
+  /* QUEM ESTA NO PLENARIO ACENDE, e so ele: e o unico dos tres estagios em que o mes seguinte
+     decide alguma coisa. */
   .passage__row[data-stage="floor"] .passage__stage {
     color: var(--brand);
   }
@@ -655,9 +498,7 @@
     color: var(--paper-ink);
   }
 
-  /* O JABUTI E DITO POR EXTENSO. O relator salvou uma alavanca do texto, e essa e a
-     informacao mais util da linha: ela explica por que o preco caiu e por que aquele
-     pedaco continua como estava. */
+  /* O JABUTI E DITO POR EXTENSO. */
   .passage__saved {
     font-size: var(--text-note);
     color: var(--brand);
@@ -670,9 +511,7 @@
     white-space: nowrap;
   }
 
-  /* ⚠ O RELOGIO SO APARECE QUANDO JA APERTOU — ver a view. Um "morre em 6" no mes
-     do protocolo ensinaria o olho a ignorar a linha, e ai, no mes em que faltasse
-     um, ele apareceria onde o jogador ja parou de ler. */
+  /* ⚠ O RELOGIO SO APARECE QUANDO JA APERTOU — ver a view. */
   .passage__clock {
     font-family: var(--font-display);
     font-size: var(--text-note);
@@ -681,23 +520,16 @@
     white-space: nowrap;
   }
 
-  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
-     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
-     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
-     desktop; eu quero a perfeição no desktop, perfeição mesmo".
-
-     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
-     de rolar. Foi o corte que permitiu a tela fechar na dobra.
-
-     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
-     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
+  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
+     rolar.
+     O corte para em 640/720px, que é território de telefone. */
 
   @media (max-width: 1180px) {
-    /* ⚠ E AQUI A FILEIRA VOLTA A SER GRADE. `grid-auto-flow` e herdado do bloco
-       acima, e sem desliga-lo as tres colunas desta consulta virariam tres colunas
-       com oito areas espremidas dentro — medido em 390px: o medidor fechava em
-       24px com o conteudo estourando 42. */
+    /* ⚠ E AQUI A FILEIRA VOLTA A SER GRADE.
+       `grid-auto-flow` e herdado do bloco acima, e sem desliga-lo as tres colunas desta
+       consulta virariam tres colunas com oito areas espremidas dentro — medido em 390px: o
+       medidor fechava em 24px com o conteudo estourando 42. */
     .capacities {
       grid-auto-flow: row;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -725,8 +557,7 @@
     }
   }
 
-  /* No celular a bancada vira DUAS linhas: nome e humor em cima, controle e
-     leitura embaixo. Quatro colunas num aparelho de 390px poriam o controle
-     deslizante em 60px de largura, e ai o passo de 5% deixa de ser alcancavel
-     com o polegar. */
+  /* No celular a bancada vira DUAS linhas: nome e humor em cima, controle e leitura embaixo.
+     Quatro colunas num aparelho de 390px poriam o controle deslizante em 60px de largura, e
+     ai o passo de 5% deixa de ser alcancavel com o polegar. */
 }

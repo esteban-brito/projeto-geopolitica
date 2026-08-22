@@ -1,42 +1,8 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   COMPONENTES — as pecas reutilizaveis, e so elas.
-   ═══════════════════════════════════════════════════════════════════════════
-
-   Uma peca so entra aqui quando existe em mais de uma tela. Enquanto e de uma
-   tela so, ela vive no arquivo daquela tela — senao este arquivo vira o deposito
-   onde tudo acaba, que e o oposto de organizado.
-
-   REGRA DE FORMA: informacoes do mesmo nivel usam o MESMO objeto, e a diferenca
-   entre elas e so ENFASE. Forma diferente para conteudo equivalente e o que faz
-   uma faixa parecer bagunçada por mais alinhada que esteja. */
+/* COMPONENTES — as pecas reutilizaveis, e so elas. */
 
 @layer components {
-  /* ── A FAIXA DE CONTEXTO MORREU AQUI EM 15/08/2026 ─────────────────────────
-     `.strip`, `.chip`, `.chip__label`, `.chip__value`, `.chip--alert` e
-     `.strip--stacked` desenhavam a faixa de mandato/base/situacao. Ela deixou de
-     ser montada quando a barra superior absorveu os tres campos dela, na setima
-     sessao — e as regras ficaram, sem uma linha de HTML para pintar, por duas
-     sessoes: 99 linhas de folha que nenhum seletor alcancava.
-
-     ⚠ ELAS SO FORAM ENCONTRADAS POR VARREDURA, e nao por leitura. Nada acusa CSS
-     orfa — a guarda `orphans` e justamente a que o projeto ainda nao escreveu (o
-     achado 5 da retomada), e este e o custo dela em numero. A folha inteira de
-     `70-screen-approval.css` caiu na mesma varredura, pela mesma razao.
-
-     O QUE SOBREVIVEU DA REGRA DE FORMA esta no comentario do topo deste arquivo, e
-     ela nao morreu com a peca: informacoes do mesmo nivel usam o mesmo objeto. */
-
-  /* ── O SINETE ───────────────────────────────────────────────────────────────
-     Iniciais num anel, e o anel e o ALCANCE — a fracao da bancada que aquela
-     pessoa de fato arrasta. Nao e enfeite: e o numero que decide se comprar aquele
-     sujeito resolve a votacao ou nao, e um medidor lê mais rapido que um numero
-     quando a pergunta e "muito ou pouco?".
-
-     ⚠ ELE NAO TEM COR DE PARTIDO, e a ausencia e decisao. O catalogo nao declara
-     cor de bloco, e inventar uma aqui colidiria com a paleta semantica: verde ja
-     significa ALTA e vermelho ja significa CRISE, entao pintar ideologia com os
-     mesmos tons faria um lado parecer bom e o outro parecer perigo. O bloco de cada
-     pessoa ja e dito pelo lugar dela na tela. */
+  /* ── O SINETE ─────────────────────────────────────────────────────────────── Iniciais num
+     anel, e o anel e o ALCANCE — a fracao da bancada que aquela pessoa de fato arrasta. */
   .sigil {
     position: relative;
     display: grid;
@@ -62,9 +28,9 @@
     transition: stroke-dasharray var(--dur-piece) var(--ease-move);
   }
 
-  /* QUEM PRESIDE GANHA O ANEL ACESO, e so quem preside: o presidente da Camara e a
-     unica pessoa do jogo cujo cargo vai decidir se um texto existe — e quando a
-     tramitacao nascer, ele e o primeiro nome que o jogador precisa achar. */
+  /* QUEM PRESIDE GANHA O ANEL ACESO, e so quem preside: o presidente da Camara e a unica
+     pessoa do jogo cujo cargo vai decidir se um texto existe — e quando a tramitacao nascer,
+     ele e o primeiro nome que o jogador precisa achar. */
   .sigil[data-office="speaker"] .sigil__reach {
     stroke: var(--brand);
   }
@@ -81,41 +47,12 @@
     color: var(--brand);
   }
 
-  /* ── O ESTADO VAZIO, e ele e o mesmo em toda tela ──────────────────────────
-     A ESPERA E TEXTO, e nao um bloco vazio com um icone triste: ela diz o que vai
-     aparecer ali e o que falta para isso — a mesma postura do item desligado no
-     rail.
-
-     ⚠ ELA PRECISOU DE COMPOSICAO quando a Caixa de Entrada virou coluna.
-     Encostado no teto de uma coluna alta, um paragrafo solto deixa um vao enorme
-     embaixo e a tela lê como carregamento travado. Centrado, o vazio lê como lugar
-     reservado. A CHAMADA VEM ANTES DA EXPLICACAO porque ela responde a pergunta
-     que o olho faz primeiro ("isto esta quebrado?") em cinco palavras, e a prosa
-     abaixo responde a segunda ("por que?") para quem quiser.
-
-     ⚠ E ELA VIROU COMPONENTE em 15/08/2026, quando a segunda tela precisou dela. A
-     mesa sem pauta escrevia "Nada em pauta" com as classes do TITULO de uma pauta
-     real — a ausencia de assunto com o peso de um assunto —, e o Gabinete ja tinha
-     a forma certa do lado. Duas formas para o mesmo estado e como uma tela comeca
-     a parecer montada por duas pessoas diferentes.
-
-     A MEDIDA DE LINHA E CURTA de proposito: 46 caracteres numa coluna larga deixam
-     o texto no meio em vez de esticado de ponta a ponta, e prosa esticada e o que
-     faz um estado vazio parecer mensagem de erro. */
-  /* ── A LINHA DE TENDENCIA ───────────────────────────────────────────────────
-     ⚠ ELA SUBSTITUIU A ESCADA DE BLOCOS EM 21/08/2026, e a razão inteira está em
-     `sparkline`, em `shared/format.mjs`: um bloco tem oito alturas e cada uma é uma
-     fração do corpo da fonte, então um indicador que vive no terço de baixo da própria
-     régua saía como uma fileira de traços de um pixel — o olho lia o SUBLINHADO do
-     número. Três capturas em três tamanhos provaram que não havia corpo que resolvesse.
-
-     ⚠ E O TAMANHO MORA AQUI, E NÃO NO DESENHO. A peça é a mesma em três telas — o painel
-     de Finanças, a tela de área e a faixa do Congresso —, e cada uma tem uma caixa
-     diferente. O SVG estica; quem diz o quanto é o lugar onde ele mora. Este bloco dá o
-     padrão, e as folhas de tela ajustam a largura quando a coluna delas pede.
-
-     A COR VEM DE `currentColor`, e é assim que o traço acompanha a tinta do contêiner
-     sem que nenhuma das três folhas precise repetir uma cor. */
+  /* ── O ESTADO VAZIO, e ele e o mesmo em toda tela ────────────────────────── A ESPERA E
+     TEXTO, e nao um bloco vazio com um icone triste: ela diz o que vai aparecer ali e o que
+     falta para isso — a mesma postura do item desligado no rail.
+     A MEDIDA DE LINHA E CURTA de proposito: 46 caracteres numa coluna larga deixam o texto no
+     meio em vez de esticado de ponta a ponta, e prosa esticada e o que faz um estado vazio
+     parecer mensagem de erro. */
   .spark {
     display: inline-block;
     width: 4rem;
@@ -127,8 +64,8 @@
     fill: none;
     stroke: currentColor;
     /* ⚠ 1,5 E NAO 1: com `non-scaling-stroke` o traco vale pixel de tela, e 1px sobre um
-       fundo escuro com o texto ao lado em peso 600 lê como fio de tabela — a linha some
-       na leitura. 1,5 é o mesmo peso ótico da régua de `.gauge`. */
+       fundo escuro com o texto ao lado em peso 600 lê como fio de tabela — a linha some na
+       leitura. */
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -157,25 +94,8 @@
     line-height: 1.5;
   }
 
-  /* ── O SEGUNDO PESO, e ele existe porque o jogo tem DOIS tipos de ausencia ──
-     ⚠ ATE 18/08/2026 HAVIA QUATRO FORMAS para a mesma coisa: `.empty` com chamada
-     e prosa no Congresso, `.report--waiting` no relatorio, `.closing__empty` no
-     fecho, e uma frase solta no cartao da CALDEIRA. Quatro maneiras de dizer "nao
-     ha nada aqui" e o que faz uma tela parecer montada por quatro pessoas.
-
-     A DIFERENCA QUE SOBREVIVEU E DE PESO, e ela e real:
-
-       BLOCO   a secao inteira esta vazia e HA O QUE FAZER a respeito — "Nada em
-               pauta · escolha uma acao numa das areas". Chamada centrada e prosa
-               embaixo, porque o jogador precisa ser levado a algum lugar;
-       DISCRETO  a ausencia e um FATO consumado dentro de um documento — "nenhuma
-               lei foi escrita neste mandato". Uma linha, alinhada com o texto ao
-               redor, sem chamada: nao ha para onde levar ninguem, e uma chamada
-               centrada daria a um fato o peso de um problema.
-
-     ⚠ O DISCRETO NAO E O BLOCO DESBOTADO. Ele nao centraliza e nao reserva altura,
-     porque ele mora DENTRO da prosa — um bloco de altura minima no meio de um
-     documento abre um buraco onde o olho procura conteudo que nunca vem. */
+  /* fecho, e uma frase solta no cartao da CALDEIRA. Quatro maneiras de dizer "nao
+     ha nada aqui" e o que faz uma tela parecer montada por quatro pessoas. */
   .empty--quiet {
     align-content: start;
     justify-items: start;
@@ -184,14 +104,11 @@
     text-align: left;
   }
 
-  /* ── ACAO ───────────────────────────────────────────────────────────────────
-     AS DUAS ACOES SAO A MESMA PECA. Mesma caixa, mesmo corpo, mesmo material,
-     mesma construcao — a unica diferenca e a COR, e a primaria acrescenta
-     exatamente uma coisa: uma camada de tinta sobre o mesmo vidro.
-     Botoes irmaos que herdam corpo de bases diferentes divergem em silencio: no
-     projeto anterior dois deles mediam 14,72px e 12,16px, 21% de diferenca, e
-     nenhuma guarda olhava tipografia de botao. Por isso o corpo e declarado
-     AQUI, e nao herdado. */
+  /* ── ACAO ─────────────────────────────────────────────────────────────────── AS DUAS ACOES
+     SAO A MESMA PECA.
+     Botoes irmaos que herdam corpo de bases diferentes divergem em silencio: no projeto
+     anterior dois deles mediam 14,72px e 12,16px, 21% de diferenca, e nenhuma guarda olhava
+     tipografia de botao. */
   .action {
     display: flex;
     flex-direction: column;
@@ -213,21 +130,11 @@
       background var(--dur-touch) linear;
   }
 
-  /* ── A PRESSAO ──────────────────────────────────────────────────────────────
-     ⚠ ELA FALTAVA DESDE SEMPRE, e a ausencia estava escrita na propria regra
-     acima: a peca declarava `transform` na transicao e NADA nunca lhe dava um
-     `transform` fora do hover. O orcamento de movimento do clique existia,
-     reservado, e nunca foi gasto.
-
-     E e ela que decide se a tela parece rapida. Nenhuma reducao de duracao
-     conserta um botao que nao se move quando se aperta: o dedo espera uma
-     confirmacao FISICA, e sem ela o jogador atribui a demora a maquina — mesmo
-     quando a maquina ja respondeu. Encurtar `--dur-touch` sem isto seria deixar
-     o botao morto mais depressa.
-
-     O afundamento e menor que a subida do hover de proposito. Eles se somam: com
-     o ponteiro em cima a peca esta a −2px, e apertar a traz de volta para perto
-     de zero — o gesto inteiro le como "levantou, encostou". */
+  /* ── A PRESSAO ────────────────────────────────────────────────────────────── ⚠ ELA FALTAVA
+     DESDE SEMPRE, e a ausencia estava escrita na propria regra acima: a peca declarava
+     `transform` na transicao e NADA nunca lhe dava um `transform` fora do hover.
+     Eles se somam: com o ponteiro em cima a peca esta a −2px, e apertar a traz de volta para
+     perto de zero — o gesto inteiro le como "levantou, encostou". */
   .action:active {
     transform: translateY(0) scale(0.985);
   }
@@ -240,19 +147,13 @@
     color: var(--ink);
   }
 
-  /* A MARCA E A LAMINA, e nao uma demao sobre a lamina neutra. A versao antiga
-     empilhava `rgba(--brand, .46)` sobre `--glass-action-bg` e compunha
-     rgb(119, 91, 52) — ambar no matiz e terracota no olho, porque o que faltava
-     era LUMINOSIDADE e nao cor. Ver a prosa de `--glass-brand-bg`.
-     O filtro continua sendo o mesmo `var(--glass-blur)` de toda a tela: o que
-     muda entre os niveis e a densidade do fundo, nunca o material. */
+  /* A MARCA E A LAMINA, e nao uma demao sobre a lamina neutra. */
   .action--primary {
-    /* A aresta acompanha a lamina. Borda azul em volta de superficie ambar
-       denuncia uma peca pintada de ambar, e nao uma peca de ambar. */
+    /* A aresta acompanha a lamina. */
     border-color: rgba(var(--brand-rgb), 0.72);
     background: var(--glass-brand-bg);
-    /* A tinta escurece PORQUE a lamina clareou — e a mesma razao que poe preto
-       sobre amarelo em sinalizacao de transito. */
+    /* A tinta escurece PORQUE a lamina clareou — e a mesma razao que poe preto sobre amarelo
+       em sinalizacao de transito. */
     color: var(--bg-deep);
   }
 
@@ -260,28 +161,10 @@
     color: var(--bg-deep);
   }
 
-  /* ── O PRECO DE AVANCAR O MES ───────────────────────────────────────────────
-     ⚠ E ELE E PRECO, E NAO TRAVA. Um dossiê externo pediu o botão CINZA enquanto
-     houvesse pergunta urgente na mesa, e este projeto não tem muro: o presidente pode
-     atravessar o mês sem responder nada, e o que ele não pode é descobrir o custo
-     depois do clique. A recusa inteira está em `silences`, no motor.
-
-     ⚠ E A COR É BORDÔ, E NÃO O VERMELHO DE CRISE. Os dois estão no vocabulário, e o
-     que os separa é o que cada um já significa: `--crisis` é a cor do que JÁ deu
-     errado — teto fechado, bancada rompida, prazo estourado —, e aqui nada deu errado
-     ainda. Bordô é a cor do carimbo, e é isso que este aviso diz: há um despacho
-     pendente sobre a mesa, e o mês vai bater o carimbo por você.
-
-     A ARESTA ACOMPANHA A TINTA pela mesma regra da lâmina âmbar duas regras acima:
-     borda âmbar em volta de um aviso bordô denunciaria um aviso pintado por cima de um
-     botão, em vez de um botão que mudou de estado.
-
-     ⚠ E O BORDÔ É FUNDO, E NÃO TINTA — a primeira versão pintou o texto de bordô sobre
-     a lâmina âmbar, e a CONTA reprova: a lâmina compõe rgb(193, 137, 55) e o bordô dá
-     **2,8:1** contra ela, num texto de 10px. A captura mostrou o que a conta dizia — um
-     borrão escuro debaixo do rótulo. Invertido, o mesmo par dá 5,6:1 e vira o que a
-     prosa acima já dizia que ele era: um CARIMBO. A metáfora estava certa e a
-     implementação a tinha posto do avesso. */
+  /* ⚠ E O BORDÔ É FUNDO, E NÃO TINTA — a primeira versão pintou o texto de bordô sobre a
+     lâmina âmbar, e a CONTA reprova: a lâmina compõe rgb(193, 137, 55) e o bordô dá *2,8:1**
+     contra ela, num texto de 10px.
+     A captura mostrou o que a conta dizia — um borrão escuro debaixo do rótulo. */
   .action--primary[data-price="true"] {
     border-color: rgba(var(--bordo-rgb), 0.85);
   }
@@ -294,18 +177,6 @@
     color: var(--paper);
   }
 
-  /* ⚠ ACAO DESLIGADA E ACAO QUE DIZ QUE ESTA DESLIGADA, e ate 18/08/2026 este
-     bloco nao existia. O botao do turno ficava `disabled` no fim do mandato com a
-     lamina ambar CHEIA — do mesmo tamanho, da mesma cor e com a mesma aresta de
-     sempre. Clicar nele nao fazia nada e nao explicava por que, e a unica pista do
-     fim da partida era um selo de dez pixels no canto de um cartao.
-
-     A REGRA E A MESMA DO RAIL, e ela ja estava escrita ali: oferecer como
-     pressionavel o que nao responde ensina a desconfiar de toda peca pressionavel
-     da tela. Aqui ela custa mais, porque este e O botao do jogo.
-
-     O AMBAR CAI E A TINTA VOLTA A SER TINTA DE TEXTO: sem lamina de marca, o
-     rotulo perderia o contraste que ele so tinha contra o fundo claro. */
   .action[disabled] {
     cursor: not-allowed;
     border-color: rgba(255, 255, 255, 0.12);
@@ -319,11 +190,8 @@
     color: var(--ink-dim);
   }
 
-  /* ── A ACAO DISCRETA ────────────────────────────────────────────────────────
-     Mesma peca, menos voz — e SEM LAMINA. Ela e a unica acao da tela que nao
-     recebe vidro, e nao por economia: o botao que apaga um mandato inteiro mora
-     ao lado do que avanca o mes, e dar a ele o mesmo material seria oferecer os
-     dois como caminhos equivalentes. Material tambem e hierarquia.
+  /* ── A ACAO DISCRETA ──────────────────────────────────────────────────────── Mesma peca,
+     menos voz — e SEM LAMINA.
      De quebra, some um `backdrop-filter` de uma superficie que ninguem olha. */
   .action--quiet {
     min-width: 0;
@@ -352,9 +220,7 @@
     .action:not([disabled]):hover {
       transform: translateY(-2px);
     }
-    /* O hover so CLAREIA: cada um sobe a propria tinta um degrau. Trocar o
-       gradiente no hover e trocar de MATERIAL, e ai a peca vira outra coisa
-       quando o mouse encosta. */
+    /* O hover so CLAREIA: cada um sobe a propria tinta um degrau. */
     .action:not([disabled]):hover {
       background:
         linear-gradient(0deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),
@@ -367,14 +233,9 @@
     }
   }
 
-  /* ── O RAIL ─────────────────────────────────────────────────────────────────
-     Navegacao primaria na estrutura do FM2020: lateral fixa, icone a esquerda,
-     rotulo ao lado, item corrente destacado, bloco ancorado no rodape.
-
-     Ele e uma LAMINA FLUTUANTE e nao uma barra colada na borda — margem em
-     volta, raio nos quatro cantos. Barra sangrada ate a borda perde as duas
-     quinas de fora, e quina e onde a espessura do vidro aparece: sem elas a
-     peca lê como um retangulo mais escuro, nao como material. */
+  /* ── O RAIL ───────────────────────────────────────────────────────────────── Navegacao
+     primaria na estrutura do FM2020: lateral fixa, icone a esquerda, rotulo ao lado, item
+     corrente destacado, bloco ancorado no rodape. */
   .rail {
     position: sticky;
     top: var(--space-4);
@@ -398,14 +259,6 @@
     color: var(--ink);
   }
 
-  /* ── DE QUEM É ESTE GOVERNO ─────────────────────────────────────────────────
-     ⚠ ELE ENTROU EM 15/08/2026, e o que ele conserta e o buraco mais fundo que a
-     auditoria externa apontou sem nomear: o jogador era a UNICA pessoa sem nome num
-     jogo em que sete outras tinham. A marca dizia "PLANALTO" e a barra dizia
-     "1º MANDATO · ANO 1" — o mandato de quem?
-
-     ELE FICA ABAIXO DA MARCA E ACIMA DA NAVEGACAO, e a ordem e a hierarquia: o jogo
-     se apresenta, depois o governo se apresenta, e so entao vem para onde ir. */
   .rail__gov {
     display: grid;
     gap: 1px;
@@ -423,8 +276,8 @@
     color: var(--ink-dim);
   }
 
-  /* O NOME EM SERIFA, como todo nome de gente neste jogo: serifa e texto de
-     REGISTRO, e uma pessoa e um registro. */
+  /* O NOME EM SERIFA, como todo nome de gente neste jogo: serifa e texto de REGISTRO, e uma
+     pessoa e um registro. */
   .rail__president {
     font-family: var(--font-record);
     font-size: var(--text-name);
@@ -433,16 +286,8 @@
     color: var(--ink);
   }
 
-  /* ── A POSIÇÃO QUE O GOVERNO SE TORNOU ──────────────────────────────────────
-     ⚠ ELA É A REGRA DO CICLO 2 FINALMENTE VISÍVEL. "A posição ideológica é sombra,
-     e nunca controle": o jogador nunca arrasta um cursor no plano — ele mexe em
-     leitos e alíquotas, e a posição é CALCULADA do que ele moveu. O cálculo existia
-     desde o ciclo 2, rodava todo mês dentro de `compose`, e morria dentro de uma
-     pauta sem nenhuma tela dizer o resultado.
-
-     O TOM É DISCRETO DE PROPÓSITO. Ela é consequência, e não painel: um destaque
-     aqui a faria parecer um controle — exatamente a leitura que o ciclo 2 recusou
-     quando recusou o cursor. */
+  /* ── A POSIÇÃO QUE O GOVERNO SE TORNOU ────────────────────────────────────── ⚠ ELA É A
+     REGRA DO CICLO 2 FINALMENTE VISÍVEL. */
   .rail__stance {
     font-size: var(--text-note);
     line-height: 1.35;
@@ -459,8 +304,7 @@
     flex-direction: column;
     gap: 2px;
     list-style: none;
-    /* O rail rola por DENTRO quando a lista nao cabe. Sem isto o estouro sai
-       pela janela e vira rolagem horizontal no celular, que a suite acusa. */
+    /* O rail rola por DENTRO quando a lista nao cabe. */
     overflow: auto;
   }
 
@@ -482,25 +326,21 @@
       transform var(--dur-touch) var(--ease-enter);
   }
 
-  /* O rail afunda MENOS que a acao, e a diferenca e hierarquia: navegar nao e
-     decidir. Um item de menu que afunda como um botao de turno promete uma
-     consequencia que ele nao tem. */
+  /* O rail afunda MENOS que a acao, e a diferenca e hierarquia: navegar nao e decidir. */
   .rail__item:not([disabled]):active {
     transform: scale(0.99);
   }
 
-  /* ITEM DESLIGADO E ITEM QUE DIZ QUE ESTA DESLIGADO. Cinco das seis secoes tem
-     contrato de motor e nenhuma tela; oferece-las como se abrissem ensinaria a
-     desconfiar do menu inteiro. */
+  /* ITEM DESLIGADO E ITEM QUE DIZ QUE ESTA DESLIGADO. */
   .rail__item[disabled] {
     color: var(--ink-dim);
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  /* O item corrente e o UNICO lugar do rail que recebe ambar, e ele o recebe
-     como tinta rasa — a marca e a cor do que se PRESSIONA, e gasta-la cheia num
-     rotulo de navegacao enfraqueceria o botao de turno logo abaixo. */
+  /* O item corrente e o UNICO lugar do rail que recebe ambar, e ele o recebe como tinta rasa
+     — a marca e a cor do que se PRESSIONA, e gasta-la cheia num rotulo de navegacao
+     enfraqueceria o botao de turno logo abaixo. */
   .rail__item--active {
     background: rgba(var(--brand-rgb), 0.16);
     color: var(--ink);
@@ -529,8 +369,7 @@
     }
   }
 
-  /* O RODAPE ANCORADO. `margin-top: auto` o empurra para baixo sem posicao
-     absoluta, entao ele continua no fluxo e a lista acima e quem cede espaco. */
+  /* O RODAPE ANCORADO. */
   .rail__foot {
     margin-top: auto;
     display: flex;
@@ -538,25 +377,16 @@
     gap: var(--space-2);
   }
 
-  /* A acao herda a peca inteira e cede so a largura: dentro do rail ela e
-     governada pela coluna, e nao pelo proprio minimo. */
+  /* A acao herda a peca inteira e cede so a largura: dentro do rail ela e governada pela
+     coluna, e nao pelo proprio minimo. */
   .rail__foot .action {
     min-width: 0;
     width: 100%;
     padding: var(--space-3) var(--space-3);
   }
 
-  /* ── O VEREDITO ─────────────────────────────────────────────────────────────
-     A unica frase que diz o que esta em jogo. Ela morava embaixo da peca central
-     e subiu para o rail quando o tabuleiro passou a ser repintado por inteiro:
-     la dentro ela seria destruida a cada troca de tela, e ela nao e de tela
-     nenhuma — e do MES.
-
-     AQUI ELA NAO E UMA LAMINA. Perdeu a classe de vidro que tinha na tela
-     anterior porque o rail JA e vidro, e vidro dentro de vidro sao dois
-     materiais empilhados para exibir uma frase. O que sobrou e a mesma aresta de
-     luz que separa os campos da faixa logo acima: ela lê como mais um campo do
-     rail, que e exatamente o que ela e. */
+  /* ── O VEREDITO ───────────────────────────────────────────────────────────── A unica frase
+     que diz o que esta em jogo. */
   .verdict {
     padding: var(--space-3);
     font-family: var(--font-display);
@@ -569,30 +399,8 @@
       0 -1px 0 rgba(0, 0, 0, 0.22) inset;
   }
 
-  /* ── ETIQUETA DE INSTRUMENTO ────────────────────────────────────────────────
-     Lei, emenda ou caneta. UMA forma para as tres, e a razao e a regra de forma
-     no alto deste arquivo: o rito e o quorum ja estao escritos por extenso na
-     mesma linha, entao tres cores aqui seriam um segundo canal repetindo o que o
-     texto diz — e gastariam paleta num rotulo que ninguem pressiona.
-
-     A CANETA E A UNICA EXCECAO, e nao por enfase: ela e a unica que nao vai a
-     plenario. Isso e diferenca de categoria, e nao de grau — e diferenca de
-     categoria e a unica coisa que merece cor propria. */
-  /* ── O SELO DO RITO ─────────────────────────────────────────────────────────
-     ⚠ ELE ERA UMA PASTILHA, E VIROU CARIMBO em 15/08/2026. A forma anterior — pílula
-     de cantos redondos, fundo cinza translúcido — é o vocabulário de etiqueta de
-     aplicativo, e dizia com peso de etiqueta a coisa mais cara do jogo: que aquele
-     movimento precisa de 308 votos porque a Constituição o protege.
-
-     O CARIMBO NÃO É DECORAÇÃO — ele devolve ao rótulo o peso que a MECÂNICA já tem.
-     Emenda custa mais que lei, que custa mais que caneta, e a tela dizia os três no
-     mesmo tom. Agora a moldura é um traço fino, o canto é reto e a cor sobe com a
-     exigência: quanto mais caro o rito, mais o selo se destaca.
-
-     ⚠ O CANTO RETO É A DECISÃO, e não o contorno. Todo o resto desta interface é
-     arredondado — pastilha, cartão, lâmina —, e é justamente por isso que um canto
-     reto lê como outra natureza de coisa: um documento carimbado, e não um elemento
-     de UI. É a mesma ideia da regra tipográfica do ciclo 5, aplicada à forma. */
+  /* ── ETIQUETA DE INSTRUMENTO ──────────────────────────────────────────────── Lei, emenda
+     ou caneta. */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -600,8 +408,8 @@
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: var(--radius-stamp);
     background: transparent;
-    /* ⚠ MONOESPACADA, e ela e a terceira familia do projeto: o rito nao e nome nem
-       medicao — e o despacho que a maquina do Estado carimba sobre o papel. */
+    /* ⚠ MONOESPACADA, e ela e a terceira familia do projeto: o rito nao e nome nem medicao —
+       e o despacho que a maquina do Estado carimba sobre o papel. */
     font-family: var(--font-machine);
     font-size: var(--text-label);
     font-weight: 800;
@@ -612,9 +420,7 @@
     white-space: nowrap;
   }
 
-  /* CANETA NÃO LEVA SELO NENHUM na área — a linha só mostra o piso. Aqui ele
-     aparece nas telas que listam rito em coluna, e no tom mais apagado que existe:
-     executar o orçamento é o caso comum, e o comum não se carimba. */
+  /* CANETA NÃO LEVA SELO NENHUM na área — a linha só mostra o piso. */
   .badge[data-instrument="budget"] {
     border-color: rgba(255, 255, 255, 0.1);
     color: var(--ink-dim);
@@ -626,10 +432,7 @@
     color: var(--stable);
   }
 
-  /* ⚠ EMENDA LEVA A MARCA, e ela é a única coisa fora de um botão que a usa. O
-     âmbar é a cor do que se pressiona, e gastá-la aqui seria enfraquecê-la — a
-     exceção se paga porque furar cláusula protegida É a decisão mais cara que este
-     jogo oferece, e ela precisa ser reconhecível antes de ser lida. */
+  /* ⚠ EMENDA LEVA A MARCA, e ela é a única coisa fora de um botão que a usa. */
   .badge[data-instrument="amendment"] {
     border-color: rgba(var(--brand-rgb), 0.6);
     color: var(--brand);
@@ -641,23 +444,8 @@
     color: var(--ink);
   }
 
-  /* ── O CONTROLE DESLIZANTE ──────────────────────────────────────────────────
-     Duas telas o usam — verba por bancada na Mesa, bilhoes por area nas areas —,
-     e por isso ele mora aqui. UMA construcao para os dois: pista rasa e o polegar
-     em AMBAR, porque ele e a unica coisa da tela que se arrasta e ambar e a cor
-     do que se pressiona.
-
-     `appearance: none` desliga o controle nativo, e desligar o nativo obriga a
-     devolver tudo o que ele dava. O foco visivel ja volta pela regra de
-     `10-base.css`; pista e polegar estao aqui, e em DOIS DIALETOS separados:
-     `::-webkit-slider-*` e `::-moz-range-*` nao podem dividir um seletor, porque
-     um seletor com pseudo-elemento desconhecido e descartado INTEIRO pelo
-     navegador — a regra some para os dois lados em vez de valer para um.
-
-     NAO HA PISTA PREENCHIDA. O Firefox sabe pintar o trecho percorrido e o
-     Chromium nao, e igualar os dois exigiria escrever o valor num token a cada
-     quadro do arrasto. O numero ao lado do controle ja diz onde ele esta, e
-     diz melhor: ele e a verba, e nao a fracao. */
+  /* ── O CONTROLE DESLIZANTE ────────────────────────────────────────────────── Duas telas o
+     usam — verba por bancada na Mesa, bilhoes por area nas areas —, e por isso ele mora aqui. */
   input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
@@ -667,11 +455,9 @@
     cursor: pointer;
   }
 
-  /* ── A CALHA ESCULPIDA ──────────────────────────────────────────────────────
-     A pista era um fio de 6px com fundo translucido — o componente mais generico
-     da web moderna, e o mesmo que ajusta o volume de um fone. Agora ela e uma calha
-     ESCAVADA: mais espessa, escura, com a sombra vindo de dentro. Um sulco na mesa,
-     e nao uma linha desenhada sobre ela. */
+  /* ── A CALHA ESCULPIDA ────────────────────────────────────────────────────── A pista era
+     um fio de 6px com fundo translucido — o componente mais generico da web moderna, e o
+     mesmo que ajusta o volume de um fone. */
   input[type="range"]::-webkit-slider-runnable-track {
     height: 10px;
     border-radius: var(--radius-stamp);
@@ -690,16 +476,6 @@
       0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  /* ── O PINO DE METAL ────────────────────────────────────────────────────────
-     ⚠ ELE DEIXOU DE SER UMA BOLINHA em 15/08/2026, e a forma e a mensagem: um
-     circulo lê como controle de midia, e um retangulo com quinas lê como TRAVA que
-     se arrasta ao longo de uma regua. Cortar um bilhao de um hospital nao pode ter a
-     mesma gestualidade que baixar o brilho da tela.
-
-     ⚠ E ELE NAO E MAIS AMBAR. A marca e a cor do que se PRESSIONA — uma cor, um
-     lugar —, e um pino que se arrasta nao se pressiona: gasta-la em trinta e oito
-     controles por tela era exatamente a diluicao que a regra existe para impedir.
-     Metal escovado, com luz em cima e sombra embaixo, e o que um pegador e. */
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -735,31 +511,11 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
-  /* ── AS TRES ZONAS DO TRILHO ────────────────────────────────────────────────
-     ⚠ ESTA E A REGRA QUE CONSOME O DADO QUE A VISTA SEMPRE ESCREVEU E NINGUEM LIA.
-     `--floor` e `--ceiling` sao a faixa vigente daquela alavanca, e com eles o
-     trilho deixa de ser um fio uniforme e passa a dizer, ANTES de o jogador
-     arrastar, o que cada trecho custa:
-
-       ate o piso        custa lei, ou emenda quando a guarda e constitucional;
-       do piso ao teto   caneta — e a lei ja autorizou;
-       acima do teto     custa de novo.
-
-     Ate 15/08/2026 a tela so dizia isso DEPOIS: a linha se tingia quando o
-     controle ja tinha atravessado. Informacao que chega depois da decisao nao e
-     informacao — e um recibo.
-
-     ⚠ AS MARCAS DE PISO E TETO SAO PARADAS DURAS no mesmo gradiente, e nao
-     pseudo-elementos: o trilho de um `<input type=range>` nao aceita filho, e um
-     segundo elemento posicionado por cima sairia de registro com a pista no
-     primeiro navegador que arredondasse diferente. Uma pintura so, uma verdade so.
-
-     ⚠ O SELETOR REPETE `input[type="range"]` DE PROPOSITO, e a razao e um defeito
-     medido: `.dial__slider` sozinho tem especificidade (0,1,0) e PERDE para a regra
-     generica acima, que e (0,1,1) — atributo mais tipo. A primeira versao pintou as
-     tres zonas e a tela continuou com o trilho liso, sem nenhum erro em lugar
-     nenhum. Uma classe nao vence um seletor de atributo, e este e o tipo de derrota
-     que nao aparece em teste de unidade nem em guarda: so na imagem. */
+  /* ── AS TRES ZONAS DO TRILHO ──────────────────────────────────────────────── ⚠ ESTA E A
+     REGRA QUE CONSOME O DADO QUE A VISTA SEMPRE ESCREVEU E NINGUEM LIA.
+     ⚠ O SELETOR REPETE `input[type="range"]` DE PROPOSITO, e a razao e um defeito medido:
+     `.dial__slider` sozinho tem especificidade (0,1,0) e PERDE para a regra generica acima,
+     que e (0,1,1) — atributo mais tipo. */
   input[type="range"].dial__slider::-webkit-slider-runnable-track,
   input[type="range"].law__slider::-webkit-slider-runnable-track {
     background: linear-gradient(
@@ -784,36 +540,15 @@
     );
   }
 
-  /* ── A LINHA DE LEITURA — nome, medidor, valor. UMA gramatica so ────────────
-     ⚠ ELA NASCEU DE UM DEFEITO QUE O RESPONSAVEL VIU NA TELA, em 16/08/2026: "o
-     gabinete ta feio, despadronizado, assimetrico". Estava, e a causa era minha e do
-     mesmo dia.
-
-     A Parte C do ciclo 11 tirou a caixa dos cinco cartoes do Gabinete — e a caixa
-     estava ESCONDENDO que cada bloco tinha uma grade interna propria:
-
-       .street__row    7,5rem │ 1fr │ 3rem
-       .boiler__row    9rem   │ 1fr │ 2,5rem
-
-     Duas gramaticas empilhadas na MESMA coluna, uma embaixo da outra. As barras
-     comecavam em x diferentes e os valores terminavam em x diferentes, e o olho lê
-     isso como desalinho antes de conseguir nomear a causa. Com a caixa em volta, o
-     contorno dava a cada bloco uma moldura propria e o desencontro passava; sem ela,
-     ficou exposto.
-
-     ⚠ E O CONSERTO NAO PODE SER "IGUALAR OS NUMEROS NOS DOIS LUGARES" — isso e a
-     familia do numero repetido a mao, e os dois divergem de novo no primeiro ajuste.
-     Uma gramatica que duas telas usam mora na camada de componentes, como o estado
-     vazio mora desde 15/08. Aqui ela e uma so, e nao ha o que divergir. */
-  /* ⚠ A COLUNA DO NOME FOI DE 9rem PARA 10,5rem EM 20/08/2026, e ela ECONOMIZA altura
-     ao ficar mais LARGA — o que parece contraditório e não é. A segunda fileira da
+  /* ── A LINHA DE LEITURA — nome, medidor, valor.
+     Aqui ela e uma so, e nao ha o que divergir. */
+  /* ⚠ A COLUNA DO NOME FOI DE 9rem PARA 10,5rem EM, e ela ECONOMIZA altura ao ficar mais
+     LARGA — o que parece contraditório e não é.
+     A segunda fileira da E o medidor aguenta: a 1440px a coluna da direita tem 440px, então
+     ele sai de ~200 para ~176.
      CALDEIRA carrega o que cada grupo cobra ("que a torneira das emendas fique aberta"),
      e em 9rem essa frase quebrava em três linhas nas quatro linhas do cartão. Em 10,5rem
-     ela cabe em duas.
-
-     E o medidor aguenta: a 1440px a coluna da direita tem 440px, então ele sai de ~200
-     para ~176. O aviso registrado neste projeto — "o medidor sobrou com 24 pixels" — é
-     sobre PARTIR a coluna ao meio, e não sobre 24 pixels a menos numa barra de 200. */
+     ela cabe em duas. */
   .reading {
     display: grid;
     grid-template-columns: 10.5rem minmax(0, 1fr) 3rem;
@@ -828,37 +563,14 @@
     color: var(--ink);
   }
 
-  /* NO CELULAR O NOME OCUPA A LINHA e o medidor desce: 9rem de rotulo num aparelho
-     de 390px deixariam a barra com 80px, e uma barra de 80px nao mostra proporcao
-     nenhuma — ela vira um traco que muda de cor. */
-  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
-     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
-     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
-     desktop; eu quero a perfeição no desktop, perfeição mesmo".
+  /* NO CELULAR O NOME OCUPA A LINHA e o medidor desce: 9rem de rotulo num aparelho de 390px
+     deixariam a barra com 80px, e uma barra de 80px nao mostra proporcao nenhuma — ela vira
+     um traco que muda de cor. */
+  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
+     rolar.
+     O corte para em 640/720px, que é território de telefone. */
 
-     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
-     de rolar. Foi o corte que permitiu a tela fechar na dobra.
-
-     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
-     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
-
-  /* ── O PAPEL — e ele e UMA peca, e nao tres ─────────────────────────────────
-     ⚠ ATE 18/08/2026 ELE ERA TRES. As mesmas quatro declaracoes — borda, raio,
-     fundo e tinta — estavam escritas em `45-screen-cabinet.css` (a carta), em
-     `50-screen-mesa.css` (o texto em tramitacao) e em `60-screen-area.css` (a lei
-     escrita). Elas eram identicas, o que e pior do que serem diferentes: tres
-     copias iguais nao acusam nada enquanto ninguem mexe, e a primeira mudanca em
-     duas delas cria a divergencia sem ninguem decidir isso.
-
-     O QUE AS TRES SAO: documento. Tinta escura sobre superficie clara, num jogo em
-     que todo o resto e vidro escuro — e essa inversao e o vocabulario inteiro. Ela
-     diz "isto e papel de verdade, e nao mais um painel".
-
-     ⚠ O QUE NAO ENTRA AQUI E A GRADE DE CADA UMA. Carta, linha de tramitacao e lei
-     escrita tem colunas, vaos e recuos diferentes porque carregam coisas
-     diferentes — e forcar uma grade comum seria padronizar o que nao e o mesmo. O
-     que se compartilha e o MATERIAL, e so ele. */
   .letter,
   .passage__row,
   .law {
@@ -868,25 +580,15 @@
     color: var(--paper-ink);
   }
 
-  /* ── A REGUA — um valor na escala do motor, com o LIMIAR marcado ────────────
-     ⚠ ELA SUBSTITUI UM MEDIDOR QUE MENTIA, e a captura pegou no primeiro desenho. A
-     primeira versao normalizava "quanto do caminho ate a ruptura ja andou": com a rua
-     em 44 e o piso em 20, a conta dava 70% e a barra aparecia quase cheia e VERMELHA
-     num governo confortavel.
-
-     Normalizar por uma regua inventada desenha drama onde nao ha — e a mesma familia
-     da escada de tendencia, que passou semanas desenhando calmaria porque lia inflacao
-     numa regua de 0 a 100. A regua honesta e a que o motor usa, zero a cem, e o que o
-     jogador precisa saber e de que LADO da linha ele esta.
-
-     ⚠ E ELA GANHOU UM SEGUNDO CONSUMIDOR NO MESMO DIA, que e o que a trouxe para ca:
+  /* ── A REGUA — um valor na escala do motor, com o LIMIAR marcado ──────────── ⚠ ELA
+     SUBSTITUI UM MEDIDOR QUE MENTIA, e a captura pegou no primeiro desenho.
+     A primeira versao normalizava "quanto do caminho ate a ruptura ja andou": com a rua em 44
+     e o piso em 20, a conta dava 70% e a barra aparecia quase cheia e VERMELHA num governo
+     confortavel.
      as quatro barras da CALDEIRA mostravam pressao de 0 a 100 e NAO diziam onde e o
      ponto de fervura. Um grupo em 55 e um em 20 apareciam como "duas barras curtas",
      quando o primeiro esta a cinco pontos de abandonar o governo. Mesma pergunta, e
-     uma das duas reguas sem a marca — era a divergencia comecando.
-
-     E O DESENHO NAO E NOVO NEM AQUI: e a regua legal do controle de verba, com a marca
-     do piso no proprio trilho. Um vocabulario, tres lugares. */
+     uma das duas reguas sem a marca — era a divergencia comecando. */
   .gauge {
     position: relative;
     height: 8px;
@@ -899,8 +601,8 @@
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   }
 
-  /* A MARCA DO LIMIAR — dois pixels de latao, e ela e a unica coisa que a barra
-     precisa dizer alem do valor: onde e a linha. */
+  /* A MARCA DO LIMIAR — dois pixels de latao, e ela e a unica coisa que a barra precisa dizer
+     alem do valor: onde e a linha. */
   .gauge::after {
     content: "";
     position: absolute;
@@ -910,8 +612,8 @@
     background: var(--brand);
   }
 
-  /* DO LADO ERRADO DA LINHA, o preenchimento vira crise — e a cor troca com o ESTADO,
-     e nao com a proximidade: uma ruptura ou aconteceu ou nao aconteceu. */
+  /* DO LADO ERRADO DA LINHA, o preenchimento vira crise — e a cor troca com o ESTADO, e nao
+     com a proximidade: uma ruptura ou aconteceu ou nao aconteceu. */
   .gauge[data-past="true"] {
     background: linear-gradient(
       90deg,
@@ -920,24 +622,9 @@
     );
   }
 
-  /* ── MEDIDOR SEGMENTADO ─────────────────────────────────────────────────────
-     Tres segmentos que somam 100%. O que separa um do outro e um vao, nunca uma
-     borda: dois tons proximos encostados viram uma faixa continua, e o medidor
-     perde justamente a informacao que existe para dar.
-
-     ⚠ ELE SOBREVIVE A REGUA, e a fronteira entre os dois e a Parte D do ciclo 11:
-     REGUA e um valor numa escala com um limiar; MEDIDOR e uma COMPOSICAO cujas partes
-     somam o todo. A pesquisa da Rua — otimo, regular, ruim — e composicao, e trocar as
-     tres fatias por um numero perderia a informacao. O cofre e composicao pelo mesmo
-     motivo: o que ele diz nao e "95%", e o obrigatorio ENGOLINDO o discricionario.
-
-     O que os dois passaram a compartilhar e a FORMA: mesma altura e mesmo canto. A
-     pastilha de 999px era o ultimo resto do dialeto de aplicativo nesta camada.
-
-     ⚠ ELE ATENDE HOJE UMA PECA SO, e ela esta estacionada: a aprovacao, em
-     `70-screen-approval.css`. Continua aqui — e nao la — porque um medidor de
-     partes que somam o todo e o oposto de especifico, e o dia em que a
-     composicao do Congresso ou a fatia de cada bancada precisar de um, e este. */
+  /* ── MEDIDOR SEGMENTADO ───────────────────────────────────────────────────── Tres
+     segmentos que somam 100%.
+     A pastilha de 999px era o ultimo resto do dialeto de aplicativo nesta camada. */
   .meter {
     display: flex;
     gap: 2px;
@@ -963,17 +650,11 @@
     --part-color: var(--crisis);
   }
 
-  /* ── CARTAO DE DIALOGO ──────────────────────────────────────────────────────
-     O <dialog> nativo nao recebe estilo de caixa: ele e so a camada superior.
-     Quem tem forma e o cartao dentro dele, que usa o MESMO nivel de vidro da
-     peca central — um dialogo e a peca central do momento em que aparece. */
-  /* A LARGURA VOLTOU A SER A DA COLUNA DE TEXTO, e a razao mudou junto com o
-     conteudo. Enquanto o cartao carregava o relatorio do mes — uma tabela de
-     cinco colunas por bancada — ele precisava da largura da peca central, porque
-     tabela espremida na largura de um paragrafo deixa de ser comparavel.
-     O relatorio virou painel da Mesa, e o que sobrou aqui e o AVISO: prosa
-     corrida, e prosa quer medida de linha curta. Herdar `--column` agora daria um
-     cartao de 1180px com tres frases dentro. */
+  /* ── CARTAO DE DIALOGO ────────────────────────────────────────────────────── O <dialog>
+     nativo nao recebe estilo de caixa: ele e so a camada superior. */
+  /* O relatorio virou painel da Mesa, e o que sobrou aqui e o AVISO: prosa corrida, e prosa
+     quer medida de linha curta.
+     Herdar `--column` agora daria um cartao de 1180px com tres frases dentro. */
   .dialog-card {
     width: min(var(--column-notice), calc(100vw - 2 * var(--space-6)));
     padding: var(--space-6);
@@ -983,9 +664,8 @@
     text-align: center;
   }
 
-  /* O titulo do dialogo usa o degrau de TITULO, e nao o de rotulo: a peca
-     central do momento em que aparece merece a segunda maior tipografia da
-     escala. */
+  /* O titulo do dialogo usa o degrau de TITULO, e nao o de rotulo: a peca central do momento
+     em que aparece merece a segunda maior tipografia da escala. */
   .dialog-card__title {
     font-family: var(--font-display);
     font-weight: 800;
@@ -993,11 +673,9 @@
     line-height: 1.15;
   }
 
-  /* ── O RELATORIO DO MES ─────────────────────────────────────────────────────
-     Ele e um BLOCO, e nao uma tela: hoje mora como painel da Mesa, e a mesma
-     forma serve o cartao de aviso. Por isso ele nao herda a centralizacao do
-     cartao — a leitura aqui é tabular, cinco colunas de número por bancada, e
-     número centrado não se compara de relance. */
+  /* ── O RELATORIO DO MES ───────────────────────────────────────────────────── Ele e um
+     BLOCO, e nao uma tela: hoje mora como painel da Mesa, e a mesma forma serve o cartao de
+     aviso. */
   .report {
     display: grid;
     gap: var(--space-2);
@@ -1005,13 +683,7 @@
     text-align: left;
   }
 
-  /* O MES E TRATADO COMO O RAIL O TRATA. `monthLabel` devolve "mar · 2027", e a
-     mesma cadeia aparece em caixa alta no alto do rail da direita: duas formas
-     para a mesma informacao na mesma tela leem como dois dados diferentes.
-
-     E ELE E O DEGRAU DE TITULO, mas nao o do cartao: como painel, o relatorio
-     nao e a peca central da tela — a negociacao é. Um título do tamanho do
-     diálogo aqui competiria com o placar da Mesa, que é o que se está decidindo. */
+  /* O MES E TRATADO COMO O RAIL O TRATA. */
   .report__month {
     font-family: var(--font-display);
     font-weight: 800;
@@ -1029,9 +701,7 @@
     color: var(--ink-soft);
   }
 
-  /* O VEREDITO VEM ANTES DO PLACAR, e não depois. O jogador apertou o botão para
-     saber uma coisa: passou ou não. O número é a explicação, e explicação vem
-     depois da resposta. */
+  /* O VEREDITO VEM ANTES DO PLACAR, e não depois. */
   .report__verdict {
     margin-top: var(--space-2);
     font-family: var(--font-display);
@@ -1077,27 +747,14 @@
     color: var(--ink);
   }
 
-  /* O ALERTA E DA LINHA INTEIRA. Rateio e contingenciamento não são detalhes de
-     um número: eles explicam por que o resto do relatório saiu como saiu. */
+  /* O ALERTA E DA LINHA INTEIRA. */
   .report__line[data-alert="true"],
   .report__line[data-alert="true"] b {
     color: var(--crisis);
   }
 
-  /* ── A LEGENDA DE UMA SECAO, e ela e UMA peca em nove lugares ───────────────
-     ⚠ ATE 18/08/2026 ELA ERA DUAS, e a primeira tinha o nome errado. As mesmas seis
-     declaracoes tipograficas estavam escritas aqui e em `60-screen-area.css`, sob o
-     nome `.block__legend` — que era usado por SEIS telas e morava na folha de UMA.
-     Quem abrisse a folha da area para ajustar a legenda dela estaria mexendo no
-     Gabinete, em Financas, no Congresso e em O Estado sem saber.
-
-     ⚠ E ESSE E O DEFEITO QUE A GUARDA `orphans` DOCUMENTA, do outro lado: seletor
-     amarrado a um nome que nao descreve mais o que a peca e. Aqui ele nao matou
-     nenhuma regra — ele so escondeu o alcance dela, que e pior, porque nada acusa.
-
-     O QUE DIFERE ENTRE OS DOIS USOS E O FIO, e nada mais. A legenda de bloco de tela
-     leva o fio metalico embaixo; a do relatorio nao, porque ali ela ja esta DENTRO de
-     um painel — dois fios aninhados leem como tabela, e nao como estrutura. */
+  /* ⚠ E ESSE E O DEFEITO QUE A GUARDA `orphans` DOCUMENTA, do outro lado: seletor amarrado a
+     um nome que nao descreve mais o que a peca e. */
   .block__legend,
   .report__legend,
   .report__table caption {
@@ -1139,9 +796,9 @@
     color: var(--ink-dim);
   }
 
-  /* O titulo da primeira coluna acompanha o conteudo dela: os nomes das bancadas
-     sao texto e ficam a esquerda, e um rotulo alinhado a direita sobre uma
-     coluna alinhada a esquerda lê como pertencente a coluna anterior. */
+  /* O titulo da primeira coluna acompanha o conteudo dela: os nomes das bancadas sao texto e
+     ficam a esquerda, e um rotulo alinhado a direita sobre uma coluna alinhada a esquerda lê
+     como pertencente a coluna anterior. */
   .report__table thead th:first-child {
     text-align: left;
   }
@@ -1156,9 +813,9 @@
     color: var(--ink-soft);
   }
 
-  /* A aresta de luz separa as linhas sem borda: a mesma construção da faixa de
-     contexto, e pelo mesmo motivo — borda é peso, e cinco pesos numa tabela de
-     quatro linhas viram grade de planilha. */
+  /* A aresta de luz separa as linhas sem borda: a mesma construção da faixa de contexto, e
+     pelo mesmo motivo — borda é peso, e cinco pesos numa tabela de quatro linhas viram grade
+     de planilha. */
   .report__table tbody tr:not(:first-child) > * {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
@@ -1217,12 +874,11 @@
     color: var(--signal-down);
   }
 
-  /* No celular a tabela perde o respiro lateral antes de perder coluna: nenhuma
-     das cinco é dispensável, e esconder dado para caber é mentir por omissão. */
+  /* No celular a tabela perde o respiro lateral antes de perder coluna: nenhuma das cinco é
+     dispensável, e esconder dado para caber é mentir por omissão. */
 
-  /* ── VARIACAO ───────────────────────────────────────────────────────────────
-     O sinal e carregado por DUAS coisas — a seta e a cor — porque cor sozinha
-     nao e canal suficiente. */
+  /* ── VARIACAO ─────────────────────────────────────────────────────────────── O sinal e
+     carregado por DUAS coisas — a seta e a cor — porque cor sozinha nao e canal suficiente. */
   .trend {
     display: inline-flex;
     align-items: baseline;

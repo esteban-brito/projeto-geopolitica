@@ -1,20 +1,12 @@
-/* SUITE · O FLUXO DE ALEATORIEDADE.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   Duas famílias de propriedade, e as duas importam por razoes diferentes:
-
-     DETERMINISMO — mesma semente, mesma sequencia. E o que torna um defeito
-     relatado investigavel, e sem isso balancear o jogo vira adivinhacao;
-     QUALIDADE — o misturador precisa MISTURAR. Um gerador determinstico e
-     correto que devolvesse 0,5 sempre passaria em toda prova de determinismo, e
-     por isso a distribuicao e a independencia entre indices sao medidas aqui. */
+/* E o que torna um defeito relatado investigavel, e sem isso balancear o jogo vira
+   adivinhacao; QUALIDADE — o misturador precisa MISTURAR. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-/* A SEMENTE PADRAO VEM DO ESTADO, e nao repetida a mao: ela e a mesma que abre uma
-   partida sem semente escolhida, e dois lugares com o mesmo numero e um lugar que vai
-   divergir na primeira vez que alguem trocar o padrao. */
+/* A SEMENTE PADRAO VEM DO ESTADO, e nao repetida a mao: ela e a mesma que abre uma partida
+   sem semente escolhida, e dois lugares com o mesmo numero e um lugar que vai divergir na
+   primeira vez que alguem trocar o padrao. */
 import { DEFAULT_SEED } from "../../src/state/state.mjs";
 import { hash, integer, mix, streamFrom, take, unit } from "../../src/state/random.mjs";
 
@@ -29,9 +21,7 @@ test("mesma semente e mesmo indice dao sempre o mesmo numero", () => {
 });
 
 test("o fluxo e funcao pura de (semente, saques): reconstruir da o mesmo futuro", () => {
-  /* A propriedade que justifica o gerador CONTADO. Salvar dois inteiros e
-     reabrir a partida tem de produzir exatamente a continuacao — se o gerador
-     guardasse estado interno, esta prova exigiria serializar esse estado. */
+  /* A propriedade que justifica o gerador CONTADO. */
   fc.assert(
     fc.property(anySeed, fc.nat({ max: 500 }), (seed, steps) => {
       let live = streamFrom(seed, "congress");
@@ -69,9 +59,7 @@ test("cada saque avanca o contador em exatamente um", () => {
 });
 
 test("os fluxos dos dois motores sao INDEPENDENTES", () => {
-  /* A razao de existirem dois. Com fluxo unico, um evento a mais num turno
-     deslocaria o indice e mudaria o resultado de uma votacao sem relacao com
-     ele — e calibrar a frequencia de eventos mexeria em todas as votacoes. */
+  /* A razao de existirem dois. */
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 1, max: 50 }), (seed, extra) => {
       const congress = streamFrom(seed, "congress");
@@ -118,8 +106,8 @@ test("take equivale a encadear a mao, e existe para nao errar o encadeamento", (
 });
 
 test("o valor fica em [0, 1) e NUNCA chega a 1", () => {
-  /* O 1,0 estoura toda faixa escrita como `[min, max)`, e o defeito aparece uma
-     vez em quatro bilhoes — ou seja, nunca em teste e sempre em producao. */
+  /* O 1,0 estoura toda faixa escrita como `[min, max)`, e o defeito aparece uma vez em quatro
+     bilhoes — ou seja, nunca em teste e sempre em producao. */
   fc.assert(
     fc.property(anySeed, fc.nat({ max: 2000 }), (seed, steps) => {
       const values = take({ seed, draws: steps }, 40).values;
@@ -157,17 +145,16 @@ test("faixa invertida nao produz numero fora dela", () => {
   assert.equal(drawn.value, 10);
 });
 
-/* ── QUALIDADE DO MISTURADOR ────────────────────────────────────────────────
-   Determinismo sozinho nao prova nada sobre a mistura: um gerador que
-   devolvesse 0,5 sempre passaria em todas as provas acima. */
+/* ── QUALIDADE DO MISTURADOR ──────────────────────────────────────────────── Determinismo
+   sozinho nao prova nada sobre a mistura: um gerador que devolvesse 0,5 sempre passaria em
+   todas as provas acima. */
 
 test("a distribuicao e plana: a media de dez mil saques fica perto de 0,5", () => {
   const { values } = take(streamFrom(DEFAULT_SEED, "congress"), 10000);
   const mean = values.reduce((a, b) => a + b, 0) / values.length;
   assert.ok(Math.abs(mean - 0.5) < 0.02, `media ${mean.toFixed(4)}`);
 
-  /* Dez baldes, e nenhum pode ficar muito acima ou abaixo do esperado. Um
-     gerador enviesado passa na media e falha aqui. */
+  /* Dez baldes, e nenhum pode ficar muito acima ou abaixo do esperado. */
   const buckets = new Array(10).fill(0);
   for (const value of values) buckets[Math.floor(value * 10)]++;
   for (const [index, count] of buckets.entries()) {
@@ -176,9 +163,9 @@ test("a distribuicao e plana: a media de dez mil saques fica perto de 0,5", () =
 });
 
 test("indices VIZINHOS nao produzem numeros vizinhos", () => {
-  /* Avalanche. Sem ela, o saque da bancada 1 e o da bancada 2 andariam juntos e
-     a dissidencia inteira ficaria correlacionada — todas as bancadas traindo no
-     mesmo turno, o que parece evento e e defeito. */
+  /* Sem ela, o saque da bancada 1 e o da bancada 2 andariam juntos e a dissidencia inteira
+     ficaria correlacionada — todas as bancadas traindo no mesmo turno, o que parece evento e
+     e defeito. */
   const seed = 987654321;
   let jumps = 0;
   const total = 2000;

@@ -1,25 +1,4 @@
-/* O RELATORIO DO MES — o que o turno FEZ. View PURA.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   POR QUE ELE E A PECA QUE FALTAVA. Ate aqui o jogador apertava "avancar o mes" e
-   a tela trocava em silencio: `playMonth` devolvia um relatorio inteiro — placar,
-   deriva por bancada, prometido contra pago, contingenciamento — e o entrypoint
-   jogava fora. Sem isso o ciclo nao fecha. Decidir sem saber o que a decisao fez
-   nao e jogar, e a segunda decisao passa a ser um chute com a mesma informacao da
-   primeira.
-
-   ── A PREVISAO E CONFRONTADA COM O DIA ───────────────────────────────────────
-   Esta e a unica tela do jogo onde a banda `± 14` prova que era honesta. A Mesa
-   promete uma faixa; aqui aparece o numero que saiu, e o quanto ele desviou. Sem
-   esse confronto o jogador nunca aprende a ler a faixa — ele so aprende que a
-   tela mostra um numero e depois outro.
-
-   ── A ORDEM E A DA CONSEQUENCIA, e nao a da execucao ─────────────────────────
-   O turno resolve orcamento antes de votacao, porque a votacao usa a verba paga.
-   O relatorio comeca pela VOTACAO, que e o que o jogador estava esperando, e so
-   depois mostra o dinheiro que a produziu, a base que sobrou e o pais que mudou.
-   Relatorio na ordem do motor seria relatorio escrito para quem escreveu o
-   motor. */
+/* O RELATORIO DO MES — o que o turno FEZ. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed } from "../shared/format.mjs";
@@ -33,12 +12,9 @@ import { monthLabel } from "../../state/state.mjs";
  */
 
 /**
- * UM AVISO no mesmo cartao do relatorio.
- *
- * Ele existe para o save recusado ter onde aparecer. Recusar em silencio e
- * comecar uma partida nova sem dizer nada seria a pior forma de tratar o caso:
- * o jogador veria o mandato dele desaparecer e nao teria como saber se foi
- * defeito, engano dele ou decisao do jogo.
+ * Recusar em silencio e comecar uma partida nova sem dizer nada seria a pior forma de tratar
+ * o caso: o jogador veria o mandato dele desaparecer e nao teria como saber se foi defeito,
+ * engano dele ou decisao do jogo.
  *
  * @param {object} input
  * @param {string} input.title
@@ -55,45 +31,15 @@ export function noticeHtml({ title, body }) {
 /**
  * O RELATORIO COMO PAINEL DA MESA, e nao mais como cartao que interrompe.
  *
- * ⚠ ELE TRAZ O PROPRIO ELEMENTO DE FORA, como toda view deste projeto: o
- * entrypoint concatena telas, e nao decide a forma delas.
- *
- * ── POR QUE SAIU DO `<dialog>` ───────────────────────────────────────────────
- * O modal foi a forma certa de PROVAR que o relatorio existia — e virou pedagio.
- * Um clique obrigatorio por mes, 48 por mandato, para dispensar uma leitura que
- * cabia na tela. Pior: `showModal()` deixa o fundo inerte, entao o jogador nao
- * podia comparar o relatorio com a Mesa que o produziu sem antes fechar um dos
- * dois. O que era acessibilidade de graca virou parede.
- *
- * O `<dialog>` continua no documento e continua certo — para o AVISO, que e uma
- * interrupcao legitima porque algo deu errado. Informacao consultavel e painel;
- * interrupcao e modal. A diferenca e essa, e ela nao e de gosto.
- *
- * ── E A LAMINA E DE APOIO, e nao a central ───────────────────────────────────
- * `glass-support`, o mesmo nivel da faixa de indices. A peca central da Mesa e a
- * NEGOCIACAO — o que se decide agora. O mes passado e contexto, e contexto com o
- * peso do protagonista disputa a atencao com ele.
- *
  * @param {Parameters<typeof reportHtml>[0] | null} input o ultimo mes, ou nada
  * @returns {string}
  */
 export function reportPanelHtml(input) {
-  /* PARTIDA NOVA — E TAMBEM PARTIDA RETOMADA. O relatorio nao entra no save
-     porque e memoria de tela e nao estado de jogo, entao quem volta ao jogo
-     amanha cai aqui tambem. Dizer "nenhum mes resolvido nesta sessao" e a
-     verdade; um painel vazio seria lido como defeito. */
-  /* ⚠ O VIDRO E A LEGENDA SAIRAM em 15/08/2026. Ele era `glass-support` com um
-     rotulo proprio porque morava solto no tabuleiro, embaixo da mesa; agora ele e
-     um bloco dentro da lamina do Congresso, e quem diz "O mês passado" e a legenda
-     do bloco. Mantidos os dois, a tela repetiria o mesmo titulo duas vezes com dois
-     pesos diferentes — que e como uma tela comeca a parecer remendada. */
+  /* PARTIDA NOVA — E TAMBEM PARTIDA RETOMADA. */
   if (!input) {
     return (
-      /* ⚠ A ESPERA USA A PECA DE AUSENCIA, e nao uma forma propria. Ela tinha
-         `.report--waiting` so para si — a terceira das quatro maneiras que o jogo
-         tinha de dizer "nao ha nada aqui". Aqui o peso e o DISCRETO: nenhum mes
-         resolvido nao e um problema a resolver, e uma chamada centrada daria a um
-         fato o peso de um defeito. */
+      /* Aqui o peso e o DISCRETO: nenhum mes resolvido nao e um problema a resolver, e uma
+         chamada centrada daria a um fato o peso de um defeito. */
       `<div class="report empty empty--quiet">` +
       `<p class="empty__note">${escapeHtml(UI.report.waiting)}</p>` +
       `</div>`
@@ -119,9 +65,8 @@ function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore
   const { tally } = report;
   const bill = report.agenda.proposal;
 
-  /* O TITULO E O MES, e ele nao carrega mais `id` de dialogo: o relatorio deixou
-     de ser um cartao que interrompe e virou painel da Mesa. Quem ainda usa o
-     `<dialog>` e o aviso, e e ele que leva o `id` agora — ver `noticeHtml`. */
+  /* O TITULO E O MES, e ele nao carrega mais `id` de dialogo: o relatorio deixou de ser um
+     cartao que interrompe e virou painel da Mesa. */
   const head =
     `<h2 class="report__month">` +
     `${escapeHtml(monthLabel(report.month))}</h2>` +
@@ -153,8 +98,7 @@ function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore
 function verdictBlock({ report, quorum, tally }) {
   if (!report.agenda.proposal) return "";
 
-  /* A CANETA NAO TEM PLACAR, e nao e um placar de zero: ela nao foi a plenario.
-     Mostrar `0 de 257` para um decreto seria afirmar uma derrota que nao houve. */
+  /* A CANETA NAO TEM PLACAR, e nao e um placar de zero: ela nao foi a plenario. */
   if (!tally) {
     return (
       `<p class="report__verdict" data-passed="true">${escapeHtml(UI.report.decreed)}</p>` +
@@ -169,9 +113,6 @@ function verdictBlock({ report, quorum, tally }) {
     `${escapeHtml(tally.passed ? UI.report.passed : UI.report.rejected)}</p>` +
     `<p class="report__score" data-numeric>${seats(tally.votes)}` +
     `<small>${escapeHtml(UI.report.against)} ${seats(quorum)}</small></p>` +
-    /* O CONFRONTO. Ele existe para a banda da Mesa provar que era honesta: a
-       previsao e deterministica, o dia nao, e e aqui que o jogador ve o tamanho
-       real do "nao". */
     `<p class="report__line">${escapeHtml(UI.report.forecastWas)} ` +
     `<b data-numeric>${seats(tally.expected)}</b> · ` +
     `${escapeHtml(UI.report.dayGave)} <b data-numeric>${signed(drift)}</b></p>`
@@ -200,8 +141,8 @@ function benchBlock({ report, tally, parties, loyaltyBefore }) {
         `<th scope="row">${escapeHtml(party.label)}</th>` +
         `<td data-numeric>${percent(report.paid[party.id] ?? 0)}</td>` +
         `<td data-numeric>${line ? seats(line.votes) : "—"}</td>` +
-        /* A DERIVA E O DIA, e ela merece coluna propria: uma bancada que entregou
-           menos do que prometia nao e a mesma coisa que uma que entregou pouco. */
+        /* A DERIVA E O DIA, e ela merece coluna propria: uma bancada que entregou menos do
+           que prometia nao e a mesma coisa que uma que entregou pouco. */
         `<td data-numeric>${line ? signed(line.drift) : "—"}</td>` +
         `<td class="report__mood" data-direction="${moved > 0 ? "up" : moved < 0 ? "down" : "flat"}"` +
         ` data-numeric>${seats(after)} <small>${signed(moved, 1)}</small></td>` +
@@ -235,9 +176,7 @@ function moneyBlock(report) {
   const paid = report.paidCost + report.allocatedTotal;
   const cut = demand > 0 ? 1 - paid / demand : 0;
 
-  /* O CORTE SO APARECE QUANDO EXISTE. Uma linha dizendo "cortou 0%" todo mes
-     ensina o jogador a parar de ler a linha justamente antes do mes em que ela
-     passa a valer alguma coisa. */
+  /* O CORTE SO APARECE QUANDO EXISTE. */
   const shortfall =
     cut > 1e-9
       ? `<p class="report__line" data-alert="true">${escapeHtml(UI.report.cut)} ` +

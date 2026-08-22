@@ -17,6 +17,7 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 | cor                 | token no arquivo de tokens, no par `--x` + `--x-rgb` | literal fora dos tokens; `color-mix()` | `tokens`                    |
 | superfície          | uma das três lâminas                                 | `backdrop-filter` fora do material     | `material`                  |
 | raio, espaço, corpo | valor da escala, derivado de um número raiz          | número cru numa regra                  | revisão                     |
+| comentário          | lição medida, até 10 linhas por bloco                | diário: data, citação, histórico       | `prose`                     |
 | cascata             | camadas declaradas por `@layer`                      | regra fora de camada; `!important`     | `cascade`                   |
 | movimento           | tokens de duração e curva + rede global              | `animation: none`; animação inline     | `motion`                    |
 | aleatoriedade       | fluxo injetado, próprio de cada motor que sorteia    | `Math.random` no domínio               | `boundaries`                |
@@ -93,6 +94,12 @@ aceitável é superfície pequena sobre fundo **estático**. Antes de levar o
 material a uma tela nova, meça o fps dela com braço de controle sem filtro — e
 com GPU e vsync ligados, porque em rasterização por software os dois braços caem
 juntos e o número não diz nada.
+
+**Um fio claro por aresta, e ele é a `border`.** Toda superfície de vidro declarava
+`border` **e** um bisel com realce de cima, e os dois caem em pixels vizinhos: medido
+no ofício da Caixa de Entrada, `77,72,66` da borda encostado em `78,77,75` do realce —
+um fio de 2px para dizer uma fronteira. `--bevel-under` é o bisel de quem já tem borda:
+só a sombra de baixo, que não duplica nada. Quatro tokens de sombra viraram um.
 
 **Uma lâmina por tela.** As peças de dentro são linhas e seções, não cartões: um
 contorno por informação é peso repetido, e peso repetido é ruído. Vidro dentro de
@@ -248,6 +255,7 @@ número ao lado dela.
 | `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                                    |
 | `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                               |
 | `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                                   |
+| `prose`      | bloco de comentário acima do teto — 10 linhas no corpo, 14 no cabeçalho do arquivo                                         |
 | `vocabulary` | a mesma frase da interface teclada duas vezes; e a frase declarada que **nenhum arquivo alcança** — 49 delas em 21/08/2026 |
 
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem

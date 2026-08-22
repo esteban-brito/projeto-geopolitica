@@ -1,27 +1,6 @@
-/* GUARDA · ESQUEMA — todo dado editavel passa por uma fronteira, e por UMA so.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   O catalogo vai virar editavel (a aba de nome e logo e decisao fechada), e dado
-   editavel sem fronteira produz o pior tipo de defeito: ele nao quebra onde foi
-   digitado, quebra tres motores adiante, num calculo que parece errado sem
-   motivo aparente.
-
-   O QUE ELA IMPEDE:
-
-     1. MODULO DE DADO SEM ESQUEMA. Colecao que ninguem descreve e colecao que
-        ninguem consegue validar — e a que sempre sobra de fora quando a
-        validacao e escrita depois;
-     2. ESQUEMA QUE NINGUEM VALIDA. Declarar `PARTY_SCHEMA` e nunca conferir
-        nenhum registro contra ele e a pior das situacoes, porque parece
-        cobertura. `catalog.mjs` tem de citar todo esquema declarado;
-     3. ESQUEMA FORA DE `src/data/`. A fronteira e um lugar. Um segundo esquema
-        vivendo num motor e como duas definicoes do mesmo dado comecam a
-        divergir — e a divergencia so aparece quando as duas ja tem consumidor.
-
-   O QUE ELA NAO COBRE: se os REGISTROS obedecem ao esquema. Isso e trabalho da
-   suite `tests/suites/catalog.mjs`, que importa o catalogo de verdade e o
-   confere valor a valor — guarda lê texto e nao executa, entao provar conteudo
-   aqui exigiria interpretar JavaScript, que e frageis demais para ser prova. */
+/* O catalogo vai virar editavel (a aba de nome e logo e decisao fechada), e dado editavel sem
+   fronteira produz o pior tipo de defeito: ele nao quebra onde foi digitado, quebra tres
+   motores adiante, num calculo que parece errado sem motivo aparente. */
 
 import { collect, isGuardSource, stripJsComments } from "../lib/project.mjs";
 
@@ -30,8 +9,8 @@ export const name = "schema";
 const DATA_DIR = "src/data/";
 const INDEX = "src/data/catalog.mjs";
 
-/* Os dois modulos que sao INFRAESTRUTURA do catalogo, e nao assunto dele: um
-   define o validador, o outro reune. Nenhum dos dois declara colecao. */
+/* Os dois modulos que sao INFRAESTRUTURA do catalogo, e nao assunto dele: um define o
+   validador, o outro reune. */
 const PLUMBING = new Set(["src/data/schema.mjs", INDEX]);
 
 const SCHEMA_NAME = /\b([A-Z][A-Z0-9_]*_SCHEMA)\b/g;

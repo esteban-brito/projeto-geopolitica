@@ -1,31 +1,10 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   TOKENS — a unica fonte de valor visual do projeto.
-   ═══════════════════════════════════════════════════════════════════════════
-
-   Este arquivo declara valores. Ele NAO tem um seletor sequer alem do `:root`,
-   e essa restricao e cobrada por `tests/guards/tokens.mjs`.
-
-   POR QUE ELE VEM PRIMEIRO E DECLARA AS CAMADAS. A ordem da cascata deixa de
-   ser um efeito de quem carregou o que primeiro e passa a ser uma DECLARACAO:
-   a linha `@layer` abaixo fixa a precedencia de uma vez, e a partir dai a ordem
-   das tags <link> no HTML nao importa mais. Uma regra de `components` nunca
-   pode vencer uma de `screens` por acidente de ordem — que e como uma folha de
-   3.600 linhas acumula 33 declaracoes que nunca chegam a tela.
-
-   REGRA DE COR: toda cor existe em DOIS formatos — `--x` (hex, para uso direto)
-   e `--x-rgb` (canais crus, para `rgba(var(--x-rgb), a)`). Translucidez usa o
-   segundo, e nunca `color-mix()`: medido no projeto anterior, `color-mix` e
-   `rgba` divergem em 1/255 em 21 de 21 capturas. A guarda prova que os dois
-   formatos de cada cor descrevem a MESMA cor. */
+/* Translucidez usa o segundo, e nunca `color-mix()`: medido no projeto anterior, `color-mix`
+   e `rgba` divergem em 1/255 em 21 de 21 capturas. */
 
 @layer tokens, base, material, components, screens, motion;
 
 /* TIPAGEM DE CUSTOM PROPERTY.
-   `@property` entra em todo token numerico que e ANIMADO ou INJETADO em runtime
-   — e so neles, porque e neles que ela paga: sem tipo, uma custom property e
-   string, e string nao interpola (o gradiente salta entre quadros em vez de
-   girar) nem valida (um valor invalido vira erro silencioso em vez de ser
-   descartado). Tipar um token estatico so adiciona ruido. */
+   `@property` entra em todo token numerico que e ANIMADO ou INJETADO em runtime */
 @property --light-angle {
   syntax: "<angle>";
   inherits: true;
@@ -39,96 +18,31 @@
 
 @layer tokens {
   :root {
-    /* ── COR ────────────────────────────────────────────────────────────────
-       Tema escuro por decisao: e a condicao em que vidro translucido lê como
-       material, e nao como veu. Sala de comando noturna — azul-noite como
-       ambiente, ambar como a unica cor de acao.
-
-       Os PAPEIS sao fechados. Uma cor nova precisa de um papel novo declarado
-       aqui; nao existe "mais um azul". */
-
-    /* ambiente */
     --bg: #090d15;
     --bg-rgb: 9, 13, 21;
     --bg-deep: #05070c;
     --bg-deep-rgb: 5, 7, 12;
 
-    /* tinta — tres niveis, e so isso */
     --ink: #eef2f8;
     --ink-rgb: 238, 242, 248;
     --ink-soft: #c4cddb;
     --ink-dim: #93a1b4;
 
-    /* acao — a marca. Uma cor, um lugar: o que se pressiona.
-       Gasta-la num rotulo passivo enfraquece o unico ponto onde ela precisa
-       funcionar sem concorrencia. */
-    /* ⚠ ELE ESCURECEU EM 15/08/2026, e o criterio foi dado pelo responsavel: "o que
-       tiver mais cara de jogo da Paradox". A resposta e direta — o ouro daquelas
-       telas e DESSATURADO e envelhecido: latao sob verniz, e nao ambar sob luz.
-       `#e8a33d` tinha a saturacao de uma cor de marca moderna; este tem a de um
-       objeto que existe ha tempo.
-
-       ⚠ ELE VESTE QUATRO LUGARES DE UMA VEZ — o botao de avancar, o selo de emenda,
-       o anel do presidente da Camara e a acao da carta —, e e isso que se quer: uma
-       cor, um lugar, e o lugar e "o que se pressiona ou o que custa caro".
-
-       O CONTRASTE FOI MEDIDO antes de fechar. Se um dia ele reprovar, o conserto e
-       clarear a TINTA sobre o ouro — nunca abandonar o tom, porque isso seria a
-       aritmetica decidindo a estetica. */
+    /* O CONTRASTE FOI MEDIDO antes de fechar. */
     --brand: #c2a675;
     --brand-rgb: 194, 166, 117;
 
-    /* SITUACAO — o estado do pais, que veste o ambiente inteiro.
-       `stable` e AZUL e nao ambar de proposito: se a situacao neutra usasse a
-       cor da marca, o fundo competiria com o botao em toda tela calma. */
     --crisis: #e0574f;
     --crisis-rgb: 224, 87, 79;
     --stable: #6f8cb0;
     --stable-rgb: 111, 140, 176;
     --growth: #4fbf87;
 
-    /* SINAL de variacao — aliases, nao cores novas. Um indicador que sobe usa
-       exatamente o verde de crescimento; duas cores para o mesmo conceito e
-       como uma paleta comeca a divergir.
-       A forma `-rgb` de cada um nasce quando o primeiro consumidor precisar de
-       translucidez: token sem consumidor e o que esta guarda proibe. */
+    /* Um indicador que sobe usa exatamente o verde de crescimento; duas cores para o mesmo
+       conceito e como uma paleta comeca a divergir. */
     --signal-up: var(--growth);
     --signal-down: var(--crisis);
 
-    /* ── O BORDÔ — a terceira cor, e ela é INSTITUCIONAL e não semântica ─────
-       ⚠ ELA ENTROU EM 15/08/2026, e a razão é uma crítica externa que acertou o
-       problema errando o diagnóstico: a auditoria chamou a paleta de "verde neon
-       de startup" e pediu cores institucionais. O verde nunca foi a marca — ele é
-       SEMÂNTICO (alta, bancada leal) — e a marca já é âmbar. O que de fato
-       faltava era outra coisa: o Congresso, o STF e o Executivo saíam todos no
-       mesmo azul-cinza, e um jogo sobre a separação de poderes desenhava os três
-       com a mesma tinta.
-
-       O BORDÔ É O CARPETE DO LEGISLATIVO E DO JUDICIÁRIO, e essa é a única coisa
-       que ele diz: "isto é a outra casa". Ele não significa bom nem ruim, e é
-       por isso que ele pode existir ao lado de verde e vermelho sem competir —
-       as duas famílias respondem perguntas diferentes.
-
-       ⚠ ELE NÃO PINTA BANCADA NEM IDEOLOGIA. Cor de partido foi recusada três
-       vezes, e a razão não mudou: o modelo não tem "oposição", e pintar um bloco
-       de vermelho diria que ele é perigo. Aqui a cor é do LUGAR, não de quem
-       está nele. */
-    /* ── O EIXO ECONÔMICO — cinco faixas, da esquerda à direita ────────────────
-       ⚠ ESTA FAMÍLIA REABRE UMA RECUSA REGISTRADA TRÊS VEZES, e a reabertura é do
-       responsável, olhando a tela e escolhendo as cores uma a uma: "usa vermelho,
-       vermelho alaranjado, amarelo, verde, verde azulado escuro, nessa ordem pra
-       extrema esquerda, esquerda, centro, direita, extrema direita".
-
-       ⚠ A REGRA ANTIGA FICA REGISTRADA em vez de apagada, porque ela não era boba: "a
-       paleta já gasta verde em ALTA e vermelho em CRISE, e pintar ideologia com os
-       mesmos tons faria um bloco parecer bom e o outro parecer perigo". O risco é
-       real e a decisão é dele — e a forma de conviver com o risco é a saturação: estes
-       cinco são tons TERROSOS, não os semânticos. `--crisis` é #e0574f, claro e
-       saturado; o vermelho daqui é mais escuro e mais fechado. O alerta continua
-       vencendo o plenário quando os dois aparecem juntos.
-
-       ⚠ E ELAS SÓ VIVEM NA FITA. Uma cor de eixo em qualquer outro lugar da tela seria
-       a segunda paleta que o sistema visual existe para impedir. */
     --axis-1: #b8443c;
     --axis-2: #c86f36;
     --axis-3: #c7a83f;
@@ -143,121 +57,31 @@
     --bordo: #8f3b4a;
     --bordo-rgb: 143, 59, 74;
 
-    /* ── O PAPEL — a SEGUNDA substância, e a fronteira dela é declarada ────────
-       ⚠ ISTO REABRE UMA DECISÃO FECHADA, e a reabertura é do responsável: "liquid
-       glass é a base do design inteiro" valeu enquanto tudo na tela era a mesma
-       natureza de coisa — painel, medidor, controle. Não é mais. Uma LEI e uma
-       CARTA não são superfícies da máquina do Estado: são o registro que a máquina
-       produz, e desenhá-las com o mesmo vidro do resto é o que faz um simulador de
-       presidência parecer um painel de fintech — que foi exatamente a crítica.
-
-       A REGRA PASSA A SER DUAS SUBSTÂNCIAS COM FRONTEIRA ESCRITA:
-
-         VIDRO  a máquina do Estado — painel, medidor, controle, navegação
-         PAPEL  o texto de registro — a lei e (quando existir) a carta
-
-       ⚠ E A FRONTEIRA É O RISCO INTEIRO. No dia em que o papel aparecer num cartão
-       de resumo ou num botão, ele deixa de ser uma legenda e vira a segunda paleta
-       que o sistema visual existe para impedir — e aí o projeto terá trocado um
-       material coerente por dois incoerentes. Papel só onde há TEXTO QUE OBRIGA.
-
-       ELE NÃO É BRANCO, e isso não é timidez. Papel branco num ambiente escuro é
-       um buraco de luz: ele arranca o olho da decisão e força o contraste da tela
-       inteira a se reorganizar em volta dele. O que se quer é pergaminho À MEIA
-       LUZ — quente onde tudo é frio, o que basta para o olho ler "outra coisa"
-       sem que a tela mude de temperatura. */
-    /* ── O TRILHO COMO REGUA LEGAL ─────────────────────────────────────────────
-       ⚠ O CONTROLE MAIS IMPORTANTE DO JOGO NAO CARREGAVA A LEI. O piso era escrito
-       em estilo inline pela vista desde que o orcamento virou granular, e NENHUMA
-       regra o consumia — canal de dado morto, e o efeito e que arrastar a verba da
-       saude tinha a estetica de arrastar o volume de um fone. Uma auditoria externa
-       leu a tela inteira como "mesa de som", e leu certo pelo motivo errado: nao era
-       o componente, era a informacao que ele nao mostrava.
-
-       AS TRES ZONAS SAO A MECANICA CENTRAL: abaixo do piso custa lei ou emenda,
-       entre piso e teto e caneta, acima do teto custa de novo. O trilho passa a
-       mostrar as tres ANTES de o jogador atravessar — ate aqui a linha so se tingia
-       DEPOIS, o que e informacao chegando tarde demais para decidir.
-
-       ⚠ E A ZONA CARA NAO E UMA ZONA PROIBIDA. Nada de hachura de perigo: a doutrina
-       do projeto e "tudo tem preco, nada tem muro", e um trilho que parecesse
-       bloqueado ensinaria que a lei e um limite da INTERFACE. Ela e mais escura e
-       mais funda — cara de lugar onde se entra pagando, e nao de parede. */
     --rail-free: #4b5665;
-    /* O PINO E METAL ESCOVADO, e as tres paradas sao uma peca so: luz na quina de
-       cima, corpo no meio, sombra embaixo. Ele nao usa a marca de proposito — a
-       marca e a cor do que se PRESSIONA, e um pino que se ARRASTA nao se pressiona;
-       gasta-la em trinta e oito controles por tela seria a diluicao que a regra de
-       uma cor, um lugar existe para impedir. */
     --pin-light: #b9c2cd;
     --pin-body: #78838f;
     --pin-shade: #5a646f;
     --rail-costly: #232a33;
     --rail-mark: #8a734c;
 
-    /* ⚠ ELE CLAREOU em 15/08/2026. A primeira versao era #221d18 — pergaminho a
-       meia luz —, e a escolha estava certa na intencao e errada na medida: contra a
-       lamina, ela diferia quase so em MATIZ, e nao em claridade. Um revisor externo
-       leu o bloco de leis como "caixas de contorno fininho", sem perceber que havia
-       papel ali. Substancia que so o autor enxerga nao e substancia. */
-    /* ⚠ A FORMA `-rgb` NASCEU E MORREU EM 22/08/2026, e quem a matou foi `npm run screen`.
-       Ela existiu por algumas horas para o oficio aberto ser um marrom TRANSLUCIDO — "da
-       pra ser marrom liquid glass o bloco da direita?" —, e a translucidez cobrou 9,7 fps
-       de media: uma superficie grande translucida sobre a lamina recompoe a cada quadro,
-       porque `--light-angle` interpola. A luz voltou a ser PINTADA no proprio oficio, em
-       gradiente estatico, e o par ficou sem consumidor no mesmo dia.
-       ⚠ E FOI A GUARDA `tokens` QUE O ACHOU, no primeiro `validate` depois do conserto. O
-       registro fica porque a licao nao e sobre o token: e sobre alfa grande sobre lamina
-       animada ser o mesmo defeito de `--glass-support-bg`, por outro caminho. */
+    /* A primeira versao era #221d18 — pergaminho a meia luz —, e a escolha estava certa na
+       intencao e errada na medida: contra a lamina, ela diferia quase so em MATIZ, e nao em
+       claridade. */
+    /* Ela existiu por algumas horas para o oficio aberto ser um marrom TRANSLUCIDO — "da pra
+       ser marrom liquid glass o bloco da direita?" —, e a translucidez cobrou 9,7 fps de
+       media: uma superficie grande translucida sobre a lamina recompoe a cada quadro, porque
+       `--light-angle` interpola. */
     --paper: #2b241c;
     --paper-edge: #4a3f31;
     --paper-ink: #d9cdbc;
-    /* A forma `-rgb` existe porque a tinta do papel precisa de translucidez: as
-       leituras secundárias da linha da lei são a mesma tinta com menos presença, e
-       não um segundo cinza. Um cinza calibrado para vidro escuro fica turvo sobre
-       pergaminho — cor que é função de um fundo é consequência, não escolha. */
     --paper-ink-rgb: 217, 205, 188;
 
-    /* ── VIDRO ──────────────────────────────────────────────────────────────
-       UM MATERIAL, TRES DENSIDADES. O desfoque, a saturacao e a borda sao os
-       MESMOS em toda a tela — e isso nao e economia, e o que faz as pecas lerem
-       como recortes da mesma placa. O que distingue os tres niveis e so a
-       DENSIDADE do fundo, porque o que eles expressam e PAPEL:
-
-         stage   — a peca central da tela, a que carrega o assunto;
-         action  — o que se pressiona;
-         support — informacao que nao se toca.
-
-       Nivel NAO pode significar raio de desfoque. Tres desfoques sao tres
-       materiais, e "cada bloco parece um liquid glass diferente" e exatamente
-       a critica que este sistema existe para impedir.
-
-       `backdrop-filter` CUSTA, e o custo e por TELA, nao por efeito. No projeto
-       anterior ele derrubou uma tela em movimento para 31 fps. O que o torna
-       aceitavel e a condicao: superficie pequena sobre fundo ESTATICO.
+    /* No projeto anterior ele derrubou uma tela em movimento para 31 fps.
        MECA O FPS DE UMA TELA NOVA, com braco de controle sem filtro, antes de
-       levar o material para ela.
-
-       ⚠ ELE ENGROSSOU EM 14/08/2026, de `blur(14px) saturate(1.4)`, e a regra
-       acima foi obedecida antes e nao depois: `npm run screen` mediu 240,4 fps
-       com material contra 240,1 sem, em tres rodadas alternadas. A medicao NAO
-       prova que o vidro e barato — os dois bracos batem no teto de 240 Hz do
-       monitor, e um teto nao mede folga. O que ela prova e o que basta para esta
-       mudanca: nesta maquina, o material nao custa um quadro sequer, e havia
-       margem para pedir mais dele.
-
-       O que a medicao NAO cobre continua declarado: aparelho movel com GPU fraca.
-       O desfoque e o unico numero deste arquivo que se deve baixar primeiro se um
-       dia a tela travar em telefone. */
+       levar o material para ela. */
     --glass-blur: blur(18px) saturate(1.5);
     --glass-edge: rgba(255, 255, 255, 0.14);
 
-    /* A BASE ESCURA. Vidro branco translucido so protege texto quando o que
-       esta atras e escuro — e o que esta atras aqui e o grafo, que e conteudo
-       arbitrario. Uma demao escura sob o realce e o que faz o material
-       funcionar sobre qualquer fundo, e nao so sobre o fundo em que foi
-       calibrado. Vem por ULTIMO na pilha de `background`, ou seja, mais ao
-       fundo: a peca ganha chao sem trocar de cor. */
     --glass-base: rgba(var(--bg-rgb), 0.34);
 
     --glass-stage-bg: linear-gradient(
@@ -274,91 +98,42 @@
       linear-gradient(var(--light-angle), rgba(34, 46, 68, 0.22), rgba(14, 20, 31, 0.34)),
       var(--glass-base);
 
-    /* A LAMINA AMBAR — uma lamina PROPRIA, e nao a neutra com tinta por cima.
-       O botao primario passou quatro rodadas terracota no projeto anterior, e a
-       conta diz por que: `rgba(--brand, .46)` sobre a lamina azul compunha
-       rgb(119, 91, 52). O MATIZ estava certo o tempo todo — 35 graus, ambar —,
-       e o que estava errado era a LUMINOSIDADE: 33,5%. Marrom e laranja escuro,
-       e tinta translucida sobre fundo escuro so sabe escurecer.
-       Subir a densidade do ambar compoe rgb(193, 137, 55): mesmo matiz, 48,6%
-       de luminosidade, e ai a peca lê ambar. E a saida certa porque vidro ambar
-       real amostra a luz de tras e a devolve TINGIDA — ele nao e vidro neutro
-       com uma demao em cima.
-       `brightness` no `backdrop-filter` resolveria e esta PROIBIDO: seria um
-       segundo material, e a guarda `material` recusa. A luz tem de vir da
-       propria lamina. */
+    /* O MATIZ estava certo o tempo todo — 35 graus, ambar —, e o que estava errado era a
+       LUMINOSIDADE: 33,5%. */
     --glass-brand-bg: linear-gradient(
       var(--light-angle),
       rgba(var(--brand-rgb), 0.82),
       rgba(var(--brand-rgb), 0.62)
     );
 
-    /* ELEVACAO EM TRES PARTES, e cada uma faz uma coisa: a sombra de CONTATO
-       diz onde a peca toca o chao, a LARGA a descola do fundo (com spread quase
-       inteiro — spread negativo demais come o borrao e o resultado lê como
-       "tudo num plano so"), e a ARESTA ACESA e a luz batendo na quina. */
-    --glass-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.45),
-      0 2px 4px rgba(0, 0, 0, 0.55), 0 24px 60px -20px rgba(0, 0, 0, 0.85);
-    --glass-shadow-soft: var(--bevel-fine), 0 10px 24px -18px rgba(0, 0, 0, 0.9);
+    /* oficio   dy=0 `77,72,66`  dy=1 `78,77,75`  brilhos iguais: le como 2px indice dy=0
+       `54,66,80`  dy=1 `80,91,103` o realce mais CLARO que a borda .glass-action dy=0
+       `177,153,108` dy=1 `184,171,149` .glass-support dy=0 `43,51,60`  dy=1 `64,70,79` ⚠ E A
+       BASE E OS LADOS JA ESTAVAM CERTOS, o que prova que o defeito era so o realce de cima:
+       embaixo o bisel poe a sombra ANTES do fio da borda — luz e sombra, e e o par que da
+       espessura —, e nos lados so ha o fio da borda. */
+    --bevel-under: inset 0 -1px 0 rgba(0, 0, 0, 0.26);
 
-    /* O BISEL da espessura a peca. Vidro real tem espessura, e espessura
-       aparece na BORDA antes de aparecer na superficie — por isso um `border`
-       de cor unica nunca lê como vidro, por mais desfoque que haja atras.
-       Duas intensidades porque a luz vem de cima: peca grande expoe mais quina
-       que peca pequena, e o mesmo valor nas duas deixa a pequena cromada. */
-    --bevel:
-      inset 0 1px 0 rgba(255, 255, 255, 0.34), inset 0 -1px 0 rgba(0, 0, 0, 0.34),
-      inset 1px 0 0 rgba(255, 255, 255, 0.08), inset -1px 0 0 rgba(255, 255, 255, 0.05);
-    --bevel-fine: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.26);
-
-    /* ── RAIO ───────────────────────────────────────────────────────────────
-       UM numero nasce; o resto DERIVA dele. Curvatura derivada e o que faz duas
-       pecas aninhadas parecerem talhadas do mesmo bloco — e impede o estado em
-       que dois tokens valem o mesmo por coincidencia aritmetica e divergem no
-       primeiro ajuste. */
     --radius-stage: 24px;
     --radius-piece: calc(var(--radius-stage) - var(--space-2));
     --radius-pill: var(--radius-piece);
 
-    /* ── OS TRES RAIOS DE PECA PEQUENA, e eles nao derivam da lamina ──────────
-       ⚠ ELES ENTRARAM EM 18/08/2026 PORQUE JA EXISTIAM ESCRITOS A MAO, em doze
-       lugares: `2px` em oito e `3px` em quatro. A divergencia nao era arbitraria —
-       levantados lado a lado, os `3px` sao todos PAPEL e os `2px` sao todos
-       CARIMBO —, e e exatamente por isso que ela precisava de nome: uma coerencia
-       que so existe na cabeca de quem escreveu dura ate o proximo bloco.
-
-       ELES NAO SAEM DE `--radius-stage`, e a excecao e declarada: a lamina e a
-       moldura da tela, e uma curva derivada dela num selo de dez pixels daria um
-       raio maior que a propria altura da peca. O que estes tres dizem e outra
-       coisa — que material aquilo e.
-
-       PAPEL   documento: carta, texto em tramitacao, lei escrita;
-       CARIMBO a maquina do Estado marcando — selo, distintivo, tarja;
-       PONTO   a pilula redonda de estado, e ela e redonda de verdade. */
+    /* ── OS TRES RAIOS DE PECA PEQUENA, e eles nao derivam da lamina ────────── ⚠ ELES
+       ENTRARAM EM PORQUE JA EXISTIAM ESCRITOS A MAO, em doze lugares: `2px` em oito e `3px`
+       em quatro. */
     --radius-paper: 3px;
     --radius-stamp: 2px;
     --radius-dot: 999px;
 
-    /* O DIAMETRO DO PONTO DE ESTADO. Ele era `6px` num lugar e `8px` em dois — a
-       mesma peca, tres vezes, com dois tamanhos. Oito ganhou por ser o que aparece
-       duas vezes e por bater com `--space-2`, e nao por gosto. */
+    /* Ele era `6px` num lugar e `8px` em dois — a mesma peca, tres vezes, com dois tamanhos. */
     --dot: 8px;
 
-    /* ── A MARCA NA BORDA ESQUERDA, e ela tem DOIS graus e nao tres ───────────
-       O gesto e um so em quatro lugares — "esta peca esta em tal estado" —, e ele
-       aparecia em `2px`, `3px` e `4px`. Duas larguras bastam, e cada uma diz uma
-       coisa: a marca NORMAL e a marca do grau MAXIMO, que hoje e a emenda
-       constitucional. Uma terceira largura no meio nao acrescenta grau nenhum —
-       ela so faz duas pecas parecerem diferentes sem motivo. */
+    /* ── A MARCA NA BORDA ESQUERDA, e ela tem DOIS graus e nao tres ─────────── O gesto e um
+       so em quatro lugares — "esta peca esta em tal estado" —, e ele aparecia em `2px`, `3px`
+       e `4px`. */
     --rule: 2px;
     --rule-strong: 4px;
 
-    /* ── ESPACO ─────────────────────────────────────────────────────────────
-       Base 4. O valor nao e o ponto — o ponto e a RAZAO: dentro de um grupo,
-       8 a 12; entre grupos, 32 a 44. Distancia igual entre tudo significa que
-       nada pertence a nada, e proximidade e a ferramenta primaria de
-       agrupamento. */
     --space-1: 4px;
     --space-2: 8px;
     --space-3: 12px;
@@ -367,202 +142,51 @@
     --space-8: 32px;
     --space-11: 44px;
 
-    /* ── TIPOGRAFIA ─────────────────────────────────────────────────────────
-       CINCO degraus com salto perceptivel, e o maior reservado ao dado
-       dramatico do momento. O olho nao constroi hierarquia com degrau de 0,3px:
-       ele lê "tudo medio" e desiste de ordenar.
-
-       A FAMILIA e provisoria: `system-ui` ate a fonte propria entrar
-       auto-hospedada, com o mesmo protocolo de asset do resto. Escolher a fonte
-       muda pixel e e decisao visivel — fica para quando houver o que comparar. */
     --font-display: system-ui, "Segoe UI", sans-serif;
-    /* A prosa da interface. Ela e a MESMA familia do display de proposito: rotulo,
-       leitura e nota sao a mesma voz, e o que os distingue e peso e caixa. */
     --font-text: system-ui, "Segoe UI", sans-serif;
 
-    /* ── A FAMILIA DO REGISTRO, e a divisao entre elas e uma LEGENDA ───────────
-       Ate 15/08/2026 o jogo inteiro tinha uma voz so, e nada na tela distinguia uma
-       LEI de uma MEDICAO — duas coisas de natureza oposta num simulador de
-       presidencia. Uma auditoria externa leu isso como "estetica de SaaS
-       corporativo" e acertou o sintoma.
-
-       A regra, e ela vale em toda tela:
-
-         serifa = TEXTO DE REGISTRO   o NOME de uma norma, de uma pessoa, o assunto
-                                      de um oficio — aquilo que se assina
-         sans   = TODO O RESTO        numero, rotulo, leitura, nota, prosa de
-                                      interface
-
-       ⚠ ELA E OPT-IN, E ISSO E O CONSERTO DE UM DEFEITO MEU DO MESMO DIA. A primeira
-       versao trocou `--font-text` — a fonte do CORPO — por serifa, e com isso a
-       serifa virou o PADRAO de tudo o que nao declara fonte propria: unidade de
-       controle, nota de cartao, prosa de estado vazio, linha de rateio, rotulo de
-       rua. Metade da interface saiu serifada por herança e a outra metade sans por
-       declaracao explicita, e o responsavel viu na hora — "as fontes estao estranhas
-       e despadronizadas". A regra estava certa; a implementacao a inverteu.
-
-       Registro e uma LISTA CURTA e nomeada, e nao um padrao: o nome da norma na
-       tela de area, o nome da pessoa na bancada e na carta, o nome do presidente no
-       rail, o assunto da carta e a assinatura da leitura do mes. Mais nada.
-
-       ⚠ E O NUMERO CONTINUA PROTEGIDO: `[data-numeric]` declara `--font-display` em
-       `10-base.css`, entao um numero e sans mesmo dentro de um nome serifado.
-
-       PILHA DE SISTEMA, e nao arquivo baixado: o projeto e zero build e zero
-       dependencia de runtime, e uma fonte de rede seria uma requisicao que pode
-       falhar e um bloco de texto invisivel enquanto ela nao chega. */
-    /* ── A FAMILIA DA MAQUINA ──────────────────────────────────────────────────
-       A terceira, e ela tem funcao propria: serifa e o texto que se ASSINA, sans e
-       o valor que se MEDE, e a monoespacada e o que a maquina do Estado CARIMBA.
-       Rito de tramitacao — EMENDA, LEI ORDINARIA — nao e nome nem medicao: e o
-       despacho que um servidor bateu sobre o papel, e maquina de escrever e a letra
-       que o mundo associa a isso.
-
-       ⚠ TRES FAMILIAS E O TETO. Uma quarta nao teria papel sobrando para ocupar, e
-       uma paleta tipografica so e legenda enquanto cada entrada dela responde uma
-       pergunta diferente. */
+    /* A regra, e ela vale em toda tela: serifa = TEXTO DE REGISTRO o NOME de uma norma, de
+       uma pessoa, o assunto de um oficio — aquilo que se assina sans = TODO O RESTO numero,
+       rotulo, leitura, nota, prosa de interface ⚠ ELA E OPT-IN, E ISSO E O CONSERTO DE UM
+       DEFEITO MEU DO MESMO DIA. */
     --font-machine: ui-monospace, "Cascadia Mono", Consolas, monospace;
 
     --font-record: Georgia, "Times New Roman", Times, serif;
 
     --text-hero: clamp(2.6rem, 6vw, 4.5rem);
 
-    /* ── O NOME DA TELA, e ele DEIXOU DE SER O HERÓI em 20/08/2026 ─────────────
-       ⚠ O DEGRAU NASCEU DE UMA AUDITORIA EXTERNA, e ela acertou a leitura: "títulos
-       gigantes ocupam espaço nobilíssimo apenas para dizer ao jogador onde ele está".
-       Medido no Gabinete a 1440×980: a cabeça da tela custava **101px** para imprimir
-       uma palavra que o rail já marca em destaque três centímetros à esquerda.
-
-       ⚠ E A CORREÇÃO NÃO É ENCOLHER `--text-hero`, que foi a primeira ideia e estaria
-       errada: a prosa dele diz o que ele é — "o maior reservado ao DADO DRAMÁTICO do
-       momento" —, e quem o usa além do título é o placar de uma votação, que é
-       exatamente esse dado. Encolhido, o placar encolheria junto. O defeito nunca foi
-       o tamanho do herói: era o nome da tela estar VESTIDO de herói.
-
-       Ele fica maior que o título de bloco e menor que o placar, que é a hierarquia
-       que a tela sempre quis ter: primeiro o que está acontecendo, depois onde. */
+    /* Medido no Gabinete a 1440×980: a cabeça da tela custava **101px** para imprimir uma
+       palavra que o rail já marca em destaque três centímetros à esquerda. */
     --text-screen: clamp(1.5rem, 2.9vw, 2.2rem);
     --text-title: clamp(1.15rem, 2.4vw, 1.6rem);
     --text-verdict: clamp(0.82rem, 1.15vw, 0.95rem);
     --text-body: 0.85rem;
     --text-label: 0.625rem;
 
-    /* ── OS DOIS DEGRAUS QUE FALTAVAM, e a ausência deles era visível ──────────
-       ⚠ O RESPONSÁVEL VIU ISTO USANDO A TELA: "as fontes estão estranhas e
-       despadronizadas". A escala declarava CINCO degraus e as folhas usavam ONZE
-       tamanhos crus fora dela — `0.7`, `0.72`, `0.74`, `0.76`, `0.78`, `0.8`,
-       `0.82`, `0.86`, `1.02`, `1.05` —, todos escritos à mão, componente a
-       componente, ao longo de várias sessões. Onze tamanhos entre 11px e 17px não
-       formam hierarquia nenhuma: formam ruído, e o olho lê ruído como desleixo
-       mesmo sem saber nomear a causa.
-
-       A causa é estrutural e não estética: uma escala só é escala se TUDO passar
-       por ela. Um degrau novo digitado direto no componente parece inofensivo — são
-       0,02rem de diferença — e é assim que uma paleta de tipos vira uma lista de
-       exceções que ninguém consegue mais revisar.
-
-       ⚠ NOTA E O DEGRAU MAIS USADO DO PROJETO, e ele não existia: oito componentes
-       chegaram a `0.78rem` cada um por conta própria, o que é a definição de um
-       token faltando. NOME é o par dele em cima: o nome de uma norma, de uma pessoa
-       ou o assunto de um ofício pesa mais que a leitura ao lado e menos que o
-       título da tela. */
+    /* Onze tamanhos entre 11px e 17px não formam hierarquia nenhuma: formam ruído, e o olho
+       lê ruído como desleixo mesmo sem saber nomear a causa. */
     --text-note: 0.78rem;
     --text-name: 1.05rem;
     --track-label: 0.18em;
 
-    /* ── MOVIMENTO ──────────────────────────────────────────────────────────
-       Quatro duracoes e duas curvas, por PAPEL. Duracao crua numa regra e como
-       o movimento de uma interface deixa de ser sistema.
-
-       ⚠ A ESCALA FOI ENCURTADA em 14/08/2026, com o pedido "que as transicoes
-       fiquem mais fluidas e instantaneas". Ela nao encolheu por igual, e a razao
-       e que as quatro duracoes nao fazem a mesma coisa:
-
-         TOQUE   e RESPOSTA A UM DEDO, e resposta tem um limiar perceptivo. Acima
-                 de ~100ms o olho deixa de ler "o botao reagiu" e passa a ler "a
-                 tela esta pensando" — e 160ms estava do lado errado desse
-                 limiar. Foi para 90ms, que e reacao;
-         PECA    e uma coisa se rearranjando na tela. Ela pode ser vista, entao
-                 nao pode ser instantanea — mas 280ms era tempo de espera;
-         TELA    e a troca inteira. Era a maior espera do jogo: TODA navegacao
-                 pagava 420ms antes de mostrar qualquer coisa. Um crossfade de
-                 220ms continua sendo lido como transicao e nao como corte;
-         PALCO   NAO encolheu, e isso e o ponto. Ela nao e resposta a gesto
-                 nenhum: e o gel da aurora mudando quando a situacao do governo
-                 muda. Ambiente que troca depressa vira piscada, e o jogador
-                 aprende a ignorar o unico sinal periferico da tela.
-
-       A licao esta na diferenca: "instantaneo" e uma propriedade do que RESPONDE
-       ao jogador, e nao do que acontece ao redor dele. */
+    /* Foi para 90ms, que e reacao; PECA e uma coisa se rearranjando na tela. */
     --dur-touch: 90ms;
     --dur-piece: 180ms;
     --dur-screen: 220ms;
     --dur-stage: 520ms;
 
-    /* AS DUAS CURVAS BASTAM PARA A PRESSAO TAMBEM, e chegou a existir aqui uma
-       terceira — `--ease-press: linear` — que a guarda de tokens matou no mesmo
-       minuto, deixando `--ease-enter` orfao e acusando. Ela estava certa duas
-       vezes: o token novo nao tinha consumidor proprio, e a razao escrita para ele
-       estava errada. `--ease-enter` e saida exponencial, ou seja, RAPIDA no comeco
-       e lenta no fim — exatamente o que um afundamento de 90ms precisa. A cauda
-       lenta dura uns 40ms e ninguem a percebe. */
+    /* `--ease-enter` e saida exponencial, ou seja, RAPIDA no comeco e lenta no fim —
+       exatamente o que um afundamento de 90ms precisa. */
     --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-move: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* ── MEDIDAS DA COLUNA ──────────────────────────────────────────────────
-       Declaradas como token, nunca como fallback de `var()`: variavel que so
-       existe no segundo argumento de um `var()` parece ponto de ajuste do
-       sistema sem ser um, porque muda-la exige achar cada consumidor.
-
-       ERAM DUAS, viraram uma, e voltaram a ser duas — como o comentario anterior
-       previu, no dia em que a segunda largura ganhasse dono. O dono chegou: o
-       cartao de AVISO. Ele carrega prosa corrida, e prosa a 1180px tem medida de
-       linha que ninguem lê de uma passada; a peca do tabuleiro carrega tabela e
-       controle, que querem o oposto.
-
-       A LARGA CRESCEU DE 780 PARA 1180, e o motivo foi medido na tela em uso: em
-       1440px de janela, o tabuleiro tem 1008px entre os dois rails, e a peca
-       parava em 780 — sobravam cem pixels mortos de cada lado enquanto as
-       bancadas apertavam o controle deslizante numa coluna de 120px. Peca alta e
-       estreita nao e escolha de composicao aqui: e um teto herdado de quando a
-       tela tinha uma coluna de texto no meio.
-
-       ⚠ O TETO CAIU EM 15/08/2026, A PEDIDO DO RESPONSAVEL USANDO A TELA: "todos
-       os paineis precisam ocupar pelo menos 80% do espaco da tela, esticados,
-       padronizados, iguais, sem excecao". O teto de 1180 fazia exatamente o que ele
-       descreveu — num monitor de 1920 a lamina parava em 61% da janela e ficava
-       "pequena ali no meio", com 260px mortos de cada lado.
-
-       O QUE SE PERDE ESTA REGISTRADO, porque a razao antiga nao era boba: numa
-       janela muito larga uma tabela esticada deixa de ser comparavel de relance —
-       o olho perde a linha entre a primeira coluna e a ultima. A resposta a isso
-       deixa de ser o teto da LAMINA e passa a ser medida de linha DENTRO dela, que
-       e onde o problema de fato mora: `.empty__note` ja para em 46ch e o veredito
-       em 34ch. Prosa se limita onde prosa esta; tabela nao e prosa.
-
-       O QUE MANDA AGORA E O TABULEIRO, e a lamina o preenche inteiro. O unico
-       espaco que sobra dos lados e o rail e o respiro — e o respiro encolheu junto
-       (ver `.board`), porque com o teto fora ele passou a ser o unico limite entre
-       a peca e os 80%. */
+    /* Ele carrega prosa corrida, e prosa a 1180px tem medida de linha que ninguem lê de uma
+       passada; a peca do tabuleiro carrega tabela e controle, que querem o oposto. */
     --column: 100%;
     --column-notice: 520px;
-    /* A largura do rail. Ela cabe o rotulo mais longo da navegacao sem quebrar,
-       e e o rotulo que manda: rail dimensionado pelo icone obriga o texto a
-       abreviar, e abreviacao e onde um menu comeca a precisar ser decorado.
-
-       ⚠ ELA VIROU FLUIDA em 15/08/2026, e a razao e aritmetica. Com o teto da
-       lamina fora, o rail passou a ser o unico grande custo fixo entre a peca e os
-       80% da janela que o responsavel pediu: 216px sao 21% de um monitor de 1024 e
-       15% de um de 1440, e nesses dois a lamina fechava em 72,8% e 79,8% por causa
-       dele sozinho. Em 1920 ele custa 11% e nao atrapalha ninguem — entao o que ele
-       precisava era encolher onde e caro e ficar onde nao e.
-
-       O PISO DE 184px E O ROTULO, e continua sendo ele que manda: e onde
-       "Congresso & Leis" ainda cabe em uma linha. Abaixo disso o rail nao afina —
-       ele DEITA, e o ponto em que isso acontece subiu de 900 para 1180 pela mesma
-       conta: entre 900 e 1180 nao existe largura de rail que caiba o rotulo E deixe
-       a lamina passar de 80%. Deitado, ele custa zero de largura e a peca fecha em
-       96%. */
+    /* Ela cabe o rotulo mais longo da navegacao sem quebrar, e e o rotulo que manda: rail
+       dimensionado pelo icone obriga o texto a abreviar, e abreviacao e onde um menu comeca a
+       precisar ser decorado. */
     --rail: clamp(184px, 13vw, 216px);
   }
 }

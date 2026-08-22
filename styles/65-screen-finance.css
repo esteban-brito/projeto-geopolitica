@@ -1,39 +1,11 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   TELA · FINANCAS — o placar, e a unica tela do jogo sem um controle.
-   ═══════════════════════════════════════════════════════════════════════════
-
-   ELA E A UNICA DENSA, E ISSO E DELIBERADO. Em tela que decide, densidade e
-   ruido: cada numero a mais disputa atencao com a decisao, e o projeto ja gastou
-   uma sessao tirando numero de cima da Mesa por isso. Aqui nao ha decisao —
-   ninguem arrasta nada nesta tela —, e a comparacao lado a lado e justamente o
-   servico que ela presta. Dezenove linhas em quatro blocos cabem numa dobra, e e
-   isso que faz "a divida subiu enquanto o primario caiu" ser uma leitura de
-   relance em vez de uma navegacao.
-
-   A AUSENCIA DE CONTROLE PRECISA SER VISIVEL NO PRIMEIRO SEGUNDO. Se a linha
-   parecesse pressionavel, o jogador procuraria o botao, nao acharia, e concluiria
-   que a tela esta quebrada. Dai a forma de RAZAO CONTABIL e nao de pastilha: fio
-   de separacao em vez de fundo por linha, nenhum raio, nenhum hover, nenhuma
-   transicao. Toda peca pressionavel deste jogo tem fundo proprio e reage ao
-   ponteiro; esta nao tem nem uma coisa nem outra, e a diferenca lê antes de
-   qualquer texto ser lido.
-
-   AS QUATRO COLUNAS SAO SEMPRE AS MESMAS: o que e, quanto e, o que vem fazendo, e
-   o que aquilo significa. Numero em coluna fixa e o unico jeito de dezenove
-   grandezas diferentes serem comparaveis de relance — coluna que se alinha
-   sozinha por linha deixa de ser coluna. */
+/* Se a linha parecesse pressionavel, o jogador procuraria o botao, nao acharia, e concluiria
+   que a tela esta quebrada. */
 
 @layer screens {
   .ledger {
     display: grid;
   }
 
-  /* A NOTA RECEBE A SOBRA, e nao o rotulo: "Despesa obrigatória" cabe em pouco
-     mais de um palmo e nao cresce, enquanto "a obrigatória sozinha já fura o
-     teto" e a frase que explica o mes inteiro. A coluna do valor e fixa em `rem`
-     por licao paga: `ch` mede a largura do zero NA FONTE DE CADA ELEMENTO, e
-     duas colunas medidas assim em degraus tipograficos diferentes nunca se
-     alinham. */
   .ledger__row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 7.5rem 4rem minmax(0, 1.2fr);
@@ -62,30 +34,15 @@
     white-space: nowrap;
   }
 
-  /* ── A ESCADA PRECISA DE AR ENTRE OS DEGRAUS ────────────────────────────────
-     Os blocos sao retangulos solidos e se LADRILHAM: encostados, seis deles viram
-     um tarjao unico, e uma serie estavel passa a parecer uma barra de
-     carregamento — foi assim que ela apareceu na primeira captura desta tela.
-     A escada do indice de area resolve encolhendo (a fonte lá é de 4rem); aqui a
-     linha e de corpo, e encolher mais tornaria o degrau invisivel. O que separa
-     os blocos e ESPACO ENTRE ELES, e por isso o `letter-spacing` e positivo — o
-     oposto do que a peca do indice faz, e pela mesma razao de fundo: a marca so
-     informa enquanto der para contar os degraus. */
-  /* ⚠ O ÚNICO TAMANHO FORA DA ESCALA EM TODO O PROJETO, e a exceção é declarada:
-     a escada não é TEXTO, é um desenho feito de caracteres. O que este número
-     controla é a altura de um degrau — geometria —, e amarrá-lo a um degrau da
-     escala tipográfica faria a curva mudar de forma no dia em que alguém ajustasse
-     o corpo de uma nota. É a mesma natureza de `--index` e `--neutral`, que são
-     dado e não paleta. Todos os outros vinte e um tamanhos crus do projeto viraram
-     token em 15/08/2026. */
-  /* ⚠ AS TRES DECLARACOES DE TIPOGRAFIA MORRERAM AQUI EM 21/08/2026 — corpo, entrelinha
-     e espacamento existiam para desenhar a escada de BLOCOS, que era texto. A peca virou
-     linha de SVG e a tipografia deixou de significar alguma coisa nela; o que sobra e a
-     TINTA, que o traco herda por `currentColor`.
-
-     A LARGURA VEM DA COLUNA: a trilha da faisca mede 4rem na grade da linha, e e o mesmo
-     valor que `.spark` traz por padrao — declarar `width: 100%` aqui seria um segundo
-     dono para uma medida so. */
+  /* ── A ESCADA PRECISA DE AR ENTRE OS DEGRAUS ──────────────────────────────── Os blocos sao
+     retangulos solidos e se LADRILHAM: encostados, seis deles viram um tarjao unico, e uma
+     serie estavel passa a parecer uma barra de carregamento — foi assim que ela apareceu na
+     primeira captura desta tela. */
+  /* ⚠ O ÚNICO TAMANHO FORA DA ESCALA EM TODO O PROJETO, e a exceção é declarada: a escada não
+     é TEXTO, é um desenho feito de caracteres. */
+  /* A LARGURA VEM DA COLUNA: a trilha da faisca mede 4rem na grade da linha, e e o mesmo
+     valor que `.spark` traz por padrao — declarar `width: 100%` aqui seria um segundo dono
+     para uma medida so. */
   .ledger__spark {
     color: var(--ink-dim);
   }
@@ -98,15 +55,6 @@
     white-space: nowrap;
   }
 
-  /* ── O SINAL TINGE O NUMERO, E SO ELE ───────────────────────────────────────
-     A linha inteira colorida faria quatro linhas vermelhas seguidas parecerem um
-     alarme, e nenhuma delas e alarme: juro da divida e sempre "para baixo" e
-     sempre existiu. O que muda entre um mes e outro e a grandeza, entao e o
-     numero que carrega a cor.
-
-     E `flat` NAO E CINZA APAGADO, e sim a cor cheia do texto: um indicador dentro
-     da normalidade e informacao boa, e desbota-lo ensinaria a nao olhar
-     justamente para a linha que esta no lugar. */
   .ledger__row[data-direction="up"] .ledger__value {
     color: var(--signal-up);
   }
@@ -115,21 +63,9 @@
     color: var(--signal-down);
   }
 
-  /* ── NO CELULAR A LINHA VIRA DUAS ───────────────────────────────────────────
-     Quatro colunas em 390px poriam a nota em duas palavras por fileira e o valor
-     quebrado no meio. Rotulo e valor ficam na primeira fileira, porque sao o par
-     que se lê junto; a escada e a nota descem para a segunda. Nada e escondido:
-     esconder para caber e mentir por omissao, e numa tela que so informa a
-     omissao e a unica coisa que ela poderia fazer de errado. */
-  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
-     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
-     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
-     desktop; eu quero a perfeição no desktop, perfeição mesmo".
-
-     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
-     de rolar. Foi o corte que permitiu a tela fechar na dobra.
-
-     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
-     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
+  /* ── NO CELULAR A LINHA VIRA DUAS ─────────────────────────────────────────── Quatro
+     colunas em 390px poriam a nota em duas palavras por fileira e o valor quebrado no meio. */
+  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
+     rolar. */
 }

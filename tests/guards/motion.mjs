@@ -1,13 +1,4 @@
-/* GUARDA · MOVIMENTO — a rede de `prefers-reduced-motion` continua sendo rede.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   Ela existe porque honrar a preferencia bloco a bloco depende de lembrar, e no
-   projeto anterior isso deixou trinta declaracoes descobertas — quatro delas
-   infinitas — e chegou a INVERTER o sinal numa tela, onde a preferencia LIGAVA
-   uma animacao em vez de desliga-la.
-
-   Os quatro pontos cobrados aqui sao os quatro jeitos de a rede parar de valer
-   sem que nada quebre visivelmente. */
+/* GUARDA · MOVIMENTO — a rede de `prefers-reduced-motion` continua sendo rede. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
 
@@ -61,8 +52,8 @@ export function audit(files) {
     );
   }
 
-  /* Animacao injetada por estilo INLINE vence qualquer camada: e a unica forma
-     de furar a rede sem escrever CSS. */
+  /* Animacao injetada por estilo INLINE vence qualquer camada: e a unica forma de furar a
+     rede sem escrever CSS. */
   for (const [path, source] of files) {
     if (!/\.mjs$/.test(path) || path.startsWith("tests/")) continue;
     if (/style\.animation\s*=|setProperty\(\s*["']animation/.test(source)) {

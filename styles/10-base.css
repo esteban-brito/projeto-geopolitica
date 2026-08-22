@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   BASE — reset, ambiente e as regras que valem para o documento inteiro.
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* BASE — reset, ambiente e as regras que valem para o documento inteiro. */
 
 @layer base {
   *,
@@ -27,9 +25,7 @@
     overflow-x: hidden;
   }
 
-  /* FOCO VISIVEL, SEMPRE. Nao existe `outline: none` neste projeto sem um
-     substituto declarado na mesma regra: e a primeira coisa que se perde e a
-     ultima que alguem percebe. */
+  /* FOCO VISIVEL, SEMPRE. */
   :focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
@@ -45,36 +41,21 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* TODO NUMERO DE INDICADOR E TABULAR. Numero proporcional dança de largura a
-     cada atualizacao, e num painel que muda a cada turno isso lê como a
-     interface tremendo.
-
-     ⚠ E TODO NUMERO E SANS, e esta linha e o que torna a regra tipografica do
-     ciclo 5 EXECUTAVEL em vez de combinada: serifa e texto de registro, sans e
-     valor medido. Sem ela, um numero herdaria a serifa de qualquer prosa em que
-     caisse — e a regra passaria a depender de cada componente lembrar dela, que e
-     como uma convencao tipografica diverge no terceiro componente. Aqui ela vale
-     em toda a tela, inclusive dentro de uma carta ou de uma lei. */
+  /* TODO NUMERO DE INDICADOR E TABULAR.
+     ⚠ E TODO NUMERO E SANS, e esta linha e o que torna a regra tipografica do ciclo 5
+     EXECUTAVEL em vez de combinada: serifa e texto de registro, sans e valor medido. */
   [data-numeric] {
     font-family: var(--font-display);
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.015em;
   }
 
-  /* ⚠ `.sr-only` SAIU DAQUI em 16/08/2026, acusada pela guarda `orphans` no primeiro
-     minuto de vida dela. Ela existia "para titulos de coluna que na tela seriam rotulo
-     em cima de um botao que ja diz o que faz" — e nenhum titulo desses foi escrito: o
-     projeto resolveu acessibilidade com `aria-label` e `role="img"` em toda peca que
-     precisou. Utilitario que espera um consumidor que nao vem e folha orfa com nome
-     bonito. Ela volta no dia em que houver um rotulo para esconder. */
-
   ::selection {
     background: rgba(var(--brand-rgb), 0.3);
     color: var(--ink);
   }
 
-  /* O <dialog> nativo cuida de foco, `inert` do fundo, Escape e top-layer.
-     O que sobra para o CSS e a aparencia do proprio backdrop. */
+  /* O <dialog> nativo cuida de foco, `inert` do fundo, Escape e top-layer. */
   dialog {
     border: none;
     padding: 0;
@@ -82,27 +63,20 @@
     color: inherit;
     max-width: none;
     max-height: none;
-    /* ELE PRECISA DE `margin: auto` DE VOLTA. O navegador centra um dialogo modal
-       justamente por essa margem, e o reset la em cima zera a margem de TUDO —
-       entao o cartao nascia colado na quina superior esquerda da janela. Passou
-       despercebido enquanto o dialogo so demonstrava um padrao e ninguem o
-       olhou numa captura. */
+    /* ELE PRECISA DE `margin: auto` DE VOLTA.
+       Passou despercebido enquanto o dialogo so demonstrava um padrao e ninguem o olhou numa
+       captura. */
     margin: auto;
   }
 
   /* O BACKDROP NAO LEVA `backdrop-filter`, e a guarda foi quem decidiu isto.
      A primeira versao pedia `blur(2px)` aqui — um SEGUNDO material na tela, que
-     `tests/guards/material.mjs` recusa por definicao. E a recusa esta certa por
-     um motivo alem da consistencia: o backdrop cobre a JANELA INTEIRA, que e
-     exatamente a condicao em que o filtro deixa de ser barato. Um veu escuro
-     entrega a mesma separacao entre modal e fundo por custo zero. */
+     `tests/guards/material.mjs` recusa por definicao. */
   dialog::backdrop {
     background: rgba(var(--bg-deep-rgb), 0.72);
   }
 
-  /* A duracao da troca de tela sai do token, e nao do padrao do navegador.
-     Os pseudo-elementos de View Transition vivem no `:root` e precisam ser
-     nomeados — nenhum seletor de descendente os alcanca. */
+  /* A duracao da troca de tela sai do token, e nao do padrao do navegador. */
   ::view-transition-group(root) {
     animation-duration: var(--dur-screen);
   }

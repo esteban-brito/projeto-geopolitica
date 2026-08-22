@@ -1,20 +1,5 @@
-/* GUARDA · MATERIAL — um material de vidro na tela inteira.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   O QUE ELA IMPEDE:
-
-     1. um SEGUNDO material. Tres desfoques sao tres materiais, e "cada bloco
-        parece um liquid glass diferente" e a critica que criou este sistema. O
-        que distingue os niveis e a DENSIDADE do fundo, nunca o filtro;
-     2. `backdrop-filter` fora de `20-material.css`. E assim que uma tela nova
-        entra com numero proprio e o padrao diverge sem ninguem decidir
-        diverge-lo;
-     3. declaracao sem o par `-webkit-`. Sem ele o vidro simplesmente NAO EXISTE
-        no Safari — e a conta e por OCORRENCIA, nao por regra: uma linha nova sem
-        par passaria despercebida numa folha grande;
-     4. o aviso de custo sumir do bloco de tokens. Ele e a unica memoria de que
-        `backdrop-filter` derrubou uma tela para 31 fps, e de que fps se mede
-        ANTES de levar o material a uma tela nova. */
+/* Ele e a unica memoria de que `backdrop-filter` derrubou uma tela para 31 fps, e de que fps
+   se mede ANTES de levar o material a uma tela nova. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
 
@@ -80,8 +65,7 @@ export function audit(files) {
   return list;
 }
 
-/* PROVAS SINTETICAS — a guarda tem de conseguir FALHAR.
-   Cada uma reintroduz um dos quatro defeitos e exige que o auditor acuse. */
+/* PROVAS SINTETICAS — a guarda tem de conseguir FALHAR. */
 export const synthetic = [
   {
     label: "um segundo material de vidro",

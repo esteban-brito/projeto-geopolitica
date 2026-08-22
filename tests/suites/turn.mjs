@@ -1,14 +1,5 @@
-/* SUITE · O TURNO — o acoplamento entre o caixa e o Congresso.
-   ══════════════════════════════════════════════════════════════════════════════
-
-   As suites dos dois motores provam cada um por dentro. Esta prova o que so
-   existe quando eles se encostam, e que nenhuma das duas consegue ver:
-
-     1. o teto MANDA. Nao existe ordem do jogador que gaste mais do que cabe;
-     2. o Congresso responde ao que FOI PAGO, e nao ao que foi prometido;
-     3. promessa quebrada custa base — e e por isso que contingenciamento,
-        que e aritmetica e nao evento, produz crise politica;
-     4. o mandato inteiro e reproduzivel a partir da semente e das ordens. */
+/* promessa quebrada custa base — e e por isso que contingenciamento, que e aritmetica e nao
+   evento, produz crise politica; 4. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -32,14 +23,11 @@ import { createState } from "../../src/state/state.mjs";
 
 /** @typedef {import("../../src/application/turn.mjs").Orders} Orders */
 
-/* Uma folga de centavos para comparacao de ponto flutuante. Ela e larga o
-   suficiente para o arredondamento e estreita o suficiente para nao esconder um
+/* Ela e larga o suficiente para o arredondamento e estreita o suficiente para nao esconder um
    defeito: os valores do jogo estao na casa das dezenas de bilhoes. */
 const EPSILON = 1e-9;
 
-/* OS MOTIVOS QUE A TELA SABE DIZER. A prova le a tabela de textos em vez de
-   redigitar a lista: motivo novo sem frase e um veredito em branco no rail, e o
-   sintoma seria uma linha vazia que ninguem associa a esta funcao. */
+/* OS MOTIVOS QUE A TELA SABE DIZER. */
 const UI_REASONS = new Set(Object.keys(UI.verdict));
 
 /** @param {number} level */
@@ -54,10 +42,7 @@ const anyFunding = fc
   })
   .map(values => Object.fromEntries(PARTIES.map((party, i) => [party.id, values[i] ?? 0])));
 
-/* UM MOVIMENTO DE ORCAMENTO QUALQUER — um programa sorteado, num nivel sorteado
-   de 0 a 100. Ele atravessa piso e teto de proposito: e justamente nos extremos
-   que o rito muda, e uma amostra que so passeasse dentro da faixa nunca provaria
-   a parte cara. */
+/* UM MOVIMENTO DE ORCAMENTO QUALQUER — um programa sorteado, num nivel sorteado de 0 a 100. */
 const anyLevels = fc
   .tuple(fc.constantFrom(...PROGRAMS), fc.integer({ min: 0, max: 100 }))
   .map(([program, level]) => ({ [program.id]: level }));
@@ -78,9 +63,8 @@ if (!LOOSE) throw new Error("o catalogo perdeu o programa de piso solto");
 const shuffle = () => ({ [LOOSE.id]: LOOSE.initial - 4 });
 
 /**
- * Um catalogo com outros parametros fiscais. Ele existe para a suite conseguir
- * montar posicoes que o catalogo real leva anos para alcancar — o
- * contingenciamento e uma delas, e esperar 47 meses por ele dentro de um teste
+ * Ele existe para a suite conseguir montar posicoes que o catalogo real leva anos para
+ * alcancar — o contingenciamento e uma delas, e esperar 47 meses por ele dentro de um teste
  * seria transformar uma prova em uma simulacao.
  *
  * @param {Partial<typeof CATALOG.fiscal>} overrides
@@ -90,8 +74,8 @@ function catalogWith(overrides) {
   return { ...CATALOG, fiscal: { ...CATALOG.fiscal, ...overrides } };
 }
 
-/* A obrigatoria nasce ACIMA da ancora de despesa, entao ela ja fura o teto no
-   primeiro mes: nao ha discricionario nenhum, e nao por escolha do jogador. */
+/* A obrigatoria nasce ACIMA da ancora de despesa, entao ela ja fura o teto no primeiro mes:
+   nao ha discricionario nenhum, e nao por escolha do jogador. */
 const SQUEEZED = catalogWith({ initialMandatory: 3600, initialDiscretionary: 0 });
 
 test("O TETO MANDA: nenhuma ordem gasta mais do que cabe no mes", () => {
@@ -102,8 +86,7 @@ test("O TETO MANDA: nenhuma ordem gasta mais do que cabe no mes", () => {
       const { report } = playMonth(state, orders);
 
       assert.ok(report.paidCost <= room + EPSILON, `pagou ${report.paidCost} com folga de ${room}`);
-      /* E o que se paga nunca passa do que se prometeu — o rateio corta, e
-         nunca inventa. */
+      /* E o que se paga nunca passa do que se prometeu — o rateio corta, e nunca inventa. */
       assert.ok(report.paidCost <= report.promisedCost + EPSILON);
     }),
   );
@@ -124,9 +107,8 @@ test("a verba paga por bancada nunca passa da prometida, e o rateio e proporcion
         if (promised > EPSILON) ratios.push(paid / promised);
       }
 
-      /* PROPORCIONAL quer dizer que ninguem e escolhido para sofrer: o corte e o
-         mesmo para todos. Se um dia alguem escrever prioridade aqui, esta linha
-         fica vermelha e a decisao tera de ser declarada. */
+      /* PROPORCIONAL quer dizer que ninguem e escolhido para sofrer: o corte e o mesmo para
+         todos. */
       for (const ratio of ratios) {
         assert.ok(
           Math.abs(ratio - (ratios[0] ?? 0)) < 1e-9,
@@ -138,23 +120,11 @@ test("a verba paga por bancada nunca passa da prometida, e o rateio e proporcion
 });
 
 test("SOBRA NAO E CORTE: o relatorio distingue folga de rateio", () => {
-  /* ⚠ ESTA PROVA NASCEU DE UM NUMERO ERRADO QUE ATRAVESSOU O PROJETO INTEIRO.
-
-     O simulador media "quantos meses o rateio cortou" com uma conta PROPRIA —
-     `pago + alocado < room || prometido + alocado > room` —, e a primeira metade
-     acusava SOBRA DE CAIXA como se fosse corte. Para a politica `herdado` ele
-     devolvia 41 de 48; a verdade e 7, e os 41 sao exatamente os meses em que NADA
-     foi cortado. O achado 2 do handoff foi escrito desse numero, e ele chegou a
-     bloquear o conserto do achado 31 — o defeito mais fundo do projeto.
-
-     Duas afirmacoes, e a primeira e a que morde:
-
-       gastar MENOS do que cabe nao e rateio, e sim FOLGA;
-       o rateio corta quando o PEDIDO nao cabe, e so entao. */
+  /* O achado 2 do handoff foi escrito desse numero, e ele chegou a bloquear o conserto do
+     achado 31 — o defeito mais fundo do projeto. */
   const state = createState(3);
 
-  /* O GOVERNO QUE PEDE POUCO: todo programa no piso e ninguem pago. Nao ha
-     discricionario pedido nem emenda prometida, entao o mes sobra por construcao. */
+  /* O GOVERNO QUE PEDE POUCO: todo programa no piso e ninguem pago. */
   const floors = Object.fromEntries(PROGRAMS.map(program => [program.id, program.floor]));
   const slack = playMonth(state, { levels: floors });
 
@@ -173,10 +143,6 @@ test("SOBRA NAO E CORTE: o relatorio distingue folga de rateio", () => {
   const squeezed = playMonth(state, { funding });
   assert.ok(squeezed.report.ratio < 1, "verba cheia coube no mes, e o rateio nao cortou nada");
 
-  /* ── E A DEFINICAO FICA PINADA ───────────────────────────────────────────────
-     `ratio < 1` e exatamente "o pedido nao cabe", e nada mais. Enquanto esta linha
-     estiver verde, nenhum instrumento precisa remontar a pergunta — e remonta-la foi
-     a SEXTA ocorrencia da familia mais cara deste projeto. */
   for (const orders of [{ levels: floors }, { funding }, {}]) {
     const closed = settlement(state, orders);
     assert.equal(
@@ -203,10 +169,8 @@ test("CONTINGENCIAMENTO ENTREGA ZERO, por mais que se prometa", () => {
 });
 
 test("O CONGRESSO RESPONDE AO PAGO, e nao ao prometido", () => {
-  /* A prova do acoplamento. Sob contingenciamento, prometer verba cheia tem de
-     produzir EXATAMENTE o mesmo placar que nao prometer nada — porque nos dois
-     casos o que chegou na conta foi zero. Se estas duas linhas divergirem,
-     promessa esta comprando voto, e o orcamento virou enfeite. */
+  /* Se estas duas linhas divergirem, promessa esta comprando voto, e o orcamento virou
+     enfeite. */
   const state = createState(4, SQUEEZED);
   const orders = { levels: reform(), funding: everyone(1) };
 
@@ -252,27 +216,8 @@ test("verba PAGA levanta a base, e a lealdade nunca sai da faixa", () => {
         const paid = generous.state.loyalty[party.id] ?? 0;
         const unpaid = dry.state.loyalty[party.id] ?? 0;
         assert.ok(paid >= 0 && paid <= 100, `${party.id} saiu da faixa: ${paid}`);
-        /* Quem recebeu alguma coisa nunca fica PIOR que quem nao recebeu nada —
-           e a promessa honrada em parte ainda pode ficar pior, porque o buraco
-           cobra. Entao a comparacao so vale quando o pagamento foi integral.
-
-           ⚠ E "INTEGRAL" E UMA RAZAO, E NAO UMA DIFERENCA. Esta pre-condicao era
-           `paidCost >= promisedCost - EPSILON`, com EPSILON absoluto, e por isso a
-           prova era INTERMITENTE: ela falhava em cerca de uma rodada em vinte, o
-           que num `validate` obrigatorio e pior do que falhar sempre — ensina a
-           rodar de novo ate passar.
-
-           O contraexemplo, caçado em 20 mil rodadas: uma promessa de `6,7e-11` a
-           esquerda, com o caixa honrando `ratio = 0,274`. O calote foi de 73%, e
-           mesmo assim `paidCost − promisedCost` valia `2,6e-10` — trezentas vezes
-           MENOR que o epsilon —, entao a diferenca absoluta dizia "pagou tudo"
-           sobre um mes em que o governo pagou um quarto. A prova entao cobrava
-           `paid >= unpaid` de uma bancada que tinha acabado de ser traida, e a
-           lealdade caia o 1e-9 que a traicao cobra. O motor estava certo nas duas
-           pontas; quem estava errado era a pergunta.
-
-           Diferenca absoluta nao responde "honrou tudo?" quando o proprio valor e
-           menor que a tolerancia. Razao responde, em qualquer escala. */
+        /* Quem recebeu alguma coisa nunca fica PIOR que quem nao recebeu nada — e a promessa
+           honrada em parte ainda pode ficar pior, porque o buraco cobra. */
         const honoured =
           generous.report.promisedCost <= 0 ||
           generous.report.paidCost >= generous.report.promisedCost * (1 - 1e-9);
@@ -286,9 +231,6 @@ test("verba PAGA levanta a base, e a lealdade nunca sai da faixa", () => {
 });
 
 test("o mandato inteiro se refaz da semente e das ordens", () => {
-  /* REPLAY. Ele e a razao de o fluxo de aleatoriedade ser contado e de o estado
-     ser imutavel: sem esta propriedade, "o Congresso derrubou minha lei" nunca e
-     reproduzivel, e portanto nunca e investigavel. */
   const run = () => {
     let state = createState(77);
     const votes = [];
@@ -322,16 +264,12 @@ test("o turno nao muta o estado que recebeu", () => {
 });
 
 test("a votacao consome o fluxo, e o mes sem pauta nao consome nada", () => {
-  /* Fluxo gasto sem votacao deslocaria o indice e mudaria o resultado de uma
-     votacao futura sem relacao nenhuma com o mes parado. */
+  /* Fluxo gasto sem votacao deslocaria o indice e mudaria o resultado de uma votacao futura
+     sem relacao nenhuma com o mes parado. */
   const state = createState(11);
   const idle = playMonth(state, { funding: everyone(0.1) });
   assert.equal(idle.state.streams.congress.draws, state.streams.congress.draws);
 
-  /* ⚠ E O MES EM QUE O TEXTO E ESCRITO TAMBEM NAO CONSOME NADA, desde 15/08/2026.
-     Ele entra na gaveta, e gaveta nao sorteia: a Mesa decide com `whipCount`, que e
-     deterministico. Isto e mais forte do que a prova pedia antes — agora ha DOIS
-     tipos de mes que nao gastam sorteio, e o segundo e novo. */
   const written = playMonth(state, { levels: reform(), funding: everyone(0.1) });
   assert.equal(
     written.state.streams.congress.draws,
@@ -339,15 +277,9 @@ test("a votacao consome o fluxo, e o mes sem pauta nao consome nada", () => {
     "o mes em que o texto foi protocolado consumiu sorteio — a gaveta nao sorteia",
   );
 
-  /* ⚠ O SORTEIO E UM POR BANCADA QUE VOTA, e a camara deixou de ter quatro delas
-     em 14/08/2026: com o elenco, cada lider leva a fracao da bancada que arrasta e
-     o resto do bloco continua sendo uma bancada. A prova PERGUNTA quantas sao em
-     vez de redigitar o numero — redigitado, ela ficaria vermelha a cada arquetipo
-     novo, e a tentacao seria corrigir o numero em vez de olhar o que mudou. */
   const chamber = settlement(state, { funding: everyone(0.1) }).benches.length;
 
-  /* E O PLENARIO GASTA UMA VEZ SO, no mes em que ele acontece — tres meses depois
-     da caneta. Os dois meses de espera no meio nao consomem nada. */
+  /* E O PLENARIO GASTA UMA VEZ SO, no mes em que ele acontece — tres meses depois da caneta. */
   let now = state;
   let before = state.streams.congress.draws;
   for (let month = 0; month < 8; month++) {
@@ -376,18 +308,10 @@ test("a votacao consome o fluxo, e o mes sem pauta nao consome nada", () => {
 });
 
 test("pauta aprovada muda a despesa obrigatoria PARA SEMPRE, no sinal do catalogo", () => {
-  /* O que torna a decisao pesada: o custo politico se paga uma vez, e o efeito
-     fiscal fica no resto do mandato. */
-  /* ⚠ O SINAL INVERTEU JUNTO COM A MECANICA, e a inversao e a prova de que o
-     modelo ficou mais honesto. Antes, uma pauta "que custa" carregava um
-     `fiscalImpact` negativo digitado a mao, e aprova-la AUMENTAVA a obrigatoria.
-     Agora a obrigatoria e a soma dos PISOS, e a unica coisa que a move e furar
-     um piso — o que so acontece para baixo. Gastar mais num programa nao aumenta
-     a despesa obrigatoria: aumenta o discricionario empenhado, que e outra conta
-     e nao atravessa o mes.
-
-     Entao a prova passou a cobrar o caso que existe: uma reforma que fura piso
-     constitucional ALIVIA a obrigatoria para sempre. */
+  /* O que torna a decisao pesada: o custo politico se paga uma vez, e o efeito fiscal fica no
+     resto do mandato. */
+  /* ⚠ O SINAL INVERTEU JUNTO COM A MECANICA, e a inversao e a prova de que o modelo ficou
+     mais honesto. */
   const state = createState(13);
   const passed = playMonth(state, { levels: reform(), funding: everyone(1) });
 
@@ -398,9 +322,8 @@ test("pauta aprovada muda a despesa obrigatoria PARA SEMPRE, no sinal do catalog
       "furar um piso constitucional tinha de aliviar a obrigatoria",
     );
 
-    /* E O ALIVIO ATRAVESSA O MES: a obrigatoria menor abre discricionario no mes
-       seguinte, que e a razao inteira de alguem pagar 308 votos por uma reforma.
-       Sem esta linha, a reforma seria um numero bonito sem consequencia. */
+    /* E O ALIVIO ATRAVESSA O MES: a obrigatoria menor abre discricionario no mes seguinte,
+       que e a razao inteira de alguem pagar 308 votos por uma reforma. */
     assert.ok(
       discretionaryRoom(passed.state) > discretionaryRoom(idle.state),
       "a obrigatoria menor tinha de abrir o discricionario do mes seguinte",
@@ -413,32 +336,16 @@ test("o preco da cadeira traduz verba em bilhoes, e o total fecha", () => {
   const seats = PARTIES.reduce((sum, party) => sum + party.seats, 0);
   assert.equal(full, seats * CATALOG.fiscal.seatPrice);
 
-  /* COMPRAR O PLENARIO INTEIRO NAO PODE CABER NUM MES. Se couber, existe uma
-     jogada dominante — pagar todo mundo sempre — e a escolha de a quem pagar
-     deixa de ser escolha. Esta e a unica prova do arquivo que cobra
-     CALIBRAGEM, e ela esta aqui de proposito: o dia em que alguem mexer no
-     preco da cadeira ou no discricionario inicial, ela cobra a conversa. */
+  /* COMPRAR O PLENARIO INTEIRO NAO PODE CABER NUM MES. */
   assert.ok(
     full > discretionaryRoom(createState(1)),
     `o plenario inteiro custa ${full.toFixed(1)} e cabe no mes — nao ha o que escolher`,
   );
 });
 
-/* ── O QUE JA VIROU REALIDADE ────────────────────────────────────────────────
-   A lista `state.enacted` MORREU em 13/08/2026, e as duas provas que a cercavam
-   foram movidas para o que a substituiu: `state.levels`.
-
-   A troca nao foi de nome. A lista guardava ids de leis aprovadas para responder
-   "o que ja esta em vigor?"; os niveis respondem a mesma pergunta com o proprio
-   numero — em que intensidade cada programa esta rodando AGORA. Guardar as duas
-   seria manter o registro do que foi decidido ao lado do resultado do que foi
-   decidido, e os dois divergem no primeiro remendo.
-
-   O defeito que a lista existia para impedir — cobrar o mesmo impacto fiscal
-   duas vezes — deixou de ser possivel por construcao, e nao por vigilancia: nao
-   ha "aprovar de novo" quando o que se aprova e um nivel. Repetir a ordem pede o
-   mesmo nivel que ja esta em vigor, e pedir o que ja existe nao e movimento
-   nenhum. A primeira prova abaixo cobra exatamente isso. */
+/* O defeito que a lista existia para impedir — cobrar o mesmo impacto fiscal duas vezes —
+   deixou de ser possivel por construcao, e nao por vigilancia: nao ha "aprovar de novo"
+   quando o que se aprova e um nivel. */
 
 test("REPETIR A ORDEM NAO COBRA DUAS VEZES, e nem vai a plenario de novo", () => {
   const state = createState(13);
@@ -448,10 +355,7 @@ test("REPETIR A ORDEM NAO COBRA DUAS VEZES, e nem vai a plenario de novo", () =>
   const orders = { levels: { [cut.id]: cut.floor - 8 }, funding: everyone(1) };
   const first = playMonth(state, orders);
 
-  /* A MESMA ORDEM, DE NOVO — partindo do estado que ela produziu. Se a reforma
-     passou, o nivel ja esta la e nao ha o que mover; se caiu, o pedido volta a
-     ser um movimento novo. As duas leituras sao corretas, e a prova cobra a que
-     valer. */
+  /* A MESMA ORDEM, DE NOVO — partindo do estado que ela produziu. */
   const again = playMonth(first.state, orders);
   const moved = first.state.levels[cut.id] !== state.levels[cut.id];
 
@@ -459,10 +363,7 @@ test("REPETIR A ORDEM NAO COBRA DUAS VEZES, e nem vai a plenario de novo", () =>
     assert.equal(again.report.agenda.proposal, null, "o nivel ja vigente voltou ao plenario");
     assert.equal(again.report.agenda.quorum, 0);
 
-    /* O EFEITO FISCAL E O QUE IMPORTA AQUI, e era ele que dobrava no desenho
-       antigo. A comparacao e contra um mes PARADO partindo do mesmo estado — a
-       obrigatoria cresce sozinha todo mes, e sem esse controle a prova mediria o
-       crescimento vegetativo em vez do alivio da reforma. */
+    /* O EFEITO FISCAL E O QUE IMPORTA AQUI, e era ele que dobrava no desenho antigo. */
     const idle = playMonth(first.state, { funding: everyone(1) });
     assert.ok(
       Math.abs(again.state.fiscal.mandatory - idle.state.fiscal.mandatory) < EPSILON,
@@ -475,10 +376,6 @@ test("REPETIR A ORDEM NAO COBRA DUAS VEZES, e nem vai a plenario de novo", () =>
 });
 
 test("A DERROTA DEVOLVE O NIVEL, e a execucao orcamentaria sobrevive a ela", () => {
-  /* A prova que substituiu "a lista guarda o que PASSOU". Um pacote com duas
-     naturezas: um corte que fura piso constitucional — que precisa de 308 — e um
-     remanejamento dentro da faixa, que nao precisa de ninguem. Quando o plenario
-     derruba, so o primeiro volta. */
   const state = createState(5);
 
   const hard = PROGRAMS.find(program => program.guard === "constitution" && program.floor > 20);
@@ -492,15 +389,9 @@ test("A DERROTA DEVOLVE O NIVEL, e a execucao orcamentaria sobrevive a ela", () 
 
   assert.equal(played.report.agenda.quorum, QUALIFIED_MAJORITY, "o pacote nao virou emenda");
 
-  /* ⚠ A PROVA NAO EXIGE QUE O PACOTE CAIA, e a mudanca tem razao. A versao
-     anterior fixava `passed: false` e quebrou na recalibragem de 13/08/2026: com
-     o orcamento real, uma emenda pode passar no mes 5 com verba zero, o que e um
-     achado de CALIBRAGEM e nao um defeito desta mecanica.
-
-     O que se prova aqui e a separacao das duas naturezas, e ela vale nos dois
-     desfechos: aprovado, tudo anda; derrotado, so o que dependia de voto volta.
-     Prender a prova a um resultado de sorteio seria medir a calibragem no lugar
-     onde se quer medir o mecanismo. */
+  /* A versao anterior fixava `passed: false` e quebrou na recalibragem de : com o orcamento
+     real, uma emenda pode passar no mes 5 com verba zero, o que e um achado de CALIBRAGEM e
+     nao um defeito desta mecanica. */
   const budgetMoved = (played.state.levels[easy.id] ?? 0) < (state.levels[easy.id] ?? 0);
   assert.ok(budgetMoved, "o remanejamento que nao dependia de voto nao aconteceu");
 
@@ -519,11 +410,9 @@ test("A DERROTA DEVOLVE O NIVEL, e a execucao orcamentaria sobrevive a ela", () 
 });
 
 test("A TELA E O TURNO FAZEM A MESMA CONTA: o rateio previsto e o rateio executado", () => {
-  /* `settlement` existe para a Mesa poder mostrar, enquanto o jogador arrasta, o
-     que o mes vai fazer. O valor dela depende inteiramente de ela nao divergir
-     do turno — e divergencia entre previsao e execucao e o tipo de defeito que
-     so aparece no caso extremo, que aqui e justamente o caso interessante: o mes
-     em que a promessa estoura o caixa. */
+  /* O valor dela depende inteiramente de ela nao divergir do turno — e divergencia entre
+     previsao e execucao e o tipo de defeito que so aparece no caso extremo, que aqui e
+     justamente o caso interessante: o mes em que a promessa estoura o caixa. */
   fc.assert(
     fc.property(anyOrders, fc.integer({ min: 1, max: 40 }), (orders, seed) => {
       const state = createState(seed);
@@ -542,20 +431,10 @@ test("A TELA E O TURNO FAZEM A MESMA CONTA: o rateio previsto e o rateio executa
 });
 
 test("A AREA E O TURNO PROJETAM O MESMO INDICE: a seta nao aponta para o lado errado", () => {
-  /* ⚠ ESTA E A SETIMA OCORRENCIA DA MESMA FAMILIA, e a primeira em que o defeito
-     estava na tela onde o jogador DECIDE quanto gastar por area.
-
-     O entrypoint projetava o indice a mao — `value − decay + yield × asked` —, com a
+  /* ⚠ ESTA E A SETIMA OCORRENCIA DA MESMA FAMILIA, e a primeira em que o defeito estava na
+     tela onde o jogador DECIDE quanto gastar por area.
      prosa ao lado jurando ser "a mesma conta do motor". A MALHA consome o gasto CHEIO
-     ja rateado (`funded`), e `asked` e so a parte acima do piso: na Previdencia,
-     R$ 2,4 bi contra R$ 126,7 bi. E o canal `capacity` da educacao nao entrava.
-
-     Medido no mes 1 da partida padrao, ANTES do conserto: em CINCO das oito areas a
-     seta apontava para o lado errado. A tela dizia que a Saude cairia de 61,0 para
-     60,4; o mes a levou a 61,1. Fazenda, Previdencia, Educacao e Defesa, idem.
-
-     A igualdade e EXATA de proposito: as duas chamam `capacityStep` com a mesma
-     alocacao, entao qualquer tolerancia aqui esconderia uma segunda conta nascendo. */
+     ja rateado (`funded`), e `asked` e so a parte acima do piso: na Previdencia, */
   fc.assert(
     fc.property(anyOrders, fc.integer({ min: 1, max: 40 }), (orders, seed) => {
       const state = createState(seed);
@@ -570,11 +449,8 @@ test("A AREA E O TURNO PROJETAM O MESMO INDICE: a seta nao aponta para o lado er
     }),
   );
 
-  /* ── E O CONTRAFACTUAL E O MES SEM AS ORDENS, e nao um mundo inalcancavel ──────
-     `idle` era `value − decay`: o indice se a area recebesse ZERO. Gastar zero numa
-     area exige derrubar todos os pisos dela por emenda — o contrafactual descrevia um
-     pais que a lei nao permite. Agora ele e o mes parado, que e a alternativa real a
-     decisao que o jogador esta tomando. */
+  /* ── E O CONTRAFACTUAL E O MES SEM AS ORDENS, e nao um mundo inalcancavel ────── `idle` era
+     `value − decay`: o indice se a area recebesse ZERO. */
   const state = createState(9);
   const quiet = playMonth(state, {});
   assert.deepEqual(
@@ -585,17 +461,10 @@ test("A AREA E O TURNO PROJETAM O MESMO INDICE: a seta nao aponta para o lado er
 });
 
 test("O PLACAR E O TURNO FECHAM A MESMA CONTA: o painel de Financas nao inventa numero", () => {
-  /* A mesma exigencia que `settlement` cumpre para a Mesa, agora para Financas.
-     Ela vale mais aqui do que la, porque o painel e a unica tela do jogo em que o
-     jogador nao tem como conferir nada: na area ele ve o controle que moveu, na
-     Mesa ve a bancada que pagou — no placar ele so tem o numero, e um numero que
-     divergisse do turno seria indistinguivel de um numero certo.
-
-     A AMOSTRA E DE REMANEJAMENTO, e a razao esta no que acontece depois da
-     votacao: quando uma pauta CAI, o turno devolve os niveis que furaram parede e
-     fecha o orcamento com outra configuracao — que e a conta certa, e nao a que o
-     painel mostrava antes de o voto acontecer. O painel prevê o mes com a decisao
-     em pe, e a previsao dele e exata enquanto o plenario nao derruba nada. */
+  /* Ela vale mais aqui do que la, porque o painel e a unica tela do jogo em que o jogador nao
+     tem como conferir nada: na area ele ve o controle que moveu, na Mesa ve a bancada que
+     pagou — no placar ele so tem o numero, e um numero que divergisse do turno seria
+     indistinguivel de um numero certo. */
   fc.assert(
     fc.property(anyFunding, fc.integer({ min: 1, max: 40 }), (funding, seed) => {
       const state = createState(seed);
@@ -612,10 +481,8 @@ test("O PLACAR E O TURNO FECHAM A MESMA CONTA: o painel de Financas nao inventa 
       assert.equal(shown.budget.balance, played.report.budget.balance);
       assert.equal(shown.interest, played.report.interest);
 
-      /* E O ESTOQUE FECHA COM O MES: o que o painel chama de divida bruta e
-         exatamente com quanto o mes seguinte comeca. Sem esta linha, o juro
-         poderia entrar duas vezes ou nenhuma, e as duas falhas apareceriam
-         devagar — como uma razao divida/PIB que anda sozinha. */
+      /* E O ESTOQUE FECHA COM O MES: o que o painel chama de divida bruta e exatamente com
+         quanto o mes seguinte comeca. */
       assert.ok(
         Math.abs(shown.debt - played.state.fiscal.debt) < EPSILON,
         `o painel mostrou ${shown.debt} e o mes fechou em ${played.state.fiscal.debt}`,
@@ -625,32 +492,18 @@ test("O PLACAR E O TURNO FECHAM A MESMA CONTA: o painel de Financas nao inventa 
 });
 
 test("e o corte aparece: promessa que nao cabe entrega MENOS voto do que promete", () => {
-  /* A prova de que a previsao da tela precisa usar o pago. Com o caixa apertado,
-     a mesma promessa vale menos — e uma Mesa que previsse com o prometido
-     anunciaria o placar de cima enquanto o turno produz o de baixo. */
+  /* A prova de que a previsao da tela precisa usar o pago. */
   const state = createState(9);
   const orders = { levels: reform(), funding: everyone(0.2) };
 
   const rich = settlement(state, orders);
-  /* O estado tambem nasce apertado: a obrigatoria de abertura e do catalogo, e
-     um estado normal lido com parametros apertados seria outra coisa. */
+  /* O estado tambem nasce apertado: a obrigatoria de abertura e do catalogo, e um estado
+     normal lido com parametros apertados seria outra coisa. */
   const poor = settlement(createState(9, SQUEEZED), orders, SQUEEZED);
 
-  /* ⚠ A PROVA DEIXOU DE EXIGIR `rich.ratio === 1`, e a razao e um achado da
-     recalibragem de 13/08/2026 que vale registrado: com o orcamento real, o
-     rateio corta DESDE O PRIMEIRO MES, sem o jogador ter feito nada.
-
-     A configuracao herdada custa cerca de 14,6 bilhoes por mes de discricionario
-     e o teto do arcabouco so abre 12,7 — porque os indices de abertura de saude e
-     seguranca estao abaixo do ponto neutro, e servico publico ruim ENCARECE a
-     despesa obrigatoria. O presidente recebe um pais cujo nivel de servico atual
-     nao cabe na regra fiscal que ele herdou junto.
-
-     Isso nao e defeito: e a armadilha do LASTRO funcionando com numeros de
+  /* Isso nao e defeito: e a armadilha do LASTRO funcionando com numeros de
      verdade, e e a primeira decisao real que o jogo cobra — cortar alguma coisa
-     antes de poder prometer qualquer coisa. O que a prova cobra agora e a
-     RELACAO, que e o que ela sempre quis dizer: quanto mais apertado o caixa,
-     mais fundo o corte. */
+     antes de poder prometer qualquer coisa. O que a prova cobra agora e a */
   assert.ok(
     rich.ratio > poor.ratio,
     `o caixa folgado cortou tanto quanto o apertado: ${rich.ratio} contra ${poor.ratio}`,
@@ -679,9 +532,8 @@ test("a partida abre com o governo de pe, e o motivo e dito", () => {
 });
 
 test("O TETO FECHADO E CRISE, e ele vem antes de qualquer outra leitura", () => {
-  /* A ordem das perguntas e a da gravidade: sem discricionario nao ha emenda, e
-     sem emenda a base nao se compra de volta. Mesmo com o Congresso inteiro
-     satisfeito, o governo sem caixa esta em crise. */
+  /* A ordem das perguntas e a da gravidade: sem discricionario nao ha emenda, e sem emenda a
+     base nao se compra de volta. */
   const squeezed = createState(3, SQUEEZED);
   const standing = situationOf(squeezed, SQUEEZED);
 
@@ -699,9 +551,6 @@ test("bancada rompida e crise mesmo com o caixa livre", () => {
 });
 
 test("OBSTRUCAO SEGURA EM ESTAVEL: o degrau do meio existe de verdade", () => {
-  /* Se obstrucao caisse em crise, a tela iria de "alta" a "crise" num mes e o
-     nivel do meio nunca apareceria — indicador de tres nomes com dois estados
-     uteis e um indicador de dois nomes mal escrito. */
   const state = createState(5);
   const sour = { ...state, loyalty: { ...state.loyalty, [PARTIES[0]?.id ?? ""]: 45 } };
 
@@ -719,24 +568,13 @@ test("a base derretendo derruba o governo em minoria", () => {
   assert.equal(standing.reason, "minority");
 });
 
-/* ═══ O PAIS NAO SE DESENDIVIDA SOZINHO ══════════════════════════════════════
-   As duas provas abaixo travam o achado numero um do handoff, corrigido em
-   14/08/2026. Ele nao era uma calibragem frouxa: era um modelo que NAO CONSEGUIA
-   rodar deficit primario, por tres motivos somados — a obrigatoria crescia sem
-   inflacao, a MALHA media a arrecadacao contra o ponto neutro em vez da abertura,
-   e o dividendo das estatais era somado por cima de uma carga que ja o continha.
-   Sem estas provas, a proxima recalibragem reabre tudo em silencio.
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* inflacao, a MALHA media a arrecadacao contra o ponto neutro em vez da abertura,
+   e o dividendo das estatais era somado por cima de uma carga que ja o continha. */
 
 test("O PRESIDENTE AUSENTE TERMINA MAIS ENDIVIDADO, e isso e o mundo", () => {
-  /* A afirmacao mais simples que o modelo tem de sustentar, e ela esteve INVERTIDA
-     por tres sessoes: quem nao tocava em nada terminava o mandato com a MELHOR
-     divida do quadro (78% → 68,4%), e quem cortava tudo terminava com a pior.
-
-     A causa era mecanica, e a mais grave das tres esta em `growMandatory`: a
-     despesa obrigatoria crescia 2,5% ao ano contra um PIB nominal de ~6%, ou seja,
-     ela ENCOLHIA contra o PIB todo mes. Aposentadoria e salario sao indexados; sem
-     a inflacao dentro da conta, o pais se desendividava por aritmetica. */
+  /* A afirmacao mais simples que o modelo tem de sustentar, e ela esteve INVERTIDA por tres
+     sessoes: quem nao tocava em nada terminava o mandato com a MELHOR divida do quadro (78% →
+     68,4%), e quem cortava tudo terminava com a pior. */
   let state = createState();
   const opening = state.fiscal.debt / state.macro.gdp;
 
@@ -753,24 +591,8 @@ test("O PRESIDENTE AUSENTE TERMINA MAIS ENDIVIDADO, e isso e o mundo", () => {
 });
 
 test("O DEFICIT PRIMARIO E ALCANCAVEL, e o modelo nao o proibe por construcao", () => {
-  /* O defeito de fundo, e o mais dificil de ver: `allowance = min(caixa, teto)` e
-     `saldo = caixa/12 − empenho` faziam o primario ser NAO-NEGATIVO por
-     construcao. Nenhuma jogada produzia deficit — o Brasil roda um ha uma decada e
-     este modelo nao conseguia nem tentando.
-
-     A prova nao pede que o deficit seja frequente: pede que ele EXISTA. Um modelo
-     em que o saldo primario nunca cruza o zero nao esta calibrado errado, esta
-     descrevendo outro pais.
-
-     ⚠ E QUEM O ALCANCA E QUEM USA O TETO, e nao quem fica parado — a primeira
-     versao desta prova pedia deficit de um governo que nao gasta nada, e falhou
-     com razao. A desigualdade e exata:
-
-         saldo ≥ (receita − teto) / 12
-
-     entao o deficit so existe quando o arcabouco AUTORIZA gastar mais do que se
-     arrecada, que e a situacao fiscal brasileira e nao um acidente. O governo que
-     promete verba cheia gasta ate o limite legal, e e la que o vermelho aparece. */
+  /* O defeito de fundo, e o mais dificil de ver: `allowance = min(caixa, teto)` e `saldo =
+     caixa/12 − empenho` faziam o primario ser NAO-NEGATIVO por construcao. */
   let state = createState();
   const funding = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
   let deficits = 0;
@@ -788,16 +610,8 @@ test("O DEFICIT PRIMARIO E ALCANCAVEL, e o modelo nao o proibe por construcao", 
 });
 
 test("RECLASSIFICAR NAO CONSTROI HOSPITAL: derrubar o piso nao muda o que a area recebe", () => {
-  /* O exploit que a politica `explorador` mediu, e ele e o mais bonito do modelo
-     porque ninguem o escreveu. Ate 14/08/2026 so o gasto ACIMA DO PISO alimentava
-     o indice da area — entao derrubar o piso da saude a zero nao mudava um real do
-     que o pais gasta em saude, mas movia o gasto inteiro para o balde
-     discricionario, e aquele mesmo dinheiro passava a COMPRAR indice.
-     Desregulamentar era a jogada dominante: o mandato terminava com os oito
-     indices em 100 e a divida caindo vinte pontos.
-
-     O que a prova fixa e a invariancia: com os MESMOS niveis, a area recebe o
-     mesmo, tenha piso ou nao. O rotulo juridico do real nao constroi nada. */
+  /* O exploit que a politica `explorador` mediu, e ele e o mais bonito do modelo porque
+     ninguem o escreveu. */
   const state = createState();
   const levels = Object.fromEntries(PROGRAMS.map(program => [program.id, program.initial]));
 
@@ -821,33 +635,15 @@ test("RECLASSIFICAR NAO CONSTROI HOSPITAL: derrubar o piso nao muda o que a area
 });
 
 test("O PACOTE PAGA PELO TAMANHO: juntar tudo num texto so ficou caro", () => {
-  /* O achado 1c do handoff, medido em 14/08/2026: um movimento de piso
-     constitucional saia por 358 votos e OITENTA E CINCO movimentos saiam por 334 —
-     os dois passavam, no mesmo mes, com a mesma verba. Nao havia razao para o
-     jogador nao juntar tudo, e o logrolling deixava de ser escolha para virar
-     padrao.
-
-     A causa era a media ponderada: um texto que corta a saude E amplia a defesa
-     tem posicao MEDIA no centro do plano, e o centro nao incomoda ninguem. A
-     correcao devolveu ao motor a informacao que a media apagava — o RAIO da nuvem
-     de movimentos —, e ela entra na resistencia como um terceiro eixo. Nenhuma
-     constante nova: e a identidade da distancia quadratica media.
-
-     A prova compara os dois extremos no MESMO mes e com a MESMA verba cheia. */
+  /* O achado 1c do handoff, medido : um movimento de piso constitucional saia por 358 votos e
+     OITENTA E CINCO movimentos saiam por 334 — os dois passavam, no mesmo mes, com a mesma
+     verba. */
   const state = createState();
   const funding = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
   const guarded = PROGRAMS.find(program => program.guard === "constitution" && program.floor > 20);
   assert.ok(guarded);
 
-  /* ⚠ A PROVA PASSOU A PERGUNTAR A `forecast`, e nao a esperar o plenario. A
-     tramitacao entrou em 15/08/2026 e o pacote de oitenta e cinco movimentos NUNCA
-     CHEGA AO PLENARIO: a Mesa o engaveta, e ele morre na gaveta em seis meses. Isso
-     e a mecanica funcionando — e uma resposta mais dura ao achado 1c do que o raio
-     sozinho —, mas torna impossivel comparar dois placares que so um dos textos
-     produz.
-     O que se compara agora e a PREVISAO dos dois, que e a mesma conta que o plenario
-     faria: `forecast` monta a camara identica a de `playMonth`, e ha uma prova
-     cobrando essa identidade. A afirmacao nao mudou; o instrumento sim. */
+  /* ⚠ A PROVA PASSOU A PERGUNTAR A `forecast`, e nao a esperar o plenario. */
   const single = forecast(state, {
     bands: { [guarded.id]: { floor: 0, ceiling: guarded.ceiling } },
     funding,
@@ -876,11 +672,6 @@ test("O PACOTE PAGA PELO TAMANHO: juntar tudo num texto so ficou caro", () => {
       `do movimento unico — o preco continua nao escalando com o tamanho`,
   );
 
-  /* ⚠ E A GAVETA COBRA O SEGUNDO PRECO, que e novo em 15/08/2026: o pacote nao chega
-     nem a ser votado. Escrever tudo num texto so deixou de ser uma aposta ruim para
-     virar uma que nem acontece — a Mesa nao pauta, e em seis meses o texto morre sem
-     nunca ter perdido nada, que e o destino que o ciclo 4 descreve para a esmagadora
-     maioria dos projetos de uma casa legislativa de verdade. */
   let carrying = state;
   let reached = false;
   for (let month = 0; month < 8 && !reached; month++) {
@@ -891,27 +682,19 @@ test("O PACOTE PAGA PELO TAMANHO: juntar tudo num texto so ficou caro", () => {
   assert.ok(!reached, "o pacote de oitenta e cinco movimentos chegou ao plenario");
 });
 
-/* ── A MESA E O TURNO PREVEEM COM A MESMA CAMARA ───────────────────────────────
-   ⚠ ESTA PROVA NASCE DE UM DEFEITO MEDIDO, e ele e o terceiro da mesma familia.
-   O entrypoint montava a previsao a mao: `whipCount` com os QUATRO blocos do
-   catalogo, a verba crua e a lealdade crua. O turno vota, desde a oitava sessao,
+/* ── A MESA E O TURNO PREVEEM COM A MESMA CAMARA ─────────────────────────────── ⚠ ESTA PROVA
+   NASCE DE UM DEFEITO MEDIDO, e ele e o terceiro da mesma familia.
    com as ONZE bancadas do ELENCO, a verba com credito de memoria e desconto de
    ambicao dentro, e a APROVACAO DA RUA deslocando a resistencia.
-
-   Medido antes do conserto, em 1.012 votacoes reais: divergencia de ate 35 votos e
-   o veredito INVERTIDO em 275 delas — 27,2%. A Mesa anunciava "acima do quorum" e
-   o mes derrubava a pauta em mais de um quarto dos casos.
-
-   O que a torna necessaria e o modo como o defeito nasceu: NINGUEM QUEBROU NADA.
    O ELENCO e a SONDA chegaram, `playMonth` passou a usa-los, e a tela ficou para
    tras em silencio — cada lado certo sozinho. Nenhum tipo, nenhuma guarda e nenhuma
    das 190 provas via, porque nenhuma delas comparava os dois. Esta compara. */
 test("A MESA E O TURNO PREVEEM COM A MESMA CAMARA, e com a mesma rua", () => {
   fc.assert(
     fc.property(anyOrders, fc.integer({ min: 0, max: 400 }), (orders, seed) => {
-      /* A MEMORIA PRECISA EXISTIR PARA A PROVA MORDER: com o elenco em saldo zero,
-         a verba oferecida ao lider e a do bloco e o defeito antigo passaria
-         despercebido em metade das sementes. Alguns meses pagos criam credito. */
+      /* A MEMORIA PRECISA EXISTIR PARA A PROVA MORDER: com o elenco em saldo zero, a verba
+         oferecida ao lider e a do bloco e o defeito antigo passaria despercebido em metade
+         das sementes. */
       let state = createState(seed);
       for (let month = 0; month < 4; month++) {
         state = playMonth(state, { funding: everyone(0.5) }).state;
@@ -930,10 +713,9 @@ test("A MESA E O TURNO PREVEEM COM A MESMA CAMARA, e com a mesma rua", () => {
 
       if (!seen.whip || played.report.tally === null) return;
 
-      /* ⚠ O QUE SE COMPARA E A PREVISAO CONTRA O DETERMINISTICO DA VOTACAO, e nao
-         contra o placar sorteado: `vote` tira a dissidencia do dia de um fluxo, e
-         exigir igualdade com o sorteio seria cobrar que a previsao adivinhe o dado.
-         O que ela TEM de acertar e o centro — e o centro e `whipCount`. */
+      /* ⚠ O QUE SE COMPARA E A PREVISAO CONTRA O DETERMINISTICO DA VOTACAO, e nao contra o
+         placar sorteado: `vote` tira a dissidencia do dia de um fluxo, e exigir igualdade com
+         o sorteio seria cobrar que a previsao adivinhe o dado. */
       const centre = played.report.tally.expected;
       assert.ok(
         Math.abs(seen.whip.votes - centre) < 1e-6,
@@ -947,8 +729,7 @@ test("A MESA E O TURNO PREVEEM COM A MESMA CAMARA, e com a mesma rua", () => {
         "a Mesa e o turno discordaram sobre passar ou nao",
       );
 
-      /* A SOMA DAS LINHAS BATE COM O PLACAR. Cada linha da Mesa mostra um BLOCO, e
-         um bloco e o resto da bancada mais os lideres que sairam dela. */
+      /* A SOMA DAS LINHAS BATE COM O PLACAR. */
       const total = Object.values(seen.byBloc).reduce((sum, votes) => sum + votes, 0);
       assert.ok(
         Math.abs(total - seen.whip.votes) < 1e-6,
@@ -958,36 +739,12 @@ test("A MESA E O TURNO PREVEEM COM A MESMA CAMARA, e com a mesma rua", () => {
   );
 });
 
-/* ── O QUE NAO FOI AUTORIZADO NAO E EXECUTADO, E NEM COBRADO ───────────────────
-   ⚠ ESTE E O ACHADO 14, e a tramitacao o TRIPLICOU antes de mata-lo. O ciclo previa
-   que ele sumisse quando o pedido e o aplicado se separassem; eles se separaram em
-   15/08/2026, e o resto do turno continuou lendo o PEDIDO.
-
-   O sintoma tinha duas metades, e as duas mentiam para o mesmo lado:
-
-     · a MALHA recebia o mes como se a reforma tivesse valido — o indice da area
-       andava por um dinheiro que nao saiu;
-     · o CAIXA cobrava o empenho que nao aconteceu.
-
-   Antes da tramitacao a divergencia durava um mes, ate a votacao. Depois dela dura
-   TRES — ou para sempre, se o texto morrer na gaveta.
-
-   A prova compara o mes de um corte que PRECISA DE LEI contra o mes em que nada foi
-   pedido: enquanto o texto tramita, os dois tem de ser identicos em dinheiro e em
-   capacidade, porque nos dois o pais executou exatamente a mesma coisa. */
+/* ── O QUE NAO FOI AUTORIZADO NAO E EXECUTADO, E NEM COBRADO ─────────────────── ⚠ ESTE E O
+   ACHADO 14, e a tramitacao o TRIPLICOU antes de mata-lo.
+   · a MALHA recebia o mes como se a reforma tivesse valido — o indice da area
+   andava por um dinheiro que nao saiu; */
 test("A CHANTAGEM EXISTE, e o SILENCIO nela RECUSA — ao contrario da emenda", () => {
-  /* ⚠ ESTA PROVA TRAVA A UNICA REGRA DA CHANTAGEM QUE INVERTE UMA JA ESCRITA. No
-     ciclo 9 ficou decidido que "o silencio ACEITA": prazo vencido sem resposta e a
-     emenda do relator vale, porque e assim que uma tramitacao real anda.
-
-     Aqui e o contrario, e a razao nao e simetria: um lobby que exige e nao recebe
-     resposta NAO ENTENDE QUE GANHOU. Ignorar uma cobranca e recusa-la devagar, e a
-     carta diz isso antes de vencer — que e o que transforma ignorar em ESCOLHA.
-
-     ⚠ E A PROVA COBRA AS TRES SAIDAS SE SEPARANDO, e nao so a existencia da carta.
-     Uma exigencia em que ceder e recusar dessem no mesmo lugar seria uma pergunta
-     decorativa — e o achado 30 deste projeto e exatamente isso do outro lado: dois
-     lobbies que nunca se moviam. */
+  /* ⚠ ESTA PROVA TRAVA A UNICA REGRA DA CHANTAGEM QUE INVERTE UMA JA ESCRITA. */
   const floors = Object.fromEntries(PROGRAMS.map(program => [program.id, program.floor]));
 
   /** @param {"accept" | "block" | null} answer */
@@ -1008,10 +765,8 @@ test("A CHANTAGEM EXISTE, e o SILENCIO nela RECUSA — ao contrario da emenda", 
     return { state, demands };
   };
 
-  /* 1 — ELA CHEGA. Um governo que corta tudo ao piso tira das areas dos dois grupos
-     de capacidade, e eles cobram de volta. Instrumento que nunca dispara e o achado 3
-     deste projeto se repetindo — e este numero ja foi 2 em 48 meses, com um limiar
-     escolhido no olho. */
+  /* Instrumento que nunca dispara e o achado 3 deste projeto se repetindo — e este numero ja
+     foi 2 em 48 meses, com um limiar escolhido no olho. */
   const ignored = run(null);
   assert.ok(
     ignored.demands > 0,
@@ -1034,15 +789,13 @@ test("A CHANTAGEM EXISTE, e o SILENCIO nela RECUSA — ao contrario da emenda", 
     `recusar nao custou mais que ceder: ${heat(refused).toFixed(1)} contra ${heat(ceded).toFixed(1)}`,
   );
 
-  /* 3 — E O SILENCIO FICA DO LADO DA RECUSA. Se ele aceitasse, o governo que ignora
-     terminaria tao aliviado quanto o que cede — e a carta estaria mentindo. */
+  /* 3 — E O SILENCIO FICA DO LADO DA RECUSA. */
   assert.ok(
     heat(ignored) > heat(ceded),
     "o silencio aliviou como se fosse cessao — a carta promete o contrario",
   );
 
-  /* 4 — E CEDER MOVE A ALAVANCA DE VERDADE. Sem isto a carta seria um botao que so
-     mexe num numero de pressao, e o lobby estaria cobrando por nada. */
+  /* 4 — E CEDER MOVE A ALAVANCA DE VERDADE. */
   const moved = PROGRAMS.some(
     program => (ceded.state.levels[program.id] ?? 0) > (ignored.state.levels[program.id] ?? 0),
   );
@@ -1052,8 +805,8 @@ test("A CHANTAGEM EXISTE, e o SILENCIO nela RECUSA — ao contrario da emenda", 
 test("O QUE ESPERA NAO GASTA: o mes do protocolo executa o orcamento que ja valia", () => {
   const state = createState(31);
 
-  /* Um corte que fura piso constitucional: ele vai para a gaveta, e o mes tem de
-     acontecer como se ele nao tivesse sido escrito. */
+  /* Um corte que fura piso constitucional: ele vai para a gaveta, e o mes tem de acontecer
+     como se ele nao tivesse sido escrito. */
   const writing = playMonth(state, { levels: reform(), funding: everyone(0.3) });
   const quiet = playMonth(state, { funding: everyone(0.3) });
 
@@ -1078,8 +831,7 @@ test("O QUE ESPERA NAO GASTA: o mes do protocolo executa o orcamento que ja vali
     "o resultado primario divergiu por uma reforma que ainda esta na gaveta",
   );
 
-  /* ⚠ E O NIVEL TAMBEM NAO ANDA. Sem isto o pais executaria o orcamento antigo e
-     guardaria o novo, e o mes seguinte comecaria de um estado que ninguem autorizou. */
+  /* ⚠ E O NIVEL TAMBEM NAO ANDA. */
   assert.equal(
     writing.state.levels[HARD.id],
     state.levels[HARD.id],
