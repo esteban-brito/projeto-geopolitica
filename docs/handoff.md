@@ -4,15 +4,166 @@
 > leia este arquivo e depois `docs/standards.md`. O nome deste arquivo é estável
 > de propósito: ponteiro com data envelhece e obriga a mover arquivo.
 
-## ▶ COMECE AQUI — estado em 22/08/2026 · sessão 15
+## ▶ COMECE AQUI — a ordem para a sessão 16
 
-⚠ **HÁ TRABALHO NÃO COMMITADO.** Últimos commits: `672291a` (o corte de prosa) e `2b468ad`
-(o hash). Depois deles veio a auditoria do Gabinete, e ela **não está commitada**.
+**Estado: verde e commitado em `a01ffdb`.** `validate` (235 provas · 12 guardas · 50 provas
+sintéticas · 128 arquivos), `walk` verde, árvore limpa. Branch `acoplamento-e-simulador`,
+33 commits à frente da `main` (fast-forward quando ele quiser).
 
-**A ordem dele:** _"o nosso foco é no gabinete"_, _"quanto mais minimalista e simples melhor,
-quanto menos lixo melhor, quanto mais padronizado melhor"_, e a recusa que fecha a questão da
-mecânica: _"eu ainda vou mudar muito o jeito que o jogo funciona — sistema, mecânicas,
-motores, tudo vai ser mexido"_. **Carta escrita hoje é carta reescrita depois.**
+**A ordem dele é uma só, e ela não mudou:** _"agora é UI, design, css, visual mesmo, do
+gabinete todo"_. **Motor está fechado** até a reformulação — decisão registrada dele:
+_"eu ainda vou mudar muito o jeito que o jogo funciona"_.
+
+### ⚠ O QUE FAZER AMANHÃ — cinco itens, todos decididos por ele, nenhum em aberto
+
+Vieram de um dossiê externo (Gemini) que ele trouxe. **Ele decidiu item a item**; o que
+segue é execução, não deliberação.
+
+---
+
+**1. ⛔ MATAR "AS TRÊS, JUNTAS" — a frase inteira, e não uma reescrita.**
+
+Palavras dele: _"não serve pra bosta nenhuma essa frase, eu quero minimalismo porra"_.
+⚠ **Eu tinha recomendado REESCREVER** (a frase carrega a regra do impeachment: o processo
+só abre com as três rupturas juntas). **Ele recusou, e a decisão é dele.** Não reabra.
+
+- mora em `UI.cabinet.trinityHold` e `trinityNone`, em `src/ui/strings.mjs`;
+- é impressa no `<span>` dentro do `block__legend` de `trinityHtml`, em
+  `src/ui/screens/cabinet.mjs`;
+- ⚠ **a guarda `vocabulary` vai cobrar as duas chaves órfãs** assim que a view parar de
+  lê-las — apague-as no mesmo movimento, e o `holding` que as escolhia sai junto.
+
+---
+
+**2. ✔ A TABELA QUE NÃO SOMA — método do MAIOR RESÍDUO.**
+
+Ele delegou: _"o que vc recomendar, vc faz"_. A recomendação foi (b).
+
+⚠ **O MECANISMO, medido:** em `annexHtml`, `src/ui/screens/inbox.mjs`, cada célula é
+arredondada por conta própria e o total é o arredondamento da soma dos valores **cheios**:
+
+```js
+const values = ANNEX_NOTES.map(note => data[`${segment.id}.${note}`] ?? 0);
+const total = values.reduce((sum, value) => sum + value, 0);
+`${seats(value)}` // célula arredondada sozinha
+`${seats(total)}`; // total arredondado da soma cheia
+```
+
+Reconstruído: `15,4 + 11,6 + 7,6 + 5,6 + 2,8 = 43,0`. As células imprimem
+`15+12+8+6+3 = 44`; o total imprime `43`. **As duas estão certas e são incompatíveis.**
+
+**O conserto:** arredondar as células pelo maior resíduo, de modo que a soma delas seja
+exatamente o total arredondado. A célula de menor resíduo cede (`11,6 → 11`).
+
+⚠ **E ELE TEM DOIS CASOS QUE QUEBRAM A IMPLEMENTAÇÃO INGÊNUA:**
+
+- **valores NEGATIVOS** — a linha do desgaste tira pontos, e maior resíduo com sinal misto
+  precisa distribuir pelo resíduo e não pelo módulo;
+- **o defeito é da tabela inteira, e não da Classe C.** Toda linha do anexo tem o mesmo
+  problema, então a prova tem de cobrar a propriedade — _a soma das células impressas é
+  igual ao total impresso_ — e não um caso.
+
+---
+
+**3. ✔ TOOLTIPS NAS NOTAS DE RODAPÉ — decisão dele, contra a minha recomendação.**
+
+O dossiê pediu; eu recomendei **cortar a frase em vez de escondê-la**, porque o projeto tem
+escrito que _"informação que chega depois da decisão é recibo"_ e porque no FM o jogador já
+sabe as regras enquanto aqui ele está aprendendo. **Ele decidiu fazer tooltip.** Registrado,
+e não se reabre.
+
+As frases que ele nomeou:
+
+- _"a Casa Civil manda a pesquisa quando ela se move o bastante para importar"_ — é o
+  `letter__why`, o pé do ofício;
+- _"o desgaste do cargo tirou 1 de todas"_ — é o `annex__foot`.
+
+⚠ **E UM TOOLTIP DE VERDADE NÃO É `title=`.** O atributo nativo não aparece em toque, demora
+~1s, não é estilizável e alguns leitores de tela o ignoram. Se for tooltip, tem de ser peça
+com `aria-describedby` e alcance por teclado — senão a informação some para quem joga em
+telefone, que é metade do passeio.
+
+---
+
+**4. ✔ A HIERARQUIA DA COLUNA DA DIREITA — e a ESCALA DAS BARRAS resolve junto.**
+
+O dossiê e a minha auditoria concordam aqui, e a medição nomeia o defeito:
+
+⚠ **DUAS GRAMÁTICAS DE LEITURA A 100px DE DISTÂNCIA.** A caldeira e a Trindade desenham uma
+**régua com a marca do limiar** — você vê onde é a linha. A Rua desenha uma **barra empilhada
+sem referência nenhuma**. O mesmo olho lê as duas na mesma coluna.
+
+E as três despadronizações medidas, que continuam de pé:
+
+- **duas das quatro fichas têm cabeça com número grande e botão** (Congresso, Cofre) e duas
+  não têm nada (Caldeira, Rua). ⚠ **Somar cabeça é o contrário do que ele pediu** — ele quer
+  menos, não mais;
+- **a fita do Congresso tem raio 0** contra `--radius-stamp` em toda outra barra.
+  ⚠ Arredondar só o cocho deixaria os blocos furando as pontas — não é a troca de uma linha
+  que parece;
+- **duas larguras de barra**: 431,5px nas cheias, 191,5px nas recuadas.
+
+**Alturas medidas, para orçar a troca:** Congresso 120px · Cofre 143px · Caldeira 170px ·
+Rua 90px, numa coluna de 630px.
+
+---
+
+**5. ✔ O CONTRASTE — e escrever a guarda `contrast`, que o `standards.md` §7 declara ausente.**
+
+⚠ **O DOSSIÊ ERROU O ALVO E ACERTOU A VIZINHANÇA.** Ele disse que a barra superior não
+destaca. **Medido no pixel renderizado, ela passa folgado:** rótulo do vital **6,01**, valor
+do vital **15,02**. Mas três rótulos de 10px reprovam AA, e ele não os nomeou:
+
+| peça                                                          | razão    |     |
+| ------------------------------------------------------------- | -------- | --- |
+| `OPINIÃO PÚBLICA · CAPITAL · O BAIXO CLERO` (`.trinity__who`) | **3,32** | ⛔  |
+| `rompe acima de 86` (`.trinity__value small`)                 | **3,89** | ⛔  |
+| `ÓTIMO/BOM · RUIM/PÉSSIMO` (`.street__poles span`)            | **4,13** | ⛔  |
+
+**O padrão é claro: o que está SOBRE O VIDRO perde contraste**, porque a lâmina é mais clara
+que o fundo da página. A 10px nada disso é "texto grande" — o piso é 4,5.
+
+⚠ **E O CONSERTO NÃO É ABANDONAR O TOM**, que é regra escrita: clareia-se a TINTA sobre a
+cor. Provavelmente `--ink-dim` sobre vidro precisa de um degrau próprio.
+
+**A guarda:** ela mede o par RENDERIZADO num navegador, e não o par teórico — `--ink-dim`
+sobre `--bg` passa; sobre a lâmina, não. ⚠ Isso significa que ela **não cabe em
+`npm run check`** (que é Node puro): ou nasce dentro do `walk`, ou vira um passo próprio.
+Decida isso antes de escrever, senão ela mede a cor errada e fica verde mentindo.
+
+---
+
+### ⚠ AS TRÊS FERRAMENTAS QUE ESTA SESSÃO USOU, e o algoritmo de cada uma
+
+Elas moram no scratchpad da sessão, que **não sobrevive**. Reconstruir é barato, e vale:
+
+- **detector de fio duplicado** — varre colunas e linhas de pixel da captura, marca todo
+  pixel mais claro que os dois vizinhos por ≥8 de luminância, e acusa **pares a ≤2px**. Um
+  fio de verdade aparece em dezenas de varreduras porque atravessa o bloco; uma serifa
+  aparece em uma. ⚠ **As outras dez telas nunca passaram por ele**;
+- **medidor de contraste** — tira a captura, devolve o PNG ao navegador num `<canvas>`,
+  amostra os 5% mais claros e os 30% mais escuros da caixa do elemento e calcula a razão
+  WCAG. É o esqueleto da guarda do item 5;
+- **caça a bug** — joga o mandato inteiro clicando **esperando o botão religar**, e em cada
+  mês varre as quatro telas procurando `NaN|undefined|Infinity`, rolagem horizontal, valor
+  vazio e estilo inline sujo. ⚠ **Escutar `pageerror` é obrigatório** — `console` não pega
+  rejeição de promessa, e foi assim que 46 delas ficaram invisíveis por sessões.
+
+### ⚠ E DUAS BUSCAS DE PROSA, se alguém rodar corte automático de novo
+
+- bloco cuja última frase não termina em `.`, `!` ou `?` — **truncagem**;
+- bloco com `\.\s+[a-z]{4,}` — **frase fora de ordem** (o escore junta frases não vizinhas).
+
+Hoje: **3 defeitos em 1.109 blocos**, e os três são falso positivo do formato `recebe/devolve`.
+
+### ⛔ NÃO ABRIR
+
+Densidade da Caixa de Entrada (recusa dele), **motor de qualquer espécie**, o vazio de 430px
+dentro do ofício, o rubor vermelho do peso, a sparkline dos quatro vitais, e a seção
+"Santo Graal" do dossiê — pops, relações CK3, tela de negociação, minirreforma: **é tudo
+mecânica**, e ele já disse que mecânica é depois.
+
+## O que esta sessao fez — 22/08/2026
 
 ### ✔ A AUDITORIA DO GABINETE — cada leitura medida em 48 meses, em dois governos
 
