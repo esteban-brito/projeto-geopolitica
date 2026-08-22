@@ -1,5 +1,8 @@
-/* ── O TERMO DE AMEACA, e o defeito que ele conserta ────────────────────────── `threat` (0 a
-   1) e o quanto a pauta ataca a MAQUINA — foro privilegiado, emendas, cargo, impunidade. */
+/* AS ACOES — tudo o que o presidente pode pautar ou decretar.
+   ⚠ FICCAO com inspiracao na realidade, como todo o catalogo.
+   Os titulos evocam debates reconheciveis de proposito — reconhecimento e o que faz o jogador
+   ter intuicao sobre quem vai votar como antes de entender a matematica —, mas nenhum numero
+   aqui e afirmacao sobre proposta real nenhuma. */
 
 import { QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "./regime.mjs";
 

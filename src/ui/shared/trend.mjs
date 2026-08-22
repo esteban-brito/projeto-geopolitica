@@ -1,6 +1,6 @@
-/* ── O DEFEITO QUE ELA CONSERTA, E ELE ERA UM NUMERO INVENTADO ──────────────── O historico
-   da capacidade NAO e um buffer de tela: ele e o mecanismo do atraso, `lag` anteriores.
-   e a MALHA guarda exatamente `lag + 1` valores de cada area — o de hoje e os */
+/* A TENDENCIA DE UM INDICE — quanto ele andou, e EM QUANTO TEMPO.
+   ── POR QUE UM ARQUIVO, PARA UMA SUBTRACAO Porque duas telas mostram a variacao da MESMA
+   area, e elas mostravam numeros diferentes. */
 
 /* MEDIDO ANTES DA TROCA, num mandato passivo de 30 meses: com SEIS degraus, tres das quatro
    escadas saem com UM degrau so — planas do primeiro ao ultimo mes. */

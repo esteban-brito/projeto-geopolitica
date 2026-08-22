@@ -1,5 +1,8 @@
-/* Ele e a unica memoria de que `backdrop-filter` derrubou uma tela para 31 fps, e de que fps
-   se mede ANTES de levar o material a uma tela nova. */
+/* GUARDA · MATERIAL — um material de vidro na tela inteira.
+   O QUE ELA IMPEDE: 1.
+   um SEGUNDO material.
+   Tres desfoques sao tres materiais, e "cada bloco parece um liquid glass diferente" e a
+   critica que criou este sistema. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
 

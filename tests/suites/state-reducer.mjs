@@ -1,5 +1,8 @@
-/* O que precisa ser provado e diferente: que NENHUM estado valido quebra os invariantes — e
-   borda de faixa e exatamente o que ninguem escolhe como exemplo. */
+/* SUITE · O REDUCER — propriedades, e nao exemplos.
+   POR QUE ESTA E A PRIMEIRA SUITE, com os motores ainda por nascer.
+   O reducer e a unica peca ja implementada que o resto vai depender: `src/state/state.mjs`
+   promete tres coisas — imutabilidade, pureza e identidade de referencia — e as tres sao a
+   base do render sem framework. */
 
 import assert from "node:assert/strict";
 import test from "node:test";

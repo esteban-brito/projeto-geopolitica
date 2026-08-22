@@ -1,8 +1,6 @@
-/* ⚠ A PROVA MAIS IMPORTANTE E A PRIMEIRA, e ela existe por um risco de desenho, e nao por um
-   defeito medido.
-   A CALDEIRA nasceu de um numero: a politica que nao toca em nada terminava o mandato
-   com a melhor divida do quadro. Uma versao dela que premiasse a passividade seria
-   pior que nao te-la. */
+/* SUITE · A CALDEIRA — o que ela cobra e que a INACAO esquente.
+   ⚠ A PROVA MAIS IMPORTANTE E A PRIMEIRA, e ela existe por um risco de desenho, e nao por um
+   defeito medido. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -37,8 +35,7 @@ test("A INACAO ESQUENTA — e esta e a razao de este motor existir", () => {
 
 test("ELA SOBE MAIS RAPIDO DO QUE DESCE, e a assimetria e a mecanica", () => {
   /* ⚠ Simetrica, a caldeira seria um pendulo: bastaria alternar quem se agrada para nunca
-     esquentar nada.
-     mesma forma que SONDA usa para satisfacao. */
+     esquentar nada. */
   const um = LOBBIES[0];
   assert.ok(um);
 

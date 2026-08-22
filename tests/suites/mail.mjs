@@ -1,6 +1,6 @@
-/* ⚠ A PROVA MAIS IMPORTANTE DAQUI E A QUARTA, e ela existe por um defeito medido: `pending`
-   consultava a caixa de ANTES do fechamento do mes, entao a carta que o jogador acabava de
-   responder ainda constava como aberta e o texto esperava por ela PARA SEMPRE. */
+/* A CORRESPONDENCIA — o que esta suite cobra e que a carta SEJA uma decisao.
+   Nao e "as cartas aparecem": e que o prazo, o silencio e as duas saidas produzam
+   consequencia diferente uma da outra. */
 
 import assert from "node:assert/strict";
 import test from "node:test";

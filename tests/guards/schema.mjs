@@ -1,4 +1,5 @@
-/* O catalogo vai virar editavel (a aba de nome e logo e decisao fechada), e dado editavel sem
+/* GUARDA · ESQUEMA — todo dado editavel passa por uma fronteira, e por UMA so.
+   O catalogo vai virar editavel (a aba de nome e logo e decisao fechada), e dado editavel sem
    fronteira produz o pior tipo de defeito: ele nao quebra onde foi digitado, quebra tres
    motores adiante, num calculo que parece errado sem motivo aparente. */
 

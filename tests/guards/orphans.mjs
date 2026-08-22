@@ -1,4 +1,6 @@
-/* O custo dele esta medido, em duas varreduras feitas A MAO: nona sessao  299 linhas —
+/* GUARDA · ORFAS — nenhuma regra de estilo sem HTML para pintar.
+   ⚠ ELA E O ACHADO 5 DA RETOMADA, e ele ficou aberto por seis sessoes.
+   O custo dele esta medido, em duas varreduras feitas A MAO: nona sessao  299 linhas —
    `70-screen-approval.css` inteiro, a familia `.strip`/`.chip`, e duas regras de `.strip--
    stacked`; decima sessao 201 linhas de CSS morto, mais uma regra `.cards` duplicada que era
    sobrescrita inteira pela irma vinte linhas abaixo. */

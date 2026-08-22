@@ -21,9 +21,7 @@ export const LOBBY_SCHEMA = {
   label: { kind: "text" },
   /* O QUE ELE COBRA, em uma linha, e ela vai para a tela. */
   wants: { kind: "text" },
-  /* A POSICAO NO PLANO, como bloco e pessoa ja tem.
-     agradar um lobby sair da MESMA distancia euclidiana que ECLUSA usa — e nao de
-     uma formula nova. */
+  /* A POSICAO NO PLANO, como bloco e pessoa ja tem. */
   economic: { kind: "number", min: 0, max: 100 },
   liberty: { kind: "number", min: 0, max: 100 },
   /* O CANAL: qual motor produz o descontentamento dele. */
@@ -117,12 +115,7 @@ export const PRESSURE_SCHEMA = {
    forcar numeros ate ela ser fatal seria calibrar para obter a conclusao desejada. */
 /* ⚠ Comecei em 35, sem razao nenhuma alem de gosto, e a medicao mostrou o preco de um chute:
    DUAS exigencias em 48 meses, as duas depois do mes 45 — instrumento que nunca dispara e o
-   achado 3 deste projeto se repetindo.
-   coisa que a chantagem soma a CALDEIRA. ⚠ E ele nao precisa de memoria propria: a
-   pressao JA e um estoque com inercia, entao um mes de queixa alta continua doendo
-   nos meses seguintes sozinho. Guardar um rancor a parte seria a mesma verdade em
-   dois lugares — e o rancor de quem foi recusado e exatamente o que a caldeira
-   guarda. */
+   achado 3 deste projeto se repetindo. */
 export const PRESSURE = {
   rise: 0.18,
   cool: 0.06,

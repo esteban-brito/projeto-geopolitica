@@ -111,12 +111,7 @@
 
   /* OS VITAIS ROLAM POR DENTRO quando a janela aperta, e nao quebram em duas fileiras: uma
      barra que muda de altura empurra o tabuleiro inteiro para baixo toda vez que um numero
-     cresce um digito.
-     honesta quando SONDA nasceu — a barra passou tres sessoes sem existir para nao
-     nascer com um quarto do conteudo inventado. O que mudou e a FORMA: as quatro
-     fichas viraram UMA LINHA de leituras separadas por fio, que e como um boletim
-     oficial imprime indicador. Um rotulo em caixa alta, o valor ao lado na mesma
-     base, e um fio vertical entre as leituras. */
+     cresce um digito. */
   .topbar__vitals {
     display: flex;
     justify-content: center;

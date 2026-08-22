@@ -1,5 +1,7 @@
-/* E ele nao substitui prova nenhuma: o que ele acha vira prova em `tests/suites/screens.mjs`,
-   que e onde o defeito fica preso. */
+/* O PASSEIO — a tela usada como se joga, num navegador de verdade.
+   POR QUE ELE EXISTE, e a resposta e uma lista de defeitos que nada mais pegou.
+   `npm run screen` abre a pagina e mede o custo do material; ele nunca CLICA em nada, entao
+   so ve a tela de abertura. */
 
 import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -55,6 +57,10 @@ try {
   page.on("console", message => {
     if (message.type() === "error" || message.type() === "warning") noise.push(message.text());
   });
+  /* ⚠ `pageerror` NAO E `console`, e por isso uma familia inteira de defeito era invisivel
+     aqui: rejeicao de promessa nao tratada chega por este canal e nao pelo outro. Ele
+     achou 46 delas na primeira vez que foi ligado, todas de View Transition pulada. */
+  page.on("pageerror", error => noise.push(`erro nao tratado: ${error.message}`));
   page.on("pageerror", error => noise.push(String(error)));
   page.on("requestfailed", request => noise.push(`404/erro: ${request.url()}`));
 

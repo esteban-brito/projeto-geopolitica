@@ -1,6 +1,7 @@
-/* ⚠ A PROVA MAIS IMPORTANTE E A DO PLENARIO, e ela existe por um defeito medido: a primeira
-   versao nao normalizava os alcances, quatro pessoas do Centrao levavam 1,96 da propria
-   bancada, e a Camara fechava com 730 cadeiras. */
+/* SUITE · O ELENCO — a republica ganha gente, e a gente lembra.
+   O que esta suite cobra nao e "os nomes saem bonitos": e que gerar gente da semente nao
+   quebre nenhuma das quatro coisas que o projeto inteiro se apoia — o plenario fechar, o
+   mandato se refazer, o motor nao sortear por fora e o catalogo mandar no que se gera. */
 
 import assert from "node:assert/strict";
 import test from "node:test";

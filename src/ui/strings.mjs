@@ -20,10 +20,17 @@ const TERMOS = {
   obstructing: "obstruindo",
   ruptured: "em ruptura",
 
-  /* As tres rupturas. Elas eram duas listas identicas dentro de `cabinet`. */
+  /* As tres rupturas. Elas eram duas listas identicas dentro de `cabinet`.
+
+     ⚠ A TERCEIRA CHAMAVA-SE "Base no Congresso" E MENTIA. Ela mede a pressao do
+     fisiologismo — sobe quando ele te abandona, e rompe ACIMA de 86 —, enquanto a
+     barra superior mostra "Base 436", que sao cadeiras e sobe quando melhora. As duas
+     ficam visiveis juntas na abertura, e o jogador lia "Base no Congresso 0" como
+     "nao tenho base", tendo 436 de 513. Mesma palavra, sentido invertido, 130px de
+     distancia. O nome certo e o que a CALDEIRA ja usa para o mesmo grupo. */
   social: "Opinião pública",
   economic: "Capital",
-  political: "Base no Congresso",
+  political: "O baixo clero",
 
   /* O carimbo do fim, e ele e o mesmo no cartao da CALDEIRA e no fecho. */
   removed: "MANDATO INTERROMPIDO",

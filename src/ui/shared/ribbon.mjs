@@ -1,5 +1,6 @@
-/* ── ELA SUBSTITUIU O HEMICICLO, E A SUBSTITUIÇÃO É A DECISÃO ──────────────── O hemiciclo
-   desenhava 513 círculos num arco e custava 170px de uma coluna de 899. */
+/* A FITA DO PLENÁRIO — a Câmara em cinco faixas, da esquerda à direita.
+   ── ELA SUBSTITUIU O HEMICICLO, E A SUBSTITUIÇÃO É A DECISÃO O hemiciclo desenhava 513
+   círculos num arco e custava 170px de uma coluna de 899. */
 
 import { escapeHtml } from "./html.mjs";
 import { seats } from "./format.mjs";

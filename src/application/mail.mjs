@@ -1,12 +1,14 @@
-/* ⚠ E ISSO CUSTOU MAIS DEPOIS DA TRAMITACAO, e nao menos. */
+/* A CORRESPONDENCIA — o unico lugar do jogo que espera uma resposta.
+   recebe  as cartas guardadas, o que o mes produziu, as ordens e o mes devolve as cartas do
+   mes seguinte, e o que venceu no caminho Este arquivo NAO E UM MOTOR e nao tem codinome,
+   pela mesma razao de `passage.mjs`: nada aqui inventa preco. */
 
 /**
  * @typedef {import("../state/state.mjs").Letter} Letter
  * @typedef {import("./passage.mjs").Bill} Bill
  */
 
-/* QUANTOS MESES UMA PERGUNTA FICA ABERTA.
-   declarado, como o PIVOT de ECLUSA e o TABLE da Mesa. */
+/* QUANTOS MESES UMA PERGUNTA FICA ABERTA. */
 export const ANSWER_TIME = 2;
 
 /* QUANTOS MESES UMA CARTA JA FECHADA CONTINUA NA BANDEJA. */

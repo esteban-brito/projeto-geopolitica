@@ -1,6 +1,6 @@
-/* Escrita assim ela NAO e uma restricao: se a despesa e definida como uma fracao da receita,
-   o caixa discricionario e sempre os outros 10%, cai junto quando a receita cai, e nunca
-   aperta. */
+/* PARAMETROS FISCAIS — as constantes que LASTRO consome.
+   ⚠ FICCAO com inspiracao na realidade, como o resto do catalogo.
+   Nenhum destes numeros cita fonte porque nenhum e afirmacao sobre o Brasil. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 

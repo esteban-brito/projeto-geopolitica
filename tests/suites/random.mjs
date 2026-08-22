@@ -1,5 +1,6 @@
-/* E o que torna um defeito relatado investigavel, e sem isso balancear o jogo vira
-   adivinhacao; QUALIDADE — o misturador precisa MISTURAR. */
+/* SUITE · O FLUXO DE ALEATORIEDADE.
+   Duas famílias de propriedade, e as duas importam por razoes diferentes: DETERMINISMO —
+   mesma semente, mesma sequencia. */
 
 import assert from "node:assert/strict";
 import test from "node:test";

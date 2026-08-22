@@ -17,11 +17,8 @@ export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../dat
 
 /* A PREVISAO e a BANDA sao os dois numeros que a mesa de negociacao mostra ao vivo enquanto o
    jogador arrasta a verba. */
-/* `baseSplit` passa pela porta pela mesma razao das duas acima, e com um agravante proprio: o
-   arco do Gabinete pinta a base por estado da bancada, e os limiares que A tela que os
-   redigitasse chamaria de obstrucao o que o motor ja trata como ruptura no dia seguinte a
-   primeira recalibragem.
-   separam "com o governo" de "obstruindo" e de "rompido" sao calibragem de ECLUSA. */
+/* A tela que os redigitasse chamaria de obstrucao o que o motor ja trata como ruptura no dia
+   seguinte a primeira recalibragem. */
 /* quatro blocos do catalogo enquanto o turno votava com as onze bancadas do ELENCO,
    a verba com credito de memoria dentro e a aprovacao da rua. Ninguem quebrou nada
    ao acrescentar esses motores; a tela simplesmente ficou para tras, e em 27,2% das
@@ -37,26 +34,22 @@ export { pollFrom } from "../domain/opinion/index.mjs";
 /* `lockedBy` e a quinta porta, e ela responde a pergunta que o jogador faz antes de qualquer
    outra: por que eu nao tenho dinheiro. */
 /* ⚠ `forecast` E A SEXTA, e ela nasceu de um defeito medido: a Mesa montava a previsao a mao
-   com os quatro blocos do catalogo enquanto o turno votava com as Ela e a porta que torna
-   esse defeito impossivel de repetir: a tela nao tem mais como montar uma camara, porque ela
-   nao recebe as pecas — recebe a resposta.
-   onze bancadas do ELENCO, a verba com credito de memoria dentro e a aprovacao da
-   rua. Em 1.012 votacoes, o veredito saia INVERTIDO em 27,2% delas. */
+   com os quatro blocos do catalogo enquanto o turno votava com as onze bancadas do ELENCO, a
+   verba com credito de memoria dentro e a aprovacao da rua.
+   Em 1.012 votacoes, o veredito saia INVERTIDO em 27,2% delas.
+   Ela e a porta que torna esse defeito impossivel de repetir: a tela nao tem mais como montar
+   uma camara, porque ela nao recebe as pecas — recebe a resposta. */
 /* `governmentOf` e a setima porta, e ela responde a pergunta que o jogo nunca respondeu: QUEM
    E VOCE. */
 /* `passageOf` e a nona porta, e ela nasceu junto com a tramitacao: o texto que o jogador
    escreve hoje vai para a GAVETA, e uma tela que continuasse anunciando o placar do mes
    estaria prevendo uma votacao que nao vai acontecer. */
 /* `chamberOf` e a oitava porta, e ela desenha o hemiciclo: quantas cadeiras cada bancada tem
-   e quantas delas respondem ao governo.
-   calibragem de ECLUSA — refeita na tela, ela produziria um plenario desenhado que
-   discorda do numero impresso ao lado dele. */
+   e quantas delas respondem ao governo. */
 /* A tela nao remonta pressao nem redecide ruptura: refeitas por fora, elas divergiriam no
    primeiro mes em que um limiar mudasse. */
 /* ⚠ `outlook` e a decima segunda porta, e ela fechou a PORTA ERRADA que estava aberta no
-   entrypoint.
-   yield × asked` — enquanto a MALHA consome o gasto CHEIO e ja rateado, e o
-   resultado era a seta apontando para o lado errado em CINCO das oito areas no mes 1. */
+   entrypoint. */
 /* ⚠ `termOf` e a decima terceira porta, e ela guarda uma regra que estava PELA METADE na
    tela. */
 export {

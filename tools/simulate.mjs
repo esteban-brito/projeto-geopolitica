@@ -268,9 +268,8 @@ if (!policy) {
 const seed = Number(values.seed);
 const months = Number(values.months);
 /* ⚠ O CRESCIMENTO DO PIB DEIXOU DE SER PREMISSA.
-   obedecia. Com a CORRENTE, o PIB e consequencia — do juro, da carga e da
-   capacidade do Estado —, e o que sobrou de premissa e o CHOQUE de oferta, que e
-   a unica coisa que vem de fora da economia. */
+   Ele era um argumento porque nao havia motor macro: quem simulava declarava "suponha 2% ao
+   ano" e o turno obedecia. */
 const shock = Number(values.shock);
 
 for (const [label, value] of [

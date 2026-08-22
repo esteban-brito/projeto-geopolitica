@@ -1,9 +1,16 @@
-/* O acidente que a auditoria teme — um Congresso com 90% de extremistas — nao e um sorteio
-   infeliz, e um esquema mal escrito; e esse tipo de erro tem guarda desde a terceira sessao.
-   Um bloco de um so. O ciclo previu isso e a previsao se confirmou: ECLUSA nao
-   mudou uma linha para atender o elenco, porque uma pessoa tem posicao e
-   venalidade exatamente como uma bancada tem. O que ela tem A MAIS sao duas
-   coisas, e sao elas que transformam barganha em relacao: */
+/* ELENCO — a republica ganha gente, e a gente lembra.
+   recebe   os blocos, os arquetipos, o vocabulario de nomes e uma semente
+   devolve  as pessoas do mandato, e o preco que a memoria de cada uma cobra
+
+   As pessoas sao GERADAS da semente: um elenco fixo seria decorado em duas partidas, e o
+   mandato continua reproduzivel — a regra que sustenta save, simulador e calibragem.
+
+   ⚠ DETERMINISTICO NAO E ALEATORIO, e a distincao responde ao risco R4 da auditoria: o
+   gerador distribui dentro de faixas que o catalogo declara. Um Congresso com 90% de
+   extremistas nao seria sorteio infeliz, seria esquema mal escrito — e disso ha guarda.
+
+   ⚠ UMA PESSOA E UM BLOCO DE UM SO, e por isso ECLUSA nao mudou uma linha para atende-la.
+   O que ela tem A MAIS sao MEMORIA e AMBICAO. */
 
 /**
  * @typedef {import("../../data/parties.mjs").Party} Party

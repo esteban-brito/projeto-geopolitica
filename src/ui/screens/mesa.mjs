@@ -239,8 +239,7 @@ export function mesaHtml(input) {
       `<p class="empty__note">${escapeHtml(UI.mesa.emptyHint)}</p>` +
       `</div>`;
 
-  /* ⚠ OS VOTOS DA LINHA VEM SOMADOS DO MOTOR.
-     mesmo id que o bloco, e depois do ELENCO isso encontra apenas o RESTO do bloco */
+  /* ⚠ OS VOTOS DA LINHA VEM SOMADOS DO MOTOR. */
   const peopleOf = new Map(input.blocs.map(bloc => [bloc.id, bloc.people]));
 
   const benches = input.parties

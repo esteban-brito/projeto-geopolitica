@@ -179,9 +179,8 @@ export const PROGRAMS = [
     floor: 63,
     ceiling: 100,
     guard: "constitution",
-    /* A fracao NAO foi inventada: ela e a calibragem de abertura relida em outra unidade, 63
-       pontos x R$ 189 bi / R$ 2.280 bi de receita.
-       constitucional e 15% da RECEITA CORRENTE LIQUIDA, que e menor que a bruta; o
+    /* Somada a atencao basica, a saude fecha em 8,0% da receita bruta.
+       O numero constitucional e 15% da RECEITA CORRENTE LIQUIDA, que e menor que a bruta; o
        modelo ainda nao separa as duas, e a omissao esta declarada no achado 26. */
     bound: 0.052224,
     weight: 1.2,

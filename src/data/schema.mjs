@@ -1,4 +1,6 @@
-/* O catalogo vai ser editavel pelo jogador mais adiante (a aba de edicao de nome e logo e
+/* ESQUEMA — a fronteira de validacao do dado editavel.
+   POR QUE UM DADO PRECISA DE FRONTEIRA.
+   O catalogo vai ser editavel pelo jogador mais adiante (a aba de edicao de nome e logo e
    decisao fechada), e dado editavel que entra sem validacao vira defeito longe da origem: um
    campo com texto onde deveria haver numero nao quebra na edicao, quebra tres motores depois,
    num calculo que parece errado sem motivo. */

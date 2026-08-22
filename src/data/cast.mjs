@@ -138,9 +138,15 @@ export const ARCHETYPE_SCHEMA = {
  * @property {number} reachMax - fracao maxima
  */
 
-/* ── OS ARQUETIPOS ─────────────────────────────────────────────────────────── Um por cargo
-   da onda 1, mais um lider por bloco.
-   ⚠ AS FAIXAS SAO PRIMEIRO CHUTE, declarado como o de ECLUSA e o da MALHA. O que */
+/* ── OS ARQUETIPOS ───────────────────────────────────────────────────────────
+   Um por cargo da onda 1, mais um lider por bloco. O `reach` impede a pessoa de virar a
+   bancada inteira: o lider arrasta uma parte, e a que ele NAO arrasta continua votando
+   pela ideologia do bloco — e e isso que faz compra-lo ser barato e insuficiente ao mesmo
+   tempo.
+
+   ⚠ AS FAIXAS SAO PRIMEIRO CHUTE, declarado como o de ECLUSA e o da MALHA. O que NAO e
+   chute e a RAZAO entre elas: o presidente da Camara arrasta mais que qualquer lider,
+   porque o poder dele vem da mesa e nao da bancada. */
 
 /** @type {ReadonlyArray<Archetype>} */
 export const ARCHETYPES = [
@@ -274,8 +280,6 @@ export const CAST = {
   betrayalWeight: 30,
   memoryCap: 100,
   /* Quem quer o Planalto em 2030 ganha com o governo fraco, e por isso resiste a mais mesmo
-     pago.
-     forma do segundo termo da resistencia de ECLUSA, e pela mesma razao: o que
-     esta em disputa nao e o preco, e a vaga. */
+     pago. */
   successionDrag: 0.35,
 };

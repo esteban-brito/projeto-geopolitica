@@ -431,10 +431,11 @@ test("A TELA E O TURNO FAZEM A MESMA CONTA: o rateio previsto e o rateio executa
 });
 
 test("A AREA E O TURNO PROJETAM O MESMO INDICE: a seta nao aponta para o lado errado", () => {
-  /* ⚠ ESTA E A SETIMA OCORRENCIA DA MESMA FAMILIA, e a primeira em que o defeito estava na
-     tela onde o jogador DECIDE quanto gastar por area.
-     prosa ao lado jurando ser "a mesma conta do motor". A MALHA consome o gasto CHEIO
-     ja rateado (`funded`), e `asked` e so a parte acima do piso: na Previdencia, */
+  /* A MALHA consome o gasto CHEIO ja rateado (`funded`), e `asked` e so a parte acima do
+     piso: na Previdencia, R$ 2,4 bi contra R$ 126,7 bi.
+     E o canal `capacity` da educacao nao entrava.
+     Medido no mes 1 da partida padrao, ANTES do conserto: em CINCO das oito areas a seta
+     apontava para o lado errado. */
   fc.assert(
     fc.property(anyOrders, fc.integer({ min: 1, max: 40 }), (orders, seed) => {
       const state = createState(seed);

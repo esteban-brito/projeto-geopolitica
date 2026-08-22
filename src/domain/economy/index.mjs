@@ -90,9 +90,7 @@ export function step(input) {
   const unemployment = Math.min(0.4, Math.max(0.01, p.naturalUnemployment - p.okun * gap));
 
   /* O PIB NOMINAL carrega a inflacao junto, porque toda a contabilidade do jogo e nominal:
-     receita e fracao do PIB, e divida e razao sobre ele.
-     nominal aqui pouparia uma multiplicacao e obrigaria o LASTRO a aprender a
-     distincao inteira. */
+     receita e fracao do PIB, e divida e razao sobre ele. */
   const price = monthly(inflation);
   const gdp = gdpReal * price;
 

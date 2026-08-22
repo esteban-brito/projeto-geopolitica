@@ -1,5 +1,6 @@
-/* Formato incompativel e recusa explicita: melhor um erro no ato de carregar que um defeito
-   tres telas adiante. */
+/* SAVE — o estado inteiro vira texto, e volta identico.
+   O cabecalho de `state.mjs` promete isto desde o primeiro dia: "SAVE e serializar o estado.
+   Nao existe campo que ficou de fora". */
 
 import { SCHEMA_VERSION } from "./state.mjs";
 

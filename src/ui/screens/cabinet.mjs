@@ -170,12 +170,22 @@ export function cabinetHtml(input) {
          uma palavra. */
       /* Vermelho que cobre tudo nao destaca nada — e a correcao da manha tinha criado
          exatamente o defeito que ela veio corrigir, so que com mais tinta. */
+      /* ⚠ O COMPROMETIDO SO APARECE QUANDO DIFERE DO HERO, desde 22/08/2026, e a razao e
+         uma medicao: num governo que nao toca em nada as duas leituras imprimem o MESMO
+         numero em 44 de 49 meses — 90%, inclusive no mes 1, que e a primeira tela que
+         alguem ve. Num governo que corta, elas divergem em 37 de 49, e ai a linha e a
+         resposta que o cartao existe para dar. E a mesma regra que o estouro ja usava:
+         compara-se a FORMATACAO, e nao o valor cheio, para a linha nao aparecer por uma
+         diferenca que o texto arredonda para zero. */
       `<p class="card__note">${escapeHtml(UI.cabinet.vaultLocked)} ` +
-      `<b data-numeric>${percent(locked)}</b> · ` +
+      `<b data-numeric>${percent(locked)}</b>` +
       (over > 0
-        ? `<b data-over="true">${escapeHtml(UI.cabinet.vaultOver)} ` +
+        ? ` · <b data-over="true">${escapeHtml(UI.cabinet.vaultOver)} ` +
           `<b data-numeric>${money(over)}</b></b>`
-        : `${escapeHtml(UI.cabinet.vaultTaken)} <b data-numeric>${money(input.committed)}</b>`) +
+        : money(input.committed) === money(input.room)
+          ? ""
+          : ` · ${escapeHtml(UI.cabinet.vaultTaken)} ` +
+            `<b data-numeric>${money(input.committed)}</b>`) +
       `</p>` +
       /* ── DO REAL TRAVADO ATE O TEXTO QUE O TRAVOU ──────────────────────────── ⚠ ELA E A
          METADE DO RISCO R2 QUE FALTAVA, e uma revisao externa a cobrou com todas as letras:

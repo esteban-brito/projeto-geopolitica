@@ -1,6 +1,4 @@
-/* O TURNO — onde o orcamento e o Congresso se encontram.
-   papel declarado da camada de aplicacao: LASTRO diz quanto existe, ECLUSA diz
-   quem vota, e a ordem em que os dois sao chamados e a mecanica. */
+/* O TURNO — onde o orcamento e o Congresso se encontram. */
 
 import { revenueOf, step as budgetStep } from "../domain/budget/index.mjs";
 import { pressureOf, step as capacityStep } from "../domain/capacity/index.mjs";
@@ -202,11 +200,8 @@ export function bandsOf(state, catalog = CATALOG) {
  * @param {typeof CATALOG} catalog
  */
 
-/* ── O DESCONTENTAMENTO DE CADA GRUPO, e ele e a UNICA coisa que a CALDEIRA nao sabe ⚠ CADA
-   UM LE UM LUGAR, e a regra da exclusao mutua esta em `src/data/lobbies.mjs`: dois grupos que
-   subissem pelo mesmo numero seriam um grupo com dois nomes.
-   fazer sozinha. Motor nenhum chama outro motor: quem enxerga LASTRO, ECLUSA e MALHA
-   ao mesmo tempo e esta camada, e por isso a leitura mora aqui. */
+/* ── O DESCONTENTAMENTO DE CADA GRUPO, e ele e a UNICA coisa que a CALDEIRA nao sabe fazer
+   sozinha. */
 /**
  * @param {object} input
  * @param {number} input.debtRatio
@@ -232,9 +227,11 @@ function grievanceOf({ debtRatio, delivered, index, spurned = [], catalog }) {
     }
 
     if (lobby.reads === "share") {
-      /* ⚠ O QUE CHEGOU, E NAO O RATEIO — e esta linha e a correcao do defeito mais A primeira
-         versao lia `ratio`: que FRACAO do prometido o caixa honrou.
-         grave que a CALDEIRA teve, achado na primeira medicao dela. */
+      /* ⚠ O QUE CHEGOU, E NAO O RATEIO — e esta linha e a correcao do defeito mais grave que
+         a CALDEIRA teve, achado na primeira medicao dela.
+         A primeira versao lia `ratio`: que FRACAO do prometido o caixa honrou.
+         E com isso um governo que nao promete nada a ninguem honra 100% de zero e o baixo
+         clero ficava SATISFEITO — pressao zero em 48 meses de descaso completo. */
       want[lobby.id] = clamp(1 - delivered, 0, 1);
       continue;
     }
@@ -335,10 +332,8 @@ export function lockedBy(state, catalog = CATALOG, top = 3) {
 function positionOf(state, catalog) {
   const pressure = pressureOf({ areas: catalog.areas, history: state.capacity.history });
 
-  /* O DIVIDENDO DAS ESTATAIS ENTRA PELO FATOR DE RECEITA, e a razao e evitar um `receita =
-     base × pressao + dividendos`, sem o motor precisar aprender uma fonte de receita nova.
-     campo novo no LASTRO por uma linha. O fator ja e "quanto do devido de fato
-     entra"; somar a ele a razao entre dividendo e receita-base da exatamente */
+  /* O DIVIDENDO DAS ESTATAIS ENTRA PELO FATOR DE RECEITA, e a razao e evitar um campo novo no
+     LASTRO por uma linha. */
   const base = state.macro.gdp * catalog.fiscal.taxLoad;
 
   /* O canal fiscal continua inteiro, porque o que ele sempre mediu foi a MUDANCA: privatizar
@@ -942,9 +937,7 @@ function blocsOf(state, share, whip, byBloc, catalog) {
            a pessoa queria arrastar e o efetivo diz o que ela arrasta. */
         reach: party.seats > 0 ? (seatsOf.get(person.id) ?? 0) / party.seats : 0,
         votes: votesOf.get(person.id) ?? 0,
-        /* ⚠ A MEMORIA VAI NORMALIZADA, de -1 a 1, e nao em pontos.
-           depende de `memoryCap`, que e calibragem de ELENCO — e a tela que o
-           mostrasse cru teria de saber o teto para dizer se 40 e muito ou pouco. */
+        /* ⚠ A MEMORIA VAI NORMALIZADA, de -1 a 1, e nao em pontos. */
         memory: clamp((state.memory[person.id] ?? 0) / (catalog.cast.memoryCap || 1), -1, 1),
       })),
   }));
@@ -1342,9 +1335,7 @@ function advanceBills(state, { share, standing, catalog, resolved, mail }) {
 
     const result = vote({
       bill: agenda.proposal,
-      /* ⚠ QUEM VOTA E A CAMARA DIVIDIDA, e nao os quatro blocos.
-         resto do bloco continua votando pela ideologia do bloco. ECLUSA nao soube de
-         nada disso: uma pessoa e uma bancada de um so. */
+      /* ⚠ QUEM VOTA E A CAMARA DIVIDIDA, e nao os quatro blocos. */
       parties: share.benches,
       funding: share.offeredPaid,
       loyalty: share.chamberLoyalty,
@@ -1978,10 +1969,14 @@ function weightedAbandon(state, catalog) {
   return total > 0 ? (abandoned / total) * 100 : 0;
 }
 
-/* ── O FECHO DO MANDATO ────────────────────────────────────────────────────── POR QUE ELE
-   EXISTE, e a resposta e uma partida jogada ate o fim.
-   estoque da CALDEIRA. O que esta funcao faz e PERGUNTAR — ela nao refaz conta
-   nenhuma, pela mesma razao que nenhuma tela refaz. */
+/* ── O FECHO DO MANDATO ──────────────────────────────────────────────────────
+   O mandato passivo cai no mes 47, e a unica coisa que a tela dizia era um selo de dez
+   pixels no canto de um cartao: o botao de avancar continuava aceso, e clicar nele nao
+   fazia nada nem explicava por que.
+
+   ⚠ ELE NAO E UMA TELA DE DERROTA. A partida JA E um mandato de 48 meses, sem vitoria e
+   sem placar — cair e o mandato terminar antes, e o que muda e a DATA. Ha um fecho so, e
+   as duas saidas diferem no motivo e no mes, nunca no tom. */
 
 /**
  * @typedef {object} TermArea uma area, do dia da posse ao ultimo mes

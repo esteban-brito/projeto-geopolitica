@@ -1,7 +1,7 @@
-/* E o custo disso ja apareceu duas vezes, as duas achadas pela SIMULACAO e nao por prova: o
-   hiato medido em termos nominais (a economia fugia sozinha, 1% no mes 6 virando 7,6% no mes
-   24) e o juro incidindo so sobre a parte pos-fixada (a divida caia de 78% para 55% sem o
-   jogador fazer nada). */
+/* SUITE · A CORRENTE — e ela nasceu tarde demais.
+   ⚠ ESTE MOTOR RODOU DUAS SESSOES SEM PROVA PROPRIA.
+   Todos os outros tem suite; a economia tinha as quatro equacoes, o carrego da divida e nada
+   cobrando nenhum dos dois. */
 
 import assert from "node:assert/strict";
 import test from "node:test";

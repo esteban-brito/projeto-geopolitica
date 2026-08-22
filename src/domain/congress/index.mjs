@@ -1,5 +1,7 @@
-/* Sem essa separacao o motor viraria planilha: bastaria descobrir que 32,4% da verba garante
-   a lei, e a votacao deixaria de ter risco — que e a unica coisa que ela existe para ter. */
+/* ECLUSA — congresso.
+   recebe  bancadas, proposta, moeda oferecida, historico de barganha devolve votos por
+   bancada, resultado, custo pago, ressentimento ── A SEPARACAO QUE FAZ A MECANICA Duas
+   funcoes, e a divisao entre elas E o jogo: `whipCount` — a PREVISAO. */
 
 import { unit } from "../../state/random.mjs";
 
@@ -193,9 +195,7 @@ export function seating({ parties, loyalty }) {
  */
 export function whipCount({ bill, parties, funding, loyalty, standing }) {
   /* A RUA ENTRA COMO DESLOCAMENTO DA RESISTENCIA, e nao como multiplicador da adesao:
-     multiplicar mexeria no comparecimento, que e o que a lealdade ja faz.
-     opiniao publica e continua valendo sozinho, como o LASTRO vale sem os fatores
-     da MALHA. Toda a suite antiga descreve a verdade sem tocar em nada. */
+     multiplicar mexeria no comparecimento, que e o que a lealdade ja faz. */
   const street = ((standing ?? STANDING_NEUTRAL) - STANDING_NEUTRAL) / 100;
   const forecasts = parties.map(party => {
     const dx = party.economic - bill.economic;

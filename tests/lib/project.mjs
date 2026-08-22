@@ -1,4 +1,6 @@
-/* Leitura do projeto, e o contrato que todas as guardas seguem. */
+/* Leitura do projeto, e o contrato que todas as guardas seguem.
+   TODA GUARDA E UMA FUNCAO PURA: recebe um mapa `caminho -> conteudo` e devolve uma lista de
+   achados. */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";

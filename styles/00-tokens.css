@@ -1,5 +1,7 @@
-/* Translucidez usa o segundo, e nunca `color-mix()`: medido no projeto anterior, `color-mix`
-   e `rgba` divergem em 1/255 em 21 de 21 capturas. */
+/* TOKENS — a unica fonte de valor visual do projeto.
+   Este arquivo declara valores.
+   Ele NAO tem um seletor sequer alem do `:root`, e essa restricao e cobrada por
+   `tests/guards/tokens.mjs`. */
 
 @layer tokens, base, material, components, screens, motion;
 

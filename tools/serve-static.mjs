@@ -1,4 +1,6 @@
-/* Servidor estatico de desenvolvimento. */
+/* Servidor estatico de desenvolvimento.
+   Existe porque modulos ES nao carregam por `file://` — o jogo publicado continua sendo
+   arquivos estaticos servidos por qualquer coisa. */
 
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";

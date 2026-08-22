@@ -1,5 +1,11 @@
-/* O QUE ELA IMPEDE, e cada item veio de um defeito real medido no projeto anterior: 1.
-   CONCORRENTES para a mesma funcao; */
+/* GUARDA · TOKENS — nenhum valor visual vive fora do arquivo de tokens.
+
+   Cada item veio de um defeito medido no projeto anterior: literal de cor solto (225 hex e
+   178 `rgba()` crus contra ~40 tokens, e o problema nao era ruido — eram cores
+   CONCORRENTES para a mesma funcao); `color-mix()` para translucidez, igual a `rgba()` na
+   algebra e diferente na tela, com 21 de 21 capturas deslocadas em 1/255; par hex/rgb
+   divergente; `var(--x)` para token inexistente, que invalida a declaracao inteira em
+   silencio; e token orfao, que atravessa meses sem ninguem notar. */
 
 import { collect, isGuardSource, stripCssComments, stripJsComments } from "../lib/project.mjs";
 
@@ -10,8 +16,13 @@ const TOKENS_FILE = "styles/00-tokens.css";
 /* Um token daqui deixa de ser conferido: se ninguem o injetar, a declaracao que o consome
    fica invalida em silencio — exatamente o defeito que o item 4 desta guarda existe para
    pegar.
-   mesma razao: e um numero por elemento, vem da CALDEIRA — 20 para a
-   rua, 50 para o capital, 80 para quem sustenta — e nao da paleta. */
+   Entra aqui so o que e DADO, e nao valor visual: --part-color a cor de um segmento do
+   medidor, declarada na regra do proprio segmento em `30-components.css`; --neutral   o ponto
+   neutro do indice de area, que vem do CATALOGO e nao da paleta — 50 e regra de jogo, e
+   duplica-lo no arquivo de tokens criaria um segundo lugar para ele divergir; --index    o
+   indice corrente de uma area, escrito em estilo inline pela propria faixa de medidores: e um
+   numero por elemento, e nao um valor do sistema; --floor    onde a lei daquela alavanca
+   comeca, e --ceiling   onde ela acaba. */
 const RUNTIME = new Set(["--part-color", "--neutral", "--index", "--floor", "--ceiling", "--mark"]);
 
 /**

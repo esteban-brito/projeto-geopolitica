@@ -1,8 +1,7 @@
-/* E por isso a mudanca nao quebra o jogo que existia: o presidente que so remaneja verba
-   dentro das faixas nao sente diferenca nenhuma.
-   mesma distancia euclidiana que ECLUSA usa, e o plenario vota com `vote`. O que
-   esta parte acrescenta e TEMPO.
-   distancia que ECLUSA usa para decidir voto, agora com outro interesse. */
+/* A TRAMITACAO — o texto deixa de ser instantaneo.
+   recebe  os textos protocolados, a camara, o mes e o catalogo devolve os textos um estagio
+   adiante, e o que deles chegou ao plenario Este arquivo nao e um motor e nao tem codinome —
+   ele COMPOE, como `agenda.mjs` e `turn.mjs`. */
 
 import { whipCount } from "../domain/congress/index.mjs";
 import { compose } from "./agenda.mjs";

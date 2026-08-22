@@ -261,9 +261,7 @@ export function describeMail({
       });
 
       switch (letter.kind) {
-        /* ⚠ A CARTA DE POSSE ABRE O MANDATO, e ela e a unica que nasce com o estado.
-           produzidos pelo LASTRO desde a primeira sessao — o que faltava era
-           alguem ENTREGAR isso ao presidente em vez de deixa-lo procurar. */
+        /* ⚠ A CARTA DE POSSE ABRE O MANDATO, e ela e a unica que nasce com o estado. */
         case "posse":
           return paper({
             from: by("chief"),

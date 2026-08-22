@@ -1,5 +1,6 @@
-/* `61 ▁▂▃▃▂▁ −24 em 12 meses` diz que o jogador esta afundando a saude ha um ano — que e a
-   informacao de que ele precisa para decidir, e nao o numero de hoje. */
+/* A TELA DE AREA — um molde, sete instancias.
+   ── ELA DEIXOU DE SER UM MENU Ate esta tela oferecia SEIS PAUTAS PRONTAS por area, e o
+   jogador escolhia uma. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { attr, money, seats, signed, sparkline } from "../shared/format.mjs";

@@ -1,6 +1,7 @@
-/* O congelamento e permanente, e nao so em desenvolvimento: o estado e pequeno, o custo e
-   desprezivel, e uma mutacao acidental que so falha em producao e exatamente o defeito que
-   isto existe para impedir. */
+/* ESTADO — imutavel, e um reducer puro como unica forma de muda-lo.
+   POR QUE IMUTAVEL.
+   Num jogo de turnos, quatro coisas caem de graca quando o estado nunca e mutado no lugar: ·
+   SAVE e serializar o estado. */
 
 import { CATALOG } from "../data/catalog.mjs";
 import { opening } from "../domain/capacity/index.mjs";
@@ -257,10 +258,7 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
 export function reduce(state, action) {
   switch (action.type) {
     case "monthResolved": {
-      /* O HUMOR CHEGA PRONTO, como tudo o mais.
-         omissao declarada — "quem produz aprovacao e SONDA, que ainda nao
-         existe" —, e ela vigorou por tres sessoes. O motor nasceu; o reducer
-         continua so dobrando o resultado no estado. */
+      /* O HUMOR CHEGA PRONTO, como tudo o mais. */
       return deepFreeze({
         ...state,
         month: state.month + 1,

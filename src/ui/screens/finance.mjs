@@ -1,10 +1,7 @@
-/* Esta nao pede nenhuma, e isso precisa ser evidente no primeiro segundo — senao o jogador
-   procura o botao, nao acha, e conclui que a tela esta quebrada.
-   Nao ha um so valor digitado. PIB, inflacao, juro e desemprego saem da CORRENTE;
-   receita, obrigatoria, teto e divida saem do LASTRO; os indices saem da MALHA. O
-   projeto ja pagou para aprender que um indicador congelado ao lado de indicadores
-   vivos ensina a desconfiar da tela inteira — foi por isso que a aprovacao ficou
-   fora dela ate a SONDA existir, e ela continua fora. */
+/* FINANCAS — o placar do pais.
+   View PURA, e a unica tela sem um controle.
+   ── A AUSENCIA DE CONTROLE E A INFORMACAO PRINCIPAL Toda outra tela deste jogo pede uma
+   decisao. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, num, percent, seats, signed, sparkline } from "../shared/format.mjs";
@@ -21,9 +18,7 @@ import { UI } from "../strings.mjs";
    consumidor daria dois lugares afirmando em que faixa a inflacao vive — o primeiro a ser
    recalibrado divergiria do outro. */
 
-/* A BANDA DE TOLERANCIA DA META, para cada lado.
-   porque nenhum motor a consome: a CORRENTE persegue o CENTRO da meta, e a banda
-   so existe para a tela saber quando acender o vermelho. */
+/* A BANDA DE TOLERANCIA DA META, para cada lado. */
 const TOLERANCE = 0.015;
 
 /**
@@ -99,11 +94,7 @@ export function financeHtml({
   index,
   history,
 }) {
-  /* DUAS CONTAS SAO FEITAS AQUI, e as duas sao divisoes de uma linha.
-     estado, e a razao entre PIB e potencial devolve o MESMO numero: a CORRENTE
-     envelhece os dois com o mesmo fator de preco de proposito, justamente para
-     que a razao entre eles siga sendo real. Refazer aqui nao diverge; nao poder
-     refazer obrigaria o estado a guardar um derivado. */
+  /* DUAS CONTAS SAO FEITAS AQUI, e as duas sao divisoes de uma linha. */
   const perCapita = macro.population > 0 ? macro.gdp / macro.population : 0;
   const gap = macro.potential > 0 ? (macro.gdp - macro.potential) / macro.potential : 0;
 

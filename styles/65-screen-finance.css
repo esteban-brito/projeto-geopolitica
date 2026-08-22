@@ -1,5 +1,7 @@
-/* Se a linha parecesse pressionavel, o jogador procuraria o botao, nao acharia, e concluiria
-   que a tela esta quebrada. */
+/* TELA · FINANCAS — o placar, e a unica tela do jogo sem um controle.
+   ELA E A UNICA DENSA, E ISSO E DELIBERADO.
+   Em tela que decide, densidade e ruido: cada numero a mais disputa atencao com a decisao, e
+   o projeto ja gastou uma sessao tirando numero de cima da Mesa por isso. */
 
 @layer screens {
   .ledger {

@@ -1,8 +1,7 @@
-/* Um governo com 45% de aprovacao pode ser um governo com apoio morno de todo mundo — que
-   aguenta uma crise — ou um governo adorado por metade do pais e odiado pela outra — que nao
-   aguenta nenhuma.
-   TER PRECO — que e a razao de SONDA existir agora. Regiao entra quando a
-   federacao entrar; religiao entra com a bancada evangelica. */
+/* OS SEGMENTOS E OS PARAMETROS DA OPINIAO — o que SONDA consome.
+   ⚠ AS FATIAS DE POPULACAO SAO REAIS E DATADAS, como o resto do catalogo ; os PESOS de cada
+   segmento sao julgamento declarado, porque nenhuma fonte publica mede "quanto a classe C
+   liga para seguranca". */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 

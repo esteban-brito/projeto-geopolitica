@@ -1,5 +1,8 @@
-/* A lamina e da tela inteira; um cartao com material proprio seria vidro dentro de vidro, que
-   e o defeito que o sistema visual inteiro existe para impedir. */
+/* TELA · GABINETE — o resumo da república, em cartões.
+   ELA SUBSTITUI A MESA, E NAO E A MESA COM OUTRO NOME.
+   A Mesa misturava o resumo do mes com a mesa de negociacao: quem abria o jogo caia no meio
+   de uma decisao — placar, bancadas e controles de verba — sem antes saber como o pais
+   estava. */
 
 @layer screens {
   .cabinet {
@@ -118,10 +121,9 @@
        de 700px, que e exatamente o que ele existe para evitar. */
     grid-template-rows: minmax(0, 1fr);
     align-content: stretch;
-    /* ⚠ A COLUNA INTEIRA, E O NUMERO DE LINHAS NAO SE DIGITA MAIS.
-       ciclo 10 acrescentou a CALDEIRA e ninguem voltou aqui: a coluna da esquerda
-       passou a terminar uma linha antes da direita, e o rodape do Gabinete ficou com
-       um degrau que so a captura mostra. Nada falhou — o `span` continuou valido. */
+    /* O ciclo 10 acrescentou a CALDEIRA e ninguem voltou aqui: a coluna da esquerda passou a
+       terminar uma linha antes da direita, e o rodape do Gabinete ficou com um degrau que so
+       a captura mostra. */
     grid-row: 1;
     /* ⚠ E O ESTIRAMENTO FICA — eu o TIREI e devolvi na mesma sessao, contra a captura. */
     align-self: stretch;

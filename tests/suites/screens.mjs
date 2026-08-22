@@ -1,6 +1,6 @@
-/* Um numero escrito no formato errado dentro de um atributo nao quebra nada em Node, nao
-   aparece em nenhum tipo, nao derruba guarda nenhuma e nao suja o console: ele muda o
-   comportamento do controle na tela, em silencio. */
+/* SUITE · AS TELAS — views puras, provadas sem navegador.
+   POR QUE ELA EXISTE, e o motivo tem data.
+   As views devolvem TEXTO, e texto que o navegador vai interpretar. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -15,6 +15,7 @@ import {
 } from "../../src/domain/congress/index.mjs";
 import { alarm } from "../../src/application/mail.mjs";
 import { describeMail, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
+import { vitalsHtml } from "../../src/ui/screens/dashboard.mjs";
 import {
   boilerOf,
   chamberOf,
@@ -946,4 +947,35 @@ test("NENHUM ROTULO DE INSTRUMENTO CAI NO ID CRU — e id cru aqui e INGLES", ()
       `o instrumento "${instrument}" nao tem rito em portugues: a tela imprime o id`,
     );
   }
+});
+
+/* ⚠ AUSENCIA NAO E RESULTADO, E A BARRA A DESENHAVA COMO "NAO MOVEU". `painted` e variavel
+   de modulo do entrypoint: numa recarga nao ha mes anterior, e a barra caia no proprio mes
+   como passado — as quatro setas saiam em `—` no mes 30 de um mandato em que tudo andou. */
+test("A SETA SO EXISTE QUANDO HA PASSADO: sem mes anterior, a barra nao opina", () => {
+  const agora = {
+    macro: { gdp: 12500, inflation: 0.04 },
+    approval: 40,
+    base: 400,
+    majority: 257,
+  };
+
+  const mudo = vitalsHtml({ ...agora, before: null });
+  assert.equal(
+    mudo.includes("data-direction"),
+    false,
+    "sem mes anterior a barra desenhou seta, e seta e veredito sobre um passado que nao existe",
+  );
+
+  const falado = vitalsHtml({
+    ...agora,
+    before: { gdp: 12000, inflation: 0.05, approval: 44, base: 436 },
+  });
+  assert.equal(
+    (falado.match(/data-direction/g) ?? []).length,
+    4,
+    "com mes anterior os quatro vitais tem de opinar",
+  );
+  /* A INFLACAO CAIU, E CAIR E BOM: o sinal dela se inverte, e a seta sobe. */
+  assert.match(falado, /data-direction="up"[^>]*>▲<\/i><\/span><\/div><div class="vital/);
 });

@@ -693,18 +693,24 @@ function paint() {
 
   if (!previous || previous !== state) {
     const poll = pollFrom(state.mood, CATALOG.segments, CATALOG.opinion);
-    const past = previous ? previous : state;
+    /* ⚠ SEM MES ANTERIOR NAO HA TENDENCIA, e ate 22/08/2026 isto caia em `state` — o
+       proprio mes servindo de passado, o que faz as quatro setas sairem em "nao moveu".
+       Numa RECARGA `painted` volta nulo, entao a barra afirmava que nada tinha andado no
+       mes 30 de um mandato em que tudo andou. Ausencia nao e resultado: agora a barra
+       recebe `null` e nao desenha seta nenhuma. */
     el.vitals.innerHTML = vitalsHtml({
       macro: state.macro,
       approval: poll.good,
       base: current.base,
       majority: SIMPLE_MAJORITY,
-      before: {
-        gdp: past.macro.gdp,
-        inflation: past.macro.inflation,
-        approval: pollFrom(past.mood, CATALOG.segments, CATALOG.opinion).good,
-        base: standing?.base ?? current.base,
-      },
+      before: previous
+        ? {
+            gdp: previous.macro.gdp,
+            inflation: previous.macro.inflation,
+            approval: pollFrom(previous.mood, CATALOG.segments, CATALOG.opinion).good,
+            base: standing?.base ?? current.base,
+          }
+        : null,
     });
   }
 
@@ -911,7 +917,21 @@ function transition(depois) {
     depois?.();
     return;
   }
-  start(paint).finished.then(() => depois?.());
+
+  const view = start(paint);
+
+  /* ⚠ PULAR A TRANSICAO NAO E ERRO, e ate 22/08/2026 virava um. `ready` REJEITA quando
+     uma transicao comeca antes de a anterior terminar — o que acontece a cada navegacao
+     rapida —, e ninguem a escutava: medido num navegador de verdade, 48 trocas de tela
+     seguidas produziram 46 rejeicoes nao tratadas. Elas nao quebravam nada, e esse era o
+     problema: enchiam o unico lugar onde um erro de verdade apareceria. */
+  view.ready?.catch(() => {});
+
+  /* ⚠ E O `depois` RODA ACONTECA O QUE ACONTECER, porque ele destrava o botao de avancar
+     (`resolving = false`). Preso a um `then` sozinho, bastaria `paint` lancar uma vez para
+     `finished` rejeitar e o mes nunca mais poder ser avancado — sem erro na tela, sem
+     nada: o jogo simplesmente pararia de responder. */
+  view.finished.catch(() => {}).then(() => depois?.());
 }
 
 document.addEventListener("click", event => {
@@ -1165,7 +1185,14 @@ function label(node, text, hint) {
    se o prazo venceu, ela pergunta o que este fechamento decide sozinho. */
 function endLabel() {
   const term = termOf(state, CATALOG);
-  el.advance.disabled = term.over;
+  /* ⚠ `|| resolving` — E ELE VALE UM MES INTEIRO DE CLIQUE. `paint` chama esta funcao, e
+     `paint` roda no PRIMEIRO quadro da View Transition: sem a trava aqui, o botao voltava a
+     ficar clicavel enquanto o mes ainda estava resolvendo. A janela e a transicao inteira, e
+     o clique dela cai no `if (resolving) return` — sem erro, sem aviso, sem nada.
+
+     Medido num navegador de verdade, clicando a cada 200 ms: TRES cliques produziam UM mes.
+     O defeito nasceu em 20/08/2026, quando o botao passou a se repintar junto com a tela. */
+  el.advance.disabled = term.over || resolving;
 
   const quiet = term.over
     ? []

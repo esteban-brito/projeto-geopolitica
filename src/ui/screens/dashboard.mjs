@@ -45,7 +45,8 @@ export function turnHtml(state, closing) {
  * @param {number} input.approval - "otimo/bom", em pontos
  * @param {number} input.base - cadeiras que respondem ao governo
  * @param {number} input.majority
- * @param {{ gdp: number, inflation: number, approval: number, base: number }} input.before
+ * @param {{ gdp: number, inflation: number, approval: number, base: number } | null} input.before
+ *   o mes anterior, ou `null` quando nao ha passado nenhum para comparar
  * @returns {string}
  */
 export function vitalsHtml({ macro, approval, base, majority, before }) {
@@ -53,7 +54,7 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
     {
       label: UI.vitals.gdp,
       value: money(macro.gdp),
-      delta: macro.gdp - before.gdp,
+      delta: before ? macro.gdp - before.gdp : null,
       /* CRESCER E BOM: o sinal do delta e o sinal da leitura. */
       good: 1,
       alert: false,
@@ -61,7 +62,7 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
     {
       label: UI.vitals.inflation,
       value: percent(macro.inflation, 1),
-      delta: macro.inflation - before.inflation,
+      delta: before ? macro.inflation - before.inflation : null,
       /* ⚠ INFLACAO SUBINDO E RUIM, e por isso o sinal se inverte. */
       good: -1,
       alert: macro.inflation > 0.075,
@@ -69,14 +70,14 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
     {
       label: UI.vitals.approval,
       value: `${seats(approval)}%`,
-      delta: approval - before.approval,
+      delta: before ? approval - before.approval : null,
       good: 1,
       alert: approval < 20,
     },
     {
       label: UI.vitals.base,
       value: seats(base),
-      delta: base - before.base,
+      delta: before ? base - before.base : null,
       good: 1,
       alert: base < majority,
     },
@@ -84,8 +85,19 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
 
   return items
     .map(item => {
-      const moved = Math.abs(item.delta) < 1e-9 ? 0 : item.delta * item.good;
-      const direction = moved > 0 ? "up" : moved < 0 ? "down" : "flat";
+      /* ⚠ AUSENCIA NAO E RESULTADO, e aqui ela era desenhada como "nao moveu" — conserto
+         de 22/08/2026. `painted` e variavel de modulo, entao numa RECARGA nao existe mes
+         anterior nenhum: as quatro setas saiam em `—` no mes 30, afirmando que nada tinha
+         andado num mandato em que tudo andou. O traco e um veredito; a falta de passado
+         nao e. Sem base de comparacao, a seta simplesmente nao existe. */
+      const direction =
+        item.delta === null
+          ? null
+          : Math.abs(item.delta) < 1e-9
+            ? "flat"
+            : item.delta * item.good > 0
+              ? "up"
+              : "down";
 
       /* ⚠ O ROTULO VEM ANTES DO VALOR, NA MESMA LINHA — Parte B do ciclo 11. */
       /* ⚠ O QUE NAO EXISTE E ESPACO, e a captura provou duas vezes. */
@@ -94,21 +106,20 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
         `<div class="vital${item.alert ? " vital--alert" : ""}">` +
         `<span class="vital__label">${escapeHtml(item.label)}</span>` +
         `<span class="vital__value" data-numeric>${escapeHtml(item.value)}` +
-        `<i class="trend" data-direction="${direction}" aria-hidden="true">` +
-        `${UI.trend[direction]}</i></span>` +
+        (direction === null
+          ? ""
+          : `<i class="trend" data-direction="${direction}" aria-hidden="true">` +
+            `${UI.trend[direction]}</i>`) +
+        `</span>` +
         `</div>`
       );
     })
     .join("");
 }
 
-/* aprovacao morreu quando SONDA nasceu e deu outra casa ao numero — a propria
-   barra, e o cartao da Rua no Gabinete.
-   escrito: "se SONDA der outra casa a aprovacao, este arquivo morre com o desenho
-   antigo, e morrer inteiro e mais barato do que continuar meio vivo". SONDA nasceu
-   em 14/08/2026 e deu — entao o que restava eram duas views e uma folha inteira
-   esperando um dia que ja tinha passado. Sairam juntas, que e como o proprio
-   arquivo mandava. */
+/* As duas eram puras, corretas, e ninguem as importava: a faixa morreu quando a barra
+   superior absorveu os tres campos dela, e a tela de aprovacao morreu quando SONDA nasceu e
+   deu outra casa ao numero — a propria barra, e o cartao da Rua no Gabinete. */
 
 /**
  * A frase que diz o que esta em jogo.

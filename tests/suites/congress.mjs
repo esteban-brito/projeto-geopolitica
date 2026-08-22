@@ -465,9 +465,7 @@ test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
 });
 
 test("SEM A RUA, O MOTOR CONTINUA O MESMO: o padrao e neutro e nao zero", () => {
-  /* O contrato que mantem a suite antiga descrevendo a verdade.
-     exatamente o placar de antes — a mesma regra do LASTRO com os fatores da
-     MALHA. */
+  /* O contrato que mantem a suite antiga descrevendo a verdade. */
   const bill = BILLS[0];
   assert.ok(bill);
   const input = { bill, parties: PARTIES, funding: everyone(0.4), loyalty: everyone(60) };
