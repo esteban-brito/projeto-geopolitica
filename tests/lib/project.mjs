@@ -91,8 +91,20 @@ export function isGuardSource(path) {
  * @param {string} source
  * @returns {string}
  */
+/* ⚠ ELA PASSOU A PRESERVAR AS QUEBRAS DE LINHA em 21/08/2026, e a irma de CSS ja fazia
+   isso desde que nasceu, com a razao escrita ao lado — "para que o numero da linha
+   continue valendo". Esta aqui apagava o comentario INTEIRO, quebras e tudo, e o preco
+   era invisivel porque quase nenhuma guarda reporta linha.
+
+   ⚠ `vocabulary` REPORTA, e por isso o defeito estava consumado: num arquivo em que a
+   prosa e maior que o codigo, toda acusacao dela apontava para uma linha que nao era a
+   da frase — as vezes duzentas linhas acima. A acusacao estava certa e o endereco,
+   errado, que e a pior forma de estar certo. */
 export function stripJsComments(source) {
-  return source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/[^\n]*/g, "$1");
+  const blank = (/** @type {string} */ text) => text.replace(/[^\n]/g, " ");
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, blank)
+    .replace(/(^|[^:])(\/\/[^\n]*)/g, (_, before, comment) => before + blank(comment));
 }
 
 /** Remove comentarios de CSS antes de qualquer casamento.

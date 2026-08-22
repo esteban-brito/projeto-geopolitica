@@ -102,6 +102,38 @@
      A MEDIDA DE LINHA E CURTA de proposito: 46 caracteres numa coluna larga deixam
      o texto no meio em vez de esticado de ponta a ponta, e prosa esticada e o que
      faz um estado vazio parecer mensagem de erro. */
+  /* ── A LINHA DE TENDENCIA ───────────────────────────────────────────────────
+     ⚠ ELA SUBSTITUIU A ESCADA DE BLOCOS EM 21/08/2026, e a razão inteira está em
+     `sparkline`, em `shared/format.mjs`: um bloco tem oito alturas e cada uma é uma
+     fração do corpo da fonte, então um indicador que vive no terço de baixo da própria
+     régua saía como uma fileira de traços de um pixel — o olho lia o SUBLINHADO do
+     número. Três capturas em três tamanhos provaram que não havia corpo que resolvesse.
+
+     ⚠ E O TAMANHO MORA AQUI, E NÃO NO DESENHO. A peça é a mesma em três telas — o painel
+     de Finanças, a tela de área e a faixa do Congresso —, e cada uma tem uma caixa
+     diferente. O SVG estica; quem diz o quanto é o lugar onde ele mora. Este bloco dá o
+     padrão, e as folhas de tela ajustam a largura quando a coluna delas pede.
+
+     A COR VEM DE `currentColor`, e é assim que o traço acompanha a tinta do contêiner
+     sem que nenhuma das três folhas precise repetir uma cor. */
+  .spark {
+    display: inline-block;
+    width: 4rem;
+    height: 0.9rem;
+    vertical-align: middle;
+  }
+
+  .spark__line {
+    fill: none;
+    stroke: currentColor;
+    /* ⚠ 1,5 E NAO 1: com `non-scaling-stroke` o traco vale pixel de tela, e 1px sobre um
+       fundo escuro com o texto ao lado em peso 600 lê como fio de tabela — a linha some
+       na leitura. 1,5 é o mesmo peso ótico da régua de `.gauge`. */
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .empty {
     display: grid;
     align-content: center;
@@ -226,6 +258,40 @@
 
   .action--primary .action__hint {
     color: var(--bg-deep);
+  }
+
+  /* ── O PRECO DE AVANCAR O MES ───────────────────────────────────────────────
+     ⚠ E ELE E PRECO, E NAO TRAVA. Um dossiê externo pediu o botão CINZA enquanto
+     houvesse pergunta urgente na mesa, e este projeto não tem muro: o presidente pode
+     atravessar o mês sem responder nada, e o que ele não pode é descobrir o custo
+     depois do clique. A recusa inteira está em `silences`, no motor.
+
+     ⚠ E A COR É BORDÔ, E NÃO O VERMELHO DE CRISE. Os dois estão no vocabulário, e o
+     que os separa é o que cada um já significa: `--crisis` é a cor do que JÁ deu
+     errado — teto fechado, bancada rompida, prazo estourado —, e aqui nada deu errado
+     ainda. Bordô é a cor do carimbo, e é isso que este aviso diz: há um despacho
+     pendente sobre a mesa, e o mês vai bater o carimbo por você.
+
+     A ARESTA ACOMPANHA A TINTA pela mesma regra da lâmina âmbar duas regras acima:
+     borda âmbar em volta de um aviso bordô denunciaria um aviso pintado por cima de um
+     botão, em vez de um botão que mudou de estado.
+
+     ⚠ E O BORDÔ É FUNDO, E NÃO TINTA — a primeira versão pintou o texto de bordô sobre
+     a lâmina âmbar, e a CONTA reprova: a lâmina compõe rgb(193, 137, 55) e o bordô dá
+     **2,8:1** contra ela, num texto de 10px. A captura mostrou o que a conta dizia — um
+     borrão escuro debaixo do rótulo. Invertido, o mesmo par dá 5,6:1 e vira o que a
+     prosa acima já dizia que ele era: um CARIMBO. A metáfora estava certa e a
+     implementação a tinha posto do avesso. */
+  .action--primary[data-price="true"] {
+    border-color: rgba(var(--bordo-rgb), 0.85);
+  }
+
+  .action--primary[data-price="true"] .action__hint {
+    padding: 2px 7px;
+    border-radius: var(--radius-stamp);
+    background: var(--bordo);
+    font-weight: 700;
+    color: var(--paper);
   }
 
   /* ⚠ ACAO DESLIGADA E ACAO QUE DIZ QUE ESTA DESLIGADA, e ate 18/08/2026 este
@@ -739,9 +805,18 @@
      familia do numero repetido a mao, e os dois divergem de novo no primeiro ajuste.
      Uma gramatica que duas telas usam mora na camada de componentes, como o estado
      vazio mora desde 15/08. Aqui ela e uma so, e nao ha o que divergir. */
+  /* ⚠ A COLUNA DO NOME FOI DE 9rem PARA 10,5rem EM 20/08/2026, e ela ECONOMIZA altura
+     ao ficar mais LARGA — o que parece contraditório e não é. A segunda fileira da
+     CALDEIRA carrega o que cada grupo cobra ("que a torneira das emendas fique aberta"),
+     e em 9rem essa frase quebrava em três linhas nas quatro linhas do cartão. Em 10,5rem
+     ela cabe em duas.
+
+     E o medidor aguenta: a 1440px a coluna da direita tem 440px, então ele sai de ~200
+     para ~176. O aviso registrado neste projeto — "o medidor sobrou com 24 pixels" — é
+     sobre PARTIR a coluna ao meio, e não sobre 24 pixels a menos numa barra de 200. */
   .reading {
     display: grid;
-    grid-template-columns: 9rem minmax(0, 1fr) 3rem;
+    grid-template-columns: 10.5rem minmax(0, 1fr) 3rem;
     align-items: center;
     gap: 0 var(--space-3);
   }
@@ -756,11 +831,17 @@
   /* NO CELULAR O NOME OCUPA A LINHA e o medidor desce: 9rem de rotulo num aparelho
      de 390px deixariam a barra com 80px, e uma barra de 80px nao mostra proporcao
      nenhuma — ela vira um traco que muda de cor. */
-  @media (max-width: 640px) {
-    .reading {
-      grid-template-columns: minmax(0, 1fr) 3rem;
-    }
-  }
+  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
+     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
+     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
+     desktop; eu quero a perfeição no desktop, perfeição mesmo".
+
+     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
+     de rolar. Foi o corte que permitiu a tela fechar na dobra.
+
+     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
+     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
 
   /* ── O PAPEL — e ele e UMA peca, e nao tres ─────────────────────────────────
      ⚠ ATE 18/08/2026 ELE ERA TRES. As mesmas quatro declaracoes — borda, raio,
@@ -1138,16 +1219,6 @@
 
   /* No celular a tabela perde o respiro lateral antes de perder coluna: nenhuma
      das cinco é dispensável, e esconder dado para caber é mentir por omissão. */
-  @media (max-width: 640px) {
-    .report__table th,
-    .report__table td {
-      padding: var(--space-1) 4px;
-    }
-
-    .report__country {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
 
   /* ── VARIACAO ───────────────────────────────────────────────────────────────
      O sinal e carregado por DUAS coisas — a seta e a cor — porque cor sozinha

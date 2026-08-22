@@ -236,18 +236,19 @@ número ao lado dela.
 
 ## 6. As guardas
 
-| guarda       | impede                                                                                                      |
-| ------------ | ----------------------------------------------------------------------------------------------------------- |
-| `material`   | segundo material; filtro fora do arquivo de material; falta do par `-webkit-`; sumiço do aviso de fps       |
-| `tokens`     | literal de cor solto; `color-mix`; par hex/rgb divergente; `var()` órfão; token sem consumidor              |
-| `cascade`    | regra fora de camada; `!important`; ordem de carregamento errada; `motion` deixar de ser a última           |
-| `motion`     | rede incompleta; `animation: none`; falta de alcance a pseudo-elementos e View Transitions; animação inline |
-| `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; dependência de teste vazando     |
-| `naming`     | `.js`; nome fora do padrão; CommonJS; `export default`; identificador acentuado                             |
-| `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                  |
-| `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                     |
-| `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                |
-| `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                    |
+| guarda       | impede                                                                                                                     |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `material`   | segundo material; filtro fora do arquivo de material; falta do par `-webkit-`; sumiço do aviso de fps                      |
+| `tokens`     | literal de cor solto; `color-mix`; par hex/rgb divergente; `var()` órfão; token sem consumidor                             |
+| `cascade`    | regra fora de camada; `!important`; ordem de carregamento errada; `motion` deixar de ser a última                          |
+| `motion`     | rede incompleta; `animation: none`; falta de alcance a pseudo-elementos e View Transitions; animação inline                |
+| `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; dependência de teste vazando                    |
+| `naming`     | `.js`; nome fora do padrão; CommonJS; `export default`; identificador acentuado                                            |
+| `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                                 |
+| `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                                    |
+| `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                               |
+| `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                                   |
+| `vocabulary` | a mesma frase da interface teclada duas vezes; e a frase declarada que **nenhum arquivo alcança** — 49 delas em 21/08/2026 |
 
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.

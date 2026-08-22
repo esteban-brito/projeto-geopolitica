@@ -59,19 +59,57 @@ test("A OBRIGATORIA E A SOMA DOS PISOS", () => {
   );
 });
 
-test("COMPRAR O PLENARIO INTEIRO E IMPOSSIVEL, e o centrao sozinho cabe e doi", () => {
-  /* A razao que sustenta `seatPrice`, e ela e uma PROPORCAO e nao um valor: quando
-     a escala do orcamento foi corrigida para o Brasil real, o preco da cadeira
-     caiu junto. Sem esta prova, a proxima recalibragem quebraria o desenho em
-     silencio — comprar o Congresso viraria jogada dominante, e a escolha central
-     do jogo (a quem pagar) deixaria de existir. */
+test("COMPRAR UMA MAIORIA NAO CABE NUM MES, e nenhuma bancada sozinha decide", () => {
+  /* A razao que sustenta `seatPrice`, e ela e uma PROPORCAO e nao um valor: quando a
+     escala do orcamento foi corrigida para o Brasil real, o preco da cadeira caiu
+     junto. Sem esta prova, a proxima recalibragem quebraria o desenho em silencio —
+     comprar o Congresso viraria jogada dominante, e a escolha central do jogo (a quem
+     pagar) deixaria de existir.
+
+     ⚠ ELA FOI REESCRITA EM 20/08/2026, quando os quatro blocos abstratos viraram NOVE
+     legendas com o desenho da Camara real. A afirmacao antiga era "o centrao sozinho
+     cabe e doi", e ela dependia de existir um bloco com 205 cadeiras — 40% do plenario
+     numa sigla so. Com nove legendas a maior tem 145, e a antiga afirmacao passou a ser
+     uma coincidencia de calibragem em vez de uma regra de desenho.
+
+     ⚠ E A AFIRMACAO NOVA E MAIS FORTE, e nao um afrouxamento para a prova passar: o que
+     o jogo precisa garantir nunca foi sobre UMA bancada, era sobre a MAIORIA. Agora ela
+     diz exatamente isso — **nenhuma soma de bancadas que chegue a 257 cabe no dinheiro
+     de um mes** —, e essa e a frase que mantem a negociacao existindo. Uma maioria
+     comprada a vista tornaria o Congresso um caixa eletronico. */
   const room = FISCAL.initialDiscretionary / 12;
   const chamber = SEATS * FISCAL.seatPrice;
-  const biggest = Math.max(...PARTIES.map(party => party.seats)) * FISCAL.seatPrice;
 
   assert.ok(chamber > room * 1.5, `o plenario custa ${chamber} e cabem ${room} no mes`);
-  assert.ok(biggest < room, `a maior bancada custa ${biggest} e nao cabe nos ${room} do mes`);
-  assert.ok(biggest > room * 0.5, `a maior bancada custa ${biggest}, barato demais para doer`);
+
+  /* A MAIORIA MAIS BARATA E A DAS MAIORES BANCADAS, porque o preco e por CADEIRA: a
+     mesma maioria custa o mesmo montada de qualquer jeito, e o que muda e quantas
+     portas o presidente precisa bater. Aqui interessa o piso do custo. */
+  const ordenadas = [...PARTIES].sort((a, b) => b.seats - a.seats);
+  let cadeiras = 0;
+  let custo = 0;
+  for (const party of ordenadas) {
+    if (cadeiras >= SIMPLE_MAJORITY) break;
+    cadeiras += party.seats;
+    custo += party.seats * FISCAL.seatPrice;
+  }
+
+  assert.ok(
+    cadeiras >= SIMPLE_MAJORITY,
+    `as bancadas somam ${cadeiras} e a maioria simples e ${SIMPLE_MAJORITY}`,
+  );
+  assert.ok(
+    custo > room,
+    `a maioria mais barata custa ${custo.toFixed(1)} e cabe nos ${room.toFixed(1)} do mes`,
+  );
+
+  /* ⚠ E NENHUMA BANCADA SOZINHA E MAIORIA. Com uma unica sigla passando de 257, o jogo
+     inteiro viraria uma negociacao so — e as outras oito seriam cenario. */
+  const maior = Math.max(...PARTIES.map(party => party.seats));
+  assert.ok(
+    maior < SIMPLE_MAJORITY,
+    `a maior bancada tem ${maior} cadeiras e fecha a maioria simples sozinha`,
+  );
 });
 
 test("O PISO NUNCA PASSA DO NIVEL HERDADO", () => {

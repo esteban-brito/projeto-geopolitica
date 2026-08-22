@@ -78,10 +78,15 @@
      o corpo de uma nota. É a mesma natureza de `--index` e `--neutral`, que são
      dado e não paleta. Todos os outros vinte e um tamanhos crus do projeto viraram
      token em 15/08/2026. */
+  /* ⚠ AS TRES DECLARACOES DE TIPOGRAFIA MORRERAM AQUI EM 21/08/2026 — corpo, entrelinha
+     e espacamento existiam para desenhar a escada de BLOCOS, que era texto. A peca virou
+     linha de SVG e a tipografia deixou de significar alguma coisa nela; o que sobra e a
+     TINTA, que o traco herda por `currentColor`.
+
+     A LARGURA VEM DA COLUNA: a trilha da faisca mede 4rem na grade da linha, e e o mesmo
+     valor que `.spark` traz por padrao — declarar `width: 100%` aqui seria um segundo
+     dono para uma medida so. */
   .ledger__spark {
-    font-size: 0.5rem;
-    line-height: 1;
-    letter-spacing: 0.14em;
     color: var(--ink-dim);
   }
 
@@ -116,21 +121,15 @@
      que se lê junto; a escada e a nota descem para a segunda. Nada e escondido:
      esconder para caber e mentir por omissao, e numa tela que so informa a
      omissao e a unica coisa que ela poderia fazer de errado. */
-  @media (max-width: 720px) {
-    .ledger__row {
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 2px var(--space-3);
-      padding: var(--space-2) 0;
-    }
+  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
+     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
+     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
+     desktop; eu quero a perfeição no desktop, perfeição mesmo".
 
-    .ledger__spark {
-      grid-column: 1;
-      white-space: nowrap;
-    }
+     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
+     de rolar. Foi o corte que permitiu a tela fechar na dobra.
 
-    .ledger__note {
-      grid-column: 2;
-      text-align: right;
-    }
-  }
+     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
+     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
 }

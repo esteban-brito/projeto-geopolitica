@@ -31,18 +31,21 @@ import { escapeHtml } from "./html.mjs";
 
 /**
  * @param {object} input
- * @param {string} input.eyebrow o rotulo de categoria; o que ESTA tela e
+ * ⚠ O OLHO MORREU EM 20/08/2026, e o pedido foi direto: "tire o máximo de texto
+ * inútil da tela". Ele imprimia uma categoria — "o resumo da república", "o poder
+ * legislativo" — acima de um título que já diz a mesma coisa em uma palavra, numa
+ * tela cujo menu já marca em destaque onde o jogador está. Três lugares dizendo a
+ * mesma coisa, e o mais caro deles ocupando o topo da lâmina.
  * @param {string} input.title o nome dela, e ele e sempre um nome
  * @param {{ label: string, value: string }} [input.reading] o que ela diz de si
  *   agora. `value` entra como HTML ja montado, porque em duas telas ele carrega
  *   marcacao — a escada de tendencia e o tom do veredito.
  * @returns {string}
  */
-export function headHtml({ eyebrow, title, reading }) {
+export function headHtml({ title, reading }) {
   return (
     `<div class="area__head">` +
     `<div>` +
-    `<p class="area__eyebrow">${escapeHtml(eyebrow)}</p>` +
     `<p class="area__value">${escapeHtml(title)}</p>` +
     `</div>` +
     (reading

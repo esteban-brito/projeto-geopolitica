@@ -58,8 +58,8 @@ test("o preco depende do assunto, e em sentidos opostos", () => {
   /* O caso que motivou a mudanca: a bancada liberal nao entrega a pauta
      economica e negocia costumes; o centrao faz o contrario. Se os dois
      andassem para o mesmo lado, um eixo so bastaria. */
-  const liberal = PARTIES.find(party => party.id === "direita-liberal");
-  const centrao = PARTIES.find(party => party.id === "centrao");
+  const liberal = PARTIES.find(party => party.id === "liberais");
+  const centrao = PARTIES.find(party => party.id === "uniao-progressista");
   assert.ok(liberal && centrao);
   assert.ok(
     liberal.venalityLiberty > liberal.venalityEconomic,

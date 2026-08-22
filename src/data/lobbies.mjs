@@ -197,9 +197,24 @@ export const PRESSURE_SCHEMA = {
 export const PRESSURE = {
   rise: 0.18,
   cool: 0.06,
-  boil: 60,
-  streetFloor: 20,
-  brokerBoil: 80,
+  /* ⚠ OS TRES SUBIRAM EM 20/08/2026, e a razao e JOGABILIDADE — declarada como tal
+     pelo responsavel: "voce pode inventar numeros por enquanto; o nosso foco e deixar
+     o jogo bom de verdade, jogavel; depois eu peco uma boa pesquisa focando em
+     fidelidade". Fica registrado que estes tres sao ESCOLHA DE DIFICULDADE e nao
+     medicao, e que a pesquisa de fidelidade ainda os vai revisar.
+
+     ⚠ O QUE ELES CONSERTAM ESTA MEDIDO: com a Camara de nove legendas, um governo de
+     MANUTENCAO — que aperta o orcamento ate caber no teto e paga so a base — via a
+     ruptura politica abrir no mes 12 e caia no mes 50, no ultimo mes do mandato. A
+     garantia de desenho deste projeto e a oposta e esta escrita numa prova: "a queda
+     tem de ser alcancavel por um governo RUIM e inalcancavel por um MEDIANO".
+
+     ⚠ E A MARGEM ERA FINA DEMAIS ANTES DISSO, o que e um defeito por si: o mediano
+     caia no mes 52 contra um limite de 50. Dois meses de folga nao e desenho, e
+     coincidencia — qualquer recalibragem futura a consumiria sem ninguem ver. */
+  boil: 68,
+  streetFloor: 16,
+  brokerBoil: 86,
   demandAt: 30,
   spite: 0.25,
 };

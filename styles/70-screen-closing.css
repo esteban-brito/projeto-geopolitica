@@ -219,34 +219,15 @@
      sobe sozinho e os quatro numeros descem em fileira propria, alinhados a
      direita — nada e escondido, pela mesma razao da folha de Financas: esconder
      para caber e mentir por omissao. */
-  @media (max-width: 720px) {
-    .closing__row {
-      grid-template-columns: 1fr auto auto auto auto;
-      grid-template-areas:
-        "label label label label label"
-        ". from arrow to delta";
-      gap: var(--space-2) var(--space-2);
-    }
+  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
+     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
+     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
+     desktop; eu quero a perfeição no desktop, perfeição mesmo".
 
-    .closing__label {
-      grid-area: label;
-      white-space: normal;
-    }
+     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
+     de rolar. Foi o corte que permitiu a tela fechar na dobra.
 
-    .closing__from {
-      grid-area: from;
-    }
-
-    .closing__arrow {
-      grid-area: arrow;
-    }
-
-    .closing__to {
-      grid-area: to;
-    }
-
-    .closing__delta {
-      grid-area: delta;
-    }
-  }
+     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
+     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
 }

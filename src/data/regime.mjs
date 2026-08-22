@@ -66,11 +66,21 @@ export const SEATS = REGIME.seats;
 export const SIMPLE_MAJORITY = Math.floor(SEATS / 2) + 1;
 
 /* MAIORIA QUALIFICADA E OUTRO JOGO, e a diferenca nao e de grau.
-   Duas bancadas grandes somam maioria simples com folga — esquerda mais centrao
-   dao 313, centrao mais direita liberal dao 309. O que nenhuma dupla consegue e
-   ENTREGAR 308, porque adesao de bancada nunca e integral nem com verba cheia e
-   lealdade cheia. Quem confundir as duas coisas vai concluir que uma dupla
-   basta, e vai calibrar o jogo errado. */
+
+   ⚠ E ESTA NOTA FOI REESCRITA EM 20/08/2026, quando os quatro blocos abstratos viraram
+   NOVE legendas com o desenho da Camara real. A versao antiga dizia "duas bancadas
+   grandes somam maioria simples com folga — esquerda mais centrao dao 313" e isso
+   deixou de ser verdade no mesmo commit: **nenhuma DUPLA de bancadas chega a 257**. As
+   duas maiores somam 251, seis votos abaixo da maioria simples.
+
+   Isso e propriedade de desenho e nao acaso, e ela melhorou o jogo: toda maioria exige
+   pelo menos TRES portas, e tres portas com precos diferentes e a negociacao existindo.
+   Ha uma prova cobrando as duas metades em `tests/suites/agenda.mjs`.
+
+   O que continua valendo da nota antiga e a distincao que ela existia para fazer:
+   somar CADEIRAS nao e ENTREGAR VOTOS, porque adesao de bancada nunca e integral nem
+   com verba cheia e lealdade cheia. Quem confundir as duas coisas vai concluir que uma
+   coligacao basta, e vai calibrar o jogo errado. */
 export const QUALIFIED_MAJORITY = Math.ceil(SEATS * REGIME.qualifiedShare);
 
 /* QUANTAS ASSINATURAS AFASTAM UM PRESIDENTE. 342 em 513. */

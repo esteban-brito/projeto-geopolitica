@@ -252,12 +252,30 @@ export const ARCHETYPE_SCHEMA = {
    NAO e chute e a RAZAO entre elas: o presidente da Camara arrasta mais que
    qualquer lider, porque o poder dele nao vem da bancada — vem da mesa. */
 
+/* ── DE QUE BANCADA SAI CADA CARGO ────────────────────────────────────────────
+   ⚠ A DISTRIBUICAO FOI REFEITA EM 20/08/2026, com as nove legendas. Antes QUATRO dos
+   oito arquetipos saiam do mesmo bloco, e o resultado era cinco partidos sem uma unica
+   pessoa dentro — inclusive o MAIOR deles, com 145 cadeiras. Uma bancada grande sem
+   rosto e uma bancada que o jogador nao tem como negociar: o inbox nao recebe carta
+   dela, o sinete nao existe, e ela vira uma barra que se arrasta.
+
+   Agora cada cargo sai de onde ele sairia num Congresso de verdade: a presidencia da
+   Camara vai para a maior bancada, a do Senado para a federacao de caciques regionais,
+   a relatoria do orcamento para quem detem a fatia do orcamento, e a chefia da Casa
+   Civil para o partido do proprio presidente.
+
+   ⚠ E OS IDS CONTINUAM DIZENDO "centrao", o que e DIVIDA DECLARADA e nao descuido:
+   `speaker-centrao` mora hoje na bancada liberal-conservadora. O id do arquetipo e a
+   chave da verba prometida a cada pessoa no estado salvo, entao renomear atravessa o
+   save e so vale junto com uma migracao. E o que ele descreve — o arquetipo — nao
+   mudou: quem preside a Camara e o sujeito de bancada grande que negocia pauta por
+   cargo, chame-se a bancada como se chamar. */
 /** @type {ReadonlyArray<Archetype>} */
 export const ARCHETYPES = [
   {
     id: "speaker-centrao",
     label: "cacique da Mesa",
-    bloc: "centrao",
+    bloc: "liberais-conservadores",
     office: "speaker",
     /* Ele nao e o centro do proprio bloco: quem chega a presidencia da Camara
        chega negociando com todos, e isso o puxa para o meio do plenario. */
@@ -272,7 +290,7 @@ export const ARCHETYPES = [
   {
     id: "senate-centrao",
     label: "chefe do Senado",
-    bloc: "centrao",
+    bloc: "democratas-nacionais",
     office: "senate",
     economicShift: -4,
     libertyShift: -6,
@@ -283,7 +301,7 @@ export const ARCHETYPES = [
   {
     id: "rapporteur-centrao",
     label: "relator de orçamento",
-    bloc: "centrao",
+    bloc: "uniao-progressista",
     office: "rapporteur",
     /* O relator e o cargo mais tecnico e o mais caro: ele nao entrega votos, ele
        entrega TEXTO — e por isso o alcance dele e baixo e o preco nao. */
@@ -296,7 +314,7 @@ export const ARCHETYPES = [
   {
     id: "leader-esquerda",
     label: "líder da esquerda",
-    bloc: "esquerda",
+    bloc: "trabalhistas-unidos",
     office: "leader",
     economicShift: -6,
     libertyShift: 5,
@@ -309,7 +327,7 @@ export const ARCHETYPES = [
   {
     id: "leader-centro-esquerda",
     label: "líder do centro",
-    bloc: "centro-esquerda",
+    bloc: "socialistas",
     office: "leader",
     economicShift: 6,
     libertyShift: -4,
@@ -320,7 +338,7 @@ export const ARCHETYPES = [
   {
     id: "leader-centrao",
     label: "líder do Centrão",
-    bloc: "centrao",
+    bloc: "social-municipalista",
     office: "leader",
     economicShift: 3,
     libertyShift: 2,
@@ -331,7 +349,7 @@ export const ARCHETYPES = [
   {
     id: "leader-direita-liberal",
     label: "líder liberal",
-    bloc: "direita-liberal",
+    bloc: "liberais",
     office: "leader",
     economicShift: 5,
     libertyShift: -8,
@@ -364,7 +382,7 @@ export const ARCHETYPES = [
   {
     id: "chief-of-staff",
     label: "chefe da Casa Civil",
-    bloc: "centrao",
+    bloc: "trabalhistas-unidos",
     office: "chief",
     economicShift: 0,
     libertyShift: 0,

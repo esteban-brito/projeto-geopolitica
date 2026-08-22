@@ -144,4 +144,10 @@ export { compose, honour, spendOf } from "../application/agenda.mjs";
    e o que a tela refaz sem pensar, e no dia em que o vencimento deixar de ser
    `due - month` — prorrogacao, prazo em dias, feriado legislativo — a tarja de
    gravidade passaria a mentir sem nada acusar. A tela pergunta. */
-export { left } from "../application/mail.mjs";
+/* ⚠ `silences` e a decima quinta porta, e ela nasceu de uma RECUSA. Um dossie
+   externo pediu que o botao de avancar travasse com pergunta urgente na mesa; o
+   projeto nao tem muro, tem preco. Ela responde exatamente a pergunta que o botao
+   precisa fazer — "o que este clique decide por mim?" — e a resposta e `settle`
+   filtrada, e nao uma regra nova: a tela que perguntasse `left(carta) <= 0` por fora
+   estaria refazendo a conta do motor pela oitava vez neste projeto. */
+export { left, silences } from "../application/mail.mjs";

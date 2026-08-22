@@ -67,8 +67,34 @@ export const ANSWER_TIME = 2;
             correndo vira mais um deles.
 
    Com um, o mes que fechou continua na mesa enquanto o novo comeca — que e onde
-   papel de verdade fica — e some quando deixa de ser novidade. */
-export const KEEP = 1;
+   papel de verdade fica — e some quando deixa de ser novidade.
+
+   ⚠ E ELE SUBIU DE 1 PARA 24 EM 21/08/2026, por decisao do responsavel: "o empilhamento
+   deve servir pra sempre — quando eu pulo o mes as mensagens do mes anterior devem
+   continuar". Com um mes de retencao, a bandeja se esvaziava sozinha e a PILHA nunca
+   tinha o que empilhar: o freio era o relogio, e nao o espaco.
+
+   ⚠ A TROCA E DE FREIO, E NAO DE DOUTRINA. O "NUNCA" acima continua recusado — 48 meses
+   de "a Mesa pautou" empilhados sao o mural que este arquivo veio consertar. O que mudou
+   e QUEM freia: agora e a pilha da tela, que mostra onze e nunca descarta uma pergunta,
+   e nao um contador de meses que apagava papel que o jogador ainda nao tinha lido.
+
+   ⚠ E ISSO SO E SEGURO PORQUE O PESO ESTA NA COR. Numa bandeja indiferenciada, vinte e
+   quatro cartas sao um mural; numa em que o movimento grande grita e o pequeno sussurra,
+   sao um arquivo que se varre de relance. A frase e do responsavel: "e so fazer um jogo
+   de cores, o olho vai focar no que importa". */
+export const KEEP = 24;
+
+/* QUANTAS CARTAS FECHADAS O ESTADO CARREGA, no maximo.
+   ⚠ ELE EXISTE PORQUE `KEEP` DEIXOU DE SER UM FREIO. Com um mes de retencao, o freio era
+   o relogio; com vinte e quatro, a bandeja acumula de verdade — e um mandato de 48 meses
+   com tres relatorios por mes chegaria a 144 papeis no save se ninguem contasse.
+
+   VINTE E QUATRO E O DOBRO DA PILHA VISIVEL, e a folga e de proposito: a pilha mostra
+   onze e protege as perguntas, entao ela precisa de mais candidatos do que cabem para
+   ter o que escolher. Guardar exatamente onze faria o teto da tela virar o teto do
+   ESTADO, e ai mudar o recuo de uma linha apagaria correspondencia. */
+const CARRY = 24;
 
 /**
  * A CARTA DA EMENDA — a unica pergunta que o jogo faz hoje.
@@ -98,6 +124,9 @@ export function amendment({ bill, month, except, saved }) {
     from: null,
     lever: null,
     level: null,
+    was: null,
+    now: null,
+    weight: null,
     answer: null,
     closedAt: null,
   };
@@ -155,6 +184,9 @@ export function demand({ lobby, program, level, month }) {
     from: lobby.id,
     lever: program.id,
     level,
+    was: null,
+    now: null,
+    weight: null,
     answer: null,
     closedAt: null,
   };
@@ -183,6 +215,9 @@ export function notice({ kind, id, subject, month }) {
     from: null,
     lever: null,
     level: null,
+    was: null,
+    now: null,
+    weight: null,
     /* O AVISO JA CHEGA FECHADO: nao ha o que responder, e por isso ele envelhece a
        partir do mes em que chegou. */
     answer: null,
@@ -217,14 +252,26 @@ export function notice({ kind, id, subject, month }) {
  * ferida. Sem isso, uma pressao oscilando em volta do limiar escreveria uma carta
  * por mes, e o inbox viraria o mural que este arquivo inteiro veio consertar.
  *
+ * ⚠ E ELE GANHOU TRES ESPECIES NOVAS EM 21/08/2026 — `ceiling`, `minority` e `boiling`
+ * —, e a razao e a mesma medicao de sempre, refeita: mesmo DEPOIS de o mercado ganhar
+ * verbo, a bandeja fecha com **1,2 cartas por mes** num governo passivo, e **20 de 24
+ * meses tem uma carta ou nenhuma**. O responsavel viu antes de eu medir: "estou avancando
+ * os meses e nada esta sendo empilhado".
+ *
+ * ⚠ E AS TRES SAO TRAVESSIA, e nao noticia inventada. O motor ja decide as tres todo mes
+ * — o teto que fecha, a base que perde a maioria, o grupo que passa do ponto de fervura —
+ * e nenhuma delas tinha como chegar ao jogador que nao estivesse olhando o cartao certo.
+ * Nada aqui e vocabulario gerado: e o mundo entregando o que ele ja fez.
+ *
  * @param {object} input
- * @param {"rupture" | "siege"} input.kind
- * @param {string} input.id - qual ruptura, ou o cerco
+ * @param {"rupture" | "siege" | "ceiling" | "minority" | "boiling"} input.kind
+ * @param {string} input.id - qual ruptura, qual grupo, ou o cerco
  * @param {string} input.subject
  * @param {number} input.month
+ * @param {string | null} [input.from] o id de quem assina, quando ha alguem
  * @returns {Letter}
  */
-export function alarm({ kind, id, subject, month }) {
+export function alarm({ kind, id, subject, month, from = null }) {
   return {
     id: `${kind}:${id}`,
     kind,
@@ -234,11 +281,76 @@ export function alarm({ kind, id, subject, month }) {
     bill: null,
     except: [],
     saved: null,
+    /* ⚠ `from` DEIXOU DE SER SEMPRE NULO em 21/08/2026, e so a fervura o usa — mas o que
+       ele guarda e o FATO de quem ferveu, e nao quem assina a carta. Um lobby nao tem
+       rosto neste jogo: ele nao esta no elenco, nao tem sinete e nao tem cargo. Quem
+       assina continua sendo a Casa Civil, como em toda carta que o mundo escreve; o nome
+       do grupo vai no ASSUNTO, que e onde ele lê como manchete: "O baixo clero passou do
+       ponto". Guardar o id aqui e o que permite a view achar a pressao dele na caldeira
+       sem adivinhar pelo texto. */
+    from,
+    lever: null,
+    level: null,
+    was: null,
+    now: null,
+    weight: null,
+    answer: null,
+    /* JA CHEGA FECHADO, como todo aviso: nao ha o que responder aqui. */
+    closedAt: month,
+  };
+}
+
+/**
+ * O RELATORIO DE UM DOMINIO — o mundo dizendo, todo mes, o que se mexeu nele.
+ *
+ * ⚠ ELE E A TERCEIRA NATUREZA DE CARTA, e a primeira que chega SEM nada ter cruzado um
+ * limiar. As duas anteriores respondiam a eventos: alguem pautou, alguem emendou, uma
+ * ferida abriu. Esta responde ao TEMPO — e e por isso que ela e a unica capaz de encher
+ * uma bandeja, porque evento e raro e mes e todo mes.
+ *
+ * ⚠ E ELA REVERTE UMA REGRA REGISTRADA DUAS VEZES NESTE PROJETO, por decisao do
+ * responsavel. A regra era: "uma linha que so diz que nada aconteceu ensina o olho a pular
+ * a linha inteira", e ela matou duas legendas com razao. O que ele apontou e que ela vale
+ * para linhas INDIFERENCIADAS — e ele esta certo: numa bandeja em que o peso esta na cor, o
+ * olho varre por intensidade e nao por leitura, que e exatamente como o inbox do Football
+ * Manager funciona. As palavras dele: "e so fazer um jogo de cores, o olho vai focar no que
+ * importa".
+ *
+ * ⚠ E O RELATORIO SO NASCE SE HOUVE MOVIMENTO. "Nada aconteceu" continua nao virando
+ * carta — o que mudou e o que conta como acontecer: antes era cruzar um limiar, agora e se
+ * mover de forma material. Quem decide o que e material sao os limiares medidos em
+ * `turn.mjs`, e nao esta funcao.
+ *
+ * @param {object} input
+ * @param {"street" | "seats" | "vault"} input.kind qual dominio escreve
+ * @param {number} input.month
+ * @param {number} input.was o valor com que o mes comecou
+ * @param {number} input.now o valor com que ele fechou
+ * @param {boolean} input.heavy se o movimento foi grande o bastante para gritar
+ * @param {Record<string, number>} [input.attach] o anexo — dado ja pesado pelo motor
+ * @returns {Letter}
+ */
+export function report({ kind, month, was, now, heavy, attach }) {
+  return {
+    /* O ID CARREGA O MES, ao contrario do alarme: o relatorio de marco e o de abril sao
+       duas noticias, e nao a mesma ferida reaberta. */
+    id: `${kind}:${month}`,
+    kind,
+    month,
+    due: null,
+    subject: null,
+    bill: null,
+    except: [],
+    saved: null,
     from: null,
     lever: null,
     level: null,
+    was,
+    now,
+    weight: heavy ? "high" : null,
+    attach: attach ?? null,
     answer: null,
-    /* JA CHEGA FECHADO, como todo aviso: nao ha o que responder aqui. */
+    /* JA CHEGA FECHADO: nao ha o que responder a um relatorio. */
     closedAt: month,
   };
 }
@@ -313,7 +425,18 @@ export function settle({ mail, orders, month }) {
     next.push(letter);
   }
 
-  return { mail: next, resolved };
+  /* ⚠ O TETO DO ESTADO CORTA PELO COMECO, e nunca uma pergunta: `next` chega em ordem de
+     chegada, e o que sai e o papel mais velho JA FECHADO. Cortar sem separar apagaria uma
+     pergunta com prazo correndo no mes em que a bandeja enchesse — e a tela cobraria o
+     preco de um silencio que o jogador nunca teve chance de quebrar. */
+  const asking = next.filter(letter => letter.due !== null && letter.answer === null);
+  const closed = next.filter(letter => !asking.includes(letter));
+  const kept = closed.slice(-Math.max(0, CARRY - asking.length));
+
+  return {
+    mail: next.filter(letter => asking.includes(letter) || kept.includes(letter)),
+    resolved,
+  };
 }
 
 /**
@@ -332,4 +455,44 @@ export function settle({ mail, orders, month }) {
 export function left(letter, month) {
   if (letter.due === null || letter.answer !== null) return null;
   return letter.due - month;
+}
+
+/**
+ * O QUE ESTE FECHAMENTO DECIDE PELO SILENCIO — e ele e o PRECO de avancar o mes.
+ *
+ * ── POR QUE ELE EXISTE, e a razao e uma recusa ──────────────────────────────
+ * Um dossie externo pediu que o botao de avancar o mes **travasse** enquanto
+ * houvesse pergunta urgente sem resposta. Isso e um muro, e a regra de fundacao
+ * deste projeto e a oposta: tudo tem preco, nada tem muro. Nunca `if (proibido)
+ * return` — a pergunta certa e QUANTO CUSTA, e nao se pode.
+ *
+ * ⚠ E O PROPRIO DOSSIE ESCREVE A VERSAO CERTA na frase seguinte a do muro: "o tempo
+ * cobra seu preco". O preco ja existia e ja estava modelado desde o ciclo 9 — prazo
+ * vencido fecha em silencio, e o silencio ACEITA a emenda do relator e RECUSA a
+ * exigencia do lobby. O que faltava nao era mecanica: era a barra de cima DIZER isso
+ * antes do clique, porque informacao que chega depois da decisao e recibo.
+ *
+ * ── POR QUE ELA NAO CONTA NADA POR FORA ─────────────────────────────────────
+ * ⚠ A TENTACAO ERA ESCREVER `left(letter) <= 0` NA TELA, e ela e exatamente a
+ * familia de defeito mais cara deste projeto, com sete ocorrencias medidas: a view
+ * refaz a conta do motor, as duas concordam hoje e divergem no dia da primeira
+ * mudanca. Prorrogacao de prazo, feriado legislativo, uma carta que vence no fim do
+ * ano — qualquer uma delas e o botao passa a prometer um preco que o mes nao cobra.
+ *
+ * Ela nao tem regra propria: ela **e** `settle`, filtrada. Quem decide o que o
+ * silencio alcanca continua sendo um lugar so, e no dia em que essa regra mudar o
+ * botao muda junto sem ninguem se lembrar dele.
+ *
+ * ⚠ E ELA LE AS ORDENS DO MES, e nao so o estado: o jogador que ja marcou "aceitar"
+ * numa pergunta ja decidiu, e cobrar o preco dela na barra de cima seria a tela
+ * anunciando uma consequencia que o turno nao vai executar.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Letter>} input.mail
+ * @param {Record<string, string>} input.orders o que o jogador marcou neste mes
+ * @param {number} input.month
+ * @returns {Letter[]} as cartas que este mes fecha sem resposta
+ */
+export function silences({ mail, orders, month }) {
+  return settle({ mail, orders, month }).resolved.filter(letter => letter.answer === "silence");
 }

@@ -4,7 +4,399 @@
 > leia este arquivo e depois `docs/standards.md`. O nome deste arquivo é estável
 > de propósito: ponteiro com data envelhece e obriga a mover arquivo.
 
-## ▶ COMECE AQUI — estado em 18/08/2026
+## ▶ COMECE AQUI — estado em 22/08/2026
+
+**A décima quarta sessão fechou o item que a retomada anterior deixou aberto, e a
+ordem dele é uma só:** _"nós temos que fechar a UI, design, css, e todo esse tipo de
+coisa primeiro, depois mexemos nos sistemas e motores e mecânicas do jogo"_. Está
+verde — `validate` (**234 provas · 11 guardas · 46 provas sintéticas**), `walk`,
+`screen` (**+5,5 fps**) e as capturas olhadas.
+
+⚠ **E O ITEM QUE ELA VEIO FECHAR ESTAVA ENTERRADO NO MEIO DESTE ARQUIVO**, e não na
+seção de retomada. Custou uma sessão inteira de estudo achá-lo. **A seção de retomada
+é o topo, e nada que a próxima sessão precise fazer pode morar em outro lugar.**
+
+- ✔ **OS DOIS BLOCOS DA CAIXA DE ENTRADA VIRARAM UM MÓVEL SÓ** — pedido dele:
+  _"só quero que fique grudado os dois blocos da caixa de entrada, e os dois liquid
+  glass padronizados e simétricos"_. Costura **0px**, degrau **0**, raios
+  complementares. ⚠ **E o que quebrava a simetria não era o vão — eram os RAIOS**;
+- ✔ **E A TERCEIRA LEITURA É DELE, e é melhor que as duas que eu ofereci:** _"dá pra
+  ser marrom liquid glass o bloco da direita, e o da esquerda só liquid glass?"_. Eu
+  tinha posto a escolha como marrom **ou** vidro, e ela nunca foi excludente. Ver
+  [_O ofício virou vidro marrom_](#o-oficio-virou-vidro-marrom-e-a-densidade-e-medida--22082026);
+- ⚠ **NASCEU A SEGUNDA METADE DA GUARDA `vocabulary`: a FRASE ÓRFÃ — e ela achou 49.**
+  Entre elas `approvalParts`, que era a **chave das três cores** do termômetro da rua:
+  o Gabinete desenhava verde, azul e vermelho **sem legenda nenhuma**, e a legenda
+  existia, escrita, a um caminho de distância. Ver
+  [_A frase órfã ganhou guarda_](#a-frase-orfa-ganhou-guarda-e-ela-achou-49--22082026);
+- ⚠ **E TRÊS DEFEITOS ANTERIORES APARECERAM NO CAMINHO, e os três estavam consumados:**
+  a carta que anuncia que a **sua lei passou** era uma folha em branco; o corpo do
+  ofício **nunca subiu** para `--text-verdict` porque uma regra duplicada dez linhas
+  abaixo o revertia; e `stripJsComments` **não preservava as quebras de linha**, então
+  toda acusação da guarda `vocabulary` apontava para a linha errada.
+
+### ⚠ E A ÁRVORE QUE ESTE ARQUIVO DECLARAVA VERDE NÃO ESTAVA VERDE
+
+`src/application/turn.mjs` estava gravado em **CRLF** e o `prettier` reprovava —
+`npm run validate` falhava no passo `format`. O git não vê diferença nenhuma (ele já
+normaliza para LF), então era defeito de disco e não de conteúdo. **Mas o handoff
+dizia "verde" e o portão dizia o contrário**, e quem confia no handoff é a próxima
+sessão. Normalizado.
+
+### ▶ O QUE EU FARIA AGORA — a ordem que ele mandou guardar, em 22/08/2026
+
+**UI primeiro. Enquanto a interface não fechar, motor não se toca** — isso suspende os
+achados 37, 47, 52, 53 e 54 inteiros, e com eles a densidade da Caixa de Entrada.
+
+**1. ▶ PASSAR O MÉTODO DESTA SESSÃO NAS OUTRAS OITO TELAS — é a recomendação forte, e a
+razão é aritmética.** Em **duas telas** ele achou **quatro defeitos consumados**: a carta
+sem corpo, a regra duplicada que revertia uma decisão dele, a chave de gráfico que nunca
+chegou, e o `stripJsComments` que errava o endereço da acusação. **Nenhum deles era
+visível a tipo, guarda ou prova**, e todos eram a mesma família — _a decisão foi tomada e
+não chegou à tela_. Congresso, Finanças, Área, O Estado, Mesa, Fecho e Relatório **nunca
+passaram por essa peneira**. Se a densidade se repetir, há mais uma dúzia lá.
+
+⚠ **O MÉTODO, e ele não é leitura:**
+
+- **medir no navegador** e comparar o valor COMPUTADO com o que a prosa do arquivo
+  promete — foi assim que os 13,6px apareceram onde a decisão dizia 15,2;
+- **caçar seletor declarado duas vezes** no mesmo arquivo. Mesma especificidade, e a
+  última vence — em silêncio, e nenhuma guarda alcança;
+- **abrir a captura**, sempre. Três defeitos já atravessaram tipo, guarda e cem provas
+  para morrer na imagem;
+- **desconfiar de prosa confiante.** Duas vezes nesta sessão a justificativa escrita
+  descrevia um estado que o código não tinha mais.
+
+**2. ▶ OS SEIS ZEROS DA ABERTURA.** Os quatro grupos da caldeira e duas das três da
+Trindade abrem o jogo com **"0" e régua vazia**. Os zeros são honestos, e este projeto já
+consertou esse mesmo defeito **duas vezes** trocando o zero por uma frase (_"R$ 0,0 bi
+livre no mês"_ virou o hero do que CABE; o peso zero virou _"não pesa no capital"_). É a
+primeira tela que um jogador novo vê, é pura tela, e cai dentro do item 1.
+
+**3. ▶ O ACHADO 40 — e ele é decisão DELE, não trabalho parado.** _"Quem trava a
+obrigatória"_ caiu de três para um a pedido dele, e ficou escrito que _"o segundo e o
+terceiro estão a um parâmetro de distância no dia em que a coluna couber"_. **Ela cabe:**
+805 de 935, com 130px de folga. A pergunta não é de layout — é **se um só basta**: um
+governo que não corta previdência vê a mesma linha por 48 meses, e aí ela vira legenda
+estática, que é o defeito que as frases de desejo da caldeira acabaram de pagar.
+
+**4. ▶ OS DOIS ESTADOS VAZIOS DO CONGRESSO** ocupam ~400px juntos. Não é defeito: é
+decisão de peso, e ela nunca foi tomada de propósito.
+
+**5. ▶ A METÁFORA NA VARREDURA DE VOCABULÁRIO.** A regra _"rótulo nomeia a coisa, a
+metáfora mora na prosa"_ nunca foi passada sistematicamente. ⚠ **Metade dela acabou de ser
+feita por máquina** — a guarda nova mata a frase morta —, mas **a metáfora continua sendo
+revisão humana, e não tem casador honesto**.
+
+**6. ⛔ NÃO REABRIR:** o vazio de 430px dentro do ofício (decisão dele — a folha estica), o
+rubor vermelho do peso (decisão dele), e a sparkline dos quatro vitais (construída e
+reprovada pela captura em dois tamanhos — achado 44). E **nada de motor**: mexer em limiar
+de carta agora é girar um número que a reformulação vai girar de novo.
+
+## O ofício virou vidro marrom, e a densidade é medida — 22/08/2026
+
+**As três edições que a retomada anterior deixou especificadas foram aplicadas**, e a
+quarta é dele. Medido a 1440×980, mês 15:
+
+| peça                | antes                  | agora                               |
+| ------------------- | ---------------------- | ----------------------------------- |
+| vão entre os blocos | 16px                   | **0**                               |
+| raio do índice      | 16px nos quatro cantos | **16px só do lado de fora**         |
+| raio do ofício      | 3px (`--radius-paper`) | **16px só do lado de fora**         |
+| aresta do ofício    | `--paper-edge`         | **`--glass-edge`, igual ao índice** |
+| bisel               | sombra projetada       | **`--bevel-fine`, igual ao índice** |
+| degrau de altura    | 0                      | 0                                   |
+
+⚠ **O QUE QUEBRAVA A SIMETRIA NÃO ERA O VÃO — ERAM OS RAIOS.** Cada bloco herdava a
+curvatura do próprio material. Colar sem igualar teria deixado as duas curvas **se
+tocando**, que é pior que o vão. E a aresta direita do índice morreu para virar costura:
+duas bordas de 1px encostadas leem como um fio de 2px, que é o defeito dos _"dois
+separadores para uma fronteira"_ que já matou os cinco fios das legendas.
+
+### ⚠ E "OS DOIS LIQUID GLASS" NÃO ERA EXCLUDENTE COM O MARROM — a leitura é dele
+
+Eu tinha oferecido **(a)** só a moldura padroniza, o ofício continua papel, ou **(b)** o
+ofício vira vidro e a linha selecionada vira junto, reabrindo a confusão que a rodada de
+21/08 existiu para desfazer. Ele respondeu com a terceira: _"dá pra ser marrom liquid
+glass o bloco da direita, e o da esquerda só liquid glass? os dois igualmente
+padronizados?"_
+
+⚠ **E O QUE DESTRAVA É QUE O ÍNDICE TAMBÉM NÃO TEM FILTRO.** `glass-support` foi tentado
+nele em 21/08 e custou **17,9 fps**. O que faz o índice ler como vidro é a **FORMA**:
+aresta clara de 1px, bisel, e uma demão translúcida sobre a lâmina. Então _"os dois
+padronizados"_ é: **mesma aresta, mesmo bisel, mesmo raio — e a TINTA diferente.** Um
+material, duas tintas, que é literalmente o que `20-material.css` declara sobre os três
+níveis: _"o que distingue os níveis é só a DENSIDADE do fundo"_.
+
+**Medido em `npm run screen`: +5,5 fps** contra o braço de controle. Não é filtro — é
+forma, e forma não custa.
+
+### ⚠ E A DENSIDADE DO MARROM É MEDIDA, e o piso tem razão física
+
+Amostrado no **pixel renderizado**, no topo e na base do ofício:
+
+| alfa     | topo         | base         | gradiente | veredito                       |
+| -------- | ------------ | ------------ | --------- | ------------------------------ |
+| 1,00     | 43,36,28     | 43,36,28     | 0,0%      | tinta chapada, sem luz nenhuma |
+| 0,88     | 39,34,29     | 44,37,33     | 0,3%      |                                |
+| **0,78** | **36,32,30** | **44,37,35** | **0,5%**  | ← o escolhido                  |
+| 0,66     | 32,30,31     | 42,36,37     | 0,6%      | ⛔ **o marrom INVERTE**        |
+
+⚠ **O QUE REPROVA 0,66 NÃO É O CONTRASTE — ele fica em 9,64 — É A MATIZ.** Em `32,30,31`
+o azul da lâmina ultrapassa o verde e o pergaminho vira **cinza frio**: a substância
+deixa de ser papel. É exatamente o que a prosa de `--paper` registra ter custado um
+revisor externo em 15/08 — _"leu o bloco de leis como caixas de contorno fininho, sem
+perceber que havia papel ali"_.
+
+**Contraste no par renderizado: 9,51:1**, contra os 4,5 da norma e os 7 do nível AAA. E
+`--paper-rgb` nasceu para isso — sem o par, o marrom só existe opaco, e opaco ele é tinta
+e não vidro.
+
+## A frase órfã ganhou guarda, e ela achou 49 — 22/08/2026
+
+⚠ **O CASO QUE A CRIOU É O PIOR DELES:** o termômetro da rua desenha três barras
+empilhadas — verde, azul, vermelho — com **um número só ao lado**, e não havia chave
+nenhuma. Sem ela não havia como saber se `53%` era a verde, a vermelha ou a soma. É o
+defeito exato que este projeto já pagou uma vez: foi ele que criou a legenda do arco, e
+quando o arco morreu a lição ficou escrita — _"desenho de várias cores precisa de chave"_
+— e a fita a herdou. **O termômetro nunca recebeu, e as duas peças moram na mesma coluna.**
+
+⚠ **E O VOCABULÁRIO JÁ EXISTIA, SEM CONSUMIDOR NENHUM.** `approvalParts` estava em
+`strings.mjs` com as três palavras certas e **nunca foi lido por lugar algum**. `tokens`
+acusa token órfão, `orphans` acusa folha órfã — **frase órfã não tinha guarda**, e foi o
+único eixo em que cinquenta peças mortas se acumularam.
+
+⚠ **E A PRIMEIRA VERSÃO DA CHAVE FOI REPROVADA PELA MEDIÇÃO:** com _"Regular"_ no meio ela
+media 235px numa barra de 192 e **vazava 44px** para dentro da coluna do número. A regra
+que corrige já estava escrita na fita — _"a chave de uma rampa é o nome dos dois POLOS"_ —
+e com dois ela fecha exata: 1135→1327, igual à barra. A palavra do meio continua viva na
+descrição da barra, que passou a nomear as três fatias em vez de uma.
+
+### O que a guarda mede, e por que ela tem DUAS auditorias com fomes diferentes
+
+A duplicata precisa só de `strings.mjs`; a órfã precisa do **projeto inteiro**, porque o
+consumidor mora fora. Por isso a segunda só roda com o entrypoint no mapa — e isso **não é
+conveniência**: sem a condição, as provas sintéticas da duplicata (que entregam só o
+arquivo de frases) passariam a ser acusadas de orfandade, e ficariam verdes mesmo se a
+detecção de duplicata quebrasse. **Uma prova que passa pela razão errada não prova nada.**
+
+⚠ **E UM CAMINHO ALCANÇADO COBRE TUDO ABAIXO DELE.** Quem escreve
+`labelOf(UI.inbox.why, letter.kind)` passa a **tabela**, e as nove frases dentro dela são
+alcançadas sem que nenhuma apareça em código. Exigir a folha ali faria a guarda acusar
+exatamente o padrão que este projeto usa para não ter nove `case`.
+
+### ⚠ E AS 49 SÃO ARQUEOLOGIA DE PEÇA MORTA
+
+`cabinet.archLoyal` e as duas irmãs sobreviveram ao arco que morreu em 15/08;
+`cabinet.inbox`, `cabinet.congress` e `cabinet.vault` sobreviveram às cinco legendas que
+saíram em 20/08; `area.propose` sobreviveu ao orçamento granular — **e a prosa ao lado
+dela já dizia que ela tinha saído**. Prosa que registra a morte não apaga a chave, e a
+chave morta é o que faz a próxima sessão achar que a peça existe. Três tabelas inteiras
+ficaram vazias e saíram: `context`, `situation` e `inbox.reportUnit`.
+
+⚠ **E A PRIMEIRA REMOÇÃO FOI FEITA ERRADA, E O ERRO VALE REGISTRADO:** o script casou por
+**nome de folha** e apagou homônimas legítimas — `nav.congress` e `TERMOS.month` morreram
+junto com `cabinet.congress`. **O caminho é único; o nome não é.** Refeito pelo número de
+linha que a própria guarda reporta, com conferência de que a linha declara mesmo aquela
+chave antes de apagar.
+
+### ⚠ E ISSO SÓ FUNCIONOU DEPOIS DE CONSERTAR UM DEFEITO DE SEIS GUARDAS
+
+`stripJsComments` apagava o comentário **inteiro, quebras de linha e tudo** — enquanto a
+irmã de CSS preserva desde que nasceu, com a razão escrita ao lado: _"para que o número da
+linha continue valendo"_. O preço era invisível porque quase nenhuma guarda reporta linha.
+**`vocabulary` reporta**, e num arquivo em que a prosa é maior que o código toda acusação
+dela apontava para uma linha que não era a da frase — às vezes duzentas linhas acima.
+**A acusação estava certa e o endereço, errado**, que é a pior forma de estar certo.
+
+## A carta que anuncia que a sua lei passou era uma folha em branco — 22/08/2026
+
+`passed` e `rejected` eram as **duas únicas cartas do jogo com `body: ""`**. Numa folha que
+estica até 630px isso é cabeçalho, assunto e **430px de papel vazio** — e a espécie que
+sofria é a do **desfecho** do texto que o jogador escreveu, negociou e pagou. O momento de
+maior recompensa do jogo chegava como a carta mais vazia dele.
+
+As duas passaram a dizer o que a mecânica faz depois do voto, e **só a aprovação tem
+porta** (`Ver a lei em vigor` → O Estado): a derrubada não criou nada, e um botão ali
+mandaria o jogador olhar a ausência de uma coisa.
+
+⛔ **O QUE NÃO ENTROU É O PLACAR DA VOTAÇÃO.** `notice` não guarda voto, e lê-lo do estado
+vivo faria uma carta de março imprimir a Câmara de agosto. **Isso é motor**, e motor não se
+mexe enquanto a interface não fecha.
+
+### ⚠ E o corpo do ofício NUNCA subiu para `--text-verdict`
+
+`.tray__open .letter__lines` estava declarada **duas vezes no mesmo arquivo**, com dez
+linhas entre uma e outra: a de cima subia o corpo para `--text-verdict`, a de baixo o
+devolvia para `--text-body`. Mesma especificidade, e a última vence.
+
+**Medido no navegador: 13,6px onde a decisão dizia 15,2.** O _"esticou a tela, estique o
+texto também"_ de 21/08 foi implementado, justificado em quinze linhas de prosa — e
+revertido em silêncio pela regra logo abaixo. ⚠ **Nenhuma guarda alcança isso:** `orphans`
+acusa regra sem produtor e as duas tinham; `tokens` acusa token sem consumidor e os dois
+são consumidos. **Duas declarações do mesmo seletor no mesmo arquivo são sempre isso.**
+
+### A medição da Caixa de Entrada, num mandato passivo de 24 meses
+
+| leitura                            | medido    |
+| ---------------------------------- | --------- |
+| linhas visíveis na bandeja (média) | **6,3**   |
+| cartas **novas** por mês           | **0,75**  |
+| meses com 0 ou 1 carta nova        | **18/24** |
+| meses 11→24 sem nada novo          | **11/14** |
+| perguntas em 45 meses              | **0**     |
+
+⚠ **A BANDEJA PARECE CHEIA E ESTÁ PARADA.** Do mês 10 em diante ela fica travada em 7
+linhas e quase nunca muda — `KEEP = 24` mantém as velhas e as novas param de chegar. É o
+achado 54 pelo outro lado, e **a decisão continua sendo dele**: baixar os limiares de volta,
+ou dar voz a quem ainda não escreve. **A segunda é motor.**
+
+## O estado anterior — 21/08/2026
+
+**A décima segunda sessão nasceu de um dossiê externo** que o responsável trouxe inteiro
+— _"leia, estude e absorva; vamos discutir antes de editar qualquer coisa"_. Ele pede
+demolir o Gabinete e reconstruí-lo como uma **Sala de Guerra**, com referência declarada
+em Football Manager, Paradox e Geo-Political Simulator. Está verde — `validate` (**230
+provas**) e `walk` rodados no fim, e as capturas olhadas.
+
+⚠ **ELA FOI CORTADA NO MEIO por limite de sessão, e a retomada em 21/08 começou por onde
+ela parou:** a auditoria da última mudança tinha nomeado dois defeitos — _"os blocos da
+direita perderam qualquer separação e as duas colunas deixaram de ter a mesma altura"_ —
+e o limite estourou antes de medi-los. **Nada se perdeu** — nem uma linha de código: o
+trabalho todo estava no disco, sem commit. Os dois foram medidos e consertados, e estão na
+seção
+[_As cinco legendas saíram_](#as-cinco-legendas-saíram-e-a-saída-achou-dois-defeitos--20082026).
+O que veio DEPOIS deles é a seção logo abaixo.
+
+O que ele pediu, e o que aconteceu com cada pedido, está na seção
+[_O dossiê da Sala de Guerra_](#o-dossiê-da-sala-de-guerra--20082026). O resumo em três
+linhas:
+
+- ✔ **a Caixa de Entrada virou master-detail** — índice à esquerda, ofício aberto à
+  direita. Decisão do responsável: _"faça como o dossiê recomenda"_;
+- ✔ **o botão de avançar o mês passou a dizer o PREÇO de avançar** — e **NÃO** a travar.
+  A recusa é doutrinária e está escrita em três lugares no código;
+- ✔ **o nome da tela deixou de ser o herói tipográfico** — degrau novo, `--text-screen`.
+
+### E a segunda metade da sessão foi de DESENHO, com carta branca dele
+
+_"Deixe tudo mais minimalista e bonito. Principalmente essa parte do congresso. Te dou
+carta branca pode reestruturar, reformular, redesenhar o que quiser."_
+
+- ✔ **o hemiciclo virou FITA** — e a ideia do formato é dele. Ver a seção
+  [_A fita do plenário_](#a-fita-do-plenário--20082026-e-ela-nasceu-de-uma-ideia-do-responsável);
+- ✔ **a página caiu de 1347px para 1108** numa janela de 980, sem apagar uma leitura
+  sequer. A coluna da direita era um cartaz e virou outliner;
+- ✔ **o Congresso parou de repetir** — _"sem histórico com o seu governo"_ saía sete
+  vezes na mesma tela.
+
+- ✔ **o Congresso saiu do dialeto de cartão** e a escavação da bandeja clareou;
+- ✔ **o MERCADO DEIXOU DE SER MUDO**, e com ele nasceu o dilema que faltava — duas
+  cartas que se contradizem na mesma bandeja. Ver
+  [_O mercado deixou de ser mudo_](#o-mercado-deixou-de-ser-mudo--20082026);
+- ✔ **a CÂMARA GANHOU NOVE LEGENDAS** com o desenho da Câmara real, todas fictícias —
+  ver [_A Câmara ganhou nove legendas_](#a-câmara-ganhou-nove-legendas--20082026);
+- ✔ **o GABINETE PAROU DE ROLAR** — 1347px viraram 980 numa janela de 980, sem apagar uma
+  leitura. O celular saiu de escopo por decisão dele, e foi isso que destravou o canvas.
+  Ver [_O desktop virou o único alvo_](#o-desktop-virou-o-único-alvo-e-a-tela-passou-a-caber--20082026);
+- ✔ **as CINCO LEGENDAS e os CINCO FIOS saíram do Gabinete**, a pedido dele — _"retira as
+  escritas caixa de entrada e o congresso, e as barras pretas também que ficam embaixo das
+  escritas; padronize e simetria em tudo"_. ⚠ **E o corte cobrou dois defeitos de regra
+  vencida, medidos e consertados em 21/08** — a bandeja parou de esticar e os quatro
+  blocos da direita encostaram. Ver
+  [_As cinco legendas saíram_](#as-cinco-legendas-saíram-e-a-saída-achou-dois-defeitos--20082026).
+
+⚠ **DA PARTE 3 DO DOSSIÊ — a materialidade — o que faltava JÁ EXISTIA, e isso só se
+descobriu medindo:** o grão de filme está no substrato a 5% de opacidade desde a nona
+sessão, e o gel de situação tinge a tela inteira conforme o país piora. O trilho de verba
+já é uma calha escavada com pino de metal escovado. **O que de fato faltava era o
+contrário do que o dossiê pedia:** não somar textura, e sim tirar o material opaco que
+tapava a que já havia.
+
+⚠ **O QUE SOBROU DELA, e é o único item:** o **contorno da tela quando o cerco abre**. Há
+carimbo no cartão da CALDEIRA e frase na carta, mas a lâmina não muda quando um processo
+de impeachment está correndo — e esse é o estado que decide a partida.
+
+### E a décima terceira sessão fez o Gabinete parar de desenhar a própria caixa — 21/08/2026
+
+**Pergunta dele, e ela tinha uma resposta que ninguém tinha tentado:** _"não é só diminuir o
+tamanho da caixa de entrada? E deixar o Gabinete todo mais minimalista, com menos textos e
+mais botões liquid glass?"_ Está verde — `validate` (**234 provas**), `walk`, `screen` e as
+capturas olhadas.
+
+- ✔ **A ESCAVAÇÃO DA CAIXA DE ENTRADA SAIU INTEIRA**, e a altura ficou. Encolher já tinha
+  sido revertido duas vezes; parar de DESENHAR a caixa nunca tinha sido tentado, e é o
+  passo seguinte do _"menos tinta dá mais vidro"_ de 20/08;
+- ✔ **o vidro desceu para o que se aperta** — `glass-action` era usado UMA vez no app
+  inteiro. **Custo medido: delta de 0,2 fps contra o braço de controle**;
+- ✔ **cinco linhas de "e quem trava" viraram uma frase**, e ⚠ isso é perda de resposta
+  declarada — ver o achado **40**;
+- ⚠ **A AUDITORIA EXTERNA ACHOU UM NÚMERO QUE EXISTIA NO MOTOR E NUNCA CHEGOU À TELA:**
+  `weight`, a fatia da ruptura econômica que cada lobby carrega. **As forças de ordem têm
+  peso ZERO** e a tela desenhava para elas a mesma régua do mercado. Ver a seção
+  [_O Gabinete parou de desenhar a própria caixa_](#o-gabinete-parou-de-desenhar-a-própria-caixa--21082026);
+- ⚠ **e o ACHADO 38 CADUCOU sozinho:** a coluna da direita fecha em 805 de 935, com 130px
+  de folga e rolagem zero. **A decisão que estava parada com ele não precisa mais ser
+  tomada** — ver o achado **41**;
+- ⚠ **E UMA CAPTURA DELE ACHOU UMA TELA QUE MENTIA** — a Caixa de Entrada vazia dizia _"o
+  primeiro mês ainda não foi resolvido"_ em junho de 2027, com três meses resolvidos atrás.
+  **A causa é uma recarga de página:** `last`, o relatório do turno, não vai para o save.
+  Consertado com prova; **a perda da leitura do mês continua aberta** — ver o achado **46**;
+- ✔ **e a BARRA DE ROLAGEM LATERAL do índice saiu** — ela era uma reticência que nunca
+  funcionou: `text-overflow: ellipsis` sem `min-width: 0` empurra em vez de cortar, e
+  11px de estouro bastavam para abrir a barra;
+- ✔ **e a FAÍSCA DEIXOU DE SER DECORATIVA em três telas** — a escada de blocos virou
+  polilinha de SVG, e a janela virou uma só. ⚠ **Medir isso achou algo maior:** quatro dos
+  cinco indicadores de Finanças movem **menos de uma unidade de vinte em dois anos** — ver
+  o achado **47**, que é o mais fundo desta sessão;
+- ⛔ **o ACHADO 46 fecha como RECUSA:** guardar o mês no save custaria cinco campos nulos
+  em nove espécies de carta, e o que se perde é um aviso, não uma pergunta;
+- ✔ **A CAIXA DE ENTRADA FOI AO FOOTBALL MANAGER buscar quatro peças** — o não lido, a
+  razão de cada carta ter chegado, o botão que nomeia, e a PILHA COM TETO que ele pediu.
+  ⚠ **Metade do que o FM faz nós já fazíamos**, e o botão de avançar daqui é melhor que o
+  de lá: o `Continue` deles trava, o nosso diz o preço. Ver
+  [_A Caixa de Entrada foi ao Football Manager_](#a-caixa-de-entrada-foi-ao-football-manager-buscar-quatro-peças--21082026);
+- ✔ **A LÂMINA PASSOU A REAGIR AO CERCO** — moldura bordô pulsando quando um processo
+  está aberto. Era o último item da Parte 3 do dossiê da Sala de Guerra;
+- ✔ **e o MUNDO GANHOU TRÊS TRAVESSIAS** — o teto que fecha, a base que perde a maioria,
+  o grupo que ferve. ⚠ **E a medição depois diz o que o pedido dele de fato exige:**
+  travessia é rara por definição, e densidade tipo Football Manager pede **relatório
+  periódico por delta**, que é ciclo próprio. Ver
+  [_O cerco passou a mudar a tela_](#o-cerco-passou-a-mudar-a-tela-e-o-mundo-passou-a-escrever--21082026);
+- ✔ **A CAIXA DE ENTRADA ENCHEU: de 1,2 para 8,5 cartas por mês.** Entraram três
+  RELATÓRIOS MENSAIS — a rua, a base e o caixa —, com seis limiares medidos e o peso na
+  cor. ⚠ **Foi uma frase dele que destravou:** _"é só fazer um jogo de cores, o olho vai
+  focar no que importa"_ — e ela desmontou uma recusa minha apoiada numa regra registrada
+  duas vezes. Ver
+  [_A caixa encheu_](#a-caixa-encheu-e-quem-destravou-foi-uma-frase-dele--21082026);
+- ✔ **E A CARTA GANHOU ANEXO: o jogo passou a se explicar.** SONDA calculava sete termos
+  por classe e jogava todos fora; agora a carta da rua traz a tabela — **D/E vive de
+  carestia, A/B vive de economia**, e isso nunca tinha sido dito. ⚠ **A causa veio de um
+  print do Football Manager:** a prosa da mensagem de lá tem duas linhas, e o que enche o
+  painel é o ANEXO. Ver
+  [_A carta ganhou ANEXO_](#a-carta-ganhou-anexo-e-o-jogo-passou-a-se-explicar--21082026).
+
+### ⚠ MAS A MEDIÇÃO ACHOU DUAS COISAS QUE VALEM MAIS QUE OS TRÊS CONSERTOS
+
+**1. O MUNDO QUASE NÃO PERGUNTA, e o número é este: num governo que joga ATIVO cortando
+UMA alavanca por pauta, passaram-se 30 MESES sem uma única carta que pergunte.** Não é
+defeito: é a regra de `reports` em `passage.mjs`, escrita e justificada — o relator só
+emenda texto que machuca **duas ou mais** alavancas, porque emendar exige o que sobra.
+
+A consequência não estava escrita em lugar nenhum: **um jogador cauteloso — que mexe numa
+coisa de cada vez — nunca vê a caixa de entrada perguntar nada em quatro anos.** A única
+pergunta do jogo fica atrás de um comportamento que ninguém ensina. Ver o achado **37**.
+
+**2. O VAZIO DA CAIXA DE ENTRADA NÃO É DELA.** Medido a 1440×980, antes de qualquer
+mudança: a bandeja fechava em **899px de altura com 242px de conteúdo — 657px mortos**, e
+ela é o maior objeto do Gabinete. A altura nunca foi escolha dela: a coluna da direita
+empilha 302+232+255+110 = **exatamente 899**, e a bandeja estica para acompanhar.
+
+⚠ **E o master-detail RESHAPED o vazio, não o matou:** hoje são 591px, e eles continuam
+vindo da coluna vizinha. Encolher a bandeja já foi tentado e revertido na décima primeira
+sessão, com razão registrada. Ver o achado **38**.
+
+## O estado anterior — 18/08/2026
 
 **A décima primeira sessão foi sobre uma coisa só, e ela foi pedida assim:** _"o que eu
 também realmente quero é que o jogo fique minimamente jogável hoje"_. Está verde —
@@ -200,7 +592,37 @@ npm run validate   # verde de ponta a ponta é obrigatório antes de dizer "pron
 4. ✔ **a padronização da interface** — feita depois disso, a pedido dele. Ver a seção
    _A varredura de padronização_.
 
-### ▶ E O QUE EU FARIA NA PRÓXIMA SESSÃO, nesta ordem
+### ▶ E O QUE EU FARIA NA PRÓXIMA SESSÃO, nesta ordem — revista em 20/08/2026
+
+⚠ **A ordem de 18/08 abaixo continua válida no conteúdo, mas o item 1 dela venceu** (ver
+achado 39: o achado 30 já estava medido). A ordem de hoje:
+
+1. ▶ **OS DOIS LOBBIES MUDOS, e agora eles são o item 1 por uma razão nova.** Deixaram de
+   ser "os dois decorativos" e passaram a ser **a única saída barata para o achado 37**: o
+   jogo tem uma pergunta só, e ela mora atrás de um comportamento que ninguém ensina. Um
+   lobby que exige por conta própria não depende de o jogador escrever texto grande.
+   ⚠ **Não force os dois na carta que existe:** a exigência de piso funciona porque
+   "devolva o que você cortou" tem um número derivado atrás; um teto e uma torneira não
+   têm, e inventá-los seria o número inventado que este projeto recusa. Cada um precisa de
+   verbo próprio;
+2. ▶ **A DECISÃO DO ACHADO 38 é dele, e não minha.** A coluna da direita não cabe na
+   dobra por densificação — o teto medido é ~144px de 367. Fechar exige dizer o que sai da
+   tela, e o candidato é "Aprovação por renda". **Pergunte antes de cortar**;
+3. ▶ **terminar a varredura de vocabulário nas dez telas.** A regra que matou _"as placas
+   tectônicas"_ e _"a rua"_ — rótulo nomeia a coisa, a metáfora mora na prosa — passou em
+   três casos a mais em 18/08, mas **não foi passada sistematicamente**. É barata e não
+   toca em motor;
+4. ▶ **a materialidade do dossiê**, que é a Parte 3 dele e a única que ficou inteira de
+   fora: textura sutil no fundo, relevo nos elementos que se clicam, e o contorno âmbar da
+   tela quando o risco de queda está crítico. Não toca em motor, não inventa número, e é
+   exatamente o pedido antigo do responsável — _"tirar essa cara de site de investimentos"_;
+5. ▶ **os DOIS ESTADOS VAZIOS do Congresso** ocupam ~400px juntos numa tela de 1900. Não é
+   defeito: é decisão de peso, e ela nunca foi tomada de propósito;
+6. ▶ recalibrar a tramitação (achados **22** e **28**), e os achados **26**, **32**,
+   **33**, **35** e **36**; depois o [ciclo 8](cycles/08-o-mapa-e-o-rastro.md) e as
+   partes B e C do [ciclo 7](cycles/07-o-congresso-tem-cara.md).
+
+### ▶ A ORDEM DE 18/08, que a de cima revisa
 
 1. ▶ **MEDIR O ACHADO 30 antes de tocar em qualquer lobby.** O país passou a se degradar
    na décima sessão, e o setor produtivo e as forças de ordem podem ter deixado de ser
@@ -321,6 +743,1321 @@ retomada previa ao mandar consertar o 31 antes dele.
 de equilíbrio. **Isso deixou de ser um defeito**: ele paga no único lugar que importa,
 que é a cadeira. É a tese do ciclo 10 cumprida — _"não se conserta com número, se
 conserta com risco"_.
+
+## A carta ganhou ANEXO, e o jogo passou a se explicar — 21/08/2026
+
+Queixa do responsável: _"o bloco esquerdo é muito pequeno, mal dá pra ler, e o bloco
+direito é grande demais pra uma mensagem tão pequena"_ — com um print da caixa de entrada
+do Football Manager.
+
+**Medido antes de propor qualquer coisa:**
+
+| peça                 | medida                                           |
+| -------------------- | ------------------------------------------------ |
+| a bandeja            | 659 × 630px                                      |
+| o índice             | **208px**, assunto em 12,5px cortado em 3 linhas |
+| o documento          | 435px                                            |
+| a carta              | 435 × 191px                                      |
+| **o texto da carta** | **196 × 22px**                                   |
+| vazio abaixo dela    | 439px de 630                                     |
+
+⚠ **O texto de uma carta ocupava 1% da área da bandeja.**
+
+### ⚠ E o print derrubou a explicação óbvia
+
+A divisão índice/documento no FM é **35/65**; aqui era **32/66**. **A proporção já estava
+certa.** O que difere é que **no FM a caixa de entrada É A TELA** — o índice dele tem 415px
+absolutos porque a janela inteira é dele; aqui ela é uma coluna de um painel.
+
+⚠ **E a prosa da mensagem do FM tem DUAS LINHAS** — _"Joel Méndez esteve particularmente
+impressionante"_ —, tão curta quanto as nossas. **O que enche o painel dele é um ANEXO:**
+um cartão de jogador e uma tabela de nove linhas. **O painel daqui não era grande demais:
+ele estava esperando o anexo.**
+
+### ✔ O índice: corpo maior, corte menor
+
+`--text-note` → `--text-body` (12,5 → 13,6px) e o corte de 3 linhas para 2. Alargar seria
+tirar do documento, que ia receber o anexo — então o conserto é o corpo e o corte, e não a
+largura.
+
+⚠ **E NÃO É UMA LINHA, que é o que o FM usa:** lá o assunto é manchete — _"Méndez
+estreia-se a marcar pelo México"_ —, e aqui ele carrega o verbo e o nome do texto:
+_"Devolvi o seu texto com uma emenda: Cortar atenção básica · e mais 1"_. Com uma linha o
+jogador leria _"Devolvi o seu texto com u…"_, que é pior do que não mostrar.
+
+⚠ **E o teto da pilha caiu de 9 para 8**, porque o corpo maior levou o pior caso de 66 para
+70px. **Ele já foi 11.** Este número não se conserta lendo prosa: quem o derruba é a prova
+do passeio, e foi ela que o pegou das duas vezes.
+
+### ✔ O anexo: SONDA passou a contar a conta que já fazia
+
+⚠ **`step()` calculava sete termos por segmento e jogava todos fora.** Cinco notas
+nacionais — carestia, emprego, serviços, ordem, economia —, pesadas de forma **diferente
+por classe**, menos a promessa não honrada e o desgaste do cargo. Ela devolvia só o número
+final, e a tela mostrava `23%` sem ter como dizer mais nada.
+
+**Agora ela devolve `notes`, `betrayal`, `wear` e `weighed`** — cada nota já pesada por
+segmento. ⚠ **E pesada LÁ, e não na view:** multiplicar nota por peso do lado de cá daria
+dois lugares fazendo a mesma conta, e o segundo divergiria no dia em que um peso mudasse —
+que é o dia em que o anexo precisa estar certo.
+
+**O que sai na tela, medido:**
+
+|            | carestia | emprego | serviços | ordem | economia | soma |
+| ---------- | -------- | ------- | -------- | ----- | -------- | ---- |
+| Classe D/E | **21**   | 9       | 13       | 4     | 0        | 47   |
+| Classe C   | **16**   | 12      | 8        | 6     | 3        | 44   |
+| Classe A/B | 8        | 3       | 3        | 11    | **22**   | 48   |
+
+**D/E vive de carestia; A/B vive de economia.** A textura política inteira do jogo estava
+calculada desde que SONDA nasceu e **nunca tinha sido dita**.
+
+⚠ **E É TABELA, E NÃO GRÁFICO.** Cinco notas em cinco cores exigiriam uma chave, e
+_"desenho de várias cores precisa de chave"_ é regra registrada aqui — a legenda do arco
+custou um dia inteiro. Uma tabela com o nome em cima de cada coluna não precisa de nenhuma.
+**A maior de cada linha ganha peso**, e é ela que faz a tabela ler de relance: sem
+destaque, cinco números por linha são cinco números.
+
+**A carta foi de 191 para 342px.**
+
+### ⚠ E o campo do anexo é UM, e genérico, de propósito
+
+`attach` é um `Record<string, number>` — um mapa de números, nunca prosa. As três espécies
+de relatório compartilham o mesmo campo, e o caixa e a base vão receber os seus. **Sete
+campos nulos em nove espécies foi exatamente o que fez a leitura do mês ser recusada no
+save hoje de manhã, e a lição não se repete.**
+
+### E depois a carta virou OFÍCIO, e a régua subiu duas vezes na mesma conversa
+
+Primeiro: _"tô achando ultra genérico todos os títulos e textos, horrível mesmo, tipo A rua
+se moveu, a base se moveu, parece tudo igual e feito por uma IA burra"_.
+
+⚠ **Ele está certo, e o defeito tem nome:** _"A rua se moveu"_ é um **rótulo de categoria**,
+e não uma frase. Ele diz de que assunto a carta trata, e não o que aconteceu — e três
+cartas com o mesmo verbo e sujeitos trocados leem como formulário preenchido.
+
+**Três rótulos viraram doze manchetes**, e nenhuma inventa nada: a carta já guardava a
+DIREÇÃO e o TAMANHO, e o que faltava era a view usar os dois para escolher o verbo.
+
+|       | caiu                    | caiu muito                     |
+| ----- | ----------------------- | ------------------------------ |
+| rua   | _A rua escorregou_      | _A rua virou contra o governo_ |
+| base  | _O Congresso escorreu_  | _A base desmanchou_            |
+| caixa | _Sobrou menos este mês_ | _O caixa apertou_              |
+
+⚠ **E o verbo é o trabalho.** "Se moveu" é o verbo de quem não quer se comprometer;
+"desmanchou", "escorregou", "respirou" dizem o tamanho antes do número.
+
+**Depois ele subiu de novo:** _"quero algo como uma mensagem de verdade para um presidente
+de verdade"_.
+
+⚠ **E isso não é manchete melhor — é VOZ.** O corpo era uma leitura de dado: _"caiu de 24
+para 23 de aprovação"_. Leitura de dado não é mensagem — **não tem quem fala, não tem para
+quem, e não diz o que aquilo significa.** O que sai agora:
+
+> **Presidente,**
+>
+> A pesquisa fechou o mês em **21%** de ótimo ou bom — **1** ponto abaixo do mês passado.
+>
+> O que sustenta o senhor é **economia**, e é na **Classe A/B** que ela pesa mais.
+>
+> A nota mais fraca é **ordem**, e ela puxa as três classes para baixo.
+
+⚠ **E CADA ORAÇÃO SE PRENDE A UM FATO, que é a parte difícil e a única que importa.** O
+número e a direção vêm da carta; a nota que mais sustenta é a maior **já pesada** e a mais
+fraca é a menor soma nacional — as duas de `attach`, que SONDA passou a produzir hoje. Uma
+frase sem número atrás seria a tela opinando, **e isso continua recusado mesmo com as ADRs
+reabertas: o que o projeto proíbe não é o modelo escrever, é a tela AFIRMAR o que o motor
+não sabe.**
+
+⚠ **E o vocativo é o que mais muda a leitura, por menos que ele custe.** _"Presidente,"_
+transforma um relatório num ofício — é a diferença entre um sistema exibindo estado e
+alguém escrevendo para alguém.
+
+### ✔ A data saiu de dentro do remetente, e as pesadas ganharam rubor
+
+Duas queixas dele, as duas certas:
+
+- **a data** vinha colada no fim de _"Denise Hollanda Cavalcanti · out · 2027"_, na mesma
+  tinta apagada e depois de um nome longo. Com uma carta por mês passava; com **vinte e
+  quatro guardadas**, a data é o que separa o mês passado do retrasado. Virou peça própria,
+  na fonte de REGISTRO — mês e ano são dado, e dado aqui se escreve com a serifa do arquivo;
+- **o peso virou VERMELHO e ganhou fundo.** Eu tinha escolhido latão com a razão de que
+  "movimento grande não é crise" — e a razão dele vence, porque o que ele pede não é
+  semântica de crise: **é que o olho encontre a linha sem procurar.** Com vinte e quatro
+  cartas, encontrar é o problema.
+
+⚠ **E os dois sinais vermelhos não se confundem, porque moram em canais diferentes:** o
+prazo vencendo é a **tarja** da esquerda, o movimento grande é o **fundo** da linha. Uma
+carta pode ter os dois — e aí ela é as duas coisas, o que é verdade. ⚠ E a linha aberta
+mantém o rubor **por baixo** do vidro: sem isso a marca sumiria debaixo do próprio clique.
+
+### ⚠ E a manchete precisou de TRÊS versões, com ele recusando as duas primeiras
+
+A segunda recusa veio com a palavra certa: _"pare com essa poesia, eu quero que seja algo
+TÉCNICO, vida real, humanizado"_.
+
+| versão | exemplo                 | o defeito                                           |
+| ------ | ----------------------- | --------------------------------------------------- |
+| v1     | _"A rua se moveu"_      | **rótulo de categoria** — diz o assunto, não o fato |
+| v2     | _"A rua escorregou"_    | **poesia** — diz o tamanho, e não diz QUANTO        |
+| v3     | _"Aprovação cai a 21%"_ | **notícia** — verbo e número                        |
+
+⚠ **O QUE SEPARA A TERCEIRA DAS OUTRAS DUAS É O NÚMERO NO TÍTULO.** Manchete de agência,
+assunto de ofício e linha de despacho têm todos a mesma forma: **o que mudou, para quanto.**
+_"A base desmanchou"_ é uma opinião sobre o tamanho; _"Base perde 157 cadeiras"_ é o fato, e
+quem forma a opinião é o leitor — **que é o que um documento técnico faz.**
+
+⚠ **E POR ISSO ELAS DEIXARAM DE SER FRASES PRONTAS.** O número muda todo mês, então a
+manchete se COMPÕE: o vocabulário guarda o verbo e a unidade, e a view monta com o valor da
+carta. Doze frases estáticas viraram seis verbos e uma composição.
+
+⚠ **E O PESO SAIU DA CHAVE DA MANCHETE.** Ele existia para escolher entre "escorregou" e
+"desmanchou" — e com o número no título ele não tem mais o que decidir: **157 é maior que 4
+sem ninguém precisar dizer.** Ele continua vivo onde serve: no rubor da linha do índice, que
+é onde o olho procura.
+
+⚠ **E a base fala em cadeiras GANHAS ou PERDIDAS, e as outras duas no NÍVEL.** _"Base perde
+157 cadeiras"_ é a notícia; _"Base cai a 229"_ é um placar. Já 21% de aprovação e R$ 11,3 bi
+são **o que o presidente tem**, e não o quanto mudou.
+
+### ✔ E o documento passou a esticar, revertendo uma regra escrita três vezes
+
+Pedido dele: _"o bloco direito deve ser esticado até o final, ficando simétrico e
+padronizado com o bloco esquerdo, não importa se o texto da mensagem vai ser pequeno"_.
+
+⚠ **A razão antiga era de MATERIAL — "papel não estica" — e a dele é de COMPOSIÇÃO, e é a
+que vale aqui.** O que a coluna mostra não é uma folha solta sobre uma mesa: são **duas
+colunas lado a lado**, e duas colunas que terminam em alturas diferentes leem como layout
+inacabado. É exatamente o argumento que já tinha ganhado do outro lado quando a bandeja
+passou a acompanhar a coluna da direita — _"um degrau no rodapé custa mais que o vazio
+dentro de um contêiner que se anuncia como contêiner"_.
+
+**Medido: carta 630px, índice 630px, diferença ZERO.**
+
+⚠ **E ESTICAR A FOLHA NÃO É ESTICAR O TEXTO.** `align-content: start` dentro da carta mantém
+remetente, assunto e corpo onde a leitura começa, e o que cresce é o papel embaixo deles.
+Sem essa linha, uma grade que recebeu altura distribui as linhas pelo espaço todo e um
+ofício de três linhas sai com trinta pixels entre cada uma — **o texto viraria uma escada**.
+
+⚠ **E SÓ A CARTA DA BANDEJA ESTICA.** `.letter` é a mesma peça em três telas — o fecho e o
+relatório também a usam —, e lá ela é item de fluxo que deve medir o próprio texto.
+Esticar seria dar a elas uma folha sem fundo definido.
+
+### E depois o TEXTO precisou ocupar a folha, e "esticar" não era o que parecia
+
+_"Esticou a tela, estique o texto também, tudo bem padronizado e simétrico."_
+
+⚠ **A saída óbvia estava errada, e é a primeira que vem à cabeça:** distribuir as linhas
+pelo espaço todo com `space-between`. Isso produz uma **ESCADA** — remetente no teto, corpo
+no meio, ação no rodapé, com cem pixels de nada entre cada um.
+
+**Texto não se distribui — texto se ANCORA, e um documento tem duas âncoras:** a leitura
+começa em cima, e a nota de rodapé mora embaixo. Três faixas, então: cabeça e assunto no
+topo, o corpo com o que sobrar, e o rodapé colado no pé. É a estrutura de qualquer papel
+timbrado, e ela vale exatamente porque **não é uma distribuição — é uma composição**.
+
+- **a nota de rodapé foi para o pé**, que é literalmente o nome dela. Ela vinha logo abaixo
+  do último parágrafo, e num ofício de três linhas dentro de 630px isso a deixava boiando
+  no terço de cima. `margin-top: auto` a empurra sem altura fixa e sem tocar no texto acima;
+- **o corpo cresceu um degrau.** Numa folha de 630px, 13,6px é corpo de aviso e não de
+  documento.
+
+### ⚠ E o degrau foi REUSADO, e não inventado — a primeira versão criava um token novo
+
+Eu ia criar um `--text-read` entre `body` e `name`. **Isso reabriria em silêncio o defeito
+que a escala existe para fechar:** a prosa dos tokens registra que as folhas usavam **onze
+tamanhos crus** fora dela, e que _"onze tamanhos entre 11px e 17px não formam hierarquia,
+formam ruído"_ — e a queixa que gerou aquela consolidação foi dele mesmo, _"as fontes estão
+estranhas e despadronizadas"_.
+
+`--text-verdict` é o degrau certo **por significado, e não por coincidência de valor**: ele
+é a voz que diz o que está em jogo, e a carta da Casa Civil é exatamente isso — o mês lido
+para o presidente. **Um degrau novo com o mesmo tamanho seria um segundo nome para a mesma
+coisa.**
+
+**Medido: carta 630px, rodapé a 25px do pé.**
+
+## A caixa encheu, e quem destravou foi uma frase dele — 21/08/2026
+
+⚠ **EU TINHA RECUSADO O RELATÓRIO PERIÓDICO por uma regra registrada duas vezes** — _"uma
+linha que só diz que nada aconteceu ensina o olho a pular a linha inteira"_ —, e ela matou
+duas legendas com razão. **A resposta dele desmontou a recusa em nove palavras:** _"é só
+fazer um jogo de cores, o olho vai focar no que importa"_.
+
+**E ele está certo.** A regra vale para linhas **indiferenciadas**. Numa bandeja em que o
+peso está na cor, o olho varre por **intensidade** e não por leitura — que é exatamente
+como o inbox do Football Manager funciona. É a segunda vez nesta sessão que uma razão dele
+vence uma recusa minha de desenho.
+
+### O que mudou, em três peças
+
+**1. TRÊS RELATÓRIOS MENSAIS** — a rua, a base e o caixa. Eles são a **terceira natureza de
+carta**: as duas anteriores respondiam a eventos, e esta responde ao **tempo**. É a única
+capaz de encher uma bandeja, porque evento é raro e mês é todo mês.
+
+⚠ **E "nada aconteceu" continua não virando carta.** O que mudou foi o que conta como
+acontecer: antes era cruzar um limiar, agora é **se mover de forma material**.
+
+⚠ **E OS SEIS LIMIARES SÃO MEDIDOS, e não escolhidos.** Movimento mensal absoluto num
+mandato passivo de 48 meses:
+
+| grandeza  | mediana | p75  | p90  | máx    | escreve | grita |
+| --------- | ------- | ---- | ---- | ------ | ------- | ----- |
+| aprovação | 0,00    | 1,00 | 1,00 | 8,00   | ≥ 1     | ≥ 4   |
+| base      | 2,00    | 4,00 | 4,00 | 158,00 | ≥ 3     | ≥ 10  |
+| caixa     | 0,31    | 0,43 | 0,49 | 0,52   | ≥ 0,3   | ≥ 1,0 |
+
+O primeiro número fica perto da **mediana** — é assim que a carta chega em cerca de metade
+dos meses de um governo passivo, e em quase todos de um ativo. O segundo fica perto do
+**máximo**: o mês em que a base perde dez cadeiras não pode ter a mesma cara do mês em que
+ela perde duas.
+
+**2. A TARJA DA ESQUERDA GANHOU UM SEGUNDO DONO** — e nunca os dois ao mesmo tempo. Numa
+carta com prazo ela é **tempo**; numa sem prazo, **peso**. Os dois respondem a mesma
+pergunta do olho — _"o quanto eu preciso me importar com esta linha?"_ —, e é por isso que
+um canal só serve aos dois. ⚠ O peso é **latão e não vermelho**: um movimento grande não é
+crise, e a paleta já gasta `--crisis` no prazo vencendo.
+
+**3. `KEEP` SUBIU DE 1 PARA 24, e o freio deixou de ser o relógio.** Pedido dele: _"o
+empilhamento deve servir pra sempre — quando eu pulo o mês as mensagens do mês anterior
+devem continuar"_. Com um mês de retenção a bandeja se esvaziava sozinha e **a pilha nunca
+tinha o que empilhar**. Agora quem freia é a pilha da tela, que mostra nove e **nunca
+descarta uma pergunta**. Um teto novo, `CARRY = 24`, impede o save de crescer sem conta.
+
+### O resultado, medido
+
+|                                | antes        | depois      |
+| ------------------------------ | ------------ | ----------- |
+| cartas visíveis por mês        | **1,2**      | **8,5**     |
+| meses com uma carta ou nenhuma | **20 de 24** | **1 de 24** |
+| cartas que gritam              | —            | **10%**     |
+
+### ⚠ E dois defeitos meus que só apareceram com a bandeja cheia
+
+**1. A PILHA GUARDAVA A CARTA VELHA E JOGAVA FORA A NOVA.** `state.mail` é cronológica e a
+pilha corta pelo fim: ela manteria a rua de março para sempre e descartaria a de hoje. Com
+uma carta por mês a ordem não aparecia. `newestFirst` inverte **entre iguais** — a pergunta
+continua na frente de tudo, porque ordenar por data poria um relatório de aprovação na
+frente de uma emenda com prazo correndo.
+
+**2. ⚠ O TETO DA PILHA ERA DO CASO TÍPICO, E NÃO DO PIOR — e quem o derrubou foi a prova
+do passeio**, no primeiro mês em que a bandeja de fato encheu: _"o índice rola 53px para
+baixo com 11 linhas — a pilha estourou"_. Onze vinha de dividir 630 por 54, a linha típica.
+Um assunto que quebra em duas linhas mede **66px**, e _"O baixo clero passou do ponto"_
+quebra. A conta certa é 630 ÷ 70 = **nove**.
+
+**Dimensionar pelo típico faz a pilha estourar exatamente no mês movimentado — que é o
+único mês em que ela precisava funcionar.** Duas linhas de folga num mês calmo não custam
+nada; uma barra de rolagem no mês em que tudo acontece custa a leitura.
+
+### ⛔ E o pedido de "uma boa IA humana e inteligente por trás" NÃO foi atendido como IA
+
+Ele pediu isso com estas palavras, e a resposta honesta é que **duas ADRs o proíbem**: a
+[0001](adr/) diz que a IA não entra no turno, e a [0002](adr/) que ela gera vocabulário e
+**nunca efeito**. Um modelo decidindo o que chega na caixa faria o jogo parar de se refazer
+da semente, e o mandato deixaria de ser reproduzível.
+
+⚠ **O QUE ELE QUER É OUTRA COISA, E ELA FOI FEITA: que o mundo pareça ter cabeça.** Isso
+não vem de um modelo no laço — vem do motor escrevendo o que ele já decidiu. As sete
+espécies de carta que entraram hoje são todas leitura de número que o turno produziu, e
+nenhuma delas inventa uma frase sobre um fato que não aconteceu. **Se ele quiser reabrir as
+ADRs, isso é decisão dele e não se resolve de passagem.**
+
+## O cerco passou a mudar a tela, e o mundo passou a escrever — 21/08/2026
+
+Duas frases do responsável, e a primeira derrubou uma afirmação minha: _"estou avançando os
+meses e nada está sendo empilhado"_ e _"a IA do jogo precisa ser aprimorada, quero que mais
+coisas apareçam na caixa de entrada todos os meses"_.
+
+⚠ **ELE VIU ANTES DE EU MEDIR, e o meu número estava mal escolhido.** Eu tinha reportado
+_"pico de 5 cartas contra um teto de 11"_ — e pico é o número errado para essa pergunta. O
+número certo: **média de 1,2 cartas por mês, com 20 de 24 meses tendo uma carta ou
+nenhuma.** O pico acontecia uma vez, no mês 46.
+
+### ✔ A lacuna 1 do dossiê fechou: a lâmina reage ao cerco
+
+Era o último item aberto da Parte 3 do dossiê da Sala de Guerra. Com um processo correndo
+havia carimbo na caldeira e frase na carta, e **a tela continuava idêntica ao mês
+tranquilo**.
+
+⚠ **ELE ENTRA POR ARESTA, E NÃO POR TINTA.** O gel de situação já tinge tudo por
+crise/estável/crescimento, e um quarto tom ali competiria com a leitura que o gel existe
+para dar. A aresta responde outra pergunta: o gel diz _"quão bem o país vai"_, a moldura diz
+_"há uma gaveta aberta"_.
+
+⚠ **E A COR É O BORDÔ DO CARIMBO, e não o vermelho de crise.** `--crisis` é o que JÁ deu
+errado; aqui a Câmara autorizou e o mandato continua. É a mesma cor que o botão de avançar
+usa quando o mês vai bater o carimbo por você — uma voz, uma cor. Ela pulsa em 9s, o mesmo
+passo do passeio da luz, e **`prefers-reduced-motion` tira o pulso e mantém a moldura**: ela
+é informação, não enfeite.
+
+### ✔ A lacuna 2 fechou como SÃ, e a Trindade é o instrumento mais saudável da tela
+
+Ela era a única leitura do Gabinete sem prova de que se move. Medida em 48 meses de governo
+passivo:
+
+| régua             | percorre | limiar                         |
+| ----------------- | -------- | ------------------------------ |
+| Opinião pública   | 44 → 12  | rompe abaixo de 16 ✔ atravessa |
+| Capital           | 0 → 65   | rompe acima de 50 ✔ atravessa  |
+| Base no Congresso | 0 → 100  | rompe acima de 86 ✔ atravessa  |
+
+**As três atravessam o próprio limiar sem o jogador fazer nada.** É o oposto do
+[achado 47](#achados-abertos--o-que-eu-veria-primeiro-na-próxima-sessão), em que quatro dos
+cinco indicadores de Finanças não movem uma unidade de vinte em dois anos.
+
+### ✔ Três travessias novas, e o mundo passou a falar nos meses que importam
+
+`alarmsOf` já era a peça certa — ela compara o antes com o depois e **só escreve
+transição**. Ganhou três:
+
+- **`ceiling`** — o teto do arcabouço fechou. É a primeira crise da lista de `situationOf`,
+  com a razão já escrita lá: _"sem discricionário não há emenda, e sem emenda a base não se
+  compra de volta"_. O jogo inteiro estreita nesse mês, e a única notícia disso era o gel
+  mudar de cor;
+- **`minority`** — a base cruzou a maioria simples **para baixo**. ⚠ É travessia e não
+  estado: um governo que abre em minoria não recebe carta, porque nada mudou. Assinada pelo
+  LÍDER, porque recompor é problema dele antes de ser do presidente;
+- **`boiling`** — um grupo passou do ponto de fervura. Uma por grupo, e não um aviso
+  agregado: **o mercado fervendo e o baixo clero fervendo pedem coisas opostas.**
+
+**Medido, com o texto que sai na tela:**
+
+> _"O baixo clero passou do ponto — 70 de 100, e o ponto de fervura é 68. E ele carrega 30%
+> do capital."_
+
+⚠ **E NENHUMA INVENTA NÚMERO.** As três o motor já decidia todo mês; o que faltava era elas
+chegarem a quem não estivesse olhando o cartão certo da coluna da direita.
+
+⚠ **E O `from` DA FERVURA NÃO É QUEM ASSINA.** Um lobby não tem rosto neste jogo — não está
+no elenco, não tem sinete, não tem cargo. O id guardado é o que deixa a view achar a pressão
+dele na caldeira sem adivinhar pelo texto; o nome vai no ASSUNTO, onde lê como manchete.
+
+### ⚠ E A MEDIÇÃO DEPOIS DIZ UMA COISA ESTRUTURAL QUE MUDA O PEDIDO DELE
+
+Com as três, a média foi de **1,2 para 1,3** cartas por mês. **No mês em que algo acontece a
+bandeja fecha com cinco cartas** — a captura do cerco mostra isso —, e nos meses calmos ela
+continua com uma.
+
+**A razão não é falta de travessias: é que travessia é RARA POR DEFINIÇÃO.** Uma ferida
+cruza uma vez. Nenhuma quantidade de limiares novos produz a densidade do Football Manager,
+porque **o inbox do FM não é feito de travessias — é feito de RELATÓRIOS PERIÓDICOS**: a
+tabela da liga, o relatório do olheiro, a lista de lesionados. Eles chegam toda semana e não
+dizem "nada aconteceu"; dizem "este é o número deste assunto agora".
+
+⚠ **O que produziria a densidade pedida é um mecanismo diferente, e ele é decisão dele:**
+uma carta por DOMÍNIO por mês, disparada por **delta** e não por nível — a Fazenda escreve
+quando a posição fiscal se moveu materialmente, a rua quando a aprovação se moveu, uma
+bancada quando a lealdade dela se moveu. Delta dispara com frequência (as coisas se mexem
+todo mês) sem disparar sempre (mês parado fica quieto). **É ciclo próprio**, e colide com uma
+regra registrada duas vezes — _"uma linha que só diz que nada aconteceu ensina o olho a
+pular a linha inteira"_ —, então o limiar de "material" é a decisão inteira.
+
+## A Caixa de Entrada foi ao Football Manager buscar quatro peças — 21/08/2026
+
+Pedido do responsável: _"quero que a caixa de entrada se assemelhe mais com a do Football
+Manager, pesquise sobre e me traga pelo menos 3 pontos aplicáveis"_ — e depois, a quarta,
+que é dele: _"empilhar as mensagens, aí elas vão se excluindo sozinhas quando a próxima
+ocuparia mais espaço do que a tela aguenta sem precisar rolar"_.
+
+⚠ **E METADE DO QUE O FM FAZ NÓS JÁ FAZÍAMOS**, o que precisa ser dito antes das novidades:
+master-detail, ordenação por urgência, acento vermelho no que vence, remetente com cara e
+ação dentro do item. **E o botão de avançar já era melhor que o de lá:** o `Continue` do FM
+vira `Must Respond` e **trava**; o nosso diz o **preço** e deixa passar.
+
+### 1. O ESTADO NÃO LIDO, e é ele que faz uma bandeja ser bandeja
+
+No FM o peso visual principal do índice é o item que ainda **não** foi aberto. Aqui uma
+carta recém-chegada tinha exatamente a mesma cara de uma lida três vezes.
+
+⚠ **E ELE NÃO ENTROU NO SAVE, e essa é a decisão que vale registrada.** Qual carta foi lida
+não move um número, não decide um mês e não muda um veredito — é registro de quem estava
+olhando. Pô-lo em `GameState` custaria um **bump de esquema**, e este save recusa versão
+diferente em vez de converter: o jogador perderia a partida em andamento para pagar por uma
+marca de leitura. **E o reducer tem uma ação só, de propósito** — uma segunda já foi
+proposta e recusada, e marcar carta como lida abriria esse caminho por um motivo muito
+menor.
+
+**A saída foi uma chave própria — `planalto:interface`.** O estado continua puro, a guarda
+de fronteiras continua valendo, e a leitura sobrevive ao F5, que era o único requisito real.
+
+⚠ **E "LIDA" SIGNIFICA "ESTEVE ABERTA NA TELA", e não "foi clicada"**: a bandeja abre a mais
+urgente sozinha, então exigir clique marcaria como não-lida justamente a carta que o jogador
+está lendo. Quem persiste é o entrypoint, lendo o `aria-current` que a bandeja já escreveu —
+recalcular ali qual carta abre seria o defeito recorrente número um deste projeto. **E o
+conjunto poda sozinho** contra as linhas que a bandeja mostrou, senão ele guardaria id de
+carta morta pelos 48 meses do mandato.
+
+### 2. ⚠ CADA CARTA DIZ POR QUE CHEGOU — e é a que mais casa com a doutrina daqui
+
+No FM cada mensagem tem um controle que _"indica por que você está recebendo isto"_. Neste
+projeto **todo número mostrado tem motor atrás**, e a carta era a única peça da tela que não
+explicava a própria existência: o jogador via a consequência e não a causa, e consequência
+sem causa é evento roteirizado — que é o que o ciclo 4 proíbe em texto.
+
+**Nada é inventado: a razão sai do `kind`**, que o motor já grava. São nove espécies e uma
+linha só no código — escrever a razão dentro de cada `case` seria nove lugares para manter
+em dia.
+
+⚠ **E `reported` É A MAIS IMPORTANTE DAS NOVE, por causa do achado 37.** A única pergunta
+que este jogo faz mora atrás de uma regra que ninguém ensina — só texto que machuca DUAS
+alavancas ou mais passa por relatoria com emenda —, e um jogador cauteloso atravessa quatro
+anos sem nunca ver a caixa perguntar nada, **sem descobrir por quê**. Esta linha é o lugar
+onde essa regra finalmente se diz: _"seu texto mexeu em duas alavancas ou mais, e texto
+assim passa por relatoria — é ela que emenda"_.
+
+### 3. O botão nomeia o que espera, e não só conta
+
+Ele dizia _"uma pergunta fecha sem resposta"_. Agora diz **qual**. O plural continua
+contando, porque três assuntos num rótulo de botão viram uma frase que ninguém lê.
+
+### 4. ⚠ A BANDEJA VIROU PILHA COM TETO — e a trava não estava no pedido
+
+O teto é medido: a bandeja fecha em 630px e uma linha mede 50 mais 4 de respiro, então onze
+cabem e a décima segunda começa a rolar.
+
+⚠ **UMA PERGUNTA NUNCA CAI DA PILHA, e isso o pedido não menciona.** Descartar uma carta com
+prazo por falta de espaço seria a tela decidindo pelo jogador: ele nunca a veria, `silences`
+a fecharia sozinha no vencimento, e o mês cobraria o preço de um silêncio que ninguém
+escolheu. **Isso é um muro com outra cara** — e a doutrina inteira deste projeto é que tudo
+tem preço e nada tem muro. Como as perguntas chegam primeiro, cortar pelo fim tira aviso
+antes de tirar pergunta sozinho; a trava existe para o caso extremo em que só há pergunta,
+e ali **a pilha estoura de propósito e a coluna volta a rolar** — uma barra de rolagem é
+mais barata que uma pergunta escondida.
+
+⚠ **E O NÚMERO 11 É UM NÚMERO NA VIEW**, o que normalmente seria defeito aqui. Não é conta
+de motor: é a capacidade de uma caixa de vidro, e o motor não sabe quantos pixels ela tem.
+**Quem impede o número de envelhecer é o PASSEIO** — há uma prova de navegador que reprova
+se o índice rolar, e ela mora depois da recarga de propósito, que é quando a bandeja está
+mais cheia.
+
+### ⚠ E a captura reprovou o ponto de não lido na primeira tentativa
+
+Ele nasceu como `::after` dentro do assunto, e caiu **numa linha só dele** no meio do
+índice, lendo como um pingo de sujeira. A causa: `.tray__subject` é um `-webkit-box` com
+corte de três linhas, e um filho de um box desses **não flui inline com o texto** —
+`vertical-align` não conserta, porque o problema não é alinhamento. Foi para a quina
+superior direita, que é onde todo cliente de email do mundo o põe, e o assunto abre recuo
+**só quando ele existe**.
+
+⚠ **E a imagem pegou uma segunda contradição:** a carta que acabava de chegar abria sozinha
+e saía **com o ponto de não lida ao lado** — a marca dizendo "você ainda não viu isto"
+apontando para o que estava aberto na frente do jogador. A regra passou a morar na bandeja,
+que é quem decide qual carta abre; qualquer outro lugar teria de refazer essa decisão.
+
+### E `labelOf` ganhou um dono, no caminho
+
+Ela morava em **três telas ao mesmo tempo** — `area`, `mesa` e `report`, corpo por corpo
+idênticas — e a quarta ia nascer na Caixa de Entrada. Três cópias é sorte; quatro é sistema.
+Subiu para `strings.mjs`, porque o que ela protege é um contrato do vocabulário: chave que
+não existe na tabela sai como o próprio id, feia e visível, em vez de derrubar a pintura.
+
+## O Gabinete parou de desenhar a própria caixa — 21/08/2026
+
+**A pergunta do responsável foi a certa, e ela tinha uma resposta que ninguém tinha
+tentado:** _"não é só diminuir o tamanho da caixa de entrada? E deixar o Gabinete todo
+mais minimalista, com menos textos e mais botões liquid glass?"_
+
+⚠ **ENCOLHER A BANDEJA JÁ TINHA SIDO TENTADO E REVERTIDO DUAS VEZES**, sempre com a mesma
+razão registrada — _"uma bandeja curta com um vão enorme embaixo lê como layout
+inacabado"_. **O que nunca tinha sido tentado é parar de DESENHAR a caixa**, e a diferença
+entre as duas é o que o jogador vê: uma bandeja de 630px sem moldura não tem vazio nenhum,
+porque não há borda anunciando onde a caixa acaba. Retângulo com espaço lê como falha;
+lâmina com espaço lê como a tela.
+
+**É o mesmo movimento de 20/08, um passo adiante.** A escavação caiu de 22% para 10% de
+opacidade naquele dia com a razão escrita — _"menos tinta dá mais vidro"_. Zero é onde
+essa frase termina: o gradiente, o passeio da luz e a granulação do substrato atravessam
+agora a metade esquerda inteira, em vez de morrerem atrás de uma demão preta.
+
+⚠ **E O SULCO NÃO MORREU — MUDOU DE DONO.** A razão de ele existir veio de uma revisão
+externa e continua de pé: _"papel tem de cair DENTRO de alguma coisa"_. O que recebe o
+papel agora é a lâmina do palco, que é uma superfície de verdade com aresta e reflexo.
+
+### E a captura matou um fio que a medição não pegaria
+
+O `.tray__list` tinha `border-right` separando o índice do documento, e ele fazia sentido
+DENTRO do poço — ali as duas colunas eram regiões de um mesmo retângulo escuro. Sem a
+escavação ele virou **630px de traço ao lado de um item de 50px**, descendo até o rodapé
+sem nada para separar embaixo. E virou o SEGUNDO separador do mesmo par: a linha aberta é
+uma peça de vidro com aresta própria e o ofício é papel. Dois separadores para uma
+fronteira é a mesma conta que matou os cinco fios das legendas em 20/08.
+
+### O vidro desceu para o que se aperta
+
+`glass-action` — o **nível 2** do sistema de material, descrito em `20-material.css` como
+_"o que se pressiona"_ — era usado **UMA vez no app inteiro**: o botão de avançar o mês.
+Um sistema de três níveis com o do meio vazio não é um sistema; é um botão principal e um
+monte de retângulos tintados imitando o que o material já sabia fazer.
+
+Ganharam o material: **NEGOCIAR**, **FINANÇAS**, e a **linha aberta do índice**.
+
+⚠ **E DUAS RECUSAS, as duas por razão e não por preguiça:**
+
+1. **as peças da CARTA não entram** — `.letter__action` e `.letter__choice` vivem sobre
+   **PAPEL**, e não sobre a lâmina. Vidro sobre papel são dois materiais empilhados para
+   dizer uma coisa só, que é o defeito que o sistema visual inteiro existe para impedir; e
+   o desfoque amostraria o papel em vez da cena atrás dele;
+2. **só a linha ABERTA do índice é vidro, e a razão é o custo medido.** `backdrop-filter`
+   custa por TELA e não por efeito — a lição que `tests/browser/screen-cost.mjs` guarda, e
+   que nasceu de uma tela que caiu a 31 fps no projeto anterior. Dez cartas seriam dez
+   desfoques para dizer o que uma linha precisa dizer. O master-detail garante uma aberta
+   por vez, então o material entra exatamente uma vez na coluna.
+
+**Medido depois: 6 elementos com desfoque na tela** (barra, rail, avançar, a linha aberta
+e as duas pílulas) mais os dois `::after` do palco — contra 3+2 antes. Os três novos são
+207×50 e dois de 93×23: **superfície pequena sobre fundo estático**, que é exatamente a
+condição que o projeto já mediu como barata.
+
+### O que saiu de texto, e o que a medição RECUSOU cortar
+
+O responsável marcou três cortes. **Dois foram feitos e o terceiro foi recusado pela
+medição** — e ele tinha dado a licença para isso: _"o que você achar que não deve ser
+cortado, faça de um jeito simplificado e minimalista"_.
+
+| candidato                                   | o que a verificação achou                                                                                                                                       | o que foi feito                               |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| as 4 frases de desejo da CALDEIRA           | estáticas — as mesmas palavras nos 48 meses                                                                                                                     | **saíram**, e voltam só quando o grupo ferve  |
+| `o orçamento escrito já consome R$ 14,5 bi` | ⚠ **NÃO repetia o hero.** O hero é `room`, o que CABE; a nota é `committed`, o que as ordens PEDIRAM. Iguais só no mês 1, por coincidência do orçamento herdado | **encolheu para uma palavra**, número intacto |
+| `E QUEM TRAVA` + as 3 linhas                | ⚠ **NÃO existe em Finanças.** Lá a obrigatória é um TOTAL; quem trava só aparece programa a programa, em oito telas de ministério                               | **5 linhas viraram 1 frase** — ver achado 40  |
+
+⚠ **E UMA PROVA DERRUBOU A PRIMEIRA PALAVRA ESCOLHIDA, com razão, por um defeito que
+ninguém veria lendo a tela.** `vaultTaken` tinha virado `"escrito"` — e a frase do
+ESTOURO, uma linha abaixo, é _"o orçamento ESCRITO passa do que cabe em"_. A palavra curta
+virou **substring** da frase longa, e a prova que garante que o estouro não repete o total
+passou a acusar repetição. O defeito é real fora do teste: duas leituras vizinhas abririam
+com a mesma palavra. Ficou `"comprometido"`, que é **a palavra que a carta da Casa Civil
+já usa** para este número.
+
+⚠ **E A PROVA MUDOU DE ALVO, e isso é o conserto e não o contorno.** Ela cobrava o literal
+`"já consome"`; agora ela pergunta a `UI.cabinet.vaultTaken`. Prova amarrada à redação
+vira alarme de revisão de texto — e alarme que dispara sem defeito ensina a desligar o
+alarme.
+
+### ⚠ A auditoria externa achou UM número que existia no motor e nunca chegou à tela
+
+O responsável trouxe uma auditoria do Gemini sobre a tela. **O padrão de sempre se repetiu
+— ela lê bem a imagem e infere mal o mecanismo** —, mas um item procede, e é forte:
+
+> _"A barra mostra se eles gostam de você; falta o número que mostra o estrago que podem
+> fazer se não gostarem."_
+
+**`weight` existe em `lobbies.mjs` desde o ciclo 10** — a fração da ruptura econômica que
+cada grupo carrega — e nunca tinha chegado a lugar nenhum da interface. **E o caso extremo
+é o que condena o silêncio: as forças de ordem têm peso ZERO.** Elas podem ferver o
+mandato inteiro sem mover a ruptura um milímetro, e a tela desenhava para elas a mesma
+régua que desenha para o mercado. Não era ausência de informação: era a tela afirmando
+igualdade por omissão.
+
+A fatia entrou **no lugar exato da frase de desejo que saiu** — mesma linha, mesmos
+pixels, estático virou leitura. A palavra é a mesma que a Trindade usa duas peças acima
+(`TERMOS.economic`), porque é literalmente a barra dela que os quatro repartem.
+
+⚠ **E O PESO ZERO GANHOU FRASE PRÓPRIA, e não "0%"**: um zero ao lado de uma régua cheia
+lê como defeito de carregamento — o mesmo erro que o hero do Cofre já cometeu uma vez com
+_"R$ 0,0 bi livre no mês"_. Ficou _"não pesa no capital"_.
+
+⚠ **E ELA TIROU UMA DUPLICATA DO MOTOR, em vez de acrescentar uma.** `capitalShares`
+nasceu em `domain/pressure/`, e `rupture` — que somava os pesos no próprio laço — passou a
+usá-la. Havia uma soma; continuou havendo uma. No dia em que um quinto grupo entrar no
+catálogo, ela se refaz sozinha nos dois lugares.
+
+### Onde a auditoria ERROU, e é o padrão medido em quatro auditorias
+
+- ⛔ **"adicione ícones de tendência (23% 🔻)"** — **já existem**. `vitalsHtml` calcula o
+  delta contra o mês anterior, com seta e cor, e **inverte o sinal da inflação** porque
+  subir é ruim. Ele auditou o mês 1, em que todo delta é zero e a seta imprime `—`;
+- ⛔ **os tooltips aninhados** — informação atrás de hover é informação ausente para quem
+  não passa o mouse. E o exemplo dado (_"+5% Bolsa Família, −8% inflação de alimentos"_)
+  seria **número inventado**: a SONDA não devolve atribuição por fator;
+- ⛔ **"transforme o centro da tela numa Mesa de Despachos"** — **é o que ela é** desde
+  20/08, master-detail e tudo, a pedido do dossiê anterior;
+- ⛔ **"o botão Avançar só deve brilhar quando os despachos urgentes forem resolvidos"** —
+  **é o muro que este projeto recusa**, e a recusa é doutrinária e está escrita em três
+  lugares no código. O dossiê anterior pediu a mesma coisa e foi recusado pela mesma
+  razão: tudo tem preço, nada tem muro. O botão já diz **o preço** de avançar sem
+  responder;
+- ⛔ **"adicione Traços aos personagens"** — o elenco já tem atributos com efeito de jogo,
+  e **mais do que ele supôs**: `economicShift`, `libertyShift`, `venalityShift`,
+  `reachMin/reachMax`, `memoryDecay`, `favourWeight`, `betrayalWeight`, `successionDrag`.
+  O que falta é TELA, não motor.
+
+### E dois itens dela procedem pela metade — vão para a próxima sessão
+
+- ▶ **as SPARKLINES.** A ideia é certa e é exatamente o gênero: _"um gráfico descendo
+  vertiginosamente gera mais pânico que ler 23%"_. ⚠ **Mas não há série.** O estado guarda
+  `before` — um mês — e só `capacity` tem `history`. Sparkline exige buffer novo no
+  estado: é pequeno, mas é motor, e motor novo não entra sem pedido;
+- ▶ **as AÇÕES DIRETAS no Gabinete.** O rito de decreto existe; _"convocar reunião
+  ministerial"_ e _"pronunciamento em cadeia nacional"_ são mecânicas novas, e são ciclo
+  próprio.
+
+### E os achados 42 e 43 foram atacados no mesmo dia — 21/08/2026
+
+Pergunta do responsável: _"tem algo do Gemini que ainda dê pra entrar?"_ Tinha, e a
+resposta obrigou a corrigir uma classificação minha: eu tinha dito que as sparklines
+exigiam motor novo. **Não exigiam** — `sparkline()` está escrita, Finanças já a usa em
+cinco linhas, e `state.series` guarda 48 meses de seis indicadores.
+
+**✔ O ACHADO 42 ESTÁ CONSERTADO, e é o de valor.** As três telas que desenham índice de
+área liam `state.capacity.history` — o buffer do ATRASO, que a MALHA mantém com `lag + 1`
+valores — enquanto o estado guarda uma segunda série, longa e feita para isto. A prosa do
+estado diz a diferença com todas as letras: _"o histórico é curto e ALIMENTA O MOTOR; a
+série é longa e alimenta os OLHOS"_. Ninguém tinha vindo trocar.
+
+Medido no mês 20, antes e depois:
+
+| área        | antes (buffer) | depois (série)  |
+| ----------- | -------------- | --------------- |
+| Fazenda     | **— (calada)** | −0,1 em 12m     |
+| Previdência | **— (calada)** | −0,0 em 12m     |
+| Indústria   | −1,8 em **6m** | **−3,6 em 12m** |
+| Segurança   | −0,4 em **3m** | **−1,0 em 12m** |
+| Educação    | +0,1 em 12m    | +0,1 em 12m     |
+
+⚠ **A INDÚSTRIA É O CASO QUE CONDENA:** a janela curta escondia **metade da queda**, e o
+número menor saía com a autoridade de um número medido. E a prosa de `trend.mjs`
+justificava as duas mudas afirmando que _"a série de índices por área não existe no
+estado"_ — **ela existe**, preenchida todo turno por `extend`. O texto continuou válido e
+parou de ser verdade, que é a família de defeito mais cara deste projeto, e aqui ele
+conseguiu algo novo: **justificar em prosa uma ausência que o estado já tinha resolvido**.
+
+**⛔ O ACHADO 43 FOI CONSTRUÍDO INTEIRO E REVERTIDO PELA CAPTURA.** A escada dos quatro
+vitais foi feita — esquema 18, série carregando aprovação e base, peça desenhada — e a
+imagem a reprovou em dois tamanhos: **a 0,5rem ela cabe e vira um traço; a 0,85rem ela lê e
+empurra o rótulo do PIB para fora da barra.** Não há terceiro tamanho. O esquema voltou
+para 17 porque campo de estado sem consumidor custa uma versão de save, e este save recusa
+em vez de converter. Ver o achado **44** — a medição inteira está lá, e ela vale no dia em
+que houver onde desenhar.
+
+⚠ **E A TENTATIVA ACHOU UM DEFEITO DE VERDADE NO CAMINHO:** a régua do PIB ia até _"metade
+a mais que a largada"_, um chute nunca medido, **em duas telas com a expressão digitada nas
+duas**. Medido em 48 meses: o PIB usa **cinco dos oito degraus**, e a escada de Finanças
+gastava metade da altura numa faixa que a partida nunca visita. Virou `gdpRange`, com fator
+1,2 e um dono só. `SCALE` mudou de casa junto, pelo mesmo motivo.
+
+### E uma captura do responsável achou uma tela que MENTIA — 21/08/2026
+
+_"às vezes a tela do jogo fica assim"_, com a imagem do Gabinete de bandeja vazia. Duas
+coisas erradas nela, e a segunda é a grave.
+
+**1. O parágrafo do vazio boiava, e isso era regressão da mesma sessão.** Medido:
+`.empty` fechava em **369px dentro de uma coluna de 659**, encostado na esquerda —
+`justify-items: start` em `.card__body` faz todo filho medir o conteúdo, e a bandeja já
+compensava com `width: 100%` enquanto o vazio nunca compensou. Como o `.empty` centra o
+texto por dentro, o parágrafo saía centrado num retângulo que ninguém via, na metade
+esquerda de uma coluna vazia: o olho lia **torto**, e não centrado.
+
+⚠ **E A ESCAVAÇÃO ESCONDIA ISSO ATÉ ONTEM.** Com o poço desenhado, o retângulo de 369px
+caía dentro de uma moldura que dava a referência. Tirada a moldura, a única referência que
+sobra é a coluna — e é contra ela que o vazio tem de se centrar.
+
+**2. ⚠ A TELA AFIRMAVA UM FATO FALSO SOBRE O MANDATO, e nada no projeto a acusava.** Os
+números da captura — aprovação 28, base 425 — são exatamente os do **mês +3**, e a tela
+dizia _"O primeiro mês ainda não foi resolvido"_, prometendo na linha seguinte que _"todo
+mês que você resolve chega aqui"_.
+
+**A causa, reproduzida num navegador de verdade:** `last` — o relatório do turno — é
+variável de módulo do entrypoint e **não vai para o save**. Numa recarga de página o
+estado volta inteiro e `last` volta nulo; `describeMonth` não produz carta, e a bandeja
+fecha vazia. Abertura → 1 ofício; depois de 3 meses → 1; **depois de F5 → 0**.
+
+⚠ **A DECISÃO É QUAL FRASE, E NÃO SE HÁ FRASE.** Ausência se declara neste projeto; o que
+a captura pegou foi ausência declarada com o **texto errado**, que é pior que silêncio —
+o jogador acredita na tela. Agora são duas frases, e a escolha vem do **MÊS do estado**,
+que atravessa o save, e não de `last`, que não atravessa. A nota também se partiu em duas:
+a promessa _"todo mês que você resolve chega aqui"_ só pode ser dita a quem ainda não
+resolveu mês nenhum.
+
+**A prova nova — _"A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO"_ — trava as duas frases
+e a promessa.** ⚠ **E a perda da leitura do mês continua aberta:** ver o achado **46**, e o
+conserto dela colide com uma recusa registrada, então é decisão do responsável.
+
+### E a barra de rolagem lateral do índice era uma reticência que nunca funcionou
+
+Pedido dele, na mesma sessão: _"retire aquele rolamento ali do bloco esquerdo da caixa de
+entrada, não quero ficar rolando da esquerda pra direita"_.
+
+**A causa não era a coluna estreita — era uma frase que se recusava a encolher.**
+`.tray__when` declara `white-space: nowrap` com `overflow: hidden` e `text-overflow:
+ellipsis`, ou seja: _"corte com reticências quando não couber"_. **O "quando não couber"
+nunca chegava.** Um item de flex nasce com `min-width: auto`, que vale o tamanho do
+CONTEÚDO — e conteúdo que não quebra linha tem o tamanho da frase inteira. Em vez de
+encolher e cortar, ele empurrava.
+
+Medido a 1440×980: _"Denise Hollanda Cavalcanti · mar · 2027"_ levava a lista a **219px de
+conteúdo dentro de uma caixa de 208** — 11px de estouro. E `overflow-y: auto` **não
+consegue ficar só num eixo**: com um eixo diferente de `visible`, o outro vira `auto`
+sozinho. A barra horizontal nascia daí.
+
+⚠ **É A MESMA LIÇÃO QUE O CANVAS JÁ REGISTRA NO OUTRO EIXO** — _"o mínimo automático de um
+item de grade é o tamanho do conteúdo dele, então ele cresce para caber o filho em vez de
+obrigar o filho a se virar"_. Lá foram seis `min-height: 0` aninhados; aqui é largura, e o
+remédio é idêntico. **Os dois níveis, ou nenhum:** consertar só a frase deixaria o próximo
+texto largo — o assunto de uma carta de tramitação — reabrir a mesma barra por outro
+caminho, então o `<li>` levou o seu.
+
+**Depois: `scrollWidth` igual a `clientWidth` em todos os meses medidos, e as reticências
+passaram a existir de verdade.**
+
+### E a decisão que ele delegou virou duas: uma recusa e uma troca de instrumento
+
+_"faça o que for melhor pro jogo"_, sobre o achado 46.
+
+**⛔ O ACHADO 46 FECHA COMO RECUSA, e a razão é o tipo `Letter`.** A saída óbvia seria
+guardar o relatório do mês no save. Ela foi descartada por três medições, não por gosto:
+
+1. **o `Report` é peça de TELA**, e pô-lo no estado faria toda mudança de interface virar
+   pergunta de migração de save — que é o oposto do que o estado existe para ser;
+2. **e a alternativa doutrinária é pior:** guardar o mês como CARTA obedeceria a regra
+   certa — _"o que se guarda é o FATO, e nunca a prosa"_ —, mas exigiria **cinco campos
+   novos em `Letter`**, todos nulos nas nove outras espécies. Cada campo daquele tipo hoje
+   tem uma razão escrita; cinco nulos não teriam;
+3. **e a perda é um AVISO, não uma pergunta.** Nenhum prazo, nenhuma decisão, nenhum
+   número: o mês seguinte escreve outro. O que era grave — a tela AFIRMANDO um fato falso
+   — já está consertado e com prova.
+
+**✔ E O QUE ENTROU NO LUGAR VALE MAIS: a faísca deixou de ser decorativa em TRÊS telas.**
+
+A escada de blocos (`▁▂▃▄▅▆▇█`) morreu, e a razão é geométrica. Um bloco tem oito alturas,
+e cada uma é uma fração do **corpo da fonte**: a 0,5rem — o tamanho do painel — o degrau 1
+tem **um pixel**. Um indicador que vive no terço de baixo da própria régua saía como uma
+fileira de traços colada na linha de base, e o olho lia o **sublinhado do número**.
+
+⚠ **E NÃO HAVIA TAMANHO QUE CONSERTASSE, o que custou três capturas para provar.** Medido
+a 0,5 / 0,7 / 0,9rem: **a altura da linha não muda nos três** (37px; o painel fecha em 1188
+nos três) — então o corpo nunca foi caro. Mas a 0,9rem a escada invade a coluna da nota, e
+a 0,7rem ela continua um traço. **O problema nunca foi o corpo: era a razão entre a barra e
+a célula do glifo.** O mesmo experimento reprovou a escada na barra superior no mesmo dia.
+
+**Entrou uma polilinha de SVG** — a mesma convenção do sinete e do arco do plenário, sem
+biblioteca e sem canvas. O que ela ganha é uma coisa só e é decisiva: **usa a altura
+inteira da caixa, independentemente de onde o valor mora na régua**.
+
+⚠ **E A JANELA VIROU UMA SÓ NAS TRÊS TELAS.** Finanças desenhava 6 meses ao lado de uma
+variação escrita que conta 12 — duas medidas do passado dentro da mesma leitura —, e o
+Congresso ficou com 6 **por omissão**, que era o padrão do parâmetro. Agora as três usam
+`WINDOW`. Medido: só olhar mais para trás levou o PIB de **2,8 para 6,0** unidades de traço,
+sem custar um pixel.
+
+⚠ **E A PROVA MUDOU DE ALVO, e ficou mais forte.** Ela contava quantos CARACTERES
+diferentes a escada tinha — respondia a pergunta certa por acidente. Agora lê o `points` da
+polilinha e conta **alturas distintas**, que é literalmente a pergunta que ela defende:
+_"esta série subiu na tela, ou saiu plana na régua errada?"_
+
+⚠ **E MEDIR ISSO ACHOU ALGO MAIOR QUE O DESENHO — ver o achado 47:** com o instrumento
+novo e a janela dobrada, **quatro dos cinco indicadores continuam movendo menos de UMA
+unidade de vinte em dois anos.** A coluna de tendência de Finanças nunca mostrou nada em
+partida nenhuma, e a causa não é a peça.
+
+### ⚠ E a troca de instrumento derrubou DUAS provas, e as duas estavam certas em cair
+
+A escada era TEXTO, e as duas provas que a defendiam liam caractere:
+
+- a prova de unidade contava **quantos caracteres diferentes** a peça tinha;
+- o passeio lia `allInnerTexts()` e fazia a mesma conta no navegador.
+
+Com SVG, as duas ficam sem texto para ler. ⚠ **E a do passeio é a lição:** ela ficou
+vermelha porque o `.some` estava escrito na direção certa — se estivesse invertido, ela
+teria ficado **permanentemente verde por vacuidade**, defendendo nada, e ninguém saberia.
+As duas passaram a ler o `points` da polilinha e a contar **alturas distintas**, que é
+literalmente a pergunta que elas existem para fazer.
+
+### ⚠ E a guarda `naming` acusou uma linha INOCENTE, e o ponto cego é dela
+
+Ela apontou `"obrigatória"` numa prova do Cofre que não tinha mudado. **A causa estava
+trinta linhas acima:** o removedor de strings de `tests/guards/naming.mjs` não conhece
+literal de expressão regular. Diante de `/points="([^"]*)"/` ele vê a aspa de abertura,
+casa até a aspa de dentro do `[^"]`, e a partir dali **as aspas do arquivo inteiro ficam
+desemparelhadas** — o que sobra vira "código" e qualquer acento em texto de UI é acusado.
+
+⚠ **Contornado no chamador** — `"(.*?)"` casa limpo e resolve o mesmo —, **e o ponto cego
+fica**: a próxima expressão regular com `[^"]` em qualquer arquivo do projeto vai acusar
+outra linha inocente. Não vale conserto especulativo (reconhecer literal de regex com
+regex é a receita do próximo falso positivo), mas vale saber que o dedo dela pode apontar
+para o lugar errado.
+
+## O dossiê da Sala de Guerra — 20/08/2026
+
+O responsável trouxe um dossiê de outro modelo, escrito explicitamente _"de IA para IA"_,
+pedindo para **demolir o Gabinete**. Ele foi tratado pelo protocolo de sempre: **captura
+nova e DOM medido antes de julgar qualquer item**, e o veredito em três baldes.
+
+### A régua, antes de qualquer opinião
+
+Gabinete a 1440×980, com o jogo no mês 1:
+
+| peça                  | medido                                             |
+| --------------------- | -------------------------------------------------- |
+| página                | **1347px** numa janela de 980 → rola 367           |
+| cabeça da tela        | **101px** (olho + "Gabinete" em `--text-hero`)     |
+| **Caixa de Entrada**  | **899px de caixa, 242px de conteúdo — 657 MORTOS** |
+| coluna da direita     | 302 + 232 + 255 + 110 = **899**                    |
+| hemiciclo             | **170px** travados                                 |
+| "Aprovação por renda" | 110px, **inteiro abaixo da dobra**                 |
+
+### Onde ele acertou
+
+- **espaço morto** — acertou o sintoma e errou a causa. Ele leu "a inbox é um bloco de
+  texto passivo"; ela é **uma carta esticada pela coluna vizinha**. 657px;
+- **título gigante** — 101px de espaço nobre para imprimir uma palavra que o rail já
+  marca em destaque três centímetros à esquerda. Procede, e virou `--text-screen`;
+- **hemiciclo caro** — procede **no mês 1**, e a razão é que ali ele é degenerado: as
+  onze bancadas estão no mesmo humor e o desenho é um bloco verde. ⚠ **É a SEGUNDA
+  auditoria independente a ler esse mesmo bloco** — a primeira chamou de "macarrão
+  verde", e está registrado em `cabinet.mjs`. O achado não é "mate o hemiciclo": é que
+  **o mês 1 é a pior tela do jogo**;
+- **hierarquia invertida** — as barras mais saturadas da tela são "Aprovação por renda",
+  o item menos importante dela, e ele está abaixo da dobra.
+
+### Onde ele errou — e é o padrão de sempre
+
+- **"botão de avançar invisível, formatado como link"** — captura vencida. É o maior
+  botão sólido da tela, âmbar, canto superior direito;
+- **"a Trindade deve ser Ruas / Máquina / Blindagem"** — ⚠ **essa trindade já foi
+  proposta pelo décimo dossiê e recusada com razão registrada** em `cabinet.mjs`: a
+  burocracia não existe no modelo e as forças de ordem têm `weight: 0`. Quem carrega a
+  ruptura econômica é o mercado e o setor produtivo, que a trindade dele omite. E ela já
+  está exatamente onde a Parte 2 do próprio dossiê manda pôr — a Parte 1 dele pede para
+  tirar de lá. **O documento se contradiz**;
+- **"inbox é aviso de tutorial estático"** — o motor de prazo existe desde o ciclo 9:
+  `due`, `ANSWER_TIME`, `settle`, e o silêncio que aceita;
+- **"monoespaçada em todo número"** — colidiria com uma legenda tipográfica que já
+  existe e que nasceu de uma auditoria anterior: serifa é o que se assina, sans é o que
+  se mede, mono é o que a máquina carimba. `[data-numeric]` protege o número em sans **de
+  propósito**. Ele está certo que a voz da máquina é subusada; errado sobre onde ela vai.
+
+### ⛔ E a recusa, que é doutrinária e não estética
+
+A mecânica central do dossiê é: _"o botão permanece bloqueado até que as crises com tarja
+de urgência sejam resolvidas"_. **Isso é um muro**, e a regra de fundação do projeto é a
+oposta — nunca `if (proibido) return`; a pergunta é _quanto custa_.
+
+⚠ **E o próprio dossiê escreve a versão certa na frase seguinte:** _"o tempo cobra seu
+preço"_. O preço já existia e já estava modelado. O que faltava era a barra de cima
+**dizer** isso antes do clique, porque informação que chega depois da decisão é recibo.
+
+Foi o que entrou: `silences` no motor, e o botão carrega um carimbo bordô com _"uma
+pergunta fecha sem resposta"_. **Ele não trava.** A recusa está escrita em `mail.mjs`, em
+`app.mjs` e no CSS do carimbo, e tem prova própria em `tests/suites/mail.mjs`.
+
+### O que entrou, peça por peça
+
+**A BANDEJA DE DUAS COLUNAS.** `mailHtml` devolvia HTML pronto, e o índice precisaria
+remontar o assunto de cada carta — a oitava ocorrência da família de defeito mais cara
+deste projeto. Entrou o **descritor**: o `switch` decide UMA vez o que a carta diz
+(`describeMail`, `describeMonth` → `Dispatch`), e duas views leem dele — `letterHtml` para
+o documento, `rowHtml` para o índice. `urgencyOf` saiu de dentro de `letterHtml` pela
+mesma razão.
+
+⚠ **E o índice ganhou o MÊS por causa da captura:** ela mostrou duas linhas idênticas —
+"Pautei o seu texto: Cortar média e alta complexidade · e mais 2", do mesmo remetente,
+duas vezes. As duas estavam certas (dois textos, meses diferentes); o índice é que não
+dava como distinguir. A data é a coluna que toda caixa de entrada tem, e é por isso.
+
+⚠ **E o assunto passou a ocupar a linha inteira, também pela captura:** com o prazo ao
+lado, o assunto de uma carta de tramitação quebrava em **sete linhas** numa coluna de
+13rem. Um índice de sete linhas por item deixa de ser índice.
+
+**O PREÇO NO BOTÃO.** `silences({ mail, orders, month })` é `settle` **filtrada**, e não
+uma segunda regra de vencimento: a tentação era escrever `left(carta) <= 0` na tela, e ela
+é exatamente a família de defeito que este projeto mede em sete ocorrências. Ela lê as
+ORDENS do mês junto com o estado — quem já marcou "aceitar" já decidiu, e cobrar o preço
+dela seria a tela anunciando uma consequência que o turno não vai executar.
+
+⚠ **E o bordô teve de virar FUNDO em vez de tinta.** A primeira versão pintou o texto de
+bordô sobre a lâmina âmbar: a lâmina compõe rgb(193, 137, 55) e o par dá **2,8:1** num
+texto de 10px. A captura mostrou o borrão que a conta previa. Invertido, dá 5,6:1 e vira o
+que a prosa já dizia que era — um **carimbo**.
+
+**O NOME DA TELA.** ⚠ A primeira ideia era encolher `--text-hero`, e estaria errada: a
+prosa dele diz que ele é "o maior reservado ao dado dramático do momento", e o outro
+consumidor dele é o **placar de uma votação**, que é exatamente esse dado. O defeito nunca
+foi o tamanho do herói — era o nome da tela estar vestido de herói. Entrou `--text-screen`.
+
+## A fita do plenário — 20/08/2026, e ela nasceu de uma ideia do responsável
+
+O pedido dele foi de estética e virou modelagem: _"não acha melhor fazer essa barra como
+se fosse extrema esquerda, esquerda, centro, direita, extrema direita, mas sem escrever,
+por cor? Ai cada ideologia vai ter um pedacinho preenchido... aprimore a minha ideia"_.
+
+### ⚠ O que a ideia dele desmontou, e nem ele nem eu tínhamos visto
+
+A fita pintava cada bancada pelo **humor** e preenchia cada bloco pela **entrega**. No
+motor:
+
+```js
+delivered: party.seats * clamp01(moodFactor(mood));
+```
+
+**O comprimento preenchido É o humor, em forma contínua** — e a cor categórica era o
+mesmo fato desenhado uma segunda vez. O hemiciclo carregava essa duplicação desde que
+nasceu, e a legenda de três cores existia para decifrar uma cor que o comprimento já
+dizia. Liberada da repetição, a cor passou a dizer a única coisa que o desenho não
+dizia: **onde cada bancada está no eixo econômico**.
+
+### E isso NÃO reabre "cor de bancada", que foi recusada três vezes
+
+A recusa registrada é sobre cor de **identidade** pintada com a paleta **semântica** — "a
+paleta já gasta verde em ALTA e vermelho em CRISE, e pintar ideologia com os mesmos tons
+faria um bloco parecer bom e o outro parecer perigo". O que entrou é uma **rampa sobre
+uma régua que o catálogo declara em prosa**: `economic`, de 0 a 100, onde _"0 é máxima
+intervenção e 100 é máximo mercado"_. A cor não identifica ninguém: diz posição.
+
+⚠ **E as cinco paradas não são taxonomia nova.** Não existe "extrema esquerda" no modelo,
+e a fita não escreve uma palavra dentro de si: são cinco quintos de uma régua declarada,
+que é quantização linear. Os únicos nomes na tela são os dois **polos**, embaixo, com o
+vocabulário do próprio catálogo — _intervenção_ e _mercado_. Escrever "esquerda" e
+"direita" importaria a taxonomia que o modelo recusa: ele tem **duas** dimensões, e
+reduzi-las a uma palavra de uma delas seria a tela afirmando o que o motor não afirma.
+
+### O que a fita mostra, e por que nada nela repete nada
+
+| peça          | o que diz                                            |
+| ------------- | ---------------------------------------------------- |
+| largura       | quantas cadeiras a bancada tem — a soma fecha em 513 |
+| ordem         | a posição dela no eixo, da intervenção ao mercado    |
+| cor           | o mesmo eixo, em cinco paradas dessaturadas          |
+| preenchimento | quanto daquela bancada responde ao governo, hoje     |
+| **a linha**   | **onde a maioria simples fecha**                     |
+
+⚠ **A LINHA É O DADO QUE NUNCA FOI DESENHADO.** `majority` chegava ao Gabinete desde que
+o Gabinete existe e **morria sem consumidor** — no cartão em que o presidente pergunta se
+tem votos. Era canal de dado morto, da mesma família do achado da régua legal.
+
+⚠ **E ela passou uma hora invisível por um `overflow: hidden`.** A fita tinha canto
+arredondado, e o `overflow` que aparava os blocos nas pontas aparava as duas pontas da
+marca: ela ficava rente ao topo e à base e sumia contra um bloco claro. O DOM dizia que
+ela estava lá, com 2px e cor de tinta — e estava. Faltava **atravessar**. Sem o
+`overflow` a fita ficou reta, e isso é ganho: pílula é botão, e esta peça é régua.
+
+### O que morreu junto, e o registro fica
+
+- **`hemicycle.mjs` inteiro** — módulo, folha e desenho. 513 círculos num arco custavam
+  170px de uma coluna de 899, e **duas auditorias externas independentes** o leram como
+  pixel caro. A substituição é a decisão, e não a convivência — é o mesmo movimento que
+  matou o ARCO quando o hemiciclo nasceu;
+- **`legendHtml`** — ela decifrava as três cores de humor. Uma legenda que decifra uma
+  cor que não existe mais é pior que nenhuma: ela ensina a ler o desenho errado. A regra
+  dela sobreviveu inteira e a fita a herdou — desenho de várias cores precisa de chave —,
+  e o que mudou foi quantas peças a chave tem: **uma rampa se decifra pelos polos**;
+- **`memoryNone`** — _"sem histórico com o seu governo"_, que saía **sete vezes na mesma
+  tela** do Congresso, porque no mês 1 ninguém tem histórico. A regra contrária já estava
+  escrita duas vezes no projeto e não tinha sido aplicada aqui.
+
+### A varredura de densidade, e ela não apagou uma leitura sequer
+
+A coluna da direita era um **cartaz**, e virou outliner. Nada foi removido para caber —
+apagar leitura seria a saída fácil e é a menos parecida com os jogos da referência: eles
+não escondem número, eles apertam.
+
+| medida                 | antes | depois |
+| ---------------------- | ----- | ------ |
+| página (janela de 980) | 1347  | 1108   |
+| rolagem                | 367   | 128    |
+| coluna da direita      | 899   | 664    |
+| bandeja: espaço morto  | 657   | ~410   |
+
+O que rendeu: gaps de 12→8 (a coluna toda), o hemiciclo (170→0, e a fita custa 14), a
+coluna de nome da `.reading` de 9rem para **10,5rem** — que economiza altura ficando mais
+**larga**, porque a frase do que cada lobby cobra deixa de quebrar em três linhas.
+
+## O Congresso parou de ser feio, e o vidro voltou a aparecer — 20/08/2026
+
+Dois pedidos do responsável, na mesma sessão: _"deixe tudo mais minimalista e bonito,
+principalmente essa parte do congresso — carta branca"_ e, depois, _"quanto mais liquid
+glass e minimalismo, melhor"_.
+
+### A tela do Congresso era a ÚLTIMA no dialeto de cartão
+
+⚠ **O Gabinete abandonou esse dialeto em 16/08 e o Congresso ficou para trás.** Lá, a
+razão está escrita: _"vidro dentro de vidro são dois materiais empilhados para dizer uma
+coisa só, e cinco retângulos numa grade são a unidade visual de um dashboard"_. Aqui
+sobraram **onze retângulos preenchidos, cada um com OUTRO retângulo aninhado dentro** — a
+lista de gente. Caixa dentro de caixa, onze vezes, na tela que ele chamou de feia duas
+sessões seguidas.
+
+O que entrou:
+
+- **a bancada deixou de ser cartão.** Sem preenchimento, sem raio: o que separa uma da
+  seguinte é um FIO, como no resto do projeto;
+- **o estado virou TARJA e deixou de ser preenchimento.** Uma faixa vermelha atrás da
+  linha inteira empurra a cor para debaixo do texto, do controle e de quatro números — e
+  vermelho que cobre tudo não destaca nada, que é a lição que o cofre já tinha aprendido.
+  ⚠ **E a tarja não é desenho novo:** é a MESMA gramática da carta que vence e da linha do
+  índice da Caixa de Entrada. O projeto passa a ter um jeito só de dizer "esta linha está
+  em outro estado";
+- **o controle encolheu de ~400px para 180, e isso é conserto de USO.** Com `1.4fr`, o
+  trilho comia o meio da linha e a leitura que ele muda ficava a quatrocentos pixels dele:
+  o jogador arrastava aqui e o número respondia do outro lado da tela;
+- **a memória neutra calou.** _"Sem histórico com o seu governo"_ saía **sete vezes na
+  mesma tela**, porque no mês 1 ninguém tem histórico.
+
+### E o "mais liquid glass" resolveu-se TIRANDO material, não somando
+
+⚠ **O pedido colide com uma regra aplicada duas vezes em 15/08**, e a colisão foi dita a
+ele: dar uma segunda lâmina a uma caixa dentro do palco é exatamente o defeito que o
+sistema visual existe para impedir. A saída não é somar vidro — é tirar o que sobrava.
+
+A escavação da Caixa de Entrada era `rgba(0,0,0,0.22)` com sombra interna pesada, e isso é
+um **terceiro material**: nem o vidro da máquina do Estado, nem o papel do registro. Um
+retângulo preto opaco de 660×660 no meio da lâmina — **e ele tapava justamente o vidro**.
+
+Em 10% em vez de 22%, com `--bevel-fine` no lugar da borda própria, o palco volta a
+aparecer através da bandeja: o gradiente, o passeio da luz e a granulação do substrato
+atravessam a caixa em vez de morrer atrás de uma demão preta. O sulco continua existindo —
+papel tem de cair DENTRO de alguma coisa, e essa razão veio de uma revisão externa —, só
+que agora ele é uma **aresta** e não um buraco.
+
+⚠ **E o custo foi medido antes de ficar**, como a prosa dos tokens manda: `npm run screen`
+deu **material 240,5 fps × controle 232,1** — o vidro não custou nada.
+
+## O desktop virou o único alvo, e a tela passou a caber — 20/08/2026
+
+Três decisões do responsável, na mesma sessão, e as três destravaram coisas:
+
+1. _"Pare de se importar se o jogo funciona no mobile. Nunca vou jogar no mobile, só no
+   desktop. Eu quero a perfeição no desktop, perfeição mesmo."_
+2. _"Tire o máximo de texto inútil da tela — aquela leitura do mês toda você já remove."_
+3. _"A barra do congresso tá muito confusa. Usa vermelho, vermelho alaranjado, amarelo,
+   verde, verde azulado escuro, nessa ordem."_
+
+### ▶ O GABINETE É UM CANVAS, e a página parou de rolar
+
+**Medido: 1347px → 980px numa janela de 980. Rolagem ZERO.**
+
+⚠ **Isso não se conseguiu apagando leitura** — a coluna da direita não perdeu uma linha
+sequer nesta sessão. Jogo de grande estratégia **não rola a tela**: Victoria 3, Football
+Manager e o Geo-Political Simulator põem tudo num canvas do tamanho da janela e deixam os
+PAINÉIS rolarem por dentro. A página que rola é a gramática de um site; o painel que rola
+é a de um instrumento.
+
+⚠ **E o canvas só ficou possível quando o celular saiu de escopo.** Numa janela de 390px,
+travar a altura esconderia metade da tela atrás de uma dobra sem nada avisando.
+
+### ⚠ E O CANVAS ACHOU UM DEFEITO DE SEIS SESSÕES no rail
+
+`.rail` declara `height: calc(100dvh - 2 * var(--space-4))` — **948px numa janela de
+980** — e mora na linha 2 da casca, que começa ABAIXO da barra superior e tem 904. **Ele
+sempre transbordou 44px, em toda tela, desde que foi escrito.** Numa página que rola isso
+é invisível: a página já rolava por outros motivos. No canvas ele era a única coisa
+segurando os últimos 60 pixels. Trocado por `align-self: stretch` — medida em vez de
+palpite —, escopado à tela do Gabinete porque nas outras `stretch` faria o rail crescer
+com a página e `sticky` deixaria de segurá-lo.
+
+### O que saiu de texto, e por quê
+
+| morreu                            | por quê                                                                                                                                                    |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **a leitura do mês**              | 101px do topo para dizer em prosa o que a Trindade, o gel de situação e a barra já dizem. A voz não morreu: a Casa Civil continua assinando a carta do mês |
+| **o olho das cinco telas**        | uma categoria acima de um título que diz o mesmo em uma palavra, numa tela cujo menu já marca onde você está — três lugares, uma informação                |
+| `nenhuma ruptura aberta`          | saía todo mês em que nada acontecia, e ensinava o olho a pular a linha onde a ruptura de verdade vai aparecer                                              |
+| `sem histórico com o seu governo` | **sete vezes na mesma tela** do Congresso, porque no mês 1 ninguém tem histórico                                                                           |
+
+### A fita virou CINCO faixas, e a confusão era geométrica
+
+Ela desenhava as onze bancadas uma a uma, e **duas vizinhas da mesma faixa saíam como dois
+blocos da mesma cor separados por um vão** — o olho lia uma fronteira que o eixo não tem.
+Agora as vizinhas se somam: o número de divisões na tela passa a ser o número de divisões
+que existem.
+
+⚠ **E o mesmo defeito quase voltou por dentro:** a demão da cadeira não entregue estava em
+16% de opacidade e ficava quase preta — a parte vazia de um bloco lia como VÃO, e o
+desenho voltava a mostrar sete divisões onde há cinco. Em 34% ela volta a ler como o que
+é: ausência DENTRO de uma identidade, e não ausência da identidade.
+
+⚠ **As cores são as dele, e elas VENCEM uma regra registrada três vezes** — "a paleta já
+gasta verde em ALTA e vermelho em CRISE". O risco fica registrado nos tokens em vez de
+resolvido em silêncio, e a forma de conviver com ele é a saturação: os cinco são tons
+terrosos, e `--crisis` continua mais claro e mais saturado que o vermelho do eixo.
+
+### O que ficou de fora, e é o que eu faria primeiro
+
+⚠ **A Caixa de Entrada ainda tem ~300px de folga no mês tranquilo**, e ela não é defeito
+de layout: é o [achado 37](#achados-abertos--o-que-eu-veria-primeiro-na-próxima-sessão) —
+**o mundo quase não escreve**. Nenhuma mudança de CSS enche uma bandeja vazia. O caminho é
+dar verbo aos dois lobbies mudos.
+
+## As cinco legendas saíram, e a saída achou dois defeitos — 20/08/2026
+
+**Pedido do responsável, com as palavras dele:** _"aproveite e retira as escritas caixa de
+entrada e o congresso, e as barras pretas também que ficam embaixo das escritas,
+padronize e simetria em tudo"_.
+
+⚠ **SAÍRAM AS CINCO, E NÃO AS DUAS NOMEADAS** — tirar duas de cinco seria o oposto de
+padronizar. A regra que sobra vale para o Gabinete inteiro: **um bloco que abre com um
+número não precisa dizer o próprio nome.** "436 de 513" não fica mais claro embaixo de
+"O CONGRESSO", e "R$ 14,5 bi cabe no mês" não fica mais claro embaixo de "O COFRE DA
+UNIÃO" — a legenda repetia, em caixa alta e ocupando uma linha, o que o número já dizia
+em corpo de título. Com ela morreu `legendHtml`, e a cabeça do cartão virou `leadHtml`:
+a linha do número, com a porta ao lado dela e alinhada pela BASE, que é como texto se
+alinha.
+
+⚠ **E O FIO METÁLICO SAIU JUNTO, revertendo uma regra aplicada em cinco telas** — "o que
+faz uma tela ler como grand strategy não é o ouro do botão, e sim a REPETIÇÃO do mesmo
+fio, tela após tela, até o olho parar de ver decoração e ver estrutura". **O que ele
+descobriu usando a tela é que a repetição virou peso:** com onze blocos numa página, onze
+fios não leem como estrutura — leem como formulário. O separador passou a ser o ESPAÇO,
+que é o que separa parágrafo de parágrafo em qualquer documento e não cobra tinta.
+
+### ⚠ E O CORTE COBROU DOIS DEFEITOS, os dois medidos e os dois consertados em 21/08
+
+**Nenhum dos dois é do corte em si: os dois são regra que ficou vencida porque a peça que
+a justificava saiu, e ninguém voltou nela.** É a mesma classe de erro do `span` do
+Gabinete e do `height` do rail — o código continuou válido e parou de ser verdade.
+
+**1. O CORPO DA BANDEJA PAROU DE ESTICAR, e o vão era de 295px.**
+`.card[data-span="lead"]` declarava `grid-template-rows: auto 1fr` — o título na primeira
+trilha, o corpo na segunda. Sem cabeça, `cardHtml` passou a emitir UM filho, e um filho
+só cai na trilha `auto`: o corpo voltou a medir o conteúdo e a trilha `1fr` ficou vazia
+embaixo. Medido a 1440×980: a escavação fechava em **335px dentro de uma coluna de 630**,
+com a coluna vizinha indo até o rodapé. **É o degrau no rodapé que a prosa da própria
+folha diz custar mais que o vazio** — só que desta vez estava do lado errado. Consertado
+para uma trilha só, `minmax(0, 1fr)`: o número de trilhas passa a ser o número de filhos,
+e não há o que envelhecer se a cabeça voltar.
+
+**2. OS QUATRO BLOCOS DA DIREITA ENCOSTARAM, e a coluna virou um texto corrido.**
+Medido: **305→409→595→752, zero de separação visível.** O ar tinha encolhido de 12 para
+8px mais cedo na mesma sessão, por densificação — e a decisão estava certa **enquanto
+cada bloco ainda abria com legenda e fio**: o que separava assunto de assunto era o fio,
+e os 8px só precisavam não colar o fio no texto de cima. Meia hora depois legenda e fio
+saíram, e o ar herdou um trabalho para o qual não fora dimensionado.
+
+⚠ **O CONSERTO É AR, E NÃO O FIO DE VOLTA** — devolvê-lo reabriria em silêncio um pedido
+direto dele. `--space-6`, 24px: o degrau que o projeto já usa para "outro assunto", e
+metade dos 32 que separam as duas colunas, de modo que a divisão vertical continua a mais
+forte da tela. **Custou 48 dos 116 pixels que sobravam mortos no pé da coluna — nenhuma
+leitura saiu e nada passou a rolar.** O recuo maior é escopado a `.cards__side > .card`:
+a bandeja é um objeto só, e 24px ali não separariam nada, apenas devolveriam o vão que o
+conserto 1 acabou de fechar. E a bandeja perdeu o recuo inteiro por simetria medida — ela
+encostava no teto em 305 e parava 8px antes do pé em 927.
+
+**Depois: as duas colunas fecham em 305→935, a página em 980 numa janela de 980, rolagem
+zero.** `validate` verde com **230 provas**, `walk` verde, captura olhada.
+
+## A Câmara ganhou nove legendas — 20/08/2026
+
+Pedido do responsável, em duas mensagens: primeiro o espectro partidário brasileiro real
+com nomes e siglas; depois, quando a colisão com a ADR 0003 foi apontada, a solução dele
+— _"não vamos usar os nomes reais, mas você pode pegar todos esses partidos e simplesmente
+usar sinônimos ou mudar alguma coisa do nome, sigla, etc.; de resto quero tudo idêntico"_.
+
+⚠ **E ISSO CABE NA ADR INTEIRA.** Ela proíbe carregar **a marca** de uma organização real
+e manda dar nome próprio inventado; ela permite — e pede — que o **arquétipo** seja real.
+Nove legendas fictícias com o desenho da Câmara verdadeira é exatamente a leitura dela.
+
+### As nove, e a forma que elas reproduzem
+
+| sigla | eixo | cadeiras | ≈ o que ela é                                                                 |
+| ----- | ---- | -------- | ----------------------------------------------------------------------------- |
+| FSP   | 24   | 14       | a frente socialista de direitos humanos: a mais ideológica, a que menos vende |
+| PTU   | 30   | 80       | a maior da centro-esquerda: desenvolvimentista e pragmática                   |
+| PSU   | 38   | 31       | trabalhismo de frente ampla — a fiel da balança                               |
+| MDN   | 55   | 42       | a federação de caciques regionais                                             |
+| PSM   | 60   | 71       | capilaridade municipal e governabilidade                                      |
+| UPB   | 72   | 106      | a fatia do orçamento e a máquina pública — **o Centrão do jogo**              |
+| PLB   | 78   | 145      | a maior bancada: pragmática no dinheiro, dura nos costumes                    |
+| PLV   | 94   | 18       | liberalismo clássico — não vende a pauta econômica                            |
+| PNR   | 68   | 6        | nacionalismo militarista, o que menos negocia costume                         |
+
+**Somam 513 exatos.** E as cinco faixas da fita ficam: **0 / 125 / 113 / 257 / 18** — a
+faixa da intervenção máxima vazia, como na Câmara real, onde as legendas marxistas não
+têm uma cadeira.
+
+### ⚠ Três propriedades de desenho que apareceram sozinhas
+
+1. **Nenhuma DUPLA de bancadas faz maioria.** As duas maiores somam 251, seis abaixo de
+   257 — toda maioria exige três portas, e três portas com preços diferentes é a
+   negociação existindo. A prova de `agenda.mjs` foi reescrita para cobrar isso;
+2. **A maioria mais barata não cabe num mês.** Era a afirmação que a prova antiga fazia
+   sobre UMA bancada — "o centrão sozinho cabe e dói" —, e ela dependia de existir um
+   bloco com 40% do plenário. A nova é mais forte e é estrutural;
+3. **O elenco teve de se espalhar.** Com quatro dos oito arquétipos saindo do mesmo
+   bloco, cinco partidos ficaram sem uma única pessoa dentro — inclusive o de 145
+   cadeiras. Bancada grande sem rosto é bancada que não se negocia: sem sinete, sem
+   carta, sem nome. Agora a presidência da Câmara sai da maior bancada, a do Senado da
+   federação de caciques, a relatoria de quem detém o orçamento.
+
+### O que a série mediu, antes e depois
+
+| 48 meses, governo simulado | 4 blocos | 9 legendas   |
+| -------------------------- | -------- | ------------ |
+| votações aprovadas         | 14 de 43 | **30 de 43** |
+| programas movidos          | 33 de 38 | 38 de 38     |
+| meses com rateio           | 4        | 1            |
+| emenda não honrada         | 11,3     | **1,6**      |
+
+⚠ **E A DIFICULDADE PRECISOU DE UMA MÃO, com autorização explícita.** Com as nove
+legendas, um governo de MANUTENÇÃO passou a cair no mês 50 — o último do mandato —, e a
+garantia de desenho deste projeto é a oposta: _"a queda tem de ser alcançável por um
+governo RUIM e inalcançável por um MEDIANO"_. Subiram `boil` (60→68), `streetFloor`
+(20→16) e `brokerBoil` (80→86).
+
+⚠ **Fica registrado que os três são ESCOLHA DE DIFICULDADE e não medição**, e a
+autorização foi dita assim: _"você pode inventar números por enquanto; o nosso foco é
+deixar o jogo bom de verdade, jogável; depois eu peço uma boa pesquisa focando em
+fidelidade e realismo"_. **A pesquisa de fidelidade ainda vai revisar os três**, e a
+margem antiga — 52 contra um limite de 50 — era fina demais para ser desenho: dois meses
+de folga é coincidência, e qualquer recalibragem futura a consumiria sem ninguém ver.
+
+### ⚠ E o que continua ACHADO, não conserto
+
+A distribuição de cadeiras entre esquerda e direita **não foi mexida por fidelidade** —
+ela foi montada para reproduzir a Câmara real e reproduz. O que muda de verdade a
+dificuldade é o presidente: um governo de esquerda numa Câmara com 257 cadeiras nas duas
+faixas de mercado joga outro jogo. Isso é decisão de desenho, e é dele.
+
+## O mercado deixou de ser mudo — 20/08/2026
+
+⚠ **ELE ESTAVA MUDO POR UM BLOQUEIO QUE O RESPONSÁVEL DESTRAVOU NESTA SESSÃO.** A
+retomada registrava, desde 16/08: _"o mercado quer que a dívida pare de crescer — um
+TETO, e não um piso — e o baixo clero quer verba para as bancadas, que não é alavanca.
+Não force os dois na carta que existe: a exigência de piso funciona porque 'devolva o que
+você cortou' tem um número derivado atrás; um teto e uma torneira não têm, e inventá-los
+seria o número inventado que este projeto recusa."_
+
+A autorização dele foi explícita: _"você pode inventar números por enquanto; o foco é
+deixar o jogo bom de verdade, jogável"_. **E, com a porta aberta, não foi preciso inventar
+nada.**
+
+### A solução não precisou de máquina nova: o mercado é o ESPELHO
+
+Os dois grupos de capacidade escolhem o programa de maior **queda** em dinheiro e pedem o
+nível da posse de volta. O mercado escolhe o de maior **alta** e pede o mesmo nível da
+posse. **Mesma alavanca, mesmo número derivado, sinal invertido** — e o nível exigido
+continua sendo um valor que o próprio jogador já viu.
+
+### ⚠ E ISSO CRIA O DILEMA QUE FALTAVA AO JOGO INTEIRO
+
+Até aqui **todas** as exigências empurravam para o mesmo lado: gaste mais. Um jogo em que
+todo mundo quer a mesma coisa não tem escolha dentro dele — bastava ter dinheiro. Agora a
+bandeja pode receber duas cartas que **se contradizem**: a saúde pedindo o hospital de
+volta e o mercado pedindo o corte que o pagou. Ceder às duas é impossível, e **escolher
+qual lobby decepcionar é o jogo**.
+
+Medido: um governo gastador recebe a carta do mercado no **mês 23** — _"Aposentadoria
+urbana: quer o programa cortado de volta para 78"_.
+
+### O que a carta precisou aprender
+
+⚠ **A FRASE TEVE DE GANHAR SENTIDO.** Ela dizia _"quer o programa de volta em 40"_ — e
+embaixo de um número **menor** que o nível de hoje, o jogador leria a exigência ao
+contrário: cederia achando que gasta, quando na verdade corta. Aprender uma regra invertida
+e jogar contra ela por meses é pior que não ter a carta. Entraram `demandCutBody` e
+`demandCutChoices`, e **a recusa continua sendo uma frase só** — dizer não a um lobby é o
+mesmo ato nos dois casos, e a guarda `vocabulary` acusou a cópia no primeiro `check`.
+
+⚠ **E O SENTIDO NÃO FOI GUARDADO NA CARTA.** Ele é lido de `reads` no catálogo — quem lê a
+dívida pede corte. Guardá-lo na carta daria dois lugares dizendo a mesma coisa, e um
+quinto lobby entra sozinho por ali no dia em que nascer.
+
+### ⚠ O baixo clero continua mudo, e agora a razão é ESTRUTURAL
+
+O que ele quer — verba de bancada — **não é alavanca de programa**: é a torneira por
+BANCADA, que no modelo é o `funding` de cada legenda. Ceder a ele exige uma segunda
+espécie de alavanca dentro da carta, e isso é a próxima onda. Com as nove legendas, ela
+ficou mais interessante do que era: a exigência passa a nomear uma bancada específica.
 
 ## A varredura de padronização — 18/08/2026
 
@@ -1652,7 +3389,691 @@ plantar uma vinculação onde não existia é criar uma.
 save antigo não sabe repartir a capacidade da Produção entre lavoura e fábrica, e
 não sabe qual reforma aquele mandato já tinha aprovado.
 
+## O índice virou objeto: a mensagem é uma peça, e o mês é um cabeçalho
+
+Pedido dele, e ele desenhou a solução inteira: _"cada mensagem ali vai ser um retângulo
+liquid glass com bordas arredondadas, pra não parecer texto solto, e coloque também o nome
+da pessoa que enviou embaixo do título, pequeno e pouco visível. A data nós vamos colocar
+em outro lugar, pode ser entre as mensagens onde fica a linha física hoje — você retira a
+linha e troca por uma barra horizontal liquid glass com a data, e coloca ela em cima, e as
+mensagens correspondentes àquela data embaixo."_
+
+### ⚠ E ISSO REVERTEU TRÊS DECISÕES DO MESMO DIA — as três estavam certas quando foram tomadas
+
+| decisão de horas antes   | por que ela valia                                                                     | por que ela caiu                                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| a linha não tem borda    | a peça era texto, e texto não tem contorno                                            | oito assuntos em negrito sem contorno são oito FRASES: o olho não acha onde uma acaba                                                   |
+| o remetente saiu         | "Denise Hollanda Cavalcanti" em 8 de 8 linhas era moldura, e gastava metade da altura | dentro de um retângulo com fundo próprio ele lê como LEGENDA, e legenda cabe                                                            |
+| o divisor não tem rótulo | _"não pedi pra colocar mês e ano ali, era só a barra"_                                | um rótulo sentado sobre um FIO interrompe o separador; numa BARRA com fundo próprio ele é cabeçalho, e cabeçalho tem nome por definição |
+
+⚠ **O padrão das três é o mesmo, e é o achado de método desta rodada: nenhuma delas era
+uma decisão sobre ESTILO — todas eram consequência de qual OBJETO a peça era.** Enquanto a
+linha foi texto solto, borda era enfeite, remetente era ruído e data era repetição. No
+instante em que ela virou peça com contorno e fundo, os três voltaram a caber sem que
+nenhum argumento contra eles tenha sido refutado. **Reverter aqui não foi corrigir um
+erro: foi o mesmo raciocínio dando outra resposta porque a pergunta mudou.**
+
+⚠ **E A BARRA PASSOU A NASCER ANTES DE TODO GRUPO, inclusive o primeiro** — o que inverte
+a regra escrita na versão anterior (_"nunca antes do primeiro: uma régua no topo separaria
+a lista do nada"_). A regra valia para um TRAÇO: separador só existe entre duas coisas.
+Cabeçalho pertence ao grupo abaixo dele, e sem ele as cartas do mês corrente seriam as
+únicas órfãs.
+
+### ✔ É a FORMA do vidro, e não o filtro — e a medição autoriza
+
+`backdrop-filter` custa por TELA e não por efeito, e sete linhas seriam sete desfoques
+empilhados **dentro de uma lâmina que já desfoca o que está atrás dela**. As linhas
+receberam aresta (`--glass-edge`), tinta (`--glass-support-bg`) e bisel (`--bevel-fine`);
+o filtro continua exclusivo da linha ABERTA, que é `glass-action` e sobe.
+
+**Medido em `npm run screen`: 170,4 fps com material contra 162,7 do braço de controle.**
+O braço com material ficou ACIMA do controle — ou seja, o custo desta mudança está dentro
+do ruído da medição. A guarda `material` continua verde: nenhum arquivo novo declara o
+filtro.
+
+### ⚠ E O TETO DA PILHA CAIU DE 8 PARA 7, e desta vez quem o pegou fui eu medindo
+
+`TRAY_CAPACITY` já foi 11, 9 e 8. A barra com data custa 26px onde o fio custava 9, e o
+remetente devolveu uma linha a cada carta:
+
+| peça               | antes | agora |
+| ------------------ | ----- | ----- |
+| linha típica       | 33px  | 52px  |
+| linha do pior caso | 70px  | 70px  |
+| divisor de mês     | 9px   | 26px  |
+
+**Varrido mês a mês por 30 meses, o pior caso com teto 8 foi 706px numa coluna de 630 — 95
+de estouro, no mês 27.** Com teto 7 e a margem da barra enxugada para 4/2, **nenhum dos 30
+meses rolou**. A prova do passeio segue sendo quem defende o número: mexeu no recuo da
+linha ou no corpo do assunto, ela fica vermelha.
+
+⚠ **E o índice sobra ~105px no mês calmo, de propósito.** O teto é do PIOR caso; dimensionar
+pelo típico faz a pilha estourar exatamente no mês movimentado, que é o único em que ela
+precisava funcionar.
+
+## A caixa de entrada virou um móvel, e o balanço engoliu os três avulsos
+
+Duas rodadas no mesmo dia, e as duas com o print dele na mão.
+
+### ✔ O índice: um painel com fios, e não sete cartões
+
+Queixa dele sobre a versão anterior: _"tá difícil diferenciar visualmente as caixas liquid
+glass, data e mensagem"_ — com um print do Football Manager e o desenho da saída: _"um
+bloco inteiro em liquid glass para o bloco esquerdo, e só linhas finas horizontais para
+diferenciar. E na mensagem que eu apertar, a mesma cor do fundo do bloco da mensagem, sabe
+esse fundo marrom?"_
+
+⚠ **E A CULPA ERA MINHA, E ESTAVA POR ESCRITO.** Eu tinha dado à barra de data o MESMO
+material da linha e defendido isso na prosa da regra — _"mesmo material da linha, e de
+propósito"_. Dois objetos de papéis diferentes com material idêntico não se distinguem, e
+ele viu isso em dois segundos numa peça que eu tinha acabado de justificar.
+
+| peça          | antes                          | agora                                                                         |
+| ------------- | ------------------------------ | ----------------------------------------------------------------------------- |
+| a coluna      | lista transparente             | **uma superfície só** — aresta, tinta, bisel, raio                            |
+| a mensagem    | cartão com borda, fundo e raio | **linha lisa**, separada por fio de 1px                                       |
+| a selecionada | `glass-action`                 | **`--paper` (#2b241c)** — a cor do ofício ao lado, com `--paper-ink` no texto |
+| a data        | barra de vidro                 | **rótulo apagado** em caixa alta, sem superfície                              |
+
+⚠ **O CONTRASTE PASSOU A SER ENTRE TER SUPERFÍCIE E NÃO TER**, que é o mais forte que
+existe — e é por isso que dar à data um terceiro material seria a resposta errada para a
+queixa certa.
+
+### ⚠ E O CUSTO DE TELA REPROVOU DUAS VEZES, e a proposta que eu levei a ele estava errada
+
+O plano dizia, com confiança: _"sete linhas com forma de vidro viram UM desfoque, e por ser
+um só ele pode ser o filtro de verdade"_.
+
+| tentativa                                  | delta contra o controle | por quê                                                                                             |
+| ------------------------------------------ | ----------------------- | --------------------------------------------------------------------------------------------------- |
+| `glass-support` no painel                  | **−17,9 fps** ⛔        | as sete linhas nunca tiveram filtro. Isso não consolidava nada: **adicionava** um desfoque de 630px |
+| forma sem filtro, com `--glass-support-bg` | **−28,3 fps** ⛔        | o token segue `--light-angle`, que **interpola a cada quadro**                                      |
+| forma com `--glass-base`                   | **+1,5 fps** ✔          | tinta chapada                                                                                       |
+
+⚠ **E O SEGUNDO NÚMERO É O ACHADO GERAL, e ele vale para a tela inteira:
+`--glass-support-bg`, `--glass-action-bg` e `--glass-stage-bg` seguem `--light-angle`.**
+Qualquer superfície grande que os use **repinta sessenta vezes por segundo**. O passeio da
+luz foi calibrado para a lâmina do cartão — grande, atrás, uma por tela. Num móvel de
+dentro ele é o mesmo efeito pago duas vezes, e custa mais que o desfoque que o sistema
+inteiro existe para orçar.
+
+### ✔ O balanço engoliu os três relatórios avulsos
+
+A carta mensal da Casa Civil já existia e trazia **uma** leitura — a rua. Agora traz as
+três, com anexo de antes-e-depois. `Report` ganhou `balance`, medido **uma vez** por
+`balanceOf()`: os avulsos comparam para decidir se escrevem, e a carta imprime. Medidos em
+dois lugares, os dois divergiriam no primeiro remendo.
+
+### ⚠ E A TABELA DE CALIBRAGEM DESTA PROSA ESTAVA ERRADA — o caixa por um fator de 3
+
+Ela dizia que o caixa se move `mediana 0,31 · p90 0,49 · max 0,52` por mês. **O valor real é
+`1,07 · 1,19 · 8,47`.** Não foi erro de aritmética: a medição antiga perguntava o
+discricionário ao **estado velho**, e o do mês velho e o do mês novo são grandezas
+diferentes. Quando `nextFiscal` subiu e o balanço passou a ler o mês que FECHOU, a série
+mudou de escala e a prosa não foi refeita.
+
+⚠ **E O PREÇO APARECEU NA TELA NO MESMO DIA.** Pus o limiar do caixa em 0,9 para ficar
+"acima da rotina" segundo a tabela velha — e 0,9 está **abaixo da mediana real**. O print
+seguinte trazia _"Caixa cai a R$ 11,6 bi / Caixa cai a R$ 12,0 bi / Caixa cai a R$ 11,3
+bi"_ em linhas consecutivas: exatamente o defeito que a mudança existia para consertar.
+**Número calibrado contra prosa desatualizada não é calibragem.** Os seis limiares foram
+remedidos nos dois regimes — parado e jogando — e ficam bem acima do p90 de ambos.
+
+### ⚠ ACHADO 54 — a densidade caiu de 8,5 para 1,8 cartas/mês, e isso ainda é decisão dele
+
+| regime                  | cartas avulsas/mês | com o balanço |
+| ----------------------- | ------------------ | ------------- |
+| passivo                 | 0,5                | **1,5**       |
+| ativo (paga 3 bancadas) | 0,8                | **1,8**       |
+
+⚠ **E ISSO APARECE NA CAPTURA COMO CINCO RÓTULOS DE DATA PARA SETE MENSAGENS.** Com pouco
+mais de uma carta por mês, quase todo mês tem UMA — e aí o cabeçalho de grupo quase empata
+com o conteúdo que ele agrupa.
+
+**Ele pediu antes _"quero essa caixa de entrada cheia de mensagens e notícias"_, e aprovou
+depois a opção que a esvazia.** As duas coisas são incompatíveis, e a escolha entre elas é
+dele. O que eu registro é o diagnóstico: **os relatórios frequentes eram papel de parede
+sobre um mundo que gera 0,5 evento por mês.** Subir o limiar não criou o problema — tirou o
+papel e mostrou a parede. Quem enche a caixa de verdade é evento novo (o baixo clero
+escrevendo, a imprensa, o governador), e isso é motor, não interface.
+
+## ⏸ A RETOMADA — parado em 21/08/2026 para ele reiniciar o PC
+
+**Estado da árvore: VERDE e consistente.** `npm run validate` (234 provas · 11 guardas · 44
+provas sintéticas), `npm run walk` e `npm run screen` (+1,5 fps) passaram na última
+execução. **Nada ficou aplicado pela metade** — o script da edição em voo valida antes de
+escrever, e ele abortou sem gravar.
+
+### ⚠ O QUE FAZER PRIMEIRO — o pedido dele estava a meio caminho
+
+Palavras dele, e é o único item aberto:
+
+> _"só quero que fique grudado os dois blocos da caixa de entrada, e os dois liquid glass
+> padronizados e simétricos"_
+
+**Medido antes de parar** (janela 1440×980, mês 16):
+
+| peça          | x   | largura         | altura  |
+| ------------- | --- | --------------- | ------- |
+| o índice      | 264 | 208             | 630     |
+| o ofício      | 488 | 435             | 630     |
+| **a costura** | —   | **16px de vão** | —       |
+| **o degrau**  | —   | —               | **0** ✔ |
+
+⚠ **E O QUE QUEBRA A SIMETRIA NÃO É O VÃO — SÃO OS RAIOS.** O índice fecha em
+`--radius-piece` (**16px**) e o ofício em `--radius-paper` (**3px**), porque cada um herda
+do próprio material. Lado a lado com 16px entre eles, duas curvaturas diferentes leem como
+duas peças que por acaso estão perto.
+
+**As três edições prontas para aplicar, em `styles/45-screen-cabinet.css`:**
+
+1. `.tray` → `gap: 0` (era `var(--space-4)`);
+2. `.tray__list` → `border-right: 0` e `border-radius: var(--radius-piece) 0 0
+var(--radius-piece)`. A aresta direita morre para virar costura: duas bordas de 1px
+   coladas leem como um fio de 2px, que é o defeito dos "dois separadores para uma
+   fronteira";
+3. `.tray__open .letter` → `border-radius: 0 var(--radius-piece) var(--radius-piece) 0`,
+   `border-color: var(--glass-edge)`, `box-shadow: none`. **Escopado à bandeja de
+   propósito**: `.letter` é a mesma peça em três telas, e nas outras duas ela é folha solta
+   e deve manter `--radius-paper` e a sombra que a descola do fundo.
+
+⚠ **E RESTA UMA AMBIGUIDADE QUE É DELE PARA RESOLVER, e que eu não devo adivinhar.** Ele
+disse _"os dois liquid glass"_, e o bloco da direita hoje é **papel** (`--paper`, #2b241c).
+Duas leituras:
+
+- **(a) só a moldura padroniza** — raio, aresta e costura iguais; o ofício **continua
+  marrom**. É o que as três edições acima fazem, e preserva a peça que ele elogiou: a linha
+  selecionada do índice é pintada de `--paper` justamente para dizer "esta linha É o
+  documento ao lado";
+- **(b) o ofício vira vidro também** — aí a linha selecionada tem de virar vidro junto, e
+  isso **reabre a confusão que esta rodada inteira existiu para desfazer** (material igual
+  não distingue nada).
+
+**Fazer (a), capturar, e mostrar — perguntando só isto.** Ver [[pergunte-ao-olho-dele]]: em
+questão visual, a pergunta dele custa dez segundos e a dedução já custou três iterações
+hoje.
+
+### O que ficou aberto e é decisão dele, não trabalho parado
+
+**A densidade da caixa: 1,8 cartas/mês** (achado 54, logo abaixo). Ele pediu antes _"quero
+essa caixa de entrada cheia"_ e aprovou depois a opção que a esvazia. A pergunta que ficou
+sem resposta, nestas palavras: **baixar os limiares de volta, ou dar voz a quem ainda não
+escreve** (o baixo clero, a imprensa, o governador)? A segunda é motor, não interface.
+
+### ⚠ E DUAS LIÇÕES DESTA SESSÃO QUE VALEM PARA A TELA INTEIRA
+
+1. **`--glass-support-bg`, `--glass-action-bg` e `--glass-stage-bg` seguem `--light-angle`,
+   que interpola a cada quadro.** Qualquer superfície grande que os use repinta 60×/s:
+   custou **28,3 fps** num painel de 208×630, **sem filtro nenhum**. Superfície grande de
+   dentro usa `--glass-base`, que é estático;
+2. **prosa de calibragem envelhece calada.** A tabela de movimento do caixa nesta mesma
+   prosa estava errada por um fator de 3, e eu calibrei um limiar contra ela no mesmo dia —
+   o resultado foi o defeito que a mudança existia para consertar, com o número maior.
+   **Antes de escolher um limiar, remeça a distribuição.**
+
 ## Achados abertos — o que EU veria primeiro na próxima sessão
+
+**53. ⛔ NÃO RECALIBRAR A CAPACIDADE ANTES DA REFORMULAÇÃO — decisão dele, registrada em
+21/08/2026.** Com o achado 52 na mão eu ia recomendar girar `decay` e `yield`, e ele avisou
+a tempo: _"o jogo ainda terá uma boa reformulação, nós vamos adicionar empresas reais,
+coisas reais, estatização, privatização, criação, construção — MAS ISSO É A LONGO PRAZO,
+não é pra hoje"_.
+
+⚠ **A reformulação substitui exatamente o modelo que eu ajustaria.** Cada número girado
+hoje é um número girado duas vezes, e o segundo giro apaga o primeiro.
+
+**O QUE SOBREVIVE À REFORMULAÇÃO, e é onde vale investir:**
+
+- **o Congresso inteiro** — bancadas, lealdade, emenda, quórum. Nada disso é trocado por
+  empresa, e a sonda `favoritos` acabou de mostrar que o eixo funciona: três a 73 e oito em
+  ruptura, com o teto fechando em 12 meses;
+- **a tramitação** — estatizar e privatizar vão passar por ela. É o canal, e ele já leva
+  uma lei modesta da caneta à norma em quatro meses;
+- **a Caixa de Entrada** — ela é a superfície por onde o mundo fala, e um mundo com empresas
+  fala mais, não menos;
+- **a lição de método do achado 52**, que vale para qualquer modelo que venha.
+
+**O QUE NÃO SOBREVIVE, e por isso não deve receber trabalho agora:**
+
+- os oito `decay` e `yield` de `areas.mjs`, e a identidade que os produz;
+- qualquer conclusão sobre "o país responde na velocidade certa" — a pergunta volta inteira
+  quando uma estatal construída no mês 6 começar a produzir.
+
+⚠ **E A PERGUNTA FICA ESCRITA, mesmo sem a resposta:** _quanto tempo uma decisão do
+presidente leva para mudar o país?_ Hoje são "mais que um mandato, em seis das oito áreas",
+e isso é herdado de uma identidade aritmética — **ninguém escolheu**. No modelo novo ela
+merece ser escolhida.
+
+**52. ⚠ O ACHADO 49 ESTÁ ERRADO, E EU O ESCREVI HOJE — a correção é de MÉTODO e é a terceira
+da mesma família em uma sessão, 21/08/2026.** Ele dizia: _"o país é quase inerte; hoje o
+Planalto é um jogo de sobrevivência no Congresso com um país decorativo"_.
+
+**O país não é inerte. As SONDAS é que espalham tudo por igual.**
+
+**Medido depois, com duas sondas novas:**
+
+| jogada                            | Saúde         | preço                                        |
+| --------------------------------- | ------------- | -------------------------------------------- |
+| concentrar tudo nela, 48 meses    | **61 → 71,5** | Indústria 48→15, Segurança 38→15, dívida 93% |
+| rodar o foco a cada 12 meses      | 61 → 65       | Indústria 48→21, Segurança 38→19             |
+| espalhar (as seis sondas antigas) | 61 → 60       | —                                            |
+
+E no Congresso, com a sonda `favoritos` — emenda cheia às três maiores bancadas e nada às
+outras oito: **três a 73 e oito em ruptura**, contingenciamento em **12 meses**, alocação
+caindo de 254 para 115.
+
+⚠ **AS SEIS POLÍTICAS ANTIGAS ESPALHAM NOS DOIS EIXOS** — verba dividida entre as oito
+áreas, emenda oferecida às onze bancadas na mesma medida. **Nenhuma delas ESCOLHE.** E
+escolher é o jogo: é o que Victoria 3, Democracy 4 e o Geo-Political Simulator pedem do
+jogador do primeiro turno ao último.
+
+**Uma sonda que espalha mede o espalhamento, e conclui que o mundo é plano.**
+
+### ⚠ E o que sobrevive do 49 é a METADE que a velocidade explica
+
+| área              | decay/mês | meia-vida  | % do caminho em 48 meses |
+| ----------------- | --------- | ---------- | ------------------------ |
+| Educação          | 0,0088    | **79 mês** | 35%                      |
+| Defesa            | 0,0088    | **78**     | 35%                      |
+| Saúde             | 0,0110    | **63**     | 41%                      |
+| Agricultura       | 0,0114    | **61**     | 42%                      |
+| Fazenda           | 0,0124    | **55**     | 45%                      |
+| Previdência       | 0,0171    | 40         | 56%                      |
+| Segurança         | 0,0419    | 16         | 87%                      |
+| Indústria e Infra | 0,0569    | 12         | 94%                      |
+
+⚠ **SEIS DAS OITO TÊM MEIA-VIDA MAIOR QUE O MANDATO.** Educação leva 79 meses para
+percorrer metade do caminho até onde o dinheiro a levaria, e o mandato tem 48. **E as duas
+que se movem são exatamente as duas que desabam em toda partida** — Indústria e Segurança
+percorrem 87–94% do caminho, então elas obedecem; as outras seis não têm tempo.
+
+**Isso é uma decisão de design, e ela nunca foi tomada de propósito:** um jogo em que
+Educação não responde a um mandato inteiro é uma tese sobre o Brasil — defensável — mas
+hoje ela é só a consequência aritmética de uma identidade calibrada área por área.
+
+⚠ **E A CONSEQUÊNCIA DE JOGO É NÍTIDA: o país premia COMPROMISSO SUSTENTADO, e pune
+rotação.** Concentrar 48 meses na Saúde dá +10,5; rodar o foco a cada 12 dá +4. Nenhuma
+tela do jogo diz isso ao jogador, e é a regra mais importante que ele precisaria saber.
+
+### A lição de método, e ela é a mais cara desta sessão
+
+**Três vezes hoje eu quase registrei como defeito do MOTOR o que era uniformidade do
+INSTRUMENTO:**
+
+1. _"as onze bancadas não diferenciam"_ — diferenciam: amplitude 66 pagando uma só;
+2. _"o país é inerte"_ — responde: +10,5 concentrando;
+3. _"a lei nunca é escrita"_ — é: quatro meses da caneta à norma.
+
+**As três vezes o teste que separou as duas frases levou menos de um minuto**, e as duas
+frases pedem trabalhos opostos — recalibrar um motor, ou escrever uma sonda. **Antes de
+chamar de defeito, faça a pergunta que o instrumento nunca fez.**
+
+**49. ⛔ CORRIGIDO PELO ACHADO 52, E A CORREÇÃO É MINHA — leia os dois juntos.** O que
+segue continua valendo como MEDIÇÃO das seis sondas antigas; a CONCLUSÃO que eu tirei dela
+— "o país é quase inerte" — está errada, e o 52 mostra por quê: as sondas espalham, e o
+país responde a quem concentra.
+
+**49. ⚠ O PAÍS É QUASE INERTE, E É ELE QUE DÁ NOME AO JOGO — ACHADO NOVO em 21/08/2026, e
+é o mais fundo já registrado aqui.** Pedido do responsável: _"analise todo o jogo como ele
+funciona hoje"_. Rodado com `simulate` sobre a semente padrão, 48 meses, sem choque.
+
+**O país ao fim, em pontos de índice:**
+
+| área              | abre | paga a base | faz agenda | legisla   |
+| ----------------- | ---- | ----------- | ---------- | --------- |
+| Fazenda           | 72   | **70**      | **70**     | 70        |
+| Agricultura       | 63   | **54**      | **54**     | 56        |
+| Indústria e Infra | 48   | **20**      | **20**     | 24        |
+| Previdência       | 71   | **70**      | **70**     | 70        |
+| Saúde             | 61   | **60**      | **60**     | 63        |
+| Educação          | 44   | **43**      | **43**     | 44        |
+| Segurança         | 38   | **20**      | **20**     | 23        |
+| Defesa            | 51   | **49**      | **49**     | 50        |
+| alocado           | —    | 254,0       | 253,7      | **456,2** |
+
+⚠ **OITO DE OITO IDÊNTICAS** entre pagar a base e fazer agenda — duas jogadas opostas, o
+mesmo país. E o legislador, que aloca **quase o dobro**, move a Saúde em **3 pontos em
+quatro anos**.
+
+**O que muda é o Congresso**, que vai de 0 a 58 conforme a jogada. **Hoje o Planalto é um
+jogo de sobrevivência no Congresso com um país decorativo.** Isso não é defeito de código:
+é onde a calibragem parou, e ninguém escolheu que fosse assim.
+
+⚠ **E O PAÍS NÃO TEM OITO ÍNDICES: TEM DOIS QUE DESABAM E SEIS PARADOS.** Indústria perde
+24–28 pontos e Segurança 15–18 **em todas as sete políticas**; as outras seis não passam
+de 2. Nenhuma jogada segura as duas, nem a que aloca o dobro.
+
+⚠ **E A DÍVIDA TERMINA EM ~90% DO PIB FAÇA O QUE FIZER**: 90,1 / 90,2 / 90,7 / 92,0. O
+explorador, que existe para quebrar o modelo, chega a dois pontos do governo prudente.
+
+**50. ✔ A LEI FUNCIONA, E NENHUM INSTRUMENTO TINHA OLHADO — 21/08/2026.** _"A lei vira
+texto"_ é o norte declarado do projeto desde 14/08, e as **seis** políticas do simulador
+terminavam o mandato com **zero normas escritas**. Cinco só movem NÍVEL — que é caneta, e
+caneta não vira lei — e a sexta, o explorador, escreve uma lei impossível de propósito.
+
+**Medido à mão, fora do simulador, uma lei modesta atravessa a tramitação inteira em quatro
+meses:** mês 3 gaveta → mês 4 a Mesa pauta → mês 5 o relator emenda → mês 6 o plenário
+aprova e a **norma 45** entra no arquivo.
+
+⚠ **ENTROU A SONDA `legislador`** para o instrumento finalmente ver o caminho que o jogo
+chama de norte. Com ela: **2 normas em 48 meses, com 2 de 39 votações aprovadas — 5%** —
+e rateio cortando em 44 dos 48 meses para pagar a tentativa. **O caminho existe e é quase
+intransitável, e ninguém decidiu que devia ser.**
+
+**51. ✔ O CONGRESSO DIFERENCIA DE VERDADE, e nenhuma sonda joga favoritos — 21/08/2026.**
+Nas sete políticas as onze bancadas terminam com **o mesmo número**, o que parecia um
+modelo sem diferenciação. **Não é:** pagando verba a UMA só bancada por 24 meses, a
+amplitude entre elas vai a **66 pontos**.
+
+⚠ **As sondas pagam todo mundo igual.** O eixo mais interessante do jogo — escolher quem se
+compra e quem se decepciona — **nunca foi medido por ninguém**. É a primeira coisa que eu
+faria: uma sonda que paga duas bancadas e abandona nove.
+
+⚠ **E EU QUASE REGISTREI ISSO COMO DEFEITO DO MOTOR** antes de testar. A medição de um
+minuto separou "o modelo não diferencia" de "as sondas não diferenciam", e as duas frases
+pedem trabalhos opostos.
+
+**48. ⚠ O ACHADO 37 ESTÁ PELA METADE VENCIDO, e eu repeti a metade morta dele numa resposta
+antes de medir — 21/08/2026.** Ele dizia, medido em 20/08: _"num governo que joga ATIVO
+cortando UMA alavanca por pauta, passaram-se 30 MESES sem uma única carta que pergunte"_, e
+a consequência escrita era que **a Caixa de Entrada nunca pergunta nada em quatro anos**.
+
+**Medido hoje, num mandato PASSIVO de 48 meses — o caso mais calmo que existe:**
+
+| espécie de carta                 | carta-meses em 48 |
+| -------------------------------- | ----------------- |
+| `demand` (a chantagem do lobby)  | **29**            |
+| `rupture`                        | 6                 |
+| `posse`                          | 3                 |
+| `siege`                          | 2                 |
+| `reported` (a emenda do relator) | **0**             |
+
+**Há pergunta de verdade na mesa em 22 dos 48 meses.** A caixa não é muda: ela pergunta em
+quase metade do mandato, e pergunta a um presidente que não fez **nada**.
+
+⚠ **O QUE MUDOU FOI O MERCADO GANHAR VERBO em 20/08**, na mesma sessão em que o achado foi
+escrito — e o achado foi escrito antes. Um governo passivo endivida, o mercado esquenta, e
+ele cobra. **O laço fecha.**
+
+⚠ **E A METADE QUE CONTINUA DE PÉ É A CAUSA, e não a consequência:** `reported` deu **ZERO**
+em 48 meses. A regra de `reports` em `passage.mjs` — só texto que machuca **duas alavancas
+ou mais** passa por relatoria com emenda — continua exatamente como estava, e a pergunta do
+RELATOR continua atrás de um comportamento que ninguém ensina. O que mudou é que ela deixou
+de ser a única porta.
+
+**A lição desta correção é de método, e é cara:** o achado 37 foi escrito na mesma sessão em
+que o conserto que o desatualizou entrou, e passou uma sessão inteira sendo citado como
+verdade — inclusive por mim, em voz alta, antes de eu medir. **Achado com número tem data, e
+número com data envelhece.** Antes de repetir um, remeça-o.
+
+**47. ⚠ A COLUNA DE TENDÊNCIA DE FINANÇAS NUNCA MOSTROU NADA, e a causa não é o desenho —
+é que as réguas descrevem um país 20 vezes mais volátil do que o modelo produz. ACHADO
+NOVO em 21/08/2026, e ele é o mais fundo desta sessão.**
+
+Medido num mandato passivo de 20 meses, em **unidades de traço, de 20 possíveis**:
+
+| indicador  | 6 meses | 12 meses | 24 meses |
+| ---------- | ------- | -------- | -------- |
+| PIB        | 2,8     | **6,0**  | 10,1     |
+| Inflação   | 0,2     | 0,4      | **0,6**  |
+| Juro       | 0,3     | 0,6      | 1,2      |
+| Desemprego | **0,0** | 0,1      | 0,3      |
+| Dívida/PIB | 0,2     | 0,5      | 1,0      |
+
+**Quatro dos cinco movem menos de UMA unidade de vinte em dois anos.** A inflação vive
+entre 3,1% e 4,2% contra uma régua de 0 a 15%; o desemprego não sai de 7,7%.
+
+⚠ **E O DESENHO JÁ FOI TROCADO, então ele está descartado como causa.** A escada de blocos
+morreu nesta sessão e virou linha de SVG, e a janela dobrou de 6 para 12 — o PIB passou a
+mostrar movimento de verdade, e os outros quatro **não mudaram nada**, porque não há o que
+mostrar.
+
+**São duas hipóteses, e elas pedem coisas opostas:**
+
+1. **as réguas estão largas demais.** Apertar `SCALE.inflation` para [0,02; 0,06] faria a
+   linha viver. ⚠ **Mas ela perderia o drama exatamente quando ele importar:** uma
+   inflação de 12% viraria uma linha reta encostada no teto, e é justamente esse o mês em
+   que o jogador precisa ver a curva subir;
+2. **o modelo macro é estável demais.** Um mandato inteiro sem o jogador tocar em nada
+   move a inflação em 1,1 ponto. Se o ATIVO também não move, o problema não é de tela.
+
+⚠ **A MEDIÇÃO QUE FALTA É A DO GOVERNO ATIVO**, e ela decide qual das duas: `npm run
+simulate` com um governo que corta e escreve. **Não meça no passivo** — foi o passivo que
+produziu a tabela acima, e ele é o caso mais calmo possível por construção.
+
+**E a decisão é do responsável nos dois ramos**, porque calibragem não se muda para fazer
+um desenho ficar bonito: se a régua estiver errada, é conserto de leitura; se o modelo
+estiver parado, é conserto de jogo, e os dois têm donos diferentes.
+
+**46. ⚠ RECARREGAR A PÁGINA APAGA A LEITURA DO MÊS, e o save não tem como devolvê-la —
+ACHADO NOVO em 21/08/2026, e ele veio de uma captura do responsável.** `last`, o relatório
+do turno, é **variável de módulo do entrypoint** e não vai para o save. Numa recarga o
+estado volta inteiro do `localStorage` e `last` volta **nulo**: `describeMonth` não produz
+carta nenhuma, e se `state.mail` também estiver vazia a bandeja fecha com **zero ofícios**.
+
+Reproduzido num navegador de verdade, sem tocar em código:
+
+| momento           | ofícios na bandeja |
+| ----------------- | ------------------ |
+| abertura          | 1                  |
+| depois de 3 meses | 1                  |
+| **depois de F5**  | **0**              |
+
+✔ **A METADE VISÍVEL FOI CONSERTADA**: o estado vazio dizia _"O primeiro mês ainda não foi
+resolvido"_ em junho de 2027, com três meses resolvidos, e prometia na linha seguinte que
+_"todo mês que você resolve chega aqui"_. Agora ele tem duas frases e escolhe pelo MÊS do
+estado — que atravessa o save —, e não por `last`, que não. A prova
+_"A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO"_ trava as duas.
+
+⚠ **MAS A PERDA DE LEITURA CONTINUA, e ela é a metade que importa.** O fechamento do mês —
+a carta assinada pela Casa Civil, com o que o mês fez — **desaparece na recarga e não
+volta**. A Caixa de Entrada é a superfície central do desenho (_"o inbox é o jogo"_), e um
+F5 apaga a única coisa que o mundo escreveu.
+
+⚠ **E O CONSERTO COLIDE COM UMA RECUSA REGISTRADA, por isso ele é decisão do responsável.**
+A prosa do estado diz: _"a leitura do mês NÃO é carta; guardá-la aqui obrigaria o save a
+carregar 48 relatórios para reescrever um texto que o turno já sabe produzir"_. **O
+argumento é contra guardar 48, e guardar UM é outra coisa** — mas é mudança de forma do
+save, e este save **recusa versão diferente em vez de converter**: custa a partida em
+andamento de quem estiver jogando. As três saídas:
+
+1. **persistir só o último relatório** — resolve inteiro, custa um bump de esquema;
+2. **regenerar do estado** — ⛔ impossível: o relatório é função do estado ANTERIOR e das
+   ordens daquele mês, e nenhum dos dois sobrevive;
+3. **aceitar a perda e declará-la** — é o que está no ar agora, e é honesto, mas o jogador
+   perde a leitura sem saber que existiu.
+
+**45. ⚠ AS ESCADAS DE FINANÇAS TÊM O MESMO DEFEITO QUE REPROVOU A DA BARRA, e elas estão
+na tela há sessões — ACHADO NOVO em 21/08/2026, pego na captura do passeio.**
+`.ledger__spark` declara `font-size: 0.5rem`, e é a mesma conta do achado 44: o bloco `▁`
+tem **um oitavo do corpo da fonte**, então a 8px ele é **um pixel**. Na captura de
+`walk-financas.png`, `PIB R$ 12,42 tri ______` e `Inflação 3,1% _______` leem como
+sublinhado do número, e não como desenho.
+
+⚠ **E ELE É MENOS GRAVE LÁ, o que é a razão de ele ter sobrevivido:** cada linha do painel
+traz a variação ESCRITA ao lado — _"−6 em 6 meses"_ —, então a escada é o segundo sinal e
+não o único. Na barra superior não havia texto de apoio, e por isso o mesmo tamanho
+reprovou.
+
+⚠ **E O CONSERTO NÃO É ÓBVIO, por isso ele é achado e não conserto.** Finanças é a tela
+**densa por decisão registrada** — _"em tela que só informa, densidade é o serviço"_ —, e
+subir a escada de 0,5 para 0,7rem engorda **dezoito linhas** de um painel que já foi
+calibrado para caber. É uma troca entre legibilidade de uma peça e a altura da tela
+inteira, e ela é decisão do responsável.
+
+**44. ⚠ A ESCADA NÃO CABE NA BARRA SUPERIOR, e o intervalo entre "cabe" e "lê" é VAZIO —
+MEDIDO e REVERTIDO em 21/08/2026.** O achado 43 dizia que as sparklines dos quatro vitais
+eram baratas. **A metade cara dele estava certa** — `sparkline` existe, Finanças já a usa,
+e a série custou só dois campos —, **e a metade barata estava errada**: a peça foi
+construída inteira, o esquema subiu para 18, e **a captura a reprovou duas vezes**.
+
+| tamanho     | o que a captura mostrou                                                                                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **0,5rem**  | cabe, e vira um TRAÇO. O bloco `▁` tem 1/8 do corpo da fonte — a 8px isso é **um pixel**, e doze deles leem como o sublinhado do número: `R$ 13,01 tri ___________` |
+| **0,85rem** | lê, e não cabe. `overflow-x` entrou e o primeiro vital ficou mostrando **"i"** com uma barra ao lado — o rótulo `PIB` e o valor saíram da tela                      |
+
+**A conta é a razão:** a fileira tem **994px para quatro leituras** — 248 cada, e rótulo
+mais valor já gastam ~150. Uma escada legível de doze degraus pede ~120.
+
+⚠ **E ENCURTAR A JANELA NÃO SALVA.** Com seis degraus ela volta a caber, e medido num
+mandato passivo de 30 meses ela sai com **UM degrau só em três dos quatro vitais** — plana
+do primeiro ao último mês, que é a escada afirmando que nada nunca acontece. **Cabe e
+mente, ou lê e não cabe.**
+
+⚠ **O ESQUEMA VOLTOU PARA 17, e isso é parte do conserto e não hesitação.** Os dois campos
+novos ficaram sem consumidor, e **campo de estado sem consumidor custa uma versão de
+save** — este save RECUSA em vez de converter, então cada número novo ali custa ao jogador
+a partida em andamento. O número 18 não foi queimado.
+
+**O que a tentativa DEIXOU, e é o que sobrou de valor:**
+
+- ⚠ **a régua do PIB estava errada há sessões, e em DUAS telas.** Ela ia até "metade a
+  mais que a largada" — um chute nunca medido. **Medido num mandato de 48 meses: o PIB vai
+  de 12,06 para 15,18 tri e usa CINCO dos oito degraus.** A escada gastava metade da altura
+  numa faixa que a partida nunca visita. Agora é `gdpRange`, com fator 1,2 e um dono só —
+  Finanças e a barra digitavam a mesma expressão;
+- **`SCALE` mudou de casa** para `shared/trend.mjs`, junto com a JANELA: os dois
+  consumidores estavam prestes a ter duas cópias da mesma régua.
+
+**O LUGAR DA ESCADA JÁ EXISTE, e é Finanças** — lá cada linha tem a largura do painel, e as
+cinco de lá funcionam desde que nasceram. ⚠ **O que continua aberto é onde pôr uma leitura
+de TRAJETÓRIA no Gabinete**, que é a pergunta legítima da auditoria. O candidato com espaço
+é a Trindade — três linhas de ~370px —, mas **duas das três séries dela não existem**, e
+desenhar duas de três é o defeito que tirou a aprovação da barra por três sessões.
+
+**42. ⚠ AS TELAS LEEM O BUFFER CURTO DO MOTOR E IGNORAM A SÉRIE DE 48 MESES QUE EXISTE PARA
+ELAS — ACHADO NOVO em 21/08/2026, e ele saiu de uma pergunta do responsável sobre a
+auditoria externa.** `state.series.areas` guarda o índice de cada área **mês a mês, até 48**,
+e é preenchido todo turno por `extend` em `turn.mjs`. A prosa do estado diz para que ele
+serve, com todas as letras: _"o histórico é curto e ALIMENTA O MOTOR; a série é longa e
+alimenta os OLHOS"_.
+
+**Finanças e a tela de área leem `state.capacity.history`** — o buffer do atraso, que guarda
+`lag + 1` valores. Medido no mês 18:
+
+| fonte                     | Fazenda | Previdência | Saúde | Educação |
+| ------------------------- | ------- | ----------- | ----- | -------- |
+| `series.areas` (não lida) | **16**  | **16**      | 16    | 16       |
+| `capacity.history` (lida) | **1**   | **1**       | 4     | 16       |
+
+**A consequência tem duas metades, e a segunda é pior:**
+
+1. **Fazenda e Previdência não têm tendência nem faísca**, em toda partida, em duas telas —
+   e a ausência é DECLARADA como se o dado não existisse;
+2. **seis das oito áreas mostram uma janela mais curta do que o dado suporta.** A Saúde diz
+   _"em 3 meses"_ com dezesseis meses guardados ao lado.
+
+⚠ **E A PROSA QUE JUSTIFICA A AUSÊNCIA ENVELHECEU.** `trend.mjs` afirma, para explicar o
+`null`: _"a série de índices por área não existe no estado (`state.series` guarda o macro, e
+nada mais)"_. **Ela existe.** É a mesma classe de erro do `span` do Gabinete e do `height`
+do rail — o código continuou válido e parou de ser verdade —, e é a terceira ocorrência
+nesta sessão.
+
+⚠ **O CONSERTO NÃO É TROCAR A FONTE E PRONTO.** `trendOf` recebe a janela do histórico e
+devolve quantos meses ela suportou; com a série, a janela passa a ser 12 para todas — que é
+o que `WINDOW` já queria. **Isso MUDA NÚMEROS MOSTRADOS em seis linhas de duas telas**, e
+mudar leitura é decisão do responsável, não conserto de rotina.
+
+**43. ▶ AS SPARKLINES DO GABINETE SÃO BARATAS, E EU AS ADIEI POR ENGANO — 21/08/2026.** Ao
+avaliar a auditoria externa eu disse que elas exigiam motor novo. **Não exigem:**
+`sparkline()` está escrita e Finanças já a usa em cinco linhas, e `state.series` guarda 48
+meses de PIB, inflação, juro, desemprego, dívida/PIB e primário.
+
+⚠ **O QUE CUSTA É A SIMETRIA DOS QUATRO VITAIS.** A barra superior mostra PIB, inflação,
+**aprovação** e **base** — e os dois últimos **não estão na série**. Pôr faísca em dois dos
+quatro reproduz exatamente o defeito que este projeto já pagou uma vez: _"um indicador
+congelado ao lado de indicadores vivos ensina a desconfiar da tela inteira"_ — foi o que
+tirou a aprovação da barra por três sessões, e a lição está escrita em `vitalsHtml`.
+
+Fazer os quatro custa **dois campos novos em `Series`, um bump de `schemaVersion` e a
+migração** — que é trabalho pequeno e com precedente farto no arquivo, mas é motor, e motor
+não entra sem pedido.
+
+**40. ⚠ "QUEM TRAVA A OBRIGATÓRIA" CAIU DE TRÊS PARA UM, e isso é PERDA DE RESPOSTA e não
+conserto — 21/08/2026.** O responsável pediu o corte do bloco inteiro; a verificação
+recusou o corte porque **a leitura não existe em outro lugar**: Finanças mostra a
+obrigatória como TOTAL, e quem trava só aparece programa a programa, espalhado por oito
+telas de ministério. Apagar aqui apagaria do jogo a única resposta ao item de auditoria
+externa que criou o bloco — _"não há como investigar quais leis herdadas estão sugando esse
+dinheiro"_.
+
+O meio-termo entregue foi **o maior travador, nomeado, numa frase**: `Aposentadoria urbana
+trava R$ 66,7 bi`. Custou ~80px e quatro linhas. ⚠ **O segundo e o terceiro estão a um
+parâmetro de distância** — `lockedBy(state, catalog, top)` continua devolvendo três, e é a
+tela que imprime um. **A pergunta que fica aberta não é de layout: é se um só basta.** Um
+governo que corta previdência vê o número mudar; um que não corta vê a mesma linha por 48
+meses, e aí ela vira legenda estática — que é exatamente o defeito que as frases de desejo
+da CALDEIRA acabaram de pagar.
+
+**41. ⚠ O ACHADO 38 CADUCOU, e o que sobrou dele é outra pergunta — MEDIDO em 21/08/2026.**
+Ele dizia que a coluna da direita não cabe na dobra e que fechar exigiria decidir o que sai
+da tela, com _"Aprovação por renda"_ como candidato. **A decisão nunca precisou ser tomada:**
+a coluna fecha hoje em **805 de 935 numa janela de 980, com rolagem ZERO** — 130px de folga.
+Ela chegou lá por três movimentos que ninguém planejou como densificação: o canvas de 20/08,
+o ar de 24px entre blocos de 21/08 e os cortes desta sessão.
+
+⚠ **O que a folga NÃO resolve é o outro lado, e ele continua aberto:** a metade esquerda tem
+~300px de lâmina sem nada, e isso é o [achado 37](#achados-abertos--o-que-eu-veria-primeiro-na-próxima-sessão)
+— **o mundo quase não escreve**. Tirar a moldura fez o vazio parar de ser feio; não fez a
+caixa de entrada ter conteúdo. Nenhuma mudança de CSS enche uma bandeja vazia, e o caminho
+continua sendo dar verbo aos dois lobbies mudos.
+
+**37. ⚠ A ÚNICA CARTA QUE PERGUNTA EXIGE UM TEXTO QUE MACHUCA DUAS ALAVANCAS, e ninguém
+diz isso ao jogador — ACHADO NOVO em 20/08/2026, e é o mais fundo desta sessão.**
+
+Medido num navegador de verdade, com o jogo jogado de fato:
+
+| como se joga                             | perguntas em 30 meses |
+| ---------------------------------------- | --------------------- |
+| passivo (só avança o mês)                | **0**                 |
+| ativo, cortando UMA alavanca por pauta   | **0**                 |
+| ativo, cortando TRÊS alavancas por pauta | a primeira no mês 5   |
+
+A causa **não é defeito**: é a regra de `reports`, em `passage.mjs`, escrita e justificada
+com um defeito medido atrás dela — _"o relator que apaga a única cláusula do texto não
+escreveu um jabuti: ele REJEITOU o projeto, e rejeitar é trabalho do plenário"_. `hurt < 2`
+devolve `saved: undefined`, e **sem emenda não há pergunta**.
+
+⚠ **O que não estava escrito em lugar nenhum é a consequência de jogo:** a Caixa de
+Entrada é a superfície central do desenho inteiro — o ciclo 4 diz que _"o inbox é o
+jogo"_ —, e um presidente cauteloso, que mexe numa coisa de cada vez, **atravessa quatro
+anos sem que ela pergunte nada**. Toda a tensão que o dossiê externo sentiu faltando na
+tela tem aqui uma das causas, e ela não é de CSS.
+
+⚠ **E o conserto NÃO é baixar o limiar para 1.** Isso reabriria o defeito que a regra veio
+consertar — zero votações em 24 meses. As saídas honestas são outras, e as três são
+mecânica e não pintura:
+
+- **os DOIS LOBBIES MUDOS** (item 2 da ordem antiga) — o mercado e o baixo clero. Eles
+  perguntam por conta própria, sem depender de o jogador escrever texto grande;
+- **o relator emendar por OUTRA razão** que não "sobrou alavanca" — hoje a única porta
+  para uma pergunta é o tamanho do texto;
+- **a tela dizer o que ninguém diz**: que um texto de uma cláusula não passa por
+  relatoria com emenda. Isso é informação de regra, e ela não existe na interface.
+
+**38. ⚠ O VAZIO DA CAIXA DE ENTRADA É DA COLUNA DA DIREITA, e não dela — MEDIDO em
+20/08/2026, e ele sobreviveu ao master-detail.** A bandeja fecha na altura da coluna
+vizinha: 302 + 232 + 255 + 110 = 899, e sobram 591px sem conteúdo no mês 1.
+
+⚠ **As duas saídas óbvias já estão fechadas por decisão registrada.** Encolher a bandeja
+foi tentado e revertido na décima primeira sessão — _"uma bandeja curta com um vão enorme
+embaixo lê como layout inacabado"_ —, e o dossiê externo pede o contrário: densificar a
+coluna da direita até ela caber. Contas feitas sobre a medição de dentro dos cartões, o
+teto de uma varredura de densidade honesta (gaps de 12→8, hemiciclo de 170→104, linhas da
+CALDEIRA mais justas) é de **~144px**, o que leva a página de 1347 para ~1203. **Não fecha
+os 367px de rolagem.**
+
+Fechar exige **decidir o que sai da tela**, e isso é decisão do responsável — é a mesma
+que ele fechou em 18/08 com _"deixe como está"_, e que o dossiê reabre. O candidato mais
+óbvio é "Aprovação por renda": 110px inteiramente abaixo da dobra, com as barras mais
+saturadas da tela no item menos importante dela.
+
+**39. O ITEM 1 DA ORDEM ANTIGA ESTAVA VENCIDO, e a próxima sessão não precisa dele.** A
+retomada de 18/08 mandava _"MEDIR O ACHADO 30 antes de tocar em qualquer lobby"_. Ele já
+tinha sido medido, e o resultado está na prosa da trindade em `cabinet.mjs`: consertado o
+achado 31, **o setor produtivo vai a 33 e as forças de ordem a 35 em 48 meses, contra ZERO
+antes**. O que sobrou aberto dos dois não é movimento — é **verbo**: eles se mexem e não
+têm como exigir nada. É o item 2, e ele passou a ser o item 1.
 
 **34. ⚠ A TELA DA ÁREA PROJETAVA O ÍNDICE PARA O LADO ERRADO — RESOLVIDO em 16/08/2026,
 e é a SÉTIMA ocorrência da família mais cara deste projeto.** `app.mjs` refazia a

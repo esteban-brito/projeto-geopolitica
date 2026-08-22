@@ -113,6 +113,33 @@
        vezes, e a razão não mudou: o modelo não tem "oposição", e pintar um bloco
        de vermelho diria que ele é perigo. Aqui a cor é do LUGAR, não de quem
        está nele. */
+    /* ── O EIXO ECONÔMICO — cinco faixas, da esquerda à direita ────────────────
+       ⚠ ESTA FAMÍLIA REABRE UMA RECUSA REGISTRADA TRÊS VEZES, e a reabertura é do
+       responsável, olhando a tela e escolhendo as cores uma a uma: "usa vermelho,
+       vermelho alaranjado, amarelo, verde, verde azulado escuro, nessa ordem pra
+       extrema esquerda, esquerda, centro, direita, extrema direita".
+
+       ⚠ A REGRA ANTIGA FICA REGISTRADA em vez de apagada, porque ela não era boba: "a
+       paleta já gasta verde em ALTA e vermelho em CRISE, e pintar ideologia com os
+       mesmos tons faria um bloco parecer bom e o outro parecer perigo". O risco é
+       real e a decisão é dele — e a forma de conviver com o risco é a saturação: estes
+       cinco são tons TERROSOS, não os semânticos. `--crisis` é #e0574f, claro e
+       saturado; o vermelho daqui é mais escuro e mais fechado. O alerta continua
+       vencendo o plenário quando os dois aparecem juntos.
+
+       ⚠ E ELAS SÓ VIVEM NA FITA. Uma cor de eixo em qualquer outro lugar da tela seria
+       a segunda paleta que o sistema visual existe para impedir. */
+    --axis-1: #b8443c;
+    --axis-2: #c86f36;
+    --axis-3: #c7a83f;
+    --axis-4: #4f8f55;
+    --axis-5: #2c6668;
+    --axis-1-rgb: 184, 68, 60;
+    --axis-2-rgb: 200, 111, 54;
+    --axis-3-rgb: 199, 168, 63;
+    --axis-4-rgb: 79, 143, 85;
+    --axis-5-rgb: 44, 102, 104;
+
     --bordo: #8f3b4a;
     --bordo-rgb: 143, 59, 74;
 
@@ -174,6 +201,13 @@
        leu o bloco de leis como "caixas de contorno fininho", sem perceber que havia
        papel ali. Substancia que so o autor enxerga nao e substancia. */
     --paper: #2b241c;
+    /* ⚠ A FORMA `-rgb` NASCEU EM 21/08/2026, e o consumidor e o oficio aberto da Caixa de
+       Entrada. Pedido dele: "da pra ser marrom liquid glass o bloco da direita, e o da
+       esquerda so liquid glass? os dois igualmente padronizados?" — e a resposta e a mesma
+       gramatica que `--glass-base` ja usa, com outra tinta: uma demao TRANSLUCIDA sobre a
+       lamina, e nao uma cor chapada. Sem o par, o marrom so existe opaco, e opaco ele e
+       tinta e nao vidro. */
+    --paper-rgb: 43, 36, 28;
     --paper-edge: #4a3f31;
     --paper-ink: #d9cdbc;
     /* A forma `-rgb` existe porque a tinta do papel precisa de translucidez: as
@@ -390,6 +424,22 @@
     --font-record: Georgia, "Times New Roman", Times, serif;
 
     --text-hero: clamp(2.6rem, 6vw, 4.5rem);
+
+    /* ── O NOME DA TELA, e ele DEIXOU DE SER O HERÓI em 20/08/2026 ─────────────
+       ⚠ O DEGRAU NASCEU DE UMA AUDITORIA EXTERNA, e ela acertou a leitura: "títulos
+       gigantes ocupam espaço nobilíssimo apenas para dizer ao jogador onde ele está".
+       Medido no Gabinete a 1440×980: a cabeça da tela custava **101px** para imprimir
+       uma palavra que o rail já marca em destaque três centímetros à esquerda.
+
+       ⚠ E A CORREÇÃO NÃO É ENCOLHER `--text-hero`, que foi a primeira ideia e estaria
+       errada: a prosa dele diz o que ele é — "o maior reservado ao DADO DRAMÁTICO do
+       momento" —, e quem o usa além do título é o placar de uma votação, que é
+       exatamente esse dado. Encolhido, o placar encolheria junto. O defeito nunca foi
+       o tamanho do herói: era o nome da tela estar VESTIDO de herói.
+
+       Ele fica maior que o título de bloco e menor que o placar, que é a hierarquia
+       que a tela sempre quis ter: primeiro o que está acontecendo, depois onde. */
+    --text-screen: clamp(1.5rem, 2.9vw, 2.2rem);
     --text-title: clamp(1.15rem, 2.4vw, 1.6rem);
     --text-verdict: clamp(0.82rem, 1.15vw, 0.95rem);
     --text-body: 0.85rem;

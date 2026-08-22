@@ -138,7 +138,6 @@ export function closingHtml(term) {
   return (
     `<section class="stage closing">` +
     headHtml({
-      eyebrow: copy.eyebrow,
       title: copy.title,
       reading: { label: copy.months, value: `${term.months} de ${term.of}` },
     }) +

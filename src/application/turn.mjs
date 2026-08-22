@@ -48,7 +48,7 @@ import { revenueOf, step as budgetStep } from "../domain/budget/index.mjs";
 import { pressureOf, step as capacityStep } from "../domain/capacity/index.mjs";
 import { benches as benchesOf, cast, offered, president, remember } from "../domain/cast/index.mjs";
 import { carry, premiumOf, step as economyStep } from "../domain/economy/index.mjs";
-import { heat, rupture } from "../domain/pressure/index.mjs";
+import { capitalShares, heat, rupture } from "../domain/pressure/index.mjs";
 import { enact, resolve } from "../domain/norms/index.mjs";
 import {
   opening as opinionOpening,
@@ -68,7 +68,15 @@ import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 import { CATALOG } from "../data/catalog.mjs";
 import { bandOf, compose, honour, spendOf } from "./agenda.mjs";
 import { DRAWER_LIFE, forgotten, proposalOf, reports, tables } from "./passage.mjs";
-import { alarm, amendment, demand, notice, pending, settle as settleMail } from "./mail.mjs";
+import {
+  alarm,
+  amendment,
+  demand,
+  notice,
+  pending,
+  report,
+  settle as settleMail,
+} from "./mail.mjs";
 import {
   MONTHS_PER_TERM,
   MONTHS_PER_YEAR,
@@ -133,6 +141,10 @@ import { OPENING_MONTH, reduce } from "../state/state.mjs";
  * @property {Record<string, number>} allocated bilhoes que chegaram, por area
  * @property {Tally | null} tally nulo quando nao houve votacao — decreto ou mes parado
  * @property {Record<string, number>} loyalty o humor depois do mes
+ * @property {Balance} balance as tres leituras do mes, com o antes e o depois de cada
+ *   uma. ⚠ ELAS SUBIRAM PARA CA em 21/08/2026 porque a carta da Casa Civil passou a
+ *   imprimir as tres — e a tela nao pode medir nenhuma delas por fora: `discretionaryRoom`
+ *   perguntado ao estado vivo daria o mes SEGUINTE, e a view estaria contando outro mes
  * @property {ReadonlyArray<import("../domain/cast/index.mjs").Person>} people o elenco do mandato
  * @property {Record<string, number>} memory o que cada pessoa passou a lembrar
  * @property {ReadonlyArray<{ kind: string, label: string, detail: string | null }>} events
@@ -897,13 +909,15 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
  * pressao dele cruza `demandAt` — e `demandAt` e MENOR que o ponto de fervura, porque
  * uma exigencia que chega depois de o grupo ja ter abandonado o governo e um recibo.
  *
- * ── SO OS DOIS QUE LEEM A MALHA EXIGEM, e a limitacao e declarada ────────────
- * Cada lobby cobra na moeda do canal que ele lê, e essa e a regra de exclusao mutua do
- * catalogo. Os dois de capacidade cobram GASTO NUMA AREA, que e uma alavanca que o
- * presidente move com a caneta. Os outros dois cobram coisas que ainda nao tem carta:
- * o mercado quer que a divida pare de crescer — um TETO, e nao um piso — e o baixo
- * clero quer verba para as bancadas, que nao e alavanca. **Fica registrado**: sao a
- * proxima onda, e cada um precisa de um verbo proprio.
+ * ── TRES DOS QUATRO EXIGEM, desde 20/08/2026 ────────────────────────────────
+ * Cada lobby cobra na moeda do canal que ele lê. Os dois de capacidade cobram GASTO
+ * NUMA AREA e pedem de volta o que foi cortado; o MERCADO cobra na mesma alavanca e
+ * pede o contrario — que o aumento seja desfeito. Ver `leverOf`, logo abaixo, e o
+ * dilema que isso cria.
+ *
+ * ⚠ O BAIXO CLERO CONTINUA MUDO, e fica registrado: o que ele quer e verba de BANCADA,
+ * que nao e alavanca de programa. Ele precisa de uma segunda especie de alavanca na
+ * carta, e essa e a proxima onda.
  *
  * ── E ELE EXIGE DE VOLTA O QUE FOI CORTADO ──────────────────────────────────
  * O nivel exigido e o da POSSE, e por isso a exigencia so nasce quando o jogador de
@@ -921,7 +935,6 @@ function demandsOf(state, pressure, catalog) {
   const written = [];
 
   for (const lobby of catalog.lobbies) {
-    if (lobby.reads !== "capacity") continue;
     if ((pressure[lobby.id] ?? 0) < catalog.pressure.demandAt) continue;
 
     /* ⚠ UMA EXIGENCIA ABERTA POR VEZ, POR GRUPO. Sem isto o mesmo lobby escreveria
@@ -929,23 +942,9 @@ function demandsOf(state, pressure, catalog) {
        tarefas que o ciclo 9 recusou. */
     if (state.mail.some(letter => letter.from === lobby.id && letter.answer === null)) continue;
 
-    const areas = new Set((lobby.areas ?? "").split(" ").filter(Boolean));
+    const worst = leverOf(state, lobby, catalog);
 
-    /* O CORTE QUE MAIS PESOU EM DINHEIRO. `cost` e o gasto anual cheio do programa,
-       entao `(posse − hoje)/100 × custo` e quanto o pais deixou de gastar ali. */
-    let worst = null;
-    let deepest = 0;
-    for (const program of catalog.programs) {
-      if (!areas.has(program.area)) continue;
-      const now = state.levels[program.id] ?? program.initial;
-      const cut = ((program.initial - now) / 100) * program.cost;
-      if (cut > deepest) {
-        deepest = cut;
-        worst = program;
-      }
-    }
-
-    /* NADA CORTADO, NADA A EXIGIR — e o silencio aqui e a informacao. Um grupo
+    /* NADA A EXIGIR, NADA ESCRITO — e o silencio aqui e a informacao. Um grupo
        insatisfeito que nao tem o que pedir continua esquentando pelo indice; ele so
        nao tem uma carta para escrever. */
     if (!worst) continue;
@@ -954,6 +953,64 @@ function demandsOf(state, pressure, catalog) {
   }
 
   return written;
+}
+
+/**
+ * QUAL ALAVANCA UM GRUPO COBRA — e cada canal cobra a dele.
+ *
+ * ⚠ O MERCADO DEIXOU DE SER MUDO EM 20/08/2026, e a solucao nao precisou de maquina
+ * nova: ele e o ESPELHO EXATO da exigencia que ja existia. Os dois grupos de capacidade
+ * dizem "devolva o que voce cortou" e escolhem o programa de maior QUEDA em dinheiro; o
+ * mercado diz "desfaca o que voce aumentou" e escolhe o de maior ALTA. Mesma alavanca,
+ * mesmo nivel da posse, sinal invertido — e nenhum numero inventado, porque o nivel
+ * exigido continua sendo um valor que o proprio jogador ja viu.
+ *
+ * ⚠ E ISSO CRIA O DILEMA QUE FALTAVA AO JOGO. Ate aqui as exigencias empurravam todas
+ * para o mesmo lado: gaste mais. Com o mercado escrevendo, a bandeja passa a receber
+ * duas cartas que se contradizem — a saude pedindo o hospital de volta e o mercado
+ * pedindo o corte que o pagou —, e ceder as duas e impossivel. **Escolher qual lobby
+ * decepcionar e o jogo**, e essa escolha nao existia enquanto so um lado falava.
+ *
+ * ⚠ O TETO PROPRIAMENTE DITO CONTINUA REGISTRADO COMO AUSENTE. O decimo dossie pedia
+ * que o mercado exigisse um limite de DIVIDA, e isso seria uma segunda moeda: o jogador
+ * teria de aprender uma grandeza nova para responder uma carta. Cobrar em ALAVANCA usa
+ * o vocabulario que ele ja tem, e o efeito sobre a divida vem por consequencia, que e
+ * como o resto deste motor funciona.
+ *
+ * ⚠ E O BAIXO CLERO CONTINUA MUDO, e a razao e estrutural e nao falta de vontade: o que
+ * ele quer — verba de bancada — nao e uma alavanca de PROGRAMA, e sim a torneira por
+ * BANCADA. Ceder a ele exigiria uma segunda especie de alavanca na carta, e isso e a
+ * proxima onda. Fica registrado.
+ *
+ * @param {GameState} state
+ * @param {import("../data/lobbies.mjs").Lobby} lobby
+ * @param {typeof CATALOG} catalog
+ * @returns {import("../data/programs.mjs").Program | null}
+ */
+function leverOf(state, lobby, catalog) {
+  /* O MERCADO OLHA O ORCAMENTO INTEIRO, e nao uma area: o que o incomoda e a despesa,
+     venha ela de onde vier. Os de capacidade olham so as areas que eles leem. */
+  const areas = new Set((lobby.areas ?? "").split(" ").filter(Boolean));
+  const wantsCut = lobby.reads === "debt";
+
+  let chosen = null;
+  let deepest = 0;
+
+  for (const program of catalog.programs) {
+    if (!wantsCut && !areas.has(program.area)) continue;
+
+    const now = state.levels[program.id] ?? program.initial;
+    /* `cost` e o gasto anual cheio do programa, entao a diferenca de nivel vezes o
+       custo e quanto o pais passou a gastar — ou deixou de gastar — ali. */
+    const moved = ((wantsCut ? now - program.initial : program.initial - now) / 100) * program.cost;
+
+    if (moved > deepest) {
+      deepest = moved;
+      chosen = program;
+    }
+  }
+
+  return chosen;
 }
 
 /**
@@ -1503,13 +1560,29 @@ const NOTICED = new Set(["tabled", "forgotten", "passed", "rejected"]);
  * elas nao estao no estado, entao a unica maneira de saber o que mudou e perguntar
  * duas vezes, com o antes e com o depois.
  *
+ * ⚠ E ELA GANHOU TRES TRAVESSIAS EM 21/08/2026, pela mesma razao de sempre e com o
+ * numero refeito: mesmo DEPOIS de o mercado ganhar verbo, a bandeja fechava com **1,2
+ * cartas por mes** num governo passivo, e **20 de 24 meses tinham uma carta ou nenhuma**.
+ * O responsavel viu antes de eu medir. As tres novas — o teto que fecha, a base que perde
+ * a maioria, o grupo que ferve — o motor ja decidia todo mes, e nenhuma tinha como chegar
+ * a quem nao estivesse olhando o cartao certo da coluna da direita.
+ *
+ * ⚠ E O "DEPOIS" CHEGA DE FORA, e nao se recalcula aqui. Quem acabou de resolver o mes ja
+ * tem a pressao, a lealdade e o orcamento novos na mao; refaze-los dentro desta funcao
+ * seria a segunda conta da mesma coisa, e ela divergiria da primeira no mes em que um
+ * limiar mudasse — que e exatamente o mes em que esta carta precisa estar certa.
+ *
  * @param {GameState} state o mes ANTES do passo
  * @param {ReturnType<typeof rupture>} now as rupturas depois dele
  * @param {number | null} impeachment o mes em que o processo abriu, ja decidido
  * @param {typeof CATALOG} catalog
+ * @param {object} after o que o mes acabou de produzir
+ * @param {Record<string, number>} after.pressure
+ * @param {Record<string, number>} after.loyalty
+ * @param {boolean} after.contingency se o teto do arcabouco fechou
  * @returns {import("../state/state.mjs").Letter[]}
  */
-function alarmsOf(state, now, impeachment, catalog) {
+function alarmsOf(state, now, impeachment, catalog, after) {
   const before = rupture({
     pressure: state.pressure,
     lobbies: catalog.lobbies,
@@ -1534,11 +1607,226 @@ function alarmsOf(state, now, impeachment, catalog) {
     written.push(alarm({ kind: "siege", id: "siege", subject: "siege", month: state.month }));
   }
 
+  /* ── O TETO DO ARCABOUCO FECHOU ─────────────────────────────────────────────
+     ⚠ ELE E A PRIMEIRA CRISE DA LISTA DE `situationOf`, e a razao esta escrita la: "o
+     teto fechado vem primeiro porque ele nao se negocia — sem discricionario nao ha
+     emenda, e sem emenda a base nao se compra de volta". O jogo inteiro estreita nesse
+     mes, e a unica noticia disso era o gel da tela mudar de cor. */
+  const ceilingBefore = budgetStep({ ...positionOf(state, catalog), spent: 0 }).contingency;
+  if (!ceilingBefore && after.contingency) {
+    written.push(alarm({ kind: "ceiling", id: "ceiling", subject: "ceiling", month: state.month }));
+  }
+
+  /* ── A BASE CRUZOU A MAIORIA, PARA BAIXO ────────────────────────────────────
+     ⚠ E ELA E TRAVESSIA E NAO ESTADO: um governo que abre em minoria nao recebe carta
+     nenhuma, porque nada mudou — ele nasceu assim, e a Trindade ja diz. O que merece
+     carta e o mes em que o chao cede. */
+  const seatsBefore = baseCount({ parties: catalog.parties, loyalty: state.loyalty });
+  const seatsNow = baseCount({ parties: catalog.parties, loyalty: after.loyalty });
+  if (seatsBefore >= SIMPLE_MAJORITY && seatsNow < SIMPLE_MAJORITY) {
+    written.push(
+      alarm({ kind: "minority", id: "minority", subject: "minority", month: state.month }),
+    );
+  }
+
+  /* ── UM GRUPO PASSOU DO PONTO DE FERVURA ────────────────────────────────────
+     ⚠ ELE E POR GRUPO, e nao um aviso agregado: qual deles ferveu e a informacao inteira
+     — o mercado fervendo e o baixo clero fervendo pedem coisas opostas. E o remetente e
+     ELE, porque quem passou do limite tem nome.
+
+     ⚠ E O LIMIAR E O DO MOTOR, lido de `catalog.pressure.boil`. A tela nao tem o proprio,
+     e esta funcao tambem nao pode ter: uma carta que chamasse de fervendo o que a ruptura
+     ainda trata como paciencia mentiria no unico mes que importa. */
+  for (const lobby of catalog.lobbies) {
+    const wasBoiling = (state.pressure[lobby.id] ?? 0) >= catalog.pressure.boil;
+    const isBoiling = (after.pressure[lobby.id] ?? 0) >= catalog.pressure.boil;
+    if (wasBoiling || !isBoiling) continue;
+    written.push(
+      alarm({
+        kind: "boiling",
+        id: lobby.id,
+        subject: lobby.id,
+        month: state.month,
+        from: lobby.id,
+      }),
+    );
+  }
+
   /* ⚠ A CAIXA MANDA NO ID. O alarme nao carrega o mes de proposito — a ferida que
      reabre nao e uma noticia nova —, e sem esta linha uma pressao oscilando em volta
      do limiar poria duas cartas de mesmo id na bandeja no mesmo mes. */
   const held = new Set(state.mail.map(letter => letter.id));
   return written.filter(letter => !held.has(letter.id));
+}
+
+/* O QUE CONTA COMO MOVIMENTO, e o que conta como GRITO.
+   ══════════════════════════════════════════════════════════════════════════════
+   ⚠ OS SEIS NUMEROS SAO MEDIDOS, e nao escolhidos. O movimento mensal absoluto de cada
+   grandeza, em 48 meses, e agora nos DOIS regimes — parado e jogando (pagando tres
+   bancadas), porque a diferenca entre eles decide o limiar:
+
+     grandeza    mediana   p75    p90     max      (passivo / ativo)
+     aprovacao   0 / 1    1 / 1  1 / 1   8 / 10
+     base        2 / 3    4 / 7  4 / 16  158 / 112
+     caixa    1,07/0,95 1,15/1,05 1,19/1,08  8,47/7,64
+
+   ⚠ E A TABELA ANTERIOR DESTA PROSA ESTAVA ERRADA NO CAIXA — ela dizia "mediana 0,31, p90
+   0,49, max 0,52", e o valor real e TRES VEZES MAIOR em todas as casas. O erro nao foi de
+   aritmetica: a medicao antiga perguntava o discricionario ao ESTADO VELHO, e o
+   discricionario do mes velho e o do mes novo sao grandezas diferentes. Depois que
+   `nextFiscal` subiu e o balanco passou a ler o mes que FECHOU, a serie mudou de escala e a
+   prosa nao foi refeita.
+
+   ⚠ E O PRECO DISSO APARECEU NA TELA. O limiar do caixa foi posto em 0,9 para ficar "acima
+   da rotina" segundo a tabela velha — e 0,9 esta ABAIXO da mediana real. O print seguinte
+   tinha "Caixa cai a R$ 11,6 bi", "Caixa cai a R$ 12,0 bi", "Caixa cai a R$ 11,3 bi" em
+   linhas consecutivas: o mesmo defeito que a mudanca queria consertar, agora com o numero
+   maior. NUMERO CALIBRADO CONTRA PROSA DESATUALIZADA NAO E CALIBRAGEM.
+
+   ⚠ E O PRIMEIRO NUMERO ESTAVA NA MEDIANA, E ISSO ERA O DEFEITO. A regra antiga dizia
+   "perto da MEDIANA, e assim o relatorio chega em cerca de metade dos meses" — e o print
+   dele mostrou o que isso produz de verdade:
+
+     Base perde 4 cadeiras · Caixa cai a R$ 12,0 bi
+     Base perde 4 cadeiras · Caixa cai a R$ 12,5 bi
+     Base perde 4 cadeiras · Caixa cai a R$ 12,4 bi
+
+   ⚠ E MEDIDO DEPOIS: NAO E ARTEFATO DE UM MANDATO PASSIVO. Jogando — pagando tres
+   bancadas — a serie de cadeiras perdidas por mes e 7, 4, 5, 5, 5, 5, 5, 4, 4. O numero e
+   constante PORQUE O FATO E CONSTANTE, e um relatorio mensal de uma constante nao e
+   noticia: e linha de log. A carta estava honesta e inutil.
+
+   ⚠ O LIMIAR AGORA FICA ACIMA DA ROTINA, e nao perto dela. O que faz escrever deixou de
+   ser "moveu" e passou a ser "moveu MAIS DO QUE COSTUMA":
+
+     grandeza    rotina (p90)   escreve a partir de   grita a partir de
+     aprovacao         1                   3                     5
+     base           4 a 16                 8                    20
+     caixa        1,08 a 1,19              2                     4
+
+   Cada "escreve" fica bem acima do p90 dos DOIS regimes, e cada "grita" a meio caminho
+   entre ele e o maximo observado. E por isso que a base pede 8 e o caixa pede 2 — nao e
+   escala de importancia, e a distancia entre o que aquela grandeza faz todo mes e o que
+   ela faz no mes que importa.
+
+   E A DENSIDADE NAO CAI POR ISSO, porque ela deixou de depender destes tres: quem garante
+   uma carta por mes e o BALANCO DA CASA CIVIL, que sempre chega e carrega as tres leituras
+   juntas. Os avulsos voltaram a ser o que o nome diz — o mes fora da curva.
+
+   O SEGUNDO E O QUE FAZ GRITAR, e ele fica perto do MAXIMO observado: o mes em que a base
+   perde dez cadeiras nao pode ter a mesma cara do mes em que ela perde duas. E o "jogo de
+   cores" — sem ele, vinte e quatro cartas na bandeja sao um mural; com ele, sao um arquivo
+   que se varre de relance. */
+const MOVED = { street: 3, seats: 8, vault: 2 };
+const HEAVY = { street: 5, seats: 20, vault: 4 };
+
+/**
+ * @typedef {object} Balance as tres leituras do mes, com o valor de ANTES e o de DEPOIS
+ * @property {number} streetWas
+ * @property {number} streetNow
+ * @property {number} seatsWas
+ * @property {number} seatsNow
+ * @property {number} roomWas
+ * @property {number} roomNow
+ */
+
+/**
+ * O ANTES DAS TRES LEITURAS, medido UMA VEZ no mes que ainda nao andou.
+ *
+ * ⚠ ELA EXISTE PORQUE DOIS CONSUMIDORES PASSARAM A PRECISAR DOS MESMOS SEIS NUMEROS:
+ * os relatorios avulsos, que comparam para decidir se escrevem, e o BALANCO DA CASA
+ * CIVIL, que imprime os seis. Medidos em dois lugares, os dois divergiriam no primeiro
+ * remendo — e e a familia de defeito mais cara deste projeto, ja paga seis vezes.
+ *
+ * ⚠ E O "ANTES" SE PERGUNTA AO ESTADO VELHO, que e o unico lugar onde ele ainda existe.
+ * Depois de `reduce` o mes anterior deixou de estar em qualquer campo, e uma carta que
+ * lesse o "antes" do estado vivo contaria o mes errado na segunda vez que fosse aberta.
+ *
+ * @param {GameState} state o mes ANTES do passo
+ * @param {{ approval: number, seats: number, room: number }} after
+ * @param {typeof CATALOG} catalog
+ * @returns {Balance}
+ */
+function balanceOf(state, after, catalog) {
+  return {
+    streetWas: pollFrom(state.mood, catalog.segments, catalog.opinion).good,
+    streetNow: after.approval,
+    seatsWas: baseCount({ parties: catalog.parties, loyalty: state.loyalty }),
+    seatsNow: after.seats,
+    roomWas: discretionaryRoom(state, catalog),
+    roomNow: after.room,
+  };
+}
+
+/**
+ * O QUE O MUNDO ESCREVE POR TEMPO, e nao por evento.
+ *
+ * ⚠ ELA E A RESPOSTA A UMA MEDICAO QUE O RESPONSAVEL VIU ANTES DE MIM: mesmo com o
+ * mercado exigindo e com tres travessias novas, a bandeja fechava com 1,3 cartas por mes.
+ * A razao e estrutural — travessia e rara por definicao, porque uma ferida cruza uma vez —
+ * e a densidade de um inbox de verdade nao vem de limiar: vem de RELATORIO PERIODICO.
+ *
+ * ⚠ E NENHUM DOS TRES INVENTA NUMERO. Aprovacao, cadeiras e discricionario sao lidos das
+ * mesmas funcoes que a tela pergunta, com o valor de ANTES e o de DEPOIS do passo. A carta
+ * guarda os dois porque uma que lesse o "depois" do estado vivo estaria contando o mes
+ * errado na segunda vez que fosse aberta.
+ *
+ * @param {GameState} state o mes ANTES do passo
+ * @param {object} after o que o mes acabou de produzir
+ * @param {number} after.approval
+ * @param {number} after.seats
+ * @param {number} after.room
+ * @param {Record<string, Record<string, number>>} [after.attach] os ANEXOS, um por
+ *   dominio e com a chave sendo a propria especie da carta.
+ *
+ *   ⚠ ELES MORAM NUM MAPA PROPRIO e nao soltos ao lado de `seats` e `room`, e a razao e
+ *   uma colisao real: `after.seats` E O NUMERO DE CADEIRAS, e um anexo chamado `seats` no
+ *   mesmo objeto sobrescreveria a contagem. Separados, `after.attach[kind]` acha o anexo
+ *   certo sem nenhum `if` por especie — e um quarto dominio so precisa por a propria
+ *   chave aqui.
+ *
+ *   ⚠ E TODOS CHEGAM PRONTOS. A rua vem de SONDA com as notas ja pesadas; o caixa vem do
+ *   LASTRO com a identidade dele; a base vem da lealdade que o mes acabou de fechar.
+ *   Nenhum deles se calcula nesta funcao
+ * @param {Balance} balance o antes e o depois das tres leituras, ja medido uma vez.
+ *
+ *   ⚠ E FOI ELE QUE APOSENTOU O `catalog` DESTA FUNCAO: o catalogo so entrava aqui para
+ *   medir o "antes", e medir o antes deixou de ser trabalho dela. Uma dependencia que
+ *   sobrevive ao motivo dela e o que faz uma funcao parecer precisar de mais mundo do
+ *   que precisa
+ * @returns {import("../state/state.mjs").Letter[]}
+ */
+function reportsOf(state, after, balance) {
+  const before = { street: balance.streetWas, seats: balance.seatsWas, room: balance.roomWas };
+
+  /** @type {import("../state/state.mjs").Letter[]} */
+  const written = [];
+
+  /** @param {"street" | "seats" | "vault"} kind @param {number} was @param {number} now */
+  const write = (kind, was, now) => {
+    const moved = Math.abs(now - was);
+    if (moved < MOVED[kind]) return;
+    written.push(
+      report({
+        kind,
+        month: state.month,
+        was,
+        now,
+        heavy: moved >= HEAVY[kind],
+        /* ⚠ AS TRES TEM ANEXO, e a chave e o proprio `kind` — nao ha `if` por especie
+           aqui, e isso e de proposito: no dia em que um quarto dominio escrever, ele so
+           precisa por a propria chave em `after`. Um `switch` neste ponto seria o quinto
+           lugar do turno que precisa saber quantos dominios existem. */
+        attach: after.attach?.[kind],
+      }),
+    );
+  };
+
+  write("street", before.street, after.approval);
+  write("seats", before.seats, after.seats);
+  write("vault", before.room, after.room);
+
+  return written;
 }
 
 /**
@@ -2165,11 +2453,33 @@ export function playMonth(state, orders = {}, options = {}) {
 
   const fallen = state.fallen ?? (survivors && !survivors.passed ? state.month : null);
 
+  /* A POSICAO FISCAL COM QUE O MES SEGUINTE COMECA. Ela sobe para ca em 21/08/2026
+     porque DOIS consumidores passaram a precisar dela: o reducer, como sempre, e o
+     relatorio do caixa — que tem de perguntar o discricionario ao mes que fechou, e nao
+     ao que comecou. Calculada duas vezes, as duas divergiriam no primeiro remendo. */
+  const nextFiscal = nextPosition(state, budget, applied, catalog, interest, bands, appliedBands);
+
+  /* ⚠ AS TRES LEITURAS DO MES FECHADO, MEDIDAS UMA VEZ SO — e elas subiram para ca em
+     21/08/2026 porque ganharam um SEGUNDO consumidor. Ate entao so os relatorios avulsos
+     as usavam, e podiam medi-las por dentro; agora o balanco da Casa Civil imprime os
+     mesmos seis numeros, e dois lugares medindo a mesma coisa e o defeito que este
+     projeto ja pagou seis vezes.
+
+     ⚠ E O DISCRICIONARIO SE PERGUNTA AO ESTADO NOVO, que ainda nao existe aqui.
+     `nextPosition` ja produziu a posicao fiscal com que o mes seguinte comeca, e e dela
+     que o caixa sai: perguntar ao estado velho daria um balanco sempre um mes atrasado. */
+  const closed = {
+    approval: pollFrom(opinion.mood, catalog.segments, catalog.opinion).good,
+    seats: baseCount({ parties, loyalty }),
+    room: discretionaryRoom({ ...state, fiscal: nextFiscal }, catalog),
+  };
+  const balance = balanceOf(state, closed, catalog);
+
   return {
     state: reduce(state, {
       type: "monthResolved",
       loyalty,
-      fiscal: nextPosition(state, budget, applied, catalog, interest, bands, appliedBands),
+      fiscal: nextFiscal,
       macro: economy.macro,
       mood: opinion.mood,
       series: extend(
@@ -2209,10 +2519,65 @@ export function playMonth(state, orders = {}, options = {}) {
          impeachment aberto embaixo de tres avisos de tramitacao e um inbox que
          ensina a rolar — e quem rola para de ler. */
       mail: [
-        ...alarmsOf(state, rupturas, impeachment, catalog),
+        ...alarmsOf(state, rupturas, impeachment, catalog, {
+          pressure,
+          loyalty,
+          contingency: budget.contingency,
+        }),
         ...passage.asked,
         ...demandsOf(state, pressure, catalog),
         ...notices(passage.events, state.month),
+        /* ⚠ O RELATORIO VEM POR ULTIMO NA ORDEM, e a razao e a mesma da bandeja inteira:
+           o que exige leitura antes da proxima decisao fica no alto. Um aviso de que a
+           aprovacao andou dois pontos acima de uma pergunta com prazo correndo seria o
+           inbox ensinando a rolar — e quem rola para de ler. */
+        ...reportsOf(
+          state,
+          {
+            ...closed,
+            /* ── OS TRES ANEXOS, NUM MAPA SO ────────────────────────────────────
+               A chave e a propria especie da carta, e por isso `reportsOf` nao precisa de
+               nenhum `if`: um quarto dominio so poe a propria chave aqui. */
+            attach: {
+              /* A RUA — as cinco notas JA PESADAS por classe, achatadas em `classe.nota`.
+                 Achatar aqui e o que permite ao anexo ser um `Record<string, number>`
+                 generico: as tres especies compartilham UM campo, e nao um campo cada. */
+              street: {
+                ...Object.fromEntries(
+                  Object.entries(opinion.weighed).flatMap(([id, pesos]) =>
+                    Object.entries(pesos).map(([nota, valor]) => [`${id}.${nota}`, valor]),
+                  ),
+                ),
+                betrayal: opinion.betrayal,
+                wear: opinion.wear,
+              },
+              /* O CAIXA — e os quatro numeros sao a IDENTIDADE do LASTRO, e nao uma
+                 selecao: receita menos obrigatoria e o que EXISTE, o teto e o que a regra
+                 deixa gastar, e o MENOR dos dois e o que se pode empenhar. Mostrar os
+                 quatro e mostrar por que o discricionario e daquele tamanho — que e a
+                 unica pergunta que o jogador faz olhando para ele. */
+              vault: {
+                revenue: budget.revenue,
+                mandatory: budget.mandatory,
+                ceiling: budget.ceiling,
+                allowance: budget.allowance,
+              },
+              /* A BASE, BANCADA POR BANCADA.
+                 ⚠ ELE E O EIXO QUE O SIMULADOR NUNCA MEDIU — pagar uns e abandonar outros
+                 —, e ate hoje ele so aparecia agregado. Onze bancadas somadas num "398
+                 cadeiras" escondem que tres estao a 73 e oito em ruptura, que e exatamente
+                 a informacao com que se governa. */
+              seats: Object.fromEntries(
+                parties.flatMap(party => [
+                  [`${party.id}.was`, state.loyalty[party.id] ?? 0],
+                  [`${party.id}.now`, loyalty[party.id] ?? 0],
+                  [`${party.id}.seats`, party.seats],
+                ]),
+              ),
+            },
+          },
+          balance,
+        ),
         ...post.mail,
       ],
       pressure,
@@ -2248,6 +2613,7 @@ export function playMonth(state, orders = {}, options = {}) {
       loyalty,
       people,
       memory,
+      balance,
       /* O QUE A TRAMITACAO FEZ NESTE MES — a materia-prima das cartas. */
       events: passage.events,
     },
@@ -2454,11 +2820,21 @@ export function boilerOf(state, catalog = CATALOG) {
     parameters: catalog.pressure,
   });
 
+  /* ⚠ A FATIA DO CAPITAL VEM DO MOTOR, e a tela nao a divide por conta propria. Ela
+     e a resposta a uma cegueira que uma auditoria externa nomeou em 21/08/2026: a
+     caldeira desenha quatro reguas do mesmo tamanho, e uma delas nao consegue derrubar
+     presidente nenhum. "A barra mostra se eles gostam de voce; o numero ao lado mostra
+     o estrago que podem fazer se nao gostarem." O estrago ja existia no catalogo desde
+     o ciclo 10 — `weight`, em `lobbies.mjs` — e nunca tinha chegado a tela. */
+  const shares = capitalShares(catalog.lobbies);
+
   return {
     lobbies: catalog.lobbies.map(lobby => ({
       id: lobby.id,
       label: lobby.label,
       wants: lobby.wants,
+      /* QUANTO DA RUPTURA ECONOMICA ESTE GRUPO CARREGA, de 0 a 1. */
+      share: shares[lobby.id] ?? 0,
       pressure: state.pressure[lobby.id] ?? 0,
       /* FERVENDO E UM ESTADO, e nao um adjetivo: e o mesmo limiar que a ruptura
          economica le, e por isso a tela nao pode ter o proprio. */

@@ -31,6 +31,21 @@ const TERMOS = {
   /* Os tres estados de uma bancada. Eles apareciam em `mood` e em `cabinet.arch*`
      com as mesmas palavras em dois — e com palavras DIFERENTES no terceiro:
      "rompida" contra "em ruptura", para o mesmo estado do mesmo motor. */
+  /* ⚠ ELA VIROU TERMO EM 20/08/2026, quando a fita do plenário passou a nomear a
+     linha que ela desenha. A mesma frase já era o RITO de quórum de uma lei
+     ordinária — e as duas nomeiam o mesmo limiar da Constituição: se um dia ele
+     mudar de nome, muda nos dois lugares ou o jogo passa a ter dois nomes para a
+     mesma linha. */
+  /* ⚠ RECUSAR E O MESMO ATO NAS DUAS CHANTAGENS, e por isso a palavra e uma so. O
+     grupo de capacidade pede verba de volta e o mercado pede corte — os dois lados de
+     CEDER sao opostos e tem frases proprias —, mas dizer nao a um lobby e dizer nao a
+     um lobby, e a consequencia e identica: ele esquenta. A guarda `vocabulary` acusou
+     a copia no primeiro `check`, e ela estava certa. */
+  refuse: "Recusar",
+  refuseCost: "o grupo esquenta, e a caldeira não esfria depressa",
+
+  simpleMajority: "maioria simples",
+
   loyal: "com o governo",
   obstructing: "obstruindo",
   ruptured: "em ruptura",
@@ -43,6 +58,26 @@ const TERMOS = {
   /* O carimbo do fim, e ele e o mesmo no cartao da CALDEIRA e no fecho. */
   removed: "MANDATO INTERROMPIDO",
   removedNote: "a Câmara autorizou o afastamento",
+
+  /* ⚠ APROVAR E DERRUBAR SAO O MESMO MOTIVO DE CHEGADA, e a guarda `vocabulary` cobrou
+     a copia no primeiro `check`. O DESFECHO das duas cartas e oposto — uma diz que passou,
+     outra que caiu —, mas a pergunta "por que isto chegou na minha caixa" tem uma resposta
+     so: o plenario julgou um texto que voce assinou. Duas copias divergiriam no dia em que
+     alguem ajustasse uma delas, e ai o jogo passaria a ensinar duas mecanicas onde ha uma. */
+  plenaryJudged: "o plenário votou um texto que você assinou",
+
+  /* ⚠ CINCO ROTULOS SUBIRAM PARA CA EM 21/08/2026, e todos pela mesma razao: o ANEXO da
+     carta passou a mostrar as mesmas grandezas que Financas e a Mesa ja nomeavam. A guarda
+     `vocabulary` cobrou as cinco copias no primeiro `check`, e ela estava certa por um
+     motivo que vale mais que a duplicacao — **a carta e a tela dizem o MESMO numero**, e
+     no dia em que um deles mudasse de nome o jogador leria dois nomes para a mesma linha
+     do orcamento. */
+  mandatorySpend: "Despesa obrigatória",
+  ceilingRule: "Teto do arcabouço",
+  seatsWord: "cadeiras",
+  moodWord: "humor",
+  perMonthWord: "no mês",
+  revenueWord: "Receita",
 
   /* Unidades e grandezas, ditas uma vez. */
   month: "mês",
@@ -63,8 +98,28 @@ const TERMOS = {
   pen: "caneta",
 };
 
+/**
+ * O ROTULO DE UMA CHAVE, com o proprio id como reserva.
+ *
+ * ⚠ ELA MOROU EM TRES TELAS AO MESMO TEMPO ate 21/08/2026 — `area.mjs`, `mesa.mjs` e
+ * `report.mjs`, corpo por corpo identicas —, e a quarta ia nascer na Caixa de Entrada.
+ * Tres copias e sorte; quatro e sistema. Ela sobe para ca porque o que ela protege e um
+ * contrato do VOCABULARIO: chave que nao existe na tabela sai como o proprio id.
+ *
+ * E ESSA RESERVA E A RAZAO DE ELA EXISTIR, e nao economia de digitacao: `instrument`,
+ * `guard` e `kind` sao texto vindo do CATALOGO, e catalogo e dado que gente edita. Um
+ * valor novo digitado errado tem de aparecer cru na tela — feio, visivel, consertavel —
+ * e nao derrubar a pintura inteira com `undefined`.
+ *
+ * @param {Record<string, string>} table
+ * @param {string} key
+ * @returns {string}
+ */
+export function labelOf(table, key) {
+  return table[key] ?? key;
+}
+
 export const UI = {
-  mark: "Planalto",
   /* AS SECOES SAO A TABELA DE MOTORES, e nao uma lista de telas desejadas. Cada
      uma que ainda nao existe entra DESLIGADA e diz isso — menu que oferece o que
      nao abre ensina o jogador a desconfiar do menu inteiro. */
@@ -86,9 +141,7 @@ export const UI = {
   },
   /* O GABINETE — a tela inicial, e a unica que so resume. */
   cabinet: {
-    eyebrow: "o resumo da república",
     title: TERMOS.cabinet,
-    inbox: "Caixa de entrada",
     /* ⚠ A ESPERA E DITA, e nao escondida. A Caixa de Entrada e a peca central
        desta tela e ela so tem o que dizer quando o Congresso, o relator e o
        tribunal existirem para escrever. Um inbox com tres tipos de carta ensina a
@@ -106,32 +159,68 @@ export const UI = {
        escrever" — e a caixa nasceu antes disso: o mês que fecha cai aqui como
        carta assinada. O que continua verdade é mais estreito, e é o que ela diz
        agora: o Executivo já escreve, e os OUTROS poderes ainda não. */
+    /* ⚠ A NOTA VIROU DUAS FRASES EM 21/08/2026, e a divisão é de VERDADE e não de
+       estilo. A primeira metade — "todo mês que você resolve chega aqui" — é uma
+       PROMESSA, e ela só pode ser dita a quem ainda não resolveu mês nenhum: dita ao
+       lado de uma bandeja vazia depois de três meses resolvidos, ela é o texto negando
+       o que o jogador acabou de fazer. A segunda metade declara o que o MUNDO ainda não
+       escreve, e essa continua verdadeira nos dois casos. */
+    inboxSigned: "Todo mês que você resolve chega aqui, assinado pela Casa Civil.",
     inboxWaiting:
-      "Todo mês que você resolve chega aqui, assinado pela Casa Civil. O que ainda não chega é o resto da república: o líder que cobra a diretoria prometida, a lei que o relator devolveu mudada, o tribunal que derrubou o que passou. Quem escreve primeiro é a tramitação.",
-    congress: "O Congresso",
+      "O que ainda não chega é o resto da república: o líder que cobra a diretoria prometida, a lei que o relator devolveu mudada, o tribunal que derrubou o que passou. Quem escreve primeiro é a tramitação.",
+    /* ── A CHAVE DA FITA DO PLENÁRIO — ver `ribbon.mjs` ──────────────────────
+       ⚠ OS DOIS POLOS SÃO O VOCABULÁRIO DO CATÁLOGO, e não uma escala nova: a prosa
+       de `parties.mjs` declara o eixo com estas palavras — "0 é máxima intervenção,
+       100 é máximo mercado". Escrever "esquerda" e "direita" aqui importaria uma
+       taxonomia que o modelo não tem: ele tem DUAS dimensões, e reduzir as duas a uma
+       palavra de uma delas seria a tela afirmando o que o motor não afirma. */
+    /* ⚠ A FRASE DO LEITOR DE TELA MORA AQUI, e não na view — a guarda `naming` a
+       expulsou de `ribbon.mjs` e estava certa por uma razão que vale além dela: quem
+       lê a fita por som recebe a MESMA descrição que o olho recebe, e uma descrição
+       escrita dentro do desenho é a única frase da interface que ninguém revisa. */
+    ribbonRead: "cadeiras respondem ao governo, em",
+    ribbonBenches: "bancadas ordenadas da maior intervenção ao maior mercado; a maioria fecha em",
+    axisLeft: "intervenção",
+    axisRight: "mercado",
+    majority: TERMOS.simpleMajority,
     congressAction: "negociar",
-    vault: "O cofre da União",
     vaultFree: "cabe no mês",
     vaultLocked: "obrigatória",
-    vaultTaken: "o orçamento escrito já consome",
+    /* ⚠ SEIS PALAVRAS VIRARAM UMA EM 21/08/2026. A frase inteira era "o orçamento escrito
+       já consome", e ela explicava o que o número ao lado dela já dizia. O responsável
+       pediu o corte da linha; a medição mostrou que o NÚMERO não podia sair — ele é
+       `committed`, e o hero é `room` — e o que sobrou para cortar foram as palavras.
+
+       ⚠ E A PRIMEIRA PALAVRA ESCOLHIDA FOI "escrito", E UMA PROVA A DERRUBOU EM DOIS
+       MINUTOS — com razão, e por um defeito que eu não teria visto lendo a tela: a frase
+       do ESTOURO, uma linha abaixo, é "o orçamento ESCRITO passa do que cabe em". A
+       palavra curta virou substring da frase longa, e a prova que garante que o estouro
+       não repete o total passou a acusar repetição onde não havia. O defeito é real
+       mesmo fora do teste: duas leituras vizinhas passariam a abrir com a mesma palavra.
+
+       "comprometido" É A PALAVRA QUE A INTERFACE JÁ USA para este número — a carta da
+       Casa Civil diz "o que sobra para o mês, depois do que já está comprometido". Usar
+       a que já existe é o oposto de inventar um segundo nome para a mesma coisa, que é o
+       que a guarda `vocabulary` existe para pegar. */
+    vaultTaken: "comprometido",
     /* ⚠ ELE DIZ O EXCESSO, e nao repete o total. "já consome R$ 14,5 bi" logo
        abaixo de "cabe R$ 14,2 bi" obriga o jogador a subtrair de cabeca para
        descobrir a unica coisa que importa — e a subtracao e trabalho da tela. */
     vaultOver: "o orçamento escrito passa do que cabe em",
-    street: "Aprovação por renda",
     seats: "de 513",
-    reading: "a leitura do mês",
     /* A LEGENDA DO ARCO. Tres cores sem chave e um grafico que so o autor lê —
        e este arco passou um dia inteiro assim, com as fatias certas e ninguem
        sabendo o que elas diziam. */
-    archLoyal: TERMOS.loyal,
-    archObstructing: TERMOS.obstructing,
-    archRuptured: TERMOS.ruptured,
     /* ⚠ A RESPOSTA A PERGUNTA QUE O JOGADOR FAZ PRIMEIRO. Ele olha "obrigatória
        95%" e pergunta por quê; a resposta do Planalto e diferente da que ele
        espera — nao e falta de caixa, e excesso de TEXTO, e cada real preso tem uma
        norma com nome e hierarquia atras dele. */
-    vaultWho: "e quem trava",
+    /* ⚠ ELE VIROU VERBO EM 21/08/2026. Era o rótulo "e quem trava", em caixa alta, acima
+       de uma lista de três; com a lista reduzida ao maior, um título acima de um item só
+       é cabeça de parágrafo — e a regra do Gabinete desde 20/08 é que um bloco não diz o
+       próprio nome. "Aposentadoria urbana TRAVA R$ 66,7 bi" é uma sentença, e sentença
+       carrega sozinha o que o rótulo carregava. */
+    vaultWho: "trava",
     /* ── A CALDEIRA ────────────────────────────────────────────────────────────
        ⚠ ELA MEDE QUEM CONSEGUE TE DERRUBAR, e a Rua logo abaixo mede quem te
        aprova. São perguntas diferentes, e por isso são dois cartões e não um. */
@@ -143,14 +232,15 @@ export const UI = {
 
        ⚠ E A REGRA QUE SAI DAQUI vale para toda tela: rotulo nomeia a COISA; a metafora,
        se ela se paga, mora na prosa do arquivo e nao na interface. */
-    boiler: "Grupos de pressão",
-    boiling: "fervendo",
     /* AS TRÊS RUPTURAS, e o processo só abre com as três juntas — presidentes não
        caem por um fator só. */
     ruptureSocial: TERMOS.social,
     ruptureEconomic: TERMOS.economic,
     rupturePolitical: TERMOS.political,
-    ruptureNone: "nenhuma ruptura aberta",
+    /* ⚠ `ruptureNone` MORREU EM 20/08/2026 — "nenhuma ruptura aberta". Ela saía todo
+       mês em que nada acontecia, que é a maioria dos meses de um governo que funciona, e
+       ensinava o olho a pular a linha onde a ruptura de verdade vai aparecer. A razão
+       inteira está em `boilerCardHtml`. */
     rompeu: "rompeu:",
     /* ── A TRINDADE, e ela é a leitura que faltava ─────────────────────────────
        ⚠ ELA DIZ O QUE AINDA SEGURA O GOVERNO DE PÉ, e não quantas romperam. Um
@@ -177,6 +267,18 @@ export const UI = {
     trinityAbove: "rompe acima de",
     /* O rótulo do medidor, para leitor de tela. */
     boilerMeter: "de 100 de pressão",
+    /* ⚠ A FATIA DO CAPITAL, e ela substituiu a frase de desejo em 21/08/2026. A palavra
+       é a MESMA que a Trindade usa duas peças acima — `TERMOS.economic` —, porque é
+       literalmente a barra dela que estes quatro repartem. Chamar de "capital" aqui e de
+       outra coisa ali daria dois nomes ao mesmo limiar do motor, que é exatamente o que a
+       guarda `vocabulary` existe para pegar. */
+    boilerShare: `do ${TERMOS.economic.toLowerCase()}`,
+    /* ⚠ E O PESO ZERO PRECISA DE FRASE PROPRIA, e não de "0%". Um zero ao lado de uma
+       régua cheia lê como defeito de carregamento — foi exatamente o erro que o hero do
+       Cofre já cometeu uma vez, com "R$ 0,0 bi livre no mês". As forças de ordem não são
+       um grupo sem pressão: são um grupo cuja pressão não move esta ruptura, e a frase
+       tem de dizer isso em vez de imprimir um algarismo que nega a barra ao lado. */
+    boilerNoShare: `não pesa no ${TERMOS.economic.toLowerCase()}`,
     /* ⚠ E O CARIMBO DO CERCO. Ele é mono porque é a máquina do Estado carimbando —
        não é medição nem nome. */
     siege: "PROCESSO ABERTO",
@@ -279,6 +381,13 @@ export const UI = {
     rejected: "derrubada",
     voted: "o plenário deu",
     street: "a rua fechou o mês em",
+    /* ⚠ AS DUAS ENTRARAM EM 21/08/2026, e elas sao a metade que faltava do BALANCO.
+       A carta da Casa Civil chegava todo mes com UMA leitura — a rua — enquanto tres
+       relatorios avulsos escreviam as outras duas do lado dela, todo mes, com o mesmo
+       numero. Reunidas aqui, a carta do mes passou a ser o que o nome dela diz, e os
+       avulsos voltaram a ser o mes fora da curva. */
+    base: "a base fechou o mês em",
+    vault: "e o que sobra para o mês, em",
     seeMonth: "ver o mês",
     /* ⚠ O VAZIO MUDOU DE FRASE quando a primeira carta passou a existir. Ele dizia
        "a mesa ainda não recebe correspondência", e isso deixou de ser verdade no
@@ -287,6 +396,225 @@ export const UI = {
        (Congresso, relator e tribunal escrevendo) continua na nota abaixo, porque
        ela continua sendo o estado real do projeto. */
     firstLead: "O primeiro mês ainda não foi resolvido",
+    /* ⚠ E ELA GANHOU UMA IRMÃ EM 21/08/2026, porque a frase acima passou a MENTIR num
+       caso real que o responsável fotografou: recarregar a página com partida salva
+       zera a bandeja — `last`, o relatório do mês, é variável de módulo e não vai para
+       o save —, e a tela dizia "o primeiro mês ainda não foi resolvido" em junho de
+       2027, com três meses resolvidos atrás.
+
+       ⚠ NÃO É A MESMA AUSÊNCIA, e por isso não é a mesma frase. Uma diz "o jogo ainda
+       não começou a te escrever"; a outra diz "não há nada aguardando você agora". A
+       segunda é a única verdadeira depois do mês 1, e a regra deste projeto é que
+       ausência se declara — não que se declare qualquer coisa. */
+    quietLead: "Nada espera resposta",
+    /* ── O TETO, A MINORIA E A FERVURA ────────────────────────────────────────
+       ⚠ AS TRES CHEGARAM EM 21/08/2026 e as tres dizem uma TRAVESSIA, e nunca um estado:
+       o mês em que o chão cedeu, e não os meses em que ele já estava cedido. Um aviso por
+       mês de estado empilharia trinta cartas idênticas — o mural que a caixa deixou de
+       ser em 16/08.
+
+       E NENHUMA DELAS INVENTA NÚMERO: o teto, a maioria e o ponto de fervura são do
+       motor, e a frase é montada em volta deles. */
+    ceilingSubject: "O teto do arcabouço fechou",
+    ceilingBody:
+      "O gasto do ano encostou no limite da regra. Enquanto ele estiver fechado não há discricionário para emenda — e sem emenda a base não se compra de volta.",
+    ceilingNote: "o que sobra para o mês:",
+    minoritySubject: "O governo perdeu a maioria",
+    minorityBody: "As cadeiras que respondem ao governo caíram abaixo da maioria simples.",
+    minorityNote: "de 513, e a maioria fecha em",
+    /* ⚠ O ASSUNTO DA FERVURA CARREGA O NOME DO GRUPO, montado pela view: "O mercado
+       passou do ponto" é uma frase, e "Um grupo passou do ponto" é um formulário. */
+    boilingSubject: "passou do ponto",
+    boilingBody: "A pressão dele passou do ponto de fervura e ele deixou de sustentar o governo.",
+    boilingNote: "de 100, e o ponto de fervura é",
+    boilingWeight: "e ele carrega",
+    boilingNoWeight: "e ele não pesa na ruptura econômica",
+
+    /* ── OS TRES RELATORIOS DO MES ────────────────────────────────────────────
+       ⚠ ELES CHEGAM POR TEMPO, e nao por evento — sao a unica especie assim. Cada um diz
+       de onde para onde a grandeza foi, e os dois numeros vem guardados na carta: ler o
+       "depois" do estado vivo faria a carta de marco contar o mes de abril na segunda vez
+       que fosse aberta. */
+    /* ── O ANEXO DA RUA ───────────────────────────────────────────────────────
+       ⚠ ELE NASCEU DE UMA OBSERVACAO DO RESPONSAVEL sobre o inbox do Football Manager: a
+       mensagem aberta la tem DUAS LINHAS de prosa — tao curta quanto as nossas — e o que
+       enche o painel e um ANEXO de dado estruturado. O painel daqui nao era grande demais:
+       ele estava esperando o anexo.
+
+       AS CINCO NOTAS SAO AS DE `SONDA`, e os nomes sao os que o jogador usa. "Carestia" e
+       nao "inflacao" porque quem sente preco no supermercado nao chama de indice; "ordem"
+       e nao "seguranca" porque a area ja se chama Seguranca e o mesmo nome em dois papeis
+       e o defeito que a guarda `vocabulary` existe para pegar. */
+    annexLegend: "o que pesou em cada classe",
+    annexNote: {
+      prices: "carestia",
+      jobs: "emprego",
+      services: "serviços",
+      safety: "ordem",
+      economy: "economia",
+    },
+    annexTotal: "soma",
+    /* ── O ANEXO DO CAIXA ─────────────────────────────────────────────────────
+       Os quatro sao a identidade do LASTRO, e nao uma selecao de numeros bonitos: receita
+       menos obrigatoria e o que EXISTE, o teto e o que a regra deixa gastar, e o menor dos
+       dois e o que se pode empenhar. */
+    annexVault: "de onde vem o que sobra",
+    /* ⚠ TRES DOS QUATRO SAO OS ROTULOS DE FINANCAS, e a guarda `vocabulary` cobrou a
+       copia no primeiro `check` — com razao, e por uma razao que vale mais que a
+       duplicacao: **o anexo e Financas dizem o MESMO numero**, e no dia em que um deles
+       mudasse de nome o jogador leria dois nomes para a mesma linha do orcamento. A carta
+       aponta para a tela; a tela e quem batiza. */
+    annexVaultRow: {
+      revenue: TERMOS.revenueWord,
+      mandatory: TERMOS.mandatorySpend,
+      ceiling: TERMOS.ceilingRule,
+      allowance: "Empenhável",
+    },
+    /* ── O ANEXO DA BASE ──────────────────────────────────────────────────────
+       ⚠ ELE MOSTRA O EIXO QUE O JOGO INTEIRO TEM E NUNCA MOSTROU: onze bancadas somadas
+       num "398 cadeiras" escondem que tres estao a 73 e oito em ruptura — e escolher quem
+       se compra e quem se decepciona e o jogo. */
+    annexSeats: "bancada por bancada",
+    /* ⚠ OS TRES JA EXISTIAM: "cadeiras" na manchete da base, "humor" na Mesa e "no mês"
+       em Financas. Duas colunas com o mesmo nome escrito em lugares diferentes divergem no
+       primeiro ajuste — e a que fica errada e sempre a que ninguem estava olhando. */
+    annexSeatsCol: TERMOS.seatsWord,
+    annexMoodCol: TERMOS.moodWord,
+    annexMoveCol: TERMOS.perMonthWord,
+    /* ⚠ OS DOIS DESCONTOS PESAM IGUAL EM TODA CLASSE, e por isso eles ficam no PE e nao
+       numa coluna: credibilidade nao tem classe, e desgaste de cargo tambem nao. */
+    /* ── O ANEXO DO BALANCO ───────────────────────────────────────────────────
+       ⚠ ELE E A TABELA QUE TORNA OS TRES AVULSOS DISPENSAVEIS NO MES CALMO: antes e depois
+       das tres leituras, lado a lado. O que o relatorio avulso faz e GRITAR uma delas; o
+       que esta tabela faz e deixar o jogador comparar as tres sem abrir nada. */
+    annexBalance: "o mês em três leituras",
+    annexBalanceWas: "antes",
+    annexBalanceNow: "agora",
+    annexBalanceRow: {
+      street: "aprovação",
+      seats: TERMOS.seatsWord,
+      vault: "o que sobra",
+    },
+    annexWear: "o desgaste do cargo tirou",
+    annexBetrayal: "e a promessa não honrada tirou",
+    annexEveryone: "de todas",
+
+    /* ── AS MANCHETES DO RELATORIO ────────────────────────────────────────────
+       ⚠ ELAS JA FORAM TRES ROTULOS E DOZE FRASES, e as duas versoes foram recusadas pelo
+       responsavel — a segunda com a palavra certa: "pare com essa poesia, eu quero que
+       seja algo TECNICO, vida real, humanizado".
+
+         v1  "A rua se moveu"          — rotulo de categoria. Diz o ASSUNTO, nao o fato
+         v2  "A rua escorregou"        — poesia. Diz o tamanho, e nao diz QUANTO
+         v3  "Aprovação cai a 21%"     — noticia. Verbo e NUMERO
+
+       ⚠ E O QUE SEPARA A v3 DAS OUTRAS DUAS E O NUMERO NO TITULO. Manchete de agencia,
+       assunto de oficio e linha de despacho tem todos a mesma forma: o que mudou, para
+       quanto. "A base desmanchou" e uma opiniao sobre o tamanho; "Base perde 12 cadeiras"
+       e o fato, e o leitor forma a opiniao sozinho — que e o que um documento tecnico
+       faz.
+
+       ⚠ E POR ISSO ELAS DEIXARAM DE SER FRASES PRONTAS: o numero muda todo mes, entao a
+       manchete se COMPOE. O que fica aqui e o verbo e a unidade; quem monta e a view, com
+       o valor que a carta guarda. */
+    headline: {
+      "street.rose": "Aprovação sobe a",
+      "street.fell": "Aprovação cai a",
+      "seats.rose": "Base ganha",
+      "seats.fell": "Base perde",
+      /* ⚠ "CAIXA" E NAO "DISCRICIONARIO", e a troca e de LARGURA e nao de vocabulario:
+         "Discricionário cai a R$ 11,3 bi" tem 31 caracteres e quebra em duas linhas num
+         indice de 208px — e cada quebra custa 18px de uma coluna que tem 630. "Caixa cai a
+         R$ 11,3 bi" cabe numa linha e diz a mesma coisa; o termo tecnico continua inteiro
+         no CORPO da carta, que e onde ha espaco para ele. */
+      "vault.rose": "Caixa sobe a",
+      "vault.fell": "Caixa cai a",
+    },
+    headlineSeats: TERMOS.seatsWord,
+    /* ⚠ O VERBO CARREGA A DIRECAO, e a primeira versao nao tinha verbo: ela dizia "de 44
+       para 40", e a guarda `vocabulary` acusou o "de" contra o `TERMOS.of` de "436 de
+       513". Os dois sao a mesma palavra com sentidos diferentes — um e origem, o outro e
+       fracao —, e resolver isso com um verbo e melhor do que declarar excecao: a frase
+       ficou mais curta de ler e ganhou uma informacao que estava na carta e nao aparecia. */
+    /* ── A VOZ DA CARTA ───────────────────────────────────────────────────────
+       ⚠ O RESPONSAVEL SUBIU A REGUA: "quero algo como uma mensagem de verdade para um
+       presidente de verdade". O corpo do relatorio era uma LEITURA DE DADO — "caiu de 24
+       para 23 de aprovação" —, e leitura de dado nao e mensagem: nao tem quem fala, nao
+       tem para quem, e nao diz o que aquilo significa.
+
+       ⚠ E NADA AQUI E INVENTADO, o que e a parte dificil. Cada oração se prende a um fato
+       que o motor produziu: o número e a direção vêm da carta; a nota que mais sustenta e
+       a que menos sustenta vêm de `weighed` e `notes`, que SONDA passou a devolver hoje.
+       Uma recomendação sem número atrás seria o modelo opinando, e isso o projeto recusa.
+
+       ⚠ E O VOCATIVO E O QUE MAIS MUDA A LEITURA, por menos que ele custe. "Presidente,"
+       transforma um relatório num ofício — é a diferença entre um sistema exibindo estado
+       e alguém escrevendo para alguém. */
+    vocative: "Presidente,",
+    pollClosed: "A pesquisa fechou o mês em",
+    pollGood: "de ótimo ou bom",
+    pollDown: "abaixo do mês passado.",
+    pollUp: "acima do mês passado.",
+    pollPoint: "ponto",
+    pollPoints: "pontos",
+    pollHolds: "O que sustenta o senhor é",
+    pollHoldsIn: ", e é na",
+    pollHoldsWeighs: "que ela pesa mais.",
+    pollDrags: "A nota mais fraca é",
+    pollDragsAt: "e ela puxa as três classes para baixo.",
+    seatsBody: "As cadeiras que respondem ao governo fecharam o mês em",
+    seatsOf: "de 513, e a maioria simples fecha em",
+    seatsHint: "Sem ela, nada do que o senhor assinar chega ao plenário.",
+    vaultBody: "O que sobra para o mês fechou em",
+    vaultHint: "É desse dinheiro que sai emenda, e é ele que compra voto.",
+
+    /* ⚠ `reportUnit` MORREU JUNTO COM O TEMPLATE COMUM. Ela dava a unidade de cada
+       relatorio — "de aprovação", "cadeiras com o governo", "de discricionário" — para uma
+       frase montada igual para as tres especies. Em 21/08 o corpo virou OFICIO e cada
+       especie passou a escrever a propria frase, com a unidade dentro dela; a tabela ficou
+       para tras, e com ela `reportRose`, `reportFell` e `reportTo`. */
+
+    /* ── POR QUE ESTA CARTA CHEGOU ─────────────────────────────────────────────
+       ⚠ A IDEIA E DO INBOX DO FOOTBALL MANAGER, onde cada item tem um controle que
+       "indica por que você está recebendo isto" — e ela é a que mais casa com a doutrina
+       deste projeto. Aqui todo número mostrado tem motor atrás; a CARTA era a única peça
+       da tela que não explicava a própria existência. O jogador via a consequência e não
+       a causa, e consequência sem causa é evento roteirizado — que é o que o ciclo 4
+       proíbe em texto.
+
+       ⚠ E NADA AQUI É INVENTADO: a razão sai do `kind`, que o motor já grava na carta.
+       É prosa sobre fato existente, e não um segundo lugar decidindo o que aconteceu.
+
+       ⚠ E `reported` É A MAIS IMPORTANTE DAS NOVE, por causa do achado 37: a única
+       pergunta que este jogo faz mora atrás de uma regra que ninguém ensina — só texto
+       que machuca DUAS alavancas ou mais passa por relatoria com emenda. Um jogador
+       cauteloso atravessa quatro anos sem nunca ver a caixa perguntar nada, e nunca
+       descobre por quê. Esta linha é o lugar onde essa regra finalmente se diz. */
+    why: {
+      posse: "você tomou posse, e o orçamento em vigor ainda é o do seu antecessor",
+      tabled: "a Mesa pautou um texto que você assinou",
+      reported:
+        "seu texto mexeu em duas alavancas ou mais, e texto assim passa por relatoria — é ela que emenda",
+      forgotten: "seu texto passou do prazo sem a Mesa pautar",
+      passed: TERMOS.plenaryJudged,
+      rejected: TERMOS.plenaryJudged,
+      demand: "você mexeu numa alavanca que este grupo cobra",
+      rupture: "uma das três rupturas da queda se abriu",
+      siege: "as três rupturas se abriram no mesmo mês, e é isso que abre a gaveta",
+      ceiling: "o gasto do ano encostou no limite da regra neste mês",
+      minority: "a sua base cruzou a maioria simples para baixo neste mês",
+      boiling: "a pressão deste grupo passou do ponto de fervura neste mês",
+      /* ⚠ AS TRES RAZOES SAO A MESMA FRASE COM O SUJEITO TROCADO, e isso e de propósito:
+         o que o jogador precisa aprender é a REGRA, e ela é uma só — o domínio escreve no
+         mês em que se move o bastante, e cala no mês em que não. */
+      /* ⚠ AS TRES ERAM A MESMA FRASE COM O SUJEITO TROCADO — "se moveu o bastante neste
+         mês para valer uma linha" — e o responsável acusou o conjunto: "parece tudo igual".
+         A razão de chegar é a mesma nas três, mas dizê-la três vezes com as mesmas palavras
+         é o que faz o rodapé virar ruído. Cada uma diz agora QUEM está falando e por quê. */
+      street: "a Casa Civil manda a pesquisa quando ela se move o bastante para importar",
+      seats: "o líder conta as cadeiras todo mês, e escreve quando a conta muda",
+      vault: "a Fazenda fecha o mês e avisa quando o que sobra muda de tamanho",
+    },
     /* ── AS CARTAS DA TRAMITAÇÃO ─────────────────────────────────────────────
        ⚠ ELAS SÃO O QUE TRANSFORMA A GAVETA EM MECÂNICA. Sem elas o jogador vê o
        texto sumir e não sabe se a Mesa engavetou, se o relator o esvaziou ou se o
@@ -297,12 +625,27 @@ export const UI = {
     tabled: "Pautei o seu texto",
     tabledBody: "Ele vai ao relator, e volta de lá no mês que vem.",
     reported: "Devolvi o seu texto com uma emenda",
-    reportedBody: "Ele vai a plenário no mês que vem.",
     reportedSaved: "salvei",
     forgotten: "O seu texto morreu na gaveta",
     forgottenBody: "Seis meses sem ser pautado. Ele não perdeu a votação — ela nunca aconteceu.",
     passedBill: "O plenário aprovou",
     rejectedBill: "O plenário derrubou",
+    /* ⚠ AS DUAS NASCERAM DE UMA MEDIÇÃO EM 21/08/2026, e o defeito era o pior da
+       Caixa de Entrada: `passed` e `rejected` eram as duas ÚNICAS cartas do jogo com
+       `body: ""`. Numa folha que estica até 630px isso é um ofício com cabeçalho,
+       assunto e **430px de papel em branco** — e a espécie que sofria era a do
+       desfecho do texto que o jogador escreveu, negociou e pagou. O momento de maior
+       recompensa do jogo chegava como uma folha vazia.
+
+       ⚠ E NENHUMA DAS DUAS INVENTA FATO. A aprovação vira norma e só cai por outro
+       texto que a revogue pelo nome — é o brocardo que `domain/norms/` implementa em
+       `repeals`. A derrubada não devolve o texto à Mesa: quem o quiser de novo assina
+       outro, porque a fila não guarda o que o plenário já julgou. */
+    passedBillBody:
+      "O texto virou norma, e ela vale a partir de agora. Desfazê-la exige outro texto que a revogue pelo nome.",
+    passedBillAction: "Ver a lei em vigor",
+    rejectedBillBody:
+      "O texto caiu no plenário. A faixa segue a que estava, e ele não volta sozinho: quem o quiser de novo assina outro.",
     /* ── A PERGUNTA, E ELA É A ÚNICA COISA NESTA TELA QUE ESPERA VOCÊ ─────────
        ⚠ AS DUAS SAÍDAS CUSTAM, e a frase de cada uma diz o quê. Um par de botões
        genéricos — "sim" e "não" — obrigaria o jogador a descobrir o preço depois
@@ -322,7 +665,14 @@ export const UI = {
        verdade e é tudo o que se pode afirmar antes de o mês fechar — quanto sai
        depende do rateio, e prometer um valor aqui seria a Mesa anunciando um placar
        que o turno não entrega. */
+    /* ⚠ AS DUAS FRASES SAO A MESMA EXIGENCIA EM SENTIDOS OPOSTOS, e desde 20/08/2026 o
+       jogo tem as duas. Os grupos de capacidade pedem o que foi CORTADO de volta; o
+       mercado pede que o AUMENTO seja desfeito. Uma frase so nas duas cartas faria a do
+       mercado dizer "quer o programa de volta em 40" embaixo de um numero MENOR do que o
+       nivel de hoje — e o jogador leria a exigencia ao contrario, cedendo achando que
+       gasta mais quando na verdade corta. */
     demandBody: "quer o programa de volta em",
+    demandCutBody: "quer o programa cortado de volta para",
     /* ⚠ O SILENCIO AQUI RECUSA, e essa frase e o inverso da irma dela na emenda. A
        diferenca nao e de tom: um lobby que exige e nao recebe resposta NAO entende que
        ganhou, e prometer o contrario faria o jogador aprender uma regra errada e jogar
@@ -333,8 +683,17 @@ export const UI = {
     demandChoices: {
       accept: "Ceder",
       acceptCost: "a verba volta, e ela sai da mesma bolsa deste mês",
-      block: "Recusar",
-      blockCost: "o grupo esquenta, e a caldeira não esfria depressa",
+      block: TERMOS.refuse,
+      blockCost: TERMOS.refuseCost,
+    },
+    /* ⚠ CEDER AO MERCADO NAO CUSTA DINHEIRO — CUSTA O PROGRAMA. O par de cima descreve
+       o preco de devolver verba; aqui o preco esta do outro lado, e usar a mesma frase
+       prometeria uma consequencia que o turno nao executa. */
+    demandCutChoices: {
+      accept: "Cortar",
+      acceptCost: "o gasto cai neste mês, e a área sente no índice",
+      block: TERMOS.refuse,
+      blockCost: TERMOS.refuseCost,
     },
     /* ⚠ O PREÇO DO SILÊNCIO É DITO ANTES, e essa frase é a razão de o prazo ser
        mecânica em vez de relógio: é saber o que acontece se você não responder que
@@ -370,7 +729,6 @@ export const UI = {
     inflation: TERMOS.inflation,
     approval: TERMOS.approval,
     base: "Base",
-    advance: "Avançar",
   },
   /* OS TRES VERBOS DE GOVERNAR, e a ordem em que aparecem na tela de area e o
      custo de executar cada um: alocar nao precisa de ninguem, pautar precisa do
@@ -383,7 +741,6 @@ export const UI = {
        "ATENDIMENTO / 61" — o nome do indice e o numero dele —, e era a unica tela
        do jogo que nao se apresentava: o nome do ministerio so existia no rail. As
        outras quatro usam `categoria / nome`, e "Ministério" e a categoria desta. */
-    ministry: "Ministério",
     programs: "O orçamento",
     thisArea: "esta área",
     outlook: "Para onde vai",
@@ -391,34 +748,22 @@ export const UI = {
        que só aparece depois de violado é um limite que o jogador descobre
        errando — e o erro aqui custa a pauta do mês. */
     floor: "piso",
-    allocate: "Alocar",
-    propose: "Pautar",
-    standing: "Vigente",
     ofMonth: "do mês",
     available: "disponíveis",
     committed: "já comprometidos nas outras áreas",
     holding: "parado",
     perYear: TERMOS.perYear,
-    total: "total",
     /* OS TITULOS DAS TRES COLUNAS DE NUMERO. Sem eles a linha de uma acao mostra
        `308 · −140 · +8`, que sao tres grandezas diferentes em tres unidades
        diferentes sem nada dizendo qual e qual — e o jogador que adivinha errado
        aprende o modelo errado. */
-    action: "ação",
-    instrument: "rito",
     /* A COLUNA DO BOTÃO tem título só para quem lê por leitor de tela: na tela
        ele seria um rótulo em cima de um botão que já diz o que faz. */
-    decide: "decidir",
-    quorum: "quórum",
     /* RESULTADO, e não "despesa". O sinal do catálogo é o do RESULTADO — positivo
        poupa ou arrecada, negativo custa. Sob o título "despesa", o mesmo `−48`
        se lê ao contrário do que ele significa: como corte de gasto, quando é
        gasto novo. Rótulo que inverte o sinal do número é pior que rótulo
        nenhum. */
-    fiscal: "resultado/ano",
-    lift: "índice",
-    nothingStanding: "nada aprovado ainda nesta área",
-    nothingLeft: "tudo desta área já foi feito",
   },
   /* AS LEIS DA ÁREA — o segundo bloco, e o mais novo do jogo.
      ⚠ NÃO HÁ VERBO NENHUM AQUI, e a ausência é o desenho. "Criar lei", "alterar"
@@ -444,7 +789,6 @@ export const UI = {
     },
     /* O QUE MUDA quando o jogador move uma faixa: ela deixa de ser a lei vigente e
        passa a ser um texto em votação. */
-    proposed: "em votação",
     was: "hoje",
   },
   /* O INSTRUMENTO E ETIQUETA NA LINHA, e nao tela propria. Ele decide o quorum e
@@ -466,7 +810,7 @@ export const UI = {
        saía "CANETA · Saúde · budget · resultado −26,5/ano". Regra do projeto:
        português na interface, inglês no código. */
     budget: "o Congresso já autorizou",
-    law: "maioria simples",
+    law: TERMOS.simpleMajority,
     amendment: "três quintos",
     decree: "sem votação",
   },
@@ -484,7 +828,6 @@ export const UI = {
      segundo lugar para a calibragem divergir, e o rótulo é quem sempre esquece de
      ser atualizado. */
   finance: {
-    eyebrow: "as contas da União",
     title: TERMOS.finance,
     economy: "A economia",
     gdp: TERMOS.gdp,
@@ -501,8 +844,8 @@ export const UI = {
        que é quando ele mais importa. */
     gapNote: "distância até o que o país produz sem pressionar preço",
     accounts: "As contas",
-    revenue: "Receita",
-    mandatory: "Despesa obrigatória",
+    revenue: TERMOS.revenueWord,
+    mandatory: TERMOS.mandatorySpend,
     ofRevenue: "da receita",
     room: "Discricionário",
     primary: "Resultado primário",
@@ -523,13 +866,13 @@ export const UI = {
     premiumNote: "o que o mercado cobra acima da básica",
     gross: TERMOS.grossDebt,
     overGdp: "Dívida sobre o PIB",
-    ceiling: "Teto do arcabouço",
+    ceiling: TERMOS.ceilingRule,
     headroom: "Folga até o teto",
     untilCeiling: "o que o teto ainda deixa gastar",
     squeezed: "a obrigatória sozinha já fura o teto",
     country: TERMOS.country,
     perYear: TERMOS.perYear,
-    perMonth: "no mês",
+    perMonth: TERMOS.perMonthWord,
   },
   /* ⚠ O CONGRESSO GANHOU CABECA E VIROU UMA LAMINA SO em 15/08/2026. Ele era a
      unica tela do jogo com TRES pecas de vidro soltas — a faixa de indices, a mesa
@@ -537,7 +880,6 @@ export const UI = {
      dizia o proprio nome. Agora ela tem a mesma forma das outras quatro: uma
      lamina, uma cabeca, e blocos com legenda dentro. */
   congress: {
-    eyebrow: "o poder legislativo",
     /* ── A TRAMITAÇÃO ────────────────────────────────────────────────────────
        ⚠ O TEXTO DEIXOU DE VALER NO MÊS EM QUE É ESCRITO em 15/08/2026. Ele entra
        na GAVETA, passa pela Mesa, volta da relatoria e só então vai a plenário —
@@ -596,15 +938,15 @@ export const UI = {
        frase diz exatamente isso: o sujeito negocia como quem já recebeu. */
     memoryGood: "negocia como quem já recebeu",
     memoryBad: "cobra a promessa que você não pagou",
-    memoryNone: "sem histórico com o seu governo",
-    delivers: TERMOS.delivers,
+    /* ⚠ `memoryNone` MORREU EM 20/08/2026 — "sem histórico com o seu governo". Ela
+       saía SETE VEZES na mesma tela no mês 1, porque no mês 1 ninguém tem histórico. A
+       razão inteira está em `personHtml`; aqui fica o registro de que a frase existiu e
+       de que apagá-la foi decisão, e não esquecimento. */
   },
   mesa: {
-    onTable: TERMOS.onTable,
     empty: "Nada em pauta",
     emptyHint: "escolha uma ação numa das áreas — ou avance o mês assim mesmo",
     swap: "trocar",
-    forecast: "Previsão",
     needs: "precisa de",
     promises: "promete",
     fits: "cabe",
@@ -621,11 +963,9 @@ export const UI = {
     above: "acima do quórum",
     decree: "vale sem passar pelo plenário",
     bench: "bancada",
-    mood: "humor",
+    mood: TERMOS.moodWord,
     result: "resultado",
-    delivers: TERMOS.delivers,
     funding: "verba",
-    cost: "custo",
     seats: TERMOS.of,
     /* ⚠ O QUE A COLUNA DIZ NUM MES SEM PAUTA. Ela imprimia "de 76" — metade de uma
        frase, com o antecedente faltando —, porque votos só existem contra um texto
@@ -642,23 +982,19 @@ export const UI = {
     obstructing: TERMOS.obstructing,
     broken: TERMOS.ruptured,
   },
-  approvalLabel: "Aprovação do governo",
   approvalParts: {
     good: "Ótimo/bom",
     fair: "Regular",
     poor: "Ruim/péssimo",
   },
-  context: {
-    month: "Mês",
-    mandate: "Mandato",
-    congress: "Base aliada",
-    situation: "Situação",
-  },
-  situation: {
-    crisis: "Crise",
-    stable: "Estável",
-    growth: "Alta",
-  },
+  /* ⚠ `context` E `situation` MORRERAM EM 21/08/2026, e o registro fica porque as duas
+     contam a mesma historia: `context` era a faixa do rail da direita, que a barra de cima
+     substituiu em 15/08; `situation` era "Crise / Estável / Alta", e o veredito por MOTIVO
+     — logo abaixo — tomou o lugar dela pela razao escrita ali. As duas pecas sairam da
+     tela e as duas tabelas ficaram no arquivo por seis dias, intactas e mudas.
+
+     ⚠ E FOI A GUARDA QUE AS ACHOU, e nao a leitura. Sao 49 frases nesse estado, e nenhuma
+     delas quebrava nada: elas so faziam a proxima sessao acreditar que a peca existia. */
   /* O VEREDITO É POR MOTIVO, e não por nível. Três frases para três níveis
      diziam "crise" de um jeito só, e crise por teto fechado não se resolve como
      crise por base rompida — uma se paga com dinheiro que não existe, a outra
@@ -730,6 +1066,22 @@ export const UI = {
        se paga pela mesma regra do reinicio: ela chega no momento em que a
        informacao muda a decisao — o jogador acabou de descobrir que nao ha mais
        mes, e precisa saber que ha outra partida. */
+    /* ── O PRECO DE AVANCAR, e ele e a unica legenda que MUDA de mes para mes ──
+       ⚠ ELA PASSA NO TESTE DA LINHA ACIMA COM FOLGA: "Avancar o mes" nao diz que
+       DUAS perguntas na mesa vao fechar sozinhas neste clique, e essa e exatamente a
+       informacao que muda a decisao — e que, dita depois, viraria recibo.
+
+       ⚠ E ELA CONTA PERGUNTAS, E NAO CARTAS. Aviso nao tem prazo e nao fecha por
+       silencio; anunciar "3 cartas" numa bandeja com dois avisos dentro seria a barra
+       de cima prometendo um preco que o mes nao cobra. Quem separa uma coisa da outra
+       e `silences`, no motor. */
+    /* ⚠ ELA PASSOU A NOMEAR EM 21/08/2026, e a ideia e do inbox do Football Manager: la o
+       rotulo do botao de avancar muda para dizer O QUE espera, e nao quantos. A diferenca
+       e entre saber que ha um preco e saber QUAL — e com uma ou duas cartas na mesa,
+       nomear cabe. ⚠ O plural continua contando, porque tres assuntos num rotulo de botao
+       viram uma frase que ninguem lê. */
+    silenceOne: "fecha sem resposta:",
+    silenceMany: "perguntas fecham sem resposta",
     ended: "O mandato acabou",
     endedHint: "nova partida, ao pé da coluna",
     restart: "Nova partida",

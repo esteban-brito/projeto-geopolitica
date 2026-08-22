@@ -23,7 +23,7 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed } from "../shared/format.mjs";
-import { UI } from "../strings.mjs";
+import { UI, labelOf } from "../strings.mjs";
 import { monthLabel } from "../../state/state.mjs";
 
 /**
@@ -31,14 +31,6 @@ import { monthLabel } from "../../state/state.mjs";
  * @typedef {import("../../data/parties.mjs").Party} Party
  * @typedef {import("../../application/turn.mjs").Report} Report
  */
-
-/**
- * @param {Record<string, string>} table
- * @param {string} key
- */
-function labelOf(table, key) {
-  return table[key] ?? key;
-}
 
 /**
  * UM AVISO no mesmo cartao do relatorio.

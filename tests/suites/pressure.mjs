@@ -283,3 +283,80 @@ test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {
     `o plenario votou no mesmo mes da abertura (${opened}) — nao houve leilao`,
   );
 });
+
+test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigencia tem SENTIDO", () => {
+  /* ⚠ ESTA PROVA PRENDE O DILEMA CENTRAL DO JOGO, e ele so passou a existir em
+     20/08/2026. Ate aqui todas as exigencias empurravam para o mesmo lado — gaste mais
+     —, e um jogo em que todo mundo quer a mesma coisa nao tem escolha dentro dele: bastava
+     ter dinheiro. Com o mercado escrevendo, a bandeja pode receber duas cartas que se
+     contradizem, e ceder as duas e impossivel.
+
+     ⚠ E O QUE ELA COBRA E O SENTIDO, e nao a existencia da carta. Uma exigencia com o
+     sentido invertido e pior que exigencia nenhuma: o jogador cede achando que gasta e
+     na verdade corta, aprende a regra ao contrario, e joga contra ela por meses. E o
+     defeito nao falha em lugar nenhum — a carta sai inteira, com numero e botao. */
+
+  /** UM GOVERNO GASTADOR: sobe tudo o que a lei permite, todo mes. */
+  const gastador = () => {
+    let state = createState();
+    for (let month = 0; month < 40; month++) {
+      const levels = Object.fromEntries(
+        PROGRAMS.map(p => [p.id, Math.min(p.ceiling, (state.levels[p.id] ?? p.initial) + 3)]),
+      );
+      state = playMonth(
+        state,
+        { levels, funding: {}, bands: bandsOf(state, CATALOG), mail: {} },
+        { catalog: CATALOG },
+      ).state;
+      const carta = state.mail.find(l => l.kind === "demand" && l.from === "mercado");
+      if (carta) return { state, carta };
+    }
+    return null;
+  };
+
+  const achado = gastador();
+  assert.ok(
+    achado,
+    "o mercado nao escreveu em 40 meses de governo gastador — ele voltou a ser mudo",
+  );
+
+  const { state, carta } = achado;
+  const programa = PROGRAMS.find(p => p.id === carta.lever);
+  assert.ok(programa, `o mercado exigiu a alavanca ${carta.lever}, que nao e um programa`);
+
+  /* ⚠ O NIVEL EXIGIDO E O DA POSSE, e ele tem de ser MENOR que o de hoje: e isso que
+     faz a exigencia ser um CORTE. Maior, e ela seria um pedido de gasto assinado pelo
+     grupo que existe para cobrar o contrario. */
+  assert.equal(carta.level, programa.initial, "o mercado nao pediu o nivel da posse");
+  assert.ok(
+    (carta.level ?? 0) < (state.levels[programa.id] ?? programa.initial),
+    `o mercado pediu ${carta.level} e o programa esta em ${state.levels[programa.id]} — isso e gasto, e nao corte`,
+  );
+
+  /* ⚠ E O SENTIDO DO OUTRO LADO CONTINUA VALENDO. Um governo que CORTA recebe a
+     exigencia inversa, do grupo de capacidade — e o nivel pedido fica ACIMA do de hoje.
+     Sem esta metade, a prova passaria com os dois grupos pedindo corte. */
+  let cortador = createState();
+  let devolver = null;
+  for (let month = 0; month < 40; month++) {
+    const levels = Object.fromEntries(PROGRAMS.map(p => [p.id, p.floor]));
+    cortador = playMonth(
+      cortador,
+      { levels, funding: {}, bands: bandsOf(cortador, CATALOG), mail: {} },
+      { catalog: CATALOG },
+    ).state;
+    const carta = cortador.mail.find(
+      l => l.kind === "demand" && l.from !== "mercado" && l.answer === null,
+    );
+    if (carta) {
+      devolver = carta;
+      break;
+    }
+  }
+
+  assert.ok(devolver, "nenhum grupo de capacidade exigiu verba de volta em 40 meses de corte");
+  assert.ok(
+    (devolver.level ?? 0) > (cortador.levels[devolver.lever ?? ""] ?? 0),
+    `um grupo de capacidade pediu ${devolver.level} com o programa em ${cortador.levels[devolver.lever ?? ""]} — isso e corte, e nao verba`,
+  );
+});

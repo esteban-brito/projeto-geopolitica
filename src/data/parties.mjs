@@ -61,6 +61,7 @@
 export const PARTY_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
+  sigla: { kind: "text" },
   /* ⚠ O ARTIGO E VOCABULARIO, e por isso ele mora no catalogo e nao no template.
      A tela escreve "governa mais perto DO Centrao" e "DA Esquerda" — a contracao
      pede genero, e genero e propriedade do nome. Montada na view, ela viraria uma
@@ -78,6 +79,10 @@ export const PARTY_SCHEMA = {
  * @typedef {object} Party
  * @property {string} id
  * @property {string} label - o nome que a interface mostra; ATRIBUTO, nao identidade
+ * @property {string} sigla - a sigla, e ela e o nome CURTO da bancada na tela estreita.
+ *   ⚠ TODA SIGLA E INVENTADA e nenhuma existe no registro do TSE. Isso e conferido a
+ *   mao e nao por guarda: a ADR 0003 proibe carregar a marca de uma organizacao real,
+ *   e sigla e a marca mais curta que existe
  * @property {string} [article] - a contracao com que a prosa se refere a ele: `do`, `da`.
  *   ⚠ OPCIONAL PORQUE UMA BANCADA NEM SEMPRE E UM BLOCO: desde o ELENCO, `benches`
  *   monta bancadas a partir de PESSOAS, e uma pessoa se refere pelo nome — nao ha
@@ -102,47 +107,173 @@ export const PARTY_SCHEMA = {
                      que a bancada de fe mora enquanto ela nao existir sozinha
      direita-liberal O INVERSO EXATO: nao entrega a pauta economica por preco
                      nenhum, e negocia costumes com relativa facilidade */
+/* ── ONDE CADA BLOCO CAI NO EIXO, E ISSO PASSOU A VIR DA REALIDADE ───────────
+   ⚠ A POSICAO DA ESQUERDA FOI RECALIBRADA EM 20/08/2026 contra o espectro partidario
+   brasileiro, com a lista de registrados no TSE como fonte:
+   https://www.tse.jus.br/partidos/partidos-registrados-no-tse
+
+   ⚠ E O QUE ENTROU FOI A POSICAO, E NUNCA O NOME. A ADR 0003 e explicita nos dois
+   sentidos: "organizacoes que agem como personagem ganham nome proprio inventado em vez
+   de carregarem a marca de uma organizacao real" — e um partido aqui negocia, vende voto
+   e tem venalidade medida, entao ele E personagem. Mas a mesma ADR diz que os ARQUETIPOS
+   politicos continuam reais, porque "centrao" e "bancada ruralista" descrevem fenomenos
+   e nao pessoas. Posicao no eixo e fenomeno.
+
+   ── O DEFEITO QUE A MEDICAO ACHOU ─────────────────────────────────────────────
+   Com a esquerda em **20**, o modelo punha **73 cadeiras medias no primeiro quinto do
+   eixo** — a faixa da intervencao maxima, que e onde mora o marxismo revolucionario. No
+   Brasil real essa faixa nao tem **uma unica cadeira** na Camara: as legendas dela sao
+   pequenas e sem representacao federal.
+
+   A esquerda brasileira COM ASSENTO e desenvolvimentista e estatizante, e nao
+   revolucionaria: ela cede em economia por cargo, que e o que a venalidade dela ja dizia
+   neste mesmo catalogo — e quem recusa o mercado por principio nao cede por cargo. Em 32
+   ela cai no segundo quinto, que e onde ela esta.
+
+   ── ⚠ E O EIXO DAQUI NAO E A REGUA ESQUERDA-DIREITA ───────────────────────────
+   Esta e a correcao que quase me fez errar duas posicoes de uma vez. O eixo do modelo e
+   ECONOMICO — "0 e maxima intervencao, 100 e maximo mercado" —, e o espectro de
+   IDENTIDADE (extrema esquerda ... extrema direita) e outra regua. As duas se parecem
+   nas pontas e divergem no meio, e e no meio que mora o Congresso brasileiro:
+
+     · o CENTRAO fica em **70** e nao no centro, e a razao e a Camara real: o bloco que
+       detem a fatia do orcamento e opera a maquina — o mesmo que este catalogo modela
+       com venalidade 0,95 — vota com o mercado quando o mercado paga. Move-lo para o
+       centro por causa do NOME seria desenhar a regua de identidade por cima da
+       economica, e ai a fita passaria a mentir sobre quem entrega voto por dinheiro;
+     · a DIREITA LIBERAL fica em **92** sem ser "extrema direita" de identidade: maximo
+       mercado e uma posicao economica, e o liberalismo classico nao e reacionarismo. A
+       fita nomeia os polos dela pelo que eles sao — *intervencao* e *mercado* —, e nunca
+       "esquerda" e "direita", exatamente por isto.
+
+   ── ⚠ E A DISTRIBUICAO DE CADEIRAS NAO FOI MEXIDA, de proposito ───────────────
+   Ela e ACHADO, e nao conserto. Medido contra a Camara eleita: o modelo tem ~204
+   cadeiras a esquerda do centro e ~104 na direita liberal; a Camara real tem ~130 a
+   esquerda e ~266 somando direita fisiologica e liberal. **O Congresso do jogo pende
+   para a esquerda e o de verdade pende para a direita**, e corrigir isso muda a
+   DIFICULDADE do jogo inteiro — um presidente de esquerda joga outro jogo. Quem decide
+   isso e o responsavel. Ver o achado 40 na retomada. */
 /** @type {ReadonlyArray<Party>} */
 export const PARTIES = [
   {
-    id: "esquerda",
-    label: "Esquerda",
+    /* ≈ a frente socialista das pautas de direitos humanos e identidade: pequena,
+       a mais ideologica da Camara, e a que menos vende. */
+    id: "frente-socialista",
+    label: "Frente Socialista Popular",
+    sigla: "FSP",
     article: "da",
-    economic: 20,
-    liberty: 80,
-    venalityEconomic: 0.2,
-    venalityLiberty: 0.1,
-    seats: 108,
+    economic: 24,
+    liberty: 92,
+    venalityEconomic: 0.1,
+    venalityLiberty: 0.05,
+    seats: 14,
   },
   {
-    id: "centro-esquerda",
-    label: "Centro-esquerda",
-    article: "da",
-    economic: 45,
-    liberty: 70,
+    /* ≈ a maior legenda da centro-esquerda, em federacao com a comunista
+       institucional e a ambientalista. Desenvolvimentista, estatizante e
+       PRAGMATICA: ela cede em economia por cargo, e quase nada em costumes. */
+    id: "trabalhistas-unidos",
+    label: "Partido dos Trabalhadores Unidos",
+    sigla: "PTU",
+    article: "do",
+    economic: 30,
+    liberty: 78,
+    venalityEconomic: 0.3,
+    venalityLiberty: 0.1,
+    seats: 80,
+  },
+  {
+    /* ≈ o trabalhismo e o socialismo de frente ampla: educacao publica, soberania
+       e composicao com quem governa. E ela a fiel da balanca. */
+    id: "socialistas",
+    label: "Partido Socialista Unificado",
+    sigla: "PSU",
+    article: "do",
+    economic: 38,
+    liberty: 72,
     venalityEconomic: 0.45,
     venalityLiberty: 0.3,
-    seats: 96,
+    seats: 31,
   },
   {
-    id: "centrao",
-    label: "Centrão",
+    /* ≈ a federacao historica de caciques regionais: compoe governo de qualquer
+       matriz, e o preco dela e cargo e emenda. */
+    id: "democratas-nacionais",
+    label: "Movimento Democrático Nacional",
+    sigla: "MDN",
     article: "do",
-    economic: 70,
-    liberty: 35,
-    venalityEconomic: 0.95,
-    venalityLiberty: 0.6,
-    seats: 205,
+    economic: 55,
+    liberty: 45,
+    venalityEconomic: 0.9,
+    venalityLiberty: 0.65,
+    seats: 42,
   },
   {
-    id: "direita-liberal",
-    label: "Direita liberal",
+    /* ≈ a legenda de capilaridade municipal somada aos restos da social-democracia:
+       governabilidade acima de doutrina. */
+    id: "social-municipalista",
+    label: "Partido Social Municipalista",
+    sigla: "PSM",
+    article: "do",
+    economic: 60,
+    liberty: 42,
+    venalityEconomic: 0.92,
+    venalityLiberty: 0.6,
+    seats: 71,
+  },
+  {
+    /* ≈ a federacao que detem a maior fatia do orcamento e opera a maquina publica.
+       E o bloco que o jogo chama de CENTRAO: vende quase tudo em economia, e menos
+       em costumes. */
+    id: "uniao-progressista",
+    label: "União Progressista Brasileira",
+    sigla: "UPB",
     article: "da",
-    economic: 92,
-    liberty: 60,
+    economic: 72,
+    liberty: 32,
+    venalityEconomic: 0.95,
+    venalityLiberty: 0.55,
+    seats: 106,
+  },
+  {
+    /* ≈ a maior bancada da Camara: burocracia pragmatica no dinheiro e conservadorismo
+       duro nos costumes, somada a bancada de fe. Ela negocia verba e NAO negocia
+       pauta de costume. */
+    id: "liberais-conservadores",
+    label: "Partido Liberal Brasileiro",
+    sigla: "PLB",
+    article: "do",
+    economic: 78,
+    liberty: 26,
+    venalityEconomic: 0.7,
+    venalityLiberty: 0.25,
+    seats: 145,
+  },
+  {
+    /* ≈ o liberalismo economico classico: privatizacao, Estado menor, e a recusa de
+       vender a propria pauta economica por preco algum. O INVERSO EXATO do centrao. */
+    id: "liberais",
+    label: "Partido Livre",
+    sigla: "PLV",
+    article: "do",
+    economic: 94,
+    liberty: 65,
     venalityEconomic: 0.08,
     venalityLiberty: 0.4,
-    seats: 104,
+    seats: 18,
+  },
+  {
+    /* ≈ o nacionalismo militarista de retorica antissistema. Pequeno, e o que menos
+       negocia costume em toda a Camara. */
+    id: "nacionalistas",
+    label: "Partido Nacionalista Renovador",
+    sigla: "PNR",
+    article: "do",
+    economic: 68,
+    liberty: 12,
+    venalityEconomic: 0.35,
+    venalityLiberty: 0.05,
+    seats: 6,
   },
 ];
 

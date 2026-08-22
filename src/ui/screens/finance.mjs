@@ -25,7 +25,7 @@
 import { escapeHtml } from "../shared/html.mjs";
 import { money, num, percent, seats, signed, sparkline } from "../shared/format.mjs";
 import { headHtml } from "../shared/head.mjs";
-import { trendOf, windowLabel } from "../shared/trend.mjs";
+import { SCALE, WINDOW, gdpRange, trendOf, windowLabel } from "../shared/trend.mjs";
 import { UI } from "../strings.mjs";
 
 /**
@@ -33,31 +33,18 @@ import { UI } from "../strings.mjs";
  * @typedef {import("../../state/state.mjs").Series} Series
  */
 
-/* AS REGUAS DA ESCADA, uma por indicador, e todas DECLARADAS.
-   ══════════════════════════════════════════════════════════════════════════════
-   Elas nao saem da serie: uma escada normalizada pelo proprio historico desenha
-   drama quando nao ha nada acontecendo — dois meses de inflacao entre 4,1% e 4,3%
-   virariam um degrau cheio de subida. Elas tambem nao sao a regua do indice de
-   area: contra 0 a 100, uma inflacao de 0,042 e um juro de 0,105 ficam no degrau
-   do chao para sempre, e a escada passa a afirmar que nada nunca muda.
+/* ⚠ `SCALE` MUDOU DE CASA EM 21/08/2026 e agora mora em `shared/trend.mjs`, junto com a
+   JANELA. A barra superior passou a desenhar a mesma escada, e copiar as reguas para o
+   segundo consumidor daria dois lugares afirmando em que faixa a inflacao vive — o
+   primeiro a ser recalibrado divergiria do outro. A prosa inteira foi junto.
 
-   Cada faixa e uma afirmacao sobre o mundo do jogo — "juro basico vive entre 0 e
-   25% ao ano" — e por isso mora aqui, ao lado de quem desenha, e nao no catalogo:
-   o catalogo diz onde os numeros COMECAM, e isto diz em que regua eles sao lidos.
-   O PIB e o unico ancorado na propria serie, e a ancora e o primeiro mes guardado:
-   PIB nominal nao tem teto natural, e o que se quer ver dele e a distancia
-   percorrida desde a posse. */
+   O PIB CONTINUA SEM FAIXA FIXA, e a ancora dele e a propria serie: PIB nominal nao tem
+   teto natural, e o que se quer ver dele e a distancia percorrida desde a posse. */
+
 /* A BANDA DE TOLERANCIA DA META, para cada lado. Ela mora aqui e nao no catalogo
    porque nenhum motor a consome: a CORRENTE persegue o CENTRO da meta, e a banda
    so existe para a tela saber quando acender o vermelho. */
 const TOLERANCE = 0.015;
-
-const SCALE = /** @type {const} */ ({
-  inflation: [0, 0.15],
-  rate: [0, 0.25],
-  unemployment: [0, 0.2],
-  debtRatio: [0.4, 1.2],
-});
 
 /**
  * UMA LINHA DO PAINEL: rotulo, valor, e a curva do que ele vem fazendo.
@@ -77,7 +64,12 @@ function lineHtml({ label, value, past, range, note, tone }) {
     `<span class="ledger__label">${escapeHtml(label)}</span>` +
     `<span class="ledger__value" data-numeric>${value}</span>` +
     `<span class="ledger__spark" aria-hidden="true">` +
-    (past && past.length > 1 ? sparkline([...past], 6, range) : "") +
+    /* ⚠ A JANELA E `WINDOW`, e ela DOBROU em 21/08/2026 — era um 6 digitado aqui. A
+       tendencia escrita ao lado desta coluna ja conta doze meses; a linha contava seis, e
+       as duas mediam pedacos diferentes do passado dentro da mesma leitura. Medido num
+       mandato passivo de 20 meses, em unidades de traco (de 20 possiveis): o PIB sobe de
+       2,8 para 6,0 so por olhar mais para tras. Nao custa pixel: a caixa e a mesma. */
+    (past && past.length > 1 ? sparkline([...past], WINDOW, range) : "") +
     `</span>` +
     `<span class="ledger__note">${note ? escapeHtml(note) : ""}</span>` +
     `</div>`
@@ -154,10 +146,12 @@ export function financeHtml({
         label: UI.finance.gdp,
         value: money(macro.gdp),
         past: series.gdp,
-        /* O PIB NOMINAL NAO TEM TETO NATURAL, entao a regua dele e a propria
-           largada: do primeiro mes guardado ate metade a mais. E a unica escada
-           ancorada em dado, e o dado e o passado do jogador. */
-        range: [series.gdp[0] ?? macro.gdp, (series.gdp[0] ?? macro.gdp) * 1.5],
+        /* O PIB NOMINAL NAO TEM TETO NATURAL, entao a regua dele e a propria largada.
+           ⚠ ATE 21/08/2026 ELA IA ATE "METADE A MAIS", e o numero era um chute: medido
+           num mandato de 48 meses, o PIB usava CINCO dos oito degraus e a escada gastava
+           metade da altura numa faixa que a partida nunca visita. Quem decide agora e
+           `gdpRange`, e ele e o mesmo dos dois consumidores. */
+        range: gdpRange(series.gdp, macro.gdp),
         note: UI.finance.perYear,
       }) +
       lineHtml({
@@ -326,7 +320,7 @@ export function financeHtml({
 
   return (
     `<section class="area glass-stage">` +
-    headHtml({ eyebrow: UI.finance.eyebrow, title: UI.finance.title }) +
+    headHtml({ title: UI.finance.title }) +
     economy +
     accounts +
     stock +

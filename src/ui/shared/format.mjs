@@ -123,52 +123,92 @@ export function signed(value, digits = 0) {
   return num(0, digits);
 }
 
-/* A ESCADA DE BLOCOS, oito degraus. Ela desenha tendencia sem canvas, sem SVG e
-   sem biblioteca — e num rail estreito ela cabe onde um grafico nao caberia. */
-const BLOCKS = ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"];
+/* ⚠ A ESCADA DE BLOCOS MORREU EM 21/08/2026, e o registro dela fica porque a razao de
+   ela ter nascido era boa: `["▁","▂",...,"█"]` desenhava tendencia sem canvas, sem SVG e
+   sem biblioteca, e — a frase original — "num rail estreito ela cabe onde um grafico nao
+   caberia". O rail estreito dela nao existe mais desde 14/08, quando a barra superior
+   absorveu a coluna da direita.
+
+   ⚠ E O QUE A MATOU FOI UMA MEDICAO, e nao gosto. Um bloco tem OITO alturas, e a altura
+   de cada um e uma fracao do CORPO DA FONTE: a 0,5rem — o tamanho que o painel usa — o
+   degrau 1 tem UM PIXEL. Um indicador que vive no terco de baixo da propria regua sai
+   como uma fileira de tracos de um pixel colada na linha de base, e o olho lê o
+   SUBLINHADO do numero, e nao um grafico. Nas capturas de Financas: `R$ 12,75 tri ______`
+   e `3,3% _______`.
+
+   ⚠ E NAO HA TAMANHO QUE CONSERTE, o que custou tres capturas para provar. Medido a
+   0,5 / 0,7 / 0,9rem: a altura da linha NAO muda (37px nos tres, o painel fecha em 1188
+   nos tres), entao o corpo nao era caro — mas a 0,9rem a escada invade a coluna da nota
+   ao lado, e a 0,7rem ela continua um traco, porque o problema nunca foi o corpo: e a
+   razao entre a barra e a celula do glifo.
+
+   O MESMO EXPERIMENTO REPROVOU A ESCADA NA BARRA SUPERIOR, no mesmo dia e pelo mesmo
+   motivo. Ver o achado 44. */
+
+/* A LINHA, e ela e o instrumento certo para a pergunta "para onde isto vem indo".
+   ══════════════════════════════════════════════════════════════════════════════
+   ⚠ SVG INLINE, e a convencao ja e do projeto: o sinete e o arco do plenario desenham
+   assim ha sessoes — sem biblioteca, sem canvas, sem build. O que ela ganha sobre a
+   escada e uma coisa so, e ela e decisiva: a linha usa a ALTURA INTEIRA da caixa
+   independentemente de onde o valor mora na regua. Um indice de 3% contra uma regua de
+   0 a 15% desenha uma curva de verdade, e nao um risco de um pixel.
+
+   `preserveAspectRatio="none"` deixa a caixa esticar sem que o desenho precise saber
+   quanto ela mede; `vector-effect="non-scaling-stroke"` impede que esse esticamento
+   engrosse o traco num eixo e afine no outro — sem ele, a mesma linha sai gorda em
+   Financas e fina no Congresso, porque as duas caixas tem proporcoes diferentes.
+
+   ⚠ A REGUA CONTINUA SENDO PARAMETRO, e a razao nao mudou: normalizar pelo minimo e
+   pelo maximo da propria serie faria uma oscilacao de dois pontos parecer um
+   desabamento — o desenho ficaria dramatico justamente quando nao ha nada acontecendo.
+   Quem sabe em que faixa um indicador vive e quem o mostra, e as faixas moram em
+   `shared/trend.mjs`. */
+
+/* O QUADRO INTERNO, e ele e arbitrario de proposito: a caixa real vem do CSS, e estes
+   numeros so precisam de proporcao entre si. A folga de 2 em cima e embaixo existe para
+   o traco nao ser cortado ao meio quando a serie encosta no teto ou no chao da regua. */
+const FRAME = { width: 100, height: 24, pad: 2 };
 
 /**
- * Uma serie desenhada em blocos, contra uma faixa DECLARADA.
- *
- * A ESCALA NUNCA SAI DA PROPRIA SERIE. Normalizar pelo minimo e pelo maximo dos
- * pontos faria uma oscilacao de dois pontos parecer um desabamento — o desenho
- * ficaria dramatico justamente quando nao ha nada acontecendo, que e o oposto do
- * que uma faixa de tendencia serve para dizer.
- *
- * ⚠ A FAIXA E PARAMETRO, E O PADRAO E O INDICE DE AREA. Quando a CORRENTE nasceu,
- * o painel passou a desenhar inflacao (0,042), juro (0,105) e divida sobre PIB
- * (0,78) com a mesma regua de um indice de 0 a 100 — e as tres viravam o degrau
- * mais baixo, para sempre, em qualquer partida. A serie existia, o motor estava
- * certo, e a escada mentia dizendo "nada nunca acontece". Quem sabe em que faixa
- * um indicador vive e quem o mostra, entao a faixa entra por aqui.
+ * Uma serie desenhada como linha, contra uma faixa DECLARADA.
  *
  * @param {ReadonlyArray<number>} values
- * @param {number} [width] quantos degraus mostrar, do fim da serie
+ * @param {number} [width] quantos meses mostrar, do fim da serie
  * @param {readonly [number, number]} [range] o piso e o teto da regua
  * @returns {string}
  */
 export function sparkline(values, width = 6, range = [0, 100]) {
-  /* UM PONTO NAO E TENDENCIA. Com uma leitura so a escada desenha um bloco
-     solitario, que na tela lê como sujeira de renderizacao e nao como
-     informacao — e foi assim que ela apareceu no primeiro mes da partida, ao
-     lado de cada um dos seis indices. Tendencia precisa de dois pontos; com
-     menos que isso, o certo e nao desenhar nada. */
+  /* UM PONTO NAO E TENDENCIA. Com uma leitura so a linha vira um ponto solitario, que
+     na tela lê como sujeira de renderizacao e nao como informacao — e foi assim que a
+     escada apareceu no primeiro mes da partida, ao lado de cada um dos seis indices. */
   if (values.length < 2) return "";
 
   const [floor, ceiling] = range;
   /* Faixa degenerada nao existe em chamada valida, e uma divisao por zero aqui
-     produziria `NaN` que atravessa o `Math.floor` e sai como bloco de baixo em
-     toda a serie — um desenho plausivel descrevendo um defeito. */
+     produziria `NaN` atravessando o atributo `points` — o navegador descarta a
+     polilinha inteira em silencio, e o defeito sai como uma caixa vazia plausivel. */
   const span = ceiling - floor || 1;
 
   const shown = values.slice(-width);
-  return shown
-    .map(value => {
-      const step = Math.min(
-        BLOCKS.length - 1,
-        Math.max(0, Math.floor(((value - floor) / span) * BLOCKS.length)),
-      );
-      return BLOCKS[step] ?? BLOCKS[0];
+  const last = shown.length - 1;
+  const reach = FRAME.height - 2 * FRAME.pad;
+
+  const points = shown
+    .map((value, index) => {
+      const share = Math.min(1, Math.max(0, (value - floor) / span));
+      const x = (index / last) * FRAME.width;
+      /* O EIXO Y CRESCE PARA BAIXO EM SVG, entao o valor alto tem de virar coordenada
+         BAIXA. Esquecer esta inversao desenha a serie de cabeca para baixo, e o desenho
+         continua plausivel — e o pior tipo de defeito de grafico. */
+      const y = FRAME.height - FRAME.pad - share * reach;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
     })
-    .join("");
+    .join(" ");
+
+  return (
+    `<svg class="spark" viewBox="0 0 ${FRAME.width} ${FRAME.height}" ` +
+    `preserveAspectRatio="none" aria-hidden="true">` +
+    `<polyline class="spark__line" vector-effect="non-scaling-stroke" points="${points}" />` +
+    `</svg>`
+  );
 }

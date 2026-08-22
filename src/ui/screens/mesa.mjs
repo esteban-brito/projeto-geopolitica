@@ -28,9 +28,10 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed, sparkline } from "../shared/format.mjs";
+import { WINDOW } from "../shared/trend.mjs";
 import { headHtml } from "../shared/head.mjs";
 import { sigilHtml } from "../shared/sigil.mjs";
-import { UI } from "../strings.mjs";
+import { UI, labelOf } from "../strings.mjs";
 
 /**
  * @typedef {import("../../data/areas.mjs").Area} Area
@@ -42,18 +43,6 @@ import { UI } from "../strings.mjs";
 /* O estado de humor de uma bancada, como a tela o nomeia. Os limiares chegam do
    motor: redigita-los aqui seria garantir que um dia a tela chame de
    "obstruindo" quem o motor ja trata como rompida. */
-/**
- * O rotulo de um instrumento. Ele passa por aqui em vez de indexar direto porque
- * `bill.instrument` e texto vindo do catalogo, e catalogo e dado editavel: um
- * instrumento novo digitado errado tem de aparecer como o proprio id na tela, e
- * nao derrubar a pintura inteira.
- *
- * @param {Record<string, string>} table
- * @param {string} key
- */
-function labelOf(table, key) {
-  return table[key] ?? key;
-}
 
 /**
  * @param {number} loyalty
@@ -89,7 +78,10 @@ export function capacityStripHtml({ areas, index, history }) {
     .map(area => {
       const value = index[area.id] ?? area.initial;
       const past = history[area.id] ?? [];
-      const trend = sparkline(past.length > 0 ? past : [value]);
+      /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `shared/trend.mjs`.
+         Cada uma tinha a propria ate 21/08/2026, e a faixa do Congresso ficou com a
+         menor por omissao: `sparkline` tem 6 como padrao, e ninguem escolheu isso aqui. */
+      const trend = sparkline(past.length > 0 ? past : [value], WINDOW);
 
       return (
         `<button class="capacity" type="button" data-section="${escapeHtml(area.id)}">` +
@@ -137,14 +129,29 @@ const MEMORY_FLOOR = 0.08;
  * @returns {string}
  */
 function personHtml({ person, voting }) {
-  /* A MEMORIA VIRA FRASE, e a faixa morta no meio e declarada: sem histórico é um
-     estado, e não um zero. */
+  /* ── A MEMÓRIA SÓ FALA QUANDO TEM O QUE DIZER ───────────────────────────────
+     ⚠ ATÉ 20/08/2026 ELA IMPRIMIA "sem histórico com o seu governo" NO CASO NEUTRO, e
+     a prosa antiga defendia isso — "sem histórico é um estado, e não um zero". A
+     afirmação é verdadeira e a conclusão estava errada, e a captura mostrou por quê: no
+     mês 1 NINGUÉM tem histórico, e a mesma frase saía **sete vezes na mesma tela**, uma
+     debaixo da outra, sob sete pessoas diferentes.
+
+     ⚠ E A REGRA CONTRÁRIA JÁ ESTAVA ESCRITA DUAS VEZES NESTE PROJETO, nos dois lugares
+     em que ela foi aplicada: "uma legenda que lista 'em ruptura: 0' todo mês ensina o
+     olho a ignorar a linha inteira", na legenda do plenário, e "um 'prometeu R$ 0,0 bi'
+     todo mês ensina o olho a pular a linha", na carta do mês. Aqui ela não tinha sido
+     aplicada, e o custo é o mesmo: a linha que repete vira textura, e no mês em que
+     alguém DE FATO se lembrar de você, a frase aparece num lugar que o olho já
+     aprendeu a pular.
+
+     Ausência aqui não esconde nada: memória neutra é a falta de história, e a falta de
+     história se lê pela falta da linha. */
   const memory =
     person.memory > MEMORY_FLOOR
       ? { tone: "good", text: UI.congress.memoryGood }
       : person.memory < -MEMORY_FLOOR
         ? { tone: "poor", text: UI.congress.memoryBad }
-        : { tone: "none", text: UI.congress.memoryNone };
+        : null;
 
   const ambition = labelOf(UI.congress.ambition, person.ambition);
   /* ⚠ SO A SUCESSAO GANHA O PRECO ESCRITO AO LADO, porque so ela tem preco hoje.
@@ -170,7 +177,9 @@ function personHtml({ person, voting }) {
     `</span>` +
     `<span class="person__note">` +
     `<span class="person__ambition">${escapeHtml(ambition)}${price}</span>` +
-    `<span class="person__memory" data-tone="${memory.tone}">${escapeHtml(memory.text)}</span>` +
+    (memory
+      ? `<span class="person__memory" data-tone="${memory.tone}">${escapeHtml(memory.text)}</span>`
+      : "") +
     `</span>` +
     /* ⚠ SEM PAUTA ELA IMPRIMIA "de 76" — a segunda metade de uma frase cuja
        primeira metade nao existe. `votes` so tem sentido contra um texto em
@@ -211,7 +220,14 @@ function benchHtml({ party, loyalty, funding, votes, seatPrice, thresholds, voti
      o unico que a atualizacao ao vivo substitui. */
   return (
     `<div class="bench" data-mood="${mood}" data-party="${escapeHtml(party.id)}">` +
-    `<span class="bench__name">${escapeHtml(party.label)}</span>` +
+    /* ⚠ A SIGLA VEM PRIMEIRO E O NOME EMBAIXO, desde que a Camara ganhou legendas em
+       20/08/2026. "Partido Social Municipalista" numa coluna de 96px quebra em tres
+       linhas e empurra a linha inteira; a sigla cabe sempre e e como um Congresso de
+       verdade se cita. O nome fica logo abaixo, em corpo de nota — ninguem decora nove
+       siglas na primeira partida, e escondê-lo faria a tela falar uma lingua que o
+       jogador ainda nao tem. */
+    `<span class="bench__name"><b>${escapeHtml(party.sigla)}</b>` +
+    `<small>${escapeHtml(party.label)}</small></span>` +
     `<span class="bench__mood" data-numeric title="${escapeHtml(UI.mood[mood])}">` +
     `${seats(loyalty)}<i aria-hidden="true"></i></span>` +
     `<input class="bench__slider" type="range" min="0" max="100" step="5" ` +
@@ -457,7 +473,7 @@ export function congressHtml({ gauges, mesa, report, passage }) {
 
   return (
     `<section class="area glass-stage">` +
-    headHtml({ eyebrow: UI.congress.eyebrow, title: UI.nav.congress }) +
+    headHtml({ title: UI.nav.congress }) +
     block(UI.congress.country, gauges) +
     block(UI.congress.agenda, mesa) +
     block(UI.congress.passage, passage) +

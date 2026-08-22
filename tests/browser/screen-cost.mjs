@@ -39,9 +39,11 @@ const BASE = `http://127.0.0.1:${PORT}`;
 const OUT = join(ROOT, "captures");
 
 const VIEWPORTS = [
+  /* ⚠ TABLET E CELULAR SAIRAM EM 20/08/2026, por decisao de ESCOPO do responsavel —
+     ver a nota em `walk.mjs`. O que sobra e o desktop, e o numero e o que ele usa.
+     Medir fps num aparelho que ninguem vai usar nao e cobertura: e ruido com aparencia
+     de rigor, e ele custa dois navegadores por rodada. */
   { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 760, height: 1024 },
-  { name: "celular", width: 390, height: 844 },
 ];
 
 /* Desliga o material sem mexer no layout: mesma caixa, mesma cor, mesmo texto.

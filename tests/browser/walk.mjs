@@ -27,6 +27,7 @@ import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "playwright";
 import { ROOT } from "../lib/project.mjs";
+import { CATALOG } from "../../src/data/catalog.mjs";
 
 const PORT = 5201;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -269,9 +270,15 @@ try {
     /aprovada|rejeitada|decretada/i.test(verdict),
     `[relatorio] o veredito veio como "${verdict}"`,
   );
+  /* ⚠ O NUMERO E COBRADO CONTRA O CATALOGO, e nao digitado. Ate 20/08/2026 esta linha
+     dizia `=== 4`, escrita quando a Camara tinha quatro blocos abstratos — e ela ficou
+     vermelha no dia em que eles viraram nove legendas. O que a prova quer garantir nunca
+     foi "quatro": e que a tabela traga TODAS as bancadas, porque uma que sumisse por
+     erro de composicao nao quebra nada — a tela apenas mostra um voto a menos, e o
+     defeito atravessa tudo calado. Lido do catalogo, este numero nao envelhece de novo. */
   expect(
-    (await page.locator(".report__table tbody tr").count()) === 4,
-    "[relatorio] a tabela nao trouxe as quatro bancadas",
+    (await page.locator(".report__table tbody tr").count()) === CATALOG.parties.length,
+    `[relatorio] a tabela trouxe ${await page.locator(".report__table tbody tr").count()} bancadas e o catalogo tem ${CATALOG.parties.length}`,
   );
   await page.screenshot({ path: join(OUT, "walk-relatorio.png"), fullPage: true });
 
@@ -380,14 +387,25 @@ try {
     "[financas] o placar ofereceu algo para mexer",
   );
 
-  /* E A ESCADA SUBIU DE VERDADE. Com a regua errada — a do indice de area, de 0 a
-     100 —, inflacao, juro e divida sobre PIB ficam no degrau do chao em toda
-     partida, e a coluna inteira desenha a mesma barra dizendo que nada nunca
-     acontece. Aqui basta um degrau diferente do outro para provar o contrario. */
-  const steps = await page.locator(".ledger__spark").allInnerTexts();
+  /* E A LINHA SUBIU DE VERDADE. Com a regua errada — a do indice de area, de 0 a
+     100 —, inflacao, juro e divida sobre PIB ficam colados no chao em toda partida, e a
+     coluna inteira desenha o mesmo traco dizendo que nada nunca acontece. Basta UMA das
+     series ter duas alturas diferentes para provar o contrario.
+
+     ⚠ ELA PASSOU A LER GEOMETRIA em 21/08/2026, e nao texto. A escada de blocos morreu e
+     virou polilinha de SVG — ver `sparkline` —, entao `allInnerTexts` devolve string
+     vazia para todas: a prova ficaria PERMANENTEMENTE verde por vacuidade se o `.some`
+     tivesse sido escrito ao contrario, e ficou permanentemente vermelha porque nao foi.
+     Ler o `points` e a mesma pergunta feita ao desenho de verdade. */
+  const lines = await page.locator(".ledger__spark polyline").evaluateAll(nodes =>
+    nodes.map(node => {
+      const points = node.getAttribute("points") ?? "";
+      return new Set(points.split(" ").map(pair => pair.split(",")[1])).size;
+    }),
+  );
   expect(
-    steps.some(spark => new Set(spark.trim()).size > 1),
-    `[financas] nenhuma serie variou na escada: ${steps.filter(Boolean).join(" ")}`,
+    lines.some(heights => heights > 1),
+    `[financas] nenhuma serie variou na linha: ${lines.join(" ")}`,
   );
 
   /* A CAPTURA ESPERA A TRANSICAO ACABAR. A troca de tela passa por View
@@ -408,6 +426,43 @@ try {
     monthBefore === monthAfter,
     `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
   );
+  /* ⚠ E O INDICE DA BANDEJA NAO ROLA — nem para o lado, nem para baixo. As duas
+     rolagens sairam em 21/08/2026 por caminhos diferentes, e as duas voltam por descuido:
+
+       · a LATERAL era uma reticencia que nunca funcionava — `text-overflow: ellipsis`
+         sem `min-width: 0` empurra em vez de cortar, e 11px de estouro bastavam;
+       · a VERTICAL saiu quando a bandeja virou PILHA COM TETO, a pedido do responsavel.
+         O teto e `TRAY_CAPACITY`, um numero medido contra a altura da linha — e numero
+         medido a mao envelhece no dia em que alguem mexer no recuo da linha.
+
+     Esta prova e o que impede o numero de envelhecer calado: mude a altura da linha e ela
+     fica vermelha aqui, num navegador de verdade, com a bandeja cheia de verdade. */
+  /* ⚠ ELA MORA DEPOIS DA RECARGA DE PROPOSITO, e nao na visita ao Gabinete la em cima:
+     a retomada abre no Gabinete com o mandato ja andado, que e a bandeja mais CHEIA que o
+     passeio produz — e pilha so estoura cheia. Medida no comeco, com uma carta na mesa,
+     esta prova ficaria verde para sempre sem defender nada.
+
+     ⚠ E ELA NAO NAVEGA. A primeira versao clicava no Gabinete aqui e a captura mostrou o
+     preco: o clique acontecia ANTES da checagem de Financas, e a coluna de tendencia
+     ficava sendo medida numa tela que nao a tem. O passeio inteiro ficou vermelho por uma
+     linha de navegacao no lugar errado. */
+  const tray = await page.evaluate(() => {
+    const list = document.querySelector(".tray__list");
+    if (!list) return null;
+    return {
+      x: list.scrollWidth - list.clientWidth,
+      y: list.scrollHeight - list.clientHeight,
+      rows: list.querySelectorAll(".tray__row").length,
+    };
+  });
+  if (tray) {
+    expect(tray.x <= 1, `[gabinete] o indice da bandeja rola ${tray.x}px para o lado`);
+    expect(
+      tray.y <= 1,
+      `[gabinete] o indice rola ${tray.y}px para baixo com ${tray.rows} linhas — a pilha estourou`,
+    );
+  }
+
   /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e
      memoria de sessao e nao entra no save. Entao o que se confere aqui sao os
      cartoes, que so existem quando a partida carregou de verdade. */
@@ -428,37 +483,24 @@ try {
     "[recomecar] o segundo clique nao recomecou a partida",
   );
 
-  /* 9 — O CELULAR, com a mesma sequencia ja no estado avancado. */
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.waitForTimeout(400);
-  await checkOverflow("celular · area");
+  /* ⚠ A PERNA DO CELULAR SAIU EM 20/08/2026, e ela NAO saiu para destravar nada.
+     Este projeto tem uma regra dura sobre isso — "nao remova uma guarda ou uma prova
+     para destravar; elas existem por defeito medido" —, e ela continua valendo. O que
+     mudou aqui foi o ESCOPO, e a mudanca e do responsavel, com estas palavras: "pare de
+     se importar se o jogo funciona no mobile, simplesmente nao importa, nunca vou jogar
+     no mobile, so no desktop; eu quero a perfeicao no desktop, perfeicao mesmo".
 
-  /* ⚠ O GABINETE ENTROU NESTA PERNA DEPOIS DE ELA DEIXAR PASSAR UM DEFEITO GRAVE.
-     A tela INICIAL do jogo — a primeira coisa que qualquer jogador de celular ve —
-     era a unica que o passeio nao abria no telefone: ele ia direto de uma area
-     para Financas e para o Congresso. E era justamente ela que estava quebrada,
-     com os quatro cartoes desenhados uns por cima dos outros em todo aparelho de
-     720px para baixo.
+     ⚠ E O DEFEITO QUE ELA PEGOU CONTINUA REGISTRADO, porque a licao dele nao e sobre
+     telefone: os quatro cartoes do Gabinete se desenhavam uns por cima dos outros em
+     todo aparelho de 720px para baixo, e a razao de ninguem ter visto era que a perna
+     do celular estava organizada pelo que PARECIA arriscado — o placar denso, a mesa
+     larga — e nao pelo que o jogador de fato ve primeiro. **A tela mais provavel de
+     quebrar nao e a mais complexa; e a que ninguem conferiu.** Isso vale igual no
+     desktop, e e por isso que `checkNoOverlap` ficou.
 
-     A licao nao e "faltava um clique": e que a perna do celular estava organizada
-     pelo que parecia ARRISCADO — o placar denso, a mesa larga — e nao pelo que o
-     jogador de fato ve. A tela mais provavel de quebrar nao e a mais complexa; e a
-     que ninguem conferiu. */
-  await page.click('[data-section="cabinet"]');
-  await page.waitForTimeout(600);
-  await checkOverflow("celular · gabinete");
-  await checkNoOverlap("celular · gabinete", ".cards > .card");
-  await page.screenshot({ path: join(OUT, "walk-celular-gabinete.png"), fullPage: true });
-  /* O PLACAR E A TELA MAIS LARGA DO JOGO — quatro colunas de numero —, e por isso
-     ele e o candidato mais provavel a empurrar a pagina de lado num aparelho de
-     390px. */
-  await page.click('[data-section="finance"]');
-  await page.waitForTimeout(600);
-  await checkOverflow("celular · financas");
-  await page.click('[data-section="congress"]');
-  await page.waitForTimeout(600);
-  await checkOverflow("celular · congresso");
-  await page.screenshot({ path: join(OUT, "walk-celular.png"), fullPage: true });
+     O que saiu junto: as folhas de 640px e 720px, e os dois aparelhos de
+     `screen-cost.mjs`. O bloco de 1180px FICA — aquilo e um notebook, e notebook e
+     desktop. */
 
   expect(noise.length === 0, `console sujo: ${noise.join(" | ")}`);
 

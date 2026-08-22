@@ -252,6 +252,14 @@ const anyState = fc.record({
       from: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
       lever: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
       level: fc.option(fc.integer({ min: 0, max: 100 }), { nil: null }),
+      /* ⚠ OS TRES DO RELATORIO, e eles entraram na carta em 21/08/2026: `was` e `now` sao
+         o antes e o depois de uma grandeza, e `weight` diz se o movimento foi grande o
+         bastante para gritar na bandeja. O reducer so carrega o que lhe derem, entao um
+         estado sorteado sem eles passaria verde descrevendo uma carta que o jogo nao
+         produz mais — foi o VERIFICADOR DE TIPOS que os cobrou aqui, e nao um teste. */
+      was: fc.option(fc.integer({ min: 0, max: 513 }), { nil: null }),
+      now: fc.option(fc.integer({ min: 0, max: 513 }), { nil: null }),
+      weight: fc.option(fc.constant("high"), { nil: null }),
       answer: fc.option(fc.constantFrom("accept", "block", "silence"), { nil: null }),
       closedAt: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
     }),

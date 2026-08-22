@@ -37,8 +37,8 @@
 import { escapeHtml } from "../shared/html.mjs";
 import { attr, money, seats, signed, sparkline } from "../shared/format.mjs";
 import { headHtml } from "../shared/head.mjs";
-import { trendOf, windowLabel } from "../shared/trend.mjs";
-import { UI } from "../strings.mjs";
+import { WINDOW, trendOf, windowLabel } from "../shared/trend.mjs";
+import { UI, labelOf } from "../strings.mjs";
 import { bandOf, riteFor, riteForBand } from "../../application/agenda.mjs";
 
 export { riteFor as riteOf };
@@ -61,14 +61,6 @@ export { riteFor as riteOf };
  * @property {string} guard
  * @property {number} [cost]
  */
-
-/**
- * @param {Record<string, string>} table
- * @param {string} key
- */
-function labelOf(table, key) {
-  return table[key] ?? key;
-}
 
 /* O RITO VEM DO MOTOR, e a tela nao tem opiniao sobre ele.
    ⚠ A DIVIDA FOI PAGA, e ela cobrou juros em menos de uma hora. Esta funcao era
@@ -318,7 +310,13 @@ export function areaHtml(input) {
      existe onde o atraso passa de onze. Em SEIS das oito areas a tela mostrava a
      variacao desde a posse com rotulo de doze meses, e no mes 40 isso e uma frase
      falsa. Agora a janela e a que o historico suporta, e ela vai escrita ao lado —
-     a mesma leitura que Financas mostra, do mesmo lugar. */
+     a mesma leitura que Financas mostra, do mesmo lugar.
+
+     ⚠ E EM 21/08/2026 A FONTE MUDOU, e com ela a janela ficou honesta de verdade. O que
+     chegava aqui era `state.capacity.history` — o buffer do ATRASO — e por isso "a
+     janela que o historico suporta" era 1 na Fazenda, 3 na Saude e 6 na Industria.
+     Agora chega `state.series.areas`, que guarda 48 meses de todas as oito. A regra nao
+     mudou; o dado que ela le, sim. Ver a prosa de `trend.mjs` e o achado 42. */
   const past = history.length > 0 ? history : [value];
   const moved = trendOf(value, past);
 
@@ -341,13 +339,12 @@ export function areaHtml(input) {
      dizer de si AGORA, que e exatamente o papel da leitura da direita, o mesmo que
      o veredito ocupa no Gabinete. */
   const head = headHtml({
-    eyebrow: UI.area.ministry,
     title: area.label,
     reading: {
       label: area.index,
       value:
         `<p class="head__value" data-numeric>${seats(value)}` +
-        `<span class="area__spark" aria-hidden="true">${sparkline(past)}</span></p>` +
+        `<span class="area__spark" aria-hidden="true">${sparkline(past, WINDOW)}</span></p>` +
         /* A VARIACAO USA A PECA DE VARIACAO, e nao uma classe propria que repinta o
            mesmo verde. Duas regras para o mesmo conceito e como uma paleta comeca a
            divergir: a que ficar de fora do proximo ajuste vira a cor errada.
@@ -515,7 +512,7 @@ export function estadoHtml({ rules, levels, bands = {}, requestedBands = {} }) {
 
   return (
     `<section class="area glass-stage">` +
-    headHtml({ eyebrow: UI.estado.eyebrow, title: UI.estado.title }) +
+    headHtml({ title: UI.estado.title }) +
     groups.join("") +
     `</section>`
   );

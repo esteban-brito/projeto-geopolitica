@@ -50,6 +50,107 @@
     grid-template-rows: auto minmax(0, 1fr);
   }
 
+  /* ⚠ E ELA TRAVA A ALTURA QUANDO O GABINETE ESTÁ ABERTO — 20/08/2026.
+     `min-height: 100dvh` diz "pelo menos a janela", e por isso a casca CRESCE com o
+     conteúdo: qualquer altura fixa que o Gabinete declarasse lá dentro media contra
+     uma casca que já tinha esticado, e o canvas nunca fechava. `height` no lugar de
+     `min-height` é o que faz a linha `minmax(0, 1fr)` valer exatamente o que sobra da
+     janela depois da barra.
+
+     ⚠ E O ESCOPO É O SELETOR, e não uma classe nova: `:has()` deixa a regra depender
+     da tela que está aberta sem que o entrypoint tenha de espelhar `data-screen` num
+     segundo elemento. As outras sete telas continuam com a casca elástica e a página
+     rolando, que é o certo enquanto o conteúdo delas não tiver teto medido.
+
+     ⚠ E ISTO SÓ É LEGÍTIMO PORQUE O CELULAR SAIU DE ESCOPO nesta sessão, por decisão
+     do responsável. Numa janela de 390px, travar a altura esconderia metade do
+     Gabinete atrás de uma dobra sem nada que avisasse. */
+  .shell:has(> .board[data-screen="cabinet"]) {
+    height: 100dvh;
+  }
+
+  /* ── O RAIL DENTRO DO CANVAS ────────────────────────────────────────────────
+     ⚠ DEFEITO ANTIGO, ACHADO PELA MEDIÇÃO DO CANVAS em 20/08/2026: o rail declara
+     `height: calc(100dvh - 2 * var(--space-4))` — **948px numa janela de 980** — e
+     mora na linha 2 da casca, que começa ABAIXO da barra superior e tem 904. Ele
+     sempre transbordou 44px, em toda tela, desde que foi escrito. Numa página que
+     rola isso é invisível: a página já rolava por outros motivos. No canvas ele é a
+     única coisa que impede a tela de fechar na dobra — e era ele que segurava os
+     últimos 60 pixels.
+
+     `align-self: stretch` troca o palpite pela medida: em vez de calcular a janela e
+     errar a barra, o rail passa a valer exatamente a linha em que ele está. A margem
+     dele sai de dentro dessa altura, e não por fora.
+
+     ⚠ E O CONSERTO É ESCOPADO À TELA, e não global, por uma razão de comportamento:
+     nas sete telas que ainda rolam, `stretch` faria o rail crescer junto com a página
+     — 1563px no Congresso — e aí `position: sticky` deixaria de segurá-lo à vista,
+     porque um elemento mais alto que a janela não gruda. Lá o palpite errado é
+     inofensivo; aqui ele é o defeito. */
+  .shell:has(> .board[data-screen="cabinet"]) .rail {
+    height: auto;
+    align-self: stretch;
+  }
+
+  /* A LISTA ROLA POR DENTRO e o pé fica preso, que é a mesma regra da coluna da
+     direita do Gabinete: o que se corta é o meio, e nunca o gesto. "Nova partida" é
+     o único botão do rail, e um botão que desaparece por rolagem some sem avisar. */
+  .shell:has(> .board[data-screen="cabinet"]) .rail__list {
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* ── O CERCO NA MOLDURA ─────────────────────────────────────────────────────
+     ⚠ ELE FALTAVA DESDE QUE O IMPEACHMENT EXISTE, e era o ultimo item aberto da Parte 3
+     do dossie da Sala de Guerra: com um processo correndo havia carimbo no bloco da
+     caldeira e frase na carta, e a tela — o objeto que o jogador olha o tempo todo —
+     continuava identica ao mes tranquilo.
+
+     ⚠ ELE E ARESTA, E NAO TINTA. O gel de situacao ja tinge tudo por crise/estavel/
+     crescimento, e um quarto tom ali competiria com a leitura que o gel existe para dar.
+     A aresta e um canal livre, e ela diz outra coisa: o gel responde "quao bem o pais
+     vai", e isto responde "ha uma gaveta aberta". Sao perguntas diferentes.
+
+     ⚠ E A COR E O BORDO DO CARIMBO. `--crisis` e a cor do que JA deu errado — teto
+     fechado, bancada rompida —, e aqui nada caiu ainda: a Camara autorizou e o mandato
+     continua. Bordo e a cor do despacho pendente, e e a mesma que o botao de avancar usa
+     quando o mes vai bater o carimbo por voce. Uma voz, uma cor.
+
+     ⚠ E ELE PULSA DEVAGAR, com um orcamento de movimento que o projeto ja reserva. Nove
+     segundos e o mesmo passo do passeio da luz — rapido o bastante para o olho pegar,
+     lento o bastante para nao competir com a leitura. Uma moldura parada em bordo vira
+     decoracao em dois meses; uma que respira continua sendo um estado. */
+  .shell[data-siege="true"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    border: var(--rule) solid rgba(var(--bordo-rgb), 0.72);
+    box-shadow:
+      inset 0 0 0 1px rgba(var(--bordo-rgb), 0.28),
+      inset 0 0 60px -12px rgba(var(--bordo-rgb), 0.55);
+    animation: siege-breath 9s ease-in-out infinite;
+  }
+
+  /* ⚠ E QUEM PEDIU MENOS MOVIMENTO NAO RECEBE PULSO, e a moldura FICA — ela e
+     informacao, e nao enfeite. O que sai e a respiracao, e nao o estado. */
+  @media (prefers-reduced-motion: reduce) {
+    .shell[data-siege="true"]::after {
+      animation: none;
+    }
+  }
+
+  @keyframes siege-breath {
+    0%,
+    100% {
+      opacity: 0.72;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
   /* ── A BARRA SUPERIOR ───────────────────────────────────────────────────────
      Ela atravessa as duas colunas: o status do governo vale para a navegacao
      tambem, e uma barra que comecasse depois da sidebar leria como parte do
@@ -155,6 +256,11 @@
   .vital--alert .vital__value {
     color: var(--crisis);
   }
+
+  /* ⚠ `.vital__spark` NASCEU E MORREU EM 21/08/2026, e a razao esta em `dashboard.mjs`:
+     a fileira tem 248px por leitura e uma escada legivel pede 120 alem do rotulo. A
+     captura reprovou os dois tamanhos tentados — 0,5rem cabe e vira um traco, 0,85rem le
+     e empurra o rotulo do PIB para fora da barra. A guarda `orphans` acusaria a regra. */
 
   .vital .trend {
     font-size: 0.7em;
@@ -430,34 +536,15 @@
   }
 
   /* No celular a coluna e uma so, e ai TODA aresta vertical tem de bater. */
-  @media (max-width: 640px) {
-    .board {
-      padding: var(--space-6) var(--space-4);
-    }
+  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
+     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
+     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
+     desktop; eu quero a perfeição no desktop, perfeição mesmo".
 
-    .board > * {
-      width: 100%;
-    }
+     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
+     de rolar. Foi o corte que permitiu a tela fechar na dobra.
 
-    .rail__foot {
-      flex-direction: column;
-    }
-
-    /* ⚠ A LINHA DE LEITURAS VOLTA A SER COLUNA NO CELULAR, e isto e uma REGRESSAO
-       MINHA consertada na captura do mesmo dia. A forma de boletim — rotulo e valor na
-       mesma base, com fio entre as leituras — custa cerca do dobro da largura por
-       leitura, e num aparelho de 390px a faixa passou a cortar a BASE fora da tela. A
-       tira rola por dentro de proposito, entao nada estourava e nada ficava vermelho:
-       o quarto sinal vital simplesmente deixava de existir para quem nao arrastasse.
-
-       No telefone o empilhado nao e o defeito que a queixa nomeia: "cara de site de
-       investimentos" e sobre a tela larga, onde quatro fichas centradas com seta leem
-       como painel de mercado. Numa coluna estreita, rotulo em cima e valor embaixo e
-       so o jeito de caber. */
-    .vital {
-      display: grid;
-      gap: 0;
-      padding: 0 var(--space-3);
-    }
-  }
+     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
+     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
 }

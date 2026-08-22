@@ -69,6 +69,41 @@ export function heat({ pressure, grievance, parameters }) {
 }
 
 /**
+ * QUANTO CADA GRUPO PESA NA RUPTURA ECONOMICA, ja normalizado, de 0 a 1.
+ *
+ * ⚠ ELA NASCEU EM 21/08/2026 PARA A TELA, e o motivo de ser uma FUNCAO e nao uma
+ * conta na tela e a regra dura deste projeto: quem mostra nao refaz conta de quem
+ * executa. A caldeira do Gabinete desenha quatro reguas identicas, e uma delas — as
+ * forcas de ordem — tem peso ZERO: ela pode ferver o mandato inteiro sem mover a
+ * ruptura economica um milimetro. A tela nao tinha como dizer isso, e por isso dizia
+ * o contrario por omissao.
+ *
+ * ⚠ E ELA TIRA UMA DUPLICATA, e nao acrescenta uma. `rupture`, logo abaixo, somava o
+ * total dos pesos no proprio laco; com a tela precisando do mesmo total, seriam duas
+ * somas para uma verdade. Agora ha uma, e o dia em que um quinto grupo entrar no
+ * catalogo ela se refaz sozinha nos dois lugares.
+ *
+ * O PESO ZERO SAI COMO ZERO, e nao como ausente: quem pergunta a fatia de um grupo
+ * que nao pesa recebe a resposta certa, que e "nenhuma".
+ *
+ * @param {ReadonlyArray<{ id: string, weight: number }>} lobbies
+ * @returns {Record<string, number>}
+ */
+export function capitalShares(lobbies) {
+  let total = 0;
+  for (const lobby of lobbies) {
+    if (lobby.weight > 0) total += lobby.weight;
+  }
+
+  /** @type {Record<string, number>} */
+  const shares = {};
+  for (const lobby of lobbies) {
+    shares[lobby.id] = total > 0 && lobby.weight > 0 ? lobby.weight / total : 0;
+  }
+  return shares;
+}
+
+/**
  * AS TRES RUPTURAS — e o processo so abre com as tres ao mesmo tempo.
  *
  * ⚠ PRESIDENTES NAO CAEM POR UM FATOR SO, e este e o achado que o nono dossie
@@ -97,15 +132,19 @@ export function rupture({ pressure, lobbies, standing, broker, parameters }) {
 
   /* A RUPTURA ECONOMICA E PONDERADA, e nao "qualquer um deles". Um grupo com peso
      zero pode ferver sem que o capital tenha abandonado nada — as forcas de ordem
-     nao financiam campanha nem precificam divida, e o peso delas diz isso. */
+     nao financiam campanha nem precificam divida, e o peso delas diz isso.
+
+     ⚠ O TOTAL SAIU DAQUI em 21/08/2026 e virou `capitalShares`, logo acima: a tela
+     passou a mostrar a fatia de cada grupo, e duas somas para a mesma verdade e a
+     divergencia esperando o quinto lobby entrar no catalogo. Com a fatia ja
+     normalizada, o que sobra aqui e a soma de quem ABANDONOU — que e a pergunta
+     desta funcao, e a unica. */
+  const shares = capitalShares(lobbies);
   let abandoned = 0;
-  let total = 0;
   for (const lobby of lobbies) {
-    if (lobby.weight <= 0) continue;
-    total += lobby.weight;
-    if ((pressure[lobby.id] ?? 0) >= parameters.boil) abandoned += lobby.weight;
+    if ((pressure[lobby.id] ?? 0) >= parameters.boil) abandoned += shares[lobby.id] ?? 0;
   }
-  const economic = total > 0 && abandoned / total >= 0.5;
+  const economic = abandoned >= 0.5;
 
   /* ⚠ A RUPTURA POLITICA TEM LIMIAR PROPRIO, e ele e MAIS ALTO que o dos outros: o
      fisiologismo e o ultimo a virar, porque ele ganha dinheiro sustentando. Enquanto

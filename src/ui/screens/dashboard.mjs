@@ -117,6 +117,35 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
          bolsa: quatro delas lado a lado sao o painel de que a auditoria reclamou por
          quatro dossiês seguidos. Lado a lado com um fio entre as leituras, a mesma
          informacao le como boletim. */
+      /* ⚠ A ESCADA DOS VITAIS FOI TENTADA E REVERTIDA EM 21/08/2026, e o registro fica
+         porque a ideia continua boa e o motivo de ela nao caber e MEDIDO.
+
+         Pedido que veio de uma auditoria externa, e a razao dela estava certa: "politica
+         e economia sao sobre tendencias, nao sobre o retrato do momento". A peca existe
+         — `sparkline` —, a serie existe, e Financas ja desenha as dela.
+
+         ⚠ O QUE NAO EXISTE E ESPACO, e a captura provou duas vezes. A fileira de vitais
+         tem 994px para QUATRO leituras — 248px cada, e rotulo mais valor ja gastam ~150.
+         Uma escada de doze degraus precisa de ~120px para os blocos terem altura:
+
+           · a 0,5rem ela CABE e vira um TRACO. O bloco `▁` tem um oitavo do corpo da
+             fonte: a 8px isso e UM PIXEL, e doze deles em fila leem como o sublinhado do
+             numero. A captura mostrou "R$ 13,01 tri ___________";
+           · a 0,85rem ela LE e nao cabe. A fileira passou de 994 para alem do espaco da
+             barra, `overflow-x` entrou, e o primeiro vital ficou mostrando "i" com uma
+             barra ao lado — o rotulo "PIB" e o valor sairam da tela.
+
+         Nao ha terceiro tamanho: o intervalo entre "cabe" e "le" e vazio nesta largura.
+
+         ⚠ E A SAIDA NAO E DIMINUIR A JANELA. Com seis degraus a escada volta a caber, e
+         medido num mandato passivo de 30 meses ela sai com UM DEGRAU SO em tres dos
+         quatro vitais — plana do primeiro ao ultimo mes, que e a escada afirmando que
+         nada nunca acontece. Cabe e mente, ou le e nao cabe.
+
+         O LUGAR DELA JA EXISTE, e e Financas: la cada linha tem a largura inteira do
+         painel, e as cinco escadas de la funcionam desde que nasceram. O que esta sessao
+         deixou para elas foi a regua do PIB consertada — ver `gdpRange` em `trend.mjs`. */
+
       return (
         `<div class="vital${item.alert ? " vital--alert" : ""}">` +
         `<span class="vital__label">${escapeHtml(item.label)}</span>` +

@@ -132,11 +132,16 @@
   /* A escada de blocos e texto, e por isso ela desce pela linha de base junto
      com o numero. O aperto negativo cola os degraus: com o espaco normal entre
      caracteres, seis blocos leem como seis simbolos e nao como uma curva. */
+  /* ⚠ A TIPOGRAFIA SAIU EM 21/08/2026 junto com a escada de blocos — ver `sparkline`.
+     A faixa e estreita e tem seis campos lado a lado, entao a linha aqui e mais curta
+     que a do painel de Financas: 2,5rem cabe ao lado do numero sem empurra-lo. */
   .capacity__trend {
-    font-size: var(--text-note);
-    line-height: 1;
-    letter-spacing: -0.08em;
     color: var(--ink-dim);
+  }
+
+  .capacity__trend .spark {
+    width: 2.5rem;
+    height: 0.75rem;
   }
 
   /* A BARRA E A LINHA D'AGUA. Os dois unicos numeros desta folha que nao sao
@@ -242,24 +247,61 @@
     gap: var(--space-2);
   }
 
+  /* ── A BANCADA DEIXOU DE SER CARTÃO EM 20/08/2026 ───────────────────────────
+     ⚠ ESTA TELA ERA A ÚLTIMA NO DIALETO QUE O GABINETE ABANDONOU. Lá, em 16/08, os
+     cinco cartões viraram blocos com a razão escrita: "vidro dentro de vidro são dois
+     materiais empilhados para dizer uma coisa só, e cinco retângulos numa grade são a
+     unidade visual de um dashboard". Aqui sobraram ONZE retângulos preenchidos, cada
+     um com OUTRO retângulo aninhado dentro — a lista de gente. Caixa dentro de caixa,
+     onze vezes, na tela que o responsável chamou de feia duas sessões seguidas.
+
+     O que separa uma bancada da seguinte passa a ser um FIO, que é o que separa tudo
+     o mais neste projeto. E o que diz que a gente pertence ao bloco continua sendo a
+     linha vertical do recuo — ela já fazia esse trabalho sozinha, e o preenchimento
+     só estava dizendo de novo o que a posição dizia.
+
+     ⚠ O CONTROLE ENCOLHEU DE ~400px PARA 180, e isso é conserto de uso e não de
+     estética: com `1.4fr`, o trilho comia o meio da linha e a LEITURA que ele muda
+     ficava a quatrocentos pixels dele. O jogador arrastava aqui e o número respondia
+     do outro lado da tela. Fixo, o trilho termina colado na leitura — e a folga vai
+     para o nome, que é o que tem texto de verdade para mostrar. */
   .bench {
     display: grid;
-    grid-template-columns: minmax(96px, 1fr) auto minmax(120px, 1.4fr) auto;
+    grid-template-columns: minmax(96px, 1fr) auto 180px auto;
     align-items: center;
     gap: var(--space-3);
+    /* A TARJA DE ESTADO OCUPA LUGAR MESMO NEUTRA — transparente, e não ausente:
+       sem ela, uma bancada em ruptura andaria três pixels para a direita em relação
+       às vizinhas, e a coluna dos nomes perderia a margem comum. É a mesma decisão
+       da linha do índice da Caixa de Entrada. */
     padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-piece);
-    background: rgba(255, 255, 255, 0.04);
-    transition: background var(--dur-piece) linear;
+    border-left: var(--rule-strong) solid transparent;
+    transition: border-color var(--dur-piece) linear;
+  }
+
+  .bench + .bench {
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.07);
   }
 
   .bench__name {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
     font-family: var(--font-display);
-    font-weight: 600;
     color: var(--ink);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  }
+
+  .bench__name b {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  /* O NOME INTEIRO EMBAIXO DA SIGLA, e ele pode quebrar: e a unica prosa da linha, e
+     cortá-la com reticências esconderia justamente o que ensina a sigla. */
+  .bench__name small {
+    font-size: var(--text-label);
+    line-height: 1.25;
+    color: var(--ink-dim);
   }
 
   /* ── A GENTE DENTRO DO BLOCO ────────────────────────────────────────────────
@@ -338,10 +380,9 @@
   .person__memory[data-tone="poor"] {
     color: var(--crisis);
   }
-  .person__memory[data-tone="none"] {
-    color: var(--ink-dim);
-    opacity: 0.72;
-  }
+  /* ⚠ A REGRA DO TOM NEUTRO SAIU EM 20/08/2026 junto com a frase dele: memória
+     neutra deixou de imprimir linha, e regra de estilo sem HTML para pintar é
+     exatamente o que a guarda `orphans` existe para acusar. */
 
   .person__votes {
     font-family: var(--font-display);
@@ -382,19 +423,26 @@
     color: var(--signal-up);
   }
 
+  /* ⚠ O ESTADO VIROU TARJA E DEIXOU DE SER PREENCHIMENTO, em 20/08/2026. Uma faixa
+     vermelha atrás de uma linha inteira empurra a cor para debaixo do texto, do
+     controle e de quatro números — e vermelho que cobre tudo não destaca nada, que é
+     a mesma lição que o cofre do Gabinete já tinha aprendido.
+
+     ⚠ E A TARJA NÃO É UM DESENHO NOVO: é a MESMA gramática da carta que vence e da
+     linha do índice da Caixa de Entrada — marca na quina esquerda, e a cor gradua. O
+     projeto passa a ter um jeito só de dizer "esta linha está em outro estado". */
   .bench[data-mood="obstructing"] {
-    background: rgba(var(--crisis-rgb), 0.1);
+    border-left-color: rgba(var(--crisis-rgb), 0.5);
   }
 
   .bench[data-mood="obstructing"] .bench__mood {
     color: var(--signal-down);
   }
 
-  /* RUPTURA NAO E OBSTRUCAO COM MAIS TINTA. A barra na quina esquerda e a forma
-     que separa as duas: uma e a base reclamando, a outra e a base fora. */
+  /* RUPTURA NÃO É OBSTRUÇÃO COM MAIS TINTA. A tarja cheia é a forma que separa as
+     duas: uma é a base reclamando, a outra é a base fora. */
   .bench[data-mood="broken"] {
-    background: rgba(var(--crisis-rgb), 0.2);
-    box-shadow: inset 3px 0 0 var(--crisis);
+    border-left-color: var(--crisis);
   }
 
   .bench[data-mood="broken"] .bench__mood {
@@ -626,21 +674,17 @@
     white-space: nowrap;
   }
 
-  @media (max-width: 640px) {
-    .passage__row {
-      grid-template-columns: minmax(0, 1fr) auto;
-      row-gap: var(--space-1);
-    }
+  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
+     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
+     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
+     desktop; eu quero a perfeição no desktop, perfeição mesmo".
 
-    .passage__stage {
-      grid-column: 1;
-    }
+     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
+     de rolar. Foi o corte que permitiu a tela fechar na dobra.
 
-    .passage__what {
-      grid-column: 1 / -1;
-      order: 3;
-    }
-  }
+     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
+     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
 
   @media (max-width: 1180px) {
     /* ⚠ E AQUI A FILEIRA VOLTA A SER GRADE. `grid-auto-flow` e herdado do bloco
@@ -678,55 +722,4 @@
      leitura embaixo. Quatro colunas num aparelho de 390px poriam o controle
      deslizante em 60px de largura, e ai o passo de 5% deixa de ser alcancavel
      com o polegar. */
-  @media (max-width: 640px) {
-    .bench {
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: var(--space-2) var(--space-3);
-    }
-
-    /* ── A GENTE REFLUI COM A BANCADA QUE A CONTEM ─────────────────────────────
-       ⚠ E ELA REFLUI NO MESMO PONTO, e nao num proprio. A pessoa mora DENTRO da
-       linha do bloco; se as duas trocassem de forma em larguras diferentes,
-       existiria uma faixa de tela — entre um ponto e o outro — em que o bloco
-       ainda esta em quatro colunas e a gente dentro dele ja esta empilhada. Peca
-       aninhada que quebra antes do pai lê como defeito, e nao como adaptacao.
-
-       O NOME E OS VOTOS FICAM NA MESMA FILEIRA porque sao as duas unicas coisas
-       que o jogador procura de relance: quem, e quanto entrega. Cargo, ambicao e
-       memoria descem — sao o porquê, e o porquê se lê depois. */
-    .person {
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      row-gap: 2px;
-    }
-
-    .person__who {
-      grid-column: 2;
-    }
-
-    .person__votes {
-      grid-column: 3;
-      align-self: start;
-    }
-
-    .person__note {
-      grid-column: 2 / -1;
-    }
-
-    .bench__slider {
-      grid-column: 1;
-    }
-
-    .bench__read {
-      grid-column: 2;
-      grid-template-columns: 4ch 9ch;
-      row-gap: 0;
-    }
-
-    /* As cadeiras sobem para a primeira coluna da leitura e ficam sozinhas na
-       segunda fileira: e o numero que o jogador esta comprando. */
-    .bench__votes {
-      grid-column: 1 / -1;
-      justify-self: end;
-    }
-  }
 }

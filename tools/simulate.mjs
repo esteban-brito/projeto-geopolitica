@@ -315,6 +315,83 @@ const POLICIES = {
     funding: everyone(1),
   }),
 
+  /* ── AS DUAS SONDAS DA ESCOLHA ───────────────────────────────────────────────
+     ⚠ ELAS NASCERAM DO ACHADO MAIS CONSTRANGEDOR DE 21/08/2026, e ele e sobre o
+     INSTRUMENTO e nao sobre o jogo: as seis politicas que existiam **espalham tudo por
+     igual**, nos dois eixos — verba dividida entre as oito areas e emenda oferecida as
+     onze bancadas na mesma medida. Nenhuma delas ESCOLHE.
+
+     E escolher e o jogo. Medido a mao, fora do simulador:
+
+       · concentrando verba numa area so, a Saude vai de 61 a 71,5 em 48 meses — e a
+         Industria desaba de 48 a 15 e a divida vai a 93% do PIB, que e o preco;
+       · pagando emenda a UMA bancada so, a amplitude de lealdade entre as onze vai a
+         66 pontos.
+
+     ⚠ E EU QUASE REGISTREI OS DOIS COMO DEFEITO DO MODELO — "o pais e inerte", "as
+     bancadas nao diferenciam" — antes de testar. As duas frases estavam erradas pelo
+     mesmo motivo: o instrumento nunca tinha feito a pergunta. Uma sonda que espalha mede
+     o espalhamento, e conclui que o mundo e plano. */
+
+  /* O CONCENTRADOR. Poe uma area em intensidade cheia e todas as outras no piso, e
+     troca de area a cada doze meses. E a sonda do "eu escolhi": ela mede quanto o pais
+     responde a quem aposta, e quanto custa a aposta nas areas abandonadas. */
+  concentra: state => {
+    const alvos = ["health", "education", "industry", "security"];
+    const alvo = alvos[Math.floor((state.month - 2) / 12) % alvos.length];
+    return {
+      levels: Object.fromEntries(
+        CATALOG.programs.map(p => [p.id, p.area === alvo ? 100 : p.floor]),
+      ),
+      funding: everyone(Math.min(UPKEEP, affordableLevel(state))),
+    };
+  },
+
+  /* OS FAVORITOS. Paga emenda cheia as TRES maiores bancadas e nada as outras oito.
+     ⚠ E TRES E O NUMERO DA MAIORIA, e nao um gosto: as tres maiores somam perto de 257
+     cadeiras, entao esta sonda mede a jogada que um governo real faz — comprar o minimo
+     que aprova, e deixar o resto falando. */
+  favoritos: state => {
+    const escolhidas = [...CATALOG.parties].sort((a, b) => b.seats - a.seats).slice(0, 3);
+    const level = affordableLevel(state);
+    return {
+      levels: { ...state.levels },
+      funding: Object.fromEntries(escolhidas.map(p => [p.id, level])),
+    };
+  },
+
+  /* O LEGISLADOR — e ele mede o NORTE DO PROJETO, que nenhuma outra sonda alcanca.
+     ⚠ ELE NASCEU DE UMA MEDICAO EM 21/08/2026, e ela e desconfortavel: as seis politicas
+     que existiam terminam um mandato de 48 meses com **ZERO normas escritas**. Todas.
+     Cinco delas so movem NIVEL — que e caneta, e caneta nao vira lei —, e a sexta, o
+     explorador, escreve uma lei impossivel de propósito e nunca chega a voto.
+
+     O resultado e que "a lei vira texto", que este projeto chama de norte desde 14/08,
+     nunca tinha sido rodada por 48 meses. Medido a mao, fora do simulador: uma lei
+     MODESTA — baixar um piso em cinco pontos — atravessa a tramitacao inteira em quatro
+     meses, gaveta → Mesa → relator → plenario → norma. **A mecanica funciona, e era
+     invisivel para o unico instrumento que olha o mandato inteiro.**
+
+     ⚠ E ELE PEDE UM PISO DE CADA VEZ, e nao trinta e oito: o explorador ja mede o pacote
+     impossivel, e uma segunda sonda medindo a mesma coisa nao acrescenta nada. O que
+     falta medir e o caminho que o jogador de verdade percorre — uma emenda por vez, paga
+     com o que sobra. */
+  legislador: (state, memory) => {
+    const program = CATALOG.programs.find(
+      item => item.floor > 0 && !memory.passed.has(item.id) && (state.norms ?? []).length >= 0,
+    );
+    if (!program) return { levels: { ...state.levels }, funding: everyone(UPKEEP) };
+
+    /* CINCO PONTOS DE PISO, e o numero e pequeno de proposito: o que se mede aqui e se o
+       CAMINHO existe, e nao qual o maior texto que passa. Um piso que desaba trinta
+       pontos cobraria quorum de emenda constitucional e mediria de novo o explorador. */
+    return {
+      levels: { ...state.levels },
+      bands: { [program.id]: { floor: Math.max(0, program.floor - 5), ceiling: 100 } },
+      funding: everyone(Math.min(UPKEEP, affordableLevel(state))),
+    };
+  },
+
   /* O GOVERNO QUE PROMETE. Pauta uma reforma e oferece verba cheia todo mes, sem
      olhar o caixa. E a sonda da traicao: o rateio corta a promessa no que o teto
      deixa, e o buraco entre o falado e o pago desaba sobre a lealdade mes a mes. */

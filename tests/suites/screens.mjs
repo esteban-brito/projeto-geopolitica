@@ -28,7 +28,7 @@ import {
   whipCount,
 } from "../../src/domain/congress/index.mjs";
 import { alarm } from "../../src/application/mail.mjs";
-import { mailHtml } from "../../src/ui/screens/inbox.mjs";
+import { describeMail, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
 import {
   boilerOf,
   chamberOf,
@@ -42,7 +42,7 @@ import {
   situationOf,
   termOf,
 } from "../../src/application/turn.mjs";
-import { createState } from "../../src/state/state.mjs";
+import { OPENING_MONTH, createState } from "../../src/state/state.mjs";
 import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
 import { enact } from "../../src/domain/norms/index.mjs";
 import { closingHtml } from "../../src/ui/screens/closing.mjs";
@@ -174,8 +174,32 @@ function financeOf(months, series = {}) {
 const NUMERIC_ATTRIBUTE = /\s(?:min|max|step|value)="([^"]*)"/g;
 
 /* A COLUNA DE TENDENCIA do placar, com o conteudo — que pode ser vazio, e o vazio
-   e informacao: serie curta demais nao vira escada. */
-const SPARK = /class="ledger__spark"[^>]*>([^<]*)</g;
+   e informacao: serie curta demais nao vira desenho. */
+const SPARK = /class="ledger__spark"[^>]*>(.*?)<\/span>/g;
+
+/* ⚠ A PROVA PASSOU A LER A GEOMETRIA em 21/08/2026, e ela ficou MAIS FORTE com isso. A
+   escada de blocos morreu — ver `sparkline` —, e ate aqui o que se media era quantos
+   CARACTERES diferentes a peca tinha. Contar glifo respondia a pergunta por acidente:
+   duas alturas diferentes davam dois caracteres. Agora se lê o `points` da polilinha e
+   se conta quantas COORDENADAS Y distintas ela tem, que e literalmente a pergunta —
+   "esta serie subiu na tela, ou saiu plana?".
+
+   ⚠ E O VAZIO CONTINUA SENDO VAZIO: sem passado, `sparkline` devolve string vazia e nao
+   ha `points` para extrair. A distincao entre "nao desenhou" e "desenhou plano" e o que
+   as duas provas abaixo separam, e ela nao pode se perder. */
+
+/** @param {string} spark @returns {number} quantas alturas distintas a linha tem */
+function heightsOf(spark) {
+  /* ⚠ `"(.*?)"` E NAO `"[^"]*"`, e a escolha e da GUARDA e nao do casador. O removedor
+     de strings de `tests/guards/naming.mjs` nao conhece literal de expressao regular:
+     ele ve o `"` de abertura, casa ate o `"` de dentro do `[^"]`, e a partir dali as
+     aspas do arquivo inteiro ficam desemparelhadas. O sintoma e uma guarda vermelha
+     apontando uma linha INOCENTE — aqui ela acusou "obrigatória", trinta linhas abaixo.
+     Preguicoso resolve o mesmo e casa limpo para os dois. */
+  const points = /points="(.*?)"/.exec(spark)?.[1] ?? "";
+  if (points === "") return 0;
+  return new Set(points.split(" ").map(pair => pair.split(",")[1])).size;
+}
 
 /** @param {string} html @param {string} where */
 function assertNumericAttributes(html, where) {
@@ -306,13 +330,13 @@ test("A ESCADA LE CADA INDICADOR NA REGUA DELE, e nao na do indice de area", () 
   });
 
   const varied = [...html.matchAll(SPARK)]
-    .map(hit => hit[1] ?? "")
-    .filter(spark => new Set(spark).size > 1);
+    .map(hit => heightsOf(hit[1] ?? ""))
+    .filter(alturas => alturas > 1);
 
   assert.equal(
     varied.length,
     3,
-    `${varied.length} das tres series macro subiram na escada — o resto ficou plano na regua errada`,
+    `${varied.length} das tres series macro subiram na linha — o resto saiu plano na regua errada`,
   );
 });
 
@@ -357,7 +381,14 @@ function cabinetOf(state, extra = {}) {
        desenha 513 cadeiras a partir desta lista, e uma prova que o alimentasse com
        quatro caixas nao exercitaria a soma que ele precisa fechar. */
     chamber: chamberOf(state, CATALOG),
-    inbox: [],
+    /* ⚠ A BANDEJA CHEGA PRONTA desde 20/08/2026, e vazia e string vazia — nao lista
+       vazia. O Gabinete deixou de receber cartas soltas: quem monta o indice e o oficio
+       aberto e `trayHtml`, e o que chega aqui e o resultado. */
+    inbox: "",
+    /* ⚠ O ESTADO VAZIO TEM DUAS FRASES desde 21/08/2026, e a prova monta o caso do MES
+       1 — nenhum mes resolvido — porque e ele que estas provas medem. O outro caso, o da
+       bandeja vazia depois de meses resolvidos, tem prova propria logo abaixo. */
+    resolved: state.month > OPENING_MONTH,
     room: share.room,
     committed: share.demand,
     mandatory: budget.mandatory,
@@ -419,45 +450,287 @@ test("A BASE REPARTIDA SOMA A BASE INTEIRA, e nao o plenario", () => {
    cheias sao a base efetiva que `baseCount` devolve. Duas verdades sobre quantas
    cadeiras respondem ao governo, no mesmo cartao, e o defeito que a regra das tres
    fatias existiu para impedir. */
-test("O HEMICICLO FECHA O PLENARIO, e as cadeiras cheias sao a base do motor", () => {
+test("A FITA FECHA O PLENARIO, e as cadeiras cheias sao a base do motor", () => {
+  /* ⚠ ESTA PROVA ERA DO HEMICICLO, e ela foi REESCRITA e nao apagada em 20/08/2026.
+     O desenho mudou — 513 circulos num arco viraram onze blocos numa linha —, mas o
+     invariante que ela protege e o mesmo e nao depende da forma: **o plenario fecha em
+     513 e as cadeiras cheias sao a base que o motor conta**. Apagar a prova junto com o
+     desenho teria sido trocar a forma E perder a garantia.
+
+     ⚠ E A FITA FECHA MELHOR QUE O ARCO FECHAVA. O hemiciclo perdia uma cadeira por
+     fronteira de bancada — o vao entre cunhas era um assento pulado —, e a prova antiga
+     tinha de tolerar essa margem. Aqui a largura de cada bloco E o numero de cadeiras
+     dele: a soma fecha exata, e a tolerancia sai da afirmacao. */
   let state = createState();
 
   for (let month = 0; month < 18; month++) {
     const html = cabinetOf(state);
-    const seatsDrawn = [...html.matchAll(/class="seat" data-mood="(\w+)" data-held="(\w+)"/g)];
+    const drawn = [
+      ...html.matchAll(
+        /class="ribbon__bench" data-axis="(\d)" style="flex-grow:([\d.]+)"><span class="ribbon__held" style="flex-basis:([\d.]+)%"/g,
+      ),
+    ];
 
-    /* ⚠ AS CADEIRAS DESENHADAS SAO 513 MENOS OS VAOS. O vao entre bancadas e uma
-       cadeira PULADA — o mesmo recurso do arco segmentado —, entao o desenho perde
-       uma por fronteira. O que a prova cobra e que a perda seja EXATAMENTE essa: o
-       plenario menos os vaos, e nem uma a mais. */
     const benches = chamberOf(state, CATALOG).filter(bench => Math.round(bench.seats) > 0);
     const total = CATALOG.parties.reduce((sum, party) => sum + party.seats, 0);
 
+    /* ⚠ A FITA DESENHA FAIXAS, E NAO BANCADAS, desde 20/08/2026: bancadas vizinhas do
+       mesmo quinto do eixo se somam num bloco so. Antes ela desenhava onze pedacos, e
+       duas vizinhas da mesma cor saiam separadas por um vao — o olho lia uma fronteira
+       que o eixo nao tem, e o responsavel leu a barra como "muito confusa".
+
+       O que a prova cobra e o TETO: nunca mais que cinco blocos, e nunca um bloco a
+       mais do que faixas ocupadas. Uma faixa vazia nao vira bloco, pela mesma regra que
+       governava a legenda do arco — so entra no desenho quem tem cadeira. */
+    const faixas = new Set(
+      benches.map(b => Math.min(5, Math.max(1, Math.floor((b.economic / 100) * 5) + 1))),
+    );
+    assert.equal(
+      drawn.length,
+      faixas.size,
+      `no mes ${month} a fita desenhou ${drawn.length} blocos e o eixo tem ${faixas.size} faixas ocupadas`,
+    );
+    assert.ok(drawn.length <= 5, `no mes ${month} a fita passou de cinco blocos`);
+
+    /* A SOMA DAS LARGURAS E O PLENARIO, e ela e exata: o crescimento de cada bloco
+       recebe o numero de cadeiras dele, entao a proporcao sai da propria soma sem a
+       view calcular porcentagem nenhuma. */
+    const width = drawn.reduce((sum, hit) => sum + Number(hit[2]), 0);
     assert.ok(
-      seatsDrawn.length <= total && seatsDrawn.length >= total - benches.length,
-      `no mes ${month} o hemiciclo desenhou ${seatsDrawn.length} cadeiras num plenario de ${total}`,
+      Math.abs(width - total) < 1,
+      `no mes ${month} a fita soma ${width.toFixed(1)} cadeiras num plenario de ${total}`,
     );
 
-    /* AS CHEIAS SAO A BASE, e a base e do motor. */
-    const held = seatsDrawn.filter(hit => hit[2] === "true").length;
+    /* AS CHEIAS SAO A BASE, e a base e do motor. Cada bloco entrega a fracao dele; a
+       soma ponderada pela largura tem de bater com o que o motor conta. */
+    const held = drawn.reduce((sum, hit) => sum + (Number(hit[2]) * Number(hit[3])) / 100, 0);
     const base = baseCount({ parties: CATALOG.parties, loyalty: state.loyalty });
     assert.ok(
       Math.abs(held - base) <= benches.length,
-      `no mes ${month} o desenho mostra ${held} cadeiras com o governo e o motor diz ${base}`,
+      `no mes ${month} a fita mostra ${held.toFixed(0)} com o governo e o motor diz ${base}`,
     );
 
-    /* ⚠ NENHUMA CADEIRA SAI SEM HUMOR. Um `data-mood` vazio pintaria a cadeira com
-       a cor padrao — cinza — e ela leria como uma quarta categoria que o modelo nao
-       tem, ao lado de leal, obstruindo e rompida. */
-    for (const hit of seatsDrawn) {
+    /* ⚠ NENHUMA BANCADA SAI FORA DA RAMPA. Uma parada vazia ou fora de 1..5 deixaria o
+       bloco sem as duas demaos declaradas por parada — ele sumiria, e um bloco invisivel
+       numa fita de proporcao mente sobre a composicao inteira da Camara.
+
+       ⚠ E ISTO PRENDE A QUANTIZACAO CONTRA A REGUA DO CATALOGO: `economic` e declarado
+       de 0 a 100, e cinco quintos de 0 a 100 sempre caem em 1..5. No dia em que alguem
+       mudar a escala do catalogo sem mexer aqui, esta linha fica vermelha em vez de a
+       Camara aparecer com uma bancada invisivel. */
+    for (const hit of drawn) {
       assert.ok(
-        ["loyal", "obstructing", "ruptured"].includes(hit[1] ?? ""),
-        `uma cadeira saiu com humor "${hit[1]}", que nao e estado de bancada`,
+        ["1", "2", "3", "4", "5"].includes(hit[1] ?? ""),
+        `uma bancada saiu com humor "${hit[1]}", que nao e estado de bancada`,
       );
     }
 
+    /* ⚠ A LINHA DA MAIORIA CAI ONDE A MAIORIA ESTA, e esta e a metade NOVA da prova.
+       O quorum chegava ao Gabinete desde que o Gabinete existe e morria sem consumidor;
+       agora ele e geometria, e geometria escrita a mao mente no dia em que ele mudar. */
+    const mark = html.match(/class="ribbon__majority" style="left:([\d.]+)%"/);
+    assert.ok(mark, `no mes ${month} a fita saiu sem a linha da maioria`);
+    assert.ok(
+      Math.abs(Number(mark?.[1]) - (257 / total) * 100) < 0.1,
+      `a linha da maioria caiu em ${mark?.[1]}% e a maioria e 257 de ${total}`,
+    );
+
     state = playMonth(state, {}).state;
   }
+});
+
+/* ── COMO ESTAS PROVAS LEEM A BANDEJA, e por que NAO com casador de aspas ───────
+   ⚠ A GUARDA `naming` TEM UM PONTO CEGO, e ele mordeu DUAS vezes em 21/08/2026. O
+   removedor de strings dela nao conhece literal de expressao regular nem aspas aninhadas:
+   diante de `/x="(.*?)"/` misturado com `'a="b"'` no mesmo arquivo, ele perde o
+   emparelhamento e passa a tratar codigo como texto — e ai acusa o primeiro ACENTO que
+   encontrar, que costuma estar numa linha inocente dezenas de linhas adiante. As duas
+   vezes o dedo dela apontou para o lugar errado, e as duas custaram diagnostico.
+
+   ⚠ A SAIDA NAO E LUTAR COM O CASADOR: e nao precisar dele. Partir por `data-dispatch=`
+   da uma linha por carta sem uma aspa aninhada em lugar nenhum, e o `prettier` nao tem
+   como reescrever isto de volta para o formato que quebra. */
+const ASPA = String.fromCharCode(34);
+const UNREAD = "data-unread=";
+
+/** @param {string} html @returns {string[]} um pedaco por linha do indice, id na frente */
+function rowsOf(html) {
+  return html.split("data-dispatch=").slice(1);
+}
+
+/* ── A PILHA TEM CAPACIDADE, E A PERGUNTA NUNCA CAI DELA ─────────────────────
+   Pedido do responsavel em 21/08/2026: "empilhar as mensagens, aí elas vão se excluindo
+   sozinhas quando a próxima ocuparia mais espaço do que a tela aguenta sem precisar
+   rolar". A bandeja passou a ter TETO — ver `TRAY_CAPACITY`, em `inbox.mjs`.
+
+   ⚠ E O QUE ESTA PROVA DEFENDE NAO E O TETO: e a TRAVA. Descartar uma carta com prazo
+   por falta de espaco seria a tela decidindo pelo jogador — ele nunca a veria, `silences`
+   a fecharia sozinha no vencimento, e o mes cobraria o preco de um silencio que ninguem
+   escolheu. Isso e um MURO com outra cara, e a doutrina inteira deste projeto e que tudo
+   tem preco e nada tem muro.
+
+   ⚠ E O CASO EXTREMO E DE PROPOSITO: com MAIS perguntas que capacidade, a pilha estoura e
+   a coluna volta a rolar. Uma barra de rolagem e mais barata que uma pergunta escondida,
+   e esta prova prende essa ordem de precos. */
+test("A PILHA DA BANDEJA CORTA AVISO, e NUNCA corta pergunta", () => {
+  /** @param {number} n @param {number | null} due */
+  const carta = (n, due) => ({
+    id: `carta-${n}`,
+    month: n,
+    from: null,
+    subject: `assunto ${n}`,
+    body: "<p>corpo</p>",
+    due,
+  });
+
+  /* A ORDEM E A DA BANDEJA DE VERDADE: pergunta primeiro, aviso depois. */
+  const perguntas = [0, 1, 2].map(n => carta(n, 3));
+  const avisos = [10, 11, 12, 13, 14, 15].map(n => carta(n, null));
+
+  const apertado = trayHtml({ dispatches: [...perguntas, ...avisos], open: null, capacity: 5 });
+
+  for (const pergunta of perguntas) {
+    assert.ok(
+      rowsOf(apertado).some(linha => linha.startsWith(ASPA + pergunta.id + ASPA)),
+      `${pergunta.id} tinha prazo e a pilha a descartou — isso e um muro`,
+    );
+  }
+
+  const linhas = rowsOf(apertado).length;
+  assert.equal(linhas, 5, `a pilha mostrou ${linhas} linhas com capacidade 5`);
+
+  /* ⚠ O MAIS NOVO SOBREVIVE AO MAIS VELHO entre os avisos: a bandeja chega ordenada, e
+     cortar pelo fim e cortar o que o mundo disse ha mais tempo. */
+  const ficaram = rowsOf(apertado).map(linha => linha.slice(1, linha.indexOf(ASPA, 1)));
+  assert.ok(ficaram.includes("carta-10"), "a pilha cortou o aviso errado");
+  assert.ok(!ficaram.includes("carta-15"), "a pilha nao cortou nada");
+
+  /* SO PERGUNTA, E MAIS QUE CABE: a pilha estoura de proposito. */
+  const so = trayHtml({ dispatches: perguntas, open: null, capacity: 1 });
+  const todas = rowsOf(so).length;
+  assert.equal(todas, 3, "a pilha escondeu uma pergunta para nao rolar");
+});
+
+/* ── O NAO LIDO, E CADA CARTA DIZENDO POR QUE CHEGOU ─────────────────────────
+   As duas peças vieram do inbox do Football Manager, e a segunda e a que mais casa com
+   a doutrina daqui: neste projeto todo numero mostrado tem motor atras, e a CARTA era a
+   unica peca da tela que nao explicava a propria existencia. */
+test("A BANDEJA MARCA O NAO LIDO, e a carta aberta deixa de ser um", () => {
+  /** @param {number} n */
+  const carta = n => ({
+    id: `carta-${n}`,
+    month: n,
+    from: null,
+    subject: `assunto ${n}`,
+    body: "<p>corpo</p>",
+    due: null,
+  });
+
+  /* ⚠ `carta-2` ESTA ABERTA E NAO ESTA EM `seen`, de proposito: e o caso que a captura
+     pegou. A carta que chega abre sozinha, e sem regra ela saía com o ponto de nao lida
+     ao lado — a marca dizendo "voce ainda nao viu isto" apontando para o que estava
+     aberto na frente do jogador. Quem resolve e a bandeja, porque e ela que decide qual
+     abre. */
+  const html = trayHtml({
+    dispatches: [carta(1), carta(2), carta(3)],
+    open: "carta-2",
+    seen: ["carta-1"],
+  });
+
+  /* ⚠ PARTE POR LINHA ANTES DE PERGUNTAR, e a primeira versao nao partia: um casador
+     de `data-dispatch="(.*?)" ... data-unread="true"` parece preso a UMA linha e nao
+     esta — quando o resto da linha nao casa, o motor volta atras e faz o `.*?` crescer
+     por cima do `>`, atravessando os botoes seguintes ate achar um `data-unread` que e de
+     OUTRA carta. O casador devolvia um id de trezentos caracteres com HTML dentro.
+
+     Dentro de uma linha so nao ha o que atravessar, e ai o preguicoso para onde deve. */
+  const naoLidas = rowsOf(html)
+    .filter(linha => linha.includes(UNREAD))
+    .map(linha => linha.slice(1, linha.indexOf(ASPA, 1)));
+  assert.deepEqual(naoLidas, ["carta-3"], "a marca de nao lido caiu na carta errada");
+});
+
+test("TODA CARTA DIZ POR QUE CHEGOU, e a razao sai do motor e nao da view", () => {
+  /* ⚠ ELA COBRE AS NOVE ESPECIES, e nao uma amostra: uma razao faltando sai como o
+     PROPRIO ID na tela — `labelOf` devolve a chave crua quando a tabela nao a tem —, e
+     "reported" no pe de um oficio e pior do que nenhuma linha. */
+  const kinds = [
+    "posse",
+    "tabled",
+    "reported",
+    "forgotten",
+    "passed",
+    "rejected",
+    "demand",
+    "rupture",
+    "siege",
+  ];
+
+  for (const kind of kinds) {
+    const why = /** @type {Record<string, string>} */ (UI.inbox.why)[kind];
+    assert.ok(why, `a espécie "${kind}" chegou sem razão`);
+    assert.notEqual(why, kind, `a espécie "${kind}" saiu com o id cru no lugar da razão`);
+  }
+
+  /* E ELA CHEGA NA TELA, e nao so na tabela. */
+  const html = letterHtml({
+    from: null,
+    subject: "Reforma",
+    body: "<p>corpo</p>",
+    why: UI.inbox.why.reported,
+  });
+  assert.ok(html.includes(UI.inbox.why.reported), "o ofício aberto nao imprimiu a razão");
+});
+
+/* ── A BANDEJA VAZIA NAO PODE MENTIR SOBRE O MANDATO ─────────────────────────
+   ⚠ DEFEITO PEGO NUMA CAPTURA DO RESPONSAVEL, em 21/08/2026, e ele estava na tela
+   havia sessoes sem que nada o acusasse. Recarregar a pagina com partida salva zera a
+   Caixa de Entrada: `last` — o relatorio do mes — e variavel de modulo do entrypoint e
+   NAO vai para o save, entao na volta `describeMonth` nao produz carta nenhuma; se
+   `state.mail` tambem estiver vazia, a bandeja fecha com zero oficios.
+
+   Ate aqui e perda de leitura, e ela continua aberta como achado. O que esta prova
+   trava e o que veio depois: com a bandeja vazia, o Gabinete imprimia "O PRIMEIRO MES
+   AINDA NAO FOI RESOLVIDO" — em junho de 2027, com tres meses resolvidos atras — e
+   prometia na linha seguinte que "todo mes que voce resolve chega aqui".
+
+   ⚠ E A REGRA QUE ELA DEFENDE E A MAIS DURA DESTE PROJETO: ausencia se DECLARA, e a
+   declaracao tem de ser verdadeira. Uma tela que afirma um fato falso sobre o mandato e
+   pior do que uma tela que nao diz nada, porque o jogador acredita nela. */
+test("A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO, e ela tem duas frases", () => {
+  const abertura = createState();
+  assert.equal(abertura.month, OPENING_MONTH, "a partida nao abre no mes de abertura");
+
+  const primeiro = cabinetOf(abertura);
+  assert.ok(
+    primeiro.includes(UI.inbox.firstLead),
+    "no mes 1 a bandeja vazia parou de dizer que nenhum mes foi resolvido",
+  );
+  assert.ok(
+    primeiro.includes(UI.cabinet.inboxSigned),
+    "no mes 1 a bandeja vazia parou de dizer o que vai chegar nela",
+  );
+
+  /* O MESMO ESTADO, TRES MESES ADIANTE — que e exatamente o caso da captura. */
+  let depois = abertura;
+  for (let i = 0; i < 3; i += 1) depois = playMonth(depois, {}).state;
+
+  const tarde = cabinetOf(depois);
+  assert.ok(
+    !tarde.includes(UI.inbox.firstLead),
+    "com meses resolvidos, a bandeja vazia continuou dizendo que o primeiro nao foi",
+  );
+  assert.ok(
+    tarde.includes(UI.inbox.quietLead),
+    "com meses resolvidos, a bandeja vazia nao disse o que de fato acontece",
+  );
+  /* ⚠ E A PROMESSA NAO PODE SOBRAR. "Todo mes que voce resolve chega aqui" ao lado de
+     uma bandeja vazia depois de tres meses resolvidos e o texto negando o que o jogador
+     acabou de fazer — e foi a metade da frase que a captura denunciou. */
+  assert.ok(
+    !tarde.includes(UI.cabinet.inboxSigned),
+    "a promessa de que o mes resolvido chega na bandeja sobreviveu a bandeja vazia",
+  );
 });
 
 test("O ESTOURO DO COFRE TEM COR, e so quando a LEITURA e maior que zero", () => {
@@ -472,7 +745,13 @@ test("O ESTOURO DO COFRE TEM COR, e so quando a LEITURA e maior que zero", () =>
   const over = cabinetOf(state, { room: 10, committed: 10.3 });
   assert.ok(over.includes('data-over="true"'), "o estouro nao acendeu");
   assert.ok(over.includes("passa do que cabe"), "o estouro nao foi dito");
-  assert.ok(!over.includes("já consome"), "o estouro repetiu o total em vez do excesso");
+  /* ⚠ ELA PERGUNTA AO TERMO, E NAO AO LITERAL, desde 21/08/2026 — e a mudanca veio de
+     esta prova quebrar por uma razao errada. Ela cobrava a frase "ja consome", e a frase
+     encolheu para uma palavra a pedido do responsavel; a LEITURA que a prova existe para
+     defender — "sem estouro, o cartao continua dizendo o que foi gasto" — nao tinha
+     mudado nada. Prova amarrada a redacao vira alarme de revisao de texto, e alarme que
+     dispara sem defeito ensina a desligar o alarme. */
+  assert.ok(!over.includes(UI.cabinet.vaultTaken), "o estouro repetiu o total em vez do excesso");
 
   /* ⚠ E SO O ESTOURO ACENDE. Com o paragrafo inteiro em vermelho, "obrigatoria
      95%" sai no mesmo tom do deficit e os dois viram contexto — vermelho que cobre
@@ -489,7 +768,10 @@ test("O ESTOURO DO COFRE TEM COR, e so quando a LEITURA e maior que zero", () =>
 
   const room = cabinetOf(state, { room: 10, committed: 4 });
   assert.ok(!room.includes('data-over="true"'));
-  assert.ok(room.includes("já consome"), "sem estouro, o cartao parou de dizer o que foi gasto");
+  assert.ok(
+    room.includes(UI.cabinet.vaultTaken),
+    "sem estouro, o cartao parou de dizer o que foi gasto",
+  );
 });
 
 /* ── O ZERO ARREDONDADO NAO CARREGA SINAL ──────────────────────────────────────
@@ -786,14 +1068,16 @@ test("O REMETENTE EXISTE: a carta da Casa Civil e assinada", () => {
   const chief = government.people.find(person => person.office === "chief");
   assert.ok(chief, "o elenco nao tem chefe da Casa Civil no cargo que a view procura");
 
-  const posse = mailHtml({
+  const posse = describeMail({
     mail: state.mail,
     people: government.people,
     left: () => null,
     inherited: { mandatory: 2166, room: 14.5 },
     answered: {},
     lobbies: CATALOG.lobbies,
-  }).join("");
+  })
+    .map(letterHtml)
+    .join("");
   assert.ok(posse.includes(chief.name), "a carta de posse chegou sem quem a assinou");
 });
 
@@ -804,7 +1088,7 @@ test("O CERCO ESCREVE, e ele nao inventa nenhum dos dois numeros", () => {
 
   /** @param {import("../../src/state/state.mjs").Letter[]} mail */
   const render = mail =>
-    mailHtml({
+    describeMail({
       mail,
       people: government.people,
       left: () => null,
@@ -812,7 +1096,9 @@ test("O CERCO ESCREVE, e ele nao inventa nenhum dos dois numeros", () => {
       answered: {},
       lobbies: CATALOG.lobbies,
       siege: boiler,
-    }).join("");
+    })
+      .map(letterHtml)
+      .join("");
 
   const siege = render([alarm({ kind: "siege", id: "siege", subject: "siege", month: 40 })]);
   assert.ok(siege.includes(UI.inbox.siegeSubject), "o processo abriu e a carta nao dizia isso");

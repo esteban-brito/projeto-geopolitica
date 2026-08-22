@@ -21,6 +21,7 @@ import {
   notice,
   pending,
   settle,
+  silences,
 } from "../../src/application/mail.mjs";
 
 /** @typedef {import("../../src/state/state.mjs").Letter} Letter */
@@ -137,6 +138,60 @@ test("O AVISO NAO TEM PRAZO, e a pergunta tem — e a tarja le isso", () => {
          de novo. */
       const closed = settle({ mail: [pergunta], orders: { [pergunta.id]: "accept" }, month });
       assert.equal(left(/** @type {Letter} */ (closed.mail[0]), month), null);
+    }),
+    { numRuns: 200 },
+  );
+});
+
+test("O PRECO DE AVANCAR E O QUE O MES DECIDE SOZINHO — e nunca o que ja foi decidido", () => {
+  /* ⚠ ESTA PROVA EXISTE POR UMA RECUSA, e a recusa e doutrinaria. Um dossie externo
+     pediu que o botao de avancar o mes TRAVASSE enquanto houvesse pergunta urgente na
+     mesa. Este projeto nao tem muro: tudo tem preco. O botao passou a dizer quantas
+     perguntas este clique fecha sozinho, e `silences` e quem responde isso.
+
+     ⚠ E O QUE ELA PRENDE E A PROMESSA CONTRA O TURNO. O numero na barra de cima e uma
+     promessa sobre o que vai acontecer, e a unica forma de ela nao virar mentira e
+     `silences` SER `settle` filtrada, e nao uma segunda regra de vencimento escrita ao
+     lado. No dia em que o prazo mudar de forma, os dois mudam juntos ou esta prova
+     fica vermelha. */
+  fc.assert(
+    fc.property(anyMonth, month => {
+      const pergunta = question(month);
+
+      /* ABERTA E LONGE DO PRAZO: o mes nao decide nada, e o botao nao cobra nada. */
+      assert.equal(
+        silences({ mail: [pergunta], orders: {}, month }).length,
+        0,
+        "o botao cobrou preco de uma pergunta que ainda tem prazo",
+      );
+
+      /* NO MES DO VENCIMENTO, SEM RESPOSTA: e ai que o clique decide por ele. */
+      const vencendo = month + ANSWER_TIME;
+      const quiet = silences({ mail: [pergunta], orders: {}, month: vencendo });
+      assert.equal(quiet.length, 1, "o mes ia fechar uma pergunta e o botao nao disse");
+      assert.equal(quiet[0]?.answer, "silence", "o que fechou nao fechou por silencio");
+
+      /* ⚠ RESPONDIDA, O PRECO SOME NO MESMO INSTANTE. Este e o meio da mecanica: a
+         barra de cima le as ORDENS do mes, e nao so o estado. Lendo so o estado, ela
+         continuaria anunciando uma consequencia que o turno nao vai executar — e o
+         jogador que acabou de responder veria o aviso de que nao respondeu. */
+      for (const answer of ["accept", "block"]) {
+        assert.equal(
+          silences({ mail: [pergunta], orders: { [pergunta.id]: answer }, month: vencendo }).length,
+          0,
+          `o botao cobrou preco de uma pergunta ja respondida com ${answer}`,
+        );
+      }
+
+      /* O AVISO NUNCA ENTRA NA CONTA: ele nao tem prazo, e nao ha o que o silencio
+         decida nele. Um botao que contasse cartas em vez de PERGUNTAS anunciaria um
+         preco que o mes nao cobra. */
+      const aviso = notice({ kind: "forgotten", id: "texto-9", subject: "Reforma", month });
+      assert.equal(
+        silences({ mail: [aviso], orders: {}, month: month + ANSWER_TIME + KEEP + 1 }).length,
+        0,
+        "o aviso entrou no preco de avancar",
+      );
     }),
     { numRuns: 200 },
   );

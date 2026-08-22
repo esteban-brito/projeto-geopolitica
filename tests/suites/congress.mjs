@@ -163,7 +163,7 @@ test("O PRECO DEPENDE DO ASSUNTO: a mesma verba compra bancadas diferentes", () 
   };
 
   assert.ok(
-    gain("centrao") > gain("direita-liberal"),
+    gain("uniao-progressista") > gain("liberais"),
     "a mesma verba tinha de mover mais o centrao numa pauta economica",
   );
 });
@@ -202,9 +202,10 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
   /* O bloco mais fisiologico tem de sofrer MAIS com a ameaca que o menos
      fisiologico — e a inversao da relacao habitual entre venalidade e
      resistencia. */
-  const centraoPenalty = of(onThreat, "centrao").resistance - of(onHarmless, "centrao").resistance;
+  const centraoPenalty =
+    of(onThreat, "uniao-progressista").resistance - of(onHarmless, "uniao-progressista").resistance;
   const liberalPenalty =
-    of(onThreat, "direita-liberal").resistance - of(onHarmless, "direita-liberal").resistance;
+    of(onThreat, "liberais").resistance - of(onHarmless, "liberais").resistance;
 
   assert.ok(
     centraoPenalty > liberalPenalty,
@@ -215,7 +216,7 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
   /* E verba cheia NAO compra esse termo. */
   const bought = of(
     whipCount({ bill: threatening, parties: PARTIES, funding: everyone(1), loyalty: LOYAL }),
-    "centrao",
+    "uniao-progressista",
   );
   assert.ok(bought.adherence < 0.5, `o centrao entregou ${(bought.adherence * 100).toFixed(0)}%`);
 });

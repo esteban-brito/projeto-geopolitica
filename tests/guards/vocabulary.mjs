@@ -1,5 +1,36 @@
-/* GUARDA · VOCABULARIO — nenhuma frase da interface escrita duas vezes.
+/* GUARDA · VOCABULARIO — nenhuma frase escrita duas vezes, e nenhuma escrita e nunca dita.
    ══════════════════════════════════════════════════════════════════════════════
+
+   ── ELA TEM DOIS TRABALHOS, e o segundo nasceu em 21/08/2026 ────────────────
+   O primeiro e a DUPLICATA: a mesma frase teclada em dois lugares. O segundo e a
+   ORFA: uma frase declarada em `strings.mjs` que nenhum arquivo alcanca.
+
+   ⚠ A SEGUNDA NASCEU DE UMA CONTAGEM, e o numero e 49. A varredura de 21/08 achou
+   quarenta e nove frases que nenhum arquivo le — entre elas `approvalParts`, que era a
+   CHAVE das tres cores do termometro da rua: o Gabinete desenhava verde, azul e vermelho
+   sem legenda nenhuma, e a legenda existia, escrita, a um caminho de distancia. **A
+   ausencia na tela e a presenca no arquivo estavam as duas erradas ao mesmo tempo**, e
+   nada podia acusar isso.
+
+   ⚠ E O RESTO DAS 49 E ARQUEOLOGIA DE PECA MORTA: `cabinet.archLoyal` e as duas irmas
+   sobreviveram ao arco que morreu em 15/08; `cabinet.inbox`, `cabinet.congress` e
+   `cabinet.vault` sobreviveram as cinco legendas que sairam em 20/08; `area.propose`
+   sobreviveu ao orcamento granular — e a prosa ao lado dela JA DIZIA que ela tinha saido.
+   **Prosa que registra a morte nao apaga a chave**, e a chave morta e o que faz a proxima
+   sessao achar que a peca ainda existe.
+
+   ⚠ E O PROJETO JA COBRAVA ISSO NOS OUTROS EIXOS: `tokens` acusa token sem consumidor,
+   `orphans` acusa folha de estilo sem produtor, e a doutrina escrita diz que "`export`
+   sem quem importe e uma porta aberta". A frase da interface era o unico eixo sem a mesma
+   cobranca — e foi o unico em que cinquenta pecas mortas se acumularam.
+
+   ── AS DUAS AUDITORIAS PEDEM COISAS DIFERENTES DO `files` ───────────────────
+   ⚠ A DUPLICATA precisa so de `strings.mjs`; a ORFA precisa do PROJETO INTEIRO, porque o
+   consumidor mora fora. Por isso a segunda so roda quando o entrypoint esta no mapa — e
+   isso NAO e conveniencia: sem a condicao, as provas sinteticas da duplicata (que entregam
+   so o arquivo de frases) passariam a ser acusadas de orfandade, e ai elas ficariam verdes
+   mesmo se a deteccao de duplicata quebrasse. **Uma prova que passa pela razao errada e
+   uma prova que nao prova nada.**
 
    ⚠ ELA NASCEU DE UMA CONTAGEM, em 18/08/2026: **vinte e tres frases estavam
    duplicadas** em `src/ui/strings.mjs`, e uma delas — "Opinião pública" — aparecia
@@ -82,6 +113,126 @@ function literals(code) {
   return found;
 }
 
+/* O ENTRYPOINT E O SINAL DE QUE O PROJETO INTEIRO ESTA NO MAPA. Ver a prosa do
+   cabecalho: a auditoria de orfandade so pode rodar com os consumidores presentes. */
+const ENTRY = "app.mjs";
+
+/**
+ * AS FOLHAS DECLARADAS EM `export const UI`, com a linha de cada uma.
+ *
+ * ⚠ ELA LE O TEXTO E NAO IMPORTA O MODULO, e a razao e a mesma que faz a duplicata contar
+ * LITERAL: a guarda precisa rodar sobre o arquivo FALSO de uma prova sintetica, e um
+ * `import` so alcanca o arquivo de verdade.
+ *
+ * ⚠ E ELA PULA A STRING ANTES DE CONTAR CHAVE. Sem isso, uma frase com dois-pontos dentro
+ * — "vence em: 2 meses" — viraria uma chave, e a guarda acusaria uma orfa que nao existe.
+ *
+ * @param {string} code ja sem comentarios
+ * @returns {Array<[string, number]>} o caminho de cada folha, e a linha dela
+ */
+function leaves(code) {
+  /** @type {Array<[string, number]>} */
+  const out = [];
+  const start = code.indexOf("export const UI");
+  if (start < 0) return out;
+
+  let cursor = code.indexOf("{", start);
+  if (cursor < 0) return out;
+
+  let line = 1;
+  for (let i = 0; i < cursor; i++) if (code[i] === "\n") line++;
+
+  /** @type {string[]} */
+  const path = [];
+  /** @type {string | null} */
+  let key = null;
+  let depth = 0;
+
+  while (cursor < code.length) {
+    const ch = code[cursor];
+
+    if (ch === "\n") {
+      line++;
+      cursor++;
+      continue;
+    }
+
+    if (ch === '"' || ch === "'" || ch === "`") {
+      let end = cursor + 1;
+      while (end < code.length && code[end] !== ch) {
+        if (code[end] === "\\") end++;
+        if (code[end] === "\n") line++;
+        end++;
+      }
+      /* CHAVE ou VALOR: o que separa os dois e o `:` depois do fecha-aspas. */
+      if (/^\s*:/.test(code.slice(end + 1))) key = code.slice(cursor + 1, end);
+      else if (key !== null) {
+        out.push([[...path, key].join("."), line]);
+        key = null;
+      }
+      cursor = end + 1;
+      continue;
+    }
+
+    if (ch === "{") {
+      depth++;
+      if (key !== null) {
+        path.push(key);
+        key = null;
+      }
+      cursor++;
+      continue;
+    }
+
+    if (ch === "}") {
+      depth--;
+      if (depth === 0) break;
+      path.pop();
+      cursor++;
+      continue;
+    }
+
+    const word = code.slice(cursor).match(/^[A-Za-z_]\w*/)?.[0];
+    if (word) {
+      /* `TERMOS.cabinet` como VALOR fecha a folha; `cabinet:` abre uma chave. */
+      if (/^\s*:/.test(code.slice(cursor + word.length))) key = word;
+      else if (key !== null) {
+        out.push([[...path, key].join("."), line]);
+        key = null;
+      }
+      cursor += word.length;
+      continue;
+    }
+
+    cursor++;
+  }
+
+  return out;
+}
+
+/**
+ * TODO CAMINHO `UI.a.b` ESCRITO FORA DO ARQUIVO DE FRASES.
+ *
+ * ⚠ UM CAMINHO ALCANCADO COBRE TUDO ABAIXO DELE, e essa e a regra inteira: quem escreve
+ * `labelOf(UI.inbox.why, letter.kind)` passa a TABELA, e as nove frases dentro dela sao
+ * alcancadas sem que nenhuma apareca em codigo. Exigir a folha ali faria a guarda acusar
+ * exatamente o padrao que este projeto usa para nao ter nove `case`.
+ *
+ * @param {Map<string, string>} files
+ * @returns {Set<string>}
+ */
+function reached(files) {
+  /** @type {Set<string>} */
+  const paths = new Set();
+  for (const [path, code] of files) {
+    if (path === STRINGS_FILE) continue;
+    for (const match of code.matchAll(/\bUI((?:\.[A-Za-z_]\w*)+)/g)) {
+      paths.add((match[1] ?? "").slice(1));
+    }
+  }
+  return paths;
+}
+
 /**
  * @param {Map<string, string>} files
  */
@@ -106,6 +257,25 @@ export function audit(files) {
         `duas copias da mesma frase divergem no dia em que alguem ajustar uma delas. ` +
         `Se as duas mudam juntas, ponha em TERMOS; se nao, declare em PERMITIDAS`,
     );
+  }
+
+  /* ── A ORFA ────────────────────────────────────────────────────────────────
+     So com o projeto inteiro no mapa. Ver a prosa do cabecalho. */
+  if (files.has(ENTRY)) {
+    const paths = reached(files);
+    const covered = (/** @type {string} */ leaf) => {
+      for (const used of paths) if (used === leaf || leaf.startsWith(`${used}.`)) return true;
+      return false;
+    };
+
+    for (const [leaf, line] of leaves(stripJsComments(raw))) {
+      if (covered(leaf)) continue;
+      add(
+        `${STRINGS_FILE}:${line} declara "${leaf}" e nenhum arquivo a alcanca — ` +
+          `frase que a tela nunca diz e peca morta que a proxima sessao acha que existe. ` +
+          `Ou a tela deixou de dizer o que devia, ou a chave sobreviveu a peca que a usava`,
+      );
+    }
   }
 
   return list;
@@ -154,6 +324,41 @@ export const synthetic = [
         STRINGS_FILE,
         'export const UI = { area: { perYear: \"/ano\" }, finance: { perYear: \"/ano\" } };',
       ],
+    ]),
+  },
+  /* ── AS PROVAS DA ORFA ────────────────────────────────────────────────────
+     ⚠ AS DUAS ENTREGAM O ENTRYPOINT, e sem ele a segunda auditoria nem roda — ver a prosa
+     do cabecalho. E o `app.mjs` de cada uma consome UMA das duas chaves, porque a prova
+     precisa mostrar que a guarda separa a viva da morta, e nao que ela acusa tudo.
+
+     ⚠ E QUE A TABELA PASSADA INTEIRA NAO E ORFA nao ganha prova sintetica propria, pela
+     mesma razao que "comentario nao conta" nao ganha: ela ja tem uma melhor, e e o arquivo
+     REAL. `UI.inbox.why` tem nove frases e nenhuma delas aparece em codigo — quem escreve
+     e `labelOf(UI.inbox.why, letter.kind)`. Se a guarda exigisse a folha, ela acusaria
+     nove frases vivas no primeiro `npm run check`, e o arquivo real e quem prova que nao. */
+  {
+    label: "a chave que sobreviveu a peca que a usava",
+    files: new Map([
+      [
+        STRINGS_FILE,
+        'export const UI = { cabinet: { title: "Gabinete", archLoyal: "com o governo" } };',
+      ],
+      ["app.mjs", "el.main.innerHTML = headHtml({ title: UI.cabinet.title });"],
+    ]),
+  },
+  {
+    /* ⚠ ESTA E A QUE IMPORTA, e ela e o caso medido de 21/08: `approvalParts` era a CHAVE
+       das tres cores do termometro da rua — escrita, correta, e nunca lida. O defeito nao
+       era uma linha a mais no arquivo: era a tela desenhar verde, azul e vermelho sem
+       legenda nenhuma tendo a legenda pronta ao lado. */
+    label: "a chave de um grafico, escrita e nunca dita",
+    files: new Map([
+      [
+        STRINGS_FILE,
+        'export const UI = { cabinet: { title: "Gabinete" }, ' +
+          'approvalParts: { good: "Ótimo/bom", poor: "Ruim/péssimo" } };',
+      ],
+      ["app.mjs", "el.main.innerHTML = headHtml({ title: UI.cabinet.title });"],
     ]),
   },
 ];

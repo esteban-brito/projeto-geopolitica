@@ -360,6 +360,11 @@ export function benches({ people, parties, memory, parameters }) {
       benches.push({
         id: person.id,
         label: person.name,
+        /* ⚠ A SIGLA DE UMA PESSOA E A DA BANCADA DELA, e nao uma legenda propria: o
+           que este bloco monta e uma bancada de UM — o sujeito que arrasta uma fatia
+           do proprio partido —, e inventar uma sigla para ele diria que ele fundou um
+           partido. Ele nao fundou: ele racha o voto de dentro. */
+        sigla: party.sigla,
         /* A SUCESSAO ENTRA COMO DISTANCIA, e nao como venalidade menor: quem quer
            a vaga nao fica mais caro, fica mais LONGE — e distancia e o que
            dinheiro compra pela metade. Deslocar a venalidade faria o oposto do

@@ -64,6 +64,20 @@
  * @property {Record<string, number>} mood - a satisfacao do mes seguinte
  * @property {Approval} approval - a leitura nacional, na escala de pesquisa
  * @property {Record<string, Approval>} bySegment - a mesma escala, por segmento
+ *
+ * ── A CONTA, e ela existe para a tela poder EXPLICAR ─────────────────────────
+ * ⚠ OS QUATRO CAMPOS ABAIXO ENTRARAM EM 21/08/2026, e ate entao esta funcao calculava
+ * todos eles e os descartava. A referencia e o Democracy 4: la o jogo inteiro e a cadeia
+ * causal visivel — o jogador ve POR QUE cada grupo mudou. Aqui a cadeia existia completa
+ * e morria dentro do laco.
+ *
+ * @property {Record<string, number>} notes - as cinco notas nacionais, de 0 a 100
+ * @property {number} betrayal - quanto a promessa quebrada tirou de todo mundo
+ * @property {number} wear - quanto o desgaste do cargo tirou de todo mundo
+ * @property {Record<string, Record<string, number>>} weighed - cada nota JA PESADA, por
+ *   segmento. ⚠ E ela e pesada AQUI e nao na view: multiplicar nota por peso do lado de
+ *   la daria dois lugares fazendo a mesma conta, e o segundo divergiria do primeiro no
+ *   dia em que um peso mudasse — que e o dia em que o anexo precisa estar certo
  */
 
 /** @param {number} value */
@@ -142,6 +156,10 @@ export function step(input) {
   const mood = {};
   /** @type {Record<string, Approval>} */
   const bySegment = {};
+  /* QUANTO CADA NOTA VALEU PARA CADA SEGMENTO, ja pesado. E o que o anexo desenha, e a
+     soma de uma linha destas menos traicao e desgaste E o alvo daquela classe. */
+  /** @type {Record<string, Record<string, number>>} */
+  const weighed = {};
   let weighted = 0;
   let shareTotal = 0;
 
@@ -167,6 +185,13 @@ export function step(input) {
 
     mood[segment.id] = next;
     bySegment[segment.id] = pollOf(next, p);
+    weighed[segment.id] = {
+      prices: notes.prices * segment.prices,
+      jobs: notes.jobs * segment.jobs,
+      services: notes.services * segment.services,
+      safety: notes.safety * segment.safety,
+      economy: notes.economy * segment.economy,
+    };
     weighted += next * segment.share;
     shareTotal += segment.share;
   }
@@ -177,7 +202,19 @@ export function step(input) {
      tres telas adiante. */
   const national = shareTotal > 0 ? weighted / shareTotal : 0;
 
-  return { mood, approval: pollOf(national, p), bySegment };
+  /* ⚠ A CONTA SAI JUNTO DO RESULTADO desde 21/08/2026, e ate aqui ela era CALCULADA E
+     JOGADA FORA: `step` sabia exatamente por que cada classe mudou de humor — cinco notas
+     pesadas uma a uma, menos a traicao e o desgaste — e devolvia so o numero. A tela
+     mostrava "23%" e nao tinha como dizer nada alem disso.
+
+     ⚠ E DEVOLVER A CONTA E O CONTRARIO DE REFAZE-LA. A alternativa seria a view multiplicar
+     nota por peso para montar o anexo, e ai haveria dois lugares somando a mesma coisa —
+     o defeito recorrente numero um deste projeto. Quem multiplica e quem ja multiplicava;
+     o que mudou e que agora ele conta o que fez.
+
+     A REFERENCIA E O DEMOCRACY 4, e ela e do responsavel: o jogo inteiro daquele e a
+     cadeia causal visivel. Aqui a cadeia existia, completa, e era muda. */
+  return { mood, approval: pollOf(national, p), bySegment, notes, betrayal, wear, weighed };
 }
 
 /**

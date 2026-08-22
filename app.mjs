@@ -22,7 +22,7 @@
    arrasto arranca o elemento que o ponteiro esta segurando, e o arrasto morre no
    primeiro pixel. Entao enquanto o controle e movido, so as leituras trocam. */
 
-import { createState } from "./src/state/state.mjs";
+import { OPENING_MONTH, createState } from "./src/state/state.mjs";
 import { deserialize, serialize } from "./src/state/save.mjs";
 import {
   CATALOG,
@@ -44,6 +44,7 @@ import {
   outlook,
   playMonth,
   settlement,
+  silences,
   situationOf,
   termOf,
 } from "./src/public/index.mjs";
@@ -74,7 +75,7 @@ import { financeHtml } from "./src/ui/screens/finance.mjs";
 import { turnHtml, verdictHtml, vitalsHtml } from "./src/ui/screens/dashboard.mjs";
 import { cabinetHtml } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
-import { mailHtml, monthLetterHtml } from "./src/ui/screens/inbox.mjs";
+import { describeMail, describeMonth, trayHtml } from "./src/ui/screens/inbox.mjs";
 import { UI } from "./src/ui/strings.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
@@ -82,6 +83,9 @@ import { UI } from "./src/ui/strings.mjs";
 /** @typedef {import("./src/public/index.mjs").Report} Report */
 
 const el = {
+  /* A CASCA INTEIRA, e ela so ganhou id em 21/08/2026: ate entao nada precisava
+     enderecar a moldura do jogo, e agora o CERCO precisa — ver `paint`. */
+  shell: must("shell"),
   railNav: must("railNav"),
   railGov: must("railGov"),
   turn: must("turn"),
@@ -117,6 +121,57 @@ function must(id) {
    nao consegue guardar joga assim mesmo — o que nao pode e travar na abertura. */
 const SAVE_KEY = "planalto:partida";
 const REFUSED_KEY = "planalto:partida-recusada";
+
+/* ── A INTERFACE TEM CHAVE PROPRIA, e ela NAO entra no estado do jogo ───────────
+   ⚠ QUAL CARTA ESTA ABERTA E QUAIS JA FORAM LIDAS NAO SAO ESTADO DE JOGO. Nenhuma das
+   duas move um numero, decide um mes ou muda um veredito — sao registro de quem estava
+   olhando. Poe-las em `GameState` custaria um BUMP DE ESQUEMA, e este save recusa versao
+   diferente em vez de converter: o jogador perderia a partida em andamento para pagar por
+   uma marca de leitura.
+
+   ⚠ E O REDUCER TEM UMA ACAO SO, DE PROPOSITO. Uma segunda — `mailAnswered` — ja foi
+   proposta e recusada, com a razao escrita em `state.mjs`: "o vencimento acontece dentro
+   do turno, e uma resposta fora dele criaria dois caminhos mutando a mesma carta". Marcar
+   uma carta como lida abriria esse segundo caminho por um motivo muito menor.
+
+   Chave separada resolve os dois: o estado continua puro, a guarda de fronteiras continua
+   valendo, e a leitura sobrevive ao F5 — que e o unico requisito real.
+
+   ⚠ E SO A LEITURA ENTRA — `openDispatch` FICA DE FORA, e a razao ja estava escrita na
+   prosa dele: "qual carta o presidente estava lendo quando fechou o navegador nao muda
+   nada do que o mes vai fazer". Ela continua valendo, e o ganho de guardar seria proximo
+   de zero. "Lida" e diferente: sem ela, um F5 devolve a bandeja inteira ao estado de
+   nunca-vista, e a marca deixa de significar qualquer coisa. */
+const UI_KEY = "planalto:interface";
+
+/**
+ * O que a interface lembra entre uma sessao e outra.
+ *
+ * @returns {string[]} os ids ja abertos alguma vez
+ */
+function resumeSeen() {
+  try {
+    const text = window.localStorage.getItem(UI_KEY);
+    if (text === null) return [];
+    const saved = JSON.parse(text);
+    /* ⚠ NADA AQUI CONFIA NO QUE LEU. O conteudo veio de uma versao antiga, de outra
+       maquina ou de um dedo no console — e a resposta certa a qualquer surpresa e a
+       mesma: comeca do zero. Uma marca de leitura errada nao vale um travamento. */
+    return Array.isArray(saved?.seen)
+      ? saved.seen.filter((/** @type {unknown} */ id) => typeof id === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function persistSeen() {
+  try {
+    window.localStorage.setItem(UI_KEY, JSON.stringify({ seen: [...readMail] }));
+  } catch {
+    /* Sem lugar para guardar. A leitura vale so esta sessao. */
+  }
+}
 
 function persist() {
   try {
@@ -161,6 +216,39 @@ const opening = resume();
 let state = opening.state;
 let screen = "cabinet";
 let orders = blankOrders();
+
+/* ── QUAL OFÍCIO ESTÁ ABERTO NA BANDEJA ──────────────────────────────────────
+   ⚠ ELE NÃO É ESTADO DE JOGO, e não entra no save — pela mesma razão de `last` e
+   de `screen` logo acima: qual carta o presidente estava lendo quando fechou o
+   navegador não muda nada do que o mês vai fazer. Salvar isso faria o arquivo de
+   partida carregar memória de janela, e um save carregado num mês em que aquela
+   carta já venceu abriria num id que não existe mais.
+
+   NULO SIGNIFICA "A DE CIMA", e não "nenhuma": a bandeja resolve o vazio abrindo a
+   primeira da lista, que já chega ordenada por urgência. Uma bandeja que abrisse
+   fechada obrigaria um clique para ver o que o mundo mandou — e o mundo mandou
+   justamente porque queria ser lido. */
+/** @type {string | null} */
+let openDispatch = null;
+
+/* ── O QUE JA FOI LIDO ───────────────────────────────────────────────────────
+   ⚠ ELE E O QUE FALTAVA PARA A BANDEJA SER UMA BANDEJA, e a referencia e o inbox do
+   Football Manager: la o peso visual principal do indice e o item que ainda NAO foi
+   aberto. Aqui uma carta recem-chegada tinha a mesma cara de uma lida tres vezes.
+
+   ⚠ E ELE PODA SOZINHO. Sem poda, o conjunto cresceria por 48 meses guardando id de
+   carta que nao existe mais — um vazamento lento num armazenamento que tem cota. A poda
+   acontece na pintura, contra os ids que a bandeja de fato mostrou: o que sumiu do jogo
+   sai da memoria junto.
+
+   ⚠ E "LIDA" SIGNIFICA "ESTEVE ABERTA NA TELA", e nao "foi clicada". A bandeja abre a
+   mais urgente sozinha, entao exigir clique marcaria como nao-lida justamente a carta que
+   o jogador esta lendo agora. */
+/** @type {Set<string>} */
+/* ⚠ `readMail` E NAO `seen`, e o nome e defensivo: `seen` ja e uma variavel local em
+   `mesaInput` — a previsao do turno —, e um modulo com duas coisas chamadas igual e a
+   armadilha esperando a proxima sessao editar a errada. */
+const readMail = new Set(resumeSeen());
 
 /* O ULTIMO MES RESOLVIDO, com o que ele precisa para se comparar com o mes
    anterior. Ele NAO e estado de jogo e nao entra no save: e a memoria de uma
@@ -282,7 +370,13 @@ function financeInput() {
     target: CATALOG.macro.inflationTarget,
     areas: CATALOG.areas,
     index: state.capacity.index,
-    history: state.capacity.history,
+    /* ⚠ A FONTE MUDOU EM 21/08/2026, e ela era a ERRADA desde que a coluna nasceu. Isto
+       era `state.capacity.history` — o buffer do ATRASO, que a MALHA mantem com `lag + 1`
+       valores porque e assim que o mecanismo funciona. O estado guarda uma SEGUNDA serie,
+       longa e feita para isto, e a prosa dela em `state.mjs` diz a diferenca com todas as
+       letras: "o historico e curto e ALIMENTA O MOTOR; a serie e longa e alimenta os
+       OLHOS". Ninguem tinha vindo trocar. Ver o achado 42 na retomada. */
+    history: state.series.areas,
   };
 }
 
@@ -330,38 +424,71 @@ function cabinetInput(current) {
        E A LEITURA DO MES CONTINUA VINDO DO RELATORIO, de proposito: ela nao e
        correspondencia, e o fechamento do turno. Guarda-la faria o save carregar 48
        relatorios para reescrever um texto que o turno ja sabe produzir. */
-    inbox: [
-      ...mailHtml({
-        mail: state.mail,
-        people: governmentOf(state, CATALOG).people,
-        left: letter => left(letter, state.month),
-        /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
+    /* ⚠ SE ALGUM MES JA FOI RESOLVIDO, e ele existe por um defeito que o responsavel
+       fotografou em 21/08/2026: recarregar a pagina com partida salva zerava a bandeja
+       — `last` e variavel de modulo e nao vai para o save — e o estado vazio dizia "o
+       primeiro mes ainda nao foi resolvido" em junho de 2027.
+
+       ⚠ E A PERGUNTA E FEITA AO MES, E NAO A `last`. Era exatamente ler `last` que
+       produzia a mentira: ele nasce nulo em toda carga, e o mes nao — ele atravessa o
+       save, que e onde a verdade sobre o mandato mora. */
+    resolved: state.month > OPENING_MONTH,
+    inbox: trayHtml({
+      open: openDispatch,
+      seen: [...readMail],
+      dispatches: [
+        /* ⚠ O AVISO VEM DO MAIS NOVO PARA O MAIS VELHO, e ate 21/08/2026 ele vinha do
+           mais VELHO — `state.mail` e cronologica, e ninguem tinha reordenado porque com
+           uma carta por mes a ordem nao aparecia. Com o relatorio mensal a bandeja passou
+           a fechar com vinte e poucas, e a PILHA corta pelo fim: ela guardaria a rua de
+           marco para sempre e descartaria a de hoje.
+
+           ⚠ E A PERGUNTA CONTINUA NA FRENTE DE TUDO. `newestFirst` so mexe entre iguais —
+           quem tem prazo ja vem antes, e a ordenacao por data nunca atravessa essa
+           fronteira. O que exige resposta fica no alto; o que so informa se enfileira
+           atras, e a mais recente primeiro. */
+        ...newestFirst(
+          describeMail({
+            mail: state.mail,
+            people: governmentOf(state, CATALOG).people,
+            left: letter => left(letter, state.month),
+            /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
            impacto seria "95% da despesa e obrigatoria" — e a divisao que a produz
            ja mora no cartao do Cofre, entao escreve-la aqui daria dois lugares
            fazendo a mesma conta, que e o defeito recorrente numero um deste
            projeto. Dois valores em reais dizem a mesma coisa sem abrir a segunda
            porta. */
-        inherited: { mandatory: budget.mandatory, room: share.room },
-        answered: orders.mail,
-        /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
+            inherited: { mandatory: budget.mandatory, room: share.room },
+            answered: orders.mail,
+            /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
            mora no catalogo. Uma tabela de nomes nesta view seria a segunda verdade
            sobre quem sao os quatro. */
-        lobbies: CATALOG.lobbies,
-        /* ⚠ O CERCO SAI DO MOTOR, e a carta dele nao escreve numero proprio: o
+            lobbies: CATALOG.lobbies,
+            /* ⚠ O CERCO SAI DO MOTOR, e a carta dele nao escreve numero proprio: o
            triplo da cadeira e `SIEGE_PRICE`, e os 342 de 513 sao a CF art. 86 no
            regime. Copiados na view, os dois mentiriam no dia em que mudassem. */
-        siege: boilerOf(state, CATALOG),
-      }),
-      ...(last
-        ? [
-            monthLetterHtml({
-              report: last.report,
-              adviser: governmentOf(state, CATALOG).adviser,
-              approval: pollFrom(state.mood, CATALOG.segments, CATALOG.opinion).good,
-            }),
-          ]
-        : []),
-    ],
+            siege: boilerOf(state, CATALOG),
+            /* AS CADEIRAS E O QUORUM, para a carta da MINORIA. Os dois ja estao calculados
+             nesta funcao — a tela nao soma bancada de novo. */
+            chamber: { base: current.base, majority: SIMPLE_MAJORITY },
+            /* AS CLASSES, so pelo ROTULO: o anexo da carta da rua nomeia as linhas, e os
+               numeros dele ja vem pesados dentro da propria carta. */
+            segments: CATALOG.segments,
+            /* AS BANCADAS, so pelo ROTULO: a lealdade e as cadeiras chegam na propria
+               carta, gravadas no mes em que ela foi escrita. */
+            parties: CATALOG.parties,
+          }),
+        ),
+        ...(last
+          ? [
+              describeMonth({
+                report: last.report,
+                adviser: governmentOf(state, CATALOG).adviser,
+              }),
+            ]
+          : []),
+      ],
+    }),
     room: share.room,
     committed: share.demand,
     mandatory: budget.mandatory,
@@ -418,7 +545,8 @@ function areaInput(area) {
   return {
     area,
     value,
-    history: state.capacity.history[area.id] ?? [],
+    /* A SERIE LONGA, e nao o buffer do atraso — ver a prosa em `financeInput`. */
+    history: state.series.areas[area.id] ?? [],
     programs: CATALOG.programs.filter(program => program.area === area.id),
     levels: orders.levels,
     spent,
@@ -446,6 +574,12 @@ let standing = null;
 
 function paint() {
   const current = situationOf(state, CATALOG);
+  /* ⚠ O BOTAO SE REPINTA JUNTO COM A TELA desde 20/08/2026, e antes ele so se
+     repintava ao FIM de um mes. Enquanto ele so dizia "Avancar o mes" isso bastava;
+     agora ele carrega o preco do clique, e o preco cai no instante em que o jogador
+     marca uma resposta na bandeja. Repintado so no fechamento, ele anunciaria uma
+     pergunta sem resposta que o jogador acabou de responder. */
+  endLabel();
   /* ⚠ QUEM SABE SE O MANDATO ACABOU E O MOTOR. Ate 18/08/2026 esta pergunta era
      `state.fallen !== null` escrita aqui, e ela estava PELA METADE: pegava a queda e
      nao pegava o PRAZO — nada terminava o mandato aos 48 meses, e quem atravessasse
@@ -501,7 +635,8 @@ function paint() {
       gauges: capacityStripHtml({
         areas: CATALOG.areas,
         index: state.capacity.index,
-        history: state.capacity.history,
+        /* A SERIE LONGA, e nao o buffer do atraso — ver a prosa em `financeInput`. */
+        history: state.series.areas,
       }),
       mesa: mesaHtml(mesaInput()),
       /* A GAVETA. Quem a conta e o motor: o quorum de cada texto e recomposto
@@ -530,6 +665,15 @@ function paint() {
   } else {
     el.main.innerHTML = cabinetHtml(cabinetInput(current));
     el.main.dataset["screen"] = "cabinet";
+    /* ⚠ MARCA DEPOIS DE PINTAR, E LENDO O QUE FOI PINTADO. A alternativa era marcar
+       antes, calculando qual carta a bandeja VAI abrir — e isso seria o entrypoint
+       refazendo a decisao dela, que e o defeito recorrente numero um deste projeto. O
+       DOM ja tem a resposta: `aria-current` esta exatamente na linha que a bandeja
+       escolheu, e perguntar a ela nao pode divergir dela.
+
+       ⚠ E A PODA ACONTECE AQUI, contra as linhas que a bandeja de fato mostrou. Sem ela
+       o conjunto guardaria id de carta morta pelos 48 meses do mandato. */
+    rememberRead();
   }
 
   /* RENDER POR IDENTIDADE DE REFERENCIA na barra superior. Como o estado e
@@ -568,8 +712,75 @@ function paint() {
     document.documentElement.style.setProperty("--situation-tint", `var(--${current.level})`);
   }
 
+  /* ⚠ O CERCO PASSA A MUDAR A TELA, e ate 21/08/2026 ele nao mudava. Havia carimbo no
+     bloco da caldeira e frase na carta, e a LAMINA continuava exatamente igual: o mes em
+     que um processo de impeachment esta correndo — o estado que decide a partida — tinha a
+     mesma cara do mes tranquilo. Era o unico item que sobrou inteiro da Parte 3 do dossie
+     da Sala de Guerra.
+
+     ⚠ E ELE NAO E UMA QUARTA SITUACAO. O gel ja tinge a tela por crise/estavel/crescimento,
+     e acrescentar um quarto tom ali faria o cerco competir com a leitura que o gel existe
+     para dar. O cerco entra por ARESTA, que e um canal livre — e o estado dele nao e
+     "quao bem o pais vai": e "ha uma gaveta aberta".
+
+     ⚠ E A COR E O BORDO DO CARIMBO, e nao o vermelho de crise. Os dois estao no
+     vocabulario e o que os separa ja esta escrito no botao de avancar: `--crisis` e a cor
+     do que JA deu errado, e bordo e a cor do carimbo — do despacho pendente. O processo
+     aberto e exatamente isso: a Camara carimbou, e o mandato ainda nao caiu. */
+  el.shell.dataset["siege"] = state.impeachment !== null && state.fallen === null ? "true" : "";
+
   painted = state;
   standing = current;
+}
+
+/**
+ * O QUE ESTA NA TELA AGORA VIRA LIDO, e o que sumiu do jogo sai da memoria.
+ *
+ * ⚠ ELA LE O DOM DE PROPOSITO. Este e um dos poucos lugares do projeto em que isso e o
+ * certo: a pergunta nao e "qual carta deveria estar aberta" — que a bandeja ja respondeu
+ * — e sim "qual esta". Recalcular aqui daria dois lugares decidindo a mesma coisa, e o
+ * segundo divergiria do primeiro no mes em que a ordem de urgencia mudasse.
+ */
+function rememberRead() {
+  const rows = /** @type {HTMLElement[]} */ ([...el.main.querySelectorAll(".tray__row")]);
+  if (rows.length === 0) return;
+
+  const before = readMail.size;
+
+  /* A PODA PRIMEIRO: so sobrevive quem ainda esta na bandeja. */
+  const alive = new Set(rows.map(row => row.dataset["dispatch"] ?? ""));
+  for (const id of readMail) if (!alive.has(id)) readMail.delete(id);
+
+  const current = /** @type {HTMLElement | null} */ (
+    el.main.querySelector('.tray__row[aria-current="true"]')
+  );
+  const id = current?.dataset["dispatch"];
+  if (id) readMail.add(id);
+
+  /* ⚠ SO ESCREVE QUANDO MUDOU. `paint` roda a cada clique da tela, e gravar em disco
+     sessenta vezes seguidas para guardar o mesmo conjunto e desperdicio que um dia vira
+     travamento numa maquina lenta. */
+  if (readMail.size !== before) persistSeen();
+}
+
+/**
+ * A PERGUNTA NA FRENTE, E O AVISO DO MAIS NOVO PARA O MAIS VELHO.
+ *
+ * ⚠ ELA NASCEU COM O RELATORIO MENSAL, em 21/08/2026: `state.mail` e cronologica, e a
+ * pilha da bandeja corta pelo FIM. Com uma carta por mes isso nao aparecia; com vinte,
+ * significa guardar a rua de marco para sempre e jogar fora a de hoje.
+ *
+ * ⚠ E ELA NAO ATRAVESSA A FRONTEIRA DA PERGUNTA. Ordenar tudo por data poria um relatorio
+ * de aprovacao na frente de uma emenda com prazo correndo — e o inbox passaria a ensinar
+ * a rolar, que e o defeito que a ordem por urgencia existe para impedir.
+ *
+ * @param {ReadonlyArray<import("./src/ui/screens/inbox.mjs").Dispatch>} dispatches
+ * @returns {ReadonlyArray<import("./src/ui/screens/inbox.mjs").Dispatch>}
+ */
+function newestFirst(dispatches) {
+  const asking = dispatches.filter(item => item.due !== null && item.due !== undefined);
+  const telling = dispatches.filter(item => !asking.includes(item));
+  return [...asking, ...telling.sort((a, b) => b.month - a.month)];
 }
 
 /** So os numeros derivados, para o arrasto sobreviver. */
@@ -722,6 +933,24 @@ document.addEventListener("click", event => {
        engano so se desfaria escolhendo a outra — e escolher o contrario do que se
        quer para voltar atras nao e desfazer, e uma segunda decisao errada. */
     orders.mail[id] = orders.mail[id] === choice.dataset["answer"] ? "" : choice.dataset["answer"];
+    paint();
+    return;
+  }
+
+  /* ── ABRIR UM OFÍCIO NA BANDEJA ─────────────────────────────────────────────
+     ⚠ ELE VEM DEPOIS DA ESCOLHA E ANTES DA NAVEGAÇÃO, e a ordem dos três é a
+     mecânica: os botões de resposta moram DENTRO do ofício aberto, que por sua vez
+     mora numa tela que também navega. Abrir antes de escolher faria responder virar
+     "abrir de novo o que já está aberto"; navegar antes de abrir faria um clique na
+     lista trocar de tela.
+
+     ⚠ E O ATRIBUTO É `data-dispatch` E NÃO `data-open`, o que não é gosto: a
+     trindade do Gabinete já marca ruptura aberta com `data-open="true"`, e um seletor
+     `[data-open]` aqui leria um clique na barra de risco como pedido para abrir a
+     carta de id "true" — que não existe, e a bandeja cairia calada na primeira. */
+  const dispatch = target.closest("[data-dispatch]");
+  if (dispatch instanceof HTMLElement && dispatch.dataset["dispatch"]) {
+    openDispatch = dispatch.dataset["dispatch"];
     paint();
     return;
   }
@@ -925,13 +1154,39 @@ function label(node, text, hint) {
    aceso, do mesmo tamanho e da mesma cor de sempre, e clicar nele nao fazia nada e
    nao explicava por que — a unica pista do fim do mandato era um selo de dez pixels
    no canto de um cartao da coluna da direita. */
+/* ── E O PRECO DE AVANCAR VAI NO BOTAO, e ele NAO trava ────────────────────
+   ⚠ A RECUSA ESTA REGISTRADA EM `mail.mjs` e vale repetida aqui, porque e aqui
+   que a tentacao mora: o dossie pedia `disabled` enquanto houvesse pergunta
+   urgente. Um botao cinza e um muro, e este projeto nao tem muro — ele tem preco.
+   O jogador PODE atravessar o mes sem responder nada; o que ele nao pode e nao
+   saber o que isso custa antes de clicar.
+
+   ⚠ E QUEM CONTA E O MOTOR. `silences` e `settle` filtrada: a tela nao pergunta
+   se o prazo venceu, ela pergunta o que este fechamento decide sozinho. */
 function endLabel() {
   const term = termOf(state, CATALOG);
   el.advance.disabled = term.over;
+
+  const quiet = term.over
+    ? []
+    : silences({ mail: state.mail, orders: orders.mail, month: state.month });
+  /* O ATRIBUTO E O QUE ACENDE A LEGENDA, e ele fica no botao e nao numa classe: o
+     que ele descreve e um ESTADO do mes, e nao uma variante do componente. */
+  el.advance.dataset["price"] = quiet.length > 0 ? "true" : "";
+
   label(
     el.advance,
     term.over ? UI.actions.ended : UI.actions.advance,
-    term.over ? UI.actions.endedHint : "",
+    term.over
+      ? UI.actions.endedHint
+      : quiet.length === 0
+        ? ""
+        : /* ⚠ COM UMA SO, O ROTULO NOMEIA; com duas ou mais, ele conta. O assunto vem da
+             carta que o motor devolveu, e nao de uma segunda montagem aqui — `silences` e
+             `settle` filtrada, entao o que se imprime e a carta que de fato vai fechar. */
+          quiet.length === 1
+          ? `${UI.actions.silenceOne} ${quiet[0]?.subject ?? ""}`.trim()
+          : `${quiet.length} ${UI.actions.silenceMany}`,
   );
 }
 

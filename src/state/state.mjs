@@ -96,6 +96,23 @@ import { streamFrom } from "./random.mjs";
  * @property {number[]} unemployment
  * @property {number[]} debtRatio
  * @property {number[]} primary - o resultado primario do mes, em bilhoes
+ *
+ * ⚠ A APROVACAO E A BASE FORAM ACRESCENTADAS E RETIRADAS EM 21/08/2026, e o registro
+ * fica porque a razao de retirar nao e a razao de nao tentar. As duas entraram para a
+ * barra superior desenhar a escada dos quatro vitais, o esquema subiu para 18, e a
+ * CAPTURA reprovou a peca: a fileira nao tem largura para uma escada legivel. Ver a
+ * prosa em `dashboard.mjs`.
+ *
+ * ⚠ E ELAS SAIRAM JUNTO COM A PECA, e nao ficaram "para quando alguem precisar": campo
+ * de estado sem consumidor custa uma VERSAO DE SAVE, e save deste jogo nao converte —
+ * ele recusa. Guardar dois numeros que ninguem le custaria ao jogador a partida em
+ * andamento para pagar por uma tela que nao existe.
+ *
+ * O ARGUMENTO PARA ELAS CONTINUA VALENDO no dia em que houver consumidor, e ele nao e
+ * o obvio: guardar derivado e proibido aqui — a SITUACAO saiu do estado na versao 6 por
+ * isso —, mas o que se guardaria nao e o valor de hoje e sim o PASSADO. A aprovacao de
+ * doze meses atras nao se refaz de nada: ela saiu do humor daquele mes, e aquele humor
+ * nao existe mais em lugar nenhum. Passado e fato, e nao derivacao.
  * @property {Record<string, number[]>} areas - o indice de cada area, mes a mes
  *
  * A CORRESPONDENCIA — e ela e o unico lugar do estado que ESPERA UMA RESPOSTA.
@@ -123,7 +140,15 @@ import { streamFrom } from "./random.mjs";
  * @typedef {object} Letter
  * @property {string} id - deterministico, e por isso a mesma carta nao chega duas vezes
  * @property {"posse" | "tabled" | "reported" | "forgotten" | "passed" | "rejected" | "demand"
- *   | "rupture" | "siege"} kind
+ *   | "rupture" | "siege" | "ceiling" | "minority" | "boiling"
+ *   | "street" | "seats" | "vault"} kind
+ *
+ * ⚠ AS TRES ULTIMAS SAO O MUNDO SE MEXENDO SOZINHO, e entraram em 21/08/2026 por uma
+ * medicao refeita: mesmo com o mercado ja exigindo, a bandeja fechava com 1,2 cartas por
+ * mes num governo passivo, e 20 de 24 meses tinham uma carta ou nenhuma. `ceiling` e o
+ * teto do arcabouco fechando, `minority` e a base cruzando a maioria simples para baixo,
+ * e `boiling` e um grupo passando do ponto de fervura. As tres o motor ja decidia todo
+ * mes; nenhuma tinha como chegar a quem nao estivesse olhando o cartao certo.
  *
  * ⚠ `rupture` E `siege` SAO O CERCO FALANDO, e as duas nao falam de texto nenhum:
  * `bill` e `lever` ficam nulos. Elas entraram em 18/08/2026 por uma medicao — num
@@ -142,6 +167,39 @@ import { streamFrom } from "./random.mjs";
  * guardar o texto renderizado seria a quinta ocorrencia de "dois lugares montando a
  * mesma pergunta".
  *
+ * ── O RELATORIO DO MES, e ele e a terceira natureza de carta ────────────────
+ * ⚠ TRES CAMPOS NOVOS EM 21/08/2026, e eles servem uma CLASSE inteira: `street`, `seats`
+ * e `vault` sao os tres dominios que escrevem TODO MES em que se moveram. Guardar o antes
+ * e o depois na carta e o que a impede de mentir um mes depois — uma carta que dissesse
+ * "a aprovacao foi de 44 para X" lendo o X do estado VIVO estaria contando o mes errado
+ * na segunda vez que fosse aberta.
+ *
+ * ⚠ E `weight` E O QUE FAZ O RELATORIO PERIODICO SER POSSIVEL. A regra antiga deste
+ * projeto — "uma linha que so diz que nada aconteceu ensina o olho a pular a linha
+ * inteira" — matou duas legendas, e ela vale para linhas INDIFERENCIADAS. Numa bandeja em
+ * que o peso esta na cor, ela deixa de valer: o olho varre por intensidade e nao por
+ * leitura, que e exatamente como o inbox do Football Manager funciona. A decisao e do
+ * responsavel, com as palavras dele: "e so fazer um jogo de cores, o olho vai focar no que
+ * importa".
+ *
+ * @property {number | null} was - o valor com que o mes comecou; so no relatorio
+ * @property {number | null} now - o valor com que ele fechou; so no relatorio
+ * @property {"high" | null} weight - se o movimento foi grande o bastante para gritar
+ *
+ * ⚠ E `attach` E O ANEXO, e ele entrou em 21/08/2026 com uma observacao do responsavel
+ * sobre o inbox do Football Manager: a mensagem aberta la tem DUAS LINHAS de prosa — tao
+ * curta quanto as nossas — e o que enche o painel e um ANEXO de dado estruturado, um
+ * cartao e uma tabela. "O bloco direito deveria ocupar todo o espaco com a mensagem."
+ *
+ * ⚠ E ELE E UM MAPA DE NUMEROS, e nunca prosa. A regra do arquivo inteiro vale aqui sem
+ * excecao: o estado guarda o FATO, e quem escreve a frase e a view. Um anexo com texto
+ * dentro seria a quinta ocorrencia de "dois lugares montando a mesma carta".
+ *
+ * ⚠ E ELE E GENERICO DE PROPOSITO — um campo para as tres especies de relatorio, e nao
+ * um campo por especie. A rua anexa as cinco notas pesadas por classe; o caixa e a base
+ * vao anexar o que lhes couber. Sete campos nulos em nove especies foi exatamente o que
+ * fez a leitura do mes ser RECUSADA no save, e a licao nao se repete.
+ * @property {Record<string, number> | null} [attach] o dado do anexo, ja pesado pelo motor
  * @property {string | null} from - o id do lobby que exigiu; nulo em toda outra carta
  * @property {string | null} lever - a alavanca que ele quer movida
  * @property {number | null} level - o nivel que ele exige, e ele NAO e inventado:
@@ -358,7 +416,13 @@ import { streamFrom } from "./random.mjs";
 
    SUBIU PARA 17 quando o lobby passou a EXIGIR. Um save da 16 nao tem os tres campos
    da chantagem, e uma carta sem `from` seria uma exigencia sem autor — a view nao teria
-   quem desenhar e o turno nao teria a quem cobrar. */
+   quem desenhar e o turno nao teria a quem cobrar.
+   ⚠ A 18 FOI ESCRITA E DESFEITA NA MESMA SESSAO, em 21/08/2026, e o registro fica para
+   quem for tentar de novo. Ela acrescentaria a aprovacao e a base a serie, para a barra
+   superior desenhar a escada dos quatro vitais; a captura reprovou a peca por LARGURA, e
+   um campo de estado sem consumidor nao vale uma versao de save — este save recusa em
+   vez de converter, entao cada numero novo aqui custa a partida em andamento do jogador.
+   O numero da versao NAO foi queimado: a proxima mudanca de forma e a 18. */
 export const SCHEMA_VERSION = 17;
 
 /* O HUMOR DE ABERTURA da base. Uniforme de proposito nesta fase: uma coalizao
@@ -524,6 +588,9 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
         from: null,
         lever: null,
         level: null,
+        was: null,
+        now: null,
+        weight: null,
         answer: null,
         closedAt: OPENING_MONTH,
       },

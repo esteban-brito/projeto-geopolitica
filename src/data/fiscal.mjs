@@ -190,7 +190,9 @@ export const FISCAL = {
      bilhoes por mes, e comprar as 513 cadeiras a verba cheia tem de ser IMPOSSIVEL
      — senao existe jogada dominante e a escolha de a quem pagar deixa de ser
      escolha. A 0,05 o plenario inteiro custa 25,7, quase o dobro do que cabe no
-     mes; o centrao sozinho custa 10,3, que cabe e doi. E a MESMA razao de antes:
+     mes; a maior bancada — a liberal-conservadora, com 145 cadeiras — custa 7,3, que
+     cabe e doi, e a maioria mais barata custa 14,7 e NAO cabe. ⚠ Os numeros mudaram em
+     20/08/2026 com as nove legendas; o que nao mudou foi a razao de antes:
      quando a escala do orcamento caiu, este numero caiu junto, porque o que ele
      descreve e uma proporcao e nao um valor. */
   seatPrice: 0.05,

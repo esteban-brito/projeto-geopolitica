@@ -20,6 +20,10 @@
    voto nenhum. */
 
 @layer screens {
+  /* ⚠ `.area__eyebrow` MORREU EM 20/08/2026 nas CINCO telas de uma vez. O olho
+     imprimia uma categoria acima de um título que já dizia a mesma coisa numa palavra,
+     numa tela cujo menu já marca onde o jogador está. A razão está em `head.mjs`. */
+
   .area {
     display: grid;
     gap: var(--space-6);
@@ -81,14 +85,6 @@
     color: var(--ink);
   }
 
-  .area__eyebrow {
-    font-family: var(--font-display);
-    font-size: var(--text-label);
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-
   /* ⚠ O TITULO DA TELA E SERIFA desde 15/08/2026, e ele foi o furo da regra do
      ciclo 5: "Saude", "Gabinete", "Congresso & Leis" sao NOMES DE INSTITUICAO —
      registro, pela minha propria definicao — e sairam em sans por seis telas. Uma
@@ -101,8 +97,8 @@
     gap: var(--space-3);
     font-family: var(--font-record);
     font-weight: 800;
-    font-size: var(--text-hero);
-    line-height: 0.95;
+    font-size: var(--text-screen);
+    line-height: 1;
     color: var(--ink);
   }
 
@@ -111,11 +107,17 @@
      ao lado do indice — uma serie estavel virava o que parece um retangulo de
      carregamento. No tamanho de rotulo ela volta a ser o que e: uma marca de
      tendencia, e nao um segundo indicador competindo com o numero. */
+  /* ⚠ `font-size: 0.18em` ERA A ESCADA DE BLOCOS ENCOLHIDA, e ela saiu em 21/08/2026 —
+     ver `sparkline`. Um corpo em `em` sobre um numero grande dava um glifo de ~4px, que
+     e o caso extremo do defeito que matou a escada: a esta altura, o degrau 1 nao tem
+     pixel nenhum para desenhar. */
   .area__spark {
-    font-size: 0.18em;
-    line-height: 1;
-    letter-spacing: -0.06em;
     color: var(--ink-dim);
+  }
+
+  .area__spark .spark {
+    width: 3rem;
+    height: 0.8rem;
   }
 
   /* A VARIACAO herda cor e sinal da peca `.trend`; daqui sai so o tamanho. */
@@ -149,11 +151,19 @@
   /* ⚠ A TIPOGRAFIA SAIU DAQUI em 18/08/2026 e foi para `30-components.css`, junto
      com a legenda do relatorio: as seis declaracoes estavam escritas duas vezes. O
      que fica aqui e o que so esta peca tem — o FIO e a repartição em duas pontas. */
+  /* ⚠ O FIO METÁLICO SAIU EM 20/08/2026, e a saída é um pedido direto do responsável:
+     "as barras pretas também que ficam embaixo das escritas". Ele era duas paradas —
+     latão apagado e sombra — e existia por uma razão que fica registrada, porque ela não
+     era boba: "o que faz uma tela ler como grand strategy não é o ouro do botão, e a
+     REPETIÇÃO do mesmo fio, tela após tela, até o olho parar de ver decoração e passar a
+     ver estrutura".
+
+     ⚠ E O QUE ELE DESCOBRIU USANDO A TELA é que a repetição virou peso: com onze blocos
+     numa página, onze fios não leem como estrutura, leem como formulário. O que separa um
+     bloco do seguinte passa a ser o ESPAÇO — que é o que separa parágrafo de parágrafo em
+     qualquer documento, e não cobra tinta nenhuma. */
   .block__legend {
-    padding-bottom: var(--space-2);
-    box-shadow:
-      0 1px 0 rgba(var(--brand-rgb), 0.22),
-      0 2px 0 rgba(0, 0, 0, 0.35);
+    padding-bottom: var(--space-1);
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -306,15 +316,17 @@
   /* NO CELULAR A LINHA VIRA FILEIRAS. Trinta controles num aparelho de 390px com
      o slider espremido em 60px poriam o passo de um ponto fora do alcance do
      polegar — e o passo e a decisao. */
-  @media (max-width: 720px) {
-    .dial {
-      grid-template-columns: minmax(0, 1fr);
-    }
+  /* ⚠ O BLOCO DE TELEFONE SAIU DAQUI EM 20/08/2026, e a saída é de ESCOPO e não de
+     limpeza. Decisão do responsável, com estas palavras: "pare de se importar se o jogo
+     funciona no mobile, simplesmente não importa, nunca vou jogar no mobile, só no
+     desktop; eu quero a perfeição no desktop, perfeição mesmo".
 
-    .dial__read {
-      justify-items: start;
-    }
-  }
+     ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
+     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem
+     de rolar. Foi o corte que permitiu a tela fechar na dobra.
+
+     O corte para em 640/720px, que é território de telefone. O bloco de **1180px**
+     FICA: aquilo é um notebook de verdade, e notebook é desktop. */
 
   /* ── AS LEIS DA AREA ────────────────────────────────────────────────────────
      Mesma pastilha do controle de orcamento, e de proposito: mudar quanto se
@@ -426,12 +438,6 @@
     text-transform: uppercase;
     color: var(--ink-dim);
     white-space: nowrap;
-  }
-
-  @media (max-width: 720px) {
-    .law {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 
   /* ── ALOCAR ─────────────────────────────────────────────────────────────────
