@@ -6,7 +6,7 @@
 
 ## ▶ COMECE AQUI — estado em 22/08/2026
 
-⚠ **O COMMIT DESTA SESSÃO É `95681c3`**, e ele carrega **duas** sessões — a décima
+⚠ **OS COMMITS SÃO `95681c3` (duas sessões atrasadas) e `52fae34` (a padronização da bandeja, a limpeza e o ofício-molde). Nada está pendente de commit.** O primeiro é descrito abaixo; ⚠ **o antigo texto**, e ele carrega **duas** sessões — a décima
 terceira estava só no disco desde 18/08. Nada mais está pendente de commit.
 
 **A décima quarta sessão fechou o item que a retomada anterior deixou aberto, e a
