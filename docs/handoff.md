@@ -6,6 +6,9 @@
 
 ## ▶ COMECE AQUI — estado em 22/08/2026
 
+⚠ **O COMMIT DESTA SESSÃO É `95681c3`**, e ele carrega **duas** sessões — a décima
+terceira estava só no disco desde 18/08. Nada mais está pendente de commit.
+
 **A décima quarta sessão fechou o item que a retomada anterior deixou aberto, e a
 ordem dele é uma só:** _"nós temos que fechar a UI, design, css, e todo esse tipo de
 coisa primeiro, depois mexemos nos sistemas e motores e mecânicas do jogo"_. Está
