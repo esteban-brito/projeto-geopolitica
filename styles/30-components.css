@@ -664,6 +664,75 @@
     text-align: center;
   }
 
+  /* ── A POSSE ────────────────────────────────────────────────────────────────
+     O unico formulario do jogo, e ele existe uma vez por partida: o jogador escreve o
+     proprio nome. Alinhado a ESQUERDA, ao contrario do aviso — prosa curta se centra, campo
+     de formulario nao: rotulo centrado sobre campo largo nao diz a qual campo pertence. */
+  .swear {
+    justify-items: stretch;
+    text-align: left;
+  }
+
+  .swear__field,
+  .swear__how {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* ⚠ A CLASSE NAO VENCE O SELETOR DE ATRIBUTO: `.swear__input` e (0,1,0) e
+     `input[type="text"]` e (0,1,1). Ver `docs/standards.md` §4. */
+  input[type="text"].swear__input {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--glass-edge);
+    border-radius: var(--radius-piece);
+    background: var(--glass-base);
+    box-shadow: var(--bevel-under);
+    color: var(--ink);
+    font-family: var(--font-record);
+    font-size: var(--text-name);
+  }
+
+  input[type="text"].swear__input:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  /* AS DUAS FORMAS DE TRATAMENTO, lado a lado: sao duas e a escolha e binaria, entao uma
+     linha basta e uma lista vertical seria altura gasta com duas palavras. */
+  .swear__how {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  .swear__how legend {
+    grid-column: 1 / -1;
+    padding: 0;
+    color: var(--ink-dim);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+  }
+
+  .swear__pick {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+  }
+
+  .swear__feet {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
   /* O titulo do dialogo usa o degrau de TITULO, e nao o de rotulo: a peca central do momento
      em que aparece merece a segunda maior tipografia da escala. */
   .dialog-card__title {

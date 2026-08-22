@@ -76,7 +76,7 @@ import { turnHtml, verdictHtml, vitalsHtml } from "./src/ui/screens/dashboard.mj
 import { cabinetHtml } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
 import { describeMail, describeMonth, trayHtml } from "./src/ui/screens/inbox.mjs";
-import { UI } from "./src/ui/strings.mjs";
+import { DEFAULT_TREATMENT, UI } from "./src/ui/strings.mjs";
 
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
 /** @typedef {import("./src/public/index.mjs").Orders} Orders */
@@ -93,6 +93,16 @@ const el = {
   main: must("main"),
   advance: /** @type {HTMLButtonElement} */ (must("advance")),
   restart: must("restart"),
+  swearDialog: /** @type {HTMLDialogElement} */ (must("swearDialog")),
+  swearForm: /** @type {HTMLFormElement} */ (must("swearForm")),
+  swearName: /** @type {HTMLInputElement} */ (must("swearName")),
+  swearTitle: must("swearTitle"),
+  swearNameLabel: must("swearNameLabel"),
+  swearHowLabel: must("swearHowLabel"),
+  swearSir: must("swearSir"),
+  swearMadam: must("swearMadam"),
+  swearOk: must("swearOk"),
+  swearCancel: must("swearCancel"),
   /* O `<dialog>` FICOU, E ENCOLHEU DE PAPEL: ele carregava o relatorio do mes e
      agora carrega so o AVISO. A distincao e de natureza — informacao que se
      consulta e painel, interrupcao porque algo deu errado e modal. */
@@ -451,6 +461,7 @@ function cabinetInput(current) {
           describeMail({
             mail: state.mail,
             people: governmentOf(state, CATALOG).people,
+            treatment: governmentOf(state, CATALOG).treatment,
             left: letter => left(letter, state.month),
             /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
            impacto seria "95% da despesa e obrigatoria" — e a divisao que a produz
@@ -592,7 +603,11 @@ function paint() {
      porque a POSICAO muda: ela e derivada do que o jogador moveu no orcamento, e
      portanto anda junto com o mandato. O nome nao muda; a frase abaixo dele, sim. */
   const gov = governmentOf(state, CATALOG);
-  el.railGov.innerHTML = railGovHtml({ president: gov.president, stance: gov.stance });
+  el.railGov.innerHTML = railGovHtml({
+    president: gov.president,
+    stance: gov.stance,
+    treatment: gov.treatment,
+  });
 
   /* CADA VIEW TRAZ O PROPRIO ELEMENTO DE FORA, e o entrypoint so concatena. A
      versao anterior montava aqui a `<div class="mesa">` que embrulha a tela — e
@@ -660,7 +675,7 @@ function paint() {
        mes para decidir: manter os dois lado a lado daria ao jogador uma tela de
        decisao que nao decide nada, ao lado de uma que diz que acabou. As outras
        continuam no rail de proposito — o pais que ele deixou e consultavel. */
-    el.main.innerHTML = closingHtml(term);
+    el.main.innerHTML = closingHtml(term, governmentOf(state, CATALOG).treatment);
     el.main.dataset["screen"] = "closing";
   } else {
     el.main.innerHTML = cabinetHtml(cabinetInput(current));
@@ -1130,13 +1145,44 @@ el.restart.addEventListener("click", () => {
 
   window.clearTimeout(arming);
   arming = 0;
-  state = createState();
+  disarm();
+  /* ⚠ A PARTIDA NAO COMECA NO CLIQUE, e sim na POSSE: o jogador escreve o nome antes de o
+     estado existir. O `createState` so roda quando o formulario fecha. */
+  openSwear();
+});
+
+/* ── A POSSE ───────────────────────────────────────────────────────────────── */
+
+function openSwear() {
+  el.swearName.value = state.president?.name ?? "";
+  const marcado = /** @type {HTMLInputElement | null} */ (
+    el.swearForm.querySelector(
+      `input[name="treatment"][value="${state.president?.treatment ?? DEFAULT_TREATMENT}"]`,
+    )
+  );
+  if (marcado) marcado.checked = true;
+  el.swearDialog.showModal();
+  el.swearName.focus();
+  el.swearName.select();
+}
+
+el.swearCancel.addEventListener("click", () => el.swearDialog.close());
+
+el.swearForm.addEventListener("submit", () => {
+  const nome = el.swearName.value.trim();
+  const escolha = /** @type {HTMLInputElement | null} */ (
+    el.swearForm.querySelector('input[name="treatment"]:checked')
+  );
+  const treatment = escolha?.value === "senhora" ? "senhora" : DEFAULT_TREATMENT;
+
+  /* ⚠ NOME VAZIO VOLTA AO SORTEADO, e nao a uma string em branco: a tela cita o presidente
+     em quatro lugares, e um vazio ali leria como defeito de carregamento. */
+  state = createState(undefined, CATALOG, nome === "" ? null : { name: nome, treatment });
   last = null;
   orders = blankOrders();
   screen = "cabinet";
   painted = null;
   standing = null;
-  disarm();
   persist();
   transition();
 });
@@ -1219,6 +1265,15 @@ function endLabel() {
 
 endLabel();
 label(el.restart, UI.actions.restart, "");
+
+/* OS ROTULOS DA POSSE, como todo texto: do arquivo de frases, e nao do documento. */
+el.swearTitle.textContent = UI.actions.swearTitle;
+el.swearNameLabel.textContent = UI.actions.swearName;
+el.swearHowLabel.textContent = UI.actions.swearHow;
+el.swearSir.textContent = UI.actions.swearSir;
+el.swearMadam.textContent = UI.actions.swearMadam;
+el.swearOk.textContent = UI.actions.swearOk;
+el.swearCancel.textContent = UI.actions.swearCancel;
 el.noticeClose.textContent = UI.actions.close;
 
 paint();

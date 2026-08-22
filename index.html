@@ -114,6 +114,42 @@
          modal a transformava em pedágio: um clique por mês, 48 por mandato, e o
          fundo inerte impedia comparar o relatório com a Mesa que o produziu.
          Interrupção é para quando algo deu errado — que é o caso do aviso. -->
+    <!-- A POSSE — onde o jogador escreve o proprio nome.
+         ⚠ O TRATAMENTO E PERGUNTADO, e nao deduzido do nome: com o nome DIGITADO nao ha
+         de onde deduzir, e a interface tem sete frases que dependem dele. Ate 22/08/2026
+         elas diziam "o senhor" para todo mundo. -->
+    <dialog id="swearDialog" aria-labelledby="swearTitle">
+      <form class="glass-stage dialog-card swear" id="swearForm" method="dialog">
+        <h2 class="block__legend" id="swearTitle"></h2>
+        <label class="swear__field">
+          <span id="swearNameLabel"></span>
+          <input
+            class="swear__input"
+            id="swearName"
+            type="text"
+            maxlength="40"
+            autocomplete="off"
+            required
+          />
+        </label>
+        <fieldset class="swear__how">
+          <legend id="swearHowLabel"></legend>
+          <label class="swear__pick">
+            <input type="radio" name="treatment" value="senhor" checked />
+            <span id="swearSir"></span>
+          </label>
+          <label class="swear__pick">
+            <input type="radio" name="treatment" value="senhora" />
+            <span id="swearMadam"></span>
+          </label>
+        </fieldset>
+        <div class="swear__feet">
+          <button class="action action--quiet" id="swearCancel" type="button"></button>
+          <button class="action glass-action" id="swearOk" type="submit"></button>
+        </div>
+      </form>
+    </dialog>
+
     <dialog id="noticeDialog" aria-labelledby="noticeTitle">
       <div class="glass-stage dialog-card">
         <!-- O TITULO VEM DE DENTRO. `aria-labelledby` aponta para um `id` que a

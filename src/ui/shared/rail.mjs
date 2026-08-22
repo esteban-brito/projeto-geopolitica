@@ -1,7 +1,7 @@
 /* O RAIL — a navegacao primaria, a esquerda e sempre presente. */
 
 import { escapeHtml } from "./html.mjs";
-import { UI } from "../strings.mjs";
+import { DEFAULT_TREATMENT, UI, titleOf } from "../strings.mjs";
 
 /** @typedef {import("../../data/areas.mjs").Area} Area */
 
@@ -75,11 +75,14 @@ function itemHtml({ key, label, ready }, current) {
  * @param {object} input
  * @param {{ name: string }} input.president
  * @param {{ near: string, article: string } | null} input.stance
+ * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado
  * @returns {string}
  */
-export function railGovHtml({ president, stance }) {
+export function railGovHtml({ president, stance, treatment = DEFAULT_TREATMENT }) {
   return (
-    `<p class="rail__who">${escapeHtml(UI.gov.president)}</p>` +
+    /* ⚠ O CARGO SEGUE O TRATAMENTO: "PRESIDENTE" sobre um nome escolhido com "a senhora"
+       e a mesma frase errada que a carta acabou de parar de dizer. */
+    `<p class="rail__who">${escapeHtml(titleOf(treatment))}</p>` +
     `<p class="rail__president">${escapeHtml(president.name)}</p>` +
     `<p class="rail__stance">` +
     (stance

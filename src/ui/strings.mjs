@@ -74,6 +74,23 @@ export function labelOf(table, key) {
   return table[key] ?? key;
 }
 
+/* ⚠ O TRATAMENTO E UMA TROCA, E NAO DUAS LISTAS DE FRASE. Sete frases da interface citavam
+   "o senhor" com todas as letras, e o gerador de nomes sorteia feminino e masculino na mesma
+   proporcao: metade das partidas tratava a presidenta por "o senhor" durante 48 meses.
+
+   ⚠ E DEDUZIR PELO NOME DEIXOU DE SER POSSIVEL quando o nome passou a ser DIGITADO — entao a
+   escolha e do jogador, feita junto com o nome, e mora no save. Duas listas paralelas de
+   frase seriam duas traducoes do mesmo texto divergindo na primeira edicao; um marcador e
+   uma troca mantem UMA frase. */
+/* O padrao e o masculino porque e o que a partida sem escolha ja usava; ele existe como
+   CONSTANTE para nao ser um literal repetido em cada assinatura. */
+export const DEFAULT_TREATMENT = /** @type {"senhor"} */ ("senhor");
+
+const TRATAMENTO = /** @type {const} */ ({
+  senhor: { voce: "o senhor", titulo: "Presidente" },
+  senhora: { voce: "a senhora", titulo: "Presidenta" },
+});
+
 export const UI = {
   /* AS SECOES SAO A TABELA DE MOTORES, e nao uma lista de telas desejadas. */
   /* A NAVEGACAO E POR PODERES E LUGARES, e nao por area de governo. */
@@ -168,7 +185,6 @@ export const UI = {
   /* ── DE QUEM É ESTE GOVERNO ──────────────────────────────────────────────── ⚠ O JOGADOR
      ERA A ÚNICA PESSOA SEM NOME num jogo em que sete outras tinham. */
   gov: {
-    president: "presidente",
     /* se aproxima é a mesma distância euclidiana que ECLUSA usa para votar. */
     nearest: "governa mais perto",
     /* ⚠ QUEM NÃO MOVEU NADA NÃO É DE CENTRO. */
@@ -196,7 +212,7 @@ export const UI = {
       economic:
         "Metade do capital que financia campanha abandonou o governo. Quem paga a conta de uma eleição está do outro lado.",
       political:
-        "O fisiologismo concluiu que sustentar o senhor custa mais do que derrubá-lo — e ele é o último a virar, porque ganha dinheiro sustentando.",
+        "O fisiologismo concluiu que sustentar {v} custa mais do que derrubá-lo — e ele é o último a virar, porque ganha dinheiro sustentando.",
     },
     /* ⚠ A FRASE COMUM É O QUE FAZ A CARTA VALER: uma ruptura sozinha não derruba ninguém, e
        sem isso o aviso soaria como sentença. */
@@ -299,21 +315,20 @@ export const UI = {
     },
     headlineSeats: TERMOS.seatsWord,
     /* a que menos sustenta vêm de `weighed` e `notes`, que SONDA passou a devolver hoje. */
-    vocative: "Presidente,",
     pollClosed: "A pesquisa fechou o mês em",
     pollGood: "de ótimo ou bom",
     pollDown: "abaixo do mês passado.",
     pollUp: "acima do mês passado.",
     pollPoint: "ponto",
     pollPoints: "pontos",
-    pollHolds: "O que sustenta o senhor é",
+    pollHolds: "O que sustenta {v} é",
     pollHoldsIn: ", e é na",
     pollHoldsWeighs: "que ela pesa mais.",
     pollDrags: "A nota mais fraca é",
     pollDragsAt: "e ela puxa as três classes para baixo.",
     seatsBody: "As cadeiras que respondem ao governo fecharam o mês em",
     seatsOf: "de 513, e a maioria simples fecha em",
-    seatsHint: "Sem ela, nada do que o senhor assinar chega ao plenário.",
+    seatsHint: "Sem ela, nada do que {v} assinar chega ao plenário.",
     vaultBody: "O que sobra para o mês fechou em",
     vaultHint: "É desse dinheiro que sai emenda, e é ele que compra voto.",
 
@@ -403,10 +418,10 @@ export const UI = {
     silenced: "O prazo venceu sem resposta. A emenda valeu.",
     /* ── A CARTA DE POSSE ──────────────────────────────────────────────────── ⚠ ELA EXISTE
        PORQUE A PRIMEIRA TELA DO JOGO TINHA A PEÇA CENTRAL VAZIA. */
-    inauguration: "O país que o senhor recebe",
+    inauguration: "O país que {v} recebe",
     inheritedMandatory: "da despesa do ano é obrigatória, e ela não passa pela sua caneta",
     inheritedRoom: "é o que sobra para o mês, depois do que já está comprometido",
-    inheritedLead: "O orçamento em vigor é o do seu antecessor até o senhor escrevê-lo.",
+    inheritedLead: "O orçamento em vigor é o do seu antecessor até {v} escrevê-lo.",
   },
   /* A BARRA SUPERIOR — os sinais vitais, e eles nunca somem da tela. */
   vitals: {
@@ -648,6 +663,16 @@ export const UI = {
     ended: "O mandato acabou",
     endedHint: "nova partida, ao pé da coluna",
     restart: "Nova partida",
+    /* ── A POSSE ─────────────────────────────────────────────────────────────
+       O jogador era a unica pessoa sem nome proprio num jogo em que oito outras tinham,
+       e o nome sorteado nao era dele. */
+    swearTitle: "Quem toma posse",
+    swearName: "Seu nome",
+    swearHow: "Como a Casa Civil deve tratá-lo",
+    swearSir: TRATAMENTO.senhor.voce,
+    swearMadam: TRATAMENTO.senhora.voce,
+    swearOk: "Tomar posse",
+    swearCancel: "Voltar",
     restartConfirm: "Apagar mesmo?",
     restartConfirmHint: "clique de novo para confirmar",
     close: "Entendi",
@@ -672,7 +697,7 @@ export const UI = {
     removedNote: TERMOS.removedNote,
     served: "MANDATO CUMPRIDO",
     servedNote: "os quatro anos terminaram",
-    country: "O país que o senhor entrega",
+    country: "O país que {v} entrega",
     approval: TERMOS.approval,
     approvalNote: "ótimo e bom",
     debt: TERMOS.grossDebt,
@@ -680,8 +705,7 @@ export const UI = {
     written: "O que ficou escrito",
     /* Um mandato sem lei nenhuma é um fato sobre o governo, e a frase diz isso — não deixa um
        espaço vazio que parece defeito de tela. */
-    noLaws:
-      "Nenhuma lei foi escrita neste mandato. O país terminou com as regras que o senhor recebeu.",
+    noLaws: "Nenhuma lei foi escrita neste mandato. O país terminou com as regras que {v} recebeu.",
     abandoned: "Abandonaram o governo:",
     noneAbandoned: "Nenhum grupo abandonou o governo.",
   },
@@ -691,3 +715,24 @@ export const UI = {
     flat: "—",
   },
 };
+
+/**
+ * Troca o marcador `{v}` pelo tratamento escolhido.
+ *
+ * @param {string} text
+ * @param {"senhor" | "senhora"} [treatment]
+ * @returns {string}
+ */
+export function addressed(text, treatment = DEFAULT_TREATMENT) {
+  return text.replaceAll("{v}", TRATAMENTO[treatment].voce);
+}
+
+/**
+ * Como o vocativo da carta chama quem preside.
+ *
+ * @param {"senhor" | "senhora"} [treatment]
+ * @returns {string}
+ */
+export function titleOf(treatment = DEFAULT_TREATMENT) {
+  return TRATAMENTO[treatment].titulo;
+}

@@ -16,6 +16,7 @@ import {
 import { alarm } from "../../src/application/mail.mjs";
 import { describeMail, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
 import { vitalsHtml } from "../../src/ui/screens/dashboard.mjs";
+import { addressed } from "../../src/ui/strings.mjs";
 import {
   boilerOf,
   chamberOf,
@@ -807,14 +808,22 @@ test("AS DUAS SAIDAS LEEM A MESMA TELA, e o que muda e o carimbo e a data", () =
   /* A MESMA FORMA NOS DOIS: mesmas seccoes, mesmo numero de linhas de rubrica. */
   const rows = (/** @type {string} */ html) => html.split('class="closing__row"').length;
   assert.equal(rows(removed), rows(served), "as duas saidas desenharam tabelas diferentes");
-  assert.ok(served.includes(UI.closing.country), "o fecho do prazo perdeu o pais que ele entrega");
+  /* ⚠ A FRASE PASSA PELO TRATAMENTO, e por isso a prova compara o texto JA TRADUZIDO: o
+     bruto carrega o marcador `{v}`, e compara-lo com o renderizado acusaria sempre. */
+  assert.ok(
+    served.includes(addressed(UI.closing.country)),
+    "o fecho do prazo perdeu o pais que ele entrega",
+  );
 });
 
 test("AUSENCIA DECLARADA NO FECHO: um mandato sem lei DIZ que nao teve lei", () => {
   /* Um espaco vazio no lugar da lista pareceria defeito — e o passivo, que e uma partida
      inteira valida, e exatamente quem cai nesse caso. */
   const empty = closingHtml(termOf({ ...createState(7), month: MONTHS_PER_TERM }));
-  assert.ok(empty.includes(UI.closing.noLaws), "o mandato sem lei nenhuma nao disse isso");
+  assert.ok(
+    empty.includes(addressed(UI.closing.noLaws)),
+    "o mandato sem lei nenhuma nao disse isso",
+  );
   assert.ok(!empty.includes("closing__laws"), "a lista de leis nasceu vazia em vez de ausente");
 });
 

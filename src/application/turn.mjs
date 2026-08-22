@@ -774,12 +774,27 @@ export function governmentOf(state, catalog = CATALOG) {
        pelo CARGO, e refazer o elenco na tela seria a segunda geracao da mesma gente no mesmo
        turno. */
     people,
-    president: president({
-      seed: state.seed,
-      people,
-      firstNames: catalog.firstNames,
-      surnames: catalog.surnames,
-    }),
+    /* ⚠ O NOME DIGITADO VENCE O SORTEADO, e o sorteado continua existindo para a partida
+       que abre antes de alguem escolher. O resto do elenco nao tem essa porta: so o
+       presidente entra no save, porque so o nome dele nao se refaz da semente. */
+    president: state.president
+      ? {
+          ...president({
+            seed: state.seed,
+            people,
+            firstNames: catalog.firstNames,
+            surnames: catalog.surnames,
+          }),
+          name: state.president.name,
+        }
+      : president({
+          seed: state.seed,
+          people,
+          firstNames: catalog.firstNames,
+          surnames: catalog.surnames,
+        }),
+    /* COMO ELE QUER SER TRATADO. Ver `TREATMENTS` em `state.mjs`. */
+    treatment: state.president?.treatment ?? "senhor",
     /* ⚠ O CONSELHEIRO E ACHADO PELO CARGO, e nao pelo id do arquetipo. */
     adviser: people.find(person => person.office === "chief") ?? null,
     stance: stanceOf(state, catalog),

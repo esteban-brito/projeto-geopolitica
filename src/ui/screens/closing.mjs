@@ -3,7 +3,7 @@
 import { escapeHtml } from "../shared/html.mjs";
 import { num, percent, signed } from "../shared/format.mjs";
 import { headHtml } from "../shared/head.mjs";
-import { UI } from "../strings.mjs";
+import { DEFAULT_TREATMENT, UI, addressed } from "../strings.mjs";
 import { monthLabel } from "../../state/state.mjs";
 
 /** @typedef {import("../../application/turn.mjs").Term} Term */
@@ -40,7 +40,10 @@ function rowHtml({ label, note, from, to, delta, rising = true }) {
  * @param {Term} term o mandato, perguntado a `termOf`
  * @returns {string}
  */
-export function closingHtml(term) {
+export function closingHtml(
+  term,
+  /** @type {"senhor" | "senhora"} */ treatment = DEFAULT_TREATMENT,
+) {
   const removed = term.ending === "removed";
   const copy = UI.closing;
 
@@ -86,7 +89,7 @@ export function closingHtml(term) {
          ausência do resto do jogo, no peso discreto: o fecho é um documento, e um
          fato consumado dentro dele não pede chamada centrada. */
       `<div class="empty empty--quiet"><p class="empty__note">` +
-      `${escapeHtml(copy.noLaws)}</p></div>`;
+      `${escapeHtml(addressed(copy.noLaws, treatment))}</p></div>`;
 
   const abandoned = term.abandoned.length
     ? `<p class="closing__abandoned">${escapeHtml(copy.abandoned)} ` +
@@ -104,7 +107,7 @@ export function closingHtml(term) {
     )}</b> ` +
     `${escapeHtml(removed ? copy.removedNote : copy.servedNote)} — ` +
     `<time>${escapeHtml(when)}</time></p>` +
-    `<h3 class="block__legend">${escapeHtml(copy.country)}</h3>` +
+    `<h3 class="block__legend">${escapeHtml(addressed(copy.country, treatment))}</h3>` +
     `<div class="closing__rows">` +
     rowHtml({
       label: copy.approval,

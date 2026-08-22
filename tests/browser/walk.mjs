@@ -369,10 +369,37 @@ try {
     "[recomecar] o primeiro clique ja apagou a partida",
   );
   await page.click("#restart");
+  await page.waitForTimeout(300);
+
+  /* ⚠ E O SEGUNDO CLIQUE ABRE A POSSE, e nao recomeca: desde 22/08/2026 o jogador escreve o
+     proprio nome antes de o estado existir. A partida so troca quando o formulario fecha. */
+  expect(
+    await page.locator("#swearDialog").evaluate(node => node.open),
+    "[posse] o segundo clique nao abriu a posse",
+  );
+  expect(
+    (await page.locator("#turn").innerText()) === monthAfter,
+    "[posse] a partida trocou ANTES de o jogador tomar posse",
+  );
+
+  await page.fill("#swearName", "Teste da Silva");
+  await page.locator('input[name="treatment"][value="senhora"]').click();
+  await page.click("#swearOk");
   await page.waitForTimeout(600);
   expect(
     (await page.locator("#turn").innerText()) !== monthAfter,
-    "[recomecar] o segundo clique nao recomecou a partida",
+    "[posse] tomar posse nao recomecou a partida",
+  );
+  expect(
+    (await page.locator(".rail").innerText()).includes("Teste da Silva"),
+    "[posse] o nome digitado nao chegou a tela",
+  );
+
+  /* ⚠ E O TRATAMENTO ATRAVESSA A CARTA: sete frases da interface dependiam dele, e ate hoje
+     diziam "o senhor" para toda presidenta. */
+  expect(
+    (await page.locator(".tray__open .letter").innerText()).includes("a senhora"),
+    "[posse] a carta continuou tratando a presidenta por 'o senhor'",
   );
 
   /* ⚠ E O DEFEITO QUE ELA PEGOU CONTINUA REGISTRADO, porque a licao dele nao e sobre

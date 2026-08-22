@@ -77,6 +77,8 @@ import { streamFrom } from "./random.mjs";
  * @typedef {object} GameState
  * @property {number} schemaVersion - versao do formato do save
  * @property {number} seed - a semente da partida; com ela e as acoes, tudo se refaz
+ * @property {{ name: string, treatment: "senhor" | "senhora" } | null} president
+ *   o nome que o jogador digitou e como ele quer ser tratado; `null` usa o sorteado
  * @property {number} month - meses decorridos desde a posse (0 = janeiro do ano 1)
  * @property {Record<string, number>} mood - a satisfacao de cada segmento, de 0 a 100
  * @property {Record<string, number>} loyalty - o humor de cada bancada, de 0 a 100
@@ -104,7 +106,13 @@ import { streamFrom } from "./random.mjs";
    da 10 guarda a PESQUISA, quando o que o jogo passou a precisar e a SATISFACAO por
    segmento — e a conversao nao tem inversa util. Chuta-la distribuiria igual entre as tres
    classes, apagando a polarizacao, que e a informacao que SONDA existe para dar. */
-export const SCHEMA_VERSION = 17;
+export const SCHEMA_VERSION = 18;
+
+/* ⚠ O TRATAMENTO E ESCOLHA DO JOGADOR, e nao deducao do nome. Ate 22/08/2026 a interface
+   tinha SETE frases com "o senhor" digitadas fixas, e o gerador sorteia nomes femininos e
+   masculinos na mesma proporcao: metade das partidas chamava a presidenta de "o senhor" por
+   48 meses. Com o nome DIGITADO pelo jogador, deduzir e impossivel — entao se pergunta. */
+export const TREATMENTS = /** @type {const} */ (["senhor", "senhora"]);
 
 /* O HUMOR DE ABERTURA da base. */
 export const INITIAL_LOYALTY = 70;
@@ -140,13 +148,20 @@ function deepFreeze(value) {
  * declarado e um numero inventado que vira dividia silenciosa.
  * @param {number} [seed] a semente da partida
  * @param {typeof CATALOG} [catalog] o catalogo de onde sai a posicao inicial
+ * @param {{ name: string, treatment: "senhor" | "senhora" } | null} [president] o nome
+ *   digitado pelo jogador, e como ele quer ser tratado
  * @returns {GameState}
  */
-export function createState(seed = DEFAULT_SEED, catalog = CATALOG) {
+export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = null) {
   const { areas, fiscal, macro, parties, programs, rules, segments } = catalog;
   return deepFreeze({
     schemaVersion: SCHEMA_VERSION,
     seed,
+    /* ⚠ O PRESIDENTE E O UNICO PERSONAGEM QUE ENTRA NO SAVE, e a excecao tem razao: todo o
+       resto do elenco se refaz da semente, mas um nome DIGITADO nao se refaz de lugar
+       nenhum. `null` quer dizer "use o que a semente sorteia", que e como a partida abre
+       antes de o jogador escolher. */
+    president,
     month: OPENING_MONTH,
     /* A SATISFACAO DE ABERTURA sai do catalogo, como tudo. */
     mood: opinionOpening(segments),

@@ -4,7 +4,7 @@ import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed } from "../shared/format.mjs";
 import { sigilHtml } from "../shared/sigil.mjs";
 import { monthLabel } from "../../state/state.mjs";
-import { UI, labelOf } from "../strings.mjs";
+import { DEFAULT_TREATMENT, UI, addressed, labelOf, titleOf } from "../strings.mjs";
 
 /**
  * Esta e a familia de defeito mais cara do projeto, com sete ocorrencias medidas, e ela nasce
@@ -22,6 +22,7 @@ import { UI, labelOf } from "../strings.mjs";
  * @property {number | null | undefined} [due] quantos meses faltam; nulo sem prazo
  * @property {string | undefined} [why] por que ESTA carta chegou — a causa, e nao o efeito
  * @property {"high" | undefined} [weight] se o movimento foi grande o bastante para gritar
+ * @property {"senhor" | "senhora" | undefined} [treatment] como o jogador quer ser tratado
  */
 
 /**
@@ -47,7 +48,8 @@ function urgencyOf(due) {
  * @param {string} [input.choices] as duas saidas, quando a carta PERGUNTA
  * @param {number | null} [input.due] quantos meses faltam; nulo quando nao ha prazo
  * @param {string} [input.why] por que ela chegou
- * @param {number | null} [input.month] o mês em que ela foi escrita, para o cabeçalho
+ * @param {number | null} [input.month]
+ * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado o mês em que ela foi escrita, para o cabeçalho
  * @returns {string}
  */
 export function letterHtml({
@@ -60,6 +62,7 @@ export function letterHtml({
   due = null,
   why,
   month = null,
+  treatment = DEFAULT_TREATMENT,
 }) {
   const urgency = urgencyOf(due);
 
@@ -86,7 +89,7 @@ export function letterHtml({
     /* Escrito dentro de cada caso, ele seria doze lugares para manter em dia e a decima
        terceira ocorrencia da familia de defeito mais cara deste projeto — foi assim que tres
        das doze o tiveram e nove nao. */
-    `<p class="letter__vocative">${escapeHtml(UI.inbox.vocative)}</p>` +
+    `<p class="letter__vocative">${escapeHtml(`${titleOf(treatment)},`)}</p>` +
     `<div class="letter__body">${body}</div>` +
     (choices ?? "") +
     (action && target
@@ -208,7 +211,8 @@ export function describeMonth({ report, adviser }) {
  * quorum do afastamento e o quanto a cadeira encareceu; a da fervura cita a pressao, o
  * ponto e a fatia. ⚠ Os cinco sao do motor: escritos a mao nesta view, mentiriam no dia
  * em que qualquer um deles mudasse
- * @param {ReadonlyArray<{ id: string, label: string }>} [input.parties] as bancadas, para o
+ * @param {ReadonlyArray<{ id: string, label: string }>} [input.parties]
+ * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado as bancadas, para o
  * @param {ReadonlyArray<{ id: string, label: string }>} [input.segments] as classes, para o
  * @param {{ base: number, majority: number }} [input.chamber] as cadeiras que respondem ao
  * governo e o quorum simples. ⚠ Ela entrou em 21/08/2026 com a carta da MINORIA, e os
@@ -227,6 +231,9 @@ export function describeMail({
   chamber = { base: 0, majority: 0 },
   segments = [],
   parties = [],
+  /* ⚠ COMO O JOGADOR QUER SER TRATADO, e ele escolhe junto com o nome. Sem isto a carta
+     dizia "o senhor" em metade das partidas para uma presidenta. Ver `addressed`. */
+  treatment = DEFAULT_TREATMENT,
 }) {
   const by = (/** @type {string} */ office) =>
     people.find(person => person.office === office) ?? null;
@@ -251,6 +258,9 @@ export function describeMail({
         ...spec,
         id: letter.id,
         month: letter.month,
+        /* ELE VIAJA COM A CARTA, e nao por um segundo caminho: quem abre o oficio e a
+           bandeja, e ela nao teria por que saber o tratamento de quem preside. */
+        treatment,
         /* O `kind` ja e o que o motor gravou para dizer o que aconteceu; escrever a razao
            dentro de cada `case` seria nove lugares para manter em dia, e a nona ocorrencia da
            familia de defeito mais cara deste projeto. */
@@ -265,7 +275,7 @@ export function describeMail({
         case "posse":
           return paper({
             from: by("chief"),
-            subject: UI.inbox.inauguration,
+            subject: addressed(UI.inbox.inauguration, treatment),
             body:
               `<div class="letter__lines">` +
               /* ⚠ `money`, E NAO `seats`. */
@@ -273,7 +283,7 @@ export function describeMail({
               `${escapeHtml(UI.inbox.inheritedMandatory)}</span>` +
               `<span><b data-numeric>${money(inherited.room)}</b> ` +
               `${escapeHtml(UI.inbox.inheritedRoom)}</span>` +
-              `<span>${escapeHtml(UI.inbox.inheritedLead)}</span>` +
+              `<span>${escapeHtml(addressed(UI.inbox.inheritedLead, treatment))}</span>` +
               `</div>`,
             action: UI.inbox.seeMonth,
             target: "congress",
@@ -371,7 +381,9 @@ export function describeMail({
           return paper({
             from: by("chief"),
             subject: headlineOf(letter),
-            body: reportBody(letter, segments, chamber) + annexHtml(letter, segments, parties),
+            body:
+              reportBody(letter, segments, chamber, treatment) +
+              annexHtml(letter, segments, parties),
           });
 
         /* ── O MUNDO SE MEXENDO SOZINHO ───────────────────────────────────── ⚠ AS TRES SAO
@@ -438,7 +450,7 @@ export function describeMail({
             subject: ruptureText(UI.inbox.ruptureSubject, subject) ?? UI.inbox.ruptureFallback,
             body:
               `<div class="letter__lines">` +
-              `<span>${escapeHtml(ruptureText(UI.inbox.ruptureBody, subject) ?? "")}</span>` +
+              `<span>${escapeHtml(addressed(ruptureText(UI.inbox.ruptureBody, subject) ?? "", treatment))}</span>` +
               `<span>${escapeHtml(UI.inbox.ruptureNote)}</span>` +
               `</div>`,
           });
@@ -621,7 +633,12 @@ function fitted(dispatches, current, capacity) {
  * @param {{ base: number, majority: number }} chamber
  * @returns {string}
  */
-function reportBody(letter, segments, chamber) {
+function reportBody(
+  letter,
+  segments,
+  chamber,
+  /** @type {"senhor" | "senhora"} */ treatment = DEFAULT_TREATMENT,
+) {
   const was = letter.was ?? 0;
   const now = letter.now ?? 0;
   const moved = Math.abs(now - was);
@@ -640,7 +657,7 @@ function reportBody(letter, segments, chamber) {
           `${escapeHtml(moved === 1 ? UI.inbox.pollPoint : UI.inbox.pollPoints)} ` +
           `${escapeHtml(way)}`,
       ) +
-      line(escapeHtml(UI.inbox.seatsHint)) +
+      line(escapeHtml(addressed(UI.inbox.seatsHint, treatment))) +
       `</div>`
     );
   }
@@ -693,7 +710,7 @@ function reportBody(letter, segments, chamber) {
     ) +
     (holds
       ? line(
-          `${escapeHtml(UI.inbox.pollHolds)} ` +
+          `${escapeHtml(addressed(UI.inbox.pollHolds, treatment))} ` +
             `<b>${escapeHtml(labelOf(UI.inbox.annexNote, holds.note))}</b>` +
             `${escapeHtml(UI.inbox.pollHoldsIn)} ` +
             `<b>${escapeHtml(holds.segment)}</b> ` +

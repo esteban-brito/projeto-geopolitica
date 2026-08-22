@@ -161,6 +161,15 @@ const anyNorms = fc
 const anyState = fc.record({
   schemaVersion: fc.constant(SCHEMA_VERSION),
   seed: fc.integer({ min: 0, max: 4294967295 }),
+  /* O presidente entrou na versao 18: nome digitado pelo jogador, ou `null` para o sorteado.
+     O reducer apenas o carrega, entao a prova cobre os dois lados. */
+  president: fc.option(
+    fc.record({
+      name: fc.string({ minLength: 1, maxLength: 40 }),
+      treatment: fc.constantFrom("senhor", "senhora"),
+    }),
+    { nil: null },
+  ),
   /* 48 turnos por mandato — a decisao fechada. */
   month: fc.integer({ min: 0, max: 47 }),
   mood: anyMood,
