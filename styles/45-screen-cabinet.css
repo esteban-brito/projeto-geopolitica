@@ -521,8 +521,12 @@
   /* Numa folha de 630px, 13,6px é corpo de aviso e não de documento. */
   /* ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA DESFAZIA A PRIMEIRA EM SILENCIO — medido e consertado
      . */
+  /* ⚠ O VAO E UM SO, e ate 22/08/2026 eram dois: a grade da carta separa vocativo, corpo e
+     rodape por `--space-3`, e as linhas do corpo se separavam por `--space-2`. O olho lia um
+     degrau entre "Presidente," e o primeiro paragrafo maior que o degrau entre paragrafos —
+     sem nada que justificasse a diferenca. */
   .tray__open .letter__lines {
-    gap: var(--space-2);
+    gap: var(--space-3);
     font-size: var(--text-verdict);
     line-height: 1.65;
   }
@@ -612,8 +616,13 @@
 
   /* ⚠ E ELA E MAIS APAGADA QUE O CORPO, de propósito e com conta atras: `--paper-ink` a 58%
      sobre o papel dá 4,8:1, que passa em texto pequeno. */
+  /* ⚠ `align-self` E O EIXO ERRADO NUMA GRADE, e por isso o fio do rodape era 65px mais
+     curto que o do anexo: em grade `align-self` governa a ALTURA, e a largura pede
+     `justify-self`. O item media o proprio texto — 336px contra os 401 do corpo —, e a
+     carta terminava com tres fios de larguras diferentes empilhados. */
   .letter__why {
     align-self: stretch;
+    justify-self: stretch;
     margin-top: var(--space-1);
     padding-top: var(--space-2);
     border-top: 1px solid rgba(var(--paper-ink-rgb), 0.16);
@@ -627,6 +636,7 @@
      uma bandeja de 659 × 630**, que é 1% da área. */
   .annex {
     align-self: stretch;
+    justify-self: stretch;
     display: grid;
     gap: var(--space-2);
     margin-top: var(--space-2);
@@ -685,7 +695,20 @@
 
   .annex__table tbody td {
     color: rgba(var(--paper-ink-rgb), 0.62);
+  }
+
+  /* ⚠ O FIO E DA LINHA, E NAO DA CELULA — conserto de 22/08/2026, e o defeito era visivel:
+     com a borda no `td`, o traco comecava depois do nome da classe e a tabela aparecia com
+     tres tracos flutuando no meio dela. `border-bottom` no `tr` so pinta com
+     `border-collapse`, que esta declarado acima. */
+  .annex__table tbody tr {
     border-bottom: 1px solid rgba(var(--paper-ink-rgb), 0.08);
+  }
+
+  /* ⚠ E A ULTIMA LINHA NAO TEM FIO: fio embaixo do ultimo item separa a tabela de nada, e e o
+     mesmo defeito que a bandeja consertou em 22/08. */
+  .annex__table tbody tr:last-child {
+    border-bottom: 0;
   }
 
   /* ⚠ A MAIOR DA LINHA É O QUE FAZ A TABELA LER DE RELANCE. */
