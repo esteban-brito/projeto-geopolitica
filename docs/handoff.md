@@ -6,8 +6,9 @@
 
 ## ▶ COMECE AQUI — estado em 22/08/2026 · sessão 15
 
-⚠ **NADA COMMITADO.** O último commit é `ab76c8e`; esta sessão mexeu em quase todo o
-projeto e não commitou — ele decide quando.
+✔ **COMMITADO EM `672291a`**, na branch `acoplamento-e-simulador` — 93 arquivos,
++3.297 / −13.843. Nada pendente. ⚠ A `main` está **32 commits atrás**, e a atualização é
+fast-forward: o trabalho todo mora nesta branch.
 
 **A ordem dele, e ela substitui a recomendação da sessão 14:** _"o nosso foco é no gabinete
 por enquanto"_, depois _"quanto mais minimalista e simples melhor, quanto menos lixo melhor,
