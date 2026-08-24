@@ -44,13 +44,14 @@ export const NEUTRAL = 50;
 
 /* O SINAL DE `force` CARREGA A DIRECAO, e sem ele o molde nao fecharia. */
 
-/* O que a identidade produz, em meia-vida do estoque sem verba nenhuma: industria  12 meses
-   previdencia  40 meses   defesa   78 meses seguranca  16 meses   treasury   55 meses
-   educacao  79 meses agricultura  61 meses   saude   63 meses E a leitura do desenho MUDOU DE
-   LUGAR, porque a velocidade agora e consequencia do custo por ponto de cada area
-   (`gasto_herdado / indice`) e nao de uma escolha: · SEGURANCA continua a alavanca populista,
-   e agora com a razao explicita: ela custa R$ 0,07 bi por ponto, o mais barato do catalogo.
-   pela identidade escrita no `@property {number} decay` acima. O que segue chute e o */
+/* A MEIA-VIDA DE CADA AREA sem verba nenhuma, em meses, e ela sai da identidade do `decay`
+   acima e nao de uma escolha: industria 12 · seguranca 16 · previdencia 40 · treasury 55 ·
+   agricultura 61 · saude 63 · defesa 78 · educacao 79.
+
+   ⚠ SEIS DAS OITO LEVAM MAIS QUE UM MANDATO, que tem 48. E uma tese sobre o Brasil —
+   defensavel — e ninguem a escolheu: ela e consequencia aritmetica do custo por ponto de
+   cada area. E SEGURANCA e a alavanca populista com a razao explicita: R$ 0,07 bi por
+   ponto, o mais barato do catalogo. */
 /** @type {ReadonlyArray<Area>} */
 export const AREAS = [
   {

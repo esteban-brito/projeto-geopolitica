@@ -1,26 +1,17 @@
 /* ENTRYPOINT — composicao e wiring, e nada mais.
-   ══════════════════════════════════════════════════════════════════════════════
-   Este arquivo nao calcula nada e nao formata nada. Ele liga o estado as views e
-   as views ao documento. `tests/guards/boundaries.mjs` prova que ele so importa
-   de `src/state/`, `src/public/` e `src/ui/` — e a razao e concreta: no projeto
-   anterior o entrypoint nasceu como wiring, foi acumulando regra, e virou 1.715
-   linhas que uma etapa inteira de refatoracao nao conseguiu desmontar.
 
-   ── AS TRES COISAS QUE ELE GUARDA ────────────────────────────────────────────
-     `state`   o jogo, imutavel, so trocado pelo turno resolvido;
-     `screen`  onde o jogador esta — a mesa ou uma area;
-     `orders`  o que ele montou para ESTE mes e ainda nao executou.
+   Ele nao calcula e nao formata: liga o estado as views e as views ao documento, e
+   `boundaries` prova que ele so alcanca `src/state/`, `src/public/` e `src/ui/`. No
+   projeto anterior o entrypoint nasceu wiring, acumulou regra e virou 1.715 linhas que
+   uma refatoracao inteira nao desmontou.
 
-   `orders` e a unica coisa mutavel aqui, e ela e mutavel de proposito: e rascunho
-   de interface, e nao estado de jogo. Ela vira estado no instante em que o mes e
-   executado, e nao antes — e por isso arrastar um controle nao muda nada no
-   modelo, so na intencao.
+   ELE GUARDA TRES COISAS: `state`, o jogo; `screen`, onde o jogador esta; `orders`, o
+   que ele montou para ESTE mes. So `orders` e mutavel, e de proposito — rascunho de
+   interface vira estado no instante em que o mes executa, e nao antes.
 
-   ── POR QUE HA DUAS PINTURAS ─────────────────────────────────────────────────
-   `paint` redesenha; `refresh` so atualiza os numeros derivados. A segunda existe
-   por uma razao de GESTO: trocar o HTML de um `<input type=range>` no meio de um
-   arrasto arranca o elemento que o ponteiro esta segurando, e o arrasto morre no
-   primeiro pixel. Entao enquanto o controle e movido, so as leituras trocam. */
+   E HA DUAS PINTURAS: `paint` redesenha, `refresh` so troca numero derivado. Trocar o
+   HTML de um `<input type=range>` no meio de um arrasto arranca o elemento que o
+   ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
 
 import { OPENING_MONTH, createState } from "./src/state/state.mjs";
 import { deserialize, serialize } from "./src/state/save.mjs";
@@ -69,7 +60,7 @@ import {
 } from "./src/ui/screens/mesa.mjs";
 import { financeHtml } from "./src/ui/screens/finance.mjs";
 /* A APROVACAO VOLTOU. Ela esteve fora da tela por tres sessoes com esta razao
-   escrita aqui: "quem a produz e SONDA, que nao existe". Em 14/08/2026 o motor
+   escrita aqui: "quem a produz e SONDA, que nao existe". O motor
    nasceu, e o numero passou a se mover quando o mes e resolvido de verdade —
    que era a unica condicao. */
 import { turnHtml, verdictHtml, vitalsHtml } from "./src/ui/screens/dashboard.mjs";
@@ -83,7 +74,7 @@ import { DEFAULT_TREATMENT, UI } from "./src/ui/strings.mjs";
 /** @typedef {import("./src/public/index.mjs").Report} Report */
 
 const el = {
-  /* A CASCA INTEIRA, e ela so ganhou id em 21/08/2026: ate entao nada precisava
+  /* A CASCA INTEIRA, e ela so ganhou id: ate entao nada precisava
      enderecar a moldura do jogo, e agora o CERCO precisa — ver `paint`. */
   shell: must("shell"),
   railNav: must("railNav"),
@@ -119,39 +110,25 @@ function must(id) {
 }
 
 /* ── A PARTIDA ATRAVESSA O NAVEGADOR FECHADO ────────────────────────────────
-   `serialize` e `deserialize` existem e sao provados desde a terceira sessao, e
-   nenhuma linha os chamava: fechar a aba perdia o mandato inteiro.
+   O ACESSO AO ARMAZENAMENTO MORA AQUI, e nao em `src/state/`: a serializacao e pura e
+   testavel em Node, o armazenamento e efeito de navegador, e a guarda de fronteiras
+   existe para manter os dois separados.
 
-   O ACESSO AO ARMAZENAMENTO MORA AQUI, no entrypoint, e nao em `src/state/`.
-   A serializacao e pura e testavel em Node; o armazenamento e efeito de
-   navegador, e a guarda de fronteiras existe para manter os dois separados.
-
-   TUDO ENVOLVIDO EM `try`: aba anonima, cota estourada e armazenamento
-   desligado por politica sao rotina, e nenhuma delas pode derrubar o jogo. Quem
-   nao consegue guardar joga assim mesmo — o que nao pode e travar na abertura. */
+   TUDO ENVOLVIDO EM `try`: aba anonima, cota estourada e armazenamento desligado por
+   politica sao rotina, e nenhuma delas pode derrubar o jogo. Quem nao consegue guardar
+   joga assim mesmo — o que nao pode e travar na abertura. */
 const SAVE_KEY = "planalto:partida";
 const REFUSED_KEY = "planalto:partida-recusada";
 
 /* ── A INTERFACE TEM CHAVE PROPRIA, e ela NAO entra no estado do jogo ───────────
-   ⚠ QUAL CARTA ESTA ABERTA E QUAIS JA FORAM LIDAS NAO SAO ESTADO DE JOGO. Nenhuma das
-   duas move um numero, decide um mes ou muda um veredito — sao registro de quem estava
-   olhando. Poe-las em `GameState` custaria um BUMP DE ESQUEMA, e este save recusa versao
-   diferente em vez de converter: o jogador perderia a partida em andamento para pagar por
-   uma marca de leitura.
+   ⚠ QUAL CARTA FOI LIDA NAO E ESTADO DE JOGO: nao move numero, nao decide mes e nao
+   muda veredito. Po-la em `GameState` custaria um BUMP DE ESQUEMA, e este save recusa
+   versao diferente em vez de converter — o jogador perderia a partida em andamento
+   para pagar por uma marca de leitura.
 
-   ⚠ E O REDUCER TEM UMA ACAO SO, DE PROPOSITO. Uma segunda — `mailAnswered` — ja foi
-   proposta e recusada, com a razao escrita em `state.mjs`: "o vencimento acontece dentro
-   do turno, e uma resposta fora dele criaria dois caminhos mutando a mesma carta". Marcar
-   uma carta como lida abriria esse segundo caminho por um motivo muito menor.
-
-   Chave separada resolve os dois: o estado continua puro, a guarda de fronteiras continua
-   valendo, e a leitura sobrevive ao F5 — que e o unico requisito real.
-
-   ⚠ E SO A LEITURA ENTRA — `openDispatch` FICA DE FORA, e a razao ja estava escrita na
-   prosa dele: "qual carta o presidente estava lendo quando fechou o navegador nao muda
-   nada do que o mes vai fazer". Ela continua valendo, e o ganho de guardar seria proximo
-   de zero. "Lida" e diferente: sem ela, um F5 devolve a bandeja inteira ao estado de
-   nunca-vista, e a marca deixa de significar qualquer coisa. */
+   ⚠ E SO A LEITURA ENTRA: `openDispatch` fica de fora porque um F5 sem ele nao perde
+   nada, e sem a leitura a bandeja inteira volta ao estado de nunca-vista e a marca
+   deixa de significar qualquer coisa. */
 const UI_KEY = "planalto:interface";
 
 /**
@@ -228,11 +205,8 @@ let screen = "cabinet";
 let orders = blankOrders();
 
 /* ── QUAL OFÍCIO ESTÁ ABERTO NA BANDEJA ──────────────────────────────────────
-   ⚠ ELE NÃO É ESTADO DE JOGO, e não entra no save — pela mesma razão de `last` e
-   de `screen` logo acima: qual carta o presidente estava lendo quando fechou o
-   navegador não muda nada do que o mês vai fazer. Salvar isso faria o arquivo de
-   partida carregar memória de janela, e um save carregado num mês em que aquela
-   carta já venceu abriria num id que não existe mais.
+   ⚠ ELE NÃO É ESTADO DE JOGO e não entra no save: um save carregado num mês em que
+   aquela carta já venceu abriria num id que não existe mais.
 
    NULO SIGNIFICA "A DE CIMA", e não "nenhuma": a bandeja resolve o vazio abrindo a
    primeira da lista, que já chega ordenada por urgência. Uma bandeja que abrisse
@@ -242,18 +216,13 @@ let orders = blankOrders();
 let openDispatch = null;
 
 /* ── O QUE JA FOI LIDO ───────────────────────────────────────────────────────
-   ⚠ ELE E O QUE FALTAVA PARA A BANDEJA SER UMA BANDEJA, e a referencia e o inbox do
-   Football Manager: la o peso visual principal do indice e o item que ainda NAO foi
-   aberto. Aqui uma carta recem-chegada tinha a mesma cara de uma lida tres vezes.
+   ⚠ ELE PODA SOZINHO. Sem poda, o conjunto cresceria por 48 meses guardando id de
+   carta que nao existe mais — vazamento lento num armazenamento que tem cota. A poda
+   acontece na pintura, contra os ids que a bandeja de fato mostrou.
 
-   ⚠ E ELE PODA SOZINHO. Sem poda, o conjunto cresceria por 48 meses guardando id de
-   carta que nao existe mais — um vazamento lento num armazenamento que tem cota. A poda
-   acontece na pintura, contra os ids que a bandeja de fato mostrou: o que sumiu do jogo
-   sai da memoria junto.
-
-   ⚠ E "LIDA" SIGNIFICA "ESTEVE ABERTA NA TELA", e nao "foi clicada". A bandeja abre a
-   mais urgente sozinha, entao exigir clique marcaria como nao-lida justamente a carta que
-   o jogador esta lendo agora. */
+   ⚠ E "LIDA" SIGNIFICA "ESTEVE ABERTA NA TELA", e nao "foi clicada": a bandeja abre a
+   mais urgente sozinha, entao exigir clique marcaria como nao-lida justamente a carta
+   que o jogador esta lendo agora. */
 /** @type {Set<string>} */
 /* ⚠ `readMail` E NAO `seen`, e o nome e defensivo: `seen` ja e uma variavel local em
    `mesaInput` — a previsao do turno —, e um modulo com duas coisas chamadas igual e a
@@ -313,19 +282,11 @@ function lawNow() {
 /**
  * A PREVISAO AO VIVO — e ela NAO e montada aqui.
  *
- * ⚠ ATE 15/08/2026 ESTE ARQUIVO MONTAVA A CAMARA A MAO, e por isso a Mesa mentia.
- * Havia aqui um `forecastNow` que chamava `whipCount` com os QUATRO blocos do
- * catalogo, a verba crua e a lealdade crua — e o turno vota, desde a oitava sessao,
- * com as ONZE bancadas do ELENCO, a verba com o credito de memoria dentro e a
- * aprovacao da rua deslocando a resistencia. Nenhum dos dois motores quebrou nada
- * ao chegar; eles so chegaram, e esta funcao ficou para tras em silencio.
- *
- * Medido: em 1.012 votacoes, o veredito da Mesa saia INVERTIDO em 275 — 27,2% —, e
- * a divergencia chegava a 35 votos. "Acima do quorum" numa pauta que o mes derruba.
- *
- * A pauta tambem era composta duas vezes, com argumentos diferentes. Agora ha uma
- * porta so: `forecast` devolve a pauta, o placar, a banda e o que cada bloco
- * entrega — tudo da mesma camara que `playMonth` vai usar.
+ * ⚠ ESTE ARQUIVO JA MONTOU A CAMARA A MAO, com os QUATRO blocos do catalogo e a
+ * lealdade crua, enquanto o turno votava com as ONZE bancadas do ELENCO. Medido: em
+ * 1.012 votacoes o veredito da Mesa saia INVERTIDO em 275 — 27,2%, com divergencia de
+ * ate 35 votos. Ha uma porta so: `forecast` devolve a pauta, o placar, a banda e o que
+ * cada bloco entrega, tudo da mesma camara que `playMonth` vai usar.
  */
 function mesaInput() {
   const seen = forecast(state, orders, CATALOG);
@@ -380,7 +341,7 @@ function financeInput() {
     target: CATALOG.macro.inflationTarget,
     areas: CATALOG.areas,
     index: state.capacity.index,
-    /* ⚠ A FONTE MUDOU EM 21/08/2026, e ela era a ERRADA desde que a coluna nasceu. Isto
+    /* ⚠ A FONTE MUDOU, e ela era a ERRADA desde que a coluna nasceu. Isto
        era `state.capacity.history` — o buffer do ATRASO, que a MALHA mantem com `lag + 1`
        valores porque e assim que o mecanismo funciona. O estado guarda uma SEGUNDA serie,
        longa e feita para isto, e a prosa dela em `state.mjs` diz a diferenca com todas as
@@ -427,7 +388,7 @@ function cabinetInput(current) {
        primeiro porque elas pedem uma decisao — a Mesa pautou, o relator emendou, o
        texto morreu na gaveta —, e o fechamento do mes so informa. Um inbox ordenado
        por hora poe o aviso na frente do pedido, e ai o jogador aprende a rolar. */
-    /* ⚠ A CAIXA SAI DO ESTADO, e nao do ultimo relatorio. Ate 16/08/2026 ela lia
+    /* ⚠ A CAIXA SAI DO ESTADO, e nao do ultimo relatorio. Antes ela lia
        `last.report.events` — e por isso era um mural: o que chegava sumia no mes
        seguinte. O que espera mora em `state.mail`, e e ele que tem prazo.
 
@@ -435,7 +396,7 @@ function cabinetInput(current) {
        correspondencia, e o fechamento do turno. Guarda-la faria o save carregar 48
        relatorios para reescrever um texto que o turno ja sabe produzir. */
     /* ⚠ SE ALGUM MES JA FOI RESOLVIDO, e ele existe por um defeito que o responsavel
-       fotografou em 21/08/2026: recarregar a pagina com partida salva zerava a bandeja
+       fotografou: recarregar a pagina com partida salva zerava a bandeja
        — `last` e variavel de modulo e nao vai para o save — e o estado vazio dizia "o
        primeiro mes ainda nao foi resolvido" em junho de 2027.
 
@@ -447,7 +408,7 @@ function cabinetInput(current) {
       open: openDispatch,
       seen: [...readMail],
       dispatches: [
-        /* ⚠ O AVISO VEM DO MAIS NOVO PARA O MAIS VELHO, e ate 21/08/2026 ele vinha do
+        /* ⚠ O AVISO VEM DO MAIS NOVO PARA O MAIS VELHO, e antes ele vinha do
            mais VELHO — `state.mail` e cronologica, e ninguem tinha reordenado porque com
            uma carta por mes a ordem nao aparecia. Com o relatorio mensal a bandeja passou
            a fechar com vinte e poucas, e a PILHA corta pelo fim: ela guardaria a rua de
@@ -539,18 +500,14 @@ function areaInput(area) {
   const share = settlement(state, orders, CATALOG);
   const spent = share.asked[area.id] ?? 0;
 
-  /* ⚠ A PROJECAO PASSOU A SER PERGUNTADA em 16/08/2026, e antes disso ela era
-     REFEITA AQUI — com a prosa deste mesmo bloco afirmando o contrario, em
-     maiusculas: "a projecao e a mesma conta do motor, e nao uma aproximacao escrita
-     aqui". Ela era uma aproximacao escrita aqui, e estava errada.
+  /* ⚠ A PROJECAO E PERGUNTADA, e ela ja foi REFEITA AQUI — com a prosa deste mesmo
+     bloco afirmando o contrario, em maiusculas. A MALHA consome o gasto CHEIO da area,
+     ja rateado (`funded`), e a linha antiga projetava com `asked`, so a parte acima do
+     piso: na Previdencia sao R$ 2,4 bi contra R$ 126,7 bi. Medido no mes 1, em CINCO
+     das oito areas a seta apontava para o lado errado.
 
-     A MALHA consome o gasto CHEIO da area, ja rateado (`funded`), e esta linha
-     projetava com `asked` — so a parte acima do piso. Na Previdencia sao R$ 2,4 bi
-     contra R$ 126,7 bi. Medido no mes 1: em CINCO das oito areas a seta apontava
-     para o lado errado.
-
-     E o entrypoint nao pode calcular — `boundaries` existe por isso, e aqui a regra
-     foi furada por uma linha que se anunciava como fiel. */
+     E o entrypoint nao pode calcular — `boundaries` existe por isso, e a regra foi
+     furada justamente por uma linha que se anunciava como fiel. */
   const ahead = outlook(state, orders, CATALOG);
 
   return {
@@ -585,13 +542,13 @@ let standing = null;
 
 function paint() {
   const current = situationOf(state, CATALOG);
-  /* ⚠ O BOTAO SE REPINTA JUNTO COM A TELA desde 20/08/2026, e antes ele so se
+  /* ⚠ O BOTAO SE REPINTA JUNTO COM A TELA, e antes ele so se
      repintava ao FIM de um mes. Enquanto ele so dizia "Avancar o mes" isso bastava;
      agora ele carrega o preco do clique, e o preco cai no instante em que o jogador
      marca uma resposta na bandeja. Repintado so no fechamento, ele anunciaria uma
      pergunta sem resposta que o jogador acabou de responder. */
   endLabel();
-  /* ⚠ QUEM SABE SE O MANDATO ACABOU E O MOTOR. Ate 18/08/2026 esta pergunta era
+  /* ⚠ QUEM SABE SE O MANDATO ACABOU E O MOTOR. Antes esta pergunta era
      `state.fallen !== null` escrita aqui, e ela estava PELA METADE: pegava a queda e
      nao pegava o PRAZO — nada terminava o mandato aos 48 meses, e quem atravessasse
      os quatro anos entrava num "2o mandato" que nunca teve eleicao. */
@@ -641,7 +598,7 @@ function paint() {
        porque ela E uma mesa de negociacao. O que mudou foi o endereco: ela deixou
        de ser a tela inicial e passou a ser o lugar onde se negocia — e o resumo
        do mes, que dividia a tela com ela, virou o Gabinete. */
-    /* ⚠ O EMBRULHO SAIU DAQUI em 15/08/2026, e ele nunca devia ter estado. Este
+    /* ⚠ O EMBRULHO SAIU DAQUI, e ele nunca devia ter estado. Este
        trecho concatenava TRES pecas de vidro soltas, o que fazia do Congresso a
        unica tela do jogo montada no entrypoint — e portanto a unica cuja forma
        morava no arquivo que nao pode ter forma nenhuma. Agora `congressHtml` traz a
@@ -708,7 +665,7 @@ function paint() {
 
   if (!previous || previous !== state) {
     const poll = pollFrom(state.mood, CATALOG.segments, CATALOG.opinion);
-    /* ⚠ SEM MES ANTERIOR NAO HA TENDENCIA, e ate 22/08/2026 isto caia em `state` — o
+    /* ⚠ SEM MES ANTERIOR NAO HA TENDENCIA, e antes isto caia em `state` — o
        proprio mes servindo de passado, o que faz as quatro setas sairem em "nao moveu".
        Numa RECARGA `painted` volta nulo, entao a barra afirmava que nada tinha andado no
        mes 30 de um mandato em que tudo andou. Ausencia nao e resultado: agora a barra
@@ -733,21 +690,14 @@ function paint() {
     document.documentElement.style.setProperty("--situation-tint", `var(--${current.level})`);
   }
 
-  /* ⚠ O CERCO PASSA A MUDAR A TELA, e ate 21/08/2026 ele nao mudava. Havia carimbo no
-     bloco da caldeira e frase na carta, e a LAMINA continuava exatamente igual: o mes em
-     que um processo de impeachment esta correndo — o estado que decide a partida — tinha a
-     mesma cara do mes tranquilo. Era o unico item que sobrou inteiro da Parte 3 do dossie
-     da Sala de Guerra.
+  /* ⚠ O CERCO NAO E UMA QUARTA SITUACAO. O gel ja tinge a tela por
+     crise/estavel/crescimento, e um quarto tom ali faria o cerco competir com a leitura
+     que o gel existe para dar. Ele entra por ARESTA, que e um canal livre — o estado
+     dele nao e "quao bem o pais vai": e "ha uma gaveta aberta".
 
-     ⚠ E ELE NAO E UMA QUARTA SITUACAO. O gel ja tinge a tela por crise/estavel/crescimento,
-     e acrescentar um quarto tom ali faria o cerco competir com a leitura que o gel existe
-     para dar. O cerco entra por ARESTA, que e um canal livre — e o estado dele nao e
-     "quao bem o pais vai": e "ha uma gaveta aberta".
-
-     ⚠ E A COR E O BORDO DO CARIMBO, e nao o vermelho de crise. Os dois estao no
-     vocabulario e o que os separa ja esta escrito no botao de avancar: `--crisis` e a cor
-     do que JA deu errado, e bordo e a cor do carimbo — do despacho pendente. O processo
-     aberto e exatamente isso: a Camara carimbou, e o mandato ainda nao caiu. */
+     ⚠ E A COR E O BORDO DO CARIMBO, e nao o vermelho de crise: `--crisis` e a cor do
+     que JA deu errado, e bordo e a do despacho pendente. O processo aberto e exatamente
+     isso — a Camara carimbou, e o mandato ainda nao caiu. */
   el.shell.dataset["siege"] = state.impeachment !== null && state.fallen === null ? "true" : "";
 
   painted = state;
@@ -787,13 +737,10 @@ function rememberRead() {
 /**
  * A PERGUNTA NA FRENTE, E O AVISO DO MAIS NOVO PARA O MAIS VELHO.
  *
- * ⚠ ELA NASCEU COM O RELATORIO MENSAL, em 21/08/2026: `state.mail` e cronologica, e a
- * pilha da bandeja corta pelo FIM. Com uma carta por mes isso nao aparecia; com vinte,
- * significa guardar a rua de marco para sempre e jogar fora a de hoje.
- *
- * ⚠ E ELA NAO ATRAVESSA A FRONTEIRA DA PERGUNTA. Ordenar tudo por data poria um relatorio
- * de aprovacao na frente de uma emenda com prazo correndo — e o inbox passaria a ensinar
- * a rolar, que e o defeito que a ordem por urgencia existe para impedir.
+ * ⚠ `state.mail` E CRONOLOGICA e a pilha da bandeja corta pelo FIM: sem inverter, ela
+ * guardaria a rua de marco para sempre e jogaria fora a de hoje. E ela NAO atravessa a
+ * fronteira da pergunta — ordenar tudo por data poria um relatorio de aprovacao na
+ * frente de uma emenda com prazo correndo, e o inbox passaria a ensinar a rolar.
  *
  * @param {ReadonlyArray<import("./src/ui/screens/inbox.mjs").Dispatch>} dispatches
  * @returns {ReadonlyArray<import("./src/ui/screens/inbox.mjs").Dispatch>}
@@ -935,7 +882,7 @@ function transition(depois) {
 
   const view = start(paint);
 
-  /* ⚠ PULAR A TRANSICAO NAO E ERRO, e ate 22/08/2026 virava um. `ready` REJEITA quando
+  /* ⚠ PULAR A TRANSICAO NAO E ERRO, e antes virava um. `ready` REJEITA quando
      uma transicao comeca antes de a anterior terminar — o que acontece a cada navegacao
      rapida —, e ninguem a escutava: medido num navegador de verdade, 48 trocas de tela
      seguidas produziram 46 rejeicoes nao tratadas. Elas nao quebravam nada, e esse era o
@@ -973,16 +920,14 @@ document.addEventListener("click", event => {
   }
 
   /* ── ABRIR UM OFÍCIO NA BANDEJA ─────────────────────────────────────────────
-     ⚠ ELE VEM DEPOIS DA ESCOLHA E ANTES DA NAVEGAÇÃO, e a ordem dos três é a
-     mecânica: os botões de resposta moram DENTRO do ofício aberto, que por sua vez
-     mora numa tela que também navega. Abrir antes de escolher faria responder virar
-     "abrir de novo o que já está aberto"; navegar antes de abrir faria um clique na
-     lista trocar de tela.
+     ⚠ ELE VEM DEPOIS DA ESCOLHA E ANTES DA NAVEGAÇÃO: os botões de resposta moram
+     DENTRO do ofício aberto, que mora numa tela que também navega. Abrir antes de
+     escolher faria responder virar "abrir de novo o que já está aberto"; navegar antes
+     de abrir faria um clique na lista trocar de tela.
 
-     ⚠ E O ATRIBUTO É `data-dispatch` E NÃO `data-open`, o que não é gosto: a
-     trindade do Gabinete já marca ruptura aberta com `data-open="true"`, e um seletor
-     `[data-open]` aqui leria um clique na barra de risco como pedido para abrir a
-     carta de id "true" — que não existe, e a bandeja cairia calada na primeira. */
+     ⚠ E O ATRIBUTO É `data-dispatch` E NÃO `data-open`: a trindade já marca ruptura
+     aberta com `data-open="true"`, e um seletor `[data-open]` aqui leria um clique na
+     barra de risco como pedido para abrir a carta de id "true". */
   const dispatch = target.closest("[data-dispatch]");
   if (dispatch instanceof HTMLElement && dispatch.dataset["dispatch"]) {
     openDispatch = dispatch.dataset["dispatch"];
@@ -1043,17 +988,14 @@ document.addEventListener("input", event => {
 });
 
 /* ── O MES E REPETIVEL, E O QUE O SEGURA E O JOGO ───────────────────────────
-   Nao ha mais confirmacao entre um mes e o seguinte: quem quiser atravessar dez
-   meses sem decidir nada atravessa, e chega do outro lado com a base obstruindo
-   — a lealdade decai 1,5 ao mes e nao perdoa desatencao. Cobrar um clique de
-   "entendi" para proteger o jogador dele mesmo e regra artificial, que e
-   exatamente o que este jogo recusa.
+   Nao ha confirmacao entre um mes e o seguinte: quem quiser atravessar dez meses sem
+   decidir nada atravessa, e chega do outro lado com a base obstruindo. Cobrar um clique
+   de "entendi" para proteger o jogador dele mesmo e a regra artificial que este jogo
+   recusa.
 
-   O TRAVAMENTO NAO E RITMO, E CORRECAO. `playMonth` e sincrono, mas a pintura
-   passa por View Transition e a promessa dela demora alguns quadros; dois
-   cliques dentro dessa janela resolveriam DOIS meses sobre o MESMO estado, e o
-   segundo relatorio descreveria um mundo que ninguem viu. O botao desliga
-   enquanto a transicao corre e volta quando ela termina. */
+   O TRAVAMENTO NAO E RITMO, E CORRECAO. `playMonth` e sincrono, mas a pintura passa por
+   View Transition e a promessa dela demora alguns quadros; dois cliques dentro dessa
+   janela resolveriam DOIS meses sobre o MESMO estado. */
 let resolving = false;
 
 el.advance.addEventListener("click", () => {
@@ -1061,7 +1003,7 @@ el.advance.addEventListener("click", () => {
   /* ⚠ MANDATO ACABADO NAO E BLOQUEIO DE FLUXO, e a distincao importa porque o
      ciclo 9 proibiu o oposto: bloquear o turno para FORCAR uma resposta. Aqui nao ha
      turno para dar — o mandato acabou, e o botao para pela queda ou pelo PRAZO, que
-     e a metade que faltava ate 18/08/2026. Quem quiser jogar de novo aperta "nova
+     e a metade que faltava antes. Quem quiser jogar de novo aperta "nova
      partida". */
   if (termOf(state, CATALOG).over) return;
   resolving = true;
@@ -1107,14 +1049,11 @@ el.noticeClose.addEventListener("click", () => el.dialog.close());
 /**
  * O AVISO — a unica coisa que ainda interrompe.
  *
- * `showModal()` entrega foco, inercia do fundo, Escape e camada superior. Nada
- * disso e escrito aqui — e essa e a diferenca entre o padrao nativo e a versao
- * manual, que no projeto anterior custou uma sessao inteira de correcao de
- * acessibilidade e tres regras permanentes de documentacao.
- *
- * O relatorio do mes saiu daqui de proposito: ele e informacao que se consulta,
- * e informacao consultavel nao trava o fundo. Um aviso trava porque algo deu
- * errado e continuar sem ler seria continuar no escuro.
+ * `showModal()` entrega foco, inercia do fundo, Escape e camada superior; a versao
+ * manual disso custou, no projeto anterior, uma sessao inteira de correcao de
+ * acessibilidade e tres regras permanentes de documentacao. O relatorio saiu daqui de
+ * proposito: informacao que se consulta nao trava o fundo, e um aviso trava porque
+ * algo deu errado.
  *
  * @param {string} title
  * @param {string} body
@@ -1205,7 +1144,7 @@ document.documentElement.style.setProperty("--neutral", String(NEUTRAL));
  */
 function label(node, text, hint) {
   node.textContent = text;
-  /* ⚠ A LEGENDA E OPCIONAL desde 16/08/2026, e o teste dela e um so: ela se paga
+  /* ⚠ A LEGENDA E OPCIONAL, e o teste dela e um so: ela se paga
      quando diz algo que o rotulo nao diz. "Avancar o mes" nao precisa de "resolve o
      turno"; a CONFIRMACAO de apagar o mandato precisa, porque ela chega no momento em
      que a informacao muda a decisao. */
@@ -1237,7 +1176,7 @@ function endLabel() {
      o clique dela cai no `if (resolving) return` — sem erro, sem aviso, sem nada.
 
      Medido num navegador de verdade, clicando a cada 200 ms: TRES cliques produziam UM mes.
-     O defeito nasceu em 20/08/2026, quando o botao passou a se repintar junto com a tela. */
+     O defeito nasceu quando o botao passou a se repintar junto com a tela. */
   el.advance.disabled = term.over || resolving;
 
   const quiet = term.over

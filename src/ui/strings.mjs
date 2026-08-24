@@ -29,7 +29,7 @@ const TERMOS = {
      "nao tenho base", tendo 436 de 513. Mesma palavra, sentido invertido, 130px de
      distancia. O nome certo e o que a CALDEIRA ja usa para o mesmo grupo. */
   social: "Opinião pública",
-  /* ⚠ OS DOIS SAIRAM DA METAFORA em 22/08/2026, por ordem dele: "chega de poesia, quero algo
+  /* ⚠ OS DOIS SAIRAM DA METAFORA, por ordem dele: "chega de poesia, quero algo
      mais tecnico e bem claro pro novo jogador". "Capital" nao diz quem e, e "o baixo clero" e
      giria de Congresso — quem nunca jogou le as duas e nao sabe de quem a tela esta falando.
      ⚠ E "Parlamentares" NAO PODE VIRAR "base": a regua chamou-se "Base no Congresso" e o
@@ -121,12 +121,11 @@ export const UI = {
     inboxSigned: "Todo mês que você resolve chega aqui, assinado pela Casa Civil.",
     inboxWaiting:
       "O que ainda não chega é o resto da república: o líder que cobra a diretoria prometida, a lei que o relator devolveu mudada, o tribunal que derrubou o que passou. Quem escreve primeiro é a tramitação.",
-    /* ⚠ A FRASE DO LEITOR DE TELA MORA AQUI, e não na view — a guarda `naming` a expulsou de
-       `ribbon.mjs` e estava certa por uma razão que vale além dela: quem lê a fita por som
-       recebe a MESMA descrição que o olho recebe, e uma descrição escrita dentro do desenho é
-       a única frase da interface que ninguém revisa. */
+    /* ⚠ A FRASE DO LEITOR DE TELA MORA AQUI, e não dentro do desenho: quem lê por som recebe
+       a MESMA descrição que o olho recebe, e descrição escrita dentro de uma view é a única
+       frase da interface que ninguém revisa. */
     /* ── AS LEGENDAS DOS QUATRO BLOCOS ─────────────────────────────────────── ⚠ ELAS
-       VOLTARAM em 22/08/2026, e cinco delas tinham SAIDO em 20/08. A premissa daquela
+       VOLTARAM, e cinco delas tinham SAIDO antes. A premissa daquela
        retirada era que o numero grande nomeava o bloco sozinho; sem numero grande, uma lista
        que abre em "O mercado" nao diz de que assunto ela e. A da Rua nao se redigita — ela e
        a mesma palavra do rail, e teclar de novo e como um vocabulario comeca a divergir. */
@@ -249,7 +248,7 @@ export const UI = {
     passed: "aprovada",
     rejected: "derrubada",
     voted: "o plenário deu",
-    /* ⚠ AS TRES SAIRAM em 22/08/2026 com as tres linhas que elas costuravam: o anexo "o mes em
+    /* ⚠ AS TRES SAIRAM com as tres linhas que elas costuravam: o anexo "o mes em
        tres leituras" ja mostra as mesmas com o ANTES ao lado, e o corpo as repetia so com o
        depois. Frase que sobrevive a peca que a usava e o que a segunda metade desta guarda
        existe para achar. */
@@ -264,13 +263,13 @@ export const UI = {
     minoritySubject: "O governo perdeu a maioria",
     minorityBody: "As cadeiras que respondem ao governo caíram abaixo da maioria simples.",
     /* ⚠ ELA ERA UMA COSTURA ENTRE DOIS NUMEROS — "436 de 513, e a maioria fecha em 257" — e os
-       dois viraram cards em 22/08/2026. Sobrou o denominador, que qualifica o primeiro. */
+       dois viraram cards. Sobrou o denominador, que qualifica o primeiro. */
     quietMonth: "Nenhum texto foi a plenário neste mês.",
     ruptureLegend: "O que falta para abrir o processo",
     minorityNote: "de 513",
     /* O QUORUM DA LEI COMUM, e ele e o mesmo TERMO que a Camara usa no Gabinete. */
     majority: TERMOS.simpleMajority,
-    /* ⚠ AS CINCO FRASES SAO NEUTRAS EM NUMERO desde 22/08/2026, e o defeito era consumado:
+    /* ⚠ AS CINCO FRASES SAO NEUTRAS EM NUMERO, e o defeito era consumado:
        elas foram escritas para nomes de grupo no singular — "O mercado passou do ponto" — e os
        nomes viraram plurais quando o vocabulario deixou de ser metafora. A tela imprimia
        "Parlamentares passou do ponto" e "e ele carrega 30%". Nenhuma guarda alcanca
@@ -334,7 +333,7 @@ export const UI = {
     headline: {
       "street.rose": "Aprovação sobe a",
       "street.fell": "Aprovação cai a",
-      /* ⚠ AS DUAS PASSARAM A FALAR NO NIVEL em 22/08/2026, e as outras quatro ja falavam: com
+      /* ⚠ AS DUAS PASSARAM A FALAR NO NIVEL, e as outras quatro ja falavam: com
          a pastilha de variacao ao lado do assunto, "Base perde 157 cadeiras" e "▼157" diziam o
          MESMO numero duas vezes. O assunto carrega o que o presidente TEM; a pastilha carrega
          o quanto andou. */
@@ -354,7 +353,7 @@ export const UI = {
     pollUp: "acima do mês passado.",
     pollPoint: "ponto",
     pollPoints: "pontos",
-    /* ⚠ AS CINCO VIRARAM DUAS em 22/08/2026: elas eram os pedacos de duas FRASES coladas em
+    /* ⚠ AS CINCO VIRARAM DUAS: elas eram os pedacos de duas FRASES coladas em
        volta de um numero — "O que sustenta o senhor é economia, e é na Alta renda que ela pesa
        mais" —, e as duas leituras desceram para cards. Num card a legenda nomeia e o valor
        responde, entao a costura da frase deixou de existir. */
@@ -432,7 +431,7 @@ export const UI = {
     /* ── A CARTA DE POSSE ──────────────────────────────────────────────────── ⚠ ELA EXISTE
        PORQUE A PRIMEIRA TELA DO JOGO TINHA A PEÇA CENTRAL VAZIA. */
     inauguration: "O país que {v} recebe",
-    /* ⚠ AS DUAS ERAM FIM DE FRASE e viraram LEGENDA DE CARD em 22/08/2026: num card a legenda
+    /* ⚠ AS DUAS ERAM FIM DE FRASE e viraram LEGENDA DE CARD: num card a legenda
        nomeia e o valor responde, entao a costura em volta do numero deixou de existir. */
     inheritedMandatory: "Obrigatória do ano",
     inheritedRoom: TERMOS.roomLine,
@@ -568,7 +567,7 @@ export const UI = {
     agenda: TERMOS.onTable,
     /* ── A GENTE DO CONGRESSO ───────────────────────────────────────────────── ⚠ SETE
        PESSOAS DECIDIAM O PREÇO DE TODA VOTAÇÃO E NENHUMA APARECIA.
-       ELENCO gera nome, cargo, ambição e memória desde 14/08/2026; o jogador
+       ELENCO gera nome, cargo, ambição e memória; o jogador
        pagava um bloco, a memória do líder mudava o valor em silêncio, e ele nunca
        soube que existia um líder. Motor que o jogador não vê não é profundidade,
        é custo. */

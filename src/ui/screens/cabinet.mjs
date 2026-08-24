@@ -37,8 +37,8 @@ function share(part, whole) {
 }
 
 /**
- * A LINHA DE LEITURA — nome, barra, valor. ⚠ ELA E A UNICA FORMA DA COLUNA DA DIREITA desde
- * 22/08/2026, por decisao dele: "quero algo padronizado e refeito do zero". Antes eram duas
+ * A LINHA DE LEITURA — nome, barra, valor. ⚠ ELA E A UNICA FORMA DA COLUNA DA DIREITA,
+ * por decisao dele: "quero algo padronizado e refeito do zero". Antes eram duas
  * gramaticas na mesma coluna — placar com numero grande e barra de 432px nas duas fichas de
  * cima, lista com barra recuada de 192px nas duas de baixo —, e o olho lia as quatro juntas.
  *
@@ -63,7 +63,7 @@ function readingHtml({ who, value, bar, tone }) {
 /**
  * UM BLOCO — a legenda que o nomeia, e as linhas dele.
  *
- * ⚠ A LEGENDA VOLTOU, e ela tinha saido em 20/08/2026 com outras quatro. A premissa daquela
+ * ⚠ A LEGENDA VOLTOU, e ela tinha saido com outras quatro. A premissa daquela
  * retirada era que o numero grande nomeava a ficha sozinho — "436 de 513" diz Congresso. Sem
  * numero grande, uma lista que abre em "O mercado" nao diz de que assunto ela e.
  *
@@ -322,8 +322,8 @@ function trinityHtml({ boiler }) {
     })
     .join("");
 
-  /* ⚠ A LEGENDA NAO CARREGA MAIS A REGRA DO IMPEACHMENT — "as tres, juntas" saiu inteira em
-     22/08/2026, por decisao dele, e nao foi reescrita. */
+  /* ⚠ A LEGENDA NAO CARREGA MAIS A REGRA DO IMPEACHMENT — "as tres, juntas" saiu inteira,
+     por decisao dele, e nao foi reescrita. */
   return (
     /* ⚠ O `data-open` DA SECAO SAIU JUNTO: as tres rompidas ja carimbam PROCESSO ABERTO no
        bloco da caldeira, e um segundo canal para o mesmo estado — que ninguem pintava — era a

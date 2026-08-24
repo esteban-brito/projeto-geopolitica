@@ -5,8 +5,10 @@ runtime, ESM puro servido como arquivo.
 
 ## Leia nesta ordem
 
-1. [`docs/handoff.md`](docs/handoff.md) — o ponto de retomada. Primeira leitura de
-   toda sessão, última escrita de toda sessão que muda algo;
+1. [`docs/handoff.md`](docs/handoff.md) — o ponto de retomada, e ele é CURTO de
+   propósito: só entra o que é verificável hoje. Primeira leitura de toda sessão, última
+   escrita de toda sessão que muda algo. A narrativa de sessão mora em
+   [`docs/journal.md`](docs/journal.md), e não volta para cá;
 2. [`docs/standards.md`](docs/standards.md) — as convenções, e quais têm guarda;
 3. [`docs/cycles/`](docs/cycles/) — o ciclo mais recente é o plano em vigor;
 4. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
@@ -47,17 +49,21 @@ reprovada, com o número que a reprovou.** Nada mais entra.
 ## Fluxo
 
 ```bash
-npm run validate   # guardas + tipos + lint + formato + testes — tem de ficar verde
-npm run walk       # a tela num navegador de verdade; rode ao mexer em UI
+npm run validate   # guardas + tipos + lint + formato + testes + passeio — 42s, tem de ficar verde
+npm run check      # só as guardas, 2s — o laço curto de quem mexe em folha
+npm test           # só as suítes, 2s — o laço curto de quem mexe em motor
 npm run simulate   # 48 meses no terminal; rode ao mexer em calibragem
 npm run serve      # http://127.0.0.1:5173/
 ```
 
-- `validate` verde é obrigatório antes de dizer que algo está pronto;
-- mexeu em tela? rode `walk` **e olhe a captura** em `captures/`. Três defeitos já
-  atravessaram tipo, guarda e cem provas para morrer na imagem;
+- `validate` verde é obrigatório antes de dizer que algo está pronto, e **o passeio
+  está dentro dele**: o portão agora vê geometria, recorte e contraste no navegador;
+- ⚠ **mas o portão não sabe OLHAR.** Mexeu em tela? **abra a captura** em `captures/`.
+  Três defeitos já atravessaram tipo, guarda e cem provas para morrer na imagem, e
+  nenhum deles falhava — é o único passo que continua sendo humano;
 - mexeu em catálogo ou motor? rode `simulate` e compare a série;
-- `npm run screen` oscila ~20 fps entre rodadas. Meça os dois braços na mesma rodada;
+- `npm run screen` oscila ~20 fps entre rodadas, e continua **fora** do portão: ele
+  abre janela e mede contra a taxa do monitor. Meça os dois braços na mesma rodada;
   um número solto dele não decide nada.
 
 ## Não faça sem pedido

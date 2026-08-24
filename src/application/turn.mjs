@@ -87,7 +87,7 @@ import { OPENING_MONTH, reduce } from "../state/state.mjs";
  * @property {Tally | null} tally nulo quando nao houve votacao — decreto ou mes parado
  * @property {Record<string, number>} loyalty o humor depois do mes
  * @property {Balance} balance as tres leituras do mes, com o antes e o depois de cada
- * uma. ⚠ ELAS SUBIRAM PARA CA em 21/08/2026 porque a carta da Casa Civil passou a
+ * uma. ⚠ ELAS SUBIRAM PARA CA porque a carta da Casa Civil passou a
  * imprimir as tres — e a tela nao pode medir nenhuma delas por fora: `discretionaryRoom`
  * perguntado ao estado vivo daria o mes SEGUINTE, e a view estaria contando outro mes
  * @property {ReadonlyArray<import("../domain/cast/index.mjs").Person>} people o elenco do mandato
@@ -547,8 +547,9 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   const honoured = spendOf({ programs, levels, bands });
   const allocated = honoured.byArea;
 
-  /* O QUE A CAPACIDADE CONSOME E O GASTO CHEIO DA AREA, e nao a parte acima do piso.
-     ao hospital, e nao o rotulo juridico dele. Enquanto a MALHA lia so o
+  /* O QUE A CAPACIDADE CONSOME E O GASTO CHEIO DA AREA, e nao a parte acima do piso: o
+     que constroi capacidade e o dinheiro que chega ao hospital, e nao o rotulo juridico
+     dele. Enquanto a MALHA lia so o
      discricionario, derrubar um piso convertia gasto obrigatorio em compra de
      indice sem mover um real — e desregulamentar era a jogada dominante. */
   const funded = honoured.fullByArea;
@@ -557,8 +558,9 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
      MONTADA AQUI, E NAO NO TURNO, pela mesma razao que o rateio: a tela precisa prever com
      EXATAMENTE a mesma camara que vai votar.
      O ELENCO SE REFAZ DA SEMENTE a cada chamada, e isso e barato de proposito: sao
-     sete pessoas e nenhuma consulta a fluxo de aleatoriedade. Guardar as pessoas no
-     estado seria guardar valor derivado — e o save so precisa da semente e da */
+     sete pessoas e nenhuma consulta a fluxo de aleatoriedade. Guardar as pessoas no estado
+     seria guardar valor derivado — e o save so precisa da semente e das ordens para refazer
+     o elenco inteiro, identico. */
   const people = cast({
     seed: state.seed,
     parties,
@@ -678,8 +680,8 @@ function leverOf(state, lobby, catalog) {
  * ⚠ ELA NASCEU DE UM DEFEITO MEDIDO, e ele e a SETIMA ocorrencia da familia mais cara deste
  * projeto.
  *
- * · a MALHA consome `funded` — o gasto CHEIO da area, piso incluido e ja rateado —
- * desde 14/08/2026, e `asked` e so a parte ACIMA DO PISO. Na Previdencia os dois
+ * · a MALHA consome `funded` — o gasto CHEIO da area, piso incluido e ja rateado —,
+ * e `asked` e so a parte ACIMA DO PISO. Na Previdencia os dois
  * numeros sao R$ 2,4 bi e R$ 126,7 bi: a tela projetava com 2% do dinheiro;
  * todas as sete nasceram: `funded` substituiu `asked` na alimentacao da MALHA, e a
  * projecao do entrypoint ficou no numero antigo, em silencio.

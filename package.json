@@ -18,7 +18,7 @@
     "test": "node --test \"tests/suites/*.mjs\"",
     "screen": "node tests/browser/screen-cost.mjs",
     "walk": "node tests/browser/walk.mjs",
-    "validate": "npm run check && npm run types && npm run lint && npm run format && npm test"
+    "validate": "npm run check && npm run types && npm run lint && npm run format && npm test && npm run walk"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

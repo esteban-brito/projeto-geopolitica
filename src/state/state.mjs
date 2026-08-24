@@ -108,7 +108,7 @@ import { streamFrom } from "./random.mjs";
    classes, apagando a polarizacao, que e a informacao que SONDA existe para dar. */
 export const SCHEMA_VERSION = 18;
 
-/* ⚠ O TRATAMENTO E ESCOLHA DO JOGADOR, e nao deducao do nome. Ate 22/08/2026 a interface
+/* ⚠ O TRATAMENTO E ESCOLHA DO JOGADOR, e nao deducao do nome. Antes a interface
    tinha SETE frases com "o senhor" digitadas fixas, e o gerador sorteia nomes femininos e
    masculinos na mesma proporcao: metade das partidas chamava a presidenta de "o senhor" por
    48 meses. Com o nome DIGITADO pelo jogador, deduzir e impossivel — entao se pergunta. */

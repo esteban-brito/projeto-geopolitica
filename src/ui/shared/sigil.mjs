@@ -2,7 +2,7 @@
 
 import { escapeHtml } from "./html.mjs";
 
-/* ⚠ AS INICIAIS SAIRAM em 22/08/2026, e o motivo e do responsavel: "avatar do ministro pode
+/* ⚠ AS INICIAIS SAIRAM, e o motivo e do responsavel: "avatar do ministro pode
    ser um icon de pessoa, preto, e se for mulher com cabelo de mulher, padronizado os dois".
    Duas silhuetas, e duas e o teto — nao ha rosto, e um rosto inventado seria a cara de alguem
    que existe (ADR 0003). O disco e claro e a figura e escura: e a mesma leitura do lugar de

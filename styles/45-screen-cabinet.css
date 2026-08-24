@@ -70,7 +70,7 @@
     gap: var(--space-3) var(--space-8);
   }
 
-  /* ⚠ ELE E TRES `.reading` LADO A LADO desde 22/08/2026, e nao mais um dialeto proprio: a
+  /* ⚠ ELE E TRES `.reading` LADO A LADO, e nao mais um dialeto proprio: a
      faixa tinha rotulo de 10px em caixa alta, numero de 16,8px e limiar em `<small>` inline,
      enquanto a coluna da direita usava rotulo de 12,5px, valor de corpo e legenda na pista da
      barra. Eram as duas ultimas gramaticas da tela. A faixa continua HORIZONTAL, que e a
@@ -118,7 +118,7 @@
   }
 
   /* ── O BLOCO — legenda em cima, linhas embaixo ────────────────────────────── ⚠ ELE E O
-     UNICO DESENHO DA COLUNA DA DIREITA desde 22/08/2026. Antes eram duas gramaticas: numero
+     UNICO DESENHO DA COLUNA DA DIREITA. Antes eram duas gramaticas: numero
      grande com botao e barra de 432px nas duas fichas de cima, lista com barra de 192px nas
      duas de baixo — quatro larguras, dois raios e duas alturas de linha na mesma coluna. */
   .block__rows {
@@ -497,9 +497,10 @@
      cresce, nunca some e nunca divide espaco com o texto. */
 
   /* Numa folha de 630px, 13,6px é corpo de aviso e não de documento. */
-  /* ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA DESFAZIA A PRIMEIRA EM SILENCIO — medido e consertado
-     . */
-  /* ⚠ O VAO E UM SO, e ate 22/08/2026 eram dois: a grade da carta separa vocativo, corpo e
+  /* ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA DESFAZIA A PRIMEIRA EM SILENCIO: mesma
+     especificidade, dez linhas entre uma e outra, e a ultima vence. O corpo saia com 13,6px
+     onde a decisao dizia 15,2. */
+  /* ⚠ O VAO E UM SO, e antes eram dois: a grade da carta separa vocativo, corpo e
      rodape por `--space-3`, e as linhas do corpo se separavam por `--space-2`. O olho lia um
      degrau entre "Presidente," e o primeiro paragrafo maior que o degrau entre paragrafos —
      sem nada que justificasse a diferenca. */
@@ -757,7 +758,7 @@
     color: rgba(var(--sheet-ink-rgb), 0.62);
   }
 
-  /* ⚠ O FIO E DA LINHA, E NAO DA CELULA — conserto de 22/08/2026, e o defeito era visivel:
+  /* ⚠ O FIO E DA LINHA, E NAO DA CELULA — conserto, e o defeito era visivel:
      com a borda no `td`, o traco comecava depois do nome da classe e a tabela aparecia com
      tres tracos flutuando no meio dela. `border-bottom` no `tr` so pinta com
      `border-collapse`, que esta declarado acima. */
@@ -970,35 +971,6 @@
     border-color: var(--brand);
     background: rgba(var(--brand-rgb), 0.16);
   }
-
-  /* ── O HEMICICLO ──────────────────────────────────────────────────────────── 513 cadeiras,
-     agrupadas por bancada e assentadas da esquerda para a direita pelo eixo economico — como
-     um plenario de verdade se organiza, e como o modelo ja sabe. */
-  /* Medido a 1440x900, a pagina tinha 1495px numa janela de 900 — e o hemiciclo sozinho
-     ocupava 268 deles, porque a largura cheia que eu dei a ele horas antes o esticou de 300
-     para 470px de base. */
-  /* Dois desenhos da mesma verdade no mesmo cartão é o defeito que este projeto já resolveu
-     uma vez. */
-  /* ⚠ ELA ENGROSSOU DE 14 PARA 20px junto com a passagem para cinco blocos. */
-  /* A lista de três virou UMA frase — "Aposentadoria urbana trava R$ 66,7 bi" —, e um título
-     em caixa alta acima de um item só é cabeça de parágrafo. */
-
-  /* Vermelho aqui ensinaria que o piso da saude e um defeito. */
-
-  /* ── A LEGENDA DO ARCO ────────────────────────────────────────────────────── O ponto de
-     cor vem antes do numero e o rotulo vem depois, nesta ordem: o olho casa a cor com o arco
-     primeiro e so entao lê o que ela quer dizer. */
-
-  /* ⚠ `.street__value` SAIU DAQUI acusada pela guarda `orphans` no primeiro minuto de vida
-     dela — e o defeito era MEU, do mesmo dia. */
-
-  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
-     rolar. */
-
-  /* Ela consertava um defeito que so a captura pegou — sem cor propria, `rest` herdava o
-     fundo claro e a barra em pressao ZERO lia como barra CHEIA —, e a regua ja nasce com o
-     trilho declarado, entao a correcao virou parte do componente. */
 
   /* ⚠ FERVENDO USA O VERMELHO SEMÂNTICO, e aqui ele é literal: um grupo que ferveu abandonou
      o governo, e isso é a definição de crise no modelo. */

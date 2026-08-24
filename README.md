@@ -8,19 +8,23 @@ dependência de runtime.
 npm ci
 npm run serve      # http://127.0.0.1:5173/ — onze telas, jogaveis
 npm run simulate   # roda um mandato inteiro no terminal, sem tela
-npm run validate   # guardas + tipos + lint + formato + testes
-npm run walk       # usa a tela como se joga, num navegador de verdade
+npm run validate   # guardas + tipos + lint + formato + testes + passeio — o portao
+npm run check      # so as guardas, 2s; `npm test` roda so as suites
 ```
 
 ## Onde ler
 
-- [`docs/handoff.md`](docs/handoff.md) — **comece aqui**: estado verificado,
-  achados abertos, e para onde o projeto vai;
+- [`docs/handoff.md`](docs/handoff.md) — **comece aqui**: estado verificado, achados
+  abertos, e para onde o projeto vai. Ele é curto de propósito — só entra o que é
+  verificável hoje;
+- [`docs/journal.md`](docs/journal.md) — o histórico, sessão a sessão. ⚠ **Todo número
+  dele tem a data em que foi medido**, e envelhece calado: leia para saber por que uma
+  decisão foi tomada, nunca para saber o estado do projeto;
 - [`docs/standards.md`](docs/standards.md) — as convenções travadas, a estrutura,
   o sistema visual e a tabela de motores;
-- [`docs/cycles/`](docs/cycles/) — o que foi acordado fazer, e por quê. O mais
-  recente é o [ciclo 4](docs/cycles/04-a-republica-responde.md), que muda a natureza
-  do jogo: a lei deixa de ser um número e vira um texto;
+- [`docs/cycles/`](docs/cycles/) — o que foi acordado fazer, e por quê. O que muda a
+  natureza do jogo é o [ciclo 4](docs/cycles/04-a-republica-responde.md), em que a lei
+  deixa de ser um número e vira um texto;
 - [`docs/adr/`](docs/adr/) — as decisões que não se reabrem sem pedido;
 - [`docs/research/`](docs/research/) — os briefings de pesquisa e o que voltou
   deles. É de lá que vêm as rubricas reais do catálogo.
@@ -86,15 +90,27 @@ não como exemplos: elas afirmam o que vale para todo estado válido, e não o q
 vale para um. A mesma exigência das guardas se aplica — a suíte do reducer prova
 que sua asserção central consegue falhar.
 
-`npm run screen` abre a tela com GPU e mede o custo do material contra um braço
-de controle sem filtro. Ele vive em `tests/browser/` e **fora** do `validate`:
-abre navegador com janela, e `validate` precisa rodar rápido e sem tela.
+`npm run walk` faz o que nenhum dos dois faz: **usa** a tela, a 1440×980. Ele entra
+numa área, arrasta o orçamento até furar um piso, compra bancada, estoura o caixa,
+avança o mês, confere o relatório e abre o placar de Finanças — medindo rolagem,
+recorte, sobreposição e contraste no pixel renderizado a cada parada. Ele nasceu
+porque três defeitos atravessaram tipo verde, guarda verde e 99 provas verdes: um
+`max="25,04"` que o navegador descartava calado, duas grades que mediam colunas em
+`ch` com fontes diferentes, e uma previsão que usava a verba prometida enquanto o
+turno votava com a paga.
 
-`npm run walk` faz o que nenhum dos dois faz: **usa** a tela. Ele entra numa área,
-arrasta o orçamento até furar um piso, compra bancada, estoura o caixa, avança o
-mês, confere o relatório e abre o placar de Finanças — em desktop e em celular. Ele
-nasceu porque três defeitos atravessaram tipo verde, guarda verde e 99 provas
-verdes: um `max="25,04"` que o navegador descartava calado, duas grades que
-mediam colunas em `ch` com fontes diferentes, e uma previsão que usava a verba
-prometida enquanto o turno votava com a paga. O que ele acha vira propriedade em
-`tests/suites/screens.mjs` — o passeio encontra, a suíte prende.
+⚠ **E ele está DENTRO do `validate` desde 23/08/2026**, o que antes não era verdade.
+A razão é uma assimetria medida: motor e tela têm o mesmo tamanho — 8.007 contra
+9.601 linhas — e o motor tinha **207 provas** contra **29** da tela, todas lendo
+string. As 38 checagens que de fato veem a tela viviam fora do portão, então mexer
+em folha de estilo deixava o portão verde sem ele ter olhado nada. O passeio custa
+33s e o portão foi de 9s para 42s.
+
+⚠ **O que o portão continua NÃO sabendo fazer é olhar.** Ele mede geometria e
+contraste; ele não vê que a peça ficou feia. As capturas em `captures/` existem para
+isso, e abri-las é o único passo do fluxo que segue sendo humano.
+
+`npm run screen` abre a tela com GPU e mede o custo do material contra um braço
+de controle sem filtro. Ele vive em `tests/browser/` e continua **fora** do
+`validate`: abre navegador com janela e mede fps contra a taxa do monitor, e num
+runner sem GPU os dois braços caem juntos e o número mente.

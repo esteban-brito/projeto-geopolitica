@@ -561,7 +561,7 @@
 
   /* ⚠ A COLUNA DO NOME VOLTOU DE 10,5rem PARA 9rem, e a premissa que a alargou caducou: ela
      tinha crescido para caber "que a torneira das emendas fique aberta" em duas linhas, e essa
-     frase saiu da linha em 22/08/2026. A do VALOR foi de 3rem para 5rem porque agora ela
+     frase saiu da linha. A do VALOR foi de 3rem para 5rem porque agora ela
      carrega dinheiro — `R$ 66,7 bi` nao cabe em 48px, e o que nao cabe estoura para fora da
      coluna sem nada falhar. */
   .reading__who {
@@ -631,7 +631,7 @@
      par (a Rua) e o trio com a marca no meio (a fita do plenario). */
   /* ⚠ A POSICAO E DO CONTEXTO, e nao da peca: enquanto `grid-column: 2` morava aqui, por a
      legenda dentro de qualquer outra grade criava uma segunda coluna fantasma e desmontava o
-     bloco inteiro — aconteceu duas vezes em 22/08/2026. Ela so se posiciona onde a pista da
+     bloco inteiro — aconteceu duas vezes. Ela so se posiciona onde a pista da
      barra existe, que e dentro de uma `.reading`. */
   .reading > .poles {
     grid-column: 2;
@@ -730,7 +730,7 @@
 
   /* A MARCA DO LIMIAR — dois pixels de latao, e ela e a unica coisa que a barra precisa dizer
      alem do valor: onde e a linha.
-     ⚠ ELA PASSOU A SER DECLARADA em 22/08/2026, e nao mais automatica: a obrigatoria do cofre
+     ⚠ ELA PASSOU A SER DECLARADA, e nao mais automatica: a obrigatoria do cofre
      e uma regua SEM limiar — nao existe percentual em que ela "rompe" —, e sem o atributo o
      `calc(1% * var(--mark))` cairia num valor invalido e desenharia latao no zero. */
   .gauge[data-mark="true"]::after {

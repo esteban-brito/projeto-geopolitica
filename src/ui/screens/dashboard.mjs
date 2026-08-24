@@ -85,8 +85,8 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
 
   return items
     .map(item => {
-      /* ⚠ AUSENCIA NAO E RESULTADO, e aqui ela era desenhada como "nao moveu" — conserto
-         de 22/08/2026. `painted` e variavel de modulo, entao numa RECARGA nao existe mes
+      /* ⚠ AUSENCIA NAO E RESULTADO, e aqui ela era desenhada como "nao moveu".
+         `painted` e variavel de modulo, entao numa RECARGA nao existe mes
          anterior nenhum: as quatro setas saiam em `—` no mes 30, afirmando que nada tinha
          andado num mandato em que tudo andou. O traco e um veredito; a falta de passado
          nao e. Sem base de comparacao, a seta simplesmente nao existe. */

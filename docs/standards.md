@@ -29,7 +29,7 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 ```
 index.html · app.mjs        entrypoint: composição e wiring, nunca cálculo
 styles/                     seis camadas, na ordem que o nome declara
-vendor/                     dependência vendorizada — ainda VAZIO; nasce com d3-force
+vendor/fonts/               Inter e Source Serif 4, sob SIL OFL — 226KB, sem rede
 src/data/                   catálogo; `catalog.mjs` indexa todo dado do projeto
 src/domain/                 os motores, funções puras
 src/state/                  estado imutável e o reducer
@@ -38,7 +38,8 @@ src/public/                 a composição que todo consumidor usa
 src/ui/                     views puras: recebem dado, devolvem string
 tests/                      run.mjs · lib/ · guards/ · suites/ · browser/
 tools/                      geradores, servidor, simulador de mandato
-docs/                       handoff.md (o ponto de retomada) · adr/ · cycles/ · research/
+docs/                       handoff.md (a retomada, curta) · journal.md (o histórico)
+                            adr/ · cycles/ · research/
 CLAUDE.md                   as regras que o agente lê antes de tudo
 ```
 
@@ -243,23 +244,31 @@ número ao lado dela.
 
 ## 6. As guardas
 
-| guarda       | impede                                                                                                                     |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| `material`   | segundo material; filtro fora do arquivo de material; falta do par `-webkit-`; sumiço do aviso de fps                      |
-| `tokens`     | literal de cor solto; `color-mix`; par hex/rgb divergente; `var()` órfão; token sem consumidor                             |
-| `cascade`    | regra fora de camada; `!important`; ordem de carregamento errada; `motion` deixar de ser a última                          |
-| `motion`     | rede incompleta; `animation: none`; falta de alcance a pseudo-elementos e View Transitions; animação inline                |
-| `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; dependência de teste vazando                    |
-| `naming`     | `.js`; nome fora do padrão; CommonJS; `export default`; identificador acentuado                                            |
-| `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                                 |
-| `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                                    |
-| `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                               |
-| `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                                   |
-| `prose`      | bloco de comentário acima do teto — 10 linhas no corpo, 14 no cabeçalho do arquivo                                         |
-| `vocabulary` | a mesma frase da interface teclada duas vezes; e a frase declarada que **nenhum arquivo alcança** — 49 delas em 21/08/2026 |
+| guarda       | impede                                                                                                                                                                                                    |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `material`   | segundo material; filtro fora do arquivo de material; falta do par `-webkit-`; sumiço do aviso de fps                                                                                                     |
+| `tokens`     | literal de cor solto; `color-mix`; par hex/rgb divergente; `var()` órfão; token sem consumidor                                                                                                            |
+| `cascade`    | regra fora de camada; `!important`; ordem de carregamento errada; `motion` deixar de ser a última                                                                                                         |
+| `motion`     | rede incompleta; `animation: none`; falta de alcance a pseudo-elementos e View Transitions; animação inline                                                                                               |
+| `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; dependência de teste vazando                                                                                                   |
+| `naming`     | `.js`; nome fora do padrão; CommonJS; `export default`; identificador acentuado                                                                                                                           |
+| `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                                                                                                                |
+| `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                                                                                                                   |
+| `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                                                                                                              |
+| `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                                                                                                                  |
+| `prose`      | bloco acima do teto (10 no corpo, 14 no cabeçalho); **data** em comentário; bloco que **para no meio de uma frase**; e o `--token`, `.classe` ou `arquivo.mjs` citado em prosa que o projeto não tem mais |
+| `vocabulary` | a mesma frase da interface teclada duas vezes; e a frase declarada que **nenhum arquivo alcança** — 49 delas em 21/08/2026                                                                                |
 
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.
+
+⚠ **E o portão tem uma SEGUNDA PERNA desde 23/08/2026, que não mora em
+`tests/guards/`:** o passeio (`tests/browser/walk.mjs`) entrou no `validate`. As doze
+guardas leem TEXTO — arquivo, seletor, literal —, e nenhuma delas abre um navegador;
+o passeio mede **geometria e pixel**: rolagem da página, conteúdo cortado dentro do
+próprio recorte, peça desenhada por cima de peça, e contraste no par renderizado. A
+razão de ele ter entrado é uma assimetria medida — motor e tela têm 8.007 e 9.601
+linhas, e as provas eram **207 contra 29**. Custo: o portão foi de 9s para 42s.
 
 ## 7. O que ainda NÃO tem guarda
 
@@ -276,15 +285,26 @@ Declarado para não ser confundido com cobertura:
   `index.html`. Classe no HTML sem regra **não** é acusada — ela é gancho legítimo para
   o passeio e para a suíte de telas. E `data-*` fica de fora porque é ESTADO: um
   `[data-boiling="true"]` pode passar meses sem acontecer e continuar correto;
-- **`contrast`** continua sem existir. O que entrou no lugar foi
-  `npm run walk`, que usa a tela como se joga e achou três defeitos que tipo,
-  guarda e 99 provas não achavam. Ele não é guarda: não roda em `validate`, e o
-  que ele acha vira prova em `tests/suites/screens.mjs`;
+- ⚠ **o CONTRASTE de texto que não é folha.** O medidor existe e está no portão —
+  `checkContrast`, dentro do passeio —, e ele mede o par RENDERIZADO e não o teórico,
+  porque `--ink-dim` sobre `--bg` passa e sobre a lâmina reprova. **Mas ele só alcança
+  FOLHA**: elemento sem filho elemento. Num `<p>` com `<b>` dentro, o `<b>` é medido
+  sozinho e o texto próprio do pai **não é medido por ninguém**. É a omissão declarada,
+  e ela é do medidor e não do desenho;
 - **o VALOR de um dado do catálogo.** `identity` prova que todo registro tem
   identidade própria e que nenhuma se repete; `schema` prova que todo esquema
   existe e é validado; a suite prova que os registros obedecem ao esquema.
   Nenhuma das três sabe dizer se `0,95` é a venalidade certa do Centrão — isso é
   calibração, é revisão humana, e não existe casador honesto para intenção;
+- ⚠ **PROSA QUE AFIRMA COMPORTAMENTO FALSO, e ela é a metade que a guarda `prose` NÃO
+  alcança.** Ela acusa o **nome** morto — `--token`, `.classe`, `arquivo.mjs` citados entre
+  crases e que o projeto não tem mais. Ela **não** acusa a frase que descreve um estado que
+  o código deixou de ter: `trend.mjs` afirmou por sessões que _"a série de índices por área
+  não existe no estado"_ enquanto ela existia e era preenchida todo turno, e duas telas
+  liam a fonte errada por causa disso. **Aquela frase passaria verde pela guarda de hoje.**
+  Não há casador honesto para isto — o que dá para mecanizar é o nome, e é o que ela faz;
+  o resto é revisão, e a pergunta que a acha é sempre a mesma: _o código ainda faz o que
+  este parágrafo diz?_;
 - **escala de raio, espaço e corpo** — a derivação está no arquivo de tokens e é
   cobrada por revisão, não por máquina;
 - **nome real de pessoa no catálogo** (ADR 0003). Toda pessoa do jogo é fictícia,

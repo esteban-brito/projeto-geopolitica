@@ -161,10 +161,10 @@
     color: var(--signal-down);
   }
 
-  /* ⚠ `.vital__spark` NASCEU E MORREU EM, e a razao esta em `dashboard.mjs`: a fileira tem
-     248px por leitura e uma escada legivel pede 120 alem do rotulo.
-     A captura reprovou os dois tamanhos tentados — 0,5rem cabe e vira um traco, 0,85rem le e
-     empurra o rotulo do PIB para fora da barra. */
+  /* ⚠ A ESCADA DE TENDENCIA NAO CABE NESTA BARRA, e o intervalo entre "cabe" e "le" e
+     VAZIO: a fileira tem 248px por leitura, rotulo e valor gastam ~150, e uma escada
+     legivel pede ~120. A captura reprovou os dois tamanhos tentados — 0,5rem cabe e vira
+     um traco, 0,85rem le e empurra o rotulo do PIB para fora da barra. */
 
   .vital .trend {
     font-size: 0.7em;

@@ -1,5 +1,11 @@
 # O portao. Ele roda exatamente `npm run validate` — as mesmas guardas, tipos,
-# lint, formato e suites que rodam na maquina de quem escreve.
+# lint, formato, suites e PASSEIO que rodam na maquina de quem escreve.
+#
+# O passeio entrou no portao em 23/08/2026, e o numero que decidiu isso e a
+# assimetria de cobertura: motor e tela tem o mesmo tamanho — 8.007 contra 9.601
+# linhas — e o motor tinha 207 provas contra 29 da tela, todas lendo string. As
+# 38 checagens que de fato veem geometria e contraste moram aqui, e estavam fora
+# do portao. Custo medido: 9s para 42s.
 #
 # `npm run screen` NAO entra aqui, e nao e esquecimento: ele abre um Chromium
 # COM JANELA e mede fps contra a taxa do monitor. Num runner sem GPU os dois
@@ -34,5 +40,10 @@ jobs:
       # `ci` e nao `install`: ele instala do lock e falha se o lock divergir do
       # package.json, que e a unica forma de o CI garantir a mesma arvore.
       - run: npm ci
+
+      # O NAVEGADOR E DEPENDENCIA DO PORTAO desde que o passeio entrou nele.
+      # So o chromium: o passeio abre um so, e baixar os tres triplicaria o
+      # tempo de instalacao para provar exatamente a mesma coisa.
+      - run: npx playwright install --with-deps chromium
 
       - run: npm run validate

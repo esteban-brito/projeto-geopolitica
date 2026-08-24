@@ -71,7 +71,7 @@
     --ink: #eef2f8;
     --ink-rgb: 238, 242, 248;
     --ink-soft: #c4cddb;
-    /* ⚠ ELA SUBIU DE `#93a1b4` EM 22/08/2026, e o numero e medido no par RENDERIZADO: sobre a
+    /* ⚠ ELA SUBIU DE `#93a1b4`, e o numero e medido no par RENDERIZADO: sobre a
        parte mais clara da lamina do palco — onde a Trindade mora — o tom antigo dava 4,10 no
        rotulo e 3,89 no limiar, contra o piso 4,5 de AA. A 10px nada disso e texto grande.
        Em toda outra peca ele ja passava folgado (5,4 a 7,3), entao o conserto foi clarear a
@@ -91,7 +91,7 @@
     /* ── O PAR DE SINAL E TINTA, E SO TINTA ─────────────────────────────────── Os dois
        aparecem SEMPRE em `color:` e nunca em preenchimento — e e isso que permite ao vermelho
        de leitura ser mais claro que o vermelho de superficie sem a paleta divergir.
-       ⚠ `--signal-down` DEIXOU DE APONTAR PARA `--crisis` EM 22/08/2026, e o motivo e medido
+       ⚠ `--signal-down` DEIXOU DE APONTAR PARA `--crisis`, e o motivo e medido
        no par renderizado: `R$ 72,6 bi`, `80,1%` e `0,01%` davam 4,48, 3,89 e 3,86 sobre a
        metade CLARA da lamina de Financas, contra o piso 4,5. A regra escrita manda clarear a
        tinta e nao abandonar o tom; o matiz e a saturacao ficam, e o pior par vai a 4,76.
@@ -109,7 +109,7 @@
     --rail-costly: #232a33;
     --rail-mark: #8a734c;
 
-    /* ── A FOLHA — o documento, e ela deixou de ser PAPEL em 22/08/2026 ────── Palavras dele:
+    /* ── A FOLHA — o documento, e ela deixou de ser PAPEL ────── Palavras dele:
        "vou remover esse marrom cor de bosta e colocar um liquid glass escuro". O pergaminho
        era a segunda substancia do sistema — vidro = a maquina do Estado, papel = o texto de
        registro —, e a substancia caiu com ele: agora ha uma so, e o documento se distingue por

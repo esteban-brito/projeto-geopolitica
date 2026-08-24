@@ -88,7 +88,7 @@ export function letterHtml({
     `</span>` +
     `</header>` +
     `<h4 class="letter__subject">${escapeHtml(subject)}</h4>` +
-    /* ⚠ O VOCATIVO SAIU em 22/08/2026, por minimalismo: "Presidente," era a MESMA palavra na
+    /* ⚠ O VOCATIVO SAIU, por minimalismo: "Presidente," era a MESMA palavra na
        abertura das doze cartas, e uma linha que nunca muda e nunca decide nada e a definicao
        de cerimonia. Ela custava 20px em toda carta e a segunda linha de leitura em todas.
        ⚠ Voltar e uma linha, e o tratamento continua chegando aqui: o resto do corpo o usa. */
@@ -173,7 +173,7 @@ export function describeMonth({ report, adviser }) {
     );
   }
 
-  /* ⚠ AS TRES LEITURAS SAIRAM DO CORPO em 22/08/2026, e a razao e duplicacao medida: o anexo
+  /* ⚠ AS TRES LEITURAS SAIRAM DO CORPO, e a razao e duplicacao medida: o anexo
      "o mes em tres leituras" mostra as MESMAS tres com o antes ao lado, e o corpo as repetia
      so com o depois. Tres linhas de prosa para dizer metade do que a tabela logo abaixo diz
      inteiro. O corpo ficou com o que o anexo NAO tem: o que o mes decidiu, e quanto custou. */
@@ -225,7 +225,7 @@ export function describeMonth({ report, adviser }) {
  * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado as bancadas, para o
  * @param {ReadonlyArray<{ id: string, label: string }>} [input.segments] as classes, para o
  * @param {{ base: number, majority: number }} [input.chamber] as cadeiras que respondem ao
- * governo e o quorum simples. ⚠ Ela entrou em 21/08/2026 com a carta da MINORIA, e os
+ * governo e o quorum simples. ⚠ Ela entrou com a carta da MINORIA, e os
  * dois numeros vem prontos: a soma das bancadas leais e conta de `baseCount`, e refaze-la
  * aqui daria a esta carta um placar diferente do que a Trindade mostra ao lado dela
  * @returns {Dispatch[]}
@@ -581,7 +581,7 @@ function rowHtml(dispatch, open, read) {
     `<li>` +
     `<button class="tray__row" type="button" ` +
     `data-dispatch="${escapeHtml(dispatch.id)}"` +
-    /* ⚠ A TARJA DA ESQUERDA TEM UM DONO SO, E ELE E O PRAZO. Ela teve dois ate 22/08/2026, e o
+    /* ⚠ A TARJA DA ESQUERDA TEM UM DONO SO, E ELE E O PRAZO. Ela teve dois antes, e o
        segundo pintava do MESMO vermelho do prazo vencido: um aviso sem prazo nenhum aparecia
        na coluna com a marca de "vence agora". A prosa do nao-lido, dez linhas abaixo na folha,
        ja proibia isso com todas as letras — "a esquerda ja significa PRAZO em tres cores, e
@@ -695,7 +695,7 @@ function reportBody(
   }
 
   /* ⚠ O CORPO FICOU COM A MANCHETE, E SO ELA. As duas leituras de analise — o que sustenta e o
-     que puxa para baixo — desceram para cards em 22/08/2026: elas sao ANEXO, e nao prosa, e
+     que puxa para baixo — desceram para cards: elas sao ANEXO, e nao prosa, e
      lidas como terceiro e quarto paragrafo elas obrigavam o jogador a ler tres linhas para
      saber se precisava se preocupar. Ver `pollCards`. */
   return (
