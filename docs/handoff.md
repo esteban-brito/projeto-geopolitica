@@ -110,6 +110,21 @@ no mesmo 700. Fora da caixa, 600 é o peso de nome em cinco peças.
 assim / mesmo"_, com uma palavra sozinha na segunda linha. `text-wrap: pretty` na prosa e
 `balance` na chamada — a chamada iguala as linhas, a prosa só recusa a última órfã.
 
+### ▶ A PROPOSTA QUE ESTÁ NA MESA — o [ciclo 12](cycles/12-o-jogo-olha-para-frente.md)
+
+⚠ **PROPOSTA, NÃO ACORDADA.** Escrita em 24/08/2026 a pedido dele, e ela nasceu de medição e
+não de leitura — inclusive **corrigindo uma afirmação minha**: _"o país é quase inerte"_ está
+errado. Concentrar tudo numa área por 48 meses move **Segurança +60,9** e **Previdência
++0,7**; o fator entre as pontas é **87×**, e várias curvas sobem até o mês 24 e **caem**
+depois, porque concentrar derruba as outras áreas e a receita volta contra quem se alimentava.
+
+**O diagnóstico:** toda leitura do jogo tem horizonte de UM mês e toda decisão paga em 12 a 48. A tela de área imprime `61 → 61` numa área que anda 0,40 por mês — é matematicamente
+incapaz de mostrar a decisão. **A profundidade está construída e é invisível.**
+
+**A proposta:** `trajectory` — rodar `playMonth` para frente com as ordens congeladas, sobre
+uma cópia do estado. Custo medido: **24 meses em 5,3ms**. Sem motor novo, sem número
+inventado, sem campo no save.
+
 ### ⛔ NÃO REABRIR
 
 A fita de cinco cores no Gabinete, os botões `NEGOCIAR`/`FINANÇAS`, as três classes da Rua,
