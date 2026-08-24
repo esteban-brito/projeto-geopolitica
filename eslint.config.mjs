@@ -12,6 +12,8 @@ const BROWSER = {
   requestAnimationFrame: "readonly",
   performance: "readonly",
   Image: "readonly",
+  /* O medidor de contraste do passeio le a cor COMPUTADA e desenha a captura num canvas. */
+  getComputedStyle: "readonly",
   HTMLDialogElement: "readonly",
   HTMLElement: "readonly",
   /* Os gestos da tela chegam por DELEGACAO — um listener no documento, e nao um

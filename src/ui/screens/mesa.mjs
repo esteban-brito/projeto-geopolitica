@@ -70,7 +70,8 @@ const MEMORY_FLOOR = 0.08;
  *
  * @param {object} input
  * @param {{ id: string, name: string, office: string, role: string, ambition: string,
- * seats: number, votes: number, reach: number, memory: number }} input.person
+ * seats: number, votes: number, reach: number, memory: number,
+ * gender?: "f" | "m" }} input.person
  * @param {boolean} input.voting
  * @returns {string}
  */
@@ -99,6 +100,7 @@ function personHtml({ person, voting }) {
       office: person.office,
       reach: person.reach,
       role: person.role,
+      ...(person.gender ? { gender: person.gender } : {}),
     }) +
     `<span class="person__who">` +
     `<b class="person__name">${escapeHtml(person.name)}</b>` +

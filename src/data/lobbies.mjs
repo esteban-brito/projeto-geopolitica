@@ -48,7 +48,7 @@ export const LOBBY_SCHEMA = {
 export const LOBBIES = [
   {
     id: "mercado",
-    label: "O mercado",
+    label: "Mercado financeiro",
     /* ELE NAO PEDE LEI, EXIGE SUPERAVIT — e essa e a diferenca dele para os outros tres: nao
        ha o que assinar para agrada-lo, so o que deixar de gastar. */
     wants: "que a dívida pare de crescer",
@@ -61,7 +61,7 @@ export const LOBBIES = [
   },
   {
     id: "fisiologismo",
-    label: "O baixo clero",
+    label: "Parlamentares",
     /* ⚠ FOME DE EXECUCAO, E NAO IDEOLOGIA. */
     wants: "que a torneira das emendas fique aberta",
     economic: 50,
@@ -71,7 +71,7 @@ export const LOBBIES = [
   },
   {
     id: "produtivo",
-    label: "O setor produtivo",
+    label: "Indústria e agro",
     wants: "estrada, crédito e safra escoada",
     economic: 76,
     liberty: 58,
@@ -81,7 +81,7 @@ export const LOBBIES = [
   },
   {
     id: "ordem",
-    label: "As forças de ordem",
+    label: "Militares e polícia",
     /* O unico dos quatro que se move no eixo das LIBERDADES, e e por isso que ele existe
        separado: um governo pode agradar o mercado e o produtivo ao mesmo tempo e ter este
        contra, porque o que ele cobra nao e dinheiro. */

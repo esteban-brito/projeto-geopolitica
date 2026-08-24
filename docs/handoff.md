@@ -4,24 +4,420 @@
 > leia este arquivo e depois `docs/standards.md`. O nome deste arquivo é estável
 > de propósito: ponteiro com data envelhece e obriga a mover arquivo.
 
-## ▶ COMECE AQUI — a ordem para a sessão 16
+## ▶ COMECE AQUI — a ordem para a sessão 18
 
-**Estado: verde e commitado em `a01ffdb`.** `validate` (235 provas · 12 guardas · 50 provas
-sintéticas · 128 arquivos), `walk` verde, árvore limpa. Branch `acoplamento-e-simulador`,
-33 commits à frente da `main` (fast-forward quando ele quiser).
+**Estado: verde, e NA ÁRVORE — nada commitado.** `validate` (**236 provas · 12 guardas · 50
+provas sintéticas · 127 arquivos**), `walk` verde. Último commit: `4e54088`.
 
-**A ordem dele é uma só, e ela não mudou:** _"agora é UI, design, css, visual mesmo, do
-gabinete todo"_. **Motor está fechado** até a reformulação — decisão registrada dele:
-_"eu ainda vou mudar muito o jeito que o jogo funciona"_.
+⚠ **25 arquivos modificados, 1 apagado, `vendor/` novo — 1.851 inserções contra 1.042
+remoções.** Se a próxima sessão abrir e a árvore estiver limpa, alguém commitou; se estiver
+suja, este arquivo descreve o que está nela.
 
-### ⚠ O QUE FAZER AMANHÃ — cinco itens, todos decididos por ele, nenhum em aberto
+**A ordem dele não mudou:** UI, design, visual. **Motor fechado.**
 
-Vieram de um dossiê externo (Gemini) que ele trouxe. **Ele decidiu item a item**; o que
-segue é execução, não deliberação.
+### ▶ O QUE FAZER, na ordem
+
+1. ▶ **A COLUNA DA DIREITA DO GABINETE AINDA NÃO É NOTA 10.** Ele deu 7 na Caixa de Entrada
+   antes da revisão e **8 depois**; a coluna da direita nunca recebeu nota. O que sobrou lá
+   está na seção "o que falta para 9-10" abaixo;
+2. ▶ **AS OUTRAS OITO TELAS NÃO PASSARAM POR NADA DISTO.** Congresso, Finanças, Área, O Estado,
+   Mesa, Fecho e Relatório continuam com a tipografia antiga, com `--paper` renomeado mas sem
+   revisão, e sem passar pelo medidor de tipografia. ⚠ **A Caixa de Entrada foi de 11
+   combinações de tipo para 2 famílias × 4 tamanhos × 2 pesos** — as outras telas não;
+3. ▶ **O ÍNDICE DA BANDEJA NÃO DISTINGUE A ESPÉCIE DA CARTA.** É o único item de TELA da lista
+   dos quatro que faltam; os outros três são de motor.
+
+### ⚠ AS FERRAMENTAS DESTA SESSÃO MORAM EM `tmp/`, que o git ignora
+
+Reconstruir é barato, e **elas foram o que achou quase tudo**:
+
+- `tmp/auditar-caixa.mjs` — abre TODA carta em 24 meses e mede transbordo, rolagem dentro de
+  recorte, cards de alturas desiguais, e o **inventário de tipografia com o nome da peça atrás
+  de cada combinação**. Foi ele que achou os quatro pesos no mesmo 10px;
+- `tmp/prints-caixa.mjs` — um print 2× de cada espécie de carta;
+- `tmp/fontes.mjs` — o censo de famílias, tamanhos e pesos da bandeja inteira;
+- `tmp/medir-coluna.mjs`, `tmp/auditar-faixa.mjs`, `tmp/vaos.mjs` — geometria da coluna da
+  direita, da Trindade e dos vãos em volta de uma barra;
+- `tmp/tipos.mjs` — renderiza a mesma carta em N pares tipográficos, para escolher com o olho.
+
+### ⛔ NÃO REABRIR
+
+A fita de cinco cores no Gabinete, os botões `NEGOCIAR`/`FINANÇAS`, as três classes da Rua, o
+`letter__why`, o `annex__foot`, o vocativo, a pastilha com fundo, as setas verde e vermelha, e
+**o mobile** — _"a perfeição que eu almejo é no desktop sempre"_.
+
+## ✔ AS DUAS FAMÍLIAS ENTRARAM NO PROJETO — 22/08/2026
+
+Queixa dele: _"as fontes que você usa são muito feias"_, com o teto de **duas**. Renderizei a
+mesma carta em cinco pares e ele escolheu **Segoe UI Variable + Constantia**.
+
+⚠ **AS DUAS SÃO DA MICROSOFT E NÃO PODEM SER REDISTRIBUÍDAS**, e ele pediu fonte aberta desde
+já. Entraram as equivalentes sob SIL OFL, vendorizadas em `vendor/fonts/`:
+
+| token            | agora                           | antes       |
+| ---------------- | ------------------------------- | ----------- |
+| `--font-display` | **Inter**                       | `system-ui` |
+| `--font-text`    | **Inter**                       | `system-ui` |
+| `--font-record`  | **Source Serif 4**              | `Georgia`   |
+| `--font-machine` | mono do sistema — **não mudou** | idem        |
+
+São **variáveis**: um arquivo cobre 400 e 700, e cada família vem em `latin` e `latin-ext`, com
+`unicode-range` para o segundo só baixar se a página precisar. **226KB no total.** A pilha de
+reserva continua declarada, e não é cerimônia: `font-display: swap` desenha com ela no primeiro
+quadro. ⚠ **E o `@font-face` mora DENTRO de `@layer tokens`** — fora, a guarda `cascade` reprova
+como CSS solto, com razão.
+
+### ⛔ E A TROCA DE FONTE REABRIU UM DEFEITO QUE JÁ ESTAVA CONSERTADO
+
+**A Inter é mais larga que a Segoe UI, e a coluna da SOMA voltou a sair cortada.** Os 24px
+vieram do recuo lateral do card — que saiu junto com a caixa dele, porque **recuo existe para
+afastar conteúdo de uma BORDA, e aquele card não tem mais borda nenhuma**.
+
+⚠ **E O PASSEIO FICOU VERDE COM A TABELA CORTADA.** Ele mede a rolagem da PÁGINA, e uma peça com
+`overflow-x: auto` engole o excesso sem a página crescer um pixel. ✔ Nasceu `checkClipped`:
+qualquer peça com recorte próprio cujo conteúdo não cabe é acusada. ⚠ **E ela nasceu SEM
+ALCANCE** — rodava nos pontos de troca de tela, e no mês 1 a bandeja não tem carta com tabela.
+Agora o passeio **avança até achar uma carta com anexo** e mede lá. Verificado reintroduzindo o
+defeito: acusa `annex__scroll 390>353`.
+
+## ✔ A REVISÃO DA CAIXA DE ENTRADA, PIXEL A PIXEL — 22/08/2026
+
+Nota dele antes: **7**. O método foi medir primeiro e olhar depois — `tmp/auditar-caixa.mjs`
+instrumenta TODA carta (transbordo, rolagem horizontal, cards desiguais, e o inventário de
+tipografia com o nome da peça atrás de cada combinação), e `tmp/prints-caixa.mjs` tira um
+print 2× de cada espécie.
+
+### ⚠ O ACHADO PRINCIPAL FOI TIPOGRÁFICO, e nenhum olho o pegaria
+
+**A carta usava 11 combinações de tamanho/peso/família — e QUATRO PESOS no mesmo corpo de
+10px** (400, 600, 700 e 800). É literalmente o que o `standards.md` proíbe: _"onze tamanhos
+entre 11px e 17px não formam hierarquia nenhuma: formam ruído"_.
+
+Os 600 eram órfãos (`annex__table tbody th`, `annex__sum`, `letter__name`) e o 800 era um
+quinto grau só do botão. ✔ **Dois pesos agora, 400 e 700**, e a diferença entre peça e peça
+sai do tamanho e da tinta.
+
+⚠ **E o vocativo era MENOR que a frase que ele abre** — 13,6px acima de um corpo de 15,2. Isso
+é inversão de hierarquia, não sutileza.
+
+### ⛔ A TARJA DA COLUNA TINHA DOIS DONOS, E OS DOIS PINTAVAM DE VERMELHO
+
+`data-weight="high"` e `data-urgency="now"` usavam **`--crisis` os dois**: um aviso sem prazo
+nenhum aparecia na coluna com a marca de _"vence agora"_. ⚠ **A prosa do não-lido, dez linhas
+abaixo na mesma folha, já proibia isso com todas as letras** — _"a esquerda já significa PRAZO
+em três cores, e uma quarta cor ali faria o jogador ler urgência onde há novidade"_.
+
+✔ A tarja tem um dono só. Quem carrega o peso agora é **a pastilha, que desceu para o índice**
+— e ela resolve duas coisas: o remetente repetia _"Denise Hollanda Cavalcanti"_ em **seis de
+sete linhas**, e quem escolhe o que abrir precisa saber QUANTO andou, não de novo quem assinou.
+⚠ `weight` saiu do `Dispatch` junto: campo que chega e ninguém lê é dado morto.
+
+### ✔ E TRÊS DEFEITOS DE ALINHAMENTO QUE SÓ O PRINT 2× MOSTROU
+
+- **a pastilha encostava no `%`** do assunto e caía para a base da linha;
+- **os cards irmãos tinham caixas iguais e conteúdo desalinhado**: uma legenda de duas linhas
+  empurrava o valor para baixo. ✔ A leitura ancora no fim do card, então dois irmãos alinham o
+  que o olho compara;
+- **a pastilha de dinheiro quebrava a linha do índice** em duas das sete cartas — `R$ 7,7 bi`
+  com 0,18em de entreletra. ⚠ **Entreletra é para rótulo em versal**, e o que mora na pastilha
+  é número. E a linha precisou de `min-width: 0`: o remetente tem reticência, mas só encolhe se
+  o pai puder encolher.
+
+### ⛔ E DEPOIS A SETA INTEIRA SAIU — nota dele: 8
+
+Primeiro caiu o fundo (_"esse fundo retangulo fica estranho"_), e na rodada seguinte a peça
+inteira: _"não curti as setinhas verde e vermelha, nem nada do tipo, sem elas estava bem
+melhor"_. ✔ `.signal`, `.signal__arrow`, `deltaBadge`, o campo `badge` do `Dispatch` e os
+tokens `--growth-rgb` / `--signal-down-rgb` saíram todos — não sobrou seletor nem chave.
+
+⚠ **E `Base cai a 229 cadeiras` FICA no nível.** A pastilha foi o que revelou que a manchete
+falava na variação enquanto as outras duas falavam no nível; a pastilha morreu e a correção
+sobreviveu, porque ela nunca dependeu da pastilha. **A variação segue dita na primeira linha do
+corpo**, que é onde ela sempre esteve.
+
+### ✔ A TIPOGRAFIA DA CAIXA, MEDIDA E FECHADA — `tmp/fontes.mjs`
+
+Varredura de 20 meses abrindo cada carta, índice e ofício juntos:
+
+| eixo         | quantas | quais                                       |
+| ------------ | ------- | ------------------------------------------- |
+| **famílias** | **2**   | `system-ui` (4.962 peças) · `Georgia` (234) |
+| **tamanhos** | **5**   | 10 · 12,48 · 13,6 · 15,2 · 16,8px           |
+| **pesos**    | **2**   | 400 e 700                                   |
+| combinações  | 19      | todas dentro de 2 × 5 × 2                   |
+
+⚠ **A terceira família do projeto — `--font-machine`, a mono do carimbo — NÃO aparece na caixa
+de entrada.** Isso é correto e vale registrar: ali não há rito carimbado, só documento.
+
+⚠ **E há UMA divergência declarada:** o assunto é `Georgia 16,8` no ofício e `system-ui 13,6`
+no índice. É a mesma frase em duas famílias, e a razão é de papel — no ofício ele é o título do
+documento (o que se assina, e serifa é a regra disso); no índice é item de navegação. Se um dia
+alguém achar que é defeito, **é aqui que a decisão está escrita.**
+
+### ✔ ANTES DISSO: A CAIXA DA SETA SAIU, E O CABEÇALHO GANHOU FAIXA
+
+- ⚠ **`"esse fundo retangulo fica estranho"`** — e ele tem razão pelo mesmo motivo que o ciclo
+  11 matou a pastilha: a caixa era o dialeto de aplicativo, e o que carrega o sinal é a **cor**
+  e a **seta**. Sobrou seta e número. `--growth-rgb` e `--signal-down-rgb` saíram junto —
+  existiam só para aquele fundo, e a guarda `tokens` os acusaria;
+- **as duas setas medem 8×5 e o desvio contra o número é 0,3px**, medido. A simetria vem de as
+  duas ocuparem a MESMA caixa — a que sobe pinta a borda de baixo, a que desce pinta a de cima
+  — e o centro é do `align-items: center` do pai, nunca de ajuste manual;
+- **a faixa do remetente** é o par de cima da faixa de ação: as duas sangram até a borda, as
+  duas usam o degrau de profundidade do card, e entre elas fica o documento.
+
+⚠ **E as duas faixas nasceram CURTAS:** a carta é uma grade com `justify-items: start`, então
+quem quer a largura toda **pede**. Sem `justify-self: stretch` a faixa media o próprio conteúdo
+e parava a 68px da borda — a margem negativa só deslocava, em vez de esticar. **É a terceira
+vez que este mesmo `justify-items: start` morde nesta sessão** (o bloco da coluna da direita e
+a seção de anexos foram as outras duas).
+
+### ▶ O QUE FALTA PARA 9-10, e três dos quatro são de MOTOR
+
+1. ⚠ **O VÃO NO PÉ, e ele é o maior buraco visual que sobrou.** Medido: ~300px na carta de
+   aprovação. **Metade das espécies não tem rodapé porque não tem o que fazer** — as portas que
+   elas abririam (`A Rua`, `Bastidor`) estão desligadas. Não é defeito de layout: é a caixa não
+   ter ação para oferecer;
+2. ⚠ **O REMETENTE É O MESMO EM SEIS DE SETE CARTAS.** Só três espécies têm remetente próprio
+   (relator, presidente da Câmara, líder); o resto é Casa Civil. É achado de ELENCO, não de
+   tela — e é o que faria o índice ter variedade de verdade;
+3. ⚠ **UMA ESPÉCIE PERGUNTA, ONZE INFORMAM.** A caixa é quase toda leitura. É isso que separa
+   um inbox de um mural, e é decisão de mecânica;
+4. **o índice não agrupa nem filtra por tipo** — no FM há abas. É tela, e é o único dos quatro
+   que dá para fazer sem tocar em motor.
+
+## ✔ AS DOZE CARTAS PASSARAM PELA MESMA PENEIRA — 22/08/2026
+
+**O método, e ele vale para a próxima:** instrumentar TODA carta do jogo — altura do corpo,
+número de linhas, número de anexos, altura do rodapé e o vazio que sobra — e rodar 22 meses
+abrindo cada uma. `tmp/todas-cartas.mjs`.
+
+**Antes × depois, medido:**
+
+| carta            | antes                       | depois                   |
+| ---------------- | --------------------------- | ------------------------ |
+| posse            | 194px · 3 linhas · 0 anexos | 70px · 1 linha · 2 cards |
+| mês fechado      | 119px · 3 linhas            | 45px · 1 linha           |
+| fervura de grupo | 144px · 3 linhas · 0 anexos | 70px · 1 linha · 2 cards |
+| ruptura          | 157px · 2 linhas · 0 anexos | 95px · 1 linha · 1 card  |
+| minoria          | 107px · 2 linhas · 0 anexos | 70px · 1 linha · 2 cards |
+| **vazio no pé**  | até 390px                   | **1px ou 37px**          |
+
+### ⚠ TRÊS DUPLICAÇÕES QUE SÓ APARECERAM COM A PASTILHA E O ANEXO
+
+1. **`Base perde 157 cadeiras` + pastilha `▼157`** — o mesmo número duas vezes. As outras duas
+   manchetes já falavam no NÍVEL; esta falava na variação. ✔ Virou `Base cai a 229 cadeiras`:
+   o assunto carrega o que o presidente TEM, a pastilha carrega o quanto andou;
+2. **as três leituras do corpo da carta do mês** repetiam o anexo _"o mês em três leituras"_,
+   que mostra as mesmas três **com o antes ao lado**. Três linhas de prosa para dizer metade do
+   que a tabela abaixo dizia inteiro. ✔ Saíram, e `inbox.street`/`base`/`vault` com elas;
+3. **a regra do impeachment como segunda linha de toda ruptura** — a mesma frase todo mês, lida
+   uma vez e ignorada depois. ✔ Virou card.
+
+### ✔ E CINCO FRAGMENTOS DE FRASE VIRARAM LEGENDA
+
+`"da despesa do ano é obrigatória, e ela não passa pela sua caneta"`,
+`"de 513, e a maioria fecha em"`, `"de 100 de pressão, contra um ponto de fervura de"` — todas
+eram **costura em volta de um número**. Num card a legenda nomeia e o valor responde, então a
+costura deixa de existir. ⚠ **E a guarda `vocabulary` cobrou cada órfã que isso deixou**, uma
+por uma — foi ela que guiou a limpeza.
+
+⚠ **`vaultFree` e `inheritedRoom` viraram a MESMA frase e a guarda acusou:** são a mesma
+leitura em dois lugares e mudam juntas por definição. Foram para `TERMOS.roomLine`.
+
+### ⚠ O QUE FICOU DE FORA, DE PROPÓSITO
+
+As cartas de **caixa** e **cadeiras** ficaram com 2 linhas: a segunda é a dica que ensina o
+que aquele número significa (_"é desse dinheiro que sai emenda, e é ele que compra voto"_).
+Para quem nunca jogou, ela paga o próprio pixel.
+
+## ✔ A FAIXA E A CÂMARA, DEPOIS DA REVISÃO DELE — 22/08/2026
+
+### ⚠ A TRINDADE: `.reading` É GRAMÁTICA DE LISTA VERTICAL, e eu a usei deitada
+
+Primeira tentativa: três `.reading` lado a lado. **Ele reprovou olhando, e a medição deu razão
+a ele em três eixos:**
+
+| defeito               | medido                                                       |
+| --------------------- | ------------------------------------------------------------ |
+| separação entre itens | **24px**, contra **12px** dentro do item — dobro não agrupa  |
+| alinhamento vertical  | barra **5,9px acima** do centro (214,3 × 220,2)              |
+| vão do rótulo curto   | coluna fixa de 112px, "Capital" tem 38px → **74px de vazio** |
+
+⚠ **A LIÇÃO, e ela vale para a próxima peça:** o que faz `.reading` funcionar é o alinhamento
+ENTRE LINHAS. Numa faixa de três colunas não existe linha para alinhar, então ela só entrega o
+custo. **Padronize os TOKENS, não o arranjo.** O item virou pilha — nome e valor nos dois
+extremos da mesma linha, barra na largura toda, legenda embaixo.
+
+### ✔ E A CÂMARA FOI REFEITA POR CAUSA DE UM DEFEITO DE MODELAGEM, e não de forma
+
+Queixa dele: _"um jogador novo bate o olho e não entende absolutamente nada"_. Procurando o
+porquê, a marca da maioria **não media o que parecia medir**:
+
+⚠ **UM RISCO EM `maioria/total` DESENHADO SOBRE A ORDEM IDEOLÓGICA marca onde cai a 257ª
+CADEIRA, e não se o governo tem maioria.** E as partes claras da fita — o que cada faixa
+entrega — são **descontínuas**, então não havia como compará-las com o risco a olho. O bloco
+dizia três coisas ao mesmo tempo e nenhuma respondia a pergunta que decide o mês.
+
+✔ **A primeira linha passou a responder:** régua de 0 a 513, preenchimento na base, marca na
+maioria, limiar escrito embaixo — a mesma gramática da Trindade. A fita desceu para a segunda
+linha e virou o que sempre foi: a composição do plenário.
+
+⚠ **E A PROVA FOI ATRÁS DA MARCA em vez de sumir** (`A FITA FECHA O PLENARIO`): ela cobrava
+`ribbon__majority`; agora cobra que, na régua, preenchimento e marca meçam a MESMA escala.
+⚠ **E ela precisou de âncora:** a Trindade desenha três réguas com `--index;--mark` acima desta
+na mesma tela, e sem ancorar no rótulo a prova media o limiar da ruptura social — 20.
+
+### ⚠ O MEDIDOR DE CONTRASTE PRODUZIU FALSO POSITIVO, e o conserto é o terceiro decil
+
+A mediana da caixa como fundo falha em caixa apertada: num valor de **um dígito** a caixa é
+quase toda glifo, e `--ink` sobre a lâmina saiu como **4,05** quando o par real passa de 14.
+✔ O fundo passou a ser o **terceiro decil**. Em caixa larga os dois dão o mesmo número, porque
+ali letra é minoria de pixel.
+
+⚠ **E A TROCA DE TINTA FOI RE-VERIFICADA sob a amostragem nova:** `#93a1b4` continua
+reprovando em **quatro** lugares — inclusive `head__label` em Área, que o método anterior nem
+alcançava. A decisão se sustenta.
+
+### ✔ E TRÊS COISAS QUE ELE PEDIU DIRETO
+
+- **as duas frases explicativas foram DELETADAS** — _"tudo pra mim é lixo"_ (item 3);
+- **a legenda do limiar subiu um degrau da escala** (`--text-label` → `--text-note`), e os
+  polos em versal ficaram onde estavam;
+- **o vão em volta da barra caiu de 5,7/9,0px para 3,6/3,0px.** ⚠ A assimetria tinha DUAS
+  causas, e nenhuma era o `gap`: a meia entrelinha herdada do corpo, e um `margin-top` na
+  própria legenda que **somava ao `gap` de quem a abrigava**. Espaço é do contenedor.
+
+## ✔ A COLUNA DA DIREITA FOI REFEITA DO ZERO — 22/08/2026
+
+**O diagnóstico, medido a 1440×980:** havia **duas gramáticas** disputando a mesma coluna —
+placar com número grande, botão e barra de 432px nas duas fichas de cima; lista com barra
+recuada de 192px nas duas de baixo. Quatro divergências com número:
+
+| eixo             | antes                  | agora          |
+| ---------------- | ---------------------- | -------------- |
+| largura da barra | 432px e 192px          | **184px, uma** |
+| x inicial        | 955 e 1135             | **1111, um**   |
+| altura da barra  | 20px (fita) e 8px      | **8px, uma**   |
+| raio             | 0px (fita) e 2px       | **2px, um**    |
+| altura da linha  | 34px (caldeira) e 20px | **20px, uma**  |
+
+**E duas duplicações que a medição achou:** a barra superior já mostra `BASE 436` e
+`APROVAÇÃO 44%` — os dois números grandes da coluna eram eco.
+
+**A gramática nova tem DUAS formas, e duas é o teto:**
+
+- **`.reading`** — nome · barra · valor;
+- **`.reading--wide`** — nome atravessa a pista, só o valor fica na margem. Ela existe porque
+  nem toda leitura tem régua: _"livre no mês"_ não tem teto mensal contra o que se medir, e
+  inventar uma escala para preencher a pista seria desenhar um número que o motor não produz.
+
+**O que saiu, e por quê:**
+
+- **os botões `NEGOCIAR` e `FINANÇAS`** — decisão dele. O rail já leva às duas telas, e eram
+  metade da despadronização: duas fichas tinham porta e duas não;
+- **os dois números grandes** (`card__hero`) — eco da barra superior;
+- **a fatia do capital** de cada grupo da caldeira (`35% do capital`) — ela vem do catálogo e
+  não muda em 48 meses, e era a segunda fileira que fazia aquela linha ter 34px. ✔ **Ficou no
+  `aria-label`**, então quem lê por som não perdeu nada;
+- **o que cada grupo cobra** (`boiler__wants`) — só aparecia no mês da fervura, e a carta de
+  fervura já diz a mesma coisa com mais espaço.
+
+**E as legendas dos blocos VOLTARAM** — `A CÂMARA`, `O CAIXA DO MÊS`, `QUEM PODE DERRUBAR`,
+`A RUA`. ⚠ Cinco delas tinham saído em 20/08; a premissa daquela retirada era que o número
+grande nomeava a ficha sozinho. Sem número grande, uma lista que abre em _"O mercado"_ não
+diz de que assunto ela é. **Foi a premissa que caducou, e não a regra.**
+
+### ⚠ TRÊS DEFEITOS QUE SÓ A MEDIÇÃO PEGOU, e nenhum falhava
+
+- **`.card__body` tem `justify-items: start`**, então quem quer a largura toda **pede**. Sem
+  `justify-self: stretch` o bloco media o próprio texto: as réguas da caldeira saíram com
+  **0px** e o medidor do cofre com **2px** — e os dois blocos com legenda de cores ficavam
+  largos, porque o TEXTO da legenda os esticava. Nada falhou;
+- **`grid-column: 2` num filho de `.block__rows`** criou uma segunda coluna no bloco e
+  desmontou a tela inteira. A chave de cores mora dentro de uma `.reading` vazia, porque é lá
+  que a pista da barra existe;
+- **a chave da fita tinha TRÊS peças** e quebrava em duas linhas dentro de 184px, deixando o
+  bloco 28px mais alto. A maioria virou linha própria — que é a forma que a coluna usa.
+
+### ✔ E O MOBILE ESTAVA QUEBRADO ANTES DISTO
+
+Medido a 390px **na árvore anterior**: a coluna da direita fechava em 240px e **toda barra
+dela saía com 0px**. O rail deitava desde 1180px e a grade dos cartões nunca acompanhou.
+Consertado de carona (`.cards` desempilha; no telefone o nome ocupa a linha e a barra desce).
+⚠ **E ele foi explícito:** _"não me importo tanto com o mobile, a perfeição que eu almejo é no
+desktop sempre"_.
+
+### ⚠ AS DUAS FERRAMENTAS DESTA SESSÃO MORAM EM `tmp/`, que é ignorado pelo git
+
+`tmp/medir-coluna.mjs` (geometria de cada peça da coluna) e `tmp/celular.mjs`. O medidor de
+contraste **não** — ele virou parte do `walk`.
+
+## ✔ O QUE A SESSÃO 17 FEZ — 22/08/2026
+
+### ✔ 1 · A FRASE "as três, juntas" SAIU INTEIRA
+
+Palavras dele: _"não serve pra bosta nenhuma essa frase, eu quero minimalismo porra"_. Saiu o
+`<span>` do `block__legend` em `trinityHtml`, saíram `trinityHold` e `trinityNone` de
+`strings.mjs`, e saiu o `holding` que escolhia entre as duas. `vocabulary` verde.
+
+### ✔ 2 · A TABELA PASSOU A FECHAR — método do MAIOR RESÍDUO
+
+`apportion` nasceu em `src/ui/shared/format.mjs`: pisos por `Math.floor`, e o que sobra vai
+para os maiores resíduos. ⚠ **O resíduo é COM SINAL e não em módulo** — a linha do desgaste
+tira pontos, e o módulo daria o ponto à célula errada.
+
+Medido: a Classe C imprimia células somando **44** com total **43**; agora fecha em 43.
+
+⚠ **A prova é de PROPRIEDADE e não de caso** (`tests/suites/screens.mjs`): `fast-check`
+sorteia as quinze notas — negativos inclusos —, renderiza pela `describeMail` e cobra
+_a soma das células impressas = o total impresso_ em toda linha. Uma segunda prova cobra que
+nenhuma célula ande mais de um ponto do próprio valor.
+
+### ✔ 5 · O CONTRASTE — e a medição achou SETE, não três
+
+⚠ **O MEDIDOR MORA NO `walk`, e a decisão tinha de vir antes de escrever:** ele não cabe em
+`npm run check`, que é Node puro, porque `--ink-dim` sobre `--bg` passa e sobre a lâmina
+reprova — o par teórico e o par renderizado são dois pares diferentes.
+
+**O algoritmo:** uma captura de página inteira por tela, decodificada num `<canvas>`; para
+cada FOLHA com texto, a tinta sai da cor COMPUTADA (composta sobre o fundo quando tem alfa) e
+o fundo sai da MEDIANA dos pixels da caixa — letra é minoria de pixel. Piso 4,5, ou 3,0 em
+texto grande.
+
+⚠ **Ele só mede FOLHA** — elemento sem filho elemento. Um `<p>` com `<b>` dentro fica de fora
+e o `<b>` é medido sozinho; o texto próprio do pai não é medido. É a omissão declarada.
+
+**O que ele achou, e as duas famílias:**
+
+| peça                           | antes     | causa                             |
+| ------------------------------ | --------- | --------------------------------- |
+| `.trinity__who`                | 4,10      | `--ink-dim` na parte clara        |
+| `.trinity__value small`        | 3,89      | `--ink-dim` na parte clara        |
+| `ledger__value` × 3 (Finanças) | 3,86–4,48 | `--crisis` como TINTA             |
+| `tally__cash b` × 2 (Mesa)     | 4,02–4,40 | `--crisis` como TINTA             |
+| `report__line b` (Relatório)   | 4,35      | `--crisis` como TINTA             |
+| `.passage__wait`               | 4,48      | `--paper-ink` a 0,6 no pergaminho |
+
+⚠ **E os números da retomada anterior (3,32 · 3,89 · 4,13) vinham de outro método** — os 5%
+mais claros contra os 30% mais escuros. Ele é mais pessimista; o daqui usa a cor exata.
+`.street__poles` passava (4,78) e não estava errado.
+
+**Os três consertos, e nenhum abandona o tom:**
+
+- **`--ink-dim` de `#93a1b4` para `#a4b1c2`** — o menor degrau que fecha; pior par agora 4,73;
+- ⚠ **`--signal-down` DEIXOU DE APONTAR PARA `--crisis`** e virou `#ea6f66`. O par de sinal
+  aparece **sempre** em `color:` e nunca em preenchimento — é isso que deixa o vermelho de
+  leitura ser mais claro que o vermelho de superfície sem a paleta divergir. E **todo
+  `color: var(--crisis)` virou `color: var(--signal-down)`**: o eixo agora é
+  _crise como tinta = `--signal-down`; crise como marca ou preenchimento = `--crisis`_;
+- **`.passage__wait` de 0,6 para 0,72** de demão sobre o pergaminho.
+
+O verde não se mexeu: já passava.
 
 ---
 
-**1. ⛔ MATAR "AS TRÊS, JUNTAS" — a frase inteira, e não uma reescrita.**
+**1. ✔ FEITO — MATAR "AS TRÊS, JUNTAS" — a frase inteira, e não uma reescrita.**
 
 Palavras dele: _"não serve pra bosta nenhuma essa frase, eu quero minimalismo porra"_.
 ⚠ **Eu tinha recomendado REESCREVER** (a frase carrega a regra do impeachment: o processo
@@ -35,7 +431,7 @@ só abre com as três rupturas juntas). **Ele recusou, e a decisão é dele.** N
 
 ---
 
-**2. ✔ A TABELA QUE NÃO SOMA — método do MAIOR RESÍDUO.**
+**2. ✔ FEITO — A TABELA QUE NÃO SOMA — método do MAIOR RESÍDUO.**
 
 Ele delegou: _"o que vc recomendar, vc faz"_. A recomendação foi (b).
 
@@ -108,7 +504,7 @@ Rua 90px, numa coluna de 630px.
 
 ---
 
-**5. ✔ O CONTRASTE — e escrever a guarda `contrast`, que o `standards.md` §7 declara ausente.**
+**5. ✔ FEITO — O CONTRASTE — e escrever a guarda `contrast`, que o `standards.md` §7 declara ausente.**
 
 ⚠ **O DOSSIÊ ERROU O ALVO E ACERTOU A VIZINHANÇA.** Ele disse que a barra superior não
 destaca. **Medido no pixel renderizado, ela passa folgado:** rótulo do vital **6,01**, valor

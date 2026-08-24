@@ -162,7 +162,7 @@
   }
 
   .closing__abandoned b {
-    color: var(--crisis);
+    color: var(--signal-down);
   }
 
   /* ── NO CELULAR A LINHA VIRA DUAS ─────────────────────────────────────────── Cinco colunas

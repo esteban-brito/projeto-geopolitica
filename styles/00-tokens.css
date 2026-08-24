@@ -19,6 +19,49 @@
 }
 
 @layer tokens {
+  /* ── AS DUAS FAMILIAS, VENDORIZADAS ───────────────────────────────────────── ⚠ ELAS SAO DE
+     LICENCA ABERTA POR EXIGENCIA, e nao por gosto: a comparacao no navegador elegeu Segoe UI
+     Variable + Constantia, e as duas sao da Microsoft e nao podem ser redistribuidas. Inter e
+     Source Serif 4 sao as equivalentes sob SIL OFL — ver `vendor/fonts/LICENCA.md`.
+     ⚠ E ELAS MORAM DENTRO DA CAMADA: `@font-face` fora de `@layer` e CSS solto, e a guarda
+     `cascade` reprova — com razao, porque foi assim que uma regra escapou da ordem uma vez.
+     Sao VARIAVEIS: um arquivo cobre 400 e 700, entao dois pesos nao custam dois downloads. */
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("../vendor/fonts/inter-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+20AC, U+2122;
+  }
+
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("../vendor/fonts/inter-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+1E00-1EFF, U+2020, U+20A0-20AB, U+2113, U+2C60-2C7F;
+  }
+
+  @font-face {
+    font-family: "Source Serif 4";
+    font-style: normal;
+    font-weight: 200 900;
+    font-display: swap;
+    src: url("../vendor/fonts/source-serif-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+20AC, U+2122;
+  }
+
+  @font-face {
+    font-family: "Source Serif 4";
+    font-style: normal;
+    font-weight: 200 900;
+    font-display: swap;
+    src: url("../vendor/fonts/source-serif-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+1E00-1EFF, U+2020, U+20A0-20AB, U+2113, U+2C60-2C7F;
+  }
+
   :root {
     --bg: #090d15;
     --bg-rgb: 9, 13, 21;
@@ -28,7 +71,12 @@
     --ink: #eef2f8;
     --ink-rgb: 238, 242, 248;
     --ink-soft: #c4cddb;
-    --ink-dim: #93a1b4;
+    /* ⚠ ELA SUBIU DE `#93a1b4` EM 22/08/2026, e o numero e medido no par RENDERIZADO: sobre a
+       parte mais clara da lamina do palco — onde a Trindade mora — o tom antigo dava 4,10 no
+       rotulo e 3,89 no limiar, contra o piso 4,5 de AA. A 10px nada disso e texto grande.
+       Em toda outra peca ele ja passava folgado (5,4 a 7,3), entao o conserto foi clarear a
+       TINTA e nao abandonar o tom: agora o pior par da tela e 4,73. */
+    --ink-dim: #a4b1c2;
 
     /* O CONTRASTE FOI MEDIDO antes de fechar. */
     --brand: #c2a675;
@@ -40,21 +88,16 @@
     --stable-rgb: 111, 140, 176;
     --growth: #4fbf87;
 
-    /* Um indicador que sobe usa exatamente o verde de crescimento; duas cores para o mesmo
-       conceito e como uma paleta comeca a divergir. */
+    /* ── O PAR DE SINAL E TINTA, E SO TINTA ─────────────────────────────────── Os dois
+       aparecem SEMPRE em `color:` e nunca em preenchimento — e e isso que permite ao vermelho
+       de leitura ser mais claro que o vermelho de superficie sem a paleta divergir.
+       ⚠ `--signal-down` DEIXOU DE APONTAR PARA `--crisis` EM 22/08/2026, e o motivo e medido
+       no par renderizado: `R$ 72,6 bi`, `80,1%` e `0,01%` davam 4,48, 3,89 e 3,86 sobre a
+       metade CLARA da lamina de Financas, contra o piso 4,5. A regra escrita manda clarear a
+       tinta e nao abandonar o tom; o matiz e a saturacao ficam, e o pior par vai a 4,76.
+       O verde ja passava, e por isso ele nao se mexeu. */
     --signal-up: var(--growth);
-    --signal-down: var(--crisis);
-
-    --axis-1: #b8443c;
-    --axis-2: #c86f36;
-    --axis-3: #c7a83f;
-    --axis-4: #4f8f55;
-    --axis-5: #2c6668;
-    --axis-1-rgb: 184, 68, 60;
-    --axis-2-rgb: 200, 111, 54;
-    --axis-3-rgb: 199, 168, 63;
-    --axis-4-rgb: 79, 143, 85;
-    --axis-5-rgb: 44, 102, 104;
+    --signal-down: #ea6f66;
 
     --bordo: #8f3b4a;
     --bordo-rgb: 143, 59, 74;
@@ -66,17 +109,21 @@
     --rail-costly: #232a33;
     --rail-mark: #8a734c;
 
-    /* A primeira versao era #221d18 — pergaminho a meia luz —, e a escolha estava certa na
-       intencao e errada na medida: contra a lamina, ela diferia quase so em MATIZ, e nao em
-       claridade. */
-    /* Ela existiu por algumas horas para o oficio aberto ser um marrom TRANSLUCIDO — "da pra
-       ser marrom liquid glass o bloco da direita?" —, e a translucidez cobrou 9,7 fps de
-       media: uma superficie grande translucida sobre a lamina recompoe a cada quadro, porque
-       `--light-angle` interpola. */
-    --paper: #2b241c;
-    --paper-edge: #4a3f31;
-    --paper-ink: #d9cdbc;
-    --paper-ink-rgb: 217, 205, 188;
+    /* ── A FOLHA — o documento, e ela deixou de ser PAPEL em 22/08/2026 ────── Palavras dele:
+       "vou remover esse marrom cor de bosta e colocar um liquid glass escuro". O pergaminho
+       era a segunda substancia do sistema — vidro = a maquina do Estado, papel = o texto de
+       registro —, e a substancia caiu com ele: agora ha uma so, e o documento se distingue por
+       PROFUNDIDADE, e nao por materia.
+       ⚠ ELA E CHAPADA E NAO TRANSLUCIDA, e o numero e medido: o oficio translucido sobre a
+       lamina custou 9,7 fps, porque `--light-angle` interpola e a superficie inteira recompoe
+       a cada quadro. Uma folha grande usa tinta estatica; o passeio da luz fica na lamina. */
+    --sheet: #0c1220;
+    /* O ANEXO E UM DEGRAU ACIMA DA FOLHA, e nao uma segunda superficie: card sobre documento e
+       profundidade, e nao materia nova. */
+    --sheet-raise: #131b2c;
+    --sheet-edge: #1f2a3d;
+    --sheet-ink: #e6ecf6;
+    --sheet-ink-rgb: 230, 236, 246;
 
     /* No projeto anterior ele derrubou uma tela em movimento para 31 fps.
        MECA O FPS DE UMA TELA NOVA, com braco de controle sem filtro, antes de
@@ -123,7 +170,7 @@
     /* ── OS TRES RAIOS DE PECA PEQUENA, e eles nao derivam da lamina ────────── ⚠ ELES
        ENTRARAM EM PORQUE JA EXISTIAM ESCRITOS A MAO, em doze lugares: `2px` em oito e `3px`
        em quatro. */
-    --radius-paper: 3px;
+    --radius-sheet: 3px;
     --radius-stamp: 2px;
     --radius-dot: 999px;
 
@@ -144,8 +191,10 @@
     --space-8: 32px;
     --space-11: 44px;
 
-    --font-display: system-ui, "Segoe UI", sans-serif;
-    --font-text: system-ui, "Segoe UI", sans-serif;
+    /* ⚠ A PILHA DE RESERVA CONTINUA, e nao e cerimonia: `font-display: swap` desenha com ela
+       enquanto o arquivo carrega, e e ela que segura a tela no primeiro quadro. */
+    --font-display: "Inter", system-ui, "Segoe UI", sans-serif;
+    --font-text: "Inter", system-ui, "Segoe UI", sans-serif;
 
     /* A regra, e ela vale em toda tela: serifa = TEXTO DE REGISTRO o NOME de uma norma, de
        uma pessoa, o assunto de um oficio — aquilo que se assina sans = TODO O RESTO numero,
@@ -153,7 +202,7 @@
        DEFEITO MEU DO MESMO DIA. */
     --font-machine: ui-monospace, "Cascadia Mono", Consolas, monospace;
 
-    --font-record: Georgia, "Times New Roman", Times, serif;
+    --font-record: "Source Serif 4", Georgia, "Times New Roman", Times, serif;
 
     --text-hero: clamp(2.6rem, 6vw, 4.5rem);
 

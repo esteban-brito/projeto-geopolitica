@@ -39,7 +39,7 @@ export const SEGMENT_SCHEMA = {
 export const SEGMENTS = [
   {
     id: "baixa",
-    label: "Classe D/E",
+    label: "Baixa renda",
     share: 0.42,
     /* ⚠ A LUA DE MEL E REAL, e a primeira calibragem a esqueceu: com 38 de satisfacao a
        partida abria com 14% de otimo/bom, que e numero de governo em fim de mandato ruim — e
@@ -56,7 +56,7 @@ export const SEGMENTS = [
   },
   {
     id: "media",
-    label: "Classe C",
+    label: "Renda média",
     share: 0.38,
     initial: 62,
     prices: 0.3,
@@ -68,7 +68,7 @@ export const SEGMENTS = [
   },
   {
     id: "alta",
-    label: "Classe A/B",
+    label: "Alta renda",
     share: 0.2,
     /* A MENOS SATISFEITA NA ABERTURA, e nao por gosto: ela paga a maior parte do imposto e
        usa a menor parte do servico publico, entao a conta que ela faz do governo comeca mais

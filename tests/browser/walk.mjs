@@ -73,6 +73,32 @@ try {
   }
 
   /**
+   * ⚠ CONTEUDO CORTADO DENTRO DO PROPRIO RECORTE, e o passeio era CEGO para isso: ele media a
+   * rolagem da PAGINA, e uma peca com `overflow-x: auto` engole o excesso sem que a pagina
+   * cresca um pixel. Foi assim que a tabela do anexo saiu com a coluna da SOMA cortada duas
+   * vezes — na segunda, com o passeio verde ao lado.
+   * A rolagem lateral e o plano B declarado para janela estreita; a 1440px nada deve cortar.
+   *
+   * @param {string} where
+   */
+  async function checkClipped(where) {
+    const clipped = await page.$$eval("#main *, .rail *", nodes =>
+      nodes
+        .filter(node => {
+          const style = getComputedStyle(node);
+          if (style.overflowX !== "auto" && style.overflowX !== "scroll") return false;
+          return node.scrollWidth > node.clientWidth + 1;
+        })
+        .map(node => `${node.className || node.tagName} ${node.scrollWidth}>${node.clientWidth}`),
+    );
+
+    expect(
+      clipped.length === 0,
+      `[${where}] peca com conteudo cortado dentro do proprio recorte: ${clipped.join(" | ")}`,
+    );
+  }
+
+  /**
    * PECA DESENHADA POR CIMA DE PECA — e este e um defeito que so a geometria pega.
    *
    * @param {string} where
@@ -115,8 +141,132 @@ try {
     );
   }
 
+  /* ── O CONTRASTE, MEDIDO NO PAR RENDERIZADO ─────────────────────────────── ⚠ ELE NAO PODE
+     SER GUARDA DE `npm run check`, e a razao decide o desenho: `--ink-dim` sobre `--bg` passa
+     folgado e sobre a lamina do palco reprovava — o par teorico e o par certo sao dois pares
+     diferentes, e so um navegador sabe qual e qual. Por isso ele mora aqui.
+     O FUNDO SAI DO PIXEL e a TINTA sai do valor computado: amostrar a tinta na captura leria
+     serrilhado em vez de cor. A mediana da caixa e o fundo porque letra e minoria de pixel.
+     ⚠ SO FOLHA ENTRA — elemento sem filho elemento. Um `<p>` com `<b>` dentro fica de fora, e
+     o `<b>` e medido sozinho: medir o pai daria a cor dele contra a caixa dos dois. */
+  const FLOOR = 4.5;
+  /* AA nao pede 4,5 de texto GRANDE, e o piso dele e 3,0 — 24px, ou 18,66px em negrito. */
+  const LARGE = 24;
+  const LARGE_BOLD = 18.66;
+
+  /** @param {string} where */
+  async function checkContrast(where) {
+    /* ⚠ A CAPTURA E DA PAGINA INTEIRA, e nao da janela: Financas rola 1300px, e medir so o
+       que cabe na tela deixaria metade das leituras sem medicao nenhuma. Ver o desvio de
+       `scrollY` abaixo — a caixa do elemento e da JANELA, e a captura e do documento. */
+    const shot = (await page.screenshot({ fullPage: true })).toString("base64");
+    const failures = await page.evaluate(
+      async ({ shot, FLOOR, LARGE, LARGE_BOLD }) => {
+        const image = new Image();
+        image.src = `data:image/png;base64,${shot}`;
+        await image.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return ["o canvas de medicao nao abriu"];
+        ctx.drawImage(image, 0, 0);
+        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        const scale = image.width / document.documentElement.clientWidth;
+        const downBy = window.scrollY;
+        const acrossBy = window.scrollX;
+
+        /** @param {number} channel */
+        const linear = channel => {
+          const unit = channel / 255;
+          return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4;
+        };
+        /** @param {number} r @param {number} g @param {number} b */
+        const lum = (r, g, b) => 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
+
+        const found = [];
+        for (const node of document.querySelectorAll("#main *, .topbar *, .rail *")) {
+          if (node.children.length > 0) continue;
+          if (!(node.textContent ?? "").trim()) continue;
+
+          const box = node.getBoundingClientRect();
+          if (box.width < 2 || box.height < 2) continue;
+          const style = getComputedStyle(node);
+          if (style.visibility === "hidden" || style.opacity === "0") continue;
+
+          const parts = style.color.match(/rgba?\(([^)]+)\)/);
+          if (!parts || !parts[1]) continue;
+          const [r = 0, g = 0, b = 0, alpha = 1] = parts[1].split(",").map(Number);
+
+          const x0 = Math.max(0, Math.round((box.left + acrossBy) * scale));
+          const x1 = Math.min(canvas.width, Math.round((box.right + acrossBy) * scale));
+          const y0 = Math.max(0, Math.round((box.top + downBy) * scale));
+          const y1 = Math.min(canvas.height, Math.round((box.bottom + downBy) * scale));
+          const sample = [];
+          for (let y = y0; y < y1; y++) {
+            for (let x = x0; x < x1; x++) {
+              const at = (y * canvas.width + x) * 4;
+              sample.push({
+                r: pixels[at] ?? 0,
+                g: pixels[at + 1] ?? 0,
+                b: pixels[at + 2] ?? 0,
+                l: lum(pixels[at] ?? 0, pixels[at + 1] ?? 0, pixels[at + 2] ?? 0),
+              });
+            }
+          }
+          if (sample.length === 0) continue;
+          /* ⚠ O DECIL DO FUNDO DEPENDE DE QUE LADO A TINTA ESTA, e ignorar isso produziu os
+             DOIS falsos positivos deste medidor. A mediana pega tinta em caixa apertada — num
+             valor de um digito `--ink` saiu 4,05 quando o par real passa de 14. E um decil fixo
+             na ponta escura subestima texto ESCURO sobre fundo claro: o botao de avancar, tinta
+             `--bg-deep` sobre latao, saiu 4,43 porque a amostra caiu na parte mais escura do
+             gradiente. O fundo e o aglomerado do lado OPOSTO ao da tinta. */
+          sample.sort((one, other) => one.l - other.l);
+          const middle = sample[Math.floor(sample.length / 2)];
+          if (!middle) continue;
+          const inkOnDeclared = lum(r, g, b);
+          const light = inkOnDeclared > middle.l;
+          const back = sample[Math.floor(sample.length * (light ? 0.3 : 0.7))];
+          if (!back) continue;
+
+          /* A TINTA COMPOSTA, e nao a declarada: metade das notas deste projeto e branco com
+             alfa, e o literal delas nao e a cor que chega ao olho. */
+          const ink = lum(
+            r * alpha + back.r * (1 - alpha),
+            g * alpha + back.g * (1 - alpha),
+            b * alpha + back.b * (1 - alpha),
+          );
+          const ratio = (Math.max(ink, back.l) + 0.05) / (Math.min(ink, back.l) + 0.05);
+
+          const size = Number.parseFloat(style.fontSize);
+          const bold = Number.parseInt(style.fontWeight, 10) >= 700;
+          const floor = size >= LARGE || (bold && size >= LARGE_BOLD) ? 3 : FLOOR;
+          if (ratio + 0.005 < floor) {
+            /* O NOME DO PAI ENTRA JUNTO porque metade das acusacoes cai num `<b>` solto, e
+               `b` sozinho nao diz em que peca da tela ele mora. */
+            const name = node.className || node.tagName.toLowerCase();
+            const parent = node.parentElement?.className || "";
+            found.push(
+              `${parent ? `${parent} > ` : ""}${name} "${(node.textContent ?? "").trim().slice(0, 22)}" ` +
+                `${ratio.toFixed(2)} < ${floor} (${style.fontSize}, ${style.color})`,
+            );
+          }
+        }
+        return found;
+      },
+      { shot, FLOOR, LARGE, LARGE_BOLD },
+    );
+
+    expect(
+      failures.length === 0,
+      `[${where}] contraste abaixo do piso AA: ${failures.join(" | ")}`,
+    );
+  }
+
   await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
   await checkOverflow("gabinete");
+  await checkClipped("gabinete");
+  await checkContrast("gabinete");
   await checkNoOverlap("gabinete", ".cards > .card");
 
   /* 1 — O GABINETE E A TELA INICIAL, e ele nao decide nada. */
@@ -132,10 +282,14 @@ try {
   );
   await page.screenshot({ path: join(OUT, "walk-gabinete.png"), fullPage: true });
 
-  /* 1b — E O CARTAO LEVA AO LUGAR DE DECIDIR. */
-  await page.click('.card__action[data-section="congress"]');
+  /* 1b — E O RAIL LEVA AO LUGAR DE DECIDIR. ⚠ ERA O BOTAO DO CARTAO ate 22/08/2026, e ele
+     saiu com a reformulacao da coluna: duas fichas tinham porta e duas nao, e o rail ja leva
+     as duas telas que aqueles botoes abriam. */
+  await page.click('.rail [data-section="congress"]');
   await page.waitForTimeout(600);
   await checkOverflow("congresso");
+  await checkClipped("congresso");
+  await checkContrast("congresso");
   expect(
     (await page.locator(".tally__forecast").count()) === 0,
     "[congresso] a mesa sem pauta mostrou placar",
@@ -145,6 +299,8 @@ try {
   await page.click('[data-section="health"]');
   await page.waitForTimeout(600);
   await checkOverflow("area");
+  await checkClipped("area");
+  await checkContrast("area");
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento veio sem programas");
 
   /* 3 — O ORCAMENTO GRANULAR. */
@@ -183,6 +339,7 @@ try {
   const after = Number((await page.locator(".tally__forecast").innerText()).match(/\d+/)?.[0]);
   expect(after > before, `[mesa] comprar verba nao moveu o placar: ${before} → ${after}`);
   await page.screenshot({ path: join(OUT, "walk-mesa.png"), fullPage: true });
+  await checkContrast("mesa");
 
   /* 6 — ESTOURAR O CAIXA acende a linha de dinheiro. */
   for (let index = 0; index < 4; index++) {
@@ -223,6 +380,7 @@ try {
     `[relatorio] a tabela trouxe ${await page.locator(".report__table tbody tr").count()} bancadas e o catalogo tem ${CATALOG.parties.length}`,
   );
   await page.screenshot({ path: join(OUT, "walk-relatorio.png"), fullPage: true });
+  await checkContrast("relatorio");
 
   /* 7b — O MES E REPETIVEL. */
   const beforeRun = await page.locator("#turn").innerText();
@@ -279,6 +437,8 @@ try {
       "[caixa] a carta que pergunta saiu sem prazo legivel",
     );
     await checkOverflow("caixa com pergunta");
+    await checkClipped("caixa com pergunta");
+    await checkContrast("caixa com pergunta");
     await checkNoOverlap("caixa com pergunta", ".letter");
     await page.screenshot({ path: join(OUT, "walk-carta-pergunta.png"), fullPage: true });
   }
@@ -286,6 +446,8 @@ try {
   await page.click('[data-section="health"]');
   await page.waitForTimeout(600);
   await checkOverflow("area depois do mes");
+  await checkClipped("area depois do mes");
+  await checkContrast("area depois do mes");
 
   /* O QUE FOI DECIDIDO ESTA NO PROPRIO CONTROLE, e nao numa lista de leis em vigor: a lista
      morreu junto com o catalogo de pautas, e a pergunta que ela respondia — o que ja esta
@@ -299,6 +461,8 @@ try {
   await page.click('[data-section="finance"]');
   await page.waitForTimeout(600);
   await checkOverflow("financas");
+  await checkClipped("financas");
+  await checkContrast("financas");
 
   expect(
     (await page.locator(".ledger__row").count()) > 12,
@@ -409,6 +573,29 @@ try {
      aparelho de 720px para baixo, e a razao de ninguem ter visto era que a perna do celular
      estava organizada pelo que PARECIA arriscado — o placar denso, a mesa larga — e nao pelo
      que o jogador de fato ve primeiro. */
+
+  /* ── A TABELA DO ANEXO, E ELA SO EXISTE DEPOIS DE ALGUNS MESES ────────────── ⚠ A CHECAGEM
+     DE CORTE NASCEU SEM ALCANCE: ela roda nos pontos de troca de tela, e no mes 1 a bandeja
+     nao tem carta com tabela — o passeio ficou verde com a coluna da SOMA cortada. Aqui ela
+     vai ATE a peca: avanca ate uma carta com anexo aparecer, abre, e so entao mede. */
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(400);
+  for (let month = 0; month < 10 && (await page.locator(".annex__table").count()) === 0; month++) {
+    await page.click("#advance");
+    await page.waitForTimeout(420);
+    const rows = await page.locator(".tray__row").count();
+    for (let row = 0; row < rows; row++) {
+      await page
+        .locator(".tray__row")
+        .nth(row)
+        .click({ timeout: 3000 })
+        .catch(() => {});
+      await page.waitForTimeout(90);
+      if ((await page.locator(".annex__table").count()) > 0) break;
+    }
+  }
+  expect((await page.locator(".annex__table").count()) > 0, "[anexo] nenhuma carta trouxe tabela");
+  await checkClipped("carta com anexo");
 
   expect(noise.length === 0, `console sujo: ${noise.join(" | ")}`);
 

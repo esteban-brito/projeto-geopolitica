@@ -8,7 +8,7 @@ import test from "node:test";
 import fc from "fast-check";
 import { benches, cast, offered, remember } from "../../src/domain/cast/index.mjs";
 import { CATALOG } from "../../src/data/catalog.mjs";
-import { AMBITIONS, ARCHETYPES, FIRST_NAMES, SURNAMES } from "../../src/data/cast.mjs";
+import { AMBITIONS, ARCHETYPES, FIRST_NAMES, GENDER_OF, SURNAMES } from "../../src/data/cast.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
 import { SEATS } from "../../src/data/regime.mjs";
 import { settlement } from "../../src/application/turn.mjs";
@@ -23,6 +23,7 @@ const castOf = seed =>
     firstNames: FIRST_NAMES,
     surnames: SURNAMES,
     ambitions: AMBITIONS,
+    genderOf: GENDER_OF,
   });
 
 /* MUITAS SEMENTES, e nao uma. */

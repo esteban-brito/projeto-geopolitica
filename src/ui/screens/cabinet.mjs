@@ -2,7 +2,6 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { headHtml } from "../shared/head.mjs";
-import { ribbonHtml } from "../shared/ribbon.mjs";
 import { attr, money, percent, seats } from "../shared/format.mjs";
 import { UI } from "../strings.mjs";
 
@@ -26,23 +25,66 @@ function cardHtml({ body, span }) {
 }
 
 /**
- * A LINHA DO NUMERO, com a porta que leva ao lugar de decidir.
+ * ⚠ ELA E A UNICA CONTA DESTA VIEW, e e de ESCALA e nao de modelo: a regua le de 0 a 100, e
+ * cadeira e maioria vem em unidades do plenario.
+ *
+ * @param {number} part
+ * @param {number} whole
+ * @returns {number}
+ */
+function share(part, whole) {
+  return whole > 0 ? (part / whole) * 100 : 0;
+}
+
+/**
+ * A LINHA DE LEITURA — nome, barra, valor. ⚠ ELA E A UNICA FORMA DA COLUNA DA DIREITA desde
+ * 22/08/2026, por decisao dele: "quero algo padronizado e refeito do zero". Antes eram duas
+ * gramaticas na mesma coluna — placar com numero grande e barra de 432px nas duas fichas de
+ * cima, lista com barra recuada de 192px nas duas de baixo —, e o olho lia as quatro juntas.
  *
  * @param {object} input
- * @param {string} input.value o numero, ja em HTML
- * @param {string} [input.action] o rotulo do botao
- * @param {string} [input.target] a secao para onde ele leva
+ * @param {string} input.who o nome da leitura
+ * @param {string} input.value o numero, ja formatado
+ * @param {string} [input.bar] a barra, ja em HTML; sem ela o nome atravessa a pista
+ * @param {string} [input.tone] `crisis` tinge a linha inteira
  * @returns {string}
  */
-function leadHtml({ value, action, target }) {
+function readingHtml({ who, value, bar, tone }) {
   return (
-    `<div class="card__lead">${value}` +
-    (action && target
-      ? `<button class="card__action glass-action" type="button" ` +
-        `data-section="${escapeHtml(target)}">${escapeHtml(action)}</button>`
-      : "") +
+    `<div class="reading${bar ? "" : " reading--wide"}"` +
+    `${tone ? ` data-tone="${escapeHtml(tone)}"` : ""}>` +
+    `<span class="reading__who">${escapeHtml(who)}</span>` +
+    (bar ?? "") +
+    `<span class="reading__value" data-numeric>${value}</span>` +
     `</div>`
   );
+}
+
+/**
+ * UM BLOCO — a legenda que o nomeia, e as linhas dele.
+ *
+ * ⚠ A LEGENDA VOLTOU, e ela tinha saido em 20/08/2026 com outras quatro. A premissa daquela
+ * retirada era que o numero grande nomeava a ficha sozinho — "436 de 513" diz Congresso. Sem
+ * numero grande, uma lista que abre em "O mercado" nao diz de que assunto ela e.
+ *
+ * @param {object} input
+ * @param {string} input.legend
+ * @param {string} input.rows
+ * @param {string} [input.key] a chave das cores, quando a barra e composta. ⚠ Ela entra
+ * DENTRO de uma linha vazia, e nao solta ao lado das outras: ela se alinha pela pista da
+ * barra, e `grid-column` so encontra essa pista dentro de uma `.reading`
+ * @param {string} [input.foot] o que atravessa a largura toda — carimbo, ruptura aberta
+ * @returns {string}
+ */
+function blockHtml({ legend, rows, key, foot }) {
+  return cardHtml({
+    body:
+      `<h3 class="block__legend">${escapeHtml(legend)}</h3>` +
+      `<div class="block__rows">${rows}` +
+      (key ? `<div class="reading">${key}</div>` : "") +
+      `</div>` +
+      (foot ?? ""),
+  });
 }
 
 /* de ser quando o ELENCO nasceu: a Camara passou a ter ONZE bancadas com contagem
@@ -128,15 +170,35 @@ export function cabinetHtml(input) {
         : input.inbox,
   });
 
-  const congress = cardHtml({
-    body:
-      leadHtml({
-        value:
-          `<p class="card__hero" data-numeric>${seats(input.base)}` +
-          `<small>${escapeHtml(UI.cabinet.seats)}</small></p>`,
-        action: UI.cabinet.congressAction,
-        target: "congress",
-      }) + ribbonHtml({ benches: input.chamber, total: input.seats, majority: input.majority }),
+  /* ⚠ ELE FOI CORTADO ATE SOBRAR A PERGUNTA, e a queixa dele nomeia cada pedaco do defeito:
+     "Base no plenario" era jargao, "maioria simples 257" ficava solto sem nada a que se
+     prender, "436" e "513" eram numeros sem relacao entre si, e a fita de cinco cores nao
+     dizia o que significava — nem os polos, porque intervencao e mercado sao o EIXO do
+     catalogo e nao uma frase que alguem entenda de primeira.
+     ⚠ A COMPOSICAO POR EIXO SAIU DO GABINETE, e a razao e de largura: uma barra de onze
+     bancadas em 184px so seria legivel com uma legenda nomeando cada cor, e essa legenda nao
+     cabe. Quem lista bancada por bancada, com nome e humor, e a tela do Congresso. */
+  const congress = blockHtml({
+    legend: UI.cabinet.blockCongress,
+    rows:
+      readingHtml({
+        who: UI.cabinet.baseLine,
+        bar:
+          `<div class="gauge" role="img" data-mark="true" ` +
+          `style="--index:${attr(share(input.base, input.seats))};` +
+          `--mark:${attr(share(input.majority, input.seats))}" ` +
+          `aria-label="${escapeHtml(
+            `${UI.cabinet.baseLine}: ${seats(input.base)} ${UI.cabinet.of} ${seats(input.seats)}`,
+          )}"></div>`,
+        value: `${seats(input.base)} ${UI.cabinet.of} ${seats(input.seats)}`,
+      }) +
+      /* ⚠ A FRASE EXPLICA A MARCA, e o numero dentro dela e da COR DA MARCA: e o unico jeito
+         de ligar um risco de latao na barra a um numero escrito, sem uma seta e sem uma nota
+         de rodape. */
+      `<div class="reading"><p class="poles poles--note"><span>` +
+      `${escapeHtml(UI.cabinet.lawPasses)} ` +
+      `<b class="poles__mark" data-numeric>${seats(input.majority)}</b>` +
+      `</span></p></div>`,
   });
 
   /* O COFRE MOSTRA O QUE SOBRA E O QUE ESTA PRESO, e os dois na mesma barra: a obrigatoria
@@ -150,52 +212,43 @@ export function cabinetHtml(input) {
   /* ⚠ O ESTOURO E MEDIDO NA LEITURA, E NAO NO VALOR CHEIO. */
   const over = money(excess) === money(0) ? 0 : excess;
 
-  /* ⚠ O HERO E O QUE CABE, E NAO O QUE SOBRA. */
-  const vault = cardHtml({
-    body:
-      leadHtml({
-        value:
-          `<p class="card__hero" data-numeric>${money(input.room)}` +
-          `<small>${escapeHtml(UI.cabinet.vaultFree)}</small></p>`,
-        action: UI.nav.finance,
-        target: "finance",
+  /* ⚠ ELE RESPONDE NA ORDEM EM QUE A PERGUNTA NASCE: quanto sobra, por que sobra tao pouco, e
+     qual e o maior grampo. Antes a primeira linha era "livre no mes" e a segunda um "95%" sem
+     base — 95% de que? A frase abaixo da regua da a base, que e a mesma forma da Camara. */
+  const vault = blockHtml({
+    legend: UI.cabinet.blockVault,
+    rows:
+      /* ⚠ SEM BARRA, e a ausencia e honesta: nao existe teto MENSAL contra o que medir o que
+         sobra — o teto do arcabouco mede o ano. Inventar uma escala aqui seria desenhar um
+         numero que o motor nao produz. */
+      readingHtml({ who: UI.cabinet.vaultFree, value: money(input.room) }) +
+      readingHtml({
+        who: UI.cabinet.vaultLocked,
+        bar:
+          `<div class="gauge" role="img" style="--index:${attr(locked * 100)}" ` +
+          `aria-label="${escapeHtml(`${percent(locked)} ${UI.cabinet.vaultLocked}`)}"></div>`,
+        value: percent(locked),
       }) +
-      `<div class="meter meter--vault" role="img" ` +
-      `aria-label="${escapeHtml(`${percent(locked)} ${UI.cabinet.vaultLocked}`)}">` +
-      `<span class="meter__part" data-part="poor" style="flex-grow:${(locked * 100).toFixed(1)}"></span>` +
-      `<span class="meter__part" data-part="good" style="flex-grow:${((1 - locked) * 100).toFixed(1)}"></span>` +
-      `</div>` +
-      /* ── O ESTOURO PASSA A TER SINAL ──────────────────────────────────────── ⚠ A TELA
-         MOSTRAVA "cabe R$ 14,2 bi" E "ja consome R$ 14,5 bi" LADO A LADO, sem uma cor, sem
-         uma palavra. */
-      /* Vermelho que cobre tudo nao destaca nada — e a correcao da manha tinha criado
-         exatamente o defeito que ela veio corrigir, so que com mais tinta. */
-      /* ⚠ O COMPROMETIDO SO APARECE QUANDO DIFERE DO HERO, desde 22/08/2026, e a razao e
-         uma medicao: num governo que nao toca em nada as duas leituras imprimem o MESMO
-         numero em 44 de 49 meses — 90%, inclusive no mes 1, que e a primeira tela que
-         alguem ve. Num governo que corta, elas divergem em 37 de 49, e ai a linha e a
-         resposta que o cartao existe para dar. E a mesma regra que o estouro ja usava:
-         compara-se a FORMATACAO, e nao o valor cheio, para a linha nao aparecer por uma
-         diferenca que o texto arredonda para zero. */
-      `<p class="card__note">${escapeHtml(UI.cabinet.vaultLocked)} ` +
-      `<b data-numeric>${percent(locked)}</b>` +
+      `<div class="reading"><p class="poles poles--note"><span>` +
+      `${escapeHtml(UI.cabinet.vaultOfRevenue)} ` +
+      `<b data-numeric>${money(input.revenue)}</b></span></p></div>` +
+      /* ⚠ O COMPROMETIDO SO APARECE QUANDO DIFERE DO QUE SOBRA, e a razao e uma medicao: num
+         governo que nao toca em nada as duas leituras imprimem o MESMO numero em 44 de 49
+         meses. Compara-se a FORMATACAO, e nao o valor cheio. */
       (over > 0
-        ? ` · <b data-over="true">${escapeHtml(UI.cabinet.vaultOver)} ` +
-          `<b data-numeric>${money(over)}</b></b>`
+        ? readingHtml({ who: UI.cabinet.vaultOver, value: money(over), tone: "crisis" })
         : money(input.committed) === money(input.room)
           ? ""
-          : ` · ${escapeHtml(UI.cabinet.vaultTaken)} ` +
-            `<b data-numeric>${money(input.committed)}</b>`) +
-      `</p>` +
+          : readingHtml({ who: UI.cabinet.vaultTaken, value: money(input.committed) })) +
       /* ── DO REAL TRAVADO ATE O TEXTO QUE O TRAVOU ──────────────────────────── ⚠ ELA E A
          METADE DO RISCO R2 QUE FALTAVA, e uma revisao externa a cobrou com todas as letras:
          "a barra diz que 95% e obrigatorio, mas nao ha como investigar quais leis herdadas
          estao sugando esse dinheiro". */
       (input.locked[0]
-        ? `<p class="locked">` +
-          `<span class="locked__item" data-guard="${escapeHtml(input.locked[0].guard)}">` +
-          `${escapeHtml(input.locked[0].label)} ${escapeHtml(UI.cabinet.vaultWho)} ` +
-          `<b data-numeric>${money(input.locked[0].spend)}</b></span></p>`
+        ? readingHtml({
+            who: `${UI.cabinet.vaultBiggest} ${input.locked[0].label}`,
+            value: money(input.locked[0].spend),
+          })
         : ""),
   });
 
@@ -233,34 +286,50 @@ function trinityHtml({ boiler }) {
     .map(item => {
       const label = UI.cabinet.trinity[/** @type {"social"} */ (item.id)];
 
-      /* Ela MENTIA, e a captura pegou: com a rua em 44 e o piso em 20, a conta dava 70% e a
-         barra aparecia quase cheia e vermelha num governo confortavel. */
+      /* Ela MENTIA, e a captura pegou: com a aprovacao em 44 e o piso em 20, a conta dava 70%
+         e a barra aparecia quase cheia e vermelha num governo confortavel. */
       const safe =
         item.breaks === "below" ? item.value > item.threshold : item.value < item.threshold;
 
+      /* ⚠ O ITEM E UMA PILHA, e nao uma `.reading` deitada. A linha de leitura e gramatica de
+         LISTA VERTICAL: o que a faz funcionar e o alinhamento entre linhas, e numa faixa de
+         tres colunas nao existe linha para alinhar. Medido: o rotulo numa coluna de 112px
+         deixava 74px de vazio antes da barra de "Capital", e o vao entre um item e o seguinte
+         era 24px contra 12px dentro do item — "31 Capital" lia como uma frase so. Aqui o que
+         se padroniza sao os TOKENS (rotulo, valor, regua, legenda), e nao o arranjo. */
       return (
-        `<div class="trinity__item"${item.open ? ' data-open="true"' : ""}>` +
-        `<span class="trinity__who">${escapeHtml(label)}</span>` +
-        `<span class="trinity__value" data-numeric>${seats(item.value)}` +
-        `<small>${escapeHtml(item.breaks === "below" ? UI.cabinet.trinityBelow : UI.cabinet.trinityAbove)} ` +
-        `${seats(item.threshold)}</small></span>` +
+        /* ⚠ `data-open` SAIU DAQUI, e ele era canal morto dos dois lados: nenhuma folha o
+           pintava e nenhuma prova o lia, entao a ruptura aberta nao mudava um pixel. Quem
+           tinge agora e `data-tone`, que e o mesmo marcador da linha estourada do cofre. */
+        `<div class="trinity__item"${item.open ? ' data-tone="crisis"' : ""}>` +
+        `<p class="trinity__head">` +
+        `<span class="reading__who">${escapeHtml(label)}</span>` +
+        `<span class="reading__value" data-numeric>${seats(item.value)}</span>` +
+        `</p>` +
         /* O VALOR E A MARCA SAO DADO, e por isso vao em estilo inline — a mesma excecao
            declarada do `--floor` no trilho do orcamento. */
-        `<div class="gauge" role="img"${safe ? "" : ' data-past="true"'} ` +
+        `<div class="gauge" role="img" data-mark="true"${safe ? "" : ' data-past="true"'} ` +
         `style="--index:${attr(Math.round(item.value))};--mark:${attr(item.threshold)}" ` +
         `aria-label="${escapeHtml(`${label}: ${seats(item.value)}`)}"></div>` +
+        /* ⚠ O LIMIAR CONTINUA ESCRITO, e a marca sozinha nao bastaria: as tres rompem em
+           DIRECOES diferentes — uma quando cai, duas quando sobem —, entao um risco de latao
+           sem texto e ambiguo. */
+        `<p class="poles poles--note"><span>` +
+        `${escapeHtml(item.breaks === "below" ? UI.cabinet.trinityBelow : UI.cabinet.trinityAbove)} ` +
+        `${seats(item.threshold)}</span></p>` +
         `</div>`
       );
     })
     .join("");
 
-  /* ⚠ O RODAPE DIZ O QUE AINDA SEGURA O GOVERNO DE PE, e nao quantas romperam. */
-  const holding = boiler.ruptures.filter(item => !item.open).length;
-
+  /* ⚠ A LEGENDA NAO CARREGA MAIS A REGRA DO IMPEACHMENT — "as tres, juntas" saiu inteira em
+     22/08/2026, por decisao dele, e nao foi reescrita. */
   return (
-    `<section class="trinity"${boiler.ruptures.every(i => i.open) ? ' data-open="true"' : ""}>` +
-    `<h3 class="block__legend">${escapeHtml(UI.cabinet.trinityTitle)}` +
-    `<span>${escapeHtml(holding === 0 ? UI.cabinet.trinityNone : UI.cabinet.trinityHold)}</span></h3>` +
+    /* ⚠ O `data-open` DA SECAO SAIU JUNTO: as tres rompidas ja carimbam PROCESSO ABERTO no
+       bloco da caldeira, e um segundo canal para o mesmo estado — que ninguem pintava — era a
+       familia de defeito mais cara deste projeto. */
+    `<section class="trinity">` +
+    `<h3 class="block__legend">${escapeHtml(UI.cabinet.trinityTitle)}</h3>` +
     `<div class="trinity__row">${rows}</div>` +
     `</section>`
   );
@@ -282,43 +351,37 @@ function cabinetStreetHtml({ segments, street }) {
       const poll = street[segment.id];
       if (!poll) return "";
 
-      /* Ate cada uma tinha a propria grade — 7,5rem aqui, 9rem la —, e as duas moram uma
-         embaixo da outra na mesma coluna do Gabinete: as barras comecavam em pontos
-         diferentes e o olho lia desalinho sem conseguir nomear a causa. */
       /* ⚠ A DESCRICAO NOMEIA AS TRES FATIAS, e nao so a verde. */
       const described = /** @type {const} */ (["good", "fair", "poor"])
         .map(part => `${poll[part]}% ${UI.approvalParts[part]}`)
         .join(", ");
 
-      return (
-        `<div class="street__row reading">` +
-        `<span class="street__who">${escapeHtml(segment.label)}</span>` +
-        `<div class="meter" role="img" ` +
-        `aria-label="${escapeHtml(`${segment.label}: ${described}`)}">` +
-        /** @type {const} */ (["good", "fair", "poor"])
-          .map(
-            part =>
-              `<span class="meter__part" data-part="${part}" style="flex-grow:${poll[part]}"></span>`,
-          )
-          .join("") +
-        `</div>` +
-        `<span class="reading__value" data-numeric>${poll.good}%</span>` +
-        `</div>`
-      );
+      return readingHtml({
+        who: segment.label,
+        bar:
+          `<div class="meter" role="img" ` +
+          `aria-label="${escapeHtml(`${segment.label}: ${described}`)}">` +
+          /** @type {const} */ (["good", "fair", "poor"])
+            .map(
+              part =>
+                `<span class="meter__part" data-part="${part}" style="flex-grow:${poll[part]}"></span>`,
+            )
+            .join("") +
+          `</div>`,
+        value: `${poll.good}%`,
+      });
     })
     .join("");
 
   /* Sem chave, o jogador nao tem como saber se `27%` e a verde, a vermelha ou a soma; com
      chave, a posicao responde sozinha. */
   const key =
-    `<div class="street__key reading">` +
-    `<p class="street__poles">` +
+    `<p class="poles">` +
     `<span>${escapeHtml(UI.approvalParts.good)}</span>` +
     `<span>${escapeHtml(UI.approvalParts.poor)}</span>` +
-    `</p>` +
-    `</div>`;
+    `</p>`;
 
-  return cardHtml({ body: `<div class="street">${rows}${key}</div>` });
+  return blockHtml({ legend: UI.cabinet.blockStreet, rows, key });
 }
 
 /**
@@ -335,24 +398,23 @@ function cabinetStreetHtml({ segments, street }) {
  */
 function boilerCardHtml({ boiler }) {
   const rows = boiler.lobbies
-    .map(
-      lobby =>
-        `<div class="boiler__row reading"${lobby.boiling ? ' data-boiling="true"' : ""}>` +
-        /* Dois nomes para o mesmo limiar seriam o defeito que a guarda `vocabulary` existe
-           para pegar. */
-        `<span class="boiler__who">${escapeHtml(lobby.label)}` +
-        `<small class="boiler__share">` +
-        (lobby.share > 0
-          ? `${percent(lobby.share)} ${escapeHtml(UI.cabinet.boilerShare)}`
-          : escapeHtml(UI.cabinet.boilerNoShare)) +
-        `</small></span>` +
-        /* ⚠ O DESEJO VOLTA QUANDO ELE FERVE, e aí ele deixa de ser legenda e vira aviso. */
-        (lobby.boiling ? `<span class="boiler__wants">${escapeHtml(lobby.wants)}</span>` : "") +
-        `<div class="gauge" role="img"${lobby.boiling ? ' data-past="true"' : ""} ` +
-        `style="--index:${attr(Math.round(lobby.pressure))};--mark:${attr(lobby.boil)}" ` +
-        `aria-label="${escapeHtml(`${lobby.label}: ${Math.round(lobby.pressure)} ${UI.cabinet.boilerMeter}`)}"></div>` +
-        `<span class="boiler__value reading__value" data-numeric>${Math.round(lobby.pressure)}</span>` +
-        `</div>`,
+    .map(lobby =>
+      readingHtml({
+        who: lobby.label,
+        /* ⚠ A FATIA DO CAPITAL SAIU DA LINHA E FICOU NO ROTULO DE LEITOR DE TELA, e a razao
+           e a auditoria: ela vem do catalogo e nao muda em 48 meses — leitura que nao muda e
+           legenda, e legenda ocupava aqui a segunda fileira que fazia esta linha ter 34px
+           contra os 20px de toda outra linha da coluna. */
+        bar:
+          `<div class="gauge" role="img" data-mark="true"${lobby.boiling ? ' data-past="true"' : ""} ` +
+          `style="--index:${attr(Math.round(lobby.pressure))};--mark:${attr(lobby.boil)}" ` +
+          `aria-label="${escapeHtml(
+            `${lobby.label}: ${Math.round(lobby.pressure)} ${UI.cabinet.boilerMeter}, ` +
+              `${lobby.share > 0 ? `${percent(lobby.share)} ${UI.cabinet.boilerShare}` : UI.cabinet.boilerNoShare}`,
+          )}"></div>`,
+        value: String(Math.round(lobby.pressure)),
+        ...(lobby.boiling ? { tone: "crisis" } : {}),
+      }),
     )
     .join("");
 
@@ -370,20 +432,25 @@ function boilerCardHtml({ boiler }) {
       : boiler.impeachment !== null
         ? `<p class="boiler__siege"><b class="stamp">${escapeHtml(UI.cabinet.siege)}</b> ` +
           `${escapeHtml(UI.cabinet.siegeNote)}</p>`
-        : /* ⚠ E O SILÊNCIO É O ESTADO NORMAL, ENTÃO ELE NÃO IMPRIME LINHA. Até
-             20/08/2026 esta frase dizia "nenhuma ruptura aberta" todo mês em que nada
-             acontecia — que é a maioria dos meses de um governo que funciona. A regra
-             contrária já estava escrita duas vezes neste projeto, e nos dois casos com
-             a mesma razão: "uma legenda que lista 'em ruptura: 0' todo mês ensina o
-             olho a ignorar a linha inteira — e aí, no mês em que a ruptura acontecer,
-             ela aparece num lugar que o jogador já parou de ler".
-
-             Pedido do responsável, na mesma sessão: "tire o máximo de texto inútil da
-             tela". Uma linha que só diz que nada aconteceu é a definição disso. */
+        : /* ⚠ E O SILÊNCIO É O ESTADO NORMAL, ENTÃO ELE NÃO IMPRIME LINHA. Uma legenda que
+             lista "em ruptura: 0" todo mês ensina o olho a ignorar a linha inteira — e aí, no
+             mês em que a ruptura acontecer, ela aparece num lugar que o jogador já parou de
+             ler. */
           open.length > 0
           ? `<p class="boiler__ruptures">${escapeHtml(UI.cabinet.rompeu)} ` +
             `<b>${open.map(escapeHtml).join(" · ")}</b></p>`
           : "";
 
-  return cardHtml({ body: `<div class="boiler">${rows}</div>${foot}` });
+  /* ⚠ UMA FRASE PARA AS QUATRO LINHAS, e nao uma por linha: o ponto de fervura e UM numero do
+     catalogo, o mesmo para todos os grupos, entao repeti-lo quatro vezes seria a legenda
+     estatica que este projeto ja pagou duas vezes. Ela so aparece se o catalogo mantiver o
+     ponto igual — no dia em que um grupo tiver o proprio, ela cala em vez de mentir. */
+  const boil = boiler.lobbies[0]?.boil ?? 0;
+  const same = boiler.lobbies.every(lobby => lobby.boil === boil);
+  const key = same
+    ? `<p class="poles poles--note"><span>${escapeHtml(UI.cabinet.boilerBreaks)} ` +
+      `<b class="poles__mark" data-numeric>${seats(boil)}</b></span></p>`
+    : undefined;
+
+  return blockHtml({ legend: UI.cabinet.blockBoiler, rows, key, foot });
 }

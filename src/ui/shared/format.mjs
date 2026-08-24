@@ -54,6 +54,39 @@ export function seats(value) {
 }
 
 /**
+ * ⚠ ELA EXISTE PORQUE ARREDONDAR CADA CELULA SOZINHA FAZ A LINHA NAO FECHAR, e o anexo da
+ * pesquisa imprimia as duas contas certas e incompativeis: `15,4 + 11,6 + 7,6 + 5,6 + 2,8`
+ * saia como `15+12+8+6+3 = 44` nas celulas e `43` no total, que e a soma cheia arredondada.
+ * O metodo do maior residuo distribui o que sobra: a celula de menor residuo cede.
+ *
+ * @param {ReadonlyArray<number>} values
+ * @returns {number[]} inteiros que somam exatamente `Math.round(soma dos valores)`
+ */
+export function apportion(values) {
+  const floors = values.map(value => Math.floor(value));
+  const seated = floors.reduce((sum, value) => sum + value, 0);
+  const total = Math.round(values.reduce((sum, value) => sum + value, 0));
+
+  /* ⚠ O RESIDUO E COM SINAL, E NAO EM MODULO. A linha do desgaste tira pontos, e com sinal
+     misto o modulo ordenaria pela distancia do zero: `-2,4` pareceria residuo 0,4 e ganharia
+     o ponto que cabia a `3,6`. `Math.floor` desce `-2,4` para `-3`, e o residuo e 0,6. */
+  const order = values
+    .map((value, index) => ({ index, rest: value - (floors[index] ?? 0) }))
+    .sort((a, b) => b.rest - a.rest || a.index - b.index);
+
+  /* Cada celula ja levou o proprio piso, entao o que falta esta entre zero e o numero delas;
+     o limite defende so do residuo de ponto flutuante. */
+  const up = Math.min(values.length, Math.max(0, total - seated));
+
+  const cells = [...floors];
+  for (let index = 0; index < up; index++) {
+    const pick = order[index];
+    if (pick) cells[pick.index] = (cells[pick.index] ?? 0) + 1;
+  }
+  return cells;
+}
+
+/**
  * Ja juro e inflacao MUDAM de significado na primeira decimal: 10,5% e 11,0% de Selic sao
  * dois paises diferentes para quem paga a divida, e arredondar os dois para 11% apagaria a
  * decisao do Banco Central.

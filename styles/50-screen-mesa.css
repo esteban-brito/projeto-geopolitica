@@ -274,7 +274,7 @@
     color: var(--growth);
   }
   .person__memory[data-tone="poor"] {
-    color: var(--crisis);
+    color: var(--signal-down);
   }
 
   .person__votes {
@@ -429,7 +429,7 @@
 
   .tally__cash[data-fits="false"],
   .tally__cash[data-fits="false"] b {
-    color: var(--crisis);
+    color: var(--signal-down);
   }
 
   /* O resultado ficou na tela desde entao: o painel do mes passado sem recheio nenhum, colado
@@ -476,7 +476,7 @@
     font-weight: 700;
     letter-spacing: var(--track-label);
     text-transform: uppercase;
-    color: rgba(var(--paper-ink-rgb), 0.62);
+    color: rgba(var(--sheet-ink-rgb), 0.62);
   }
 
   /* QUEM ESTA NO PLENARIO ACENDE, e so ele: e o unico dos tres estagios em que o mes seguinte
@@ -495,7 +495,7 @@
     font-family: var(--font-record);
     font-weight: 600;
     line-height: 1.25;
-    color: var(--paper-ink);
+    color: var(--sheet-ink);
   }
 
   /* O JABUTI E DITO POR EXTENSO. */
@@ -504,10 +504,12 @@
     color: var(--brand);
   }
 
+  /* ⚠ A DEMAO SUBIU DE 0,6 PARA 0,72: medida sobre o pergaminho, ela dava 4,48 contra o piso
+     4,5 de AA. E a menor demao que fecha, e a hierarquia com o texto cheio continua legivel. */
   .passage__wait {
     font-family: var(--font-display);
     font-size: var(--text-note);
-    color: rgba(var(--paper-ink-rgb), 0.6);
+    color: rgba(var(--sheet-ink-rgb), 0.72);
     white-space: nowrap;
   }
 
@@ -516,7 +518,7 @@
     font-family: var(--font-display);
     font-size: var(--text-note);
     font-weight: 700;
-    color: var(--crisis);
+    color: var(--signal-down);
     white-space: nowrap;
   }
 

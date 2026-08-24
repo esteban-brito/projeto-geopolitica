@@ -566,6 +566,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     firstNames: catalog.firstNames,
     surnames: catalog.surnames,
     ambitions: catalog.ambitions,
+    genderOf: catalog.genderOf,
   });
 
   const { benches, credit } = benchesOf({
@@ -767,6 +768,7 @@ export function governmentOf(state, catalog = CATALOG) {
     firstNames: catalog.firstNames,
     surnames: catalog.surnames,
     ambitions: catalog.ambitions,
+    genderOf: catalog.genderOf,
   });
 
   return {

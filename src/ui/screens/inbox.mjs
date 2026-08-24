@@ -1,10 +1,10 @@
 /* A CAIXA DE ENTRADA — a primeira carta de verdade. */
 
 import { escapeHtml } from "../shared/html.mjs";
-import { money, percent, seats, signed } from "../shared/format.mjs";
+import { apportion, money, percent, seats, signed } from "../shared/format.mjs";
 import { sigilHtml } from "../shared/sigil.mjs";
 import { monthLabel } from "../../state/state.mjs";
-import { DEFAULT_TREATMENT, UI, addressed, labelOf, titleOf } from "../strings.mjs";
+import { DEFAULT_TREATMENT, UI, addressed, labelOf } from "../strings.mjs";
 
 /**
  * Esta e a familia de defeito mais cara do projeto, com sete ocorrencias medidas, e ela nasce
@@ -13,16 +13,14 @@ import { DEFAULT_TREATMENT, UI, addressed, labelOf, titleOf } from "../strings.m
  * @typedef {object} Dispatch
  * @property {string} id o mesmo id da carta no estado; e por ele que a bandeja abre
  * @property {number} month o mes em que ela chegou — e o indice PRECISA dele; ver `rowHtml`
- * @property {{ name: string, office: string, label: string, reach: number } | null} from
+ * @property {{ name: string, office: string, label: string, reach: number, gender?: "f" | "m" } | null} from
  * @property {string} subject
  * @property {string} body ja em HTML
+ * @property {string | undefined} [annex] os anexos, ja em HTML
  * @property {string | undefined} [action] o rotulo do botao que leva ao lugar de decidir
  * @property {string | undefined} [target] a secao para onde ele leva
  * @property {string | undefined} [choices] as duas saidas, quando a carta PERGUNTA
  * @property {number | null | undefined} [due] quantos meses faltam; nulo sem prazo
- * @property {string | undefined} [why] por que ESTA carta chegou — a causa, e nao o efeito
- * @property {"high" | undefined} [weight] se o movimento foi grande o bastante para gritar
- * @property {"senhor" | "senhora" | undefined} [treatment] como o jogador quer ser tratado
  */
 
 /**
@@ -40,29 +38,27 @@ function urgencyOf(due) {
  * UMA CARTA — remetente, assunto, corpo, e para onde ela leva.
  *
  * @param {object} input
- * @param {{ name: string, office: string, label: string, reach: number } | null} input.from
+ * @param {{ name: string, office: string, label: string, reach: number, gender?: "f" | "m" } | null} input.from
  * @param {string} input.subject
  * @param {string} input.body ja em HTML
+ * @param {string} [input.annex] os anexos, ja em HTML; cada um e um card
  * @param {string} [input.action] o rotulo do botao
  * @param {string} [input.target] a secao para onde ele leva
  * @param {string} [input.choices] as duas saidas, quando a carta PERGUNTA
  * @param {number | null} [input.due] quantos meses faltam; nulo quando nao ha prazo
- * @param {string} [input.why] por que ela chegou
  * @param {number | null} [input.month]
- * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado o mês em que ela foi escrita, para o cabeçalho
  * @returns {string}
  */
 export function letterHtml({
   from,
   subject,
   body,
+  annex,
   action,
   target,
   choices,
   due = null,
-  why,
   month = null,
-  treatment = DEFAULT_TREATMENT,
 }) {
   const urgency = urgencyOf(due);
 
@@ -70,7 +66,13 @@ export function letterHtml({
     `<article class="letter"${urgency ? ` data-urgency="${urgency}"` : ""}>` +
     `<header class="letter__head">` +
     (from
-      ? sigilHtml({ name: from.name, office: from.office, reach: from.reach, role: from.label })
+      ? sigilHtml({
+          name: from.name,
+          office: from.office,
+          reach: from.reach,
+          role: from.label,
+          ...(from.gender ? { gender: from.gender } : {}),
+        })
       : "") +
     `<span class="letter__from">` +
     (from
@@ -86,18 +88,30 @@ export function letterHtml({
     `</span>` +
     `</header>` +
     `<h4 class="letter__subject">${escapeHtml(subject)}</h4>` +
-    /* Escrito dentro de cada caso, ele seria doze lugares para manter em dia e a decima
-       terceira ocorrencia da familia de defeito mais cara deste projeto — foi assim que tres
-       das doze o tiveram e nove nao. */
-    `<p class="letter__vocative">${escapeHtml(`${titleOf(treatment)},`)}</p>` +
+    /* ⚠ O VOCATIVO SAIU em 22/08/2026, por minimalismo: "Presidente," era a MESMA palavra na
+       abertura das doze cartas, e uma linha que nunca muda e nunca decide nada e a definicao
+       de cerimonia. Ela custava 20px em toda carta e a segunda linha de leitura em todas.
+       ⚠ Voltar e uma linha, e o tratamento continua chegando aqui: o resto do corpo o usa. */
     `<div class="letter__body">${body}</div>` +
-    (choices ?? "") +
-    (action && target
-      ? `<button class="letter__action" type="button" data-section="${escapeHtml(target)}">` +
-        `${escapeHtml(action)}</button>`
+    /* ⚠ A SECAO EXISTE MESMO VAZIA, e nao e desperdicio: ela e a fileira `1fr` da grade da
+       carta, e sem ela o rodape sobe e cola no corpo em toda carta sem anexo. */
+    `<section class="letter__annexes">` +
+    /* ⚠ A LEGENDA "ANEXOS" SAIU: era um rotulo para um bloco de rotulos. Cada card ja se
+       nomeia, e uma palavra em versal para anunciar que o que vem abaixo tem nome e a
+       definicao de texto que nao paga o proprio pixel. */
+    (annex ? `<div class="annexes">${annex}</div>` : "") +
+    `</section>` +
+    /* ⚠ O RODAPE E UMA BARRA QUE SANGRA ATE A BORDA, como a "mensagem de accao" do Football
+       Manager: o que se pode FAZER com um documento nao mora no meio dele. */
+    (choices || (action && target)
+      ? `<footer class="letter__foot">` +
+        (choices ?? "") +
+        (action && target
+          ? `<button class="letter__action" type="button" data-section="${escapeHtml(target)}">` +
+            `${escapeHtml(action)}</button>`
+          : "") +
+        `</footer>`
       : "") +
-    /* ⚠ A RAZAO FICA NO PE, E NAO NO TOPO, e a ordem e a pergunta que o leitor faz. */
-    (why ? `<p class="letter__why">${escapeHtml(why)}</p>` : "") +
     `</article>`
   );
 }
@@ -121,7 +135,7 @@ function dueLabel(due) {
  *
  * @param {object} input
  * @param {import("../../application/turn.mjs").Report} input.report
- * @param {{ name: string, office: string, label: string, reach: number } | null} input.adviser
+ * @param {{ name: string, office: string, label: string, reach: number, gender?: "f" | "m" } | null} input.adviser
  * @returns {Dispatch}
  */
 export function describeMonth({ report, adviser }) {
@@ -159,19 +173,15 @@ export function describeMonth({ report, adviser }) {
     );
   }
 
-  /* ⚠ AS TRES LEITURAS JUNTAS, E ISSO E O CONSERTO DE UM DEFEITO DE PROJETO MEU. */
+  /* ⚠ AS TRES LEITURAS SAIRAM DO CORPO em 22/08/2026, e a razao e duplicacao medida: o anexo
+     "o mes em tres leituras" mostra as MESMAS tres com o antes ao lado, e o corpo as repetia
+     so com o depois. Tres linhas de prosa para dizer metade do que a tabela logo abaixo diz
+     inteiro. O corpo ficou com o que o anexo NAO tem: o que o mes decidiu, e quanto custou. */
   const balance = report.balance;
-  lines.push(
-    `<span>${escapeHtml(UI.inbox.street)} ` +
-      `<b data-numeric>${seats(balance.streetNow)}%</b></span>`,
-  );
-  lines.push(
-    `<span>${escapeHtml(UI.inbox.base)} ` +
-      `<b data-numeric>${seats(balance.seatsNow)}</b> ${escapeHtml(UI.inbox.headlineSeats)}</span>`,
-  );
-  lines.push(
-    `<span>${escapeHtml(UI.inbox.vault)} <b data-numeric>${money(balance.roomNow)}</b></span>`,
-  );
+
+  /* O MES QUE NAO DECIDE NADA PRECISA DIZER ISSO, senao o corpo fica vazio — e carta com corpo
+     vazio ja foi defeito medido aqui: cabecalho, assunto e 430px de folha em branco. */
+  if (lines.length === 0) lines.push(`<span>${escapeHtml(UI.inbox.quietMonth)}</span>`);
 
   /* ⚠ O ID E O MES, e nao um contador: esta carta nao mora em `state.mail` — ela e lida do
      relatorio a cada pintura. */
@@ -182,11 +192,11 @@ export function describeMonth({ report, adviser }) {
     /* Duas datas coladas uma na outra nao sao redundancia inofensiva — elas roubam a largura
        do unico campo que decide o clique, numa coluna de 208px. */
     subject,
-    body: `<div class="letter__lines">${lines.join("")}</div>${balanceAnnex(balance)}`,
+    body: `<div class="letter__lines">${lines.join("")}</div>`,
+    annex: balanceAnnex(balance),
     action: UI.inbox.seeMonth,
     target: "congress",
     due: null,
-    why: UI.cabinet.inboxSigned,
   };
 }
 
@@ -196,7 +206,7 @@ export function describeMonth({ report, adviser }) {
  * @param {object} input
  * @param {ReadonlyArray<import("../../state/state.mjs").Letter>} input.mail
  * @param {ReadonlyArray<{ id: string, name: string, office: string, label: string,
- * reach: number }>} input.people
+ * reach: number, gender?: "f" | "m" }>} input.people
  * @param {(letter: import("../../state/state.mjs").Letter) => number | null} input.left
  * quantos meses faltam, perguntado a fachada
  * @param {{ mandatory: number, room: number }} input.inherited a heranca, para a posse
@@ -258,16 +268,13 @@ export function describeMail({
         ...spec,
         id: letter.id,
         month: letter.month,
-        /* ELE VIAJA COM A CARTA, e nao por um segundo caminho: quem abre o oficio e a
-           bandeja, e ela nao teria por que saber o tratamento de quem preside. */
-        treatment,
-        /* O `kind` ja e o que o motor gravou para dizer o que aconteceu; escrever a razao
-           dentro de cada `case` seria nove lugares para manter em dia, e a nona ocorrencia da
-           familia de defeito mais cara deste projeto. */
-        why: labelOf(UI.inbox.why, letter.kind),
-        /* ⚠ O PESO VEM DA CARTA, e a tela nao o recalcula: quem sabe se um movimento e grande
-           e quem conhece os limiares, e eles moram no motor. */
-        weight: letter.weight ?? undefined,
+        /* ⚠ `treatment` NAO VIAJA MAIS COM A CARTA: ele existia para o vocativo, e o vocativo
+           saiu. Quem trata o presidente por senhor ou senhora sao as FRASES do corpo, e elas
+           se montam aqui, onde o tratamento ja esta. */
+        /* ⚠ `weight` NAO VIAJA MAIS COM A CARTA. Ele so alimentava a segunda tarja da coluna,
+           que saiu por pintar do mesmo vermelho do prazo vencido; e o campo continuar chegando
+           aqui sem ninguem le-lo seria dado morto — o defeito que este projeto persegue dos
+           dois lados. Quem diz que o movimento foi grande agora e a propria pastilha. */
       });
 
       switch (letter.kind) {
@@ -278,13 +285,12 @@ export function describeMail({
             subject: addressed(UI.inbox.inauguration, treatment),
             body:
               `<div class="letter__lines">` +
-              /* ⚠ `money`, E NAO `seats`. */
-              `<span><b data-numeric>${money(inherited.mandatory)}</b> ` +
-              `${escapeHtml(UI.inbox.inheritedMandatory)}</span>` +
-              `<span><b data-numeric>${money(inherited.room)}</b> ` +
-              `${escapeHtml(UI.inbox.inheritedRoom)}</span>` +
               `<span>${escapeHtml(addressed(UI.inbox.inheritedLead, treatment))}</span>` +
               `</div>`,
+            /* ⚠ `money`, E NAO `seats`. */
+            annex:
+              cardHtml(UI.inbox.inheritedMandatory, `<b>${money(inherited.mandatory)}</b>`) +
+              cardHtml(UI.inbox.inheritedRoom, `<b>${money(inherited.room)}</b>`),
             action: UI.inbox.seeMonth,
             target: "congress",
           });
@@ -381,9 +387,8 @@ export function describeMail({
           return paper({
             from: by("chief"),
             subject: headlineOf(letter),
-            body:
-              reportBody(letter, segments, chamber, treatment) +
-              annexHtml(letter, segments, parties),
+            body: reportBody(letter, segments, chamber, treatment),
+            annex: annexHtml(letter, segments, parties),
           });
 
         /* ── O MUNDO SE MEXENDO SOZINHO ───────────────────────────────────── ⚠ AS TRES SAO
@@ -408,10 +413,12 @@ export function describeMail({
             body:
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.minorityBody)}</span>` +
-              `<span><b data-numeric>${seats(chamber.base)}</b> ` +
-              `${escapeHtml(UI.inbox.minorityNote)} ` +
-              `<b data-numeric>${seats(chamber.majority)}</b></span>` +
               `</div>`,
+            annex:
+              cardHtml(
+                UI.cabinet.baseLine,
+                `<b>${seats(chamber.base)}</b><small>${escapeHtml(UI.inbox.minorityNote)}</small>`,
+              ) + cardHtml(UI.inbox.majority, `<b>${seats(chamber.majority)}</b>`),
             action: UI.cabinet.congressAction,
             target: "congress",
           });
@@ -422,22 +429,28 @@ export function describeMail({
           const group = (siege?.lobbies ?? []).find(item => item.id === subject) ?? null;
           return paper({
             from: by("chief"),
-            subject: `${nameOf(subject) || subject} ${UI.inbox.boilingSubject}`,
+            /* ⚠ O NOME VEM DEPOIS DO VERBO, e nao antes: assim a frase nao concorda com ele. */
+            subject: `${UI.inbox.boilingSubject} ${nameOf(subject) || subject}`,
             body:
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.boilingBody)}</span>` +
-              (group
-                ? `<span><b data-numeric>${seats(group.pressure)}</b> ` +
-                  `${escapeHtml(UI.inbox.boilingNote)} ` +
-                  `<b data-numeric>${seats(group.boil)}</b>. ` +
-                  (group.share > 0
-                    ? `${escapeHtml(UI.inbox.boilingWeight)} ` +
-                      `<b data-numeric>${percent(group.share)}</b> ` +
-                      `${escapeHtml(UI.cabinet.boilerShare)}`
-                    : escapeHtml(UI.inbox.boilingNoWeight)) +
-                  `</span>`
-                : "") +
               `</div>`,
+            ...(group
+              ? {
+                  annex:
+                    cardHtml(
+                      UI.inbox.boilingPressure,
+                      `<b>${seats(group.pressure)}</b>` +
+                        `<small>${escapeHtml(UI.inbox.boilingNote)} ${seats(group.boil)}</small>`,
+                    ) +
+                    cardHtml(
+                      UI.inbox.boilingWeight,
+                      group.share > 0
+                        ? `<b>${percent(group.share)}</b>`
+                        : `<b>${escapeHtml(UI.inbox.boilingNoWeight)}</b>`,
+                    ),
+                }
+              : {}),
           });
         }
 
@@ -451,8 +464,11 @@ export function describeMail({
             body:
               `<div class="letter__lines">` +
               `<span>${escapeHtml(addressed(ruptureText(UI.inbox.ruptureBody, subject) ?? "", treatment))}</span>` +
-              `<span>${escapeHtml(UI.inbox.ruptureNote)}</span>` +
               `</div>`,
+            /* ⚠ A REGRA DO IMPEACHMENT E ANEXO, e nao rodape de prosa: ela e a mesma frase em
+               toda ruptura, e como segunda linha do corpo ela era lida uma vez e ignorada
+               depois — que e o defeito que a linha "nenhuma ruptura aberta" ja pagou. */
+            annex: cardHtml(UI.inbox.ruptureLegend, `<b>${escapeHtml(UI.inbox.ruptureNote)}</b>`),
           });
 
         case "siege":
@@ -565,9 +581,13 @@ function rowHtml(dispatch, open, read) {
     `<li>` +
     `<button class="tray__row" type="button" ` +
     `data-dispatch="${escapeHtml(dispatch.id)}"` +
-    /* ⚠ A TARJA DA ESQUERDA TEM DOIS DONOS, E NUNCA OS DOIS AO MESMO TEMPO. */
+    /* ⚠ A TARJA DA ESQUERDA TEM UM DONO SO, E ELE E O PRAZO. Ela teve dois ate 22/08/2026, e o
+       segundo pintava do MESMO vermelho do prazo vencido: um aviso sem prazo nenhum aparecia
+       na coluna com a marca de "vence agora". A prosa do nao-lido, dez linhas abaixo na folha,
+       ja proibia isso com todas as letras — "a esquerda ja significa PRAZO em tres cores, e
+       uma quarta cor ali faria o jogador ler urgencia onde ha novidade". Quem carrega o peso
+       agora e a pastilha de variacao, que diz quanto andou e para que lado. */
     (urgency ? ` data-urgency="${urgency}"` : "") +
-    (!urgency && dispatch.weight ? ` data-weight="${dispatch.weight}"` : "") +
     (open ? ` aria-current="true"` : "") +
     /* ⚠ O NAO LIDO E A UNICA COISA QUE FALTAVA PARA ISTO SER UMA BANDEJA, e a referencia e o
        inbox do Football Manager: la o peso visual principal do indice e o item que ainda nao
@@ -674,32 +694,10 @@ function reportBody(
     );
   }
 
-  /* ── A RUA, E SÓ ELA TEM A CONTA POR TRÁS ───────────────────────────────── ⚠ A NOTA QUE
-     SUSTENTA É A MAIOR JÁ PESADA, e não a maior nota crua: o que segura o governo numa classe
-     é o produto da nota pelo peso DELA, e é exatamente por isso que a mesma inflação agrada
-     uma faixa e é indiferente para outra. */
-  const data = letter.attach;
-  const notes = ["prices", "jobs", "services", "safety", "economy"];
-
-  let holds = null;
-  let weakest = null;
-
-  if (data) {
-    for (const segment of segments) {
-      for (const note of notes) {
-        const value = data[`${segment.id}.${note}`] ?? 0;
-        if (!holds || value > holds.value) holds = { value, note, segment: segment.label };
-      }
-    }
-    /* A NOTA CRUA SE RECUPERA DE UMA CLASSE COM PESO CONHECIDO? */
-    let least = null;
-    for (const note of notes) {
-      const total = segments.reduce((sum, s) => sum + (data[`${s.id}.${note}`] ?? 0), 0);
-      if (!least || total < least.total) least = { total, note };
-    }
-    weakest = least;
-  }
-
+  /* ⚠ O CORPO FICOU COM A MANCHETE, E SO ELA. As duas leituras de analise — o que sustenta e o
+     que puxa para baixo — desceram para cards em 22/08/2026: elas sao ANEXO, e nao prosa, e
+     lidas como terceiro e quarto paragrafo elas obrigavam o jogador a ler tres linhas para
+     saber se precisava se preocupar. Ver `pollCards`. */
   return (
     `<div class="letter__lines">` +
     line(
@@ -708,23 +706,73 @@ function reportBody(
         `${escapeHtml(moved === 1 ? UI.inbox.pollPoint : UI.inbox.pollPoints)} ` +
         `${escapeHtml(way)}`,
     ) +
+    `</div>`
+  );
+}
+
+/**
+ * OS DOIS CARDS DE ANALISE DA PESQUISA — o que segura o governo, e o que o puxa.
+ *
+ * @param {Record<string, number>} data
+ * @param {ReadonlyArray<{ id: string, label: string }>} segments
+ * @returns {string}
+ */
+function pollCards(data, segments) {
+  const notes = ANNEX_NOTES;
+
+  /* ⚠ A NOTA QUE SUSTENTA E A MAIOR JA PESADA, e nao a maior nota crua: o que segura o governo
+     numa classe e o produto da nota pelo peso DELA. */
+  let holds = null;
+  for (const segment of segments) {
+    for (const note of notes) {
+      const value = data[`${segment.id}.${note}`] ?? 0;
+      if (!holds || value > holds.value) holds = { value, note, segment: segment.label };
+    }
+  }
+
+  /* A NOTA CRUA SE RECUPERA DE UMA CLASSE COM PESO CONHECIDO? */
+  let weakest = null;
+  for (const note of notes) {
+    const total = segments.reduce((sum, s) => sum + (data[`${s.id}.${note}`] ?? 0), 0);
+    if (!weakest || total < weakest.total) weakest = { total, note };
+  }
+
+  return (
     (holds
-      ? line(
-          `${escapeHtml(addressed(UI.inbox.pollHolds, treatment))} ` +
-            `<b>${escapeHtml(labelOf(UI.inbox.annexNote, holds.note))}</b>` +
-            `${escapeHtml(UI.inbox.pollHoldsIn)} ` +
-            `<b>${escapeHtml(holds.segment)}</b> ` +
-            `${escapeHtml(UI.inbox.pollHoldsWeighs)}`,
+      ? cardHtml(
+          /* ⚠ SEM `addressed`: a legenda deixou de tratar o presidente por "o senhor" quando
+             virou rotulo de card — "O QUE SUSTENTA O SENHOR" quebrava em duas linhas e
+             desalinhava o valor do card vizinho. Um rotulo nomeia a coisa, e nao interpela. */
+          UI.inbox.pollHolds,
+          `<b>${escapeHtml(labelOf(UI.inbox.annexNote, holds.note))}</b>` +
+            `<small>${escapeHtml(holds.segment)}</small>`,
         )
       : "") +
     (weakest
-      ? line(
-          `${escapeHtml(UI.inbox.pollDrags)} ` +
-            `<b>${escapeHtml(labelOf(UI.inbox.annexNote, weakest.note))}</b>, ` +
-            `${escapeHtml(UI.inbox.pollDragsAt)}`,
+      ? /* ⚠ SEM QUALIFICADOR: "nas tres faixas de renda" e sempre a mesma frase, por
+           construcao — a nota mais fraca e a que soma menos SOMANDO as tres. Frase que nao
+           varia nao e leitura, e legenda. */
+        cardHtml(
+          UI.inbox.pollDrags,
+          `<b>${escapeHtml(labelOf(UI.inbox.annexNote, weakest.note))}</b>`,
         )
-      : "") +
-    `</div>`
+      : "")
+  );
+}
+
+/**
+ * UM CARD DE ANEXO — legenda em cima, leitura embaixo.
+ *
+ * @param {string} legend
+ * @param {string} body ja em HTML
+ * @returns {string}
+ */
+function cardHtml(legend, body) {
+  return (
+    `<section class="annex">` +
+    `<h5 class="annex__legend">${escapeHtml(legend)}</h5>` +
+    `<p class="annex__read">${body}</p>` +
+    `</section>`
   );
 }
 
@@ -742,9 +790,7 @@ function headlineOf(letter) {
 
   /* As outras duas falam no NIVEL, porque e o nivel que decide — 21% de aprovacao e R$ 13,2
      bi sao o que o presidente tem, e nao o quanto ele mudou. */
-  if (letter.kind === "seats") {
-    return `${verb} ${seats(Math.abs(now - was))} ${UI.inbox.headlineSeats}`;
-  }
+  if (letter.kind === "seats") return `${verb} ${seats(now)} ${UI.inbox.headlineSeats}`;
   if (letter.kind === "vault") return `${verb} ${money(now)}`;
   return `${verb} ${seats(now)}%`;
 }
@@ -881,8 +927,14 @@ function annexHtml(letter, segments, parties) {
     .map(segment => {
       const values = ANNEX_NOTES.map(note => data[`${segment.id}.${note}`] ?? 0);
       const total = values.reduce((sum, value) => sum + value, 0);
+      /* ⚠ AS CELULAS SAO REPARTIDAS, e nao arredondadas uma a uma: o total impresso e a soma
+         cheia arredondada, e cinco arredondamentos independentes nao fecham nele. */
+      const cells = apportion(values);
       /* ⚠ A MAIOR DA LINHA GANHA PESO, e e ela que faz a tabela ser legivel de relance: sem
-         destaque, cinco numeros por linha sao cinco numeros. */
+         destaque, cinco numeros por linha sao cinco numeros.
+         Ela sai do valor CHEIO, e nao da celula repartida: com empate impresso o peso fica na
+         que de fato e maior, e a reparticao nunca inverte a ordem — quem tem piso maior nunca
+         imprime menos que quem tem piso menor. */
       const top = Math.max(...values);
 
       return (
@@ -893,7 +945,7 @@ function annexHtml(letter, segments, parties) {
             (value, index) =>
               `<td data-numeric${value === top && value > 0 ? ' data-top="true"' : ""} ` +
               `title="${escapeHtml(labelOf(UI.inbox.annexNote, ANNEX_NOTES[index] ?? ""))}">` +
-              `${seats(value)}</td>`,
+              `${seats(cells[index] ?? 0)}</td>`,
           )
           .join("") +
         `<td data-numeric class="annex__sum">${seats(total)}</td>` +
@@ -902,11 +954,9 @@ function annexHtml(letter, segments, parties) {
     })
     .join("");
 
-  const wear = data["wear"] ?? 0;
-  const betrayal = data["betrayal"] ?? 0;
-
   return (
-    `<section class="annex">` +
+    pollCards(data, segments) +
+    `<section class="annex" data-wide="true">` +
     `<h5 class="annex__legend">${escapeHtml(UI.inbox.annexLegend)}</h5>` +
     `<div class="annex__scroll">` +
     `<table class="annex__table">` +
@@ -916,14 +966,6 @@ function annexHtml(letter, segments, parties) {
     `<tbody>${rows}</tbody>` +
     `</table>` +
     `</div>` +
-    (wear > 0
-      ? `<p class="annex__foot">${escapeHtml(UI.inbox.annexWear)} ` +
-        `<b data-numeric>${seats(wear)}</b> ${escapeHtml(UI.inbox.annexEveryone)}` +
-        (betrayal > 0
-          ? `, ${escapeHtml(UI.inbox.annexBetrayal)} <b data-numeric>${seats(betrayal)}</b>`
-          : "") +
-        `</p>`
-      : "") +
     `</section>`
   );
 }

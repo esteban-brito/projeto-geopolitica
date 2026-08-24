@@ -158,7 +158,7 @@
   /* O ALERTA TINGE O NUMERO, e nao o cartao: quatro cartoes acesos ao mesmo tempo seriam
      quatro alarmes, e alarme que toca sempre e alarme que ninguem ouve. */
   .vital--alert .vital__value {
-    color: var(--crisis);
+    color: var(--signal-down);
   }
 
   /* ⚠ `.vital__spark` NASCEU E MORREU EM, e a razao esta em `dashboard.mjs`: a fileira tem

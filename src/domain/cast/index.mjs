@@ -20,6 +20,8 @@
  * @typedef {object} Person
  * @property {string} id
  * @property {string} name - inventado, sempre; ver o ADR 0003
+ * @property {"f" | "m"} gender - sai do vocabulario de nomes, e a tela so o usa para escolher
+ * a silhueta do sinete: nao ha rosto, e um rosto inventado seria a cara de alguem
  * @property {string} archetype
  * @property {string} label - o arquetipo em uma linha, para a tela
  * @property {string} bloc - o bloco de onde ela sai
@@ -75,9 +77,10 @@ function hashed(text) {
  * @param {ReadonlyArray<string>} input.firstNames
  * @param {ReadonlyArray<string>} input.surnames
  * @param {ReadonlyArray<string>} input.ambitions
+ * @param {ReadonlyMap<string, "f" | "m">} input.genderOf
  * @returns {Person[]}
  */
-export function cast({ seed, parties, archetypes, firstNames, surnames, ambitions }) {
+export function cast({ seed, parties, archetypes, firstNames, surnames, ambitions, genderOf }) {
   /** @type {Person[]} */
   const people = [];
   /** @type {Set<string>} */
@@ -114,6 +117,7 @@ export function cast({ seed, parties, archetypes, firstNames, surnames, ambition
     people.push({
       id: archetype.id,
       name,
+      gender: genderOf.get(name.split(" ")[0] ?? "") ?? "m",
       archetype: archetype.id,
       label: archetype.label,
       bloc: bloc.id,

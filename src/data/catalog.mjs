@@ -9,6 +9,7 @@ import {
   CAST,
   CAST_SCHEMA,
   FIRST_NAMES,
+  GENDER_OF,
   SURNAMES,
 } from "./cast.mjs";
 import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
@@ -36,6 +37,7 @@ export const CATALOG = {
   lobbies: LOBBIES,
   pressure: PRESSURE,
   firstNames: FIRST_NAMES,
+  genderOf: GENDER_OF,
   surnames: SURNAMES,
   ambitions: AMBITIONS,
 };

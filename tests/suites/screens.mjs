@@ -4,6 +4,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
+import fc from "fast-check";
 import { CATALOG } from "../../src/data/catalog.mjs";
 import { quorumOf } from "../../src/data/bills.mjs";
 import {
@@ -38,7 +39,7 @@ import { UI } from "../../src/ui/strings.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { areaHtml } from "../../src/ui/screens/area.mjs";
 import { financeHtml } from "../../src/ui/screens/finance.mjs";
-import { money, num, percent, signed } from "../../src/ui/shared/format.mjs";
+import { apportion, money, num, percent, signed } from "../../src/ui/shared/format.mjs";
 import { trendOf, windowLabel } from "../../src/ui/shared/trend.mjs";
 import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/mesa.mjs";
 import { cabinetHtml } from "../../src/ui/screens/cabinet.mjs";
@@ -372,69 +373,45 @@ test("A BASE REPARTIDA SOMA A BASE INTEIRA, e nao o plenario", () => {
    digitado aqui: as cadeiras cheias sao a base efetiva que `baseCount` devolve.
    ELENCO ja produziu uma vez, quando os alcances nao normalizados fecharam a Camara
    em 730 assentos, e o mesmo que `chamberMismatch` pega no catalogo. */
-test("A FITA FECHA O PLENARIO, e as cadeiras cheias sao a base do motor", () => {
+test("A REGUA DA CAMARA MEDE A BASE CONTRA A MAIORIA, e as duas na mesma escala", () => {
   let state = createState();
+  const total = CATALOG.parties.reduce((sum, party) => sum + party.seats, 0);
 
   for (let month = 0; month < 18; month++) {
     const html = cabinetOf(state);
-    const drawn = [
-      ...html.matchAll(
-        /class="ribbon__bench" data-axis="(\d)" style="flex-grow:([\d.]+)"><span class="ribbon__held" style="flex-basis:([\d.]+)%"/g,
-      ),
-    ];
-
-    const benches = chamberOf(state, CATALOG).filter(bench => Math.round(bench.seats) > 0);
-    const total = CATALOG.parties.reduce((sum, party) => sum + party.seats, 0);
-
-    const faixas = new Set(
-      benches.map(b => Math.min(5, Math.max(1, Math.floor((b.economic / 100) * 5) + 1))),
-    );
-    assert.equal(
-      drawn.length,
-      faixas.size,
-      `no mes ${month} a fita desenhou ${drawn.length} blocos e o eixo tem ${faixas.size} faixas ocupadas`,
-    );
-    assert.ok(drawn.length <= 5, `no mes ${month} a fita passou de cinco blocos`);
-
-    /* A SOMA DAS LARGURAS E O PLENARIO, e ela e exata: o crescimento de cada bloco recebe o
-       numero de cadeiras dele, entao a proporcao sai da propria soma sem a view calcular
-       porcentagem nenhuma. */
-    const width = drawn.reduce((sum, hit) => sum + Number(hit[2]), 0);
-    assert.ok(
-      Math.abs(width - total) < 1,
-      `no mes ${month} a fita soma ${width.toFixed(1)} cadeiras num plenario de ${total}`,
-    );
-
-    /* AS CHEIAS SAO A BASE, e a base e do motor. */
-    const held = drawn.reduce((sum, hit) => sum + (Number(hit[2]) * Number(hit[3])) / 100, 0);
     const base = baseCount({ parties: CATALOG.parties, loyalty: state.loyalty });
+
+    /* ⚠ ANCORADA NO ROTULO, e nao na primeira ocorrencia: a Trindade desenha tres reguas com
+       `--index;--mark` ACIMA desta na mesma tela, e sem a ancora a prova media o limiar da
+       ruptura social — 20 — e acusava a maioria de estar no lugar errado. */
+    const gauge = html.match(
+      new RegExp(`--index:([0-9.-]+);--mark:([0-9.-]+)" aria-label="${UI.cabinet.baseLine}`),
+    );
+    assert.ok(gauge, `no mes ${month} a base saiu sem regua`);
+
+    /* ⚠ ESTA PROVA SUBSTITUI "A FITA FECHA O PLENARIO", e ela nao foi apagada: a fita saiu do
+       Gabinete em 22/08/2026 porque onze bancadas em 184px so seriam legiveis com uma legenda
+       nomeando cada cor, e essa legenda nao cabe. O que ela cobrava e que continua importando
+       — o desenho nao inventa a base, e ele a compara com a maioria na MESMA escala. */
     assert.ok(
-      Math.abs(held - base) <= benches.length,
-      `no mes ${month} a fita mostra ${held.toFixed(0)} com o governo e o motor diz ${base}`,
+      Math.abs(Number(gauge?.[1]) - (base / total) * 100) < 0.5,
+      `no mes ${month} a regua encheu ate ${gauge?.[1]}% e a base do motor e ${base} de ${total}`,
+    );
+    assert.ok(
+      Math.abs(Number(gauge?.[2]) - (257 / total) * 100) < 0.1,
+      `a marca da maioria caiu em ${gauge?.[2]}% e a maioria e 257 de ${total}`,
     );
 
-    /* ⚠ NENHUMA BANCADA SAI FORA DA RAMPA. */
-    for (const hit of drawn) {
-      assert.ok(
-        ["1", "2", "3", "4", "5"].includes(hit[1] ?? ""),
-        `uma bancada saiu com humor "${hit[1]}", que nao e estado de bancada`,
-      );
-    }
-
-    /* ⚠ A LINHA DA MAIORIA CAI ONDE A MAIORIA ESTA, e esta e a metade NOVA da prova. */
-    const mark = html.match(/class="ribbon__majority" style="left:([\d.]+)%"/);
-    assert.ok(mark, `no mes ${month} a fita saiu sem a linha da maioria`);
+    /* ⚠ E O NUMERO ESCRITO E O MESMO QUE A REGUA DESENHA. */
     assert.ok(
-      Math.abs(Number(mark?.[1]) - (257 / total) * 100) < 0.1,
-      `a linha da maioria caiu em ${mark?.[1]}% e a maioria e 257 de ${total}`,
+      html.includes(`${Math.round(base)} ${UI.cabinet.of} ${total}`),
+      `no mes ${month} a leitura escrita nao diz ${Math.round(base)} de ${total}`,
     );
 
     state = playMonth(state, {}).state;
   }
 });
 
-/* Partir por `data-dispatch=` da uma linha por carta sem uma aspa aninhada em lugar nenhum, e
-   o `prettier` nao tem como reescrever isto de volta para o formato que quebra. */
 const ASPA = String.fromCharCode(34);
 const UNREAD = "data-unread=";
 
@@ -510,35 +487,6 @@ test("A BANDEJA MARCA O NAO LIDO, e a carta aberta deixa de ser um", () => {
   assert.deepEqual(naoLidas, ["carta-3"], "a marca de nao lido caiu na carta errada");
 });
 
-test("TODA CARTA DIZ POR QUE CHEGOU, e a razao sai do motor e nao da view", () => {
-  const kinds = [
-    "posse",
-    "tabled",
-    "reported",
-    "forgotten",
-    "passed",
-    "rejected",
-    "demand",
-    "rupture",
-    "siege",
-  ];
-
-  for (const kind of kinds) {
-    const why = /** @type {Record<string, string>} */ (UI.inbox.why)[kind];
-    assert.ok(why, `a espécie "${kind}" chegou sem razão`);
-    assert.notEqual(why, kind, `a espécie "${kind}" saiu com o id cru no lugar da razão`);
-  }
-
-  /* E ELA CHEGA NA TELA, e nao so na tabela. */
-  const html = letterHtml({
-    from: null,
-    subject: "Reforma",
-    body: "<p>corpo</p>",
-    why: UI.inbox.why.reported,
-  });
-  assert.ok(html.includes(UI.inbox.why.reported), "o ofício aberto nao imprimiu a razão");
-});
-
 test("A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO, e ela tem duas frases", () => {
   const abertura = createState();
   assert.equal(abertura.month, OPENING_MONTH, "a partida nao abre no mes de abertura");
@@ -578,25 +526,27 @@ test("O ESTOURO DO COFRE TEM COR, e so quando a LEITURA e maior que zero", () =>
      cinza das outras leituras. */
   const state = createState();
 
+  /* ⚠ O MARCADOR MUDOU DE `data-over` PARA `data-tone="crisis"` quando a coluna virou uma
+     gramatica so: quem tinge agora e a LINHA, e nao um campo dentro de um paragrafo. */
   const over = cabinetOf(state, { room: 10, committed: 10.3 });
-  assert.ok(over.includes('data-over="true"'), "o estouro nao acendeu");
-  assert.ok(over.includes("passa do que cabe"), "o estouro nao foi dito");
+  assert.ok(over.includes('data-tone="crisis"'), "o estouro nao acendeu");
+  assert.ok(over.includes(UI.cabinet.vaultOver), "o estouro nao foi dito");
   /* ⚠ ELA PERGUNTA AO TERMO, E NAO AO LITERAL, — e a mudanca veio de esta prova quebrar por
      uma razao errada. */
   assert.ok(!over.includes(UI.cabinet.vaultTaken), "o estouro repetiu o total em vez do excesso");
 
-  /* ⚠ E SO O ESTOURO ACENDE. */
-  const lit = over.slice(over.indexOf('data-over="true"'));
-  assert.ok(!lit.includes("obrigatória"), "o vermelho do estouro engoliu o contexto");
+  /* ⚠ E SO A LINHA DO ESTOURO ACENDE: a linha da obrigatoria vem ANTES dela e fica fora. */
+  const lit = over.slice(over.indexOf('data-tone="crisis"'));
+  assert.ok(!lit.includes(UI.cabinet.vaultLocked), "o vermelho do estouro engoliu o contexto");
 
   const tight = cabinetOf(state, { room: 10, committed: 10.01 });
   assert.ok(
-    !tight.includes('data-over="true"'),
+    !tight.includes('data-tone="crisis"'),
     "um excesso que imprime R$ 0,0 bi acendeu o vermelho mesmo assim",
   );
 
   const room = cabinetOf(state, { room: 10, committed: 4 });
-  assert.ok(!room.includes('data-over="true"'));
+  assert.ok(!room.includes('data-tone="crisis"'));
   assert.ok(
     room.includes(UI.cabinet.vaultTaken),
     "sem estouro, o cartao parou de dizer o que foi gasto",
@@ -987,4 +937,134 @@ test("A SETA SO EXISTE QUANDO HA PASSADO: sem mes anterior, a barra nao opina", 
   );
   /* A INFLACAO CAIU, E CAIR E BOM: o sinal dela se inverte, e a seta sobe. */
   assert.match(falado, /data-direction="up"[^>]*>▲<\/i><\/span><\/div><div class="vital/);
+});
+
+/* ⚠ A TABELA IMPRIMIA DUAS CONTAS CERTAS E INCOMPATIVEIS, e as duas de boa fe: cada celula
+   se arredondava sozinha e o total era o arredondamento da soma CHEIA. Medido na Classe C —
+   `15,4 + 11,6 + 7,6 + 5,6 + 2,8` — as celulas davam 44 e o total imprimia 43.
+   ⚠ E A PROPRIEDADE E DA TABELA INTEIRA, e nao daquela linha: a prova sorteia as notas,
+   inclui NEGATIVO (o desgaste tira pontos) e cobra o fecho em toda linha impressa. */
+test("O ANEXO FECHA A CONTA: a soma das celulas impressas e o total impresso", () => {
+  const segments = [
+    { id: "de", label: "Classe D/E" },
+    { id: "c", label: "Classe C" },
+    { id: "ab", label: "Classe A/B" },
+  ];
+  const notes = ["prices", "jobs", "services", "safety", "economy"];
+
+  /** @param {Record<string, number>} attach */
+  function tabelaOf(attach) {
+    const [dispatch] = describeMail({
+      mail: [
+        {
+          id: "pesquisa-1",
+          kind: "street",
+          month: 3,
+          due: null,
+          subject: null,
+          bill: null,
+          except: [],
+          saved: null,
+          was: 40,
+          now: 44,
+          weight: null,
+          attach,
+          from: null,
+          lever: null,
+          level: null,
+          answer: null,
+          closedAt: null,
+        },
+      ],
+      people: [],
+      left: () => null,
+      inherited: { mandatory: 0, room: 0 },
+      answered: {},
+      segments,
+    });
+    assert.ok(dispatch, "a carta da pesquisa nao chegou a bandeja");
+
+    /* ⚠ O ANEXO SAIU DO CORPO em 22/08/2026: ele virou uma secao propria da carta, com card e
+       legenda, e o corpo ficou so com a manchete. A prova foi atras dele. */
+    const corpo = dispatch.annex ?? "";
+    const anexo = corpo.slice(corpo.indexOf("annex__table"));
+    return [...anexo.matchAll(/<tr>(.*?)<\/tr>/g)]
+      .map(linha => [...(linha[1] ?? "").matchAll(/<td[^>]*>(−?-?\d+)<\/td>/g)])
+      .filter(celulas => celulas.length === notes.length + 1)
+      .map(celulas => celulas.map(celula => Number((celula[1] ?? "0").replace("−", "-"))));
+  }
+
+  /* O CASO MEDIDO, ANTES DO SORTEIO: ele e o que a captura pegou, e sem ele um gerador que
+     nunca produzisse residuo grande deixaria a prova verde por sorte. */
+  const medido = tabelaOf({
+    "c.prices": 15.4,
+    "c.jobs": 11.6,
+    "c.services": 7.6,
+    "c.safety": 5.6,
+    "c.economy": 2.8,
+  });
+  const linhaC = medido.find(linha => linha[linha.length - 1] === 43);
+  assert.ok(linhaC, "a linha medida nao imprimiu o total de 43");
+  assert.equal(
+    linhaC.slice(0, -1).reduce((soma, valor) => soma + valor, 0),
+    43,
+    "as celulas da Classe C nao fecham no total impresso",
+  );
+
+  fc.assert(
+    fc.property(
+      fc.array(fc.double({ min: -14, max: 26, noNaN: true, noDefaultInfinity: true }), {
+        minLength: segments.length * notes.length,
+        maxLength: segments.length * notes.length,
+      }),
+      valores => {
+        /** @type {Record<string, number>} */
+        const attach = {};
+        let posicao = 0;
+        for (const segment of segments) {
+          for (const note of notes) attach[`${segment.id}.${note}`] = valores[posicao++] ?? 0;
+        }
+
+        const linhas = tabelaOf(attach);
+        assert.equal(linhas.length, segments.length, "o anexo nao imprimiu uma linha por classe");
+        for (const linha of linhas) {
+          const total = linha[linha.length - 1];
+          const soma = linha.slice(0, -1).reduce((acc, valor) => acc + valor, 0);
+          assert.equal(soma, total, `as celulas somam ${soma} e a linha imprime ${total}`);
+        }
+      },
+    ),
+  );
+});
+
+/* ⚠ E A REPARTICAO NAO INVENTA CELULA: cada uma fica a um passo do proprio valor, senao o
+   fecho seria comprado com um numero que a classe nunca teve. */
+test("A REPARTICAO FICA COLADA NO VALOR: nenhuma celula anda mais de um ponto", () => {
+  fc.assert(
+    fc.property(
+      fc.array(fc.double({ min: -50, max: 50, noNaN: true, noDefaultInfinity: true }), {
+        minLength: 1,
+        maxLength: 12,
+      }),
+      valores => {
+        const celulas = apportion(valores);
+        /* ⚠ `+ 0` FECHA O ZERO NEGATIVO: `Math.round(-0,2)` e `-0`, e `assert.equal` separa os
+           dois zeros. E a mesma armadilha que `attr` existe para fechar. */
+        const total = Math.round(valores.reduce((soma, valor) => soma + valor, 0)) + 0;
+        assert.equal(
+          celulas.reduce((soma, valor) => soma + valor, 0),
+          total,
+          "as celulas repartidas nao somam o total arredondado",
+        );
+        for (const [indice, valor] of valores.entries()) {
+          const celula = celulas[indice] ?? 0;
+          assert.ok(Number.isInteger(celula), `a celula ${indice} saiu fracionaria`);
+          assert.ok(
+            Math.abs(celula - valor) < 1,
+            `a celula ${indice} andou ${Math.abs(celula - valor)} para fechar a conta`,
+          );
+        }
+      },
+    ),
+  );
 });

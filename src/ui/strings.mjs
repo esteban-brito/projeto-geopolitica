@@ -29,8 +29,13 @@ const TERMOS = {
      "nao tenho base", tendo 436 de 513. Mesma palavra, sentido invertido, 130px de
      distancia. O nome certo e o que a CALDEIRA ja usa para o mesmo grupo. */
   social: "Opinião pública",
-  economic: "Capital",
-  political: "O baixo clero",
+  /* ⚠ OS DOIS SAIRAM DA METAFORA em 22/08/2026, por ordem dele: "chega de poesia, quero algo
+     mais tecnico e bem claro pro novo jogador". "Capital" nao diz quem e, e "o baixo clero" e
+     giria de Congresso — quem nunca jogou le as duas e nao sabe de quem a tela esta falando.
+     ⚠ E "Parlamentares" NAO PODE VIRAR "base": a regua chamou-se "Base no Congresso" e o
+     jogador lia "Base no Congresso 0" como "nao tenho base" tendo 436 de 513. */
+  economic: "Setor privado",
+  political: "Parlamentares",
 
   /* O carimbo do fim, e ele e o mesmo no cartao da CALDEIRA e no fecho. */
   removed: "MANDATO INTERROMPIDO",
@@ -45,6 +50,10 @@ const TERMOS = {
   seatsWord: "cadeiras",
   moodWord: "humor",
   perMonthWord: "no mês",
+  /* ⚠ ELA E A MESMA LEITURA EM DOIS LUGARES — o bloco do dinheiro no Gabinete e o card da
+     carta de posse —, e as duas mudam juntas por definicao: e o discricionario que cabe no
+     mes. Teclada duas vezes, divergiriam na primeira vez que alguem ajustasse uma. */
+  roomLine: "Sobra para o mês",
   revenueWord: "Receita",
 
   /* Unidades e grandezas, ditas uma vez. */
@@ -116,25 +125,34 @@ export const UI = {
        `ribbon.mjs` e estava certa por uma razão que vale além dela: quem lê a fita por som
        recebe a MESMA descrição que o olho recebe, e uma descrição escrita dentro do desenho é
        a única frase da interface que ninguém revisa. */
-    ribbonRead: "cadeiras respondem ao governo, em",
-    ribbonBenches: "bancadas ordenadas da maior intervenção ao maior mercado; a maioria fecha em",
-    axisLeft: "intervenção",
-    axisRight: "mercado",
-    majority: TERMOS.simpleMajority,
+    /* ── AS LEGENDAS DOS QUATRO BLOCOS ─────────────────────────────────────── ⚠ ELAS
+       VOLTARAM em 22/08/2026, e cinco delas tinham SAIDO em 20/08. A premissa daquela
+       retirada era que o numero grande nomeava o bloco sozinho; sem numero grande, uma lista
+       que abre em "O mercado" nao diz de que assunto ela e. A da Rua nao se redigita — ela e
+       a mesma palavra do rail, e teclar de novo e como um vocabulario comeca a divergir. */
+    blockCongress: "A Câmara",
+    blockVault: "Dinheiro do mês",
+    blockBoiler: "Quem pode derrubar",
+    blockStreet: "Aprovação por renda",
+    baseLine: "Apoiam o governo",
+    of: TERMOS.of,
+    /* ⚠ O ROTULO DIZ O QUE O NUMERO E, e nao onde ele mora: "base no plenario" e jargao de
+       quem ja joga. E a frase abaixo dele existe para o risco de latao na barra deixar de ser
+       um traco sem explicacao — ela e o unico texto do bloco, e paga o proprio pixel. */
+    lawPasses: "uma lei passa com",
     congressAction: "negociar",
-    vaultFree: "cabe no mês",
-    vaultLocked: "obrigatória",
+    vaultFree: TERMOS.roomLine,
+    /* ⚠ A FRASE DA A BASE DO PERCENTUAL, e sem ela "95%" nao diz 95% de que. */
+    vaultOfRevenue: "da receita de",
+    vaultBiggest: "Maior gasto preso:",
+    vaultLocked: "Preso por lei",
     /* O defeito é real mesmo fora do teste: duas leituras vizinhas passariam a abrir com a
        mesma palavra. */
-    vaultTaken: "comprometido",
+    vaultTaken: "Já comprometido",
     /* ⚠ ELE DIZ O EXCESSO, e nao repete o total. */
-    vaultOver: "o orçamento escrito passa do que cabe em",
-    seats: "de 513",
+    vaultOver: "Passa do que cabe",
     /* A LEGENDA DO ARCO. */
     /* ⚠ A RESPOSTA A PERGUNTA QUE O JOGADOR FAZ PRIMEIRO. */
-    /* "Aposentadoria urbana TRAVA R$ 66,7 bi" é uma sentença, e sentença carrega sozinha o
-       que o rótulo carregava. */
-    vaultWho: "trava",
     /* ── A CALDEIRA ──────────────────────────────────────────────────────────── ⚠ ELA MEDE
        QUEM CONSEGUE TE DERRUBAR, e a Rua logo abaixo mede quem te aprova. */
     /* Ele esta certo, e o defeito tem nome — a metafora estava fazendo o trabalho que o
@@ -148,8 +166,6 @@ export const UI = {
     /* Os três nomes são os mesmos de `ruptureSocial` e irmãs, e não uma segunda tradução:
        dois nomes para a mesma ruptura é como um vocabulário começa a divergir. */
     trinityTitle: "Risco de queda",
-    trinityHold: "as três, juntas",
-    trinityNone: "as três romperam",
     /* OS TRES NOMES DIZEM QUEM ABANDONA, e nao uma imagem. */
     trinity: {
       social: TERMOS.social,
@@ -162,6 +178,9 @@ export const UI = {
     trinityAbove: "rompe acima de",
     /* O rótulo do medidor, para leitor de tela. */
     boilerMeter: "de 100 de pressão",
+    /* A MESMA FORMA DA CAMARA: uma frase curta explica o risco de latao na barra, e o numero
+       dentro dela usa a cor da marca. */
+    boilerBreaks: "rompem acima de",
     boilerShare: `do ${TERMOS.economic.toLowerCase()}`,
     /* ⚠ E O PESO ZERO PRECISA DE FRASE PROPRIA, e não de "0%". */
     boilerNoShare: `não pesa no ${TERMOS.economic.toLowerCase()}`,
@@ -230,9 +249,10 @@ export const UI = {
     passed: "aprovada",
     rejected: "derrubada",
     voted: "o plenário deu",
-    street: "a rua fechou o mês em",
-    base: "a base fechou o mês em",
-    vault: "e o que sobra para o mês, em",
+    /* ⚠ AS TRES SAIRAM em 22/08/2026 com as tres linhas que elas costuravam: o anexo "o mes em
+       tres leituras" ja mostra as mesmas com o ANTES ao lado, e o corpo as repetia so com o
+       depois. Frase que sobrevive a peca que a usava e o que a segunda metade desta guarda
+       existe para achar. */
     seeMonth: "ver o mês",
     /* ⚠ O VAZIO MUDOU DE FRASE quando a primeira carta passou a existir. */
     firstLead: "O primeiro mês ainda não foi resolvido",
@@ -243,12 +263,24 @@ export const UI = {
     ceilingNote: "o que sobra para o mês:",
     minoritySubject: "O governo perdeu a maioria",
     minorityBody: "As cadeiras que respondem ao governo caíram abaixo da maioria simples.",
-    minorityNote: "de 513, e a maioria fecha em",
-    boilingSubject: "passou do ponto",
-    boilingBody: "A pressão dele passou do ponto de fervura e ele deixou de sustentar o governo.",
-    boilingNote: "de 100, e o ponto de fervura é",
-    boilingWeight: "e ele carrega",
-    boilingNoWeight: "e ele não pesa na ruptura econômica",
+    /* ⚠ ELA ERA UMA COSTURA ENTRE DOIS NUMEROS — "436 de 513, e a maioria fecha em 257" — e os
+       dois viraram cards em 22/08/2026. Sobrou o denominador, que qualifica o primeiro. */
+    quietMonth: "Nenhum texto foi a plenário neste mês.",
+    ruptureLegend: "O que falta para abrir o processo",
+    minorityNote: "de 513",
+    /* O QUORUM DA LEI COMUM, e ele e o mesmo TERMO que a Camara usa no Gabinete. */
+    majority: TERMOS.simpleMajority,
+    /* ⚠ AS CINCO FRASES SAO NEUTRAS EM NUMERO desde 22/08/2026, e o defeito era consumado:
+       elas foram escritas para nomes de grupo no singular — "O mercado passou do ponto" — e os
+       nomes viraram plurais quando o vocabulario deixou de ser metafora. A tela imprimia
+       "Parlamentares passou do ponto" e "e ele carrega 30%". Nenhuma guarda alcanca
+       concordancia; o conserto e nao depender dela. */
+    boilingSubject: "rompeu com o governo:",
+    boilingBody: "A pressão passou do ponto de fervura, e o apoio ao governo acabou.",
+    boilingNote: "ponto de fervura",
+    boilingPressure: "Pressão do grupo",
+    boilingWeight: "Peso na ruptura econômica",
+    boilingNoWeight: "não pesa",
 
     /* ── OS TRES RELATORIOS DO MES ──────────────────────────────────────────── ⚠ ELES CHEGAM
        POR TEMPO, e nao por evento — sao a unica especie assim. */
@@ -297,16 +329,17 @@ export const UI = {
       seats: TERMOS.seatsWord,
       vault: "o que sobra",
     },
-    annexWear: "o desgaste do cargo tirou",
-    annexBetrayal: "e a promessa não honrada tirou",
-    annexEveryone: "de todas",
 
     /* Diz o tamanho, e nao diz QUANTO v3 "Aprovação cai a 21%"   — noticia. */
     headline: {
       "street.rose": "Aprovação sobe a",
       "street.fell": "Aprovação cai a",
-      "seats.rose": "Base ganha",
-      "seats.fell": "Base perde",
+      /* ⚠ AS DUAS PASSARAM A FALAR NO NIVEL em 22/08/2026, e as outras quatro ja falavam: com
+         a pastilha de variacao ao lado do assunto, "Base perde 157 cadeiras" e "▼157" diziam o
+         MESMO numero duas vezes. O assunto carrega o que o presidente TEM; a pastilha carrega
+         o quanto andou. */
+      "seats.rose": "Base sobe a",
+      "seats.fell": "Base cai a",
       /* ⚠ "CAIXA" E NAO "DISCRICIONARIO", e a troca e de LARGURA e nao de vocabulario:
          "Discricionário cai a R$ 11,3 bi" tem 31 caracteres e quebra em duas linhas num
          indice de 208px — e cada quebra custa 18px de uma coluna que tem 630. */
@@ -321,11 +354,12 @@ export const UI = {
     pollUp: "acima do mês passado.",
     pollPoint: "ponto",
     pollPoints: "pontos",
-    pollHolds: "O que sustenta {v} é",
-    pollHoldsIn: ", e é na",
-    pollHoldsWeighs: "que ela pesa mais.",
-    pollDrags: "A nota mais fraca é",
-    pollDragsAt: "e ela puxa as três classes para baixo.",
+    /* ⚠ AS CINCO VIRARAM DUAS em 22/08/2026: elas eram os pedacos de duas FRASES coladas em
+       volta de um numero — "O que sustenta o senhor é economia, e é na Alta renda que ela pesa
+       mais" —, e as duas leituras desceram para cards. Num card a legenda nomeia e o valor
+       responde, entao a costura da frase deixou de existir. */
+    pollHolds: "O que sustenta",
+    pollDrags: "O que puxa para baixo",
     seatsBody: "As cadeiras que respondem ao governo fecharam o mês em",
     seatsOf: "de 513, e a maioria simples fecha em",
     seatsHint: "Sem ela, nada do que {v} assinar chega ao plenário.",
@@ -334,27 +368,6 @@ export const UI = {
 
     /* ⚠ `reportUnit` MORREU JUNTO COM O TEMPLATE COMUM. */
 
-    why: {
-      posse: "você tomou posse, e o orçamento em vigor ainda é o do seu antecessor",
-      tabled: "a Mesa pautou um texto que você assinou",
-      reported:
-        "seu texto mexeu em duas alavancas ou mais, e texto assim passa por relatoria — é ela que emenda",
-      forgotten: "seu texto passou do prazo sem a Mesa pautar",
-      passed: TERMOS.plenaryJudged,
-      rejected: TERMOS.plenaryJudged,
-      demand: "você mexeu numa alavanca que este grupo cobra",
-      rupture: "uma das três rupturas da queda se abriu",
-      siege: "as três rupturas se abriram no mesmo mês, e é isso que abre a gaveta",
-      ceiling: "o gasto do ano encostou no limite da regra neste mês",
-      minority: "a sua base cruzou a maioria simples para baixo neste mês",
-      boiling: "a pressão deste grupo passou do ponto de fervura neste mês",
-      /* ⚠ AS TRES RAZOES SAO A MESMA FRASE COM O SUJEITO TROCADO, e isso e de propósito: o
-         que o jogador precisa aprender é a REGRA, e ela é uma só — o domínio escreve no mês
-         em que se move o bastante, e cala no mês em que não. */
-      street: "a Casa Civil manda a pesquisa quando ela se move o bastante para importar",
-      seats: "o líder conta as cadeiras todo mês, e escreve quando a conta muda",
-      vault: "a Fazenda fecha o mês e avisa quando o que sobra muda de tamanho",
-    },
     /* ── AS CARTAS DA TRAMITAÇÃO ───────────────────────────────────────────── ⚠ ELAS SÃO O
        QUE TRANSFORMA A GAVETA EM MECÂNICA. */
     tabled: "Pautei o seu texto",
@@ -419,8 +432,10 @@ export const UI = {
     /* ── A CARTA DE POSSE ──────────────────────────────────────────────────── ⚠ ELA EXISTE
        PORQUE A PRIMEIRA TELA DO JOGO TINHA A PEÇA CENTRAL VAZIA. */
     inauguration: "O país que {v} recebe",
-    inheritedMandatory: "da despesa do ano é obrigatória, e ela não passa pela sua caneta",
-    inheritedRoom: "é o que sobra para o mês, depois do que já está comprometido",
+    /* ⚠ AS DUAS ERAM FIM DE FRASE e viraram LEGENDA DE CARD em 22/08/2026: num card a legenda
+       nomeia e o valor responde, entao a costura em volta do numero deixou de existir. */
+    inheritedMandatory: "Obrigatória do ano",
+    inheritedRoom: TERMOS.roomLine,
     inheritedLead: "O orçamento em vigor é o do seu antecessor até {v} escrevê-lo.",
   },
   /* A BARRA SUPERIOR — os sinais vitais, e eles nunca somem da tela. */

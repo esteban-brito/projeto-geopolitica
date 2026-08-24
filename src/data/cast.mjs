@@ -4,54 +4,68 @@
 
 /* ⚠ ELAS TINHAM UM ANDAR SOCIAL SO, E ISSO ERA UM DEFEITO DE MATERIA-PRIMA. */
 
-/** @type {ReadonlyArray<string>} */
-export const FIRST_NAMES = [
+/* ⚠ O GENERO MORA NA MESMA LINHA DO NOME, e nao numa segunda lista: o sinete precisa dele
+   para escolher a silhueta, e duas listas paralelas seriam duas fontes da mesma verdade —
+   divergiriam no dia em que alguem acrescentasse um nome so numa delas.
+   A ORDEM E A MESMA DE ANTES, e isso importa: o gerador sorteia por indice a partir da
+   semente, entao reordenar trocaria o elenco inteiro de toda partida ja salva. */
+
+/** @typedef {{ name: string, gender: "f" | "m" }} Given */
+
+/** @type {ReadonlyArray<Given>} */
+export const GIVEN_NAMES = [
   /* A geracao que ja estava aqui — e ela FICA. */
-  "Adalberto",
-  "Belarmino",
-  "Custódio",
-  "Dalva",
-  "Eurico",
-  "Filomena",
-  "Genésio",
-  "Hermínia",
-  "Januário",
-  "Leocádia",
-  "Lourival",
-  "Nazaré",
-  "Onofre",
-  "Quitéria",
-  "Sebastiana",
-  "Ubirajara",
-  "Valdomiro",
-  "Zulmira",
+  { name: "Adalberto", gender: "m" },
+  { name: "Belarmino", gender: "m" },
+  { name: "Custódio", gender: "m" },
+  { name: "Dalva", gender: "f" },
+  { name: "Eurico", gender: "m" },
+  { name: "Filomena", gender: "f" },
+  { name: "Genésio", gender: "m" },
+  { name: "Hermínia", gender: "f" },
+  { name: "Januário", gender: "m" },
+  { name: "Leocádia", gender: "f" },
+  { name: "Lourival", gender: "m" },
+  { name: "Nazaré", gender: "f" },
+  { name: "Onofre", gender: "m" },
+  { name: "Quitéria", gender: "f" },
+  { name: "Sebastiana", gender: "f" },
+  { name: "Ubirajara", gender: "m" },
+  { name: "Valdomiro", gender: "m" },
+  { name: "Zulmira", gender: "f" },
   /* A GERACAO DO MEIO — quem se elegeu pela primeira vez nos anos 90 e hoje preside comissao. */
-  "Adriano",
-  "Beatriz",
-  "Cláudio",
-  "Denise",
-  "Fábio",
-  "Gilmar",
-  "Heloísa",
-  "Jorge",
-  "Márcia",
-  "Nilson",
-  "Renata",
-  "Sérgio",
-  "Vera",
-  "Wagner",
+  { name: "Adriano", gender: "m" },
+  { name: "Beatriz", gender: "f" },
+  { name: "Cláudio", gender: "m" },
+  { name: "Denise", gender: "f" },
+  { name: "Fábio", gender: "m" },
+  { name: "Gilmar", gender: "m" },
+  { name: "Heloísa", gender: "f" },
+  { name: "Jorge", gender: "m" },
+  { name: "Márcia", gender: "f" },
+  { name: "Nilson", gender: "m" },
+  { name: "Renata", gender: "f" },
+  { name: "Sérgio", gender: "m" },
+  { name: "Vera", gender: "f" },
+  { name: "Wagner", gender: "m" },
   /* A GERACAO NOVA — o primeiro mandato. */
-  "Bruno",
-  "Camila",
-  "Diego",
-  "Ícaro",
-  "Juliana",
-  "Letícia",
-  "Rafael",
-  "Tainá",
-  "Thiago",
-  "Yasmin",
+  { name: "Bruno", gender: "m" },
+  { name: "Camila", gender: "f" },
+  { name: "Diego", gender: "m" },
+  { name: "Ícaro", gender: "m" },
+  { name: "Juliana", gender: "f" },
+  { name: "Letícia", gender: "f" },
+  { name: "Rafael", gender: "m" },
+  { name: "Tainá", gender: "f" },
+  { name: "Thiago", gender: "m" },
+  { name: "Yasmin", gender: "f" },
 ];
+
+/** @type {ReadonlyArray<string>} */
+export const FIRST_NAMES = GIVEN_NAMES.map(given => given.name);
+
+/** ⚠ Ele nasce da MESMA lista, entao nao ha o que divergir. */
+export const GENDER_OF = new Map(GIVEN_NAMES.map(given => [given.name, given.gender]));
 
 /** @type {ReadonlyArray<string>} */
 export const SURNAMES = [

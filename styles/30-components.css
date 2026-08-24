@@ -35,16 +35,18 @@
     stroke: var(--brand);
   }
 
-  .sigil__mark {
-    font-family: var(--font-display);
-    font-size: var(--text-note);
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    color: var(--ink-soft);
+  /* O DISCO CLARO E A FIGURA ESCURA, e nao o contrario: uma silhueta clara sobre fundo escuro
+     depende do que esta ATRAS do sinete, e o sinete anda por tres superficies diferentes. */
+  .sigil__disc {
+    fill: var(--ink-soft);
   }
 
-  .sigil[data-office="speaker"] .sigil__mark {
-    color: var(--brand);
+  .sigil__body {
+    fill: var(--bg-deep);
+  }
+
+  .sigil[data-office="speaker"] .sigil__disc {
+    fill: var(--brand);
   }
 
   /* ── O ESTADO VAZIO, e ele e o mesmo em toda tela ────────────────────────── A ESPERA E
@@ -174,7 +176,7 @@
     border-radius: var(--radius-stamp);
     background: var(--bordo);
     font-weight: 700;
-    color: var(--paper);
+    color: var(--sheet);
   }
 
   .action[disabled] {
@@ -551,9 +553,54 @@
      ela cabe em duas. */
   .reading {
     display: grid;
-    grid-template-columns: 10.5rem minmax(0, 1fr) 3rem;
+    grid-template-columns: 9rem minmax(0, 1fr) 5rem;
     align-items: center;
     gap: 0 var(--space-3);
+    min-height: 20px;
+  }
+
+  /* ⚠ A COLUNA DO NOME VOLTOU DE 10,5rem PARA 9rem, e a premissa que a alargou caducou: ela
+     tinha crescido para caber "que a torneira das emendas fique aberta" em duas linhas, e essa
+     frase saiu da linha em 22/08/2026. A do VALOR foi de 3rem para 5rem porque agora ela
+     carrega dinheiro — `R$ 66,7 bi` nao cabe em 48px, e o que nao cabe estoura para fora da
+     coluna sem nada falhar. */
+  .reading__who {
+    font-size: var(--text-note);
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── NO TELEFONE O NOME OCUPA A LINHA E A BARRA DESCE ─────────────────────── 9rem de rotulo
+     mais 5rem de valor num aparelho de 390px nao deixam pista nenhuma: a barra sai com zero.
+     Uma barra de 80px nao mostra proporcao — ela vira um traco que muda de cor. */
+  @media (max-width: 720px) {
+    .reading {
+      grid-template-columns: minmax(0, 1fr) auto;
+      row-gap: var(--space-1);
+    }
+
+    .reading__who {
+      grid-area: 1 / 1;
+    }
+
+    .reading__value {
+      grid-area: 1 / 2;
+    }
+
+    .reading > .gauge,
+    .reading > .meter,
+    .reading > .poles {
+      grid-area: 2 / 1 / 3 / -1;
+    }
+  }
+
+  /* ⚠ A MAIUSCULA E DA LINHA, e nao da frase: "maioria simples" e um TERMO compartilhado com
+     o quorum de uma lei, e capitaliza-lo na origem daria dois literais para a mesma palavra —
+     que e exatamente o que a guarda `vocabulary` existe para impedir. */
+  .reading__who::first-letter {
+    text-transform: uppercase;
   }
 
   .reading__value {
@@ -561,6 +608,86 @@
     font-weight: 700;
     text-align: right;
     color: var(--ink);
+  }
+
+  /* ── A LINHA SEM BARRA — e ela e a segunda e ULTIMA forma da coluna ────────── Nem toda
+     leitura tem regua: "livre no mes" nao tem teto mensal contra o que se medir, e inventar
+     uma escala para preencher a pista seria desenhar um numero que o motor nao produz. Aqui o
+     nome atravessa a pista e so o valor fica na margem — as colunas continuam alinhadas. */
+  .reading--wide .reading__who {
+    grid-column: 1 / 3;
+    white-space: normal;
+  }
+
+  /* ⚠ A LINHA INTEIRA TINGE, e nao so o valor: quando um grupo ferve ou o mes estoura, o que
+     mudou de estado e a leitura, e nao um dos dois campos dela. */
+  .reading[data-tone="crisis"] .reading__who,
+  .reading[data-tone="crisis"] .reading__value {
+    color: var(--signal-down);
+  }
+
+  /* ── OS POLOS — a chave de uma barra COMPOSTA ─────────────────────────────── Ela mora na
+     pista da barra e nao na largura toda, porque o que ela decifra e a barra. Duas formas: o
+     par (a Rua) e o trio com a marca no meio (a fita do plenario). */
+  /* ⚠ A POSICAO E DO CONTEXTO, e nao da peca: enquanto `grid-column: 2` morava aqui, por a
+     legenda dentro de qualquer outra grade criava uma segunda coluna fantasma e desmontava o
+     bloco inteiro — aconteceu duas vezes em 22/08/2026. Ela so se posiciona onde a pista da
+     barra existe, que e dentro de uma `.reading`. */
+  .reading > .poles {
+    grid-column: 2;
+  }
+
+  .poles {
+    /* ⚠ FLEX E NAO GRADE DE DUAS COLUNAS, e a razao e o numero de pecas: a chave da fita e a
+       do medidor por classe tem duas, e a do limiar da Trindade tem UMA. Numa grade `1fr 1fr`
+       a peca unica caia na primeira metade e o alinhamento a direita a jogava para o meio. */
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-2);
+    /* ⚠ O ESPACO E DO CONTENEDOR, e nao da peca: com `margin-top` proprio ela somava a
+       propria margem ao `gap` de quem a abriga, e o vao abaixo da barra saia com o DOBRO do
+       vao acima — 8px contra 4px. */
+    /* ⚠ A ENTRELINHA E DECLARADA, e sem ela o vao NAO E O `gap`: medido na faixa da Trindade,
+       sobravam 5,7px acima da barra contra 9,0px abaixo, e a diferenca inteira era a meia
+       entrelinha herdada do corpo. `1,15` cabe a cauda do "p" e do "ç" sem sobra. */
+    line-height: 1.15;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* AS PONTAS OLHAM PARA FORA, e o centro fica centrado. */
+  .poles > :last-child {
+    text-align: right;
+  }
+
+  /* ⚠ CAIXA ALTA COM ENTRELETRA E PARA ROTULO, E NAO PARA FRASE: os polos sao palavras soltas
+     ("intervencao", "otimo/bom") e leem bem em versal; "rompe abaixo de 16" e uma sentenca, e
+     em versal ela vira um letreiro que custa o dobro da largura para dizer o mesmo. */
+  /* O NUMERO QUE A FRASE EXPLICA USA A COR DA MARCA na barra logo acima — e o unico jeito de
+     ligar um risco de latao a um numero escrito sem uma seta e sem nota de rodape. */
+  .poles__mark {
+    color: var(--brand);
+    font-weight: 700;
+  }
+
+  /* ⚠ O ALINHAMENTO A DIREITA E DOS POLOS, e nao da nota: com um filho so, a regra do ultimo
+     filho pegava a nota inteira, e quando ela quebrava em duas linhas a segunda saia colada na
+     direita — texto corrido lido como duas colunas. */
+  .poles--note > :last-child {
+    text-align: left;
+  }
+
+  .poles--note {
+    /* ⚠ UM DEGRAU DA ESCALA, e nao um numero novo: ela sobe de `--text-label` (10px) para
+       `--text-note` (12,5px) porque a 10px em caixa de frase a legenda ficava dificil de ler.
+       Os polos em versal ficam onde estao — versal com entreletra ja e legivel em 10px, e e
+       o rotulo que eles sao. */
+    font-size: var(--text-note);
+    text-transform: none;
+    letter-spacing: normal;
   }
 
   /* NO CELULAR O NOME OCUPA A LINHA e o medidor desce: 9rem de rotulo num aparelho de 390px
@@ -574,10 +701,10 @@
   .letter,
   .passage__row,
   .law {
-    border: 1px solid var(--paper-edge);
-    border-radius: var(--radius-paper);
-    background: var(--paper);
-    color: var(--paper-ink);
+    border: 1px solid var(--sheet-edge);
+    border-radius: var(--radius-sheet);
+    background: var(--sheet);
+    color: var(--sheet-ink);
   }
 
   /* ── A REGUA — um valor na escala do motor, com o LIMIAR marcado ──────────── ⚠ ELA
@@ -602,8 +729,11 @@
   }
 
   /* A MARCA DO LIMIAR — dois pixels de latao, e ela e a unica coisa que a barra precisa dizer
-     alem do valor: onde e a linha. */
-  .gauge::after {
+     alem do valor: onde e a linha.
+     ⚠ ELA PASSOU A SER DECLARADA em 22/08/2026, e nao mais automatica: a obrigatoria do cofre
+     e uma regua SEM limiar — nao existe percentual em que ela "rompe" —, e sem o atributo o
+     `calc(1% * var(--mark))` cairia num valor invalido e desenharia latao no zero. */
+  .gauge[data-mark="true"]::after {
     content: "";
     position: absolute;
     inset-block: -2px;
@@ -819,7 +949,7 @@
   /* O ALERTA E DA LINHA INTEIRA. */
   .report__line[data-alert="true"],
   .report__line[data-alert="true"] b {
-    color: var(--crisis);
+    color: var(--signal-down);
   }
 
   /* ⚠ E ESSE E O DEFEITO QUE A GUARDA `orphans` DOCUMENTA, do outro lado: seletor amarrado a
