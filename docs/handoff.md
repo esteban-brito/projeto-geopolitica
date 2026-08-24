@@ -110,7 +110,25 @@ no mesmo 700. Fora da caixa, 600 é o peso de nome em cinco peças.
 assim / mesmo"_, com uma palavra sozinha na segunda linha. `text-wrap: pretty` na prosa e
 `balance` na chamada — a chamada iguala as linhas, a prosa só recusa a última órfã.
 
-### ▶ A PROPOSTA QUE ESTÁ NA MESA — o [ciclo 12](cycles/12-o-jogo-olha-para-frente.md)
+### ▶ O PLANO NA MESA — [GLORIOSO, o ciclo 13](cycles/13-glorioso.md)
+
+⚠ **PLANO, NÃO COMEÇADO.** Nomeado por ele em 24/08/2026, com o norte dito assim: _"se na
+vida real um presidente pode fazer tal coisa, no meu jogo o jogador também vai conseguir.
+Liberdade, realismo, fidelidade. Brasil real."_
+
+**São dez poderes que um presidente brasileiro tem e este jogo ainda não dá**, em quatro
+ondas, mais uma fundação de três consertos. ⚠ **Quatro dos dez não estavam em nenhum dos dois
+dossiês do Gemini** — o salário mínimo, a folha, o Congresso com pauta própria e o STF.
+
+⚠ **E ELE ACHOU TRÊS CANAIS MORTOS no caminho**, todos da mesma família — o motor sabe e nada
+consome: `data-guard` (o jogo sabe quais pisos são constitucionais e pinta todos igual),
+`taxDelta` (o arrasto tributário **nunca dispara**, porque `turn.mjs` passa a mesma constante
+nas duas pontas) e a **desoneração**, que consome discricionário sendo renúncia de receita.
+
+⚠ **O [ciclo 12](cycles/12-o-jogo-olha-para-frente.md) NÃO COMPETE COM ELE: virou a Parte 0.**
+Fidelidade que o jogador não percebe não é fidelidade.
+
+### ▶ A MEDIÇÃO QUE SUSTENTA A PARTE 0 — o [ciclo 12](cycles/12-o-jogo-olha-para-frente.md)
 
 ⚠ **PROPOSTA, NÃO ACORDADA.** Escrita em 24/08/2026 a pedido dele, e ela nasceu de medição e
 não de leitura — inclusive **corrigindo uma afirmação minha**: _"o país é quase inerte"_ está
