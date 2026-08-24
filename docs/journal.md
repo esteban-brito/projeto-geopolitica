@@ -79,7 +79,38 @@ na mesma sessão:
 
 Depois: 594 de 594 a 900, 820 e 760px. Captura aberta nas duas janelas.
 
-### As três restrições, e elas valem para os 43 itens
+### ⭐ E A PARTE D VEIO DE UMA DIRETRIZ DELE, no fim da sessão
+
+_"Siga com o que pensar ser melhor pro jogo, sempre no sentido de se aproximar de jogos como
+Victoria 3, Crusader Kings, Democracy, Football Manager."_ A leitura do código contra essas
+quatro referências achou dois buracos grandes:
+
+- **o presidencialismo de coalizão não existe.** O jogo tem partido, cadeira, venalidade e
+  memória, e o jogador compra voto a voto. Falta a estrutura brasileira: ministério em troca de
+  bancada. ⚠ **E o custo conceitual é quase zero** — as oito áreas do rail já são os oito
+  ministérios, `ELENCO` já tem `office` e `reach`, e `remember()` já guarda rancor. O A6 chamava
+  isso de "a segunda moeda", e está pequeno: aqui o gabinete é a moeda principal;
+- **não há eleição.** Duas saídas: servir 48 meses ou cair. `turn.mjs:1994` declara que não há
+  vitória nem placar — **decisão certa, e a eleição não a contradiz.** É a terceira saída, no
+  mesmo tom, e `termOf` já calcula tudo de que ela precisa.
+
+E três menores: `CASCATA` e `DELTA` são codinomes reservados e vazios; o rail promete **A Rua** e
+**Bastidor** com `ready: false`; e `graph/index.mjs` carrega um comentário sobre `backdrop-filter`
+sem relação com DELTA.
+
+### ✔ A COLUNA DA DIREITA DO GABINETE LEVOU 6
+
+A Caixa de Entrada tinha ido de 7 para 8; a coluna nunca tinha sido avaliada. Seis defeitos
+estruturais, e nenhum é "está feio": quatro blocos com a mesma forma e nenhuma hierarquia — **o
+bloco que decide a partida divide espaço igual com contabilidade**; sete barras idênticas
+medindo contagem, fração, pressão e composição; nada é porta; zero rostos numa coluna que mede
+gente; nada se move; tudo com a mesma voz.
+
+⚠ **E ELE DELEGOU AS SEIS DECISÕES ABERTAS.** As quatro de olho e as duas técnicas foram
+respondidas por mim e **escritas no plano com o motivo** — delegar muda quem assina, não apaga a
+decisão.
+
+### As três restrições, e elas valem para os 49 itens
 
 - **o orçamento de pixel** acima. Nenhum item do Gabinete entra sem dizer de onde tira a altura,
   e _"a coluna rola"_ deixou de ser resposta;

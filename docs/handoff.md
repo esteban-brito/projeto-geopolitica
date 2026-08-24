@@ -49,10 +49,42 @@ ficou feia. **Abrir a captura em `captures/` é o único passo do fluxo que segu
 4. ✔ **FEITO — a coluna do Gabinete engolia um cartão a 900px.** O canvas ganhou limiar de
    altura e o passeio ganhou o eixo Y mais uma segunda janela. Ver logo abaixo.
 
-⚠ **E O PLANO MESTRE `docs/cycles/13-o-glorioso.md` ESTÁ ESCRITO E NÃO APROVADO** — 43 itens em
-quatro partes, com as três restrições que valem para todos (o orçamento de pixel do Gabinete, o
-que significa "pronto", e o custo em versões de save). **Nenhuma linha de código sai dele sem a
-aprovação dele.**
+⚠ **O PLANO MESTRE É `docs/cycles/13-o-glorioso.md` — 49 itens em CINCO partes**, com as três
+restrições que valem para todos (o orçamento de pixel do Gabinete, o que significa "pronto", e o
+custo em versões de save). ✔ **Só o C12 foi executado**, por ser defeito e não melhoria.
+
+⭐ **E A PARTE D NASCEU DE UMA DIRETRIZ DELE:** _"siga com o que pensar ser melhor pro jogo,
+sempre no sentido de se aproximar de Victoria 3, Crusader Kings, Democracy, Football Manager"_.
+Ela tem sete itens, e **dois deles são buracos grandes achados lendo o código contra essas
+referências:**
+
+- ⭐⭐ **D1 · o presidencialismo de coalizão.** O jogo tem partido, cadeira e venalidade, e o
+  jogador compra voto a voto — **mas não é assim que o Brasil governa.** Falta a estrutura: o
+  presidente dá ministério a partido, e o partido entrega a bancada. **As oito áreas do rail JÁ
+  SÃO os oito ministérios**, e `ELENCO` já tem `office`, `reach` e `remember()`. O A6 descreve
+  isso como _"a segunda moeda"_ — está pequeno: no Brasil o gabinete é a moeda PRINCIPAL;
+- ⭐ **D2 · a eleição, e ela é a terceira saída.** Hoje há duas: servir 48 meses ou cair.
+  `turn.mjs:1994` declara que não há vitória nem placar, **e a decisão está certa** — a eleição
+  não a contradiz, completa: é o país respondendo, no mesmo tom. `termOf` já calcula tudo de que
+  ela precisa, e a faixa já promete `1º MANDATO`.
+
+⚠ **E TRÊS ACHADOS MENORES:** `CASCATA` e `DELTA` são codinomes **reservados e vazios**
+(`export {}`) — o projeto já sabia que precisava da corrente causal e parou no nome; o rail
+declara **A Rua** e **Bastidor** como `ready: false`, duas promessas cinzas; e
+`src/domain/graph/index.mjs` carrega um comentário sobre `backdrop-filter` e 31 fps que não tem
+relação com DELTA — fragmento de cemitério.
+
+### ✔ A COLUNA DA DIREITA DO GABINETE LEVOU **6** — a nota é dele, o diagnóstico é meu
+
+A Caixa de Entrada foi 7 antes da revisão e 8 depois; a coluna nunca tinha nota. Seis defeitos
+estruturais, no C13: quatro blocos com a mesma forma e nenhuma hierarquia; **sete barras
+idênticas medindo contagem, fração, pressão e composição**; nada é porta; zero rostos numa
+coluna que mede gente; nada se move; e tudo tem a mesma voz.
+
+⚠ **E AS SEIS DECISÕES QUE ESTAVAM ABERTAS FORAM DELEGADAS A MIM** — as quatro de olho (mono em
+dinheiro, identidade do Congresso, densidade do relatório, taxa do A7) e as duas técnicas (o
+save e a altura do C10). **As respostas estão escritas no plano, com o motivo, para ele reverter
+qualquer uma vendo por quê.**
 
 ### ✔ FECHADO — a coluna do Gabinete engolia um cartão, e o portão ficava verde
 

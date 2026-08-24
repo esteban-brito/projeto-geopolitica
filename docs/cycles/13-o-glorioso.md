@@ -33,21 +33,24 @@ não por doutrina**. A zona constitucional ganha cor própria e o ponteiro atrav
 | ------------------------------ | ---------------------------------------------------------------------------------------- |
 | **medição minha**              | a velocidade das áreas, a altura das telas, o custo da projeção, os quatro canais mortos |
 | **três dossiês do Gemini**     | a segunda moeda, a MP, a linha do tempo, e as auditorias do Congresso e do Gabinete      |
+| **as quatro referências dele** | Victoria 3, Crusader Kings, Democracy e Football Manager — a Parte D inteira             |
 | **achados do próprio projeto** | 8, 16, 20, 26, 32, 36, 37, 47 — abertos há sessões e fechados aqui                       |
 
 ⚠ **E os dossiês foram lidos CONTRA o código, não aceitos.** O padrão registrado em cinco
 auditorias externas se repetiu: **elas leem bem a tela e inferem mal o mecanismo.** Cada item
 abaixo diz o que o código de fato faz hoje.
 
-### Os três eixos
+### Os quatro eixos
 
-Este plano tem três metades, e elas atacam problemas diferentes:
+Este plano tem quatro metades, e elas atacam problemas diferentes:
 
 - **PARTE A — O CARGO:** o que um presidente **faz** e o jogo não deixa fazer. É fidelidade;
 - **PARTE B — A TELA:** o que o motor **já sabe** e a tela não mostra. É legibilidade;
-- **PARTE C — O GABINETE:** onde a tela que abre o jogo **se contradiz**. É confiança.
+- **PARTE C — O GABINETE:** onde a tela que abre o jogo **se contradiz**. É confiança;
+- **PARTE D — AS REFERÊNCIAS:** o que Victoria 3, Crusader Kings, Democracy e Football Manager
+  fazem e este jogo ainda não faz. É **por que se joga de novo**.
 
-E uma **PARTE 0**, que não é nenhuma das três: ela é o que precisa existir antes, porque
+E uma **PARTE 0**, que não é nenhuma das quatro: ela é o que precisa existir antes, porque
 **fidelidade que o jogador não percebe não é fidelidade.**
 
 ⚠ **A ORDEM ENTRE ELAS NÃO É A ORDEM DE EXECUÇÃO.** A Parte C vem por último no papel e quase
@@ -105,7 +108,7 @@ está morto) · **abre motor** (constrói mecânica nova).
 | **B15** | o relatório  | dois heróis na mesma tela          | pequeno |
 | **B16** | a ponte      | as quatro ambições ganham preço    | —       |
 
-### PARTE C — o Gabinete · doze itens em quatro grupos
+### PARTE C — o Gabinete · treze itens em cinco grupos
 
 | #       | grupo       | o quê                                    | motor      | tamanho |
 | ------- | ----------- | ---------------------------------------- | ---------- | ------- |
@@ -120,6 +123,18 @@ está morto) · **abre motor** (constrói mecânica nova).
 | **C9**  | tempo       | a rua ganha **seta**                     | não        | pequeno |
 | **C10** | leitura     | a base **que se compra** — 364 de 513    | não        | médio   |
 | **C11** | leitura     | o maior gasto preso para de ser legenda  | não        | pequeno |
+
+### PARTE D — as quatro referências · sete itens
+
+| #      | o quê                                         | referência       | motor      | tamanho |
+| ------ | --------------------------------------------- | ---------------- | ---------- | ------- |
+| **D1** | ⭐⭐ o **presidencialismo de coalizão**       | Victoria 3       | abre motor | grande  |
+| **D2** | ⭐ a **eleição** — a terceira saída           | Democracy        | abre motor | grande  |
+| **D3** | ⭐ as pessoas **agem sem você**               | Crusader Kings   | abre motor | grande  |
+| **D4** | ⭐ a **corrente causal** visível              | Democracy        | abre motor | médio   |
+| **D5** | a **entrevista coletiva**                     | Football Manager | não        | médio   |
+| **D6** | o relatório **conta uma história**            | Football Manager | não        | médio   |
+| **D7** | o rail promete **duas telas que não existem** | —                | —          | —       |
 
 ---
 
@@ -806,6 +821,65 @@ só aparece quando difere do que sobra).
 
 ---
 
+---
+
+## Grupo 11 — a coluna da direita, e ela levou 6
+
+### C13 · ⭐ A NOTA É DELE, E É A MAIS BAIXA QUE UMA PEÇA DESTE JOGO JÁ RECEBEU
+
+A Caixa de Entrada foi **7 antes da revisão e 8 depois**. A coluna da direita nunca tinha sido
+avaliada, e a nota veio: **6**.
+
+⚠ **A nota é o dado; o diagnóstico abaixo é meu, e ele sai da captura contra as quatro
+referências.** Seis defeitos, e nenhum deles é "está feio" — todos são estruturais.
+
+**1 · Quatro blocos com a mesma forma, e nenhuma hierarquia.**
+Rótulo à esquerda, barra no meio, número à direita — quatro vezes seguidas. **"Quem pode
+derrubar" é o bloco que decide se a partida acaba, e ele ocupa o mesmo peso visual que a nota de
+rodapé do cofre.** Em Vic3 o que pode te derrubar não divide espaço igual com contabilidade.
+
+**2 · Sete barras idênticas medindo sete coisas diferentes.**
+
+| barra            | o que ela é de verdade        |
+| ---------------- | ----------------------------- |
+| A Câmara         | uma **contagem** (436 de 513) |
+| Preso por lei    | uma **fração** (95%)          |
+| os quatro grupos | **pressão** numa escala 0–100 |
+| as três rendas   | **composição** em três cores  |
+
+Mesma espessura, mesma cor, mesma posição. **Tipo de número diferente pede forma diferente** —
+é o que separa um painel de uma planilha.
+
+**3 · Nada é porta.**
+Em Vic3, CK3 e FM **tudo na tela é clicável e leva ao detalhe**. Aqui os quatro blocos são
+leitura morta: não dá para clicar num lobby, numa classe de renda, nem na Câmara. O rail é a
+única navegação, e ele leva a telas, não a **coisas**.
+
+**4 · Zero rostos, numa coluna que mede gente.**
+CK3 e FM são feitos de retratos. Esta coluna mede parlamentares, quatro grupos de pressão e três
+classes sociais — **três blocos de gente, nenhum rosto.** O jogo tem `sigil.mjs` e o elenco tem
+sinete; a coluna não usa.
+
+**5 · Nada se move.**
+Quatro blocos, nenhuma seta, nenhuma tendência, nenhuma história. **Não há como saber o que mudou
+desde o mês passado** em nenhum dos quatro. É o C9 e o C11, e é por isso que eles estão no plano.
+
+**6 · Tudo tem a mesma voz.**
+Rótulos no mesmo tamanho e cor; números no mesmo peso. **Nada grita, então nada é lido primeiro.**
+
+### O que eu faria, na ordem
+
+| passo | mudança                                                                         | vem de     |
+| ----- | ------------------------------------------------------------------------------- | ---------- |
+| 1     | **"Quem pode derrubar" domina a coluna** — os outros três encolhem              | Vic3       |
+| 2     | **forma por tipo de número**: contagem, fração, pressão e composição diferentes | Vic3       |
+| 3     | **movimento em tudo** — seta e variação nos quatro blocos                       | C9 · C11   |
+| 4     | **tudo vira porta** — clicar num grupo abre quem ele é e o que quer             | Vic3 · CK3 |
+| 5     | **rostos**, quando A6 e D1 derem cargo e nome aos quatro grupos                 | CK3 · FM   |
+
+⚠ **E O ORÇAMENTO DE PIXEL VALE AQUI COMO PARA TODO O RESTO** (Restrição 1): a coluna é 639 de 639. Os passos 1 e 2 **redistribuem**, não acrescentam. Os passos 3 e 4 são inline. **O passo 5
+só existe depois de D1.**
+
 ## ⛔ O que a PARTE C recusa do dossiê do Gabinete
 
 | pedido                                     | por quê                                                                                                         |
@@ -815,6 +889,191 @@ só aparece quando difere do que sobra).
 | **avatares nos quatro grupos da caldeira** | lobby não está no elenco: sem sinete, sem cargo, sem rosto. Com A6, quatro ministros ganham rosto — e aí sim    |
 | **donut chart**                            | o `meter` já existe e já soma 100%. Seria o terceiro gráfico circular do projeto, e os dois anteriores morreram |
 | **hover escondendo o maior gasto preso**   | desfaz correção pedida por auditoria (achado 40)                                                                |
+
+---
+
+# PARTE D — O QUE SEPARA DE VICTORIA 3, CRUSADER KINGS, DEMOCRACY E FOOTBALL MANAGER
+
+> **A quarta parte veio de uma frase dele:** _"siga com o que pensar ser melhor pro jogo, sempre
+> no sentido de se aproximar de jogos como Victoria 3, Crusader Kings, Democracy, Football
+> Manager"_.
+>
+> As Partes A, B e C perguntam _o que o presidente faz_ e _o que a tela mostra_. **Esta pergunta
+> outra coisa: por que aqueles jogos prendem, e o que aqui não prende ainda.**
+
+## A leitura, e ela cabe numa linha por jogo
+
+| jogo                 | o que ele faz que este ainda não faz                                     |
+| -------------------- | ------------------------------------------------------------------------ |
+| **Victoria 3**       | quem está NO governo determina o que dá para aprovar                     |
+| **Crusader Kings**   | as pessoas agem sozinhas, e têm futuro próprio                           |
+| **Democracy**        | você VÊ a corrente causal, e é por isso que aprende a jogar              |
+| **Football Manager** | o mundo te interpela, e o relatório conta uma história em vez de tabular |
+
+---
+
+## D1 · ⭐⭐ O PRESIDENCIALISMO DE COALIZÃO — e é o maior buraco do jogo inteiro
+
+**Hoje o jogo tem partidos com cadeiras, venalidade e memória, e o jogador compra voto a voto.**
+Está certo e é insuficiente: **não é assim que o Brasil governa.** No Brasil o presidente
+distribui ministérios a partidos, e o partido que tem a pasta entrega a bancada. Tirar a pasta
+não deixa o partido chateado — **tira a bancada inteira**.
+
+⚠ **E ISSO NÃO É MECÂNICA NOVA COLADA POR CIMA: É A ESTRUTURA QUE FALTA DEBAIXO DE A6.** O plano
+descreve nomear e demitir como _"a segunda moeda"_. **Está pequeno.** O gabinete não é uma moeda
+paralela ao dinheiro — no presidencialismo brasileiro ele é **a moeda principal**, e o dinheiro é
+o troco.
+
+**E o custo conceitual é quase zero, porque as peças já existem:**
+
+| peça necessária       | onde ela já está                                           |
+| --------------------- | ---------------------------------------------------------- |
+| as pastas             | ⭐ **as oito áreas do rail JÁ SÃO os oito ministérios**    |
+| quem ocupa cada pasta | `ELENCO` tem `office`, e `OFFICES` é catálogo              |
+| o que o partido rende | `reach` — a fração da bancada que a pessoa de fato arrasta |
+| o que ele cobra       | `venalityEconomic` e `venalityLiberty`, por partido        |
+| o rancor              | `remember()` — o saldo de cada pessoa, com decaimento      |
+
+**O que muda no jogo:**
+
+- a base de 436 deixa de ser um número dado e passa a ser **consequência de quem está no
+  governo**. Hoje ela vem do catálogo e o jogador a empurra na margem;
+- ⭐ **demitir um ministro vira a decisão mais cara do jogo**, e é exatamente o que é na vida
+  real. O jogador ganha o instrumento e paga o preço em bancada, na hora, visível;
+- **e a Trindade ganha causa.** Hoje a ruptura política é um número que sobe. Passa a ser _"o
+  partido X saiu do governo no mês 19 e levou 71 cadeiras"_ — um fato com nome, data e culpado;
+- ⛔ **e continua sem muro:** governar em minoria é permitido, caríssimo, e historicamente real.
+
+> ⚖ **Se um item só desta parte entrar, é este.** Ele é o que faz o jogo ser sobre o **Brasil** e
+> não sobre um parlamento genérico — e é a diferença entre "comprar votos" e "governar".
+
+---
+
+## D2 · ⭐ A ELEIÇÃO — a terceira saída, e ela não é tela de vitória
+
+**Hoje o mandato tem duas saídas**, e `turn.mjs:1994` declara o tom com todas as letras:
+
+> _"ELE NÃO É UMA TELA DE DERROTA. A partida JÁ É um mandato de 48 meses, sem vitória e sem
+> placar — cair é o mandato terminar antes, e o que muda é a DATA."_
+
+⭐ **A decisão está certa, e a eleição não a contradiz — ela a completa.** Servir 48 meses e cair
+no 41 são duas saídas; **no Brasil existe uma terceira, e é a mais comum: você se submete ao
+país e ele responde.** Perder eleição não é derrota nem placar — é a mesma regra do fecho, com um
+motivo a mais e outra data.
+
+- **os dados já estão todos calculados.** `termOf` devolve aprovação de-onde-para-onde, dívida
+  sobre o PIB, as oito áreas da posse ao fim, as leis escritas e os grupos que abandonaram.
+  **É exatamente o material com que um país decide voto** — e hoje ele vira um relatório que
+  ninguém contesta;
+- **e a faixa já promete:** ela imprime `1º MANDATO · ANO 1`. O jogo anuncia um segundo mandato
+  que não existe;
+- ⭐ **e é isto que dá peso a tudo o mais.** Num jogo que acaba em 48 meses faça o que fizer, o
+  mês 40 não decide nada. Com eleição, **cada mês do quarto ano é campanha** — e a Parte A
+  inteira ganha um destinatário.
+
+⚠ **O risco é real e tem de estar escrito:** uma eleição vira placar se ela imprimir um número
+grande no fim. **Ela não pode.** O fecho continua sendo um só, no mesmo tom — o que muda é que
+ele passa a ter três motivos em vez de dois, e que um deles abre um segundo mandato.
+
+---
+
+## D3 · ⭐ AS PESSOAS AGEM SEM VOCÊ — o que Crusader Kings faz e aqui não acontece
+
+**O elenco deste jogo é mais rico do que parece:** cada pessoa tem posição econômica, posição em
+liberdades, dois preços de venda distintos, uma **ambição**, um alcance real sobre a bancada, e
+uma **memória com decaimento** do que foi prometido e do que foi pago.
+
+⚠ **E TUDO ISSO SÓ ACONTECE QUANDO O JOGADOR ENCOSTA.** Ninguém faz nada por conta própria.
+Numa partida em que o jogador não abre a mesa, o elenco inteiro fica parado por 48 meses.
+
+**O que falta, na ordem de valor:**
+
+1. ⭐ **a ambição vira ação.** `AMBITIONS` já diz o que cada pessoa quer. Hoje é rótulo. Uma
+   pessoa cuja ambição é a pasta de Saúde deveria **cobrar** a pasta de Saúde — e ficar contra
+   quando outro a receber. É carta da espécie `demand`, que já roda;
+2. **relação entre elas.** Hoje cada pessoa se relaciona só com o jogador. Sem rival, sem dívida,
+   sem padrinho, não existe política — existe atendimento ao balcão;
+3. **futuro próprio.** Um ministro que quer ser presidente é um adversário sendo criado dentro do
+   próprio governo. **É a melhor história que este jogo pode contar**, e o ADR 0003 já libera:
+   toda pessoa é inventada.
+
+---
+
+## D4 · ⭐ A CORRENTE CAUSAL VISÍVEL — o que Democracy resolveu e ninguém copiou
+
+**A razão de _Democracy_ ensinar a jogar sem tutorial é uma só: você vê as setas.** Aponta uma
+política e o jogo mostra o que a alimenta e o que ela alimenta, com sinal e peso.
+
+**Este jogo tem a corrente e não a mostra.** Gastar em Segurança move a capacidade, que move a
+arrecadação, que move o caixa, que move o que dá para gastar no mês seguinte — e **a única
+pista disso na interface é um número mudando em outra tela**.
+
+⚠ **E OS DOIS CODINOMES PARA ISSO JÁ ESTÃO RESERVADOS E VAZIOS:** `CASCATA` (`src/domain/
+propagation/`) e `DELTA` (`src/domain/graph/`) são `export {}` — nome declarado, contrato
+declarado, zero implementação. **O projeto já sabia que precisava disto e parou no nome.**
+
+- ⭐ **e a Parte 0.3 é metade do caminho.** A projeção mostra _para onde vai_; a corrente mostra
+  _por quê_. Juntas são o tutorial que o ciclo 12 diz que dispensa tutorial;
+- ⚠ **mas a ordem importa:** a corrente sem a projeção é um diagrama bonito. **0.3 primeiro.**
+
+> ⚠ **E `src/domain/graph/index.mjs` tem um comentário sobre `backdrop-filter` e 31 fps que não
+> tem nada a ver com DELTA** — fragmento de cemitério que sobreviveu a uma limpeza. Anotado.
+
+---
+
+## D5 · A ENTREVISTA COLETIVA — o que Football Manager cobra e aqui ninguém cobra
+
+Em FM o mundo **te interpela**: antes e depois de cada jogo alguém pergunta, a resposta é
+escolhida entre opções, e ela custa moral com o elenco.
+
+**Aqui ninguém nunca pergunta nada ao presidente.** O jogo tem doze espécies de aviso e duas de
+pergunta (achado 37), e nenhuma das duas vem da imprensa.
+
+- é **carta com `choices`**, que a máquina já roda. Custo estrutural: zero;
+- ⭐ **e resolve o mês 1 e o mês vazio de uma vez.** Uma coletiva não precisa de crise para
+  existir — ela acontece porque o mês aconteceu;
+- ⛔ **e ela não é segunda porta**, que é a recusa do C4: a resposta não move alavanca nenhuma.
+  Ela move **o que as pessoas acham de você**, que é `remember()` e `SONDA` — coisa que nenhuma
+  outra tela oferece.
+
+---
+
+## D6 · O RELATÓRIO CONTA UMA HISTÓRIA — e hoje ele tabula
+
+O relatório de partida de FM não lista estatística: ele diz **o que virou o jogo**. O bloco "O
+mês passado" tem 599px e é o mais arejado da tela do Congresso (B14) — e o que ele faz com esse
+espaço é uma tabela.
+
+- **o mês tem um fato principal**, e o motor sabe qual: o maior delta, a fervura que começou, a
+  lei que passou, o grupo que abandonou. **Nada disso é escolhido e dito;**
+- ⭐ **e é o mesmo material do fecho.** `termOf` já sabe destacar de-onde-para-onde num mandato.
+  O mês merece o mesmo tratamento.
+
+---
+
+## D7 · O RAIL PROMETE DUAS TELAS QUE NÃO EXISTEM
+
+`rail.mjs:120` declara **A Rua** e **Bastidor** como `ready: false` — desenhadas, cinzas,
+desabilitadas, com um `title` explicando que estão por vir.
+
+⚠ **É a mesma família do C12, num nível acima: a interface promete o que não existe.** Duas das
+treze entradas do rail são promessa. E as duas são exatamente onde as Partes A e D moram —
+**A Rua** é a opinião pública com rosto (D3, A9) e **Bastidor** é a coalizão (D1).
+
+**Decisão a tomar, e não é de gosto:** ou elas entram no plano com dono, ou saem do rail. Uma
+promessa cinza por mais um ciclo é pior que a ausência.
+
+---
+
+## ⛔ O que a PARTE D recusa
+
+| tentação                                | por quê                                                                              |
+| --------------------------------------- | ------------------------------------------------------------------------------------ |
+| **árvore de tecnologia / progressão**   | Vic3 tem porque simula um século. Um mandato de 48 meses não tem o que destravar     |
+| **mapa**                                | o jogo é sobre a mesa e o gabinete, não sobre território. Um mapa seria enfeite caro |
+| **placar ou pontuação no fecho**        | contradiz decisão declarada em `turn.mjs:1994`, e ela está certa                     |
+| **combate, guerra, exército como jogo** | o Brasil não é Vic3. "Militares e polícia" é um lobby com pressão, e isso basta      |
+| **dinastia / herdeiro**                 | CK3 tem porque atravessa gerações. Aqui o horizonte é o mandato, e o sucessor é o D2 |
 
 ---
 
@@ -854,13 +1113,37 @@ só aparece quando difere do que sobra).
 
 # ⚠ RISCOS E DECISÕES ABERTAS
 
-### Decisões que são DELE, e não minhas
+### ✔ AS DECISÕES DE OLHO FORAM DELEGADAS, e as minhas ficam registradas aqui
 
-1. **mono em dinheiro** — troca de regra tipográfica, não conserto;
-2. **a identidade visual do Congresso** — hoje a única marca da tela onde o jogo se decide é
-   um **fio bordô de 2px**. É pouco. Mas _qual_ forma é decisão de olho;
-3. **a densidade do relatório** — quanto apertar;
-4. **a taxa de A7** — de quanto em quanto tempo o Congresso propõe.
+> _"De resto você deve seguir com o que pensar ser melhor pro jogo, sempre no sentido de se
+> aproximar de jogos como Victoria 3, Crusader Kings, Democracy, Football Manager."_
+
+**Delegar não é apagar a decisão — é mudar quem assina.** As quatro ficam escritas com a
+resposta, para que ele possa reverter qualquer uma vendo o motivo:
+
+1. **dinheiro em mono → NÃO, e sim `font-variant-numeric: tabular-nums`.** O problema real é
+   dígito que não alinha em coluna, e a fonte tabular resolve **sem** abrir um segundo tipo de
+   letra na tela. Trocar de família custaria a escala inteira já medida (20 → 14 combinações);
+2. **a identidade do Congresso → adiada de propósito, e o B8 vem antes.** A tela onde o jogo se
+   decide **não tem cabeçalho** e a de consulta tem. Dar personalidade a uma tela sem cabeça é
+   decorar antes de estruturar. Julgar de novo depois do B8, com captura;
+3. **a densidade do relatório → apertar, e o espaço vai para "Em pauta".** É a mesma regra do
+   C13: **o que decide domina; o que consulta encolhe.** Hoje é o contrário — 599px de consulta
+   contra 190px de tramitação;
+4. **a taxa do A7 → não é constante, é função do governo.** Um Congresso propõe quando o
+   Executivo está fraco. Amarrar a taxa à base de apoio é mais fiel **e** dispensa calibrar um
+   número inventado — que é a regra da casa.
+
+### ⭐ E AS DUAS DECISÕES TÉCNICAS TAMBÉM FORAM DELEGADAS
+
+- **o save → opção 3 agora, opção 2 antes da Parte A.** Enquanto ninguém termina um mandato,
+  recusar não custa nada; quando a Parte A começar, o save vira `(semente, ordens)` e o mandato
+  se refaz em 10,3ms. ⚠ **Reversível**: é a leitura de hoje, e o custo de trocar antes da Parte A
+  é zero;
+- **a altura do C10 → a barra que já existe vira a divisão.** O cartão "A Câmara" já tem uma
+  barra em `Apoiam o governo 436 de 513`; ela passa a mostrar **duas cores** — quem se compra e
+  quem se convence. **Custo de altura: zero**, e é melhor do que uma linha nova, porque põe a
+  divisão exatamente em cima do número que ela explica.
 
 ### Riscos que precisam de medição antes de fechar
 
@@ -881,9 +1164,9 @@ só aparece quando difere do que sobra).
 
 ---
 
-# 🚧 AS TRÊS RESTRIÇÕES — elas valem para os 43 itens
+# 🚧 AS TRÊS RESTRIÇÕES — elas valem para os 49 itens
 
-> Um plano de 43 itens sem restrição declarada é uma lista de desejos. Estas três não são
+> Um plano de 49 itens sem restrição declarada é uma lista de desejos. Estas três não são
 > preferências: **duas foram medidas hoje e a terceira está escrita no código.**
 
 ---
@@ -941,9 +1224,9 @@ peça do Gabinete com espaço, e é onde a agência mora.** Não é coincidênci
 motor e tela têm o mesmo tamanho (8.007 contra 9.601 linhas) e tinham **207 provas contra 29**.
 Seis sessões de desenho caíram na metade sem portão.
 
-**Um plano de 43 itens sem critério de aceitação repete isso em escala maior.**
+**Um plano de 49 itens sem critério de aceitação repete isso em escala maior.**
 
-### O mínimo, e ele vale para os 43
+### O mínimo, e ele vale para os 49
 
 1. `npm run validate` verde — 12 guardas · 54 provas sintéticas · 236 provas · o passeio;
 2. ⚠ **abrir a captura em `captures/`.** O portão não sabe olhar, e três defeitos já
@@ -1002,7 +1285,7 @@ possível num jogo cujo valor inteiro é o número ter motor atrás.
 | **PARTE C** | só **C5** (os três compromissos)                 | **1**      |
 | **PARTE A** | A1 · A2 · A3 · A4 · A5 · A6 · A7 · A8 · A9 · A10 | **até 10** |
 
-⭐ **O achado é esse: 32 dos 43 itens custam ZERO no save.** Toda a legibilidade — a Parte B
+⭐ **O achado é esse: 32 dos 49 itens custam ZERO no save.** Toda a legibilidade — a Parte B
 inteira e onze doze avos da Parte C — não toca no estado. **Todo o custo está na Parte A**, e
 está concentrado.
 
@@ -1030,23 +1313,24 @@ está concentrado.
 
 # 🔢 A ORDEM QUE EU EXECUTARIA
 
-| passo  | o quê                          | por quê                                                          |
-| ------ | ------------------------------ | ---------------------------------------------------------------- |
-| **0**  | ✔ **C12**                      | ✔ **FEITO** — era defeito, e o portão era cego para ele          |
-| **1**  | **0.1 · 0.2 · C1 · C2 · C3**   | consertos pequenos e independentes, e três são defeito           |
-| **2**  | **Grupo 1 da Parte B** (B1–B5) | cinco achados num bloco de 108px — e o passo 0 é quem os protege |
-| **3**  | **C8 · C9 · C10 · C11**        | a tela que abre o jogo para de mentir e ganha profundidade       |
-| **4**  | **0.3 · B10 · C7**             | a projeção, a linha do tempo e o calendário — as três lentes     |
-| **5**  | **C5 · C6**                    | a posse vira pergunta, e o fecho ganha critério                  |
-| **6**  | **A1 · A2 · A3**               | 61% do orçamento vira decisão — e A1 precisa de C7               |
-| **7**  | **A4 · A5**                    | os instrumentos baratos, e A4 já tem máquina                     |
-| **8**  | **Grupos 2–5 da Parte B**      | a tela de decisão fica legível antes de ganhar poder novo        |
-| **9**  | **A6**                         | a segunda moeda — acende quatro ambições e dá rosto à caldeira   |
-| **10** | **A8**                         | o preço da janela de Overton                                     |
-| **11** | **A7**                         | o Congresso ganha iniciativa                                     |
-| **12** | **A9 · A10**                   | o mundo inteiro ganha voz                                        |
+| passo  | o quê                          | por quê                                                             |
+| ------ | ------------------------------ | ------------------------------------------------------------------- |
+| **0**  | ✔ **C12 · D7**                 | ✔ C12 FEITO. **D7 é decisão, não obra:** as duas telas cinzas       |
+| **1**  | **0.1 · 0.2 · C1 · C2 · C3**   | consertos pequenos e independentes, e três são defeito              |
+| **2**  | **Grupo 1 da Parte B** (B1–B5) | cinco achados num bloco de 108px — e o passo 0 é quem os protege    |
+| **3**  | **C8 · C9 · C10 · C11 · C13**  | a tela que abre o jogo para de mentir — e a coluna que levou 6      |
+| **4**  | **0.3 · B10 · C7 · D4**        | as quatro lentes: projeção, linha do tempo, calendário e a corrente |
+| **5**  | **C5 · C6**                    | a posse vira pergunta, e o fecho ganha critério                     |
+| **6**  | **A1 · A2 · A3**               | 61% do orçamento vira decisão — e A1 precisa de C7                  |
+| **7**  | **A4 · A5**                    | os instrumentos baratos, e A4 já tem máquina                        |
+| **8**  | **Grupos 2–5 da Parte B**      | a tela de decisão fica legível antes de ganhar poder novo           |
+| **9**  | ⭐ **D1 + A6**                 | **a coalizão, e A6 é a metade de cima dela.** O maior item do plano |
+| **10** | **D3 · A8**                    | as pessoas agem sozinhas; e o preço da janela de Overton            |
+| **11** | **A7 · D6**                    | o Congresso ganha iniciativa; o relatório passa a contar história   |
+| **12** | **A9 · A10 · D5**              | o mundo inteiro ganha voz — imprensa, governadores e a coletiva     |
+| **13** | ⭐ **D2**                      | **a eleição.** Ela é o fecho de tudo, e por isso é a última         |
 
-⚠ **Os passos 1 a 5 não abrem motor nenhum** (C7 é a única exceção, e é pequena). Eles usam
+⚠ **Os passos 1 a 8 quase não abrem motor** (C7 e D4 são as exceções, e são médias). Eles usam
 `ESTRATO`, `MALHA`, `ECLUSA`, `CORRENTE` e `LASTRO` como estão — e boa parte apenas **liga
 canais já construídos e mortos**.
 
