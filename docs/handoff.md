@@ -40,10 +40,10 @@ ficou feia. **Abrir a captura em `captures/` é o único passo do fluxo que segu
 
 1. ▶ **A COLUNA DA DIREITA DO GABINETE AINDA NÃO É NOTA 10.** Ele deu 7 na Caixa de Entrada
    antes da revisão e **8 depois**; a coluna da direita nunca recebeu nota;
-2. ▶ **AS OUTRAS OITO TELAS NÃO PASSARAM PELA PENEIRA DA CAIXA DE ENTRADA.** Congresso,
-   Finanças, Área, O Estado, Mesa, Fecho e Relatório continuam com a tipografia antiga e sem
-   passar pelo medidor. ⚠ **A Caixa de Entrada foi de 11 combinações de tipo para 2 famílias
-   × 4 tamanhos × 2 pesos** — as outras não;
+2. ✔ **A TIPOGRAFIA DAS ONZE TELAS PASSOU PELA PENEIRA — feito em 24/08/2026.** O projeto
+   inteiro foi de **20 para 14 combinações** e de **5 peças fora da escala para ZERO**.
+   ⚠ **O que sobra do item é o OLHO dele**, e só ele pode dar: a medição fecha, a estética
+   não se mede. Ver _A PENEIRA DE TIPOGRAFIA_, abaixo;
 3. ▶ **O ÍNDICE DA BANDEJA NÃO DISTINGUE A ESPÉCIE DA CARTA.** É o único item de TELA da
    lista dos quatro que faltam; os outros três são de motor.
 
@@ -76,6 +76,39 @@ boa. Os defeitos caem na tela, e a tela era a metade sem portão. Três conserto
 o README afirmava que o passeio roda _"em desktop e em celular"_ e ele tem **um** viewport; e
 a seção "A verificação" deste arquivo dizia **"nove guardas, 173 propriedades"** contra 12 e 236. Um cemitério de **dez blocos de comentário seguidos** em `45-screen-cabinet.css`,
 nenhum preso a regra nenhuma, descrevia o hemiciclo e a legenda do arco — peças mortas.
+
+### ✔ A PENEIRA DE TIPOGRAFIA — as onze telas, medidas e fechadas em 24/08/2026
+
+`tmp/censo-tipo.mjs` visita as onze telas no mês 6 e conta família × tamanho × peso com o
+nome da peça atrás de cada combinação; `tmp/quem-foge.mjs` lista quem cai fora dos degraus.
+
+| eixo                     | antes | agora  |
+| ------------------------ | ----- | ------ |
+| combinações no projeto   | 20    | **14** |
+| peças fora da escala     | 5     | **0**  |
+| tamanhos numa área       | 6     | **4**  |
+| combinações no Congresso | 14    | **10** |
+
+⚠ **O DEFEITO ERA `em`, E ELE ENTRA POR ONDE NINGUÉM OLHA.** Oito declarações em `em`
+produziam **11,152 · 11,333 · 12,8px** — três degraus entre `--text-label` e `--text-note`,
+nenhum na escala. **E duas delas não tinham declaração nenhuma:** eram o `<small>` padrão do
+navegador, 0,83em. Ausência de tamanho não é neutralidade — é o navegador decidindo.
+
+⚠ **E O PESO TINHA DOIS ÓRFÃOS:** o **500** existia UMA vez no projeto inteiro
+(`person__votes small`), e o **600 a 10px** existia numa regra só contra 42 peças a 700.
+
+**E a regra da serifa apareceu quando os pesos foram postos lado a lado**, e ela é limpa:
+nome de pessoa ou de norma é **600**, título de documento é **700**, título de tela é
+**800**. `letter__name` era o único **nome** vestindo o peso de **título** — dentro do
+cabeçalho do ofício, quem assina pesava igual ao assunto.
+
+⚠ **ISSO REVERTE METADE DE UMA DECISÃO DA REVISÃO DA CAIXA**, e a reversão tem razão: lá o
+600 foi morto por ser órfão _naquela tela_, e o efeito colateral foi colapsar nome e título
+no mesmo 700. Fora da caixa, 600 é o peso de nome em cinco peças.
+
+**E a viúva tipográfica saiu da prosa:** a captura do Congresso mostrava _"ou avance o mês
+assim / mesmo"_, com uma palavra sozinha na segunda linha. `text-wrap: pretty` na prosa e
+`balance` na chamada — a chamada iguala as linhas, a prosa só recusa a última órfã.
 
 ### ⛔ NÃO REABRIR
 

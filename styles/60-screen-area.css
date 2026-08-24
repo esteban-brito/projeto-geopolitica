@@ -79,9 +79,13 @@
     line-height: 1.2;
   }
 
+  /* Era 0,5em sobre `--text-title` — 12,8px, a 0,32px de `--text-note`, que e uma
+     diferenca que ninguem enxerga. Em versal, 10px e o degrau certo, e e o mesmo do
+     `head__label` que fica logo ao lado. */
   .area__delta small {
-    font-size: 0.5em;
-    font-weight: 600;
+    font-size: var(--text-label);
+    /* 700 e o peso de rotulo a 10px, e 42 pecas o usam; 600 aqui era o unico. */
+    font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-dim);
@@ -304,8 +308,12 @@
     white-space: nowrap;
   }
 
+  /* ⚠ UM DEGRAU DA ESCALA, e ele era 0,82em — 11,152px, entre `--text-label` e
+     `--text-note` e em nenhum dos dois. E FRASE em caixa baixa, e o projeto ja recusou
+     frase a 10px uma vez: a legenda do limiar subiu de `--text-label` para `--text-note`
+     porque "a 10px em caixa de frase a legenda ficava dificil de ler". */
   .allot__projection small {
-    font-size: 0.82em;
+    font-size: var(--text-note);
     color: var(--ink-dim);
   }
 

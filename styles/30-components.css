@@ -83,7 +83,12 @@
     text-align: center;
   }
 
+  /* ⚠ A CHAMADA EQUILIBRA AS LINHAS e a nota EVITA A VIUVA, e as duas sao a mesma
+     correcao vista de dois lados: a captura do Congresso mostrava "ou avance o mes assim /
+     mesmo", com uma palavra sozinha na segunda linha. `balance` e para titulo — ele iguala
+     as linhas; `pretty` e para prosa — ele so recusa a ultima linha orfa. */
   .empty__lead {
+    text-wrap: balance;
     font-family: var(--font-display);
     font-size: var(--text-verdict);
     font-weight: 700;
@@ -91,6 +96,7 @@
   }
 
   .empty__note {
+    text-wrap: pretty;
     max-width: 46ch;
     color: var(--ink-dim);
     line-height: 1.5;
@@ -291,6 +297,7 @@
   /* ── A POSIÇÃO QUE O GOVERNO SE TORNOU ────────────────────────────────────── ⚠ ELA É A
      REGRA DO CICLO 2 FINALMENTE VISÍVEL. */
   .rail__stance {
+    text-wrap: pretty;
     font-size: var(--text-note);
     line-height: 1.35;
     color: var(--ink-dim);
@@ -883,9 +890,10 @@
   }
 
   /* O MES E TRATADO COMO O RAIL O TRATA. */
+  /* ⚠ 700 E O PESO DE ROTULO A 10px, e 41 pecas o usam; este era o unico a 800. */
   .report__month {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: 700;
     font-size: var(--text-label);
     letter-spacing: var(--track-label);
     text-transform: uppercase;
@@ -938,6 +946,7 @@
   }
 
   .report__line {
+    text-wrap: pretty;
     color: var(--ink-soft);
   }
 
@@ -1027,8 +1036,9 @@
     color: var(--signal-down);
   }
 
+  /* A VARIACAO E NUMERO, e numero cabe no degrau de rotulo. Era 0,82em. */
   .report__mood small {
-    font-size: 0.82em;
+    font-size: var(--text-label);
     color: inherit;
   }
 
@@ -1059,7 +1069,11 @@
     color: var(--ink);
   }
 
+  /* ⚠ ELA NAO TINHA TAMANHO NENHUM ate 24/08: era o `<small>` PADRAO DO NAVEGADOR,
+     0,83em, que a 13,6px da 11,33px — um degrau que ninguem escolheu e que a escala nao
+     tem. Ausencia de declaracao nao e neutralidade: e o navegador decidindo. */
   .report__country small {
+    font-size: var(--text-label);
     min-width: 3rem;
     text-align: right;
     color: var(--ink-dim);

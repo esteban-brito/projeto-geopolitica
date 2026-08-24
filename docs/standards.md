@@ -135,8 +135,17 @@ bonita inverte a regra no dia em que ela nasce.
 
 **Todo tamanho de texto passa pela escala.** Um degrau novo digitado direto no
 componente parece inofensivo — são 0,02rem — e é assim que uma escala vira uma lista
-de exceções que ninguém consegue mais revisar. Exceção existe, e é **declarada na
-prosa do arquivo**: hoje há uma, a escada de Finanças, que é geometria e não texto.
+de exceções que ninguém consegue mais revisar.
+
+⚠ **E `em` É A PORTA POR ONDE ELE ENTRA.** Medido em 24/08/2026: oito declarações em `em`
+produziam **11,152 · 11,333 · 12,8px** — três degraus entre `--text-label` e `--text-note`,
+nenhum deles na escala, e **dois sem declaração nenhuma: o `<small>` padrão do navegador**.
+Ausência de tamanho não é neutralidade; é o navegador escolhendo por você.
+
+**A exceção existe e é declarada aqui, e é uma só:** o que vive DENTRO de `--text-hero` —
+`.report__score small`, `.tally__band` e `.tally__forecast small` — é dimensionado em `em`
+porque tem de escalar junto com o herói, que é `clamp()`. Um token fixo ali romperia a
+proporção justamente na janela larga, que é onde o herói cresce.
 
 **A cor da marca é a cor do que se PRESSIONA** — uma cor, um lugar. Ela veste o botão
 de avançar, o selo de emenda, o anel de quem preside e a ação da carta. Gastá-la num

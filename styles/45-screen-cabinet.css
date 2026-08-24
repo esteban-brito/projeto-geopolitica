@@ -855,9 +855,11 @@
     gap: 1px;
   }
 
+  /* ⚠ 600 E O PESO DE NOME NESTE PROJETO, e este era o unico a 700: `person__name`,
+     `law__name`, `passage__label` e `rail__president` usam 600. Mesmo papel, dois pesos. */
   .letter__name {
     font-family: var(--font-record);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--sheet-ink);
   }
 
@@ -879,7 +881,9 @@
     color: var(--sheet-ink);
   }
 
+  /* O corpo do oficio e prosa, e prosa nao termina numa palavra sozinha. */
   .letter__lines {
+    text-wrap: pretty;
     display: grid;
     gap: 2px;
     font-size: var(--text-note);

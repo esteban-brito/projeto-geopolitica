@@ -166,8 +166,9 @@
      legivel pede ~120. A captura reprovou os dois tamanhos tentados — 0,5rem cabe e vira
      um traco, 0,85rem le e empurra o rotulo do PIB para fora da barra. */
 
+  /* A seta acompanha o valor, e era 0,7em — 9,5px, abaixo do menor degrau da escala. */
   .vital .trend {
-    font-size: 0.7em;
+    font-size: var(--text-label);
   }
 
   .topbar__act .action {

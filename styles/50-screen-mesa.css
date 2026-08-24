@@ -285,8 +285,12 @@
     white-space: nowrap;
   }
 
+  /* ⚠ O PESO 500 EXISTIA UMA VEZ NO PROJETO INTEIRO, e era aqui — a escala tem 400 e 700,
+     e um peso com um consumidor so nao e degrau, e excecao. O tamanho tambem faltava: sem
+     declaracao, o `<small>` do navegador dava 11,33px. */
   .person__votes small {
-    font-weight: 500;
+    font-size: var(--text-label);
+    font-weight: 400;
     color: var(--ink-dim);
   }
 
@@ -352,8 +356,9 @@
     color: var(--ink);
   }
 
+  /* O par de `.person__votes small`, e o mesmo degrau: era 0,78em. */
   .bench__votes small {
-    font-size: 0.78em;
+    font-size: var(--text-label);
     font-weight: 400;
     color: var(--ink-dim);
   }
