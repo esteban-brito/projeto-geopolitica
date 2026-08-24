@@ -6,12 +6,14 @@
 
 ## ▶ COMECE AQUI — a ordem para a sessão 18
 
-**Estado: verde, e NA ÁRVORE — nada commitado.** `validate` (**236 provas · 12 guardas · 50
-provas sintéticas · 127 arquivos**), `walk` verde. Último commit: `4e54088`.
+**Estado: verde e commitado em `58ec488`.** `validate` (**236 provas · 12 guardas · 50 provas
+sintéticas · 127 arquivos**), `walk` verde, árvore limpa. Branch `acoplamento-e-simulador`.
 
-⚠ **25 arquivos modificados, 1 apagado, `vendor/` novo — 1.851 inserções contra 1.042
-remoções.** Se a próxima sessão abrir e a árvore estiver limpa, alguém commitou; se estiver
-suja, este arquivo descreve o que está nela.
+⚠ **O commit é grande — 30 arquivos, 1.835 inserções — e isso foi decisão registrada, não
+descuido.** Eu propus cinco commits por assunto; quatro arquivos carregam mudança dos cinco ao
+mesmo tempo (`45-screen-cabinet.css` sozinho tem 243 linhas novas e 425 removidas), e dividir
+exigiria cirurgia de _hunk_ produzindo **estados intermediários que nunca passaram pelo
+`validate`**. Um commit que nunca esteve verde é pior que um commit grande.
 
 **A ordem dele não mudou:** UI, design, visual. **Motor fechado.**
 
