@@ -110,14 +110,16 @@ no mesmo 700. Fora da caixa, 600 é o peso de nome em cinco peças.
 assim / mesmo"_, com uma palavra sozinha na segunda linha. `text-wrap: pretty` na prosa e
 `balance` na chamada — a chamada iguala as linhas, a prosa só recusa a última órfã.
 
-### ▶ O PLANO NA MESA — [GLORIOSO, o ciclo 13](cycles/13-glorioso.md)
+### ▶ O PLANO NA MESA — [O GLORIOSO](cycles/13-o-glorioso.md)
 
 ⚠ **PLANO, NÃO COMEÇADO.** Nomeado por ele em 24/08/2026, com o norte dito assim: _"se na
 vida real um presidente pode fazer tal coisa, no meu jogo o jogador também vai conseguir.
 Liberdade, realismo, fidelidade. Brasil real."_
 
-**São dez poderes que um presidente brasileiro tem e este jogo ainda não dá**, em quatro
-ondas, mais uma fundação de três consertos. ⚠ **Quatro dos dez não estavam em nenhum dos dois
+**É o plano mestre, e ele tem dois eixos:** a **PARTE A — O CARGO**, com dez poderes que um
+presidente tem e o jogo não dá; e a **PARTE B — A TELA**, com dezesseis achados do que o motor
+já sabe e a tela não mostra. Mais uma **PARTE 0** de fundação, porque fidelidade que o jogador
+não percebe não é fidelidade. ⚠ **Quatro dos dez não estavam em nenhum dos dois
 dossiês do Gemini** — o salário mínimo, a folha, o Congresso com pauta própria e o STF.
 
 ⚠ **E ELE ACHOU TRÊS CANAIS MORTOS no caminho**, todos da mesma família — o motor sabe e nada
