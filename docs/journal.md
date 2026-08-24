@@ -12,6 +12,87 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## ✔ O PLANO MESTRE, E O DEFEITO QUE ELE ACHOU AO SER ESCRITO — 24/08/2026
+
+A sessão 20 não abriu motor nenhum. Ela escreveu `docs/cycles/13-o-glorioso.md` — 43 itens em
+quatro partes — e o processo de escrevê-lo achou um defeito na tela publicada.
+
+### A PARTE C nasceu de um terceiro dossiê, e ele foi o mais afiado dos três
+
+O dossiê do Gabinete fez três acusações e **as três procedem**:
+
+1. **86 contra 68.** `TERMOS.political` é `"Parlamentares"`; `LOBBIES[1].label` é
+   `"Parlamentares"`. A Trindade imprime _"rompe acima de 86"_ e a caldeira _"rompem acima de
+   68"_, na mesma tela sem rolagem. ⚠ **E o handoff da época dava isso como resolvido** —
+   _"estruturalmente correto, e agora está legível"_. Está correto: em 68 o grupo abandona, em
+   86 a ruptura política abre. **Não está legível, porque o verbo é o mesmo nos dois.** O
+   veredito antigo foi desfeito;
+2. **a redundância do cofre.** `UI.cabinet.vaultFree` e `UI.inbox.inheritedRoom` são a mesma
+   constante, `TERMOS.roomLine`. ⚠ **A guarda de vocabulário foi quem criou:** ela forçou as
+   duas a compartilharem o literal — o que prova que são a mesma leitura — e ninguém perguntou
+   se devia aparecer duas vezes. Guarda mede consistência, não redundância;
+3. **falta de agência.** Certo no diagnóstico, errado na solução: dois dos três botões que ele
+   propõe levam para outra tela ou não existem. A superfície já existe e está vazia — `mail.mjs`
+   tem `demand`, que é exatamente o que ele descreve. O buraco é o achado 37.
+
+**E a leitura contra o código achou o quarto canal morto:** `cabinet.mjs:413` calcula o peso de
+cada grupo na ruptura econômica e escreve **dentro do `aria-label`**. Militares e polícia pesa
+**zero**, e o jogador vidente vê quatro barras iguais.
+
+### ⛔ E AÍ O ORÇAMENTO DE PIXEL DERRUBOU METADE DO QUE EU IA PROPOR
+
+Medido antes de escrever, em `tmp/cabe-no-gabinete.mjs`: a 1440×980 o Gabinete fecha em **980 de
+980**, a coluna lateral em **639 de 639**, a bandeja em **639 de 639**. A "folga de 24px" dos
+cartões é padding. No mês 1 havia 24px reais; o cofre ganhou uma linha no mês 9 e os consumiu.
+
+**Nada cabe.** C7 e C8 foram para a faixa do topo, C1/C3/C9/C11 viraram inline, e C10 ficou
+declarado como o único que custa altura — dependente do item abaixo.
+
+### ⭐ E O DEFEITO VIVO: a coluna engolia um cartão, com o portão verde ao lado
+
+`.cards__side` tem `overflow-y: auto`, e o canvas (`height: 100dvh`) valia em **qualquer**
+janela — a liberação era por largura (1180px) e **nunca por altura**:
+
+| janela       | coluna visível | conteúdo | resultado                     |
+| ------------ | -------------- | -------- | ----------------------------- |
+| 1440×**980** | 639px          | 639px    | cabia — e era a única testada |
+| 1440×**900** | 559px          | 594px    | **3 de 4 cartões inteiros**   |
+| 1440×**760** | 419px          | 594px    | **2 de 4**                    |
+
+⚠ **A ironia mora no próprio arquivo.** `40-shell.css` já carregava o argumento escrito, para o
+telefone: _"travar a altura esconderia metade do Gabinete atrás de uma dobra sem nada que
+avisasse"_. **O raciocínio estava certo e o limiar não existia.**
+
+**Por que ninguém viu, e é a mesma família pela quarta vez:** `checkOverflow` mede `scrollWidth`
+— só horizontal, só a página. `checkClipped` filtra por `style.overflowX`, e o cabeçalho dela
+conta que o passeio já foi cego no eixo X e foi consertado — **o gêmeo do Y nunca entrou**. E o
+passeio rodava numa janela só, 1440×980, que era exatamente a única altura em que cabia.
+
+**O conserto, na ordem em que foi feito** — a checagem primeiro, que é a regra escrita no plano
+na mesma sessão:
+
+1. `checkSwallowed` nasceu, e foi rodada contra a folha **antiga**: acusou `cards__side 594>559`
+   e nada mais. Exceção declarada: `.tray__list`, desenhada para rolar desde sempre;
+2. o passeio ganhou a segunda janela, 1440×900;
+3. o canvas foi para dentro de `@media (min-height: 940px)` nas duas folhas. Abaixo disso a
+   página rola — o **mesmo plano B declarado** que o eixo horizontal já usava.
+
+Depois: 594 de 594 a 900, 820 e 760px. Captura aberta nas duas janelas.
+
+### As três restrições, e elas valem para os 43 itens
+
+- **o orçamento de pixel** acima. Nenhum item do Gabinete entra sem dizer de onde tira a altura,
+  e _"a coluna rola"_ deixou de ser resposta;
+- **o que é "pronto"**: validate verde, captura aberta, e a regra dura — _nenhum item entra sem
+  que o portão saiba ver o defeito que ele conserta_. Com a lista de onde o mínimo não basta,
+  incluindo que **C6 quebra a asserção `#main input, #main select === 0`**, que o plano agora
+  declara antes em vez de descobrir depois;
+- **o save**: `SCHEMA_VERSION = 18` recusa em vez de converter, e a recusa está certa — a razão
+  já está no arquivo. O achado: **32 dos 43 itens custam zero no save**; todo o custo está na
+  Parte A. Três opções escritas, e a decisão é dele.
+
+---
+
 ## ✔ AS DUAS FAMÍLIAS ENTRARAM NO PROJETO — 22/08/2026
 
 Queixa dele: _"as fontes que você usa são muito feias"_, com o teto de **duas**. Renderizei a

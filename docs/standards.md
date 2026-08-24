@@ -275,9 +275,21 @@ acusação. O runner as executa junto da auditoria real.
 `tests/guards/`:** o passeio (`tests/browser/walk.mjs`) entrou no `validate`. As doze
 guardas leem TEXTO — arquivo, seletor, literal —, e nenhuma delas abre um navegador;
 o passeio mede **geometria e pixel**: rolagem da página, conteúdo cortado dentro do
-próprio recorte, peça desenhada por cima de peça, e contraste no par renderizado. A
-razão de ele ter entrado é uma assimetria medida — motor e tela têm 8.007 e 9.601
-linhas, e as provas eram **207 contra 29**. Custo: o portão foi de 9s para 42s.
+próprio recorte **nos dois eixos**, peça desenhada por cima de peça, e contraste no par
+renderizado. A razão de ele ter entrado é uma assimetria medida — motor e tela têm 8.007
+e 9.601 linhas, e as provas eram **207 contra 29**. Custo: o portão foi de 9s para 42s.
+
+⚠ **E ELE RODA EM DUAS JANELAS DESDE 24/08/2026 — 1440×980 e 1440×900 —, por defeito
+medido.** Rodava numa altura só, e era **exatamente a única em que o Gabinete cabia**: a
+900px a coluna dos cartões engolia 35px e um cartão inteiro descia para baixo da dobra, a
+760px sumiam dois. A página não crescia um pixel, então nada acusava. O gêmeo vertical de
+`checkClipped` — `checkSwallowed` — nasceu junto com a segunda janela, e a exceção
+declarada dele é uma só: `.tray__list`, que sempre foi desenhada para rolar.
+
+> **A lição é a família, e não o caso: toda checagem nasce sem alcance.** `checkClipped`
+> nasceu cego no eixo Y; `checkContrast` continua cego para texto que não é folha; o
+> passeio nasceu com uma janela. **A pergunta em toda checagem nova é qual metade do
+> problema ela ainda não vê** — e essa metade vai para a seção 7, declarada.
 
 ## 7. O que ainda NÃO tem guarda
 

@@ -29,25 +29,30 @@ não por doutrina**. A zona constitucional ganha cor própria e o ponteiro atrav
 
 ### As três origens de tudo o que está aqui
 
-| origem                         | o que ela produziu                                                                     |
-| ------------------------------ | -------------------------------------------------------------------------------------- |
-| **medição minha**              | a velocidade das áreas, a altura das telas, o custo da projeção, os três canais mortos |
-| **dois dossiês do Gemini**     | a segunda moeda, a MP, a linha do tempo, e a auditoria da tela do Congresso            |
-| **achados do próprio projeto** | 8, 16, 20, 26, 32, 36, 37, 47 — abertos há sessões e fechados aqui                     |
+| origem                         | o que ela produziu                                                                       |
+| ------------------------------ | ---------------------------------------------------------------------------------------- |
+| **medição minha**              | a velocidade das áreas, a altura das telas, o custo da projeção, os quatro canais mortos |
+| **três dossiês do Gemini**     | a segunda moeda, a MP, a linha do tempo, e as auditorias do Congresso e do Gabinete      |
+| **achados do próprio projeto** | 8, 16, 20, 26, 32, 36, 37, 47 — abertos há sessões e fechados aqui                       |
 
 ⚠ **E os dossiês foram lidos CONTRA o código, não aceitos.** O padrão registrado em cinco
 auditorias externas se repetiu: **elas leem bem a tela e inferem mal o mecanismo.** Cada item
 abaixo diz o que o código de fato faz hoje.
 
-### Os dois eixos
+### Os três eixos
 
-Este plano tem duas metades, e elas atacam problemas diferentes:
+Este plano tem três metades, e elas atacam problemas diferentes:
 
 - **PARTE A — O CARGO:** o que um presidente **faz** e o jogo não deixa fazer. É fidelidade;
-- **PARTE B — A TELA:** o que o motor **já sabe** e a tela não mostra. É legibilidade.
+- **PARTE B — A TELA:** o que o motor **já sabe** e a tela não mostra. É legibilidade;
+- **PARTE C — O GABINETE:** onde a tela que abre o jogo **se contradiz**. É confiança.
 
-E uma **PARTE 0**, que não é nem uma nem outra: ela é o que precisa existir antes, porque
+E uma **PARTE 0**, que não é nenhuma das três: ela é o que precisa existir antes, porque
 **fidelidade que o jogador não percebe não é fidelidade.**
+
+⚠ **A ORDEM ENTRE ELAS NÃO É A ORDEM DE EXECUÇÃO.** A Parte C vem por último no papel e quase
+primeiro na prática — enquanto a tela inicial se contradiz, todo número novo herda a
+desconfiança dela.
 
 ---
 
@@ -100,18 +105,35 @@ está morto) · **abre motor** (constrói mecânica nova).
 | **B15** | o relatório  | dois heróis na mesma tela          | pequeno |
 | **B16** | a ponte      | as quatro ambições ganham preço    | —       |
 
+### PARTE C — o Gabinete · doze itens em quatro grupos
+
+| #       | grupo       | o quê                                    | motor      | tamanho |
+| ------- | ----------- | ---------------------------------------- | ---------- | ------- |
+| **C1**  | contradição | duas rupturas, **o mesmo verbo**         | não        | pequeno |
+| **C2**  | contradição | o cofre é dito **duas vezes**            | não        | pequeno |
+| **C3**  | contradição | **4º canal morto** — o peso só no leitor | liga canal | pequeno |
+| **C4**  | agência     | a superfície existe e está vazia         | —          | —       |
+| **C5**  | agência     | a **plataforma de posse**                | liga canal | médio   |
+| **C6**  | agência     | a carta de posse passa a **perguntar**   | não        | pequeno |
+| **C7**  | tempo       | o **calendário** do mandato              | abre motor | médio   |
+| **C8**  | tempo       | quantos meses restam                     | não        | pequeno |
+| **C9**  | tempo       | a rua ganha **seta**                     | não        | pequeno |
+| **C10** | leitura     | a base **que se compra** — 364 de 513    | não        | médio   |
+| **C11** | leitura     | o maior gasto preso para de ser legenda  | não        | pequeno |
+
 ---
 
-## ⚠ TRÊS CANAIS MORTOS — e são a prova de que metade disto já está construída
+## ⚠ QUATRO CANAIS MORTOS — e são a prova de que metade disto já está construída
 
-Achados verificando os dossiês contra o código. Nenhum falha, nenhum acusa, e os três são a
+Achados verificando os dossiês contra o código. Nenhum falha, nenhum acusa, e os quatro são a
 mesma família: **o motor sabe e nada consome.**
 
-| canal                  | quem escreve                            | quem lê           |
-| ---------------------- | --------------------------------------- | ----------------- |
-| `data-guard`           | `area.mjs`, em toda linha de lei        | **ninguém**       |
-| `taxDelta`             | `economy.mjs`, com `taxDrag: 0,35`      | **nunca dispara** |
-| `desoneracao-setorial` | `programs.mjs`, classificada como gasto | **está errada**   |
+| canal                  | quem escreve                            | quem lê               |
+| ---------------------- | --------------------------------------- | --------------------- |
+| `data-guard`           | `area.mjs`, em toda linha de lei        | **ninguém**           |
+| `taxDelta`             | `economy.mjs`, com `taxDrag: 0,35`      | **nunca dispara**     |
+| `desoneracao-setorial` | `programs.mjs`, classificada como gasto | **está errada**       |
+| `lobby.share`          | `cabinet.mjs:413`, em porcentagem       | **só o `aria-label`** |
 
 - **`data-guard`** carrega `constitution`, `law` ou `none` em cada linha, e nenhuma folha
   pinta. O jogo **sabe** quais pisos são constitucionais e mostra todos com a mesma cor;
@@ -119,7 +141,9 @@ mesma família: **o motor sabe e nada consome.**
   pontas**. O arrasto tributário — calibrado, com fonte — **jamais roda**. A economia já sabe
   reagir a imposto; nada no jogo pode mexer em imposto;
 - **a desoneração** consome discricionário como se fosse obra. É **renúncia de receita**:
-  ninguém gasta, a Fazenda deixa de arrecadar.
+  ninguém gasta, a Fazenda deixa de arrecadar;
+- **`lobby.share`** entrega o peso de cada grupo na ruptura econômica só a quem usa leitor de
+  tela. Um dos quatro pesa **zero**, e o jogador vidente não tem como saber (C3).
 
 ---
 
@@ -535,6 +559,265 @@ pressiona. Nunca de crise.
 
 ---
 
+# PARTE C — O GABINETE
+
+> A terceira origem deste plano é um dossiê focado só nesta tela. **Ele acerta as três
+> acusações que faz** — e uma delas é pior do que ele descreveu.
+>
+> ⚠ **E ELE ATACA UMA DECISÃO QUE O PROJETO JÁ TINHA TOMADO E DECLARADO CERTA.** O handoff
+> registra o conflito 86/68 como _"estruturalmente correto, e agora está legível"_. Está
+> correto. **Não está legível.** A Parte C começa desfazendo esse veredito.
+
+## Por que esta tela pesa mais que as outras dez
+
+É a primeira que abre, a única sem rolagem, e a única cujo trabalho é **responder antes de
+perguntar**: o jogador chega nela para saber como o país está, e sai dela para decidir em outro
+lugar. Um erro aqui não custa uma jogada — custa a confiança em todos os números do jogo.
+
+---
+
+## Grupo 7 — a tela se contradiz três vezes
+
+### C1 · ⭐ Duas rupturas, o mesmo verbo, a MESMA PALAVRA
+
+A acusação mais séria do dossiê, e ela procede na letra:
+
+| bloco    | o que a tela imprime                     | de onde vem                           |
+| -------- | ---------------------------------------- | ------------------------------------- |
+| Trindade | **Parlamentares** · _rompe acima de_ 86  | `brokerBoil: 86` — a ruptura política |
+| Caldeira | **Parlamentares** · _rompem acima de_ 68 | `boil: 68` — a fervura do lobby       |
+
+`TERMOS.political === "Parlamentares"` e `LOBBIES[1].label === "Parlamentares"`. `trinityAbove`
+é `"rompe acima de"`; `boilerBreaks` é `"rompem acima de"`. **A mesma palavra, o mesmo verbo,
+dois números, a um palmo de distância na mesma tela sem rolagem.**
+
+⚠ **A DEFESA DO PROJETO ESTÁ CERTA E É IRRELEVANTE.** São dois eventos diferentes: em 68 o grupo
+**abandona o governo**; em 86 a **ruptura política abre** e vira uma das três condições do
+processo. Correto — e invisível, porque a tela usa o mesmo verbo para os dois. O jogador não tem
+como descobrir que são perguntas diferentes.
+
+**O conserto NÃO é unificar os números** — eles medem coisas distintas. É parar de dizer
+"rompe" duas vezes:
+
+- ⭐ **uma barra, dois limiares.** A linha de Parlamentares na caldeira ganha as duas marcas —
+  `abandona em 68 · derruba em 86` — e a terceira régua da Trindade passa a dizer de onde sai:
+  ela **é** a pressão do fisiologismo, não um número paralelo;
+- é a unificação que o dossiê tentava fazer com avatares, **sem perder a distinção entre
+  condição e causa** que separa os dois blocos.
+
+### C2 · ⚠ O cofre é dito duas vezes — e a guarda de vocabulário PROVOU isso
+
+`UI.cabinet.vaultFree = TERMOS.roomLine` e `UI.inbox.inheritedRoom = TERMOS.roomLine`. **A mesma
+constante.** No mês 1, `Sobra para o mês R$ 14,5 bi` aparece no bloco DINHEIRO DO MÊS e de novo
+no anexo da carta de posse — a metros um do outro, numa tela que não rola.
+
+⚠ **E O MECANISMO QUE DEVERIA TER PEGO ISSO É QUEM CRIOU.** A guarda de vocabulário forçou as
+duas a compartilharem o literal — o que **prova** que são a mesma leitura — e ninguém perguntou
+se ela devia ser mostrada duas vezes. É a família dos canais mortos vista pelo avesso: um canal
+**duplicado** que passou por guarda porque a guarda mede consistência, não redundância.
+
+**Conserto:** o anexo da posse mostra só o que o cofre **não** mostra. Ver C6.
+
+### C3 · ⭐ O QUARTO CANAL MORTO — o peso do grupo só existe no leitor de tela
+
+Em `src/ui/screens/cabinet.mjs:413`, a fatia de cada grupo na ruptura econômica é calculada,
+formatada em porcentagem — e escrita **dentro de um `aria-label`**. Ela é entregue
+exclusivamente a quem usa leitor de tela.
+
+| grupo               | peso     | o que o jogador vidente vê |
+| ------------------- | -------- | -------------------------- |
+| Mercado financeiro  | 0,35     | nada                       |
+| Indústria e agro    | 0,35     | nada                       |
+| Parlamentares       | 0,30     | nada                       |
+| Militares e polícia | **0,00** | nada                       |
+
+⚠ **A LINHA DE BAIXO É A QUE DÓI.** Um dos quatro grupos da caldeira **não pesa na ruptura
+econômica** — e o jogo tem uma nota em prosa explicando por quê (o que eles cobram não é
+dinheiro). O jogador vidente enxerga quatro barras idênticas e gasta capital acalmando uma que
+não conta para a conta que ele está tentando não perder.
+
+**É o quarto canal morto do plano**, e o mais barato de ligar: o valor já está pronto na linha 413. Falta sair do `aria-label`.
+
+### C12 · ✔ FEITO — a coluna lateral engolia um cartão inteiro, e o portão ficava verde
+
+**⭐ ÚNICO ITEM DESTE PLANO JÁ EXECUTADO** — porque era defeito na tela publicada, não melhoria.
+O canvas ganhou `@media (min-height: 940px)` nas duas folhas, e o passeio ganhou
+`checkSwallowed` mais uma segunda janela (1440×900). A checagem foi escrita **antes** do
+conserto e verificada contra a folha antiga: acusou `cards__side 594>559`, e só isso.
+
+`.cards__side` tem `overflow-y: auto` (`styles/45-screen-cabinet.css:46`). A coluna dos quatro
+cartões rola **por dentro** — e a página nunca cresce um pixel, então nada acusa:
+
+| janela       | coluna visível | conteúdo | resultado                                     |
+| ------------ | -------------- | -------- | --------------------------------------------- |
+| 1440×**980** | 639px          | 639px    | ✔ cabe — e é a única janela do passeio        |
+| 1440×**900** | 559px          | 594px    | ⛔ esconde 35px · **3 de 4 cartões inteiros** |
+| 1440×**820** | 479px          | 594px    | ⛔ esconde 115px · 3 de 4                     |
+| 1440×**760** | 419px          | 594px    | ⛔ esconde 175px · **2 de 4**                 |
+
+A 900px de altura — a resolução de um MacBook Air — **a Aprovação por renda some**, e o
+Gabinete deixa de ser a tela que ele foi desenhado para ser: a única sem rolagem.
+
+⚠ **E A RAZÃO DE NINGUÉM TER VISTO É A MESMA DE SEMPRE, PELA QUARTA VEZ:**
+
+- `checkOverflow` mede `scrollWidth > innerWidth`: **só a horizontal, e só a página**;
+- `checkClipped` filtra por `style.overflowX`. **O gêmeo vertical não existe.** O cabeçalho
+  dela em `walk.mjs:78` conta que o passeio já foi cego para o recorte próprio no eixo X e foi
+  consertado — e o eixo Y nunca entrou;
+- o passeio roda em **uma janela só**, `1440×980` (`walk.mjs:52`) — que é **exatamente a única
+  altura em que a coluna cabe**. O portão está medindo o único caso que passa.
+
+**O conserto tem duas metades, e a segunda vale mais que a primeira:**
+
+1. a coluna para de engolir — os quatro cartões cabem, ou a tela assume que rola;
+2. ⭐ **`checkClipped` ganha o eixo Y**, e o passeio ganha uma segunda janela. Sem isso, o item
+   seguinte que crescer 24px repete este defeito com o portão verde ao lado.
+
+> ⚠ **E É POR ISSO QUE C10 NÃO É DE GRAÇA.** Ele acrescenta ~24px dentro de "A Câmara". A 980px
+> a coluna está em 639 de 639: **não há 24px.** O que aconteceria hoje é o item entrar, a
+> página não crescer, o passeio passar, e um cartão descer para baixo da dobra em silêncio.
+
+---
+
+## Grupo 8 — a tela não pergunta
+
+### C4 · O que o dossiê pede, e por que a resposta não é botão
+
+Ele quer três botões de decisão dentro da carta — `Cortar verba`, `Emitir dívida`, `Ignorar`.
+**O diagnóstico é certo e a solução está errada por duas razões medidas:**
+
+- ⛔ **dois dos três levam para outra tela.** Cortar verba é a mesa; emitir dívida não existe
+  como alavanca. Um par de botões ali seria **segunda porta para a mesma jogada** — o jogador
+  escolheria sem ver o preço que só a outra tela mostra;
+- ⛔ **o passeio afirma o contrário há seis ciclos:** `#main input, #main select` no Gabinete
+  tem de dar **zero**. A tela inicial não decide — porque quem abria o jogo no desenho antigo
+  _"caía no meio de uma decisão sem antes saber como o país estava"_.
+
+⭐ **MAS A SUPERFÍCIE QUE ELE PEDE JÁ EXISTE, E ESTÁ VAZIA.** `mail.mjs` tem **duas** espécies
+de carta que perguntam: `amendment` (a emenda do relator) e `demand` (a chantagem do lobby). A
+segunda é **exatamente** o que o dossiê descreve: um grupo cobra, o preço está na carta, e a
+resposta se dá ali. O problema nunca foi a falta de botão — é que **o jogo tem duas perguntas e
+doze espécies de aviso** (achado 37).
+
+> **A Parte C não constrói agência no Gabinete. A Parte A a entrega:** A6 põe ministro para
+> pedir, A7 põe o Congresso para propor, A9 põe a imprensa para cobrar, A10 põe governador para
+> negociar. **Quatro fontes novas de carta que pergunta, todas na espécie que já roda.**
+
+### C5 · ⭐ A plataforma de posse — o jogo ganha um critério
+
+**Isto não veio de dossiê nenhum.** O jogo gera um presidente com nome, tratamento e partido — e
+**nenhuma promessa**. Na vida real é o inverso: um presidente chega ao cargo devendo o que disse
+na campanha, e é contra isso que ele é medido por quatro anos.
+
+- na posse, o jogador escolhe **três compromissos** de uma lista tirada do catálogo que já
+  existe (uma área para priorizar, uma norma para mover, uma meta fiscal);
+- ⚠ **a máquina de punição JÁ ESTÁ CONSTRUÍDA.** `SONDA` tem `betrayal` — _"a fração da promessa
+  que o caixa NÃO honrou"_ — e ela já derruba humor de todo mundo. Hoje ela só olha o orçamento.
+  Passa a olhar também o que foi prometido na posse;
+- **o fecho ganha o que nunca teve: um critério.** Hoje ele mostra de-onde-para-onde. Passa a
+  mostrar **prometido × entregue** — que é como um mandato é julgado fora do jogo;
+- ⛔ **nem promessa cumprida nem quebrada é muro.** Quebrar é caro, não é proibido. É a doutrina
+  inteira num lugar novo.
+
+### C6 · A carta de posse deixa de repetir e passa a perguntar
+
+Consequência de C2 e C5: o anexo para de imprimir `Sobra para o mês` (o cofre já diz, dois
+centímetros acima) e a carta passa a ser **a primeira pergunta do mandato** — a escolha dos três
+compromissos.
+
+⚠ **E ISSO RESOLVE O MÊS 1 TER ZERO DECISÕES.** Hoje o botão da carta de posse é `ver o mês` —
+navegação. Passa a ser a única carta que o jogador **tem** de responder antes de avançar.
+
+---
+
+## Grupo 9 — a tela não tem tempo
+
+### C7 · ⭐ O calendário do mandato
+
+O Gabinete mostra `MAR · 2027` e **nada mais sobre quando**. Um mandato presidencial tem forma: a
+LDO em abril, a LOA em agosto, o mínimo em 1º de janeiro, o relatório bimestral de receitas e
+despesas. **O jogo tem 48 meses e nenhum deles é diferente dos outros.**
+
+- um bloco de prazos: **o que vence este mês, o que vence no trimestre**;
+- ⚠ **A1 NÃO EXISTE SEM ISTO.** O salário mínimo é decisão **anual** com data. Sem calendário ela
+  vira mais um controle de mesa e perde exatamente o que a torna a maior decisão fiscal do
+  Executivo: ela acontece **uma vez**, e vale doze meses;
+- ⭐ e é o que dá **pulso** ao jogo: hoje todo mês tem a mesma forma, e é por isso que avançar
+  parece apertar um botão em vez de governar.
+
+### C8 · O relógio: quantos meses restam
+
+A faixa diz `1º MANDATO · ANO 1`. Não diz que faltam 41 meses. **Num jogo com fim duro, esse é o
+número mais importante da tela** — é ele que decide se uma reforma de 24 meses ainda cabe. Uma
+linha.
+
+### C9 · A rua ganha seta
+
+O dossiê pede `31% ▼ (-4%)` na aprovação por faixa de renda, e ele está certo:
+`cabinetStreetHtml` imprime `${poll.good}%` **sem variação**, enquanto a faixa de vitais logo
+acima tem seta nos quatro indicadores.
+
+⭐ **E O MECANISMO É O MESMO, A CUSTO ZERO DE SAVE.** A seta dos vitais não vem de série
+histórica — vem de `painted`, o estado do quadro anterior guardado em `app.mjs:537`. As linhas da
+rua podem ler a mesma variável.
+
+⚠ **Com a mesma limitação declarada que os vitais já carregam:** numa recarga `painted` volta
+nulo, e **ausência não é resultado** — sem base de comparação a seta não existe, não vira zero.
+
+---
+
+## Grupo 10 — a leitura fica mais funda
+
+### C10 · ⭐ A base tem duas metades: a que se compra e a que se convence
+
+O dossiê pede um donut _"fisiológico × ideológico"_ sobre a base. ⛔ **O donut não** — o projeto
+já matou o arco (513 círculos custavam 170px) e a fita, e o `meter` segmentado já existe e já
+soma 100%. ⭐ **Mas a pergunta é excelente, e o jogo tem o dado desde sempre:**
+
+`venalityEconomic` por partido, cruzado com `seats`:
+
+| metade                               | cadeiras | fatia   |
+| ------------------------------------ | -------- | ------- |
+| **se compra** (venalidade ≥ 0,7)     | **364**  | **71%** |
+| **não se compra** (venalidade < 0,7) | **149**  | **29%** |
+
+Ponderada pela venalidade de cada bancada, **68% da Câmara está à venda.**
+
+⚠ **ESSE NÚMERO RESPONDE A PERGUNTA QUE O JOGADOR MAIS FAZ E NUNCA TEVE COMO RESPONDER:**
+_quantos desses me abandonam no dia em que eu parar de pagar?_ Hoje a tela mostra 436 apoios sem
+dizer quantos são convicção e quantos são aluguel.
+
+**É o B6 no atacado** — o que cada pessoa vende, somado. E os dois se sustentam: o agregado
+explica por que a mesa importa; a mesa mostra quem, dentro do agregado.
+
+### C11 · O maior gasto preso para de ser legenda estática
+
+O dossiê quer `Maior gasto preso: Aposentadoria urbana R$ 66,7 bi` escondido atrás de hover.
+
+⛔ **Recusado, e por precedente:** essa linha nasceu de auditoria externa que cobrou _"não há como
+investigar quais leis herdadas estão sugando esse dinheiro"_, e o achado 40 já registra que
+cortá-la de três para uma foi **perda de resposta, não conserto**. Além disso, informação atrás
+de hover é informação ausente para quem não passa o mouse.
+
+⚠ **MAS A QUEIXA POR TRÁS PROCEDE, e o achado 40 já a nomeia:** _"um governo que não corta
+previdência vê a mesma linha por 48 meses, e aí ela vira legenda estática"_. **O conserto não é
+esconder — é a linha mostrar o que MUDOU**, pela mesma regra que o cofre já usa (o comprometido
+só aparece quando difere do que sobra).
+
+---
+
+## ⛔ O que a PARTE C recusa do dossiê do Gabinete
+
+| pedido                                     | por quê                                                                                                         |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| **unificar 86 e 68 num número só**         | medem eventos diferentes. O defeito é o verbo repetido, não o número                                            |
+| **três botões de decisão na carta**        | segunda porta para jogada cujo preço só a outra tela mostra                                                     |
+| **avatares nos quatro grupos da caldeira** | lobby não está no elenco: sem sinete, sem cargo, sem rosto. Com A6, quatro ministros ganham rosto — e aí sim    |
+| **donut chart**                            | o `meter` já existe e já soma 100%. Seria o terceiro gráfico circular do projeto, e os dois anteriores morreram |
+| **hover escondendo o maior gasto preso**   | desfaz correção pedida por auditoria (achado 40)                                                                |
+
+---
+
 # ⛔ O QUE FICA DE FORA, E POR QUÊ
 
 | o quê                                                | por quê                                                                                                                                                                                                                        |
@@ -598,20 +881,179 @@ pressiona. Nunca de crise.
 
 ---
 
+# 🚧 AS TRÊS RESTRIÇÕES — elas valem para os 43 itens
+
+> Um plano de 43 itens sem restrição declarada é uma lista de desejos. Estas três não são
+> preferências: **duas foram medidas hoje e a terceira está escrita no código.**
+
+---
+
+## RESTRIÇÃO 1 · O Gabinete não tem um pixel livre
+
+Medido em `tmp/cabe-no-gabinete.mjs`, a 1440×980, em regime normal (mês 9):
+
+```
+página 980px · janela 980px · folga 0px
+
+lead (Caixa de Entrada)   659×639px   conteúdo 639px   folga  0px
+A Câmara                  432×107px   conteúdo  83px   folga 24px  ← padding, não espaço
+Dinheiro do mês           432×179px   conteúdo 155px   folga 24px  ← padding, não espaço
+Quem pode derrubar        432×179px   conteúdo 155px   folga 24px  ← padding, não espaço
+Aprovação por renda       432×131px   conteúdo 131px   folga  0px
+```
+
+A coluna lateral soma **596px de cartão + 43px de vão = 639px exatos**. O cartão da bandeja
+fecha em 639 de 639. **Não há folga em lugar nenhum.**
+
+⚠ **E ELA JÁ CRESCEU ATÉ O TETO SOZINHA:** no mês 1 a coluna mede 615px; no mês 9, 639. Os
+24px foram consumidos quando o cofre ganhou uma linha. **O próximo item que crescer não tem
+para onde ir** — ele cai no C12: a coluna engole em silêncio.
+
+### O orçamento, item por item
+
+| item        | o que acrescenta                      | altura            | de onde sai                                       |
+| ----------- | ------------------------------------- | ----------------- | ------------------------------------------------- |
+| **C2**      | **remove** a linha duplicada da posse | **−1 linha**      | ⭐ **devolve espaço** — é o único que dá          |
+| **C1**      | segunda marca na barra que já existe  | 0px               | inline                                            |
+| **C3**      | a porcentagem ao lado de 4 rótulos    | 0px               | inline, no rótulo                                 |
+| **C9**      | seta ao lado de 3 números             | 0px               | inline                                            |
+| **C11**     | a linha muda de texto, não de tamanho | 0px               | —                                                 |
+| **C7 · C8** | prazo do mês e meses restantes        | 0px no tabuleiro  | ⭐ **vão para a faixa do topo**, que já tem o mês |
+| **C5 · C6** | a posse vira pergunta                 | dentro da bandeja | o documento já ocupa 637 de 639 — ver abaixo      |
+| **C10**     | um `meter` dentro de "A Câmara"       | **~24px**         | ⛔ **não existem 24px.** Depende de C12           |
+
+⚠ **C5/C6 têm uma folga que os outros não têm:** `.tray__list` também rola por dentro
+(`45-screen-cabinet.css:239`), e ali a rolagem é **desenho declarado** — o índice de cartas
+cresce a cada mês e sempre foi para rolar. Um documento mais longo cabe. **A bandeja é a única
+peça do Gabinete com espaço, e é onde a agência mora.** Não é coincidência.
+
+### A regra que sai daí
+
+> ### ⚖ Nenhum item do Gabinete entra sem dizer de onde vem a altura que ele ocupa.
+>
+> E "a coluna rola" **não é resposta** — é o C12.
+
+---
+
+## RESTRIÇÃO 2 · O que significa "pronto"
+
+**Esta é a restrição que fecha o buraco que originou toda a limpeza.** O diagnóstico foi:
+motor e tela têm o mesmo tamanho (8.007 contra 9.601 linhas) e tinham **207 provas contra 29**.
+Seis sessões de desenho caíram na metade sem portão.
+
+**Um plano de 43 itens sem critério de aceitação repete isso em escala maior.**
+
+### O mínimo, e ele vale para os 43
+
+1. `npm run validate` verde — 12 guardas · 54 provas sintéticas · 236 provas · o passeio;
+2. ⚠ **abrir a captura em `captures/`.** O portão não sabe olhar, e três defeitos já
+   atravessaram tipo, guarda e cem provas para morrer na imagem.
+
+### ⭐ E a regra dura, que é a lição inteira do projeto
+
+> ### ⚖ Nenhum item entra sem que o portão SAIBA VER o defeito que ele conserta.
+>
+> Se a checagem que pegaria a regressão não existe, **ela nasce primeiro** — no mesmo passo, e
+> antes da mudança. É o C12 em forma de regra: uma peça nova protegida por uma checagem cega é
+> uma peça sem portão, e este projeto já sabe quanto isso custa.
+
+### Onde o mínimo NÃO basta
+
+| item(ns)         | por quê                                                            | o que nasce junto                                                                      |
+| ---------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| **C12**          | o passeio é cego no eixo Y e roda numa janela só                   | ⭐ `checkClipped` ganha `overflowY`; o passeio ganha **uma segunda janela** (1440×900) |
+| **C6**           | **quebra asserção existente** — `#main input, #main select === 0`  | a asserção vira "só a carta da posse pergunta", com a razão em prosa                   |
+| **C3**           | o valor sai do `aria-label`, e ele está lá por acessibilidade      | o `aria-label` **continua**. Prova: os dois textos existem, não um no lugar do outro   |
+| **C10**          | número novo perto da tela = risco de a tela refazer conta do motor | a divisão sai da camada de aplicação, não do `.mjs` de tela. `boundaries` cobre        |
+| **C7**           | primeiro item que cria **data** no jogo                            | prova de que o calendário é função pura de `month` — sem relógio, sem `Date.now`       |
+| **C5**           | primeiro campo novo no estado desde a v18                          | suíte `save.mjs` (ida e volta idêntica) + `schema.mjs` + ver Restrição 3               |
+| **0.1**          | muda classificação de catálogo, e catálogo move a série            | `npm run simulate` antes e depois, **com as duas séries comparadas no handoff**        |
+| **A1 · A2 · A3** | mexem em calibragem fiscal — a família do achado do primário       | idem, e a verificação explícita de que o primário ainda pode ser negativo              |
+| **B1–B5**        | geometria num bloco de 108px que já estourou antes                 | `checkOverflow` + `checkClipped` + captura aberta, sem exceção                         |
+| **0.3**          | 5,3ms por repintura, e o arrasto repinta a cada movimento          | medição de quadro. **Verde não basta — o número tem de sair**                          |
+
+### O que NÃO é critério de aceitação
+
+- ⛔ **"o teste passou depois que eu mudei o número do catálogo".** Calibragem não se mexe para
+  destravar prova. Número errado é achado, e vai para o handoff;
+- ⛔ **"removi a guarda que reclamava".** Elas existem por defeito medido;
+- ⛔ **"o `npm run screen` deu bem".** Ele oscila ~20 fps entre rodadas e está fora do portão.
+  Um número solto dele não decide nada.
+
+---
+
+## RESTRIÇÃO 3 · O save recusa, e o plano tem dez motivos para quebrá-lo
+
+`SCHEMA_VERSION = 18` (`src/state/state.mjs:109`), e `deserialize` **recusa** versão diferente
+em vez de converter (`src/state/save.mjs:44`).
+
+⚠ **E A RECUSA ESTÁ CERTA — a razão já está escrita no arquivo**, e é boa demais para se
+reabrir: _"ausência de norma é ausência de restrição: o save abriria com a Constituição inteira
+revogada, que é um país válido e portanto indistinguível de um save quebrado."_ Um conversor
+que preenche campo faltante com padrão produz **um país plausível e errado** — o pior defeito
+possível num jogo cujo valor inteiro é o número ter motor atrás.
+
+### O que este plano custa em versões de save
+
+| parte       | itens que mexem no estado                        | bumps      |
+| ----------- | ------------------------------------------------ | ---------- |
+| **PARTE 0** | nenhum — 0.1 é catálogo, 0.3 é descartado        | **0**      |
+| **PARTE B** | nenhum — os dezesseis são leitura                | **0**      |
+| **PARTE C** | só **C5** (os três compromissos)                 | **1**      |
+| **PARTE A** | A1 · A2 · A3 · A4 · A5 · A6 · A7 · A8 · A9 · A10 | **até 10** |
+
+⭐ **O achado é esse: 32 dos 43 itens custam ZERO no save.** Toda a legibilidade — a Parte B
+inteira e onze doze avos da Parte C — não toca no estado. **Todo o custo está na Parte A**, e
+está concentrado.
+
+### A decisão, e ela é dele
+
+- **Opção 1 — bumpar por onda.** As quatro ondas da Parte A viram **quatro** versões em vez de
+  dez. Uma partida em curso sobrevive dentro de uma onda e morre entre ondas. Barato, e é o que
+  eu faria hoje;
+- **Opção 2 — ⭐ o save vira semente + ordens, e o mandato se refaz.** A doutrina da casa já
+  diz que _"o mandato inteiro se refaz da semente"_, e a projeção mediu o custo: **48 meses
+  custam 10,3ms.** Um save que guarda `(seed, ordens de cada mês)` **tolera mudança de estado
+  por construção** — só quebra se as ORDENS mudarem de forma.
+  - ⚠ **e a troca é honesta, não gratuita:** o save de estado quebra quando o **esquema** muda;
+    o save de repetição quebra quando a **calibragem** muda. Este plano tem dez mudanças de
+    esquema e **recusa explicitamente mexer em calibragem** (achado 53). Para este plano, a
+    repetição é o lado certo da troca — e para um jogo já lançado, seria o errado;
+- **Opção 3 — não decidir agora.** Enquanto ninguém joga um mandato inteiro, recusar não custa
+  nada. ⚠ **Mas o custo aparece exatamente quando o jogo ficar bom o bastante para alguém
+  querer terminar uma partida** — que é o objetivo deste plano.
+
+> ⚖ **Isto não é escolha de arquitetura, é escolha de produto:** _uma partida em curso pode
+> morrer quando o jogo melhora?_ Enquanto a resposta for sim, a Opção 3 basta.
+
+---
+
 # 🔢 A ORDEM QUE EU EXECUTARIA
 
-| passo  | o quê                          | por quê                                                   |
-| ------ | ------------------------------ | --------------------------------------------------------- |
-| **1**  | **0.1 · 0.2**                  | consertos pequenos e independentes, e um deles é defeito  |
-| **2**  | **Grupo 1 da Parte B** (B1–B5) | cinco achados num bloco de 108px, numa tacada             |
-| **3**  | **0.3 · B10**                  | a projeção e a linha do tempo — as duas lentes            |
-| **4**  | **A1 · A2 · A3**               | 61% do orçamento vira decisão                             |
-| **5**  | **A4 · A5**                    | os instrumentos baratos, e A4 já tem máquina              |
-| **6**  | **Grupos 2–5 da Parte B**      | a tela de decisão fica legível antes de ganhar poder novo |
-| **7**  | **A6**                         | a segunda moeda — e ela acende quatro ambições            |
-| **8**  | **A8**                         | o preço da janela de Overton                              |
-| **9**  | **A7**                         | o Congresso ganha iniciativa                              |
-| **10** | **A9 · A10**                   | o mundo inteiro ganha voz                                 |
+| passo  | o quê                          | por quê                                                          |
+| ------ | ------------------------------ | ---------------------------------------------------------------- |
+| **0**  | ✔ **C12**                      | ✔ **FEITO** — era defeito, e o portão era cego para ele          |
+| **1**  | **0.1 · 0.2 · C1 · C2 · C3**   | consertos pequenos e independentes, e três são defeito           |
+| **2**  | **Grupo 1 da Parte B** (B1–B5) | cinco achados num bloco de 108px — e o passo 0 é quem os protege |
+| **3**  | **C8 · C9 · C10 · C11**        | a tela que abre o jogo para de mentir e ganha profundidade       |
+| **4**  | **0.3 · B10 · C7**             | a projeção, a linha do tempo e o calendário — as três lentes     |
+| **5**  | **C5 · C6**                    | a posse vira pergunta, e o fecho ganha critério                  |
+| **6**  | **A1 · A2 · A3**               | 61% do orçamento vira decisão — e A1 precisa de C7               |
+| **7**  | **A4 · A5**                    | os instrumentos baratos, e A4 já tem máquina                     |
+| **8**  | **Grupos 2–5 da Parte B**      | a tela de decisão fica legível antes de ganhar poder novo        |
+| **9**  | **A6**                         | a segunda moeda — acende quatro ambições e dá rosto à caldeira   |
+| **10** | **A8**                         | o preço da janela de Overton                                     |
+| **11** | **A7**                         | o Congresso ganha iniciativa                                     |
+| **12** | **A9 · A10**                   | o mundo inteiro ganha voz                                        |
 
-⚠ **Os passos 1 a 6 não abrem motor nenhum.** Eles usam `ESTRATO`, `MALHA`, `ECLUSA`,
-`CORRENTE` e `LASTRO` como estão — e boa parte apenas **liga canais já construídos e mortos**.
+⚠ **Os passos 1 a 5 não abrem motor nenhum** (C7 é a única exceção, e é pequena). Eles usam
+`ESTRATO`, `MALHA`, `ECLUSA`, `CORRENTE` e `LASTRO` como estão — e boa parte apenas **liga
+canais já construídos e mortos**.
+
+⭐ **E a Parte C entra CEDO de propósito.** Ela é a tela que abre o jogo: enquanto ela se
+contradiz em quatro lugares, todo número que o resto do plano acrescentar herda a desconfiança.
+
+⛔ **O passo 0 não é escolha.** Ele é o único item deste plano que conserta algo que está
+quebrado na tela publicada — e a metade dele que dá o eixo Y ao passeio é **pré-requisito de
+C10 e do Grupo 1 inteiro**. Sem ela, os itens de geometria entram protegidos por uma checagem
+que não enxerga o defeito que eles podem causar.

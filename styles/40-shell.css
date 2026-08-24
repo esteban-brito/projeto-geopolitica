@@ -16,20 +16,25 @@
 
   /* As outras sete telas continuam com a casca elástica e a página rolando, que é o certo
      enquanto o conteúdo delas não tiver teto medido.
-     Numa janela de 390px, travar a altura esconderia metade do Gabinete atrás de uma dobra
-     sem nada que avisasse. */
-  .shell:has(> .board[data-screen="cabinet"]) {
-    height: 100dvh;
-  }
+     ⚠ E O LIMIAR DE ALTURA FALTAVA: a regra valia em QUALQUER janela, e o Gabinete pede 940px
+     para os quatro cartões caberem. Entre 720 e 939px ela fazia exatamente o que a linha
+     seguinte recusa fazer no telefone — esconder um cartão inteiro atrás de uma dobra muda,
+     com a página sem crescer um pixel e o portão verde ao lado.
+     Numa janela de 390px, travar a altura esconderia metade do Gabinete sem nada que avisasse. */
+  @media (min-height: 940px) {
+    .shell:has(> .board[data-screen="cabinet"]) {
+      height: 100dvh;
+    }
 
-  /* ── O RAIL DENTRO DO CANVAS ──────────────────────────────────────────────── ⚠ DEFEITO
-     ANTIGO, ACHADO PELA MEDIÇÃO DO CANVAS : o rail declara `height: calc(100dvh - 2 *
-     var(--space-4))` — **948px numa janela de 980** — e mora na linha 2 da casca, que começa
-     ABAIXO da barra superior e tem 904.
-     Ele sempre transbordou 44px, em toda tela, desde que foi escrito. */
-  .shell:has(> .board[data-screen="cabinet"]) .rail {
-    height: auto;
-    align-self: stretch;
+    /* ── O RAIL DENTRO DO CANVAS ────────────────────────────────────────────── ⚠ DEFEITO
+       ANTIGO, ACHADO PELA MEDIÇÃO DO CANVAS : o rail declara `height: calc(100dvh - 2 *
+       var(--space-4))` — **948px numa janela de 980** — e mora na linha 2 da casca, que começa
+       ABAIXO da barra superior e tem 904.
+       Ele sempre transbordou 44px, em toda tela, desde que foi escrito. */
+    .shell:has(> .board[data-screen="cabinet"]) .rail {
+      height: auto;
+      align-self: stretch;
+    }
   }
 
   /* A LISTA ROLA POR DENTRO e o pé fica preso, que é a mesma regra da coluna da direita do

@@ -16,8 +16,8 @@
 
 ## ▶ COMECE AQUI — a ordem para a sessão 20
 
-**Estado: verde.** `npm run validate` fecha em **42s** com **12 guardas · 53 provas
-sintéticas · 127 arquivos · 236 provas · passeio verde**. Branch `acoplamento-e-simulador`.
+**Estado: verde.** `npm run validate` fecha em **42s** com **12 guardas · 54 provas
+sintéticas · 130 arquivos · 236 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
 
 ⚠ **O PORTÃO MUDOU NA SESSÃO 19, e é a mudança mais importante em muitas sessões.** O
 passeio entrou no `validate`. A razão é uma assimetria medida:
@@ -45,7 +45,54 @@ ficou feia. **Abrir a captura em `captures/` é o único passo do fluxo que segu
    ⚠ **O que sobra do item é o OLHO dele**, e só ele pode dar: a medição fecha, a estética
    não se mede. Ver _A PENEIRA DE TIPOGRAFIA_, abaixo;
 3. ▶ **O ÍNDICE DA BANDEJA NÃO DISTINGUE A ESPÉCIE DA CARTA.** É o único item de TELA da
-   lista dos quatro que faltam; os outros três são de motor.
+   lista dos quatro que faltam; os outros três são de motor;
+4. ✔ **FEITO — a coluna do Gabinete engolia um cartão a 900px.** O canvas ganhou limiar de
+   altura e o passeio ganhou o eixo Y mais uma segunda janela. Ver logo abaixo.
+
+⚠ **E O PLANO MESTRE `docs/cycles/13-o-glorioso.md` ESTÁ ESCRITO E NÃO APROVADO** — 43 itens em
+quatro partes, com as três restrições que valem para todos (o orçamento de pixel do Gabinete, o
+que significa "pronto", e o custo em versões de save). **Nenhuma linha de código sai dele sem a
+aprovação dele.**
+
+### ✔ FECHADO — a coluna do Gabinete engolia um cartão, e o portão ficava verde
+
+**Achado e consertado em 24/08/2026.** Era defeito na tela publicada, não proposta.
+
+`.cards__side` tem `overflow-y: auto` (`styles/45-screen-cabinet.css:46`). A coluna dos quatro
+cartões rola por dentro, e a página não cresce um pixel:
+
+| janela       | coluna visível | conteúdo | resultado                                     |
+| ------------ | -------------- | -------- | --------------------------------------------- |
+| 1440×**980** | 639px          | 639px    | ✔ cabe — e é a **única** janela do passeio    |
+| 1440×**900** | 559px          | 594px    | ⛔ esconde 35px · **3 de 4 cartões inteiros** |
+| 1440×**820** | 479px          | 594px    | ⛔ esconde 115px                              |
+| 1440×**760** | 419px          | 594px    | ⛔ esconde 175px · **2 de 4**                 |
+
+⚠ **E A CEGUEIRA É A MESMA FAMÍLIA PELA QUARTA VEZ.** `checkOverflow` mede `scrollWidth` — só
+horizontal, só a página. `checkClipped` filtra por `style.overflowX`, e **o gêmeo do eixo Y
+nunca existiu**; o cabeçalho dela conta que o passeio já foi cego no eixo X e foi consertado. E
+o passeio roda numa janela só, `1440×980` (`walk.mjs:52`) — **exatamente a única altura em que
+cabe.** O portão mede o caso que passa.
+
+**✔ AS DUAS METADES ENTRARAM, e a segunda vale mais que a primeira:**
+
+- **o canvas ganhou limiar de altura.** `height: 100dvh` valia em QUALQUER janela; agora vive
+  dentro de `@media (min-height: 940px)`, nas duas folhas. Abaixo disso a página rola — que é
+  o **mesmo plano B declarado** que o eixo horizontal já usava para janela estreita. Medido
+  depois: a coluna mostra 594 de 594 a 900, 820 e 760px;
+- ⭐ **o passeio ganhou `checkSwallowed` e uma SEGUNDA JANELA (1440×900).** A checagem foi
+  escrita ANTES do conserto e verificada contra a folha antiga: acusou `cards__side 594>559`, e
+  só isso. Exceção declarada: `.tray__list`, desenhada para rolar.
+
+⚠ **E A LIÇÃO GENERALIZA, que é o que vale guardar:** toda checagem nasce sem alcance.
+`checkClipped` nasceu cega no eixo Y; `checkContrast` segue cega para texto que não é folha; o
+passeio nasceu com uma janela. **A pergunta em toda checagem nova é qual metade do problema ela
+ainda não vê.**
+
+⚠ **E O GABINETE NÃO TEM UM PIXEL LIVRE** (`tmp/cabe-no-gabinete.mjs`): a 1440×980 a página
+fecha em 980 de 980, a coluna lateral em 639 de 639, e a bandeja em 639 de 639. No mês 1 havia
+24px de folga; o cofre ganhou uma linha no mês 9 e consumiu os 24. **Todo item novo de tela
+tem de dizer de onde tira a altura.**
 
 ### ✔ O QUE A SESSÃO 19 FEZ — a limpeza, e ela nasceu de uma pergunta dele
 

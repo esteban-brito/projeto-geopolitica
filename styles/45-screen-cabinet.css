@@ -10,42 +10,52 @@
   }
 
   .board[data-screen="cabinet"] {
-    height: 100%;
-    min-height: 0;
     padding-bottom: var(--space-4);
   }
 
-  /* ⚠ `flex: 1` E NÃO `height: 100%`, e a diferença custou uma medição. */
-  .board[data-screen="cabinet"] > .area {
-    display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr);
-    flex: 1;
-    min-height: 0;
-  }
+  /* ⚠ O CANVAS SÓ VALE ENQUANTO A COLUNA DA DIREITA COUBER INTEIRA, e o limiar é medido: os
+     quatro cartões pedem 594px de conteúdo, a moldura come 341, e abaixo de 940px de janela
+     a coluna engolia um cartão sem nada avisar — 3 de 4 inteiros a 900px, 2 de 4 a 760.
+     Travar a altura aqui é o mesmo defeito que a casca já recusa no telefone, na outra ponta
+     da régua: metade da tela atrás de uma dobra muda. */
+  @media (min-height: 940px) {
+    .board[data-screen="cabinet"] {
+      height: 100%;
+      min-height: 0;
+    }
 
-  /* ⚠ CADA NÍVEL PRECISA DO `min-height: 0`, e esquecer UM basta para o canvas não valer
-     nada: o mínimo automático de um item de grade é o tamanho do conteúdo dele, então uma
-     linha `1fr` cresce para caber o filho em vez de obrigar o filho a se virar. */
-  .board[data-screen="cabinet"] .cards,
-  .board[data-screen="cabinet"] .cards__side,
-  .board[data-screen="cabinet"] .card[data-span="lead"],
-  .board[data-screen="cabinet"] .card[data-span="lead"] .card__body,
-  .board[data-screen="cabinet"] .tray {
-    min-height: 0;
-  }
+    /* ⚠ `flex: 1` E NÃO `height: 100%`, e a diferença custou uma medição. */
+    .board[data-screen="cabinet"] > .area {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      flex: 1;
+      min-height: 0;
+    }
 
-  /* ── O QUE ROLA POR DENTRO ────────────────────────────────────────────────── A coluna da
-     direita e o índice da bandeja, e só eles. */
-  /* Num canvas isso INVERTE: com altura de conteúdo, a coluna da direita fica com os 661px
-     dela dentro de uma trilha de 560 e transborda para fora da dobra, e `overflow-y` não tem
-     o que aparar porque o elemento nunca foi limitado. */
-  .board[data-screen="cabinet"] .cards {
-    align-items: stretch;
-  }
+    /* ⚠ CADA NÍVEL PRECISA DO `min-height: 0`, e esquecer UM basta para o canvas não valer
+       nada: o mínimo automático de um item de grade é o tamanho do conteúdo dele, então uma
+       linha `1fr` cresce para caber o filho em vez de obrigar o filho a se virar. */
+    .board[data-screen="cabinet"] .cards,
+    .board[data-screen="cabinet"] .cards__side,
+    .board[data-screen="cabinet"] .card[data-span="lead"],
+    .board[data-screen="cabinet"] .card[data-span="lead"] .card__body,
+    .board[data-screen="cabinet"] .tray {
+      min-height: 0;
+    }
 
-  .board[data-screen="cabinet"] .cards__side {
-    overflow-y: auto;
-    padding-right: var(--space-2);
+    /* ── O QUE ROLA POR DENTRO ────────────────────────────────────────────────── A coluna da
+       direita e o índice da bandeja, e só eles. */
+    /* Num canvas isso INVERTE: com altura de conteúdo, a coluna da direita fica com os 661px
+       dela dentro de uma trilha de 560 e transborda para fora da dobra, e `overflow-y` não tem
+       o que aparar porque o elemento nunca foi limitado. */
+    .board[data-screen="cabinet"] .cards {
+      align-items: stretch;
+    }
+
+    .board[data-screen="cabinet"] .cards__side {
+      overflow-y: auto;
+      padding-right: var(--space-2);
+    }
   }
 
   .cards {

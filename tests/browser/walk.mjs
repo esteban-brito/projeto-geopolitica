@@ -99,6 +99,33 @@ try {
   }
 
   /**
+   * ⚠ O GEMEO VERTICAL DE `checkClipped`, E ELE NASCEU DE UM CARTAO INTEIRO SUMINDO: a coluna
+   * do Gabinete tem `overflow-y: auto` e engolia 175px numa janela de 760 — a pagina nao
+   * crescia um pixel, entao `checkOverflow` passava e este passeio ficava verde ao lado.
+   * `.tray__list` e a UNICA excecao declarada: o indice de cartas cresce todo mes e sempre
+   * foi desenhado para rolar.
+   *
+   * @param {string} where
+   */
+  async function checkSwallowed(where) {
+    const swallowed = await page.$$eval("#main *, .rail *", nodes =>
+      nodes
+        .filter(node => {
+          if (node.closest(".tray__list")) return false;
+          const style = getComputedStyle(node);
+          if (style.overflowY !== "auto" && style.overflowY !== "scroll") return false;
+          return node.scrollHeight > node.clientHeight + 1;
+        })
+        .map(node => `${node.className || node.tagName} ${node.scrollHeight}>${node.clientHeight}`),
+    );
+
+    expect(
+      swallowed.length === 0,
+      `[${where}] peca engolindo conteudo no eixo Y: ${swallowed.join(" | ")}`,
+    );
+  }
+
+  /**
    * PECA DESENHADA POR CIMA DE PECA — e este e um defeito que so a geometria pega.
    *
    * @param {string} where
@@ -266,6 +293,7 @@ try {
   await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
   await checkOverflow("gabinete");
   await checkClipped("gabinete");
+  await checkSwallowed("gabinete");
   await checkContrast("gabinete");
   await checkNoOverlap("gabinete", ".cards > .card");
 
@@ -289,6 +317,7 @@ try {
   await page.waitForTimeout(600);
   await checkOverflow("congresso");
   await checkClipped("congresso");
+  await checkSwallowed("congresso");
   await checkContrast("congresso");
   expect(
     (await page.locator(".tally__forecast").count()) === 0,
@@ -300,6 +329,7 @@ try {
   await page.waitForTimeout(600);
   await checkOverflow("area");
   await checkClipped("area");
+  await checkSwallowed("area");
   await checkContrast("area");
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento veio sem programas");
 
@@ -462,6 +492,7 @@ try {
   await page.waitForTimeout(600);
   await checkOverflow("financas");
   await checkClipped("financas");
+  await checkSwallowed("financas");
   await checkContrast("financas");
 
   expect(
@@ -596,6 +627,22 @@ try {
   }
   expect((await page.locator(".annex__table").count()) > 0, "[anexo] nenhuma carta trouxe tabela");
   await checkClipped("carta com anexo");
+
+  /* ── A SEGUNDA JANELA ────────────────────────────────────────────────────────
+     ⚠ O PASSEIO RODAVA NUMA ALTURA SO, 980 — e era exatamente a UNICA em que o Gabinete
+     cabia: a 900 um cartao inteiro descia para baixo da dobra e nada acusava, porque a
+     pagina nao crescia. 900 e a altura util de laptop mais comum que existe. */
+  await page.setViewportSize({ width: 1440, height: 900 });
+  for (const secao of ["cabinet", "congress", "finance"]) {
+    await page.click(`.rail [data-section="${secao}"]`);
+    await page.waitForTimeout(600);
+    await checkOverflow(`900px/${secao}`);
+    await checkClipped(`900px/${secao}`);
+    await checkSwallowed(`900px/${secao}`);
+  }
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: join(OUT, "walk-gabinete-900.png"), fullPage: true });
 
   expect(noise.length === 0, `console sujo: ${noise.join(" | ")}`);
 
