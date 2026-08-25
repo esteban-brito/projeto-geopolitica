@@ -88,6 +88,36 @@ no laço de 60 da prova. Ela passou a cobrar `>= MONTHS_PER_TERM`, que é a data
 usa. **O critério é o mesmo** — um governo mediano não cai durante o mandato; o que saiu foi
 uma data chutada em paralelo à do motor.
 
+### ✔ O PASSO 3 — a coluna que levou 6, e o que dela cabia hoje
+
+Dos seis defeitos que a nota 6 registrou, **quatro fecharam** e a coluna não cresceu um pixel:
+`Quem pode derrubar 179 · A Câmara 107 · Dinheiro do mês 179 · Aprovação por renda 131`, os
+mesmos da Restrição 1.
+
+| defeito              | o que entrou                                                         |
+| -------------------- | -------------------------------------------------------------------- |
+| sem hierarquia       | a queda subiu para o topo e a legenda dela ganhou `--ink`            |
+| sete barras iguais   | a Câmara virou **composição**; régua com marca ficou só para pressão |
+| nada é porta         | A Câmara → Congresso, Dinheiro do mês → Finanças                     |
+| nada se move         | seta e sinal nas sete linhas, do quadro anterior                     |
+| _zero rostos_        | ⛔ **não dá hoje** — lobby não é pessoa. Depende de A6               |
+| tudo com a mesma voz | ⚠ parcial: a tinta separa o bloco que manda, o resto não             |
+
+⭐ **E A CÂMARA REVIVEU UM QUINTO CANAL MORTO.** `baseSplit` era calculado todo quadro,
+declarado no contrato da view e **nunca lido** — mesma família dos quatro do plano. A barra
+cheia dizia "436 apoiam"; as fatias dizem quem são os outros 77.
+
+⚠ **E A PROVA `A REGUA DA CAMARA` PEGOU O DEFEITO DE ESTREIA DA PEÇA**, que era meu: as três
+fatias somam a base, então repartir só elas deixava a barra **sempre cheia** — a comparação
+com as 513 sumia. Entrou a quarta fatia, a do que não responde. **A prova não foi enfraquecida
+— ela passou a ler a forma nova cobrando o mesmo.**
+
+⚠ **`--signal-down` CLAREOU** (`#ea6f66` → `#f2887f`): a mesma seta passa sobre a barra do topo
+e dava **4,37** sobre a lâmina do cartão, com o piso em 4,5.
+
+**C8 entrou junto:** a faixa diz `46 MESES RESTANTES`. Num jogo com fim duro é o número que
+decide se uma reforma de 24 meses ainda cabe, e ele não existia.
+
 ### ▶ O QUE FAZER, na ordem
 
 1. ▶ **A COLUNA DA DIREITA DO GABINETE AINDA NÃO É NOTA 10.** Ele deu 7 na Caixa de Entrada

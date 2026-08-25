@@ -114,6 +114,13 @@
     color: var(--ink-dim);
   }
 
+  /* ⚠ SO PESO E TINTA, e nenhum tamanho novo: o corpo continua sendo o do `small` que o
+     abriga, entao o par nao abre combinacao nova no censo de tipografia. */
+  .topbar__left {
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+
   /* OS VITAIS ROLAM POR DENTRO quando a janela aperta, e nao quebram em duas fileiras: uma
      barra que muda de altura empurra o tabuleiro inteiro para baixo toda vez que um numero
      cresce um digito. */

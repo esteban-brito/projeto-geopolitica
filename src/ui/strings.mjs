@@ -720,6 +720,10 @@ export const UI = {
     eyebrow: "a prestação de contas",
     /* O QUE A BARRA SUPERIOR DIZ NO LUGAR DO ANO. */
     ended: "mandato encerrado",
+    /* ⚠ QUANTOS FALTAM, e a faixa nunca disse: ela anunciava o ANO e o jogador nao tinha como
+       saber se uma reforma de 24 meses ainda cabia no que sobrava. */
+    monthLeft: `${TERMOS.month} restante`,
+    monthsLeft: `${TERMOS.months} restantes`,
     title: "O mandato",
     months: "meses de mandato",
     /* OS DOIS CARIMBOS. */

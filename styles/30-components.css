@@ -655,6 +655,13 @@
     white-space: normal;
   }
 
+  /* ⚠ O VAO VEM DA MARGEM E NAO DE UM `gap`, e a razao e a grade: a barra de vitais poe a
+     seta num pai `flex` e ganha o vao de graca, e aqui o valor e uma celula de grade alinhada
+     a direita — virar `flex` mudaria o alinhamento da coluna inteira para acertar 4px. */
+  .reading__value .trend {
+    margin-left: 4px;
+  }
+
   /* ⚠ A LINHA INTEIRA TINGE, e nao so o valor: quando um grupo ferve ou o mes estoura, o que
      mudou de estado e a leitura, e nao um dos dois campos dela. */
   .reading[data-tone="crisis"] .reading__who,
@@ -816,12 +823,41 @@
      segmentos que somam 100%.
      A pastilha de 999px era o ultimo resto do dialeto de aplicativo nesta camada. */
   .meter {
+    position: relative;
     display: flex;
     gap: 2px;
     width: 100%;
     height: 8px;
     border-radius: var(--radius-stamp);
     overflow: hidden;
+  }
+
+  /* ⚠ A MARCA CABE DENTRO DA CAIXA, e nao a atravessa como a da regua: `.meter` recorta o
+     proprio conteudo para arredondar as pontas, e um traco que sangrasse para fora seria
+     aparado sem nada acusar. A da regua sangra 2px porque ali nao ha recorte. */
+  .meter[data-mark="true"]::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: calc(1% * var(--mark));
+    width: 2px;
+    background: var(--brand);
+  }
+
+  /* AS TRES FATIAS DA BASE — e elas leem na mesma escala da rua de propósito: o que esta
+     comigo, o que esta em cima do muro, e o que esta contra. */
+  .meter__part[data-part="loyal"] {
+    --part-color: var(--growth);
+  }
+  .meter__part[data-part="obstructing"] {
+    --part-color: var(--stable);
+  }
+  .meter__part[data-part="ruptured"] {
+    --part-color: var(--crisis);
+  }
+  /* O QUE NAO RESPONDE AO GOVERNO — e a mesma pista vazia da regua, e nao uma quarta cor. */
+  .meter__part[data-part="rest"] {
+    --part-color: rgba(255, 255, 255, 0.07);
   }
 
   .meter__part {
@@ -1031,6 +1067,42 @@
   .report__legend,
   .report__table caption {
     margin-top: var(--space-3);
+  }
+
+  /* A LEGENDA DO BLOCO QUE MANDA — ver a prosa em `blockHtml`. */
+  .block__legend--lead {
+    color: var(--ink);
+  }
+
+  /* ── A LEGENDA QUE E PORTA ────────────────────────────────────────────────── ⚠ NADA NA
+     COLUNA DA DIREITA ERA CLICAVEL, e em Victoria 3 e no Football Manager tudo na tela leva ao
+     detalhe. Duas das quatro tem destino que existe; as outras duas seguem sendo leitura, e
+     e por isso que a seta so aparece onde ha para onde ir.
+     ELA NAO GANHA A COR DA MARCA: latao e a cor do que se PRESSIONA para decidir, e navegar
+     nao e decidir — a mesma hierarquia que o rail ja usa. */
+  .block__door {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    transition: color var(--dur-touch) linear;
+  }
+
+  .block__door::after {
+    content: "›";
+    font-size: var(--text-note);
+    line-height: 1;
+    color: var(--ink-dim);
+    transition: transform var(--dur-touch) var(--ease-move);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .block__door:hover {
+      color: var(--ink);
+    }
+
+    .block__door:hover::after {
+      transform: translateX(2px);
+    }
   }
 
   .report__table {

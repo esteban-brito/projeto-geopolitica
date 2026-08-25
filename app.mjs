@@ -473,18 +473,28 @@ function cabinetInput(current) {
     /* A CALDEIRA, perguntada ao motor: a tela nao remonta pressao nem redecide
        ruptura. */
     boiler: boilerOf(state, CATALOG),
+    /* ⚠ O MES PASSADO, E ELE NAO VEM DO SAVE. `painted` e o quadro da pintura anterior, e a
+       barra de vitais ja tira as setas dele desde sempre — a coluna da direita e que nao
+       tirava nada de lugar nenhum, e por isso NADA nela se movia. Numa recarga ele volta
+       nulo, e ai nao ha seta: ausencia nao e resultado.
+       ⚠ E ELE E LIDO AQUI, ANTES de `paint` reatribuir `painted` no fim dela. */
+    before: painted ? { pressure: painted.pressure, street: pollBySegment(painted.mood) } : null,
   };
 }
 
-/** A pesquisa de cada segmento, que e o que o termometro da rua desenha. */
-function pollBySegment() {
+/**
+ * A pesquisa de cada segmento, que e o que o termometro da rua desenha.
+ *
+ * @param {Record<string, number>} [mood] a satisfacao a ler; a do estado corrente por padrao
+ */
+function pollBySegment(mood = state.mood) {
   /** @type {Record<string, import("./src/public/index.mjs").Approval>} */
   const byId = {};
   for (const segment of CATALOG.segments) {
     /* UM SEGMENTO DE CADA VEZ, com a fatia dele valendo o pais inteiro: e assim
        que `pollFrom` devolve a leitura daquele grupo isolado, sem a media. */
     byId[segment.id] = pollFrom(
-      { [segment.id]: state.mood[segment.id] ?? segment.initial },
+      { [segment.id]: mood[segment.id] ?? segment.initial },
       [{ ...segment, share: 1 }],
       CATALOG.opinion,
     );

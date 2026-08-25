@@ -382,12 +382,27 @@ test("A REGUA DA CAMARA MEDE A BASE CONTRA A MAIORIA, e as duas na mesma escala"
     const base = baseCount({ parties: CATALOG.parties, loyalty: state.loyalty });
 
     /* ⚠ ANCORADA NO ROTULO, e nao na primeira ocorrencia: a Trindade desenha tres reguas com
-       `--index;--mark` ACIMA desta na mesma tela, e sem a ancora a prova media o limiar da
-       ruptura social — 20 — e acusava a maioria de estar no lugar errado. */
-    const gauge = html.match(
-      new RegExp(`--index:([0-9.-]+);--mark:([0-9.-]+)" aria-label="${UI.cabinet.baseLine}`),
+       `--mark` ACIMA desta na mesma tela, e sem a ancora a prova media o limiar da ruptura
+       social — 20 — e acusava a maioria de estar no lugar errado.
+       ⚠ E ELA LE UM MEDIDOR COMPOSTO desde que a Camara deixou de ser uma regua cheia: o que
+       ela cobra nao mudou uma virgula — a soma das fatias da base contra as 513, e a marca da
+       maioria na MESMA escala. O que mudou e de onde o numero sai. A prova pegou o defeito de
+       estreia da peca: sem a fatia do que NAO responde, as tres somavam 100% e a barra ficava
+       cheia em qualquer base. */
+    const mark = html.match(new RegExp(`--mark:([0-9.-]+)" aria-label="${UI.cabinet.baseLine}`));
+    assert.ok(mark, `no mes ${month} a base saiu sem regua`);
+
+    const meter = html.slice(html.indexOf(`aria-label="${UI.cabinet.baseLine}`));
+    const parts = [...meter.slice(0, meter.indexOf("</div>")).matchAll(/flex-grow:([0-9.-]+)/g)];
+    assert.equal(
+      parts.length,
+      4,
+      `no mes ${month} o medidor da base veio com ${parts.length} fatias`,
     );
-    assert.ok(gauge, `no mes ${month} a base saiu sem regua`);
+
+    const cheio = parts.reduce((sum, part) => sum + Number(part[1]), 0);
+    const naBase = parts.slice(0, 3).reduce((sum, part) => sum + Number(part[1]), 0);
+    const gauge = [null, String((naBase / cheio) * 100), mark[1]];
 
     /* ⚠ ESTA PROVA SUBSTITUI "A FITA FECHA O PLENARIO", e ela nao foi apagada: a fita saiu do
        Gabinete em 22/08/2026 porque onze bancadas em 184px so seriam legiveis com uma legenda

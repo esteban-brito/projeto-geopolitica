@@ -49,9 +49,11 @@ function share(part, whole) {
  * @param {string} [input.tone] `crisis` tinge a linha inteira
  * @param {string} [input.note] o que qualifica o nome, e nao o valor — ele entra DENTRO do
  * rotulo porque nao e uma segunda leitura: e a mesma leitura dizendo o proprio peso
+ * @param {"up" | "down" | "flat" | null} [input.trend] para que lado a leitura andou desde o
+ * mes passado; `null` quando nao ha mes passado com que comparar
  * @returns {string}
  */
-function readingHtml({ who, value, bar, tone, note }) {
+function readingHtml({ who, value, bar, tone, note, trend }) {
   return (
     `<div class="reading${bar ? "" : " reading--wide"}"` +
     `${tone ? ` data-tone="${escapeHtml(tone)}"` : ""}>` +
@@ -59,7 +61,60 @@ function readingHtml({ who, value, bar, tone, note }) {
     (note ? `<small class="reading__note">${escapeHtml(note)}</small>` : "") +
     `</span>` +
     (bar ?? "") +
-    `<span class="reading__value" data-numeric>${value}</span>` +
+    `<span class="reading__value" data-numeric>${value}` +
+    (trend
+      ? `<i class="trend" data-direction="${trend}" aria-hidden="true">${UI.trend[trend]}</i>`
+      : "") +
+    `</span>` +
+    `</div>`
+  );
+}
+
+/**
+ * PARA QUE LADO A LEITURA ANDOU — ou `null` quando nao ha com que comparar.
+ *
+ * ⚠ AUSENCIA NAO E RESULTADO: numa recarga nao existe mes anterior, e desenhar "nao moveu"
+ * ali afirmaria que nada andou num mandato em que tudo andou.
+ * ⚠ E O LIMIAR E O DA LEITURA ARREDONDADA: as duas colunas imprimem inteiro, e uma seta ao
+ * lado de um numero que nao mudou na tela faz a cor negar o numero.
+ *
+ * @param {number} now
+ * @param {number | undefined} before
+ * @param {1 | -1} good 1 quando subir e bom; -1 quando subir e ruim
+ * @returns {"up" | "down" | "flat" | null}
+ */
+function directionOf(now, before, good) {
+  if (before === undefined) return null;
+  const moved = now - before;
+  if (Math.abs(moved) < 0.5) return "flat";
+  return moved * good > 0 ? "up" : "down";
+}
+
+/**
+ * O MEDIDOR COMPOSTO — as fatias que somam o todo, e ele e a FORMA DA COMPOSICAO.
+ *
+ * ⚠ TIPO DE NUMERO DIFERENTE PEDE FORMA DIFERENTE, e a coluna tinha sete barras iguais
+ * medindo contagem, fracao, pressao e composicao. A regua com marca (`gauge`) ficou para
+ * PRESSAO, que e a unica que tem limiar; o que reparte um todo em partes vem para ca.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<{ id: string, value: number }>} input.parts
+ * @param {string} input.label o rotulo de leitor de tela
+ * @param {number} [input.mark] o limiar, quando ele existe — a maioria, na Camara
+ * @returns {string}
+ */
+function meterHtml({ parts, label, mark }) {
+  return (
+    `<div class="meter" role="img"` +
+    (mark === undefined ? "" : ` data-mark="true" style="--mark:${attr(mark)}"`) +
+    ` aria-label="${escapeHtml(label)}">` +
+    parts
+      .map(
+        part =>
+          `<span class="meter__part" data-part="${escapeHtml(part.id)}" ` +
+          `style="flex-grow:${attr(part.value)}"></span>`,
+      )
+      .join("") +
     `</div>`
   );
 }
@@ -78,12 +133,27 @@ function readingHtml({ who, value, bar, tone, note }) {
  * DENTRO de uma linha vazia, e nao solta ao lado das outras: ela se alinha pela pista da
  * barra, e `grid-column` so encontra essa pista dentro de uma `.reading`
  * @param {string} [input.foot] o que atravessa a largura toda — carimbo, ruptura aberta
+ * @param {string} [input.door] a tela que este bloco abre, quando ela existe
+ * @param {boolean} [input.lead] o bloco que manda na coluna; um so, e por tinta
  * @returns {string}
  */
-function blockHtml({ legend, rows, key, foot }) {
+function blockHtml({ legend, rows, key, foot, door, lead }) {
+  /* ⚠ A PORTA E A LEGENDA, e nao o cartao inteiro: um `<div>` com clique nao chega pelo
+     teclado, e este bloco tem leitor de tela em toda barra. Duas das quatro tem destino que
+     EXISTE — a Camara abre o Congresso, o cofre abre Financas —, e as outras duas nao ganham
+     porta nenhuma: um lobby nao tem tela para abrir, e prometer uma seria o rail cinza. */
+  /* ⚠ O BLOCO QUE DECIDE A PARTIDA DOMINA PELA TINTA, e nao por tamanho: a coluna fecha em
+     639 de 639 e nao ha um pixel para crescer, e corpo maior abriria combinacao nova no censo
+     de tipografia. Tinta nao entra no censo, e ela basta para o olho escolher por onde comeca. */
+  const mark = `block__legend${lead ? " block__legend--lead" : ""}`;
+  const head = door
+    ? `<button class="${mark} block__door" type="button" ` +
+      `data-section="${escapeHtml(door)}">${escapeHtml(legend)}</button>`
+    : `<h3 class="${mark}">${escapeHtml(legend)}</h3>`;
+
   return cardHtml({
     body:
-      `<h3 class="block__legend">${escapeHtml(legend)}</h3>` +
+      head +
       `<div class="block__rows">${rows}` +
       (key ? `<div class="reading">${key}</div>` : "") +
       `</div>` +
@@ -136,6 +206,9 @@ function blockHtml({ legend, rows, key, foot }) {
  * ruptures: ReadonlyArray<{ id: string, value: number, threshold: number,
  * breaks: string, open: boolean }>,
  * impeachment: number | null, fallen: number | null }} input.boiler a CALDEIRA, perguntada a `boilerOf`
+ * @param {{ pressure: Record<string, number>, street: Record<string, Approval> } | null}
+ * [input.before] o quadro do mes passado, e ele NAO vem do save: e a memoria de uma pintura,
+ * como a das setas da barra de cima. Numa recarga ele volta nulo e nenhuma seta e desenhada
  * @returns {string}
  */
 export function cabinetHtml(input) {
@@ -183,27 +256,57 @@ export function cabinetHtml(input) {
      ⚠ A COMPOSICAO POR EIXO SAIU DO GABINETE, e a razao e de largura: uma barra de onze
      bancadas em 184px so seria legivel com uma legenda nomeando cada cor, e essa legenda nao
      cabe. Quem lista bancada por bancada, com nome e humor, e a tela do Congresso. */
+  /* ⚠ A CAMARA DEIXOU DE SER UMA REGUA E VIROU UMA COMPOSICAO, e o dado ja existia: `split`
+     era calculado todo quadro, declarado no contrato desta view e NUNCA lido — o quinto canal
+     morto da mesma familia dos quatro do plano. Uma barra cheia dizia "436 apoiam"; as tres
+     fatias dizem QUEM SAO os outros 77, e essa e a diferenca entre um numero e uma leitura. */
+  /* QUEM APARECE NA BARRA, e so quem aparece. */
+  const dividida = [
+    input.split.obstructing >= 0.5 ? UI.mood.obstructing : "",
+    input.split.ruptured >= 0.5 ? UI.mood.broken : "",
+  ].filter(Boolean);
+
   const congress = blockHtml({
     legend: UI.cabinet.blockCongress,
+    door: "congress",
     rows:
       readingHtml({
         who: UI.cabinet.baseLine,
-        bar:
-          `<div class="gauge" role="img" data-mark="true" ` +
-          `style="--index:${attr(share(input.base, input.seats))};` +
-          `--mark:${attr(share(input.majority, input.seats))}" ` +
-          `aria-label="${escapeHtml(
-            `${UI.cabinet.baseLine}: ${seats(input.base)} ${UI.cabinet.of} ${seats(input.seats)}`,
-          )}"></div>`,
+        bar: meterHtml({
+          /* ⚠ A QUARTA FATIA E O QUE NAO RESPONDE, e sem ela a barra ficava SEMPRE CHEIA: as
+             tres primeiras somam a base — `baseCount` e `loyal + obstructing + ruptured` —,
+             entao repartir so elas apagava a comparacao com as 513 cadeiras, que e a leitura
+             inteira. Ela nao tem cor propria: e a pista vazia da regua. */
+          parts: [
+            { id: "loyal", value: input.split.loyal },
+            { id: "obstructing", value: input.split.obstructing },
+            { id: "ruptured", value: input.split.ruptured },
+            { id: "rest", value: Math.max(0, input.seats - input.base) },
+          ],
+          mark: share(input.majority, input.seats),
+          label:
+            `${UI.cabinet.baseLine}: ${seats(input.base)} ${UI.cabinet.of} ${seats(input.seats)}, ` +
+            `${seats(input.split.obstructing)} ${UI.mood.obstructing}, ` +
+            `${seats(input.split.ruptured)} ${UI.mood.broken}`,
+        }),
         value: `${seats(input.base)} ${UI.cabinet.of} ${seats(input.seats)}`,
       }) +
       /* ⚠ A FRASE EXPLICA A MARCA, e o numero dentro dela e da COR DA MARCA: e o unico jeito
          de ligar um risco de latao na barra a um numero escrito, sem uma seta e sem uma nota
-         de rodape. */
-      `<div class="reading"><p class="poles poles--note"><span>` +
+         de rodape.
+         ⚠ E ELA GANHOU A CHAVE DAS TRES CORES na outra ponta da MESMA linha: tres cores sem
+         chave sao um grafico que so o autor lê — defeito ja medido aqui —, e `.poles` poe as
+         duas pontas numa linha so, entao o bloco nao ganha altura. */
+      `<div class="reading"><p class="poles poles--note poles--wide"><span>` +
       `${escapeHtml(UI.cabinet.lawPasses)} ` +
       `<b class="poles__mark" data-numeric>${seats(input.majority)}</b>` +
-      `</span></p></div>`,
+      `</span>` +
+      /* ⚠ A CHAVE SO NOMEIA A COR QUE ESTA NA BARRA, e nunca as tres de enfeite: uma legenda
+         que lista "em ruptura" todo mes num mandato em que ninguem rompeu ensina o olho a
+         pular a linha — e ai, no mes em que a ruptura acontecer, ela aparece num lugar que o
+         jogador ja parou de ler. E o mesmo silencio que o rodape da caldeira usa. */
+      (dividida.length > 0 ? `<span>${dividida.map(escapeHtml).join(" · ")}</span>` : "") +
+      `</p></div>`,
   });
 
   /* O COFRE MOSTRA O QUE SOBRA E O QUE ESTA PRESO, e os dois na mesma barra: a obrigatoria
@@ -222,6 +325,7 @@ export function cabinetHtml(input) {
      base — 95% de que? A frase abaixo da regua da a base, que e a mesma forma da Camara. */
   const vault = blockHtml({
     legend: UI.cabinet.blockVault,
+    door: "finance",
     rows:
       /* ⚠ SEM BARRA, e a ausencia e honesta: nao existe teto MENSAL contra o que medir o que
          sobra — o teto do arcabouco mede o ano. Inventar uma escala aqui seria desenhar um
@@ -260,6 +364,8 @@ export function cabinetHtml(input) {
   /* A RUA POR SEGMENTO, e nao a media. */
   const street = cabinetStreetHtml(input);
   const boiler = boilerCardHtml(input);
+  /* ⚠ AS DUAS RECEBEM `input` INTEIRO, e e por isso que `before` chega nelas sem passar por
+     uma terceira assinatura. */
 
   return (
     `<section class="area glass-stage cabinet">` +
@@ -270,8 +376,12 @@ export function cabinetHtml(input) {
        CALDEIRA, ninguem voltou aqui, e a coluna da esquerda passou a terminar uma
        linha antes da direita — um degrau que so a captura mostra, porque nada falha:
        o `span` continua sendo um span valido. */
+    /* ⚠ A ORDEM DA COLUNA E A DA CONSEQUENCIA, e ela era a da contabilidade. Os quatro blocos
+       tinham a mesma forma e o mesmo peso, e o que decide se a PARTIDA ACABA dividia espaco
+       igual com a nota de rodape do cofre. Quem pode derrubar sobe para o topo, encostado na
+       faixa de risco que ele explica; o resto desce na ordem em que se consulta. */
     `<div class="cards">${inbox}` +
-    `<div class="cards__side">${congress}${vault}${boiler}${street}</div>` +
+    `<div class="cards__side">${boiler}${congress}${vault}${street}</div>` +
     `</div>` +
     `</section>`
   );
@@ -348,9 +458,10 @@ function trinityHtml({ boiler }) {
  * o que mais prende a obrigatoria, e a natureza da norma que prende
  * @param {ReadonlyArray<Segment>} input.segments
  * @param {Record<string, Approval>} input.street
+ * @param {{ street: Record<string, Approval> } | null} [input.before] o mes passado
  * @returns {string}
  */
-function cabinetStreetHtml({ segments, street }) {
+function cabinetStreetHtml({ segments, street, before }) {
   const rows = segments
     .map(segment => {
       const poll = street[segment.id];
@@ -363,6 +474,7 @@ function cabinetStreetHtml({ segments, street }) {
 
       return readingHtml({
         who: segment.label,
+        trend: directionOf(poll.good, before?.street[segment.id]?.good, 1),
         bar:
           `<div class="meter" role="img" ` +
           `aria-label="${escapeHtml(`${segment.label}: ${described}`)}">` +
@@ -400,9 +512,10 @@ function cabinetStreetHtml({ segments, street }) {
  * fall: number | null }>,
  * rupture: { social: boolean, economic: boolean, political: boolean, open: boolean },
  * impeachment: number | null, fallen: number | null }} input.boiler
+ * @param {{ pressure: Record<string, number> } | null} [input.before] o mes passado
  * @returns {string}
  */
-function boilerCardHtml({ boiler }) {
+function boilerCardHtml({ boiler, before }) {
   const rows = boiler.lobbies
     .map(lobby =>
       readingHtml({
@@ -413,6 +526,9 @@ function boilerCardHtml({ boiler }) {
            e gastava capital acalmando um grupo que nao conta para a conta.
            ⚠ E O ZERO NAO IMPRIME "0%": ele nao pesa POUCO, ele nao entra na conta. */
         note: lobby.share > 0 ? percent(lobby.share) : UI.cabinet.boilerNoWeight,
+        /* ⚠ PRESSAO SUBINDO E RUIM, e por isso o sinal se inverte — a mesma inversao que a
+           inflacao ja carrega na barra de vitais. */
+        trend: directionOf(lobby.pressure, before?.pressure[lobby.id], -1),
         /* ⚠ A SEGUNDA MARCA E DO FIADOR, e ela vem do motor com o resto: um grupo tem DUAS
            linhas na mesma regua — abandona o governo em `boil`, e em `fall` a ruptura
            politica abre. Antes o segundo numero morava noutro bloco com o mesmo verbo. */
@@ -491,5 +607,5 @@ function boilerCardHtml({ boiler }) {
       `</p>`
     : undefined;
 
-  return blockHtml({ legend: UI.cabinet.blockBoiler, rows, key, foot });
+  return blockHtml({ legend: UI.cabinet.blockBoiler, rows, key, foot, lead: true });
 }

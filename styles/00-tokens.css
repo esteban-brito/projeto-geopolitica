@@ -97,7 +97,10 @@
        tinta e nao abandonar o tom; o matiz e a saturacao ficam, e o pior par vai a 4,76.
        O verde ja passava, e por isso ele nao se mexeu. */
     --signal-up: var(--growth);
-    --signal-down: #ea6f66;
+    /* ⚠ ELE CLAREOU PORQUE A MEDICAO REPROVOU O PAR RENDERIZADO, e nao o teorico: a mesma
+       seta passa sobre a barra do topo e dava 4,37 sobre a lamina do cartao, com o piso em
+       4,5. O conserto e clarear a TINTA sobre a cor, e nao abandonar o tom. */
+    --signal-down: #f2887f;
 
     --bordo: #8f3b4a;
     --bordo-rgb: 143, 59, 74;

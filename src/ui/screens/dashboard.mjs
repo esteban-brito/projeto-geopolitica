@@ -27,9 +27,18 @@ export function turnHtml(state, closing) {
   const term = Math.floor(state.month / MONTHS_PER_TERM) + 1;
   const year = Math.floor((state.month % MONTHS_PER_TERM) / MONTHS_PER_YEAR) + 1;
 
+  /* ⚠ QUANTOS MESES RESTAM, e num jogo com fim duro ele e o numero mais importante da faixa:
+     e ele que decide se uma reforma de 24 meses ainda cabe. A faixa dizia `ANO 1` e mais
+     nada sobre QUANDO — o mandato tinha 46 meses e nenhum deles era diferente do outro.
+     ⚠ O FIM VEM DO MOTOR: `termOf` encerra em `month >= MONTHS_PER_TERM`, e refazer a conta
+     aqui daria a faixa uma data de fim propria — que e como duas verdades comecam. */
+  const left = Math.max(0, MONTHS_PER_TERM - state.month);
+
   return (
     `<b>${escapeHtml(monthLabel(state.month))}</b>` +
-    `<small>${term}º mandato · ano ${year}</small>`
+    `<small>${term}º mandato · ano ${year} · ` +
+    `<b class="topbar__left" data-numeric>${left}</b> ` +
+    `${escapeHtml(left === 1 ? UI.closing.monthLeft : UI.closing.monthsLeft)}</small>`
   );
 }
 
