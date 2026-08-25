@@ -286,10 +286,27 @@ medido.** Rodava numa altura só, e era **exatamente a única em que o Gabinete 
 `checkClipped` — `checkSwallowed` — nasceu junto com a segunda janela, e a exceção
 declarada dele é uma só: `.tray__list`, que sempre foi desenhada para rolar.
 
+⚠ **E O TERCEIRO IRMÃO NASCEU EM 24/08/2026: `checkEllipsized`.** Os dois primeiros medem
+ROLAGEM, e `overflow: hidden` com `text-overflow: ellipsis` **não rola** — a frase só perde o
+fim, com reticência, e a tela fica plausível. Ele nasceu antes do item que precisava dele (o
+peso do lobby entrando num rótulo de largura fixa), como manda a regra dura da Restrição 2 do
+ciclo 13 — e **acusou três truncamentos na tela publicada na primeira rodada**:
+
+| peça                | pedia | tinha | onde                      |
+| ------------------- | ----- | ----- | ------------------------- |
+| `Congresso & Leis`  | 114px | 109px | rail, item de 1º nível    |
+| `Indústria e Infr…` | 164px | 109px | rail, em Ministérios      |
+| `INDÚSTRIA E INF…`  | 202px | 117px | faixa de áreas, Congresso |
+
+A exceção declarada dele é uma só: `.bench__name small`, o nome longo do partido numa coluna
+de 96px — a sigla ao lado dela é o nome curto, e a reticência ali é o desenho.
+
 > **A lição é a família, e não o caso: toda checagem nasce sem alcance.** `checkClipped`
-> nasceu cego no eixo Y; `checkContrast` continua cego para texto que não é folha; o
-> passeio nasceu com uma janela. **A pergunta em toda checagem nova é qual metade do
-> problema ela ainda não vê** — e essa metade vai para a seção 7, declarada.
+> nasceu cego no eixo Y e os dois nasceram cegos para a reticência; `checkContrast` continua
+> cego para texto que não é folha; o passeio nasceu com uma janela. **A pergunta em toda
+> checagem nova é qual metade do problema ela ainda não vê** — e essa metade vai para a seção
+> 7, declarada. ⚠ **A terceira vez que ela foi feita, a resposta veio com três defeitos
+> juntos, e eles já estavam publicados.**
 
 ## 7. O que ainda NÃO tem guarda
 

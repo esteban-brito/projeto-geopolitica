@@ -339,15 +339,8 @@
   }
 
   /* O rail afunda MENOS que a acao, e a diferenca e hierarquia: navegar nao e decidir. */
-  .rail__item:not([disabled]):active {
+  .rail__item:active {
     transform: scale(0.99);
-  }
-
-  /* ITEM DESLIGADO E ITEM QUE DIZ QUE ESTA DESLIGADO. */
-  .rail__item[disabled] {
-    color: var(--ink-dim);
-    opacity: 0.5;
-    cursor: not-allowed;
   }
 
   /* O item corrente e o UNICO lugar do rail que recebe ambar, e ele o recebe como tinta rasa
@@ -375,7 +368,7 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .rail__item:not([disabled]):not(.rail__item--active):hover {
+    .rail__item:not(.rail__item--active):hover {
       background: rgba(255, 255, 255, 0.06);
       color: var(--ink);
     }

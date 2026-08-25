@@ -14,126 +14,109 @@
 > defeito que a mudança existia para consertar. **Um ponto de retomada que ninguém consegue
 > reler inteiro é um ponto de retomada que mente.**
 
-## ▶ COMECE AQUI — a ordem para a sessão 20
+## ▶ COMECE AQUI — a ordem para a sessão 21
 
-**Estado: verde.** `npm run validate` fecha em **42s** com **12 guardas · 54 provas
-sintéticas · 130 arquivos · 236 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
+**Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
+130 arquivos · 236 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
 
-⚠ **O PORTÃO MUDOU NA SESSÃO 19, e é a mudança mais importante em muitas sessões.** O
-passeio entrou no `validate`. A razão é uma assimetria medida:
+### ▶ O GLORIOSO ESTÁ EM EXECUÇÃO, e a ordem é a do rodapé do plano
 
-| metade do projeto | linhas | provas |
-| ----------------- | ------ | ------ |
-| motor             | 8.007  | 207    |
-| tela              | 9.601  | 29     |
+| passo | itens                      | estado                                 |
+| ----- | -------------------------- | -------------------------------------- |
+| **0** | C12 · D7                   | ✔ os dois                              |
+| **1** | 0.1 · 0.2 · C1 · C2 · C3   | ✔ os cinco                             |
+| **2** | B1 a B5 — a faixa de áreas | ▶ **COMECE POR AQUI**                  |
+| **3** | C8 · C9 · C10 · C11 · C13  | ⚠ **três de cinco** — faltam C10 e C11 |
+| **4** | 0.3 · B10 · C7 · D4        | ⛔                                     |
 
-As duas metades têm o mesmo tamanho, uma tinha sete vezes mais prova, e as 29 da tela leem
-**string**. As 38 checagens que veem geometria e contraste viviam **fora** do portão — então
-mexer em folha de estilo deixava o `validate` verde sem ele ter olhado nada, e era nessa
-metade que caía todo o trabalho de design das últimas seis sessões.
+**12 de 49 itens.**
 
-⚠ **E O QUE O PORTÃO CONTINUA NÃO SABENDO FAZER É OLHAR.** Ele mede; ele não vê que a peça
-ficou feia. **Abrir a captura em `captures/` é o único passo do fluxo que segue humano**, e
-é o passo que se pula.
+⚠ **O PASSO 3 FOI FEITO ANTES DO 2, E FOI ERRO.** Foi anunciado como inversão deliberada — "a
+coluna levou 6, e é a primeira coisa que se vê" — e ele cobrou: _"não acha melhor voltar desde
+o início, passo 1, passo 2, passo 3?"_. **A ordem do plano volta a valer.**
 
-### ✔ O PASSO 1 DO GLORIOSO ESTÁ FEITO — 0.1 · 0.2 · C1 · C2 · C3
+### ⭐ A LIÇÃO DA SESSÃO 20 É DELE, E SÃO QUATRO PALAVRAS
 
-Os cinco entraram, `validate` verde, e o Gabinete continua em **179px** no cartão da
-caldeira — o orçamento de pixel da Restrição 1 não se moveu um pixel.
+> _"mudou bosta nenhuma"_
 
-⭐ **E O PASSEIO GANHOU UM TERCEIRO IRMÃO ANTES DE QUALQUER ITEM ENTRAR: `checkEllipsized`.**
-`checkClipped` vê o eixo X, `checkSwallowed` vê o eixo Y, e **nenhum dos dois vê
-`text-overflow: ellipsis`** — texto que não rola, só perde o fim com reticência. Ela nasceu
-porque o C3 põe texto dentro de um rótulo de largura fixa, e a Restrição 2 manda a checagem
-nascer primeiro. **Ela acusou três truncamentos na tela publicada na primeira rodada:**
+Dita depois de dois commits e onze itens. **E ela está certa.** Os cinco do passo 1 e três dos
+cinco do passo 3 **consertam**: número errado, palavra repetida, informação escondida, canal
+morto. **Consertar é invisível por construção** — o melhor resultado possível de arrumar uma
+contradição é ninguém notar nada.
 
-| peça                | pedia | tinha | onde                      |
-| ------------------- | ----- | ----- | ------------------------- |
-| `Congresso & Leis`  | 114px | 109px | rail, item de 1º nível    |
-| `Indústria e Infr…` | 164px | 109px | rail, em Ministérios      |
-| `INDÚSTRIA E INF…`  | 202px | 117px | faixa de áreas, Congresso |
+⚠ **E A ESCOLHA DA ORDEM FOI MINHA.** Ele pediu _"quanto mais profissional melhor"_ e depois
+_"não quero bugs"_; eu otimizei pela segunda e entreguei polimento. **O que muda o jogo é a
+Parte A** — hoje o presidente faz UMA coisa: arrasta verba e promete emenda. Todo o resto é
+leitura. E a Parte A começa no **passo 6**.
 
-Os dois consertos: o respiro lateral do rail caiu de 12 para 8px (o item já tem 12 próprios,
-e alargar o `--rail` custaria largura do tabuleiro em toda tela), e **as áreas ganharam
-`short`** — opcional, e só `industry` a declara. É o mesmo precedente de `sigla` em `parties`.
+⚠ **MAS NÃO SE PULA PARA LÁ, e a razão é do próprio plano:** A1 e A6 dependem de **0.3**, A4
+depende de **B10** — os dois no passo 4. E o passo 4 existe por escrito para o defeito que ele
+acabou de sentir: _"acrescentar dez poderes a uma tela que não mostra consequência é somar
+profundidade invisível"_.
 
-⚠ **E ELA PEGOU O C3 ANTES DE ELE SUBIR:** `Mercado financeiro 35%` pedia 150px e
-`Militares e polícia não pesa` pedia 164, numa coluna de 144. A coluna do nome voltou para
-11rem — ela já foi 10,5, caiu para 9 quando a frase do lobby saiu, e cresceu de novo agora
-que o peso entrou. As três decisões estão certas porque a LINHA mudou entre elas.
+### ▶ O PASSO 2 — a faixa de áreas, e ela é o próximo trabalho
 
-### ⚠ O QUE O 0.1 CUSTOU, medido nas duas pontas
+Os oito blocos `Fazenda 72` no Congresso, hoje oito retângulos cinzas idênticos:
 
-A desoneração saiu da despesa e virou renúncia de receita. **A série fiscal quase não se
-move, e era o previsto:** os mesmos R$ 19,84 bi trocam de lado da conta.
+- **B1 · colorir o MANDATO, não o nível.** ⛔ Não é "vermelho abaixo de 40": isso acusaria o
+  jogador de uma Segurança 38 que ele **herdou**. É a distância de `initial`, que já está no
+  catálogo — 38 no mês 1 é neutro, 25 no mês 20 é vermelho;
+- **B2 · ela É navegação e não diz.** Cada bloco é `<button data-section>` e leva ao
+  ministério. Oito portas que ninguém sabe que abrem;
+- **B3 · não diz o QUE mede.** Cada área tem `index` no catálogo — arrecadação, safra,
+  capacidade, cobertura, atendimento, formação, ordem, prontidão — e a faixa mostra só o
+  rótulo do ministério;
+- **B4 · a faísca é sem cor.** `.trend[data-direction]` já existe;
+- **B5 · ícone por área.** O rail já tem um por ministério.
 
-| política     | dívida antes | dívida depois | votações antes | votações depois |
-| ------------ | ------------ | ------------- | -------------- | --------------- |
-| `herdado`    | 90,0%        | **90,0%**     | 0 de 0         | 0 de 0          |
-| `piso`       | 90,9%        | **90,9%**     | 5 de 17        | 5 de 17         |
-| `base`       | 90,7%        | **90,7%**     | 35 de 42       | 36 de 41        |
-| `agenda`     | 90,1%        | **90,1%**     | 29 de 43       | 30 de 42        |
-| `explorador` | 92,0%        | 91,7%         | 0 de 0         | 0 de 0          |
-| `promessa`   | 93,5%        | 93,3%         | 0 de 3         | 0 de 3          |
+⚠ **E O BLOCO TEM 108px E JÁ ESTOUROU ANTES** — a Restrição 2 manda `checkOverflow` +
+`checkClipped` + captura aberta, sem exceção. ⚠ **`checkEllipsized` agora também**: a faixa
+foi um dos três truncamentos que ele achou.
 
-⚠ **A ARITMÉTICA DECIDIU O DESENHO, e não a opinião.** A renúncia é lida no nível **cheio** e
-não em delta — ao contrário do dividendo. Em delta, o primário de posse saltaria de **−51,2
-para −31,4** sem ninguém ter escolhido isso, que é recalibragem por efeito colateral. Lida
-cheia nos dois lados, o primário não se move um real.
+### ✔ O QUE A SESSÃO 20 FEZ
 
-⚠ **E UMA PROVA MUDOU DE LIMIAR, com o critério intacto.** O governo mediano caía no mês 52 e
-passou a cair no **50**; a prova exigia `> 50`. **Mas o motor encerra o mandato em `month >=
-48`** (`turn.mjs`), então o último mês que alguém resolve é o 47 — os meses 48 a 50 só existem
-no laço de 60 da prova. Ela passou a cobrar `>= MONTHS_PER_TERM`, que é a data que o motor já
-usa. **O critério é o mesmo** — um governo mediano não cai durante o mandato; o que saiu foi
-uma data chutada em paralelo à do motor.
+⭐ **O PASSEIO GANHOU UM TERCEIRO IRMÃO: `checkEllipsized`.** `checkClipped` vê o eixo X,
+`checkSwallowed` vê o Y, e **nenhum dos dois vê `text-overflow: ellipsis`** — texto que não
+rola, só perde o fim. Ela nasceu ANTES do item que precisava dela (C3), como manda a regra
+dura da Restrição 2, e **acusou três truncamentos na tela publicada na primeira rodada**:
+`Congresso & Leis` (114px em 109), `Indústria e Infraestrutura` (164 em 109) e a mesma na
+faixa do Congresso (202 em 117). As áreas ganharam `short` — opcional, só `industry` a
+declara, mesmo precedente de `sigla` em `parties`.
 
-### ✔ O PASSO 3 — a coluna que levou 6, e o que dela cabia hoje
+⚠ **E ELA PEGOU DOIS DEFEITOS MEUS ANTES DE SUBIREM:** o rótulo do C3 estourando a coluna, e a
+Câmara sem a quarta fatia — as três somavam a base, então a barra ficava **sempre cheia** e a
+comparação com as 513 sumia. **Nenhuma prova foi enfraquecida** para acomodar isso.
 
-Dos seis defeitos que a nota 6 registrou, **quatro fecharam** e a coluna não cresceu um pixel:
-`Quem pode derrubar 179 · A Câmara 107 · Dinheiro do mês 179 · Aprovação por renda 131`, os
-mesmos da Restrição 1.
+**Passo 1** — 0.1 (desoneração vira renúncia de receita), 0.2 (`data-guard` deixa de ser canal
+morto), C1 (o verbo de 68 deixa de colidir com o de 86), C2 (o cofre parava de ser dito duas
+vezes), C3 (o quarto canal morto sai do `aria-label`).
 
-| defeito              | o que entrou                                                         |
-| -------------------- | -------------------------------------------------------------------- |
-| sem hierarquia       | a queda subiu para o topo e a legenda dela ganhou `--ink`            |
-| sete barras iguais   | a Câmara virou **composição**; régua com marca ficou só para pressão |
-| nada é porta         | A Câmara → Congresso, Dinheiro do mês → Finanças                     |
-| nada se move         | seta e sinal nas sete linhas, do quadro anterior                     |
-| _zero rostos_        | ⛔ **não dá hoje** — lobby não é pessoa. Depende de A6               |
-| tudo com a mesma voz | ⚠ parcial: a tinta separa o bloco que manda, o resto não             |
+**Passo 3, três de cinco** — C8 (`46 MESES RESTANTES` na faixa), C9 (seta nas sete linhas da
+coluna), C13 (a coluna reordenada por consequência, a Câmara virou composição, duas portas).
+⭐ **E a Câmara reviveu um QUINTO canal morto:** `baseSplit` era calculado todo quadro,
+declarado no contrato da view e nunca lido.
 
-⭐ **E A CÂMARA REVIVEU UM QUINTO CANAL MORTO.** `baseSplit` era calculado todo quadro,
-declarado no contrato da view e **nunca lido** — mesma família dos quatro do plano. A barra
-cheia dizia "436 apoiam"; as fatias dizem quem são os outros 77.
+**D7** — A Rua e Bastidor saíram do menu, por decisão dele.
 
-⚠ **E A PROVA `A REGUA DA CAMARA` PEGOU O DEFEITO DE ESTREIA DA PEÇA**, que era meu: as três
-fatias somam a base, então repartir só elas deixava a barra **sempre cheia** — a comparação
-com as 513 sumia. Entrou a quarta fatia, a do que não responde. **A prova não foi enfraquecida
-— ela passou a ler a forma nova cobrando o mesmo.**
+### ⚠ O QUE FICOU FALTANDO DO PASSO 3, e por quê
 
-⚠ **`--signal-down` CLAREOU** (`#ea6f66` → `#f2887f`): a mesma seta passa sobre a barra do topo
-e dava **4,37** sobre a lâmina do cartão, com o piso em 4,5.
+- **C10 · a base que se compra (364 de 513)** — é o único do passo que cria **número novo**, e
+  número novo é a família de defeito nº 1 deste projeto. Ele merece estar sozinho, e a
+  Restrição 2 manda a divisão sair da camada de aplicação e não da view;
+- **C11 · o maior gasto preso mostrar o que MUDOU** — precisa de valor anterior;
+- ⛔ **e o sexto defeito da nota 6 não fecha sem a Parte A:** _"zero rostos numa coluna que
+  mede gente"_. Lobby não é pessoa — sem nome, sem cargo, sem sinete. Depende de **A6**.
 
-**C8 entrou junto:** a faixa diz `46 MESES RESTANTES`. Num jogo com fim duro é o número que
-decide se uma reforma de 24 meses ainda cabe, e ele não existia.
+### ▶ O QUE FICA FORA DO PLANO, e continua aberto
 
-### ▶ O QUE FAZER, na ordem
-
-1. ▶ **A COLUNA DA DIREITA DO GABINETE AINDA NÃO É NOTA 10.** Ele deu 7 na Caixa de Entrada
-   antes da revisão e **8 depois**; a coluna da direita nunca recebeu nota;
-2. ✔ **A TIPOGRAFIA DAS ONZE TELAS PASSOU PELA PENEIRA — feito em 24/08/2026.** O projeto
-   inteiro foi de **20 para 14 combinações** e de **5 peças fora da escala para ZERO**.
-   ⚠ **O que sobra do item é o OLHO dele**, e só ele pode dar: a medição fecha, a estética
-   não se mede. Ver _A PENEIRA DE TIPOGRAFIA_, abaixo;
-3. ▶ **O ÍNDICE DA BANDEJA NÃO DISTINGUE A ESPÉCIE DA CARTA.** É o único item de TELA da
-   lista dos quatro que faltam; os outros três são de motor;
-4. ✔ **FEITO — a coluna do Gabinete engolia um cartão a 900px.** O canvas ganhou limiar de
-   altura e o passeio ganhou o eixo Y mais uma segunda janela. Ver logo abaixo.
+1. ▶ **O ÍNDICE DA BANDEJA NÃO DISTINGUE A ESPÉCIE DA CARTA.** Duas cartas de espécies
+   diferentes leem igual na coluna estreita;
+2. ▶ **A COLUNA DA DIREITA LEVOU 6 e não foi renotada.** Quatro dos seis defeitos fecharam no
+   passo 3; o quinto é parcial e o sexto depende de A6. **A nota nova é dele.**
 
 ⚠ **O PLANO MESTRE É `docs/cycles/13-o-glorioso.md` — 49 itens em CINCO partes**, com as três
 restrições que valem para todos (o orçamento de pixel do Gabinete, o que significa "pronto", e o
-custo em versões de save). ✔ **Só o C12 foi executado**, por ser defeito e não melhoria.
+custo em versões de save). ✔ **12 executados**, e o estado passo a passo está no topo dele.
 
 ⭐ **E A PARTE D NASCEU DE UMA DIRETRIZ DELE:** _"siga com o que pensar ser melhor pro jogo,
 sempre no sentido de se aproximar de Victoria 3, Crusader Kings, Democracy, Football Manager"_.

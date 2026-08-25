@@ -12,6 +12,75 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## ✔ O GLORIOSO SAI DO PAPEL — passos 1 e 3, e a frase que fechou a sessão — 24/08/2026
+
+A sessão 20 executou **12 dos 49 itens** e terminou com quatro palavras dele:
+
+> _"mudou bosta nenhuma"_
+
+**E ela está certa.** É a lição mais cara desta sessão, e ela é sobre ESCOLHA DE ORDEM, não
+sobre execução: os cinco itens do passo 1 e três dos cinco do passo 3 **consertam** — número
+errado, palavra repetida, informação escondida, canal morto. **Consertar é invisível por
+construção:** o melhor resultado possível de arrumar uma contradição é ninguém notar nada.
+
+⚠ **E A ESCOLHA FOI MINHA.** Ele pediu _"quanto mais profissional o jogo ficar, melhor"_ e
+depois _"não quero bugs"_. Eu otimizei pela segunda e entreguei polimento por um dia inteiro.
+O que muda o jogo é a Parte A — hoje o presidente faz UMA coisa, arrastar verba e prometer
+emenda —, e ela começa no passo 6.
+
+⚠ **E EU AINDA INVERTI A ORDEM DO PLANO por conta própria**, pulando o passo 2 e anunciando a
+inversão como deliberada. Ele cobrou: _"não acha melhor voltar desde o início, passo 1, passo
+2, passo 3?"_. **A ordem do plano volta a valer.**
+
+### ⭐ A CHECAGEM QUE NASCEU ANTES DO ITEM, e ela achou três defeitos publicados
+
+A Restrição 2 manda: _"nenhum item entra sem que o portão SAIBA VER o defeito que ele
+conserta"_. O C3 põe texto dentro de um rótulo de largura fixa, e o passeio era cego para
+isso: `checkClipped` e `checkSwallowed` medem **rolagem**, e `text-overflow: ellipsis` não
+rola — a frase só perde o fim, com reticência, e a tela fica plausível.
+
+`checkEllipsized` nasceu primeiro e acusou **três truncamentos na tela publicada** na primeira
+rodada: `Congresso & Leis` pedia 114px num rótulo de 109, `Indústria e Infraestrutura` pedia
+164, e a mesma na faixa do Congresso pedia 202 em 117.
+
+⚠ **E ELA PEGOU DOIS DEFEITOS MEUS ANTES DE SUBIREM:** o rótulo do C3 estourando a coluna, e —
+via a suíte, não o passeio — a Câmara sem a quarta fatia: as três somam a base, então
+reparti-las sozinhas deixava a barra **sempre cheia** e a comparação com as 513 sumia.
+**Nenhuma prova foi enfraquecida** para acomodar nada disso.
+
+### A TABELA QUE CALIBRA ESTAVA ERRADA, e foi remedida antes de ser citada
+
+A coluna de votações divergia nas quatro políticas que votam. A causa: **horizonte misturado
+dentro da mesma célula** — `14 de 43` era o numerador de 24 meses colado no denominador de 48.
+As outras três colunas passaram: a dívida fecha dentro de 0,1 p.p. nas seis, e indústria e
+segurança batem exato nas doze células. Virou o **achado 54**, e o achado 22 — que raciocinava
+em cima dela — foi reescrito.
+
+### O 0.1 e a aritmética que decidiu o desenho
+
+A desoneração saiu da despesa e virou renúncia de receita. **A série mal se move** — a dívida
+final é idêntica em quatro das seis políticas. E a forma de ler a renúncia não foi escolha de
+gosto: lida em **delta** como o dividendo, o primário de posse saltaria de **−51,2 para
+−31,4** sem ninguém escolher isso; lida **cheia** nos dois lados, não move um real.
+
+⚠ **Uma prova mudou de limiar com o critério intacto.** O governo mediano caía no mês 52 e
+passou a cair no 50, e a prova exigia `> 50` — mas o motor encerra o mandato em `month >= 48`,
+então os meses 48 a 50 só existem no laço de 60 dela.
+
+### D7 — as duas telas cinzas saíram do menu
+
+_"tira do menu por enquanto"_. Saiu junto tudo o que só existia para elas: os dois rótulos, a
+frase `ainda não existe`, os dois ícones, o parâmetro `ready` de `itemHtml` — um parâmetro que
+só recebe `true` é porta aberta — e a regra `.rail__item[disabled]`, que `orphans` **não
+alcança** por ser atributo e não classe. Elas voltam com dono: A Rua depende de D3 e A9,
+Bastidor depende de D1.
+
+### ⭐ E O QUINTO CANAL MORTO APARECEU SOZINHO
+
+O plano lista quatro canais mortos. A Câmara achou o **quinto**: `baseSplit` — quantas cadeiras
+apoiam, obstruem e romperam — era calculado todo quadro, declarado no contrato da view e
+**nunca lido**. A barra cheia dizia "436 apoiam"; as fatias dizem quem são os outros 77.
+
 ## ✔ O PLANO MESTRE, E O DEFEITO QUE ELE ACHOU AO SER ESCRITO — 24/08/2026
 
 A sessão 20 não abriu motor nenhum. Ela escreveu `docs/cycles/13-o-glorioso.md` — 43 itens em

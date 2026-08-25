@@ -6,8 +6,25 @@
 > > real um presidente e seu governo pode fazer tal coisa, no meu jogo o jogador de alguma
 > > forma também vai conseguir fazer. Liberdade, realismo, fidelidade. Brasil real."_
 >
-> ⚠ **PLANO. NADA COMEÇADO, NADA APROVADO.** Nenhuma linha de código se escreve a partir
-> daqui sem a aprovação dele.
+> ⚠ **EM EXECUÇÃO DESDE 24/08/2026, e a ordem é a do rodapé deste arquivo.**
+>
+> | passo | itens                     | estado                                 |
+> | ----- | ------------------------- | -------------------------------------- |
+> | **0** | C12 · D7                  | ✔ os dois                              |
+> | **1** | 0.1 · 0.2 · C1 · C2 · C3  | ✔ os cinco                             |
+> | **2** | B1 a B5                   | ▶ **o próximo**                        |
+> | **3** | C8 · C9 · C10 · C11 · C13 | ⚠ **três de cinco** — faltam C10 e C11 |
+> | **4** | 0.3 · B10 · C7 · D4       | ⛔                                     |
+>
+> ⚠ **O PASSO 3 FOI FEITO ANTES DO 2, e foi erro meu** — anunciado como inversão deliberada e
+> cobrado por ele: _"não acha melhor voltar desde o início, passo 1, passo 2, passo 3?"_. A
+> ordem do rodapé volta a valer, e o passo 2 é o próximo.
+>
+> ⚠ **E A LIÇÃO DO PASSO 1 É DELE, em quatro palavras: _"mudou bosta nenhuma"_.** Os cinco
+> itens do passo 1 e três dos cinco do passo 3 **consertam** — número errado, palavra
+> repetida, informação escondida. Consertar é invisível por construção: o melhor resultado
+> possível de arrumar uma contradição é ninguém notar. **O que muda o jogo é a Parte A**, e
+> ela começa no passo 6.
 
 ---
 
@@ -1062,6 +1079,16 @@ treze entradas do rail são promessa. E as duas são exatamente onde as Partes A
 
 **Decisão a tomar, e não é de gosto:** ou elas entram no plano com dono, ou saem do rail. Uma
 promessa cinza por mais um ciclo é pior que a ausência.
+
+### ✔ DECIDIDO EM 24/08/2026 — ELAS SAÍRAM DO MENU
+
+Palavras dele: _"tira do menu por enquanto"_. E saiu junto tudo o que só existia para elas: os
+dois rótulos, a frase `ainda não existe`, os dois ícones, o parâmetro `ready` de `itemHtml` — um
+parâmetro que só recebe `true` é porta aberta — e a regra `.rail__item[disabled]`, que a guarda
+`orphans` **não alcança** por ser atributo e não classe.
+
+⚠ **ELAS VOLTAM COM DONO, e o dono está escrito:** A Rua é a opinião pública com rosto (D3 e
+A9); Bastidor é a coalizão (D1). Quando existirem, cada uma entra com **uma linha**.
 
 ---
 

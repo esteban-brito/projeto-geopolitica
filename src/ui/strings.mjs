@@ -115,9 +115,9 @@ export const UI = {
     finance: TERMOS.finance,
     ministries: "Ministérios",
     estado: TERMOS.estado,
-    street: "A Rua",
-    backstage: "Bastidor",
-    pending: "ainda não existe",
+    /* ⚠ `street`, `backstage` E `pending` SAIRAM COM AS DUAS ENTRADAS CINZAS DO MENU. Elas
+       prometiam duas telas que nao existem, e frase declarada sem quem a alcance e o que esta
+       guarda existe para pegar — deixa-las aqui seria a promessa sobrevivendo a retirada. */
   },
   /* O GABINETE — a tela inicial, e a unica que so resume. */
   cabinet: {

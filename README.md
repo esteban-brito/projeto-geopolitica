@@ -110,6 +110,13 @@ em folha de estilo deixava o portão verde sem ele ter olhado nada. O passeio cu
 contraste; ele não vê que a peça ficou feia. As capturas em `captures/` existem para
 isso, e abri-las é o único passo do fluxo que segue sendo humano.
 
+⚠ **E toda checagem dele nasce sem alcance — três vezes, medidas.** `checkClipped`
+nasceu cego no eixo Y e um cartão inteiro sumia; `checkSwallowed` nasceu com uma
+janela só, que era exatamente a única em que a tela cabia; e os dois eram cegos para
+`text-overflow: ellipsis`, que **não rola** — a frase só perde o fim. `checkEllipsized`
+nasceu em 24/08/2026 e achou três truncamentos já publicados na primeira rodada. **A
+pergunta em toda checagem nova é qual metade do problema ela ainda não vê.**
+
 `npm run screen` abre a tela com GPU e mede o custo do material contra um braço
 de controle sem filtro. Ele vive em `tests/browser/` e continua **fora** do
 `validate`: abre navegador com janela e mede fps contra a taxa do monitor, e num
