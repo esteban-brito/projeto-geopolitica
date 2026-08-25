@@ -11,6 +11,10 @@ const CHANNELS = /** @type {const} */ (["revenue", "mandatory", "capacity"]);
 export const AREA_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
+  /* ⚠ O NOME CURTO E OPCIONAL, e a ausencia significa "use o `label`" — declarar os oito
+     poria sete copias do nome cheio no catalogo, e a copia so doi quando alguem renomeia uma
+     das duas. E o precedente e `sigla`, que existe em `parties` pela mesma razao medida. */
+  short: { kind: "text", optional: true },
   index: { kind: "text" },
   initial: { kind: "number", min: 0, max: 100 },
   /* FRACAO DO ESTOQUE POR MES, e nao pontos por mes — ver a prosa de `decay`
@@ -33,6 +37,7 @@ export const NEUTRAL = 50;
  * @typedef {object} Area
  * @property {string} id
  * @property {string} label - o nome que a interface mostra; ATRIBUTO, nao identidade
+ * @property {string} [short] - o nome para coluna estreita; ausente quer dizer `label`
  * @property {string} index - como se chama o indice desta area
  * @property {number} initial - o indice de abertura, de 0 a 100
  * @property {number} decay - a FRACAO do indice que vaza por mes
@@ -81,6 +86,9 @@ export const AREAS = [
   {
     id: "industry",
     label: "Indústria e Infraestrutura",
+    /* ⚠ A UNICA DAS OITO QUE NAO CABE: medido, o nome cheio pede 164px no rail de 109 e 202px
+       na faixa de 117, e as duas cortavam com reticencia em "Indústria e Infr…". */
+    short: "Indústria",
     index: "capacidade",
     initial: 48,
     decay: 0.056913,

@@ -50,10 +50,14 @@ const TERMOS = {
   seatsWord: "cadeiras",
   moodWord: "humor",
   perMonthWord: "no mês",
-  /* ⚠ ELA E A MESMA LEITURA EM DOIS LUGARES — o bloco do dinheiro no Gabinete e o card da
-     carta de posse —, e as duas mudam juntas por definicao: e o discricionario que cabe no
-     mes. Teclada duas vezes, divergiriam na primeira vez que alguem ajustasse uma. */
+  /* ⚠ ELA TEVE DOIS CONSUMIDORES E AGORA TEM UM, e a reducao foi o conserto: o card da posse
+     imprimia a MESMA leitura do bloco do dinheiro a um palmo de distancia, numa tela que nao
+     rola. O literal compartilhado provava que eram a mesma coisa e ninguem perguntou se ela
+     devia aparecer duas vezes — consistencia nao e o mesmo que nao-redundancia. */
   roomLine: "Sobra para o mês",
+  /* ⚠ O PESO ZERO PRECISA DE FRASE E NAO DE "0%", e ela e a mesma no cartao da caldeira e na
+     carta da fervura: um grupo que nao entra na conta da ruptura economica nao pesa POUCO. */
+  noWeight: "não pesa",
   revenueWord: "Receita",
 
   /* Unidades e grandezas, ditas uma vez. */
@@ -61,6 +65,8 @@ const TERMOS = {
   months: "meses",
   perYear: "/ano",
   of: "de",
+  /* A preposicao antes de um numero, e ela e a mesma na janela da tendencia e na marca. */
+  at: "em",
   gdp: "PIB",
   inflation: "Inflação",
   approval: "Aprovação",
@@ -179,10 +185,21 @@ export const UI = {
     boilerMeter: "de 100 de pressão",
     /* A MESMA FORMA DA CAMARA: uma frase curta explica o risco de latao na barra, e o numero
        dentro dela usa a cor da marca. */
-    boilerBreaks: "rompem acima de",
+    /* ⚠ O VERBO ERA "rompem acima de" E COLIDIA COM A FAIXA DO TOPO, que diz "rompe acima de"
+       sobre o MESMO grupo com outro numero — mesma palavra, mesmo verbo, 86 e 68 a um palmo
+       numa tela que nao rola. O que este limiar significa esta escrito no motor: em `boil` o
+       grupo ABANDONA o governo; quem "rompe" e a ruptura, e ela tem limiar proprio e maior. */
+    boilerBreaks: "abandonam acima de",
+    /* A ponte entre a frase e a segunda marca da barra do fiador. */
+    boilerAt: TERMOS.at,
     boilerShare: `do ${TERMOS.economic.toLowerCase()}`,
     /* ⚠ E O PESO ZERO PRECISA DE FRASE PROPRIA, e não de "0%". */
-    boilerNoShare: `não pesa no ${TERMOS.economic.toLowerCase()}`,
+    boilerNoShare: `${TERMOS.noWeight} no ${TERMOS.economic.toLowerCase()}`,
+    /* ⚠ O QUARTO CANAL MORTO DO PLANO: a fatia de cada grupo na ruptura economica era
+       calculada, formatada e entregue SO ao leitor de tela. Um dos quatro pesa zero, e quem
+       enxerga gastava capital acalmando um grupo que nao conta para a conta que ele tenta
+       nao perder. O rotulo passou a diz-lo, e o `aria-label` continua dizendo tambem. */
+    boilerNoWeight: TERMOS.noWeight,
     /* ⚠ E O CARIMBO DO CERCO. */
     siege: "PROCESSO ABERTO",
     /* ⚠ O CARIMBO DO FIM. */
@@ -196,7 +213,7 @@ export const UI = {
      essas variacoes sem dizer contra o que comparavam, e a de area chamava todas
      de "em 12 meses", inclusive as seis que nao tinham doze meses guardados. */
   window: {
-    over: "em",
+    over: TERMOS.at,
     month: TERMOS.month,
     months: TERMOS.months,
   },
@@ -279,7 +296,7 @@ export const UI = {
     boilingNote: "ponto de fervura",
     boilingPressure: "Pressão do grupo",
     boilingWeight: "Peso na ruptura econômica",
-    boilingNoWeight: "não pesa",
+    boilingNoWeight: TERMOS.noWeight,
 
     /* ── OS TRES RELATORIOS DO MES ──────────────────────────────────────────── ⚠ ELES CHEGAM
        POR TEMPO, e nao por evento — sao a unica especie assim. */
@@ -434,7 +451,6 @@ export const UI = {
     /* ⚠ AS DUAS ERAM FIM DE FRASE e viraram LEGENDA DE CARD: num card a legenda
        nomeia e o valor responde, entao a costura em volta do numero deixou de existir. */
     inheritedMandatory: "Obrigatória do ano",
-    inheritedRoom: TERMOS.roomLine,
     inheritedLead: "O orçamento em vigor é o do seu antecessor até {v} escrevê-lo.",
   },
   /* A BARRA SUPERIOR — os sinais vitais, e eles nunca somem da tela. */

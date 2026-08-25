@@ -45,7 +45,8 @@ export function capacityStripHtml({ areas, index, history }) {
 
       return (
         `<button class="capacity" type="button" data-section="${escapeHtml(area.id)}">` +
-        `<span class="capacity__label">${escapeHtml(area.label)}</span>` +
+        /* O NOME CURTO, pela mesma razao do rail: a faixa da 117px por area. */
+        `<span class="capacity__label">${escapeHtml(area.short ?? area.label)}</span>` +
         `<span class="capacity__read">` +
         `<span class="capacity__value" data-numeric>${seats(value)}</span>` +
         `<span class="capacity__trend" aria-hidden="true">${trend}</span>` +

@@ -335,9 +335,14 @@ export function spendOf({ programs, levels, bands }) {
     const above = Math.max(0, level - bandOf(program, bands).floor);
     const monthly = (above / 100) * program.cost * MONTHLY;
 
-    byProgram[program.id] = monthly;
-    byArea[program.area] = (byArea[program.area] ?? 0) + monthly;
-    total += monthly;
+    /* ⚠ A RENUNCIA NAO CONSOME A BOLSA DO MES, e essa e a correcao inteira: ninguem empenha
+       uma desoneracao — a Fazenda deixa de arrecadar, e quem abate a receita e `waivedOf`.
+       Cobra-la aqui cobrava um caixa que o jogador nunca teve. */
+    if (program.waiver !== true) {
+      byProgram[program.id] = monthly;
+      byArea[program.area] = (byArea[program.area] ?? 0) + monthly;
+      total += monthly;
+    }
 
     /* ── O GASTO CHEIO, E POR QUE ELE PRECISOU EXISTIR ──────────────────────── ⚠ ELE
        CONSERTA O EXPLOIT QUE A POLITICA `explorador` MEDIU. */
@@ -363,6 +368,13 @@ export function honour({ programs, levels, ratio, bands }) {
   const next = {};
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
+    /* ⚠ O RATEIO NAO ALCANCA RENUNCIA, e a razao e do mundo: contingenciamento aperta empenho,
+       e uma desoneracao esta em LEI — o caixa curto do mes nao revoga um beneficio fiscal.
+       Sem esta linha, um mes apertado mudaria a politica tributaria sem ninguem decidir. */
+    if (program.waiver === true) {
+      next[program.id] = level;
+      continue;
+    }
     const above = Math.max(0, level - bandOf(program, bands).floor);
     next[program.id] = level - above * (1 - ratio);
   }

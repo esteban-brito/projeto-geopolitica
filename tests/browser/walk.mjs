@@ -126,6 +126,35 @@ try {
   }
 
   /**
+   * ⚠ O TERCEIRO IRMAO DE `checkClipped`, e ele ve o que os outros dois nao veem: `overflow:
+   * hidden` com `text-overflow: ellipsis` NAO rola, entao nem o eixo X nem o eixo Y acusam —
+   * a frase simplesmente perde o fim, com reticencia, e a tela fica plausivel. E a familia
+   * inteira ja custou quatro vezes aqui: toda checagem nasce sem alcance.
+   * A EXCECAO DECLARADA E UMA SO: `.bench__name small`, o nome longo do partido numa coluna
+   * de 96px — a sigla ao lado dela e o nome curto, e a reticencia ali e o desenho.
+   *
+   * @param {string} where
+   */
+  async function checkEllipsized(where) {
+    const cut = await page.$$eval("#main *, .topbar *, .rail *", nodes =>
+      nodes
+        .filter(node => {
+          if (node.closest(".bench__name")) return false;
+          const style = getComputedStyle(node);
+          if (style.textOverflow !== "ellipsis") return false;
+          return node.scrollWidth > node.clientWidth + 1;
+        })
+        .map(
+          node =>
+            `${node.className || node.tagName} "${(node.textContent ?? "").trim().slice(0, 24)}" ` +
+            `${node.scrollWidth}>${node.clientWidth}`,
+        ),
+    );
+
+    expect(cut.length === 0, `[${where}] texto truncado com reticencia: ${cut.join(" | ")}`);
+  }
+
+  /**
    * PECA DESENHADA POR CIMA DE PECA — e este e um defeito que so a geometria pega.
    *
    * @param {string} where
@@ -294,6 +323,7 @@ try {
   await checkOverflow("gabinete");
   await checkClipped("gabinete");
   await checkSwallowed("gabinete");
+  await checkEllipsized("gabinete");
   await checkContrast("gabinete");
   await checkNoOverlap("gabinete", ".cards > .card");
 
@@ -318,6 +348,7 @@ try {
   await checkOverflow("congresso");
   await checkClipped("congresso");
   await checkSwallowed("congresso");
+  await checkEllipsized("congresso");
   await checkContrast("congresso");
   expect(
     (await page.locator(".tally__forecast").count()) === 0,
@@ -330,6 +361,7 @@ try {
   await checkOverflow("area");
   await checkClipped("area");
   await checkSwallowed("area");
+  await checkEllipsized("area");
   await checkContrast("area");
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento veio sem programas");
 
@@ -493,6 +525,7 @@ try {
   await checkOverflow("financas");
   await checkClipped("financas");
   await checkSwallowed("financas");
+  await checkEllipsized("financas");
   await checkContrast("financas");
 
   expect(
@@ -639,6 +672,7 @@ try {
     await checkOverflow(`900px/${secao}`);
     await checkClipped(`900px/${secao}`);
     await checkSwallowed(`900px/${secao}`);
+    await checkEllipsized(`900px/${secao}`);
   }
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(600);

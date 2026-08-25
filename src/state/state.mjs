@@ -4,6 +4,7 @@
    SAVE e serializar o estado. */
 
 import { CATALOG } from "../data/catalog.mjs";
+import { waivedOf } from "../data/programs.mjs";
 import { opening } from "../domain/capacity/index.mjs";
 import { opening as economyOpening } from "../domain/economy/index.mjs";
 import { inherited } from "../domain/norms/index.mjs";
@@ -171,7 +172,16 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
       mandatory: fiscal.initialMandatory,
       /* A ANCORA E O EXERCICIO ANTERIOR, e por isso ela nasce com a receita e a despesa de
          quem entregou o governo — nao com as deste mes. */
-      anchorRevenue: fiscal.initialGdp * fiscal.taxLoad,
+      /* ⚠ E ELA NASCE JA LIQUIDA DA RENUNCIA, pela mesma razao que o turno a abate: a ancora
+         e a receita QUE ENTROU no ano anterior, e o antecessor tambem nao arrecadou o que
+         desonerou. Bruta aqui, o primeiro exercicio abriria com crescimento negativo de
+         receita e o piso da banda do arcabouco dispararia sem ninguem ter feito nada. */
+      anchorRevenue:
+        fiscal.initialGdp * fiscal.taxLoad -
+        waivedOf(
+          programs,
+          Object.fromEntries(programs.map(program => [program.id, program.initial])),
+        ),
       anchorExpense: fiscal.initialMandatory + fiscal.initialDiscretionary,
       debt: fiscal.initialGdp * fiscal.initialDebtRatio,
     },

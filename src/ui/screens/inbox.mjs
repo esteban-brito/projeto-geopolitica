@@ -288,9 +288,12 @@ export function describeMail({
               `<span>${escapeHtml(addressed(UI.inbox.inheritedLead, treatment))}</span>` +
               `</div>`,
             /* ⚠ `money`, E NAO `seats`. */
-            annex:
-              cardHtml(UI.inbox.inheritedMandatory, `<b>${money(inherited.mandatory)}</b>`) +
-              cardHtml(UI.inbox.inheritedRoom, `<b>${money(inherited.room)}</b>`),
+            /* ⚠ O ANEXO MOSTRA SO O QUE O COFRE NAO MOSTRA, e a sobra do mes SAIU daqui: ela
+               era a MESMA constante do bloco do dinheiro — `TERMOS.roomLine` nos dois —, e o
+               mes 1 imprimia `R$ 14,5 bi` duas vezes a um palmo, numa tela que nao rola. A
+               guarda de vocabulario forcou o literal compartilhado (o que PROVA que sao a
+               mesma leitura) e ninguem perguntou se ela devia ser mostrada duas vezes. */
+            annex: cardHtml(UI.inbox.inheritedMandatory, `<b>${money(inherited.mandatory)}</b>`),
             action: UI.inbox.seeMonth,
             target: "congress",
           });

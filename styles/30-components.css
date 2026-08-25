@@ -251,7 +251,10 @@
     width: var(--rail);
     height: calc(100dvh - 2 * var(--space-4));
     margin: var(--space-4);
-    padding: var(--space-4) var(--space-3);
+    /* ⚠ O RESPIRO LATERAL E `--space-2` E NAO `--space-3`, e os 8px vieram de uma medicao:
+       "Congresso & Leis" pede 114px num rotulo de 109 e cortava com reticencia. Alargar o
+       `--rail` custaria largura do tabuleiro em toda tela; o item ja tem 12px proprios. */
+    padding: var(--space-4) var(--space-2);
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -520,6 +523,22 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
+  /* ── A COR DO QUE A LEI TRANCA ────────────────────────────────────────────── ⚠ O TERCEIRO
+     CANAL MORTO DO PLANO: `data-guard` diz em toda linha se aquele piso e `none`, `law` ou
+     `constitution`, e nenhuma folha pintava — o jogo sabia quais pisos so uma emenda move e
+     mostrava os tres com a mesma tinta.
+     ⚠ E COBRAR NAO E BLOQUEAR: o ponteiro atravessa a zona igual, e quem cobra continua sendo
+     o rito que a linha anuncia. O que muda e o jogador VER a severidade antes de arrastar. */
+  .dial,
+  .law {
+    --rail-floor: var(--rail-costly);
+  }
+
+  .dial[data-guard="constitution"],
+  .law[data-guard="constitution"] {
+    --rail-floor: var(--rail-locked);
+  }
+
   /* ── AS TRES ZONAS DO TRILHO ──────────────────────────────────────────────── ⚠ ESTA E A
      REGRA QUE CONSOME O DADO QUE A VISTA SEMPRE ESCREVEU E NINGUEM LIA.
      ⚠ O SELETOR REPETE `input[type="range"]` DE PROPOSITO, e a razao e um defeito medido:
@@ -529,7 +548,7 @@
   input[type="range"].law__slider::-webkit-slider-runnable-track {
     background: linear-gradient(
       90deg,
-      var(--rail-costly) 0 calc(1% * var(--floor)),
+      var(--rail-floor) 0 calc(1% * var(--floor)),
       var(--rail-mark) calc(1% * var(--floor)) calc(1% * var(--floor) + 2px),
       var(--rail-free) calc(1% * var(--floor) + 2px) calc(1% * var(--ceiling)),
       var(--rail-mark) calc(1% * var(--ceiling)) calc(1% * var(--ceiling) + 2px),
@@ -541,7 +560,7 @@
   input[type="range"].law__slider::-moz-range-track {
     background: linear-gradient(
       90deg,
-      var(--rail-costly) 0 calc(1% * var(--floor)),
+      var(--rail-floor) 0 calc(1% * var(--floor)),
       var(--rail-mark) calc(1% * var(--floor)) calc(1% * var(--floor) + 2px),
       var(--rail-free) calc(1% * var(--floor) + 2px) calc(1% * var(--ceiling)),
       var(--rail-mark) calc(1% * var(--ceiling)) calc(1% * var(--ceiling) + 2px),
@@ -560,17 +579,18 @@
      ela cabe em duas. */
   .reading {
     display: grid;
-    grid-template-columns: 9rem minmax(0, 1fr) 5rem;
+    grid-template-columns: 11rem minmax(0, 1fr) 5rem;
     align-items: center;
     gap: 0 var(--space-3);
     min-height: 20px;
   }
 
-  /* ⚠ A COLUNA DO NOME VOLTOU DE 10,5rem PARA 9rem, e a premissa que a alargou caducou: ela
-     tinha crescido para caber "que a torneira das emendas fique aberta" em duas linhas, e essa
-     frase saiu da linha. A do VALOR foi de 3rem para 5rem porque agora ela
-     carrega dinheiro — `R$ 66,7 bi` nao cabe em 48px, e o que nao cabe estoura para fora da
-     coluna sem nada falhar. */
+  /* ⚠ A COLUNA DO NOME FOI 10,5rem, CAIU PARA 9 E VOLTOU A 11, e as tres decisoes estao certas
+     porque a LINHA mudou entre elas: ela encolheu quando a frase do lobby saiu, e cresceu de
+     novo quando o peso do grupo entrou no rotulo. Medido a 9rem: `Mercado financeiro 35%` pede
+     150px e `Militares e polícia não pesa` pede 164. A do VALOR foi de 3rem para 5rem porque
+     agora ela carrega dinheiro — `R$ 66,7 bi` nao cabe em 48px, e o que nao cabe estoura para
+     fora da coluna sem nada falhar. */
   .reading__who {
     font-size: var(--text-note);
     color: var(--ink-soft);
@@ -610,6 +630,15 @@
     text-transform: uppercase;
   }
 
+  /* ⚠ O TAMANHO E DECLARADO, e a omissao e que era o defeito: `<small>` sem regra e 0,83em do
+     navegador — um degrau fora da escala, e a peneira de tipografia matou dois iguais a este.
+     Herdando o corpo do rotulo, o par nao abre combinacao nova no censo. */
+  .reading__note {
+    font-size: inherit;
+    margin-left: var(--space-2);
+    color: var(--ink-dim);
+  }
+
   .reading__value {
     font-family: var(--font-display);
     font-weight: 700;
@@ -642,6 +671,14 @@
      barra existe, que e dentro de uma `.reading`. */
   .reading > .poles {
     grid-column: 2;
+  }
+
+  /* ⚠ A EXCECAO E DE CONTEUDO, e nao de gosto: a chave da caldeira decifra DUAS marcas e
+     nomeia a linha que carrega a segunda, e isso nao cabe na pista da barra — medido, ela
+     quebrava em TRES linhas e comia 40px numa coluna que nao tem um pixel livre. Atravessando
+     a grade inteira ela cabe numa linha so, e o bloco nao ganha altura. */
+  .reading > .poles.poles--wide {
+    grid-column: 1 / -1;
   }
 
   .poles {
@@ -747,6 +784,22 @@
     left: calc(1% * var(--mark));
     width: 2px;
     background: var(--brand);
+  }
+
+  /* ── A SEGUNDA MARCA — a regua que tem DUAS linhas ────────────────────────── Um grupo da
+     caldeira tem dois limiares: em `--mark` ele abandona o governo, e em `--fall` a ruptura
+     politica abre. Os dois numeros viviam em BLOCOS diferentes com o mesmo verbo e o mesmo
+     nome, a um palmo um do outro numa tela que nao rola — e nada ligava um ao outro.
+     ⚠ A COR E O BORDO, e nao o latao: bordo ja e o canal do processo nesta paleta (a aresta
+     do cerco), e latao nos dois faria duas linhas de naturezas diferentes lerem como a
+     mesma. Ela nao passa pelo medidor de contraste, que so alcanca texto. */
+  .gauge[data-fall="true"]::before {
+    content: "";
+    position: absolute;
+    inset-block: -2px;
+    left: calc(1% * var(--fall));
+    width: 2px;
+    background: var(--bordo);
   }
 
   /* DO LADO ERRADO DA LINHA, o preenchimento vira crise — e a cor troca com o ESTADO, e nao

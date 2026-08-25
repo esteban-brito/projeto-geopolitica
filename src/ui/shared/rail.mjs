@@ -109,7 +109,11 @@ export function railNavHtml(current, areas) {
     `<p class="rail__legend">${escapeHtml(UI.nav.ministries)}</p>` +
     `<ul class="rail__sub">` +
     areas
-      .map(area => itemHtml({ key: area.id, label: area.label, ready: true }, current))
+      /* ⚠ O NOME CURTO MANDA AQUI, e a coluna e a razao: o rail tem 109px de rotulo, e o unico
+         nome que nao cabe cortava com reticencia. Ausente, `short` cai no `label`. */
+      .map(area =>
+        itemHtml({ key: area.id, label: area.short ?? area.label, ready: true }, current),
+      )
       .join("") +
     `</ul>` +
     `</li>`;

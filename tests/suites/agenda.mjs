@@ -25,7 +25,12 @@ test("O PAIS HERDADO CABE NO ORCAMENTO HERDADO", () => {
   /* Duas verdades divergem, e esta divergiria
      no primeiro mes — o jogador alocaria a partir de um total e o LASTRO cobraria
      a partir de outro. */
-  const total = PROGRAMS.reduce((sum, program) => sum + (program.cost * program.initial) / 100, 0);
+  /* ⚠ A RENUNCIA NAO ENTRA NA SOMA, e a exclusao E a prova: ela nao e despesa, e conta-la
+     aqui faria a ancora afirmar que o pais gasta um dinheiro que ninguem empenha. */
+  const total = PROGRAMS.filter(program => program.waiver !== true).reduce(
+    (sum, program) => sum + (program.cost * program.initial) / 100,
+    0,
+  );
   const declared = FISCAL.initialMandatory + FISCAL.initialDiscretionary;
 
   assert.ok(
@@ -36,7 +41,10 @@ test("O PAIS HERDADO CABE NO ORCAMENTO HERDADO", () => {
 
 test("A OBRIGATORIA E A SOMA DOS PISOS", () => {
   /* A outra metade da prova acima, e ela e o que faz a reforma significar alguma coisa. */
-  const locked = PROGRAMS.reduce((sum, program) => sum + (program.cost * program.floor) / 100, 0);
+  const locked = PROGRAMS.filter(program => program.waiver !== true).reduce(
+    (sum, program) => sum + (program.cost * program.floor) / 100,
+    0,
+  );
 
   assert.ok(
     Math.abs(locked - FISCAL.initialMandatory) / FISCAL.initialMandatory < 0.02,

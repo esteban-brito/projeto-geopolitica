@@ -22,6 +22,7 @@ import {
 } from "../domain/congress/index.mjs";
 import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 import { CATALOG } from "../data/catalog.mjs";
+import { waivedOf } from "../data/programs.mjs";
 import { bandOf, compose, honour, spendOf } from "./agenda.mjs";
 import { DRAWER_LIFE, forgotten, proposalOf, reports, tables } from "./passage.mjs";
 import {
@@ -348,6 +349,13 @@ function positionOf(state, catalog) {
   const opening = Object.fromEntries(catalog.rules.map(rule => [rule.id, rule.initial]));
   const dividends = dividendOf(state.levels) - dividendOf(opening);
 
+  /* ⚠ A RENUNCIA ABATE A RECEITA, e ela e lida CHEIA e nao em delta — ao contrario do
+     dividendo logo acima. A assimetria tem aritmetica atras: o dividendo e um ganho que o
+     jogador CRIA privatizando, entao so o movimento conta; a desoneracao ja existia na posse
+     e a carga do catalogo foi calibrada contra um pais que a tem. Lida em delta, o primario
+     de abertura saltaria de −51,2 para −31,4 — recalibragem por efeito colateral. */
+  const waived = waivedOf(catalog.programs, state.levels);
+
   return {
     gdp: state.macro.gdp,
     /* A INFLACAO INDEXA A OBRIGATORIA, e por isso ela atravessa a fronteira: sem ela,
@@ -366,7 +374,7 @@ function positionOf(state, catalog) {
       MONTHS_PER_YEAR,
     debt: state.fiscal.debt,
     parameters: catalog.fiscal,
-    revenueFactor: pressure.revenue + (base > 0 ? dividends / base : 0),
+    revenueFactor: pressure.revenue + (base > 0 ? (dividends - waived) / base : 0),
     mandatoryFactor: pressure.mandatory,
   };
 }
@@ -1929,6 +1937,11 @@ export function boilerOf(state, catalog = CATALOG) {
          e por isso a tela nao pode ter o proprio. */
       boiling: (state.pressure[lobby.id] ?? 0) >= catalog.pressure.boil,
       boil: catalog.pressure.boil,
+      /* ⚠ O SEGUNDO LIMIAR DO FIADOR, e ele e nulo nos outros tres. UM grupo tem duas linhas:
+         em `boil` ele abandona o governo, e em `brokerBoil` a ruptura POLITICA abre. A tela
+         imprimia os dois numeros em blocos diferentes com o MESMO verbo e o mesmo nome, a um
+         palmo de distancia — e quem sabe qual grupo e o fiador e este motor, nao a view. */
+      fall: lobby.id === BROKER ? catalog.pressure.brokerBoil : null,
     })),
     rupture: broke,
     /* O valor de cada ruptura e uma conta diferente — a social le a rua, a economica e uma

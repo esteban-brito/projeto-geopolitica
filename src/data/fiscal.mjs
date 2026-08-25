@@ -60,8 +60,12 @@ export const FISCAL = {
   initialGdp: 12000,
   /* A DESPESA OBRIGATORIA E A SOMA DOS PISOS DOS PROGRAMAS, e nao um numero independente:
      `tests/suites/agenda.mjs` prova que os dois batem. */
-  initialMandatory: 2154,
-  initialDiscretionary: 176,
+  /* ⚠ OS DOIS PERDERAM A DESONERACAO, e isso e RECLASSIFICACAO e nao recalibragem: ela saiu
+     da despesa e virou renuncia de receita, entao os mesmos R$ 19,84 bi que ela ocupava aqui
+     agora abatem a arrecadacao. A conta e explicita — do piso saem (31 × 48%) = 14,88, e de
+     acima do piso (31 × 16%) = 4,96. O primario de posse nao se move: −51,2 antes e depois. */
+  initialMandatory: 2139,
+  initialDiscretionary: 171,
   /* Divida bruta do governo geral sobre o PIB. Fonte: BCB. */
   initialDebtRatio: 0.78,
 };

@@ -74,8 +74,12 @@ function programHtml({ program, level, band = bandOf(program) }) {
 
   /* A FAIXA VIGENTE VIRA POSICAO NO PROPRIO TRILHO, escrita em estilo inline porque ela e
      DADO — onde a lei comeca e onde ela acaba, naquele programa — e nao decisao de paleta. */
+  /* ⚠ `data-guard` ENTROU NO CONTROLE DE VERBA, e ele so existia na linha de LEI: e o dado que
+     diz se o piso daquela alavanca e caneta, lei ou Constituicao, e quem consome e a zona
+     abaixo do piso no trilho. Sem ele aqui, a severidade aparecia so no bloco de baixo. */
   return (
     `<div class="dial" data-rite="${escapeHtml(rite)}" ` +
+    `data-guard="${escapeHtml(program.guard)}" ` +
     `style="--floor:${attr(band.floor)};--ceiling:${attr(band.ceiling)}">` +
     `<div class="dial__head">` +
     `<span class="dial__name">${escapeHtml(program.label)}</span>` +

@@ -9,7 +9,7 @@
  * ⚠ ELE E RARO DE PROPOSITO.
  *
  * @typedef {object} Field
- * @property {"id" | "text" | "number"} kind
+ * @property {"id" | "text" | "number" | "flag"} kind
  * @property {boolean} [optional] - o campo pode faltar, e faltar SIGNIFICA alguma
  * coisa. Ele nasceu com a VINCULACAO: tres programas obrigam por fracao da receita
  * e trinta e cinco obrigam por pontos, e exigir `bound: 0` nos trinta e cinco seria
@@ -17,6 +17,12 @@
  * vinculacao nenhuma. Ausencia declarada, e nao ausencia disfarcada, aplicada a
  * catalogo.
  * @property {ReadonlyArray<string>} [values] - o VOCABULARIO fechado de um `text`.
+ * ⚠ `flag` E SEMPRE `optional`, e a assimetria e a modelagem: o que ele marca e a
+ * EXCECAO — um programa entre trinta e oito e renuncia de receita —, e exigir
+ * `waiver: false` nos outros trinta e sete afirmaria trinta e sete vezes uma coisa
+ * que o silencio ja diz. Presente, ele so pode ser `true`: um `false` escrito e a
+ * mesma ausencia com mais bytes, e duas formas de dizer "nao" e como um catalogo
+ * comeca a divergir de si mesmo.
  * @property {number} [min] - so para `number`, e inclusivo
  * @property {number} [max] - so para `number`, e inclusivo
  * @typedef {Record<string, Field>} Schema
@@ -43,6 +49,13 @@ export function violations(schema, record, where) {
 
     if (value === undefined) {
       if (!rule.optional) found.push(`${where}: falta o campo "${field}"`);
+      continue;
+    }
+
+    if (rule.kind === "flag") {
+      if (value !== true) {
+        found.push(`${where}: "${field}" e uma marca e so pode ser true, e e ${String(value)}`);
+      }
       continue;
     }
 

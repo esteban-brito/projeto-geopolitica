@@ -47,13 +47,17 @@ function share(part, whole) {
  * @param {string} input.value o numero, ja formatado
  * @param {string} [input.bar] a barra, ja em HTML; sem ela o nome atravessa a pista
  * @param {string} [input.tone] `crisis` tinge a linha inteira
+ * @param {string} [input.note] o que qualifica o nome, e nao o valor — ele entra DENTRO do
+ * rotulo porque nao e uma segunda leitura: e a mesma leitura dizendo o proprio peso
  * @returns {string}
  */
-function readingHtml({ who, value, bar, tone }) {
+function readingHtml({ who, value, bar, tone, note }) {
   return (
     `<div class="reading${bar ? "" : " reading--wide"}"` +
     `${tone ? ` data-tone="${escapeHtml(tone)}"` : ""}>` +
-    `<span class="reading__who">${escapeHtml(who)}</span>` +
+    `<span class="reading__who">${escapeHtml(who)}` +
+    (note ? `<small class="reading__note">${escapeHtml(note)}</small>` : "") +
+    `</span>` +
     (bar ?? "") +
     `<span class="reading__value" data-numeric>${value}</span>` +
     `</div>`
@@ -126,7 +130,8 @@ function blockHtml({ legend, rows, key, foot }) {
  * @param {ReadonlyArray<Segment>} input.segments
  * @param {Record<string, Approval>} input.street a pesquisa de cada segmento
  * @param {{ lobbies: ReadonlyArray<{ id: string, label: string, wants: string,
- * share: number, pressure: number, boiling: boolean, boil: number }>,
+ * share: number, pressure: number, boiling: boolean, boil: number,
+ * fall: number | null }>,
  * rupture: { social: boolean, economic: boolean, political: boolean, open: boolean },
  * ruptures: ReadonlyArray<{ id: string, value: number, threshold: number,
  * breaks: string, open: boolean }>,
@@ -391,7 +396,8 @@ function cabinetStreetHtml({ segments, street }) {
  * A CALDEIRA — os quatro grupos que conseguem derrubar um presidente.
  * @param {object} input
  * @param {{ lobbies: ReadonlyArray<{ id: string, label: string, wants: string,
- * share: number, pressure: number, boiling: boolean, boil: number }>,
+ * share: number, pressure: number, boiling: boolean, boil: number,
+ * fall: number | null }>,
  * rupture: { social: boolean, economic: boolean, political: boolean, open: boolean },
  * impeachment: number | null, fallen: number | null }} input.boiler
  * @returns {string}
@@ -401,15 +407,33 @@ function boilerCardHtml({ boiler }) {
     .map(lobby =>
       readingHtml({
         who: lobby.label,
+        /* ⚠ O QUARTO CANAL MORTO SAIU DO `aria-label` E VIROU LEITURA. O peso do grupo na
+           ruptura economica era calculado, formatado em porcentagem e entregue SO a quem usa
+           leitor de tela — e um dos quatro pesa ZERO. Quem enxergava via quatro barras iguais
+           e gastava capital acalmando um grupo que nao conta para a conta.
+           ⚠ E O ZERO NAO IMPRIME "0%": ele nao pesa POUCO, ele nao entra na conta. */
+        note: lobby.share > 0 ? percent(lobby.share) : UI.cabinet.boilerNoWeight,
+        /* ⚠ A SEGUNDA MARCA E DO FIADOR, e ela vem do motor com o resto: um grupo tem DUAS
+           linhas na mesma regua — abandona o governo em `boil`, e em `fall` a ruptura
+           politica abre. Antes o segundo numero morava noutro bloco com o mesmo verbo. */
         /* ⚠ A FATIA DO CAPITAL SAIU DA LINHA E FICOU NO ROTULO DE LEITOR DE TELA, e a razao
            e a auditoria: ela vem do catalogo e nao muda em 48 meses — leitura que nao muda e
            legenda, e legenda ocupava aqui a segunda fileira que fazia esta linha ter 34px
            contra os 20px de toda outra linha da coluna. */
         bar:
-          `<div class="gauge" role="img" data-mark="true"${lobby.boiling ? ' data-past="true"' : ""} ` +
-          `style="--index:${attr(Math.round(lobby.pressure))};--mark:${attr(lobby.boil)}" ` +
+          `<div class="gauge" role="img" data-mark="true"` +
+          `${lobby.boiling ? ' data-past="true"' : ""}` +
+          `${lobby.fall === null ? "" : ' data-fall="true"'} ` +
+          `style="--index:${attr(Math.round(lobby.pressure))};--mark:${attr(lobby.boil)}` +
+          `${lobby.fall === null ? "" : `;--fall:${attr(lobby.fall)}`}" ` +
           `aria-label="${escapeHtml(
             `${lobby.label}: ${Math.round(lobby.pressure)} ${UI.cabinet.boilerMeter}, ` +
+              `${UI.cabinet.boilerBreaks} ${seats(lobby.boil)}` +
+              `${
+                lobby.fall === null
+                  ? ""
+                  : `, ${UI.cabinet.trinityTitle.toLowerCase()} ${UI.cabinet.boilerAt} ${seats(lobby.fall)}`
+              }, ` +
               `${lobby.share > 0 ? `${percent(lobby.share)} ${UI.cabinet.boilerShare}` : UI.cabinet.boilerNoShare}`,
           )}"></div>`,
         value: String(Math.round(lobby.pressure)),
@@ -447,9 +471,24 @@ function boilerCardHtml({ boiler }) {
      ponto igual — no dia em que um grupo tiver o proprio, ela cala em vez de mentir. */
   const boil = boiler.lobbies[0]?.boil ?? 0;
   const same = boiler.lobbies.every(lobby => lobby.boil === boil);
+
+  /* ⚠ A SEGUNDA CLAUSULA NOMEIA O GRUPO, e sem o nome ela seria uma marca muda na barra —
+     que e o quarto canal morto visto pelo avesso. Ela cabe na chave que ja existe: `.poles`
+     poe duas pontas na MESMA linha, entao o bloco nao ganha altura nenhuma. */
+  const faller = boiler.lobbies.find(lobby => lobby.fall !== null);
+
   const key = same
-    ? `<p class="poles poles--note"><span>${escapeHtml(UI.cabinet.boilerBreaks)} ` +
-      `<b class="poles__mark" data-numeric>${seats(boil)}</b></span></p>`
+    ? `<p class="poles poles--note${faller?.fall === null || faller?.fall === undefined ? "" : " poles--wide"}">` +
+      `<span>${escapeHtml(UI.cabinet.boilerBreaks)} ` +
+      `<b class="poles__mark" data-numeric>${seats(boil)}</b></span>` +
+      /* ⚠ O 86 NAO GANHA VERBO NOVO: ele ja se chama `Risco de queda` na faixa do topo, e
+         inventar um segundo nome aqui repetiria o defeito com os papeis trocados. */
+      (faller?.fall !== null && faller?.fall !== undefined
+        ? `<span>${escapeHtml(faller.label)}: ` +
+          `${escapeHtml(UI.cabinet.trinityTitle.toLowerCase())} ${escapeHtml(UI.cabinet.boilerAt)} ` +
+          `<b class="poles__mark" data-numeric>${seats(faller.fall)}</b></span>`
+        : "") +
+      `</p>`
     : undefined;
 
   return blockHtml({ legend: UI.cabinet.blockBoiler, rows, key, foot });

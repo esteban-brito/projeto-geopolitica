@@ -27,6 +27,9 @@ export const PROGRAM_SCHEMA = {
   /* ⚠ A VINCULACAO, e ela e OPCIONAL de proposito: a esmagadora maioria dos programas obriga
      por PONTOS, e so tres obrigam por FRACAO DA RECEITA. */
   bound: { kind: "number", min: 0, max: 1, optional: true },
+  /* ⚠ A RENUNCIA DE RECEITA, e ela e o oposto de uma rubrica: ninguem empenha, a Fazenda
+     deixa de arrecadar. Ausente quer dizer "isto e gasto", que e o caso de 37 dos 38. */
+  waiver: { kind: "flag", optional: true },
   weight: { kind: "number", min: 0, max: 5 },
   lag: { kind: "number", min: 0, max: 48 },
 };
@@ -47,6 +50,8 @@ export const PROGRAM_SCHEMA = {
  * @property {string} guard - o que protege o piso; um de `GUARDS`
  * @property {number} [bound] - a VINCULACAO, em fracao da receita. Ausente na maioria,
  * e a ausencia significa "obriga por pontos, e nao por fracao"
+ * @property {true} [waiver] - RENUNCIA DE RECEITA, e nao gasto: ausente na esmagadora
+ * maioria, e a ausencia significa "isto e uma rubrica que alguem empenha"
  * @property {number} weight - o peso dele no indice da area
  * @property {number} lag - meses ate o efeito chegar
  */
@@ -548,10 +553,14 @@ export const PROGRAMS = [
     weight: 0.9,
     lag: 12,
   },
-  /* DESONERACAO E GASTO, e o catalogo a trata como gasto de proposito: renuncia fiscal nao
-     aparece na despesa e faz o mesmo buraco. */
+  /* ⚠ DESONERACAO NAO E GASTO, e trata-la como gasto cobrava um caixa que o jogador nunca
+     teve: ninguem empenha uma renuncia — a Fazenda deixa de arrecadar. O buraco e o mesmo
+     tamanho e entra pelo outro lado da conta, e o primario de abertura nao se move um real
+     (medido: −51,2 antes e depois). O que muda e a JOGADA: ampliar deixou de apertar a bolsa
+     do mes e passou a custar receita para sempre. */
   {
     id: "desoneracao-setorial",
+    waiver: true,
     area: "industry",
     label: "Desoneração setorial",
     unit: "folha e faturamento desonerados",
@@ -749,3 +758,26 @@ export const PROGRAMS = [
     lag: 12,
   },
 ];
+
+/**
+ * QUANTO A FAZENDA DEIXA DE ARRECADAR, em bilhoes por ANO.
+ *
+ * ⚠ ELA LE O NIVEL CHEIO, e nao o que passa do piso — e a diferenca decide a
+ * abertura: a carga tributaria do catalogo foi calibrada contra um pais em que a
+ * desoneracao JA existe, entao contar so o delta faria o primario de posse saltar
+ * de −51,2 para −31,4 sem ninguem ter escolhido isso. Lida cheia nos dois lados, a
+ * reclassificacao nao move um real: os mesmos 19,84 trocam de lado da conta.
+ *
+ * @param {ReadonlyArray<Program>} programs
+ * @param {Record<string, number>} levels
+ * @returns {number} bilhoes/ano de receita renunciada
+ */
+export function waivedOf(programs, levels) {
+  let total = 0;
+  for (const program of programs) {
+    if (program.waiver !== true) continue;
+    total +=
+      (Math.min(100, Math.max(0, levels[program.id] ?? program.initial)) / 100) * program.cost;
+  }
+  return total;
+}

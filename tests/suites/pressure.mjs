@@ -8,7 +8,7 @@ import fc from "fast-check";
 import { heat, rupture } from "../../src/domain/pressure/index.mjs";
 import { LOBBIES, PRESSURE } from "../../src/data/lobbies.mjs";
 import { CATALOG } from "../../src/data/catalog.mjs";
-import { OPENING_MONTH, createState } from "../../src/state/state.mjs";
+import { createState } from "../../src/state/state.mjs";
 import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { bandsOf, costOf, discretionaryRoom, playMonth } from "../../src/application/turn.mjs";
@@ -206,10 +206,15 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
   const passivo = anos(0);
   assert.ok(passivo !== null, "o governo passivo atravessou 60 meses sem consequencia");
 
-  /* Medido: ele cai no mes 52, tres meses DEPOIS de o mandato acabar. */
+  /* ⚠ O LIMITE E O DO MOTOR, e nao um mes a mais: `termOf` encerra o mandato em
+     `month >= MONTHS_PER_TERM`, entao o ultimo mes que o jogador resolve e o 47 e nada depois
+     dele acontece numa partida. A versao anterior cobrava `> MONTHS_PER_TERM + OPENING_MONTH`
+     — o mes 50 —, e media dois meses que este laco de 60 joga e o jogo nao.
+     O CRITERIO NAO MUDOU e continua sendo o mesmo: um governo mediano nao cai DURANTE o
+     mandato. O que mudou e a data em que o mandato acaba deixar de ser chutada aqui. */
   const mediano = manutencao();
   assert.ok(
-    mediano === null || mediano > MONTHS_PER_TERM + OPENING_MONTH,
+    mediano === null || mediano >= MONTHS_PER_TERM,
     `um governo mediano caiu no mes ${mediano}, dentro do mandato — a queda virou corredor`,
   );
 });

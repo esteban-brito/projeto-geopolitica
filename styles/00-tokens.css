@@ -107,6 +107,11 @@
     --pin-body: #78838f;
     --pin-shade: #5a646f;
     --rail-costly: #232a33;
+    /* ⚠ O PISO QUE SO UMA EMENDA MOVE, e ele era pintado com a cor do piso de lei ordinaria:
+       o jogo SABE quais pisos sao constitucionais — `data-guard` carrega isso em toda linha —
+       e mostrava os tres com a mesma tinta. Frio para o que a lei ordinaria tranca, quente
+       para o que a Constituicao tranca; e o mesmo eixo do bordo, que ja e o canal do rito. */
+    --rail-locked: #3a2229;
     --rail-mark: #8a734c;
 
     /* ── A FOLHA — o documento, e ela deixou de ser PAPEL ────── Palavras dele:

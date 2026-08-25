@@ -36,6 +36,58 @@ metade que caía todo o trabalho de design das últimas seis sessões.
 ficou feia. **Abrir a captura em `captures/` é o único passo do fluxo que segue humano**, e
 é o passo que se pula.
 
+### ✔ O PASSO 1 DO GLORIOSO ESTÁ FEITO — 0.1 · 0.2 · C1 · C2 · C3
+
+Os cinco entraram, `validate` verde, e o Gabinete continua em **179px** no cartão da
+caldeira — o orçamento de pixel da Restrição 1 não se moveu um pixel.
+
+⭐ **E O PASSEIO GANHOU UM TERCEIRO IRMÃO ANTES DE QUALQUER ITEM ENTRAR: `checkEllipsized`.**
+`checkClipped` vê o eixo X, `checkSwallowed` vê o eixo Y, e **nenhum dos dois vê
+`text-overflow: ellipsis`** — texto que não rola, só perde o fim com reticência. Ela nasceu
+porque o C3 põe texto dentro de um rótulo de largura fixa, e a Restrição 2 manda a checagem
+nascer primeiro. **Ela acusou três truncamentos na tela publicada na primeira rodada:**
+
+| peça                | pedia | tinha | onde                      |
+| ------------------- | ----- | ----- | ------------------------- |
+| `Congresso & Leis`  | 114px | 109px | rail, item de 1º nível    |
+| `Indústria e Infr…` | 164px | 109px | rail, em Ministérios      |
+| `INDÚSTRIA E INF…`  | 202px | 117px | faixa de áreas, Congresso |
+
+Os dois consertos: o respiro lateral do rail caiu de 12 para 8px (o item já tem 12 próprios,
+e alargar o `--rail` custaria largura do tabuleiro em toda tela), e **as áreas ganharam
+`short`** — opcional, e só `industry` a declara. É o mesmo precedente de `sigla` em `parties`.
+
+⚠ **E ELA PEGOU O C3 ANTES DE ELE SUBIR:** `Mercado financeiro 35%` pedia 150px e
+`Militares e polícia não pesa` pedia 164, numa coluna de 144. A coluna do nome voltou para
+11rem — ela já foi 10,5, caiu para 9 quando a frase do lobby saiu, e cresceu de novo agora
+que o peso entrou. As três decisões estão certas porque a LINHA mudou entre elas.
+
+### ⚠ O QUE O 0.1 CUSTOU, medido nas duas pontas
+
+A desoneração saiu da despesa e virou renúncia de receita. **A série fiscal quase não se
+move, e era o previsto:** os mesmos R$ 19,84 bi trocam de lado da conta.
+
+| política     | dívida antes | dívida depois | votações antes | votações depois |
+| ------------ | ------------ | ------------- | -------------- | --------------- |
+| `herdado`    | 90,0%        | **90,0%**     | 0 de 0         | 0 de 0          |
+| `piso`       | 90,9%        | **90,9%**     | 5 de 17        | 5 de 17         |
+| `base`       | 90,7%        | **90,7%**     | 35 de 42       | 36 de 41        |
+| `agenda`     | 90,1%        | **90,1%**     | 29 de 43       | 30 de 42        |
+| `explorador` | 92,0%        | 91,7%         | 0 de 0         | 0 de 0          |
+| `promessa`   | 93,5%        | 93,3%         | 0 de 3         | 0 de 3          |
+
+⚠ **A ARITMÉTICA DECIDIU O DESENHO, e não a opinião.** A renúncia é lida no nível **cheio** e
+não em delta — ao contrário do dividendo. Em delta, o primário de posse saltaria de **−51,2
+para −31,4** sem ninguém ter escolhido isso, que é recalibragem por efeito colateral. Lida
+cheia nos dois lados, o primário não se move um real.
+
+⚠ **E UMA PROVA MUDOU DE LIMIAR, com o critério intacto.** O governo mediano caía no mês 52 e
+passou a cair no **50**; a prova exigia `> 50`. **Mas o motor encerra o mandato em `month >=
+48`** (`turn.mjs`), então o último mês que alguém resolve é o 47 — os meses 48 a 50 só existem
+no laço de 60 da prova. Ela passou a cobrar `>= MONTHS_PER_TERM`, que é a data que o motor já
+usa. **O critério é o mesmo** — um governo mediano não cai durante o mandato; o que saiu foi
+uma data chutada em paralelo à do motor.
+
 ### ▶ O QUE FAZER, na ordem
 
 1. ▶ **A COLUNA DA DIREITA DO GABINETE AINDA NÃO É NOTA 10.** Ele deu 7 na Caixa de Entrada
@@ -251,14 +303,17 @@ entrou, e cada uma foi superada pela seguinte. **Calibrar contra qualquer uma de
 ajustar o parafuso contra um jogo que não existe mais** — por isso elas ficaram em
 [`journal.md`](journal.md), e esta ficou aqui.
 
+⚠ **E O HORIZONTE É DECLARADO NA TABELA porque a coluna de votações já misturou dois.**
+Todas as células abaixo são de **48 meses**, semente padrão. Ver o achado 54.
+
 | política     | dívida/PIB | votações     | indústria   | segurança   |
 | ------------ | ---------- | ------------ | ----------- | ----------- |
 | `herdado`    | **90,0%**  | 0 de 0       | 48 → **28** | 38 → **27** |
-| `agenda`     | 90,2%      | 14 de 43     | 48 → 20     | 38 → 20     |
-| `base`       | 90,7%      | **29 de 42** | 48 → 20     | 38 → 20     |
-| `piso`       | 90,8%      | 2 de 24      | 48 → **15** | 38 → **15** |
+| `agenda`     | 90,1%      | **29 de 43** | 48 → 20     | 38 → 20     |
+| `base`       | 90,7%      | **35 de 42** | 48 → 20     | 38 → 20     |
+| `piso`       | 90,9%      | 5 de 17      | 48 → **15** | 38 → **15** |
 | `explorador` | 92,0%      | 0 de 0       | 48 → 17     | 38 → 17     |
-| `promessa`   | **93,5%**  | 0 de 4       | 48 → 15     | 38 → 15     |
+| `promessa`   | **93,5%**  | 0 de 3       | 48 → 15     | 38 → 15     |
 
 ⚠ **A dívida subiu ~6 pontos em TODAS as políticas, e isso é consequência e não
 regressão:** enquanto o país se consertava sozinho, a capacidade subia, a arrecadação
@@ -293,6 +348,33 @@ conserta com risco"_.
 > ⚠ **Achado com número tem data, e número com data envelhece.** Antes de repetir
 > qualquer um destes, remeça-o. Os que já morreram estão em
 > [`journal.md`](journal.md), na seção _Achados que já morreram_.
+
+**54. ✔ A COLUNA DE VOTAÇÕES DA SÉRIE QUE CALIBRA ESTAVA ERRADA, e ela foi corrigida em
+24/08/2026 — a regra do topo desta seção pagou o próprio custo na primeira vez que foi
+seguida.** A tabela foi remedida antes de ser citada, e as outras três colunas passaram:
+dívida fecha dentro de 0,1 p.p. nas seis políticas, e indústria e segurança batem **exato**
+nas doze células. **Só votações divergia**, e nas quatro políticas que votam.
+
+⚠ **A CAUSA É HORIZONTE MISTURADO DENTRO DA MESMA CÉLULA.** A `agenda` aprova assim:
+
+| horizonte | `agenda` |
+| --------- | -------- |
+| 24 meses  | 14 de 19 |
+| 36 meses  | 22 de 31 |
+| 48 meses  | 29 de 43 |
+
+O `14 de 43` que estava escrito é **o numerador de 24 meses colado no denominador de 48**.
+O `29` da `base` era o número que a `agenda` faz a 48 — uma linha pegou o da vizinha. E o
+`2 de 24` do `piso` não existe em horizonte nenhum: a 24, 36 e 48 meses ele dá 5 de 13,
+5 de 17 e 5 de 17.
+
+⚠ **NÃO É INDETERMINISMO** — `agenda` a 48 meses deu 29 em duas rodadas seguidas, e a prova
+_"o mandato inteiro se refaz da semente e das ordens"_ continua verde.
+
+⚠ **E A CONSEQUÊNCIA CAI NO ACHADO 22, que raciocina em cima desta coluna.** Com 14 de 43 a
+`agenda` aprova **33%**; com 29 de 43 ela aprova **67%**. _"Legislar é caro"_ e _"legislar
+está estrangulado"_ são diagnósticos opostos que pedem trabalhos opostos, e o segundo não
+se sustenta neste número. **Nada foi recalibrado** — o achado 53 continua de pé.
 
 **53. ⛔ NÃO RECALIBRAR A CAPACIDADE ANTES DA REFORMULAÇÃO — decisão dele, registrada em
 21/08/2026.** Com o achado 52 na mão eu ia recomendar girar `decay` e `yield`, e ele avisou
@@ -642,12 +724,19 @@ visita é 78%–89%, e nela o prêmio passa quase todo o tempo perto de zero. �
 calibragem, e vai junto com o achado 22**: um preço que só morde fora da faixa jogada
 é um preço que o jogador nunca sente.
 
-**22. A TRAMITAÇÃO PODE — E PRECISA — SER RECALIBRADA, e agora sem impedimento.**
-⚠ **O diagnóstico mudou depois do achado 25**: a `agenda` aprova **4 de 11**, e não 3
-de 24. O que parecia tramitação estrangulada era **instrumento quebrado**. O número
-atual. Isso pode ser "legislar é caro", que é o efeito
-pretendido, ou pode estar estrangulado — e até o ciclo 9 não dava para saber, porque o
-jogador não conseguia agir sobre nenhum dos 21 que morriam. ⚠ **E entrou um número novo
+**22. ⚠ O DIAGNÓSTICO DE "TRAMITAÇÃO ESTRANGULADA" NÃO SE SUSTENTA NO NÚMERO MEDIDO —
+remedido em 24/08/2026, ver o achado 54.** Este item já mudou de número duas vezes: "3 de
+24", depois "4 de 11", e as duas leituras vinham de instrumento quebrado ou de horizonte
+misturado.
+
+**Medido a 48 meses, semente padrão:** a `agenda` aprova **29 de 43 (67%)** e a `base`
+**35 de 42 (83%)**. Um Congresso que aprova dois terços do que o governo protocola não está
+estrangulado — isso é "legislar custa, e o preço se paga", que é o efeito pretendido.
+
+⚠ **O QUE SOBREVIVE DO ITEM É OUTRA PERGUNTA, e ela não é sobre a taxa de aprovação:** é
+sobre o que morre **antes** do plenário. As 43 votações da `agenda` são o que CHEGOU lá; a
+gaveta e a relatoria continuam sem medição própria, e o achado 50 mostra o outro extremo —
+a sonda `legislador` fecha o mandato com **2 normas e 2 de 39 aprovadas**. ⚠ **E entrou um número novo
 na mesma família: `ANSWER_TIME = 2`**, o prazo da pergunta, declarado como primeiro
 chute na prosa de `mail.mjs`. O que NÃO é chute está escrito lá: ele tem de ser maior
 que um, senão "responder" vira "responder agora" e o prazo não compete com nada.

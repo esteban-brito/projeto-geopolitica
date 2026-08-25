@@ -22,8 +22,20 @@ const TOKENS_FILE = "styles/00-tokens.css";
    duplica-lo no arquivo de tokens criaria um segundo lugar para ele divergir; --index    o
    indice corrente de uma area, escrito em estilo inline pela propria faixa de medidores: e um
    numero por elemento, e nao um valor do sistema; --floor    onde a lei daquela alavanca
-   comeca, e --ceiling   onde ela acaba. */
-const RUNTIME = new Set(["--part-color", "--neutral", "--index", "--floor", "--ceiling", "--mark"]);
+   comeca, e --ceiling   onde ela acaba; --fall     o SEGUNDO limiar de uma regua, e so um
+   grupo da caldeira tem um: em --mark ele abandona o governo, e em --fall a ruptura politica
+   abre; --rail-floor a tinta da zona abaixo do piso, trocada pela guarda daquela alavanca
+   na regra do proprio controle — e a mesma forma de --part-color. */
+const RUNTIME = new Set([
+  "--part-color",
+  "--neutral",
+  "--index",
+  "--floor",
+  "--ceiling",
+  "--mark",
+  "--fall",
+  "--rail-floor",
+]);
 
 /**
  * @param {Map<string, string>} files
