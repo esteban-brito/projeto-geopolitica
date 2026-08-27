@@ -13,6 +13,9 @@ import { DEFAULT_TREATMENT, UI, addressed, labelOf } from "../strings.mjs";
  * @typedef {object} Dispatch
  * @property {string} id o mesmo id da carta no estado; e por ele que a bandeja abre
  * @property {number} month o mes em que ela chegou — e o indice PRECISA dele; ver `rowHtml`
+ * @property {import("../../state/state.mjs").Letter["kind"]} [kind] a especie da carta;
+ *   necessario para o indice distinguir demand, rupture e siege — os tres kinds sem prefixo
+ *   no assunto. ausente na carta sintetica do mes (describeMonth)
  * @property {{ name: string, office: string, label: string, reach: number, gender?: "f" | "m" } | null} from
  * @property {string} subject
  * @property {string} body ja em HTML
@@ -127,6 +130,14 @@ function dueLabel(due) {
   if (due <= 0) return UI.inbox.dueNow;
   return `${UI.inbox.dueIn} ${due} ${due === 1 ? UI.inbox.month : UI.inbox.months}`;
 }
+
+/* ⚠ SOMENTE OS TRÊS KINDS SEM PREFIXO NO ASSUNTO — demand, rupture e siege. Os demais já
+   trazem a espécie escrita no subject ("Pautei:", "Devolvi com emenda:", "Esquecido:" etc.). */
+const DISPATCH_TAG = new Map([
+  ["demand", "Exigência"],
+  ["rupture", "Ruptura"],
+  ["siege", "Cerco"],
+]);
 
 /**
  * O que a carta faz e escolher QUAIS das leituras que o turno ja produziu merecem uma linha —
@@ -264,10 +275,11 @@ export function describeMail({
       /* Nove lugares para digitar a mesma chave e nove lugares para esquece-la — e uma carta
          sem id na bandeja de duas colunas nao quebra nada: ela simplesmente nunca abre quando
          clicada. */
-      const paper = (/** @type {Omit<Dispatch, "id" | "month">} */ spec) => ({
+      const paper = (/** @type {Omit<Dispatch, "id" | "month" | "kind">} */ spec) => ({
         ...spec,
         id: letter.id,
         month: letter.month,
+        kind: letter.kind,
         /* ⚠ `treatment` NAO VIAJA MAIS COM A CARTA: ele existia para o vocativo, e o vocativo
            saiu. Quem trata o presidente por senhor ou senhora sao as FRASES do corpo, e elas
            se montam aqui, onde o tratamento ja esta. */
@@ -433,7 +445,7 @@ export function describeMail({
           return paper({
             from: by("chief"),
             /* ⚠ O NOME VEM DEPOIS DO VERBO, e nao antes: assim a frase nao concorda com ele. */
-            subject: `${UI.inbox.boilingSubject} ${nameOf(subject) || subject}`,
+            subject: `${UI.inbox.boilingSubject} ${escapeHtml(nameOf(subject) || subject)}`,
             body:
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.boilingBody)}</span>` +
@@ -606,6 +618,12 @@ function rowHtml(dispatch, open, read) {
        mudou entre elas. */
     `<span class="tray__line">` +
     (dispatch.from ? `<span class="tray__from">${escapeHtml(dispatch.from.name)}</span>` : "") +
+    /* ⚠ A TAG DE ESPECIE SO APARECE NOS TRÊS KINDS SEM PREFIXO NO ASSUNTO: demand, rupture e
+       siege. Os outros já trazem "Pautei:", "Devolvi com emenda:", "Esquecido:" etc. no
+       subject, e uma tag lá seria repetição. */
+    (dispatch.kind && DISPATCH_TAG.has(dispatch.kind)
+      ? ` <span class="tray__kind">${escapeHtml(DISPATCH_TAG.get(dispatch.kind))}</span>`
+      : "") +
     (urgency
       ? `<span class="tray__due" data-numeric>${escapeHtml(dueLabel(dispatch.due ?? null))}</span>`
       : "") +
@@ -897,10 +915,10 @@ function seatsAnnex(data, parties) {
     `<section class="annex">` +
     `<h5 class="annex__legend">${escapeHtml(UI.inbox.annexSeats)}</h5>` +
     `<div class="annex__scroll"><table class="annex__table">` +
-    `<thead><tr><th></th>` +
-    `<th>${escapeHtml(UI.inbox.annexSeatsCol)}</th>` +
-    `<th>${escapeHtml(UI.inbox.annexMoodCol)}</th>` +
-    `<th>${escapeHtml(UI.inbox.annexMoveCol)}</th>` +
+    `<thead><tr><th scope="col"></th>` +
+    `<th scope="col">${escapeHtml(UI.inbox.annexSeatsCol)}</th>` +
+    `<th scope="col">${escapeHtml(UI.inbox.annexMoodCol)}</th>` +
+    `<th scope="col">${escapeHtml(UI.inbox.annexMoveCol)}</th>` +
     `</tr></thead><tbody>${rows}</tbody></table></div>` +
     `</section>`
   );
@@ -963,9 +981,11 @@ function annexHtml(letter, segments, parties) {
     `<h5 class="annex__legend">${escapeHtml(UI.inbox.annexLegend)}</h5>` +
     `<div class="annex__scroll">` +
     `<table class="annex__table">` +
-    `<thead><tr><th></th>` +
-    ANNEX_NOTES.map(note => `<th>${escapeHtml(labelOf(UI.inbox.annexNote, note))}</th>`).join("") +
-    `<th>${escapeHtml(UI.inbox.annexTotal)}</th></tr></thead>` +
+    `<thead><tr><th scope="col"></th>` +
+    ANNEX_NOTES.map(
+      note => `<th scope="col">${escapeHtml(labelOf(UI.inbox.annexNote, note))}</th>`,
+    ).join("") +
+    `<th scope="col">${escapeHtml(UI.inbox.annexTotal)}</th></tr></thead>` +
     `<tbody>${rows}</tbody>` +
     `</table>` +
     `</div>` +

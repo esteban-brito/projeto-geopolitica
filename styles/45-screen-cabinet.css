@@ -457,6 +457,15 @@
     text-overflow: ellipsis;
   }
 
+  /* ⚠ A TAG DE ESPECIE É MENOR QUE O REMETENTE — ocupa o mesmo espaço que uma palavra curta
+     e não compete com o assunto nem com o prazo. */
+  .tray__kind {
+    font-family: var(--font-text);
+    font-size: var(--text-label);
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
   /* Centrado, um ofício de três linhas flutuaria no meio de 600px — que é o defeito que o
      estado vazio levou uma sessão para consertar. */
   .tray__open {

@@ -123,3 +123,31 @@ test("qualquer texto e recusado sem lancar", () => {
     }),
   );
 });
+
+test("save com impeachment e round-trip identico", () => {
+  let state = createState(42);
+  for (let i = 0; i < 20; i++) state = idle(state);
+  /* Forca um impeachment — o campo e number | null. */
+  state = /** @type {import("../../src/state/state.mjs").GameState} */ ({
+    ...state,
+    impeachment: state.month,
+  });
+  const text = serialize(state);
+  const loaded = deserialize(text);
+  assert.equal(loaded.ok, true);
+  if (loaded.ok) {
+    assert.equal(loaded.state.impeachment, state.impeachment);
+    assert.equal(loaded.state.fallen, state.fallen);
+  }
+});
+
+test("save com campo corrupto e recusado", () => {
+  const state = createState(1);
+  const obj = JSON.parse(serialize(state));
+  obj.fiscal = 42;
+  const loaded = deserialize(JSON.stringify(obj));
+  assert.equal(loaded.ok, false);
+  if (!loaded.ok) {
+    assert.ok(loaded.reason.includes("fiscal"));
+  }
+});

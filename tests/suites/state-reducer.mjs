@@ -276,6 +276,9 @@ test("o estado de abertura ja satisfaz o invariante e ja sai congelado", () => {
   assertApprovalInvariant(pollFrom(state.mood, SEGMENTS, OPINION));
   assert.ok(Object.isFrozen(state));
   assert.ok(Object.isFrozen(state.mood));
+  assert.ok(Object.isFrozen(state.fiscal));
+  assert.ok(Object.isFrozen(state.capacity.index));
+  assert.ok(Object.isFrozen(state.series.gdp));
 });
 
 test("reduce nunca muta o estado que recebe", () => {
@@ -364,7 +367,11 @@ test("o mes resolvido PRESERVA A REFERENCIA do que ele nao toca", () => {
   fc.assert(
     fc.property(anyState, state => {
       const next = reduce(state, resolutionOf(state));
-      assert.equal(next.streams.events, state.streams.events, "o fluxo de eventos foi recriado");
+      assert.equal(
+        next.streams.events,
+        state.streams.events,
+        "o fluxo de eventos NAO foi recriado",
+      );
     }),
   );
 });

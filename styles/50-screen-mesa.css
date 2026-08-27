@@ -530,7 +530,8 @@
   /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
      atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
      rolar.
-     O corte para em 640/720px, que é território de telefone. */
+     O breakpoint efetivo e 720px (territorio de telefone). 640px e o limiar conceptual
+     onde o layout completamente colapsa, mas nao ha regra CSS separada para la. */
 
   @media (max-width: 1180px) {
     /* ⚠ E AQUI A FILEIRA VOLTA A SER GRADE.

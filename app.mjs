@@ -234,7 +234,9 @@ const readMail = new Set(resumeSeen());
    tela, e uma partida retomada comeca sem relatorio anterior porque de fato nao
    houve um nesta sessao. */
 /** @type {{ report: Report, quorum: number, loyaltyBefore: Record<string, number>,
- *           indexBefore: Record<string, number> } | null} */
+ *           indexBefore: Record<string, number>,
+ *           adviser: { name: string, office: string, label: string, reach: number,
+ *                      gender?: "f" | "m" } | null } | null} */
 let last = null;
 
 /* AS ORDENS DE UM MES QUE AINDA NAO COMECOU.
@@ -455,7 +457,7 @@ function cabinetInput(current) {
           ? [
               describeMonth({
                 report: last.report,
-                adviser: governmentOf(state, CATALOG).adviser,
+                adviser: last.adviser,
               }),
             ]
           : []),
@@ -556,13 +558,13 @@ function paint() {
      repintava ao FIM de um mes. Enquanto ele so dizia "Avancar o mes" isso bastava;
      agora ele carrega o preco do clique, e o preco cai no instante em que o jogador
      marca uma resposta na bandeja. Repintado so no fechamento, ele anunciaria uma
-     pergunta sem resposta que o jogador acabou de responder. */
-  endLabel();
+      pergunta sem resposta que o jogador acabou de responder. */
   /* ⚠ QUEM SABE SE O MANDATO ACABOU E O MOTOR. Antes esta pergunta era
      `state.fallen !== null` escrita aqui, e ela estava PELA METADE: pegava a queda e
      nao pegava o PRAZO — nada terminava o mandato aos 48 meses, e quem atravessasse
      os quatro anos entrava num "2o mandato" que nunca teve eleicao. */
   const term = termOf(state, CATALOG);
+  endLabel(term);
 
   el.railNav.innerHTML = railNavHtml(screen, CATALOG.areas);
 
@@ -707,8 +709,9 @@ function paint() {
 
      ⚠ E A COR E O BORDO DO CARIMBO, e nao o vermelho de crise: `--crisis` e a cor do
      que JA deu errado, e bordo e a do despacho pendente. O processo aberto e exatamente
-     isso — a Camara carimbou, e o mandato ainda nao caiu. */
-  el.shell.dataset["siege"] = state.impeachment !== null && state.fallen === null ? "true" : "";
+      isso — a Camara carimbou, e o mandato ainda nao caiu. */
+  const siege = state.impeachment !== null && state.fallen === null ? "true" : "";
+  if (el.shell.dataset["siege"] !== siege) el.shell.dataset["siege"] = siege;
 
   painted = state;
   standing = current;
@@ -1024,34 +1027,39 @@ el.advance.addEventListener("click", () => {
      dos dois carrega sozinho. O turno devolve o depois; o antes so existe aqui,
      no instante anterior a troca. */
   const before = state;
-  const played = playMonth(state, orders, { catalog: CATALOG });
-  state = played.state;
 
-  last = {
-    report: played.report,
-    /* O QUORUM VEM DA PAUTA COMPOSTA, e ele nao precisa mais ser recalculado: o
-       turno ja o decidiu quando compos a proposta, e refazer a conta aqui seria a
-       tela produzindo um segundo numero para a mesma pergunta. */
-    quorum: played.report.agenda.quorum,
-    loyaltyBefore: before.loyalty,
-    indexBefore: before.capacity.index,
-  };
+  /* ⚠ O TRY/CATCH EVITA TRAVAMENTO PERMANENTE. Se `playMonth` lancar por estado
+     corrompido ou violacao de contrato, `resolving` ficaria true e o botao trancado
+     para sempre — sem caminho de recuperacao. */
+  try {
+    const played = playMonth(state, orders, { catalog: CATALOG });
+    state = played.state;
 
-  /* O RASCUNHO MORRE COM O MES. Carregar a verba do mes passado para o proximo
-     faria o jogador pagar de novo sem ter decidido — e o motor cobraria, porque
-     ele nao sabe distinguir promessa nova de promessa esquecida na tela. */
-  orders = blankOrders();
-  persist();
-  /* ⚠ O FECHO PUXA A TELA PARA SI no mes em que o mandato acaba, e so nesse mes.
-     Sem isto o jogador que caisse estando em Financas continuaria em Financas, e a
-     unica noticia do fim seria um botao que parou de responder — que e exatamente o
-     defeito que este bloco existe para matar. */
-  if (termOf(state, CATALOG).over) screen = "cabinet";
+    last = {
+      report: played.report,
+      quorum: played.report.agenda.quorum,
+      loyaltyBefore: before.loyalty,
+      indexBefore: before.capacity.index,
+      adviser: governmentOf(before, CATALOG).adviser,
+    };
 
-  transition(() => {
+    /* O RASCUNHO MORRE COM O MES. Carregar a verba do mes passado para o proximo
+       faria o jogador pagar de novo sem ter decidido — e o motor cobraria, porque
+       ele nao sabe distinguir promessa nova de promessa esquecida na tela. */
+    orders = blankOrders();
+    persist();
+    /* ⚠ O FECHO PUXA A TELA PARA SI no mes em que o mandato acaba, e so nesse mes. */
+    if (termOf(state, CATALOG).over) screen = "cabinet";
+
+    transition(() => {
+      resolving = false;
+      endLabel();
+    });
+  } catch {
     resolving = false;
-    endLabel();
-  });
+    el.advance.disabled = false;
+    state = before;
+  }
 });
 
 el.noticeClose.addEventListener("click", () => el.dialog.close());
@@ -1178,8 +1186,8 @@ function label(node, text, hint) {
 
    ⚠ E QUEM CONTA E O MOTOR. `silences` e `settle` filtrada: a tela nao pergunta
    se o prazo venceu, ela pergunta o que este fechamento decide sozinho. */
-function endLabel() {
-  const term = termOf(state, CATALOG);
+function endLabel(/** @type {ReturnType<typeof termOf> | null} */ term_ = null) {
+  const term = term_ ?? termOf(state, CATALOG);
   /* ⚠ `|| resolving` — E ELE VALE UM MES INTEIRO DE CLIQUE. `paint` chama esta funcao, e
      `paint` roda no PRIMEIRO quadro da View Transition: sem a trava aqui, o botao voltava a
      ficar clicavel enquanto o mes ainda estava resolvendo. A janela e a transicao inteira, e

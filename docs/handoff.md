@@ -14,7 +14,94 @@
 > defeito que a mudança existia para consertar. **Um ponto de retomada que ninguém consegue
 > reler inteiro é um ponto de retomada que mente.**
 
-## ▶ COMECE AQUI — a ordem para a sessão 21
+---
+
+## ▶ PARA O CLAUDE — contexto da sessão 21 (auditoria, 25/08/2026)
+
+**Quem fez:** agente de auditoria (opencode), sem memória de conversa anterior. Leu o
+código inteiro como se fosse um usuário novo e encontrou tudo que estava errado.
+
+**O que foi feito:** duas rodadas de auditoria com agentes paralelos. A primeira (5
+agentes) pegou defeitos de DOM, save, CSS e código morto. A segunda (4 agentes) pegou
+colisão de nomes, XSS, validação de forma e lacunas de prova. **Nenhum motor foi
+alterado.** Todas as mudanças são de proteção (try/catch, escapeHtml, validação) ou de
+limpeza (remoção de exports mortos, JSDoc duplicado).
+
+### Arquivos modificados (25 arquivos, incluindo 1 novo)
+
+### Sessão 22 (27/08/2026) — bugs UI
+
+Dois achados de auditoria consertados. 252 testes, 12 guardas, tudo verde.
+
+| Achado | Arquivo                                                    | O que mudou                                                                                       |
+| ------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 40     | `src/ui/screens/cabinet.mjs`                               | Os 3 `lockedBy` agora aparecem (`poles--note poles--wide`) em vez de só 1                         |
+| 45     | —                                                          | **Já estava consertado** — `font-size: 0.5rem` removido no commit 95681c3 quando escada virou SVG |
+| 24     | `src/ui/screens/inbox.mjs`, `styles/45-screen-cabinet.css` | `kind` no tipo `Dispatch`, tag de espécie na linha do índice (demand/rupture/siege)               |
+| 17     | 5 arquivos CSS                                             | Comentários atualizados: 720px = breakpoint efetivo, 640px = limiar conceptual                    |
+
+| arquivo                          | o que mudou                                                                                                            |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `app.mjs`                        | try/catch em `playMonth`, `adviser` como `Person` em `last`, `termOf` uma vez por paint, `dataset.siege` só em mudança |
+| `src/domain/cast/index.mjs`      | `fullName` no set `used` + guarda de string vazia                                                                      |
+| `src/state/state.mjs`            | `deepFreeze` exportado                                                                                                 |
+| `src/state/save.mjs`             | `deepFreeze` no load, 6 campos obrigatórios, validação de forma para 8 campos críticos                                 |
+| `src/ui/screens/closing.mjs`     | `escapeHtml(term.of)`, `<time datetime>` com `monthLabel`                                                              |
+| `src/ui/screens/inbox.mjs`       | `<th scope="col">`, `escapeHtml` no caso `boiling`                                                                     |
+| `src/ui/screens/mesa.mjs`        | JSDoc órfão removido                                                                                                   |
+| `src/ui/screens/cabinet.mjs`     | `@param` duplicado removido                                                                                            |
+| `src/ui/shared/trend.mjs`        | import movido para o topo                                                                                              |
+| `styles/30-components.css`       | dois `@media` adjacentes mesclados                                                                                     |
+| `src/data/bills.mjs`             | export `INSTRUMENTS` removido, JSDoc atualizado                                                                        |
+| `src/data/cast.mjs`              | export `GIVEN_NAMES` removido (mantido como `const` local)                                                             |
+| `src/public/index.mjs`           | `INSTRUMENTS` removido do barrel                                                                                       |
+| `tests/suites/passage.mjs`       | **novo** — 13 provas (`forgotten`, `tables`, `reports`, `proposalOf`)                                                  |
+| `tests/suites/budget.mjs`        | prova GDP=0                                                                                                            |
+| `tests/suites/save.mjs`          | 2 provas novas (impeachment round-trip + campo corrompido)                                                             |
+| `tests/suites/congress.mjs`      | tolerância 20%→25%, amostras 600→1000                                                                                  |
+| `tests/suites/state-reducer.mjs` | `isFrozen` em `fiscal`, `capacity.index`, `series.gdp`; mensagem de assertion corrigida                                |
+
+### Dois itens para decidir (requerem schema bump, juntos)
+
+⚠ **O save recusa versão diferente em vez de converter** — custa a partida em andamento.
+Os dois abaixo podem ser feitos juntos num único bump de schema, quando o responsável
+decidir:
+
+1. **`last` perdido no F5** (achado 46) — a leitura do mês some na recarga. A metade
+   visível já foi consertada (a bandeja vazia agora diz a verdade sobre o mandato); falta
+   persistir o último relatório no save. **Impossível regenerar** — o relatório é função
+   do estado ANTERIOR e das ordens daquele mês;
+2. **`events` stream morto** — `state.streams.events` é código morto, nenhum motor o
+   consome. Remoção requer mudança de tipo em `Streams`.
+
+### Próximo passo do plano
+
+O Glorioso, passo 2 — **B1 a B5** (faixa de áreas no Congresso). O plano está em
+`docs/cycles/13-o-glorioso.md`. Os itens B1-B5 são:
+
+- B1: colorir o mandato (distância de `initial`, não o nível)
+- B2: cada bloco é `<button data-section>` e leva ao ministério
+- B3: cada área tem `index` no catálogo, a faixa mostra só o rótulo
+- B4: `.trend[data-direction]` já existe, a faísca é sem cor
+- B5: ícone por área (o rail já tem um por ministério)
+
+⚠ **O bloco tem 108px e já estourou antes** — a Restrição 2 manda `checkOverflow` +
+`checkClipped` + `checkEllipsized` + captura aberta, sem exceção.
+
+### Como validar
+
+```bash
+npm run validate   # guardas + tipos + lint + formato + testes + passeio — ~42s, tem de ficar verde
+npm run check      # só as guardas, ~2s — o laço curto
+npm test           # só as suítes, ~2s
+npm run simulate   # 48 meses no terminal
+npm run serve      # http://127.0.0.1:5173/
+```
+
+⚠ **O portão não sabe OLHAR.** Mexeu em tela? abra a captura em `captures/`. Três defeitos
+já atravessaram tipo, guarda e cem provas para morrer na imagem.
+
+---
 
 **Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
 130 arquivos · 236 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
@@ -571,10 +658,10 @@ um desenho ficar bonito: se a régua estiver errada, é conserto de leitura; se 
 estiver parado, é conserto de jogo, e os dois têm donos diferentes.
 
 **46. ⚠ RECARREGAR A PÁGINA APAGA A LEITURA DO MÊS, e o save não tem como devolvê-la —
-ACHADO NOVO em 21/08/2026, e ele veio de uma captura do responsável.** `last`, o relatório
-do turno, é **variável de módulo do entrypoint** e não vai para o save. Numa recarga o
-estado volta inteiro do `localStorage` e `last` volta **nulo**: `describeMonth` não produz
-carta nenhuma, e se `state.mail` também estiver vazia a bandeja fecha com **zero ofícios**.
+ACHADO em 21/08/2026, conserto parcial em 25/08/2026.** `last`, o relatório do turno, é
+**variável de módulo do entrypoint** e não vai para o save. Numa recarga o estado volta
+inteiro do `localStorage` e `last` volta **nulo**: `describeMonth` não produz carta nenhuma,
+e se `state.mail` também estiver vazia a bandeja fecha com **zero ofícios**.
 
 Reproduzido num navegador de verdade, sem tocar em código:
 
@@ -607,6 +694,9 @@ andamento de quem estiver jogando. As três saídas:
    ordens daquele mês, e nenhum dos dois sobrevive;
 3. **aceitar a perda e declará-la** — é o que está no ar agora, e é honesto, mas o jogador
    perde a leitura sem saber que existiu.
+
+⚠ **O `events` stream também é código morto em `state.streams`** — nenhum motor o consome.
+Remoção requer mudança de tipo em `Streams` e bump de esquema, junto com o `last`.
 
 **45. ⚠ AS ESCADAS DE FINANÇAS TÊM O MESMO DEFEITO QUE REPROVOU A DA BARRA, e elas estão
 na tela há sessões — ACHADO NOVO em 21/08/2026, pego na captura do passeio.**
@@ -761,11 +851,18 @@ em ELENCO: `remember` credita por verba prometida e paga, e **uma ofensa não é
 calote**. Se a calibragem do achado 22 mostrar que travar sai de graça, o canal da
 ofensa é o lugar certo de mexer.
 
-**24. RÓTULO DE TEXTO NÃO DISTINGUE TEXTO.** Dois projetos escritos em meses diferentes
+**24. ✅ CONCERTADO — RÓTULO DE TEXTO NÃO DISTINGUE TEXTO.** Dois projetos escritos em meses diferentes
 com o mesmo movimento têm o mesmo rótulo, e a bandeja mostra duas cartas aparentemente
 idênticas — visível em `captures/walk-carta-pergunta.png`. Hoje é cosmético; deixa de
 ser no dia em que o jogador tiver duas perguntas abertas e precisar escolher entre
 elas.
+
+**Conserto (27/08/2026):** `kind` adicionado ao tipo `Dispatch` e exibido como tag na
+linha do índice para os três kinds sem prefixo no assunto: demand ("Exigência"),
+rupture ("Ruptura"), siege ("Cerco"). Os demais kinds já trazem a espécie no subject
+("Pautei:", "Devolvi com emenda:", "Esquecido:" etc.). Alterados:
+`src/ui/screens/inbox.mjs` (typedef + paper + rowHtml + const DISPATCH_TAG) e
+`styles/45-screen-cabinet.css` (classe `.tray__kind`).
 
 **18. O `explorador` deixou de medir o orçamento.** Com a tramitação ele destrói a
 própria base em três meses — promete 100% a todos, o rateio corta, e a memória do
@@ -788,13 +885,18 @@ profissional, entregue por CASCATA) **não pluga** — a SONDA segmenta por rend
 por profissão, e CASCATA é só contrato. É um ciclo, e não um conserto. Ver
 [`research/03-mecanicas-de-referencia.md`](research/03-mecanicas-de-referencia.md).
 
-**17. Dois pontos de quebra convivem sem nada declarar a diferença** — 640px e
+**17. ✅ CONCERTADO — Dois pontos de quebra convivem sem nada declarar a diferença** — 640px e
 720px, mais o 1180px do rail. Lendo os blocos, a intenção existe e é razoável: 720
 é o refluxo de tablet e 640 é o colapso de telefone. Mas a atribuição parece
 arbitrária (a bancada colapsa em 640, os cartões do Gabinete em 720), e nada
 escreve a regra. A peça nova desta sessão — a gente dentro da bancada — foi para
 640 **de propósito**, para refluir junto com o pai que a contém; peça aninhada que
 quebra antes do pai lê como defeito. Isto é padronização por escrever.
+
+**Conserto (27/08/2026):** Comentários em 5 arquivos CSS atualizados — 720px declarado
+como breakpoint efetivo (território de telefone), 640px como limiar conceptual sem
+regra CSS separada. Alterados: `30-components.css`, `40-shell.css`, `50-screen-mesa.css`,
+`60-screen-area.css`, `70-screen-closing.css`.
 
 **16. Quatro das cinco ambições do elenco são INERTES.** Só `succession` tem preço
 — `successionDrag` em `offered`. `cabinet`, `state`, `court` e `seat` estão

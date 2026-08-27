@@ -12,7 +12,7 @@
 
 export { CATALOG } from "../data/catalog.mjs";
 export { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
-export { INSTRUMENTS, quorumOf } from "../data/bills.mjs";
+export { quorumOf } from "../data/bills.mjs";
 export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../data/regime.mjs";
 
 /* A PREVISAO e a BANDA sao os dois numeros que a mesa de negociacao mostra ao vivo enquanto o

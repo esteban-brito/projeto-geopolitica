@@ -133,7 +133,7 @@ export const DEFAULT_SEED = 20270101;
  * @param {T} value
  * @returns {T}
  */
-function deepFreeze(value) {
+export function deepFreeze(value) {
   if (value === null || typeof value !== "object") return value;
   for (const key of Object.keys(value)) {
     deepFreeze(/** @type {Record<string, unknown>} */ (value)[key]);

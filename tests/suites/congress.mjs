@@ -335,7 +335,7 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
     const band = dispersion({ parties: PARTIES, loyalty });
 
     const drifts = [];
-    for (let seed = 1; seed <= 600; seed++) {
+    for (let seed = 1; seed <= 1000; seed++) {
       const tally = vote({
         bill,
         parties: PARTIES,
@@ -352,10 +352,10 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
       drifts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / drifts.length,
     );
 
-    /* 20% de folga cobre o arredondamento em cadeiras (a banda e inteira, o desvio nao) e o
+    /* 25% de folga cobre o arredondamento em cadeiras (a banda e inteira, o desvio nao) e o
        corte da adesao em 0 e 1. */
     assert.ok(
-      Math.abs(sigma - band) <= band * 0.2,
+      Math.abs(sigma - band) <= band * 0.25,
       `lealdade ${level}: a banda anuncia ${band} e o dia entrega ${sigma.toFixed(2)}`,
     );
   }

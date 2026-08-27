@@ -190,3 +190,18 @@ test("o teto acompanha o sinal do crescimento da receita", () => {
   assert.ok(ceilingOf(anchor, 3000, 2700, 0.7) < anchor, "receita caindo encolhe teto");
   assert.equal(ceilingOf(anchor, 3000, 3000, 0.7), anchor, "receita parada nao mexe");
 });
+
+test("GDP zero nao produz NaN ou infinito", () => {
+  const zero = step({
+    gdp: 0,
+    mandatory: 3270,
+    anchorRevenue: 3500,
+    anchorExpense: 3600,
+    debt: 8580,
+    spent: 0,
+    parameters: FISCAL,
+  });
+  assert.ok(Number.isFinite(zero.revenue), "receita com PIB=0 deve ser finita");
+  assert.ok(Number.isFinite(zero.mandatory), "obrigatoria com PIB=0 deve ser finita");
+  assert.ok(Number.isFinite(zero.ceiling), "teto com PIB=0 deve ser finito");
+});

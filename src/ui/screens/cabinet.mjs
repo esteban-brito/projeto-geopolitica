@@ -180,10 +180,6 @@ function blockHtml({ legend, rows, key, foot, door, lead }) {
  * @param {{ loyal: number, obstructing: number, ruptured: number }} input.split a base por estado
  * @param {ReadonlyArray<{ id: string, label: string, economic: number, seats: number,
  * delivered: number, mood: string }>} input.chamber as bancadas, ja contadas pelo motor
- * @param {ReadonlyArray<{ id: string, label: string, economic: number, seats: number,
- * delivered: number, mood: string }>} input.chamber as onze bancadas, do motor
- * @param {ReadonlyArray<{ id: string, label: string, economic: number, seats: number,
- * delivered: number, mood: string }>} input.chamber as onze bancadas, ja contadas pelo motor
  * @param {boolean} input.resolved se ALGUM mes ja foi resolvido. ⚠ Ele existe para o
  * estado vazio escolher a frase verdadeira, e sai do MES do estado e nao do relatorio
  * em memoria: o relatorio nao vai para o save, e o mes vai
@@ -352,12 +348,17 @@ export function cabinetHtml(input) {
       /* ── DO REAL TRAVADO ATE O TEXTO QUE O TRAVOU ──────────────────────────── ⚠ ELA E A
          METADE DO RISCO R2 QUE FALTAVA, e uma revisao externa a cobrou com todas as letras:
          "a barra diz que 95% e obrigatorio, mas nao ha como investigar quais leis herdadas
-         estao sugando esse dinheiro". */
-      (input.locked[0]
-        ? readingHtml({
-            who: `${UI.cabinet.vaultBiggest} ${input.locked[0].label}`,
-            value: money(input.locked[0].spend),
-          })
+         estao sugando esse dinheiro".
+         ⚠ AGORA SAO TODOS, e nao so o maior: `lockedBy` devolve tres, e a tela so imprimia
+         um. A listagem usa `poles--wide` — o mesmo padrao da Camara — para caber numa linha. */
+      (input.locked.length > 0
+        ? `<div class="reading"><p class="poles poles--note poles--wide"><span>` +
+          `${escapeHtml(UI.cabinet.vaultBiggest)}</span>` +
+          `<span>` +
+          input.locked
+            .map(item => `${escapeHtml(item.label)} <b data-numeric>${money(item.spend)}</b>`)
+            .join(` ${escapeHtml("·")} `) +
+          `</span></p></div>`
         : ""),
   });
 

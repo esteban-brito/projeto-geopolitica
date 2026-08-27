@@ -2,6 +2,8 @@
    ── POR QUE UM ARQUIVO, PARA UMA SUBTRACAO Porque duas telas mostram a variacao da MESMA
    area, e elas mostravam numeros diferentes. */
 
+import { UI } from "../strings.mjs";
+
 /* MEDIDO ANTES DA TROCA, num mandato passivo de 30 meses: com SEIS degraus, tres das quatro
    escadas saem com UM degrau so — planas do primeiro ao ultimo mes. */
 export const WINDOW = 12;
@@ -34,8 +36,6 @@ export function gdpRange(gdp, fallback) {
   const opening = gdp[0] ?? fallback;
   return [opening, opening * GDP_SPAN];
 }
-
-import { UI } from "../strings.mjs";
 
 /**
  * @typedef {object} Trend

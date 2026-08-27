@@ -100,13 +100,13 @@ export function closingHtml(
     `<section class="stage closing">` +
     headHtml({
       title: copy.title,
-      reading: { label: copy.months, value: `${term.months} de ${term.of}` },
+      reading: { label: copy.months, value: `${term.months} de ${escapeHtml(term.of)}` },
     }) +
     `<p class="closing__stamp"><b class="stamp">${escapeHtml(
       removed ? copy.removed : copy.served,
     )}</b> ` +
     `${escapeHtml(removed ? copy.removedNote : copy.servedNote)} — ` +
-    `<time>${escapeHtml(when)}</time></p>` +
+    `<time datetime="${escapeHtml(monthLabel(term.months))}">${escapeHtml(when)}</time></p>` +
     `<h3 class="block__legend">${escapeHtml(addressed(copy.country, treatment))}</h3>` +
     `<div class="closing__rows">` +
     rowHtml({

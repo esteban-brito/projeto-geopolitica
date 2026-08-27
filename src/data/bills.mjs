@@ -8,9 +8,6 @@ import { QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "./regime.mjs";
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
-/** As tres vias. Ordenadas por quanto custa executar, da mais cara para a mais barata. */
-export const INSTRUMENTS = /** @type {const} */ (["amendment", "law", "decree"]);
-
 /** @type {Schema} */
 export const BILL_SCHEMA = {
   id: { kind: "id" },
@@ -29,7 +26,7 @@ export const BILL_SCHEMA = {
  * @property {string} id
  * @property {string} label
  * @property {string} area - a area de governo a que ela pertence
- * @property {string} instrument - uma de `INSTRUMENTS`
+ * @property {string} instrument - "amendment" | "law" | "decree"
  * @property {number} economic - posicao no eixo economico
  * @property {number} liberty - posicao no eixo de liberdades individuais
  * @property {number} threat - o quanto ataca a maquina; inegociavel por verba

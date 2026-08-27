@@ -13,7 +13,7 @@
 /** @typedef {{ name: string, gender: "f" | "m" }} Given */
 
 /** @type {ReadonlyArray<Given>} */
-export const GIVEN_NAMES = [
+const GIVEN_NAMES = [
   /* A geracao que ja estava aqui — e ela FICA. */
   { name: "Adalberto", gender: "m" },
   { name: "Belarmino", gender: "m" },

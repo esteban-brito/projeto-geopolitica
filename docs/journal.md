@@ -5262,3 +5262,74 @@ foi feito nesta sessão porque é mudança de estado, e a Parte 3 também quer a
 `applied` reverte os níveis mas `allocated`/`funded` já saíram de `honoured` — a
 MALHA recebe o mês como se a reforma tivesse valido. Pré-existente, e só ficou
 visível agora que a votação demora. Some quando a tramitação separar as duas.
+
+---
+
+## Sessão 21 — auditoria completa (25/08/2026)
+
+**Objetivo:** usar o projeto sem memória de conversa, como se fosse um usuário novo, e
+encontrar tudo que está errado. Duas rodadas de auditoria com agentes paralelos.
+
+### Auditoria 1 — 5 agentes paralelos
+
+- **Motor/dominio:** `app.mjs` sem try/catch em `playMonth`, `adviser` não persistia em `last`
+- **Tela/UX:** `closing.mjs` sem `escapeHtml` em `term.of`, `inbox.mjs` sem `scope="col"` nos
+  anexos, `inbox.mjs` sem `escapeHtml` no caso `boiling`
+- **Estado/save:** `save.mjs` com 6 campos obrigatórios faltando na validação, `deepFreeze` não
+  aplicado ao estado desserializado
+- **CSS/estilo:** `30-components.css` com dois `@media` adjacentes equivalentes não mesclados
+- **Código morto:** `bills.mjs` exportava `INSTRUMENTS` que ninguém consumia, `cast.mjs` exportava
+  `GIVEN_NAMES` que era local, `cabinet.mjs` com `@param` duplicado, `mesa.mjs` com JSDoc órfão,
+  `trend.mjs` com import no meio do código
+
+**Correções (13 arquivos):**
+
+- `app.mjs`: try/catch em `playMonth`, `adviser` armazenado como `Person` completa em `last`,
+  `termOf` chamado uma vez por paint, `dataset.siege` só escreve em mudança
+- `closing.mjs`: `escapeHtml(term.of)` adicionado
+- `save.mjs`: 6 campos obrigatórios adicionados à validação (`series`, `bills`, `mail`,
+  `pressure`, `impeachment`, `fallen`)
+- `inbox.mjs`: `<th scope="col">` em todos os cabeçalhos de anexo, `escapeHtml(nameOf(subject))`
+  no caso `boiling`
+- `cabinet.mjs`: `@param` duplicado removido
+- `mesa.mjs`: JSDoc órfão removido
+- `trend.mjs`: import movido para o topo
+- `30-components.css`: dois `@media` adjacentes mesclados
+- `bills.mjs`: export `INSTRUMENTS` removido, JSDoc atualizado com valores inline
+- `cast.mjs`: export `GIVEN_NAMES` removido (mantido como `const` local)
+- `public/index.mjs`: `INSTRUMENTS` removido do barrel
+
+### Auditoria 2 — 4 agentes paralelos
+
+- **Correção de nomes:** `cast/index.mjs` — `fullName` adicionado ao set `used` + guarda de
+  string vazia (colisão de nome)
+- **Save:** `deepFreeze` aplicado ao estado desserializado, validação de forma para 8 campos
+  críticos (`fiscal`, `macro`, `capacity`, `streams`, `series`, `mail`, `bills`, `norms`)
+- **Provas:** 13 novas em `passage.mjs` (`forgotten`, `tables`, `reports`, `proposalOf`),
+  prova GDP=0 em `budget.mjs`, 2 novas em `save.mjs` (round-trip de impeachment + rejeição
+  de campo corrompido)
+- **Tolerância:** `congress.mjs` tolerância 20%→25%, amostras 600→1000
+- **Congelamento:** `state-reducer.mjs` — verificações `isFrozen` em `fiscal`, `capacity.index`,
+  `series.gdp`
+- **HTML:** `closing.mjs` — `<time datetime="...">` com `monthLabel(term.months)`
+- **Mensagem de assertion:** `state-reducer.mjs:370` — mensagem invertida corrigida ("NAO foi
+  recriado")
+
+### O que ficou pendente (requer schema bump)
+
+⚠ **Dois itens colidem com a recusa de converter saves existentes** — o save recusa versão
+diferente em vez de converter, e custa a partida em andamento:
+
+1. **`last` perdido no F5** (achado 46) — persistir o último relatório no save. Visível: a
+   banda do mês some; invisível: a simulação não é afetada;
+2. **`events` stream morto** — `state.streams.events` é código morto. Remoção requer mudança
+   de tipo em `Streams`.
+
+**Os dois podem ser feitos juntos num único bump de schema**, quando o responsável decidir.
+
+### Estado do projeto
+
+`npm run validate` verde. 12 guardas, 54 provas sintéticas, 130 arquivos, 236 provas, passeio
+verde em duas janelas. Branch `acoplamento-e-simulador`.
+
+**Próximo passo:** O Glorioso, passo 2 — B1 a B5 (faixa de áreas no Congresso).

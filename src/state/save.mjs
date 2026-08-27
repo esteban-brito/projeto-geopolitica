@@ -2,7 +2,7 @@
    O cabecalho de `state.mjs` promete isto desde o primeiro dia: "SAVE e serializar o estado.
    Nao existe campo que ficou de fora". */
 
-import { SCHEMA_VERSION } from "./state.mjs";
+import { SCHEMA_VERSION, deepFreeze } from "./state.mjs";
 
 /** @typedef {import("./state.mjs").GameState} GameState */
 
@@ -64,6 +64,12 @@ export function deserialize(text) {
     "norms",
     "memory",
     "streams",
+    "series",
+    "bills",
+    "mail",
+    "pressure",
+    "impeachment",
+    "fallen",
   ];
 
   for (const field of required) {
@@ -72,5 +78,31 @@ export function deserialize(text) {
     }
   }
 
-  return { ok: true, state: /** @type {GameState} */ (parsed) };
+  /* ⚅ CHECAGEM DE FORMA — presenca nao e formato. Um save corrompido com `"fiscal": 42`
+     passaria acima e quebraria em runtime com mensagem incompreensivel. */
+  const asObj = (/** @type {unknown} */ v) =>
+    v !== null && typeof v === "object" && !Array.isArray(v);
+  const asArr = (/** @type {unknown} */ v) => Array.isArray(v);
+
+  const shape = [
+    ["fiscal", asObj, "objeto"],
+    ["macro", asObj, "objeto"],
+    ["capacity", asObj, "objeto"],
+    ["streams", asObj, "objeto"],
+    ["series", asObj, "objeto"],
+    ["mail", asArr, "array"],
+    ["bills", asArr, "array"],
+    ["norms", asArr, "array"],
+  ];
+
+  for (const entry of shape) {
+    const field = /** @type {string} */ (entry[0]);
+    const test = /** @type {(v: unknown) => boolean} */ (entry[1]);
+    const expected = /** @type {string} */ (entry[2]);
+    if (!test(candidate[field])) {
+      return { ok: false, reason: `"${field}" deveria ser ${expected}` };
+    }
+  }
+
+  return { ok: true, state: deepFreeze(/** @type {GameState} */ (parsed)) };
 }

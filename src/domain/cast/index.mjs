@@ -101,12 +101,16 @@ export function cast({ seed, parties, archetypes, firstNames, surnames, ambition
     for (let attempt = 0; attempt < firstNames.length * surnames.length; attempt++) {
       const first = firstNames[Math.floor(hashed(`${base}:first:${attempt}`) * firstNames.length)];
       const last = surnames[Math.floor(hashed(`${base}:last:${attempt}`) * surnames.length)];
-      name = `${first ?? ""} ${last ?? ""}`.trim();
-      if (!used.has(first ?? "") && !used.has(last ?? "")) break;
+      const full = `${first ?? ""} ${last ?? ""}`.trim();
+      if (full && !used.has(full) && !used.has(first ?? "") && !used.has(last ?? "")) {
+        name = full;
+        break;
+      }
     }
     const [taken = "", ...rest] = name.split(" ");
     used.add(taken);
-    used.add(rest.join(" "));
+    const surname = rest.join(" ");
+    if (surname) used.add(surname);
 
     const ambition = ambitions[Math.floor(hashed(`${base}:ambition`) * ambitions.length)] ?? "seat";
 
@@ -167,8 +171,11 @@ export function president({ seed, people, firstNames, surnames }) {
   for (let attempt = 0; attempt < firstNames.length * surnames.length; attempt++) {
     const first = firstNames[Math.floor(hashed(`${base}:first:${attempt}`) * firstNames.length)];
     const last = surnames[Math.floor(hashed(`${base}:last:${attempt}`) * surnames.length)];
-    name = `${first ?? ""} ${last ?? ""}`.trim();
-    if (!used.has(first ?? "") && !used.has(last ?? "")) break;
+    const full = `${first ?? ""} ${last ?? ""}`.trim();
+    if (full && !used.has(full) && !used.has(first ?? "") && !used.has(last ?? "")) {
+      name = full;
+      break;
+    }
   }
 
   return { id: "president", name, office: "president" };

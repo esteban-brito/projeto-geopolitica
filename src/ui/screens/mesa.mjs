@@ -272,15 +272,6 @@ export function mesaHtml(input) {
 }
 
 /**
- * A TELA DO CONGRESSO INTEIRA — uma lamina, uma cabeca, tres blocos.
- *
- * @param {object} input
- * @param {string} input.gauges a faixa de indices, ja montada
- * @param {string} input.mesa a mesa de negociacao, ja montada
- * @param {string} input.report o relatorio do mes passado, ja montado
- * @returns {string}
- */
-/**
  * A GAVETA — o que esta andando, e ha quanto tempo.
  *
  * @param {ReadonlyArray<{ id: string, label: string, stage: string, waiting: number,

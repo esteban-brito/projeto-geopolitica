@@ -149,7 +149,7 @@ export const UI = {
     vaultFree: TERMOS.roomLine,
     /* ⚠ A FRASE DA A BASE DO PERCENTUAL, e sem ela "95%" nao diz 95% de que. */
     vaultOfRevenue: "da receita de",
-    vaultBiggest: "Maior gasto preso:",
+    vaultBiggest: "Gastos presos:",
     vaultLocked: "Preso por lei",
     /* O defeito é real mesmo fora do teste: duas leituras vizinhas passariam a abrir com a
        mesma palavra. */

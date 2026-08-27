@@ -74,6 +74,15 @@ npm run serve      # http://127.0.0.1:5173/
   registre no handoff;
 - **remover guarda ou prova** para destravar. Elas existem por defeito medido.
 
+## Sessão 21 (auditoria, 25/08/2026)
+
+Duas rodadas de auditoria com agentes paralelos. **25 arquivos tocados, nenhum motor
+alterado.** Tudo é proteção (try/catch, escapeHtml, validação) ou limpeza (exports
+mortos, JSDoc duplicado). 13 provas novas em `passage.mjs`. Os dois itens pendentes
+são de schema bump (persistir `last` no save e remover `events` stream morto) —
+decisão do responsável. Próximo passo: O Glorioso, passo 2 (B1-B5). Detalhes
+completos no [`handoff.md`](docs/handoff.md).
+
 ## Como responder
 
 Curto e direto. Entregue o resultado e o número que o sustenta; corte o resto.
