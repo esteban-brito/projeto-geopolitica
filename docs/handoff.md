@@ -140,7 +140,11 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 **Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
 132 arquivos · 258 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
 
-### ▶ O PLANO EM EXECUÇÃO — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
+### ▶ COMECE POR AQUI — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
+
+> **Retomada em uma linha:** branch `caixa-de-entrada`, cinco commits à frente de `main`.
+> Passos **1, 1½, 2.1 e 3 feitos**. O próximo é o **passo 3½** — a geometria —, e o **3.4 está
+> travado de propósito** até o recorte do índice (3½.2) ser decidido junto com ele.
 
 **Sete passos. Feitos: o passo 1 inteiro e o 2.1.** As **quatro frentes de investigação
 fecharam** — motor, view, wiring e geometria —, então o plano está completo e não é mais uma
@@ -183,7 +187,7 @@ defeito com catorze meses de jogo ativo; **a reprodução curta é a que vale.**
 | ----- | -------------------------- | -------------------------------------- |
 | **0** | C12 · D7                   | ✔ os dois                              |
 | **1** | 0.1 · 0.2 · C1 · C2 · C3   | ✔ os cinco                             |
-| **2** | B1 a B5 — a faixa de áreas | ▶ **COMECE POR AQUI**                  |
+| **2** | B1 a B5 — a faixa de áreas | ⏸ **em espera — o ciclo 14 vem antes** |
 | **3** | C8 · C9 · C10 · C11 · C13  | ⚠ **três de cinco** — faltam C10 e C11 |
 | **4** | 0.3 · B10 · C7 · D4        | ⛔                                     |
 
