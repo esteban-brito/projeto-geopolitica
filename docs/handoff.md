@@ -140,36 +140,42 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 **Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
 132 arquivos · 256 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
 
-### ▶ O SEGUNDO PLANO NA MESA — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
+### ▶ O PLANO EM EXECUÇÃO — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
 
-✔ **O PASSO 1 ESTÁ FEITO — os três defeitos de motor, com as três provas nascidas antes e
-verificadas mordendo.** A série foi comparada antes e depois: **idêntica ao caractere**, que é
-o resultado desenhado — os consertos devolvem correspondência e não tocam em calibragem. Que
-estão vivos foi medido à parte: o aviso de teto saiu de **zero em cinco políticas** para um por
-mandato, e `herdado` foi de **6 para 8** exigências em 48 meses.
+**Sete passos. Feitos: o passo 1 inteiro e o 2.1.** As **quatro frentes de investigação
+fecharam** — motor, view, wiring e geometria —, então o plano está completo e não é mais uma
+lista aberta.
 
-⚠ **Do passo 2 ao 5, não começado.** E o plano nasceu de uma frase dele: _"eu estou vendo diversos bugs, brechas, visual feio e tudo mais, na caixa de
-entrada"_. A investigação achou **três defeitos de mecânica** que doze guardas, 253 provas e o
-passeio atravessaram sem acusar:
+✔ **PASSO 1 — três defeitos de motor**, com as três provas nascidas antes e verificadas
+mordendo. A série foi comparada antes e depois: **idêntica ao caractere**. Que estão vivos foi
+medido à parte — o aviso de teto saiu de **zero em cinco políticas** para um por mandato:
 
-- ✔ **a poda jogava fora a carta que acabou de chegar** — `slice` negativo sobre um array que
-  tem as novas na frente. Medido: **101 cartas destruídas com 1 a 3 meses de idade**, e a
-  caixa do mês 30 com um buraco de doze meses. A causa-raiz é documental: **três arquivos
-  discordam sobre a ordem de `state.mail`**, e a poda acreditou no errado;
-- ✔ **o alarme de fervura calava o grupo que acabou de ferver** — ele satisfaz o filtro de "uma
-  exigência aberta por vez". **26 a 30 meses-lobby bloqueados**;
-- ✔ **o alarme do teto era impossível** — a condição é `!X && X`. O teto fecha em **12 de 48**
-  meses e a carta **nunca** foi emitida. É o **quinto canal morto**, e a tela dele existe
-  inteira.
+- a **poda** cortava com `slice` negativo sobre um array que tem as novas na frente. **101
+  cartas destruídas com 1 a 3 meses de idade**, e a caixa do mês 30 com um buraco de doze
+  meses. De graça, o mesmo conserto matou o `slice(-0)`, que desligava o teto da bandeja;
+- o **alarme de fervura** calava a exigência do grupo que acabara de ferver, por satisfazer sem
+  querer o filtro de "uma exigência aberta por vez";
+- o **alarme do teto** era `!X && X` — impossível. Quinto canal morto. O aviso passou a chegar
+  **antes** de o teto fechar.
 
-E na tela: o **fechamento do mês é cortado da bandeja em 14 de 16 meses** e fica inalcançável
-(o achado 46 mede a perda no F5; ela acontece todo mês); o índice **volta no calendário**; duas
-perguntas abertas **leem idênticas** — o achado 24 foi dado como fechado e não está; e a folha
-da carta é **75% branca** nas espécies sem anexo.
+✔ **PASSO 2.1 — `checkClamped`, o quarto irmão do passeio.** Recorte por linhas não rola, não
+põe reticência e **não move `scrollHeight`**. Verificado mordendo: acusa `18>37` com recorte
+forçado. ⚠ **A exceção que declarei nele está ERRADA** e é dívida do passo 3 — ver o plano.
 
-⚠ **O PLANO ESTÁ INCOMPLETO POR DECLARAÇÃO.** Das quatro frentes de investigação, duas
-fecharam e **duas morreram no limite de sessão**: o _wiring_ do entrypoint e a geometria medida
-no navegador. **Elas rodam antes de qualquer execução.**
+⛔ **O QUE FALTA, e o passo 1½ é o mais grave:**
+
+| passo  | o quê                      | pior achado                                                                                           |
+| ------ | -------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **1½** | o gesto está quebrado      | **um clique prende o jogador numa carta por 20 meses**, e a bandeja abre a pergunta **menos** urgente |
+| **2**  | as outras quatro checagens | a retenção não tem prova nenhuma                                                                      |
+| **3**  | a bandeja para de mentir   | o fechamento do mês é **cortado** da bandeja, e o índice **volta no calendário**                      |
+| **3½** | a geometria                | a carta que pergunta **sangra 7px sobre o índice** e perde 23% da tarja                               |
+| **4**  | a folha 75% branca         | quatro espécies sem anexo nem rodapé                                                                  |
+| **5**  | canais mortos e unidades   | "11 pontos" onde são **11 cadeiras**                                                                  |
+
+⭐ **E A REPRODUÇÃO CANÔNICA DO ÍNDICE BAGUNÇADO É DELE, em três cartas:** partida nova, dois
+"avançar", e o calendário lê `ABR · 2027 → MAR · 2027 → ABR · 2027`. Eu tinha achado o mesmo
+defeito com catorze meses de jogo ativo; **a reprodução curta é a que vale.**
 
 ### ▶ O GLORIOSO ESTÁ EM EXECUÇÃO, e a ordem é a do rodapé do plano
 

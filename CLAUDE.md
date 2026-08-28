@@ -76,17 +76,24 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 12 guardas · 54 provas sintéticas · 131 arquivos · 253 provas ·
-passeio verde em duas janelas. **Próximo passo: O Glorioso, passo 2 (B1–B5)** — a
-faixa de áreas no Congresso.
+**Estado verde:** 12 guardas · 54 provas sintéticas · 132 arquivos · 256 provas · passeio
+verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
 
-**Dois itens esperam decisão do responsável**, e os dois pedem o mesmo bump de
-esquema: persistir `last` no save (achado 46) e remover o stream `events`, que é
-código morto. Detalhes no [`handoff.md`](docs/handoff.md).
+**Há DOIS planos na mesa**, e o segundo é o que está em execução:
 
-⚠ **Número de catálogo envelhece na prosa, e é a família sem guarda** (`standards.md`
-§7): a prosa afirmou por sessões um Congresso de "onze bancadas" e "sete pessoas"
-enquanto o catálogo tinha outros. Antes de repetir um número, meça-o.
+- [`cycles/14-a-caixa-de-entrada.md`](docs/cycles/14-a-caixa-de-entrada.md) — **em execução.**
+  Sete passos, com o passo 1 e o 2.1 feitos. As quatro frentes de investigação fecharam;
+- [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — o plano mestre, 12 de 49 itens.
+  Retomar no passo 2 (B1–B5) quando o ciclo 14 fechar.
+
+**Dois itens esperam decisão do responsável**, e os dois pedem o mesmo bump de esquema:
+persistir `last` no save (achado 46) e remover o stream `events`, que é código morto. Um
+terceiro entrou na fila: o placar dentro da carta (ciclo 14, passo 4).
+
+⚠ **Número de catálogo envelhece na prosa, e é a família sem guarda** (`standards.md` §7): a
+prosa afirmou por sessões um Congresso de "onze bancadas" e "sete pessoas" enquanto o catálogo
+tinha outros. Antes de repetir um número, meça-o. **E achado só fecha com prova que morde** —
+`standards.md` §8.
 
 ## Como responder
 

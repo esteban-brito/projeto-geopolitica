@@ -12,6 +12,76 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## ✔ A CAIXA DE ENTRADA, AUDITADA POR QUATRO FRENTES — 28/08/2026
+
+**Ele pediu para testar a capacidade investigativa, e proibiu conserto antes da autorização:**
+_"eu estou vendo diversos bugs, brechas, visual feio e tudo mais, na caixa de entrada. Eu quero
+testar sua capacidade investigativa, procure, use vários agentes se precisar."_
+
+Quatro frentes em paralelo — o motor da correspondência, a view, o _wiring_ do entrypoint e a
+geometria medida no navegador —, mais a minha, que confrontou a Caixa com o ciclo 9, que a
+projetou. **Duas frentes morreram no limite de sessão e foram relançadas depois do reset.**
+
+### O que a investigação achou, e a maioria não era de desenho
+
+O pedido dizia "visual feio". **Três dos achados mais graves são de motor**, e os três
+atravessaram doze guardas, 253 provas e o passeio:
+
+- a **poda** da caixa cortava com `slice` negativo sobre um array que tem as novas na frente.
+  101 cartas destruídas com 1 a 3 meses de idade, e um buraco de doze meses na caixa do mês 30;
+- o **alarme de fervura** calava a exigência do grupo que acabara de ferver;
+- o **alarme do teto** era `!X && X`. O teto fecha em 12 de 48 meses e a carta nunca saiu.
+
+⭐ **E o defeito mais visível é de gesto, não de layout:** `openDispatch` nunca é limpo, então
+**um clique prende o jogador numa carta**. Medido em 20 meses, com três meses em que havia
+pergunta vencendo e o painel mostrava um aviso velho.
+
+### ⚠ A lição de método, e ela é sobre auditoria fechada sem prova
+
+O **achado 24** estava marcado como concertado no handoff. O conserto entregue — a tag de
+espécie — cobre três espécies que **não são** a do caso que o próprio achado descreve. Bastou
+jogar catorze meses para reproduzir duas perguntas abertas idênticas.
+
+> ### ⚖ Daí saiu a regra do §8: achado só fecha com prova que morde.
+>
+> A prova nasce antes, e se ela não reprova contra o código de hoje, o achado não estava
+> consertado. **Ela vale contra mim na mesma medida** — e a mesma sessão provou isso duas
+> vezes.
+
+**A primeira:** eu excetuei `.tray__subject` do `checkClamped` lendo a prosa da folha, que diz
+que o corte é decisão. A frente de geometria mediu depois: o corte come **66% das linhas** do
+índice e faz 21 dos 24 meses terem duas linhas idênticas. **Excetuei exatamente a peça
+quebrada**, que é a definição de checagem que mente.
+
+**A segunda:** rodei `git checkout docs/handoff.md` para desfazer um `sed` de uma linha, e ele
+reverteu o arquivo inteiro, apagando nove edições. **Desfazer uma linha não se faz com um
+comando que restaura o arquivo.**
+
+### ⭐ E DUAS FRENTES DISCORDARAM — a medição direta ganhou
+
+A view concluiu que o índice _"rola em silêncio"_; a geometria mediu a calha nas três janelas e
+achou `overflowY: 0` com treze itens dentro de 627px. **A lista não rola.** O que sobrou do
+achado foi menor e continua válido: a constante de capacidade não conta os divisores de mês.
+
+**Isso é o argumento a favor de auditar em paralelo e escrever em série:** duas frentes medindo
+o mesmo lugar por caminhos diferentes se corrigem. Duas frentes ESCREVENDO no mesmo lugar
+divergem, que é a família de defeito nº 1 deste projeto.
+
+### ✔ E o que foi consertado
+
+Os três de motor, com as provas nascendo antes. **A série não mudou um caractere** — os
+consertos devolvem correspondência e nenhum toca em calibragem. Mais o `checkClamped`, o quarto
+irmão do passeio, que vê o que os outros três não veem: `-webkit-line-clamp` não move
+`scrollHeight`, então a única medição possível é soltar o recorte e comparar a altura.
+
+⚠ **O resto do ciclo 14 está escrito e não começado**, e o passo 1½ — o gesto — é o mais grave.
+
+### ⭐ A REPRODUÇÃO QUE VALE É DELE
+
+Ele achou o índice bagunçado em **três cartas**: partida nova, dois "avançar", e o calendário lê
+`ABR · 2027 → MAR · 2027 → ABR · 2027`. Eu tinha achado o mesmo defeito com **catorze meses de
+jogo ativo**. As duas medem a mesma coisa, e a curta é a que a próxima sessão consegue repetir.
+
 ## ✔ A PROSA CONTAVA UM CONGRESSO QUE NÃO EXISTE — 28/08/2026
 
 **Sessão de leitura completa do código, a pedido dele: _"leia todo o código, estude tudo, tem

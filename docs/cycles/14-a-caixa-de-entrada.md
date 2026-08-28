@@ -245,6 +245,28 @@ cronológica mente. Medido, ele anda para trás e repete:
 abr · 2028  →  mar · 2028  →  abr · 2028  →  out · 2027
 ```
 
+### ⭐ A REPRODUÇÃO CANÔNICA É DELE, e ela é de três cartas
+
+Eu achei este defeito com catorze meses de jogo ativo. **Ele achou no mês 2, apertando
+"avançar" duas vezes numa partida nova** — e a reprodução curta é a que vale, porque ela cabe
+num parágrafo e qualquer sessão futura consegue repetir:
+
+```
+JOGO NOVO      ── MAR · 2027 ──  O país que o senhor recebe
+
+APÓS 1 MÊS     ── MAR · 2027 ──  Aprovação cai a 36%
+                                 O país que o senhor recebe
+                                 Mês sem pauta          ← a nova foi para o FIM
+
+APÓS 2 MESES   ── ABR · 2027 ──  Aprovação cai a 31%
+               ── MAR · 2027 ──  Aprovação cai a 36%
+                                 O país que o senhor recebe
+               ── ABR · 2027 ──  Mês sem pauta          ← abril outra vez
+```
+
+**Palavras dele: _"toda vez quando eu pulo os meses fica tudo desorganizado, tudo uma
+bagunça"_.** E a leitura é literal — o calendário vai a abril, volta a março e avança de novo.
+
 ⭐ Ele passa a ser **seção**: um cabeçalho para o bloco que pede resposta, e mês só dentro dos
 avisos — que são cronológicos de verdade. Junto: **entre perguntas, a mais urgente primeiro**,
 porque hoje a ordem entre elas é indefinida.
