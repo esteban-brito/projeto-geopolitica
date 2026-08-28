@@ -8,9 +8,9 @@
 > fecharam** — o motor da correspondência e a view — e são a origem de tudo o que está aqui.
 > **Duas morreram no limite de sessão** e foram relançadas. ✔ **O _wiring_ do entrypoint
 > fechou** — 15 cenários, ~120 meses dirigidos no navegador — e trouxe o **passo 1½** abaixo.
-> ⏳ **A geometria ainda roda.**
+> ✔ **A geometria fechou** — três janelas, 24 meses, 14 espécies — e trouxe o **passo 3½**.
 >
-> **O que ela achar entra aqui antes do passo 3.** Este plano não é uma lista fechada.
+> **As quatro frentes fecharam. O plano está completo.**
 
 ## Por que ela pesa
 
@@ -192,8 +192,15 @@ linhas comem é exatamente a cauda que distingue duas cartas** — `"…Cortar a
 mais 2"_ perde o fim, que é o único pedaço diferente entre as duas perguntas gêmeas do 3.4. **O
 recorte trabalha contra o conserto do 3.4**, e os dois têm de ser decididos juntos.
 
-⚠ **Verificada mordendo:** com um recorte de uma linha forçado, ela acusa `18>37`. Hoje ela é
-verde, e a exceção declarada é `.tray__subject` — o corte ali é desenho escrito na folha.
+⚠ **Verificada mordendo:** com um recorte de uma linha forçado, ela acusa `18>37`.
+
+⛔ **MAS A EXCEÇÃO QUE EU DECLAREI ESTÁ ERRADA, e a geometria provou depois.** Eu excetuei
+`.tray__subject` lendo a prosa da folha — _"o corte é decisão e não descuido"_ — e a medição
+mostra que o corte come **66% das linhas** e faz 21 dos 24 meses terem duas linhas idênticas.
+**Excetuei exatamente a peça quebrada**, que é a definição de checagem que mente.
+
+⚖ **Ela sai quando o 3½.2 entrar, e não antes** — enquanto o índice cortar, remover a exceção
+só deixa o portão vermelho sem consertar nada. **Fica declarado aqui como dívida do passo 3.**
 
 ⚠ **2.1 É A QUARTA VEZ QUE ESTA FAMÍLIA COBRA O MESMO PREÇO.** A lição já está escrita em
 `docs/standards.md` §6 — _"toda checagem nasce sem alcance"_ — e a pergunta que falta é sempre
@@ -223,8 +230,11 @@ fila, e o corte para de alcançá-la. **Uma linha movida.**
   devolve **oito linhas para uma capacidade de sete**. A prova que existe abre com o padrão,
   que cai sempre dentro da janela — **o ramo nunca é exercitado**;
 - ⚠ **a capacidade conta cartas e ignora os divisores.** No mês 22 são **sete linhas mais
-  cinco divisores** numa lista dimensionada para sete. `.tray__list` rola por dentro, e a
-  rolagem dela é a **exceção declarada** do passeio — então **nada acusa**.
+  cinco divisores** numa lista dimensionada para sete.
+  ⭐ **E AS DUAS FRENTES DISCORDARAM AQUI — a medição direta ganha.** A frente da view concluiu
+  que a lista _"rola em silêncio"_; a de geometria mediu a calha nas três janelas e achou
+  **`overflowY: 0` com 13 `<li>` dentro de 627px**. **A lista não rola hoje.** O que sobra do
+  achado é a margem: a constante não conta os divisores, então ela não sabe quanto ainda cabe.
 
 ### 3.3 · O divisor de mês vira seção
 
@@ -256,6 +266,78 @@ já está no entrypoint, e o mês em que o texto foi assinado distingue os dois.
 ⚠ **E a raiz fica registrada, fora deste ciclo:** quem dá o mesmo nome a dois textos é
 `labelOf`, em `src/application/agenda.mjs`. Mexer ali atinge cinco telas — é decisão dele, e é
 maior que a Caixa.
+
+---
+
+## PASSO 3½ — A GEOMETRIA · save: zero
+
+> Medido em três janelas (1440×980, 1440×900, **1280×800**) e 24 meses. ⚠ **A terceira janela
+> não é capricho: o passeio não roda nela, e é lá que três defeitos aparecem inteiros.**
+
+### 3½.1 · ⛔ A carta que PERGUNTA sangra 7px por cima do índice
+
+`styles/45-screen-cabinet.css` — `.letter[data-urgency]` declara `padding-left` de **13px** com
+a **mesma especificidade** de `.tray__open .letter { padding: 24px }`, e vem **depois** na
+folha. As margens negativas do cabeçalho e do rodapé passam a valer sobre o recuo errado.
+
+Sobreposições medidas, iguais nas três janelas: cabeçalho × divisor de mês **7×27,5px**;
+cabeçalho × linha **7×32,7px**; rodapé × linha **7×54,69px**.
+
+⚠ **E o efeito visível é pior que a sobreposição: a tarja de gravidade SOME** nos trechos do
+cabeçalho e do rodapé — **146px dos 629 da folha, 23%** —, e fica um degrau na costura. **É a
+única carta do jogo que pede resposta**, e a tarja é o canal que diz que ela tem prazo.
+
+### 3½.2 · ⛔ O recorte faz duas linhas virarem a MESMA frase
+
+24 meses medidos: **111 de 168 linhas (66%) perdem texto**, e em **21 dos 24 meses** duas linhas
+diferentes renderizam string idêntica.
+
+```
+"O seu texto morreu na gaveta: Ampliar…"  ← Ampliar universidades federais · e mais 3
+"O seu texto morreu na gaveta: Ampliar…"  ← Ampliar aposentadoria urbana · e mais 5
+```
+
+⚠ **O sufixo `· e mais N` NUNCA aparece** — a caixa dá 2 linhas de 18,36px e o conteúdo pede 3
+ou 4. **É a causa raiz do item 3.4**, e ela é maior do que eu tinha medido: não são duas
+perguntas gêmeas, são dois terços do índice inteiro perdendo o fim.
+
+### 3½.3 · ⛔ A 1280×800 o anexo corta a coluna da SOMA
+
+| anexo                        | visível | pede | escondido                                      |
+| ---------------------------- | ------- | ---- | ---------------------------------------------- |
+| "o que pesou em cada classe" | 307     | 390  | **83px** — a soma inteira mais 69% de economia |
+| "bancada por bancada"        | 281     | 338  | **57px** — o mês inteiro mais 7px de humor     |
+
+**A 1440 as quatro tabelas cabem com 0px de folga.** O portão pegaria — `checkClipped` vê
+`overflow-x` — mas **não roda a 1280 e não abre relatório**.
+
+### 3½.4 · ⛔ A 1280×800 as duas saídas ficam inteiras abaixo da dobra
+
+| janela                      | rodapé abaixo da dobra |
+| --------------------------- | ---------------------- |
+| 1440×980                    | 0                      |
+| 1440×900                    | 41,7px — parcial       |
+| **1280×800**, bandeja cheia | **150,4px — inteiro**  |
+
+A página rola, mas **nada anuncia que "Aceitar a emenda" e "Travar o texto" existem.**
+
+### 3½.5 · ⚠ E mais cinco, de desenho
+
+- **a data do ofício quebra em duas linhas** a 1280 — sem `nowrap`, lê "MAR ·" / "2027" na
+  primeira tela do jogo;
+- **a mesma data, duas vezes, na mesma linha** — o divisor e o cabeçalho são sempre a mesma
+  string, tipograficamente idênticos, e as caixas se sobrepõem **72% na vertical**;
+- **o cabeçalho sem remetente tem 15,8% de tinta** — 354px de faixa vazia. Quatro espécies
+  saem com `from: null` e o `<span>` vazio ainda consome o vão;
+- **o documento pula até 48px** ao trocar de linha, porque o cabeçalho varia 40px de altura;
+- **três níveis estruturais com o mesmo vão de 12px** — assunto→corpo, parágrafo→parágrafo,
+  corpo→anexos.
+
+### ⚠ E um buraco no próprio passeio
+
+`checkEllipsized` **não é chamado no bloco "caixa com pergunta"** — que é justamente o estado
+em que `.tray__from` corta o nome do relator (6px a 1440, 10px a 1280). A checagem existe, vê o
+defeito, e não é chamada onde ele mora.
 
 ---
 
