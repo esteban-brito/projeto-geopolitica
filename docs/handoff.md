@@ -160,9 +160,9 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 
 ### ▶ COMECE POR AQUI — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
 
-> **Retomada em uma linha:** branch `caixa-de-entrada`, cinco commits à frente de `main`.
-> Passos **1, 2.1, 3 e 3.4 feitos**; o **1½ é três de seis**. O próximo é o **passo 3½** — a
-> geometria.
+> **Retomada em uma linha:** branch `caixa-de-entrada`, seis commits à frente de `main`.
+> **Passos 1, 2 e 3 feitos.** O **1½ é quatro de seis** e o **3½ é um de cinco**. O próximo é o
+> resto do **3½ — a geometria**, e o pior item dele é o 3½.1.
 >
 > ⭐ **O 3.3 FOI REVERTIDO POR ELE, e o 3.4 fechou de graça junto.** A seção "Precisam de
 > resposta" saiu: o índice é **calendário puro** — cada carta no bloco do mês em que chegou,
@@ -177,9 +177,12 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 >
 > ⚠ **E A MARCA DE "FEITO" JÁ MENTIU DUAS VEZES NESTE CICLO** — ver a sessão 24 abaixo: o 1½
 > estava ✔ com três itens abertos, e dois consertos declarados fechados atendiam metade do
-> defeito cada um.
+> defeito cada um. **Em 28/08 ela mentiu ao contrário**, o que é mais barato mas é o mesmo
+> descuido: o 2.4 estava ⚠ dizendo que a retenção _"não tem prova nenhuma, e nem é exportada"_,
+> e `KEEP`, `CARRY` e `mail.mjs:169` já existiam. **Conferir a marca contra o código é passo de
+> sessão, e não de auditoria.**
 
-**Sete passos. Feitos: o passo 1 inteiro e o 2.1.** As **quatro frentes de investigação
+**Sete passos. Feitos: os passos 1, 2 e 3 inteiros.** As **quatro frentes de investigação
 fecharam** — motor, view, wiring e geometria —, então o plano está completo e não é mais uma
 lista aberta.
 

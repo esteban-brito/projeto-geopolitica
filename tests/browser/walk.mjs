@@ -642,11 +642,36 @@ try {
     const list = document.querySelector(".tray__list");
     if (!list) return null;
     const save = JSON.parse(window.localStorage.getItem("planalto:partida") ?? "{}");
+
+    /* ⚠ DUAS LINHAS QUE LEEM IGUAL DENTRO DO MESMO BLOCO. Entre blocos e permitido: o
+       cabecalho do mes separa. Dentro dele nao ha nada separando, e ai o jogador escolhe no
+       escuro — que e o achado 24, dado como fechado uma vez sem prova nenhuma.
+       ⚠ E O PRAZO NAO CONTA COMO DISTINCAO, medido: comparar a linha INTEIRA deixava passar
+       exatamente o caso relatado — "assunto identico, remetente identico, e so a linha de
+       prazo, que e a menor e mais apagada, separando as duas". */
+    /** @type {{ month: string, lines: string[] }[]} */
+    const blocks = [];
+    for (const item of list.children) {
+      if (item.classList.contains("tray__month")) {
+        blocks.push({ month: item.textContent ?? "", lines: [] });
+        continue;
+      }
+      const row = item.querySelector(".tray__row");
+      if (!row) continue;
+      const subject = row.querySelector(".tray__subject")?.textContent ?? "";
+      const from = row.querySelector(".tray__from")?.textContent ?? "";
+      blocks.at(-1)?.lines.push(`${subject} · ${from}`.replace(/\s+/g, " ").trim());
+    }
+    const twins = blocks
+      .filter(block => block.lines.length !== new Set(block.lines).size)
+      .map(block => block.month);
+
     return {
       x: list.scrollWidth - list.clientWidth,
       rows: list.querySelectorAll(".tray__row").length,
       letters: Array.isArray(save.mail) ? save.mail.length : -1,
       months: [...list.querySelectorAll(".tray__month")].map(node => node.textContent ?? ""),
+      twins,
     };
   });
   if (tray) {
@@ -660,6 +685,11 @@ try {
     expect(
       tray.months.length === new Set(tray.months).size,
       `[gabinete] um mes apareceu duas vezes no indice: ${tray.months.join(" → ")}`,
+    );
+    /* ⚠ E DUAS LINHAS NUNCA LEEM IGUAL NO MESMO BLOCO. */
+    expect(
+      tray.twins.length === 0,
+      `[gabinete] duas linhas leem igual dentro do bloco ${tray.twins.join(", ")}`,
     );
   }
 

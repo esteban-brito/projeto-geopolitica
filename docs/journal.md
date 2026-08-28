@@ -5610,3 +5610,22 @@ tudo. **O mapa é versionado, as imagens não** — `.gitignore` virou `captures
 `!captures/README.md`, porque o git não reinclui arquivo dentro de pasta excluída.
 
 **259 provas, 12 guardas, passeio verde.**
+
+### E o plano foi conferido contra o código, item a item
+
+Ele pediu para profissionalizar tudo, e a conferência mudou três marcas:
+
+- **o 2.4 estava errado, e errado ao contrário**: o item dizia que a retenção _"não tem prova
+  nenhuma, e nem é exportada"_, e `KEEP`, `CARRY` e a prova em `mail.mjs:169` já existiam desde
+  o passo 1. ⚠ **A marca de "aberto" também envelhece**, e ela é mais barata mas é o mesmo
+  descuido da marca de "feito" que mentiu duas vezes neste ciclo;
+- **o 1½.4 fechou sem conserto próprio**: ele era _"a poda do não-lido mede a TELA"_, e a tela
+  cortava em 7. Sem teto, toda carta da caixa vira linha. Quem segura isso é a checagem 2.2 —
+  linhas do índice contra cartas do save;
+- **o 2.5 nasceu fraco e foi corrigido antes de entrar.** A primeira versão comparava a linha
+  **inteira** do índice, prazo incluído. O defeito relatado é _"assunto idêntico, remetente
+  idêntico, e só a linha de prazo separando"_ — ela deixava passar exatamente o caso que existe
+  para pegar. **Só percebi porque forcei a mordida e ela não mordeu.** Agora compara assunto
+  mais remetente, e acusa `out · 2027` quando forçada.
+
+**Passo 2 fechado, 5 de 5.** O passo 1½ é quatro de seis e o 3½ é um de cinco.

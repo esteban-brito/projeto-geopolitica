@@ -103,7 +103,7 @@ Congresso propondo.
 
 ---
 
-## PASSO 1½ — ◐ TRÊS DE SEIS · O GESTO ESTAVA QUEBRADO
+## PASSO 1½ — ◐ QUATRO DE SEIS · O GESTO ESTAVA QUEBRADO
 
 > Achado pela frente de _wiring_, em 15 cenários e ~120 meses dirigidos num navegador de
 > verdade. **Nenhum destes é de desenho: são de comportamento.**
@@ -160,15 +160,15 @@ e a escrita é pulada.
 três, com uma carta **morta** entre elas — e a divergência durou quatro meses. Num caso limpo,
 **6 das 7 cartas voltam como não-lidas** depois do F5.
 
-### 1½.4 · ⚠ A poda do não-lido mede a TELA, e não a caixa
+### 1½.4 · ✔ A poda do não-lido mede a TELA, e não a caixa
 
-`alive` é montado das `.tray__row` renderizadas, e a bandeja corta em 7. Carta que ainda está
-em `state.mail` — que guarda até 24 — mas caiu fora das sete **perde a marca de lida**. Medido:
-o conjunto nunca passou de 7 em 10 meses; ele é limitado pela tela.
+`alive` é montado das `.tray__row` renderizadas, e a bandeja cortava em 7. Carta que ainda
+estava em `state.mail` — que guarda até 24 — mas caía fora das sete **perdia a marca de lida**.
 
-⚠ **Honestidade da medição:** a regressão visível — a carta voltar marcada como não-lida — não
-foi reproduzida, porque correspondência nova chega todo mês e as escondidas não voltaram ao
-topo. **O que está medido é a divergência entre disco e caixa.**
+⭐ **Fechado pela queda do teto (3.2), e não por conserto próprio:** sem corte, toda carta da
+caixa vira linha, então `alive` passa a cobrir `state.mail` inteiro. ⚠ **E o que segura isso é
+guarda, e não sorte:** o passeio compara **linhas do índice com cartas do save** e reprova se
+divergirem (item 2.2). `alive` continuar lendo o DOM deixou de ser defeito.
 
 ### 1½.5 · ⚠ Todo gesto destrói o foco do teclado
 
@@ -183,20 +183,26 @@ somem no F5, e **o único sinal é o rótulo do botão voltar a cobrar o silênc
 
 ---
 
-## PASSO 2 — O PORTÃO APRENDE A VER
+## PASSO 2 — ✔ FEITO em 28/08/2026 · O PORTÃO APRENDE A VER
 
 > ### ⚖ Nenhum item entra sem que o portão SAIBA VER o defeito que ele conserta.
 >
 > É a regra dura da Restrição 2 do ciclo 13, e ela vale aqui com força: **três dos defeitos
 > acima atravessaram doze guardas, 253 provas e o passeio.**
 
-| #       | a checagem                                    | por que hoje ela é cega                                                                     |
-| ------- | --------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **2.1** | ✔ **`checkClamped` entrou** — o quarto irmão  | recorte por linhas **não rola e não move `scrollHeight`**: a caixa só diagrama o que sobrou |
-| **2.2** | toda carta que o motor produz chega à bandeja | nada compara o que a tela recebe com o que ela renderiza                                    |
-| **2.3** | o índice não volta no calendário              | nada lê a sequência de divisores                                                            |
-| **2.4** | a poda guarda as novas                        | ⚠ **a retenção não tem prova nenhuma, e nem é exportada** — nenhuma prova a alcança         |
-| **2.5** | duas linhas do índice nunca leem igual        | o achado 24 foi dado como fechado **sem prova nenhuma**                                     |
+| #       | a checagem                               | onde ela mora, e o que ela viu                                                                |
+| ------- | ---------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **2.1** | ✔ `checkClamped` — o quarto irmão        | recorte por linhas **não rola e não move `scrollHeight`**. Verificada mordendo: `18>37`       |
+| **2.2** | ✔ toda carta do motor chega à bandeja    | passeio: **linhas do índice = cartas do save**. Se um teto voltar, ela reprova                |
+| **2.3** | ✔ o índice não volta no calendário       | passeio lê a sequência de cabeçalhos, e `screens.mjs` cobre a mesma regra em prova unitária   |
+| **2.4** | ✔ a poda guarda as novas                 | ⚠ **o item estava errado:** `KEEP` e `CARRY` são exportados e `mail.mjs:169` já cobria a poda |
+| **2.5** | ✔ duas linhas do índice nunca leem igual | passeio, por bloco de mês. Verificada mordendo: acusou `out · 2027`                           |
+
+⚠ **E A 2.5 NASCEU FRACA E FOI CORRIGIDA ANTES DE ENTRAR.** A primeira versão comparava a linha
+**inteira**, prazo incluído — e o defeito relatado é exatamente _"assunto idêntico, remetente
+idêntico, e só a linha de prazo, que é a menor e mais apagada, separando as duas"_. Ela deixava
+passar o caso que existe para pegar. **Agora compara assunto mais remetente, e o prazo não conta
+como distinção.**
 
 ⭐ **E ELA JÁ PAGOU UM ACHADO DE ORDEM, sem acusar nada:** o recorte de `.tray__subject` está em
 **duas** linhas, e a prosa da folha ao lado dele diz _"três linhas e para"_. ⚠ **E o que as duas
@@ -206,13 +212,13 @@ recorte trabalha contra o conserto do 3.4**, e os dois têm de ser decididos jun
 
 ⚠ **Verificada mordendo:** com um recorte de uma linha forçado, ela acusa `18>37`.
 
-⛔ **MAS A EXCEÇÃO QUE EU DECLAREI ESTÁ ERRADA, e a geometria provou depois.** Eu excetuei
+⛔ **A EXCEÇÃO QUE EU DECLAREI ESTAVA ERRADA, e a geometria provou depois.** Eu excetuei
 `.tray__subject` lendo a prosa da folha — _"o corte é decisão e não descuido"_ — e a medição
-mostra que o corte come **66% das linhas** e faz 21 dos 24 meses terem duas linhas idênticas.
-**Excetuei exatamente a peça quebrada**, que é a definição de checagem que mente.
+mostrou que o corte comia **66% das linhas**. **Excetuei exatamente a peça quebrada**, que é a
+definição de checagem que mente.
 
-⚖ **Ela sai quando o 3½.2 entrar, e não antes** — enquanto o índice cortar, remover a exceção
-só deixa o portão vermelho sem consertar nada. **Fica declarado aqui como dívida do passo 3.**
+✔ **Dívida paga em 28/08/2026:** o `line-clamp` foi para 4 (item 3½.2), o corte zerou, e a
+exceção saiu junto. O índice passa a ser guardado como o resto da tela.
 
 ⚠ **2.1 É A QUARTA VEZ QUE ESTA FAMÍLIA COBRA O MESMO PREÇO.** A lição já está escrita em
 `docs/standards.md` §6 — _"toda checagem nasce sem alcance"_ — e a pergunta que falta é sempre
