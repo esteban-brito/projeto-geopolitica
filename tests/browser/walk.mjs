@@ -487,6 +487,30 @@ try {
   await page.screenshot({ path: join(OUT, "walk-relatorio.png"), fullPage: true });
   await checkContrast("relatorio");
 
+  /* ⚠ 7a-bis — A CARTA ABERTA MORRE COM O MES. `openDispatch` so era escrito no clique e nunca
+     limpo: um clique num aviso velho prendia o jogador nele por 20 meses medidos, com o painel
+     mostrando o aviso enquanto o botao cobrava o silencio de outra carta. */
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(400);
+  const linhas = await page.locator(".tray__row").count();
+  if (linhas > 1) {
+    await page.locator(".tray__row").last().click();
+    await page.waitForTimeout(200);
+    const presa = await page
+      .locator('.tray__row[aria-current="true"]')
+      .getAttribute("data-dispatch");
+    await page.click("#advance");
+    await page.waitForTimeout(700);
+    const agora = await page
+      .locator('.tray__row[aria-current="true"]')
+      .getAttribute("data-dispatch");
+    expect(agora !== presa, `[caixa] o mes virou e a carta aberta continuou sendo ${presa}`);
+    expect(
+      (await page.locator(".tray__row").first().getAttribute("aria-current")) === "true",
+      "[caixa] depois do mes a bandeja nao abriu a carta do topo",
+    );
+  }
+
   /* 7b — O MES E REPETIVEL. */
   const beforeRun = await page.locator("#turn").innerText();
   for (let month = 0; month < 3; month++) {

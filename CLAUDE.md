@@ -76,13 +76,13 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 12 guardas · 54 provas sintéticas · 132 arquivos · 256 provas · passeio
+**Estado verde:** 12 guardas · 54 provas sintéticas · 132 arquivos · 258 provas · passeio
 verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
 
 **Há DOIS planos na mesa**, e o segundo é o que está em execução:
 
 - [`cycles/14-a-caixa-de-entrada.md`](docs/cycles/14-a-caixa-de-entrada.md) — **em execução.**
-  Sete passos, com o passo 1 e o 2.1 feitos. As quatro frentes de investigação fecharam;
+  Sete passos, com os passos 1, 1½, 2.1 e 3 feitos. As quatro frentes de investigação fecharam;
 - [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — o plano mestre, 12 de 49 itens.
   Retomar no passo 2 (B1–B5) quando o ciclo 14 fechar.
 

@@ -638,6 +638,38 @@ function rowHtml(dispatch, open, read) {
 const TRAY_CAPACITY = 7;
 
 /**
+ * QUEM PEDE RESPOSTA — e e o unico criterio que separa os dois blocos da bandeja.
+ *
+ * @param {Dispatch} item
+ */
+function asking(item) {
+  return item.due !== null && item.due !== undefined;
+}
+
+/**
+ * A ORDEM DA BANDEJA, e ela mora AQUI e nao no entrypoint.
+ *
+ * ⚠ ELA ESTAVA PELA METADE, e as duas metades eram defeito: as perguntas nao eram ordenadas
+ * entre si, entao a bandeja abria a de prazo mais LONGO enquanto o botao cobrava o silencio da
+ * outra; e o fechamento do mes vinha concatenado DEPOIS dela, caindo sempre no fim mesmo sendo
+ * a carta mais nova. Medido em dois meses de partida: o indice lia "abr → mar → abr".
+ *
+ * @param {ReadonlyArray<Dispatch>} dispatches
+ * @returns {Dispatch[]}
+ */
+function sorted(dispatches) {
+  const asks = dispatches.filter(asking);
+  const tells = dispatches.filter(item => !asking(item));
+
+  /* A MAIS URGENTE PRIMEIRO, e o desempate e o mes: duas perguntas com o mesmo prazo sao duas
+     perguntas do mesmo mes, e ai a mais nova vem antes. */
+  asks.sort((a, b) => (a.due ?? 0) - (b.due ?? 0) || b.month - a.month);
+  tells.sort((a, b) => b.month - a.month);
+
+  return [...asks, ...tells];
+}
+
+/**
  * O QUE CABE NA PILHA, com a pergunta protegida.
  *
  * @param {ReadonlyArray<Dispatch>} dispatches ja ordenados por urgencia
@@ -652,10 +684,16 @@ function fitted(dispatches, current, capacity) {
   const asking = dispatches.filter(item => item.due !== null && item.due !== undefined);
   const rest = dispatches.filter(item => !asking.includes(item));
 
-  /* ⚠ O ABERTO ENTRA MESMO SE ELE FOR UM AVISO VELHO. */
+  /* ⚠ O ABERTO ENTRA MESMO SE ELE FOR UM AVISO VELHO — E DESPEJANDO ALGUEM. Antes ele era
+     empurrado sem tirar ninguem, e a lista devolvia oito linhas para uma capacidade de sete: o
+     ramo nunca era exercitado porque a prova abria com o padrao, que cai sempre dentro da
+     janela. Quem sai e o mais velho dos avisos, que e o ultimo de `rest`. */
   const room = Math.max(0, capacity - asking.length);
   const kept = rest.slice(0, room);
-  if (!asking.includes(current) && !kept.includes(current)) kept.push(current);
+  if (!asking.includes(current) && !kept.includes(current)) {
+    if (kept.length >= room && kept.length > 0) kept.pop();
+    kept.push(current);
+  }
 
   /* A ORDEM ORIGINAL SOBREVIVE ao corte: reordenar aqui faria a pilha embaralhar sozinha no
      mes em que uma carta caisse fora. */
@@ -1006,10 +1044,11 @@ function annexHtml(letter, segments, parties) {
 export function trayHtml({ dispatches, open, seen = [], capacity = TRAY_CAPACITY }) {
   if (dispatches.length === 0) return "";
 
-  const current = dispatches.find(item => item.id === open) ?? dispatches[0];
+  const ordered = sorted(dispatches);
+  const current = ordered.find(item => item.id === open) ?? ordered[0];
   if (!current) return "";
 
-  const shown = fitted(dispatches, current, capacity);
+  const shown = fitted(ordered, current, capacity);
   const read = new Set(seen);
 
   return (
@@ -1023,8 +1062,16 @@ export function trayHtml({ dispatches, open, seen = [], capacity = TRAY_CAPACITY
     shown
       .map((item, index) => {
         const before = shown[index - 1];
-        const divider =
-          !before || before.month !== item.month
+        /* ⚠ QUEM PEDE RESPOSTA TEM SECAO, E NAO DATA. O divisor de mes afirmava data numa
+           lista ordenada por urgencia, e o calendario andava para tras: medido numa partida
+           nova com dois avancos, ele lia "abr · 2027 → mar · 2027 → abr · 2027". Data so
+           rotula o bloco dos avisos, que e cronologico de verdade. */
+        const asks = asking(item);
+        const divider = asks
+          ? index === 0
+            ? `<li class="tray__month">${escapeHtml(UI.inbox.needsAnswer)}</li>`
+            : ""
+          : !before || asking(before) || before.month !== item.month
             ? `<li class="tray__month">${escapeHtml(monthLabel(item.month))}</li>`
             : "";
         return (

@@ -138,7 +138,7 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 ---
 
 **Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
-132 arquivos · 256 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
+132 arquivos · 258 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
 
 ### ▶ O PLANO EM EXECUÇÃO — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
 
@@ -1076,7 +1076,7 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### A verificação
 
-**Doze guardas** com provas sintéticas e **256 propriedades**, e o **passeio**
+**Doze guardas** com provas sintéticas e **258 propriedades**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.

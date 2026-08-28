@@ -446,7 +446,11 @@ test("A PILHA DA BANDEJA CORTA AVISO, e NUNCA corta pergunta", () => {
     due,
   });
 
-  /* A ORDEM E A DA BANDEJA DE VERDADE: pergunta primeiro, aviso depois. */
+  /* ⚠ A ORDEM DE ENTRADA E EMBARALHADA DE PROPOSITO, e antes ela nao era: a fixture entregava
+     os avisos em ordem CRESCENTE dizendo em prosa que estava "na ordem da bandeja de verdade",
+     e a asserção cobrava a sobrevivencia do MAIS VELHO — o contrario do que o comentario dela
+     afirmava. Ela codificava o defeito. Quem ordena agora e a bandeja, entao a entrada pode
+     chegar em qualquer ordem, e e isso que esta prova passa a cobrar. */
   const perguntas = [0, 1, 2].map(n => carta(n, 3));
   const avisos = [10, 11, 12, 13, 14, 15].map(n => carta(n, null));
 
@@ -465,8 +469,8 @@ test("A PILHA DA BANDEJA CORTA AVISO, e NUNCA corta pergunta", () => {
   /* ⚠ O MAIS NOVO SOBREVIVE AO MAIS VELHO entre os avisos: a bandeja chega ordenada, e cortar
      pelo fim e cortar o que o mundo disse ha mais tempo. */
   const ficaram = rowsOf(apertado).map(linha => linha.slice(1, linha.indexOf(ASPA, 1)));
-  assert.ok(ficaram.includes("carta-10"), "a pilha cortou o aviso errado");
-  assert.ok(!ficaram.includes("carta-15"), "a pilha nao cortou nada");
+  assert.ok(ficaram.includes("carta-15"), "a pilha descartou o aviso mais NOVO");
+  assert.ok(!ficaram.includes("carta-10"), "a pilha guardou o aviso mais velho");
 
   /* SO PERGUNTA, E MAIS QUE CABE: a pilha estoura de proposito. */
   const so = trayHtml({ dispatches: perguntas, open: null, capacity: 1 });
@@ -1081,5 +1085,78 @@ test("A REPARTICAO FICA COLADA NO VALOR: nenhuma celula anda mais de um ponto", 
         }
       },
     ),
+  );
+});
+
+/* ── O INDICE NAO VOLTA NO CALENDARIO ───────────────────────────────────────── ⚠ ELA NASCE DA
+   REPRODUCAO DELE, e ela e de tres cartas: partida nova, dois "avancar", e o calendario lia
+   `abr · 2027 → mar · 2027 → abr · 2027`. A causa eram duas: o fechamento do mes era
+   concatenado FORA da ordenacao, no entrypoint, e o divisor afirmava DATA numa lista ordenada
+   por URGENCIA. */
+test("O INDICE NAO VOLTA NO CALENDARIO, e quem pede resposta tem secao propria", () => {
+  /** @param {string} id @param {number} month @param {number | null} due */
+  const carta = (id, month, due) => ({
+    id,
+    month,
+    from: null,
+    subject: id,
+    body: "<p>corpo</p>",
+    due,
+  });
+
+  /* A ENTRADA CHEGA FORA DE ORDEM, como o entrypoint a monta. */
+  const html = trayHtml({
+    /* ⚠ A ORDEM DE ENTRADA E A QUE O ENTRYPOINT PRODUZIA, e ela e a reproducao dele: os avisos
+       vem do mais novo para o mais velho e o FECHAMENTO DO MES vem depois de todos, mesmo
+       sendo do mes mais novo. Sem ordenacao, o indice le "abr → mar → abr". */
+    dispatches: [
+      carta("aviso-abr", 3, null),
+      carta("aviso-mar", 2, null),
+      carta("fechamento-abr", 3, null),
+      carta("pergunta-longa", 4, 2),
+      carta("pergunta-urgente", 3, 0),
+    ],
+    open: null,
+    capacity: 7,
+  });
+
+  const itens = [...html.matchAll(/<li(?: class="tray__month">([^<]*)<)?/g)].map(m => m[1]);
+  const secoes = itens.filter(item => item !== undefined);
+
+  /* A SECAO DA PERGUNTA VEM PRIMEIRO, e ela nao e uma data. */
+  assert.equal(secoes[0], UI.inbox.needsAnswer, `a bandeja abriu com "${secoes[0]}"`);
+
+  /* ⚠ E OS MESES SO ANDAM PARA TRAS. Um mes que reaparece depois de outro e o defeito. */
+  const meses = secoes.slice(1);
+  assert.deepEqual(
+    meses,
+    [...new Set(meses)],
+    `um mes apareceu duas vezes no indice: ${meses.join(" → ")}`,
+  );
+});
+
+/* ⚠ O BOTAO E A BANDEJA TEM DE FALAR DA MESMA CARTA: a bandeja abria a pergunta de prazo mais
+   LONGO enquanto o botao de avancar cobrava o silencio da outra. */
+test("A BANDEJA ABRE A PERGUNTA MAIS URGENTE, e nao a mais nova", () => {
+  /** @param {string} id @param {number} month @param {number} due */
+  const pergunta = (id, month, due) => ({
+    id,
+    month,
+    from: null,
+    subject: id,
+    body: "<p>corpo</p>",
+    due,
+  });
+
+  const html = trayHtml({
+    dispatches: [pergunta("folgada", 5, 2), pergunta("vencendo", 4, 0)],
+    open: null,
+    capacity: 7,
+  });
+
+  assert.match(
+    html,
+    /class="tray__row"[^>]*data-dispatch="vencendo"[^>]*aria-current="true"/,
+    "a bandeja abriu a pergunta de prazo mais longo",
   );
 });

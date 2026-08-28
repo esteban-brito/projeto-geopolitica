@@ -439,6 +439,10 @@ export const UI = {
        vez de relógio: é saber o que acontece se você não responder que transforma ignorar
        numa ESCOLHA. */
     silenceWarns: "Se você não responder, a emenda vale.",
+    /* ⚠ O DIVISOR DE DATA MENTIA NUMA LISTA ORDENADA POR URGÊNCIA: o calendário lia
+       "abr · 2027 → mar · 2027 → abr · 2027". Quem pede resposta tem seção própria; mês só
+       vale dentro dos avisos, que são cronológicos de verdade. */
+    needsAnswer: "Precisam de resposta",
     dueIn: "vence em",
     dueNow: "vence neste mês",
     months: TERMOS.months,

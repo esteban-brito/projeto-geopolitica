@@ -103,12 +103,12 @@ Congresso propondo.
 
 ---
 
-## PASSO 1½ — O GESTO ESTÁ QUEBRADO · save: zero
+## PASSO 1½ — ✔ FEITO · O GESTO ESTAVA QUEBRADO
 
 > Achado pela frente de _wiring_, em 15 cenários e ~120 meses dirigidos num navegador de
 > verdade. **Nenhum destes é de desenho: são de comportamento.**
 
-### 1½.1 · ⛔ Um clique prende o jogador numa carta para sempre
+### 1½.1 · ✔ Um clique prendia o jogador numa carta para sempre
 
 `app.mjs` — `openDispatch` é escrito **só** no clique e **nunca** é limpo: nem na virada do
 mês, nem na posse. E `fitted` força a carta aberta para dentro da bandeja mesmo estourando a
@@ -124,7 +124,7 @@ abaixo da área visível** de `.tray__list`, com `scrollTop: 0` e nenhum `scroll
 jogador vê um documento à direita **sem nenhuma linha marcada à esquerda** — e a linha de tarja
 vermelha lê como selecionada, e não é.
 
-### 1½.2 · ⛔ A bandeja abre a pergunta MENOS urgente
+### 1½.2 · ✔ A bandeja abria a pergunta MENOS urgente
 
 `newestFirst` não ordena `asking` entre si, e `state.mail` chega com a mais **nova** na frente
 — que é a de prazo mais **longo**. **Medido:**
@@ -138,7 +138,7 @@ botão: "fecha sem resposta: Cortar aposentadoria urbana · e mais 17"   (= a ou
 **O botão avisa que a carta X fecha sem resposta, e a bandeja abre a carta Y.** É o item 3.3
 visto pelo lado do gesto, e ele sobe de prioridade por causa disto.
 
-### 1½.3 · ⛔ A marca de lida não chega ao disco
+### 1½.3 · ✔ A marca de lida não chegava ao disco
 
 `app.mjs` grava só quando o **tamanho** do conjunto muda: `readMail.size !== before`. Quando a
 poda remove um id morto e a leitura acrescenta um novo **na mesma pintura**, o tamanho não muda
@@ -208,9 +208,9 @@ a mesma: **qual metade do problema ela ainda não vê.**
 
 ---
 
-## PASSO 3 — A BANDEJA PARA DE MENTIR · save: zero
+## PASSO 3 — ✔ FEITO · A BANDEJA PAROU DE MENTIR
 
-### 3.1 · O fechamento do mês volta, e hoje ele é inalcançável
+### 3.1 · ✔ O fechamento do mês voltou
 
 A carta assinada pela Casa Civil — o que o handoff chama de _"a única coisa que o mundo
 escreveu"_ — entra na bandeja **por último**, fora da ordenação, e o corte por capacidade come
@@ -224,7 +224,7 @@ real acontece **todo mês, sem recarga nenhuma**.
 Entrando na ordenação como qualquer outro, ela cai no bloco do mês corrente, que é a frente da
 fila, e o corte para de alcançá-la. **Uma linha movida.**
 
-### 3.2 · A lista estoura a própria capacidade, por duas vias
+### 3.2 · ✔ A lista estourava a própria capacidade
 
 - o corte **acrescenta o ofício aberto sem despejar ninguém**: com ele fora da janela, a lista
   devolve **oito linhas para uma capacidade de sete**. A prova que existe abre com o padrão,
@@ -236,7 +236,7 @@ fila, e o corte para de alcançá-la. **Uma linha movida.**
   **`overflowY: 0` com 13 `<li>` dentro de 627px**. **A lista não rola hoje.** O que sobra do
   achado é a margem: a constante não conta os divisores, então ela não sabe quanto ainda cabe.
 
-### 3.3 · O divisor de mês vira seção
+### 3.3 · ✔ O divisor de mês virou seção
 
 Ele afirma **data** numa lista ordenada por **urgência**, e data numa lista que não é
 cronológica mente. Medido, ele anda para trás e repete:
@@ -273,7 +273,7 @@ porque hoje a ordem entre elas é indefinida.
 
 **Altura: uma linha, na única peça do Gabinete que tem folga declarada.**
 
-### 3.4 · Duas perguntas param de ler igual
+### 3.4 · ⛔ Duas perguntas ainda leem igual — travado pelo recorte (3½.2)
 
 O achado 24 previu o dia: _"deixa de ser cosmético quando o jogador tiver duas perguntas
 abertas e precisar escolher entre elas"_. **O dia chegou, e é reproduzível em catorze meses de

@@ -410,57 +410,46 @@ function cabinetInput(current) {
       open: openDispatch,
       seen: [...readMail],
       dispatches: [
-        /* ⚠ O AVISO VEM DO MAIS NOVO PARA O MAIS VELHO, e antes ele vinha do
-           mais VELHO — `state.mail` e cronologica, e ninguem tinha reordenado porque com
-           uma carta por mes a ordem nao aparecia. Com o relatorio mensal a bandeja passou
-           a fechar com vinte e poucas, e a PILHA corta pelo fim: ela guardaria a rua de
-           marco para sempre e descartaria a de hoje.
-
-           ⚠ E A PERGUNTA CONTINUA NA FRENTE DE TUDO. `newestFirst` so mexe entre iguais —
-           quem tem prazo ja vem antes, e a ordenacao por data nunca atravessa essa
-           fronteira. O que exige resposta fica no alto; o que so informa se enfileira
-           atras, e a mais recente primeiro. */
-        ...newestFirst(
-          describeMail({
-            mail: state.mail,
-            people: governmentOf(state, CATALOG).people,
-            treatment: governmentOf(state, CATALOG).treatment,
-            left: letter => left(letter, state.month),
-            /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
+        /* ⚠ A ORDEM NAO MORA MAIS AQUI, e a mudanca e de endereco e nao de regra: quem
+           ordena e `trayHtml`, onde ela e funcao pura e tem prova. No entrypoint ela so era
+           alcancavel pelo passeio, e passou meses com as perguntas nao ordenadas entre si. */
+        ...describeMail({
+          mail: state.mail,
+          people: governmentOf(state, CATALOG).people,
+          treatment: governmentOf(state, CATALOG).treatment,
+          left: letter => left(letter, state.month),
+          /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
            impacto seria "95% da despesa e obrigatoria" — e a divisao que a produz
            ja mora no cartao do Cofre, entao escreve-la aqui daria dois lugares
            fazendo a mesma conta, que e o defeito recorrente numero um deste
            projeto. Dois valores em reais dizem a mesma coisa sem abrir a segunda
            porta. */
-            inherited: { mandatory: budget.mandatory, room: share.room },
-            answered: orders.mail,
-            /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
+          inherited: { mandatory: budget.mandatory, room: share.room },
+          answered: orders.mail,
+          /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
            mora no catalogo. Uma tabela de nomes nesta view seria a segunda verdade
            sobre quem sao os quatro. */
-            lobbies: CATALOG.lobbies,
-            /* ⚠ O CERCO SAI DO MOTOR, e a carta dele nao escreve numero proprio: o
+          lobbies: CATALOG.lobbies,
+          /* ⚠ O CERCO SAI DO MOTOR, e a carta dele nao escreve numero proprio: o
            triplo da cadeira e `SIEGE_PRICE`, e os 342 de 513 sao a CF art. 86 no
            regime. Copiados na view, os dois mentiriam no dia em que mudassem. */
-            siege: boilerOf(state, CATALOG),
-            /* AS CADEIRAS E O QUORUM, para a carta da MINORIA. Os dois ja estao calculados
+          siege: boilerOf(state, CATALOG),
+          /* AS CADEIRAS E O QUORUM, para a carta da MINORIA. Os dois ja estao calculados
              nesta funcao — a tela nao soma bancada de novo. */
-            chamber: { base: current.base, majority: SIMPLE_MAJORITY },
-            /* AS CLASSES, so pelo ROTULO: o anexo da carta da rua nomeia as linhas, e os
+          chamber: { base: current.base, majority: SIMPLE_MAJORITY },
+          /* AS CLASSES, so pelo ROTULO: o anexo da carta da rua nomeia as linhas, e os
                numeros dele ja vem pesados dentro da propria carta. */
-            segments: CATALOG.segments,
-            /* AS BANCADAS, so pelo ROTULO: a lealdade e as cadeiras chegam na propria
+          segments: CATALOG.segments,
+          /* AS BANCADAS, so pelo ROTULO: a lealdade e as cadeiras chegam na propria
                carta, gravadas no mes em que ela foi escrita. */
-            parties: CATALOG.parties,
-          }),
-        ),
-        ...(last
-          ? [
-              describeMonth({
-                report: last.report,
-                adviser: last.adviser,
-              }),
-            ]
-          : []),
+          parties: CATALOG.parties,
+        }),
+        /* ⚠ O FECHAMENTO DO MES ENTRA NA MESMA LISTA, e nao concatenado depois dela. Ele era
+           anexado FORA da ordenacao, entao caia sempre no fim mesmo sendo a carta mais nova —
+           o calendario lia "abr → mar → abr" numa partida de dois meses, e do mes 3 em diante o
+           corte por capacidade o comia primeiro e ele ficava INALCANCAVEL: sem linha no indice,
+           nao ha o que clicar. Quem ordena agora e a bandeja. */
+        ...(last ? [describeMonth({ report: last.report, adviser: last.adviser })] : []),
       ],
     }),
     room: share.room,
@@ -729,7 +718,11 @@ function rememberRead() {
   const rows = /** @type {HTMLElement[]} */ ([...el.main.querySelectorAll(".tray__row")]);
   if (rows.length === 0) return;
 
-  const before = readMail.size;
+  /* ⚠ POR CONTEUDO, E NAO POR TAMANHO. `readMail.size !== before` pulava a gravacao quando a
+     poda tirava um id morto e a leitura acrescentava um novo NA MESMA PINTURA: medido, o disco
+     ficava com carta morta e sem a marca nova por quatro meses, e 6 de 7 cartas voltavam
+     nao-lidas depois do F5. */
+  const before = [...readMail].sort().join("|");
 
   /* A PODA PRIMEIRO: so sobrevive quem ainda esta na bandeja. */
   const alive = new Set(rows.map(row => row.dataset["dispatch"] ?? ""));
@@ -741,27 +734,21 @@ function rememberRead() {
   const id = current?.dataset["dispatch"];
   if (id) readMail.add(id);
 
+  /* ⚠ E ELA PRECISA ESTAR VISIVEL. Medido: a linha marcada ficava 68px ABAIXO da area visivel
+     da lista, com `scrollTop` em zero — o jogador via um documento a direita e nenhuma linha
+     marcada a esquerda. So rola quando ela de fato esta fora, para a lista nao pular sozinha a
+     cada pintura. */
+  const list = el.main.querySelector(".tray__list");
+  if (current && list instanceof HTMLElement) {
+    const acima = current.offsetTop < list.scrollTop;
+    const abaixo = current.offsetTop + current.offsetHeight > list.scrollTop + list.clientHeight;
+    if (acima || abaixo) current.scrollIntoView({ block: "nearest" });
+  }
+
   /* ⚠ SO ESCREVE QUANDO MUDOU. `paint` roda a cada clique da tela, e gravar em disco
      sessenta vezes seguidas para guardar o mesmo conjunto e desperdicio que um dia vira
      travamento numa maquina lenta. */
-  if (readMail.size !== before) persistSeen();
-}
-
-/**
- * A PERGUNTA NA FRENTE, E O AVISO DO MAIS NOVO PARA O MAIS VELHO.
- *
- * ⚠ `state.mail` E CRONOLOGICA e a pilha da bandeja corta pelo FIM: sem inverter, ela
- * guardaria a rua de marco para sempre e jogaria fora a de hoje. E ela NAO atravessa a
- * fronteira da pergunta — ordenar tudo por data poria um relatorio de aprovacao na
- * frente de uma emenda com prazo correndo, e o inbox passaria a ensinar a rolar.
- *
- * @param {ReadonlyArray<import("./src/ui/screens/inbox.mjs").Dispatch>} dispatches
- * @returns {ReadonlyArray<import("./src/ui/screens/inbox.mjs").Dispatch>}
- */
-function newestFirst(dispatches) {
-  const asking = dispatches.filter(item => item.due !== null && item.due !== undefined);
-  const telling = dispatches.filter(item => !asking.includes(item));
-  return [...asking, ...telling.sort((a, b) => b.month - a.month)];
+  if ([...readMail].sort().join("|") !== before) persistSeen();
 }
 
 /** So os numeros derivados, para o arrasto sobreviver. */
@@ -1042,6 +1029,12 @@ el.advance.addEventListener("click", () => {
       indexBefore: before.capacity.index,
       adviser: governmentOf(before, CATALOG).adviser,
     };
+
+    /* ⚠ E A CARTA ABERTA MORRE COM O MES TAMBEM. `openDispatch` so era escrito no clique e
+       nunca limpo: medido, um clique num aviso velho prendia o jogador nele por 20 MESES, e em
+       3 de 3 meses com pergunta vencendo o painel mostrava o aviso enquanto o botao cobrava o
+       silencio de outra carta. Nulo quer dizer "a de cima", e a de cima e a mais urgente. */
+    openDispatch = null;
 
     /* O RASCUNHO MORRE COM O MES. Carregar a verba do mes passado para o proximo
        faria o jogador pagar de novo sem ter decidido — e o motor cobraria, porque
