@@ -1033,7 +1033,7 @@ el.advance.addEventListener("click", () => {
     /* ⚠ E A CARTA ABERTA MORRE COM O MES TAMBEM. `openDispatch` so era escrito no clique e
        nunca limpo: medido, um clique num aviso velho prendia o jogador nele por 20 MESES, e em
        3 de 3 meses com pergunta vencendo o painel mostrava o aviso enquanto o botao cobrava o
-       silencio de outra carta. Nulo quer dizer "a de cima", e a de cima e a mais urgente. */
+       silencio de outra carta. Nulo quer dizer "a de cima", que e a primeira do mes mais novo. */
     openDispatch = null;
 
     /* O RASCUNHO MORRE COM O MES. Carregar a verba do mes passado para o proximo
@@ -1129,6 +1129,10 @@ el.swearForm.addEventListener("submit", () => {
      em quatro lugares, e um vazio ali leria como defeito de carregamento. */
   state = createState(undefined, CATALOG, nome === "" ? null : { name: nome, treatment });
   last = null;
+  /* ⚠ E A CARTA ABERTA MORRE NA POSSE TAMBEM, e nao so na virada do mes: o id do alarme nao
+     carrega o mes — `alarm()` monta `kind:id` —, entao um `ceiling:ceiling` clicado na
+     partida anterior atravessa o recomeco e a bandeja abre ele em vez da mais urgente. */
+  openDispatch = null;
   orders = blankOrders();
   screen = "cabinet";
   painted = null;

@@ -5499,3 +5499,114 @@ diferente em vez de converter, e custa a partida em andamento:
 verde em duas janelas. Branch `acoplamento-e-simulador`.
 
 **Próximo passo:** O Glorioso, passo 2 — B1 a B5 (faixa de áreas no Congresso).
+
+---
+
+## Sessão 24 — a marca de "feito" conferida contra o código (28/08/2026)
+
+**A sessão inteira nasceu de uma pergunta dele**, feita antes de qualquer trabalho começar:
+_"tem certeza que todos os passos antes desse fecharam? estuda mais um pouco sobre o código."_
+A resposta era não, e ela tinha quatro partes.
+
+### O que estava certo
+
+Os três consertos de motor do passo 1 estão no código e têm prova: a poda corta pelo começo
+(`mail.mjs`, `closed.slice(0, …)`), o filtro de exigência pede a espécie (`turn.mjs:646`), e o
+alarme do teto compara o mês que fecha com o que abre (`turn.mjs:1111`). O 3.1 e o 3.3 também
+— o fechamento do mês entrou na ordenação, e o divisor virou seção com prova em
+`screens.mjs:1096`.
+
+### O que não estava
+
+**O passo 1½ estava marcado "✔ FEITO" com três dos seis itens abertos.** O próprio plano os
+marcava ⚠ dois blocos abaixo do cabeçalho que dizia feito, e o handoff copiou o cabeçalho. Os
+três foram reconferidos no código e continuam abertos: `alive` ainda sai do DOM (`app.mjs:728`),
+`paint()` não restaura foco nenhum, e `persist()` só serializa `state` — `orders` é variável de
+módulo e morre no F5.
+
+**E dois consertos declarados fechados atendiam metade do defeito cada um.** O 3.2 protegia a
+pergunta e despejava o aviso mais velho — mas só quando havia aviso a despejar: com as
+perguntas enchendo a capacidade, `room` dá zero, o guarda `kept.length > 0` desliga o despejo e
+o aberto entrava de graça. **Medido: 6 linhas para uma capacidade de 5.** O 1½.1 limpava
+`openDispatch` na virada do mês e não na posse, e o id do alarme não carrega o mês — um
+`ceiling:ceiling` clicado atravessava o recomeço.
+
+⭐ **A lição é a do §7 dos padrões, e ela cobrou pela segunda sessão seguida:** a prosa que
+declara estado envelhece sozinha, e "feito" é o número mais caro de todos — porque ninguém
+volta a medir o que já foi declarado pronto. **O cabeçalho de um passo não pode ser mais novo
+que o pior dos seus itens.**
+
+### O que entrou
+
+Duas linhas de código e uma prova que nasceu antes e mordeu (`6 !== 5`): sem vaga na pilha,
+quem cede é a **preferência** — o índice abre a de cima, a pergunta não se corta, e o documento
+nunca fica sem a linha ao lado. E `openDispatch = null` na posse.
+
+**259 provas, 12 guardas, passeio verde.** O passo 2 continua em 1 de 5, e ele é o que o
+próprio ciclo exige antes de tudo: _"nenhum item entra sem que o portão saiba ver o defeito que
+ele conserta"_.
+
+---
+
+## Sessão 25 — o índice virou calendário, e duas soluções minhas foram jogadas fora (28/08/2026)
+
+**A sessão começou com ele perguntando o que tinha ficado para trás.** O terminal fechou no
+meio de uma pergunta minha, e a pergunta estava no transcript: onde entrar o mês do texto na
+linha do índice, para duas perguntas gêmeas pararem de ler igual (item 3.4).
+
+### As três medidas, e por que nenhuma entrou
+
+Capturei as três numa partida de verdade, 1440×980, jogada até ter duas perguntas abertas ao
+mesmo tempo. **A comparação lado a lado é o que ele pediu** — _"quero um exemplo real de como
+ficaria as três para escolher, pq não entendi muito bem"_ —, e ela mostrou o que a prosa não
+mostrava: o remetente é **idêntico nas duas gêmeas**, cortado nas duas, e não ajuda a escolher.
+
+| medida                    | custo em altura | o que a captura mostrou                    |
+| ------------------------- | --------------- | ------------------------------------------ |
+| mês no fim do assunto     | +18px           | na carta não-lida a pastilha empurra o mês |
+| mês em linha própria      | +70px           | o mais explícito, e o que mais cresce      |
+| mês no lugar do remetente | 0px             | mata a reticência do nome                  |
+
+⭐ **E ele respondeu com outra coisa:** _"mensagem do mês de março fica no bloco mês de março…
+quero idêntico ao Football Manager"_. As três medidas morreram na hora.
+
+### O que entrou
+
+**O índice virou calendário puro.** Cada carta no bloco do mês em que chegou, meses do mais
+novo para o mais velho, e dentro do bloco a ordem que o motor já monta — alarme, pergunta,
+exigência, aviso, relatório. `sort` é estável, então a tela não refaz essa decisão.
+
+Junto caiu o **teto de 7 linhas**: com blocos de mês, cortar em sete mostra "MAR" com 2 das 5
+cartas dele, e um bloco pela metade mente sobre o mês. `fitted()` e `TRAY_CAPACITY` saíram —
+91 linhas a menos em `inbox.mjs`. E entrou o `line-clamp: 4`, que era decisão medida na sessão
+anterior e nunca tinha sido aplicada: **20 dos 28 assuntos perdiam o fim, e agora zero.**
+
+### A lição, e ela é sobre a ordem das perguntas
+
+**Eu perguntei onde pôr o mês do texto. A pergunta certa era onde a carta mora.** As três
+medidas eram três respostas boas para um problema que não precisava existir: o bloco do mês já
+diz o mês, de graça. Medido depois — 8 blocos, 29 cartas — **12 pares de linhas idênticas no
+índice inteiro e zero dentro do mesmo bloco.**
+
+⚠ **E a decisão do 3.3 era metade do defeito.** A seção "Precisam de resposta" consertava o
+calendário arrancando a pergunta dele, e o preço era o mês da pergunta não existir — que é
+exatamente o que fazia as gêmeas lerem igual. **Um conserto criou o defeito seguinte, e as duas
+decisões eram minhas.**
+
+### As guardas seguiram a regra nova
+
+Quatro provas cobravam o teto e a seção. Foram **trocadas, não removidas**: nada é escondido, o
+calendário só anda para trás, a ordem do motor sobrevive dentro do mês, e o aberto sempre tem
+linha. No passeio, "o índice não rola" virou duas checagens que mordem mais — **linhas do
+índice = cartas do save** e **nenhum mês repetido** —, e a exceção que isentava
+`.tray__subject` do `checkClamped` morreu com o clamp 4.
+
+### E a pasta de capturas foi reorganizada
+
+77 arquivos soltos viraram seis pastas com regra declarada em `captures/README.md`: o que o
+`walk` reescreve, o que é evidência de defeito, o que espera decisão dele, e o que é rascunho
+descartável. Os dois scripts que escrevem lá foram junto, senão a rodada seguinte desfazia
+tudo. **O mapa é versionado, as imagens não** — `.gitignore` virou `captures/*` mais
+`!captures/README.md`, porque o git não reinclui arquivo dentro de pasta excluída.
+
+**259 provas, 12 guardas, passeio verde.**

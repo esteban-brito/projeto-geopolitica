@@ -58,7 +58,7 @@ npm run serve      # http://127.0.0.1:5173/
 
 - `validate` verde é obrigatório antes de dizer que algo está pronto, e **o passeio
   está dentro dele**: o portão agora vê geometria, recorte e contraste no navegador;
-- ⚠ **mas o portão não sabe OLHAR.** Mexeu em tela? **abra a captura** em `captures/`.
+- ⚠ **mas o portão não sabe OLHAR.** Mexeu em tela? **abra a captura** em `captures/passeio/`.
   Três defeitos já atravessaram tipo, guarda e cem provas para morrer na imagem, e
   nenhum deles falhava — é o único passo que continua sendo humano;
 - mexeu em catálogo ou motor? rode `simulate` e compare a série;
@@ -76,13 +76,14 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 12 guardas · 54 provas sintéticas · 132 arquivos · 258 provas · passeio
+**Estado verde:** 12 guardas · 54 provas sintéticas · 132 arquivos · 259 provas · passeio
 verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
 
 **Há DOIS planos na mesa**, e o segundo é o que está em execução:
 
 - [`cycles/14-a-caixa-de-entrada.md`](docs/cycles/14-a-caixa-de-entrada.md) — **em execução.**
-  Sete passos, com os passos 1, 1½, 2.1 e 3 feitos. As quatro frentes de investigação fecharam;
+  Sete passos, com os passos 1, 2.1, 3 e 3.4 feitos e o 1½ em três de seis. As quatro frentes de
+  investigação fecharam;
 - [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — o plano mestre, 12 de 49 itens.
   Retomar no passo 2 (B1–B5) quando o ciclo 14 fechar.
 

@@ -8,7 +8,7 @@ import { ROOT } from "../lib/project.mjs";
 
 const PORT = 5199;
 const BASE = `http://127.0.0.1:${PORT}`;
-const OUT = join(ROOT, "captures");
+const OUT = join(ROOT, "captures", "custo");
 
 const VIEWPORTS = [{ name: "desktop", width: 1440, height: 900 }];
 

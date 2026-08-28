@@ -12,7 +12,7 @@ import { CATALOG } from "../../src/data/catalog.mjs";
 
 const PORT = 5201;
 const BASE = `http://127.0.0.1:${PORT}`;
-const OUT = join(ROOT, "captures");
+const OUT = join(ROOT, "captures", "passeio");
 
 const server = spawn(process.execPath, [join(ROOT, "tools", "serve-static.mjs")], {
   env: { ...process.env, PORT: String(PORT) },
@@ -160,8 +160,9 @@ try {
    * diagrama as linhas que sobraram, entao o sinal padrao de estouro simplesmente nao existe.
    * A unica forma de medir e SOLTAR o recorte e comparar a altura — e e o que ela faz, dentro
    * de um `evaluate` so, sem repintura entre a mudanca e a restauracao.
-   * A EXCECAO DECLARADA E UMA SO: `.tray__subject`, o assunto no indice de 208px. O corte em
-   * duas linhas ali e desenho escrito na folha, e nao descuido.
+   * ⚠ E A EXCECAO DECLARADA MORREU: `.tray__subject` era isenta porque o corte em duas linhas
+   * era desenho. Em quatro ele nao corta mais — 20 de 28 assuntos perdiam o fim —, entao o
+   * indice passa a ser guardado como o resto da tela.
    *
    * @param {string} where
    */
@@ -169,7 +170,6 @@ try {
     const cut = await page.$$eval("#main *, .topbar *, .rail *", nodes =>
       nodes
         .filter(node => {
-          if (node.closest(".tray__subject")) return false;
           const style = getComputedStyle(node);
           if (!style.webkitLineClamp || style.webkitLineClamp === "none") return false;
 
@@ -379,7 +379,7 @@ try {
     (await page.locator(".vital").count()) === 4,
     "[barra] os quatro sinais vitais nao vieram",
   );
-  await page.screenshot({ path: join(OUT, "walk-gabinete.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
 
   /* 1b — E O RAIL LEVA AO LUGAR DE DECIDIR. ⚠ ERA O BOTAO DO CARTAO ate 22/08/2026, e ele
      saiu com a reformulacao da coluna: duas fichas tinham porta e duas nao, e o rail ja leva
@@ -418,7 +418,7 @@ try {
     (await page.locator('.dial[data-rite="law"], .dial[data-rite="amendment"]').count()) > 0,
     "[area] furar o piso nao mudou o rito de nenhuma linha",
   );
-  await page.screenshot({ path: join(OUT, "walk-area.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "area.png"), fullPage: true });
 
   /* 4 — E O ORCAMENTO VIRA PAUTA SOZINHO. */
   await page.click('[data-section="congress"]');
@@ -443,7 +443,7 @@ try {
   await page.waitForTimeout(150);
   const after = Number((await page.locator(".tally__forecast").innerText()).match(/\d+/)?.[0]);
   expect(after > before, `[mesa] comprar verba nao moveu o placar: ${before} → ${after}`);
-  await page.screenshot({ path: join(OUT, "walk-mesa.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "mesa.png"), fullPage: true });
   await checkContrast("mesa");
 
   /* 6 — ESTOURAR O CAIXA acende a linha de dinheiro. */
@@ -456,7 +456,7 @@ try {
     (await page.locator('.tally__cash[data-fits="false"]').count()) === 1,
     "[mesa] a promessa estourou o caixa e a linha de dinheiro nao acusou",
   );
-  await page.screenshot({ path: join(OUT, "walk-mesa-estourada.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "mesa-estourada.png"), fullPage: true });
 
   /* 7 — O MES ANDA, E ELE PRESTA CONTAS SEM INTERROMPER. */
 
@@ -484,7 +484,7 @@ try {
     (await page.locator(".report__table tbody tr").count()) === CATALOG.parties.length,
     `[relatorio] a tabela trouxe ${await page.locator(".report__table tbody tr").count()} bancadas e o catalogo tem ${CATALOG.parties.length}`,
   );
-  await page.screenshot({ path: join(OUT, "walk-relatorio.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "relatorio.png"), fullPage: true });
   await checkContrast("relatorio");
 
   /* ⚠ 7a-bis — A CARTA ABERTA MORRE COM O MES. `openDispatch` so era escrito no clique e nunca
@@ -569,7 +569,7 @@ try {
     await checkClipped("caixa com pergunta");
     await checkContrast("caixa com pergunta");
     await checkNoOverlap("caixa com pergunta", ".letter");
-    await page.screenshot({ path: join(OUT, "walk-carta-pergunta.png"), fullPage: true });
+    await page.screenshot({ path: join(OUT, "carta-pergunta.png"), fullPage: true });
   }
 
   await page.click('[data-section="health"]');
@@ -582,7 +582,7 @@ try {
      morreu junto com o catalogo de pautas, e a pergunta que ela respondia — o que ja esta
      valendo? */
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento sumiu depois do mes");
-  await page.screenshot({ path: join(OUT, "walk-area-depois.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "area-depois.png"), fullPage: true });
 
   /* 7c — O PLACAR, e ele so tem sentido AQUI, depois de quatro meses terem acontecido: numa
      partida recem-aberta a serie esta vazia e o painel nao teria tendencia nenhuma para
@@ -622,7 +622,7 @@ try {
 
   /* A CAPTURA ESPERA A TRANSICAO ACABAR. */
   await page.waitForTimeout(600);
-  await page.screenshot({ path: join(OUT, "walk-financas.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "financas.png"), fullPage: true });
 
   /* 8 — A PARTIDA ATRAVESSA O NAVEGADOR. */
   const monthBefore = await page.locator("#turn").innerText();
@@ -633,23 +633,33 @@ try {
     monthBefore === monthAfter,
     `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
   );
-  /* ⚠ E O INDICE DA BANDEJA NAO ROLA — nem para o lado, nem para baixo. */
+  /* ⚠ PARA BAIXO O INDICE ROLA DE PROPOSITO, e esta checagem ja cobrou o contrario: ela
+     defendia o teto de 7 linhas, e o teto caiu porque com blocos de mes ele mostrava "MAR" com
+     2 das 5 cartas do mes. Para o LADO continua proibido. */
   /* Medida no comeco, com uma carta na mesa, esta prova ficaria verde para sempre sem
      defender nada. */
   const tray = await page.evaluate(() => {
     const list = document.querySelector(".tray__list");
     if (!list) return null;
+    const save = JSON.parse(window.localStorage.getItem("planalto:partida") ?? "{}");
     return {
       x: list.scrollWidth - list.clientWidth,
-      y: list.scrollHeight - list.clientHeight,
       rows: list.querySelectorAll(".tray__row").length,
+      letters: Array.isArray(save.mail) ? save.mail.length : -1,
+      months: [...list.querySelectorAll(".tray__month")].map(node => node.textContent ?? ""),
     };
   });
   if (tray) {
     expect(tray.x <= 1, `[gabinete] o indice da bandeja rola ${tray.x}px para o lado`);
+    /* ⚠ NADA E ESCONDIDO: se um teto voltar, ele reprova aqui. */
     expect(
-      tray.y <= 1,
-      `[gabinete] o indice rola ${tray.y}px para baixo com ${tray.rows} linhas — a pilha estourou`,
+      tray.rows === tray.letters,
+      `[gabinete] o indice mostrou ${tray.rows} das ${tray.letters} cartas do save`,
+    );
+    /* ⚠ E O CALENDARIO SO ANDA PARA TRAS: um mes repetido e a bagunca que ele reportou. */
+    expect(
+      tray.months.length === new Set(tray.months).size,
+      `[gabinete] um mes apareceu duas vezes no indice: ${tray.months.join(" → ")}`,
     );
   }
 
@@ -745,7 +755,7 @@ try {
   }
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(600);
-  await page.screenshot({ path: join(OUT, "walk-gabinete-900.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "gabinete-900.png"), fullPage: true });
 
   expect(noise.length === 0, `console sujo: ${noise.join(" | ")}`);
 

@@ -3,7 +3,10 @@ node_modules/
 
 # Artefatos de medicao e capturas — evidencia, nao fonte.
 tmp/
-captures/
+# ⚠ `captures/*` e nao `captures/`: o git nao reinclui arquivo dentro de pasta excluida,
+# e o mapa da pasta precisa ser versionado.
+captures/*
+!captures/README.md
 
 # Material de origem de assets, como no draft9-0: entra grande, sai otimizado.
 assets-source/

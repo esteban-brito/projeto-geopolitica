@@ -31,7 +31,7 @@ import {
   situationOf,
   termOf,
 } from "../../src/application/turn.mjs";
-import { OPENING_MONTH, createState } from "../../src/state/state.mjs";
+import { OPENING_MONTH, createState, monthLabel } from "../../src/state/state.mjs";
 import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
 import { enact } from "../../src/domain/norms/index.mjs";
 import { closingHtml } from "../../src/ui/screens/closing.mjs";
@@ -435,7 +435,10 @@ function rowsOf(html) {
   return html.split("data-dispatch=").slice(1);
 }
 
-test("A PILHA DA BANDEJA CORTA AVISO, e NUNCA corta pergunta", () => {
+/* ⚠ O TETO DE 7 LINHAS CAIU, e esta prova era a dele: ela cobrava que a pilha ESCONDESSE
+   aviso para nao rolar. Com blocos de mes, esconder e mentir sobre o mes — "MAR" com 2 das 5
+   cartas dele —, e quem absorve e a rolagem que `.tray__list` ja declara no portao. */
+test("A BANDEJA NAO ESCONDE CARTA NENHUMA, e o indice rola em vez de cortar", () => {
   /** @param {number} n @param {number | null} due */
   const carta = (n, due) => ({
     id: `carta-${n}`,
@@ -446,36 +449,17 @@ test("A PILHA DA BANDEJA CORTA AVISO, e NUNCA corta pergunta", () => {
     due,
   });
 
-  /* ⚠ A ORDEM DE ENTRADA E EMBARALHADA DE PROPOSITO, e antes ela nao era: a fixture entregava
-     os avisos em ordem CRESCENTE dizendo em prosa que estava "na ordem da bandeja de verdade",
-     e a asserção cobrava a sobrevivencia do MAIS VELHO — o contrario do que o comentario dela
-     afirmava. Ela codificava o defeito. Quem ordena agora e a bandeja, entao a entrada pode
-     chegar em qualquer ordem, e e isso que esta prova passa a cobrar. */
   const perguntas = [0, 1, 2].map(n => carta(n, 3));
   const avisos = [10, 11, 12, 13, 14, 15].map(n => carta(n, null));
+  const html = trayHtml({ dispatches: [...perguntas, ...avisos], open: null });
 
-  const apertado = trayHtml({ dispatches: [...perguntas, ...avisos], open: null, capacity: 5 });
+  const linhas = rowsOf(html).length;
+  assert.equal(linhas, 9, `a bandeja mostrou ${linhas} das 9 cartas`);
 
-  for (const pergunta of perguntas) {
-    assert.ok(
-      rowsOf(apertado).some(linha => linha.startsWith(ASPA + pergunta.id + ASPA)),
-      `${pergunta.id} tinha prazo e a pilha a descartou — isso e um muro`,
-    );
-  }
-
-  const linhas = rowsOf(apertado).length;
-  assert.equal(linhas, 5, `a pilha mostrou ${linhas} linhas com capacidade 5`);
-
-  /* ⚠ O MAIS NOVO SOBREVIVE AO MAIS VELHO entre os avisos: a bandeja chega ordenada, e cortar
-     pelo fim e cortar o que o mundo disse ha mais tempo. */
-  const ficaram = rowsOf(apertado).map(linha => linha.slice(1, linha.indexOf(ASPA, 1)));
-  assert.ok(ficaram.includes("carta-15"), "a pilha descartou o aviso mais NOVO");
-  assert.ok(!ficaram.includes("carta-10"), "a pilha guardou o aviso mais velho");
-
-  /* SO PERGUNTA, E MAIS QUE CABE: a pilha estoura de proposito. */
-  const so = trayHtml({ dispatches: perguntas, open: null, capacity: 1 });
-  const todas = rowsOf(so).length;
-  assert.equal(todas, 3, "a pilha escondeu uma pergunta para nao rolar");
+  /* ⚠ E O MAIS VELHO CONTINUA LA: era ele que a pilha descartava primeiro. */
+  const ficaram = rowsOf(html).map(linha => linha.slice(1, linha.indexOf(ASPA, 1)));
+  assert.ok(ficaram.includes("carta-0"), "a bandeja perdeu a carta mais velha");
+  assert.ok(ficaram.includes("carta-15"), "a bandeja perdeu a carta mais nova");
 });
 
 /* ── O NAO LIDO, E CADA CARTA DIZENDO POR QUE CHEGOU ───────────────────────── As duas peças
@@ -1088,12 +1072,25 @@ test("A REPARTICAO FICA COLADA NO VALOR: nenhuma celula anda mais de um ponto", 
   );
 });
 
-/* ── O INDICE NAO VOLTA NO CALENDARIO ───────────────────────────────────────── ⚠ ELA NASCE DA
-   REPRODUCAO DELE, e ela e de tres cartas: partida nova, dois "avancar", e o calendario lia
-   `abr · 2027 → mar · 2027 → abr · 2027`. A causa eram duas: o fechamento do mes era
-   concatenado FORA da ordenacao, no entrypoint, e o divisor afirmava DATA numa lista ordenada
-   por URGENCIA. */
-test("O INDICE NAO VOLTA NO CALENDARIO, e quem pede resposta tem secao propria", () => {
+/* ── O CALENDARIO E A UNICA ORDEM DA BANDEJA ────────────────────────────────── ⚠ ELA NASCE
+   DA REPRODUCAO DELE, e ela e de tres cartas: partida nova, dois "avancar", e o indice lia
+   `abr · 2027 → mar · 2027 → abr · 2027`. Quem pedia resposta era arrancado do calendario para
+   uma secao propria no topo, e o mes dela deixava de existir: duas perguntas gemeas de meses
+   diferentes liam a MESMA frase, byte a byte. */
+
+/**
+ * A SEQUENCIA DO INDICE — cabecalho de mes e linha, na ordem em que saem.
+ *
+ * @param {string} html
+ * @returns {{ month: string | null, row: string | null }[]}
+ */
+function sequenceOf(html) {
+  return [...html.matchAll(/<li class="tray__month">([^<]*)<|data-dispatch="([^"]*)"/g)].map(
+    hit => ({ month: hit[1] ?? null, row: hit[2] ?? null }),
+  );
+}
+
+test("TODA CARTA MORA NO BLOCO DO MES DELA, e o calendario so anda para tras", () => {
   /** @param {string} id @param {number} month @param {number | null} due */
   const carta = (id, month, due) => ({
     id,
@@ -1106,40 +1103,78 @@ test("O INDICE NAO VOLTA NO CALENDARIO, e quem pede resposta tem secao propria",
 
   /* A ENTRADA CHEGA FORA DE ORDEM, como o entrypoint a monta. */
   const html = trayHtml({
-    /* ⚠ A ORDEM DE ENTRADA E A QUE O ENTRYPOINT PRODUZIA, e ela e a reproducao dele: os avisos
-       vem do mais novo para o mais velho e o FECHAMENTO DO MES vem depois de todos, mesmo
-       sendo do mes mais novo. Sem ordenacao, o indice le "abr → mar → abr". */
     dispatches: [
       carta("aviso-abr", 3, null),
       carta("aviso-mar", 2, null),
       carta("fechamento-abr", 3, null),
-      carta("pergunta-longa", 4, 2),
-      carta("pergunta-urgente", 3, 0),
+      carta("pergunta-mai", 4, 2),
+      carta("pergunta-abr", 3, 0),
     ],
     open: null,
-    capacity: 7,
   });
 
-  const itens = [...html.matchAll(/<li(?: class="tray__month">([^<]*)<)?/g)].map(m => m[1]);
-  const secoes = itens.filter(item => item !== undefined);
+  const sequencia = sequenceOf(html);
+  const secoes = sequencia.filter(item => item.month !== null).map(item => item.month);
 
-  /* A SECAO DA PERGUNTA VEM PRIMEIRO, e ela nao e uma data. */
-  assert.equal(secoes[0], UI.inbox.needsAnswer, `a bandeja abriu com "${secoes[0]}"`);
-
-  /* ⚠ E OS MESES SO ANDAM PARA TRAS. Um mes que reaparece depois de outro e o defeito. */
-  const meses = secoes.slice(1);
+  /* ⚠ NENHUMA SECAO QUE NAO SEJA MES, e nenhum mes duas vezes. */
   assert.deepEqual(
-    meses,
-    [...new Set(meses)],
-    `um mes apareceu duas vezes no indice: ${meses.join(" → ")}`,
+    secoes,
+    [monthLabel(4), monthLabel(3), monthLabel(2)],
+    `o indice leu ${secoes.join(" → ")}`,
+  );
+
+  /* ⚠ E A PERGUNTA MORA NO MES DELA, que e a metade que a secao propria quebrava. */
+  /** @param {string} id */
+  const blocoDe = id => {
+    let atual = "";
+    for (const item of sequencia) {
+      if (item.month !== null) atual = item.month;
+      if (item.row === id) return atual;
+    }
+    return "";
+  };
+  assert.equal(blocoDe("pergunta-mai"), monthLabel(4), "a pergunta de maio caiu noutro bloco");
+  assert.equal(blocoDe("pergunta-abr"), monthLabel(3), "a pergunta de abril caiu noutro bloco");
+  assert.equal(blocoDe("aviso-mar"), monthLabel(2), "o aviso de marco caiu noutro bloco");
+});
+
+/* ⚠ QUEM DECIDE A ORDEM DENTRO DO MES E O MOTOR, e nao a tela: `turn.mjs` monta a caixa em
+   alarme → pergunta → exigencia → aviso → relatorio, com a regra escrita la — "o que exige
+   leitura antes da proxima decisao fica no alto". Reordenar aqui refaria essa decisao. */
+test("DENTRO DO MES A ORDEM DO MOTOR SOBREVIVE, e a mais nova fica em cima", () => {
+  /** @param {string} id @param {number} month */
+  const carta = (id, month) => ({
+    id,
+    month,
+    from: null,
+    subject: id,
+    body: "<p>corpo</p>",
+    due: null,
+  });
+
+  const html = trayHtml({
+    dispatches: [
+      carta("nov-alarme", 10),
+      carta("nov-aviso", 10),
+      carta("nov-relatorio", 10),
+      carta("out-aviso", 9),
+    ],
+    open: null,
+  });
+
+  const ids = rowsOf(html).map(linha => linha.slice(1, linha.indexOf(ASPA, 1)));
+  assert.deepEqual(
+    ids,
+    ["nov-alarme", "nov-aviso", "nov-relatorio", "out-aviso"],
+    `o indice embaralhou o mes: ${ids.join(" → ")}`,
   );
 });
 
-/* ⚠ O BOTAO E A BANDEJA TEM DE FALAR DA MESMA CARTA: a bandeja abria a pergunta de prazo mais
-   LONGO enquanto o botao de avancar cobrava o silencio da outra. */
-test("A BANDEJA ABRE A PERGUNTA MAIS URGENTE, e nao a mais nova", () => {
-  /** @param {string} id @param {number} month @param {number} due */
-  const pergunta = (id, month, due) => ({
+/* ⚠ O DOCUMENTO SO ABRE O QUE O INDICE MOSTRA: documento a direita e nenhuma linha marcada a
+   esquerda foi o defeito medido no 1½.1. */
+test("A BANDEJA ABRE A PRIMEIRA DO MES MAIS NOVO, e o aberto sempre tem linha", () => {
+  /** @param {string} id @param {number} month @param {number | null} due */
+  const carta = (id, month, due) => ({
     id,
     month,
     from: null,
@@ -1148,15 +1183,20 @@ test("A BANDEJA ABRE A PERGUNTA MAIS URGENTE, e nao a mais nova", () => {
     due,
   });
 
-  const html = trayHtml({
-    dispatches: [pergunta("folgada", 5, 2), pergunta("vencendo", 4, 0)],
-    open: null,
-    capacity: 7,
-  });
+  const cartas = [carta("pergunta-velha", 2, 0), carta("aviso-novo", 5, null)];
 
+  /* SEM PREFERENCIA: abre a de cima, e a de cima e a do mes mais novo — e nao a mais urgente,
+     que e o criterio que caiu junto com a secao propria. */
   assert.match(
-    html,
-    /class="tray__row"[^>]*data-dispatch="vencendo"[^>]*aria-current="true"/,
-    "a bandeja abriu a pergunta de prazo mais longo",
+    trayHtml({ dispatches: cartas, open: null }),
+    /data-dispatch="aviso-novo"[^>]*aria-current="true"/,
+    "a bandeja nao abriu a primeira do mes mais novo",
+  );
+
+  /* COM PREFERENCIA: ela e sempre atendida, porque nada mais e escondido. */
+  assert.match(
+    trayHtml({ dispatches: cartas, open: "pergunta-velha" }),
+    /data-dispatch="pergunta-velha"[^>]*aria-current="true"/,
+    "o documento aberto ficou sem linha marcada no indice",
   );
 });

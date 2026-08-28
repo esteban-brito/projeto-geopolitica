@@ -29,6 +29,24 @@ limpeza (remoção de exports mortos, JSDoc duplicado).
 
 ### Arquivos modificados (25 arquivos, incluindo 1 novo)
 
+### Sessão 24 (28/08/2026) — a marca de "feito" foi conferida contra o código
+
+**A pergunta foi dele: _"tem certeza que todos os passos antes desse fecharam?"_** Não tinham.
+O ciclo 14 foi lido item a item contra o código, e **dois consertos declarados fechados
+atendiam metade do defeito cada um**:
+
+| item | o que sobrou, medido                                                 | estado                          |
+| ---- | -------------------------------------------------------------------- | ------------------------------- |
+| 3.2  | `room = 0` desligava o despejo: **6 linhas para capacidade 5**       | ✔ fechado, com prova que mordeu |
+| 1½.1 | a **posse** não limpava `openDispatch`, e o id do alarme não tem mês | ✔ fechado, sem prova            |
+| 1½   | marcado **✔ FEITO** com **três de seis** itens abertos (.4, .5, .6)  | ✔ marca corrigida               |
+| 2    | é **1 de 5**, e os passos 1, 1½ e 3 entraram sem o portão ver        | ⛔ aberto                       |
+
+⚠ **E a regra do próprio ciclo foi quebrada por ele mesmo:** _"nenhum item entra sem que o
+portão saiba ver o defeito que ele conserta"_. Os consertos de motor nasceram com prova de
+unidade; os de tela e de gesto, não — `walk.mjs:568` chama só `checkOverflow` e
+`checkClipped` no bloco "caixa com pergunta", que é onde o recorte mora.
+
 ### Sessão 23 (28/08/2026) — a prosa contava um Congresso que não existe
 
 **Nenhum motor alterado, nenhuma calibragem tocada.** O catálogo cresceu de 4 para 9
@@ -132,19 +150,34 @@ npm run simulate   # 48 meses no terminal
 npm run serve      # http://127.0.0.1:5173/
 ```
 
-⚠ **O portão não sabe OLHAR.** Mexeu em tela? abra a captura em `captures/`. Três defeitos
+⚠ **O portão não sabe OLHAR.** Mexeu em tela? abra a captura em `captures/passeio/`. Três defeitos
 já atravessaram tipo, guarda e cem provas para morrer na imagem.
 
 ---
 
 **Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
-132 arquivos · 258 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
+132 arquivos · 259 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`.
 
 ### ▶ COMECE POR AQUI — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
 
 > **Retomada em uma linha:** branch `caixa-de-entrada`, cinco commits à frente de `main`.
-> Passos **1, 1½, 2.1 e 3 feitos**. O próximo é o **passo 3½** — a geometria —, e o **3.4 está
-> travado de propósito** até o recorte do índice (3½.2) ser decidido junto com ele.
+> Passos **1, 2.1, 3 e 3.4 feitos**; o **1½ é três de seis**. O próximo é o **passo 3½** — a
+> geometria.
+>
+> ⭐ **O 3.3 FOI REVERTIDO POR ELE, e o 3.4 fechou de graça junto.** A seção "Precisam de
+> resposta" saiu: o índice é **calendário puro** — cada carta no bloco do mês em que chegou,
+> meses do mais novo para o mais velho, e dentro do bloco a ordem que o motor monta. O teto de
+> 7 linhas caiu com ela, e a lista rola. Medido: **29 cartas, 8 blocos, zero linhas gêmeas
+> dentro do mesmo bloco** — o cabeçalho do mês separa as duas perguntas que liam igual, e as
+> três medidas do 3.4 ficaram desnecessárias.
+>
+> ⭐ **E o 3½.2 fechou junto, com `line-clamp: 4`:** 20 dos 28 assuntos perdiam o fim, e agora
+> zero. A exceção que isentava `.tray__subject` no portão foi removida — o índice é guardado
+> como o resto da tela.
+>
+> ⚠ **E A MARCA DE "FEITO" JÁ MENTIU DUAS VEZES NESTE CICLO** — ver a sessão 24 abaixo: o 1½
+> estava ✔ com três itens abertos, e dois consertos declarados fechados atendiam metade do
+> defeito cada um.
 
 **Sete passos. Feitos: o passo 1 inteiro e o 2.1.** As **quatro frentes de investigação
 fecharam** — motor, view, wiring e geometria —, então o plano está completo e não é mais uma
@@ -928,7 +961,7 @@ ofensa é o lugar certo de mexer.
 
 **24. ✅ CONCERTADO — RÓTULO DE TEXTO NÃO DISTINGUE TEXTO.** Dois projetos escritos em meses diferentes
 com o mesmo movimento têm o mesmo rótulo, e a bandeja mostra duas cartas aparentemente
-idênticas — visível em `captures/walk-carta-pergunta.png`. Hoje é cosmético; deixa de
+idênticas — visível em `captures/passeio/carta-pergunta.png`. Hoje é cosmético; deixa de
 ser no dia em que o jogador tiver duas perguntas abertas e precisar escolher entre
 elas.
 

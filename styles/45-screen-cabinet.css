@@ -402,14 +402,16 @@
     gap: 0 var(--space-2);
   }
 
-  /* ⚠ TRÊS LINHAS E PARA, e o corte é decisão e não descuido. */
+  /* ⚠ QUATRO LINHAS, E O CORTE DEIXOU DE EXISTIR. Em duas, medido em 28 cartas, **20 delas
+     perdiam o fim** — e o sufixo `· e mais N`, que é o que distingue um texto do outro, NUNCA
+     aparecia. A quarta linha custa 403px de rolagem numa lista que já rola por decisão. */
   /* Medido contra ele: a divisao entre indice e documento la e 35/65, e aqui e 32/66 — *a
      proporcao ja estava certa**. */
   .tray__subject {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 4;
     font-family: var(--font-display);
     font-size: var(--text-body);
     font-weight: 700;

@@ -633,72 +633,20 @@ function rowHtml(dispatch, open, read) {
   );
 }
 
-/* ⚠ ELE E MEDIDO, e nao escolhido: a bandeja fecha em 630px numa janela de 980, e uma linha
-   do indice mede 50px mais 4 de respiro. */
-const TRAY_CAPACITY = 7;
-
 /**
- * QUEM PEDE RESPOSTA — e e o unico criterio que separa os dois blocos da bandeja.
+ * A ORDEM DA BANDEJA: o calendario, e so ele.
  *
- * @param {Dispatch} item
- */
-function asking(item) {
-  return item.due !== null && item.due !== undefined;
-}
-
-/**
- * A ORDEM DA BANDEJA, e ela mora AQUI e nao no entrypoint.
+ * ⚠ ELA ARRANCAVA A PERGUNTA DO CALENDARIO, e o preco era o mes dela nao existir: duas
+ * gemeas de JAN e FEV liam a MESMA frase, byte a byte, num bloco sem data.
  *
- * ⚠ ELA ESTAVA PELA METADE, e as duas metades eram defeito: as perguntas nao eram ordenadas
- * entre si, entao a bandeja abria a de prazo mais LONGO enquanto o botao cobrava o silencio da
- * outra; e o fechamento do mes vinha concatenado DEPOIS dela, caindo sempre no fim mesmo sendo
- * a carta mais nova. Medido em dois meses de partida: o indice lia "abr → mar → abr".
+ * ⚠ E O DESEMPATE DENTRO DO MES E A ORDEM DE ENTRADA, decidida pelo motor: alarme, pergunta,
+ * exigencia, aviso, relatorio. `sort` e estavel, entao ela sobrevive.
  *
  * @param {ReadonlyArray<Dispatch>} dispatches
  * @returns {Dispatch[]}
  */
 function sorted(dispatches) {
-  const asks = dispatches.filter(asking);
-  const tells = dispatches.filter(item => !asking(item));
-
-  /* A MAIS URGENTE PRIMEIRO, e o desempate e o mes: duas perguntas com o mesmo prazo sao duas
-     perguntas do mesmo mes, e ai a mais nova vem antes. */
-  asks.sort((a, b) => (a.due ?? 0) - (b.due ?? 0) || b.month - a.month);
-  tells.sort((a, b) => b.month - a.month);
-
-  return [...asks, ...tells];
-}
-
-/**
- * O QUE CABE NA PILHA, com a pergunta protegida.
- *
- * @param {ReadonlyArray<Dispatch>} dispatches ja ordenados por urgencia
- * @param {Dispatch} current o oficio aberto, que nunca some
- * @param {number} capacity
- * @returns {ReadonlyArray<Dispatch>}
- */
-function fitted(dispatches, current, capacity) {
-  if (dispatches.length <= capacity) return dispatches;
-
-  /* AS PERGUNTAS PRIMEIRO, e todas: ver a trava na prosa acima. */
-  const asking = dispatches.filter(item => item.due !== null && item.due !== undefined);
-  const rest = dispatches.filter(item => !asking.includes(item));
-
-  /* ⚠ O ABERTO ENTRA MESMO SE ELE FOR UM AVISO VELHO — E DESPEJANDO ALGUEM. Antes ele era
-     empurrado sem tirar ninguem, e a lista devolvia oito linhas para uma capacidade de sete: o
-     ramo nunca era exercitado porque a prova abria com o padrao, que cai sempre dentro da
-     janela. Quem sai e o mais velho dos avisos, que e o ultimo de `rest`. */
-  const room = Math.max(0, capacity - asking.length);
-  const kept = rest.slice(0, room);
-  if (!asking.includes(current) && !kept.includes(current)) {
-    if (kept.length >= room && kept.length > 0) kept.pop();
-    kept.push(current);
-  }
-
-  /* A ORDEM ORIGINAL SOBREVIVE ao corte: reordenar aqui faria a pilha embaralhar sozinha no
-     mes em que uma carta caisse fora. */
-  const staying = new Set([...asking, ...kept]);
-  return dispatches.filter(item => staying.has(item));
+  return [...dispatches].sort((a, b) => b.month - a.month);
 }
 
 /**
@@ -1038,17 +986,18 @@ function annexHtml(letter, segments, parties) {
  * @param {ReadonlyArray<Dispatch>} input.dispatches
  * @param {string | null} input.open o id do ofício que o jogador abriu
  * @param {ReadonlyArray<string>} [input.seen] os ids que ele já abriu alguma vez
- * @param {number} [input.capacity] quantas linhas cabem sem a coluna rolar
  * @returns {string}
  */
-export function trayHtml({ dispatches, open, seen = [], capacity = TRAY_CAPACITY }) {
+export function trayHtml({ dispatches, open, seen = [] }) {
   if (dispatches.length === 0) return "";
 
   const ordered = sorted(dispatches);
+  /* ⚠ O INDICE MOSTRA TUDO, e o teto de 7 linhas caiu com ele: com blocos de mes, cortar em
+     sete mostrava "MAR" com 2 das 5 cartas dele — um bloco pela metade mente sobre o mes.
+     `.tray__list` e a unica peca com rolagem declarada no portao, e e ela que absorve. */
   const current = ordered.find(item => item.id === open) ?? ordered[0];
   if (!current) return "";
 
-  const shown = fitted(ordered, current, capacity);
   const read = new Set(seen);
 
   return (
@@ -1059,19 +1008,15 @@ export function trayHtml({ dispatches, open, seen = [], capacity = TRAY_CAPACITY
        primeira da lista —, entao qualquer outro lugar que tentasse marcar a aberta como lida
        teria de REFAZER essa decisao, e divergiria dela no mes em que a ordem de urgencia
        mudasse. */
-    shown
+    ordered
       .map((item, index) => {
-        const before = shown[index - 1];
-        /* ⚠ QUEM PEDE RESPOSTA TEM SECAO, E NAO DATA. O divisor de mes afirmava data numa
-           lista ordenada por urgencia, e o calendario andava para tras: medido numa partida
-           nova com dois avancos, ele lia "abr · 2027 → mar · 2027 → abr · 2027". Data so
-           rotula o bloco dos avisos, que e cronologico de verdade. */
-        const asks = asking(item);
-        const divider = asks
-          ? index === 0
-            ? `<li class="tray__month">${escapeHtml(UI.inbox.needsAnswer)}</li>`
-            : ""
-          : !before || asking(before) || before.month !== item.month
+        const before = ordered[index - 1];
+        /* ⚠ O BLOCO DO MES E O UNICO DIVISOR. Quem pede resposta ja teve secao propria no
+           topo, fora do calendario, e o mes dela deixava de existir: o jogador lia "abr → mar
+           → abr" e chamou de bagunca. A pergunta se distingue pela tarja e pelo prazo, e nao
+           pela posicao. */
+        const divider =
+          !before || before.month !== item.month
             ? `<li class="tray__month">${escapeHtml(monthLabel(item.month))}</li>`
             : "";
         return (

@@ -103,10 +103,15 @@ Congresso propondo.
 
 ---
 
-## PASSO 1½ — ✔ FEITO · O GESTO ESTAVA QUEBRADO
+## PASSO 1½ — ◐ TRÊS DE SEIS · O GESTO ESTAVA QUEBRADO
 
 > Achado pela frente de _wiring_, em 15 cenários e ~120 meses dirigidos num navegador de
 > verdade. **Nenhum destes é de desenho: são de comportamento.**
+>
+> ⚠ **ELE ESTEVE MARCADO "✔ FEITO" COM METADE ABERTA** — de 28 a 28/08/2026 —, e a auditoria de
+> código o corrigiu: **1½.1 a 1½.3 entraram; 1½.4, 1½.5 e 1½.6 continuam abertos**, e os três
+> foram reconferidos no código. O handoff repetiu a marca errada, que é a família do §7 dos
+> padrões: prosa que continua gramatical e para de ser verdade.
 
 ### 1½.1 · ✔ Um clique prendia o jogador numa carta para sempre
 
@@ -118,6 +123,13 @@ capacidade. **Quem clica uma vez em qualquer ofício fica preso nele.**
 continuou a mesma. Nos **3 de 3 meses em que havia pergunta com prazo** — uma delas _"vence
 neste mês"_ — o painel mostrava o aviso velho, e o rótulo do botão nomeava uma carta que o
 jogador nunca viu aberta.
+
+⚠ **E O CONSERTO ENTROU PELA METADE, medido em 28/08/2026:** `openDispatch = null` foi escrito
+só na virada do mês. **A posse não o limpava** — o botão "recomeçar" chega em `swearForm`, que
+zera `orders`, `last`, `painted` e `standing` e não ele —, e o id do alarme **não carrega o
+mês** (`alarm()` monta `kind:id`), então um `ceiling:ceiling` clicado na partida anterior
+atravessava o recomeço e a bandeja abria ele em vez da mais urgente. ✔ **Fechado**, e sem prova:
+o entrypoint não tem nenhuma, como os outros dois itens deste passo.
 
 ⚠ **E há um segundo defeito colado nele:** a linha marcada com `aria-current` fica **68px
 abaixo da área visível** de `.tray__list`, com `scrollTop: 0` e nenhum `scrollIntoView`. O
@@ -229,12 +241,25 @@ fila, e o corte para de alcançá-la. **Uma linha movida.**
 - o corte **acrescenta o ofício aberto sem despejar ninguém**: com ele fora da janela, a lista
   devolve **oito linhas para uma capacidade de sete**. A prova que existe abre com o padrão,
   que cai sempre dentro da janela — **o ramo nunca é exercitado**;
+  ⚠ **E O CONSERTO ATENDEU SÓ METADE DO RAMO, medido em 28/08/2026:** `room` é
+  `capacity − perguntas`, e o guarda `kept.length > 0` impedia o despejo quando ele dava
+  **zero** — o aberto entrava de graça. Medido: **6 linhas para uma capacidade de 5**, com cinco
+  perguntas e um aviso aberto. ✔ **Fechado com a prova que nasceu antes e mordeu**
+  (`6 !== 5`): sem vaga quem cede é a **preferência**, e o índice abre a de cima — a pergunta
+  não se corta, e o documento nunca fica sem a linha ao lado;
 - ⚠ **a capacidade conta cartas e ignora os divisores.** No mês 22 são **sete linhas mais
   cinco divisores** numa lista dimensionada para sete.
   ⭐ **E AS DUAS FRENTES DISCORDARAM AQUI — a medição direta ganha.** A frente da view concluiu
   que a lista _"rola em silêncio"_; a de geometria mediu a calha nas três janelas e achou
   **`overflowY: 0` com 13 `<li>` dentro de 627px**. **A lista não rola hoje.** O que sobra do
   achado é a margem: a constante não conta os divisores, então ela não sabe quanto ainda cabe.
+
+⭐ **E O ITEM INTEIRO MORREU COM O TETO, por decisão dele:** com blocos de mês, cortar em sete
+mostrava _"MAR"_ com 2 das 5 cartas do mês, e **um bloco pela metade mente sobre o mês**. O
+teto, `fitted()` e a pilha saíram; quem absorve é a rolagem que `.tray__list` já declara no
+portão. Medido depois: **29 cartas, 8 blocos, `overflowY` 1949px, zero rolagem lateral.** A
+guarda do passeio que defendia o teto foi trocada por duas que mordem mais — **nenhuma carta
+escondida** (linhas do índice = cartas do save) e **nenhum mês repetido**.
 
 ### 3.3 · ✔ O divisor de mês virou seção
 
@@ -273,7 +298,33 @@ porque hoje a ordem entre elas é indefinida.
 
 **Altura: uma linha, na única peça do Gabinete que tem folga declarada.**
 
-### 3.4 · ⛔ Duas perguntas ainda leem igual — travado pelo recorte (3½.2)
+### ⚠ E ESTA DECISÃO FOI REVERTIDA POR ELE — a seção própria era metade do defeito
+
+A seção consertava o calendário arrancando a pergunta dele, e o preço era o mês da pergunta
+**não existir**: era exatamente isso que fazia duas gêmeas de JAN e FEV lerem a mesma frase
+byte a byte, que é o item 3.4. **Palavras dele: _"mensagem do mês de março fica no bloco mês de
+março… quero idêntico ao Football Manager"_.**
+
+⭐ **O que vale agora é o calendário puro:** toda carta no bloco do mês em que chegou, meses do
+mais novo para o mais velho, e dentro do bloco a ordem que o motor já monta — alarme, pergunta,
+exigência, aviso, relatório. A pergunta se distingue pela **tarja** e pelo **prazo**, e não
+pela posição. `sort` é estável, então a ordem do motor sobrevive sem a tela refazê-la.
+
+### 3.4 · ✔ Duas perguntas ainda leem igual — resolvido pelo bloco do mês
+
+⭐ **A saída não foi nenhuma das três medidas.** As três punham o mês do texto na linha — no fim
+do assunto (+18px, e na carta não-lida a pastilha empurra o mês para a 4ª linha), em linha
+própria (+70px) ou no lugar do remetente (0px). **O calendário puro do 3.3 as tornou
+desnecessárias:** o cabeçalho do bloco já diz o mês.
+
+**Medido depois da mudança, 8 blocos e 29 cartas:** 12 pares de linhas idênticas no índice
+inteiro, e **zero dentro do mesmo bloco** — o mês separa todas. Capturas em
+`captures/decisoes/mes-no-indice/`.
+
+⚠ **O que reabre o item:** duas cartas gêmeas no MESMO mês, que esta partida não produziu. Aí o
+bloco não separa, e a medida C (o mês no lugar do remetente, custo zero) é a que estava pronta.
+
+#### O achado original, que continua descrevendo o defeito
 
 O achado 24 previu o dia: _"deixa de ser cosmético quando o jogador tiver duas perguntas
 abertas e precisar escolher entre elas"_. **O dia chegou, e é reproduzível em catorze meses de
@@ -309,7 +360,13 @@ cabeçalho × linha **7×32,7px**; rodapé × linha **7×54,69px**.
 cabeçalho e do rodapé — **146px dos 629 da folha, 23%** —, e fica um degrau na costura. **É a
 única carta do jogo que pede resposta**, e a tarja é o canal que diz que ela tem prazo.
 
-### 3½.2 · ⛔ O recorte faz duas linhas virarem a MESMA frase
+### 3½.2 · ✔ O recorte faz duas linhas virarem a MESMA frase
+
+⭐ **Fechado com `-webkit-line-clamp: 4`.** Medido depois, na mesma partida de 28 cartas:
+**20 assuntos cortados → 0**, e o custo é 403px de rolagem numa lista que já rola por decisão
+do 3.2. ⚠ **E a exceção declarada do portão morreu junto:** `checkClamped` isentava
+`.tray__subject` porque o corte em duas linhas era desenho; em quatro não há corte, e o índice
+passa a ser guardado como o resto da tela.
 
 24 meses medidos: **111 de 168 linhas (66%) perdem texto**, e em **21 dos 24 meses** duas linhas
 diferentes renderizam string idêntica.
