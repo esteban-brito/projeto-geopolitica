@@ -17,7 +17,7 @@ export const KEEP = 24;
 /* Com um mes de retencao, o freio era o relogio; com vinte e quatro, a bandeja acumula de
    verdade — e um mandato de 48 meses com tres relatorios por mes chegaria a 144 papeis no
    save se ninguem contasse. */
-const CARRY = 24;
+export const CARRY = 24;
 
 /**
  * A CARTA DA EMENDA — a unica pergunta que o jogo faz hoje.
@@ -250,7 +250,14 @@ export function settle({ mail, orders, month }) {
      quebrar. */
   const asking = next.filter(letter => letter.due !== null && letter.answer === null);
   const closed = next.filter(letter => !asking.includes(letter));
-  const kept = closed.slice(-Math.max(0, CARRY - asking.length));
+  /* ⚠ CORTA PELO FIM, E NAO PELO COMECO, e a direcao e o defeito inteiro: o turno monta a
+     caixa com as NOVAS na frente, entao um `slice` negativo guardava o bloco congelado de
+     vinte meses atras e apagava o que tinha acabado de chegar. Medido em 48 meses: 101 cartas
+     destruidas com 1 a 3 meses de idade, e a caixa do mes 30 com um buraco de doze meses.
+     ⚠ E ELE CONSERTA UM SEGUNDO DEFEITO DE GRACA: `slice(-0)` devolve o array INTEIRO, entao
+     com a bandeja cheia de perguntas o teto sumia em vez de fechar. `slice(0, 0)` devolve o
+     que a aritmetica pede. */
+  const kept = closed.slice(0, Math.max(0, CARRY - asking.length));
 
   return {
     mail: next.filter(letter => asking.includes(letter) || kept.includes(letter)),

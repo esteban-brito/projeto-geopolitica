@@ -188,9 +188,10 @@ const POLICIES = {
   }),
 
   /* ── AS DUAS SONDAS DA ESCOLHA ─────────────────────────────────────────────── ⚠ ELAS
-     NASCERAM DO ACHADO MAIS CONSTRANGEDOR DE, e ele e sobre o INSTRUMENTO e nao sobre o jogo:
-     as seis politicas que existiam **espalham tudo por igual**, nos dois eixos — verba
-     dividida entre as oito areas e emenda oferecida as onze bancadas na mesma medida. */
+     NASCERAM DO ACHADO MAIS CONSTRANGEDOR DA CALIBRAGEM, e ele e sobre o INSTRUMENTO e nao
+     sobre o jogo: as seis politicas que existiam **espalham tudo por igual**, nos dois eixos
+     — verba dividida entre as oito areas e emenda oferecida a cada bloco do catalogo na
+     mesma medida. */
 
   /* O CONCENTRADOR. */
   concentra: state => {

@@ -565,10 +565,10 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   /* ── O PLENARIO COM GENTE DENTRO ───────────────────────────────────────── ⚠ A CAMARA E
      MONTADA AQUI, E NAO NO TURNO, pela mesma razao que o rateio: a tela precisa prever com
      EXATAMENTE a mesma camara que vai votar.
-     O ELENCO SE REFAZ DA SEMENTE a cada chamada, e isso e barato de proposito: sao
-     sete pessoas e nenhuma consulta a fluxo de aleatoriedade. Guardar as pessoas no estado
-     seria guardar valor derivado — e o save so precisa da semente e das ordens para refazer
-     o elenco inteiro, identico. */
+     O ELENCO SE REFAZ DA SEMENTE a cada chamada, e isso e barato de proposito: cada pessoa
+     sai de um hash da semente com o id do arquetipo, sem consultar fluxo de aleatoriedade
+     nenhum. Guardar as pessoas no estado seria guardar valor derivado — e o save so precisa
+     da semente e das ordens para refazer o elenco inteiro, identico. */
   const people = cast({
     seed: state.seed,
     parties,
@@ -636,8 +636,15 @@ function demandsOf(state, pressure, catalog) {
   for (const lobby of catalog.lobbies) {
     if ((pressure[lobby.id] ?? 0) < catalog.pressure.demandAt) continue;
 
-    /* ⚠ UMA EXIGENCIA ABERTA POR VEZ, POR GRUPO. */
-    if (state.mail.some(letter => letter.from === lobby.id && letter.answer === null)) continue;
+    /* ⚠ UMA EXIGENCIA ABERTA POR VEZ, POR GRUPO — e o filtro tem de dizer EXIGENCIA.
+       Sem a especie, o alarme de fervura satisfazia a condicao sozinho: ele nasce com o mesmo
+       remetente e com `answer: null`, porque quem fecha um aviso e `closedAt`. Como `boil` (68)
+       e maior que `demandAt` (30), quem ferve esta sempre acima do limiar de exigir — entao o
+       grupo que acabava de romper com o governo perdia a voz por ate 24 meses. Medido em 48
+       meses: 26 a 30 meses-lobby calados. */
+    const open = (/** @type {import("../state/state.mjs").Letter} */ letter) =>
+      letter.kind === "demand" && letter.from === lobby.id && letter.answer === null;
+    if (state.mail.some(open)) continue;
 
     const worst = leverOf(state, lobby, catalog);
 
@@ -748,7 +755,7 @@ export function passageOf(state, catalog = CATALOG) {
 }
 
 /**
- * O PLENARIO CADEIRA A CADEIRA — as onze bancadas, com o que cada uma entrega.
+ * O PLENARIO CADEIRA A CADEIRA — a camara dividida, com o que cada bancada entrega.
  *
  * que e calibragem de ECLUSA. Refeita na tela, ela erraria no dia seguinte a
  * primeira recalibragem dos pedagios, e o sintoma seria um plenario DESENHADO que
@@ -764,9 +771,9 @@ export function chamberOf(state, catalog = CATALOG) {
 /**
  * O SEU GOVERNO — quem voce e, quem fala com voce, e no que voce se tornou.
  *
- * O ELENCO E REFEITO AQUI, e isso e barato de proposito — sao oito pessoas e
- * nenhuma consulta a fluxo de aleatoriedade, exatamente como `settlement` ja o
- * refaz todo mes. Guardar as pessoas no estado seria guardar valor derivado.
+ * O ELENCO E REFEITO AQUI, e isso e barato de proposito — cada pessoa sai de um
+ * hash da semente, sem consultar fluxo de aleatoriedade nenhum, exatamente como
+ * `settlement` ja o refaz todo mes. Guardar as pessoas seria guardar derivado.
  * @param {GameState} state
  * @param {typeof CATALOG} [catalog]
  */
@@ -870,10 +877,10 @@ function stanceOf(state, catalog = CATALOG) {
 
 /**
  * ⚠ O DEFEITO QUE ELA CONSERTA ERA O MAIS CARO DA TELA. A Mesa montava a previsao a mao,
- * no entrypoint, com os QUATRO blocos do catalogo e a lealdade crua — enquanto o turno
- * votava com as ONZE bancadas do ELENCO, a verba ja com credito de memoria e desconto de
- * ambicao, e a rua deslocando a resistencia. Nem o ELENCO nem a SONDA quebraram nada ao
- * chegar: a tela so ficou para tras, em silencio.
+ * no entrypoint, com os blocos crus do catalogo e a lealdade crua — enquanto o turno votava
+ * com as bancadas do ELENCO, que sao outras e em outro numero, a verba ja com credito de
+ * memoria e desconto de ambicao, e a rua deslocando a resistencia. Nem o ELENCO nem a SONDA
+ * quebraram nada ao chegar: a tela so ficou para tras, em silencio.
  *
  * @param {GameState} state
  * @param {Orders} [orders]
@@ -1067,7 +1074,8 @@ const NOTICED = new Set(["tabled", "forgotten", "passed", "rejected"]);
  * @param {object} after o que o mes acabou de produzir
  * @param {Record<string, number>} after.pressure
  * @param {Record<string, number>} after.loyalty
- * @param {boolean} after.contingency se o teto do arcabouco fechou
+ * @param {boolean} after.contingency se o teto do arcabouco esta fechado NESTE mes
+ * @param {boolean} after.contingencyNext se ele estara fechado no mes que vem
  * @returns {import("../state/state.mjs").Letter[]}
  */
 function alarmsOf(state, now, impeachment, catalog, after) {
@@ -1093,8 +1101,14 @@ function alarmsOf(state, now, impeachment, catalog, after) {
     written.push(alarm({ kind: "siege", id: "siege", subject: "siege", month: state.month }));
   }
 
-  const ceilingBefore = budgetStep({ ...positionOf(state, catalog), spent: 0 }).contingency;
-  if (!ceilingBefore && after.contingency) {
+  /* ⚠ A TRAVESSIA E DAQUI PARA O MES QUE VEM, e nao daqui para aqui. A versao anterior media
+     o antes com `positionOf(state)` e o depois com `budget` — que sai da MESMA posicao —, e
+     contingenciamento e `teto − obrigatoria`, que nao depende do que foi empenhado. A condicao
+     era `!X && X`, falsa por construcao: o teto fechou em 12 dos 48 meses da politica `piso` e
+     a carta nunca saiu uma vez.
+     ⚠ E O AVISO CHEGA ANTES DE PROPOSITO. O mes que esta fechando ja sabe a posicao com que o
+     seguinte abre, e informacao que chega depois da decisao e recibo. */
+  if (!after.contingency && after.contingencyNext) {
     written.push(alarm({ kind: "ceiling", id: "ceiling", subject: "ceiling", month: state.month }));
   }
 
@@ -1362,7 +1376,7 @@ function advanceBills(state, { share, standing, catalog, resolved, mail }) {
 
     const result = vote({
       bill: agenda.proposal,
-      /* ⚠ QUEM VOTA E A CAMARA DIVIDIDA, e nao os quatro blocos. */
+      /* ⚠ QUEM VOTA E A CAMARA DIVIDIDA, e nao os blocos crus do catalogo. */
       parties: share.benches,
       funding: share.offeredPaid,
       loyalty: share.chamberLoyalty,
@@ -1695,6 +1709,12 @@ export function playMonth(state, orders = {}, options = {}) {
           pressure,
           loyalty,
           contingency: budget.contingency,
+          /* A POSICAO COM QUE O MES SEGUINTE ABRE, e ela ja esta calculada: e a mesma fonte
+             que `closed.room` usa para dizer quanto vai sobrar. */
+          contingencyNext: budgetStep({
+            ...positionOf({ ...state, fiscal: nextFiscal }, catalog),
+            spent: 0,
+          }).contingency,
         }),
         ...passage.asked,
         ...demandsOf(state, pressure, catalog),

@@ -273,9 +273,12 @@ export const UI = {
     /* ⚠ O VAZIO MUDOU DE FRASE quando a primeira carta passou a existir. */
     firstLead: "O primeiro mês ainda não foi resolvido",
     quietLead: "Nada espera resposta",
-    ceilingSubject: "O teto do arcabouço fechou",
+    /* ⚠ ELE AVISA ANTES, e o tempo verbal é a correção: a condição do motor era `!X && X` e a
+       carta nunca saiu. Agora ela sai no mês em que o teto AINDA está aberto, porque
+       informação que chega depois da decisão é recibo. */
+    ceilingSubject: "O teto do arcabouço fecha no mês que vem",
     ceilingBody:
-      "O gasto do ano encostou no limite da regra. Enquanto ele estiver fechado não há discricionário para emenda — e sem emenda a base não se compra de volta.",
+      "O gasto do ano vai encostar no limite da regra. Com ele fechado não há discricionário para emenda — e sem emenda a base não se compra de volta.",
     ceilingNote: "o que sobra para o mês:",
     minoritySubject: "O governo perdeu a maioria",
     minorityBody: "As cadeiras que respondem ao governo caíram abaixo da maioria simples.",
@@ -547,7 +550,7 @@ export const UI = {
     outsideCeiling: "fora do teto",
     debt: "A dívida",
     /* ⚠ O PRÊMIO DE RISCO PRECISAVA APARECER, senão ele seria motor invisível — que é o
-       defeito que o ciclo 5 nomeou: sete pessoas decidiam toda votação e nenhuma aparecia. */
+       defeito que o ciclo 5 nomeou: o elenco decidia toda votação e nenhum nome aparecia. */
     premium: "Prêmio de risco",
     premiumNote: "o que o mercado cobra acima da básica",
     gross: TERMOS.grossDebt,

@@ -176,7 +176,7 @@ o jogador precisava do número.
 recorrente deste projeto — encontrado quatro vezes — é **dois lugares montando a
 mesma pergunta**, e enquanto a porta errada estiver na fachada, alguém entra por ela.
 Foi por isso que `whipCount` e `dispersion` saíram de `src/public/index.mjs`: a tela
-remontava uma câmara de quatro blocos enquanto o turno votava com onze bancadas, e
+remontava uma câmara de blocos crus enquanto o turno votava com as bancadas do ELENCO, e
 **27,2% dos vereditos anunciados eram o inverso do que o mês produzia**.
 
 **A previsão usa o que será PAGO, nunca o prometido.** É a mesma regra do
@@ -355,10 +355,26 @@ Declarado para não ser confundido com cobertura:
 
 Cada linha aqui é um defeito que aconteceu, e a data em que ele custou.
 
+> ### ⚖ Achado só fecha com prova que morde.
+>
+> A prova nasce **antes** do conserto, e se ela não reprova contra o código de hoje, o achado
+> **não estava consertado** — ela está medindo outra coisa. Sem isso, "consertado" é uma
+> afirmação sobre o passado que ninguém consegue conferir.
+
+⚠ **E ELA NASCEU DE DUAS OCORRÊNCIAS, uma em cada direção.** O **achado 24** foi marcado como
+concertado, e o conserto entregue — a tag de espécie — cobre três espécies que **não são** a do
+caso que o próprio achado descreve. Reproduzido depois em catorze meses de jogo: duas perguntas
+abertas, mesmo assunto, mesmo remetente, nenhuma tag. E o **achado 37** passou uma sessão
+inteira sendo citado como verdade depois de o conserto que o invalidou ter entrado.
+
+⚠ **A regra vale para os dois lados, e é por isso que ela é regra e não conselho:** ela não
+depende de quem está sendo cuidadoso. A Restrição 2 do ciclo 13 já exige isso de **item de
+plano**; o que faltava era exigir de **achado**.
+
 **Dois lugares montando a mesma pergunta — CINCO ocorrências.** A tela remontou a
 câmara (27,2% dos vereditos invertidos); a Mesa previu com verba prometida enquanto o
 turno pagava a rateada; a tela remontou a legislação antes de `bandsOf`; havia dois
-`compose` em `turn.mjs`; e o **simulador** negociava contra os quatro blocos do
+`compose` em `turn.mjs`; e o **simulador** negociava contra os blocos crus do
 catálogo sem a rua — este último o mais caro, porque quem errava era o instrumento de
 calibragem.
 

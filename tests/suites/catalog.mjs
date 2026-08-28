@@ -1,6 +1,8 @@
 /* SUITE · O CATALOGO — o dado de verdade, conferido valor a valor. */
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 import fc from "fast-check";
 import { CATALOG, catalogViolations } from "../../src/data/catalog.mjs";
@@ -129,4 +131,55 @@ test("o validador nao conserta nem preenche, so relata", () => {
   const before = JSON.stringify(record);
   violations(PARTY_SCHEMA, record, "teste");
   assert.equal(JSON.stringify(record), before);
+});
+
+/* ── O HANDOFF CONTA O CATALOGO QUE EXISTE ─────────────────────────────────── ⚠ ELA NASCE DE
+   UM DEFEITO MEDIDO, e ele e a familia que `standards.md` §7 declara SEM GUARDA: prosa que
+   continua gramatical e para de ser verdade. O handoff afirmou por sessoes um Congresso de
+   "onze bancadas" e um elenco de "sete pessoas" enquanto o catalogo tinha nove blocos e oito
+   arquetipos — e nada podia acusar, porque toda guarda deste projeto le TEXTO e nenhuma sabe
+   contar o catalogo.
+
+   ⚠ E O ALCANCE E DECLARADO: ela cobre so o `handoff.md`, que promete no proprio cabecalho
+   que ali "so entra o que e verificavel hoje". `journal.md` e `cycles/` sao historico datado
+   e ficam de fora de proposito — corrigir um numero la seria reescrever o que foi medido. */
+const CONTAGENS = new Map([
+  ["blocos partidários", () => CATALOG.parties.length],
+  ["cadeiras", () => SEATS],
+  ["áreas", () => CATALOG.areas.length],
+  ["programas", () => CATALOG.programs.length],
+  ["regras", () => CATALOG.rules.length],
+  ["grupos de pressão", () => CATALOG.lobbies.length],
+  ["faixas de renda", () => CATALOG.segments.length],
+  ["arquétipos", () => CATALOG.archetypes.length],
+]);
+
+test("O HANDOFF CONTA O CATALOGO QUE EXISTE, e nao o de uma sessao passada", () => {
+  const handoff = readFileSync(join(import.meta.dirname, "..", "..", "docs", "handoff.md"), "utf8");
+
+  /* TODA LINHA DE DUAS COLUNAS, e nao uma tabela ancorada por titulo: o rotulo e a chave, e
+     assim a contagem pode morar em qualquer secao do arquivo sem a prova ter de saber onde. */
+  const rows = [...handoff.matchAll(/^\|\s*([^|]+?)\s*\|\s*(\d+)\s*\|\s*$/gm)];
+
+  /** @type {string[]} */
+  const checked = [];
+  for (const row of rows) {
+    const label = (row[1] ?? "").trim();
+    const count = CONTAGENS.get(label);
+    if (!count) continue;
+    checked.push(label);
+    assert.equal(
+      Number(row[2]),
+      count(),
+      `o handoff diz ${row[2]} ${label} e o catalogo tem ${count()}`,
+    );
+  }
+
+  /* ⚠ A PROVA TEM DE FALHAR QUANDO A TABELA SUMIR, senao apagar as linhas a deixa verde para
+     sempre — que e a forma mais silenciosa de uma prova morrer. */
+  assert.deepEqual(
+    [...CONTAGENS.keys()].filter(label => !checked.includes(label)),
+    [],
+    "o handoff deixou de declarar uma das contagens que esta prova cobra",
+  );
 });

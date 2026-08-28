@@ -19,6 +19,7 @@ import { PROGRAMS } from "../../src/data/programs.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
 import { QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 import { UI } from "../../src/ui/strings.mjs";
+import { alarm } from "../../src/application/mail.mjs";
 import { createState } from "../../src/state/state.mjs";
 
 /** @typedef {import("../../src/application/turn.mjs").Orders} Orders */
@@ -684,9 +685,10 @@ test("O PACOTE PAGA PELO TAMANHO: juntar tudo num texto so ficou caro", () => {
 });
 
 /* ── A MESA E O TURNO PREVEEM COM A MESMA CAMARA ─────────────────────────────── ⚠ ESTA PROVA
-   NASCE DE UM DEFEITO MEDIDO, e ele e o terceiro da mesma familia.
-   com as ONZE bancadas do ELENCO, a verba com credito de memoria e desconto de
-   ambicao dentro, e a APROVACAO DA RUA deslocando a resistencia.
+   NASCE DE UM DEFEITO MEDIDO, e ele e o terceiro da mesma familia: a Mesa previa com os
+   blocos crus do catalogo enquanto o turno votava com as bancadas do ELENCO, a verba com
+   credito de memoria e desconto de ambicao dentro, e a APROVACAO DA RUA deslocando a
+   resistencia.
    O ELENCO e a SONDA chegaram, `playMonth` passou a usa-los, e a tela ficou para
    tras em silencio — cada lado certo sozinho. Nenhum tipo, nenhuma guarda e nenhuma
    das 190 provas via, porque nenhuma delas comparava os dois. Esta compara. */
@@ -842,4 +844,76 @@ test("O QUE ESPERA NAO GASTA: o mes do protocolo executa o orcamento que ja vali
   /* E O TEXTO EXISTE — a prova nao pode passar por o corte ter sido ignorado. */
   assert.equal(writing.state.bills.length, 1, "o texto nao foi protocolado");
   assert.equal(writing.state.bills[0]?.stage, "drawer");
+});
+
+/* ── O ALARME NAO CALA QUEM ACABOU DE FERVER ────────────────────────────────── ⚠ ELA NASCE DE
+   UM DEFEITO MEDIDO, e ele e estrutural e nao de calibragem: `demandsOf` garante "uma exigencia
+   aberta por vez, por grupo" filtrando por REMETENTE e resposta nula — e o alarme de fervura
+   nasce com o mesmo remetente e resposta nula, porque ele fecha por `closedAt`.
+   Com `boil` em 68 e `demandAt` em 30, quem ferve esta SEMPRE acima do limiar de exigir: o
+   grupo que acabou de romper com o governo era exatamente o que perdia a voz, por ate 24 meses.
+   Medido em 48 meses: 26 a 30 meses-lobby calados. */
+test("O ALARME DE FERVURA NAO CALA A EXIGENCIA DO MESMO GRUPO", () => {
+  const lobby = "produtivo";
+  const base = createState(undefined, CATALOG);
+
+  /* O grupo tem do que reclamar — o jogador cortou uma alavanca da area dele — e pressao acima
+     do ponto de exigir. Sem as duas coisas nao ha exigencia para o alarme bloquear. */
+  const state = {
+    ...base,
+    levels: { ...base.levels, "plano-safra": 0 },
+    pressure: { ...base.pressure, [lobby]: 90 },
+  };
+
+  /** @param {import("../../src/state/state.mjs").GameState} from */
+  const demands = from =>
+    playMonth(from, {}, { catalog: CATALOG }).state.mail.filter(
+      letter => letter.kind === "demand" && letter.from === lobby,
+    );
+
+  assert.equal(demands(state).length, 1, "o grupo tinha do que reclamar e nao reclamou");
+
+  /* ⚠ O MESMO MES, COM O ALARME NA BANDEJA: e a unica coisa que muda entre os dois casos. */
+  const comAlarme = {
+    ...state,
+    mail: [
+      ...state.mail,
+      alarm({ kind: "boiling", id: lobby, subject: lobby, month: 1, from: lobby }),
+    ],
+  };
+
+  assert.equal(
+    demands(comAlarme).length,
+    1,
+    "o alarme de fervura calou a exigencia do grupo que acabou de ferver",
+  );
+});
+
+/* ── O TETO QUE VAI FECHAR AVISA ANTES ──────────────────────────────────────── ⚠ ELA NASCE DE
+   UM CANAL MORTO, e ele era morto por ARITMETICA: o alarme perguntava se o teto nao estava
+   fechado antes e estava depois, com os dois lados saindo da MESMA posicao — e
+   contingenciamento e `teto − obrigatoria`, que nao depende do que foi empenhado. A condicao
+   era `!X && X`. Medido em 48 meses: o teto fecha em 12 deles na politica `piso`, e a carta
+   nunca foi emitida uma vez.
+   ⚠ E O AVISO PASSOU A CHEGAR ANTES, e nao depois: o mes que esta fechando ja sabe a posicao
+   com que o mes seguinte abre. "Informacao que chega depois da decisao e recibo." */
+test("O TETO QUE VAI FECHAR AVISA ANTES, e o aviso chega uma vez so", () => {
+  /* Um discricionario magro faz a obrigatoria alcancar o teto por crescimento vegetativo, sem
+     o jogador tocar em nada — e ela abre com o teto ABERTO, que e a condicao da travessia. */
+  const catalog = catalogWith({ initialDiscretionary: 40 });
+  let state = createState(7, catalog);
+  let avisos = 0;
+
+  for (let month = 0; month < 24; month++) {
+    const played = playMonth(state, {}, { catalog });
+    avisos += played.state.mail.filter(letter => letter.kind === "ceiling").length - avisos;
+
+    if (played.report.budget.contingency) {
+      assert.ok(avisos > 0, "o teto fechou e nenhum aviso chegou antes");
+      return;
+    }
+    state = played.state;
+  }
+
+  assert.fail("o catalogo montado para fechar o teto nunca fechou");
 });

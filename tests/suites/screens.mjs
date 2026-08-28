@@ -83,8 +83,8 @@ function mesaOf(bill, funding = everyone(0.4)) {
           : 0,
       ]),
     ),
-    /* O CASO SINTETICO NAO TEM ELENCO — ele monta a Mesa com os quatro blocos crus para
-       provar a estrutura da tela. */
+    /* O CASO SINTETICO NAO TEM ELENCO — ele monta a Mesa com os blocos crus do catalogo,
+       para provar a estrutura da tela. */
     blocs: parties.map(party => ({ id: party.id, people: [] })),
     band: dispersion({ parties, loyalty: state.loyalty }),
     seatPrice: fiscal.seatPrice,
@@ -322,9 +322,9 @@ function cabinetOf(state, extra = {}) {
     seats: CATALOG.parties.reduce((sum, party) => sum + party.seats, 0),
     majority: 257,
     split: baseSplit({ parties: CATALOG.parties, loyalty: state.loyalty }),
-    /* ⚠ AQUI SAO AS ONZE BANCADAS DE VERDADE, e nao os quatro blocos: o hemiciclo desenha 513
-       cadeiras a partir desta lista, e uma prova que o alimentasse com quatro caixas nao
-       exercitaria a soma que ele precisa fechar. */
+    /* ⚠ AQUI E A CAMARA DIVIDIDA DE VERDADE, e nao os blocos crus: o hemiciclo desenha 513
+       cadeiras a partir desta lista, e uma prova que o alimentasse com um punhado de caixas
+       nao exercitaria a soma que ele precisa fechar. */
     chamber: chamberOf(state, CATALOG),
     inbox: "",
     resolved: state.month > OPENING_MONTH,
@@ -405,8 +405,8 @@ test("A REGUA DA CAMARA MEDE A BASE CONTRA A MAIORIA, e as duas na mesma escala"
     const gauge = [null, String((naBase / cheio) * 100), mark[1]];
 
     /* ⚠ ESTA PROVA SUBSTITUI "A FITA FECHA O PLENARIO", e ela nao foi apagada: a fita saiu do
-       Gabinete em 22/08/2026 porque onze bancadas em 184px so seriam legiveis com uma legenda
-       nomeando cada cor, e essa legenda nao cabe. O que ela cobrava e que continua importando
+       Gabinete porque uma bancada por cor em 184px so seria legivel com uma legenda nomeando
+       cada uma, e essa legenda nao cabe. O que ela cobrava e que continua importando
        — o desenho nao inventa a base, e ele a compara com a maioria na MESMA escala. */
     assert.ok(
       Math.abs(Number(gauge?.[1]) - (base / total) * 100) < 0.5,

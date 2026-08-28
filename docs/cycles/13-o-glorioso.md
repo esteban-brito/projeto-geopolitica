@@ -729,7 +729,7 @@ Ele quer três botões de decisão dentro da carta — `Cortar verba`, `Emitir d
 de carta que perguntam: `amendment` (a emenda do relator) e `demand` (a chantagem do lobby). A
 segunda é **exatamente** o que o dossiê descreve: um grupo cobra, o preço está na carta, e a
 resposta se dá ali. O problema nunca foi a falta de botão — é que **o jogo tem duas perguntas e
-doze espécies de aviso** (achado 37).
+treze espécies de aviso** (achado 37).
 
 > **A Parte C não constrói agência no Gabinete. A Parte A a entrega:** A6 põe ministro para
 > pedir, A7 põe o Congresso para propor, A9 põe a imprensa para cobrar, A10 põe governador para
@@ -1043,7 +1043,7 @@ declarado, zero implementação. **O projeto já sabia que precisava disto e par
 Em FM o mundo **te interpela**: antes e depois de cada jogo alguém pergunta, a resposta é
 escolhida entre opções, e ela custa moral com o elenco.
 
-**Aqui ninguém nunca pergunta nada ao presidente.** O jogo tem doze espécies de aviso e duas de
+**Aqui ninguém nunca pergunta nada ao presidente.** O jogo tem treze espécies de aviso e duas de
 pergunta (achado 37), e nenhuma das duas vem da imprensa.
 
 - é **carta com `choices`**, que a máquina já roda. Custo estrutural: zero;
@@ -1255,7 +1255,7 @@ Seis sessões de desenho caíram na metade sem portão.
 
 ### O mínimo, e ele vale para os 49
 
-1. `npm run validate` verde — 12 guardas · 54 provas sintéticas · 236 provas · o passeio;
+1. `npm run validate` verde — 12 guardas · 54 provas sintéticas · 253 provas · o passeio;
 2. ⚠ **abrir a captura em `captures/`.** O portão não sabe olhar, e três defeitos já
    atravessaram tipo, guarda e cem provas para morrer na imagem.
 

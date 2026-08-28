@@ -6,7 +6,7 @@ dependência de runtime.
 
 ```bash
 npm ci
-npm run serve      # http://127.0.0.1:5173/ — onze telas, jogaveis
+npm run serve      # http://127.0.0.1:5173/ — doze telas, jogaveis
 npm run simulate   # roda um mandato inteiro no terminal, sem tela
 npm run validate   # guardas + tipos + lint + formato + testes + passeio — o portao
 npm run check      # so as guardas, 2s; `npm test` roda so as suites

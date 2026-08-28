@@ -29,6 +29,40 @@ limpeza (remoção de exports mortos, JSDoc duplicado).
 
 ### Arquivos modificados (25 arquivos, incluindo 1 novo)
 
+### Sessão 23 (28/08/2026) — a prosa contava um Congresso que não existe
+
+**Nenhum motor alterado, nenhuma calibragem tocada.** O catálogo cresceu de 4 para 9
+blocos e de 7 para 8 arquétipos ao longo dos ciclos, e a prosa ficou para trás: 14
+lugares afirmavam "onze bancadas" e "sete pessoas" em tempo presente. Medido: são
+**9 blocos, 8 arquétipos, 16 bancadas efetivas** (as 513 cadeiras fecham).
+
+⚠ **É a família que `standards.md` §7 declara SEM GUARDA** — prosa que continua
+gramatical e para de ser verdade. Ela passa verde por construção: as doze guardas leem
+texto e nenhuma sabe contar o catálogo.
+
+| o que estava errado                      | onde                                                   |
+| ---------------------------------------- | ------------------------------------------------------ |
+| "onze bancadas" / "sete pessoas"         | 9 arquivos de código e prova, 4 de documentação        |
+| "quatro blocos" como estado **presente** | `parties.mjs`, `turn.mjs:1365`, `standards.md`         |
+| "onze telas"                             | eram **doze** — o próprio `censo-tipo.mjs` visita doze |
+| "236 provas · 130 arquivos"              | eram **253 · 131**                                     |
+| "seis políticas-sonda"                   | são **nove** desde os achados 50 e 52                  |
+| "doze espécies de aviso"                 | são **treze** (15 `kind`, duas perguntam)              |
+| A Rua e Bastidor "seguem desligados"     | saíram do rail no D7                                   |
+| "três cartões" na coluna do Gabinete     | são **quatro**, e o passeio já cobrava cinco `.card`   |
+
+⭐ **E O PORTÃO GANHOU O QUE FALTAVA PARA VER ISSO** — Restrição 2, a checagem nasce
+junto: `tests/suites/catalog.mjs` passou a conferir toda linha de duas colunas do
+handoff cujo rótulo esteja na tabela de contagens contra o `CATALOG`. Verificada
+contra o defeito: com `| blocos partidários | 11 |` ela reprova. **O alcance é
+declarado** — só o handoff, que promete no cabeçalho que ali só entra o verificável;
+`journal.md` e `cycles/` são histórico datado e ficam de fora de propósito.
+
+⚠ **E dois fragmentos de cemitério foram removidos** de `cabinet.mjs` — um deles
+truncado no meio (`"de ser quando o ELENCO nasceu:…"`), o outro repetindo uma lição que
+o código vivo já carrega ao lado da peça. `public/index.mjs` tinha um terceiro,
+reparado do sentido original.
+
 ### Sessão 22 (27/08/2026) — bugs UI
 
 Dois achados de auditoria consertados. 252 testes, 12 guardas, tudo verde.
@@ -104,7 +138,38 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 ---
 
 **Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
-130 arquivos · 236 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
+132 arquivos · 256 provas · passeio verde em DUAS janelas**. Branch `acoplamento-e-simulador`.
+
+### ▶ O SEGUNDO PLANO NA MESA — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
+
+✔ **O PASSO 1 ESTÁ FEITO — os três defeitos de motor, com as três provas nascidas antes e
+verificadas mordendo.** A série foi comparada antes e depois: **idêntica ao caractere**, que é
+o resultado desenhado — os consertos devolvem correspondência e não tocam em calibragem. Que
+estão vivos foi medido à parte: o aviso de teto saiu de **zero em cinco políticas** para um por
+mandato, e `herdado` foi de **6 para 8** exigências em 48 meses.
+
+⚠ **Do passo 2 ao 5, não começado.** E o plano nasceu de uma frase dele: _"eu estou vendo diversos bugs, brechas, visual feio e tudo mais, na caixa de
+entrada"_. A investigação achou **três defeitos de mecânica** que doze guardas, 253 provas e o
+passeio atravessaram sem acusar:
+
+- ✔ **a poda jogava fora a carta que acabou de chegar** — `slice` negativo sobre um array que
+  tem as novas na frente. Medido: **101 cartas destruídas com 1 a 3 meses de idade**, e a
+  caixa do mês 30 com um buraco de doze meses. A causa-raiz é documental: **três arquivos
+  discordam sobre a ordem de `state.mail`**, e a poda acreditou no errado;
+- ✔ **o alarme de fervura calava o grupo que acabou de ferver** — ele satisfaz o filtro de "uma
+  exigência aberta por vez". **26 a 30 meses-lobby bloqueados**;
+- ✔ **o alarme do teto era impossível** — a condição é `!X && X`. O teto fecha em **12 de 48**
+  meses e a carta **nunca** foi emitida. É o **quinto canal morto**, e a tela dele existe
+  inteira.
+
+E na tela: o **fechamento do mês é cortado da bandeja em 14 de 16 meses** e fica inalcançável
+(o achado 46 mede a perda no F5; ela acontece todo mês); o índice **volta no calendário**; duas
+perguntas abertas **leem idênticas** — o achado 24 foi dado como fechado e não está; e a folha
+da carta é **75% branca** nas espécies sem anexo.
+
+⚠ **O PLANO ESTÁ INCOMPLETO POR DECLARAÇÃO.** Das quatro frentes de investigação, duas
+fecharam e **duas morreram no limite de sessão**: o _wiring_ do entrypoint e a geometria medida
+no navegador. **Elas rodam antes de qualquer execução.**
 
 ### ▶ O GLORIOSO ESTÁ EM EXECUÇÃO, e a ordem é a do rodapé do plano
 
@@ -308,9 +373,9 @@ o README afirmava que o passeio roda _"em desktop e em celular"_ e ele tem **um*
 a seção "A verificação" deste arquivo dizia **"nove guardas, 173 propriedades"** contra 12 e 236. Um cemitério de **dez blocos de comentário seguidos** em `45-screen-cabinet.css`,
 nenhum preso a regra nenhuma, descrevia o hemiciclo e a legenda do arco — peças mortas.
 
-### ✔ A PENEIRA DE TIPOGRAFIA — as onze telas, medidas e fechadas em 24/08/2026
+### ✔ A PENEIRA DE TIPOGRAFIA — as doze telas, medidas e fechadas em 24/08/2026
 
-`tmp/censo-tipo.mjs` visita as onze telas no mês 6 e conta família × tamanho × peso com o
+`tmp/censo-tipo.mjs` visita as doze telas no mês 6 e conta família × tamanho × peso com o
 nome da peça atrás de cada combinação; `tmp/quem-foge.mjs` lista quem cai fora dos degraus.
 
 | eixo                     | antes | agora  |
@@ -526,7 +591,7 @@ outras oito: **três a 73 e oito em ruptura**, contingenciamento em **12 meses**
 caindo de 254 para 115.
 
 ⚠ **AS SEIS POLÍTICAS ANTIGAS ESPALHAM NOS DOIS EIXOS** — verba dividida entre as oito
-áreas, emenda oferecida às onze bancadas na mesma medida. **Nenhuma delas ESCOLHE.** E
+áreas, emenda oferecida a cada bloco do catálogo na mesma medida. **Nenhuma delas ESCOLHE.** E
 escolher é o jogo: é o que Victoria 3, Democracy 4 e o Geo-Political Simulator pedem do
 jogador do primeiro turno ao último.
 
@@ -563,7 +628,7 @@ tela do jogo diz isso ao jogador, e é a regra mais importante que ele precisari
 **Três vezes hoje eu quase registrei como defeito do MOTOR o que era uniformidade do
 INSTRUMENTO:**
 
-1. _"as onze bancadas não diferenciam"_ — diferenciam: amplitude 66 pagando uma só;
+1. _"as bancadas não diferenciam"_ — diferenciam: amplitude 66 pagando uma só;
 2. _"o país é inerte"_ — responde: +10,5 concentrando;
 3. _"a lei nunca é escrita"_ — é: quatro meses da caneta à norma.
 
@@ -903,10 +968,11 @@ regra CSS separada. Alterados: `30-components.css`, `40-shell.css`, `50-screen-m
 declaradas no catálogo com prosa e não movem nada. A tela passou a mostrá-las como
 caracterização (quem a pessoa é), e **só a sucessão leva a consequência escrita ao
 lado**, porque é a única que o motor cobra. Elas ganham preço na tramitação e na
-queda. Medido de quebra: a distribuição é uniforme em 600 sementes
-(20,2/20,2/20,3/20,3/19,0 em 4.200 pessoas) — mas com sete pessoas e cinco
-ambições, uma partida pode dar quatro iguais, e a de abertura dá. Não é defeito de
-hash; é amostra pequena. Sortear estratificado é decisão de desenho, não conserto.
+queda. Remedido em 28/08/2026: a distribuição é uniforme em 600 sementes
+(20,4/19,7/19,9/20,3/19,6 em 4.800 pessoas) — mas com oito pessoas e cinco
+ambições, uma partida pode dar quatro iguais, e a de abertura dá (quatro querem o
+governo do estado). Não é defeito de hash; é amostra pequena. Sortear estratificado
+é decisão de desenho, não conserto.
 
 ## O que existe
 
@@ -918,12 +984,14 @@ lugares**, com as oito áreas um nível abaixo em Ministérios. Vidro em três n
 (`stage` · `action` · `support`) e substrato de aurora em CSS puro. O rail duplo e a
 Mesa morreram na sétima sessão.
 
-**Onze telas**: o Gabinete, Congresso & Leis, Finanças, as oito áreas e O Estado.
-Dois itens da sidebar seguem desligados **e dizem que estão** — A Rua e Bastidor.
+**Doze telas**: o Gabinete, Congresso & Leis, Finanças, as oito áreas e O Estado.
+A Rua e Bastidor saíram do rail no D7, e voltam com dono: a primeira depende da
+imprensa e das pessoas agindo sozinhas, a segunda da coalizão.
 
-O **Gabinete** é duas colunas: a Caixa de Entrada à esquerda (3fr) e três cartões
-empilhados à direita (2fr) — Congresso com o arco em três fatias e legenda, o Cofre
-com quem trava o orçamento, e a Rua por classe de renda.
+O **Gabinete** é duas colunas, com a Trindade do risco atravessando as duas por
+cima: a Caixa de Entrada à esquerda (3fr) e **quatro** cartões empilhados à direita
+(2fr) — Quem pode derrubar no topo, A Câmara com a base repartida em quatro fatias
+e chave, o Cofre com quem trava o orçamento, e a Rua por classe de renda.
 
 Regras que valem para toda tela nova: **uma lâmina por tela** (os cartões do
 Gabinete são a exceção declarada), a tela **pergunta** ao motor em vez de refazer a
@@ -934,12 +1002,28 @@ estados vazios diferentes.
 
 ### Os dados (`src/data/`)
 
-Quatro blocos partidários no plano de Nolan com venalidade por eixo; **38
-programas** em oito áreas com custo, faixa de abertura, guarda e posição; **6
-regras** de propriedade e poder; **7 arquétipos** de gente com o vocabulário de
-nomes que os gera (`cast.mjs`, e o ADR 0003 na frente dele); parâmetros fiscais,
-macroeconômicos, de opinião, de elenco e do regime; e um validador de esquema que
-não conserta nada.
+Blocos partidários no plano de Nolan com venalidade por eixo; programas com custo,
+faixa de abertura, guarda e posição; regras de propriedade e poder; grupos de pressão
+e faixas de renda; arquétipos de gente com o vocabulário de nomes que os gera
+(`cast.mjs`, e o ADR 0003 na frente dele); parâmetros fiscais, macroeconômicos, de
+opinião, de elenco e do regime; e um validador de esquema que não conserta nada.
+
+⚠ **A TABELA ABAIXO É COBRADA POR PROVA, e ela existe por defeito medido.** A prosa
+deste projeto afirmou por sessões um Congresso de "onze bancadas" e um elenco de "sete
+pessoas" enquanto o catálogo tinha outros números — a família que `standards.md` §7
+declara sem guarda. Agora toda linha de duas colunas deste arquivo cujo rótulo esteja
+na lista é conferida contra `CATALOG` por `tests/suites/catalog.mjs`.
+
+| coleção            | quantos |
+| ------------------ | ------- |
+| blocos partidários | 9       |
+| cadeiras           | 513     |
+| áreas              | 8       |
+| programas          | 38      |
+| regras             | 6       |
+| grupos de pressão  | 4       |
+| faixas de renda    | 3       |
+| arquétipos         | 8       |
 
 A âncora que amarra tudo: `tests/suites/agenda.mjs` prova que a soma dos programas
 bate com a posição fiscal de abertura, e que **a obrigatória é a soma dos pisos**.
@@ -976,15 +1060,17 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
   para a tela nunca remontar a legislação por fora;
 - **`src/public/index.mjs`** — a fachada, e a guarda `boundaries` prova que o
   entrypoint não alcança domínio nem aplicação por fora dela;
-- **`tools/simulate.mjs`** — o mandato no terminal, **seis** políticas-sonda. A
-  sexta é `explorador`, e ela não governa: derruba todo piso, levanta todo teto,
-  gasta o máximo e promete verba cheia, tentando quebrar o orçamento. Foi ela que
-  mediu o achado 1. O resumo passou a imprimir o **tamanho do arquivo
-  legislativo**, que é o instrumento dos riscos 2 e 8 do ciclo.
+- **`tools/simulate.mjs`** — o mandato no terminal, **nove** políticas-sonda:
+  `herdado`, `piso`, `base`, `agenda`, `explorador`, `promessa`, e as três que
+  nasceram de achados — `concentra` e `favoritos` (52), e `legislador` (50).
+  `explorador` não governa: derruba todo piso, levanta todo teto, gasta o máximo e
+  promete verba cheia, tentando quebrar o orçamento. Foi ela que mediu o achado 1.
+  O resumo imprime o **tamanho do arquivo legislativo**, que é o instrumento dos
+  riscos 2 e 8 do ciclo.
 
 ### A verificação
 
-**Doze guardas** com provas sintéticas e **236 propriedades**, e o **passeio**
+**Doze guardas** com provas sintéticas e **256 propriedades**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.

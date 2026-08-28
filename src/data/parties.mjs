@@ -26,7 +26,7 @@ export const PARTY_SCHEMA = {
  * @property {string} [article] - a contracao com que a prosa se refere a ele: `do`, `da`.
  * monta bancadas a partir de PESSOAS, e uma pessoa se refere pelo nome — nao ha
  * contracao a fazer com "Onofre Bastos Quirino". O campo e do vocabulario dos
- * quatro blocos do catalogo, e `catalogViolations` cobra os quatro.
+ * blocos deste catalogo, e `catalogViolations` cobra todos eles.
  * @property {number} economic
  * @property {number} liberty
  * @property {number} venalityEconomic - o preco de ceder em pauta economica

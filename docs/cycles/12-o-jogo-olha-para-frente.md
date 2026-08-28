@@ -142,6 +142,6 @@ país. **Decidir depois de A e B estarem na tela, e não antes.**
 
 - `tmp/velocidade.mjs` — as duas tabelas acima: quanto uma área anda concentrando tudo nela,
   e em quantos meses o jogador vê um ponto de diferença contra não fazer nada;
-- `tmp/censo-tipo.mjs` — o censo de família × tamanho × peso das onze telas, com o nome da
+- `tmp/censo-tipo.mjs` — o censo de família × tamanho × peso das doze telas, com o nome da
   peça atrás de cada combinação;
 - `tmp/quem-foge.mjs` — quem cai fora dos degraus declarados da escala.

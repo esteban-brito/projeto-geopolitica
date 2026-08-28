@@ -7,6 +7,7 @@ import test from "node:test";
 import fc from "fast-check";
 import {
   ANSWER_TIME,
+  CARRY,
   KEEP,
   amendment,
   left,
@@ -161,5 +162,30 @@ test("O PRECO DE AVANCAR E O QUE O MES DECIDE SOZINHO — e nunca o que ja foi d
       );
     }),
     { numRuns: 200 },
+  );
+});
+
+/* ── A PODA GUARDA AS NOVAS ─────────────────────────────────────────────────── ⚠ ELA NASCE DE
+   UM DEFEITO MEDIDO: a poda cortava com `slice` NEGATIVO — que pega o FIM do array — e o turno
+   monta a caixa com as novas na FRENTE. Medido em 48 meses: 101 cartas destruidas com 1 a 3
+   meses de idade, e a caixa do mes 30 com um buraco de doze meses.
+   ⚠ E A DIRECAO E A PROVA INTEIRA: `app.mjs` e a bandeja ja cortam pelo COMECO. A view guardava
+   as novas e o motor guardava as velhas, no mesmo array. */
+test("A PODA GUARDA AS CARTAS NOVAS, e nao as velhas", () => {
+  const month = 60;
+
+  /* A CAIXA COMO O TURNO A MONTA: a mais nova na frente, e todas dentro do `KEEP` — senao a
+     retencao cortaria antes e a prova mediria outra coisa. */
+  const mail = Array.from({ length: CARRY + 1 }, (_, index) =>
+    notice({ kind: "passed", id: `texto-${index}`, subject: "x", month: month - index }),
+  );
+
+  const kept = settle({ mail, orders: {}, month }).mail;
+
+  assert.equal(kept.length, CARRY, `a poda guardou ${kept.length} e o teto e ${CARRY}`);
+  assert.deepEqual(
+    kept.map(letter => letter.month),
+    mail.slice(0, CARRY).map(letter => letter.month),
+    "a poda descartou as cartas mais NOVAS e guardou as mais velhas",
   );
 });

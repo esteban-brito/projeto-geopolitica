@@ -140,7 +140,7 @@ test("A MESMA SEMENTE DA A MESMA GENTE, e sementes diferentes dao gente diferent
 });
 
 test("NINGUEM E HOMONIMO na mesma partida, NEM DE PRIMEIRO NOME, NEM DE SOBRENOME", () => {
-  /* Dois sujeitos com o mesmo nome num Congresso de sete pessoas nao e sabor local: e um
+  /* Dois sujeitos com o mesmo nome num elenco deste tamanho nao e sabor local: e um
      defeito que o jogador lê como bug, e que a identidade por `id` esconderia do motor mas
      nao dos olhos. */
   fc.assert(

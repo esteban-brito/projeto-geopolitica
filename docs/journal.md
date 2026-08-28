@@ -12,6 +12,102 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## ✔ A PROSA CONTAVA UM CONGRESSO QUE NÃO EXISTE — 28/08/2026
+
+**Sessão de leitura completa do código, a pedido dele: _"leia todo o código, estude tudo, tem
+muita coisa nova"_.** Nenhum motor foi alterado e nenhuma calibragem foi tocada. O que a
+leitura achou não foi defeito de mecanismo — foi o **instrumento de leitura da próxima sessão
+mentindo**.
+
+### O achado, e ele é de método
+
+O catálogo cresceu de 4 para 9 blocos partidários e de 7 para 8 arquétipos ao longo dos ciclos.
+**A prosa não cresceu junto.** Medido no dia: são **9 blocos, 8 arquétipos e 16 bancadas
+efetivas**, e as 513 cadeiras fecham. Quatorze lugares afirmavam "onze bancadas" e "sete
+pessoas" em tempo presente — incluindo o contrato de `chamberOf`, a fachada, e a seção "O que
+existe" do próprio handoff.
+
+⚠ **E É EXATAMENTE A FAMÍLIA QUE `standards.md` §7 DECLARA SEM GUARDA:** prosa que continua
+gramatical e para de ser verdade. A guarda `prose` pega o identificador morto — `--token`,
+`.classe`, `arquivo.mjs` que o projeto não tem mais —, e não pega a frase que descreve um
+estado que o código deixou de ter. **As doze guardas leem TEXTO, e nenhuma sabe contar o
+catálogo.**
+
+### O que estava errado, além das bancadas
+
+A varredura pegou sete outras contagens, e nenhuma delas era defeito de mecanismo:
+
+| afirmação                            | verdade medida                                    |
+| ------------------------------------ | ------------------------------------------------- |
+| "onze telas"                         | **doze** — o próprio `censo-tipo.mjs` visita doze |
+| "236 provas · 130 arquivos"          | **253 · 131**                                     |
+| "seis políticas-sonda"               | **nove**, desde os achados 50 e 52                |
+| "doze espécies de aviso"             | **treze** — são 15 `kind`, e duas perguntam       |
+| "A Rua e Bastidor seguem desligados" | saíram do rail no D7, quatro dias antes           |
+| "três cartões" na coluna do Gabinete | **quatro** — e o passeio já cobrava cinco `.card` |
+| "o arco em três fatias"              | o arco morreu; hoje é `meter` com quatro fatias   |
+
+⚠ **A ÚLTIMA É A MAIS INSTRUTIVA:** a mesma seção do handoff descrevia uma peça que morreu em
+15/08 e um número que o passeio já cobrava diferente. **Duas verificações existiam e nenhuma
+alcançava a prosa.**
+
+### A distinção que guiou cada conserto
+
+Nem todo número velho é um número errado. A regra que apliquei:
+
+- **afirmação em tempo presente sobre a forma de hoje** → corrigida, ou reescrita para não
+  depender de contagem nenhuma. `settlement` dizia "são sete pessoas e nenhuma consulta a
+  fluxo"; passou a dizer que **cada pessoa sai de um hash da semente** — que é o mecanismo, e
+  o mecanismo não envelhece;
+- **medição em tempo passado onde o número É a evidência** → mantida. `mesa.mjs` registra que
+  a mesma frase saía uma vez por pessoa na captura; `app.mjs` registra os **27,2%** de
+  vereditos invertidos. Esses números são a prova, e apagá-los apagaria a lição;
+- **número velho que era só cenário numa frase de história** → removido. "o turno votava com as
+  ONZE bancadas do ELENCO" virou "com as bancadas do ELENCO": a lição é o 27,2%, e não o 11.
+
+⛔ **E `journal.md`, `cycles/` e os ADRs ficaram intocados de propósito.** Eles são histórico
+datado — corrigir um número ali seria reescrever o que foi medido no dia.
+
+### ⭐ E O PORTÃO GANHOU O QUE FALTAVA, porque a Restrição 2 manda
+
+> _"Nenhum item entra sem que o portão SAIBA VER o defeito que ele conserta. Se a checagem que
+> pegaria a regressão não existe, ela nasce primeiro."_
+
+Eu tinha acabado de consertar um defeito que o portão não enxerga. **A regra dura do ciclo 13
+se aplica a ela mesma**, então a checagem nasceu junto.
+
+**E ela é uma PROVA, e não uma décima terceira guarda** — a decisão é sobre honestidade do
+casador. Uma guarda que varresse prosa procurando "<numeral> bancadas" acusaria toda frase
+histórica do `journal.md`, que é o modo de falhar que este projeto já recusou uma vez: a versão
+larga da guarda `prose` acusava 25 blocos, dos quais 21 eram falso positivo. **O que dá para
+provar sem ambiguidade é uma tabela declarada.**
+
+`tests/suites/catalog.mjs` passou a ler o `handoff.md` e conferir toda linha de duas colunas
+cujo rótulo esteja num mapa fixo — blocos, cadeiras, áreas, programas, regras, grupos de
+pressão, faixas de renda e arquétipos — contra o `CATALOG`. **Verificada contra o defeito que
+ela existe para pegar:** com `| blocos partidários | 11 |` ela reprova.
+
+⚠ **E ELA TEM DUAS DEFESAS ESCRITAS, e a segunda é a que quase faltou:** a primeira é o alcance
+declarado (só o handoff, que promete no cabeçalho que ali só entra o verificável); a segunda é
+que **apagar a tabela reprova a prova**. Sem isso, remover as linhas a deixaria verde para
+sempre — que é a forma mais silenciosa de uma prova morrer.
+
+### ⚠ E EU DESTRUÍ NOVE EDIÇÕES COM UM `git checkout`, e o registro fica
+
+Depois de verificar que a prova nova reprova com o número errado, rodei `git checkout
+docs/handoff.md` para desfazer o `sed` de uma linha. **Ele reverteu o arquivo inteiro** e apagou
+as nove edições daquela sessão no handoff. Refazer custou pouco porque as edições estavam no
+histórico da conversa; num arquivo maior teria custado a sessão. **Desfazer uma linha não se faz
+com um comando que restaura o arquivo.**
+
+### O que ficou aberto
+
+Os dois canais mortos do plano continuam mortos, e os dois foram confirmados no código:
+`taxDelta` — `turn.mjs` passa `catalog.fiscal.taxLoad` nas duas pontas, então a subtração é
+sempre zero — e `streams.events`, que só a suíte do reducer toca. Os outros dois já foram
+ligados: `data-guard` pinta em `30-components.css`, e a desoneração virou renúncia via
+`waiver`/`waivedOf`.
+
 ## ✔ O GLORIOSO SAI DO PAPEL — passos 1 e 3, e a frase que fechou a sessão — 24/08/2026
 
 A sessão 20 executou **12 dos 49 itens** e terminou com quatro palavras dele:

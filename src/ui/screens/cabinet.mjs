@@ -161,12 +161,6 @@ function blockHtml({ legend, rows, key, foot, door, lead }) {
   });
 }
 
-/* de ser quando o ELENCO nasceu: a Camara passou a ter ONZE bancadas com contagem
-   de cadeiras propria. */
-
-/* Ela decifrava as três cores de humor do arco — "com o governo / obstruindo / em ruptura" —
-   e nasceu de um defeito caro: três cores sem chave, e um gráfico que só o autor lê. */
-
 /**
  * A tela inteira.
  *

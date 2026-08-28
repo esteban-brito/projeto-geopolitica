@@ -19,10 +19,11 @@ export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../dat
    jogador arrasta a verba. */
 /* A tela que os redigitasse chamaria de obstrucao o que o motor ja trata como ruptura no dia
    seguinte a primeira recalibragem. */
-/* quatro blocos do catalogo enquanto o turno votava com as onze bancadas do ELENCO,
-   a verba com credito de memoria dentro e a aprovacao da rua. Ninguem quebrou nada
-   ao acrescentar esses motores; a tela simplesmente ficou para tras, e em 27,2% das
-   votacoes ela anunciava o veredito contrario ao que o mes produzia. */
+/* Elas passam pela porta porque a tela ja montou a camara a mao: com os blocos crus do
+   catalogo, enquanto o turno votava com as bancadas do ELENCO, a verba com credito de
+   memoria dentro e a aprovacao da rua. Ninguem quebrou nada ao acrescentar esses motores;
+   a tela simplesmente ficou para tras, e em 27,2% das votacoes ela anunciava o veredito
+   contrario ao que o mes produzia. */
 export { baseSplit, THRESHOLDS } from "../domain/congress/index.mjs";
 
 /* `pollFrom` CONVERTE SATISFACAO EM PESQUISA, e ela passa pela porta pelo mesmo motivo das
@@ -34,7 +35,7 @@ export { pollFrom } from "../domain/opinion/index.mjs";
 /* `lockedBy` e a quinta porta, e ela responde a pergunta que o jogador faz antes de qualquer
    outra: por que eu nao tenho dinheiro. */
 /* ⚠ `forecast` E A SEXTA, e ela nasceu de um defeito medido: a Mesa montava a previsao a mao
-   com os quatro blocos do catalogo enquanto o turno votava com as onze bancadas do ELENCO, a
+   com os blocos crus do catalogo enquanto o turno votava com as bancadas do ELENCO, a
    verba com credito de memoria dentro e a aprovacao da rua.
    Em 1.012 votacoes, o veredito saia INVERTIDO em 27,2% delas.
    Ela e a porta que torna esse defeito impossivel de repetir: a tela nao tem mais como montar

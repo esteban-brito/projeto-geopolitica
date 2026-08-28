@@ -78,8 +78,8 @@ const MEMORY_FLOOR = 0.08;
  */
 function personHtml({ person, voting }) {
   /* A afirmação é verdadeira e a conclusão estava errada, e a captura mostrou por quê: no mês
-     1 NINGUÉM tem histórico, e a mesma frase saía **sete vezes na mesma tela**, uma debaixo
-     da outra, sob sete pessoas diferentes. */
+     1 NINGUÉM tem histórico, e a mesma frase saía **uma vez por pessoa na mesma tela**, uma
+     debaixo da outra, sob nomes diferentes. */
   const memory =
     person.memory > MEMORY_FLOOR
       ? { tone: "good", text: UI.congress.memoryGood }

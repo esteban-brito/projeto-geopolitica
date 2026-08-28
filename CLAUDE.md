@@ -74,14 +74,19 @@ npm run serve      # http://127.0.0.1:5173/
   registre no handoff;
 - **remover guarda ou prova** para destravar. Elas existem por defeito medido.
 
-## Sessão 21 (auditoria, 25/08/2026)
+## Onde o projeto está
 
-Duas rodadas de auditoria com agentes paralelos. **25 arquivos tocados, nenhum motor
-alterado.** Tudo é proteção (try/catch, escapeHtml, validação) ou limpeza (exports
-mortos, JSDoc duplicado). 13 provas novas em `passage.mjs`. Os dois itens pendentes
-são de schema bump (persistir `last` no save e remover `events` stream morto) —
-decisão do responsável. Próximo passo: O Glorioso, passo 2 (B1-B5). Detalhes
-completos no [`handoff.md`](docs/handoff.md).
+**Estado verde:** 12 guardas · 54 provas sintéticas · 131 arquivos · 253 provas ·
+passeio verde em duas janelas. **Próximo passo: O Glorioso, passo 2 (B1–B5)** — a
+faixa de áreas no Congresso.
+
+**Dois itens esperam decisão do responsável**, e os dois pedem o mesmo bump de
+esquema: persistir `last` no save (achado 46) e remover o stream `events`, que é
+código morto. Detalhes no [`handoff.md`](docs/handoff.md).
+
+⚠ **Número de catálogo envelhece na prosa, e é a família sem guarda** (`standards.md`
+§7): a prosa afirmou por sessões um Congresso de "onze bancadas" e "sete pessoas"
+enquanto o catálogo tinha outros. Antes de repetir um número, meça-o.
 
 ## Como responder
 

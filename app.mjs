@@ -284,11 +284,11 @@ function lawNow() {
 /**
  * A PREVISAO AO VIVO — e ela NAO e montada aqui.
  *
- * ⚠ ESTE ARQUIVO JA MONTOU A CAMARA A MAO, com os QUATRO blocos do catalogo e a
- * lealdade crua, enquanto o turno votava com as ONZE bancadas do ELENCO. Medido: em
- * 1.012 votacoes o veredito da Mesa saia INVERTIDO em 275 — 27,2%, com divergencia de
- * ate 35 votos. Ha uma porta so: `forecast` devolve a pauta, o placar, a banda e o que
- * cada bloco entrega, tudo da mesma camara que `playMonth` vai usar.
+ * ⚠ ESTE ARQUIVO JA MONTOU A CAMARA A MAO, com os blocos crus do catalogo e a lealdade
+ * crua, enquanto o turno votava com as bancadas do ELENCO — que sao outras, em outro
+ * numero. Medido: em 1.012 votacoes o veredito da Mesa saia INVERTIDO em 275 — 27,2%,
+ * com divergencia de ate 35 votos. Ha uma porta so: `forecast` devolve a pauta, o placar,
+ * a banda e o que cada bloco entrega, tudo da mesma camara que `playMonth` vai usar.
  */
 function mesaInput() {
   const seen = forecast(state, orders, CATALOG);
