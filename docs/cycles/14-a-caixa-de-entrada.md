@@ -6,11 +6,11 @@
 >
 > ⚠ **E ELE CONTINUA INCOMPLETO POR DECLARAÇÃO.** A investigação abriu quatro frentes. **Duas
 > fecharam** — o motor da correspondência e a view — e são a origem de tudo o que está aqui.
-> **Duas morreram no limite de sessão** e foram relançadas: o _wiring_ do entrypoint
-> (`openDispatch`, o não-lido, a ordem dos gestos, o F5) e a **geometria medida no navegador**
-> (truncamento por recorte, contraste no par renderizado, ritmo vertical, terceira janela).
+> **Duas morreram no limite de sessão** e foram relançadas. ✔ **O _wiring_ do entrypoint
+> fechou** — 15 cenários, ~120 meses dirigidos no navegador — e trouxe o **passo 1½** abaixo.
+> ⏳ **A geometria ainda roda.**
 >
-> **O que elas acharem entra aqui antes do passo 3.** Este plano não é uma lista fechada.
+> **O que ela achar entra aqui antes do passo 3.** Este plano não é uma lista fechada.
 
 ## Por que ela pesa
 
@@ -103,6 +103,74 @@ Congresso propondo.
 
 ---
 
+## PASSO 1½ — O GESTO ESTÁ QUEBRADO · save: zero
+
+> Achado pela frente de _wiring_, em 15 cenários e ~120 meses dirigidos num navegador de
+> verdade. **Nenhum destes é de desenho: são de comportamento.**
+
+### 1½.1 · ⛔ Um clique prende o jogador numa carta para sempre
+
+`app.mjs` — `openDispatch` é escrito **só** no clique e **nunca** é limpo: nem na virada do
+mês, nem na posse. E `fitted` força a carta aberta para dentro da bandeja mesmo estourando a
+capacidade. **Quem clica uma vez em qualquer ofício fica preso nele.**
+
+**Medido:** um clique num aviso velho, depois só "Avançar" — em **20 meses** a carta aberta
+continuou a mesma. Nos **3 de 3 meses em que havia pergunta com prazo** — uma delas _"vence
+neste mês"_ — o painel mostrava o aviso velho, e o rótulo do botão nomeava uma carta que o
+jogador nunca viu aberta.
+
+⚠ **E há um segundo defeito colado nele:** a linha marcada com `aria-current` fica **68px
+abaixo da área visível** de `.tray__list`, com `scrollTop: 0` e nenhum `scrollIntoView`. O
+jogador vê um documento à direita **sem nenhuma linha marcada à esquerda** — e a linha de tarja
+vermelha lê como selecionada, e não é.
+
+### 1½.2 · ⛔ A bandeja abre a pergunta MENOS urgente
+
+`newestFirst` não ordena `asking` entre si, e `state.mail` chega com a mais **nova** na frente
+— que é a de prazo mais **longo**. **Medido:**
+
+```
+* reported:texto-m3:5 | vence em 1 mês    ← ABERTA
+  reported:texto-m2:4 | vence neste mês   ← é a que expira
+botão: "fecha sem resposta: Cortar aposentadoria urbana · e mais 17"   (= a outra)
+```
+
+**O botão avisa que a carta X fecha sem resposta, e a bandeja abre a carta Y.** É o item 3.3
+visto pelo lado do gesto, e ele sobe de prioridade por causa disto.
+
+### 1½.3 · ⛔ A marca de lida não chega ao disco
+
+`app.mjs` grava só quando o **tamanho** do conjunto muda: `readMail.size !== before`. Quando a
+poda remove um id morto e a leitura acrescenta um novo **na mesma pintura**, o tamanho não muda
+e a escrita é pulada.
+
+**Medido no jogo normal**, 8 meses só avançando: a tela tinha três lidas e o disco tinha outras
+três, com uma carta **morta** entre elas — e a divergência durou quatro meses. Num caso limpo,
+**6 das 7 cartas voltam como não-lidas** depois do F5.
+
+### 1½.4 · ⚠ A poda do não-lido mede a TELA, e não a caixa
+
+`alive` é montado das `.tray__row` renderizadas, e a bandeja corta em 7. Carta que ainda está
+em `state.mail` — que guarda até 24 — mas caiu fora das sete **perde a marca de lida**. Medido:
+o conjunto nunca passou de 7 em 10 meses; ele é limitado pela tela.
+
+⚠ **Honestidade da medição:** a regressão visível — a carta voltar marcada como não-lida — não
+foi reproduzida, porque correspondência nova chega todo mês e as escondidas não voltaram ao
+topo. **O que está medido é a divergência entre disco e caixa.**
+
+### 1½.5 · ⚠ Todo gesto destrói o foco do teclado
+
+`paint()` reescreve `innerHTML` inteiro, e os três gestos da bandeja chamam `paint`. Medido: o
+foco vai para `BODY` nos três casos, e voltar ao botão "Aceitar" que acabou de ser apertado
+custou **oito Tabs**.
+
+### 1½.6 · ⚠ O F5 no meio do mês apaga as respostas marcadas
+
+`orders` é variável de módulo e só é persistido no avanço. Medido: duas respostas marcadas
+somem no F5, e **o único sinal é o rótulo do botão voltar a cobrar o silêncio**.
+
+---
+
 ## PASSO 2 — O PORTÃO APRENDE A VER
 
 > ### ⚖ Nenhum item entra sem que o portão SAIBA VER o defeito que ele conserta.
@@ -110,13 +178,22 @@ Congresso propondo.
 > É a regra dura da Restrição 2 do ciclo 13, e ela vale aqui com força: **três dos defeitos
 > acima atravessaram doze guardas, 253 provas e o passeio.**
 
-| #       | a checagem                                     | por que hoje ela é cega                                                             |
-| ------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **2.1** | `checkClamped` — o **quarto irmão** do passeio | recorte por linhas **não rola e não põe reticência**: os três irmãos não veem       |
-| **2.2** | toda carta que o motor produz chega à bandeja  | nada compara o que a tela recebe com o que ela renderiza                            |
-| **2.3** | o índice não volta no calendário               | nada lê a sequência de divisores                                                    |
-| **2.4** | a poda guarda as novas                         | ⚠ **a retenção não tem prova nenhuma, e nem é exportada** — nenhuma prova a alcança |
-| **2.5** | duas linhas do índice nunca leem igual         | o achado 24 foi dado como fechado **sem prova nenhuma**                             |
+| #       | a checagem                                    | por que hoje ela é cega                                                                     |
+| ------- | --------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **2.1** | ✔ **`checkClamped` entrou** — o quarto irmão  | recorte por linhas **não rola e não move `scrollHeight`**: a caixa só diagrama o que sobrou |
+| **2.2** | toda carta que o motor produz chega à bandeja | nada compara o que a tela recebe com o que ela renderiza                                    |
+| **2.3** | o índice não volta no calendário              | nada lê a sequência de divisores                                                            |
+| **2.4** | a poda guarda as novas                        | ⚠ **a retenção não tem prova nenhuma, e nem é exportada** — nenhuma prova a alcança         |
+| **2.5** | duas linhas do índice nunca leem igual        | o achado 24 foi dado como fechado **sem prova nenhuma**                                     |
+
+⭐ **E ELA JÁ PAGOU UM ACHADO DE ORDEM, sem acusar nada:** o recorte de `.tray__subject` está em
+**duas** linhas, e a prosa da folha ao lado dele diz _"três linhas e para"_. ⚠ **E o que as duas
+linhas comem é exatamente a cauda que distingue duas cartas** — `"…Cortar atenção básica · e
+mais 2"_ perde o fim, que é o único pedaço diferente entre as duas perguntas gêmeas do 3.4. **O
+recorte trabalha contra o conserto do 3.4**, e os dois têm de ser decididos juntos.
+
+⚠ **Verificada mordendo:** com um recorte de uma linha forçado, ela acusa `18>37`. Hoje ela é
+verde, e a exceção declarada é `.tray__subject` — o corte ali é desenho escrito na folha.
 
 ⚠ **2.1 É A QUARTA VEZ QUE ESTA FAMÍLIA COBRA O MESMO PREÇO.** A lição já está escrita em
 `docs/standards.md` §6 — _"toda checagem nasce sem alcance"_ — e a pergunta que falta é sempre

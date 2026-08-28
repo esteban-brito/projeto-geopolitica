@@ -155,6 +155,46 @@ try {
   }
 
   /**
+   * ⚠ O QUARTO IRMAO, e ele ve o que os outros tres nao veem. `-webkit-line-clamp` nao rola,
+   * nao poe reticencia no eixo X e NAO MOVE `scrollHeight`: a caixa de `-webkit-box` so
+   * diagrama as linhas que sobraram, entao o sinal padrao de estouro simplesmente nao existe.
+   * A unica forma de medir e SOLTAR o recorte e comparar a altura — e e o que ela faz, dentro
+   * de um `evaluate` so, sem repintura entre a mudanca e a restauracao.
+   * A EXCECAO DECLARADA E UMA SO: `.tray__subject`, o assunto no indice de 208px. O corte em
+   * duas linhas ali e desenho escrito na folha, e nao descuido.
+   *
+   * @param {string} where
+   */
+  async function checkClamped(where) {
+    const cut = await page.$$eval("#main *, .topbar *, .rail *", nodes =>
+      nodes
+        .filter(node => {
+          if (node.closest(".tray__subject")) return false;
+          const style = getComputedStyle(node);
+          if (!style.webkitLineClamp || style.webkitLineClamp === "none") return false;
+
+          const clamped = node.clientHeight;
+          const clamp = node.style.webkitLineClamp;
+          const display = node.style.display;
+          node.style.webkitLineClamp = "unset";
+          node.style.display = "block";
+          const full = node.scrollHeight;
+          node.style.webkitLineClamp = clamp;
+          node.style.display = display;
+
+          return full > clamped + 1;
+        })
+        .map(
+          node =>
+            `${node.className || node.tagName} "${(node.textContent ?? "").trim().slice(0, 24)}" ` +
+            `${node.scrollHeight}>${node.clientHeight}`,
+        ),
+    );
+
+    expect(cut.length === 0, `[${where}] texto cortado por recorte de linhas: ${cut.join(" | ")}`);
+  }
+
+  /**
    * PECA DESENHADA POR CIMA DE PECA — e este e um defeito que so a geometria pega.
    *
    * @param {string} where
@@ -324,6 +364,7 @@ try {
   await checkClipped("gabinete");
   await checkSwallowed("gabinete");
   await checkEllipsized("gabinete");
+  await checkClamped("gabinete");
   await checkContrast("gabinete");
   await checkNoOverlap("gabinete", ".cards > .card");
 
@@ -349,6 +390,7 @@ try {
   await checkClipped("congresso");
   await checkSwallowed("congresso");
   await checkEllipsized("congresso");
+  await checkClamped("congresso");
   await checkContrast("congresso");
   expect(
     (await page.locator(".tally__forecast").count()) === 0,
@@ -362,6 +404,7 @@ try {
   await checkClipped("area");
   await checkSwallowed("area");
   await checkEllipsized("area");
+  await checkClamped("area");
   await checkContrast("area");
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento veio sem programas");
 
@@ -526,6 +569,7 @@ try {
   await checkClipped("financas");
   await checkSwallowed("financas");
   await checkEllipsized("financas");
+  await checkClamped("financas");
   await checkContrast("financas");
 
   expect(
@@ -673,6 +717,7 @@ try {
     await checkClipped(`900px/${secao}`);
     await checkSwallowed(`900px/${secao}`);
     await checkEllipsized(`900px/${secao}`);
+    await checkClamped(`900px/${secao}`);
   }
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(600);
