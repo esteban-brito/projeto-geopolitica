@@ -436,11 +436,15 @@ export function describeMail({
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.minorityBody)}</span>` +
               `</div>`,
+            /* ⚠ O NUMERO E O DA CARTA, e nao o de hoje: lido do estado corrente, este alarme
+               ia de 229 para 227 cadeiras entre um mes e o seguinte. `chamber` fica como
+               reserva para a carta antiga, gravada antes de o alarme carregar o proprio. */
             annex:
               cardHtml(
                 UI.cabinet.baseLine,
-                `<b>${seats(chamber.base)}</b><small>${escapeHtml(UI.inbox.minorityNote)}</small>`,
-              ) + cardHtml(UI.inbox.majority, `<b>${seats(chamber.majority)}</b>`),
+                `<b>${seats(letter.now ?? chamber.base)}</b>` +
+                  `<small>${escapeHtml(UI.inbox.minorityNote)}</small>`,
+              ) + cardHtml(UI.inbox.majority, `<b>${seats(letter.was ?? chamber.majority)}</b>`),
             action: UI.cabinet.congressAction,
             target: "congress",
           });
@@ -460,10 +464,13 @@ export function describeMail({
             ...(group
               ? {
                   annex:
+                    /* ⚠ A PRESSAO E A DO DIA EM QUE ELE FERVEU: medido, ela ia de 70 para 75
+                       um mes depois, porque a tela lia a caldeira de hoje. */
                     cardHtml(
                       UI.inbox.boilingPressure,
-                      `<b>${seats(group.pressure)}</b>` +
-                        `<small>${escapeHtml(UI.inbox.boilingNote)} ${seats(group.boil)}</small>`,
+                      `<b>${seats(letter.now ?? group.pressure)}</b>` +
+                        `<small>${escapeHtml(UI.inbox.boilingNote)} ` +
+                        `${seats(letter.was ?? group.boil)}</small>`,
                     ) +
                     cardHtml(
                       UI.inbox.boilingWeight,

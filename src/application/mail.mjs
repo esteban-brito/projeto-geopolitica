@@ -129,9 +129,11 @@ export function notice({ kind, id, subject, month }) {
  * @param {string} input.subject
  * @param {number} input.month
  * @param {string | null} [input.from] o id de quem assina, quando ha alguem
+ * @param {number | null} [input.was] o limiar que ele cruzou, quando ha um
+ * @param {number | null} [input.now] o numero que o disparou, no mes em que disparou
  * @returns {Letter}
  */
-export function alarm({ kind, id, subject, month, from = null }) {
+export function alarm({ kind, id, subject, month, from = null, was = null, now = null }) {
   return {
     id: `${kind}:${id}`,
     kind,
@@ -144,8 +146,11 @@ export function alarm({ kind, id, subject, month, from = null }) {
     from,
     lever: null,
     level: null,
-    was: null,
-    now: null,
+    /* ⚠ O NUMERO VIAJA COM A CARTA, e antes a tela o lia do estado DE HOJE: medido, um alarme
+       de fervura do mes 6 mostrava 70 e no mes 7 mostrava 75, e o de minoria ia de 229 para
+       227. Carta que muda depois de chegar nao e carta. */
+    was,
+    now,
     weight: null,
     answer: null,
     /* JA CHEGA FECHADO, como todo aviso: nao ha o que responder aqui. */

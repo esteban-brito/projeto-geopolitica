@@ -5629,3 +5629,51 @@ Ele pediu para profissionalizar tudo, e a conferência mudou três marcas:
   mais remetente, e acusa `out · 2027` quando forçada.
 
 **Passo 2 fechado, 5 de 5.** O passo 1½ é quatro de seis e o 3½ é um de cinco.
+
+---
+
+## Sessão 26 — a caixa vira caixa (28/08/2026)
+
+**Sessão longa, e quase tudo nasceu de coisa que ele viu jogando.** O plano foi conferido item a
+item contra o código antes de qualquer marca mudar.
+
+### O que ele pediu, e o que a medição respondeu
+
+- **a linha clicada virou papel branco.** No branco o prazo perde a cor: amber e vermelho claro
+  sobre branco não passam o piso AA em 10px, e quem carrega urgência é a **tarja**, que já é a
+  dona declarada do prazo. Inventar duas cores só para essa linha criaria um segundo par
+  concorrente para a mesma função;
+- **"Mês sem pauta" ia para o fim do bloco.** Ela era concatenada depois da lista, e a ordem por
+  mês tem a posição como desempate;
+- **a carta clicada não fica.** Ela agora atravessa a virada do mês e o F5, e **nasce na primeira
+  carta do mandato** — nulo queria dizer "a de cima", e a de cima troca todo mês;
+- **as mensagens se atualizavam sozinhas.** Ver o passo 3¾: 3 de 33 cartas mudavam de texto
+  depois de chegar.
+
+### O que a sonda achou sozinha
+
+Abrir toda carta em 30 meses, com uma sonda que reclama de invariante quebrada, achou quatro
+defeitos que nenhuma guarda via:
+
+1. **o rascunho do mês morria inteiro no F5** — a resposta marcada, os níveis, as faixas e a
+   verba. O plano só registrava a resposta. Agora mora em `planalto:rascunho`, peneirado por
+   tipo na leitura, **sem bump de esquema**: rascunho não é mandato;
+2. **o foco do teclado caía em `BODY`** a cada pintura;
+3. **assunto escapado duas vezes** em duas espécies;
+4. **exigência de grupo desconhecido** começava por `": "` — item 5.4, achado por acidente.
+
+### A lição, e ela se repetiu duas vezes hoje
+
+⚠ **Guarda que não morde é decoração, e as duas que escrevi hoje nasceram assim.** A do 2.5
+comparava a linha **inteira** do índice, prazo incluído — e o defeito relatado é _"assunto
+idêntico, remetente idêntico, e só a linha de prazo separando"_. **Só apareceu porque forcei a
+mordida e ela não mordeu.**
+
+⭐ **E um defeito antigo só ficou alcançável hoje:** quando a carta clicada passou a atravessar o
+mês, o passeio chegou a um estado que nunca alcançava e reprovou por contraste — **2,58 contra
+um piso de 4,5**. A causa é de meses atrás: o aviso do botão usa `color: var(--sheet)`, e
+`--sheet` virou escuro quando o documento deixou de ser pergaminho. **A regra não mudou; o token
+que ela citava mudou por baixo dela.**
+
+**259 provas, 12 guardas, passeio verde.** Passo 2 fechado; o 1½ é cinco de seis e o 3½ é quatro
+de cinco.

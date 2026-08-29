@@ -1119,7 +1119,14 @@ function alarmsOf(state, now, impeachment, catalog, after) {
   const seatsNow = baseCount({ parties: catalog.parties, loyalty: after.loyalty });
   if (seatsBefore >= SIMPLE_MAJORITY && seatsNow < SIMPLE_MAJORITY) {
     written.push(
-      alarm({ kind: "minority", id: "minority", subject: "minority", month: state.month }),
+      alarm({
+        kind: "minority",
+        id: "minority",
+        subject: "minority",
+        month: state.month,
+        was: SIMPLE_MAJORITY,
+        now: seatsNow,
+      }),
     );
   }
 
@@ -1137,6 +1144,8 @@ function alarmsOf(state, now, impeachment, catalog, after) {
         subject: lobby.id,
         month: state.month,
         from: lobby.id,
+        was: catalog.pressure.boil,
+        now: after.pressure[lobby.id] ?? 0,
       }),
     );
   }

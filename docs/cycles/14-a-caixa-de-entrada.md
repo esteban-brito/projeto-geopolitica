@@ -471,6 +471,37 @@ quebra que já deixou a coluna irregular. Custo medido: **+14px por linha que pe
 
 ---
 
+## PASSO 3¾ — A CARTA É UM RETRATO, E NÃO UMA JANELA · save: um item
+
+> **Palavras dele, 28/08/2026:** _"não entendo por que as mensagens que eu recebo não funcionam
+> realmente como mensagens… as mensagens parece que se atualizam em tempo real. Não parece
+> Football Manager."_
+
+**Medido, abrindo toda carta a cada mês por 24 meses:** de **33 cartas vistas, 3 mudavam de
+texto depois de chegar**. Elas liam o estado de HOJE, e não o do dia em que foram escritas.
+
+| carta             | mês   | mudou de         | para     |
+| ----------------- | ----- | ---------------- | -------- |
+| alarme de fervura | 6→7   | pressão **70**   | **75**   |
+| alarme de minoria | 14→15 | **229** cadeiras | **227**  |
+| carta de posse    | 0→1   | R$ **2,15** tri  | **2,16** |
+
+### ✔ Os dois alarmes — fechados
+
+O número passa a **viajar com a carta**: `alarm()` ganhou `was` e `now`, que já existiam na
+forma da carta e estavam nulos, e `turn.mjs` os preenche no mês em que o alarme dispara. A tela
+lê `letter.now ?? o vivo` — a reserva existe para a carta gravada antes desta mudança.
+**Remedido: 3 de 33 → 1 de 33.**
+
+### ⛔ A carta de posse — espera decisão dele
+
+O anexo dela lê `inherited.mandatory`, que o entrypoint calcula com o estado **corrente**. A
+herança é um fato do mês 0, e congelá-la exige o valor gravado na criação da partida — **o mesmo
+bump de esquema que `last` (achado 46) já pede**. Enquanto ele não entrar, o número da primeira
+carta do jogo anda com o mandato.
+
+---
+
 ## PASSO 4 — A FOLHA PARA DE SER 75% BRANCA
 
 **Quatro espécies são estruturalmente vazias** — a Mesa pautou, o texto morreu na gaveta, o

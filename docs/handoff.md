@@ -168,6 +168,11 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 > branco e quatro bugs achados por sonda: escape duplo no assunto, exigência de grupo sem nome
 > começando por ": ", contraste 2,58 no aviso do botão, e a bandeja pulando sozinha de carta.
 >
+> ⚠ **E ENTROU UM PASSO NOVO, o 3¾:** _"as mensagens parece que se atualizam em tempo real"_.
+> Medido: **3 de 33 cartas mudavam de texto depois de chegar**. Os dois alarmes foram fechados —
+> o número viaja com a carta —, e sobra **a carta de posse**, que pede o mesmo bump de esquema
+> que `last` (achado 46). **Passo 2 fechado; 1½ em cinco de seis; 3½ em quatro de cinco.**
+>
 > ⭐ **O 3.3 FOI REVERTIDO POR ELE, e o 3.4 fechou de graça junto.** A seção "Precisam de
 > resposta" saiu: o índice é **calendário puro** — cada carta no bloco do mês em que chegou,
 > meses do mais novo para o mais velho, e dentro do bloco a ordem que o motor monta. O teto de
