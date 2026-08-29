@@ -493,6 +493,18 @@ forma da carta e estavam nulos, e `turn.mjs` os preenche no mês em que o alarme
 lê `letter.now ?? o vivo` — a reserva existe para a carta gravada antes desta mudança.
 **Remedido: 3 de 33 → 1 de 33.**
 
+### ✔ O fechamento do mês virou registro guardado — **bump de esquema, versão 19**
+
+**Decisão dele em 29/08/2026.** O cartão do mês era montado na tela a partir de `last`, variável
+de módulo: **a caixa mostrava um único fechamento, o do mês que acabou**, e o anterior sumia a
+cada avanço — e sumia inteiro no F5. _"Num email ele ficaria lá."_
+
+⭐ **`state.months` guarda os SETE valores que a carta mostra**, e não o relatório inteiro — ele
+tem 24 campos, e 24 deles × 24 meses no save seria peso sem leitor. Teto igual ao da caixa
+(`CARRY`). Medido depois: cada mês fica no bloco dele, e atravessa o F5.
+
+⚠ **O save antigo é recusado** — a versão 19 não converte a 18. É o preço que ele aceitou.
+
 ### ⛔ A carta de posse — espera decisão dele
 
 O anexo dela lê `inherited.mandatory`, que o entrypoint calcula com o estado **corrente**. A

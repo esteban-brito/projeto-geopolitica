@@ -15,7 +15,7 @@ import {
   whipCount,
 } from "../../src/domain/congress/index.mjs";
 import { alarm } from "../../src/application/mail.mjs";
-import { describeMail, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
+import { describeMail, describeMonth, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
 import { vitalsHtml } from "../../src/ui/screens/dashboard.mjs";
 import { addressed } from "../../src/ui/strings.mjs";
 import {
@@ -1199,4 +1199,42 @@ test("A BANDEJA ABRE A PRIMEIRA DO MES MAIS NOVO, e o aberto sempre tem linha", 
     /data-dispatch="pergunta-velha"[^>]*aria-current="true"/,
     "o documento aberto ficou sem linha marcada no indice",
   );
+});
+
+/* ⚠ O FECHAMENTO DO MES ERA MONTADO NA TELA a partir de `last`, variavel de modulo: o resumo do
+   mes anterior sumia da caixa a cada avanco, e sumia inteiro no F5. Palavras dele: "num email
+   ele ficaria la". Ele virou registro guardado, e esta prova cobra a leitura desse registro. */
+test("O FECHAMENTO DO MES SE LE DO REGISTRO GUARDADO, e nao do relatorio vivo", () => {
+  /** @param {number} month @param {number | null} votes */
+  const fechado = (month, votes) => ({
+    month,
+    bill: null,
+    judged: /** @type {{ kind: string, label: string } | null} */ (null),
+    votes,
+    quorum: 257,
+    promisedCost: 0,
+    paidCost: 0,
+    balance: {
+      streetWas: 30,
+      streetNow: 28,
+      seatsWas: 300,
+      seatsNow: 290,
+      roomWas: 10,
+      roomNow: 9,
+    },
+  });
+
+  /* SEM PAUTA E SEM VOTACAO: o assunto e o do mes que nao decidiu nada, e o placar cala. */
+  const quieto = describeMonth({ report: fechado(3, null), adviser: null });
+  assert.equal(quieto.id, "month-3", `o id do fechamento saiu como ${quieto.id}`);
+  assert.equal(quieto.subject, UI.report.noBill, `o assunto saiu como "${quieto.subject}"`);
+  assert.ok(!quieto.body.includes(UI.inbox.voted), "o mes sem votacao imprimiu placar");
+
+  /* COM VOTACAO: o placar sai do registro, e o quorum ao lado dele. */
+  const votado = describeMonth({ report: fechado(4, 312), adviser: null });
+  assert.ok(votado.body.includes("312"), "o placar guardado nao chegou a carta");
+  assert.ok(votado.body.includes("257"), "o quorum guardado nao chegou a carta");
+
+  /* ⚠ E DOIS MESES SAO DUAS CARTAS, com ids diferentes: era isso que nao existia. */
+  assert.notEqual(quieto.id, votado.id, "dois meses fechados devolveram o mesmo id");
 });

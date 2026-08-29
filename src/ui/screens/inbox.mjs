@@ -145,19 +145,17 @@ const DISPATCH_TAG = new Map([
  * achou.
  *
  * @param {object} input
- * @param {import("../../application/turn.mjs").Report} input.report
+ * @param {import("../../state/state.mjs").MonthCard} input.report
  * @param {{ name: string, office: string, label: string, reach: number, gender?: "f" | "m" } | null} input.adviser
  * @returns {Dispatch}
  */
 export function describeMonth({ report, adviser }) {
-  const bill = report.agenda.proposal;
-
-  const judged = report.events.find(event => event.kind === "passed" || event.kind === "rejected");
+  const judged = report.judged;
 
   const subject = judged
     ? `${judged.kind === "passed" ? UI.inbox.passed : UI.inbox.rejected}: ${judged.label}`
-    : bill
-      ? `${UI.inbox.filed}: ${bill.label}`
+    : report.bill
+      ? `${UI.inbox.filed}: ${report.bill}`
       : UI.report.noBill;
 
   /** @type {string[]} */
@@ -165,11 +163,11 @@ export function describeMonth({ report, adviser }) {
 
   /* O PLACAR, e so quando houve votacao: decreto nao tem placar, e imprimir um travessao no
      lugar do numero ja foi defeito nesta tela uma vez. */
-  if (report.tally) {
+  if (report.votes !== null) {
     lines.push(
       `<span>${escapeHtml(UI.inbox.voted)} ` +
-        `<b data-numeric>${seats(report.tally.votes)}</b> ` +
-        `${escapeHtml(UI.mesa.needs)} <b data-numeric>${seats(report.agenda.quorum)}</b></span>`,
+        `<b data-numeric>${seats(report.votes)}</b> ` +
+        `${escapeHtml(UI.mesa.needs)} <b data-numeric>${seats(report.quorum)}</b></span>`,
     );
   }
 

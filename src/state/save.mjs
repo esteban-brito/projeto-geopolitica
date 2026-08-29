@@ -65,6 +65,7 @@ export function deserialize(text) {
     "memory",
     "streams",
     "series",
+    "months",
     "bills",
     "mail",
     "pressure",

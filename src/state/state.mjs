@@ -45,6 +45,23 @@ import { streamFrom } from "./random.mjs";
  * @property {number[]} debtRatio
  * @property {number[]} primary - o resultado primario do mes, em bilhoes
  * @property {Record<string, number[]>} areas - o indice de cada area, mes a mes
+/**
+ * O FECHAMENTO DE UM MES, no tamanho em que a carta o mostra — e nao o relatorio inteiro, que
+ * tem vinte e quatro campos e nao caberia vinte e quatro vezes no save.
+ *
+ * @typedef {object} MonthCard
+ * @property {number} month
+ * @property {string | null} bill - o rotulo do texto pautado, quando houve um
+ * @property {{ kind: string, label: string } | null} judged - o que o plenario decidiu
+ * @property {number | null} votes - o placar, e nulo quando nao houve votacao
+ * @property {number} quorum
+ * @property {number} promisedCost
+ * @property {number} paidCost
+ * @property {{ streetWas: number, streetNow: number, seatsWas: number, seatsNow: number,
+ *   roomWas: number, roomNow: number }} balance
+ */
+
+/**
  * @typedef {object} Letter
  * @property {string} id - deterministico, e por isso a mesma carta nao chega duas vezes
  * @property {"posse" | "tabled" | "reported" | "forgotten" | "passed" | "rejected" | "demand"
@@ -89,6 +106,7 @@ import { streamFrom } from "./random.mjs";
  * @property {Series} series - o que ja aconteceu, para o painel desenhar
  * @property {Record<string, number>} levels - a intensidade VIGENTE de cada programa
  * @property {Norm[]} norms - as leis escritas, na ordem em que foram escritas
+ * @property {MonthCard[]} months - o fechamento de cada mes, do mais novo ao mais velho
  * @property {Bill[]} bills - os textos em tramitacao, do mais antigo ao mais novo
  * @property {Letter[]} mail - a correspondencia que espera, da mais antiga a mais nova
  * @property {Record<string, number>} pressure - a CALDEIRA: quanto cada grupo de
@@ -107,7 +125,7 @@ import { streamFrom } from "./random.mjs";
    da 10 guarda a PESQUISA, quando o que o jogo passou a precisar e a SATISFACAO por
    segmento — e a conversao nao tem inversa util. Chuta-la distribuiria igual entre as tres
    classes, apagando a polarizacao, que e a informacao que SONDA existe para dar. */
-export const SCHEMA_VERSION = 18;
+export const SCHEMA_VERSION = 19;
 
 /* ⚠ O TRATAMENTO E ESCOLHA DO JOGADOR, e nao deducao do nome. Antes a interface
    tinha SETE frases com "o senhor" digitadas fixas, e o gerador sorteia nomes femininos e
@@ -213,6 +231,11 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
     /* A GAVETA NASCE VAZIA, e vazia aqui quer dizer o que parece: o presidente toma posse sem
        nada protocolado em nome dele. */
     bills: [],
+    /* ⚠ O FECHAMENTO DE CADA MES E CARTA GUARDADA, e nao um cartao montado na hora. Ele era
+       lido de `last`, variavel de modulo: o resumo do mes anterior sumia da caixa a cada
+       avanco e sumia inteiro no F5. Palavras dele: "num email ele ficaria la". */
+    /** @type {MonthCard[]} */
+    months: [],
     /* ⚠ A CAIXA DE ENTRADA NAO NASCE VAZIA, e essa e a unica excecao a regra de cima — e ela
        e um conserto, e nao um capricho. */
     mail: [
@@ -261,6 +284,7 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
  * capacity: Capacity,
  * macro: MacroState,
  * series: Series,
+ * months: MonthCard[],
  * mood: Record<string, number>,
  * levels: Record<string, number>,
  * norms: Norm[],
@@ -292,6 +316,7 @@ export function reduce(state, action) {
         capacity: action.capacity,
         macro: action.macro,
         series: action.series,
+        months: action.months,
         mood: action.mood,
         levels: action.levels,
         norms: action.norms,

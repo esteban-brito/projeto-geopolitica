@@ -34,6 +34,7 @@ function resolutionOf(state) {
     macro: state.macro,
     mood: state.mood,
     series: state.series,
+    months: state.months,
     levels: state.levels,
     norms: state.norms,
     bills: state.bills,
@@ -179,6 +180,8 @@ const anyState = fc.record({
      ele apenas carrega — inclusive um pais em recessao com juro de 40%. */
   macro: anyMacro,
   series: anySeries,
+  /* ⚠ O FECHAMENTO DE CADA MES entrou na versao 19 do save: o reducer apenas o carrega. */
+  months: fc.constant(/** @type {import("../../src/state/state.mjs").MonthCard[]} */ ([])),
   capacity: anyCapacity,
   levels: fc.constant(Object.fromEntries(PROGRAMS.map(p => [p.id, p.initial]))),
   norms: anyNorms,

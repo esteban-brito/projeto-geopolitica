@@ -173,6 +173,10 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 > o número viaja com a carta —, e sobra **a carta de posse**, que pede o mesmo bump de esquema
 > que `last` (achado 46). **Passo 2 fechado; 1½ em cinco de seis; 3½ em quatro de cinco.**
 >
+> ⭐ **29/08: o bump de esquema entrou, versão 19.** O fechamento de cada mês virou registro
+> guardado em `state.months` — a caixa mostrava UM cartão de mês, e agora mostra todos, e eles
+> atravessam o F5. **O achado 46 fecha junto.** ⚠ **Save da versão 18 é recusado.**
+>
 > ⭐ **O 3.3 FOI REVERTIDO POR ELE, e o 3.4 fechou de graça junto.** A seção "Precisam de
 > resposta" saiu: o índice é **calendário puro** — cada carta no bloco do mês em que chegou,
 > meses do mais novo para o mais velho, e dentro do bloco a ordem que o motor monta. O teto de

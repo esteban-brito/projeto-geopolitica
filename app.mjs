@@ -485,7 +485,11 @@ function cabinetInput(current) {
            e por mes e o desempate e a posicao na lista, entao a carta mais nova do mes caia
            embaixo das que ja estavam la. Palavras dele: "a mensagem Mes sem pauta vai pra
            ultimo na ordem, sendo que ela e mais recente". */
-        ...(last ? [describeMonth({ report: last.report, adviser: last.adviser })] : []),
+        /* ⚠ UM CARTAO POR MES FECHADO, e nao so o ultimo: eles agora moram no save, entao o
+           resumo de marco continua na caixa em dezembro — e atravessa o F5. */
+        ...state.months.map((/** @type {import("./src/state/state.mjs").MonthCard} */ fechado) =>
+          describeMonth({ report: fechado, adviser: governmentOf(state, CATALOG).adviser }),
+        ),
         /* ⚠ A ORDEM NAO MORA MAIS AQUI, e a mudanca e de endereco e nao de regra: quem
            ordena e `trayHtml`, onde ela e funcao pura e tem prova. No entrypoint ela so era
            alcancavel pelo passeio, e passou meses com as perguntas nao ordenadas entre si. */

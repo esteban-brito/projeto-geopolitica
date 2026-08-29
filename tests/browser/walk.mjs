@@ -730,7 +730,11 @@ try {
     return {
       x: list.scrollWidth - list.clientWidth,
       rows: list.querySelectorAll(".tray__row").length,
-      letters: Array.isArray(save.mail) ? save.mail.length : -1,
+      /* ⚠ A CAIXA TEM DUAS FONTES desde a versao 19 do save: as cartas e o fechamento de cada
+         mes, que virou registro guardado em vez de cartao montado na hora. */
+      letters:
+        (Array.isArray(save.mail) ? save.mail.length : -1) +
+        (Array.isArray(save.months) ? save.months.length : 0),
       months: [...list.querySelectorAll(".tray__month")].map(node => node.textContent ?? ""),
       twins,
     };

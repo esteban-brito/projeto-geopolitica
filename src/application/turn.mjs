@@ -26,6 +26,7 @@ import { waivedOf } from "../data/programs.mjs";
 import { bandOf, compose, honour, spendOf } from "./agenda.mjs";
 import { DRAWER_LIFE, forgotten, proposalOf, reports, tables } from "./passage.mjs";
 import {
+  CARRY,
   alarm,
   amendment,
   demand,
@@ -1779,6 +1780,35 @@ export function playMonth(state, orders = {}, options = {}) {
       /* O FLUXO VEM DA TRAMITACAO, e nao do placar: quem sorteia e a votacao do plenario, e
          ela agora acontece dentro de `advanceBills`. */
       stream: passage.stream,
+      /* ⚠ O MES FECHADO VIRA REGISTRO GUARDADO, e o teto e o mesmo da caixa: `CARRY`. Ele era
+         montado na tela a partir de `last`, entao o resumo do mes anterior sumia a cada avanco
+         e sumia inteiro no F5. Guardamos os SETE valores que a carta mostra, e nao o relatorio
+         inteiro — vinte e quatro campos vezes vinte e quatro meses no save. */
+      months: [
+        {
+          month: state.month,
+          bill: agenda.proposal?.label ?? null,
+          judged: (() => {
+            const hit = passage.events.find(
+              event => event.kind === "passed" || event.kind === "rejected",
+            );
+            return hit ? { kind: hit.kind, label: hit.label } : null;
+          })(),
+          votes: tally?.votes ?? null,
+          quorum: agenda.quorum,
+          promisedCost,
+          paidCost,
+          balance: {
+            streetWas: balance.streetWas,
+            streetNow: balance.streetNow,
+            seatsWas: balance.seatsWas,
+            seatsNow: balance.seatsNow,
+            roomWas: balance.roomWas,
+            roomNow: balance.roomNow,
+          },
+        },
+        ...state.months,
+      ].slice(0, CARRY),
     }),
     report: {
       month: state.month,
