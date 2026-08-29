@@ -103,7 +103,7 @@ Congresso propondo.
 
 ---
 
-## PASSO 1½ — ◐ QUATRO DE SEIS · O GESTO ESTAVA QUEBRADO
+## PASSO 1½ — ✔ FEITO em 28/08/2026 · O GESTO ESTAVA QUEBRADO
 
 > Achado pela frente de _wiring_, em 15 cenários e ~120 meses dirigidos num navegador de
 > verdade. **Nenhum destes é de desenho: são de comportamento.**
@@ -170,16 +170,29 @@ caixa vira linha, então `alive` passa a cobrir `state.mail` inteiro. ⚠ **E o 
 guarda, e não sorte:** o passeio compara **linhas do índice com cartas do save** e reprova se
 divergirem (item 2.2). `alive` continuar lendo o DOM deixou de ser defeito.
 
-### 1½.5 · ⚠ Todo gesto destrói o foco do teclado
+### 1½.5 · ✔ Todo gesto destrói o foco do teclado
 
 `paint()` reescreve `innerHTML` inteiro, e os três gestos da bandeja chamam `paint`. Medido: o
 foco vai para `BODY` nos três casos, e voltar ao botão "Aceitar" que acabou de ser apertado
 custou **oito Tabs**.
 
-### 1½.6 · ⚠ O F5 no meio do mês apaga as respostas marcadas
+⭐ **Fechado:** `paint()` guarda um seletor do elemento ativo — `id`, ou os próprios `data-` que
+os manipuladores já leem — e o devolve por último, com `preventScroll`. **Guarda no passeio,
+verificada mordendo:** com o retorno desligado ela acusa `o clique na linha jogou o foco em
+"BODY"`.
+
+### 1½.6 · ✔ O F5 no meio do mês apaga as respostas marcadas
 
 `orders` é variável de módulo e só é persistido no avanço. Medido: duas respostas marcadas
 somem no F5, e **o único sinal é o rótulo do botão voltar a cobrar o silêncio**.
+
+⚠ **E O DEFEITO ERA MAIOR QUE O REGISTRADO:** some a resposta, e somem junto **os níveis, as
+faixas e a verba** que o jogador montou no mês. O item falava só da resposta.
+
+⭐ **Fechado sem bump de esquema:** o rascunho mora em `planalto:rascunho`, ao lado da marca de
+leitura, e é peneirado por tipo na leitura — rascunho não é mandato. Mês diferente é rascunho de
+outro mês, e esse morre. **Guarda no passeio, verificada mordendo:** `o mês estava em 58 e voltou
+64 depois de recarregar`.
 
 ---
 
@@ -348,7 +361,7 @@ maior que a Caixa.
 
 ---
 
-## PASSO 3½ — A GEOMETRIA · save: zero
+## PASSO 3½ — ◐ QUATRO DE CINCO · A GEOMETRIA · save: zero
 
 > Medido em três janelas (1440×980, 1440×900, **1280×800**) e 24 meses. ⚠ **A terceira janela
 > não é capricho: o passeio não roda nela, e é lá que três defeitos aparecem inteiros.**
@@ -396,7 +409,7 @@ diferentes renderizam string idêntica.
 ou 4. **É a causa raiz do item 3.4**, e ela é maior do que eu tinha medido: não são duas
 perguntas gêmeas, são dois terços do índice inteiro perdendo o fim.
 
-### 3½.3 · ⛔ A 1280×800 o anexo corta a coluna da SOMA
+### 3½.3 · ✔ A 1280×800 o anexo corta a coluna da SOMA
 
 | anexo                        | visível | pede | escondido                                      |
 | ---------------------------- | ------- | ---- | ---------------------------------------------- |
@@ -418,6 +431,9 @@ Medido, três tentativas:
 ⭐ **Sete colunas numéricas não cabem em 307px, e mover largura só muda o defeito de coluna.** As
 saídas reais são duas, e as duas são decisão dele: **anunciar a rolagem lateral** (o plano B já
 declarado, que hoje funciona mas é invisível) ou **transpor a tabela** em janela estreita.
+
+⭐ **Ele escolheu anunciar.** Sombra nas duas bordas com `background-attachment: local`, que some
+sozinha quando não há o que rolar — sem uma linha de script para medir.
 
 ⚠ **E a medição achou um vizinho que ninguém media:** a coluna dos cartões já corta **1 elemento
 a 1280×800 hoje**, sem nenhuma mudança. O portão não roda nessa janela.

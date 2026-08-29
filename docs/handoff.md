@@ -171,7 +171,7 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 > ⚠ **E ENTROU UM PASSO NOVO, o 3¾:** _"as mensagens parece que se atualizam em tempo real"_.
 > Medido: **3 de 33 cartas mudavam de texto depois de chegar**. Os dois alarmes foram fechados —
 > o número viaja com a carta —, e sobra **a carta de posse**, que pede o mesmo bump de esquema
-> que `last` (achado 46). **Passo 2 fechado; 1½ em cinco de seis; 3½ em quatro de cinco.**
+> que `last` (achado 46). **Passos 1, 1½, 2 e 3 fechados; 3½ em quatro de cinco.**
 >
 > ⭐ **29/08: o bump de esquema entrou, versão 19.** O fechamento de cada mês virou registro
 > guardado em `state.months` — a caixa mostrava UM cartão de mês, e agora mostra todos, e eles
