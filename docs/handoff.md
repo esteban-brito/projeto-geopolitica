@@ -160,9 +160,13 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 
 ### ▶ COMECE POR AQUI — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
 
-> **Retomada em uma linha:** branch `caixa-de-entrada`, seis commits à frente de `main`.
-> **Passos 1, 2 e 3 feitos.** O **1½ é quatro de seis** e o **3½ é um de cinco**. O próximo é o
-> resto do **3½ — a geometria**, e o pior item dele é o 3½.1.
+> **Retomada em uma linha:** branch `caixa-de-entrada`, seis commits à frente de `main` mais o
+> trabalho de 3½ na árvore. **Passos 1, 2 e 3 feitos.** O **1½ é quatro de seis** e o **3½ é
+> três de cinco** — falta só o **3½.5**, de desenho.
+>
+> ⭐ **Sessão 26 fechou o 3½.1, o 3½.3, o 3½.4, o 1½.5 e o 1½.6**, mais a linha clicada em papel
+> branco e quatro bugs achados por sonda: escape duplo no assunto, exigência de grupo sem nome
+> começando por ": ", contraste 2,58 no aviso do botão, e a bandeja pulando sozinha de carta.
 >
 > ⭐ **O 3.3 FOI REVERTIDO POR ELE, e o 3.4 fechou de graça junto.** A seção "Precisam de
 > resposta" saiu: o índice é **calendário puro** — cada carta no bloco do mês em que chegou,

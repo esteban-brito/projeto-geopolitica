@@ -20,6 +20,8 @@ const BROWSER = {
      por controle —, e delegacao obriga a perguntar o que foi tocado. `instanceof
      HTMLInputElement` e essa pergunta para os controles deslizantes. */
   HTMLInputElement: "readonly",
+  /* `CSS.escape` monta o seletor que devolve o foco depois de `paint()` reescrever a tela. */
+  CSS: "readonly",
 };
 
 const NODE = {

@@ -177,12 +177,18 @@
     border-color: rgba(var(--bordo-rgb), 0.85);
   }
 
+  /* ⚠ A TINTA ERA `--sheet`, E ELA VIROU ESCURA: quando o documento deixou de ser pergaminho
+     e virou lâmina, `--sheet` passou a `#0c1220` e esta linha ficou escuro sobre bordô —
+     **2,58:1 num texto de 10px**, contra um piso de 4,5. A regra não mudou; o token que ela
+     citava mudou debaixo dela.
+     ⚠ E o portão só viu isto hoje, porque o estado só passou a ser alcançável quando a carta
+     clicada passou a atravessar a virada do mês. */
   .action--primary[data-price="true"] .action__hint {
     padding: 2px 7px;
     border-radius: var(--radius-stamp);
     background: var(--bordo);
     font-weight: 700;
-    color: var(--sheet);
+    color: var(--ink);
   }
 
   .action[disabled] {

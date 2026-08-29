@@ -82,7 +82,7 @@ verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
 **Há DOIS planos na mesa**, e o segundo é o que está em execução:
 
 - [`cycles/14-a-caixa-de-entrada.md`](docs/cycles/14-a-caixa-de-entrada.md) — **em execução.**
-  Sete passos, com os passos 1, 2 e 3 feitos, o 1½ em quatro de seis e o 3½ em um de cinco. As quatro frentes de
+  Sete passos, com os passos 1, 2 e 3 feitos, o 1½ em quatro de seis e o 3½ em três de cinco. As quatro frentes de
   investigação fecharam;
 - [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — o plano mestre, 12 de 49 itens.
   Retomar no passo 2 (B1–B5) quando o ciclo 14 fechar.

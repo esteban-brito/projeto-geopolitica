@@ -347,9 +347,16 @@ export function describeMail({
              DIVIDA pede corte, e os outros pedem verba. */
           const cutting = cuts.has(letter.from ?? "");
 
+          /* ⚠ GRUPO SEM NOME NAO IMPRIME DOIS PONTOS, e o assunto comecava por ": " quando o
+             catalogo nao conhecia o id — a carta irma, o alarme de fervura, ja tinha defesa e
+             esta nao tinha.
+             ⚠ E O ESCAPE E DE QUEM PINTA: `subject` e escapado de novo em `rowHtml` e em
+             `letterHtml`, entao escapar aqui pintava `&amp;` cru num nome com `&`. */
+          const groupName = nameOf(letter.from) || "";
+
           return paper({
             from: null,
-            subject: `${escapeHtml(nameOf(letter.from))}: ${subject}`,
+            subject: groupName ? `${groupName}: ${subject}` : subject,
             due: left(letter),
             body:
               `<div class="letter__lines">` +
@@ -445,7 +452,7 @@ export function describeMail({
           return paper({
             from: by("chief"),
             /* ⚠ O NOME VEM DEPOIS DO VERBO, e nao antes: assim a frase nao concorda com ele. */
-            subject: `${UI.inbox.boilingSubject} ${escapeHtml(nameOf(subject) || subject)}`,
+            subject: `${UI.inbox.boilingSubject} ${nameOf(subject) || subject}`,
             body:
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.boilingBody)}</span>` +

@@ -131,30 +131,43 @@ const REFUSED_KEY = "planalto:partida-recusada";
    deixa de significar qualquer coisa. */
 const UI_KEY = "planalto:interface";
 
+/* ⚠ O RASCUNHO DO MES ATRAVESSA O F5, E ANTES ELE MORRIA INTEIRO. Medido: a resposta marcada
+   numa carta some no recarregamento — `aria-pressed="accept"` antes, nenhuma marcada depois —
+   e com ela vao os niveis, as faixas e a verba que o jogador montou no mes.
+   ⚠ E ELE NAO ENTRA NO SAVE, pela mesma razao da marca de leitura: rascunho nao e mandato, e
+   po-lo em `GameState` custaria um bump de esquema num save que RECUSA versao diferente. */
+const DRAFT_KEY = "planalto:rascunho";
+
 /**
  * O que a interface lembra entre uma sessao e outra.
  *
- * @returns {string[]} os ids ja abertos alguma vez
+ * @returns {{ seen: string[], open: string | null }}
  */
 function resumeSeen() {
   try {
     const text = window.localStorage.getItem(UI_KEY);
-    if (text === null) return [];
+    if (text === null) return { seen: [], open: null };
     const saved = JSON.parse(text);
     /* ⚠ NADA AQUI CONFIA NO QUE LEU. O conteudo veio de uma versao antiga, de outra
        maquina ou de um dedo no console — e a resposta certa a qualquer surpresa e a
        mesma: comeca do zero. Uma marca de leitura errada nao vale um travamento. */
-    return Array.isArray(saved?.seen)
-      ? saved.seen.filter((/** @type {unknown} */ id) => typeof id === "string")
-      : [];
+    return {
+      seen: Array.isArray(saved?.seen)
+        ? saved.seen.filter((/** @type {unknown} */ id) => typeof id === "string")
+        : [],
+      open: typeof saved?.open === "string" ? saved.open : null,
+    };
   } catch {
-    return [];
+    return { seen: [], open: null };
   }
 }
 
 function persistSeen() {
   try {
-    window.localStorage.setItem(UI_KEY, JSON.stringify({ seen: [...readMail] }));
+    window.localStorage.setItem(
+      UI_KEY,
+      JSON.stringify({ seen: [...readMail], open: openDispatch }),
+    );
   } catch {
     /* Sem lugar para guardar. A leitura vale so esta sessao. */
   }
@@ -202,18 +215,76 @@ const opening = resume();
 
 let state = opening.state;
 let screen = "cabinet";
-let orders = blankOrders();
+
+/* O QUE A INTERFACE LEMBRAVA: o que ja foi lido, e onde o jogador estava. */
+const lembrado = resumeSeen();
+
+/**
+ * O RASCUNHO GUARDADO, e so o do mes que esta aberto.
+ *
+ * ⚠ ELE VEM DE FORA, entao cada campo e peneirado pelo tipo: um rascunho corrompido a mao
+ * chegaria em `playMonth` como numero que nao e numero. Mes diferente e rascunho de outro mes,
+ * e esse morre — que e a regra que ja valia quando o mes vira.
+ *
+ * @param {number} month
+ * @returns {ReturnType<typeof blankOrders> | null}
+ */
+function resumeDraft(month) {
+  try {
+    const text = window.localStorage.getItem(DRAFT_KEY);
+    if (!text) return null;
+    const read = JSON.parse(text);
+    if (!read || typeof read !== "object" || read.month !== month) return null;
+
+    const draft = blankOrders();
+    const numbers = (/** @type {unknown} */ from, /** @type {Record<string, number>} */ into) => {
+      if (!from || typeof from !== "object") return;
+      for (const [key, value] of Object.entries(from)) {
+        if (typeof value === "number" && Number.isFinite(value) && key in into) into[key] = value;
+      }
+    };
+    numbers(read.orders?.funding, draft.funding);
+    numbers(read.orders?.levels, draft.levels);
+    for (const [key, value] of Object.entries(read.orders?.mail ?? {})) {
+      if (typeof value === "string") draft.mail[key] = value;
+    }
+    for (const [key, value] of Object.entries(read.orders?.bands ?? {})) {
+      const band = draft.bands[key];
+      if (!band || !value || typeof value !== "object") continue;
+      for (const side of ["floor", "ceiling"]) {
+        const edge = /** @type {Record<string, unknown>} */ (value)[side];
+        if (typeof edge === "number" && Number.isFinite(edge)) {
+          /** @type {Record<string, number>} */ (band)[side] = edge;
+        }
+      }
+    }
+    return draft;
+  } catch {
+    return null;
+  }
+}
+
+function persistDraft() {
+  try {
+    window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ month: state.month, orders }));
+  } catch {
+    /* Sem lugar para guardar. O rascunho vale so ate o F5. */
+  }
+}
+
+let orders = resumeDraft(state.month) ?? blankOrders();
 
 /* ── QUAL OFÍCIO ESTÁ ABERTO NA BANDEJA ──────────────────────────────────────
    ⚠ ELE NÃO É ESTADO DE JOGO e não entra no save: um save carregado num mês em que
-   aquela carta já venceu abriria num id que não existe mais.
+   aquela carta já venceu abriria num id que não existe mais. Ele mora na memória de
+   interface, ao lado da marca de leitura, e por isso atravessa o F5.
 
-   NULO SIGNIFICA "A DE CIMA", e não "nenhuma": a bandeja resolve o vazio abrindo a
-   primeira da lista, que já chega ordenada por urgência. Uma bandeja que abrisse
-   fechada obrigaria um clique para ver o que o mundo mandou — e o mundo mandou
-   justamente porque queria ser lido. */
+   ⚠ E ELE NASCE NA PRIMEIRA CARTA DO MANDATO, e não nulo. Nulo quer dizer "a de cima",
+   e a de cima TROCA todo mês: numa partida nova em que o jogador só aperta "avançar", a
+   bandeja ia pulando sozinha para o "Mês sem pauta" mais recente. Palavras dele — "deveria
+   ficar clicado na primeira mensagem do jogo pra sempre até eu mudar". */
 /** @type {string | null} */
-let openDispatch = null;
+let openDispatch = lembrado.open ?? state.mail[0]?.id ?? null;
 
 /* ── O QUE JA FOI LIDO ───────────────────────────────────────────────────────
    ⚠ ELE PODA SOZINHO. Sem poda, o conjunto cresceria por 48 meses guardando id de
@@ -227,7 +298,7 @@ let openDispatch = null;
 /* ⚠ `readMail` E NAO `seen`, e o nome e defensivo: `seen` ja e uma variavel local em
    `mesaInput` — a previsao do turno —, e um modulo com duas coisas chamadas igual e a
    armadilha esperando a proxima sessao editar a errada. */
-const readMail = new Set(resumeSeen());
+const readMail = new Set(lembrado.seen);
 
 /* O ULTIMO MES RESOLVIDO, com o que ele precisa para se comparar com o mes
    anterior. Ele NAO e estado de jogo e nao entra no save: e a memoria de uma
@@ -410,6 +481,11 @@ function cabinetInput(current) {
       open: openDispatch,
       seen: [...readMail],
       dispatches: [
+        /* ⚠ O FECHAMENTO DO MES ABRE O BLOCO DELE, e concatenado no FIM ele fechava: a ordem
+           e por mes e o desempate e a posicao na lista, entao a carta mais nova do mes caia
+           embaixo das que ja estavam la. Palavras dele: "a mensagem Mes sem pauta vai pra
+           ultimo na ordem, sendo que ela e mais recente". */
+        ...(last ? [describeMonth({ report: last.report, adviser: last.adviser })] : []),
         /* ⚠ A ORDEM NAO MORA MAIS AQUI, e a mudanca e de endereco e nao de regra: quem
            ordena e `trayHtml`, onde ela e funcao pura e tem prova. No entrypoint ela so era
            alcancavel pelo passeio, e passou meses com as perguntas nao ordenadas entre si. */
@@ -449,7 +525,6 @@ function cabinetInput(current) {
            o calendario lia "abr → mar → abr" numa partida de dois meses, e do mes 3 em diante o
            corte por capacidade o comia primeiro e ele ficava INALCANCAVEL: sem linha no indice,
            nao ha o que clicar. Quem ordena agora e a bandeja. */
-        ...(last ? [describeMonth({ report: last.report, adviser: last.adviser })] : []),
       ],
     }),
     room: share.room,
@@ -541,7 +616,30 @@ let painted = null;
  * @type {{ level: string, reason: string, base: number } | null} */
 let standing = null;
 
+/**
+ * ONDE O TECLADO ESTAVA, escrito como seletor.
+ *
+ * ⚠ `paint()` REESCREVE `innerHTML` INTEIRO, e com ele vai o foco: medido, ele caia em `BODY`
+ * nos tres gestos da bandeja, e voltar ao botao que o jogador acabou de apertar custava OITO
+ * tabs. O id resolve o botao de avancar; o resto se identifica pelos proprios `data-`, que sao
+ * os mesmos que os manipuladores ja leem.
+ *
+ * @returns {string | null}
+ */
+function focusMark() {
+  const node = document.activeElement;
+  if (!(node instanceof HTMLElement) || node === document.body) return null;
+  if (node.id) return `#${node.id}`;
+
+  const parts = Object.entries(node.dataset).map(([key, value]) => {
+    const name = key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+    return `[data-${name}=${CSS.escape(String(value))}]`;
+  });
+  return parts.length > 0 ? node.tagName.toLowerCase() + parts.join("") : null;
+}
+
 function paint() {
+  const focused = focusMark();
   const current = situationOf(state, CATALOG);
   /* ⚠ O BOTAO SE REPINTA JUNTO COM A TELA, e antes ele so se
      repintava ao FIM de um mes. Enquanto ele so dizia "Avancar o mes" isso bastava;
@@ -701,6 +799,15 @@ function paint() {
       isso — a Camara carimbou, e o mandato ainda nao caiu. */
   const siege = state.impeachment !== null && state.fallen === null ? "true" : "";
   if (el.shell.dataset["siege"] !== siege) el.shell.dataset["siege"] = siege;
+
+  /* ⚠ E O FOCO VOLTA POR ULTIMO, depois de toda peca estar no lugar. `preventScroll` porque
+     devolver o foco nao e pedir para rolar: sem ele, a linha do indice puxava a pagina. */
+  if (focused) {
+    const back = document.querySelector(focused);
+    if (back instanceof HTMLElement && back !== document.activeElement) {
+      back.focus({ preventScroll: true });
+    }
+  }
 
   painted = state;
   standing = current;
@@ -915,6 +1022,7 @@ document.addEventListener("click", event => {
        engano so se desfaria escolhendo a outra — e escolher o contrario do que se
        quer para voltar atras nao e desfazer, e uma segunda decisao errada. */
     orders.mail[id] = orders.mail[id] === choice.dataset["answer"] ? "" : choice.dataset["answer"];
+    persistDraft();
     paint();
     return;
   }
@@ -931,6 +1039,7 @@ document.addEventListener("click", event => {
   const dispatch = target.closest("[data-dispatch]");
   if (dispatch instanceof HTMLElement && dispatch.dataset["dispatch"]) {
     openDispatch = dispatch.dataset["dispatch"];
+    persistSeen();
     paint();
     return;
   }
@@ -955,6 +1064,7 @@ document.addEventListener("input", event => {
   const party = target.dataset["party"];
   if (party) {
     orders.funding[party] = Number(target.value) / 100;
+    persistDraft();
     refresh();
     return;
   }
@@ -965,6 +1075,7 @@ document.addEventListener("input", event => {
   const program = target.dataset["program"];
   if (program) {
     orders.levels[program] = Number(target.value);
+    persistDraft();
     refresh();
     return;
   }
@@ -983,6 +1094,7 @@ document.addEventListener("input", event => {
   if (band && (side === "floor" || side === "ceiling")) {
     const current = orders.bands[band] ?? lawNow()[band];
     if (current) orders.bands[band] = { ...current, [side]: Number(target.value) };
+    persistDraft();
     refresh();
   }
 });
@@ -1030,16 +1142,18 @@ el.advance.addEventListener("click", () => {
       adviser: governmentOf(before, CATALOG).adviser,
     };
 
-    /* ⚠ E A CARTA ABERTA MORRE COM O MES TAMBEM. `openDispatch` so era escrito no clique e
-       nunca limpo: medido, um clique num aviso velho prendia o jogador nele por 20 MESES, e em
-       3 de 3 meses com pergunta vencendo o painel mostrava o aviso enquanto o botao cobrava o
-       silencio de outra carta. Nulo quer dizer "a de cima", que e a primeira do mes mais novo. */
-    openDispatch = null;
+    /* ⚠ A CARTA ABERTA ATRAVESSA O MES, POR DECISAO DELE: "quando eu avanco um mes, nao pode
+       mudar a mensagem que esta clicada, tem que ficar naquela ate que eu mesmo mude".
+       ⚠ E ISSO REVERTE O CONSERTO DE 28/08, que zerava `openDispatch` aqui. O defeito que
+       aquele conserto atacava — o painel mostrando um aviso velho enquanto o botao cobrava o
+       silencio de outra carta — nao volta: quem escreve o rotulo do botao e `silences`, do
+       motor, e nao a carta aberta. Quem perde o id (poda) cai na de cima, em `trayHtml`. */
 
     /* O RASCUNHO MORRE COM O MES. Carregar a verba do mes passado para o proximo
        faria o jogador pagar de novo sem ter decidido — e o motor cobraria, porque
        ele nao sabe distinguir promessa nova de promessa esquecida na tela. */
     orders = blankOrders();
+    persistDraft();
     persist();
     /* ⚠ O FECHO PUXA A TELA PARA SI no mes em que o mandato acaba, e so nesse mes. */
     if (termOf(state, CATALOG).over) screen = "cabinet";
@@ -1129,11 +1243,13 @@ el.swearForm.addEventListener("submit", () => {
      em quatro lugares, e um vazio ali leria como defeito de carregamento. */
   state = createState(undefined, CATALOG, nome === "" ? null : { name: nome, treatment });
   last = null;
-  /* ⚠ E A CARTA ABERTA MORRE NA POSSE TAMBEM, e nao so na virada do mes: o id do alarme nao
+  /* ⚠ E A CARTA ABERTA MORRE NA POSSE, que e o unico lugar onde ela morre: o id do alarme nao
      carrega o mes — `alarm()` monta `kind:id` —, entao um `ceiling:ceiling` clicado na
      partida anterior atravessa o recomeco e a bandeja abre ele em vez da mais urgente. */
-  openDispatch = null;
+  openDispatch = state.mail[0]?.id ?? null;
+  persistSeen();
   orders = blankOrders();
+  persistDraft();
   screen = "cabinet";
   painted = null;
   standing = null;

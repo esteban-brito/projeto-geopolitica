@@ -133,6 +133,14 @@
     --sheet-ink: #e6ecf6;
     --sheet-ink-rgb: 230, 236, 246;
 
+    /* ⚠ O PAPEL SO EXISTE NA LINHA CLICADA DO INDICE, e e a unica superficie clara do jogo:
+       pedido dele — "quando eu clicar em uma carta quero que ela fique branca, assim da um
+       contraste legal". A tinta e escura porque o fundo clareou, que e a mesma regra do botao
+       primario. */
+    --paper: #ffffff;
+    --paper-ink: #101724;
+    --paper-ink-rgb: 16, 23, 36;
+
     /* No projeto anterior ele derrubou uma tela em movimento para 31 fps.
        MECA O FPS DE UMA TELA NOVA, com braco de controle sem filtro, antes de
        levar o material para ela. */

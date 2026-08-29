@@ -13,6 +13,19 @@
     padding-bottom: var(--space-4);
   }
 
+  /* ⚠ ABAIXO DO CANVAS A CARTA NAO ESTICA, e o que ela esticava era VAZIO. O indice e o
+     documento dividem a mesma linha de grade, entao a carta crescia ate a altura do indice —
+     medido a 1280x800 com a bandeja cheia: carta de 748px, dos quais 398 eram a faixa de
+     anexos vazia, e as duas saidas 253px abaixo da dobra, zero visivel. Sem esticar: carta de
+     350px e o rodape 145px ACIMA da dobra.
+     ⚠ Travar a altura da tela aqui e o que a casca recusa, e por bom motivo — abaixo de 940px
+     a coluna dos cartoes engole um cartao inteiro. A pagina rola, e quem rola e o indice. */
+  @media (max-height: 939px) {
+    .board[data-screen="cabinet"] .tray__open {
+      align-self: start;
+    }
+  }
+
   /* ⚠ O CANVAS SÓ VALE ENQUANTO A COLUNA DA DIREITA COUBER INTEIRA, e o limiar é medido: os
      quatro cartões pedem 594px de conteúdo, a moldura come 341, e abaixo de 940px de janela
      a coluna engolia um cartão sem nada avisar — 3 de 4 inteiros a 900px, 2 de 4 a 760.
@@ -376,14 +389,19 @@
   /* Numa faixa de 51px de altura uma diagonal de 160deg nao tem distancia para virar luz: ela
      vira uma mancha. */
   .tray__row[aria-current="true"] {
-    border-bottom-color: var(--sheet-edge);
-    background: var(--sheet);
+    /* ⚠ A LINHA CLICADA E PAPEL, e ela e a unica superficie clara do jogo. A tinta troca com o
+       fundo — redefinir os dois tokens aqui faz o assunto, o remetente e o prazo virarem
+       escuros de uma vez, em vez de uma regra por peca. */
+    --sheet-ink: var(--paper-ink);
+    --sheet-ink-rgb: var(--paper-ink-rgb);
+    border-bottom-color: var(--paper);
+    background: var(--paper);
     /* Dar largura de volta moveria a linha 1px no clique, que e o defeito que a borda
        transparente sempre existiu para impedir. */
     /* ⚠ E A DA DIREITA MORREU EM — ela era o SEGUNDO fio da costura, e a medicao provou que
        havia dois: `74,63,49` desta aresta encostado em `64,61,58` da borda do oficio, dois
        claros a 0px de distancia para dizer uma fronteira so. */
-    box-shadow: inset 0 1px 0 var(--sheet-edge);
+    box-shadow: inset 0 1px 0 var(--paper);
   }
 
   /* ⚠ ELA QUEBRA EM DUAS LINHAS ANTES DE CORTAR UM NOME. */
@@ -429,6 +447,20 @@
     color: rgba(var(--sheet-ink-rgb), 0.6);
   }
 
+  /* ⚠ NA LINHA QUE TEM PRAZO ELE DESCE, e a razão é aritmética: a linha mede 179px, "vence em
+     1 mês" come 103 e sobram 68 para o nome. "Letícia Dourado" pede 74 — o relator da carta que
+     pergunta reticenciava em toda partida. Sem prazo nenhum nome corta, nem o de 129px.
+     ⚠ E ENCURTAR O RÓTULO NÃO SERVE: com "em 1 mês" o orçamento sobe para 108, e o nome de
+     129px continua cortando. A quebra é `flex-basis` e não `flex-wrap` — ela é determinística,
+     e é isso que a separa da quebra que já deixou a coluna irregular. */
+  .tray__row[data-urgency] .tray__line {
+    flex-wrap: wrap;
+  }
+
+  .tray__row[data-urgency] .tray__due {
+    flex-basis: 100%;
+  }
+
   /* O PRAZO ENCOLHE A PALAVRA E NÃO O NÚMERO. */
   .tray__due {
     flex: none;
@@ -443,6 +475,15 @@
 
   .tray__row[data-urgency="now"] .tray__due {
     color: var(--signal-down);
+  }
+
+  /* ⚠ NO PAPEL O PRAZO PERDE A COR, e quem carrega a urgencia e a TARJA — que continua colorida
+     na borda esquerda e ja e a dona declarada do prazo. Amber e vermelho claro sobre branco nao
+     passam o piso AA num texto de 10px, e inventar duas cores novas so para esta linha criaria
+     um segundo par concorrente para a mesma funcao. */
+  .tray__row[aria-current="true"] .tray__due,
+  .tray__row[aria-current="true"] .tray__kind {
+    color: rgba(var(--paper-ink-rgb), 0.62);
   }
 
   /* ⚠ E AS RETICÊNCIAS PRECISAM DO `min-width: 0`, e este é o defeito que já abriu uma barra
@@ -735,9 +776,33 @@
   /* Sete colunas num documento de 435px é apertado, e no dia em que uma nota nova entrar ela
      fica mais apertada — o que não pode acontecer é a carta crescer para fora da bandeja e
      voltar a rolagem lateral que saiu hoje de manhã. */
+  /* ⚠ A ROLAGEM LATERAL PRECISA SE ANUNCIAR, e ela era invisivel: a 1280x800 a tabela pede
+     390px e tem 307, e o que fica de fora e a coluna da SOMA. Ela ja rolava — o conteudo nunca
+     esteve inalcancavel —, mas nada na tela dizia que havia mais.
+     ⚠ E DAR LARGURA AO DOCUMENTO SO MUDA O DEFEITO DE COLUNA: medido com 7fr/3fr, a tabela
+     passa a caber e a coluna dos cartoes cai a 283px, indo de 1 para 7 elementos cortados.
+     A sombra e `background-attachment: local`, entao ela some sozinha quando nao ha o que
+     rolar — sem uma linha de script para medir. */
   .annex__scroll {
     overflow-x: auto;
     max-width: 100%;
+    background:
+      linear-gradient(to right, var(--sheet-raise) 30%, rgba(var(--sheet-ink-rgb), 0)) left center /
+        24px 100% no-repeat local,
+      linear-gradient(to left, var(--sheet-raise) 30%, rgba(var(--sheet-ink-rgb), 0)) right center /
+        24px 100% no-repeat local,
+      radial-gradient(
+          farthest-side at 0 50%,
+          rgba(var(--sheet-ink-rgb), 0.28),
+          rgba(var(--sheet-ink-rgb), 0)
+        )
+        left center / 14px 100% no-repeat scroll,
+      radial-gradient(
+          farthest-side at 100% 50%,
+          rgba(var(--sheet-ink-rgb), 0.28),
+          rgba(var(--sheet-ink-rgb), 0)
+        )
+        right center / 14px 100% no-repeat scroll;
   }
 
   .annex__table {
@@ -811,6 +876,20 @@
   .letter[data-urgency] {
     border-left-width: var(--rule-strong);
     padding-left: calc(var(--space-4) - var(--rule-strong) + 1px);
+  }
+
+  /* ⚠ NA BANDEJA O RECUO E OUTRO, e a regra acima tem a MESMA especificidade de
+     `.tray__open .letter` e vem depois: ela impunha 13px onde o recuo e 24. Medido: cabecalho e
+     rodape a -7px, invadindo o indice, e a tarja de gravidade coberta nos 4px inteiros.
+     ⚠ E SO O RECUO NAO BASTA — corrigido ele, sobravam 3 dos 4px cobertos, porque a margem
+     negativa continua sendo a do recuo cheio. A margem tem de seguir o recuo que vale. */
+  .tray__open .letter[data-urgency] {
+    padding-left: calc(var(--space-6) - var(--rule-strong) + 1px);
+  }
+
+  .tray__open .letter[data-urgency] .letter__head,
+  .tray__open .letter[data-urgency] .letter__foot {
+    margin-left: calc(-1 * (var(--space-6) - var(--rule-strong) + 1px));
   }
 
   .letter[data-urgency="open"] {

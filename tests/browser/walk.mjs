@@ -496,6 +496,16 @@ try {
   if (linhas > 1) {
     await page.locator(".tray__row").last().click();
     await page.waitForTimeout(200);
+    /* ⚠ `paint()` REESCREVE A TELA INTEIRA, e o foco ia junto: medido, ele caia em `BODY` nos
+       tres gestos da bandeja, e voltar ao botao recem-apertado custava OITO tabs. */
+    const comFoco = await page.evaluate(() => {
+      const node = document.activeElement;
+      return node instanceof HTMLElement ? (node.dataset["dispatch"] ?? node.tagName) : "nada";
+    });
+    expect(
+      comFoco === (await page.locator(".tray__row").last().getAttribute("data-dispatch")),
+      `[caixa] o clique na linha jogou o foco do teclado em "${comFoco}"`,
+    );
     const presa = await page
       .locator('.tray__row[aria-current="true"]')
       .getAttribute("data-dispatch");
@@ -504,10 +514,12 @@ try {
     const agora = await page
       .locator('.tray__row[aria-current="true"]')
       .getAttribute("data-dispatch");
-    expect(agora !== presa, `[caixa] o mes virou e a carta aberta continuou sendo ${presa}`);
+    /* ⚠ A CARTA CLICADA ATRAVESSA O MES, e esta guarda ja cobrou o CONTRARIO: ela exigia que a
+       bandeja voltasse para o topo. Palavras dele: "quando eu avanco um mes, nao pode mudar a
+       mensagem que esta clicada, tem que ficar naquela ate que eu mesmo mude". */
     expect(
-      (await page.locator(".tray__row").first().getAttribute("aria-current")) === "true",
-      "[caixa] depois do mes a bandeja nao abriu a carta do topo",
+      agora === presa,
+      `[caixa] o mes virou e a carta aberta trocou de ${presa} para ${agora}`,
     );
   }
 
@@ -567,8 +579,34 @@ try {
     );
     await checkOverflow("caixa com pergunta");
     await checkClipped("caixa com pergunta");
+    /* ⚠ ESTE ESTADO ERA O UNICO SEM O TERCEIRO IRMAO, e e justamente aqui que o indice mostra
+       o nome do relator ao lado do prazo, na coluna de 179px. A checagem existia, via o
+       defeito, e nao era chamada onde ele mora. */
+    await checkEllipsized("caixa com pergunta");
     await checkContrast("caixa com pergunta");
     await checkNoOverlap("caixa com pergunta", ".letter");
+
+    /* ⚠ A TARJA DE GRAVIDADE E O CANAL QUE DIZ QUE A CARTA TEM PRAZO, e ela sumia: cabecalho e
+       rodape saem com margem negativa do recuo CHEIO, e o recuo da carta com tarja e menor.
+       Medido antes do conserto: os dois a -7px da folha, invadindo o indice, com os 4px da
+       tarja cobertos. */
+    const tarja = await page.evaluate(() => {
+      const letter = document.querySelector(".tray__open .letter[data-urgency]");
+      if (!letter) return null;
+      const box = letter.getBoundingClientRect();
+      const edge = parseFloat(getComputedStyle(letter).borderLeftWidth);
+      const worst = [".letter__head", ".letter__foot"]
+        .map(pick => letter.querySelector(pick))
+        .filter(node => node !== null)
+        .map(node => node.getBoundingClientRect().left - box.left);
+      return { edge, over: Math.round((edge - Math.min(...worst)) * 100) / 100 };
+    });
+    if (tarja) {
+      expect(
+        tarja.over <= 0.5,
+        `[caixa com pergunta] o cabecalho ou o rodape cobre ${tarja.over}px dos ${tarja.edge} da tarja`,
+      );
+    }
     await page.screenshot({ path: join(OUT, "carta-pergunta.png"), fullPage: true });
   }
 
@@ -625,6 +663,19 @@ try {
   await page.screenshot({ path: join(OUT, "financas.png"), fullPage: true });
 
   /* 8 — A PARTIDA ATRAVESSA O NAVEGADOR. */
+  /* ⚠ E O RASCUNHO DO MES TAMBEM, e antes ele morria inteiro: medido, a resposta marcada numa
+     carta sumia no recarregamento — `aria-pressed="accept"` antes, nenhuma depois —, e com ela
+     iam os niveis, as faixas e a verba montados no mes. */
+  await page.click('.rail [data-section="health"]');
+  await page.waitForTimeout(400);
+  const medidor = page.locator(".dial__slider").first();
+  await medidor.focus();
+  for (let passo = 0; passo < 6; passo++) await page.keyboard.press("ArrowLeft");
+  await page.waitForTimeout(300);
+  const rascunho = await medidor.inputValue();
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(300);
+
   const monthBefore = await page.locator("#turn").innerText();
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForTimeout(400);
@@ -633,6 +684,16 @@ try {
     monthBefore === monthAfter,
     `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
   );
+
+  await page.click('.rail [data-section="health"]');
+  await page.waitForTimeout(400);
+  const voltou = await page.locator(".dial__slider").first().inputValue();
+  expect(
+    voltou === rascunho,
+    `[rascunho] o mes estava em ${rascunho} e voltou ${voltou} depois de recarregar`,
+  );
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(400);
   /* ⚠ PARA BAIXO O INDICE ROLA DE PROPOSITO, e esta checagem ja cobrou o contrario: ela
      defendia o teto de 7 linhas, e o teto caiu porque com blocos de mes ele mostrava "MAR" com
      2 das 5 cartas do mes. Para o LADO continua proibido. */

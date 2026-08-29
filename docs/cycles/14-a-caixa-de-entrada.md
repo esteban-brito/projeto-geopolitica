@@ -353,7 +353,7 @@ maior que a Caixa.
 > Medido em três janelas (1440×980, 1440×900, **1280×800**) e 24 meses. ⚠ **A terceira janela
 > não é capricho: o passeio não roda nela, e é lá que três defeitos aparecem inteiros.**
 
-### 3½.1 · ⛔ A carta que PERGUNTA sangra 7px por cima do índice
+### 3½.1 · ✔ A carta que PERGUNTA sangra 7px por cima do índice
 
 `styles/45-screen-cabinet.css` — `.letter[data-urgency]` declara `padding-left` de **13px** com
 a **mesma especificidade** de `.tray__open .letter { padding: 24px }`, e vem **depois** na
@@ -365,6 +365,16 @@ cabeçalho × linha **7×32,7px**; rodapé × linha **7×54,69px**.
 ⚠ **E o efeito visível é pior que a sobreposição: a tarja de gravidade SOME** nos trechos do
 cabeçalho e do rodapé — **146px dos 629 da folha, 23%** —, e fica um degrau na costura. **É a
 única carta do jogo que pede resposta**, e a tarja é o canal que diz que ela tem prazo.
+
+⭐ **Fechado em 28/08/2026, e o recuo sozinho não bastava.** Medido antes: cabeçalho e rodapé a
+**−7px** da folha, com os **4px inteiros** da tarja cobertos. Corrigido só o recuo, a invasão
+zera mas sobram **3 dos 4px** cobertos — a margem negativa continua sendo a do recuo cheio. O
+conserto é o par: recuo próprio na bandeja **e** margem que segue esse recuo. Depois: invasão 0,
+tarja 0 coberta.
+
+⚖ **E ela tem guarda, verificada mordendo:** o passeio compara a borda esquerda do cabeçalho e
+do rodapé com a da folha, no estado "caixa com pergunta". Com a margem quebrada de propósito,
+acusou `3px dos 4 da tarja`.
 
 ### 3½.2 · ✔ O recorte faz duas linhas virarem a MESMA frase
 
@@ -396,7 +406,23 @@ perguntas gêmeas, são dois terços do índice inteiro perdendo o fim.
 **A 1440 as quatro tabelas cabem com 0px de folga.** O portão pegaria — `checkClipped` vê
 `overflow-x` — mas **não roda a 1280 e não abre relatório**.
 
-### 3½.4 · ⛔ A 1280×800 as duas saídas ficam inteiras abaixo da dobra
+⚠ **RECONFIRMADO em 28/08/2026, e nenhuma saída é de graça.** A tabela pede **390px e tem 307**.
+Medido, três tentativas:
+
+| tentativa                            | anexo                | preço                                                                     |
+| ------------------------------------ | -------------------- | ------------------------------------------------------------------------- |
+| recuo de célula curto                | ainda corta **59px** | —                                                                         |
+| recuo curto **+ corpo de 9px**       | ainda corta **26px** | quebra a escala de tipo, e não resolve                                    |
+| dar largura ao documento (7fr / 3fr) | **cabe, 401 em 401** | a coluna dos cartões cai a 283px e vai de **1 para 7 elementos cortados** |
+
+⭐ **Sete colunas numéricas não cabem em 307px, e mover largura só muda o defeito de coluna.** As
+saídas reais são duas, e as duas são decisão dele: **anunciar a rolagem lateral** (o plano B já
+declarado, que hoje funciona mas é invisível) ou **transpor a tabela** em janela estreita.
+
+⚠ **E a medição achou um vizinho que ninguém media:** a coluna dos cartões já corta **1 elemento
+a 1280×800 hoje**, sem nenhuma mudança. O portão não roda nessa janela.
+
+### 3½.4 · ✔ A 1280×800 as duas saídas ficam inteiras abaixo da dobra
 
 | janela                      | rodapé abaixo da dobra |
 | --------------------------- | ---------------------- |
@@ -405,6 +431,15 @@ perguntas gêmeas, são dois terços do índice inteiro perdendo o fim.
 | **1280×800**, bandeja cheia | **150,4px — inteiro**  |
 
 A página rola, mas **nada anuncia que "Aceitar a emenda" e "Travar o texto" existem.**
+
+⭐ **Fechado, e a causa não era a dobra — era vazio esticado.** O índice e o documento dividem a
+mesma linha de grade, então a carta crescia até a altura do índice. Medido a 1280×800 com a
+bandeja cheia: **carta de 748px, dos quais 398 eram a faixa de anexos VAZIA**, e o rodapé
+**253px abaixo da dobra, zero visível**. Com `align-self: start` abaixo de 940px de janela:
+**carta de 350px e o rodapé 145px ACIMA da dobra, inteiro.**
+
+⛔ **Travar a altura da tela continua recusado** — é o que a casca já recusa abaixo de 940px,
+porque ali a coluna dos cartões engole um cartão inteiro. A página rola, e quem rola é o índice.
 
 ### 3½.5 · ⚠ E mais cinco, de desenho
 
@@ -418,11 +453,21 @@ A página rola, mas **nada anuncia que "Aceitar a emenda" e "Travar o texto" exi
 - **três níveis estruturais com o mesmo vão de 12px** — assunto→corpo, parágrafo→parágrafo,
   corpo→anexos.
 
-### ⚠ E um buraco no próprio passeio
+### ✔ E um buraco no próprio passeio
 
-`checkEllipsized` **não é chamado no bloco "caixa com pergunta"** — que é justamente o estado
-em que `.tray__from` corta o nome do relator (6px a 1440, 10px a 1280). A checagem existe, vê o
-defeito, e não é chamada onde ele mora.
+`checkEllipsized` **não era chamado no bloco "caixa com pergunta"** — que é justamente o estado
+em que `.tray__from` corta o nome do relator. A checagem existia, via o defeito, e não era
+chamada onde ele mora.
+
+⭐ **Chamada, ela acusou na primeira rodada:** `tray__from "Letícia Dourado" 74>68`. A linha do
+índice mede **179px**, "vence em 1 mês" come **103**, e sobram **68** para o nome. **Sem prazo
+nenhum nome corta** — nem "Denise Hollanda Cavalcanti", de 129px.
+
+⭐ **O prazo desce para linha própria** nas linhas que pedem resposta. ⛔ **Encurtar o rótulo não
+serve:** com "em 1 mês" o orçamento sobe para 108px, e o nome de 129 continua cortando — é
+conserto que passa hoje e quebra no mês em que um nome longo assinar uma carta com prazo. A
+quebra é `flex-basis: 100%` e não `flex-wrap`, porque determinística: é isso que a separa da
+quebra que já deixou a coluna irregular. Custo medido: **+14px por linha que pergunta.**
 
 ---
 
