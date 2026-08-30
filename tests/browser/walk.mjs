@@ -413,6 +413,37 @@ try {
   await checkContrast("area");
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento veio sem programas");
 
+  /* ⚠ A CORRENTE TEM DUAS METADES E AS DUAS TEM DE TER LINHA: uma area sem saida seria uma
+     area que nao alimenta nada, e o catalogo garante o contrario — o bloco vazio de um lado
+     e a forma como este item morreria em silencio. */
+  expect(
+    (await page.locator(".chain__half").count()) === 2,
+    "[area] a corrente nao veio com as duas metades",
+  );
+  expect(
+    (await page.locator(".chain__half .annex__line").count()) >= 3,
+    "[area] a corrente veio sem elo nenhum",
+  );
+
+  /* ⚠ E A LINHA DO ORCAMENTO COME O GASTO CHEIO, e nao a parte acima do piso — a Previdencia
+     e onde a diferenca grita: R$ 2,4 bi de discricionario contra R$ 126,7 de gasto cheio, e a
+     MALHA consome o segundo. Sem esta checagem a corrente anunciaria +0,02 onde o motor poe
+     +1,22, e nada falharia. */
+  await page.click('[data-section="welfare"]');
+  await page.waitForTimeout(400);
+  const verba = await page
+    .locator(".chain__half")
+    .first()
+    .locator(".annex__value")
+    .first()
+    .innerText();
+  expect(
+    Number(verba.replace("+", "").replace("−", "-").replace(",", ".")) > 0.5,
+    `[area] a corrente da Previdencia diz que a verba poe ${verba} — ela le o discricionario, e nao o gasto cheio`,
+  );
+  await page.click('[data-section="health"]');
+  await page.waitForTimeout(400);
+
   /* 3 — O ORCAMENTO GRANULAR. */
   const dial = page.locator(".dial__slider").first();
   await dial.focus();

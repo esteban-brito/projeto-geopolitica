@@ -78,7 +78,7 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 13 guardas · 60 provas sintéticas · 140 arquivos · 281 provas · passeio
+**Estado verde:** 13 guardas · 60 provas sintéticas · 142 arquivos · 288 provas · passeio
 verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
 
 **Há QUATRO planos na mesa**, e o 13 é o único aberto:
@@ -98,8 +98,8 @@ verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
   o vocabulário dela é de três peças com guarda. **Sobra um item**: as duas cartas sem número
   (a Mesa pautou, a gaveta), e ele pede motor;
 - [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — **em execução**, e o plano mestre:
-  **22 de 49 itens**. O passo 3 (C10 e C11), o B10 e o C7 fecharam em 30/08. Retomar no **D4**
-  — a corrente causal, e ele é o único item aberto que **abre motor**.
+  **23 de 49 itens**. O passo 4 fechou em 30/08 com o **D4** — a corrente causal, no DELTA.
+  Retomar no **passo 5**: C5 e C6.
 
 **Nenhum item espera decisão hoje.** A fila que pedia "o mesmo bump de esquema" tinha quatro
 itens e **não existe mais**: o `last` fechou na versão 19, e o `events`, o `weight` e os anexos

@@ -18,18 +18,18 @@
 
 ## ▶ COMECE POR AQUI
 
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas · 140
-arquivos · 281 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`, **14
-commits à frente de `main`** mais o trabalho desta sessão na árvore.
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas · 142
+arquivos · 288 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`, **16
+commits à frente de `main`**.
 
 ### O que está em execução
 
-| plano                                                                      | estado                                                |
-| -------------------------------------------------------------------------- | ----------------------------------------------------- |
-| [ciclo 16 — o Gabinete profissional](cycles/16-o-gabinete-profissional.md) | ✔ fechado em 30/08/2026 — o passo 5 foi recusado      |
-| [ciclo 15 — o Gabinete](cycles/15-o-gabinete.md)                           | ✔ fechado em 30/08/2026                               |
-| [ciclo 14 — a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)           | ✔ fechado em 29/08/2026 — sobra um item de motor      |
-| [ciclo 13 — O GLORIOSO](cycles/13-o-glorioso.md)                           | ▶ o plano mestre, **22 de 49**; falta o D4 no passo 4 |
+| plano                                                                      | estado                                           |
+| -------------------------------------------------------------------------- | ------------------------------------------------ |
+| [ciclo 16 — o Gabinete profissional](cycles/16-o-gabinete-profissional.md) | ✔ fechado em 30/08/2026 — o passo 5 foi recusado |
+| [ciclo 15 — o Gabinete](cycles/15-o-gabinete.md)                           | ✔ fechado em 30/08/2026                          |
+| [ciclo 14 — a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)           | ✔ fechado em 29/08/2026 — sobra um item de motor |
+| [ciclo 13 — O GLORIOSO](cycles/13-o-glorioso.md)                           | ▶ o plano mestre, **23 de 49**; o passo 4 fechou |
 
 ### ✔ A SUPERFÍCIE FOI PADRONIZADA — 30/08/2026
 
@@ -51,17 +51,31 @@ que ele mede o que diz medir.
 fps** e `--glass-support-bg` no `.tray__month` custou **28,3 sem filtro nenhum**. A tinta
 chapada ali é decisão medida, e a folha já a explicava.
 
-### O próximo trabalho — o D4, e ele abre motor
+### ✔ O D4 ENTROU — a corrente causal, 30/08/2026
 
-**A corrente causal visível.** Gastar em Segurança move a capacidade, que move a arrecadação,
-que move o caixa — e a única pista disso na interface é um número mudando em outra tela.
+**O DELTA abriu.** A tela de área ganhou o bloco **A corrente**: o que move o índice (a verba,
+com o rendimento por bilhão; o desgaste, com a meia-vida) e o que ele move (o canal, com o
+atraso do catálogo). A Indústria mostra a Educação entrando **de 24 meses atrás**, e a
+Educação mostra a mesma aresta saindo — **o mesmo número nas duas telas**.
 
-⚠ **É O ÚNICO ITEM ABERTO QUE ABRE MOTOR:** `CASCATA` (`src/domain/propagation/`) e `DELTA`
-(`src/domain/graph/`) são `export {}` até hoje — nome declarado, contrato declarado, zero
-implementação. **O projeto já sabia que precisava disto e parou no nome.**
+| onde                            | o quê                                                         |
+| ------------------------------- | ------------------------------------------------------------- |
+| `src/domain/graph/index.mjs`    | DELTA: as arestas, lidas do catálogo. Sem estado              |
+| `src/domain/capacity/index.mjs` | `pushOf` e `liftOf`, extraídas de `pressureOf` — uma conta só |
+| `src/application/chain.mjs`     | junta o grafo com a força de hoje. `chainOf` é a 18ª porta    |
 
-⭐ **E metade do caminho já está andada:** a projeção (0.3) mostra _para onde vai_; a corrente
-mostra _por quê_. O plano manda nessa ordem, e ela foi cumprida.
+⚠ **A CASCATA CONTINUA `export {}`, e é ausência declarada:** propagar é o que a MALHA já faz,
+e um segundo motor para isso seria a segunda conta da mesma pergunta.
+
+⚠ **O PASSEIO PEGOU UM DEFEITO ANTES DE ELE SAIR:** a corrente lia `asked` (o pedido acima do
+piso) e a MALHA consome `funded` (o gasto cheio). Na Previdência a linha anunciava **+0,02**
+onde o motor põe **+1,22** — o mesmo defeito que a projeção pagou uma vez, na mesma tela. A
+checagem do passeio agora o cobra, e ela **nasceu vermelha**.
+
+### O próximo trabalho — o passo 5, e ele não abre motor
+
+**C5 e C6:** a posse vira pergunta, e o fecho ganha critério. Ver a ordem no rodapé do
+[ciclo 13](cycles/13-o-glorioso.md).
 
 ### ✔ O C7 ENTROU — o calendário, 30/08/2026
 

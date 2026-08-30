@@ -8,14 +8,20 @@
 >
 > ⚠ **EM EXECUÇÃO DESDE 24/08/2026, e a ordem é a do rodapé deste arquivo.**
 >
-> | passo | itens                     | estado                  |
-> | ----- | ------------------------- | ----------------------- |
-> | **0** | C12 · D7                  | ✔ os dois               |
-> | **1** | 0.1 · 0.2 · C1 · C2 · C3  | ✔ os cinco              |
-> | **2** | B1 a B5                   | ✔ os cinco — 30/08/2026 |
-> | **3** | C8 · C9 · C10 · C11 · C13 | ✔ os cinco — 30/08/2026 |
+> | passo | itens                     | estado                   |
+> | ----- | ------------------------- | ------------------------ |
+> | **0** | C12 · D7                  | ✔ os dois                |
+> | **1** | 0.1 · 0.2 · C1 · C2 · C3  | ✔ os cinco               |
+> | **2** | B1 a B5                   | ✔ os cinco — 30/08/2026  |
+> | **3** | C8 · C9 · C10 · C11 · C13 | ✔ os cinco — 30/08/2026  |
+> | **4** | 0.3 · B10 · C7 · D4       | ✔ os quatro — 30/08/2026 |
 >
-> **22 de 49.** O **B10** e o **C7** entraram em 30/08/2026. Falta o **D4**, e ele **abre motor**.
+> **23 de 49, e o passo 4 fechou.** O **D4 entrou em 30/08/2026** e abriu o DELTA: o grafo é
+> lido do catálogo (`yield`, `decay`, `feeds`, `force`, `lag`), a força de hoje vem da MALHA, e
+> **há prova cobrando que a soma das arestas seja a pressão que o turno executa**. A CASCATA
+> continua `export {}`, e é ausência declarada: propagar é o que a MALHA já faz.
+>
+> **22 de 49.** O **B10** e o **C7** entraram em 30/08/2026.
 >
 > **20 de 49.** O **0.3 entrou em 30/08/2026** e saiu 15× mais barato que o previsto: com o
 > plenário congelado ela não roda `playMonth`, e 24 meses custam **0,34ms** contra os 5,3 que o
@@ -30,7 +36,7 @@
 > (B5), o que cada área MEDE (B3, e ele já estava no catálogo), a faísca com direção (B4) e a
 > pista colorida pela distância de `initial` (B1) — `alertsOf`, o mesmo motor que o rail lê.
 > O B2 já existia: o bloco sempre foi `<button data-section>`.
-> | **4** | 0.3 · B10 · C7 · D4 | ⛔ |
+> | **4** | 0.3 · B10 · C7 · D4 | ✔ |
 >
 > ⚠ **O PASSO 3 FOI FEITO ANTES DO 2, e foi erro meu** — anunciado como inversão deliberada e
 > cobrado por ele: _"não acha melhor voltar desde o início, passo 1, passo 2, passo 3?"_. A
@@ -164,7 +170,7 @@ está morto) · **abre motor** (constrói mecânica nova).
 | **D1** | ⭐⭐ o **presidencialismo de coalizão**       | Victoria 3       | abre motor | grande  |
 | **D2** | ⭐ a **eleição** — a terceira saída           | Democracy        | abre motor | grande  |
 | **D3** | ⭐ as pessoas **agem sem você**               | Crusader Kings   | abre motor | grande  |
-| **D4** | ⭐ a **corrente causal** visível              | Democracy        | abre motor | médio   |
+| **D4** | ✔ a **corrente causal** visível               | Democracy        | ✔ DELTA    | médio   |
 | **D5** | a **entrevista coletiva**                     | Football Manager | não        | médio   |
 | **D6** | o relatório **conta uma história**            | Football Manager | não        | médio   |
 | **D7** | o rail promete **duas telas que não existem** | —                | —          | —       |
@@ -1032,7 +1038,37 @@ Numa partida em que o jogador não abre a mesa, o elenco inteiro fica parado por
 
 ---
 
-## D4 · ⭐ A CORRENTE CAUSAL VISÍVEL — o que Democracy resolveu e ninguém copiou
+## ✔ D4 · A CORRENTE CAUSAL VISÍVEL — ENTROU EM 30/08/2026
+
+**O DELTA abriu, e a CASCATA não.** O grafo é lido do catálogo — `yield`, `decay`, `feeds`,
+`force` e `lag` já dizem quem alimenta quem —, e `src/domain/graph/index.mjs` só o descreve:
+peso, sinal e atraso, sem estado. A força de hoje sai da MALHA (`pushOf`, `liftOf`, extraídas
+de `pressureOf` para que exista **uma conta só**), e quem junta os dois é
+`src/application/chain.mjs`. A CASCATA continua `export {}`: propagar é o que a MALHA faz, e
+um segundo motor para isso seria a segunda conta da mesma pergunta.
+
+| medição                                        | valor                                              |
+| ---------------------------------------------- | -------------------------------------------------- |
+| a soma das arestas contra a pressão do turno   | **idêntica**, e há prova com `fast-check` cobrando |
+| Educação → Indústria, no mês 26                | **−0,36 ponto**, e as duas telas dizem o mesmo     |
+| a série do `simulate` depois de mexer na MALHA | **não moveu** — 30 de 42 · 90,1% · ind 19 · seg 19 |
+| provas novas                                   | 7                                                  |
+
+⚠ **E O PASSEIO PEGOU UM DEFEITO ANTES DE ELE SAIR:** a corrente lia `asked` — o pedido acima
+do piso — e a MALHA consome `funded`, o gasto cheio. Na Previdência a linha anunciava **+0,02**
+onde o motor põe **+1,22**. É o mesmo defeito que a projeção pagou uma vez, na mesma tela, e
+agora a checagem do passeio o cobra.
+
+⚠ **DUAS CASAS NOS PONTOS, e a captura decidiu:** com uma, a Saúde imprimia `0,0` ao lado da
+pista dizendo "R$ 1 bi rende 0,03" — o número negava a legenda a 2cm dele.
+
+⚠ **E A SAÍDA NÃO PROMETE FUTURO:** ela diz _"com 24 meses de atraso"_, e não "chega em 24
+meses". O valor ao lado é o que está chegando HOJE, vindo do índice de 24 meses atrás — a
+segunda frase faria uma medição ler como previsão.
+
+---
+
+## D4 — o item como ele foi escrito
 
 **A razão de _Democracy_ ensinar a jogar sem tutorial é uma só: você vê as setas.** Aponta uma
 política e o jogo mostra o que a alimenta e o que ela alimenta, com sinal e peso.

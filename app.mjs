@@ -26,6 +26,7 @@ import {
   SIMPLE_MAJORITY,
   bandsOf,
   boilerOf,
+  chainOf,
   lockedBy,
   forecast,
   passageOf,
@@ -47,6 +48,7 @@ import { railGovHtml, railNavHtml } from "./src/ui/shared/rail.mjs";
 import { closingHtml } from "./src/ui/screens/closing.mjs";
 import {
   areaHtml,
+  chainHtml,
   estadoHtml,
   lawReadHtml,
   outlookHtml,
@@ -629,6 +631,12 @@ function areaInput(area) {
     aheadIdle: curve.idle[area.id]?.at(-1) ?? value,
     bands: lawNow(),
     requestedBands: orders.bands,
+    /* ⚠ A CORRENTE COME `funded`, E NAO `spent` — e este e o MESMO defeito que a projecao ja
+       pagou uma vez: `spent` e a parte acima do piso, e a MALHA consome o gasto CHEIO da area.
+       Na Previdencia sao R$ 2,4 bi contra R$ 126,7, e a linha do orcamento anunciaria +0,02
+       onde o motor poe +1,22. Duas leituras da mesma alavanca, na mesma tela. */
+    chain: chainOf(state, area.id, share.funded[area.id] ?? 0),
+    areas: CATALOG.areas,
   };
 }
 
@@ -1022,6 +1030,12 @@ function refresh() {
 
   const outlook = document.getElementById("areaOutlook");
   if (outlook) outlook.innerHTML = outlookHtml(input);
+
+  /* ⚠ A CORRENTE E A QUARTA LEITURA QUE ACOMPANHA O ARRASTO, e ela precisa: mover a verba
+     muda o que a linha do orcamento poe no indice, e a corrente parada ao lado de uma
+     projecao que anda seria a decisao chegando em uma tela e nao na outra. */
+  const chain = document.getElementById("areaChain");
+  if (chain && input.chain) chain.innerHTML = chainHtml({ chain: input.chain, areas: input.areas });
 }
 
 /* ── OS GESTOS ────────────────────────────────────────────────────────────── */

@@ -16,6 +16,11 @@ const TERMOS = {
 
   simpleMajority: "maioria simples",
 
+  /* ⚠ A LEGENDA DO BLOCO E A PONTA DA CORRENTE SAO A MESMA COISA: o bloco onde o jogador poe
+     a verba e o no de onde a verba sai. Renomear um sem o outro faria a corrente apontar para
+     um bloco que a tela chama de outro nome, na mesma tela. */
+  budget: "O orçamento",
+
   loyal: "com o governo",
   obstructing: "obstruindo",
   ruptured: "em ruptura",
@@ -519,7 +524,7 @@ export const UI = {
   area: {
     /* O ORÇAMENTO GRANULAR. */
     /* ⚠ A CABECA DA AREA PASSOU A DIZER QUE AREA E ESTA. */
-    programs: "O orçamento",
+    programs: TERMOS.budget,
     thisArea: "esta área",
     outlook: "Para onde vai",
     /* O horizonte e escrito por extenso porque "24m" ao lado de um indice le como unidade do
@@ -537,6 +542,43 @@ export const UI = {
     /* OS TITULOS DAS TRES COLUNAS DE NUMERO. */
     /* A COLUNA DO BOTÃO tem título só para quem lê por leitor de tela: na tela ele seria um
        rótulo em cima de um botão que já diz o que faz. */
+  },
+  /* ── A CORRENTE — o que move este índice, e o que ele move ────────────────
+     ⚠ ELA FALA EM LINGUAGEM DE JOGADOR, e o motor fala em `yield`, `force` e `lag`: "R$ 1 bi
+     rende 0,64" é a mesma coisa que `yield: 0.6358`, e só a primeira responde a alguém que
+     está decidindo quanto pôr na Segurança. */
+  chain: {
+    title: "A corrente",
+    hint: "de onde vem, e para onde vai",
+    /* ⚠ SEM ARTIGO E SEM O NOME DO ÍNDICE, e a razão é gramatical: sete dos oito índices são
+       femininos e "atendimento" não é, e uma legenda montada com artigo diria "o que move a
+       atendimento" na Saúde. */
+    into: "O que move este índice",
+    out: "O que este índice move",
+    /* AS DUAS PONTAS DE DENTRO: a verba que entra, e o que vaza sozinho. */
+    budget: TERMOS.budget,
+    perBillion: (/** @type {string} */ points) => `R$ 1 bi rende ${points}`,
+    decay: "O desgaste",
+    half: (/** @type {number} */ months) => `metade em ${months} meses`,
+    /* Uma área que não vaza não existe no catálogo de hoje; a frase existe para o dia em que
+       existir, e para a peça nunca imprimir "metade em Infinity meses". */
+    forever: "não se desgasta",
+    /* O ATRASO É A METADE DA CORRENTE QUE NINGUÉM VÊ: a educação leva 24 meses para chegar à
+       indústria, e o mês em que ela chega não é o mês em que se gastou.
+       ⚠ E A SAÍDA NÃO PROMETE FUTURO: o valor ao lado é o que está chegando HOJE, vindo do
+       índice de 24 meses atrás. "Chega em 24 meses" faria o número ler como previsão, e ele
+       é medição — o defeito que a captura pegou antes de o bloco entrar.
+       ⚠ E O CASO ZERO É FRASE PRÓPRIA: duas áreas do catálogo agem no mês em que se gasta. */
+    lagged: (/** @type {number} */ months) => `com ${months} meses de atraso`,
+    prompt: "no mesmo mês",
+    came: (/** @type {number} */ months) => `de ${months} meses atrás`,
+    cameNow: "deste mês",
+    /* OS DOIS CANAIS QUE NÃO SÃO ÁREA — e é assim que o orçamento os chama. */
+    channel: {
+      revenue: "A receita",
+      mandatory: "A despesa obrigatória",
+      capacity: "A capacidade",
+    },
   },
   /* AS LEIS DA ÁREA — o segundo bloco, e o mais novo do jogo. */
   laws: {

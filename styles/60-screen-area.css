@@ -341,4 +341,30 @@
   /* ── PAUTAR E VIGENTE ─────────────────────────────────────────────────────── A mesma linha
      nas duas listas, com uma diferenca de tinta: o que ja esta em vigor nao se pressiona,
      entao ele perde o botao e recua um tom. */
+
+  /* ── A CORRENTE ───────────────────────────────────────────────────────────── As duas
+     metades emparelham porque elas se LEEM JUNTAS: o que entra a esquerda, o que sai a
+     direita. Empilhadas, a segunda cairia abaixo da dobra na janela de 1440. */
+  .chain {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-3) var(--space-6);
+  }
+
+  .chain__legend {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    padding-bottom: var(--space-1);
+  }
+
+  /* ⚠ A LINHA E A PECA DAS OUTRAS TELAS, e aqui ela nao ganha barra: pontos de indice e
+     fracao de multiplicador nao dividem escala, e uma regua comum entre eles compararia
+     duas grandezas diferentes no mesmo desenho. */
+  .chain .annex__line {
+    grid-template-columns: minmax(0, 1fr) 5rem;
+  }
 }

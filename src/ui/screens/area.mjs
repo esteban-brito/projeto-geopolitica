@@ -3,7 +3,8 @@
    jogador escolhia uma. */
 
 import { escapeHtml } from "../shared/html.mjs";
-import { attr, money, seats, signed, sparkline } from "../shared/format.mjs";
+import { attr, money, num, seats, signed, sparkline } from "../shared/format.mjs";
+import { lineHtml } from "../shared/annex.mjs";
 import { headHtml } from "../shared/head.mjs";
 import { WINDOW, trendOf, windowLabel } from "../shared/trend.mjs";
 import { UI, labelOf } from "../strings.mjs";
@@ -172,6 +173,106 @@ function lawHtml({ program, band, asked }) {
   );
 }
 
+/* ── A CORRENTE ────────────────────────────────────────────────────────────── O D4: gastar
+   em Seguranca move a ordem, que move a despesa obrigatoria, que move o caixa — e a unica
+   pista disso na interface era um numero mudando em outra tela. */
+
+/**
+ * UMA ARESTA VIRA LINHA — nome, pista e a forca que ela faz HOJE.
+ *
+ * ⚠ A LINHA E A PECA DAS OUTRAS DUAS TELAS, e nao um dialeto da area: nome, pista e valor e a
+ * mesma pergunta que a coluna do Gabinete responde. Sem barra, porque as tres especies de
+ * aresta nao dividem escala — pontos de indice e fracao de multiplicador nao se comparam.
+ *
+ * @param {import("../../application/chain.mjs").Strand} strand
+ * @param {"into" | "out"} side de que metade da corrente ela e
+ * @param {(id: string) => string} nameOf
+ * @returns {string}
+ */
+function strandHtml(strand, side, nameOf) {
+  /* O PESO DO CATALOGO VIRA PISTA E O ESTADO VIRA VALOR: "R$ 1 bi rende 0,64" e o que a
+     alavanca faz, e "+2,1" e o que ela esta fazendo neste mes. */
+  const aside =
+    strand.kind === "spend"
+      ? UI.chain.perBillion(num(strand.weight, 2))
+      : strand.kind === "decay"
+        ? Number.isFinite(strand.half ?? Infinity)
+          ? UI.chain.half(Math.round(strand.half ?? 0))
+          : UI.chain.forever
+        : side === "into"
+          ? strand.lag === 0
+            ? UI.chain.cameNow
+            : UI.chain.came(strand.lag)
+          : strand.lag === 0
+            ? UI.chain.prompt
+            : UI.chain.lagged(strand.lag);
+
+  /* ⚠ A LINHA NOMEIA A OUTRA PONTA, e nunca esta area: numa lista de seis linhas dentro da
+     tela da Seguranca, "Segurança" em duas delas diria de novo onde o jogador ja esta. */
+  return lineHtml({
+    /* O DESGASTE NAO TEM OUTRA PONTA — ele sai da area e volta para ela, e nomea-lo pela ponta
+       poria o nome da propria area numa lista que fala de tudo menos dela. */
+    who:
+      strand.kind === "decay" ? UI.chain.decay : nameOf(side === "into" ? strand.from : strand.to),
+    aside,
+    /* ⚠ DUAS CASAS NOS PONTOS, e a captura decidiu: com uma, a verba da Saude imprimia `0,0`
+       ao lado da propria pista dizendo "R$ 1 bi rende 0,03" — o numero negava a legenda que
+       estava a 2cm dele. E o multiplicador fica em uma: ele ja vem multiplicado por 100. */
+    value: strand.unit === "factor" ? `${signed(strand.now * 100, 1)}%` : signed(strand.now, 2),
+  });
+}
+
+/**
+ * O MIOLO DA CORRENTE — as duas metades, e a ordem e a da leitura: primeiro o que chega.
+ *
+ * @param {object} input
+ * @param {{ into: ReadonlyArray<import("../../application/chain.mjs").Strand>,
+ * out: ReadonlyArray<import("../../application/chain.mjs").Strand> }} input.chain
+ * @param {ReadonlyArray<Area>} input.areas o catalogo, so para o nome de quem esta na ponta
+ * @returns {string}
+ */
+export function chainHtml({ chain, areas }) {
+  /** @param {string} id */
+  const nameOf = id =>
+    id === "budget"
+      ? UI.chain.budget
+      : (areas.find(area => area.id === id)?.label ?? labelOf(UI.chain.channel, id));
+
+  const into = chain.into.map(strand => strandHtml(strand, "into", nameOf)).join("");
+  const out = chain.out.map(strand => strandHtml(strand, "out", nameOf)).join("");
+
+  return (
+    `<div class="chain__half">` +
+    `<h4 class="chain__legend">${escapeHtml(UI.chain.into)}</h4>${into}</div>` +
+    `<div class="chain__half">` +
+    `<h4 class="chain__legend">${escapeHtml(UI.chain.out)}</h4>${out}</div>`
+  );
+}
+
+/**
+ * O BLOCO DA CORRENTE — a moldura, e ela nao se repinta durante o arrasto.
+ *
+ * ⚠ O MIOLO E SEPARADO DA MOLDURA PELA MESMA RAZAO DA BOLSA E DA PROJECAO: mover a verba muda
+ * o que a corrente mostra no MESMO quadro, e uma corrente que so acompanhasse a troca de tela
+ * seria um numero velho ao lado de um controle que o jogador acabou de mexer.
+ *
+ * @param {object} input
+ * @param {{ into: ReadonlyArray<import("../../application/chain.mjs").Strand>,
+ * out: ReadonlyArray<import("../../application/chain.mjs").Strand> }} input.chain
+ * @param {ReadonlyArray<Area>} input.areas
+ * @returns {string}
+ */
+function chainBlockHtml(input) {
+  return (
+    `<section class="area__block">` +
+    `<h3 class="block__legend">${escapeHtml(UI.chain.title)}` +
+    `<span class="area__empty">${escapeHtml(UI.chain.hint)}</span>` +
+    `</h3>` +
+    `<div class="chain" id="areaChain">${chainHtml(input)}</div>` +
+    `</section>`
+  );
+}
+
 /**
  * O BLOCO INTEIRO das leis de uma area.
  *
@@ -215,6 +316,10 @@ function lawsHtml({ programs, bands, requestedBands }) {
  * @param {number} input.idle o indice ao fim do mes sem alocacao nenhuma
  * @param {Record<string, import("../../state/state.mjs").Band>} [input.bands] as leis VIGENTES
  * @param {Record<string, import("../../state/state.mjs").Band>} [input.requestedBands] as PEDIDAS
+ * @param {{ into: ReadonlyArray<import("../../application/chain.mjs").Strand>,
+ * out: ReadonlyArray<import("../../application/chain.mjs").Strand> }} [input.chain] a corrente,
+ * perguntada a `chainOf`. Sem ela o bloco NAO SAI — corrente e motor, e nao enfeite de tela
+ * @param {ReadonlyArray<Area>} [input.areas] o catalogo, so para nomear a outra ponta
  * @returns {string}
  */
 export function areaHtml(input) {
@@ -286,8 +391,15 @@ export function areaHtml(input) {
     requestedBands,
   });
 
+  /* A CORRENTE VEM DEPOIS DA PROJECAO, e a ordem e a do plano: a projecao diz PARA ONDE VAI,
+     e a corrente diz POR QUE. Invertidas, a explicacao chega antes da pergunta. */
+  const chain =
+    input.chain === undefined
+      ? ""
+      : chainBlockHtml({ chain: input.chain, areas: input.areas ?? [input.area] });
+
   /* UMA LAMINA POR TELA. */
-  return `<section class="area glass-stage">${head}${budget}${laws}${outlook}</section>`;
+  return `<section class="area glass-stage">${head}${budget}${laws}${outlook}${chain}</section>`;
 }
 
 /**

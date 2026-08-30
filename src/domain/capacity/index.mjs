@@ -42,6 +42,47 @@ function delayed(past, fallback, lag) {
 }
 
 /**
+ * A FORCA QUE UMA AREA FAZ NO CANAL DELA, hoje, e ela e a ARESTA que o DELTA descreve.
+ *
+ * ⚠ ELA MEDE CONTRA `initial` — o que o modelo cobra e o DESVIO da abertura, e nao o nivel.
+ * A troca conserta um defeito medido, e ele era o segundo termo do achado numero um do
+ * handoff — o pais que se desendivida sozinho.
+ *
+ * @param {Area} area
+ * @param {Record<string, number[]>} history
+ * @returns {number} somado a 1, vira o multiplicador; 0 e neutro
+ */
+export function pushOf(area, history) {
+  return ((delayed(history[area.id], area.initial, area.lag) - area.initial) / 100) * area.force;
+}
+
+/**
+ * O canal `capacity` mede contra `neutral`, e nao contra a abertura: uma Educacao de 44
+ * ABAIXA a producao, e e isso que a tese do modelo diz. Sao duas bases porque sao duas
+ * perguntas — quanto MUDOU, e onde ESTA.
+ *
+ * @param {Area} area
+ * @param {number} value o indice que o canal ja consome, com o atraso aplicado
+ * @param {number} neutral
+ * @returns {number} pontos de indice entregues a area alvo
+ */
+function liftAt(area, value, neutral) {
+  return ((value - neutral) / 100) * area.force;
+}
+
+/**
+ * O MESMO CANAL, PERGUNTADO DE FORA — quanto esta area entrega hoje a area alvo.
+ *
+ * @param {Area} area
+ * @param {Record<string, number[]>} history
+ * @param {number} neutral
+ * @returns {number} pontos de indice
+ */
+export function liftOf(area, history, neutral) {
+  return liftAt(area, delayed(history[area.id], area.initial, area.lag), neutral);
+}
+
+/**
  * Calculado depois, a educacao alimentaria a producao no mesmo mes em que ela propria mudou,
  * e o `lag` de 24 meses viraria enfeite.
  *
@@ -67,7 +108,7 @@ export function step({ areas, index, history, allocation, impacts = {}, neutral,
   let bonus = 0;
   for (const area of areas) {
     if (area.feeds !== "capacity") continue;
-    bonus += (((incoming[area.id] ?? area.initial) - neutral) / 100) * area.force;
+    bonus += liftAt(area, incoming[area.id] ?? area.initial, neutral);
   }
 
   /* 3 — O INDICE NOVO. */
@@ -122,11 +163,7 @@ export function pressureOf({ areas, history }) {
   let mandatory = 1;
 
   for (const area of areas) {
-    const value = delayed(history[area.id], area.initial, area.lag);
-
-    /* A troca conserta um defeito medido, e ele era o segundo termo do achado numero um do
-       handoff — o pais que se desendivida sozinho. */
-    const push = ((value - area.initial) / 100) * area.force;
+    const push = pushOf(area, history);
     if (area.feeds === "revenue") revenue += push;
     if (area.feeds === "mandatory") mandatory += push;
   }

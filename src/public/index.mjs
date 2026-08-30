@@ -85,6 +85,10 @@ export { STAGES } from "../application/passage.mjs";
 /* ⚠ O CALENDARIO E A PRIMEIRA DATA DO JOGO, e ele passa pela porta como funcao pura de `month`:
    nenhum relogio, para o mandato continuar se refazendo da semente. */
 export { calendarOf, AHEAD } from "../application/calendar.mjs";
+/* ⚠ `chainOf` E A DECIMA OITAVA PORTA, e ela e o D4: a corrente existia e nao aparecia. Gastar
+   em Seguranca move a ordem, que move a despesa obrigatoria, que move o caixa — e a unica
+   pista disso na interface era um numero mudando em outra tela. */
+export { chainOf } from "../application/chain.mjs";
 /* `left` e a decima porta, e ela e uma linha — o que importa e ela ser a UNICA. */
 /* ⚠ `silences` e a decima quinta porta, e ela nasceu de uma RECUSA. */
 export { left, silences } from "../application/mail.mjs";
