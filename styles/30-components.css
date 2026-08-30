@@ -173,7 +173,7 @@
 
   .action[disabled] {
     cursor: not-allowed;
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--veil);
     background: none;
     color: var(
       --ink-dim
@@ -255,7 +255,7 @@
     gap: 1px;
     margin: 0 var(--space-3) var(--space-4);
     padding-bottom: var(--space-3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--veil-thin);
   }
 
   .rail__who {
@@ -338,9 +338,25 @@
     text-overflow: ellipsis;
   }
 
+  /* UMA COR, DOIS PESOS. O ambar e do que se PRESSIONA e o verde-vermelho e da TENDENCIA do
+     mes; a queda desde a posse e uma terceira pergunta, e ela reusa a cor de crise em duas
+     intensidades em vez de pedir um quarto tom. */
+  .rail__alert {
+    flex: 0 0 auto;
+    margin-left: auto;
+    width: var(--dot);
+    height: var(--dot);
+    border-radius: var(--radius-dot);
+    background: var(--crisis);
+  }
+
+  .rail__item[data-alert="watch"] .rail__alert {
+    background: rgba(var(--crisis-rgb), 0.45);
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .rail__item:not(.rail__item--active):hover {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--veil-thin);
       color: var(--ink);
     }
   } /* O RODAPE ANCORADO. */
@@ -373,7 +389,7 @@
     display: inline-flex;
     align-items: center;
     padding: 1px var(--space-2);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border: 1px solid var(--glass-edge);
     border-radius: var(--radius-stamp);
     background: transparent; /* ⚠ MONOESPACADA, e ela e a terceira familia do projeto: o rito nao e nome nem medicao —
        e o despacho que a maquina do Estado carimba sobre o papel. */
@@ -387,7 +403,7 @@
     white-space: nowrap;
   } /* CANETA NÃO LEVA SELO NENHUM na área — a linha só mostra o piso. */
   .badge[data-instrument="budget"] {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--veil);
     color: var(--ink-dim);
   } /* LEI ORDINÁRIA — a primeira parede de verdade. */
   .badge[data-instrument="law"] {
@@ -546,6 +562,69 @@
      ⚠ ELA PASSOU A SER DECLARADA, e nao mais automatica: a obrigatoria do cofre
      e uma regua SEM limiar — nao existe percentual em que ela "rompe" —, e sem o atributo o
      `calc(1% * var(--mark))` cairia num valor invalido e desenharia latao no zero. */
+  /* A ZONA DE PERIGO — o trecho da pista do lado ERRADO da marca, em tinta de crise a 12%.
+     Ela responde "quanto falta" no olho, e nao na leitura, e nao custa instrumento novo: e o
+     mesmo gradiente da pista com uma parada a mais.
+     ⚠ ELA FICA ATRAS DO PREENCHIMENTO, e nao por cima — o vazio e que e a zona; pintar por
+     cima do preenchido diria que a leitura ja esta la. */
+  .gauge[data-danger="above"] {
+    background:
+      linear-gradient(
+          90deg,
+          transparent 0 calc(1% * var(--mark)),
+          rgba(var(--crisis-rgb), 0.12) calc(1% * var(--mark)) 100%
+        )
+        border-box,
+      linear-gradient(
+        90deg,
+        var(--stable) 0 calc(1% * var(--index)),
+        rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
+      );
+  }
+
+  .gauge[data-danger="below"] {
+    background:
+      linear-gradient(
+          90deg,
+          rgba(var(--crisis-rgb), 0.12) 0 calc(1% * var(--mark)),
+          transparent calc(1% * var(--mark)) 100%
+        )
+        border-box,
+      linear-gradient(
+        90deg,
+        var(--stable) 0 calc(1% * var(--index)),
+        rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
+      );
+  }
+
+  /* ⚠ O PREENCHIMENTO EM DUAS TINTAS — a base que se convence e a que se aluga. A segunda
+     metade e a MESMA cor a 45%, e nao uma cor nova: ela nao e outro estado, e a mesma base com
+     um preco atras. */
+  .gauge[data-split="true"] {
+    background: linear-gradient(
+      90deg,
+      var(--stable) 0 calc(1% * var(--split)),
+      rgba(var(--stable-rgb), 0.45) calc(1% * var(--split)) calc(1% * var(--index)),
+      rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
+    );
+  }
+
+  .gauge[data-split="true"][data-danger="below"] {
+    background:
+      linear-gradient(
+          90deg,
+          rgba(var(--crisis-rgb), 0.12) 0 calc(1% * var(--mark)),
+          transparent calc(1% * var(--mark)) 100%
+        )
+        border-box,
+      linear-gradient(
+        90deg,
+        var(--stable) 0 calc(1% * var(--split)),
+        rgba(var(--stable-rgb), 0.45) calc(1% * var(--split)) calc(1% * var(--index)),
+        rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
+      );
+  }
+
   .gauge[data-mark="true"]::after {
     content: "";
     position: absolute;

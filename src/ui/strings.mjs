@@ -116,6 +116,10 @@ export const UI = {
     finance: TERMOS.finance,
     ministries: "Ministérios",
     estado: TERMOS.estado,
+    /* O ponto do rail tem rotulo porque cor sozinha nao e leitura. A queda e de `initial`,
+       e nao do nivel: e por isso que a frase fala em CAIU, e nao em "baixo". */
+    watch: "Caiu 10 pontos ou mais desde a posse",
+    alert: "Caiu 20 pontos ou mais desde a posse",
     /* ⚠ `street`, `backstage` E `pending` SAIRAM COM AS DUAS ENTRADAS CINZAS DO MENU. Elas
        prometiam duas telas que nao existem, e frase declarada sem quem a alcance e o que esta
        guarda existe para pegar — deixa-las aqui seria a promessa sobrevivendo a retirada. */
@@ -137,6 +141,13 @@ export const UI = {
        que abre em "O mercado" nao diz de que assunto ela e. A da Rua nao se redigita — ela e
        a mesma palavra do rail, e teclar de novo e como um vocabulario comeca a divergir. */
     blockCongress: "A Câmara",
+    /* ⚠ O CALENDARIO E O QUE DA PULSO AO JOGO: sem ele os 48 meses tem a mesma forma, e
+       avancar parece apertar um botao em vez de governar. */
+    blockCalendar: "O que este mês cobra",
+    calendarNone: "Nada vence este mês",
+    calendarNow: "vence agora",
+    calendarIn: (/** @type {number} */ months) =>
+      `em ${months} ${months === 1 ? TERMOS.month : TERMOS.months}`,
     blockVault: "Dinheiro do mês",
     blockBoiler: "Quem pode derrubar",
     blockStreet: "Aprovação por renda",
@@ -185,6 +196,9 @@ export const UI = {
        numa tela que nao rola. O que este limiar significa esta escrito no motor: em `boil` o
        grupo ABANDONA o governo; quem "rompe" e a ruptura, e ela tem limiar proprio e maior. */
     boilerBreaks: "abandonam acima de",
+    /* ⚠ A FORMA CURTA E PARA O QUALIFICADOR, e ela nasceu de uma medicao: com a frase inteira
+       ao lado do peso o nome pedia 313px num campo de 271, e quatro linhas cortavam. */
+    boilerBreaksShort: "sai em",
     /* A ponte entre a frase e a segunda marca da barra do fiador. */
     boilerAt: TERMOS.at,
     /* ⚠ E O PESO ZERO PRECISA DE FRASE PROPRIA, e não de "0%". */
@@ -284,7 +298,6 @@ export const UI = {
     quietMonth: "Nenhum texto foi a plenário neste mês.",
     ruptureLegend: "O que falta para abrir o processo",
     /* O QUORUM DA LEI COMUM, e ele e o mesmo TERMO que a Camara usa no Gabinete. */
-    majority: TERMOS.simpleMajority,
     /* ⚠ AS CINCO FRASES SAO NEUTRAS EM NUMERO, e o defeito era consumado:
        elas foram escritas para nomes de grupo no singular — "O mercado passou do ponto" — e os
        nomes viraram plurais quando o vocabulario deixou de ser metafora. A tela imprimia
@@ -302,6 +315,10 @@ export const UI = {
     blockGroup: "o que este grupo pesa",
     blockRuptures: "o que falta para cada ruptura",
     blockChamber: "a Câmara neste mês",
+    /* ⚠ "Se compram" e a palavra do jogador, e nao "venalidade": a pergunta que ela responde
+       e _quantos destes me abandonam quando eu parar de pagar?_ Ela e QUALIFICADOR do nome, e
+       nao linha propria — linha propria estourou a coluna em 557 contra 518. */
+    baseBought: "se compram",
     /* ⚠ O PLACAR JA ESTAVA NO SAVE, no cartao do mes, e a carta ao lado chegava vazia: o
        jogador escrevia uma lei, esperava dois meses e lia "o plenario derrubou" sem saber se
        faltaram tres votos ou noventa. As duas leituras pedem jogadas opostas. */
@@ -405,6 +422,9 @@ export const UI = {
        a carta do cerco ja o lia de `boilerOf`. Duas frases digitadas mentiriam no dia em que
        a Camara mudasse de tamanho. */
     of: TERMOS.of,
+    /* ⚠ "para" e nao "de": a linha diz quantas cadeiras FALTAM PARA o quorum, e "faltam de
+       257" le como se 257 fosse a origem da conta. */
+    forWord: "para",
     seatsMajority: ", e a maioria simples fecha em",
     /* ⚠ A UNIDADE E CADEIRA, e a carta dizia "11 pontos" reusando o rotulo da PESQUISA. */
     seat: TERMOS.seatWord,
@@ -502,6 +522,11 @@ export const UI = {
     programs: "O orçamento",
     thisArea: "esta área",
     outlook: "Para onde vai",
+    /* O horizonte e escrito por extenso porque "24m" ao lado de um indice le como unidade do
+       indice. */
+    inMonths: (/** @type {number} */ months) => `em ${months} meses`,
+    /* ⚠ A PREMISSA E DITA, e nao subentendida: a curva nao roda votacao. */
+    frozen: "sem votação no período",
     /* O PISO É ANUNCIADO EM TODA LINHA, e não só quando é atravessado. */
     floor: "piso",
     ofMonth: "do mês",

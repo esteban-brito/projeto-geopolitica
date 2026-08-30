@@ -369,11 +369,12 @@ try {
   await checkNoOverlap("gabinete", ".cards__side .annex");
 
   /* 1 — O GABINETE E A TELA INICIAL, e ele nao decide nada. */
-  /* ⚠ CINCO BLOCOS, E ELES SAO `.annex` DESDE O CICLO 15: a coluna deixou de ser quatro
-     cartoes com gramatica propria e passou a falar a lingua da caixa. */
+  /* ⚠ SEIS BLOCOS, E ELES SAO `.annex` DESDE O CICLO 15: a coluna deixou de ser quatro cartoes
+     com gramatica propria e passou a falar a lingua da caixa. O sexto e o calendario, do C7 —
+     e o numero e conferido aqui porque bloco que some nao falha em lugar nenhum. */
   expect(
-    (await page.locator(".cards__side .annex").count()) === 5,
-    "[gabinete] os cinco blocos da coluna nao vieram",
+    (await page.locator(".cards__side .annex").count()) === 6,
+    "[gabinete] os seis blocos da coluna nao vieram",
   );
   expect(
     (await page.locator("#main input, #main select").count()) === 0,
@@ -525,6 +526,33 @@ try {
       agora === presa,
       `[caixa] o mes virou e a carta aberta trocou de ${presa} para ${agora}`,
     );
+  }
+
+  /* ⚠ 7a½ — A COLUNA DA DIREITA NAO ROLA, E ISSO E ORDEM DELE: "o bloco direito do gabinete,
+     em hipotese alguma ele pode rolar; se atravessar o limite da tela, faca de um jeito que
+     tudo se enxute e caiba". A caixa PODE rolar, e ela e a excecao declarada.
+     ⚠ E ESTA CHECAGEM NASCEU CEGA NO TEMPO: `checkSwallowed` media o Gabinete no MES 1, e no
+     mes 1 a coluna sempre coube — ela rolou 40px no mes 32 com o portao verde. O que varia com
+     o mes e o conteudo: rupturas abertas, cerco, gastos presos e marcos do calendario. */
+  /** @param {string} where */
+  async function checkColumnFits(where) {
+    const over = await page.evaluate(() => {
+      const side = document.querySelector(".cards__side");
+      if (!side) return null;
+      return side.scrollHeight - side.clientHeight;
+    });
+    expect(
+      over !== null && over <= 1,
+      `[${where}] a coluna da direita nao coube: ${over}px alem do limite`,
+    );
+  }
+
+  /* ⚠ VINTE E QUATRO MESES, e o numero e medido: os dois meses em que a coluna estourava eram
+     o 23 e o 35, e uma janela de doze nao alcancava nenhum dos dois. */
+  for (let month = 0; month < 24; month++) {
+    await page.click("#advance");
+    await page.waitForTimeout(45);
+    await checkColumnFits(`gabinete mes ${month + 2}`);
   }
 
   /* 7b — O MES E REPETIVEL. */
@@ -806,7 +834,7 @@ try {
   /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e memoria de
      sessao e nao entra no save. */
   expect(
-    (await page.locator(".cards__side .annex").count()) === 5,
+    (await page.locator(".cards__side .annex").count()) === 6,
     "[save] a tela retomada nao renderizou",
   );
 

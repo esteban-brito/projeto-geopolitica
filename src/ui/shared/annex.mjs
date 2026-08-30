@@ -8,6 +8,7 @@
    ⚠ A SUBSTANCIA E DO CONTEXTO, e nao da peca: dentro da carta ela e papel, na coluna ela e
    vidro. A folha resolve isso por contexto; escrever duas pecas resolveria por duplicacao. */
 
+import { iconHtml } from "./icons.mjs";
 import { escapeHtml } from "./html.mjs";
 import { attr, seats } from "./format.mjs";
 import { UI, labelOf } from "../strings.mjs";
@@ -43,6 +44,8 @@ export function cardHtml(legend, body) {
  * @param {number} [input.mark] o limiar, na mesma escala da barra
  * @param {number} [input.fall] o segundo limiar, quando a mesma regua tem dois
  * @param {boolean} [input.past] a leitura ja passou do limiar
+ * @param {"above" | "below"} [input.danger] de que LADO da marca fica o perigo
+ * @param {number} [input.split] onde o preenchimento troca de tinta, na mesma escala
  * @param {string} [input.note] o qualificador ao lado do numero
  * @param {string} [input.aside] o qualificador ao lado do NOME — ele nao e uma segunda
  * leitura: e a mesma leitura dizendo o proprio peso
@@ -51,12 +54,27 @@ export function cardHtml(legend, body) {
  * @param {string} [input.label] a descricao da barra para quem le por som
  * @returns {string}
  */
-export function lineHtml({ who, value, share, mark, fall, past, note, aside, tone, trend, label }) {
+export function lineHtml({
+  who,
+  value,
+  share,
+  mark,
+  fall,
+  past,
+  danger,
+  split,
+  note,
+  aside,
+  tone,
+  trend,
+  label,
+}) {
   const width = share === undefined ? 0 : Math.max(0, Math.min(100, share));
   const style =
     `--index:${attr(width)}` +
     (mark === undefined ? "" : `;--mark:${attr(mark)}`) +
-    (fall === undefined ? "" : `;--fall:${attr(fall)}`);
+    (fall === undefined ? "" : `;--fall:${attr(fall)}`) +
+    (split === undefined ? "" : `;--split:${attr(split)}`);
 
   return (
     `<div class="annex__line"${tone ? ` data-tone="${escapeHtml(tone)}"` : ""}>` +
@@ -67,6 +85,14 @@ export function lineHtml({ who, value, share, mark, fall, past, note, aside, ton
       ? ""
       : `<span class="gauge" role="img"` +
         (mark === undefined ? "" : ` data-mark="true"`) +
+        /* ⚠ O PREENCHIMENTO TROCA DE TINTA NO MEIO, e nao ganha uma linha nova: a divisao fica
+           em cima do numero que ela explica, e custa ZERO de altura numa tela que nao rola. */
+        (split === undefined ? "" : ` data-split="true"`) +
+        /* ⚠ O LADO E DECLARADO PELO CHAMADOR, e nao deduzido daqui. As duas reguas com marca
+           apontam para lados OPOSTOS: no cerco, passar de `boil` e perder o grupo; na Camara,
+           passar da maioria e poder aprovar. Pintar "alem da marca" como perigo em ambas
+           pintaria de vermelho a zona em que o jogador ganhou. */
+        (danger === undefined ? "" : ` data-danger="${danger}"`) +
         (fall === undefined ? "" : ` data-fall="true"`) +
         (past ? ` data-past="true"` : "") +
         ` style="${style}"` +
@@ -93,13 +119,17 @@ export function lineHtml({ who, value, share, mark, fall, past, note, aside, ton
  * @param {object} [extra]
  * @param {string} [extra.door] a tela que este bloco abre, quando ela existe
  * @param {string} [extra.foot] o que atravessa a largura toda — carimbo, ruptura aberta
+ * @param {string} [extra.icon] a chave do glifo, do MESMO conjunto do rail
  * @returns {string}
  */
-export function linesHtml(legend, lines, { door, foot } = {}) {
+export function linesHtml(legend, lines, { door, foot, icon } = {}) {
+  /* O GLIFO E O MESMO CONJUNTO DO RAIL, e nao um segundo: a coluna e o menu falam do mesmo
+     pais, e dois desenhos para "Congresso" seriam duas palavras para a mesma coisa. */
+  const glyph = icon ? iconHtml(icon, "annex__icon") : "";
   const head = door
     ? `<button class="annex__legend block__door" type="button" ` +
-      `data-section="${escapeHtml(door)}">${escapeHtml(legend)}</button>`
-    : `<h5 class="annex__legend">${escapeHtml(legend)}</h5>`;
+      `data-section="${escapeHtml(door)}">${glyph}${escapeHtml(legend)}</button>`
+    : `<h5 class="annex__legend">${glyph}${escapeHtml(legend)}</h5>`;
 
   return `<section class="annex" data-wide="true">` + head + lines + (foot ?? "") + `</section>`;
 }
@@ -165,9 +195,10 @@ export function rupturesRows(ruptures) {
  * @param {number} base
  * @param {number} majority
  * @param {number} seatsTotal
+ * @param {{ bought: number, convinced: number }} [venality] a base repartida por PRECO
  * @returns {string}
  */
-export function chamberRows(base, majority, seatsTotal) {
+export function chamberRows(base, majority, seatsTotal, venality) {
   const total = Math.max(1, seatsTotal);
   const falta = Math.max(0, majority - base);
 
@@ -177,12 +208,31 @@ export function chamberRows(base, majority, seatsTotal) {
       value: seats(base),
       share: (base / total) * 100,
       mark: (majority / total) * 100,
+      /* Abaixo do quorum nada passa, e e a metade da regua que custa. */
+      danger: "below",
+      /* ⚠ A CONVICCAO VEM PRIMEIRO, e o aluguel depois: a leitura corre da esquerda, e o que o
+         jogador precisa achar de relance e onde a base dele PARA de ser dele.
+         ⚠ E ELA NAO GANHA LINHA PROPRIA: o passeio cobrou 557 contra 518 quando ela ganhou, e
+         a coluna nao rola. A barra ja estava ali, em cima do numero que a divisao explica. */
+      ...(venality === undefined ? {} : { split: (venality.convinced / total) * 100 }),
       note: `${UI.inbox.of} ${seats(seatsTotal)}`,
+      ...(venality === undefined
+        ? {}
+        : { aside: `${seats(venality.bought)} ${UI.inbox.baseBought}` }),
       label: `${UI.cabinet.baseLine}: ${seats(base)} ${UI.inbox.of} ${seats(seatsTotal)}`,
     }) +
-    lineHtml({ who: UI.inbox.majority, value: seats(majority) }) +
+    /* ⚠ `Maioria simples 257` SAIU, e ela era a TERCEIRA forma de dizer a mesma coisa: a marca
+       de latao ja aponta o quorum na pista, e `Faltam` ja da a distancia ate ele. O numero nao
+       se perdeu — virou o qualificador de `Faltam`, que e a linha que fala dele. A linha
+       custava 26px numa coluna que estourava em 12. */
     /* ⚠ ZERO NAO E LEITURA AQUI: "faltam 0" ocupa uma linha para dizer que a maioria esta
        feita, e quem ja diz isso e a barra, com a marca do quorum atras do preenchimento. */
-    (falta > 0 ? lineHtml({ who: UI.inbox.blockMissing, value: seats(falta) }) : "")
+    (falta > 0
+      ? lineHtml({
+          who: UI.inbox.blockMissing,
+          aside: `${UI.inbox.forWord} ${seats(majority)}`,
+          value: seats(falta),
+        })
+      : "")
   );
 }

@@ -159,6 +159,37 @@ export function baseSplit({ parties, loyalty }) {
   return split;
 }
 
+/* MEDIDO NO CATALOGO: com o corte em 0,7 a Camara parte em 364 contra 149 cadeiras, e a media
+   ponderada pela venalidade da 67,9%. O corte nao e redondo por acaso — ele e o degrau em que
+   `venalityFor` deixa de cobrar resistencia ideologica e passa a cobrar preco. */
+const VENAL = 0.7;
+
+/**
+ * A BASE TEM DUAS METADES: a que se compra e a que se convence.
+ *
+ * ⚠ ELA RESPONDE A PERGUNTA QUE A TELA NUNCA RESPONDEU — _quantos destes me abandonam no dia em
+ * que eu parar de pagar?_ A leitura de hoje diz "436 apoiam" sem separar conviccao de aluguel.
+ *
+ * ⚠ E ELA NAO E `baseSplit`: aquela reparte por HUMOR — quem esta leal, obstruindo ou rompido
+ * hoje. Esta reparte por PRECO, que e outra pergunta e nao muda com o mes.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty
+ * @returns {{ bought: number, convinced: number }} cadeiras efetivas, e a soma e a base
+ */
+export function baseVenality({ parties, loyalty }) {
+  const split = { bought: 0, convinced: 0 };
+
+  for (const party of parties) {
+    const effective = party.seats * clamp01(moodFactor(loyalty[party.id] ?? 0));
+    if (party.venalityEconomic >= VENAL) split.bought += effective;
+    else split.convinced += effective;
+  }
+
+  return split;
+}
+
 /**
  * A soma de `delivered` aqui e exatamente o `loyal + obstructing + ruptured` de la — e ha uma
  * prova cobrando isso, porque a hora em que as duas divergirem e a hora em que o desenho

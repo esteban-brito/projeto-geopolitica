@@ -315,14 +315,32 @@ export function poolHtml({ room, committed, spent }) {
  *
  * @param {object} input
  * @param {number} input.value
- * @param {number} input.projected
- * @param {number} input.idle
+ * @param {number} input.projected o indice no fim do MES que vem
+ * @param {number} input.idle o mes que vem sem tocar em nada
+ * @param {number} [input.ahead] o indice no fim do HORIZONTE
+ * @param {number} [input.aheadIdle] o horizonte sem tocar em nada
+ * @param {number} [input.horizon] quantos meses a curva olha
  * @returns {string}
  */
-export function outlookHtml({ value, projected, idle }) {
+export function outlookHtml({ value, projected, idle, ahead, aheadIdle, horizon }) {
+  /* ⚠ O HORIZONTE E A LEITURA PRINCIPAL, e o mes que vem virou nota: com 0,40 de passo mensal a
+     area imprimia `61 → 61` na tela onde o jogador acabou de mexer — leitura incapaz de mostrar
+     a decisao. Sem horizonte a peca cai na leitura antiga, e nao mente. */
+  if (ahead === undefined || horizon === undefined) {
+    return (
+      `${seats(value)} → ${seats(projected)}` +
+      `<small>${escapeHtml(UI.area.holding)}: ${seats(idle)}</small>`
+    );
+  }
+
   return (
-    `${seats(value)} → ${seats(projected)}` +
-    `<small>${escapeHtml(UI.area.holding)}: ${seats(idle)}</small>`
+    `${seats(value)} → ${seats(ahead)}` +
+    `<small>${escapeHtml(UI.area.inMonths(horizon))} · ` +
+    `${escapeHtml(UI.area.holding)}: ${seats(aheadIdle ?? value)}</small>` +
+    /* ⚠ A CURVA DECLARA O QUE ELA NAO SIMULA. O plenario fica parado dentro dela — projetar com
+       votacao seria prever um voto que nao aconteceu —, e uma projecao que esconde a propria
+       premissa e um numero inventado com aparencia de motor. */
+    `<small>${escapeHtml(UI.area.frozen)}</small>`
   );
 }
 

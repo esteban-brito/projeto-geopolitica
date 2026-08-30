@@ -25,7 +25,9 @@ const TOKENS_FILE = "styles/00-tokens.css";
    comeca, e --ceiling   onde ela acaba; --fall     o SEGUNDO limiar de uma regua, e so um
    grupo da caldeira tem um: em --mark ele abandona o governo, e em --fall a ruptura politica
    abre; --rail-floor a tinta da zona abaixo do piso, trocada pela guarda daquela alavanca
-   na regra do proprio controle — e a mesma forma de --part-color. */
+   na regra do proprio controle — e a mesma forma de --part-color; --split    onde o
+   preenchimento de uma regua troca de tinta, e so a Camara tem: a base parte em quem se
+   convence e quem se compra, e a divisao e por elemento e nao do sistema. */
 const RUNTIME = new Set([
   "--part-color",
   "--neutral",
@@ -34,6 +36,7 @@ const RUNTIME = new Set([
   "--ceiling",
   "--mark",
   "--fall",
+  "--split",
   "--rail-floor",
 ]);
 

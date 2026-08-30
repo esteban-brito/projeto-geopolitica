@@ -16,6 +16,8 @@
 import { OPENING_MONTH, createState } from "./src/state/state.mjs";
 import { deserialize, serialize } from "./src/state/save.mjs";
 import {
+  alertsOf,
+  baseVenality,
   CATALOG,
   NEUTRAL,
   pollFrom,
@@ -31,6 +33,10 @@ import {
   ledger,
   left,
   outlook,
+  trajectory,
+  HORIZON,
+  STAGES,
+  calendarOf,
   playMonth,
   settlement,
   silences,
@@ -438,6 +444,11 @@ function cabinetInput(current) {
     base: current.base,
     seats: SEATS,
     majority: SIMPLE_MAJORITY,
+    /* ⚠ A BASE REPARTIDA POR PRECO, e quem reparte e o motor: a tela mostrava "436 apoiam"
+       sem dizer quantos sao conviccao e quantos sao aluguel. */
+    venality: baseVenality({ parties: CATALOG.parties, loyalty: state.loyalty }),
+    /* ⚠ A PRIMEIRA DATA DO JOGO, e ela e funcao pura do mes — sem relogio, com prova. */
+    calendar: calendarOf(state.month),
     /* A BASE REPARTIDA PELO ESTADO DE QUEM A ENTREGA, e quem reparte e o motor:
        os limiares que separam obstrucao de ruptura sao calibragem de ECLUSA. */
     /* AS ONZE BANCADAS, com o que cada uma entrega — e o hemiciclo desenha 513
@@ -543,7 +554,15 @@ function cabinetInput(current) {
        CORRENTE ja no segundo repinte do mes, e a coluna repinta a cada clique: medido, um
        clique na caixa levava as setas de 5 direcoes a 0, e `flat` afirma que nao andou.
        Numa recarga `framed` volta nulo, e ai nao ha seta: ausencia nao e resultado. */
-    before: framed ? { pressure: framed.pressure, street: pollBySegment(framed.mood) } : null,
+    before: framed
+      ? {
+          pressure: framed.pressure,
+          street: pollBySegment(framed.mood),
+          /* ⚠ O GASTO PRESO DO MES PASSADO, e ele e a metade que faltava do C11: um governo
+             que nao corta previdencia via a MESMA linha por 48 meses, e ela virava legenda. */
+          locked: lockedBy(framed, CATALOG),
+        }
+      : null,
   };
 }
 
@@ -584,6 +603,7 @@ function areaInput(area) {
      E o entrypoint nao pode calcular — `boundaries` existe por isso, e a regra foi
      furada justamente por uma linha que se anunciava como fiel. */
   const ahead = outlook(state, orders, CATALOG);
+  const curve = trajectory(state, orders, CATALOG);
 
   return {
     area,
@@ -601,6 +621,12 @@ function areaInput(area) {
     committed: share.demand - spent,
     projected: ahead.index[area.id] ?? value,
     idle: ahead.idle[area.id] ?? value,
+    /* ⚠ O MES QUE VEM NAO MOSTRA DECISAO NENHUMA: a area anda 0,40 por mes, e a leitura saia
+       `61 → 61` justamente na tela onde o jogador acabou de mexer. A projecao e a MESMA conta
+       com horizonte — ha prova cobrando que a 1 mes as duas deem o mesmo numero. */
+    horizon: HORIZON,
+    ahead: curve.index[area.id]?.at(-1) ?? value,
+    aheadIdle: curve.idle[area.id]?.at(-1) ?? value,
     bands: lawNow(),
     requestedBands: orders.bands,
   };
@@ -676,7 +702,13 @@ function paint() {
   const term = termOf(state, CATALOG);
   endLabel(term);
 
-  el.railNav.innerHTML = railNavHtml(screen, CATALOG.areas);
+  /* ⚠ O RAIL PERGUNTA A MALHA, e antes ele nao perguntava nada: os oito ministerios saiam
+     identicos com Saude a 62 ou a 12, com o indice de cada um calculado todo mes ao lado. */
+  el.railNav.innerHTML = railNavHtml(
+    screen,
+    CATALOG.areas,
+    alertsOf(CATALOG.areas, state.capacity.index),
+  );
 
   /* ⚠ DE QUEM E ESTE GOVERNO. Ele se repinta a cada pintura e nao so na abertura,
      porque a POSICAO muda: ela e derivada do que o jogador moveu no orcamento, e
@@ -731,11 +763,14 @@ function paint() {
         index: state.capacity.index,
         /* A SERIE LONGA, e nao o buffer do atraso — ver a prosa em `financeInput`. */
         history: state.series.areas,
+        /* O MESMO MOTOR QUE O RAIL LE: a faixa e o menu falam da mesma queda. */
+        alerts: alertsOf(CATALOG.areas, state.capacity.index),
       }),
       mesa: mesaHtml(mesaInput()),
       /* A GAVETA. Quem a conta e o motor: o quorum de cada texto e recomposto
          contra o pais de hoje, e nao contra o do dia em que ele foi assinado. */
-      passage: passageHtml(passageOf(state, CATALOG)),
+      /* O caminho vem do motor, e a tela so diz onde o texto esta dentro dele. */
+      passage: passageHtml(passageOf(state, CATALOG), STAGES),
       report: reportPanelHtml(
         last && {
           report: last.report,

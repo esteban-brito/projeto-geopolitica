@@ -230,3 +230,63 @@ do percentual saiu da coluna do valor para o lado do nome.
 ⚠ **A PODA FOI DE TRÊS LINHAS, e não de quatro:** `Da receita de` virou qualificador do nome
 em vez de sumir, o terceiro gasto preso saiu (a porta abre Finanças) e `Faltam 0` só imprime
 quando falta.
+
+---
+
+## ✔ O CICLO FECHOU — 30/08/2026
+
+| item        | estado                                                                   |
+| ----------- | ------------------------------------------------------------------------ |
+| **A1**      | ✔ o índice de capacidade chega ao rail, com dois graus                   |
+| **A2**      | ✔ a zona de perigo pintada, e o LADO é declarado pelo chamador           |
+| **passo 5** | ⛔ **medido e recusado** — a coluna não tem largura                      |
+| **passo 6** | ✔ glifo em cada um dos cinco blocos, do conjunto do rail                 |
+| extra       | ✔ a moldura do palco saiu, por ordem dele, e as bordas caíram de 44 a 16 |
+
+### ⭐ A1 — o dado que existia e não tinha consumidor
+
+`railNavHtml` recebia só a tela e `CATALOG.areas`. Agora recebe `alertsOf(areas, index)`, que
+mora na MALHA e passa pela fachada — a mesma forma de `pollFrom`, e pelo mesmo motivo: a escala
+é regra do motor, e a faixa de áreas do passo 2 vai lê-la também.
+
+⚠ **A REGRA É A DISTÂNCIA DE `initial`, E NÃO O NÍVEL** — é a doutrina que o B1 já tinha
+escrito. Um limiar absoluto acusaria o jogador de uma Segurança 38 que ele **herdou**.
+
+**Os dois limiares saíram de 72 células medidas** — nove políticas-sonda a 48 meses, oito áreas
+cada. A distribuição tem um **vão real entre −9 e −12**, e o agrupamento denso do colapso começa
+em **−20**: 49 células acima de −10, 9 na faixa do meio, 14 além de −20. Duas provas nasceram
+com ele, e as duas foram verificadas mordendo.
+
+### ⭐ A2 — e o dossiê estava pela metade
+
+Ele pedia "pintar o trecho ALÉM da marca". **Medido: as duas réguas com marca apontam para
+lados OPOSTOS** — no cerco, passar de `boil` é perder o grupo; na Câmara, passar da maioria é
+poder aprovar. Pintar "além" como perigo nas duas **pintaria de vermelho a zona em que o jogador
+ganhou**. O lado passou a ser declarado pelo chamador (`danger: "above" | "below"`).
+
+### ⛔ PASSO 5 — o prazo à direita não cabe, e a medição é a mesma de antes
+
+Entrou, foi visto na captura e **saiu no mesmo dia**. A coluna do índice tem **179px de linha**;
+`vence neste mês` pede ~103. Na linha do assunto ele espremeu o texto a quatro fileiras cortadas
+— pior que o defeito que ele vinha corrigir. **A folha já carregava essa aritmética**, escrita
+quando o prazo desceu para a linha própria; o passo 5 do plano assumiu a largura do Football
+Manager, que tem o índice três vezes mais largo.
+
+⚠ **E ELE ACHOU UMA COLISÃO DE NOME DE GRAÇA:** `.tray__head` já era a legenda `CAIXA DE
+ENTRADA`, e a peça nova reusou a classe — a mesma família da sessão 21.
+
+### ⭐ PASSO 6 — e o conjunto de glifos virou peça
+
+Os ícones moravam em `rail.mjs`. Saíram para `src/ui/shared/icons.mjs`, porque **dois arquivos
+com o mesmo desenho é como uma paleta começa a divergir**. Três dos cinco blocos já tinham
+glifo no conjunto (`congress`, `finance`, `opinion`); **dois nasceram aqui** — `risk`, o
+triângulo de aviso, e `pressure`, três silhuetas, porque quem derruba um governo é gente e não
+um indicador.
+
+### ✔ E AS BORDAS CAÍRAM DE 44px PARA 16px
+
+Queixa dele, olhando o print: _"muitos espaços em branco sem nada… espaços nas bordas"_.
+**Medido a 1920×980: `#main` dava 16px e `.cabinet` mais 28.** O recuo do palco existia para
+manter o conteúdo longe da **aresta do vidro** — e o vidro saiu na mesma sessão. Sem lâmina não
+há aresta, e os 28px eram margem morta. Zerado, as três colunas ganharam **56px de largura e
+56px de altura**, e a coluna direita passou de 776/807 para **831/863**.

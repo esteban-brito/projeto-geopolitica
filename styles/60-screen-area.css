@@ -130,7 +130,7 @@
        rito: numa peca o texto comeca na margem, e nao dentro de uma caixa. */
     padding: var(--space-2) 0 var(--space-2) var(--space-3);
     /* ⚠ O FIO E A PECA, E NAO A LINHA. */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--veil-thin);
     /* A MARCA DO RITO MORA NA BORDA ESQUERDA, e ela e transparente enquanto o movimento e
        caneta: uma linha que nao custa nada nao tem o que anunciar. */
     border-left: var(--rule) solid transparent;
@@ -327,7 +327,7 @@
     padding: var(--space-2) var(--space-3);
     border-top: 1px solid rgba(var(--brand-rgb), 0.28);
     border-bottom: 1px solid rgba(var(--brand-rgb), 0.28);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--veil-thin);
     font-size: var(--text-note);
     letter-spacing: 0.04em;
     color: var(--ink-soft);

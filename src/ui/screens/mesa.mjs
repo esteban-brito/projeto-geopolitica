@@ -2,7 +2,8 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed, sparkline } from "../shared/format.mjs";
-import { WINDOW } from "../shared/trend.mjs";
+import { WINDOW, directionOf, trendOf } from "../shared/trend.mjs";
+import { iconHtml } from "../shared/icons.mjs";
 import { headHtml } from "../shared/head.mjs";
 import { sigilHtml } from "../shared/sigil.mjs";
 import { UI, labelOf } from "../strings.mjs";
@@ -33,23 +34,42 @@ function moodOf(loyalty, thresholds) {
  * @param {ReadonlyArray<Area>} input.areas
  * @param {Record<string, number>} input.index
  * @param {Record<string, number[]>} input.history
+ * @param {Record<string, "watch" | "alert">} [input.alerts] a queda desde a posse, por area
  * @returns {string}
  */
-export function capacityStripHtml({ areas, index, history }) {
+export function capacityStripHtml({ areas, index, history, alerts = {} }) {
   const gauges = areas
     .map(area => {
       const value = index[area.id] ?? area.initial;
       const past = history[area.id] ?? [];
       /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `shared/trend.mjs`. */
       const trend = sparkline(past.length > 0 ? past : [value], WINDOW);
+      /* ⚠ A DIRECAO E A MESMA CONTA DAS OUTRAS DUAS TELAS, e ela vem de `trendOf`: refeita
+         aqui, a faisca discordaria da seta do Gabinete no primeiro mes de empate. */
+      const moved = trendOf(value, past);
+      const direction = moved === null ? null : directionOf(value, value - moved.delta, 1);
+      /* ⚠ A COR E DO MANDATO, E NAO DO NIVEL: Seguranca abre em 38, e pintar por nivel
+         acusaria o jogador de um pais que ele herdou. `alertsOf` mede a distancia de
+         `initial`, e e o MESMO motor que o rail le. */
+      const alert = alerts[area.id];
 
       return (
-        `<button class="capacity" type="button" data-section="${escapeHtml(area.id)}">` +
+        `<button class="capacity" type="button" data-section="${escapeHtml(area.id)}"` +
+        (alert ? ` data-alert="${alert}"` : "") +
+        `>` +
         /* O NOME CURTO, pela mesma razao do rail: a faixa da 117px por area. */
-        `<span class="capacity__label">${escapeHtml(area.short ?? area.label)}</span>` +
+        `<span class="capacity__label">` +
+        iconHtml(area.id, "capacity__icon") +
+        `<span class="capacity__name">${escapeHtml(area.short ?? area.label)}</span>` +
+        `</span>` +
+        /* ⚠ O QUE A AREA MEDE ESTAVA NO CATALOGO E NAO NA TELA: oito blocos diziam so o nome
+           do ministerio, e o numero grande ao lado nao dizia numero DE QUE. */
+        `<span class="capacity__index">${escapeHtml(area.index)}</span>` +
         `<span class="capacity__read">` +
         `<span class="capacity__value" data-numeric>${seats(value)}</span>` +
-        `<span class="capacity__trend" aria-hidden="true">${trend}</span>` +
+        `<span class="capacity__trend"` +
+        (direction ? ` data-direction="${direction}"` : "") +
+        ` aria-hidden="true">${trend}</span>` +
         `</span>` +
         `<span class="capacity__track" style="--index:${seats(value)}" aria-hidden="true"></span>` +
         `</button>`
@@ -276,9 +296,10 @@ export function mesaHtml(input) {
  *
  * @param {ReadonlyArray<{ id: string, label: string, stage: string, waiting: number,
  * expires: number | null, instrument: string, quorum: number, saved: string | null }>} bills
+ * @param {ReadonlyArray<string>} [stages] o caminho em ordem, e ele vem do motor
  * @returns {string}
  */
-export function passageHtml(bills) {
+export function passageHtml(bills, stages = []) {
   if (bills.length === 0) {
     return (
       `<div class="empty">` +
@@ -296,9 +317,23 @@ export function passageHtml(bills) {
             `<b data-numeric>${seats(bill.expires)}</b></span>`
           : "";
 
+      /* ⚠ O ESTAGIO ERA UMA PALAVRA, e uma palavra nao diz que ha um CAMINHO: o jogador lia
+         "na gaveta" sem saber que faltam dois passos nem quanto ja andou. Os degraus vem do
+         motor em ordem, entao um quarto estagio aparece aqui sozinho. */
+      const at = stages.indexOf(bill.stage);
+      const path = stages
+        .map((step, index) => {
+          const state = index < at ? "past" : index === at ? "now" : "next";
+          return `<span class="passage__step" data-step="${state}"></span>`;
+        })
+        .join("");
+
       return (
         `<div class="passage__row" data-stage="${escapeHtml(bill.stage)}">` +
-        `<span class="passage__stage">${escapeHtml(labelOf(UI.congress.stage, bill.stage))}</span>` +
+        `<span class="passage__stage">` +
+        (path ? `<span class="passage__path" aria-hidden="true">${path}</span>` : "") +
+        `<span class="passage__where">${escapeHtml(labelOf(UI.congress.stage, bill.stage))}</span>` +
+        `</span>` +
         `<span class="passage__what">` +
         `<b class="passage__label">${escapeHtml(bill.label)}</b>` +
         (bill.saved

@@ -48,7 +48,7 @@
     align-items: baseline;
     gap: var(--space-3);
     padding: var(--space-2) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--veil-thin);
   }
 
   .closing__row:last-child {
@@ -123,7 +123,7 @@
     justify-content: space-between;
     gap: var(--space-3);
     padding: var(--space-1) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--veil-thin);
     counter-increment: law;
   }
 

@@ -153,3 +153,36 @@ export function opening(areas) {
   }
   return { index, history };
 }
+
+/* MEDIDO EM 72 CELULAS — nove politicas-sonda a 48 meses, oito areas cada. A distribuicao tem
+   um VAO real entre -9 e -12, e o agrupamento denso do colapso comeca em -20: 49 celulas ficam
+   acima de -10, 9 caem na faixa do meio e 14 passam de -20. Os dois limiares saem dai, e nao
+   de escolha. */
+const WATCH = 10;
+const ALERT = 20;
+
+/**
+ * QUANTO CADA AREA CAIU DESDE A ABERTURA, dito em estado.
+ *
+ * ⚠ A DISTANCIA E DE `initial`, E NAO DO NIVEL. Um limiar absoluto acusaria o jogador de uma
+ * Seguranca 38 que ele HERDOU — ela abre em 38. O que e noticia e a queda, e so ela.
+ *
+ * A ausencia de uma area no resultado significa que ela esta quieta, e e ausencia DECLARADA:
+ * quem pinta le `alerts[id]` e nao encontra nada para pintar.
+ *
+ * @param {ReadonlyArray<Area>} areas
+ * @param {Record<string, number>} index - o indice de cada area, hoje
+ * @returns {Record<string, "watch" | "alert">} so as areas que caíram
+ */
+export function alertsOf(areas, index) {
+  /** @type {Record<string, "watch" | "alert">} */
+  const alerts = {};
+
+  for (const area of areas) {
+    const fall = area.initial - (index[area.id] ?? area.initial);
+    if (fall >= ALERT) alerts[area.id] = "alert";
+    else if (fall >= WATCH) alerts[area.id] = "watch";
+  }
+
+  return alerts;
+}

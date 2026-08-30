@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-import { opening, pressureOf, step } from "../../src/domain/capacity/index.mjs";
+import { alertsOf, opening, pressureOf, step } from "../../src/domain/capacity/index.mjs";
 import { AREAS, CAPACITY_TARGET, NEUTRAL } from "../../src/data/areas.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { spendOf } from "../../src/application/agenda.mjs";
@@ -259,4 +259,50 @@ test("o historico nao cresce sem fim", () => {
       `o historico de ${area.id} escapou do tamanho`,
     );
   }
+});
+
+test("O ALERTA MEDE A QUEDA, e nao o nivel — a Seguranca herdada nao acusa ninguem", () => {
+  /* Seguranca abre em 38, o menor indice do catalogo. Um limiar absoluto a acusaria no mes 1,
+     antes de o jogador tocar em nada. */
+  const quiet = alertsOf(AREAS, Object.fromEntries(AREAS.map(area => [area.id, area.initial])));
+  assert.deepEqual(quiet, {}, "a abertura nao tem alerta nenhum");
+
+  const security = AREAS.find(area => area.id === "security");
+  assert.ok(security, "o catalogo tem Seguranca");
+
+  for (const [fall, expected] of [
+    [9, undefined],
+    [10, "watch"],
+    [19, "watch"],
+    [20, "alert"],
+    [33, "alert"],
+  ]) {
+    const alerts = alertsOf([security], { security: security.initial - Number(fall) });
+    assert.equal(
+      alerts[security.id],
+      expected,
+      `uma queda de ${fall} pontos devia dar ${String(expected)}`,
+    );
+  }
+});
+
+test("O ALERTA E UMA LEITURA DA MALHA, e nenhuma area sobe para dentro dele", () => {
+  fc.assert(
+    fc.property(
+      fc.dictionary(
+        fc.constantFrom(...AREAS.map(area => area.id)),
+        fc.integer({ min: 0, max: 100 }),
+      ),
+      dictionary => {
+        const alerts = alertsOf(AREAS, dictionary);
+        for (const [id, state] of Object.entries(alerts)) {
+          const area = AREAS.find(candidate => candidate.id === id);
+          assert.ok(area, `${id} existe no catalogo`);
+          const fall = area.initial - (dictionary[id] ?? area.initial);
+          assert.ok(fall >= 10, `${id} entrou no alerta com queda de ${fall}`);
+          assert.equal(state === "alert", fall >= 20, `${id} recebeu o grau errado`);
+        }
+      },
+    ),
+  );
 });

@@ -10,6 +10,14 @@
      medidas — fundo, aresta, recuo e vao — apesar de usarem a MESMA classe. Medido a
      1920x980: `.annex` computava `rgb(19,27,44)` na carta e `rgba(238,242,248,0.03)` na
      coluna. Aqui em cima, as duas leem os mesmos tokens e o desenho e um so. */
+  /* ⚠ O RECUO DO PALCO MORREU COM A LAMINA, e ele era 28px em cada lado. Ele existia para
+     manter o conteudo longe da ARESTA do vidro; sem vidro nao ha aresta, e o que sobrava era
+     margem morta somada aos 16px de `#main` — 44px por lado, medidos a 1920x980. Zerado, as
+     tres colunas ganham 56px de largura e 56px de altura. */
+  .area.cabinet {
+    padding: 0;
+  }
+
   .cabinet {
     --sheet-ink: var(--ink);
     --sheet-ink-rgb: var(--ink-rgb);
@@ -19,7 +27,7 @@
   }
 
   .board[data-screen="cabinet"] {
-    padding-bottom: var(--space-4);
+    padding-bottom: var(--shell-floor);
   } /* ⚠ ABAIXO DO CANVAS A CARTA NAO ESTICA, e o que ela esticava era VAZIO. O indice e o
      documento dividem a mesma linha de grade, entao a carta crescia ate a altura do indice —
      medido a 1280x800 com a bandeja cheia: carta de 748px, dos quais 398 eram a faixa de
@@ -74,7 +82,7 @@
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
     align-items: start;
-    gap: var(--space-6);
+    gap: var(--gutter);
   } /* CALDEIRA logo abaixo mostravam pressao sem dizer onde e o ponto de fervura. */ /* ── A COLUNA DA DIREITA E UM ELEMENTO ────────────────────────────────────── Ver a prosa
      em `cabinet.mjs`: com os resumos soltos na grade, a Caixa de Entrada precisava declarar
      quantas linhas atravessar, e o numero envelheceu no dia em que
@@ -923,6 +931,30 @@
 
   /* ⚠ A PISTA NA FOLHA GANHA TINTA DA PRÓPRIA FOLHA porque `.gauge` pinta o vazio com branco
      a 7%, e sobre a lâmina da carta isso quase não aparece. Sobre o vidro ele aparece. */
+  /* O GLIFO DA LEGENDA — 14px, meio degrau abaixo do rail, e alinhado pela LINHA e nao pelo
+     centro: a legenda e caixa alta de 12,5px, e centrar deixaria o desenho pendurado. */
+  /* ⚠ NA COLUNA O BLOCO E PAINEL, e o raio diz isso: 3px e o token do PAPEL, e ele estava
+     certo enquanto os blocos viviam dentro do palco de 24px. A moldura saiu nesta sessao, e
+     agora cada bloco flutua sozinho no fundo ao lado de uma bandeja de 16 — cinco retangulos
+     de 3px contra um painel de 16 leem como duas gramaticas. Dentro da carta o anexo continua
+     em 3px, porque la ele e peca DENTRO de papel, e nao painel. */
+  .cards__side .annex {
+    border-radius: var(--radius-piece);
+  }
+
+  .cards__side .annex__legend {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .cards__side .annex__icon {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    opacity: 0.75;
+  }
+
   .cards__side .annex__line > .gauge {
     box-shadow: none;
   }

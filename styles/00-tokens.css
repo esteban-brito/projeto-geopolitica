@@ -145,6 +145,13 @@
        MECA O FPS DE UMA TELA NOVA, com braco de controle sem filtro, antes de
        levar o material para ela. */
     --glass-blur: blur(18px) saturate(1.5);
+    /* ── O VEU — branco sobre escuro, e ele e uma ESCALA de tres degraus ────────
+       ⚠ ELES NASCERAM DE UM CENSO: as folhas tinham QUARENTA literais de branco em TREZE
+       valores distintos, para dois trabalhos so — separar irmaos e fechar uma peca. Sem
+       escala, cada regra nova escolhia um alfa novo, e a tela ficava com sete arestas que o
+       olho le como uma so mal desenhada. */
+    --veil-thin: rgba(255, 255, 255, 0.06);
+    --veil: rgba(255, 255, 255, 0.1);
     --glass-edge: rgba(255, 255, 255, 0.14);
 
     --glass-base: rgba(var(--bg-rgb), 0.34);
@@ -205,6 +212,15 @@
     --space-4: 16px;
     --space-6: 24px;
     --space-8: 32px;
+    /* ⚠ O PE DA TELA — uma linha de base so, e ela e ordem dele: "usa a borda como limite pra
+       tudo, sobe todos os elementos usando aquela borda inferior do menu vertical como margem".
+       Rail e tabuleiro leem o MESMO valor; escrever dois faria a aresta do menu e a da coluna
+       pararem em alturas diferentes, que e o defeito que ele viu. */
+    --shell-floor: 48px;
+    /* ⚠ O VAO ENTRE COLUNAS — um so para a tela inteira. Media: rail→palco dava 32px (a margem
+       do rail mais o recuo do tabuleiro) contra 24 entre a carta e a coluna. Dois vaos numa
+       tela de tres colunas leem como uma coluna fora do lugar. */
+    --gutter: var(--space-6);
     --space-11: 44px;
 
     /* ⚠ A PILHA DE RESERVA CONTINUA, e nao e cerimonia: `font-display: swap` desenha com ela

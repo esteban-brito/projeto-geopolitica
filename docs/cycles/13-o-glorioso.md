@@ -8,13 +8,29 @@
 >
 > ⚠ **EM EXECUÇÃO DESDE 24/08/2026, e a ordem é a do rodapé deste arquivo.**
 >
-> | passo | itens                     | estado                                 |
-> | ----- | ------------------------- | -------------------------------------- |
-> | **0** | C12 · D7                  | ✔ os dois                              |
-> | **1** | 0.1 · 0.2 · C1 · C2 · C3  | ✔ os cinco                             |
-> | **2** | B1 a B5                   | ▶ **o próximo**                        |
-> | **3** | C8 · C9 · C10 · C11 · C13 | ⚠ **três de cinco** — faltam C10 e C11 |
-> | **4** | 0.3 · B10 · C7 · D4       | ⛔                                     |
+> | passo | itens                     | estado                  |
+> | ----- | ------------------------- | ----------------------- |
+> | **0** | C12 · D7                  | ✔ os dois               |
+> | **1** | 0.1 · 0.2 · C1 · C2 · C3  | ✔ os cinco              |
+> | **2** | B1 a B5                   | ✔ os cinco — 30/08/2026 |
+> | **3** | C8 · C9 · C10 · C11 · C13 | ✔ os cinco — 30/08/2026 |
+>
+> **22 de 49.** O **B10** e o **C7** entraram em 30/08/2026. Falta o **D4**, e ele **abre motor**.
+>
+> **20 de 49.** O **0.3 entrou em 30/08/2026** e saiu 15× mais barato que o previsto: com o
+> plenário congelado ela não roda `playMonth`, e 24 meses custam **0,34ms** contra os 5,3 que o
+> plano orçava. A leitura de um mês separava duas decisões opostas por **0,20 ponto** — as duas
+> imprimiam `61`; a de 24 meses separa por **4,26**.
+>
+> **19 de 49.** O passo 3 fechou junto: o C10 pôs a divisão **na barra que já existia** (custo
+> de altura zero, e uma linha própria estourou a coluna em 557 contra 518), e o C11 fez o gasto
+> preso mostrar o que MUDOU, na nota do valor.
+>
+> **17 de 49.** O passo 2 fechou em 30/08/2026: a faixa de áreas do Congresso ganhou ícone
+> (B5), o que cada área MEDE (B3, e ele já estava no catálogo), a faísca com direção (B4) e a
+> pista colorida pela distância de `initial` (B1) — `alertsOf`, o mesmo motor que o rail lê.
+> O B2 já existia: o bloco sempre foi `<button data-section>`.
+> | **4** | 0.3 · B10 · C7 · D4 | ⛔ |
 >
 > ⚠ **O PASSO 3 FOI FEITO ANTES DO 2, e foi erro meu** — anunciado como inversão deliberada e
 > cobrado por ele: _"não acha melhor voltar desde o início, passo 1, passo 2, passo 3?"_. A

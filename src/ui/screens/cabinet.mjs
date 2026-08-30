@@ -8,8 +8,9 @@
    e do contexto — papel na carta, vidro na coluna. */
 
 import { escapeHtml } from "../shared/html.mjs";
-import { money, percent } from "../shared/format.mjs";
+import { money, percent, signed } from "../shared/format.mjs";
 import { chamberRows, lineHtml, linesHtml, rupturesRows } from "../shared/annex.mjs";
+import { directionOf } from "../shared/trend.mjs";
 import { UI } from "../strings.mjs";
 
 /**
@@ -32,32 +33,13 @@ function cardHtml({ body, span }) {
 }
 
 /**
- * PARA QUE LADO A LEITURA ANDOU — ou `null` quando nao ha com que comparar.
- *
- * ⚠ AUSENCIA NAO E RESULTADO: numa recarga nao existe mes anterior, e desenhar "nao moveu"
- * ali afirmaria que nada andou num mandato em que tudo andou.
- * ⚠ E O LIMIAR E O DA LEITURA ARREDONDADA: as duas colunas imprimem inteiro, e uma seta ao
- * lado de um numero que nao mudou na tela faz a cor negar o numero.
- *
- * @param {number} now
- * @param {number | undefined} before
- * @param {1 | -1} good 1 quando subir e bom; -1 quando subir e ruim
- * @returns {"up" | "down" | "flat" | null}
- */
-function directionOf(now, before, good) {
-  if (before === undefined) return null;
-  const moved = now - before;
-  if (Math.abs(moved) < 0.5) return "flat";
-  return moved * good > 0 ? "up" : "down";
-}
-
-/**
  * A tela inteira.
  *
  * @param {object} input
  * @param {number} input.base cadeiras que respondem ao governo
  * @param {number} input.seats o plenario inteiro
  * @param {number} input.majority
+ * @param {{ bought: number, convinced: number }} [input.venality] a base repartida por PRECO
  * @param {boolean} input.resolved se ALGUM mes ja foi resolvido. ⚠ Ele existe para o
  * estado vazio escolher a frase verdadeira, e sai do MES do estado e nao do relatorio
  * em memoria: o relatorio nao vai para o save, e o mes vai
@@ -80,7 +62,11 @@ function directionOf(now, before, good) {
  * ruptures: ReadonlyArray<{ id: string, value: number, threshold: number,
  * breaks: string, open: boolean }>,
  * impeachment: number | null, fallen: number | null }} input.boiler a CALDEIRA, perguntada a `boilerOf`
- * @param {{ pressure: Record<string, number>, street: Record<string, Approval> } | null}
+ * @param {{ now: ReadonlyArray<{ id: string, label: string, what: string }>,
+ * soon: ReadonlyArray<{ id: string, label: string, what: string, due: number }> }} [input.calendar]
+ * o que o mes cobra, e o que o trimestre ja cobra
+ * @param {{ pressure: Record<string, number>, street: Record<string, Approval>,
+ * locked?: ReadonlyArray<{ id: string, spend: number }> } | null}
  * [input.before] o quadro do mes passado, e ele NAO vem do save: e a memoria de uma pintura,
  * como a das setas da barra de cima. Numa recarga ele volta nulo e nenhuma seta e desenhada
  * @returns {string}
@@ -109,17 +95,20 @@ export function cabinetHtml(input) {
      caldeira 300px abaixo — com "Parlamentares" saindo nos dois com o mesmo 83 e limiares
      DIFERENTES: "rompe acima de 86" em cima, "abandonam acima de 68" embaixo. Os dois numeros
      estavam certos e mediam coisas diferentes, e nada na tela dizia isso. */
-  const risk = linesHtml(UI.cabinet.trinityTitle, rupturesRows(input.boiler.ruptures));
+  const risk = linesHtml(UI.cabinet.trinityTitle, rupturesRows(input.boiler.ruptures), {
+    icon: "risk",
+  });
 
   const boiler = boilerBlock(input);
 
   /* ── 3 · A CAMARA — a mesma leitura que a carta do plenario ja da ─────────── */
   const chamber = linesHtml(
     UI.cabinet.blockCongress,
-    chamberRows(input.base, input.majority, input.seats),
-    { door: "congress" },
+    chamberRows(input.base, input.majority, input.seats, input.venality),
+    { door: "congress", icon: "congress" },
   );
 
+  const calendar = calendarBlock(input);
   const vault = vaultBlock(input);
   const street = streetBlock(input);
 
@@ -127,11 +116,15 @@ export function cabinetHtml(input) {
     /* ⚠ ELA NAO TEM CABECA, e e a unica tela assim: o titulo dizia o nome de uma tela que o
        rail ja marca, em 25,6px de serifa, e a faixa de risco que morava logo abaixo desceu
        para a coluna. Quem nomeia agora e a legenda da bandeja, na fonte das outras legendas. */
-    `<section class="area glass-stage cabinet">` +
+    /* ⚠ E ELA E A UNICA TELA SEM LAMINA, por ordem dele: "nao to gostando desse fundo atras
+       de tudo, esse retangulo que fica como moldura de todo o gabinete. Remova, quero tudo
+       meio que solto ali dentro". Os blocos ja tem superficie propria desde o ciclo 15 — a
+       moldura era a terceira camada de fundo empilhada sob eles. */
+    `<section class="area cabinet">` +
     /* ⚠ A ORDEM DA COLUNA E A DA CONSEQUENCIA, e ela era a da contabilidade: o que decide se a
        PARTIDA ACABA dividia espaco igual com a nota de rodape do cofre. */
     `<div class="cards">${inbox}` +
-    `<div class="cards__side">${risk}${boiler}${chamber}${vault}${street}</div>` +
+    `<div class="cards__side">${risk}${boiler}${chamber}${calendar}${vault}${street}</div>` +
     `</div>` +
     `</section>`
   );
@@ -145,6 +138,11 @@ export function cabinetHtml(input) {
  * @returns {string}
  */
 function boilerBlock({ boiler, before }) {
+  /* ⚠ O PONTO DE FERVURA E UM SO PARA OS QUATRO GRUPOS, e por isso ele cabe no qualificador.
+     No dia em que um grupo tiver o proprio, `same` fica falso e o numero cala em vez de mentir. */
+  const boil = boiler.lobbies[0]?.boil ?? 0;
+  const same = boiler.lobbies.every(lobby => lobby.boil === boil);
+
   const rows = boiler.lobbies
     .map(lobby =>
       lineHtml({
@@ -159,6 +157,7 @@ function boilerBlock({ boiler, before }) {
         /* ⚠ A SEGUNDA MARCA E DO FIADOR: um grupo tem DUAS linhas na mesma regua — abandona o
            governo em `boil`, e em `fall` a ruptura politica abre. */
         mark: lobby.boil,
+        danger: "above",
         ...(lobby.fall === null ? {} : { fall: lobby.fall }),
         past: lobby.boiling,
         label:
@@ -172,14 +171,6 @@ function boilerBlock({ boiler, before }) {
       }),
     )
     .join("");
-
-  /* ⚠ UMA LINHA PARA AS QUATRO, e nao uma por linha: o ponto de fervura e UM numero do
-     catalogo, o mesmo para todos os grupos, entao repeti-lo quatro vezes seria a legenda
-     estatica que este projeto ja pagou duas vezes. No dia em que um grupo tiver o proprio,
-     ela cala em vez de mentir. ⚠ E O NUMERO CONTINUA ESCRITO: a marca diz ONDE, e nao QUANTO. */
-  const boil = boiler.lobbies[0]?.boil ?? 0;
-  const same = boiler.lobbies.every(lobby => lobby.boil === boil);
-  const edge = same ? lineHtml({ who: UI.cabinet.boilerBreaks, value: String(boil) }) : "";
 
   /* AS RUPTURAS ABERTAS, NOMEADAS. ⚠ E O SILENCIO E O ESTADO NORMAL, ENTAO ELE NAO IMPRIME
      LINHA: uma legenda que lista "em ruptura: 0" todo mes ensina o olho a ignorar a linha, e
@@ -202,7 +193,68 @@ function boilerBlock({ boiler, before }) {
             `<b>${open.map(escapeHtml).join(" · ")}</b></p>`
           : "";
 
-  return linesHtml(UI.cabinet.blockBoiler, rows + edge, { foot });
+  /* ⚠ O LIMIAR VAI NA LEGENDA, e nao numa linha nem em quatro qualificadores: ele e UM numero
+     para os quatro grupos. Como linha custava 26px numa coluna que ja estourava; repetido nos
+     quatro, virava a legenda estatica que esta folha proibe por escrito. Na legenda ele e dito
+     uma vez e nao custa altura nenhuma. No dia em que um grupo tiver o proprio, ele cala. */
+  const legend = same
+    ? `${UI.cabinet.blockBoiler} · ${UI.cabinet.boilerBreaksShort} ${boil}`
+    : UI.cabinet.blockBoiler;
+
+  return linesHtml(legend, rows, { foot, icon: "pressure" });
+}
+
+/* ⚠ O TETO DO CALENDARIO, e ele existe porque a coluna NAO ROLA — ordem dele. Os outros cinco
+   blocos tem numero fixo de linhas ou teto proprio (`GASTOS_PRESOS`); este era o unico que
+   crescia sozinho: num mes em que dois marcos vencem e tres se aproximam, ele pediria cinco
+   linhas. Medido, a coluna estoura em 20 linhas a 1440x980. */
+const PRAZOS = 2;
+
+/**
+ * O QUE O MES COBRA — e o que o trimestre ja cobra.
+ *
+ * ⚠ O QUE VENCE AGORA E LEITURA, e o que vem e QUALIFICADOR: uma linha por marco do trimestre
+ * dobraria o bloco numa coluna que nao rola. O prazo vai ao lado do nome, como o limiar do
+ * risco ja vai.
+ *
+ * @param {Parameters<typeof cabinetHtml>[0]} input
+ * @returns {string}
+ */
+function calendarBlock(input) {
+  const agenda = input.calendar;
+  if (!agenda) return "";
+
+  const rows =
+    agenda.now.length === 0 && agenda.soon.length === 0
+      ? lineHtml({ who: UI.cabinet.calendarNone, value: "" })
+      : /* ⚠ O QUE A LINHA MOSTRA E O PRAZO, e nao a explicacao: `what` e uma frase de catalogo,
+           e numa celula de valor de largura fixa ela saiu cortada em "receitas e despes". Ela
+           vira o rotulo de leitor de tela — quem enxerga le a data, quem ouve le a frase. */
+        agenda.now
+          .slice(0, PRAZOS)
+          .map(mark =>
+            lineHtml({
+              who: mark.label,
+              value: UI.cabinet.calendarNow,
+              tone: "crisis",
+              label: `${mark.label}: ${mark.what}`,
+            }),
+          )
+          .join("") +
+        /* O QUE VENCE AGORA TEM PRECEDENCIA sobre o que vem: o teto e do bloco, e nao de cada
+           metade. Num mes cheio o trimestre cala, e quem cala e a metade menos urgente. */
+        agenda.soon
+          .slice(0, Math.max(0, PRAZOS - agenda.now.length))
+          .map(mark =>
+            lineHtml({
+              who: mark.label,
+              value: UI.cabinet.calendarIn(mark.due),
+              label: `${mark.label}: ${mark.what}`,
+            }),
+          )
+          .join("");
+
+  return linesHtml(UI.cabinet.blockCalendar, rows, { icon: "estado" });
 }
 
 /* Quantos gastos presos cabem na coluna. `lockedBy` devolve tres; o terceiro so aparece em
@@ -249,12 +301,25 @@ function vaultBlock(input) {
        linhas. Uma lista escrita como frase e uma lista que ninguem le. */
     /* ⚠ DOIS, E NAO TRES: com o tipo maior cada linha custa 26px, e o terceiro maior gasto
        preso e o primeiro item que a porta `DINHEIRO DO MES ›` ja entrega inteiro em Financas. */
+    /* ⚠ ELA MOSTRA O QUE MUDOU, e nao so o que e: sem isso, um governo que nao corta
+       previdencia le a MESMA linha por 48 meses e ela vira legenda estatica. A variacao vai na
+       NOTA do valor, que ja existe — custo de altura zero, numa coluna que nao rola.
+       ⚠ E O ZERO NAO IMPRIME, pela mesma regra que o comprometido ja usa duas linhas acima: a
+       diferenca e medida na LEITURA, e nao no valor cheio. */
     input.locked
       .slice(0, GASTOS_PRESOS)
-      .map(item => lineHtml({ who: item.label, value: money(item.spend) }))
+      .map(item => {
+        const was = input.before?.locked?.find(other => other.id === item.id)?.spend;
+        const moved = was === undefined ? 0 : item.spend - was;
+        return lineHtml({
+          who: item.label,
+          value: money(item.spend),
+          ...(money(Math.abs(moved)) === money(0) ? {} : { note: signed(moved, 1) }),
+        });
+      })
       .join("");
 
-  return linesHtml(UI.cabinet.blockVault, rows, { door: "finance" });
+  return linesHtml(UI.cabinet.blockVault, rows, { door: "finance", icon: "finance" });
 }
 
 /**
@@ -282,5 +347,5 @@ function streetBlock({ segments, street, before }) {
     })
     .join("");
 
-  return linesHtml(UI.cabinet.blockStreet, rows);
+  return linesHtml(UI.cabinet.blockStreet, rows, { icon: "opinion" });
 }

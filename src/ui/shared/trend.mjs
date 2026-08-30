@@ -72,3 +72,23 @@ export function trendOf(value, history) {
 
   return { delta: value - then, months };
 }
+
+/**
+ * PARA QUE LADO A LEITURA ANDOU — ou `null` quando nao ha com que comparar.
+ *
+ * ⚠ AUSENCIA NAO E RESULTADO: numa recarga nao existe mes anterior, e desenhar "nao moveu"
+ * ali afirmaria que nada andou num mandato em que tudo andou.
+ * ⚠ E O LIMIAR E O DA LEITURA ARREDONDADA: as duas colunas imprimem inteiro, e uma seta ao
+ * lado de um numero que nao mudou na tela faz a cor negar o numero.
+ *
+ * @param {number} now
+ * @param {number | undefined} before
+ * @param {1 | -1} good 1 quando subir e bom; -1 quando subir e ruim
+ * @returns {"up" | "down" | "flat" | null}
+ */
+export function directionOf(now, before, good) {
+  if (before === undefined) return null;
+  const moved = now - before;
+  if (Math.abs(moved) < 0.5) return "flat";
+  return moved * good > 0 ? "up" : "down";
+}

@@ -2,6 +2,7 @@
 
 import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
+import { CALENDAR, LANDMARK_SCHEMA } from "./calendar.mjs";
 import {
   AMBITIONS,
   ARCHETYPES,
@@ -26,6 +27,7 @@ export const CATALOG = {
   parties: PARTIES,
   areas: AREAS,
   bills: BILLS,
+  calendar: CALENDAR,
   programs: PROGRAMS,
   rules: RULES,
   fiscal: FISCAL,
@@ -54,6 +56,7 @@ export function catalogViolations() {
     ...collectionViolations(PARTY_SCHEMA, PARTIES, "parties"),
     ...collectionViolations(AREA_SCHEMA, AREAS, "areas"),
     ...collectionViolations(BILL_SCHEMA, BILLS, "bills"),
+    ...collectionViolations(LANDMARK_SCHEMA, CALENDAR, "calendar"),
     ...collectionViolations(PROGRAM_SCHEMA, PROGRAMS, "programs"),
     ...collectionViolations(RULE_SCHEMA, RULES, "rules"),
     ...violations(FISCAL_SCHEMA, FISCAL, "fiscal"),

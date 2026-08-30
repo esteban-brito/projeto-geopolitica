@@ -725,6 +725,63 @@ export function outlook(state, orders = {}, catalog = CATALOG) {
   return { index: project(orders), idle: project({}) };
 }
 
+/* O HORIZONTE PADRAO. 24 meses e meio mandato: longo o bastante para a area mais lenta sair
+   do lugar — seis das oito levam mais que o mandato para andar — e curto o bastante para o
+   custo caber numa repintura. */
+export const HORIZON = 24;
+
+/**
+ * A PROJECAO — para onde o pais vai, mantendo o que esta na mesa.
+ *
+ * ⚠ ELA E `outlook` COM HORIZONTE, e ha prova cobrando: a 1 mes as duas dao o mesmo numero.
+ *
+ * ⛔ O PLENARIO FICA CONGELADO, E E DECISAO. Projetar com `playMonth` rodaria votacao, e
+ * votacao sorteia: a curva mostraria texto passando e caindo — previsao sobre voto que nao
+ * aconteceu. Quem mostra a curva diz isso na tela.
+ *
+ * @param {GameState} state
+ * @param {Orders} [orders]
+ * @param {typeof CATALOG} [catalog]
+ * @param {number} [months] o horizonte, em meses
+ * @returns {{ index: Record<string, number[]>, idle: Record<string, number[]> }}
+ * a serie de cada area, do mes que vem para a frente: mantendo isto, e sem tocar em nada
+ */
+export function trajectory(state, orders = {}, catalog = CATALOG, months = HORIZON) {
+  /* ⚠ A ALOCACAO SAI UMA VEZ SO, e e o que "mantendo isto" significa: a pergunta e o que
+     acontece se o jogador NAO mexer mais, e recalcula-la a cada passo projetado responderia
+     outra — a de um governo que reage, que e coisa que a projecao nao tem como saber. */
+  const funded = settlement(state, orders, catalog).funded;
+  const idleFunded = settlement(state, {}, catalog).funded;
+
+  /** @param {Record<string, number>} allocation */
+  const run = allocation => {
+    let index = state.capacity.index;
+    let history = state.capacity.history;
+    /** @type {Record<string, number[]>} */
+    const series = {};
+    for (const area of catalog.areas) series[area.id] = [];
+
+    for (let month = 0; month < months; month++) {
+      const step = capacityStep({
+        areas: catalog.areas,
+        index,
+        history,
+        allocation,
+        impacts: {},
+        neutral: NEUTRAL,
+        capacityTarget: CAPACITY_TARGET,
+      });
+      index = step.index;
+      history = step.history;
+      for (const area of catalog.areas) series[area.id]?.push(index[area.id] ?? area.initial);
+    }
+
+    return series;
+  };
+
+  return { index: run(funded), idle: run(idleFunded) };
+}
+
 /**
  * E a terceira vez que este projeto encontra a mesma familia de defeito, e desta vez ele foi
  * visto antes de existir.

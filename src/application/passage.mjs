@@ -6,11 +6,16 @@
 import { whipCount } from "../domain/congress/index.mjs";
 import { compose } from "./agenda.mjs";
 
+/* ⚠ O CAMINHO E UMA LISTA ORDENADA, e nao tres literais soltos: a tela precisa saber QUANTOS
+   passos existem e em que ordem para desenhar onde o texto esta. Escrever a ordem la seria um
+   segundo lugar para ela — e o dia em que um quarto estagio entrasse, a tela nao saberia. */
+export const STAGES = /** @type {const} */ (["drawer", "rapporteur", "floor"]);
+
 /**
  * @typedef {import("../state/state.mjs").Band} Band
  * @typedef {import("../data/parties.mjs").Party} Party
  * @typedef {import("../domain/cast/index.mjs").Person} Person
- * @typedef {"drawer" | "rapporteur" | "floor"} Stage
+ * @typedef {(typeof STAGES)[number]} Stage
  * @typedef {object} Bill um texto protocolado, e ele e o TEXTO e nao o efeito
  * @property {string} id
  * @property {number} writtenAt - o mes em que o presidente assinou

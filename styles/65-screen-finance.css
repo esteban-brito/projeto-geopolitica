@@ -14,7 +14,7 @@
     align-items: baseline;
     gap: var(--space-3);
     padding: var(--space-2) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--veil-thin);
   }
 
   .ledger__row:last-child {

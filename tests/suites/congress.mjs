@@ -11,6 +11,7 @@ import {
   dispersion,
   vote,
   whipCount,
+  baseVenality,
 } from "../../src/domain/congress/index.mjs";
 import { BILLS, quorumOf } from "../../src/data/bills.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
@@ -471,4 +472,34 @@ test("SEM A RUA, O MOTOR CONTINUA O MESMO: o padrao e neutro e nao zero", () => 
   const input = { bill, parties: PARTIES, funding: everyone(0.4), loyalty: everyone(60) };
 
   assert.equal(whipCount(input).votes, whipCount({ ...input, standing: 35 }).votes);
+});
+
+test("A BASE PARTE EM DUAS E A SOMA E A PROPRIA BASE — conviccao mais aluguel", () => {
+  fc.assert(
+    fc.property(
+      fc.dictionary(fc.constantFrom(...PARTIES.map(p => p.id)), fc.integer({ min: 0, max: 100 })),
+      loyalty => {
+        const split = baseVenality({ parties: PARTIES, loyalty });
+        const total = baseCount({ parties: PARTIES, loyalty });
+
+        /* ⚠ A SOMA E CONFERIDA ANTES DO ARREDONDAMENTO, como manda a prosa de `baseSplit`:
+           repartir inteiro faria as partes divergirem do total em ate uma cadeira. */
+        assert.equal(
+          Math.round(split.bought + split.convinced),
+          total,
+          "as duas metades nao fecham a base",
+        );
+        assert.ok(split.bought >= 0 && split.convinced >= 0, "nenhuma metade e negativa");
+      },
+    ),
+  );
+});
+
+test("O CORTE E POR PRECO, e nao por humor — a base cheia parte 364 contra 149", () => {
+  /* Com todo mundo leal a base e a Camara inteira, e ai a divisao e a do catalogo puro. */
+  const loyal = Object.fromEntries(PARTIES.map(party => [party.id, 100]));
+  const split = baseVenality({ parties: PARTIES, loyalty: loyal });
+
+  assert.equal(Math.round(split.bought), 364, "as cadeiras a venda nao batem com o catalogo");
+  assert.equal(Math.round(split.convinced), 149, "as cadeiras de conviccao nao batem");
 });

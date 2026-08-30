@@ -16,6 +16,7 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 | idioma              | inglês em código e caminhos; português em prosa e UI | identificador acentuado                | `naming` (parcial — ver §6) |
 | cor                 | token no arquivo de tokens, no par `--x` + `--x-rgb` | literal fora dos tokens; `color-mix()` | `tokens`                    |
 | superfície          | uma das três lâminas                                 | `backdrop-filter` fora do material     | `material`                  |
+| véu                 | `--veil-thin` · `--veil` · `--glass-edge`            | literal de branco em aresta ou fundo   | revisão (ver §7)            |
 | raio, espaço, corpo | valor da escala, derivado de um número raiz          | número cru numa regra                  | revisão                     |
 | comentário          | lição medida, até 10 linhas por bloco                | diário: data, citação, histórico       | `prose`                     |
 | cascata             | camadas declaradas por `@layer`                      | regra fora de camada; `!important`     | `cascade`                   |
@@ -350,6 +351,24 @@ Declarado para não ser confundido com cobertura:
   incompleta por definição e acusaria sobrenomes comuns. Fica como regra declarada
   em `CLAUDE.md` e cobrada em revisão — o que **tem** guarda é a identidade
   (`identity`), que impede personagem sem `id` e `id` repetido.
+
+### ⚖ O NÍVEL DIZ A SUBSTÂNCIA, E A SUBSTÂNCIA DIZ O RAIO — 30/08/2026
+
+| nível                        | substância                              | raio             | aresta         |
+| ---------------------------- | --------------------------------------- | ---------------- | -------------- |
+| **painel** — flutua no fundo | lâmina, ou tinta chapada onde ela custa | `--radius-piece` | `--glass-edge` |
+| **peça dentro de painel**    | papel — `--sheet-raise`                 | `--radius-sheet` | `--sheet-edge` |
+| **fio entre irmãos**         | nenhuma                                 | —                | `--veil-thin`  |
+
+⚠ **E O VÉU É UMA ESCALA DE TRÊS, porque um censo achou QUARENTA literais de branco em TREZE
+valores** — 0,02 a 0,5 — para dois trabalhos só: separar irmãos e fechar uma peça. Sem escala,
+cada regra nova escolhia um alfa novo. Quinze deles viraram token; o resto é curva de luz
+(o especular do material) e bisel, que não são escala.
+
+⛔ **E A LÂMINA NÃO ENTRA ONDE FOI MEDIDA E REPROVADA.** `glass-support` no `.tray__list`
+custou **17,9 fps**, e `--glass-support-bg` no `.tray__month` custou **28,3 fps sem filtro
+nenhum** — ele segue `--light-angle`, que interpola a cada quadro. Ali a substância é tinta
+chapada (`--glass-base`), e isso é decisão medida, não descuido.
 
 ## 8. O que se aprendeu a não fazer
 

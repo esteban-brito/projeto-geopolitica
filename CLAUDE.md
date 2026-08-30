@@ -61,7 +61,9 @@ npm run serve      # http://127.0.0.1:5173/
 - ⚠ **mas o portão não sabe OLHAR.** Mexeu em tela? **abra a captura** em `captures/passeio/`.
   Três defeitos já atravessaram tipo, guarda e cem provas para morrer na imagem, e
   nenhum deles falhava — é o único passo que continua sendo humano;
-- mexeu em catálogo ou motor? rode `simulate` e compare a série;
+- mexeu em `src/data/`, `src/domain/` ou `src/application/`? rode `simulate` e **reescreva a
+  série** em `docs/handoff.md` no mesmo commit — comparar não basta: ela ficou seis dias vencida
+  porque o item 0.1 mudou o motor e ninguém a remediu;
 - `npm run screen` oscila ~20 fps entre rodadas, e continua **fora** do portão: ele
   abre janela e mede contra a taxa do monitor. Meça os dois braços na mesma rodada;
   um número solto dele não decide nada.
@@ -76,27 +78,28 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 13 guardas · 60 provas sintéticas · 136 arquivos · 269 provas · passeio
-verde em duas janelas. Branch de trabalho: `caixa-de-entrada`, limpa.
+**Estado verde:** 13 guardas · 60 provas sintéticas · 140 arquivos · 281 provas · passeio
+verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
 
-**Há TRÊS planos na mesa**, e o 16 é o que está em execução:
+**Há QUATRO planos na mesa**, e o 13 é o único aberto:
 
 - [`cycles/16-o-gabinete-profissional.md`](docs/cycles/16-o-gabinete-profissional.md) —
-  **em execução, 4 de 6 passos.** O tipo dentro dos blocos subiu de 10px para 13,6px e a
-  legenda da bandeja deixou de parecer com a data. **Faltam A1** (alerta por ministério no
-  rail — dado que o motor tem e a tela não recebe), **A2**, e os passos 5 e 6. No fim dele
-  está o dossiê externo dividido em quatro partes;
+  **fechado em 30/08/2026.** O tipo dentro dos blocos subiu para 13,6px, o rail passou a
+  mostrar a queda por ministério (`alertsOf`, na MALHA), a pista ganhou zona de perigo com o
+  LADO declarado, cada bloco ganhou glifo e a moldura do palco saiu. **O passo 5 foi medido e
+  recusado**: a coluna do índice tem 179px e o prazo pede 103;
 
 - [`cycles/15-o-gabinete.md`](docs/cycles/15-o-gabinete.md) — **fechado em 30/08/2026.** A
   coluna direita foi de **18 classes e três instrumentos** para **9 e um**, e o Gabinete passou
   a montar com a peça da Caixa (`src/ui/shared/annex.mjs`). A guarda `annexes` cobre as duas
   telas e a peça;
-- [`cycles/14-a-caixa-de-entrada.md`](docs/cycles/14-a-caixa-de-entrada.md) — **em execução.**
-  **fechado em 29/08/2026** — os sete passos entraram. A caixa não tem mais tabela nenhuma, e
+- [`cycles/14-a-caixa-de-entrada.md`](docs/cycles/14-a-caixa-de-entrada.md) — **fechado em
+  29/08/2026** — os sete passos entraram. A caixa não tem mais tabela nenhuma, e
   o vocabulário dela é de três peças com guarda. **Sobra um item**: as duas cartas sem número
   (a Mesa pautou, a gaveta), e ele pede motor;
-- [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — o plano mestre, 12 de 49 itens.
-  Retomar no passo 2 (B1–B5) quando o ciclo 14 fechar.
+- [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — **em execução**, e o plano mestre:
+  **22 de 49 itens**. O passo 3 (C10 e C11), o B10 e o C7 fecharam em 30/08. Retomar no **D4**
+  — a corrente causal, e ele é o único item aberto que **abre motor**.
 
 **Nenhum item espera decisão hoje.** A fila que pedia "o mesmo bump de esquema" tinha quatro
 itens e **não existe mais**: o `last` fechou na versão 19, e o `events`, o `weight` e os anexos

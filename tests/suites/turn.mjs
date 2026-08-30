@@ -10,6 +10,8 @@ import {
   forecast,
   ledger,
   outlook,
+  trajectory,
+  HORIZON,
   playMonth,
   settlement,
   situationOf,
@@ -916,4 +918,57 @@ test("O TETO QUE VAI FECHAR AVISA ANTES, e o aviso chega uma vez so", () => {
   }
 
   assert.fail("o catalogo montado para fechar o teto nunca fechou");
+});
+
+test("A PROJECAO E `outlook` COM HORIZONTE — a UM mes as duas dao o mesmo numero", () => {
+  /* ⚠ ELA EXISTE PORQUE SAO DUAS CONTAS PARA A MESMA PERGUNTA, e esse e o defeito nº 1 deste
+     projeto: cinco ocorrencias registradas. No dia em que divergirem, uma das duas telas passa
+     a prever um pais que a outra nao ve. */
+  let state = createState(7);
+  for (let month = 0; month < 12; month++) state = playMonth(state, {}, {}).state;
+
+  const orders = { funding: Object.fromEntries(PARTIES.map(party => [party.id, 0.5])) };
+  const ahead = outlook(state, orders);
+  const curve = trajectory(state, orders, CATALOG, 1);
+
+  for (const area of CATALOG.areas) {
+    assert.equal(
+      curve.index[area.id]?.[0],
+      ahead.index[area.id],
+      `${area.id} diverge entre a projecao e o proximo mes`,
+    );
+    assert.equal(curve.idle[area.id]?.[0], ahead.idle[area.id], `${area.id} diverge no ocioso`);
+  }
+});
+
+test("A PROJECAO NAO SORTEIA — duas rodadas dao a MESMA curva, e o plenario fica parado", () => {
+  let state = createState(7);
+  for (let month = 0; month < 6; month++) state = playMonth(state, {}, {}).state;
+
+  const first = trajectory(state, {}, CATALOG, HORIZON);
+  const second = trajectory(state, {}, CATALOG, HORIZON);
+  assert.deepEqual(first, second, "a projecao consumiu aleatoriedade");
+
+  for (const area of CATALOG.areas) {
+    assert.equal(first.index[area.id]?.length, HORIZON, `${area.id} nao devolveu o horizonte`);
+  }
+});
+
+test("A PROJECAO MOSTRA A DECISAO — a area que recebe verba separa da que nao recebe", () => {
+  /* O diagnostico que originou o item: a tela imprimia `61 → 61` porque um mes nao move uma
+     area que anda 0,40. Se as duas curvas fecharem iguais a 24 meses, a peca nao serve. */
+  let state = createState(7);
+  for (let month = 0; month < 6; month++) state = playMonth(state, {}, {}).state;
+
+  const target = CATALOG.areas[0];
+  assert.ok(target, "o catalogo tem area");
+  const curve = trajectory(state, { levels: {} }, CATALOG, HORIZON);
+
+  const moved = CATALOG.areas.some(area => {
+    const series = curve.index[area.id] ?? [];
+    const first = series[0] ?? 0;
+    const last = series[series.length - 1] ?? 0;
+    return Math.abs(last - first) >= 1;
+  });
+  assert.ok(moved, "nenhuma area andou um ponto em 24 meses — a curva nao mostra decisao");
 });

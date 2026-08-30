@@ -24,7 +24,13 @@ export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../dat
    memoria dentro e a aprovacao da rua. Ninguem quebrou nada ao acrescentar esses motores;
    a tela simplesmente ficou para tras, e em 27,2% das votacoes ela anunciava o veredito
    contrario ao que o mes produzia. */
-export { baseSplit, THRESHOLDS } from "../domain/congress/index.mjs";
+export { baseSplit, baseVenality, THRESHOLDS } from "../domain/congress/index.mjs";
+
+/* ⚠ `alertsOf` E A DECIMA SEXTA PORTA, e ela nasceu de um dado sem consumidor: o rail
+   desenhava os oito ministerios IDENTICOS enquanto a MALHA sabia o indice de cada um todo mes.
+   Ela passa pela porta pelo mesmo motivo de `pollFrom`: a escala de queda e regra da MALHA, e
+   duas telas vao le-la — o rail agora, a faixa de areas no passo 2. */
+export { alertsOf } from "../domain/capacity/index.mjs";
 
 /* `pollFrom` CONVERTE SATISFACAO EM PESQUISA, e ela passa pela porta pelo mesmo motivo das
    duas acima: o estado guarda o humor de cada segmento, e a escala de
@@ -67,8 +73,18 @@ export {
   settlement,
   situationOf,
   termOf,
+  /* ⚠ `trajectory` E A DECIMA SETIMA PORTA, e ela e `outlook` com horizonte: a tela de area
+     imprimia `61 → 61` numa area que anda 0,40 por mes. O plenario fica congelado dentro dela,
+     de proposito — ver a prosa da funcao. */
+  trajectory,
+  HORIZON,
 } from "../application/turn.mjs";
 export { compose, honour, spendOf } from "../application/agenda.mjs";
+/* O caminho da tramitacao, em ordem: a tela desenha onde o texto esta, e nao redeclara a fila. */
+export { STAGES } from "../application/passage.mjs";
+/* ⚠ O CALENDARIO E A PRIMEIRA DATA DO JOGO, e ele passa pela porta como funcao pura de `month`:
+   nenhum relogio, para o mandato continuar se refazendo da semente. */
+export { calendarOf, AHEAD } from "../application/calendar.mjs";
 /* `left` e a decima porta, e ela e uma linha — o que importa e ela ser a UNICA. */
 /* ⚠ `silences` e a decima quinta porta, e ela nasceu de uma RECUSA. */
 export { left, silences } from "../application/mail.mjs";
