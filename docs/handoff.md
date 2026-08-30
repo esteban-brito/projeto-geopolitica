@@ -249,8 +249,8 @@ nada**, e a fila que justificava juntá-los num bump só não existe mais.
 
 ### ▶ A RETOMADA DE 31/08/2026 — comece por aqui
 
-⛔ **NADA ESTÁ COMMITADO.** A árvore tem **seis** sessões de trabalho não commitadas, incluindo
-os ciclos 15 e 16 inteiros. Branch `caixa-de-entrada`. O portão está verde — `npm run validate`
+✔ **TUDO COMMITADO em 30/08/2026** — `18b1505`, e a árvore está limpa. Branch
+`caixa-de-entrada`, sete commits à frente de `main`. O portão está verde — `npm run validate`
 fecha com **13 guardas · 60 provas sintéticas · 136 arquivos · 269 provas · passeio verde em
 DUAS janelas**.
 
@@ -317,8 +317,7 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 ---
 
 **Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas ·
-136 arquivos · 269 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`,
-**sem nada commitado**.
+136 arquivos · 269 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`.
 
 ### ▶ COMECE POR AQUI — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
 

@@ -77,7 +77,7 @@ npm run serve      # http://127.0.0.1:5173/
 ## Onde o projeto está
 
 **Estado verde:** 13 guardas · 60 provas sintéticas · 136 arquivos · 269 provas · passeio
-verde em duas janelas. Branch de trabalho: `caixa-de-entrada` — ⛔ **nada commitado**.
+verde em duas janelas. Branch de trabalho: `caixa-de-entrada`, limpa.
 
 **Há TRÊS planos na mesa**, e o 16 é o que está em execução:
 
