@@ -5,27 +5,28 @@
    estava. */
 
 @layer screens {
+  /* ── UMA SUBSTANCIA PARA A TELA INTEIRA ──────────────────────────────────── ⚠ O
+     REMAPEAMENTO MORAVA EM `.tray`, e por isso a carta e a coluna divergiam em QUATRO
+     medidas — fundo, aresta, recuo e vao — apesar de usarem a MESMA classe. Medido a
+     1920x980: `.annex` computava `rgb(19,27,44)` na carta e `rgba(238,242,248,0.03)` na
+     coluna. Aqui em cima, as duas leem os mesmos tokens e o desenho e um so. */
   .cabinet {
+    --sheet-ink: var(--ink);
+    --sheet-ink-rgb: var(--ink-rgb);
+    --sheet-raise: rgba(var(--ink-rgb), 0.05);
+    --sheet-edge: var(--glass-edge);
     gap: var(--space-4);
   }
 
   .board[data-screen="cabinet"] {
     padding-bottom: var(--space-4);
-  }
-
-  /* ⚠ ABAIXO DO CANVAS A CARTA NAO ESTICA, e o que ela esticava era VAZIO. O indice e o
+  } /* ⚠ ABAIXO DO CANVAS A CARTA NAO ESTICA, e o que ela esticava era VAZIO. O indice e o
      documento dividem a mesma linha de grade, entao a carta crescia ate a altura do indice —
      medido a 1280x800 com a bandeja cheia: carta de 748px, dos quais 398 eram a faixa de
      anexos vazia, e as duas saidas 253px abaixo da dobra, zero visivel. Sem esticar: carta de
      350px e o rodape 145px ACIMA da dobra.
      ⚠ Travar a altura da tela aqui e o que a casca recusa, e por bom motivo — abaixo de 940px
      a coluna dos cartoes engole um cartao inteiro. A pagina rola, e quem rola e o indice. */
-  @media (max-height: 939px) {
-    .board[data-screen="cabinet"] .tray__open {
-      align-self: start;
-    }
-  }
-
   /* ⚠ O CANVAS SÓ VALE ENQUANTO A COLUNA DA DIREITA COUBER INTEIRA, e o limiar é medido: os
      quatro cartões pedem 594px de conteúdo, a moldura come 341, e abaixo de 940px de janela
      a coluna engolia um cartão sem nada avisar — 3 de 4 inteiros a 900px, 2 de 4 a 760.
@@ -35,17 +36,16 @@
     .board[data-screen="cabinet"] {
       height: 100%;
       min-height: 0;
-    }
-
-    /* ⚠ `flex: 1` E NÃO `height: 100%`, e a diferença custou uma medição. */
+    } /* ⚠ `flex: 1` E NÃO `height: 100%`, e a diferença custou uma medição. */
     .board[data-screen="cabinet"] > .area {
       display: grid;
-      grid-template-rows: auto auto minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr);
+      /* ⚠ ELE OCUPA A JANELA, e a alavanca contraria foi um erro meu — palavras dele: "voce
+         diminuiu o tamanho da pagina ao inves de so esticar ou aumentar os elementos". Com
+         `0 1 auto` o palco fechava em 863px de 980, e o vazio so mudava de lugar. */
       flex: 1;
       min-height: 0;
-    }
-
-    /* ⚠ CADA NÍVEL PRECISA DO `min-height: 0`, e esquecer UM basta para o canvas não valer
+    } /* ⚠ CADA NÍVEL PRECISA DO `min-height: 0`, e esquecer UM basta para o canvas não valer
        nada: o mínimo automático de um item de grade é o tamanho do conteúdo dele, então uma
        linha `1fr` cresce para caber o filho em vez de obrigar o filho a se virar. */
     .board[data-screen="cabinet"] .cards,
@@ -54,11 +54,8 @@
     .board[data-screen="cabinet"] .card[data-span="lead"] .card__body,
     .board[data-screen="cabinet"] .tray {
       min-height: 0;
-    }
-
-    /* ── O QUE ROLA POR DENTRO ────────────────────────────────────────────────── A coluna da
-       direita e o índice da bandeja, e só eles. */
-    /* Num canvas isso INVERTE: com altura de conteúdo, a coluna da direita fica com os 661px
+    } /* ── O QUE ROLA POR DENTRO ────────────────────────────────────────────────── A coluna da
+       direita e o índice da bandeja, e só eles. */ /* Num canvas isso INVERTE: com altura de conteúdo, a coluna da direita fica com os 661px
        dela dentro de uma trilha de 560 e transborda para fora da dobra, e `overflow-y` não tem
        o que aparar porque o elemento nunca foi limitado. */
     .board[data-screen="cabinet"] .cards {
@@ -71,66 +68,14 @@
     }
   }
 
+  /* ⚠ O VAO ENTRE AS COLUNAS CAIU DE 32 PARA 24, por queixa dele — "sobrar menos espaco":
+     32px entre duas colunas que ja tem moldura propria e ar sobre ar. */
   .cards {
     display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
     align-items: start;
-    gap: var(--space-8);
-  }
-
-  /* ── A TRINDADE — a faixa que dá espinha à tela ───────────────────────────── ⚠ ELA E A
-     MELHOR IDEIA DO DECIMO DOSSIE, e resolve dois problemas de uma vez: dá ao jogador a
-     leitura que decide a sobrevivencia dele, e dá ao Gabinete um eixo horizontal. */
-  .trinity {
-    display: grid;
-    gap: var(--space-3);
-    margin-bottom: var(--space-4);
-  }
-
-  .trinity__row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-3) var(--space-8);
-  }
-
-  /* ⚠ ELE E TRES `.reading` LADO A LADO, e nao mais um dialeto proprio: a
-     faixa tinha rotulo de 10px em caixa alta, numero de 16,8px e limiar em `<small>` inline,
-     enquanto a coluna da direita usava rotulo de 12,5px, valor de corpo e legenda na pista da
-     barra. Eram as duas ultimas gramaticas da tela. A faixa continua HORIZONTAL, que e a
-     unica coisa que ela tinha de proprio que valia manter. */
-  /* ⚠ OS TRES ITENS PRECISAM DE MAIS AR ENTRE ELES DO QUE DENTRO DELES, e essa e a regra que
-     faltava: medido, o vao entre o valor de um item e o rotulo do seguinte era 24px contra
-     12px dentro do item — dobro nenhum agrupa, e "31 Capital" lia como uma frase so. Agora e
-     a barra que delimita a coluna, e a separacao e de 32px. */
-  .trinity__item {
-    display: grid;
-    gap: var(--space-1);
-    align-content: start;
-  }
-
-  /* O NOME E O NUMERO SAO OS DOIS EXTREMOS DA MESMA LINHA — assim nao ha coluna de rotulo
-     para um nome curto deixar vazia, e o numero fica na margem, que e onde ele fica na coluna
-     da direita. */
-  .trinity__head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-3);
-    /* A MESMA ENTRELINHA DECLARADA DA LEGENDA, e pela mesma razao: o vao que o olho ve e da
-       TINTA a barra, e nao da caixa de linha ate ela. */
-    line-height: 1.15;
-  }
-
-  /* A REGRA DO TOM MORA EM `.reading` e pede a classe dela; aqui o item nao e uma linha de
-     leitura, entao ele repete o alcance — e nao a cor, que continua vindo do token. */
-  .trinity__item[data-tone="crisis"] .reading__who,
-  .trinity__item[data-tone="crisis"] .reading__value {
-    color: var(--signal-down);
-  }
-
-  /* CALDEIRA logo abaixo mostravam pressao sem dizer onde e o ponto de fervura. */
-
-  /* ── A COLUNA DA DIREITA E UM ELEMENTO ────────────────────────────────────── Ver a prosa
+    gap: var(--space-6);
+  } /* CALDEIRA logo abaixo mostravam pressao sem dizer onde e o ponto de fervura. */ /* ── A COLUNA DA DIREITA E UM ELEMENTO ────────────────────────────────────── Ver a prosa
      em `cabinet.mjs`: com os resumos soltos na grade, a Caixa de Entrada precisava declarar
      quantas linhas atravessar, e o numero envelheceu no dia em que
      a CALDEIRA nasceu. Agora sao duas celulas. */
@@ -138,63 +83,34 @@
     display: grid;
     align-content: start;
     grid-column: 2;
-  }
-
-  /* ── O BLOCO — legenda em cima, linhas embaixo ────────────────────────────── ⚠ ELE E O
-     UNICO DESENHO DA COLUNA DA DIREITA. Antes eram duas gramaticas: numero
-     grande com botao e barra de 432px nas duas fichas de cima, lista com barra de 192px nas
-     duas de baixo — quatro larguras, dois raios e duas alturas de linha na mesma coluna. */
-  .block__rows {
-    /* ⚠ `.card__body` E UMA GRADE COM `justify-items: start`, entao quem quer a largura toda
-       pede — foi o que a `.street`, a `.boiler` e o medidor do cofre ja faziam. Sem isto o
-       bloco media o proprio texto e a pista da barra ficava com 0px. */
-    justify-self: stretch;
-    display: grid;
-    /* ⚠ A COLUNA E DECLARADA, e sem ela a pista da barra COLAPSA: uma trilha `auto` mede o
-       conteudo, e a barra e uma caixa vazia — as reguas da CALDEIRA sairam com 0px de largura
-       e o medidor do cofre com 2px, enquanto os dois blocos com legenda de cores ficavam
-       largos porque o TEXTO da legenda os esticava. */
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-1);
-    margin-top: var(--space-2);
-  }
-
-  /* A pagina tinha 1495px numa janela de 900 e por-los lado a lado economizava ~110. */
+  } /* A pagina tinha 1495px numa janela de 900 e por-los lado a lado economizava ~110. */
 
   .card[data-span="lead"] {
-    grid-column: 1;
-    /* `.card` e uma grade com `align-content: start`, entao as linhas medem o conteudo e o
+    grid-column: 1; /* `.card` e uma grade com `align-content: start`, entao as linhas medem o conteudo e o
        corpo para na altura do texto — o estado vazio ficava encostado no teto de uma coluna
        de 700px, que e exatamente o que ele existe para evitar. */
     grid-template-rows: minmax(0, 1fr);
-    align-content: stretch;
-    /* O ciclo 10 acrescentou a CALDEIRA e ninguem voltou aqui: a coluna da esquerda passou a
+    align-content: stretch; /* O ciclo 10 acrescentou a CALDEIRA e ninguem voltou aqui: a coluna da esquerda passou a
        terminar uma linha antes da direita, e o rodape do Gabinete ficou com um degrau que so
        a captura mostra. */
-    grid-row: 1;
-    /* ⚠ E O ESTIRAMENTO FICA — eu o TIREI e devolvi na mesma sessao, contra a captura. */
+    grid-row: 1; /* ⚠ E O ESTIRAMENTO FICA — eu o TIREI e devolvi na mesma sessao, contra a captura. */
     align-self: stretch;
-  }
-
-  /* ⚠ O AR ENCOLHEU EM, e a razão é uma medição: a coluna da direita media 899px numa janela
+  } /* ⚠ O AR ENCOLHEU EM, e a razão é uma medição: a coluna da direita media 899px numa janela
      de 980 e a página inteira rolava 367. */
   .card {
     display: grid;
     align-content: start;
-    gap: var(--space-2);
-    /* O RECUO SOBROU PARA SEPARAR OS BLOCOS EMPILHADOS, e ele e vertical: sem a caixa, o que
+    gap: var(
+      --space-2
+    ); /* O RECUO SOBROU PARA SEPARAR OS BLOCOS EMPILHADOS, e ele e vertical: sem a caixa, o que
        afasta um assunto do seguinte e o ar entre eles. */
     padding: 0 0 var(--space-2);
-  }
-
-  /* O da esquerda e a bandeja, e ela e um objeto so: um recuo de 24px ali nao separaria
+  } /* O da esquerda e a bandeja, e ela e um objeto so: um recuo de 24px ali nao separaria
      assunto nenhum — apenas encolheria a escavacao em 24 pixels e devolveria o vao que a
      regra de cima acabou de fechar. */
   .cards__side > .card {
     padding-bottom: var(--space-6);
-  }
-
-  /* ⚠ E A BANDEJA PERDE O RECUO INTEIRO, pelo mesmo motivo e por SIMETRIA medida: com 8px
+  } /* ⚠ E A BANDEJA PERDE O RECUO INTEIRO, pelo mesmo motivo e por SIMETRIA medida: com 8px
      embaixo e nada em cima, a escavacao encostava no teto da coluna em 305 e parava 8 pixels
      antes do pe em 927. */
   .card[data-span="lead"] {
@@ -203,92 +119,84 @@
 
   .card:last-child {
     padding-bottom: 0;
-  }
-
-  /* A peça sobe 1px e não 2: ela é secundária, e um gesto do mesmo tamanho do gesto principal
-     diria que os dois pesam igual. */
-  /* ⚠ `align-content: start` E O CONSERTO DE UM DEFEITO QUE SO APARECEU COM A SEGUNDA CARTA. */
-  /* Com a escavação em 10% em vez de 22%, a lâmina do palco volta a aparecer através dela: o
+  } /* A peça sobe 1px e não 2: ela é secundária, e um gesto do mesmo tamanho do gesto principal
+     diria que os dois pesam igual. */ /* ⚠ `align-content: start` E O CONSERTO DE UM DEFEITO QUE SO APARECEU COM A SEGUNDA CARTA. */ /* Com a escavação em 10% em vez de 22%, a lâmina do palco volta a aparecer através dela: o
      gradiente, o passeio da luz e a granulação do substrato atravessam a bandeja em vez de
      morrer atrás de uma demão preta. */
   .card[data-span="lead"] .card__body {
     padding: 0;
     align-content: stretch;
-  }
-
-  /* A BANDEJA DE DUAS COLUNAS — o índice à esquerda, o documento à direita ⚠ ELA CONSERTA O
+  } /* A BANDEJA DE DUAS COLUNAS — o índice à esquerda, o documento à direita ⚠ ELA CONSERTA O
      PIOR NÚMERO DESTA TELA, medido : a Caixa de Entrada fechava em **899px de altura com
-     242px de conteúdo — 657px mortos**, e ela é o maior objeto do Gabinete. */
-  /* ⚠ E O QUE QUEBRAVA A SIMETRIA NAO ERA O VAO — ERAM OS RAIOS. */
+     242px de conteúdo — 657px mortos**, e ela é o maior objeto do Gabinete. */ /* ⚠ E O QUE QUEBRAVA A SIMETRIA NAO ERA O VAO — ERAM OS RAIOS. */
   .tray {
     /* Metade das regras usa `var(--sheet-ink)` e a outra metade `rgba(var(--sheet-ink-rgb),
        a)`; redefinir so um dos dois deixaria metade do texto marrom e a outra branca — que e
        pior que o defeito original, porque ali a divergencia teria virado desenho. */
-    --sheet-ink: var(--ink);
-    --sheet-ink-rgb: var(--ink-rgb);
     display: grid;
     grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
-    gap: 0;
-    /* É a mesma razão do `width: 100%` da carta, uma regra abaixo. */
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0; /* É a mesma razão do `width: 100%` da carta, uma regra abaixo. */
     width: 100%;
-  }
-
-  /* ── O ÍNDICE ──────────────────────────────────────────────────────────────── ELE DESCE
+  } /* ── O ÍNDICE ──────────────────────────────────────────────────────────────── ELE DESCE
      ATÉ O FUNDO e o documento não, e a assimetria é a leitura: o índice é um móvel — a calha
      da direita dele é a parede da gaveta — e o documento é o papel que está em cima da mesa. */
+  /* ── A LEGENDA DA BANDEJA ────────────────────────────────────────────────── ⚠ ELA E A
+     MOLDURA DE CIMA das duas colunas, e nao um rotulo solto: o indice e o documento sao um
+     objeto so, e uma faixa que cobre so metade partiria em dois o que o olho le como um. */
+  /* ⚠ ELA ERA IDENTICA AO DIVISOR DE MES — Inter 10px 700 1,8px caixa alta nos dois —, e
+     por isso o nome do painel lia como separador. Agora a distancia e de TRES canais: corpo,
+     peso e traqueamento. O divisor desce no mesmo movimento; diferenciar por um canal so
+     deixaria os dois no mesmo peso visual. */
+  .tray__head {
+    font-size: var(--text-note);
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--glass-edge);
+    border-bottom: 0;
+    border-radius: var(--radius-piece) var(--radius-piece) 0 0;
+    background: var(--sheet-raise);
+  }
+
   .tray__list {
     display: grid;
-    align-content: start;
-    /* Fio separa por PRESENCA, custa 1px, e le mais forte. */
+    align-content: start; /* Fio separa por PRESENCA, custa 1px, e le mais forte. */
     gap: 0;
     height: 100%;
-    margin: 0;
-    /* O RECUO SAIU DA LISTA E FOI PARA A LINHA. */
-    padding: 0;
-    /* ⚠ O FIO DIVISOR MORREU EM, E QUEM O MATOU FOI A CAPTURA. */
-    list-style: none;
-    /* `glass-support` foi tentado aqui e `npm run screen` cobrou 17,9 fps contra o braco de
-       controle. */
-    /* ⚠ A ARESTA DA DIREITA MORREU PARA VIRAR COSTURA. */
+    margin: 0; /* O RECUO SAIU DA LISTA E FOI PARA A LINHA. */
+    padding: 0; /* ⚠ O FIO DIVISOR MORREU EM, E QUEM O MATOU FOI A CAPTURA. */
+    list-style: none; /* `glass-support` foi tentado aqui e `npm run screen` cobrou 17,9 fps contra o braco de
+       controle. */ /* ⚠ A ARESTA DA DIREITA MORREU PARA VIRAR COSTURA. */
     border: 1px solid var(--glass-edge);
     border-right: 0;
-    border-radius: var(--radius-piece) 0 0 var(--radius-piece);
-    /* ⚠ E A TINTA E CHAPADA, E NAO O GRADIENTE DO MATERIAL — medido, e o segundo numero desta
+    border-radius: 0 0 0 var(--radius-piece); /* ⚠ E A TINTA E CHAPADA, E NAO O GRADIENTE DO MATERIAL — medido, e o segundo numero desta
        mesma regra hoje. */
     background: var(--glass-base);
-    box-shadow: var(--bevel-under);
-    /* A LISTA ROLA SOZINHA em vez de esticar a bandeja. */
+    box-shadow: var(--bevel-under); /* A LISTA ROLA SOZINHA em vez de esticar a bandeja. */
     min-height: 0;
     overflow-y: auto;
   }
 
   .tray__list > li {
     min-width: 0;
-  }
-
-  /* ⚠ **Ela vale para uma lista que TERMINA onde o movel termina, e esta nao termina.** O
+  } /* ⚠ **Ela vale para uma lista que TERMINA onde o movel termina, e esta nao termina.** O
      indice fecha em 630px com ~527 de conteudo, entao a ultima linha tem cem pixels de coluna
-     abaixo dela: o fio nao separa a carta do fim do movel — ele fecha a carta. */
-
-  /* ── UMA LINHA DO ÍNDICE ───────────────────────────────────────────────────── ⚠ ELA É
+     abaixo dela: o fio nao separa a carta do fim do movel — ele fecha a carta. */ /* ── UMA LINHA DO ÍNDICE ───────────────────────────────────────────────────── ⚠ ELA É
      BOTÃO, e não linha clicável: o que ela faz é trocar o documento aberto, que é ação e não
      navegação. */
   .tray__row {
     display: grid;
     gap: 1px;
     width: 100%;
-    padding: var(--space-2) var(--space-3);
-    /* A frase nomeia exatamente o defeito — sem contorno, oito assuntos em negrito empilhados
-       são oito FRASES, e o olho não tem como saber onde uma acaba e a outra começa. */
-    /* ⚠ A ARESTA DUROU MEIO DIA, e o que a matou foi o print do Football Manager: la o indice
+    padding: var(--space-2) var(--space-3); /* A frase nomeia exatamente o defeito — sem contorno, oito assuntos em negrito empilhados
+       são oito FRASES, e o olho não tem como saber onde uma acaba e a outra começa. */ /* ⚠ A ARESTA DUROU MEIO DIA, e o que a matou foi o print do Football Manager: la o indice
        e UM painel com fios finos dentro. */
     border: 0;
-    border-bottom: 1px solid var(--glass-edge);
-    /* A TARJA DE GRAVIDADE OCUPA LUGAR MESMO QUANDO NÃO HÁ PRAZO — transparente, e não
+    border-bottom: 1px solid var(--glass-edge); /* A TARJA DE GRAVIDADE OCUPA LUGAR MESMO QUANDO NÃO HÁ PRAZO — transparente, e não
        ausente: sem ela, uma carta com prazo andaria quatro pixels para a direita em relação
        às vizinhas, e a coluna do índice perderia a margem comum. */
-    border-left: var(--rule-strong) solid transparent;
-    /* ⚠ O RAIO MORREU COM A CAIXA. */
+    border-left: var(--rule-strong) solid transparent; /* ⚠ O RAIO MORREU COM A CAIXA. */
     border-radius: 0;
     background: transparent;
     color: inherit;
@@ -296,40 +204,30 @@
     text-align: left;
     cursor: pointer;
     transition: background var(--dur-touch) var(--ease-move);
-  }
-
-  /* ⚠ AS TRÊS CORES SÃO AS DA CARTA, e não uma paleta nova: é a MESMA tarja, no tamanho de
-     índice. */
-  .tray__row[data-urgency="open"] {
-    border-left-color: rgba(var(--ink-rgb), 0.28);
-  }
-
+  } /* ⚠ AS DUAS CORES SÃO AS DA CARTA, e não uma paleta nova: é a MESMA tarja, no tamanho de
+     índice.
+     ⚠ ERAM TRÊS, e a faixa larga saiu por ser inalcançável: `left` devolve 0 ou 1 em 48 meses
+     medidos. */
   .tray__row[data-urgency="soon"] {
     border-left-color: var(--brand);
   }
 
   .tray__row[data-urgency="now"] {
     border-left-color: var(--crisis);
-  }
-
-  /* ── O NAO LIDO ───────────────────────────────────────────────────────────── ⚠ ELE E O
+  } /* ── O NAO LIDO ───────────────────────────────────────────────────────────── ⚠ ELE E O
      UNICO SINAL DA COLUNA QUE NAO E TEMPO, e por isso ele nao pode usar a tarja: a esquerda
      ja significa PRAZO em tres cores, e uma quarta cor ali faria o jogador ler urgencia onde
      ha novidade. */
   .tray__row[data-unread="true"] .tray__subject {
     color: var(--ink);
-  }
-
-  /* ⚠ ELE NASCEU DENTRO DO ASSUNTO E A CAPTURA REPROVOU, . */
+  } /* ⚠ ELE NASCEU DENTRO DO ASSUNTO E A CAPTURA REPROVOU, . */
   .tray__row {
     position: relative;
   }
 
   .tray__row[data-unread="true"] .tray__subject {
     padding-right: var(--space-4);
-  }
-
-  /* Ela nao tem: um assunto que quebra em duas linhas mede 70px contra 51, e o ponto ficava
+  } /* Ela nao tem: um assunto que quebra em duas linhas mede 70px contra 51, e o ponto ficava
      colado no teto de uma caixa que crescia para baixo — a marca cada vez mais longe do
      centro da peca a que ela pertence. */
   .tray__row[data-unread="true"]::after {
@@ -342,38 +240,27 @@
     transform: translateY(-50%);
     border-radius: var(--radius-dot);
     background: var(--brand);
-  }
-
-  /* ── O PESO, E ELE E O QUE FAZ O RELATORIO MENSAL SER POSSIVEL ────────────── ⚠ A TARJA TEM
+  } /* ── O PESO, E ELE E O QUE FAZ O RELATORIO MENSAL SER POSSIVEL ────────────── ⚠ A TARJA TEM
      DOIS DONOS E NUNCA OS DOIS JUNTOS: numa carta com prazo ela e TEMPO, numa sem prazo ela e
-     PESO. */
-  /* A DEMÃO É DE 10%, e ela é lavagem e não bloco: sobre a lâmina escura, `--crisis` a 10% dá
-     um rubor que se enxerga de relance e não compete com o texto. */
-  /* ⚠ E O RUBOR PASSOU A SE SOMAR AO VIDRO, e não a substituí-lo. */
-  /* Hoje a linha e uma figura fechada, com fio em cima e embaixo, dentro de um movel com
-     aresta — e nela a tarja de 3px ja e um sinal que se acha de relance. */
-
-  /* `--text-note` contra `--text-body` são 12,5px contra 13,6 — o cabeçalho manda no grupo
+     PESO. */ /* A DEMÃO É DE 10%, e ela é lavagem e não bloco: sobre a lâmina escura, `--crisis` a 10% dá
+     um rubor que se enxerga de relance e não compete com o texto. */ /* ⚠ E O RUBOR PASSOU A SE SOMAR AO VIDRO, e não a substituí-lo. */ /* Hoje a linha e uma figura fechada, com fio em cima e embaixo, dentro de um movel com
+     aresta — e nela a tarja de 3px ja e um sinal que se acha de relance. */ /* `--text-note` contra `--text-body` são 12,5px contra 13,6 — o cabeçalho manda no grupo
      sem competir com o item. */
+  /* ⚠ ELE DESCE NO MESMO MOVIMENTO EM QUE A LEGENDA SOBE, e diferenciar por um canal so
+     deixaria os dois no mesmo peso visual: eram Inter 10px 700 1,8px caixa alta NOS DOIS. */
   .tray__month {
     display: flex;
-    align-items: center;
-    /* Seriam três materiais numa coluna de 208px. */
+    align-items: center; /* Seriam três materiais numa coluna de 208px. */
     padding: var(--space-3) var(--space-3) var(--space-1);
-    border-bottom: 1px solid var(--glass-edge);
-    /* `--glass-support-bg` foi medido nesta mesma coluna e custou 28,3 fps SEM filtro nenhum:
+    border-bottom: 1px solid var(--glass-edge); /* `--glass-support-bg` foi medido nesta mesma coluna e custou 28,3 fps SEM filtro nenhum:
        ele segue `--light-angle`, que interpola a cada quadro, e uma superficie de dentro que
        o use repinta sessenta vezes por segundo. */
     background: rgba(var(--ink-rgb), 0.05);
     font-family: var(--font-display);
     font-size: var(--text-label);
-    font-weight: 700;
-    letter-spacing: var(--track-label);
+    font-weight: 400;
     color: var(--ink-dim);
-    text-transform: uppercase;
-  }
-
-  /* A PRIMEIRA ENCOSTA MENOS NO TOPO. */
+  } /* A PRIMEIRA ENCOSTA MENOS NO TOPO. */
   .tray__month:first-child {
     padding-top: var(--space-2);
   }
@@ -382,11 +269,8 @@
     .tray__row:hover {
       background: rgba(var(--ink-rgb), 0.05);
     }
-  }
-
-  /* A seleção já foi tinta branca a 9% e já foi `glass-action`, e as duas diziam a mesma
-     coisa fraca: "esta linha está ativa". */
-  /* Numa faixa de 51px de altura uma diagonal de 160deg nao tem distancia para virar luz: ela
+  } /* A seleção já foi tinta branca a 9% e já foi `glass-action`, e as duas diziam a mesma
+     coisa fraca: "esta linha está ativa". */ /* Numa faixa de 51px de altura uma diagonal de 160deg nao tem distancia para virar luz: ela
      vira uma mancha. */
   .tray__row[aria-current="true"] {
     /* ⚠ A LINHA CLICADA E PAPEL, e ela e a unica superficie clara do jogo. A tinta troca com o
@@ -395,17 +279,14 @@
     --sheet-ink: var(--paper-ink);
     --sheet-ink-rgb: var(--paper-ink-rgb);
     border-bottom-color: var(--paper);
-    background: var(--paper);
-    /* Dar largura de volta moveria a linha 1px no clique, que e o defeito que a borda
-       transparente sempre existiu para impedir. */
-    /* ⚠ E A DA DIREITA MORREU EM — ela era o SEGUNDO fio da costura, e a medicao provou que
+    background: var(
+      --paper
+    ); /* Dar largura de volta moveria a linha 1px no clique, que e o defeito que a borda
+       transparente sempre existiu para impedir. */ /* ⚠ E A DA DIREITA MORREU EM — ela era o SEGUNDO fio da costura, e a medicao provou que
        havia dois: `74,63,49` desta aresta encostado em `64,61,58` da borda do oficio, dois
        claros a 0px de distancia para dizer uma fronteira so. */
     box-shadow: inset 0 1px 0 var(--paper);
-  }
-
-  /* ⚠ ELA QUEBRA EM DUAS LINHAS ANTES DE CORTAR UM NOME. */
-  /* ⚠ ELA NAO QUEBRA MAIS, e a quebra era pior que o aperto: com `flex-wrap`, duas das sete
+  } /* ⚠ ELA QUEBRA EM DUAS LINHAS ANTES DE CORTAR UM NOME. */ /* ⚠ ELA NAO QUEBRA MAIS, e a quebra era pior que o aperto: com `flex-wrap`, duas das sete
      linhas jogavam a pastilha para uma terceira fileira e a coluna ficava irregular sem causa
      visivel. Quem cede largura e o REMETENTE, que reticencia sem perder o que importa — a
      pastilha e um numero, e numero cortado nao e numero. */
@@ -418,12 +299,9 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 0 var(--space-2);
-  }
-
-  /* ⚠ QUATRO LINHAS, E O CORTE DEIXOU DE EXISTIR. Em duas, medido em 28 cartas, **20 delas
+  } /* ⚠ QUATRO LINHAS, E O CORTE DEIXOU DE EXISTIR. Em duas, medido em 28 cartas, **20 delas
      perdiam o fim** — e o sufixo `· e mais N`, que é o que distingue um texto do outro, NUNCA
-     aparecia. A quarta linha custa 403px de rolagem numa lista que já rola por decisão. */
-  /* Medido contra ele: a divisao entre indice e documento la e 35/65, e aqui e 32/66 — *a
+     aparecia. A quarta linha custa 403px de rolagem numa lista que já rola por decisão. */ /* Medido contra ele: a divisao entre indice e documento la e 35/65, e aqui e 32/66 — *a
      proporcao ja estava certa**. */
   .tray__subject {
     display: -webkit-box;
@@ -439,15 +317,11 @@
 
   .tray__row[aria-current="true"] .tray__subject {
     color: var(--sheet-ink);
-  }
-
-  /* E QUEM ASSINA SEGUE A MESMA TINTA, um degrau abaixo — 60% é a mesma proporção que o
+  } /* E QUEM ASSINA SEGUE A MESMA TINTA, um degrau abaixo — 60% é a mesma proporção que o
      ofício usa entre o nome e o cargo dele. */
   .tray__row[aria-current="true"] .tray__from {
     color: rgba(var(--sheet-ink-rgb), 0.6);
-  }
-
-  /* ⚠ NA LINHA QUE TEM PRAZO ELE DESCE, e a razão é aritmética: a linha mede 179px, "vence em
+  } /* ⚠ NA LINHA QUE TEM PRAZO ELE DESCE, e a razão é aritmética: a linha mede 179px, "vence em
      1 mês" come 103 e sobram 68 para o nome. "Letícia Dourado" pede 74 — o relator da carta que
      pergunta reticenciava em toda partida. Sem prazo nenhum nome corta, nem o de 129px.
      ⚠ E ENCURTAR O RÓTULO NÃO SERVE: com "em 1 mês" o orçamento sobe para 108, e o nome de
@@ -459,9 +333,7 @@
 
   .tray__row[data-urgency] .tray__due {
     flex-basis: 100%;
-  }
-
-  /* O PRAZO ENCOLHE A PALAVRA E NÃO O NÚMERO. */
+  } /* O PRAZO ENCOLHE A PALAVRA E NÃO O NÚMERO. */
   .tray__due {
     flex: none;
     font-size: var(--text-label);
@@ -475,18 +347,14 @@
 
   .tray__row[data-urgency="now"] .tray__due {
     color: var(--signal-down);
-  }
-
-  /* ⚠ NO PAPEL O PRAZO PERDE A COR, e quem carrega a urgencia e a TARJA — que continua colorida
+  } /* ⚠ NO PAPEL O PRAZO PERDE A COR, e quem carrega a urgencia e a TARJA — que continua colorida
      na borda esquerda e ja e a dona declarada do prazo. Amber e vermelho claro sobre branco nao
      passam o piso AA num texto de 10px, e inventar duas cores novas so para esta linha criaria
      um segundo par concorrente para a mesma funcao. */
   .tray__row[aria-current="true"] .tray__due,
   .tray__row[aria-current="true"] .tray__kind {
     color: rgba(var(--paper-ink-rgb), 0.62);
-  }
-
-  /* ⚠ E AS RETICÊNCIAS PRECISAM DO `min-width: 0`, e este é o defeito que já abriu uma barra
+  } /* ⚠ E AS RETICÊNCIAS PRECISAM DO `min-width: 0`, e este é o defeito que já abriu uma barra
      de rolagem lateral nesta coluna: `white-space: nowrap` com `text-overflow: ellipsis` NÃO
      corta sem ele — um item de flex nasce com mínimo igual ao conteúdo, e conteúdo que não
      quebra linha tem a largura da frase inteira. */
@@ -498,42 +366,42 @@
     color: var(--ink-dim);
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
-
-  /* ⚠ A TAG DE ESPECIE É MENOR QUE O REMETENTE — ocupa o mesmo espaço que uma palavra curta
+  } /* ⚠ A TAG DE ESPECIE É MENOR QUE O REMETENTE — ocupa o mesmo espaço que uma palavra curta
      e não compete com o assunto nem com o prazo. */
   .tray__kind {
     font-family: var(--font-text);
     font-size: var(--text-label);
     color: var(--ink-soft);
     white-space: nowrap;
-  }
-
-  /* Centrado, um ofício de três linhas flutuaria no meio de 600px — que é o defeito que o
+  } /* Centrado, um ofício de três linhas flutuaria no meio de 600px — que é o defeito que o
      estado vazio levou uma sessão para consertar. */
   .tray__open {
     display: grid;
     align-content: stretch;
     min-height: 0;
-  }
-
-  /* A bandeja fecha na altura da coluna vizinha e sobra folga no mês tranquilo — e a resposta
+  } /* A bandeja fecha na altura da coluna vizinha e sobra folga no mês tranquilo — e a resposta
      certa não é esticar a carta até o rodapé (papel não estica; ver `.letter`), é dar a ela a
-     MEDIDA de um documento em vez da de um aviso. */
-  /* `glass-support` foi tentado nele em 21/08 e `npm run screen` cobrou 17,9 fps: o desfoque
+     MEDIDA de um documento em vez da de um aviso. */ /* `glass-support` foi tentado nele em 21/08 e `npm run screen` cobrou 17,9 fps: o desfoque
      nao consolidava nada, porque as linhas nunca tiveram filtro — ele ADICIONAVA um de 630px
-     sobre um gradiente que anima. */
+     sobre um gradiente que anima. */ /* ⚠ TRÊS NÍVEIS ESTRUTURAIS TINHAM O MESMO VÃO DE 12px — assunto→corpo, parágrafo→parágrafo
+     e corpo→anexos. Três fronteiras de pesos diferentes à mesma distância não formam
+     hierarquia: o olho não sabe onde uma parte acaba e a outra começa. A grade da folha separa
+     PARTE de parte; o vão de dentro de cada parte continua em 12px. */
   .tray__open .letter {
-    gap: var(--space-3);
+    gap: var(--space-6);
     padding: var(--space-6);
-    /* cabeca · assunto · corpo · anexos (o que estica) · rodape */
+    /* ⚠ O CONTEUDO ENCOSTA NO TOPO, E O PAPEL CONTINUA EMBAIXO — escolha dele, contra a
+       versao anterior: a faixa de anexos era `1fr` e o rodape ficava pregado no pe, entao
+       entre o anexo e o botao abria um buraco — medido a 1920x980, 411px de faixa para um
+       bloco de 101. Agora a folha se comporta como painel de mensagem: o texto em cima, o
+       papel seguindo. Cabeca · assunto · corpo · anexos · rodape, todos pelo conteudo. */
     grid-template-rows: auto auto auto 1fr auto;
-    border-color: var(--glass-edge);
-    /* Dois fios de 1px a 0px de distância leem como um fio de 2px — o defeito dos "dois
+    border-color: var(
+      --glass-edge
+    ); /* Dois fios de 1px a 0px de distância leem como um fio de 2px — o defeito dos "dois
        separadores para uma fronteira", que já matou os cinco fios das legendas em 20/08 e o
        fio divisor desta mesma bandeja em 21/08. */
-    border-radius: 0 var(--radius-piece) var(--radius-piece) 0;
-    /* A primeira versao era `rgba(var(--sheet-rgb), 0.78)`, e ela deixava a lamina atravessar
+    border-radius: 0 0 var(--radius-piece) 0; /* A primeira versao era `rgba(var(--sheet-rgb), 0.78)`, e ela deixava a lamina atravessar
        de verdade: bonito, medido, e CARO. */
     background:
       linear-gradient(
@@ -542,27 +410,18 @@
         rgba(var(--bg-rgb), 0.12) 45%,
         rgba(var(--ink-rgb), 0.045)
       ),
-      var(--sheet);
-    /* Medido: `77,72,66` da borda e `78,77,75` do realce do bisel, um em cima do outro. */
+      var(--sheet); /* Medido: `77,72,66` da borda e `78,77,75` do realce do bisel, um em cima do outro. */
     box-shadow: var(--bevel-under);
-  }
-
-  /* `align-content: start` numa grade recolhe a folga toda para o FIM da caixa, e ali
+  } /* `align-content: start` numa grade recolhe a folga toda para o FIM da caixa, e ali
      `margin-top: auto` nao tem o que empurrar — a regra existiria e nao faria nada, que e o
      defeito silencioso que este projeto persegue. */
   .tray__open .letter__body {
     display: flex;
     flex-direction: column;
-  }
-
-  /* ⚠ O VOCATIVO E UMA FAIXA PROPRIA DA GRADE, e nao a primeira linha do corpo: ele nunca
-     cresce, nunca some e nunca divide espaco com o texto. */
-
-  /* Numa folha de 630px, 13,6px é corpo de aviso e não de documento. */
-  /* ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA DESFAZIA A PRIMEIRA EM SILENCIO: mesma
+  } /* ⚠ O VOCATIVO E UMA FAIXA PROPRIA DA GRADE, e nao a primeira linha do corpo: ele nunca
+     cresce, nunca some e nunca divide espaco com o texto. */ /* Numa folha de 630px, 13,6px é corpo de aviso e não de documento. */ /* ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA DESFAZIA A PRIMEIRA EM SILENCIO: mesma
      especificidade, dez linhas entre uma e outra, e a ultima vence. O corpo saia com 13,6px
-     onde a decisao dizia 15,2. */
-  /* ⚠ O VAO E UM SO, e antes eram dois: a grade da carta separa vocativo, corpo e
+     onde a decisao dizia 15,2. */ /* ⚠ O VAO E UM SO, e antes eram dois: a grade da carta separa vocativo, corpo e
      rodape por `--space-3`, e as linhas do corpo se separavam por `--space-2`. O olho lia um
      degrau entre "Presidente," e o primeiro paragrafo maior que o degrau entre paragrafos —
      sem nada que justificasse a diferenca. */
@@ -582,54 +441,37 @@
     align-content: start;
     gap: var(--space-3);
     justify-items: start;
-  }
-
-  /* A bandeja ja compensava isso com `width: 100%` — a prosa dela diz exatamente por que —, e
+  } /* A bandeja ja compensava isso com `width: 100%` — a prosa dela diz exatamente por que —, e
      o vazio nunca compensou: medido a 1440×980, ele fechava em *369px dentro de uma coluna de
      659**, encostado na esquerda. */
   .card[data-span="lead"] .card__body > .empty {
     width: 100%;
-  }
-
-  /* Ele e um SVG com `viewBox`, entao ele escala sem custo e sem perder cadeira nenhuma — e o
-     teto de 300px que ele tinha era o que o deixava boiando no meio de uma coluna de 430. */
-
-  /* ── O ESTOURO TEM COR ────────────────────────────────────────────────────── O cartao
+  } /* Ele e um SVG com `viewBox`, entao ele escala sem custo e sem perder cadeira nenhuma — e o
+     teto de 300px que ele tinha era o que o deixava boiando no meio de uma coluna de 430. */ /* ── O ESTOURO TEM COR ────────────────────────────────────────────────────── O cartao
      dizia "cabe R$ 14,2 bi" e, uma linha abaixo, "ja consome R$ 14,5 bi" — no mesmo tom cinza
-     das outras leituras. */
-
-  /* ── A CARTA ──────────────────────────────────────────────────────────────── ⚠ ELA E DE
-     PAPEL, e e a segunda consumidora da substancia nova depois da lei. */
-  /* ⚠ ELA NAO ESTICA, e a linha abaixo e a correcao de um defeito que a captura pegou no dia
-     em que a carta nasceu. */
-  /* A CARTA FLUTUA NA BANDEJA — sombra projetada, e nao so borda. */
+     das outras leituras. */ /* ── A CARTA ──────────────────────────────────────────────────────────────── ⚠ ELA E DE
+     PAPEL, e e a segunda consumidora da substancia nova depois da lei. */ /* ⚠ ELA NAO ESTICA, e a linha abaixo e a correcao de um defeito que a captura pegou no dia
+     em que a carta nasceu. */ /* A CARTA FLUTUA NA BANDEJA — sombra projetada, e nao so borda. */
   .letter {
     box-shadow:
       0 4px 8px rgba(0, 0, 0, 0.4),
       0 1px 2px rgba(0, 0, 0, 0.3);
     display: grid;
     gap: var(--space-2);
-    padding: var(--space-4);
-    /* O MATERIAL VEM DE `.letter, .passage__row, .law` em `30-components.css`. */
-    justify-items: start;
-    /* ⚠ `align-content: start` E O QUE SEPARA ESTICAR A FOLHA DE ESTICAR O TEXTO. */
+    padding: var(
+      --space-4
+    ); /* O MATERIAL VEM DE `.letter, .passage__row, .law` em `30-components.css`. */
+    justify-items: start; /* ⚠ `align-content: start` E O QUE SEPARA ESTICAR A FOLHA DE ESTICAR O TEXTO. */
     align-content: start;
     text-align: left;
     width: 100%;
-  }
-
-  /* ⚠ E SÓ A CARTA DA BANDEJA ESTICA. */
+  } /* ⚠ E SÓ A CARTA DA BANDEJA ESTICA. */
   .tray__open .letter {
     align-self: stretch;
-  }
-
-  /* ⚠ E ELA E MAIS APAGADA QUE O CORPO, de propósito e com conta atras: `--sheet-ink` a 58%
-     sobre o papel dá 4,8:1, que passa em texto pequeno. */
-
-  /* A queixa era que o painel direito é grande demais para uma mensagem tão pequena — e a
+  } /* ⚠ E ELA E MAIS APAGADA QUE O CORPO, de propósito e com conta atras: `--sheet-ink` a 58%
+     sobre o papel dá 4,8:1, que passa em texto pequeno. */ /* A queixa era que o painel direito é grande demais para uma mensagem tão pequena — e a
      medição deu razão a ele com folga: o texto de uma carta ocupava **196 × 22px dentro de
-     uma bandeja de 659 × 630**, que é 1% da área. */
-  /* ── A SECAO DE ANEXOS ────────────────────────────────────────────────────── ⚠ ELA E A
+     uma bandeja de 659 × 630**, que é 1% da área. */ /* ── A SECAO DE ANEXOS ────────────────────────────────────────────────────── ⚠ ELA E A
      FILEIRA `1fr` DA CARTA, e existe mesmo vazia: sem ela o rodape sobe e cola no corpo em
      toda carta sem anexo. Medido antes disto: o documento fechava em 639px com o conteudo
      terminando em ~250 — quase 390px mortos, num objeto que e o maior da tela. */
@@ -639,9 +481,7 @@
     align-content: start;
     gap: var(--space-2);
     min-height: 0;
-  }
-
-  /* ── A FAIXA DO REMETENTE ─────────────────────────────────────────────────── Ela e o par de
+  } /* ── A FAIXA DO REMETENTE ─────────────────────────────────────────────────── Ela e o par de
      cima da faixa de acao: as duas sangram ate a borda da folha, as duas usam o degrau de
      profundidade do card, e entre elas fica o documento. E o desenho do Football Manager, e o
      que ele entrega e uma coisa so — o cabecalho deixa de flutuar sobre o texto e vira a
@@ -655,47 +495,27 @@
     margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) 0;
     padding: var(--space-3) var(--space-6);
     border-bottom: 1px solid var(--sheet-edge);
-    border-radius: 0 var(--radius-piece) 0 0;
+    border-radius: 0;
     background: var(--sheet-raise);
-  }
-
-  /* ⚠ A MAIUSCULA E DA LINHA, e nao da frase: o assunto de tres cartas comeca por VERBO
+  } /* ⚠ A MAIUSCULA E DA LINHA, e nao da frase: o assunto de tres cartas comeca por VERBO
      ("rompeu com o governo: Parlamentares"), e o verbo vem de um termo compartilhado — subir a
      caixa dele daria dois literais para a mesma palavra. E a mesma solucao do rotulo de
      leitura na coluna da direita. */
   .letter__subject::first-letter,
   .tray__subject::first-letter {
     text-transform: uppercase;
-  }
-
-  /* ⚠ O ANEXO LARGO ATRAVESSA A GRADE: uma tabela de sete colunas em 200px nao e tabela, e a
-     rolagem lateral que ela produziria e o defeito que esta bandeja ja pagou uma vez. */
-  /* A TABELA COMECA NO TOPO: ancorar no fim so faz sentido quando ha um vizinho com que
-     alinhar, e o anexo largo atravessa a grade sozinho. */
-  /* ⚠ A TABELA PERDE A CAIXA, e o motivo e o mesmo dos "dois separadores para uma fronteira":
+  } /* ⚠ O ANEXO LARGO ATRAVESSA A GRADE: uma tabela de sete colunas em 200px nao e tabela, e a
+     rolagem lateral que ela produziria e o defeito que esta bandeja ja pagou uma vez. */ /* A TABELA COMECA NO TOPO: ancorar no fim so faz sentido quando ha um vizinho com que
+     alinhar, e o anexo largo atravessa a grade sozinho. */ /* ⚠ A TABELA PERDE A CAIXA, e o motivo e o mesmo dos "dois separadores para uma fronteira":
      a zebra ja separa linha de linha e ja desenha o bloco, entao a moldura em volta dela e o
      segundo contorno para dizer a mesma coisa. Os dois cards de leitura FICAM com caixa —
-     eles nao tem nada que os delimite por dentro. */
+     eles nao tem nada que os delimite por dentro. */ /* ⚠ A MOLDURA VOLTOU AO BLOCO LARGO, e a retirada dela tinha um dono: a TABELA, que
+     precisava dos 24px de recuo para a coluna da soma nao cortar. Sem tabela, o bloco largo
+     e um card como os outros — e a regra passou a ser dele: "blocos dentro de blocos, tudo
+     idêntico". O que fica FORA de moldura é só a abertura da mensagem. */
   .annex[data-wide="true"] {
     grid-column: 1 / -1;
-    border: 0;
-    background: none;
-    /* ⚠ SEM RECUO LATERAL, e ele saiu junto com a caixa: recuo existe para afastar conteudo de
-       uma BORDA, e este card nao tem mais borda nenhuma. Os 24px voltaram para a tabela — que
-       precisou deles quando a Inter entrou no lugar da Segoe UI e a coluna da SOMA, que a
-       reparticao por maior residuo existe para fechar, saiu cortada de novo. */
-    padding-inline: 0;
-  }
-
-  .annex[data-wide="true"] thead th {
-    letter-spacing: normal;
-  }
-
-  .annex[data-wide="true"] tbody th {
-    padding-inline: 0 var(--space-1);
-  }
-
-  /* A LEITURA DE UM CARD DE NOTA — o valor em cima, a qualificacao embaixo. */
+  } /* A LEITURA DE UM CARD DE NOTA — o valor em cima, a qualificacao embaixo. */
   .annex__read {
     display: grid;
     gap: 2px;
@@ -706,26 +526,20 @@
     font-size: var(--text-name);
     font-weight: 700;
     color: var(--sheet-ink);
-  }
-
-  /* ⚠ UM DEGRAU A MENOS NA CAIXA INTEIRA: `--text-note` (12,5px) vivia aqui e em NENHUM outro
+  } /* ⚠ UM DEGRAU A MENOS NA CAIXA INTEIRA: `--text-note` (12,5px) vivia aqui e em NENHUM outro
      lugar da bandeja, e um tamanho que aparece uma vez so nao e degrau de escala — e exececao.
      A caixa passou de cinco tamanhos para quatro. */
   .annex__read small {
     font-size: var(--text-body);
     color: rgba(var(--sheet-ink-rgb), 0.62);
-  }
-
-  /* `auto-fit` e nao um numero de colunas: hoje cada carta traz UM anexo, e no dia em que
+  } /* `auto-fit` e nao um numero de colunas: hoje cada carta traz UM anexo, e no dia em que
      trouxer tres os estreitos se emparelham sozinhos. */
   .annexes {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: var(--space-3);
     align-content: start;
-  }
-
-  /* ⚠ O CARD E UM DEGRAU DE PROFUNDIDADE, e nao uma segunda materia: a regra escrita — "as
+  } /* ⚠ O CARD E UM DEGRAU DE PROFUNDIDADE, e nao uma segunda materia: a regra escrita — "as
      pecas de dentro sao linhas e secoes, nao cartoes" — foi escrita sobre VIDRO, e o que a
      sustenta e que vidro dentro de vidro sao dois materiais para dizer uma coisa so. Aqui a
      folha e o card sao a mesma substancia com profundidades diferentes. */
@@ -734,30 +548,34 @@
        quebra em duas linhas deixava o card ao lado 18px mais curto, e dois cards irmaos com
        alturas diferentes leem como desalinho sem que o olho saiba nomear a causa. */
     align-self: stretch;
-    display: grid;
-    /* ⚠ A LEITURA ANCORA NO TOPO, e a ancora ja foi no PE: com a legenda de duas linhas, o
+    display: grid; /* ⚠ A LEITURA ANCORA NO TOPO, e a ancora ja foi no PE: com a legenda de duas linhas, o
        fim era o unico ponto em que dois cards irmaos casavam. As legendas encurtaram para uma
        linha, e ai o fim passou a alinhar o QUALIFICADOR de um card com o VALOR do outro — que
        e pior, porque o que o olho compara e o valor. Topo alinha valor com valor. */
     align-content: start;
-    gap: var(--space-2);
-    padding: var(--space-3);
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
     border: 1px solid var(--sheet-edge);
     border-radius: var(--radius-sheet);
     background: var(--sheet-raise);
+  } /* ⚠ A NOTA TEM TIPO DE PROSA, e nao de valor: a regra do impeachment ia num card de leitura
+     e saía em `--text-name`, com doze palavras no corpo de um número. */
+  .annex__note {
+    margin: 0;
+    font-size: var(--text-note);
+    line-height: 1.45;
+    color: rgba(var(--sheet-ink-rgb), 0.72);
   }
 
   .annex__legend {
     margin: 0;
     font-family: var(--font-display);
-    font-size: var(--text-label);
+    font-size: var(--text-note);
     font-weight: 700;
     letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: rgba(var(--sheet-ink-rgb), 0.62);
-  }
-
-  /* ── A FAIXA DE ACAO — ela SANGRA ate a borda da folha ────────────────────── O que se pode
+  } /* ── A FAIXA DE ACAO — ela SANGRA ate a borda da folha ────────────────────── O que se pode
      FAZER com um documento nao mora no meio dele: e a "mensagem de accao" do Football Manager,
      e o recuo negativo e o que a faz encostar nos tres lados. */
   .letter__foot {
@@ -771,114 +589,91 @@
     border-top: 1px solid var(--sheet-edge);
     border-radius: 0 0 var(--radius-piece) 0;
     background: var(--sheet-raise);
-  }
-
-  /* Sete colunas num documento de 435px é apertado, e no dia em que uma nota nova entrar ela
+  } /* Sete colunas num documento de 435px é apertado, e no dia em que uma nota nova entrar ela
      fica mais apertada — o que não pode acontecer é a carta crescer para fora da bandeja e
-     voltar a rolagem lateral que saiu hoje de manhã. */
-  /* ⚠ A ROLAGEM LATERAL PRECISA SE ANUNCIAR, e ela era invisivel: a 1280x800 a tabela pede
+     voltar a rolagem lateral que saiu hoje de manhã. */ /* ⚠ A ROLAGEM LATERAL PRECISA SE ANUNCIAR, e ela era invisivel: a 1280x800 a tabela pede
      390px e tem 307, e o que fica de fora e a coluna da SOMA. Ela ja rolava — o conteudo nunca
      esteve inalcancavel —, mas nada na tela dizia que havia mais.
      ⚠ E DAR LARGURA AO DOCUMENTO SO MUDA O DEFEITO DE COLUNA: medido com 7fr/3fr, a tabela
      passa a caber e a coluna dos cartoes cai a 283px, indo de 1 para 7 elementos cortados.
      A sombra e `background-attachment: local`, entao ela some sozinha quando nao ha o que
-     rolar — sem uma linha de script para medir. */
-  .annex__scroll {
-    overflow-x: auto;
-    max-width: 100%;
-    background:
-      linear-gradient(to right, var(--sheet-raise) 30%, rgba(var(--sheet-ink-rgb), 0)) left center /
-        24px 100% no-repeat local,
-      linear-gradient(to left, var(--sheet-raise) 30%, rgba(var(--sheet-ink-rgb), 0)) right center /
-        24px 100% no-repeat local,
-      radial-gradient(
-          farthest-side at 0 50%,
-          rgba(var(--sheet-ink-rgb), 0.28),
-          rgba(var(--sheet-ink-rgb), 0)
-        )
-        left center / 14px 100% no-repeat scroll,
-      radial-gradient(
-          farthest-side at 100% 50%,
-          rgba(var(--sheet-ink-rgb), 0.28),
-          rgba(var(--sheet-ink-rgb), 0)
-        )
-        right center / 14px 100% no-repeat scroll;
+     rolar — sem uma linha de script para medir. */ /* ── A LINHA DE ANEXO ────────────────────────────────────────────────────── ⚠ ELA
+     SUBSTITUIU AS QUATRO TABELAS DA CAIXA, e a medição é a razão: 19 de 23 cartas abertas
+     traziam tabela, com 306 células por mês. E era a tabela que cortava — a 1280×800 o anexo
+     escondia a coluna da soma, e a rolagem lateral existia para tapar isso.
+     ⚠ A GRADE É A DO GABINETE, e não um dialeto novo: nome, pista e valor. A do rail usa
+     11rem no nome porque a coluna dela tem 208px; aqui a folha é mais larga e o nome de
+     bancada pede mais. */ /* ⚠ O NOME LEVA O QUE SOBRA E A PISTA TEM LARGURA FIXA, e a captura decidiu isso: com o
+     nome em 10rem, "Partido dos Trabalhadores Unificado" saía reticenciado em toda linha de
+     bancada. A pista não precisa de 1fr — ela compara proporção, e 72px já a mostram. */
+  .annex__line {
+    display: grid;
+    /* ⚠ A PISTA LEVA A SOBRA E O VALOR TEM LARGURA FIXA, e as duas metades sao a mesma
+       medicao: com o nome em `1fr` e o valor em `auto`, numa janela de 1920px o nome ficava
+       com 300px de vazio e a pista com 72; e como o valor media o proprio texto, a pista
+       comecava num x diferente em cada bloco. Coluna fixa alinha os cinco. */
+    grid-template-columns: minmax(0, 1fr) minmax(48px, 96px) 6rem;
+    align-items: center;
+    gap: 0 var(--space-3);
+    min-height: 24px;
+  } /* SEM BARRA A FILEIRA DO MEIO SOME, e o nome fica com a folha inteira. */
+  .annex__line:not(:has(> .gauge)) {
+    grid-template-columns: minmax(0, 1fr) 6rem;
+  } /* ⚠ A MAIUSCULA E DA LINHA, e nao da frase — a mesma regra do rail, e pela mesma razao:
+     "maioria simples" e um TERMO compartilhado com o quorum de uma lei, e capitalizá-lo na
+     origem daria dois literais para a mesma palavra. Sem ela a lista mistura "Apoiam o
+     governo" com "maioria simples" na mesma coluna. */
+  .annex__who::first-letter {
+    text-transform: uppercase;
   }
 
-  .annex__table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: var(--text-label);
-  }
-
-  /* ⚠ O RECUO SUBIU EM, e o espaco veio de graca: a folha tem 630px e o anexo media 143. */
-  .annex__table th,
-  .annex__table td {
-    padding: var(--space-1) var(--space-1);
+  /* ⚠ O TIPO DENTRO DOS BLOCOS SUBIU, por ordem dele. Medido antes: a carta lia em 15,2px e
+     a coluna que carrega VINTE numeros lia em 10px — o menor degrau da escala, tamanho de
+     rotulo de eixo. A metade da tela que mais se le era a menor. */
+  .annex__who {
+    font-size: var(--text-body);
+    color: rgba(var(--sheet-ink-rgb), 0.72);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } /* O NÚMERO É O QUE A LINHA ENTREGA, e por isso ele é o único peso 700 dela. */
+  .annex__value {
+    font-size: var(--text-body);
+    font-weight: 700;
+    color: var(--sheet-ink);
     text-align: right;
     white-space: nowrap;
+  } /* ⚠ O QUALIFICADOR NÃO COMPETE COM O NÚMERO: ele diz "de 71" ou "carestia", e a 10px em
+     peso 700 ao lado do valor os dois virariam um número de duas partes. */
+  .annex__value small,
+  .annex__aside {
+    margin-left: var(--space-1);
+    /* ⚠ O QUALIFICADOR FICA UM DEGRAU ABAIXO do valor, e nao no mesmo: no mesmo corpo o olho
+       lia os dois como um numero de duas partes. */
+    font-size: var(--text-note);
+    font-weight: 400;
+    /* ⚠ 0,55 REPROVOU NO PORTAO — 4,13 contra o piso AA de 4,5 — quando o bloco passou a ser
+       vidro: o qualificador vivia sobre a folha, que e mais clara. Clareia-se a TINTA. */
+    color: rgba(var(--sheet-ink-rgb), 0.68);
   }
 
-  .annex__table thead th {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: rgba(var(--sheet-ink-rgb), 0.5);
-    border-bottom: 1px solid rgba(var(--sheet-ink-rgb), 0.16);
-  }
-
-  /* O NOME DA CLASSE ANCORA A LINHA À ESQUERDA, e é a única célula que não é número.
-     ⚠ PESO 700 E NAO 600, e a medicao nomeou o defeito: a carta usava QUATRO pesos no mesmo
-     corpo de 10px — 400, 600, 700 e 800 —, e quatro pesos a 10px nao formam hierarquia, formam
-     ruido. A escala da carta e de DOIS pesos, e a diferenca entre peca e peca sai do tamanho e
-     da tinta. */
-  .annex__table tbody th {
-    text-align: left;
-    font-weight: 700;
-    color: var(--sheet-ink);
-    padding-right: var(--space-2);
-  }
-
-  .annex__table tbody td {
-    color: rgba(var(--sheet-ink-rgb), 0.62);
-  }
-
-  /* ⚠ O FIO E DA LINHA, E NAO DA CELULA — conserto, e o defeito era visivel:
-     com a borda no `td`, o traco comecava depois do nome da classe e a tabela aparecia com
-     tres tracos flutuando no meio dela. `border-bottom` no `tr` so pinta com
-     `border-collapse`, que esta declarado acima. */
-  /* ⚠ ZEBRA E FIO SAO DOIS SEPARADORES PARA UMA FRONTEIRA, e este projeto ja matou esse
-     defeito tres vezes: o fio saiu, e o que separa uma linha da seguinte e a demao. */
-  .annex__table tbody tr:nth-child(even) {
-    background: rgba(var(--sheet-ink-rgb), 0.05);
-  }
-
-  /* ⚠ A MAIOR DA LINHA É O QUE FAZ A TABELA LER DE RELANCE. */
-  .annex__table td[data-top="true"] {
-    color: var(--sheet-ink);
-    font-weight: 700;
-  }
-
-  /* ⚠ O FIO VERTICAL SAIU EM, e ele era o defeito que ele nomeou como "essas linhas nada a
-     ver": uma borda esquerda numa celula de CORPO desenha um traco que comeca no MEIO da
-     tabela — o cabecalho nao a tinha, entao a coluna aparecia cortada pela metade. */
-  .annex__sum {
-    color: var(--sheet-ink);
-    font-weight: 700;
-  }
-
-  /* ── A TARJA DE GRAVIDADE ────────────────────────────────────────────────── ⚠ ELA MEDE
+  /* O vao vem da margem e nao de um `gap`: o valor e celula de grade alinhada a direita. */
+  .annex__value .trend {
+    margin-left: var(--space-1);
+    font-size: inherit;
+  } /* ⚠ A PISTA NA FOLHA É MAIS CLARA QUE NO RAIL: `.gauge` pinta o vazio com branco a 7%, que
+     sobre a lâmina da carta quase não aparece. O trilho ganha tinta da própria folha. */
+  .annex__line > .gauge {
+    height: 6px;
+    box-shadow: inset 0 0 0 1px rgba(var(--sheet-ink-rgb), 0.1);
+  } /* ── A TARJA DE GRAVIDADE ────────────────────────────────────────────────── ⚠ ELA MEDE
      TEMPO, E NÃO IMPORTÂNCIA, e a distinção é a razão de ela existir: um assunto grave com
      prazo largo não é urgente, e é isso que o jogador precisa saber para escolher o que
-     responder primeiro. */
-  /* ⚠ ELA ERA A TERCEIRA LARGURA, e nao havia terceiro grau. */
+     responder primeiro. */ /* ⚠ ELA ERA A TERCEIRA LARGURA, e nao havia terceiro grau. */
   .letter[data-urgency] {
     border-left-width: var(--rule-strong);
     padding-left: calc(var(--space-4) - var(--rule-strong) + 1px);
-  }
-
-  /* ⚠ NA BANDEJA O RECUO E OUTRO, e a regra acima tem a MESMA especificidade de
+  } /* ⚠ NA BANDEJA O RECUO E OUTRO, e a regra acima tem a MESMA especificidade de
      `.tray__open .letter` e vem depois: ela impunha 13px onde o recuo e 24. Medido: cabecalho e
      rodape a -7px, invadindo o indice, e a tarja de gravidade coberta nos 4px inteiros.
      ⚠ E SO O RECUO NAO BASTA — corrigido ele, sobravam 3 dos 4px cobertos, porque a margem
@@ -892,19 +687,13 @@
     margin-left: calc(-1 * (var(--space-6) - var(--rule-strong) + 1px));
   }
 
-  .letter[data-urgency="open"] {
-    border-left-color: rgba(var(--sheet-ink-rgb), 0.35);
-  }
-
   .letter[data-urgency="soon"] {
     border-left-color: var(--brand);
   }
 
   .letter[data-urgency="now"] {
     border-left-color: var(--crisis);
-  }
-
-  /* ── A DATA E O PRAZO, NO CABEÇALHO DO OFÍCIO ─────────────────────────────── ⚠ ELES
+  } /* ── A DATA E O PRAZO, NO CABEÇALHO DO OFÍCIO ─────────────────────────────── ⚠ ELES
      DIVIDEM A PONTA DIREITA, empilhados: a data é o que o documento É, e o prazo é o que ele
      COBRA. */
   .letter__meta {
@@ -913,9 +702,16 @@
     gap: 2px;
     margin-left: auto;
     text-align: right;
-  }
-
+  } /* ⚠ SEM `nowrap` ELA QUEBRA EM DUAS LINHAS a 1280, medido em 13 cartas: "MAR ·" / "2027".
+     E a quebra levava o cabeçalho de 60 para 80px — a folha inteira mudava de altura por causa
+     de um espaço. */ /* ⚠ SEM `nowrap` ELA QUEBRA EM DUAS LINHAS a 1280, medido em 13 cartas: "MAR ·" / "2027".
+     E a quebra levava o cabeçalho de 60 para 80px — a folha inteira mudava de altura por um
+     espaço.
+     ⛔ E BAIXAR O PESO DELA FOI TENTADO E RECUSADO, por ele e pelo portão no mesmo minuto:
+     em `--font-record` a 0,45 de tinta o medidor cobrou 4,09 contra o piso AA de 4,5. A data
+     dupla continua aberta, e não se resolve por tipografia. */
   .letter__date {
+    white-space: nowrap;
     font-family: var(--font-display);
     font-size: var(--text-label);
     font-weight: 700;
@@ -928,9 +724,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-3);
-  }
-
-  /* O PRAZO FICA NA CABEÇA, à direita do remetente: é a segunda coisa que o olho encontra, e
+  } /* O PRAZO FICA NA CABEÇA, à direita do remetente: é a segunda coisa que o olho encontra, e
      a única que muda de mês para mês na mesma carta. */
   .letter__due {
     margin-left: auto;
@@ -953,9 +747,7 @@
   .letter__from {
     display: grid;
     gap: 1px;
-  }
-
-  /* ⚠ 600 E O PESO DE NOME NESTE PROJETO, e este era o unico a 700: `person__name`,
+  } /* ⚠ 600 E O PESO DE NOME NESTE PROJETO, e este era o unico a 700: `person__name`,
      `law__name`, `passage__label` e `rail__president` usam 600. Mesmo papel, dois pesos. */
   .letter__name {
     font-family: var(--font-record);
@@ -963,15 +755,16 @@
     color: var(--sheet-ink);
   }
 
+  /* ⚠ O PESO E O MESMO DA LEGENDA E DO DIVISOR DE MES: eram tres carimbos no mesmo 10px
+     com traqueamento igual e DOIS pesos, e dois pesos que so se contam nao se enxergam. */
   .letter__role {
     font-family: var(--font-display);
     font-size: var(--text-label);
+    font-weight: 700;
     letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: rgba(var(--sheet-ink-rgb), 0.6);
-  }
-
-  /* O ASSUNTO EM SERIFA e com peso de título de ofício: ele é a única linha da carta que o
+  } /* O ASSUNTO EM SERIFA e com peso de título de ofício: ele é a única linha da carta que o
      jogador precisa ler para saber se abre ou não. */
   .letter__subject {
     font-family: var(--font-record);
@@ -979,9 +772,7 @@
     font-weight: 700;
     line-height: 1.3;
     color: var(--sheet-ink);
-  }
-
-  /* O corpo do oficio e prosa, e prosa nao termina numa palavra sozinha. */
+  } /* O corpo do oficio e prosa, e prosa nao termina numa palavra sozinha. */
   .letter__lines {
     text-wrap: pretty;
     display: grid;
@@ -993,9 +784,7 @@
   .letter__lines b {
     color: var(--sheet-ink);
     font-weight: 700;
-  }
-
-  /* A AÇÃO LEVA AO LUGAR ONDE O ASSUNTO SE RESOLVE, como a ação de todo cartão do Gabinete —
+  } /* A AÇÃO LEVA AO LUGAR ONDE O ASSUNTO SE RESOLVE, como a ação de todo cartão do Gabinete —
      e ela é discreta pela mesma razão: a carta informa, e o botão é a porta. */
   .letter__action {
     padding: 3px var(--space-3);
@@ -1021,9 +810,7 @@
 
   .letter__action:active {
     transform: scale(0.96);
-  }
-
-  /* ── AS DUAS SAÍDAS ──────────────────────────────────────────────────────── ⚠ ELAS SÃO
+  } /* ── AS DUAS SAÍDAS ──────────────────────────────────────────────────────── ⚠ ELAS SÃO
      IRMÃS NA LARGURA E NO PESO, e isso é decisão. */
   .letter__choices {
     display: grid;
@@ -1067,16 +854,12 @@
 
   .letter__choice:active {
     transform: scale(0.98);
-  }
-
-  /* MARCADA, ELA É UMA DECISÃO TOMADA E AINDA NÃO EXECUTADA — o mesmo estado do orçamento
+  } /* MARCADA, ELA É UMA DECISÃO TOMADA E AINDA NÃO EXECUTADA — o mesmo estado do orçamento
      escrito e não avançado. */
   .letter__choice[aria-pressed="true"] {
     border-color: var(--brand);
     background: rgba(var(--brand-rgb), 0.16);
-  }
-
-  /* ⚠ FERVENDO USA O VERMELHO SEMÂNTICO, e aqui ele é literal: um grupo que ferveu abandonou
+  } /* ⚠ FERVENDO USA O VERMELHO SEMÂNTICO, e aqui ele é literal: um grupo que ferveu abandonou
      o governo, e isso é a definição de crise no modelo. */
   .boiler__ruptures,
   .boiler__siege {
@@ -1087,9 +870,7 @@
 
   .boiler__ruptures b {
     color: var(--signal-down);
-  }
-
-  /* O CARIMBO DO CERCO — mono, porque é a máquina do Estado carimbando, e não uma medição nem
+  } /* O CARIMBO DO CERCO — mono, porque é a máquina do Estado carimbando, e não uma medição nem
      um nome. */
   .boiler__siege .stamp {
     display: inline-block;
@@ -1101,9 +882,7 @@
     font-size: var(--text-label);
     letter-spacing: var(--track-label);
     color: var(--signal-down);
-  }
-
-  /* ⚠ AS DUAS COLUNAS NAO DESEMPILHAVAM, e o defeito e anterior a reformulacao: medido a
+  } /* ⚠ AS DUAS COLUNAS NAO DESEMPILHAVAM, e o defeito e anterior a reformulacao: medido a
      390px, a coluna da direita fechava em 240px e TODA barra dela saia com 0px de largura —
      o rail ja deitava desde os 1180px e a grade dos cartoes nunca acompanhou. */
   @media (max-width: 1180px) {
@@ -1116,4 +895,48 @@
       grid-column: 1;
     }
   }
+
+  /* ── A COLUNA FALA A LINGUA DA CAIXA, E A SUBSTANCIA E DO CONTEXTO ────────── ⚠ O BLOCO É
+     O MESMO da carta — mesma moldura, mesma linha —, e o que muda é a MATÉRIA: papel na
+     carta, vidro na coluna. Escrever uma segunda peça para trocar duas cores seria o
+     vocabulário dobrando pelo mesmo motivo que ele dobrou da primeira vez. */
+  .cards__side {
+    gap: var(--space-2);
+  }
+
+  /* ⚠ O AR DA COLUNA E MENOR QUE O DA CARTA, e a razao e medida: com o recuo da carta os
+     cinco blocos pediam 851px numa coluna de 732, e o quinto ficava fora da dobra. A carta
+     tem uma folha inteira; a coluna tem 732px e cinco assuntos. */
+
+  /* ⚠ A PISTA LEVA A SOBRA, E O VALOR TEM LARGURA FIXA — e as duas metades da regra sao a
+     mesma medicao. Com o nome em `1fr` e o valor em `auto`, numa janela de 1656px o nome
+     ficava com 300px de vazio e a pista com 72; e como o valor media o proprio texto, a pista
+     comecava num x diferente em cada bloco. Coluna fixa alinha os cinco blocos. */
+  /* ── A COLUNA PREENCHE A ALTURA QUE TEM ──────────────────────────────────── ⚠ ELA
+     EMPILHAVA NO TOPO e deixava o resto em branco: o vao sobrava embaixo do quinto bloco em
+     vez de virar ar entre as leituras. Com `stretch` nos dois niveis, a sobra se reparte
+     entre os cinco blocos e, dentro deles, entre as linhas. Quando nao ha sobra, nada muda. */
+  .cards__side,
+  .cards__side .annex {
+    align-content: stretch;
+  }
+
+  /* ⚠ A PISTA NA FOLHA GANHA TINTA DA PRÓPRIA FOLHA porque `.gauge` pinta o vazio com branco
+     a 7%, e sobre a lâmina da carta isso quase não aparece. Sobre o vidro ele aparece. */
+  .cards__side .annex__line > .gauge {
+    box-shadow: none;
+  }
+
+  /* ⚠ O QUALIFICADOR DO NOME NÃO É UMA SEGUNDA LEITURA: é a mesma leitura dizendo o próprio
+     peso, e por isso ele mora DENTRO do rótulo. Solto ao lado do valor, o olho lia os dois
+     como um número de duas partes. */
+  /* ⚠ A LINHA INTEIRA TINGE, e não só o valor: quando um grupo ferve ou o mês estoura, o que
+     mudou de estado é a leitura, e não um dos dois campos dela. */
+  .annex__line[data-tone="crisis"] .annex__who,
+  .annex__line[data-tone="crisis"] .annex__value {
+    color: var(--signal-down);
+  }
+
+  /* O vão vem da margem e não de um `gap`: o valor é uma célula de grade alinhada à direita,
+     e virar `flex` mudaria o alinhamento da coluna inteira para acertar 4px. */
 }

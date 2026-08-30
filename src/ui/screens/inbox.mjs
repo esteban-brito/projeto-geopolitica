@@ -1,8 +1,16 @@
 /* A CAIXA DE ENTRADA — a primeira carta de verdade. */
 
 import { escapeHtml } from "../shared/html.mjs";
-import { apportion, money, percent, seats, signed } from "../shared/format.mjs";
+import { money, percent, seats, signed } from "../shared/format.mjs";
 import { sigilHtml } from "../shared/sigil.mjs";
+import {
+  cardHtml,
+  chamberRows,
+  lineHtml,
+  linesHtml,
+  noteHtml,
+  rupturesRows,
+} from "../shared/annex.mjs";
 import { monthLabel } from "../../state/state.mjs";
 import { DEFAULT_TREATMENT, UI, addressed, labelOf } from "../strings.mjs";
 
@@ -34,7 +42,10 @@ import { DEFAULT_TREATMENT, UI, addressed, labelOf } from "../strings.mjs";
  */
 function urgencyOf(due) {
   if (due === null || due === undefined) return null;
-  return due <= 0 ? "now" : due <= 1 ? "soon" : "open";
+  /* ⚠ ERAM TRES FAIXAS E SAO DUAS: medido em 48 meses, `left` devolve 0 ou 1 e mais nada — o
+     prazo e de dois meses e a carta so aparece no mes seguinte ao que a escreveu, entao a
+     faixa larga nunca foi pintada uma vez. */
+  return due <= 0 ? "now" : "soon";
 }
 
 /**
@@ -77,12 +88,15 @@ export function letterHtml({
           ...(from.gender ? { gender: from.gender } : {}),
         })
       : "") +
-    `<span class="letter__from">` +
+    /* ⚠ O `<span>` VAZIO CONSUMIA O VÃO DO FLEX: quatro espécies saem com `from: null` — a
+       exigência, a gaveta e as duas do plenário —, e o cabeçalho delas ficava com 354px de
+       faixa e 15,8% de tinta. Sem remetente não há caixa de remetente. */
     (from
-      ? `<b class="letter__name">${escapeHtml(from.name)}</b>` +
-        `<span class="letter__role">${escapeHtml(from.label)}</span>`
+      ? `<span class="letter__from">` +
+        `<b class="letter__name">${escapeHtml(from.name)}</b>` +
+        `<span class="letter__role">${escapeHtml(from.label)}</span>` +
+        `</span>`
       : "") +
-    `</span>` +
     /* ⚠ A DATA MORA NO CABECALHO DO OFICIO, ao lado de quem assinou — que e onde um documento
        datado se data. */
     `<span class="letter__meta">` +
@@ -128,7 +142,7 @@ export function letterHtml({
 function dueLabel(due) {
   if (due === null) return "";
   if (due <= 0) return UI.inbox.dueNow;
-  return `${UI.inbox.dueIn} ${due} ${due === 1 ? UI.inbox.month : UI.inbox.months}`;
+  return `${UI.inbox.dueIn} ${due} ${UI.inbox.month}`;
 }
 
 /* ⚠ SOMENTE OS TRÊS KINDS SEM PREFIXO NO ASSUNTO — demand, rupture e siege. Os demais já
@@ -225,18 +239,27 @@ export function describeMonth({ report, adviser }) {
  * quem lê a divida pede corte, e os outros pedem verba — e guardar o sentido na carta
  * daria dois lugares dizendo a mesma coisa
  * @param {{ price: number, removal: number, seats: number,
- * lobbies?: ReadonlyArray<{ id: string, pressure: number, boil: number, share: number }> }}
- * [input.siege] o cerco e a caldeira, perguntados ao motor. A carta do processo cita o
+ * lobbies?: ReadonlyArray<{ id: string, pressure: number, boil: number, share: number }>,
+ * ruptures?: ReadonlyArray<{ id: string, value: number, threshold: number, breaks: string,
+ * open: boolean }> }}
+ * [input.siege] o cerco e a caldeira, perguntados ao motor. ⚠ `ruptures` entrou com o bloco
+ * das tres: uma ruptura sozinha nao diz se o processo esta perto, e o processo so abre com as
+ * tres — a conta de cada uma e do motor, e refeita aqui divergiria no primeiro limiar mudado. A carta do processo cita o
  * quorum do afastamento e o quanto a cadeira encareceu; a da fervura cita a pressao, o
  * ponto e a fatia. ⚠ Os cinco sao do motor: escritos a mao nesta view, mentiriam no dia
  * em que qualquer um deles mudasse
+ * @param {ReadonlyArray<import("../../state/state.mjs").MonthCard>} [input.months] os meses
+ * fechados. ⚠ A CARTA DO PLENARIO NAO GUARDA O PROPRIO PLACAR, e ele ja mora aqui: `votes` e
+ * `quorum` do cartao do MESMO mes. Ligar os dois custa um parametro; grava-lo na carta seria
+ * uma segunda verdade sobre a mesma votacao
  * @param {ReadonlyArray<{ id: string, label: string }>} [input.parties]
  * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado as bancadas, para o
  * @param {ReadonlyArray<{ id: string, label: string }>} [input.segments] as classes, para o
- * @param {{ base: number, majority: number }} [input.chamber] as cadeiras que respondem ao
- * governo e o quorum simples. ⚠ Ela entrou com a carta da MINORIA, e os
- * dois numeros vem prontos: a soma das bancadas leais e conta de `baseCount`, e refaze-la
- * aqui daria a esta carta um placar diferente do que a Trindade mostra ao lado dela
+ * @param {{ base: number, majority: number, seats: number }} [input.chamber] as cadeiras que
+ * respondem ao governo, o quorum simples e o tamanho da Camara. ⚠ Ela entrou com a carta da
+ * MINORIA, e os numeros vem prontos: a soma das bancadas leais e conta de `baseCount`, e
+ * refaze-la aqui daria a esta carta um placar diferente do que a Trindade mostra ao lado dela.
+ * ⚠ E `seats` entrou porque o 513 estava TECLADO em duas frases, com o motor tendo o numero
  * @returns {Dispatch[]}
  */
 export function describeMail({
@@ -247,7 +270,8 @@ export function describeMail({
   answered,
   lobbies = [],
   siege,
-  chamber = { base: 0, majority: 0 },
+  chamber = { base: 0, majority: 0, seats: 0 },
+  months = [],
   segments = [],
   parties = [],
   /* ⚠ COMO O JOGADOR QUER SER TRATADO, e ele escolhe junto com o nome. Sem isto a carta
@@ -303,7 +327,17 @@ export function describeMail({
                mes 1 imprimia `R$ 14,5 bi` duas vezes a um palmo, numa tela que nao rola. A
                guarda de vocabulario forcou o literal compartilhado (o que PROVA que sao a
                mesma leitura) e ninguem perguntou se ela devia ser mostrada duas vezes. */
-            annex: cardHtml(UI.inbox.inheritedMandatory, `<b>${money(inherited.mandatory)}</b>`),
+            /* ⚠ A SOBRA VOLTOU PARA O LADO DA OBRIGATORIA, e a retirada dela tinha razao no
+               desenho antigo: ela repetia o card do Gabinete a um palmo. Num BLOCO as duas sao
+               uma leitura so — o que esta preso e o que sobra —, e e essa relacao que a posse
+               precisa ensinar. */
+            annex: linesHtml(
+              addressed(UI.inbox.blockInherited, treatment),
+              lineHtml({
+                who: UI.inbox.inheritedMandatory,
+                value: money(inherited.mandatory),
+              }) + lineHtml({ who: UI.cabinet.vaultFree, value: money(inherited.room) }),
+            ),
             action: UI.inbox.seeMonth,
             target: "congress",
           });
@@ -363,6 +397,10 @@ export function describeMail({
               `<b data-numeric>${seats(letter.level ?? 0)}</b></span>` +
               `<span>${escapeHtml(outcomeOf(letter))}</span>` +
               `</div>`,
+            /* ⚠ MEDIDO: 374px DE PAPEL EM BRANCO E ZERO BLOCO, e ela e a pergunta que custa
+               dinheiro. Quem exige ja chega inteiro em `boilerOf` — pressao, ponto de fervura e
+               fatia na ruptura economica —, e a carta irma da fervura ja mostrava os tres. */
+            annex: groupBlock(siege, letter.from),
             choices:
               letter.answer === null
                 ? choicesHtml(
@@ -395,6 +433,7 @@ export function describeMail({
               `<div class="letter__lines"><span>` +
               `${escapeHtml(letter.kind === "passed" ? UI.inbox.passedBillBody : UI.inbox.rejectedBillBody)}` +
               `</span></div>`,
+            annex: plenaryBlock(months, letter.month),
             action: letter.kind === "passed" ? UI.inbox.passedBillAction : undefined,
             target: letter.kind === "passed" ? "estado" : undefined,
           });
@@ -418,12 +457,11 @@ export function describeMail({
           return paper({
             from: by("chief"),
             subject: UI.inbox.ceilingSubject,
-            body:
-              `<div class="letter__lines">` +
-              `<span>${escapeHtml(UI.inbox.ceilingBody)}</span>` +
-              `<span>${escapeHtml(UI.inbox.ceilingNote)} ` +
-              `<b data-numeric>${money(inherited.room)}</b></span>` +
-              `</div>`,
+            body: `<div class="letter__lines"><span>${escapeHtml(UI.inbox.ceilingBody)}</span></div>`,
+            annex: linesHtml(
+              addressed(UI.inbox.blockInherited, treatment),
+              lineHtml({ who: UI.inbox.ceilingNote, value: money(inherited.room) }),
+            ),
           });
 
         case "minority":
@@ -437,12 +475,11 @@ export function describeMail({
             /* ⚠ O NUMERO E O DA CARTA, e nao o de hoje: lido do estado corrente, este alarme
                ia de 229 para 227 cadeiras entre um mes e o seguinte. `chamber` fica como
                reserva para a carta antiga, gravada antes de o alarme carregar o proprio. */
-            annex:
-              cardHtml(
-                UI.cabinet.baseLine,
-                `<b>${seats(letter.now ?? chamber.base)}</b>` +
-                  `<small>${escapeHtml(UI.inbox.minorityNote)}</small>`,
-              ) + cardHtml(UI.inbox.majority, `<b>${seats(letter.was ?? chamber.majority)}</b>`),
+            annex: chamberBlock(
+              letter.now ?? chamber.base,
+              letter.was ?? chamber.majority,
+              chamber.seats,
+            ),
             action: UI.cabinet.congressAction,
             target: "congress",
           });
@@ -459,24 +496,11 @@ export function describeMail({
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.boilingBody)}</span>` +
               `</div>`,
+            /* ⚠ A PRESSAO E A DO DIA EM QUE ELE FERVEU: medido, ela ia de 70 para 75 um mes
+               depois, porque a tela lia a caldeira de hoje. O bloco e o MESMO da exigencia —
+               dois recados sobre o mesmo grupo nao podem ter duas leituras diferentes. */
             ...(group
-              ? {
-                  annex:
-                    /* ⚠ A PRESSAO E A DO DIA EM QUE ELE FERVEU: medido, ela ia de 70 para 75
-                       um mes depois, porque a tela lia a caldeira de hoje. */
-                    cardHtml(
-                      UI.inbox.boilingPressure,
-                      `<b>${seats(letter.now ?? group.pressure)}</b>` +
-                        `<small>${escapeHtml(UI.inbox.boilingNote)} ` +
-                        `${seats(letter.was ?? group.boil)}</small>`,
-                    ) +
-                    cardHtml(
-                      UI.inbox.boilingWeight,
-                      group.share > 0
-                        ? `<b>${percent(group.share)}</b>`
-                        : `<b>${escapeHtml(UI.inbox.boilingNoWeight)}</b>`,
-                    ),
-                }
+              ? { annex: groupBlock(siege, subject, letter.now ?? null, letter.was ?? null) }
               : {}),
           });
         }
@@ -494,26 +518,30 @@ export function describeMail({
               `</div>`,
             /* ⚠ A REGRA DO IMPEACHMENT E ANEXO, e nao rodape de prosa: ela e a mesma frase em
                toda ruptura, e como segunda linha do corpo ela era lida uma vez e ignorada
-               depois — que e o defeito que a linha "nenhuma ruptura aberta" ja pagou. */
-            annex: cardHtml(UI.inbox.ruptureLegend, `<b>${escapeHtml(UI.inbox.ruptureNote)}</b>`),
+               depois — que e o defeito que a linha "nenhuma ruptura aberta" ja pagou.
+               ⚠ E AS TRES ENTRARAM JUNTO: uma ruptura sozinha nao diz se o processo esta perto,
+               e o processo so abre com as TRES. Medido: 367px de papel em branco aqui. */
+            annex: rupturesBlock(siege) + noteHtml(UI.inbox.ruptureLegend, UI.inbox.ruptureNote),
           });
 
         case "siege":
           return paper({
             from: by("chief"),
             subject: UI.inbox.siegeSubject,
-            body:
-              `<div class="letter__lines">` +
-              `<span>${escapeHtml(UI.inbox.siegeBody)}</span>` +
-              /* ⚠ OS DOIS NUMEROS VEM DO MOTOR, e a frase e montada em volta deles. */
-              (siege
-                ? `<span>${escapeHtml(UI.inbox.siegeVote)} ` +
-                  `<b data-numeric>${seats(siege.removal)}</b> ` +
-                  `${escapeHtml(UI.inbox.siegeOf)} <b data-numeric>${seats(siege.seats)}</b>. ` +
-                  `${escapeHtml(UI.inbox.siegePrice)} ` +
-                  `<b data-numeric>${seats(siege.price)}×</b>.</span>`
-                : "") +
-              `</div>`,
+            body: `<div class="letter__lines"><span>${escapeHtml(UI.inbox.siegeBody)}</span></div>`,
+            /* ⚠ OS TRES NUMEROS SAIRAM DA PROSA E VIRARAM BLOCO, e os tres continuam vindo do
+               motor: escritos a mao aqui, mentiriam no dia em que qualquer um mudasse. Numa
+               frase corrida eles eram lidos uma vez; num bloco eles ficam consultaveis. */
+            ...(siege
+              ? {
+                  annex: linesHtml(
+                    UI.inbox.blockProcess,
+                    lineHtml({ who: UI.inbox.siegeVote, value: seats(siege.removal) }) +
+                      lineHtml({ who: UI.inbox.siegeOf, value: seats(siege.seats) }) +
+                      lineHtml({ who: UI.inbox.siegePrice, value: `${seats(siege.price)}×` }),
+                  ),
+                }
+              : {}),
             action: UI.inbox.siegeAction,
             target: "congress",
           });
@@ -669,7 +697,7 @@ function sorted(dispatches) {
  * não é o modelo escrever, é a tela AFIRMAR o que o motor não sabe.
  * @param {import("../../state/state.mjs").Letter} letter
  * @param {ReadonlyArray<{ id: string, label: string }>} segments
- * @param {{ base: number, majority: number }} chamber
+ * @param {{ base: number, majority: number, seats: number }} chamber
  * @returns {string}
  */
 function reportBody(
@@ -691,9 +719,13 @@ function reportBody(
       `<div class="letter__lines">` +
       line(
         `${escapeHtml(UI.inbox.seatsBody)} <b data-numeric>${seats(now)}</b> ` +
-          `${escapeHtml(UI.inbox.seatsOf)} <b data-numeric>${seats(chamber.majority)}</b>. ` +
+          `${escapeHtml(UI.inbox.of)} <b data-numeric>${seats(chamber.seats)}</b>` +
+          `${escapeHtml(UI.inbox.seatsMajority)} ` +
+          `<b data-numeric>${seats(chamber.majority)}</b>. ` +
           `<b data-numeric>${seats(moved)}</b> ` +
-          `${escapeHtml(moved === 1 ? UI.inbox.pollPoint : UI.inbox.pollPoints)} ` +
+          /* ⚠ A UNIDADE DESTA CARTA E CADEIRA, e ela reusava o rotulo da PESQUISA: o corpo
+             dizia "11 pontos" onde sao 11 cadeiras. */
+          `${escapeHtml(moved === 1 ? UI.inbox.seat : UI.inbox.seats)} ` +
           `${escapeHtml(way)}`,
       ) +
       line(escapeHtml(addressed(UI.inbox.seatsHint, treatment))) +
@@ -780,22 +812,6 @@ function pollCards(data, segments) {
 }
 
 /**
- * UM CARD DE ANEXO — legenda em cima, leitura embaixo.
- *
- * @param {string} legend
- * @param {string} body ja em HTML
- * @returns {string}
- */
-function cardHtml(legend, body) {
-  return (
-    `<section class="annex">` +
-    `<h5 class="annex__legend">${escapeHtml(legend)}</h5>` +
-    `<p class="annex__read">${body}</p>` +
-    `</section>`
-  );
-}
-
-/**
  * A MANCHETE — verbo e NUMERO, como um despacho.
  *
  * @param {import("../../state/state.mjs").Letter} letter
@@ -814,73 +830,198 @@ function headlineOf(letter) {
   return `${verb} ${seats(now)}%`;
 }
 
-/* Ela e a ordem de `SONDA`, e nao uma reordenacao por tamanho: uma tabela cujas colunas
-   trocam de lugar conforme o mes deixa de ser tabela e vira quebra-cabeca. */
+/* Ela e a ordem de `SONDA`, e nao uma reordenacao por tamanho: uma lista cujas linhas trocam
+   de lugar conforme o mes deixa de ser leitura e vira quebra-cabeca. */
 const ANNEX_NOTES = /** @type {const} */ (["prices", "jobs", "services", "safety", "economy"]);
 
 /**
+ * O GRUPO QUE FALA — e as duas cartas dele dizem a MESMA coisa.
+ *
+ * ⚠ A EXIGENCIA CHEGAVA SEM BLOCO NENHUM, com 374px de papel em branco medidos, enquanto a
+ * carta irma da fervura mostrava pressao e peso do mesmo grupo. Duas cartas sobre o mesmo
+ * lobby com leituras diferentes sao dois vocabularios para um assunto.
+ *
+ * @param {{ lobbies?: ReadonlyArray<{ id: string, pressure: number, boil: number,
+ * share: number }> } | undefined} siege
+ * @param {string | null} id qual grupo
+ * @param {number | null} [pressure] a pressao GRAVADA na carta, quando ela a carrega
+ * @param {number | null} [boil] o ponto de fervura gravado
+ * @returns {string}
+ */
+function groupBlock(siege, id, pressure = null, boil = null) {
+  const group = (siege?.lobbies ?? []).find(item => item.id === id) ?? null;
+  if (!group) return "";
+
+  /* ⚠ O NUMERO DA CARTA VENCE O VIVO, e a reserva existe para a carta gravada antes de o
+     alarme passar a carregar o proprio: a pressao ia de 70 para 75 um mes depois. */
+  const now = pressure ?? group.pressure;
+  const point = boil ?? group.boil;
+
+  return linesHtml(
+    UI.inbox.blockGroup,
+    lineHtml({
+      who: UI.inbox.boilingPressure,
+      value: seats(now),
+      share: point > 0 ? (now / point) * 100 : 0,
+      note: `${UI.inbox.boilingNote} ${seats(point)}`,
+    }) +
+      lineHtml({
+        who: UI.inbox.boilingWeight,
+        value: group.share > 0 ? percent(group.share) : UI.inbox.boilingNoWeight,
+        ...(group.share > 0 ? { share: group.share * 100 } : {}),
+      }),
+  );
+}
+
+/**
+ * O QUE FALTA PARA CADA RUPTURA ABRIR — as mesmas linhas que a coluna do Gabinete mostra.
+ *
+ * @param {{ ruptures?: ReadonlyArray<{ id: string, value: number, threshold: number,
+ * breaks: string, open: boolean }> } | undefined} siege
+ * @returns {string}
+ */
+function rupturesBlock(siege) {
+  const ruptures = siege?.ruptures ?? [];
+  if (ruptures.length === 0) return "";
+
+  return linesHtml(UI.inbox.blockRuptures, rupturesRows(ruptures));
+}
+
+/**
+ * O PLACAR DA VOTACAO — e ele ja estava no save.
+ *
+ * ⚠ A CARTA DO PLENARIO CHEGAVA COM UMA LINHA DE TEXTO E NENHUM NUMERO, e o cartao do MESMO
+ * mes, na MESMA bandeja, guardava `votes` e `quorum` desde a versao 19. "Derrubou por 3" e
+ * "derrubou por 90" pedem jogadas opostas — comprar duas bancadas, ou reescrever o texto.
+ *
+ * @param {ReadonlyArray<import("../../state/state.mjs").MonthCard>} months
+ * @param {number} month o mes da carta
+ * @returns {string}
+ */
+function plenaryBlock(months, month) {
+  const card = months.find(item => item.month === month) ?? null;
+  /* ⚠ AUSENTE E DECLARADO, e nao zero: a bandeja e os meses tem o mesmo teto, entao na ponta
+     do mandato a carta sobrevive ao cartao que a explicava. Sem placar, sem bloco. */
+  if (!card || card.votes === null) return "";
+
+  const gap = card.votes - card.quorum;
+  const top = Math.max(card.votes, card.quorum, 1);
+
+  return linesHtml(
+    UI.inbox.blockPlenary,
+    lineHtml({
+      who: UI.inbox.blockVotes,
+      value: seats(card.votes),
+      share: (card.votes / top) * 100,
+    }) +
+      lineHtml({
+        who: UI.inbox.blockQuorum,
+        value: seats(card.quorum),
+        share: (card.quorum / top) * 100,
+      }) +
+      lineHtml({
+        who: gap < 0 ? UI.inbox.blockMissed : UI.inbox.blockSpare,
+        value: seats(Math.abs(gap)),
+      }),
+  );
+}
+
+/**
+ * A CAMARA EM TRES LINHAS — as mesmas que a coluna do Gabinete mostra.
+ *
+ * @param {number} base
+ * @param {number} majority
+ * @param {number} seatsTotal
+ * @returns {string}
+ */
+function chamberBlock(base, majority, seatsTotal) {
+  return linesHtml(UI.inbox.blockChamber, chamberRows(base, majority, seatsTotal));
+}
+
+/**
  * O ANEXO DO CAIXA — de onde vem o que sobra.
+ *
+ * ⚠ AS QUATRO DIVIDEM A MESMA ESCALA — sao reais do mesmo mes —, entao a barra compara de
+ * verdade: o empenhavel ao lado da receita diz de relance o quanto do bolo sobra.
  *
  * @param {Record<string, number>} data
  * @returns {string}
  */
 function vaultAnnex(data) {
-  const rows = ["revenue", "mandatory", "ceiling", "allowance"]
-    .map(
-      key =>
-        `<tr><th scope="row">${escapeHtml(labelOf(UI.inbox.annexVaultRow, key))}</th>` +
-        `<td data-numeric${key === "allowance" ? ' data-top="true"' : ""}>` +
-        `${money(data[key] ?? 0)}</td></tr>`,
-    )
-    .join("");
+  const keys = ["revenue", "mandatory", "ceiling", "allowance"];
+  const top = Math.max(...keys.map(key => Math.abs(data[key] ?? 0)), 1);
 
-  return (
-    `<section class="annex">` +
-    `<h5 class="annex__legend">${escapeHtml(UI.inbox.annexVault)}</h5>` +
-    `<div class="annex__scroll"><table class="annex__table annex__table--pairs">` +
-    `<tbody>${rows}</tbody></table></div>` +
-    `</section>`
+  return linesHtml(
+    UI.inbox.annexVault,
+    keys
+      .map(key =>
+        lineHtml({
+          who: labelOf(UI.inbox.annexVaultRow, key),
+          value: money(data[key] ?? 0),
+          share: (Math.abs(data[key] ?? 0) / top) * 100,
+        }),
+      )
+      .join(""),
   );
 }
 
 /**
- * O ANEXO DO BALANCO — as tres leituras do mes, antes e depois.
+ * O ANEXO DO BALANCO — as tres leituras do mes, e o quanto cada uma andou.
+ *
+ * ⚠ SEM BARRA: `%`, cadeiras e reais nao dividem escala nenhuma. O que a linha carrega e o
+ * AGORA, e a variacao ao lado — que e o que a coluna "antes" dizia com o dobro de tinta.
  *
  * @param {import("../../application/turn.mjs").Balance} balance
  * @returns {string}
  */
 function balanceAnnex(balance) {
   /* AS TRES NA ORDEM DA CARTA, e nao por tamanho: o corpo do oficio le rua, base e caixa
-     nessa ordem, e uma tabela que reordenasse obrigaria o olho a reencontrar cada uma. */
-  const rows = [
-    { key: "street", was: `${seats(balance.streetWas)}%`, now: `${seats(balance.streetNow)}%` },
-    { key: "seats", was: seats(balance.seatsWas), now: seats(balance.seatsNow) },
-    { key: "vault", was: money(balance.roomWas), now: money(balance.roomNow) },
-  ]
-    .map(
-      row =>
-        `<tr><th scope="row">${escapeHtml(labelOf(UI.inbox.annexBalanceRow, row.key))}</th>` +
-        `<td data-numeric>${escapeHtml(row.was)}</td>` +
-        `<td data-numeric data-top="true">${escapeHtml(row.now)}</td></tr>`,
-    )
-    .join("");
+     nessa ordem, e uma lista que reordenasse obrigaria o olho a reencontrar cada uma. */
+  /* ⚠ A VARIACAO ZERO NAO IMPRIME, e a captura nomeou o defeito: `signed(0)` devolve "0", e
+     "21% 0" lia como um numero de duas partes. Mes parado nao tem o que dizer ao lado. */
+  const moved = (/** @type {number} */ value, /** @type {number} */ digits = 0) =>
+    Number(value.toFixed(digits)) === 0 ? "" : signed(value, digits);
 
-  return (
-    `<section class="annex">` +
-    `<h5 class="annex__legend">${escapeHtml(UI.inbox.annexBalance)}</h5>` +
-    `<div class="annex__scroll"><table class="annex__table">` +
-    `<thead><tr><td></td>` +
-    `<th scope="col">${escapeHtml(UI.inbox.annexBalanceWas)}</th>` +
-    `<th scope="col">${escapeHtml(UI.inbox.annexBalanceNow)}</th>` +
-    `</tr></thead>` +
-    `<tbody>${rows}</tbody></table></div>` +
-    `</section>`
+  const rows = [
+    {
+      key: "street",
+      value: `${seats(balance.streetNow)}%`,
+      note: moved(balance.streetNow - balance.streetWas),
+    },
+    {
+      key: "seats",
+      value: seats(balance.seatsNow),
+      note: moved(balance.seatsNow - balance.seatsWas),
+    },
+    {
+      key: "vault",
+      value: money(balance.roomNow),
+      note: moved(balance.roomNow - balance.roomWas, 1),
+    },
+  ];
+
+  return linesHtml(
+    UI.inbox.annexBalance,
+    rows
+      .map(row =>
+        lineHtml({
+          who: labelOf(UI.inbox.annexBalanceRow, row.key),
+          value: row.value,
+          note: row.note,
+        }),
+      )
+      .join(""),
   );
 }
 
+/* QUANTAS BANCADAS A CARTA MOSTRA. ⚠ ONZE LINHAS NUM OFICIO E O DIARIO OFICIAL DENTRO DE UMA
+   CARTA, e quem lista bancada por bancada e a TELA DO CONGRESSO — o Gabinete ja recusa a mesma
+   lista com essas palavras, e a carta a trazia inteira. */
+const SEATS_SHOWN = 4;
+
 /**
- * ⚠ E ELE SO MOSTRA QUEM SE MOVEU, porque uma tabela de onze linhas num oficio de 435px e o
- * Diario Oficial dentro de uma carta — e o risco R2 que este projeto ja nomeou.
+ * ⚠ E ELE SO MOSTRA QUEM SE MOVEU, e agora so as MAIORES: o resto vira uma linha que diz
+ * quantas foram e quanto somaram, e o botao leva a tela que lista todas.
  *
  * @param {Record<string, number>} data
  * @param {ReadonlyArray<{ id: string, label: string }>} parties
@@ -891,44 +1032,58 @@ function seatsAnnex(data, parties) {
     .map(party => ({
       label: party.label,
       seats: data[`${party.id}.seats`] ?? 0,
-      was: data[`${party.id}.was`] ?? 0,
-      now: data[`${party.id}.now`] ?? 0,
+      move: (data[`${party.id}.now`] ?? 0) - (data[`${party.id}.was`] ?? 0),
     }))
-    .filter(row => Math.abs(row.now - row.was) >= 0.5)
-    .sort((a, b) => Math.abs(b.now - b.was) - Math.abs(a.now - a.was));
+    .filter(row => Math.abs(row.move) >= 0.5)
+    .sort((a, b) => Math.abs(b.move) - Math.abs(a.move));
 
   if (moved.length === 0) return "";
 
-  const rows = moved
-    .map(
-      row =>
-        `<tr><th scope="row">${escapeHtml(row.label)}</th>` +
-        `<td data-numeric>${seats(row.seats)}</td>` +
-        `<td data-numeric>${seats(row.now)}</td>` +
-        `<td data-numeric data-top="true">${signed(row.now - row.was)}</td></tr>`,
+  const shown = moved.slice(0, SEATS_SHOWN);
+  const rest = moved.slice(SEATS_SHOWN);
+
+  /* ⚠ A FRACAO SE NORMALIZA PELA MAIOR MOSTRADA, e nao por cem: um movimento tipico e de 2 a
+     15% da bancada, e contra a escala cheia as quatro barras saiam como tracos de 2 a 10px —
+     medido na captura. Contra a maior da lista, a comparacao usa a pista inteira. */
+  const deepest = Math.max(
+    ...shown.map(row => (row.seats > 0 ? Math.abs(row.move) / row.seats : 0)),
+    Number.EPSILON,
+  );
+
+  const lines = shown
+    .map(row =>
+      lineHtml({
+        who: row.label,
+        value: signed(row.move),
+        /* ⚠ A BARRA MEDE QUANTO DA PROPRIA BANCADA ANDOU, e nao a queda contra a maior queda:
+           medido na captura, quatro bancadas caindo 2 cadeiras cada davam QUATRO BARRAS CHEIAS
+           e iguais, e a peca dizia nada. Perder 2 de 14 e romper; perder 2 de 80 e ruido. */
+        share: row.seats > 0 ? (Math.abs(row.move) / row.seats / deepest) * 100 : 0,
+        note: `${UI.inbox.of} ${seats(row.seats)}`,
+      }),
     )
     .join("");
 
-  return (
-    `<section class="annex">` +
-    `<h5 class="annex__legend">${escapeHtml(UI.inbox.annexSeats)}</h5>` +
-    `<div class="annex__scroll"><table class="annex__table">` +
-    `<thead><tr><th scope="col"></th>` +
-    `<th scope="col">${escapeHtml(UI.inbox.annexSeatsCol)}</th>` +
-    `<th scope="col">${escapeHtml(UI.inbox.annexMoodCol)}</th>` +
-    `<th scope="col">${escapeHtml(UI.inbox.annexMoveCol)}</th>` +
-    `</tr></thead><tbody>${rows}</tbody></table></div>` +
-    `</section>`
-  );
+  /* ⚠ O RESTO E DITO, E NAO OMITIDO: uma lista cortada sem dizer que cortou mente sobre o
+     proprio tamanho, e o jogador leria quatro quedas onde houve nove. */
+  const tail =
+    rest.length === 0
+      ? ""
+      : lineHtml({
+          who: `${UI.inbox.annexSeatsRest} ${seats(rest.length)}`,
+          value: signed(rest.reduce((total, row) => total + row.move, 0)),
+        });
+
+  return linesHtml(UI.inbox.annexSeats, lines + tail);
 }
 
 /**
- * Multiplicar nota por peso aqui daria dois lugares fazendo a conta, e o segundo divergiria
- * no dia em que um peso mudasse — que e o dia em que o anexo precisa estar certo.
+ * O ANEXO DA RUA — o humor de cada classe, e o que pesa nela.
  *
- * como responder: SONDA calculava as cinco notas, pesava cada uma de forma diferente por
- * classe, subtraia a traicao e o desgaste — e devolvia so o numero final. A referencia e
- * o Democracy 4, e ela e do responsavel: la o jogo inteiro e a cadeia causal visivel.
+ * ⚠ ELE MOSTRAVA QUINZE CELULAS E MOSTRA TRES LINHAS, e o que saiu foi a nota por nota: o
+ * jogador nao decide sabendo que servicos vale 13 na baixa renda. Ele decide sabendo QUAL
+ * classe esta pior e o que a move — e as duas leituras de analise ja moram nos cards acima.
+ *
  * @param {import("../../state/state.mjs").Letter} letter
  * @param {ReadonlyArray<{ id: string, label: string }>} segments
  * @param {ReadonlyArray<{ id: string, label: string }>} parties
@@ -942,52 +1097,49 @@ function annexHtml(letter, segments, parties) {
   if (letter.kind === "seats") return seatsAnnex(data, parties);
   if (segments.length === 0) return "";
 
-  const rows = segments
+  const lines = segments
     .map(segment => {
-      const values = ANNEX_NOTES.map(note => data[`${segment.id}.${note}`] ?? 0);
-      const total = values.reduce((sum, value) => sum + value, 0);
-      /* ⚠ AS CELULAS SAO REPARTIDAS, e nao arredondadas uma a uma: o total impresso e a soma
-         cheia arredondada, e cinco arredondamentos independentes nao fecham nele. */
-      const cells = apportion(values);
-      /* ⚠ A MAIOR DA LINHA GANHA PESO, e e ela que faz a tabela ser legivel de relance: sem
-         destaque, cinco numeros por linha sao cinco numeros.
-         Ela sai do valor CHEIO, e nao da celula repartida: com empate impresso o peso fica na
-         que de fato e maior, e a reparticao nunca inverte a ordem — quem tem piso maior nunca
-         imprime menos que quem tem piso menor. */
-      const top = Math.max(...values);
-
-      return (
-        `<tr>` +
-        `<th scope="row">${escapeHtml(segment.label)}</th>` +
-        values
-          .map(
-            (value, index) =>
-              `<td data-numeric${value === top && value > 0 ? ' data-top="true"' : ""} ` +
-              `title="${escapeHtml(labelOf(UI.inbox.annexNote, ANNEX_NOTES[index] ?? ""))}">` +
-              `${seats(cells[index] ?? 0)}</td>`,
-          )
-          .join("") +
-        `<td data-numeric class="annex__sum">${seats(total)}</td>` +
-        `</tr>`
+      const values = ANNEX_NOTES.map(note => ({ note, value: data[`${segment.id}.${note}`] ?? 0 }));
+      const mood = values.reduce((total, item) => total + item.value, 0);
+      /* A QUE MAIS PESA NA CLASSE, e ela e o que a linha diz alem do numero. */
+      const top = values.reduce(
+        (best, item) => (best && item.value > best.value ? item : (best ?? item)),
+        values[0],
       );
+
+      return lineHtml({
+        who: segment.label,
+        value: seats(mood),
+        share: mood,
+        note: top ? labelOf(UI.inbox.annexNote, top.note) : "",
+      });
     })
     .join("");
 
+  /* ⚠ OS DOIS DESCONTOS PESAM IGUAL EM TODA CLASSE, e por isso ficam num bloco proprio e SEM
+     BARRA: sete pontos numa escala de cem sairiam como um traco, e o traco leria "quase nada"
+     onde o motor tira sete. O corte de meio ponto e o das bancadas. */
+  const discounts = [
+    { key: "betrayal", value: data.betrayal ?? 0 },
+    { key: "wear", value: data.wear ?? 0 },
+  ].filter(row => row.value >= 0.5);
+
   return (
     pollCards(data, segments) +
-    `<section class="annex" data-wide="true">` +
-    `<h5 class="annex__legend">${escapeHtml(UI.inbox.annexLegend)}</h5>` +
-    `<div class="annex__scroll">` +
-    `<table class="annex__table">` +
-    `<thead><tr><th scope="col"></th>` +
-    ANNEX_NOTES.map(
-      note => `<th scope="col">${escapeHtml(labelOf(UI.inbox.annexNote, note))}</th>`,
-    ).join("") +
-    `<th scope="col">${escapeHtml(UI.inbox.annexTotal)}</th></tr></thead>` +
-    `<tbody>${rows}</tbody>` +
-    `</table>` +
-    `</div>` +
-    `</section>`
+    linesHtml(UI.inbox.annexLegend, lines) +
+    (discounts.length === 0
+      ? ""
+      : linesHtml(
+          UI.inbox.annexDiscounts,
+          discounts
+            .map(row =>
+              lineHtml({
+                who: labelOf(UI.inbox.annexDiscount, row.key),
+                value: signed(-row.value),
+              }),
+            )
+            .join(""),
+        ))
   );
 }
 
@@ -1014,6 +1166,10 @@ export function trayHtml({ dispatches, open, seen = [] }) {
 
   return (
     `<div class="tray">` +
+    /* ⚠ A LEGENDA DA BANDEJA E A MESMA PECA DA LEGENDA DE UM BLOCO — `annex__legend` —, e nao
+       um titulo proprio: o Gabinete tinha um titulo de 25,6px em serifa para dizer o nome de
+       uma tela que o rail ja marca, e ele saiu inteiro. */
+    `<h2 class="tray__head annex__legend">${escapeHtml(UI.inbox.title)}</h2>` +
     /* ⚠ E O MATERIAL DE VERDADE FOI TENTADO AQUI E REPROVOU NA MEDICAO. */
     `<ul class="tray__list">` +
     /* Quem decide qual carta abre e esta funcao — `open` e uma preferencia, e o fallback e a

@@ -7,6 +7,7 @@ import { pathToFileURL } from "node:url";
 import { ROOT, readProject } from "./lib/project.mjs";
 
 const EXPECTED = [
+  "annexes",
   "boundaries",
   "cascade",
   "codenames",

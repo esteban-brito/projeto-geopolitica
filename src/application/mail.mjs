@@ -44,7 +44,6 @@ export function amendment({ bill, month, except, saved }) {
     level: null,
     was: null,
     now: null,
-    weight: null,
     answer: null,
     closedAt: null,
   };
@@ -80,7 +79,6 @@ export function demand({ lobby, program, level, month }) {
     level,
     was: null,
     now: null,
-    weight: null,
     answer: null,
     closedAt: null,
   };
@@ -111,7 +109,6 @@ export function notice({ kind, id, subject, month }) {
     level: null,
     was: null,
     now: null,
-    weight: null,
     /* O AVISO JA CHEGA FECHADO: nao ha o que responder, e por isso ele envelhece a partir do
        mes em que chegou. */
     answer: null,
@@ -151,7 +148,6 @@ export function alarm({ kind, id, subject, month, from = null, was = null, now =
        227. Carta que muda depois de chegar nao e carta. */
     was,
     now,
-    weight: null,
     answer: null,
     /* JA CHEGA FECHADO, como todo aviso: nao ha o que responder aqui. */
     closedAt: month,
@@ -166,11 +162,10 @@ export function alarm({ kind, id, subject, month, from = null, was = null, now =
  * @param {number} input.month
  * @param {number} input.was o valor com que o mes comecou
  * @param {number} input.now o valor com que ele fechou
- * @param {boolean} input.heavy se o movimento foi grande o bastante para gritar
  * @param {Record<string, number>} [input.attach] o anexo — dado ja pesado pelo motor
  * @returns {Letter}
  */
-export function report({ kind, month, was, now, heavy, attach }) {
+export function report({ kind, month, was, now, attach }) {
   return {
     /* O ID CARREGA O MES, ao contrario do alarme: o relatorio de marco e o de abril sao duas
        noticias, e nao a mesma ferida reaberta. */
@@ -187,7 +182,6 @@ export function report({ kind, month, was, now, heavy, attach }) {
     level: null,
     was,
     now,
-    weight: heavy ? "high" : null,
     attach: attach ?? null,
     answer: null,
     /* JA CHEGA FECHADO: nao ha o que responder a um relatorio. */

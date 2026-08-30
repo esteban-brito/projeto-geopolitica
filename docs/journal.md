@@ -12,6 +12,265 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## ⭐ A SESSÃO MAIS LONGA DO PROJETO — 30/08/2026
+
+Seis achados fechados, dois ciclos (o 15 inteiro e quatro sextos do 16), um dossiê externo
+triado e **nenhuma linha de motor tocada**. A ordem em que as coisas aconteceram importa,
+porque cada passo nasceu de uma queixa dele olhando a tela:
+
+1. **jogando**, achei o foco e as setas — dois defeitos da mesma família (identidade e estado
+   guardados no mesmo lugar), e os dois passavam por treze guardas e 269 provas;
+2. **"blocos dentro de blocos, tudo idêntico"** — o ciclo 15 inteiro, e o censo de estilo
+   provou zero divergências no fim;
+3. **"muitos espaços em branco"** — quatro medições, e um erro meu: encolhi a página em vez de
+   crescer o conteúdo. Ele nomeou o erro com todas as letras na mensagem seguinte;
+4. **"tire o título Gabinete"** — a única peça da tela que não respondia pergunta nenhuma;
+5. **"aumente o texto dentro dos blocos"** — o ciclo 16, e o passeio cobrou duas vezes o que o
+   olho não veria: sete nomes cortados a 1440px e um bloco estourando a própria largura.
+
+### A lição de método desta sessão é sobre AUDITORIA EXTERNA
+
+O dossiê do Gemini pedia uma revolução: monospace nos números, dourado nas bordas, textura de
+papel, número de protocolo, hemiciclo, tooltips aninhados. **Duas afirmações técnicas foram
+medidas antes de julgar, e as duas caíram:** o "problema de kerning" (`M ês`, `O brigatória`)
+tem delta de **0,00px e 0,02px** — era artefato da imagem que ele leu; e o payload real do
+monospace, números que não dançam, **já estava entregue** por `tabular-nums` desde sempre.
+
+⭐ **E mesmo assim ele acertou o achado mais valioso aberto hoje:** o rail não recebe o índice
+dos ministérios. É a mesma forma de sempre — _um dado que já existe no motor e nunca chegou à
+tela_ —, e é a única classe de achado externo que não custa motor novo nem número inventado.
+
+## ⭐ O GABINETE PASSOU A FALAR A LÍNGUA DA CAIXA — 30/08/2026
+
+O ciclo 15 inteiro numa sessão. A frase que o governa é dele, e ela chegou no meio da execução:
+_"tudo dentro de retângulos, blocos, igual como é a caixa de entrada, blocos dentro de blocos.
+Tente reciclar ao invés de criar e deixar despadronizado."_
+
+### "IDÊNTICO" é uma palavra que se mede
+
+A queixa foi de olho — _"falta padronização em todo o Gabinete"_ — e a resposta não podia ser
+de olho. Um censo de estilo **computado** comparou a mesma classe nos dois contextos e devolveu
+**seis divergências** em cinco classes: fundo, aresta, recuo, vão, cor da legenda, cor do nome,
+altura de linha.
+
+⭐ **E a causa era de ENDEREÇO, não de desenho.** `--sheet-ink` era remapeado em `.tray` —
+que cobre a carta e não a coluna. Bastou subir o remapeamento para `.cabinet` e levar junto
+`--sheet-raise` e `--sheet-edge`: as duas telas passaram a ler os mesmos quatro tokens, e as
+**seis sobreposições de contexto que eu tinha escrito no dia anterior foram apagadas**. Menos
+CSS, não mais.
+
+⚠ **O censo de tipo achou o defeito que os padrões já nomeiam por escrito:** `<small>` sem
+regra é 0,833em, e 0,833 de 10px é **8,33px** — um degrau que não existe na escala. Era a
+"porta por onde o `em` entra", e ela estava aberta em dois lugares.
+
+### O bug que a checagem não via porque testava o mês errado
+
+A prova do foco existia desde o ciclo 14 e estava verde. Ela clica numa carta no **mês 2** —
+quando a única carta da caixa já está lida. Do mês 6 em diante, clicar numa carta **não lida**
+jogava o foco em `BODY`, porque `focusMark` montava o seletor com o `dataset` inteiro e
+`data-unread` muda **na mesma pintura**. É a família do achado 56 outra vez, com outro nome:
+**identidade e estado guardados no mesmo lugar.**
+
+⚠ **A lição é sobre a prova, e não sobre o código:** uma checagem que só exercita o estado
+fácil fica verde para sempre. A 7d escolhe explicitamente uma carta `data-unread="true"`, e
+reprova se não houver nenhuma — porque aí ela não estaria medindo nada.
+
+### O achado não era o desenho, era o vocabulário
+
+Três instrumentos — `gauge`, `meter`, `poles` — respondiam à mesma pergunta: _onde este número
+está na régua dele?_ Cada bloco tinha sido desenhado sozinho, e cada um resolveu o mesmo
+problema de um jeito. A Caixa, reformada uma sessão antes, resolvia **quinze espécies de carta
+com três peças**. A coluna tinha **quatro blocos e dezoito classes**.
+
+### A guarda nasceu vermelha, e o número dela foi o progresso
+
+Onze achados, todos em `cabinet.mjs`. Não é decoração de processo: enquanto ela estava vermelha,
+o portão respondia "quanto falta" a cada passo — 11, depois 0. **A Restrição 2 pagou-se aqui.**
+
+### O risco que o plano anunciava não existia
+
+O passo 5 vinha marcado como o único perigoso: _"`meter` e `poles` podem ser usados por
+Finanças, a Mesa e o Congresso"_. Medido antes de apagar: `reading`, `meter`, `poles`,
+`block__door` e `card__body` tinham **um produtor só**. Catorze quilobytes de folha saíram, e
+com eles sete frases mortas e um `export` sem consumidor.
+
+### E a substância é do contexto, não da peça
+
+A linha é a mesma nas duas telas; o que muda é a matéria — **papel na carta, vidro na coluna**.
+Escrever uma segunda peça para trocar duas cores seria o vocabulário dobrando pelo mesmo motivo
+que ele dobrou da primeira vez.
+
+## ⭐ UMA VARIÁVEL RESPONDIA DUAS PERGUNTAS — 30/08/2026
+
+Sessão de leitura, não de plano: ele pediu para estudar o código e **subir o jogo ao vivo**. O
+defeito apareceu jogando, e não lendo — abrir uma carta no mês 10 e ver as sete setas da coluna
+da direita virarem traço, todas juntas, enquanto a barra do topo continuava marcando queda.
+
+### A leitura que some não fica vermelha
+
+`flat` e "não há mês passado" não são a mesma coisa, e o projeto já sabia disso: `directionOf`
+devolve `null` quando não há com que comparar, e aí **nenhum elemento é escrito**. O que estava
+acontecendo era pior que ausência — o `before` chegava montado a partir do **presente**, então
+a comparação era honesta e o resultado era "não moveu". Nada falha quando uma tela afirma
+calmaria num mês em que tudo andou.
+
+### E a barra escapou por acidente, não por desenho
+
+As duas peças leem a mesma variável. A diferença é que a barra de vitais tem o portão
+`previous !== state` e não se repinta quando o estado não muda; o Gabinete se repinta a cada
+clique. **A correção do defeito estava, por acaso, na otimização de outra coisa** — e é por isso
+que ele sobreviveu a tipo, treze guardas, 269 provas e um passeio que abre a tela e a fotografa.
+
+### O conserto é uma segunda variável, e o lugar dela importa
+
+`framed` só anda quando o mês anda. Ela se fixa no **começo** de `paint()` e não no fim: a
+coluna é montada no meio da mesma função, e fixá-la depois faria a seta comparar o mês com o
+**retrasado** — um segundo defeito, mais difícil de ver que o primeiro, porque a seta existiria
+e estaria apenas errada.
+
+### O que a varredura NÃO achou, e isso também é resultado
+
+Mandato inteiro ao vivo com um governo passivo: 48 meses, F5 no mês 20, impeachment autorizado
+no mês 45, todas as telas a cada quatro meses, 33 cartas abertas uma a uma. **Zero erro de
+console, zero `NaN` em tela, o save atravessou a recarga com as 28 cartas e a carta aberta.**
+
+## ⭐ A CAIXA PERDEU TODAS AS TABELAS — 29/08/2026
+
+**Ele não pediu isso; ele recusou uma pergunta minha.** Eu tinha fechado o passo 5 e levado a
+ele a única decisão que sobrava: a coluna da soma do anexo da rua não batia com a manchete, e
+eu queria saber se incomodava. A resposta reescreveu o passo 4 inteiro: _"todas essas tabelas
+me incomodam muito, nem queria que fossem tabelas, e se for pra ser, quero algo bem mais
+minimalista e estilo football manager, quero que você pesquise a fundo e me dê alternativas"_.
+
+⚠ **E ANTES DISSO ELE TEVE DE REESCREVER A PERGUNTA POR MIM.** A primeira versão falava em
+"coluna SOMA", "% de ótimo/bom", "o R2 que o ciclo recusou" e "o humor por classe dentro de
+`attach`". Ele respondeu: _"cara nao entendi absolutamente nada do que tenho que decidir, vc
+parece que fala em códigos"_. A decisão era simples e legítima — a pergunta é que estava
+escrita para mim, e não para ele.
+
+### A medição achou um defeito maior que o desenho
+
+Abrindo TODA carta de um mandato de 14 meses num navegador: **19 de 23 cartas traziam tabela**,
+**306 células por mês**, e a caixa tinha **cinco formatos de anexo para quinze espécies** — um
+formato novo a cada três espécies.
+
+⭐ **E A REGRA CONTRA ISSO JÁ ESTAVA ESCRITA NO PRÓPRIO CÓDIGO, contra a carta.** `cabinet.mjs`
+recusa listar bancada por bancada e diz por quê: _"quem lista bancada por bancada, com nome e
+humor, é a tela do Congresso"_. **O anexo da carta das cadeiras trazia as onze linhas.** E a
+prosa de `strings.mjs` admitia o mesmo do caixa: _"o anexo e Finanças dizem o MESMO número"_.
+O defeito nunca foi o desenho da tabela — era a carta duplicando a tela.
+
+### A pergunta dele foi a mais importante da sessão
+
+_"lembrando que o jogo ainda terá muito conteúdo a ser adicionado… até aí tudo bem, da pra
+fazer mesmo assim?"_ — e ela é o que separou um desenho bonito de uma regra.
+
+**A resposta é que a tabela é o que NÃO escalava.** Cinco formatos para quinze espécies, e cada
+tabela nova cobrando largura: o defeito 3½.3, três dias antes, era o anexo cortando a coluna da
+soma a 1280×800. O que escala é um **vocabulário fechado de três peças** — e a garantia não
+podia ser promessa minha, porque foi exatamente assim que os cinco formatos nasceram, um de
+cada vez, cada um razoável sozinho. Virou a guarda `annexes`, e ela pega tabela montada por
+pedaços — que é como eles conviviam.
+
+### Nada de motor, e a captura pegou três defeitos
+
+`boilerOf` já entregava `lobbies` (pressão, ponto de fervura, fatia) e `ruptures` (valor,
+limiar, lado). **A carta simplesmente não lia.** Zero linhas de motor, e `simulate` idêntico ao
+caractere.
+
+⚠ **E os três defeitos que sobraram morreram na imagem, não no portão** — nenhum falhava tipo,
+guarda ou prova. Quatro bancadas caindo 2 cadeiras davam **quatro barras cheias e iguais**,
+porque a barra normalizava pela maior queda: perder 2 de 14 é romper, perder 2 de 80 é ruído.
+`signed(0)` pendurava um "0" no valor, e `21% 0` lia como um número de duas partes. E a regra
+do impeachment ia num card de LEITURA, com doze palavras no tipo de um número — foi ela que
+obrigou a terceira peça a existir.
+
+**O pedido final dele fechou a forma:** _"quero esses blocos mais padronizados e com mais
+conteúdo"_. O papel em branco caiu de **290px para 255px** de média, e a exigência — a pergunta
+que custa dinheiro e chegava com **zero blocos** — passou a mostrar contra o que ela é cara.
+
+---
+
+## ⭐ A FILA QUE ESPERAVA UM BUMP TINHA QUATRO ITENS E TEM UM — 29/08/2026
+
+**A pergunta dele foi de uma linha:** _"certo, mas e os achados abertos, vc vai corrigir ou algo
+do tipo"_. A resposta honesta exigia primeiro **ler a lista em vez de repeti-la** — e ela estava
+errada em três dos quatro itens.
+
+**O handoff dizia, havia sessões, que quatro itens pediam o mesmo bump de esquema.** Eu repeti
+isso no resumo do passo 5, sem medir. Medido:
+
+| item               | o que a prosa dizia | o que se mediu                             |
+| ------------------ | ------------------- | ------------------------------------------ |
+| `last` (achado 46) | espera o bump       | **já tinha fechado na véspera**, versão 19 |
+| `streams.events`   | espera o bump       | sai sem bump: ninguém o lê                 |
+| `weight` da carta  | espera o bump       | sai sem bump: ninguém o lê                 |
+| o placar (passo 4) | espera o bump       | **talvez também não peça** — meça          |
+
+⭐ **A MEDIÇÃO É UMA LEITURA DE VINTE LINHAS.** `deserialize` confere a **presença** de 18
+campos de topo e a **forma** de 8 deles, e **não olha dentro de uma carta**. Campo a mais num
+save gravado antes é campo ignorado; campo novo numa carta nova chega ausente na carta velha,
+e isso se resolve com reserva — que é exatamente o que o passo 3¾ já tinha feito com `was` e
+`now`, três commits antes, sem ninguém notar que aquilo era a resposta para esta fila.
+
+**Ninguém tinha aberto o validador.** A frase "requerem schema bump, juntos" foi escrita uma
+vez, virou título de seção, e a partir dali era citada em vez de conferida. É o §7 dos padrões
+outra vez, e é a terceira sessão seguida em que ele aparece: **prosa que continua gramatical e
+para de ser verdade.**
+
+⚠ **E O CUSTO ERA REAL, e não teórico:** o save recusa versão diferente em vez de converter, e
+cada subida mata a partida em andamento. A fila existia para amortizar esse custo entre vários
+itens — e três deles não custavam nada. **Amortizar um custo inexistente adiou trabalho de
+graça.**
+
+**A regra que autorizava a retirada já estava escrita no próprio arquivo.** `state.mjs` diz, ao
+lado do número da versão, que _"campo novo sem consumidor não entra"_. Ele tinha dois: o
+`weight` da carta, cuja segunda tarja saiu no passo 3.1, e o `streams.events`, que era o fluxo
+de TEMPORAL — um motor que ainda é só contrato. **Os dois saíram, e a série de `simulate` é
+idêntica ao caractere.**
+
+**A prova que morde é a do save antigo**, e não a do novo: um save da versão corrente com
+`weight` em toda carta e com o fluxo a mais **continua carregando**. Sem ela, a retirada seria
+uma aposta com a partida dele.
+
+---
+
+## ✔ O PASSO 5 — OS CANAIS MORTOS E AS UNIDADES TROCADAS — 29/08/2026
+
+**Ele pediu o passo 5, e o passo 4 ficou para trás de propósito:** o 4 pede o bump de esquema
+que espera decisão dele, e o 5 é save zero e independente. A ordem do próprio ciclo já dizia
+isso — _"independentes entre si, e entram a qualquer momento depois do 2"_.
+
+**Dois dos oito já estavam fechados**, e a marca no plano é que estava velha: o assunto que
+abria com `": "` e o escape duplo entraram em `3139ddb`, três commits antes. Ler o código antes
+de consertá-lo custou duas leituras e evitou dois consertos de defeito que não existia mais —
+é o §7 dos padrões outra vez, e desta vez ele foi pago barato.
+
+**O 5.1 foi o único com desenho dentro.** Os dois descontos — credibilidade quebrada e desgaste
+do cargo — pesam **igual em toda classe**, e por isso não cabem numa coluna: a prosa de
+`strings.mjs` já dizia isso desde que o anexo nasceu, ao lado de um pé de tabela que ninguém
+tinha escrito. E a repartição já os esperava: `apportion` carrega desde sempre um comentário
+sobre resíduo com sinal porque _"a linha do desgaste tira pontos"_ — uma linha que não existia.
+
+⚠ **E a captura pegou o que o portão não pega.** Com os dois descontos no pé, cada linha levava
+o próprio fio em cima, e os dois ficavam separados um do outro — **dois separadores para uma
+fronteira só**, que é o defeito que a zebra desta mesma tabela já tinha pago. `tr:first-child`,
+e a imagem foi aberta de novo.
+
+⚠ **E o 5.1 não fecha inteiro, por declaração.** A soma da tabela continua sem bater com a
+manchete, e não é descuido de conta: **não são a mesma grandeza**. Entre a soma e o "28% de
+ótimo ou bom" estão a inércia de `SONDA` — o humor não pula para o alvo — e uma conversão em
+potência. Fechar a cadeia inteira exige o humor por classe dentro de `attach`, e `attach` vai
+para o save. **É bump, e este passo é save zero.**
+
+**O 5.7 é o único que se resolve com uma medição em vez de uma leitura.** A tarja tinha três
+faixas e o rótulo tinha plural; nenhum dos dois nunca foi pintado, porque `ANSWER_TIME` é 2 e a
+carta só aparece no mês seguinte ao que a escreveu. Medido num mandato inteiro, `left` devolve
+`[[0, 6], [1, 7]]` — zero e um, e mais nada. **A prova que morde é a própria medição**, e ela
+falha no dia em que o prazo mudar de tamanho.
+
+---
+
 ## ✔ A CAIXA DE ENTRADA, AUDITADA POR QUATRO FRENTES — 28/08/2026
 
 **Ele pediu para testar a capacidade investigativa, e proibiu conserto antes da autorização:**

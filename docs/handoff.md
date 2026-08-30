@@ -29,6 +29,122 @@ limpeza (remoção de exports mortos, JSDoc duplicado).
 
 ### Arquivos modificados (25 arquivos, incluindo 1 novo)
 
+### Sessão 26 (30/08/2026) — a coluna do Gabinete perdia a tendência no primeiro clique
+
+⭐ **UM DEFEITO ACHADO JOGANDO, e nenhuma guarda o via.** As sete setas da coluna da direita
+existiam na primeira pintura do mês e sumiam no primeiro clique em qualquer carta: medido no
+mês 10, **5 direções viravam 0**, e `flat` não é ausência — ele **afirma** que nada andou.
+
+| onde                   | antes do clique                  | depois      |
+| ---------------------- | -------------------------------- | ----------- |
+| coluna do Gabinete     | `down up down down flat flat up` | tudo `flat` |
+| barra de vitais (topo) | `▲ ▼ — ▼`                        | inalterada  |
+
+⚠ **A CAUSA ERA UMA VARIÁVEL SÓ FAZENDO DUAS PERGUNTAS.** `painted` respondia _"o que está na
+tela?"_ (para decidir o que repintar) **e** _"qual era o mês passado?"_ (para a seta). A partir
+da segunda pintura do mês as duas respostas divergem, e a barra escapava só por acidente — ela
+tem o portão `previous !== state` e simplesmente não repinta. **O Gabinete repinta sempre.**
+
+✔ **FECHADO.** `framed` é a segunda variável, e ela só anda quando o mês anda; ela se fixa no
+**começo** de `paint()`, porque `cabinetInput` a lê mais abaixo na mesma função. A prova mora no
+passeio (7c) e **nasceu vermelha**.
+
+⭐ **E O CICLO 15 COMEÇOU — PASSOS 1 E 2.** A peça de dado da correspondência saiu de
+`inbox.mjs` para `src/ui/shared/annex.mjs` **sem uma linha alterada**, e a guarda `annexes`
+passou a medir uma segunda coisa: **régua desenhada pela tela**. As provas sintéticas foram de
+3 para 6.
+
+⭐ **E OS PASSOS 3, 4 E 5 FECHARAM NO MESMO DIA — o ciclo 15 acabou.** A guarda nasceu
+vermelha com **11 achados** e fechou em **0**.
+
+| medição                                       | antes | depois                 |
+| --------------------------------------------- | ----- | ---------------------- |
+| classes de estilo distintas na coluna direita | 18    | **9**                  |
+| instrumentos para "um número numa régua"      | 3     | **1** (`gauge`)        |
+| blocos · linhas na coluna                     | 4     | **5 · 20**             |
+| a coluna rola?                                | não   | **não** — 732 de 732px |
+| CSS podado                                    | —     | **14,1 KB**            |
+
+⭐ **E A TELA FOI REDISTRIBUÍDA DEPOIS, por queixa dele** — _"tem muitos espaços em branco"_.
+Quatro medições e quatro consertos: a nota do limiar passou a qualificar o **nome** (como
+nota, ela pedia 150px na coluna do número e saía reticenciada); a pista ganhou teto de 200px;
+o palco passou a **encolher com o conteúdo** (`flex: 1` o deixava com a altura da janela mesmo
+pedindo metade — 300px de fundo no mês 1); e a carta voltou a ocupar a altura toda, mas com o
+**conteúdo no topo e o papel seguindo** — escolha dele contra a versão de antes, em que o
+rodapé ficava pregado no pé e abria um buraco de 310px acima dele.
+
+⚠ **O RISCO QUE O PLANO ANUNCIAVA NÃO EXISTIA, e a medição é a prova:** `reading`, `meter`,
+`poles`, `block__door` e `card__body` eram produzidos por **um arquivo só**. Sete frases
+mortas saíram de `strings.mjs` junto, e `verdictHtml` — export sem consumidor — morreu com
+elas.
+
+⚠ **E O RESTO DA VARREDURA VEIO LIMPO:** mandato inteiro ao vivo — 48 meses, F5 no mês 20,
+impeachment no mês 45 —, todas as telas, 33 cartas abertas uma a uma: **zero erro de console e
+zero `NaN`/`undefined` em tela**.
+
+### Sessão 25 (29/08/2026) — a caixa perdeu todas as tabelas, e o ciclo 14 fechou
+
+⭐ **O CICLO 14 ESTÁ FECHADO** (só o 3½.5, de desenho, ficou). Passos 5 e 4, nesta ordem — o 4
+foi **reescrito no meio da execução, por ordem dele**: _"todas essas tabelas me incomodam
+muito… quero algo bem mais minimalista e estilo football manager"_, e depois _"quero que tudo
+fique dentro de blocos… tudo idêntico, padronizado, minimalista, robusto"_.
+
+**Medido, abrindo TODA carta de um mandato num navegador:**
+
+| medição                             | antes            | depois              |
+| ----------------------------------- | ---------------- | ------------------- |
+| cartas abertas **com tabela**       | **19 de 23**     | **zero**            |
+| células de tabela por mês           | **306**          | **zero**            |
+| formatos de anexo, para 15 espécies | **cinco**        | **três**            |
+| papel em branco, média por carta    | **290px de 629** | **255px**           |
+| a exigência (a pergunta que custa)  | 374px · 0 blocos | **262px · 1 bloco** |
+
+⭐ **O VOCABULÁRIO É DE TRÊS PEÇAS, E A GUARDA `annexes` O FECHA** — `cardHtml` (uma leitura),
+`lineHtml` (nome · barra · valor) e `noteHtml` (prosa). Ela reprova `<table>`, `<tr>` e `<td>`
+em `inbox.mjs`, **inclusive tabela montada por pedaços**, que é como os cinco formatos
+conviviam. ⚠ **A tela do relatório continua com a dela:** planilha mora em TELA, e a caixa é
+correspondência — regra que o Gabinete já aplicava e a carta violava.
+
+⚠ **NENHUMA LINHA DE MOTOR FOI TOCADA** e a série de `simulate` é idêntica ao caractere:
+`boilerOf` já entregava `lobbies` e `ruptures`, e a carta simplesmente não os lia.
+
+⚠ **TRÊS DEFEITOS MORRERAM NA IMAGEM, e nenhum falhava tipo, guarda ou prova:** quatro
+bancadas caindo 2 cadeiras davam quatro barras **cheias e iguais**; `signed(0)` pendurava um
+"0" no valor (`21% 0`); e a regra do impeachment ia num card de leitura, com doze palavras no
+tipo de um número. Capturas em `captures/caixa-em-blocos/`.
+
+### Sessão 25 (29/08/2026) — o passo 5 fechou inteiro, e a fila do bump encolheu
+
+**Os canais mortos e as unidades trocadas.** Os **oito** itens entraram. **Save: zero**, e a
+série de `simulate` é idêntica ao caractere. Sete provas novas, e cada uma falha na versão
+anterior do arquivo que ela cobre.
+
+| item      | o que mudou                                                                       |
+| --------- | --------------------------------------------------------------------------------- |
+| 5.1       | a traição e o desgaste viraram o **pé** do anexo da rua — antes eram jogados fora |
+| 5.2       | a carta de cadeiras dizia **"11 pontos"**; a unidade agora é `TERMOS.seatWord`    |
+| 5.3       | o **513** estava teclado em duas frases: `chamber.seats` passou a vir do motor    |
+| 5.6       | o alarme de fervura gravava um `from` que a view sempre sobrescreveu              |
+| 5.7       | a faixa larga da tarja e o plural de "meses" saíram — `left` devolve 0 ou 1       |
+| 5.5       | o `weight` e o `streams.events` saíram — e **sem bump**, contra a premissa        |
+| 5.4 · 5.8 | já tinham fechado em `3139ddb`; a marca no ciclo é que estava velha               |
+
+⚠ **E UM ACHADO FICA ABERTO E DECLARADO:** a soma do anexo da rua **continua não fechando com
+a manchete** — medido no mês 4, a tabela soma **45 · 43 · 46** e a manchete diz **28%**. Não
+são a mesma grandeza: entre as duas estão a inércia de `SONDA` e a conversão em "ótimo/bom".
+Fechar a cadeia pede o humor por classe dentro de `attach`. ⚠ **E eu escrevi que isso era um
+bump, e não é** — ver a fila abaixo. **Fica aberto porque é DESENHO**, e não porque custa save:
+a alternativa é a tabela crescer dentro de uma carta, que é o R2 que este ciclo já recusou.
+
+⚠ **`left` devolve 0 ou 1 e mais nada**, medido num mandato inteiro: `[[0, 6], [1, 7]]`. É a
+prova que sustenta a retirada da terceira faixa, e ela morde no dia em que `ANSWER_TIME` mudar.
+
+⭐ **E O ACHADO MAIOR DA SESSÃO É SOBRE A PRÓPRIA PROSA:** a fila de "espera o bump" tinha
+quatro itens e tem **um**. Três saíram sem custo nenhum, e **um deles já estava fechado desde
+a véspera** — o `last`. Ninguém tinha medido o validador do save antes de escrever que ele
+exigia um bump. É o §7 dos padrões outra vez: **prosa que continua gramatical e para de ser
+verdade.**
+
 ### Sessão 24 (28/08/2026) — a marca de "feito" foi conferida contra o código
 
 **A pergunta foi dele: _"tem certeza que todos os passos antes desse fecharam?"_** Não tinham.
@@ -113,22 +229,67 @@ Dois achados de auditoria consertados. 252 testes, 12 guardas, tudo verde.
 | `tests/suites/congress.mjs`      | tolerância 20%→25%, amostras 600→1000                                                                                  |
 | `tests/suites/state-reducer.mjs` | `isFrozen` em `fiscal`, `capacity.index`, `series.gdp`; mensagem de assertion corrigida                                |
 
-### Dois itens para decidir (requerem schema bump, juntos)
+### ⭐ A FILA DE "ESPERA O BUMP" ERA DE QUATRO, E É DE UM — 29/08/2026
 
-⚠ **O save recusa versão diferente em vez de converter** — custa a partida em andamento.
-Os dois abaixo podem ser feitos juntos num único bump de schema, quando o responsável
-decidir:
+⚠ **A PREMISSA NUNCA TINHA SIDO MEDIDA.** `src/state/save.mjs` confere a **presença** de 18
+campos de topo e a **forma** de 8 deles — e **não olha dentro de uma carta**. Campo a mais num
+save gravado antes é campo ignorado; campo novo numa carta nova chega ausente na carta velha, e
+isso se resolve com reserva (`??`), como o passo 3¾ já fez.
 
-1. **`last` perdido no F5** (achado 46) — a leitura do mês some na recarga. A metade
-   visível já foi consertada (a bandeja vazia agora diz a verdade sobre o mandato); falta
-   persistir o último relatório no save. **Impossível regenerar** — o relatório é função
-   do estado ANTERIOR e das ordens daquele mês;
-2. **`events` stream morto** — `state.streams.events` é código morto, nenhum motor o
-   consome. Remoção requer mudança de tipo em `Streams`.
+| item                        | estado em 29/08/2026                                               |
+| --------------------------- | ------------------------------------------------------------------ |
+| `last` perdido no F5 (46)   | ✔ **fechou na versão 19** — `state.months` atravessa o F5          |
+| `events` stream morto       | ✔ **saiu sem bump**, com prova de que o save antigo carrega        |
+| `weight` da carta (5.5)     | ✔ **saiu sem bump**, na mesma prova                                |
+| o placar na carta (passo 4) | ⛔ **aberto** — e **meça antes de bumpar**: talvez também não peça |
+
+⚠ **O SAVE CONTINUA RECUSANDO VERSÃO DIFERENTE em vez de converter**, e cada subida custa a
+partida em andamento. É por isso que a medição acima importa: **três dos quatro não custaram
+nada**, e a fila que justificava juntá-los num bump só não existe mais.
+
+### ▶ A RETOMADA DE 31/08/2026 — comece por aqui
+
+⛔ **NADA ESTÁ COMMITADO.** A árvore tem **seis** sessões de trabalho não commitadas, incluindo
+os ciclos 15 e 16 inteiros. Branch `caixa-de-entrada`. O portão está verde — `npm run validate`
+fecha com **13 guardas · 60 provas sintéticas · 136 arquivos · 269 provas · passeio verde em
+DUAS janelas**.
+
+⭐ **O CICLO 15 FECHOU** (o Gabinete passou a falar a língua da Caixa) e o **ciclo 16 está em
+execução: 4 de 6 passos**. O que falta, na ordem, está em
+[`cycles/16-o-gabinete-profissional.md`](cycles/16-o-gabinete-profissional.md):
+
+| item      | o quê                                                               | estado                  |
+| --------- | ------------------------------------------------------------------- | ----------------------- |
+| **A1** ⭐ | alerta por ministério no rail                                       | **aprovado, não feito** |
+| **A2**    | a zona de perigo pintada na pista, além da marca                    | **aprovado, não feito** |
+| passo 5   | o prazo à direita da linha do índice — a "hora" do Football Manager | aprovado                |
+| passo 6   | ícone por bloco na coluna                                           | pede desenho            |
+
+⭐ **A1 É O ACHADO MAIS VALIOSO ABERTO, e ele tem a forma que sempre vale:** `railNavHtml`
+recebe **só** a tela ativa e `CATALOG.areas`. O `state.capacity.index` — que o motor recalcula
+todo mês — **nunca chega ao rail**, e os oito ministérios são desenhados idênticos com Saúde a
+62 ou a 12. Dado que já existe, sem consumidor.
+
+⚠ **E O DOSSIÊ EXTERNO ESTÁ DIVIDIDO EM QUATRO PARTES** no fim daquele ciclo — o que entra
+agora (A), o que é do Gabinete mas depois (B), o que é de outra tela (C: hemiciclo → Congresso,
+barra empilhada → Finanças, ghosting → áreas) e o que foi recusado com a razão medida (D).
 
 ### Próximo passo do plano
 
-O Glorioso, passo 2 — **B1 a B5** (faixa de áreas no Congresso). O plano está em
+O **ciclo 14 fechou** em 29/08/2026, e o 3½.5 fechou em quatro de cinco. **Sobram dois itens, e
+os dois são decisão dele:**
+
+1. **a Mesa pautou e a gaveta** continuam sem bloco — o número delas não está gravado em lugar
+   nenhum, e puxá-lo é motor. ✔ **As duas cartas do PLENÁRIO fecharam**: o placar já estava no
+   save, no cartão do mesmo mês, e a carta ao lado chegava vazia.
+
+⚠ **E O ITEM DA "DATA DUPLICADA" MORREU REMEDIDO:** ele dizia 72% de sobreposição entre o
+divisor do índice e a data do ofício; medido em 29/08, são **36% na carta do topo e 0% em todas
+as outras**. Palavras dele: _"qual o problema de ter a data ali?"_ — nenhum, e o número era de
+uma sessão anterior repetido sem conferência. Uma tentativa de baixar o peso tipográfico da data
+foi recusada por ele **e** pelo portão (4,09 de contraste contra o piso AA de 4,5).
+
+Depois, o Glorioso, passo 2 — **B1 a B5** (faixa de áreas no Congresso). O plano está em
 `docs/cycles/13-o-glorioso.md`. Os itens B1-B5 são:
 
 - B1: colorir o mandato (distância de `initial`, não o nível)
@@ -155,8 +316,9 @@ já atravessaram tipo, guarda e cem provas para morrer na imagem.
 
 ---
 
-**Estado: verde.** `npm run validate` fecha com **12 guardas · 54 provas sintéticas ·
-132 arquivos · 259 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`.
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas ·
+136 arquivos · 269 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`,
+**sem nada commitado**.
 
 ### ▶ COMECE POR AQUI — [o ciclo 14, a Caixa de Entrada](cycles/14-a-caixa-de-entrada.md)
 
@@ -569,6 +731,106 @@ conserta com risco"_.
 
 ## Achados abertos
 
+**61. ✔ O GABINETE PERDEU O TÍTULO, E A BANDEJA GANHOU A LEGENDA — 30/08/2026.** Ordem dele:
+_"tire esse título Gabinete. Coloque algo como caixa de entrada dentro de um bloco grudado à
+caixa de entrada, com fonte de caixa de entrada, padronizado."_
+
+O título era a **única peça da tela que não respondia pergunta nenhuma** — 25,6px de serifa
+para dizer o nome de uma tela que o rail já marca. No lugar dele, `.tray__head` é uma faixa
+colada no topo da bandeja, cobrindo as **duas** colunas (índice e documento são um objeto só),
+com a mesma `annex__legend` das legendas de bloco.
+
+| medição, a 1920×980, mês 12 | antes | depois    |
+| --------------------------- | ----- | --------- |
+| altura útil da coluna       | 732px | **805px** |
+| vão entre as duas colunas   | 32px  | **24px**  |
+| combinações de tipo na tela | 9     | **8**     |
+
+**59. ✔ A MESMA CLASSE DESENHAVA DUAS COISAS — 30/08/2026.** Queixa dele: _"falta padronização
+em todo o Gabinete. Quero tudo igualmente padronizado, cores, fontes, bordas, espaçamentos,
+tudo mesmo. IDÊNTICO."_ Medido com um censo de estilo computado, a mesma classe nos dois
+contextos:
+
+| classe           | na carta               | na coluna                |
+| ---------------- | ---------------------- | ------------------------ |
+| `.annex`         | fundo `rgb(19,27,44)`  | `rgba(238,242,248,0.03)` |
+| `.annex`         | aresta `rgb(31,42,61)` | `rgba(255,255,255,0.14)` |
+| `.annex`         | recuo 12px · vão 8px   | 8/12px · vão 4px         |
+| `.annex__legend` | `rgba(ink,0.62)`       | `--ink-dim`              |
+| `.annex__who`    | `rgba(ink,0.72)`       | `--ink-soft`             |
+| `.annex__line`   | 22px · pista 72px      | 20px · pista 56–160px    |
+
+⭐ **A CAUSA ERA O ENDEREÇO DO REMAPEAMENTO:** `--sheet-ink` era redefinido em `.tray`, que
+cobre só a carta. Subiu para `.cabinet` e levou junto `--sheet-raise` e `--sheet-edge` — as
+duas passaram a ler os **mesmos quatro tokens**, e as seis sobreposições de contexto foram
+apagadas. ✔ **Censo depois: zero divergências.**
+
+⚠ **E O CENSO DE TIPO ACHOU O DEGRAU FORA DA ESCALA que os padrões já nomeiam:** o `<small>`
+sem regra é **8,33px** — 0,833em do navegador —, e a seta de tendência entrava com **13,6px**
+ao lado de um número de 10. Combinações de tipo na tela: **12 → 9**.
+
+⚠ **O portão cobrou o preço:** com o bloco virando vidro, o qualificador em `rgba(ink,0.55)`
+caiu para **4,13 de contraste** contra o piso AA de 4,5. Clareou-se a tinta para 0,68.
+
+**60. ✔ O BOTÃO DA CARTA SUBIU PARA O MEIO — 30/08/2026.** Efeito colateral do conserto do
+vazio: pôr o conteúdo no topo (`align-content: start`) trouxe o rodapé junto. ✔ Fechado — a
+faixa de anexos volta a ser `1fr` e o rodapé fica preso no pé, com o bloco ancorado em cima.
+
+**58. ✔ O FOCO DO TECLADO CAÍA EM `BODY` AO CLICAR NUMA CARTA NÃO LIDA — 30/08/2026.** E a
+checagem que existia para isso **passava**: ela clica no mês 2, quando a única carta já está
+lida. Medido: mês 2 ✔, **mês 6 em diante ✘**.
+
+⭐ **A CAUSA É A MESMA FAMÍLIA DO ACHADO 56, com outro nome:** `focusMark` montava o seletor
+com o `dataset` **inteiro**, e metade dele é **estado**. Clicar numa carta não lida vira
+`data-unread` de `true` para vazio **na mesma pintura**, então o seletor gravado antes deixava
+de casar com qualquer coisa. Identidade e estado no mesmo lugar, de novo.
+
+✔ **FECHADO.** `IDENTITY` declara os nove `data-` que dizem _qual_ controle é — os mesmos que
+os manipuladores leem —, e `unread`, `urgency`, `moved` e `price` ficam de fora. A prova é a
+7d do passeio, e ela nasceu vermelha.
+
+**57. ✔ A LEGENDA DO ANEXO IGNORAVA O TRATAMENTO — 30/08/2026.** Com uma presidenta na cadeira,
+o corpo da carta dizia _"a senhora"_ e a legenda do anexo logo abaixo dizia **"O QUE O SENHOR
+RECEBE"**. `blockInherited` era o único texto da caixa com "o senhor" escrito à mão em vez de
+`{v}`. ✔ Fechado: a chave usa `{v}` e os dois pontos de uso passam por `addressed`.
+
+**56. ✔ A COLUNA DO GABINETE PERDIA A TENDÊNCIA NO PRIMEIRO CLIQUE — 30/08/2026.** Medido no
+mês 10, clicando uma carta da caixa: **5 direções viravam 0**, e todas as sete setas passavam a
+dizer `flat` — que **não** é ausência, é a afirmação de que nada andou. A barra de vitais, no
+mesmo instante, continuava marcando `▼`: **duas partes da mesma tela discordando sobre o mesmo
+mês.**
+
+⭐ **A CAUSA É DA FAMÍLIA MAIS CARA DESTE PROJETO, com os papéis trocados:** não eram dois
+lugares montando a mesma pergunta — era **uma variável respondendo duas**. `painted` dizia _o
+que está na tela_ e _qual era o mês passado_, e as duas respostas divergem a partir da segunda
+pintura do mês.
+
+✔ **FECHADO no mesmo dia**, com `framed` e a checagem 7c do passeio, que nasceu vermelha.
+
+**55. ✔ A CAIXA DE ENTRADA ERA UMA PLANILHA, e ela deixou de ser — 29/08/2026.** Palavras
+dele: _"todas essas tabelas me incomodam muito, nem queria que fossem tabelas, e se for pra ser,
+quero algo bem mais minimalista e estilo football manager"_.
+
+**Medido, abrindo TODA carta de um mandato de 14 meses num navegador:**
+
+| medição                                | resultado                               |
+| -------------------------------------- | --------------------------------------- |
+| cartas abertas · **com tabela dentro** | 23 · **19 (83%)**                       |
+| células de tabela em tela, num mês     | **306**                                 |
+| a pior carta — "Base cai a N cadeiras" | 10 linhas · **40 células · 27 números** |
+| a mais frequente — o fechamento do mês | 12 células, **toda vez**                |
+
+⭐ **E A REGRA JÁ ESTAVA ESCRITA NO PRÓPRIO CÓDIGO, contra a carta.** `cabinet.mjs` recusa
+listar bancada por bancada no Gabinete e diz por quê: _"quem lista bancada por bancada, com nome
+e humor, é a tela do Congresso"_. **O anexo da carta das cadeiras faz exatamente isso** — 10
+linhas. E a prosa de `strings.mjs` admite o mesmo do caixa: _"o anexo e Finanças dizem o MESMO
+número"_. **As cartas estão duplicando as telas que o jogo já tem.**
+
+✔ **FECHADO no mesmo dia.** Sete alternativas foram desenhadas com o CSS real, ele escolheu o
+caminho — _"prossiga como você achar melhor a longo prazo, robusto, minimalista, football
+manager"_ — e a caixa foi reconstruída em três peças, com a guarda `annexes` fechando o
+vocabulário. Ver o passo 4 do ciclo 14.
+
 > ⚠ **Achado com número tem data, e número com data envelhece.** Antes de repetir
 > qualquer um destes, remeça-o. Os que já morreram estão em
 > [`journal.md`](journal.md), na seção _Achados que já morreram_.
@@ -781,8 +1043,10 @@ produziu a tabela acima, e ele é o caso mais calmo possível por construção.
 um desenho ficar bonito: se a régua estiver errada, é conserto de leitura; se o modelo
 estiver parado, é conserto de jogo, e os dois têm donos diferentes.
 
-**46. ⚠ RECARREGAR A PÁGINA APAGA A LEITURA DO MÊS, e o save não tem como devolvê-la —
-ACHADO em 21/08/2026, conserto parcial em 25/08/2026.** `last`, o relatório do turno, é
+**46. ✔ FECHADO em 29/08/2026 — RECARREGAR A PÁGINA APAGAVA A LEITURA DO MÊS.** A versão 19
+do save guarda `state.months`, e cada mês fechado atravessa o F5 no bloco dele. ⚠ **A prosa
+abaixo é o achado como ele foi escrito** — ACHADO em 21/08/2026, conserto parcial em
+25/08/2026, fechado no bump da 19. `last`, o relatório do turno, é
 **variável de módulo do entrypoint** e não vai para o save. Numa recarga o estado volta
 inteiro do `localStorage` e `last` volta **nulo**: `describeMonth` não produz carta nenhuma,
 e se `state.mail` também estiver vazia a bandeja fecha com **zero ofícios**.

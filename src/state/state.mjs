@@ -23,8 +23,7 @@ import { streamFrom } from "./random.mjs";
  * @typedef {import("../domain/opinion/index.mjs").Approval} Approval
  * @typedef {import("./random.mjs").Stream} Stream
  * @typedef {object} Streams
- * @property {Stream} events - o fluxo de TEMPORAL
- * @property {Stream} congress - o fluxo de ECLUSA
+ * @property {Stream} congress - o fluxo de ECLUSA, e o unico: quem sorteia e a tramitacao
  * @typedef {import("../domain/economy/index.mjs").MacroState} MacroState
  * o orcamento passa a ler em vez de guardar. Duas verdades sobre quanto o pais
  * produz seria a divergencia mais cara que este modelo poderia ter, porque tudo
@@ -75,7 +74,6 @@ import { streamFrom } from "./random.mjs";
  * @property {string | null} saved - o rotulo do que o relator salvou
  * @property {number | null} was - o valor com que o mes comecou; so no relatorio
  * @property {number | null} now - o valor com que ele fechou; so no relatorio
- * @property {"high" | null} weight - se o movimento foi grande o bastante para gritar
  * @property {Record<string, number> | null} [attach] o dado do anexo, ja pesado pelo motor
  * @property {string | null} from - o id do lobby que exigiu; nulo em toda outra carta
  * @property {string | null} lever - a alavanca que ele quer movida
@@ -253,7 +251,6 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
         level: null,
         was: null,
         now: null,
-        weight: null,
         answer: null,
         closedAt: OPENING_MONTH,
       },
@@ -266,9 +263,10 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
     impeachment: null,
     fallen: null,
     memory: {},
-    /* UM FLUXO POR MOTOR QUE SORTEIA, e os dois derivados do NOME. */
+    /* ⚠ UM FLUXO POR MOTOR QUE SORTEIA, E SO A TRAMITACAO SORTEIA. `events` nasceu aqui, foi
+       para o save e nunca teve consumidor: quem le fluxo e `advanceBills`, e ele le
+       `congress`. Um fluxo a mais no save e um gerador que ninguem avanca. */
     streams: {
-      events: streamFrom(seed, "events"),
       congress: streamFrom(seed, "congress"),
     },
   });

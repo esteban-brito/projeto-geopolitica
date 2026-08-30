@@ -76,20 +76,37 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 12 guardas · 54 provas sintéticas · 132 arquivos · 259 provas · passeio
-verde em duas janelas. Branch de trabalho: `caixa-de-entrada`.
+**Estado verde:** 13 guardas · 60 provas sintéticas · 136 arquivos · 269 provas · passeio
+verde em duas janelas. Branch de trabalho: `caixa-de-entrada` — ⛔ **nada commitado**.
 
-**Há DOIS planos na mesa**, e o segundo é o que está em execução:
+**Há TRÊS planos na mesa**, e o 16 é o que está em execução:
 
+- [`cycles/16-o-gabinete-profissional.md`](docs/cycles/16-o-gabinete-profissional.md) —
+  **em execução, 4 de 6 passos.** O tipo dentro dos blocos subiu de 10px para 13,6px e a
+  legenda da bandeja deixou de parecer com a data. **Faltam A1** (alerta por ministério no
+  rail — dado que o motor tem e a tela não recebe), **A2**, e os passos 5 e 6. No fim dele
+  está o dossiê externo dividido em quatro partes;
+
+- [`cycles/15-o-gabinete.md`](docs/cycles/15-o-gabinete.md) — **fechado em 30/08/2026.** A
+  coluna direita foi de **18 classes e três instrumentos** para **9 e um**, e o Gabinete passou
+  a montar com a peça da Caixa (`src/ui/shared/annex.mjs`). A guarda `annexes` cobre as duas
+  telas e a peça;
 - [`cycles/14-a-caixa-de-entrada.md`](docs/cycles/14-a-caixa-de-entrada.md) — **em execução.**
-  Sete passos, com os passos 1, 1½, 2, 3 e 3¾ feitos e o 3½ em quatro de cinco. As quatro frentes de
-  investigação fecharam;
+  **fechado em 29/08/2026** — os sete passos entraram. A caixa não tem mais tabela nenhuma, e
+  o vocabulário dela é de três peças com guarda. **Sobra um item**: as duas cartas sem número
+  (a Mesa pautou, a gaveta), e ele pede motor;
 - [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — o plano mestre, 12 de 49 itens.
   Retomar no passo 2 (B1–B5) quando o ciclo 14 fechar.
 
-**Dois itens esperam decisão do responsável**, e os dois pedem o mesmo bump de esquema:
-persistir `last` no save (achado 46) e remover o stream `events`, que é código morto. Um
-terceiro entrou na fila: o placar dentro da carta (ciclo 14, passo 4).
+**Nenhum item espera decisão hoje.** A fila que pedia "o mesmo bump de esquema" tinha quatro
+itens e **não existe mais**: o `last` fechou na versão 19, e o `events`, o `weight` e os anexos
+saíram **sem bump nenhum** — o validador do save não olha dentro de uma carta. ⚠ **Meça antes
+de bumpar:** cada subida de versão custa a partida em andamento.
+
+⚠ **A CAIXA E O GABINETE TÊM UM VOCABULÁRIO SÓ, em `src/ui/shared/annex.mjs`, e a guarda
+`annexes` o fecha** — `cardHtml` (uma leitura), `lineHtml` (nome · pista · valor · nota),
+`linesHtml` (o bloco) e `noteHtml` (prosa). **Carta ou bloco novo escolhe entre elas; tabela
+nas duas telas, ou régua desenhada pela própria tela, é reprovada no portão.**
 
 ⚠ **Número de catálogo envelhece na prosa, e é a família sem guarda** (`standards.md` §7): a
 prosa afirmou por sessões um Congresso de "onze bancadas" e "sete pessoas" enquanto o catálogo

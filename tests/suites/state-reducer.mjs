@@ -364,16 +364,16 @@ test("o mes resolvido PRESERVA A REFERENCIA do que ele nao toca", () => {
   /* Um spread que recriasse um objeto sem motivo passaria em qualquer deepEqual e mandaria a
      tela redesenhar o painel inteiro todo mes — defeito silencioso, e caro exatamente na peca
      que usa filtro.
-     que a substituiu MUDA todo mes por construcao: SONDA sempre devolve um mapa
-     novo. O que continua valendo e o fluxo que a acao nao toca — e ele basta,
-     porque o defeito que a prova pega e o spread indiscriminado. */
+     ⚠ ELA MEDIA `streams.events`, QUE SAIU POR NAO TER CONSUMIDOR, e o que ela cobra continua
+     de pe no fluxo que restou: a acao devolve o MESMO fluxo, e recria-lo seria o spread
+     indiscriminado que esta prova existe para pegar. */
   fc.assert(
     fc.property(anyState, state => {
       const next = reduce(state, resolutionOf(state));
       assert.equal(
-        next.streams.events,
-        state.streams.events,
-        "o fluxo de eventos NAO foi recriado",
+        next.streams.congress,
+        state.streams.congress,
+        "o fluxo da tramitacao foi RECRIADO, e a acao o devolveu inalterado",
       );
     }),
   );

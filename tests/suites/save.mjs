@@ -151,3 +151,34 @@ test("save com campo corrupto e recusado", () => {
     assert.ok(loaded.reason.includes("fiscal"));
   }
 });
+
+/* ── O CODIGO MORTO SAIU SEM BUMP, e a razao e medida ──────────────────────── ⚠ A PREMISSA
+   REGISTRADA ERA QUE `weight` E `streams.events` PEDIAM UM BUMP DE ESQUEMA, e ela nao se
+   sustenta: `deserialize` confere a PRESENCA de 18 campos de topo e a FORMA de 8 deles, e nao
+   olha dentro de uma carta. Campo a mais num save antigo e campo ignorado — e foi so por isso
+   que os dois puderam sair sem custar a partida em andamento. */
+
+test("O SAVE DA VERSAO CORRENTE COM OS DOIS CAMPOS MORTOS CONTINUA CARREGANDO", () => {
+  const state = idle(idle(createState(7)));
+  const salvo = JSON.parse(serialize(state));
+
+  /* O SAVE COMO ELE FOI GRAVADO ANTES DA LIMPEZA: peso em toda carta, e o fluxo a mais. */
+  salvo.mail = salvo.mail.map((/** @type {object} */ letter) => ({ ...letter, weight: "high" }));
+  salvo.streams = { ...salvo.streams, events: { seed: 1, count: 0 } };
+
+  const lido = deserialize(JSON.stringify(salvo));
+  assert.ok(lido.ok, `o save de antes da limpeza foi recusado: ${lido.ok ? "" : lido.reason}`);
+});
+
+test("NENHUMA CARTA GRAVA UM PESO QUE NINGUEM LE, e nenhum fluxo fica sem consumidor", () => {
+  let state = createState(7);
+  for (let month = 0; month < 12; month++) state = idle(state);
+
+  assert.ok(state.mail.length > 0, "o mandato nao escreveu carta nenhuma: a prova nao mediu nada");
+  for (const letter of state.mail) {
+    assert.ok(!("weight" in letter), `a carta ${letter.id} voltou a gravar um peso sem leitor`);
+  }
+
+  const fluxos = Object.keys(JSON.parse(serialize(state)).streams);
+  assert.deepEqual(fluxos, ["congress"], `o save carrega fluxos sem consumidor: ${fluxos}`);
+});

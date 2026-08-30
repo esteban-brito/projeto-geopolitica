@@ -48,6 +48,7 @@ const TERMOS = {
   mandatorySpend: "Despesa obrigatória",
   ceilingRule: "Teto do arcabouço",
   seatsWord: "cadeiras",
+  seatWord: "cadeira",
   moodWord: "humor",
   perMonthWord: "no mês",
   /* ⚠ ELA TEVE DOIS CONSUMIDORES E AGORA TEM UM, e a reducao foi o conserto: o card da posse
@@ -140,16 +141,10 @@ export const UI = {
     blockBoiler: "Quem pode derrubar",
     blockStreet: "Aprovação por renda",
     baseLine: "Apoiam o governo",
-    of: TERMOS.of,
-    /* ⚠ O ROTULO DIZ O QUE O NUMERO E, e nao onde ele mora: "base no plenario" e jargao de
-       quem ja joga. E a frase abaixo dele existe para o risco de latao na barra deixar de ser
-       um traco sem explicacao — ela e o unico texto do bloco, e paga o proprio pixel. */
-    lawPasses: "uma lei passa com",
     congressAction: "negociar",
     vaultFree: TERMOS.roomLine,
     /* ⚠ A FRASE DA A BASE DO PERCENTUAL, e sem ela "95%" nao diz 95% de que. */
     vaultOfRevenue: "da receita de",
-    vaultBiggest: "Gastos presos:",
     vaultLocked: "Preso por lei",
     /* O defeito é real mesmo fora do teste: duas leituras vizinhas passariam a abrir com a
        mesma palavra. */
@@ -179,8 +174,8 @@ export const UI = {
     },
     /* O LADO EM QUE CADA UMA ROMPE, e ele vem do motor: a social rompe quando CAI, as outras
        duas quando SOBEM. */
-    trinityBelow: "rompe abaixo de",
-    trinityAbove: "rompe acima de",
+    trinityBelow: "abaixo de",
+    trinityAbove: "acima de",
     /* O rótulo do medidor, para leitor de tela. */
     boilerMeter: "de 100 de pressão",
     /* A MESMA FORMA DA CAMARA: uma frase curta explica o risco de latao na barra, e o numero
@@ -192,9 +187,7 @@ export const UI = {
     boilerBreaks: "abandonam acima de",
     /* A ponte entre a frase e a segunda marca da barra do fiador. */
     boilerAt: TERMOS.at,
-    boilerShare: `do ${TERMOS.economic.toLowerCase()}`,
     /* ⚠ E O PESO ZERO PRECISA DE FRASE PROPRIA, e não de "0%". */
-    boilerNoShare: `${TERMOS.noWeight} no ${TERMOS.economic.toLowerCase()}`,
     /* ⚠ O QUARTO CANAL MORTO DO PLANO: a fatia de cada grupo na ruptura economica era
        calculada, formatada e entregue SO ao leitor de tela. Um dos quatro pesa zero, e quem
        enxerga gastava capital acalmando um grupo que nao conta para a conta que ele tenta
@@ -231,6 +224,10 @@ export const UI = {
   /* ── A CAIXA DE ENTRADA ──────────────────────────────────────────────────── ⚠ A PRIMEIRA
      CARTA DE VERDADE é o mês que fechou, e ela existia o tempo todo. */
   inbox: {
+    /* ⚠ ELA SUBSTITUI O TITULO DA TELA, por ordem dele: "Gabinete" ocupava uma faixa inteira
+       para dizer o nome de uma tela que o rail ja marca, e a legenda que sobrou nomeia a peca
+       que o jogador de fato usa. */
+    title: "Caixa de entrada",
     /* ── O CERCO FALANDO ────────────────────────────────────────────────────── ⚠ ESTAS
        FRASES NASCERAM DE UMA MEDIÇÃO, e ela é o achado mais desconfortável de : num governo
        passivo chegavam ZERO cartas em 44 meses, e o processo de impeachment abria no mês 43
@@ -286,7 +283,6 @@ export const UI = {
        dois viraram cards. Sobrou o denominador, que qualifica o primeiro. */
     quietMonth: "Nenhum texto foi a plenário neste mês.",
     ruptureLegend: "O que falta para abrir o processo",
-    minorityNote: "de 513",
     /* O QUORUM DA LEI COMUM, e ele e o mesmo TERMO que a Camara usa no Gabinete. */
     majority: TERMOS.simpleMajority,
     /* ⚠ AS CINCO FRASES SAO NEUTRAS EM NUMERO, e o defeito era consumado:
@@ -297,6 +293,29 @@ export const UI = {
     boilingSubject: "rompeu com o governo:",
     boilingBody: "A pressão passou do ponto de fervura, e o apoio ao governo acabou.",
     boilingNote: "ponto de fervura",
+    /* ── AS LEGENDAS DOS BLOCOS ─────────────────────────────────────────────── ⚠ TODO ANEXO
+       E UM BLOCO COM LEGENDA, e a padronizacao e dele: "blocos dentro de blocos, tudo
+       identico". O que fica FORA de bloco e so a abertura da mensagem. */
+    /* ⚠ NEUTRA DE PROPOSITO: o MESMO bloco serve a exigencia e a fervura, e "o grupo que
+       exige" mentia na carta em que ele nao exige nada — ele rompeu. O nome do grupo ja esta
+       no assunto das duas. */
+    blockGroup: "o que este grupo pesa",
+    blockRuptures: "o que falta para cada ruptura",
+    blockChamber: "a Câmara neste mês",
+    /* ⚠ O PLACAR JA ESTAVA NO SAVE, no cartao do mes, e a carta ao lado chegava vazia: o
+       jogador escrevia uma lei, esperava dois meses e lia "o plenario derrubou" sem saber se
+       faltaram tres votos ou noventa. As duas leituras pedem jogadas opostas. */
+    blockPlenary: "como o plenário votou",
+    blockVotes: "Votos a favor",
+    blockQuorum: "Para passar",
+    blockMissed: "faltaram",
+    blockSpare: "sobraram",
+    blockProcess: "o processo de afastamento",
+    blockInherited: "o que {v} recebe",
+    /* ⚠ A DISTANCIA E O QUE DECIDE, e nao o valor cru: "faltam 28" responde a pergunta que o
+       jogador faz olhando a carta, e o valor sozinho obriga a conta de cabeca. */
+    blockMissing: "faltam",
+    blockOpen: "rompeu",
     boilingPressure: "Pressão do grupo",
     boilingWeight: "Peso na ruptura econômica",
     boilingNoWeight: TERMOS.noWeight,
@@ -307,7 +326,7 @@ export const UI = {
        nao "inflacao" porque quem sente preco no supermercado nao chama de indice; "ordem"
        e nao "seguranca" porque a area ja se chama Seguranca e o mesmo nome em dois papeis
        e o defeito que a guarda `vocabulary` existe para pegar. */
-    annexLegend: "o que pesou em cada classe",
+    annexLegend: "o humor de cada classe, e o que pesa nela",
     annexNote: {
       prices: "carestia",
       jobs: "emprego",
@@ -315,7 +334,6 @@ export const UI = {
       safety: "ordem",
       economy: "economia",
     },
-    annexTotal: "soma",
     /* ── O ANEXO DO CAIXA ─────────────────────────────────────────────────────
        Os quatro sao a identidade do LASTRO, e nao uma selecao de numeros bonitos: receita
        menos obrigatoria e o que EXISTE, o teto e o que a regra deixa gastar, e o menor dos
@@ -331,18 +349,21 @@ export const UI = {
       ceiling: TERMOS.ceilingRule,
       allowance: "Empenhável",
     },
-    annexSeats: "bancada por bancada",
-    annexSeatsCol: TERMOS.seatsWord,
-    annexMoodCol: TERMOS.moodWord,
-    annexMoveCol: TERMOS.perMonthWord,
+    /* ⚠ O ROTULO DEIXOU DE PROMETER A LISTA INTEIRA, e a carta deixou de traze-la: quem lista
+       bancada por bancada e a tela do Congresso. */
+    annexSeats: "quem se moveu neste mês",
+    annexSeatsRest: "e mais",
     /* ⚠ OS DOIS DESCONTOS PESAM IGUAL EM TODA CLASSE, e por isso eles ficam no PE e nao numa
        coluna: credibilidade nao tem classe, e desgaste de cargo tambem nao. */
+    annexDiscounts: "o que desconta de todas",
+    annexDiscount: {
+      betrayal: "credibilidade quebrada",
+      wear: "desgaste do cargo",
+    },
     /* ── O ANEXO DO BALANCO ─────────────────────────────────────────────────── ⚠ ELE E A
        TABELA QUE TORNA OS TRES AVULSOS DISPENSAVEIS NO MES CALMO: antes e depois das tres
        leituras, lado a lado. */
     annexBalance: "o mês em três leituras",
-    annexBalanceWas: "antes",
-    annexBalanceNow: "agora",
     annexBalanceRow: {
       street: "aprovação",
       seats: TERMOS.seatsWord,
@@ -380,7 +401,14 @@ export const UI = {
     pollHolds: "O que sustenta",
     pollDrags: "O que puxa para baixo",
     seatsBody: "As cadeiras que respondem ao governo fecharam o mês em",
-    seatsOf: "de 513, e a maioria simples fecha em",
+    /* ⚠ O 513 ESTAVA TECLADO AQUI E NA CARTA DA MINORIA, com o motor tendo o numero ao lado:
+       a carta do cerco ja o lia de `boilerOf`. Duas frases digitadas mentiriam no dia em que
+       a Camara mudasse de tamanho. */
+    of: TERMOS.of,
+    seatsMajority: ", e a maioria simples fecha em",
+    /* ⚠ A UNIDADE E CADEIRA, e a carta dizia "11 pontos" reusando o rotulo da PESQUISA. */
+    seat: TERMOS.seatWord,
+    seats: TERMOS.seatsWord,
     seatsHint: "Sem ela, nada do que {v} assinar chega ao plenário.",
     vaultBody: "O que sobra para o mês fechou em",
     vaultHint: "É desse dinheiro que sai emenda, e é ele que compra voto.",
@@ -441,7 +469,9 @@ export const UI = {
     silenceWarns: "Se você não responder, a emenda vale.",
     dueIn: "vence em",
     dueNow: "vence neste mês",
-    months: TERMOS.months,
+    /* ⚠ O PLURAL SAIU PORQUE ELE ERA INALCANCAVEL: medido em 48 meses, `left` devolve 0 ou 1
+       e mais nada — o prazo e de dois meses e a carta so aparece no mes seguinte ao que a
+       escreveu. Ver `urgencyOf`, que perdeu a terceira faixa pela mesma medicao. */
     month: TERMOS.month,
     /* O DESFECHO — e ele fica na bandeja um mês depois de fechado, porque um inbox que apaga
        o que você deixou vencer esconde justamente que você vem deixando vencer. */
@@ -639,8 +669,6 @@ export const UI = {
   },
   approvalParts: {
     good: "Ótimo/bom",
-    fair: "Regular",
-    poor: "Ruim/péssimo",
   },
   /* Sao 49 frases nesse estado, e nenhuma delas quebrava nada: elas so faziam a proxima
      sessao acreditar que a peca existia. */

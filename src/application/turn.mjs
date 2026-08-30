@@ -1144,7 +1144,8 @@ function alarmsOf(state, now, impeachment, catalog, after) {
         id: lobby.id,
         subject: lobby.id,
         month: state.month,
-        from: lobby.id,
+        /* ⚠ SEM `from`: quem assina este aviso e a Casa Civil, e a view sempre o sobrescreveu
+           com ela — o id do grupo gravado aqui nunca teve leitor, e ja viaja em `subject`. */
         was: catalog.pressure.boil,
         now: after.pressure[lobby.id] ?? 0,
       }),
@@ -1158,7 +1159,6 @@ function alarmsOf(state, now, impeachment, catalog, after) {
 
 /* ⚠ E O PRIMEIRO NUMERO ESTAVA NA MEDIANA, E ISSO ERA O DEFEITO. */
 const MOVED = { street: 3, seats: 8, vault: 2 };
-const HEAVY = { street: 5, seats: 20, vault: 4 };
 
 /**
  * @typedef {object} Balance as tres leituras do mes, com o valor de ANTES e o de DEPOIS
@@ -1218,7 +1218,6 @@ function reportsOf(state, after, balance) {
         month: state.month,
         was,
         now,
-        heavy: moved >= HEAVY[kind],
         /* ⚠ AS TRES TEM ANEXO, e a chave e o proprio `kind` — nao ha `if` por especie aqui, e
            isso e de proposito: no dia em que um quarto dominio escrever, ele so precisa por a
            propria chave em `after`. */

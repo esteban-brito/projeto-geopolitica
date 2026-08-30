@@ -1,6 +1,6 @@
 # Ciclo 14 — a Caixa de Entrada
 
-> ⚠ **O PASSO 1 ESTÁ FEITO; DO 2 AO 5, NÃO.** Escrito em 28/08/2026 a pedido dele — _"eu estou
+> ⚠ **FALTA O PASSO 4, E DOIS ITENS QUE ESPERAM DECISÃO DELE.** Escrito em 28/08/2026 a pedido dele — _"eu estou
 > vendo diversos bugs, brechas, visual feio e tudo mais, na caixa de entrada. Eu quero testar
 > sua capacidade investigativa"_ —, e executado a partir do passo 1 na mesma data.
 >
@@ -361,7 +361,7 @@ maior que a Caixa.
 
 ---
 
-## PASSO 3½ — ◐ QUATRO DE CINCO · A GEOMETRIA · save: zero
+## PASSO 3½ — ✔ QUATRO DE CINCO · A GEOMETRIA · save: zero
 
 > Medido em três janelas (1440×980, 1440×900, **1280×800**) e 24 meses. ⚠ **A terceira janela
 > não é capricho: o passeio não roda nela, e é lá que três defeitos aparecem inteiros.**
@@ -457,17 +457,27 @@ bandeja cheia: **carta de 748px, dos quais 398 eram a faixa de anexos VAZIA**, e
 ⛔ **Travar a altura da tela continua recusado** — é o que a casca já recusa abaixo de 940px,
 porque ali a coluna dos cartões engole um cartão inteiro. A página rola, e quem rola é o índice.
 
-### 3½.5 · ⚠ E mais cinco, de desenho
+### 3½.5 · ✔ FEITO em 29/08/2026 — e o quinto item não existia
 
-- **a data do ofício quebra em duas linhas** a 1280 — sem `nowrap`, lê "MAR ·" / "2027" na
-  primeira tela do jogo;
-- **a mesma data, duas vezes, na mesma linha** — o divisor e o cabeçalho são sempre a mesma
-  string, tipograficamente idênticos, e as caixas se sobrepõem **72% na vertical**;
-- **o cabeçalho sem remetente tem 15,8% de tinta** — 354px de faixa vazia. Quatro espécies
-  saem com `from: null` e o `<span>` vazio ainda consome o vão;
-- **o documento pula até 48px** ao trocar de linha, porque o cabeçalho varia 40px de altura;
-- **três níveis estruturais com o mesmo vão de 12px** — assunto→corpo, parágrafo→parágrafo,
-  corpo→anexos.
+| item                                            | medido                                     | estado                             |
+| ----------------------------------------------- | ------------------------------------------ | ---------------------------------- |
+| a data do ofício quebrava em duas linhas a 1280 | **13 cartas**, e o cabeçalho ia de 60→80px | ✔ `white-space: nowrap`            |
+| o cabeçalho sem remetente com 15,8% de tinta    | 354px de faixa vazia                       | ✔ sem remetente, sem caixa dele    |
+| o documento pulava até 48px ao trocar de linha  | **0px hoje**                               | ✔ morreu com a reforma dos blocos  |
+| três níveis estruturais com o mesmo vão de 12px | assunto→corpo = corpo→anexos = 12px        | ✔ parte 24px, dentro da parte 12px |
+
+✔ **E O QUINTO ITEM NÃO EXISTIA.** _"E quando eu leio o conteúdo da mensagem, qual o problema
+de ter a data ali?"_ — nenhum. Todo ofício é datado, e a data no cabeçalho é o que faz a carta
+ser um documento.
+
+⚠ **O ITEM DIZIA 72% DE SOBREPOSIÇÃO ENTRE O DIVISOR DO ÍNDICE E A DATA DO OFÍCIO. Remedido em
+29/08: 36% na carta do topo e 0% em todas as outras**, a 353px de distância horizontal. O número
+era de uma sessão anterior, com outro layout, e foi repetido sem ser conferido — a família do §7
+dos padrões, cometida dentro do documento que existe para evitá-la.
+
+⛔ **E uma tentativa de "consertar" isso foi rejeitada duas vezes no mesmo minuto:** baixar o
+peso tipográfico da data. Ele recusou de olho — _"não curti a mudança da fonte da data, antes
+estava melhor"_ — e o portão recusou de número: **4,09 de contraste contra o piso AA de 4,5**.
 
 ### ✔ E um buraco no próprio passeio
 
@@ -530,52 +540,141 @@ carta do jogo anda com o mandato.
 
 ---
 
-## PASSO 4 — A FOLHA PARA DE SER 75% BRANCA
+## PASSO 4 — ✔ FEITO em 29/08/2026 · A CAIXA VIROU BLOCOS · save: zero
 
-**Quatro espécies são estruturalmente vazias** — a Mesa pautou, o texto morreu na gaveta, o
-plenário derrubou, e o teto fechou: nenhuma tem anexo nem rodapé.
+> ⚠ **ELE FOI REESCRITO NO MEIO DA EXECUÇÃO, e por ordem dele.** O plano abaixo era encher a
+> folha com **anexos**; ele recusou a premissa inteira antes disso acontecer: _"todas essas
+> tabelas me incomodam muito, nem queria que fossem tabelas, e se for pra ser, quero algo bem
+> mais minimalista e estilo football manager"_. E depois: _"quero que tudo fique dentro de
+> blocos… blocos dentro de blocos… tudo idêntico, padronizado, minimalista, robusto"_.
 
-⚠ **E DUAS ESVAZIAM DEPOIS DE RESPONDIDAS.** Na emenda e na chantagem, o rodapé de escolhas é
-o **único** rodapé, e ele some quando a resposta é gravada. **A carta que pergunta fica vazia
-exatamente depois de o jogador decidir** — no instante em que ela deveria confirmar o que ele
-acabou de fazer.
+### 🔢 O QUE FOI MEDIDO — abrindo TODA carta de um mandato num navegador
 
-⚠ **E ISTO JÁ FOI DADO COMO CONSERTADO UMA VEZ.** A prosa de `src/ui/screens/inbox.mjs`
-registra _"cabeçalho, assunto e 430px de papel em branco"_, e o conserto foi dar **uma linha
-de corpo** a cada carta. **Uma linha não preenche 620px** — elas saíram de 430 para 468. O
-conserto atacou o corpo vazio; o defeito é a **folha esticada**.
+| medição                                     | antes            | depois               |
+| ------------------------------------------- | ---------------- | -------------------- |
+| cartas abertas **com tabela dentro**        | **19 de 23**     | **zero**             |
+| células de tabela em tela, por mês          | **306**          | **zero**             |
+| formatos de anexo, para 15 espécies         | **cinco**        | **três**             |
+| papel em branco, média por carta            | **290px de 629** | **255px**            |
+| a exigência — a pergunta que custa dinheiro | 374px · 0 blocos | **262px · 1 bloco**  |
+| a ruptura                                   | 367px · 0 linhas | **209px · 2 blocos** |
+| a carta das cadeiras                        | 40 células       | **5 linhas**         |
 
-⭐ **O conserto é anexo, e o motor tem o número das três que importam:** a fração da bancada
-com que a Mesa pautou, o placar do plenário com a deriva do dia, e o que sai do texto se a
-emenda for aceita. **Nada inventado, e a altura já está lá — vazia.**
+### ⭐ O VOCABULÁRIO É DE TRÊS PEÇAS, E A GUARDA `annexes` O FECHA
 
-### ⚠ A única decisão de save deste ciclo
+Era essa a pergunta dele antes de autorizar — _"o jogo ainda terá muito conteúdo… dá pra fazer
+mesmo assim?"_. Dá, e **é a tabela que não escalava**: cinco formatos para quinze espécies é um
+formato novo a cada três, e tabela cobra largura — o defeito 3½.3 era o anexo cortando a coluna
+da soma a 1280×800.
 
-As cartas antigas não guardam o placar: o aviso grava espécie, id, assunto e mês, e nada mais.
+| peça       | forma                     | quando                     |
+| ---------- | ------------------------- | -------------------------- |
+| `cardHtml` | legenda · valor destacado | uma leitura só             |
+| `lineHtml` | nome · barra · valor      | uma lista que se compara   |
+| `noteHtml` | legenda · prosa           | uma regra, e não um número |
 
-1. **anexo só na carta do mês corrente** — save **zero**, e declarável. Mas a mesma carta fica
-   rica hoje e pobre no mês que vem, e isso é pior que a pobreza uniforme;
-2. ⭐ **a carta guarda o placar** — **um bump**, e ele viaja com os dois que já esperam decisão
-   dele: o `last` do achado 46 e o stream de eventos morto. **Três mudanças num bump custam o
-   mesmo que uma.**
+⚠ **A BARRA É OPCIONAL, E A AUSÊNCIA É A MODELAGEM:** ela só entra onde as linhas dividem a
+**mesma escala**. `%`, cadeiras e reais não dividem nenhuma.
 
-**Eu faria a 2**, e a razão é a fila: os bumps já estão pendurados, e adiar não os torna mais
-baratos.
+**A guarda `annexes` recusa `<table>`, `<tr>` e `<td>` em `inbox.mjs`** — inclusive tabela
+montada por pedaços, que é como os cinco formatos conviviam. ⚠ **A tela do relatório continua
+com a dela de propósito:** planilha mora em TELA, e a caixa é correspondência.
 
----
+### ✔ O que cada carta ganhou, e nada veio de motor novo
 
-## PASSO 5 — OS CANAIS MORTOS E AS UNIDADES TROCADAS
+`boilerOf` já entregava tudo — `lobbies` com pressão e fatia, e `ruptures` com valor, limiar e
+lado. **Nenhuma linha de motor foi tocada, e a série de `simulate` é idêntica ao caractere.**
 
-| #       | o quê                                                                                                                                                                                                              | gravidade        |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
-| **5.1** | ⛔ **a traição e o desgaste chegam no anexo e são descartados.** `src/ui/strings.mjs` promete em prosa um **pé de tabela que não existe**, e **a coluna da soma não reconcilia com a manchete**. Sexto canal morto | perde informação |
-| **5.2** | ⛔ **a carta de cadeiras diz "11 pontos" onde são 11 cadeiras** — a família do `2166%`: o formatador carrega a unidade, e **nenhuma prova de igualdade alcança**                                                   | perde informação |
-| **5.3** | **o tamanho da Câmara está digitado à mão** em duas frases de `src/ui/strings.mjs`, com o motor tendo o número — e a carta do cerco lendo do motor, ao lado                                                        | perde informação |
-| **5.4** | exigência de um grupo desconhecido imprime assunto começando por `": "` — a irmã dela tem defesa, esta não                                                                                                         | perde informação |
-| **5.5** | o peso da carta é gravado **no save** e não tem leitor nenhum — candidato ao mesmo bump                                                                                                                            | código morto     |
-| **5.6** | o alarme de fervura grava quem fala, e a view **sobrescreve** com a Casa Civil                                                                                                                                     | código morto     |
-| **5.7** | o prazo nunca devolve dois, então a faixa larga da tarja e o plural de "meses" são **inalcançáveis**                                                                                                               | código morto     |
-| **5.8** | **escape duplo** na exigência e na fervura — não dispara com o catálogo de hoje, e dispara **no dia em que um rótulo tiver `&`**. O catálogo vai ser editável                                                      | latente          |
+- **a exigência e a fervura** dividem o MESMO bloco do grupo — pressão contra o ponto de
+  fervura, e peso na ruptura econômica. ⚠ Duas cartas sobre o mesmo lobby com leituras
+  diferentes eram dois vocabulários para um assunto;
+- **a ruptura** mostra **o que falta para cada uma das três** — uma ruptura sozinha não diz se
+  o processo está perto, e o processo só abre com as três;
+- **a minoria** mostra a diferença: `229 de 513 · maioria 257 · faltam 28`. **A conta que
+  decide era do jogador**;
+- **o cerco e o teto** tiraram os números da prosa corrida: numa frase eles eram lidos uma vez;
+- **a posse** mostra o que está preso ao lado do que sobra — é essa relação que ela ensina.
+
+### ⚠ E TRÊS DEFEITOS MORRERAM NA IMAGEM, não no portão
+
+Nenhum falhava tipo, guarda ou prova:
+
+1. **quatro bancadas caindo 2 cadeiras davam quatro barras CHEIAS e iguais** — a barra
+   normalizava pela maior queda. Perder 2 de 14 é romper; perder 2 de 80 é ruído. Ela passou a
+   medir a fração da própria bancada, normalizada pela maior mostrada;
+2. **`signed(0)` pendurava um "0" no valor** — `21% 0` lia como um número de duas partes;
+3. **a regra do impeachment ia num card de LEITURA**, e doze palavras em `--text-name`
+   ocupavam meia coluna. Nasceu daí a terceira peça.
+
+⚠ **E a legenda do bloco do grupo mentia na carta da fervura** — "o grupo que exige", onde ele
+não exige nada: ele rompeu.
+
+### ⛔ O que ficou de fora, e por quê
+
+- **as quatro espécies estruturalmente vazias** — a Mesa pautou, a gaveta, o plenário derrubou
+  — continuam sem bloco: o placar delas **não chega** em `describeMail` hoje, e puxá-lo é motor;
+- **o `weight` da carta e o bump** que este passo supunha: ver o 5.5. **Não havia bump.**
+
+## PASSO 5 — ✔ OITO DE OITO · OS CANAIS MORTOS E AS UNIDADES TROCADAS · save: zero
+
+**Feito em 29/08/2026, e os oito fecharam.** Sete provas novas, e cada uma falha na versão
+anterior do arquivo que ela cobre. ⭐ **E o 5.5 não precisava do bump** — a premissa registrada
+era que sim, e ela não se mede.
+
+| #       | o quê                                                           | estado                              |
+| ------- | --------------------------------------------------------------- | ----------------------------------- |
+| **5.1** | a traição e o desgaste chegavam no anexo e eram descartados     | ✔ viraram o pé da tabela            |
+| **5.2** | a carta de cadeiras dizia "11 pontos" onde são 11 cadeiras      | ✔ a unidade é `TERMOS.seatWord`     |
+| **5.3** | o 513 estava teclado em duas frases                             | ✔ `chamber.seats` vem do motor      |
+| **5.4** | exigência de grupo desconhecido abria o assunto com `": "`      | ✔ já tinha fechado em `3139ddb`     |
+| **5.5** | o `weight` da carta é gravado no save e não tem leitor          | ✔ saiu, e **sem bump**              |
+| **5.6** | o alarme de fervura gravava quem a view sobrescreve             | ✔ o `from` morto saiu de `turn.mjs` |
+| **5.7** | a faixa larga da tarja e o plural de "meses" eram inalcançáveis | ✔ saíram, e a medição é a prova     |
+| **5.8** | escape duplo na exigência e na fervura                          | ✔ já tinha fechado em `3139ddb`     |
+
+### ✔ 5.1 · O anexo da rua deixou de jogar fora os dois descontos
+
+`broken` vale **12 pontos** e o desgaste chega a **12** no fim do mandato — e nenhum dos dois
+aparecia. Eles pesam **igual em toda classe**, e por isso são pé de tabela e não coluna: a
+prosa de `strings.mjs` já dizia isso, ao lado de um pé que não existia.
+
+O corte é o de `seatsAnnex` — meio ponto. **Um pé de zeros é ruído**, e nos primeiros meses os
+dois são zero.
+
+### ⚠ E A SOMA CONTINUA NÃO FECHANDO COM A MANCHETE — declarado, e não consertado
+
+Medido no mês 4: a tabela soma **45 · 43 · 46** e a manchete diz **28%**. Não são o mesmo
+número porque **não são a mesma grandeza** — entre a soma e a manchete estão a inércia de
+`SONDA` (o humor não pula para o alvo) e a conversão em "ótimo/bom", que é uma potência.
+Fechar essa cadeia exige o humor por classe **dentro do anexo**, e `attach` é gravado no
+save: é **bump**, e este passo é save zero.
+
+### ⭐ 5.5 · O código morto saiu sem bump, e a premissa que dizia o contrário não se mede
+
+**O ciclo registrou que `weight` pedia um bump de esquema, e o handoff repetiu isso por
+sessões.** Medido em `src/state/save.mjs`: `deserialize` confere a **presença** de 18 campos de
+topo e a **forma** de 8 deles, e **não olha dentro de uma carta**. Campo a mais num save
+gravado antes é campo ignorado.
+
+**Saíram juntos, e a série é idêntica ao caractere:**
+
+| o quê             | onde morava                                | por que era morto                       |
+| ----------------- | ------------------------------------------ | --------------------------------------- |
+| `weight` da carta | `mail.mjs`, e `HEAVY` em `turn.mjs`        | a segunda tarja que o lia saiu no 3.1   |
+| `streams.events`  | `state.mjs`, e ia para o save toda partida | era o fluxo de TEMPORAL, que não existe |
+
+⚠ **E a regra que autoriza a retirada já estava escrita no próprio arquivo:** `state.mjs` diz,
+ao lado do número da versão, que _"campo novo sem consumidor não entra"_. Ele tinha dois.
+
+**A prova que morde é a do save antigo:** um save da versão corrente com `weight` em toda carta
+e com o fluxo a mais **continua carregando**. Sem ela, a retirada seria aposta.
+
+### ✔ 5.7 · A terceira faixa nunca foi pintada, e a medição é que decide
+
+`ANSWER_TIME` é 2 e a carta só aparece **no mês seguinte** ao que a escreveu, então `left`
+devolve **0 ou 1 e mais nada** — medido num mandato inteiro: `[[0, 6], [1, 7]]`. Saíram a
+faixa `open` da tarja (nas duas telas) e o plural de "meses". **A prova que morde é a
+medição**, e ela falha no dia em que o prazo mudar de tamanho.
 
 ---
 
@@ -614,13 +713,13 @@ Registrado para a próxima sessão **não reinvestigar**:
 
 ## 🔢 A ORDEM, E POR QUE ELA É ESSA
 
-| passo | o quê                        | save                    | por que nesta posição                                           |
-| ----- | ---------------------------- | ----------------------- | --------------------------------------------------------------- |
-| **1** | o motor: poda, fervura, teto | zero                    | a poda decide **quais** cartas a bandeja recebe                 |
-| **2** | as cinco checagens           | zero                    | Restrição 2 — três defeitos atravessaram o portão inteiro       |
-| **3** | a bandeja: 3.1 a 3.4         | zero                    | não adianta encher uma folha que o índice não deixa abrir       |
-| **4** | os anexos                    | zero **ou** um bump     | decisão dele                                                    |
-| **5** | canais mortos e unidades     | zero; o 5.5 vai no bump | independentes entre si, e entram a qualquer momento depois do 2 |
+| passo | o quê                        | save                | por que nesta posição                                           |
+| ----- | ---------------------------- | ------------------- | --------------------------------------------------------------- |
+| **1** | o motor: poda, fervura, teto | zero                | a poda decide **quais** cartas a bandeja recebe                 |
+| **2** | as cinco checagens           | zero                | Restrição 2 — três defeitos atravessaram o portão inteiro       |
+| **3** | a bandeja: 3.1 a 3.4         | zero                | não adianta encher uma folha que o índice não deixa abrir       |
+| **4** | os anexos                    | zero **ou** um bump | decisão dele                                                    |
+| **5** | canais mortos e unidades     | zero — o 5.5 também | independentes entre si, e entram a qualquer momento depois do 2 |
 
 ⚠ **Calibrar a capacidade da lista antes de consertar a poda é calibrar contra uma caixa que
 vai mudar.** É a mesma razão pela qual o passo 0 do ciclo 13 não era escolha.

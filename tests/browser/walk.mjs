@@ -366,11 +366,15 @@ try {
   await checkEllipsized("gabinete");
   await checkClamped("gabinete");
   await checkContrast("gabinete");
-  await checkNoOverlap("gabinete", ".cards > .card");
+  await checkNoOverlap("gabinete", ".cards__side .annex");
 
   /* 1 — O GABINETE E A TELA INICIAL, e ele nao decide nada. */
-  /* CINCO desde 16/08, quando a CALDEIRA entrou. */
-  expect((await page.locator(".card").count()) === 5, "[gabinete] os cinco cartoes nao vieram");
+  /* ⚠ CINCO BLOCOS, E ELES SAO `.annex` DESDE O CICLO 15: a coluna deixou de ser quatro
+     cartoes com gramatica propria e passou a falar a lingua da caixa. */
+  expect(
+    (await page.locator(".cards__side .annex").count()) === 5,
+    "[gabinete] os cinco blocos da coluna nao vieram",
+  );
   expect(
     (await page.locator("#main input, #main select").count()) === 0,
     "[gabinete] a tela inicial ofereceu um controle",
@@ -610,6 +614,47 @@ try {
     await page.screenshot({ path: join(OUT, "carta-pergunta.png"), fullPage: true });
   }
 
+  /* 7c — A COLUNA NAO PERDE A TENDENCIA NUM CLIQUE, e esta checagem nasceu VERMELHA: medido
+     no mes 10, as sete setas caiam de 3 direcoes para 0 assim que uma carta era clicada. A
+     causa era `painted` valer o mes CORRENTE a partir da segunda pintura do mes, e a barra
+     de vitais escapava so porque ela nao repinta quando o estado nao muda. */
+  const direcoes = () =>
+    page.$$eval(".cards__side .trend", nodes => nodes.map(node => node.dataset["direction"]));
+  const antesDoClique = await direcoes();
+  expect(
+    antesDoClique.some(direction => direction !== "flat"),
+    `[gabinete] a coluna nao trouxe tendencia nenhuma — a checagem do clique nao mede nada`,
+  );
+  await page.locator(".tray__row").first().click();
+  await page.waitForTimeout(300);
+  const depoisDoClique = await direcoes();
+  expect(
+    depoisDoClique.join(" ") === antesDoClique.join(" "),
+    `[gabinete] um clique na caixa mexeu na tendencia da coluna: ` +
+      `${antesDoClique.join(" ")} → ${depoisDoClique.join(" ")}`,
+  );
+
+  /* 7d — O FOCO ATRAVESSA O CLIQUE NUMA CARTA NAO LIDA, e esta checagem nasceu VERMELHA. A
+     de 7a-bis ja cobrava foco, e passava: ela clica no mes 2, quando a unica carta ja esta
+     lida. Clicar numa NAO lida vira `data-unread` na mesma pintura, e a marca do foco era
+     montada com o dataset inteiro — o seletor gravado antes nao casava depois. */
+  const naoLidas = page.locator('.tray__row[data-unread="true"]');
+  expect(
+    (await naoLidas.count()) > 0,
+    "[caixa] nenhuma carta nao lida sobrou — a checagem do foco nao mede nada",
+  );
+  const alvoNaoLido = await naoLidas.first().getAttribute("data-dispatch");
+  await naoLidas.first().click();
+  await page.waitForTimeout(300);
+  const focoNaoLido = await page.evaluate(() => {
+    const node = document.activeElement;
+    return node instanceof HTMLElement ? (node.dataset["dispatch"] ?? node.tagName) : "nada";
+  });
+  expect(
+    focoNaoLido === alvoNaoLido,
+    `[caixa] o clique numa carta nao lida jogou o foco em "${focoNaoLido}", e nao em "${alvoNaoLido}"`,
+  );
+
   await page.click('[data-section="health"]');
   await page.waitForTimeout(600);
   await checkOverflow("area depois do mes");
@@ -760,7 +805,10 @@ try {
 
   /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e memoria de
      sessao e nao entra no save. */
-  expect((await page.locator(".card").count()) === 5, "[save] a tela retomada nao renderizou");
+  expect(
+    (await page.locator(".cards__side .annex").count()) === 5,
+    "[save] a tela retomada nao renderizou",
+  );
 
   /* E RECOMECAR PEDE DOIS CLIQUES. */
   await page.click("#restart");
@@ -811,13 +859,16 @@ try {
      estava organizada pelo que PARECIA arriscado — o placar denso, a mesa larga — e nao pelo
      que o jogador de fato ve primeiro. */
 
-  /* ── A TABELA DO ANEXO, E ELA SO EXISTE DEPOIS DE ALGUNS MESES ────────────── ⚠ A CHECAGEM
+  /* ── A LINHA DO ANEXO, E ELA SO EXISTE DEPOIS DE ALGUNS MESES ─────────────── ⚠ A CHECAGEM
      DE CORTE NASCEU SEM ALCANCE: ela roda nos pontos de troca de tela, e no mes 1 a bandeja
-     nao tem carta com tabela — o passeio ficou verde com a coluna da SOMA cortada. Aqui ela
-     vai ATE a peca: avanca ate uma carta com anexo aparecer, abre, e so entao mede. */
+     nao tem carta com anexo — o passeio ficou verde com a coluna da SOMA cortada. Aqui ela
+     vai ATE a peca: avanca ate uma carta com anexo aparecer, abre, e so entao mede.
+     ⚠ ELA MEDIA `.annex__line`, QUE SAIU: as quatro tabelas viraram `.annex__line`, e a
+     guarda `annexes` recusa o retorno de qualquer uma. O que continua sendo medido aqui e o
+     que so o navegador ve — se a peca CORTA na largura da folha. */
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(400);
-  for (let month = 0; month < 10 && (await page.locator(".annex__table").count()) === 0; month++) {
+  for (let month = 0; month < 10 && (await page.locator(".annex__line").count()) === 0; month++) {
     await page.click("#advance");
     await page.waitForTimeout(420);
     const rows = await page.locator(".tray__row").count();
@@ -828,10 +879,13 @@ try {
         .click({ timeout: 3000 })
         .catch(() => {});
       await page.waitForTimeout(90);
-      if ((await page.locator(".annex__table").count()) > 0) break;
+      if ((await page.locator(".annex__line").count()) > 0) break;
     }
   }
-  expect((await page.locator(".annex__table").count()) > 0, "[anexo] nenhuma carta trouxe tabela");
+  expect(
+    (await page.locator(".annex__line").count()) > 0,
+    "[anexo] nenhuma carta trouxe a linha de anexo",
+  );
   await checkClipped("carta com anexo");
 
   /* ── A SEGUNDA JANELA ────────────────────────────────────────────────────────

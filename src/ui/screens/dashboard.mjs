@@ -129,12 +129,3 @@ export function vitalsHtml({ macro, approval, base, majority, before }) {
 /* As duas eram puras, corretas, e ninguem as importava: a faixa morreu quando a barra
    superior absorveu os tres campos dela, e a tela de aprovacao morreu quando SONDA nasceu e
    deu outra casa ao numero — a propria barra, e o cartao da Rua no Gabinete. */
-
-/**
- * A frase que diz o que esta em jogo.
- *
- * @param {string} reason
- */
-export function verdictHtml(reason) {
-  return escapeHtml(UI.verdict[/** @type {keyof typeof UI.verdict} */ (reason)] ?? "");
-}

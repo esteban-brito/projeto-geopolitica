@@ -14,13 +14,12 @@ import {
   dispersion,
   whipCount,
 } from "../../src/domain/congress/index.mjs";
-import { alarm } from "../../src/application/mail.mjs";
+import { alarm, left } from "../../src/application/mail.mjs";
 import { describeMail, describeMonth, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
 import { vitalsHtml } from "../../src/ui/screens/dashboard.mjs";
 import { addressed } from "../../src/ui/strings.mjs";
 import {
   boilerOf,
-  chamberOf,
   governmentOf,
   discretionaryRoom,
   ledger,
@@ -39,7 +38,7 @@ import { UI } from "../../src/ui/strings.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { areaHtml } from "../../src/ui/screens/area.mjs";
 import { financeHtml } from "../../src/ui/screens/finance.mjs";
-import { apportion, money, num, percent, signed } from "../../src/ui/shared/format.mjs";
+import { money, num, percent, signed } from "../../src/ui/shared/format.mjs";
 import { trendOf, windowLabel } from "../../src/ui/shared/trend.mjs";
 import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/mesa.mjs";
 import { cabinetHtml } from "../../src/ui/screens/cabinet.mjs";
@@ -316,16 +315,12 @@ function cabinetOf(state, extra = {}) {
   const { budget } = ledger(state, {}, CATALOG);
 
   return cabinetHtml({
-    situation: situation.level,
-    verdict: "",
     base: situation.base,
     seats: CATALOG.parties.reduce((sum, party) => sum + party.seats, 0),
     majority: 257,
-    split: baseSplit({ parties: CATALOG.parties, loyalty: state.loyalty }),
     /* ⚠ AQUI E A CAMARA DIVIDIDA DE VERDADE, e nao os blocos crus: o hemiciclo desenha 513
        cadeiras a partir desta lista, e uma prova que o alimentasse com um punhado de caixas
        nao exercitaria a soma que ele precisa fechar. */
-    chamber: chamberOf(state, CATALOG),
     inbox: "",
     resolved: state.month > OPENING_MONTH,
     room: share.room,
@@ -381,33 +376,17 @@ test("A REGUA DA CAMARA MEDE A BASE CONTRA A MAIORIA, e as duas na mesma escala"
     const html = cabinetOf(state);
     const base = baseCount({ parties: CATALOG.parties, loyalty: state.loyalty });
 
-    /* ⚠ ANCORADA NO ROTULO, e nao na primeira ocorrencia: a Trindade desenha tres reguas com
-       `--mark` ACIMA desta na mesma tela, e sem a ancora a prova media o limiar da ruptura
-       social — 20 — e acusava a maioria de estar no lugar errado.
-       ⚠ E ELA LE UM MEDIDOR COMPOSTO desde que a Camara deixou de ser uma regua cheia: o que
-       ela cobra nao mudou uma virgula — a soma das fatias da base contra as 513, e a marca da
-       maioria na MESMA escala. O que mudou e de onde o numero sai. A prova pegou o defeito de
-       estreia da peca: sem a fatia do que NAO responde, as tres somavam 100% e a barra ficava
-       cheia em qualquer base. */
-    const mark = html.match(new RegExp(`--mark:([0-9.-]+)" aria-label="${UI.cabinet.baseLine}`));
-    assert.ok(mark, `no mes ${month} a base saiu sem regua`);
-
-    const meter = html.slice(html.indexOf(`aria-label="${UI.cabinet.baseLine}`));
-    const parts = [...meter.slice(0, meter.indexOf("</div>")).matchAll(/flex-grow:([0-9.-]+)/g)];
-    assert.equal(
-      parts.length,
-      4,
-      `no mes ${month} o medidor da base veio com ${parts.length} fatias`,
+    /* ⚠ ANCORADA NO ROTULO, e nao na primeira ocorrencia: o bloco do risco desenha tres
+       reguas ACIMA desta na mesma tela, e sem a ancora a prova media outra.
+       ⚠ E ELA VOLTOU A LER UMA REGUA CHEIA no ciclo 15: o medidor composto saiu junto com o
+       instrumento `meter`, por decisao dele — a Camara passou a dizer apoiam · maioria ·
+       faltam. O que a prova cobra nao mudou uma virgula: o desenho nao inventa a base, e ele
+       a compara com a maioria na MESMA escala. */
+    const gauge = html.match(
+      new RegExp(`--index:([0-9.-]+);--mark:([0-9.-]+)" aria-label="${UI.cabinet.baseLine}`),
     );
+    assert.ok(gauge, `no mes ${month} a base saiu sem regua`);
 
-    const cheio = parts.reduce((sum, part) => sum + Number(part[1]), 0);
-    const naBase = parts.slice(0, 3).reduce((sum, part) => sum + Number(part[1]), 0);
-    const gauge = [null, String((naBase / cheio) * 100), mark[1]];
-
-    /* ⚠ ESTA PROVA SUBSTITUI "A FITA FECHA O PLENARIO", e ela nao foi apagada: a fita saiu do
-       Gabinete porque uma bancada por cor em 184px so seria legivel com uma legenda nomeando
-       cada uma, e essa legenda nao cabe. O que ela cobrava e que continua importando
-       — o desenho nao inventa a base, e ele a compara com a maioria na MESMA escala. */
     assert.ok(
       Math.abs(Number(gauge?.[1]) - (base / total) * 100) < 0.5,
       `no mes ${month} a regua encheu ate ${gauge?.[1]}% e a base do motor e ${base} de ${total}`,
@@ -419,7 +398,7 @@ test("A REGUA DA CAMARA MEDE A BASE CONTRA A MAIORIA, e as duas na mesma escala"
 
     /* ⚠ E O NUMERO ESCRITO E O MESMO QUE A REGUA DESENHA. */
     assert.ok(
-      html.includes(`${Math.round(base)} ${UI.cabinet.of} ${total}`),
+      html.includes(`>${Math.round(base)}<small>${UI.inbox.of} ${total}</small>`),
       `no mes ${month} a leitura escrita nao diz ${Math.round(base)} de ${total}`,
     );
 
@@ -942,141 +921,159 @@ test("A SETA SO EXISTE QUANDO HA PASSADO: sem mes anterior, a barra nao opina", 
   assert.match(falado, /data-direction="up"[^>]*>▲<\/i><\/span><\/div><div class="vital/);
 });
 
-/* ⚠ A TABELA IMPRIMIA DUAS CONTAS CERTAS E INCOMPATIVEIS, e as duas de boa fe: cada celula
-   se arredondava sozinha e o total era o arredondamento da soma CHEIA. Medido na Classe C —
-   `15,4 + 11,6 + 7,6 + 5,6 + 2,8` — as celulas davam 44 e o total imprimia 43.
-   ⚠ E A PROPRIEDADE E DA TABELA INTEIRA, e nao daquela linha: a prova sorteia as notas,
-   inclui NEGATIVO (o desgaste tira pontos) e cobra o fecho em toda linha impressa. */
-test("O ANEXO FECHA A CONTA: a soma das celulas impressas e o total impresso", () => {
-  const segments = [
-    { id: "de", label: "Classe D/E" },
-    { id: "c", label: "Classe C" },
-    { id: "ab", label: "Classe A/B" },
-  ];
-  const notes = ["prices", "jobs", "services", "safety", "economy"];
+/* ── A LINHA DE ANEXO SUBSTITUIU AS QUATRO TABELAS ─────────────────────────── ⚠ AS DUAS
+   PROVAS QUE MORAVAM AQUI COBRAVAM A TABELA: que as celulas impressas somassem o total
+   impresso, e que a reparticao nao andasse mais de um ponto. As duas morreram com a peca que
+   elas cobriam — `apportion` saiu junto, sem consumidor —, e o que elas garantiam continua
+   cobrado abaixo: o numero da linha e a conta do motor, e a barra nunca mente sobre ele. */
 
-  /** @param {Record<string, number>} attach */
-  function tabelaOf(attach) {
-    const [dispatch] = describeMail({
-      mail: [
-        {
-          id: "pesquisa-1",
-          kind: "street",
-          month: 3,
-          due: null,
-          subject: null,
-          bill: null,
-          except: [],
-          saved: null,
-          was: 40,
-          now: 44,
-          weight: null,
-          attach,
-          from: null,
-          lever: null,
-          level: null,
-          answer: null,
-          closedAt: null,
-        },
-      ],
-      people: [],
-      left: () => null,
-      inherited: { mandatory: 0, room: 0 },
-      answered: {},
-      segments,
-    });
-    assert.ok(dispatch, "a carta da pesquisa nao chegou a bandeja");
-
-    /* ⚠ O ANEXO SAIU DO CORPO em 22/08/2026: ele virou uma secao propria da carta, com card e
-       legenda, e o corpo ficou so com a manchete. A prova foi atras dele. */
-    const corpo = dispatch.annex ?? "";
-    const anexo = corpo.slice(corpo.indexOf("annex__table"));
-    return [...anexo.matchAll(/<tr>(.*?)<\/tr>/g)]
-      .map(linha => [...(linha[1] ?? "").matchAll(/<td[^>]*>(−?-?\d+)<\/td>/g)])
-      .filter(celulas => celulas.length === notes.length + 1)
-      .map(celulas => celulas.map(celula => Number((celula[1] ?? "0").replace("−", "-"))));
-  }
-
-  /* O CASO MEDIDO, ANTES DO SORTEIO: ele e o que a captura pegou, e sem ele um gerador que
-     nunca produzisse residuo grande deixaria a prova verde por sorte. */
-  const medido = tabelaOf({
-    "c.prices": 15.4,
-    "c.jobs": 11.6,
-    "c.services": 7.6,
-    "c.safety": 5.6,
-    "c.economy": 2.8,
+/** @param {Record<string, number>} attach
+ * @param {"street" | "seats" | "vault"} [kind]
+ * @returns {string} */
+function anexoHtml(attach, kind = "street") {
+  const [dispatch] = describeMail({
+    mail: [
+      {
+        id: `${kind}-3`,
+        kind,
+        month: 3,
+        due: null,
+        subject: null,
+        bill: null,
+        except: [],
+        saved: null,
+        was: 40,
+        now: 44,
+        attach,
+        from: null,
+        lever: null,
+        level: null,
+        answer: null,
+        closedAt: null,
+      },
+    ],
+    people: [],
+    left: () => null,
+    inherited: { mandatory: 0, room: 0 },
+    answered: {},
+    segments: [
+      { id: "de", label: "Classe D/E" },
+      { id: "c", label: "Classe C" },
+      { id: "ab", label: "Classe A/B" },
+    ],
+    parties: [{ id: "pt", label: "Partido dos Trabalhadores" }],
   });
-  const linhaC = medido.find(linha => linha[linha.length - 1] === 43);
-  assert.ok(linhaC, "a linha medida nao imprimiu o total de 43");
-  assert.equal(
-    linhaC.slice(0, -1).reduce((soma, valor) => soma + valor, 0),
-    43,
-    "as celulas da Classe C nao fecham no total impresso",
-  );
+  assert.ok(dispatch, "a carta nao chegou a bandeja");
+  return dispatch.annex ?? "";
+}
 
+test("A CAIXA NAO TEM MAIS TABELA NENHUMA, e a peca de dado e uma so", () => {
+  /* ⚠ MEDIDO ANTES: 19 de 23 cartas abertas num mandato de 14 meses traziam tabela, com 306
+     celulas por mes e CINCO formatos de anexo para quinze especies. */
+  const rua = anexoHtml({ "c.prices": 15.4, "c.jobs": 11.6, betrayal: 4, wear: 2 });
+  const caixa = anexoHtml({ revenue: 100, mandatory: 90, ceiling: 95, allowance: 5 }, "vault");
+  const base = anexoHtml({ "pt.seats": 71, "pt.was": 60, "pt.now": 54 }, "seats");
+
+  for (const caso of [
+    { nome: "rua", html: rua },
+    { nome: "caixa", html: caixa },
+    { nome: "cadeiras", html: base },
+  ]) {
+    assert.ok(!caso.html.includes("<table"), `o anexo da ${caso.nome} voltou a ser tabela`);
+    assert.ok(caso.html.includes("annex__line"), `o anexo da ${caso.nome} nao usa a linha`);
+  }
+});
+
+test("O NUMERO DA LINHA E A CONTA DO MOTOR, e a barra nunca passa de 100", () => {
+  /* ⚠ ELA SUBSTITUI A PROVA DA SOMA DAS CELULAS: nao ha mais celula para fechar, e o que
+     precisa fechar e o numero impresso contra a soma que o motor mandou. */
   fc.assert(
     fc.property(
       fc.array(fc.double({ min: -14, max: 26, noNaN: true, noDefaultInfinity: true }), {
-        minLength: segments.length * notes.length,
-        maxLength: segments.length * notes.length,
+        minLength: 5,
+        maxLength: 5,
       }),
       valores => {
+        const notes = ["prices", "jobs", "services", "safety", "economy"];
         /** @type {Record<string, number>} */
         const attach = {};
-        let posicao = 0;
-        for (const segment of segments) {
-          for (const note of notes) attach[`${segment.id}.${note}`] = valores[posicao++] ?? 0;
-        }
+        notes.forEach((note, i) => (attach[`c.${note}`] = valores[i] ?? 0));
 
-        const linhas = tabelaOf(attach);
-        assert.equal(linhas.length, segments.length, "o anexo nao imprimiu uma linha por classe");
-        for (const linha of linhas) {
-          const total = linha[linha.length - 1];
-          const soma = linha.slice(0, -1).reduce((acc, valor) => acc + valor, 0);
-          assert.equal(soma, total, `as celulas somam ${soma} e a linha imprime ${total}`);
-        }
-      },
-    ),
-  );
-});
+        const html = anexoHtml(attach);
+        const soma = Math.round(valores.reduce((total, v) => total + v, 0));
 
-/* ⚠ E A REPARTICAO NAO INVENTA CELULA: cada uma fica a um passo do proprio valor, senao o
-   fecho seria comprado com um numero que a classe nunca teve. */
-test("A REPARTICAO FICA COLADA NO VALOR: nenhuma celula anda mais de um ponto", () => {
-  fc.assert(
-    fc.property(
-      fc.array(fc.double({ min: -50, max: 50, noNaN: true, noDefaultInfinity: true }), {
-        minLength: 1,
-        maxLength: 12,
-      }),
-      valores => {
-        const celulas = apportion(valores);
-        /* ⚠ `+ 0` FECHA O ZERO NEGATIVO: `Math.round(-0,2)` e `-0`, e `assert.equal` separa os
-           dois zeros. E a mesma armadilha que `attr` existe para fechar. */
-        const total = Math.round(valores.reduce((soma, valor) => soma + valor, 0)) + 0;
-        assert.equal(
-          celulas.reduce((soma, valor) => soma + valor, 0),
-          total,
-          "as celulas repartidas nao somam o total arredondado",
+        /* A LINHA DA Classe C: o valor impresso e a soma cheia arredondada, e nao cinco
+           arredondamentos independentes. */
+        const linha = [...html.matchAll(/Classe C<\/span>(.*?)<\/b>/g)][0]?.[1] ?? "";
+        assert.ok(
+          linha.includes(`>${String(soma)}<`),
+          `a linha imprimiu ${linha.replace(/<[^>]*>/g, " ").trim()} e a soma e ${soma}`,
         );
-        for (const [indice, valor] of valores.entries()) {
-          const celula = celulas[indice] ?? 0;
-          assert.ok(Number.isInteger(celula), `a celula ${indice} saiu fracionaria`);
-          assert.ok(
-            Math.abs(celula - valor) < 1,
-            `a celula ${indice} andou ${Math.abs(celula - valor)} para fechar a conta`,
-          );
+
+        /* ⚠ A BARRA NUNCA MENTE: um humor negativo ou acima de cem sairia como uma pista
+           estourada, e `--index` fora de 0..100 pinta fora da caixa. */
+        for (const hit of html.matchAll(/--index:(-?[\d.]+)/g)) {
+          const index = Number(hit[1]);
+          assert.ok(index >= 0 && index <= 100, `a barra saiu com --index:${index}`);
         }
       },
     ),
   );
 });
 
-/* ── O CALENDARIO E A UNICA ORDEM DA BANDEJA ────────────────────────────────── ⚠ ELA NASCE
-   DA REPRODUCAO DELE, e ela e de tres cartas: partida nova, dois "avancar", e o indice lia
-   `abr · 2027 → mar · 2027 → abr · 2027`. Quem pedia resposta era arrancado do calendario para
-   uma secao propria no topo, e o mes dela deixava de existir: duas perguntas gemeas de meses
-   diferentes liam a MESMA frase, byte a byte. */
+test("A CARTA DAS CADEIRAS CORTA A LISTA E DIZ QUE CORTOU", () => {
+  /* ⚠ ONZE LINHAS NUM OFICIO E O DIARIO OFICIAL DENTRO DE UMA CARTA — quem lista bancada por
+     bancada e a tela do Congresso, e o Gabinete ja recusa a mesma lista com essas palavras. */
+  const parties = Array.from({ length: 9 }, (_, i) => ({ id: `p${i}`, label: `Bancada ${i}` }));
+  /** @type {Record<string, number>} */
+  const attach = {};
+  parties.forEach((party, i) => {
+    attach[`${party.id}.seats`] = 70 - i * 5;
+    attach[`${party.id}.was`] = 60;
+    attach[`${party.id}.now`] = 60 - (9 - i);
+  });
+
+  const [dispatch] = describeMail({
+    mail: [
+      {
+        id: "seats-9",
+        kind: "seats",
+        month: 9,
+        due: null,
+        subject: null,
+        bill: null,
+        except: [],
+        saved: null,
+        was: 260,
+        now: 249,
+        attach,
+        from: null,
+        lever: null,
+        level: null,
+        answer: null,
+        closedAt: null,
+      },
+    ],
+    people: [],
+    left: () => null,
+    inherited: { mandatory: 0, room: 0 },
+    answered: {},
+    chamber: { base: 249, majority: 257, seats: 513 },
+    parties,
+  });
+
+  const html = dispatch?.annex ?? "";
+  const linhas = [...html.matchAll(/annex__line/g)].length;
+  assert.equal(linhas, 5, `nove bancadas se moveram e a carta imprimiu ${linhas} linhas`);
+  assert.ok(
+    html.includes(UI.inbox.annexSeatsRest),
+    "a carta cortou a lista e nao disse que cortou",
+  );
+  assert.ok(
+    html.includes(`${UI.inbox.annexSeatsRest} 5`),
+    "a linha do resto nao diz quantas bancadas ficaram de fora",
+  );
+});
 
 /**
  * A SEQUENCIA DO INDICE — cabecalho de mes e linha, na ordem em que saem.
@@ -1237,4 +1234,209 @@ test("O FECHAMENTO DO MES SE LE DO REGISTRO GUARDADO, e nao do relatorio vivo", 
 
   /* ⚠ E DOIS MESES SAO DUAS CARTAS, com ids diferentes: era isso que nao existia. */
   assert.notEqual(quieto.id, votado.id, "dois meses fechados devolveram o mesmo id");
+});
+
+/* ── O PASSO 5 DO CICLO 14 ──────────────────────────────────────────────────── ⚠ AS QUATRO
+   PROVAS ABAIXO MORDEM: cada uma falha na versao anterior do arquivo que ela cobre. */
+
+/** @param {Record<string, number>} attach @returns {string} */
+function pesquisaHtml(attach) {
+  return describeMail({
+    mail: [
+      {
+        id: "pesquisa-9",
+        kind: "street",
+        month: 9,
+        due: null,
+        subject: null,
+        bill: null,
+        except: [],
+        saved: null,
+        was: 40,
+        now: 44,
+        attach,
+        from: null,
+        lever: null,
+        level: null,
+        answer: null,
+        closedAt: null,
+      },
+    ],
+    people: [],
+    left: () => null,
+    inherited: { mandatory: 0, room: 0 },
+    answered: {},
+    segments: [{ id: "c", label: "Classe C" }],
+  })
+    .map(letterHtml)
+    .join("");
+}
+
+test("O ANEXO DA RUA NAO JOGA FORA OS DOIS DESCONTOS", () => {
+  /* ⚠ ELES CHEGAVAM EM `attach` E MORRIAM NA VIEW: `broken` vale 12 pontos e o desgaste chega
+     a 12 no fim do mandato, e a coluna da soma imprimia o humor da classe sem nenhum dos
+     dois. */
+  const com = pesquisaHtml({ "c.prices": 30, "c.jobs": 20, betrayal: 4.2, wear: 3 });
+  assert.ok(com.includes(UI.inbox.annexDiscount.betrayal), "a credibilidade nao chegou ao pe");
+  assert.ok(com.includes(UI.inbox.annexDiscount.wear), "o desgaste nao chegou ao pe");
+  assert.ok(com.includes(signed(-4.2)), "o bloco nao imprimiu o desconto da credibilidade");
+  assert.ok(com.includes(UI.inbox.annexDiscounts), "os descontos sairam sem bloco proprio");
+
+  /* ⚠ E UM BLOCO DE ZEROS E RUIDO: o mes 1 nao tem promessa quebrada nem desgaste. */
+  const sem = pesquisaHtml({ "c.prices": 30, "c.jobs": 20, betrayal: 0, wear: 0 });
+  assert.ok(!sem.includes(UI.inbox.annexDiscounts), "a carta abriu um bloco para dois zeros");
+});
+
+test("A CARTA DAS CADEIRAS CONTA CADEIRA, e o tamanho da Camara vem do motor", () => {
+  /* ⚠ ELA DIZIA "11 pontos" ONDE SAO 11 CADEIRAS — o corpo reusava o rotulo da PESQUISA —, e
+     o 513 estava teclado nas frases, com o motor tendo o numero ao lado. */
+  const html = describeMail({
+    mail: [
+      {
+        id: "seats-9",
+        kind: "seats",
+        month: 9,
+        due: null,
+        subject: null,
+        bill: null,
+        except: [],
+        saved: null,
+        was: 260,
+        now: 249,
+        from: null,
+        lever: null,
+        level: null,
+        answer: null,
+        closedAt: null,
+      },
+    ],
+    people: [],
+    left: () => null,
+    inherited: { mandatory: 0, room: 0 },
+    answered: {},
+    /* UM TAMANHO QUE NAO E O DO CATALOGO: se a frase estivesse teclada, ela imprimiria 513. */
+    chamber: { base: 249, majority: 257, seats: 999 },
+  })
+    .map(letterHtml)
+    .join("");
+
+  assert.ok(html.includes(`>11</b> ${UI.inbox.seats}`), "as 11 cadeiras sairam em pontos");
+  assert.ok(!html.includes(UI.inbox.pollPoints), "a carta das cadeiras ainda fala em pontos");
+  assert.ok(html.includes(">999<"), "o tamanho da Camara nao veio do motor");
+  assert.ok(!html.includes("513"), "o 513 continua teclado na frase");
+});
+
+test("A CARTA DA MINORIA LE O DENOMINADOR DO MOTOR", () => {
+  const html = describeMail({
+    mail: [alarm({ kind: "minority", id: "minority", subject: "minority", month: 14, now: 227 })],
+    people: [],
+    left: () => null,
+    inherited: { mandatory: 0, room: 0 },
+    answered: {},
+    chamber: { base: 227, majority: 257, seats: 999 },
+  })
+    .map(letterHtml)
+    .join("");
+
+  assert.ok(html.includes(">999<") || html.includes("999"), "o denominador nao veio do motor");
+  assert.ok(!html.includes("513"), "o 513 continua teclado na carta da minoria");
+});
+
+test("O ALARME DE FERVURA NAO GRAVA UM REMETENTE QUE NINGUEM LE", () => {
+  /* ⚠ ELE GRAVAVA O ID DO GRUPO EM `from`, e a view sempre o sobrescreveu com a Casa Civil —
+     o grupo ja viaja em `subject`, e e de la que o nome sai. */
+  let state = createState(7);
+  const vistos = [];
+  for (let month = 0; month < 24; month++) {
+    state = playMonth(state, { funding: {} }, { catalog: CATALOG }).state;
+    for (const letter of state.mail) if (letter.kind === "boiling") vistos.push(letter);
+    if (state.fallen !== null) break;
+  }
+
+  assert.ok(vistos.length > 0, "nenhum grupo ferveu em 24 meses: a prova nao mediu nada");
+  for (const letter of vistos) {
+    assert.equal(letter.from, null, `o alarme de ${letter.subject} gravou um remetente morto`);
+    assert.ok(letter.subject, "o alarme perdeu o grupo junto com o remetente");
+  }
+});
+
+test("O PRAZO SO TEM DUAS FAIXAS, e a medicao e que decide isso", () => {
+  /* ⚠ A TERCEIRA FAIXA E O PLURAL DE "meses" ERAM INALCANCAVEIS: `ANSWER_TIME` e 2 e a carta
+     so aparece no mes seguinte ao que a escreveu, entao `left` devolve 0 ou 1 e mais nada. */
+  let state = createState(7);
+  const valores = new Set();
+  for (let month = 0; month < MONTHS_PER_TERM; month++) {
+    state = playMonth(state, { funding: {} }, { catalog: CATALOG }).state;
+    for (const letter of state.mail) {
+      const falta = left(letter, state.month);
+      if (falta !== null) valores.add(falta);
+    }
+    if (state.fallen !== null) break;
+  }
+
+  assert.ok(valores.size > 0, "nenhuma pergunta abriu no mandato: a prova nao mediu nada");
+  for (const valor of valores) {
+    assert.ok(valor === 0 || valor === 1, `left devolveu ${valor}: a terceira faixa voltou`);
+  }
+});
+
+test("A CARTA DO PLENARIO LE O PLACAR DO CARTAO DO MESMO MES", () => {
+  /* ⚠ O NUMERO JA ESTAVA NO SAVE e a carta ao lado chegava vazia: "derrubou por 3" e
+     "derrubou por 90" pedem jogadas opostas, e as duas liam igual. */
+  /** @param {number} month */
+  const carta = month => ({
+    id: `rejected:lei:${month}`,
+    kind: /** @type {"rejected"} */ ("rejected"),
+    month,
+    due: null,
+    subject: "Reforma do teto",
+    bill: "lei",
+    except: [],
+    saved: null,
+    from: null,
+    lever: null,
+    level: null,
+    was: null,
+    now: null,
+    answer: null,
+    closedAt: month,
+  });
+
+  /** @param {number} month @param {number | null} votes */
+  const mes = (month, votes) => ({
+    month,
+    bill: "Reforma do teto",
+    judged: null,
+    votes,
+    quorum: 257,
+    promisedCost: 0,
+    paidCost: 0,
+    balance: { streetWas: 0, streetNow: 0, seatsWas: 0, seatsNow: 0, roomWas: 0, roomNow: 0 },
+  });
+
+  /** @param {ReadonlyArray<import("../../src/state/state.mjs").MonthCard>} months */
+  const render = months =>
+    describeMail({
+      mail: [carta(9)],
+      people: [],
+      left: () => null,
+      inherited: { mandatory: 0, room: 0 },
+      answered: {},
+      months,
+    })
+      .map(letterHtml)
+      .join("");
+
+  const perto = render([mes(9, 254)]);
+  assert.ok(perto.includes(UI.inbox.blockPlenary), "a carta do plenario nao trouxe o placar");
+  assert.ok(perto.includes(">254<"), "o placar guardado nao chegou a carta");
+  assert.ok(perto.includes(UI.inbox.blockMissed), "faltando tres votos, a carta nao disse isso");
+  assert.ok(perto.includes(">3<"), "a distancia para o quorum nao foi impressa");
+
+  /* ⚠ O MES ERRADO NAO SERVE: a carta do mes 9 nao pode mostrar o placar do mes 8. */
+  assert.ok(!render([mes(8, 254)]).includes(UI.inbox.blockPlenary), "a carta leu outro mes");
+
+  /* AUSENTE E DECLARADO: sem votacao, e sem cartao, nao ha bloco. */
+  assert.ok(!render([mes(9, null)]).includes(UI.inbox.blockPlenary), "mes sem votacao deu placar");
+  assert.ok(!render([]).includes(UI.inbox.blockPlenary), "sem cartao a carta inventou um placar");
 });

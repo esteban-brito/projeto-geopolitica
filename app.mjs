@@ -23,10 +23,8 @@ import {
   SEATS,
   SIMPLE_MAJORITY,
   bandsOf,
-  baseSplit,
   boilerOf,
   lockedBy,
-  chamberOf,
   forecast,
   passageOf,
   governmentOf,
@@ -63,7 +61,7 @@ import { financeHtml } from "./src/ui/screens/finance.mjs";
    escrita aqui: "quem a produz e SONDA, que nao existe". O motor
    nasceu, e o numero passou a se mover quando o mes e resolvido de verdade —
    que era a unica condicao. */
-import { turnHtml, verdictHtml, vitalsHtml } from "./src/ui/screens/dashboard.mjs";
+import { turnHtml, vitalsHtml } from "./src/ui/screens/dashboard.mjs";
 import { cabinetHtml } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
 import { describeMail, describeMonth, trayHtml } from "./src/ui/screens/inbox.mjs";
@@ -435,20 +433,15 @@ function cabinetInput(current) {
   const share = settlement(state, orders, CATALOG);
 
   return {
-    situation: current.level,
-    verdict: verdictHtml(current.reason),
     /* QUEM ASSINA A LEITURA DO MES. Ele nao vota e nao tem cadeira — a funcao dele
        e ser a unica voz do jogo que se dirige ao presidente. */
-    adviser: governmentOf(state, CATALOG).adviser,
     base: current.base,
     seats: SEATS,
     majority: SIMPLE_MAJORITY,
     /* A BASE REPARTIDA PELO ESTADO DE QUEM A ENTREGA, e quem reparte e o motor:
        os limiares que separam obstrucao de ruptura sao calibragem de ECLUSA. */
-    split: baseSplit({ parties: CATALOG.parties, loyalty: state.loyalty }),
     /* AS ONZE BANCADAS, com o que cada uma entrega — e o hemiciclo desenha 513
        cadeiras a partir disso. Quem conta e o motor. */
-    chamber: chamberOf(state, CATALOG),
     /* ⚠ A PRIMEIRA CARTA DE VERDADE, e ela existia o tempo todo: o mes que fechou.
        O relatorio do turno e produzido desde a quinta sessao e vivia enterrado num
        bloco no rodape do Congresso — uma tela que o jogador pode nao visitar. O
@@ -516,7 +509,10 @@ function cabinetInput(current) {
           siege: boilerOf(state, CATALOG),
           /* AS CADEIRAS E O QUORUM, para a carta da MINORIA. Os dois ja estao calculados
              nesta funcao — a tela nao soma bancada de novo. */
-          chamber: { base: current.base, majority: SIMPLE_MAJORITY },
+          chamber: { base: current.base, majority: SIMPLE_MAJORITY, seats: SEATS },
+          /* ⚠ OS MESES FECHADOS, e nao para a carta do mes: a carta do PLENARIO nao guarda o
+             proprio placar, e ele ja mora aqui desde a versao 19. */
+          months: state.months,
           /* AS CLASSES, so pelo ROTULO: o anexo da carta da rua nomeia as linhas, e os
                numeros dele ja vem pesados dentro da propria carta. */
           segments: CATALOG.segments,
@@ -543,12 +539,11 @@ function cabinetInput(current) {
     /* A CALDEIRA, perguntada ao motor: a tela nao remonta pressao nem redecide
        ruptura. */
     boiler: boilerOf(state, CATALOG),
-    /* ⚠ O MES PASSADO, E ELE NAO VEM DO SAVE. `painted` e o quadro da pintura anterior, e a
-       barra de vitais ja tira as setas dele desde sempre — a coluna da direita e que nao
-       tirava nada de lugar nenhum, e por isso NADA nela se movia. Numa recarga ele volta
-       nulo, e ai nao ha seta: ausencia nao e resultado.
-       ⚠ E ELE E LIDO AQUI, ANTES de `paint` reatribuir `painted` no fim dela. */
-    before: painted ? { pressure: painted.pressure, street: pollBySegment(painted.mood) } : null,
+    /* ⚠ O MES PASSADO, E ELE NAO VEM DO SAVE nem de `painted`. A ultima pintura vira o mes
+       CORRENTE ja no segundo repinte do mes, e a coluna repinta a cada clique: medido, um
+       clique na caixa levava as setas de 5 direcoes a 0, e `flat` afirma que nao andou.
+       Numa recarga `framed` volta nulo, e ai nao ha seta: ausencia nao e resultado. */
+    before: framed ? { pressure: framed.pressure, street: pollBySegment(framed.mood) } : null,
   };
 }
 
@@ -616,17 +611,38 @@ function areaInput(area) {
 /** @type {GameState | null} */
 let painted = null;
 
+/** O QUADRO DO MES PASSADO, e ele nao e `painted`: aquele e a ULTIMA PINTURA, e do segundo
+ * repinte do mes em diante ela ja e o mes corrente. Este so anda quando o mes anda.
+ * @type {GameState | null} */
+let framed = null;
+
 /** A posicao do governo na ultima pintura, para saber o que repintar.
  * @type {{ level: string, reason: string, base: number } | null} */
 let standing = null;
 
+/* O QUE DIZ *QUAL* CONTROLE E, e nao em que estado ele esta. A lista e a mesma que os
+   manipuladores leem para decidir o que foi apertado; `unread`, `urgency`, `moved` e `price`
+   ficam de fora porque mudam na propria pintura que o foco tem de atravessar. */
+const IDENTITY = /** @type {const} */ ([
+  "dispatch",
+  "section",
+  "answer",
+  "letter",
+  "party",
+  "program",
+  "rite",
+  "band",
+  "side",
+]);
+
 /**
  * ONDE O TECLADO ESTAVA, escrito como seletor.
  *
- * ⚠ `paint()` REESCREVE `innerHTML` INTEIRO, e com ele vai o foco: medido, ele caia em `BODY`
- * nos tres gestos da bandeja, e voltar ao botao que o jogador acabou de apertar custava OITO
- * tabs. O id resolve o botao de avancar; o resto se identifica pelos proprios `data-`, que sao
- * os mesmos que os manipuladores ja leem.
+ * ⚠ SO OS `data-` DE IDENTIDADE, e essa e a metade que faltava: a marca usava o dataset
+ * INTEIRO, e metade dele e ESTADO. Clicar numa carta nao lida vira `data-unread` na mesma
+ * pintura em que `paint()` reescreve tudo, e o seletor gravado antes deixava de casar —
+ * medido, o mes 2 passava (a carta ja estava lida) e do mes 6 o foco caia em `BODY`, que
+ * custa OITO tabs para voltar ao botao recem-apertado.
  *
  * @returns {string | null}
  */
@@ -635,14 +651,17 @@ function focusMark() {
   if (!(node instanceof HTMLElement) || node === document.body) return null;
   if (node.id) return `#${node.id}`;
 
-  const parts = Object.entries(node.dataset).map(([key, value]) => {
-    const name = key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
-    return `[data-${name}=${CSS.escape(String(value))}]`;
-  });
+  const parts = IDENTITY.filter(key => node.dataset[key] !== undefined).map(
+    key => `[data-${key}=${CSS.escape(String(node.dataset[key]))}]`,
+  );
   return parts.length > 0 ? node.tagName.toLowerCase() + parts.join("") : null;
 }
 
 function paint() {
+  /* ⚠ AQUI, E NAO NO FIM DA PINTURA: `cabinetInput` le `framed` mais abaixo nesta mesma
+     funcao, e fixa-lo depois faria a coluna comparar o mes com o RETRASADO. */
+  if (painted !== null && painted.month !== state.month) framed = painted;
+
   const focused = focusMark();
   const current = situationOf(state, CATALOG);
   /* ⚠ O BOTAO SE REPINTA JUNTO COM A TELA, e antes ele so se
@@ -1256,6 +1275,7 @@ el.swearForm.addEventListener("submit", () => {
   persistDraft();
   screen = "cabinet";
   painted = null;
+  framed = null;
   standing = null;
   persist();
   transition();
