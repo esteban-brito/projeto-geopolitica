@@ -18,9 +18,9 @@
 
 ## ▶ COMECE POR AQUI
 
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas · 145
-arquivos · 299 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`, **17
-commits à frente de `main`** mais o trabalho desta sessão na árvore.
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas · 146
+arquivos · 299 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`, **21
+commits à frente de `main`**, árvore limpa, e **nada foi enviado ao remoto**.
 
 ⚠ **O SAVE SUBIU PARA A VERSÃO 20, e ele recusa versão diferente em vez de converter:** toda
 partida salva antes desta sessão **não abre mais**. O campo novo é `platform`, e o custo estava
