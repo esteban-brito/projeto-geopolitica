@@ -90,11 +90,18 @@ import { streamFrom } from "./random.mjs";
  * @typedef {import("../domain/norms/index.mjs").Band} Band
  * @typedef {import("../domain/norms/index.mjs").Norm} Norm
  * @typedef {import("../application/passage.mjs").Bill} Bill
+ * @typedef {object} Platform o que foi prometido na posse, por eixo
+ * @property {string | null} priority - a area que ele se comprometeu a entregar melhor
+ * @property {string | null} fiscal - a meta fiscal
+ * @property {string | null} reform - o compromisso de reforma
+ *
  * @typedef {object} GameState
  * @property {number} schemaVersion - versao do formato do save
  * @property {number} seed - a semente da partida; com ela e as acoes, tudo se refaz
  * @property {{ name: string, treatment: "senhor" | "senhora" } | null} president
  *   o nome que o jogador digitou e como ele quer ser tratado; `null` usa o sorteado
+ * @property {Platform} platform - os tres compromissos da posse; `null` em cada eixo quer
+ * dizer que ele nao prometeu nada naquele eixo
  * @property {number} month - meses decorridos desde a posse (0 = janeiro do ano 1)
  * @property {Record<string, number>} mood - a satisfacao de cada segmento, de 0 a 100
  * @property {Record<string, number>} loyalty - o humor de cada bancada, de 0 a 100
@@ -123,7 +130,7 @@ import { streamFrom } from "./random.mjs";
    da 10 guarda a PESQUISA, quando o que o jogo passou a precisar e a SATISFACAO por
    segmento — e a conversao nao tem inversa util. Chuta-la distribuiria igual entre as tres
    classes, apagando a polarizacao, que e a informacao que SONDA existe para dar. */
-export const SCHEMA_VERSION = 19;
+export const SCHEMA_VERSION = 20;
 
 /* ⚠ O TRATAMENTO E ESCOLHA DO JOGADOR, e nao deducao do nome. Antes a interface
    tinha SETE frases com "o senhor" digitadas fixas, e o gerador sorteia nomes femininos e
@@ -179,6 +186,10 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
        nenhum. `null` quer dizer "use o que a semente sorteia", que e como a partida abre
        antes de o jogador escolher. */
     president,
+    /* ⚠ A PLATAFORMA NASCE VAZIA, e vazia quer dizer o que parece: o presidente ainda nao
+       discursou. Ela e o UNICO campo do estado que so o jogador preenche, e uma vez so — a
+       posse acontece no mes 2 e nao volta. */
+    platform: { priority: null, fiscal: null, reform: null },
     month: OPENING_MONTH,
     /* A SATISFACAO DE ABERTURA sai do catalogo, como tudo. */
     mood: opinionOpening(segments),
@@ -285,6 +296,7 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
  * months: MonthCard[],
  * mood: Record<string, number>,
  * levels: Record<string, number>,
+ * platform: Platform,
  * norms: Norm[],
  * bills: Bill[],
  * mail: Letter[],
@@ -317,6 +329,10 @@ export function reduce(state, action) {
         months: action.months,
         mood: action.mood,
         levels: action.levels,
+        /* ⚠ ELA SO SE ESCREVE UMA VEZ, e a guarda e do turno: depois da posse, `action.platform`
+           chega com o que ja estava la. Um presidente que reescrevesse a plataforma no mes 30
+           nao teria promessa nenhuma — teria um espelho. */
+        platform: action.platform,
         norms: action.norms,
         bills: action.bills,
         mail: action.mail,

@@ -104,6 +104,59 @@
     color: var(--signal-down);
   }
 
+  /* ── O QUE FOI PROMETIDO ──────────────────────────────────────────────────── A mesma
+     anatomia da linha do fecho, com uma coluna a menos: a promessa nao tem delta — ela tem
+     veredito, e ele e uma palavra. */
+  .closing__pledges {
+    display: grid;
+  }
+
+  .pledge {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 8rem 8rem;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--veil-thin);
+  }
+
+  .pledge:last-child {
+    border-bottom: 0;
+  }
+
+  .pledge__label {
+    color: var(--ink-soft);
+  }
+
+  .pledge__label small {
+    display: block;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .pledge__read {
+    color: var(--ink-soft);
+    opacity: 0.65;
+    text-align: right;
+  }
+
+  /* ⚠ A COR E A MESMA DAS DUAS DIRECOES DO FECHO, e nao uma terceira paleta: cumprida le como
+     alta e quebrada como queda, que e o que a linha de cima ja ensina. */
+  .pledge__verdict {
+    text-align: right;
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--signal-down);
+  }
+
+  .pledge[data-kept="true"] .pledge__verdict {
+    color: var(--signal-up);
+  }
+
   .closing__laws {
     display: grid;
     margin: 0;

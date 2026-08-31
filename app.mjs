@@ -27,6 +27,7 @@ import {
   bandsOf,
   boilerOf,
   chainOf,
+  pledgesOf,
   lockedBy,
   forecast,
   passageOf,
@@ -254,6 +255,11 @@ function resumeDraft(month) {
     for (const [key, value] of Object.entries(read.orders?.mail ?? {})) {
       if (typeof value === "string") draft.mail[key] = value;
     }
+    /* ⚠ O DISCURSO ATRAVESSA O F5 como as respostas de carta: ele e a decisao mais cara do
+       mes 1, e perde-la num refresh seria perder a unica que nao se pode tomar de novo. */
+    for (const [key, value] of Object.entries(read.orders?.platform ?? {})) {
+      if (typeof value === "string") draft.platform[key] = value;
+    }
     for (const [key, value] of Object.entries(read.orders?.bands ?? {})) {
       const band = draft.bands[key];
       if (!band || !value || typeof value !== "object") continue;
@@ -330,6 +336,11 @@ function blankOrders() {
        aceitando, e a propria carta diz isso antes. */
     /** @type {Record<string, string>} */
     mail: {},
+    /* ⚠ A PLATAFORMA NASCE VAZIA E SO VALE UMA VEZ: depois da posse o turno ignora o que
+       vier daqui — ver `spoken` em `application/platform.mjs`. Vazia quer dizer "ele ainda
+       nao disse a que veio", e avancar calado e uma resposta: governar sem plataforma. */
+    /** @type {Record<string, string>} */
+    platform: {},
     /** @type {Record<string, number>} */
     levels: { ...state.levels },
     /* AS LEIS TAMBEM NASCEM NAS VIGENTES, e pelo mesmo motivo dos niveis: o
@@ -512,6 +523,11 @@ function cabinetInput(current) {
            porta. */
           inherited: { mandatory: budget.mandatory, room: share.room },
           answered: orders.mail,
+          /* ⚠ AS OPCOES VEM DA FACHADA, e o que esta marcado tem DUAS fontes: antes de a posse
+             fechar, o rascunho do mes; depois dela, o estado — a carta continua na caixa e
+             continua mostrando o que foi prometido. */
+          pledges: pledgesOf(CATALOG),
+          platform: { ...state.platform, ...orders.platform },
           /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
            mora no catalogo. Uma tabela de nomes nesta view seria a segunda verdade
            sobre quem sao os quatro. */
@@ -1087,6 +1103,23 @@ document.addEventListener("click", event => {
 
      E ELA VEM ANTES DA NAVEGACAO de proposito: o botao de escolha vive dentro de
      uma carta que tambem leva a uma tela, e a ordem inversa faria escolher navegar. */
+  /* ── O DISCURSO DE POSSE ────────────────────────────────────────────────────
+     ⚠ ELE VEM ANTES DA RESPOSTA DE CARTA e pela mesma razao que ela vem antes da navegacao:
+     os tres grupos moram DENTRO da carta da posse, que tambem leva a uma tela.
+     ⚠ E ELE NAO ESCREVE NO ESTADO — escreve no rascunho do mes, como toda decisao: quem
+     grava a plataforma e o turno, uma vez so. */
+  const pledge = target.closest("[data-pledge]");
+  if (pledge instanceof HTMLElement && pledge.dataset["pledge"] && pledge.dataset["choice"]) {
+    const axis = pledge.dataset["pledge"];
+    /* CLICAR DE NOVO NO MESMO COMPROMISSO DESMARCA, como nas duas saidas da emenda: nao
+       prometer nada naquele eixo e uma escolha, e ela tem de ter caminho de volta. */
+    orders.platform[axis] =
+      orders.platform[axis] === pledge.dataset["choice"] ? "" : pledge.dataset["choice"];
+    persistDraft();
+    paint();
+    return;
+  }
+
   const choice = target.closest("[data-letter]");
   if (choice instanceof HTMLElement && choice.dataset["letter"] && choice.dataset["answer"]) {
     const id = choice.dataset["letter"];

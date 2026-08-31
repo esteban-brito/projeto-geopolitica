@@ -827,6 +827,32 @@
     width: 100%;
   }
 
+  /* ── O DISCURSO DE POSSE ──────────────────────────────────────────────────── Tres eixos,
+     e cada um e a mesma peca de duas saidas com a lista aberta. ⚠ AS COLUNAS SAO AUTOMATICAS
+     porque os eixos nao tem o mesmo tamanho: prioridade tem tres opcoes, a meta fiscal tem
+     duas, e uma grade fixa de 1fr 1fr deixaria a fiscal cheia e a reforma torta. */
+  .letter__pledge {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  /* ⚠ UMA COLUNA, E A CAPTURA DECIDIU: com duas, os eixos de TRES opcoes deixavam a terceira
+     sozinha embaixo, e a frase quebrava em duas linhas dentro do botao. Sao frases — "entregar
+     a divida menor do que a recebi" —, e frase se le empilhada. */
+  .letter__pledge .letter__choices {
+    grid-template-columns: 1fr;
+  }
+
+  .letter__axis {
+    font-family: var(--font-display);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: rgba(var(--sheet-ink-rgb), 0.62);
+  }
+
   .letter__choice {
     display: grid;
     gap: 2px;

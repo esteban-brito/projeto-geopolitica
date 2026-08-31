@@ -24,6 +24,7 @@ import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 import { CATALOG } from "../data/catalog.mjs";
 import { waivedOf } from "../data/programs.mjs";
 import { bandOf, compose, honour, spendOf } from "./agenda.mjs";
+import { breachOf, chosenOf, platformOf, spoken } from "./platform.mjs";
 import { DRAWER_LIFE, forgotten, proposalOf, reports, tables } from "./passage.mjs";
 import {
   CARRY,
@@ -63,6 +64,8 @@ import { OPENING_MONTH, reduce } from "../state/state.mjs";
  * @property {Record<string, number>} [levels] a intensidade PEDIDA de cada programa
  * @property {Record<string, import("../state/state.mjs").Band>} [bands] as leis PEDIDAS
  * @property {Record<string, string>} [mail] o que o jogador respondeu a cada carta
+ * @property {Partial<Record<string, string | null>>} [platform] os tres compromissos marcados
+ * na carta da posse. Eles so entram no estado uma vez — ver `spoken`
  * @typedef {object} Options
  * @property {typeof CATALOG} [catalog]
  * @property {number} [shock] choque de oferta do mes, em pontos de inflacao anual
@@ -1665,8 +1668,16 @@ export function playMonth(state, orders = {}, options = {}) {
     released,
     services: mean([capacity.index["health"], capacity.index["education"]]),
     safety: capacity.index["security"] ?? 50,
-    /* A FRACAO DA PROMESSA QUE O CAIXA NAO HONROU. */
-    betrayal: promisedCost > 0 ? 1 - paidCost / promisedCost : 0,
+    /* A FRACAO DA PROMESSA QUE O CAIXA NAO HONROU, e agora ela tem DUAS fontes: a emenda que
+       nao foi paga e a plataforma da posse. ⚠ O MAIOR DOS DOIS, e nao a soma: empilhar faria
+       um governo que quebrou as duas cair duas vezes pelo mesmo pecado, e a rua nao distingue
+       qual promessa foi quebrada — ela distingue se foi.
+       ⚠ E A PLATAFORMA E JULGADA COM O ESTADO QUE O JOGADOR VIU, e nao com o que este mes vai
+       produzir: a rua reage ao que ja esta na mesa dela. */
+    betrayal: Math.max(
+      promisedCost > 0 ? 1 - paidCost / promisedCost : 0,
+      breachOf(state, catalog),
+    ),
     tenure: state.month,
     segments: catalog.segments,
     parameters: catalog.opinion,
@@ -1758,6 +1769,10 @@ export function playMonth(state, orders = {}, options = {}) {
       ),
       capacity: { index: capacity.index, history: capacity.history },
       levels: applied,
+      /* ⚠ A POSSE ACONTECE UMA VEZ: enquanto os tres eixos estao vazios, o que o jogador
+         marcou na carta entra; depois disso a plataforma e imutavel, e reescreve-la no mes 30
+         daria um presidente sem promessa nenhuma — so um espelho do que ele ja fez. */
+      platform: spoken(state.platform) ? state.platform : chosenOf(orders.platform, catalog),
       norms: appliedNorms,
       /* ⚠ O TEXTO DE HOJE ENTRA NA GAVETA DEPOIS de os antigos andarem, e a ordem e a regra:
          protocolado antes, ele andaria um estagio no proprio mes de assinatura, e tres meses
@@ -2146,6 +2161,8 @@ function weightedAbandon(state, catalog) {
  * @property {{ from: number, to: number }} debt - a divida sobre o PIB
  * @property {TermArea[]} areas - as oito, da posse ao fim
  * @property {TermLaw[]} laws - o que ficou escrito
+ * @property {Array<import("./platform.mjs").Verdict>} pledges - a plataforma da posse, julgada.
+ * Vazia quando ele nao prometeu nada
  * @property {string[]} abandoned - os grupos que fervearam e nao voltaram
  */
 
@@ -2196,6 +2213,14 @@ export function termOf(state, catalog = CATALOG) {
         guard: norm.guard,
         month: norm.enactedAt,
       })),
+    /* ⚠ O QUE FOI PROMETIDO NA POSSE, E O FECHO E QUEM ENCERRA O JULGAMENTO: uma promessa
+       `null` e uma que ainda tinha mandato para ser cumprida, e quando ele acaba ela deixa de
+       estar em aberto — ela nao foi cumprida. Deixar a tela decidir isso poria a regra do
+       julgamento na view. */
+    pledges: platformOf(state, catalog).map(verdict => ({
+      ...verdict,
+      kept: (removed || served) && verdict.kept === null ? false : verdict.kept,
+    })),
     /* QUEM FERVEU E NAO VOLTOU. */
     abandoned: catalog.lobbies
       .filter(lobby => (state.pressure[lobby.id] ?? 0) >= catalog.pressure.boil)

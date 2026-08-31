@@ -1,7 +1,7 @@
 /* O FECHO DO MANDATO — a última tela, e ela é a mesma nas duas saídas. */
 
 import { escapeHtml } from "../shared/html.mjs";
-import { num, percent, signed } from "../shared/format.mjs";
+import { money, num, percent, signed } from "../shared/format.mjs";
 import { headHtml } from "../shared/head.mjs";
 import { DEFAULT_TREATMENT, UI, addressed } from "../strings.mjs";
 import { monthLabel } from "../../state/state.mjs";
@@ -32,6 +32,59 @@ function rowHtml({ label, note, from, to, delta, rising = true }) {
     `<span class="closing__delta" data-numeric>${escapeHtml(signed(delta))}</span>` +
     `</div>`
   );
+}
+
+/**
+ * O QUE FOI PROMETIDO, E O QUE FOI ENTREGUE.
+ *
+ * ⚠ O VEREDITO VEM PRONTO DE `termOf`: quem decide que uma promessa em aberto virou quebrada
+ * quando o mandato acabou e a camada de aplicacao. Uma tela que resolvesse `null` sozinha
+ * estaria julgando.
+ *
+ * @param {Term} term
+ * @param {"senhor" | "senhora"} treatment
+ * @returns {string}
+ */
+function pledgesHtml(term, treatment) {
+  const copy = UI.closing;
+  if (term.pledges.length === 0) {
+    return (
+      `<div class="empty empty--quiet"><p class="empty__note">` +
+      `${escapeHtml(addressed(copy.noPledges, treatment))}</p></div>`
+    );
+  }
+
+  const rows = term.pledges
+    .map(pledge => {
+      /* O NUMERO SO APARECE ONDE ELE EXISTE: a promessa de reforma e um fato, e nao uma
+         medicao — "aprovar uma lei" nao tem de-onde-para-onde.
+         ⚠ E A GRANDEZA VEM COM ELE: a captura pegou `1 → 1` numa divida que foi de 78% a 90%,
+         porque a fracao estava sendo impressa como ponto de indice. */
+      const write = (/** @type {number} */ value) =>
+        pledge.unit === "ratio"
+          ? percent(value)
+          : pledge.unit === "money"
+            ? money(value)
+            : num(value, 0);
+
+      const measured =
+        pledge.from === undefined || pledge.to === undefined
+          ? ""
+          : `<span class="pledge__read" data-numeric>${escapeHtml(write(pledge.from))} → ` +
+            `${escapeHtml(write(pledge.to))}</span>`;
+
+      return (
+        `<div class="pledge" data-kept="${pledge.kept === true}">` +
+        `<span class="pledge__label">${escapeHtml(pledge.label)}` +
+        `<small>${escapeHtml(pledge.judged)}</small></span>` +
+        measured +
+        `<b class="pledge__verdict">${escapeHtml(pledge.kept === true ? copy.kept : copy.broken)}</b>` +
+        `</div>`
+      );
+    })
+    .join("");
+
+  return `<div class="closing__pledges">${rows}</div>`;
 }
 
 /**
@@ -121,6 +174,10 @@ export function closingHtml(
     `</div>` +
     /* ⚠ A LEGENDA E A MESMA DE TODA TELA, e o fecho tinha a propria ate ela ser a DECIMA
        forma de legenda do jogo. */
+    /* ⚠ A PROMESSA VEM ANTES DO QUE FICOU ESCRITO, e a ordem e a do julgamento: primeiro o
+       que ele disse que ia fazer, depois o que ele fez. */
+    `<h3 class="block__legend">${escapeHtml(addressed(copy.promised, treatment))}</h3>` +
+    pledgesHtml(term, treatment) +
     `<h3 class="block__legend">${escapeHtml(copy.written)} ` +
     `<span class="closing__count">${term.laws.length}</span></h3>` +
     laws +

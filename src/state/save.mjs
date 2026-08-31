@@ -54,6 +54,7 @@ export function deserialize(text) {
      valido e portanto indistinguivel de um save quebrado. */
   const required = [
     "seed",
+    "platform",
     "month",
     "mood",
     "loyalty",
@@ -86,6 +87,7 @@ export function deserialize(text) {
   const asArr = (/** @type {unknown} */ v) => Array.isArray(v);
 
   const shape = [
+    ["platform", asObj, "objeto"],
     ["fiscal", asObj, "objeto"],
     ["macro", asObj, "objeto"],
     ["capacity", asObj, "objeto"],

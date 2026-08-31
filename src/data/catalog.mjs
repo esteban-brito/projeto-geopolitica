@@ -17,6 +17,7 @@ import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
 import { MACRO, MACRO_SCHEMA } from "./macro.mjs";
 import { OPINION, OPINION_SCHEMA, SEGMENTS, SEGMENT_SCHEMA } from "./opinion.mjs";
 import { PARTIES, PARTY_SCHEMA } from "./parties.mjs";
+import { PLEDGES, PLEDGE_SCHEMA } from "./platform.mjs";
 import { GUARDS, PROGRAMS, PROGRAM_SCHEMA } from "./programs.mjs";
 import { REGIME, REGIME_SCHEMA } from "./regime.mjs";
 import { RULES, RULE_SCHEMA } from "./rules.mjs";
@@ -28,6 +29,7 @@ export const CATALOG = {
   areas: AREAS,
   bills: BILLS,
   calendar: CALENDAR,
+  pledges: PLEDGES,
   programs: PROGRAMS,
   rules: RULES,
   fiscal: FISCAL,
@@ -57,6 +59,7 @@ export function catalogViolations() {
     ...collectionViolations(AREA_SCHEMA, AREAS, "areas"),
     ...collectionViolations(BILL_SCHEMA, BILLS, "bills"),
     ...collectionViolations(LANDMARK_SCHEMA, CALENDAR, "calendar"),
+    ...collectionViolations(PLEDGE_SCHEMA, PLEDGES, "pledges"),
     ...collectionViolations(PROGRAM_SCHEMA, PROGRAMS, "programs"),
     ...collectionViolations(RULE_SCHEMA, RULES, "rules"),
     ...violations(FISCAL_SCHEMA, FISCAL, "fiscal"),

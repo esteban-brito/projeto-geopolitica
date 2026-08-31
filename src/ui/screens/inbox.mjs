@@ -253,6 +253,12 @@ export function describeMonth({ report, adviser }) {
  * `quorum` do cartao do MESMO mes. Ligar os dois custa um parametro; grava-lo na carta seria
  * uma segunda verdade sobre a mesma votacao
  * @param {ReadonlyArray<{ id: string, label: string }>} [input.parties]
+ * @param {{ priority: ReadonlyArray<{ id: string, label: string }>,
+ * fiscal: ReadonlyArray<{ id: string, label: string }>,
+ * reform: ReadonlyArray<{ id: string, label: string }> }} [input.pledges] o que a posse
+ * oferece, perguntado a fachada
+ * @param {{ priority: string | null, fiscal: string | null, reform: string | null }}
+ * [input.platform] o que ja esta marcado — do estado depois da posse, das ordens antes dela
  * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado as bancadas, para o
  * @param {ReadonlyArray<{ id: string, label: string }>} [input.segments] as classes, para o
  * @param {{ base: number, majority: number, seats: number }} [input.chamber] as cadeiras que
@@ -277,6 +283,11 @@ export function describeMail({
   /* ⚠ COMO O JOGADOR QUER SER TRATADO, e ele escolhe junto com o nome. Sem isto a carta
      dizia "o senhor" em metade das partidas para uma presidenta. Ver `addressed`. */
   treatment = DEFAULT_TREATMENT,
+  /* ⚠ AS OPCOES DA POSSE VEM PRONTAS DA FACHADA, e a lista de prioridade e DERIVADA la: as
+     tres areas que o pais entrega piores. Monta-la aqui daria uma segunda verdade sobre onde
+     o pais esta pior, e ela mentiria no dia em que uma abertura mudasse. */
+  pledges = { priority: [], fiscal: [], reform: [] },
+  platform = { priority: null, fiscal: null, reform: null },
 }) {
   const by = (/** @type {string} */ office) =>
     people.find(person => person.office === office) ?? null;
@@ -320,7 +331,16 @@ export function describeMail({
             body:
               `<div class="letter__lines">` +
               `<span>${escapeHtml(addressed(UI.inbox.inheritedLead, treatment))}</span>` +
-              `</div>`,
+              `<span>${escapeHtml(addressed(UI.inbox.pledgeLead, treatment))}</span>` +
+              `</div>` +
+              pledgeHtml(
+                UI.inbox.pledgePriority,
+                "priority",
+                pledges.priority,
+                platform.priority ?? "",
+              ) +
+              pledgeHtml(UI.inbox.pledgeFiscal, "fiscal", pledges.fiscal, platform.fiscal ?? "") +
+              pledgeHtml(UI.inbox.pledgeReform, "reform", pledges.reform, platform.reform ?? ""),
             /* ⚠ `money`, E NAO `seats`. */
             /* ⚠ O ANEXO MOSTRA SO O QUE O COFRE NAO MOSTRA, e a sobra do mes SAIU daqui: ela
                era a MESMA constante do bloco do dinheiro — `TERMOS.roomLine` nos dois —, e o
@@ -612,6 +632,40 @@ function choicesHtml(id, chosen, texts = UI.inbox.amendmentChoices) {
     `<div class="letter__choices">` +
     button("accept", texts.accept, texts.acceptCost) +
     button("block", texts.block, texts.blockCost) +
+    `</div>`
+  );
+}
+
+/**
+ * AS OPCOES DE UM EIXO DA POSSE — a mesma peca das duas saidas, com a lista aberta.
+ *
+ * ⚠ ELA REUSA `.letter__choice`: uma segunda forma de perguntar na mesma tela e como os cinco
+ * formatos de anexo nasceram.
+ * ⚠ E O GESTO E OUTRO — `data-pledge` e nao `data-letter`: emprestar o atributo faria a
+ * maquina da emenda receber um id de area.
+ *
+ * @param {string} legend
+ * @param {string} axis
+ * @param {ReadonlyArray<{ id: string, label: string }>} options
+ * @param {string} chosen o que ja esta marcado neste mes
+ * @returns {string}
+ */
+function pledgeHtml(legend, axis, options, chosen) {
+  const buttons = options
+    .map(
+      option =>
+        `<button class="letter__choice" type="button" ` +
+        `aria-pressed="${chosen === option.id}" ` +
+        `data-pledge="${escapeHtml(axis)}" data-choice="${escapeHtml(option.id)}">` +
+        `<b>${escapeHtml(option.label)}</b>` +
+        `</button>`,
+    )
+    .join("");
+
+  return (
+    `<div class="letter__pledge">` +
+    `<span class="letter__axis">${escapeHtml(legend)}</span>` +
+    `<div class="letter__choices">${buttons}</div>` +
     `</div>`
   );
 }

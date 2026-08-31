@@ -510,6 +510,15 @@ export const UI = {
        nomeia e o valor responde, entao a costura em volta do numero deixou de existir. */
     inheritedMandatory: "Obrigatória do ano",
     inheritedLead: "O orçamento em vigor é o do seu antecessor até {v} escrevê-lo.",
+    /* ── O DISCURSO DE POSSE — a primeira pergunta do mandato ────────────────
+       ⚠ ELA RESOLVE O MÊS 1 TER ZERO DECISÕES: o botão desta carta era `ver o mês`, que é
+       navegação. Agora ela pergunta o que este governo veio fazer.
+       ⚠ E NÃO RESPONDER É UMA RESPOSTA, e não um muro: quem avança calado governa sem
+       plataforma — e termina o mandato sem nada contra o que ser medido. */
+    pledgeLead: "O discurso está escrito. Falta {v} dizer a que veio.",
+    pledgePriority: "A prioridade",
+    pledgeFiscal: "A meta fiscal",
+    pledgeReform: "A reforma",
   },
   /* A BARRA SUPERIOR — os sinais vitais, e eles nunca somem da tela. */
   vitals: {
@@ -834,6 +843,16 @@ export const UI = {
     approvalNote: "ótimo e bom",
     debt: TERMOS.grossDebt,
     debtNote: "sobre o PIB",
+    /* ── O QUE FOI PROMETIDO, E O QUE FOI ENTREGUE ────────────────────────────
+       ⚠ ELE É O CRITÉRIO QUE O FECHO NUNCA TEVE: até aqui ele mostrava de-onde-para-onde, e
+       de-onde-para-onde sem promessa não é julgamento — é extrato. */
+    promised: "O que {v} prometeu",
+    kept: "cumprida",
+    broken: "não cumprida",
+    /* Não prometer nada é uma escolha, e o preço dela aparece aqui: um mandato sem nada
+       contra o que ser medido. */
+    noPledges:
+      "Nenhum compromisso foi assumido na posse. O mandato terminou sem nada contra o que ser medido.",
     written: "O que ficou escrito",
     /* Um mandato sem lei nenhuma é um fato sobre o governo, e a frase diz isso — não deixa um
        espaço vazio que parece defeito de tela. */

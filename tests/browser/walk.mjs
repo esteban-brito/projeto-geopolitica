@@ -386,6 +386,34 @@ try {
   );
   await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
 
+  /* 1a — A POSSE PERGUNTA, e ela e a primeira decisao do mandato. ⚠ A ASSERCAO ACIMA CONTINUA
+     VALENDO e nao foi afrouxada: os tres eixos sao BOTOES, e nao `input` nem `select` — a tela
+     inicial continua sem controle, e passou a ter pergunta. */
+  expect(
+    (await page.locator(".letter__pledge").count()) === 3,
+    "[posse] a carta de posse nao trouxe os tres eixos do discurso",
+  );
+  const opcoes = await page.locator(".letter__pledge .letter__choice").count();
+  expect(opcoes >= 7, `[posse] o discurso ofereceu ${opcoes} compromissos`);
+
+  /* ⚠ E MARCAR TEM DE MARCAR: o gesto escreve no rascunho do mes, e um botao que nao muda de
+     estado e uma decisao que o jogador acha que tomou. */
+  await page.locator('[data-pledge="priority"]').first().click();
+  await page.waitForTimeout(200);
+  expect(
+    (await page.locator('.letter__choice[aria-pressed="true"]').count()) === 1,
+    "[posse] marcar um compromisso nao marcou nada",
+  );
+  /* E clicar de novo desmarca — nao prometer e uma escolha, e ela tem caminho de volta. */
+  await page.locator('[data-pledge="priority"]').first().click();
+  await page.waitForTimeout(200);
+  expect(
+    (await page.locator('.letter__choice[aria-pressed="true"]').count()) === 0,
+    "[posse] o compromisso marcado nao desmarcou",
+  );
+  await checkClipped("posse");
+  await checkEllipsized("posse");
+
   /* 1b — E O RAIL LEVA AO LUGAR DE DECIDIR. ⚠ ERA O BOTAO DO CARTAO ate 22/08/2026, e ele
      saiu com a reformulacao da coluna: duas fichas tinham porta e duas nao, e o rail ja leva
      as duas telas que aqueles botoes abriam. */

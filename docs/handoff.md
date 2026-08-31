@@ -18,9 +18,13 @@
 
 ## ▶ COMECE POR AQUI
 
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas · 142
-arquivos · 288 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`, **16
-commits à frente de `main`**.
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas · 145
+arquivos · 299 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`, **17
+commits à frente de `main`** mais o trabalho desta sessão na árvore.
+
+⚠ **O SAVE SUBIU PARA A VERSÃO 20, e ele recusa versão diferente em vez de converter:** toda
+partida salva antes desta sessão **não abre mais**. O campo novo é `platform`, e o custo estava
+previsto na Restrição 3 do ciclo 13 — C5 é o único item do plano inteiro que o cobra.
 
 ### O que está em execução
 
@@ -72,10 +76,44 @@ piso) e a MALHA consome `funded` (o gasto cheio). Na Previdência a linha anunci
 onde o motor põe **+1,22** — o mesmo defeito que a projeção pagou uma vez, na mesma tela. A
 checagem do passeio agora o cobra, e ela **nasceu vermelha**.
 
-### O próximo trabalho — o passo 5, e ele não abre motor
+### ✔ O PASSO 5 ENTROU — a posse vira pergunta, 30/08/2026
 
-**C5 e C6:** a posse vira pergunta, e o fecho ganha critério. Ver a ordem no rodapé do
-[ciclo 13](cycles/13-o-glorioso.md).
+**O jogo ganhou critério.** O presidente era gerado com nome, tratamento e partido e **nenhuma
+promessa**; agora a carta da posse pergunta o que ele veio fazer, em três eixos:
+
+| eixo              | as opções                                                          | como é julgado                                 |
+| ----------------- | ------------------------------------------------------------------ | ---------------------------------------------- |
+| **a prioridade**  | as **três áreas que o país entrega piores**, derivadas do catálogo | o índice de hoje contra o `initial` da posse   |
+| **a meta fiscal** | a dívida menor que a herdada · o último ano no azul                | `debt/gdp` contra `initialDebtRatio` · a série |
+| **a reforma**     | aprovar uma lei · mudar a Constituição · **não** mexer nela        | `norms` com `enactedAt > 0`, pela natureza     |
+
+⭐ **A MÁQUINA DE PUNIÇÃO JÁ EXISTIA:** `betrayal`, na SONDA, derruba humor de todo mundo e só
+olhava o orçamento. Agora é **o maior dos dois** — e não a soma: empilhar faria um governo que
+quebrou as duas cair duas vezes pelo mesmo pecado.
+
+⚠ **OS DOIS EIXOS SE COBRAM DIFERENTE, e a diferença é o mundo:** a promessa de índice e a
+fiscal são ESTADO (ou o número está acima hoje, ou não está) e cobram desde o mês 1; a de
+reforma é EVENTO, e só pode ser dada por quebrada quando o mandato acaba. Quem fecha esse
+julgamento é `termOf`, e não a tela.
+
+⛔ **E NÃO RESPONDER NÃO É MURO.** O plano dizia que a posse seria "a única carta que o jogador
+TEM de responder"; a doutrina diz que nada tem muro. Quem avança calado governa sem plataforma,
+e o preço aparece no fecho: um mandato sem nada contra o que ser medido. **Divergência do plano,
+resolvida pela doutrina.**
+
+⚠ **A CAPTURA PEGOU DOIS DEFEITOS que o tipo não vê:** o fecho imprimia `1 → 1` para uma dívida
+que foi de **78% a 90%** (o veredito não dizia a grandeza, e a fração saía arredondada como
+ponto de índice), e a grade de duas colunas deixava a terceira opção órfã com a frase quebrada
+em duas linhas. As duas estão consertadas, e a primeira ganhou prova.
+
+**Medido num mandato inteiro** (semente padrão, sem verba nenhuma): o governo cai no mês 45, e
+as três promessas saem `não cumprida` — ordem 38 → 24, dívida 78% → 90%, nenhuma lei escrita.
+
+### O próximo trabalho — o passo 6, e ele mexe em calibragem fiscal
+
+**A1 · A2 · A3:** 61% do orçamento vira decisão, e o A1 já tem o C7 de que precisava. ⚠ **É a
+família do achado do primário** — a Restrição 2 cobra `simulate` antes e depois com as duas
+séries no handoff, e a verificação explícita de que o primário ainda pode ser negativo.
 
 ### ✔ O C7 ENTROU — o calendário, 30/08/2026
 

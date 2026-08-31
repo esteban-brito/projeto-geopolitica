@@ -15,6 +15,12 @@
 > | **2** | B1 a B5                   | ✔ os cinco — 30/08/2026  |
 > | **3** | C8 · C9 · C10 · C11 · C13 | ✔ os cinco — 30/08/2026  |
 > | **4** | 0.3 · B10 · C7 · D4       | ✔ os quatro — 30/08/2026 |
+> | **5** | C5 · C6                   | ✔ os dois — 30/08/2026   |
+>
+> **25 de 49, e o passo 5 fechou.** O jogo ganhou **critério**: o presidente assume três
+> compromissos na posse — a prioridade, a meta fiscal e a reforma —, a rua os cobra por
+> `betrayal` (que já existia e só olhava o orçamento) e o fecho passou a mostrar **prometido ×
+> entregue**. ⚠ **Custou o bump para a versão 20**, o primeiro campo novo no estado desde a 18.
 >
 > **23 de 49, e o passo 4 fechou.** O **D4 entrou em 30/08/2026** e abriu o DELTA: o grafo é
 > lido do catálogo (`yield`, `decay`, `feeds`, `force`, `lag`), a força de hoje vem da MALHA, e
@@ -155,8 +161,8 @@ está morto) · **abre motor** (constrói mecânica nova).
 | **C2**  | contradição | o cofre é dito **duas vezes**            | não        | pequeno |
 | **C3**  | contradição | **4º canal morto** — o peso só no leitor | liga canal | pequeno |
 | **C4**  | agência     | a superfície existe e está vazia         | —          | —       |
-| **C5**  | agência     | a **plataforma de posse**                | liga canal | médio   |
-| **C6**  | agência     | a carta de posse passa a **perguntar**   | não        | pequeno |
+| **C5**  | ✔ agência   | a **plataforma de posse**                | ✔ 30/08    | médio   |
+| **C6**  | ✔ agência   | a carta de posse passa a **perguntar**   | ✔ 30/08    | pequeno |
 | **C7**  | tempo       | o **calendário** do mandato              | abre motor | médio   |
 | **C8**  | tempo       | quantos meses restam                     | não        | pequeno |
 | **C9**  | tempo       | a rua ganha **seta**                     | não        | pequeno |
@@ -1321,18 +1327,18 @@ Seis sessões de desenho caíram na metade sem portão.
 
 ### Onde o mínimo NÃO basta
 
-| item(ns)         | por quê                                                            | o que nasce junto                                                                      |
-| ---------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| **C12**          | o passeio é cego no eixo Y e roda numa janela só                   | ⭐ `checkClipped` ganha `overflowY`; o passeio ganha **uma segunda janela** (1440×900) |
-| **C6**           | **quebra asserção existente** — `#main input, #main select === 0`  | a asserção vira "só a carta da posse pergunta", com a razão em prosa                   |
-| **C3**           | o valor sai do `aria-label`, e ele está lá por acessibilidade      | o `aria-label` **continua**. Prova: os dois textos existem, não um no lugar do outro   |
-| **C10**          | número novo perto da tela = risco de a tela refazer conta do motor | a divisão sai da camada de aplicação, não do `.mjs` de tela. `boundaries` cobre        |
-| **C7**           | primeiro item que cria **data** no jogo                            | prova de que o calendário é função pura de `month` — sem relógio, sem `Date.now`       |
-| **C5**           | primeiro campo novo no estado desde a v18                          | suíte `save.mjs` (ida e volta idêntica) + `schema.mjs` + ver Restrição 3               |
-| **0.1**          | muda classificação de catálogo, e catálogo move a série            | `npm run simulate` antes e depois, **com as duas séries comparadas no handoff**        |
-| **A1 · A2 · A3** | mexem em calibragem fiscal — a família do achado do primário       | idem, e a verificação explícita de que o primário ainda pode ser negativo              |
-| **B1–B5**        | geometria num bloco de 108px que já estourou antes                 | `checkOverflow` + `checkClipped` + captura aberta, sem exceção                         |
-| **0.3**          | 5,3ms por repintura, e o arrasto repinta a cada movimento          | medição de quadro. **Verde não basta — o número tem de sair**                          |
+| item(ns)         | por quê                                                                 | o que nasce junto                                                                      |
+| ---------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| **C12**          | o passeio é cego no eixo Y e roda numa janela só                        | ⭐ `checkClipped` ganha `overflowY`; o passeio ganha **uma segunda janela** (1440×900) |
+| **C6**           | ✔ **e a asserção NÃO precisou ser afrouxada** — os eixos são `<button>` | o passeio ganhou três checagens próprias: os três eixos, marcar e desmarcar            |
+| **C3**           | o valor sai do `aria-label`, e ele está lá por acessibilidade           | o `aria-label` **continua**. Prova: os dois textos existem, não um no lugar do outro   |
+| **C10**          | número novo perto da tela = risco de a tela refazer conta do motor      | a divisão sai da camada de aplicação, não do `.mjs` de tela. `boundaries` cobre        |
+| **C7**           | primeiro item que cria **data** no jogo                                 | prova de que o calendário é função pura de `month` — sem relógio, sem `Date.now`       |
+| **C5**           | primeiro campo novo no estado desde a v18                               | suíte `save.mjs` (ida e volta idêntica) + `schema.mjs` + ver Restrição 3               |
+| **0.1**          | muda classificação de catálogo, e catálogo move a série                 | `npm run simulate` antes e depois, **com as duas séries comparadas no handoff**        |
+| **A1 · A2 · A3** | mexem em calibragem fiscal — a família do achado do primário            | idem, e a verificação explícita de que o primário ainda pode ser negativo              |
+| **B1–B5**        | geometria num bloco de 108px que já estourou antes                      | `checkOverflow` + `checkClipped` + captura aberta, sem exceção                         |
+| **0.3**          | 5,3ms por repintura, e o arrasto repinta a cada movimento               | medição de quadro. **Verde não basta — o número tem de sair**                          |
 
 ### O que NÃO é critério de aceitação
 
@@ -1399,7 +1405,7 @@ está concentrado.
 | **2**  | **Grupo 1 da Parte B** (B1–B5) | cinco achados num bloco de 108px — e o passo 0 é quem os protege    |
 | **3**  | **C8 · C9 · C10 · C11 · C13**  | a tela que abre o jogo para de mentir — e a coluna que levou 6      |
 | **4**  | **0.3 · B10 · C7 · D4**        | as quatro lentes: projeção, linha do tempo, calendário e a corrente |
-| **5**  | **C5 · C6**                    | a posse vira pergunta, e o fecho ganha critério                     |
+| **5**  | ✔ **C5 · C6**                  | a posse vira pergunta, e o fecho ganha critério                     |
 | **6**  | **A1 · A2 · A3**               | 61% do orçamento vira decisão — e A1 precisa de C7                  |
 | **7**  | **A4 · A5**                    | os instrumentos baratos, e A4 já tem máquina                        |
 | **8**  | **Grupos 2–5 da Parte B**      | a tela de decisão fica legível antes de ganhar poder novo           |

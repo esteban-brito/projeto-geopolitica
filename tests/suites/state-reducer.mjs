@@ -29,6 +29,7 @@ function resolutionOf(state) {
   return {
     type: "monthResolved",
     loyalty: state.loyalty,
+    platform: state.platform,
     fiscal: state.fiscal,
     capacity: state.capacity,
     macro: state.macro,
@@ -171,6 +172,13 @@ const anyState = fc.record({
     }),
     { nil: null },
   ),
+  /* ⚠ A PLATAFORMA ENTROU NA VERSAO 20: os tres compromissos da posse, e o reducer apenas os
+     carrega. Os quatro estados de cada eixo entram — inclusive o `null` de quem nao prometeu. */
+  platform: fc.record({
+    priority: fc.option(fc.constantFrom("security", "education", "industry"), { nil: null }),
+    fiscal: fc.option(fc.constantFrom("debt", "primary"), { nil: null }),
+    reform: fc.option(fc.constantFrom("law", "amendment", "keep"), { nil: null }),
+  }),
   /* 48 turnos por mandato — a decisao fechada. */
   month: fc.integer({ min: 0, max: 47 }),
   mood: anyMood,
