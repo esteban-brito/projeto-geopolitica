@@ -47,6 +47,9 @@ export function pledgesOf(catalog = CATALOG) {
       id: area.id,
       axis: "priority",
       label: `entregar ${area.index} acima do que recebi`,
+      /* O NOME DA AREA E O ROTULO CURTO, e ele ja tem glifo no rail: a carta mostra QUAL, e o
+         eixo acima dela ja disse que e a prioridade. */
+      short: area.short ?? area.label,
       judged: `o índice de ${area.label}, contra os ${area.initial} da posse`,
     }));
 

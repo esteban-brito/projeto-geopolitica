@@ -387,6 +387,19 @@
     display: grid;
     align-content: stretch;
     min-height: 0;
+  }
+
+  /* ⚠ A CARTA ABERTA ROLA POR DENTRO, e so na janela em que a tela TRAVA a altura: a bandeja
+     esquerda ja rolava (`.tray__list`) e a carta nao tinha contencao nenhuma — ela crescia e
+     empurrava a pagina para fora da janela travada. Medido com o discurso de posse, a mais
+     alta do jogo: 875px de carta numa faixa de 831, e a pagina saindo em 1011 contra 980.
+     ⚠ E O LIMIAR E O DA CASCA: abaixo de 940px a altura nao e travada, a pagina rola por
+     decisao declarada, e a carta nao tem teto para rolar contra. */
+  @media (min-height: 940px) {
+    .tray__open .letter {
+      min-height: 0;
+      overflow-y: auto;
+    }
   } /* A bandeja fecha na altura da coluna vizinha e sobra folga no mês tranquilo — e a resposta
      certa não é esticar a carta até o rodapé (papel não estica; ver `.letter`), é dar a ela a
      MEDIDA de um documento em vez da de um aviso. */ /* `glass-support` foi tentado nele em 21/08 e `npm run screen` cobrou 17,9 fps: o desfoque
@@ -396,7 +409,10 @@
      hierarquia: o olho não sabe onde uma parte acaba e a outra começa. A grade da folha separa
      PARTE de parte; o vão de dentro de cada parte continua em 12px. */
   .tray__open .letter {
-    gap: var(--space-6);
+    /* ⚠ O VAO ENTRE AS PARTES CAIU DE 24 PARA 16px, por ordem dele: "os espacamentos entre as
+       linhas de texto da caixa de entrada, tem muito espaco, vaos muito grandes". Medido antes:
+       head→assunto→corpo→anexos a 24px cada e 36 antes do rodape, numa folha que ja rolava. */
+    gap: var(--space-4);
     padding: var(--space-6);
     /* ⚠ O CONTEUDO ENCOSTA NO TOPO, E O PAPEL CONTINUA EMBAIXO — escolha dele, contra a
        versao anterior: a faixa de anexos era `1fr` e o rodape ficava pregado no pe, entao
@@ -434,9 +450,11 @@
      degrau entre "Presidente," e o primeiro paragrafo maior que o degrau entre paragrafos —
      sem nada que justificasse a diferenca. */
   .tray__open .letter__lines {
-    gap: var(--space-3);
+    gap: var(--space-2);
     font-size: var(--text-verdict);
-    line-height: 1.65;
+    /* 1,65 dava 25,08px de entrelinha para um corpo de 15,2 — leitura de ensaio, e a carta e
+       um oficio de tres paragrafos. */
+    line-height: 1.5;
   }
 
   .tray__open .letter__subject {
@@ -633,6 +651,24 @@
      governo" com "maioria simples" na mesma coluna. */
   .annex__who::first-letter {
     text-transform: uppercase;
+  }
+
+  /* ⚠ NA CARTA O NOME QUEBRA, E NA COLUNA ELE RETICENCIA, e a diferenca e a largura: a coluna
+     do Gabinete da 1fr de 208px ao nome e a folha da 152, porque o anexo mora dentro de um
+     documento de 394. Medido abrindo TODA carta de 24 meses: 8 linhas saiam cortadas —
+     "Partido dos Trabalhadores Unidos" pedia 218px, "Movimento Democratico Nacional" 217 e
+     "Peso na ruptura economica" 177. Reticencia em nome proprio esconde QUEM, e a carta e o
+     lugar em que o jogador le o nome pela primeira vez.
+     ⚠ E A ALTURA DEIXOU DE SER O IMPEDIMENTO: a carta rola por dentro desde este mesmo
+     conserto, entao uma segunda linha custa rolagem e nao corte. */
+  .letter__annexes .annex__who,
+  .letter__annexes .annex__value {
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .letter__annexes .annex__line {
+    align-items: start;
   }
 
   /* ⚠ O TIPO DENTRO DOS BLOCOS SUBIU, por ordem dele. Medido antes: a carta lia em 15,2px e
@@ -837,11 +873,25 @@
     margin-top: var(--space-3);
   }
 
-  /* ⚠ UMA COLUNA, E A CAPTURA DECIDIU: com duas, os eixos de TRES opcoes deixavam a terceira
-     sozinha embaixo, e a frase quebrava em duas linhas dentro do botao. Sao frases — "entregar
-     a divida menor do que a recebi" —, e frase se le empilhada. */
+  /* ⚠ TRES COLUNAS, E O ROTULO CURTO E QUEM PERMITE: com a frase inteira dentro do botao a
+     grade tinha de ser de uma coluna — 8 linhas de 36px — e a carta passava dos 875px numa
+     folha de 831. Com o NOME do compromisso e o glifo da area, os tres eixos cabem em tres
+     linhas. */
   .letter__pledge .letter__choices {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .letter__pledge .letter__choice {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .pledge__icon {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    opacity: 0.72;
   }
 
   .letter__axis {

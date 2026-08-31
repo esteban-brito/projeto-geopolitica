@@ -512,10 +512,11 @@ export const UI = {
     inheritedLead: "O orçamento em vigor é o do seu antecessor até {v} escrevê-lo.",
     /* ── O DISCURSO DE POSSE — a primeira pergunta do mandato ────────────────
        ⚠ ELA RESOLVE O MÊS 1 TER ZERO DECISÕES: o botão desta carta era `ver o mês`, que é
-       navegação. Agora ela pergunta o que este governo veio fazer.
+       navegação. Agora ela pergunta o que este governo veio fazer — e pergunta com o NOME do
+       compromisso, não com a frase inteira: "entregar ordem acima do que recebi" repete o que
+       o eixo já diz, e a carta ficou 60px mais alta do que a folha comporta por causa disso.
        ⚠ E NÃO RESPONDER É UMA RESPOSTA, e não um muro: quem avança calado governa sem
        plataforma — e termina o mandato sem nada contra o que ser medido. */
-    pledgeLead: "O discurso está escrito. Falta {v} dizer a que veio.",
     pledgePriority: "A prioridade",
     pledgeFiscal: "A meta fiscal",
     pledgeReform: "A reforma",

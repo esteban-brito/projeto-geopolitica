@@ -109,6 +109,45 @@ em duas linhas. As duas estão consertadas, e a primeira ganhou prova.
 **Medido num mandato inteiro** (semente padrão, sem verba nenhuma): o governo cai no mês 45, e
 as três promessas saem `não cumprida` — ordem 38 → 24, dívida 78% → 90%, nenhuma lei escrita.
 
+### ✔ CINCO DEFEITOS DE TELA, ACHADOS POR ELE JOGANDO — 31/08/2026
+
+Palavras dele: _"o gabinete e a caixa de entrada estão cheios de bugs"_, _"os espaçamentos
+entre as linhas de texto da caixa de entrada, tem muito espaço, vãos muito grandes"_ e _"a
+mensagem o país que o senhor recebe é grande demais, ela é cortada no final"_.
+
+| o quê                                          | medido                                     | agora                          |
+| ---------------------------------------------- | ------------------------------------------ | ------------------------------ |
+| o Gabinete **rolava** a 1440×980               | página 1011 contra janela 980              | a carta aberta rola POR DENTRO |
+| a carta da posse era cortada                   | 875px de carta numa folha de 831           | **796px**, e ela cabe          |
+| vãos da carta                                  | 24px entre partes · entrelinha 1,65        | 16px · 1,5 · parágrafos a 8px  |
+| texto cortado com reticência dentro das cartas | **13 linhas** em 24 meses de partida       | o nome quebra em duas linhas   |
+| os glifos da posse saíam com 96px              | classe `icon` sem tamanho em folha nenhuma | `pledge__icon`, 16px           |
+
+⚠ **A CARTA ABERTA NUNCA TEVE CONTENÇÃO, e só o discurso revelou:** a bandeja esquerda já
+rolava por dentro desde o ciclo 14, e a carta crescia empurrando a página para fora da janela
+travada. **Qualquer carta longa furava a tela** — a da posse só foi a primeira a ser longa.
+
+⚠ **E O PASSEIO ERA CEGO PARA A PÁGINA ROLAR — quinta ocorrência da mesma família.** Ele media
+recorte dentro dos elementos e transbordo lateral; um Gabinete 31px mais alto que a janela
+passava verde. `checkNoPageScroll` nasceu vermelha e acusa `[gabinete] a pagina rola 31px`.
+
+⚠ **O QUE A CHECAGEM AINDA NÃO PEGA:** os 13 cortes estavam em cartas que o passeio não abre
+(ruptura de bancada, base em queda) — ele agora abre TODAS as cartas do mês, mas o percurso vai
+só até o mês 8. **A auditoria completa mora em `tmp/auditar-caixa.mjs`**, que abre toda carta de
+24 meses. Rode-a ao mexer na caixa.
+
+⛔ **ABAIXO DE 940px DE JANELA O GABINETE CONTINUA ROLANDO, e isso é decisão declarada**
+(`40-shell.css`): travar a altura ali esconderia um cartão inteiro atrás de uma dobra muda.
+Medido a 1440×900: **rola 314px no mês 9**. ⚠ **A decisão é de 24/08 e pode estar vencida** —
+desde então a coluna, a bandeja e agora a carta rolam por dentro. **Espera ele.**
+
+### ▶ A DIREÇÃO QUE ELE DEU — menos texto, mais visual
+
+Palavras dele: _"tudo parece escrito por IA, quero menos texto, mais minimalismo, mais CSS,
+mais imagens, mais visual e menos texto... gráficos, mapas, isso tudo é melhor do que só texto
+e mais texto"_. **Nenhum item do ciclo 13 cobre isso**, e ela vale para as duas telas que ele
+mais olha. O primeiro passo já entrou: a posse trocou três frases por três pastilhas com glifo.
+
 ### O próximo trabalho — o passo 6, e ele mexe em calibragem fiscal
 
 **A1 · A2 · A3:** 61% do orçamento vira decisão, e o A1 já tem o C7 de que precisava. ⚠ **É a

@@ -10,7 +10,10 @@
  * @typedef {object} Pledge um compromisso que o jogador pode assumir
  * @property {string} id
  * @property {string} axis - o eixo a que ele pertence
- * @property {string} label - a promessa, na boca do candidato
+ * @property {string} label - a promessa inteira, na boca do candidato. E ela e do FECHO: e la
+ * que "entregar ordem acima do que recebi — nao cumprida" precisa estar por extenso
+ * @property {string} short - o nome do compromisso na carta, em duas palavras. ⚠ A CARTA NAO
+ * REPETE A FRASE: o eixo ja diz "A PRIORIDADE", e o botao so precisa dizer QUAL
  * @property {string} judged - como ela e julgada, dito para quem vai ser julgado
  */
 
@@ -21,6 +24,7 @@ export const PLEDGE_SCHEMA = {
   id: { kind: "id" },
   axis: { kind: "text", values: AXES },
   label: { kind: "text" },
+  short: { kind: "text" },
   judged: { kind: "text" },
 };
 
@@ -43,12 +47,14 @@ export const PLEDGES = [
     id: "debt",
     axis: "fiscal",
     label: "entregar a dívida menor do que a recebi",
+    short: "Dívida menor",
     judged: "a dívida sobre o PIB, contra a do dia da posse",
   },
   {
     id: "primary",
     axis: "fiscal",
     label: "fechar o último ano no azul",
+    short: "Ano no azul",
     judged: "a soma do resultado primário dos últimos doze meses",
   },
   /* ── O EIXO DA REFORMA ────────────────────────────────────────────────────── ⚠ ELE E SOBRE
@@ -59,18 +65,21 @@ export const PLEDGES = [
     id: "law",
     axis: "reform",
     label: "aprovar ao menos uma lei minha",
+    short: "Uma lei",
     judged: "uma norma de lei ordinária promulgada neste mandato",
   },
   {
     id: "amendment",
     axis: "reform",
     label: "mudar a Constituição ao menos uma vez",
+    short: "Uma emenda",
     judged: "uma emenda promulgada neste mandato",
   },
   {
     id: "keep",
     axis: "reform",
     label: "não mexer na Constituição",
+    short: "Não mexer",
     judged: "nenhuma emenda promulgada neste mandato",
   },
 ];

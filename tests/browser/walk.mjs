@@ -98,6 +98,26 @@ try {
     );
   }
 
+  /* ⚠ O PASSEIO NAO VIA A PAGINA ROLAR, e essa foi a quinta ocorrencia da mesma cegueira: ele
+     media recorte DENTRO dos elementos e transbordo lateral, e um Gabinete 31px mais alto que
+     a janela passava verde. A tela e a unica do jogo que declara nao rolar — acima de 940px de
+     altura ela trava em `100dvh` e as listas rolam por dentro (`40-shell.css`).
+     ⚠ E O LIMIAR E O DA FOLHA, e nao um numero desta prova: abaixo de 940 a pagina rolar e
+     DECISAO declarada — travar ali esconderia um cartao inteiro atras de uma dobra muda. */
+  /** @param {string} where */
+  async function checkNoPageScroll(where) {
+    const scroll = await page.evaluate(() => ({
+      page: document.documentElement.scrollHeight,
+      window: window.innerHeight,
+    }));
+    if (scroll.window < 940) return;
+    expect(
+      scroll.page <= scroll.window + 1,
+      `[${where}] a pagina rola ${scroll.page - scroll.window}px — o Gabinete nao rola acima ` +
+        `de 940px de janela, e quem rola por dentro sao as listas`,
+    );
+  }
+
   /**
    * ⚠ O GEMEO VERTICAL DE `checkClipped`, E ELE NASCEU DE UM CARTAO INTEIRO SUMINDO: a coluna
    * do Gabinete tem `overflow-y: auto` e engolia 175px numa janela de 760 — a pagina nao
@@ -367,6 +387,7 @@ try {
   await checkClamped("gabinete");
   await checkContrast("gabinete");
   await checkNoOverlap("gabinete", ".cards__side .annex");
+  await checkNoPageScroll("gabinete");
 
   /* 1 — O GABINETE E A TELA INICIAL, e ele nao decide nada. */
   /* ⚠ SEIS BLOCOS, E ELES SAO `.annex` DESDE O CICLO 15: a coluna deixou de ser quatro cartoes
@@ -413,6 +434,9 @@ try {
   );
   await checkClipped("posse");
   await checkEllipsized("posse");
+  /* ⚠ A CARTA DA POSSE E A MAIS ALTA DO JOGO — 875px com o discurso —, e foi ela que revelou
+     que a carta aberta nao tinha contencao nenhuma: ela crescia e furava a tela travada. */
+  await checkNoPageScroll("posse");
 
   /* 1b — E O RAIL LEVA AO LUGAR DE DECIDIR. ⚠ ERA O BOTAO DO CARTAO ate 22/08/2026, e ele
      saiu com a reformulacao da coluna: duas fichas tinham porta e duas nao, e o rail ja leva
@@ -675,6 +699,19 @@ try {
        defeito, e nao era chamada onde ele mora. */
     await checkEllipsized("caixa com pergunta");
     await checkContrast("caixa com pergunta");
+
+    /* ⚠ E AGORA TODA CARTA DO MES E ABERTA, e nao so a que pergunta: o passeio media UMA
+       carta por percurso, e a auditoria que abre TODAS achou 13 cortes que ele nao via —
+       "Partido dos Trabalhadores Unidos" pedindo 218px numa coluna de 152, dentro do anexo da
+       carta. Uma carta por passeio e uma amostra de um, e o defeito mora na que nao foi
+       sorteada. */
+    const cartas = await page.locator(".tray__row").count();
+    for (let index = 0; index < cartas; index++) {
+      await page.locator(".tray__row").nth(index).click();
+      await page.waitForTimeout(120);
+      await checkEllipsized(`carta ${index + 1} de ${cartas}`);
+      await checkClipped(`carta ${index + 1} de ${cartas}`);
+    }
     await checkNoOverlap("caixa com pergunta", ".letter");
 
     /* ⚠ A TARJA DE GRAVIDADE E O CANAL QUE DIZ QUE A CARTA TEM PRAZO, e ela sumia: cabecalho e

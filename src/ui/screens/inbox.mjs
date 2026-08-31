@@ -1,6 +1,7 @@
 /* A CAIXA DE ENTRADA — a primeira carta de verdade. */
 
 import { escapeHtml } from "../shared/html.mjs";
+import { iconHtml } from "../shared/icons.mjs";
 import { money, percent, seats, signed } from "../shared/format.mjs";
 import { sigilHtml } from "../shared/sigil.mjs";
 import {
@@ -253,10 +254,10 @@ export function describeMonth({ report, adviser }) {
  * `quorum` do cartao do MESMO mes. Ligar os dois custa um parametro; grava-lo na carta seria
  * uma segunda verdade sobre a mesma votacao
  * @param {ReadonlyArray<{ id: string, label: string }>} [input.parties]
- * @param {{ priority: ReadonlyArray<{ id: string, label: string }>,
- * fiscal: ReadonlyArray<{ id: string, label: string }>,
- * reform: ReadonlyArray<{ id: string, label: string }> }} [input.pledges] o que a posse
- * oferece, perguntado a fachada
+ * @param {{ priority: ReadonlyArray<{ id: string, label: string, short: string }>,
+ * fiscal: ReadonlyArray<{ id: string, label: string, short: string }>,
+ * reform: ReadonlyArray<{ id: string, label: string, short: string }> }} [input.pledges] o que
+ * a posse oferece, perguntado a fachada
  * @param {{ priority: string | null, fiscal: string | null, reform: string | null }}
  * [input.platform] o que ja esta marcado — do estado depois da posse, das ordens antes dela
  * @param {"senhor" | "senhora"} [input.treatment] como o jogador quer ser tratado as bancadas, para o
@@ -331,7 +332,6 @@ export function describeMail({
             body:
               `<div class="letter__lines">` +
               `<span>${escapeHtml(addressed(UI.inbox.inheritedLead, treatment))}</span>` +
-              `<span>${escapeHtml(addressed(UI.inbox.pledgeLead, treatment))}</span>` +
               `</div>` +
               pledgeHtml(
                 UI.inbox.pledgePriority,
@@ -646,7 +646,7 @@ function choicesHtml(id, chosen, texts = UI.inbox.amendmentChoices) {
  *
  * @param {string} legend
  * @param {string} axis
- * @param {ReadonlyArray<{ id: string, label: string }>} options
+ * @param {ReadonlyArray<{ id: string, label: string, short: string }>} options
  * @param {string} chosen o que ja esta marcado neste mes
  * @returns {string}
  */
@@ -655,9 +655,16 @@ function pledgeHtml(legend, axis, options, chosen) {
     .map(
       option =>
         `<button class="letter__choice" type="button" ` +
+        /* A PROMESSA INTEIRA VAI PARA QUEM LE POR SOM, e o botao mostra o nome: a frase por
+           extenso ("entregar ordem acima do que recebi") repete o que o eixo ja disse. */
+        `aria-label="${escapeHtml(option.label)}" ` +
         `aria-pressed="${chosen === option.id}" ` +
         `data-pledge="${escapeHtml(axis)}" data-choice="${escapeHtml(option.id)}">` +
-        `<b>${escapeHtml(option.label)}</b>` +
+        /* ⚠ A CLASSE E PROPRIA, e a captura cobrou: com a `icon` padrao o SVG nao tem tamanho
+           em folha nenhuma e estica ate a caixa inteira — os tres glifos sairam com 96px e o
+           nome da area por cima deles. Rail e coluna ja tem a sua, com 16 e 14px. */
+        (axis === "priority" ? iconHtml(option.id, "pledge__icon") : "") +
+        `<b>${escapeHtml(option.short)}</b>` +
         `</button>`,
     )
     .join("");
