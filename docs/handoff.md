@@ -141,6 +141,42 @@ só até o mês 8. **A auditoria completa mora em `tmp/auditar-caixa.mjs`**, que
 Medido a 1440×900: **rola 314px no mês 9**. ⚠ **A decisão é de 24/08 e pode estar vencida** —
 desde então a coluna, a bandeja e agora a carta rolam por dentro. **Espera ele.**
 
+### ▶ O BRASIL INTEIRO — a direção declarada em 31/08/2026
+
+Palavras dele: _"nós vamos criar o brasil todo com dados reais, tudo mesmo, estados, capitais,
+empresas, e mais muita coisa além disso, deixe registrado. Nosso jogo vai ser muito mais
+complexo, livre, e completo do que é hoje."_ **Registrado em
+[cycles/17-o-brasil-inteiro.md](cycles/17-o-brasil-inteiro.md)**, e é registro — não plano:
+não há passo, ordem nem orçamento acordado.
+
+⚠ **E ELA TORNA A DECISÃO DO SAVE URGENTE:** 27 estados e um cadastro de empresas não cabem em
+um bump. Ou vira uma sequência de versões, ou o save vira **semente + ordens** — a opção 2 da
+Restrição 3 do [ciclo 13](cycles/13-o-glorioso.md). **Espera ele.**
+
+⚖ **A REGRA DO NOME, decidida em 31/08:** _"serão empresas reais com nomes alterados"_. **É a
+mesma regra que os partidos já seguem** — `Partido dos Trabalhadores Unidos`, `Movimento
+Democrático Nacional`: reconhecíveis em um segundo, e nenhum existe com aquele nome. O DADO é
+real e citado; o NOME da empresa é alterado; **estado e capital ficam reais** (são fato
+geográfico, e alterá-los seria inventar um país); **pessoa continua fictícia** — o
+[ADR 0003](adr/0003-o-mundo-e-real-as-pessoas-sao-inventadas.md) não se reabre.
+
+⭐ **E O ESQUELETO FISCAL DA PRIVATIZAÇÃO JÁ RODA** — o ciclo 17 amplia, não inventa. Medido no
+catálogo de hoje: vender o petróleo põe **R$ 326,7 bi** no caixa e apaga **R$ 12,7 bi/ano**
+para sempre; vender os Correios **melhora** a conta em R$ 3,6 bi/ano, porque lá a folha é maior
+que o dividendo. **A mesma alavanca com sinais opostos, e nenhum script.**
+
+### ▶ A CAIXA VIRA EMAIL, E O GABINETE NASCE VAZIO — 31/08/2026
+
+Palavras dele: _"em nenhuma mensagem eu quero que tenha botões, eu quero que sejam EMAIL,
+exatamente igual a um EMAIL. E isso serve pra toda a caixa de entrada. (...) vamos mudar o nome
+dessa aba Gabinete pra Email, e criar uma nova aba, totalmente vazia, chamada Gabinete, e vamos
+pensar no que colocar lá."_
+
+⚠ **ISSO REABRE O CICLO 9 E O C6 DESTA SESSÃO:** hoje a carta é o lugar onde o jogador decide —
+a emenda pergunta com duas saídas (`accept`/`block`), a posse pergunta os três compromissos, e
+o silêncio é resposta com prazo. **Sem botão, essas decisões precisam de outro lugar**, e o
+lugar não está decidido.
+
 ### ▶ A DIREÇÃO QUE ELE DEU — menos texto, mais visual
 
 Palavras dele: _"tudo parece escrito por IA, quero menos texto, mais minimalismo, mais CSS,
