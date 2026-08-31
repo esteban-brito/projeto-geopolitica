@@ -12,6 +12,86 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO QUE COMEÇOU COM O PC DELE TRAVANDO — 30 e 31/08/2026
+
+Ela abriu com uma pergunta que não era sobre o jogo: _"meu pc desligou ou reiniciou sozinho?
+o que aconteceu?"_. O log do Windows respondeu — **Machine Check Exception às 18:19:21**, erro
+fatal de hardware no núcleo do processador, com o bit de contexto corrompido ligado. Nenhum
+minidump: a máquina reiniciou antes de escrever. **O repositório saiu ileso** — `validate`
+verde, `git fsck` sem corrupção, e as duas últimas escritas 15 segundos antes do travamento
+consistentes.
+
+⚠ **E o que estava em risco não era o disco: eram 1.737 linhas verdes sem commit.** Foi a
+primeira coisa a entrar.
+
+### O que entrou, em quatro commits
+
+| commit    | o quê                                                                        |
+| --------- | ---------------------------------------------------------------------------- |
+| `46e17a2` | as quatro lentes: projeção, linha do tempo, calendário e o passo 3 (C10/C11) |
+| `ec73cee` | **D4 — a corrente causal.** O DELTA abriu                                    |
+| `152230d` | **C5 e C6 — a plataforma de posse.** O save subiu para a versão 20           |
+| `91b8191` | cinco defeitos de tela, achados por ele jogando                              |
+| `f99ca71` | o ciclo 17 ganha corpo — a regra do nome e o inventário do cargo             |
+
+### ⭐ O D4 — e a lição foi sobre onde a conta mora
+
+O grafo é lido do catálogo: `yield`, `decay`, `feeds`, `force` e `lag` já dizem quem alimenta
+quem. O DELTA só descreve a aresta; a força de hoje sai da MALHA (`pushOf` e `liftOf`,
+**extraídas de dentro de `pressureOf`** para que exista uma conta só); e quem junta é
+`application/chain.mjs`. **Há prova cobrando que a soma das arestas seja exatamente a pressão
+que o turno executa** — sem ela seriam duas contas para a mesma pergunta, a família de defeito
+nº 1 deste projeto.
+
+⚠ **E o passeio pegou um defeito antes de ele sair:** a corrente lia `asked` — o pedido acima
+do piso — e a MALHA consome `funded`, o gasto cheio. Na Previdência a linha anunciava **+0,02**
+onde o motor põe **+1,22**. É o mesmo defeito que a projeção pagou uma vez, na mesma tela.
+
+### O C5 custou o primeiro bump desde a v18, e a doutrina venceu o plano
+
+A posse passou a perguntar três compromissos, e `betrayal` — que existia na SONDA e só olhava o
+orçamento — passou a olhar a plataforma também, pelo **maior dos dois** e não pela soma.
+
+⛔ **E o plano dizia que a posse seria "a única carta que o jogador TEM de responder".** Isso é
+muro, e a doutrina não tem muro. Quem avança calado governa sem plataforma, e o preço aparece no
+fecho: um mandato sem nada contra o que ser medido. **Divergência do plano, resolvida pela
+doutrina, e registrada.**
+
+### E então ele foi jogar — cinco defeitos que o portão não via
+
+_"o gabinete e a caixa de entrada estão cheios de bugs"_. A auditoria devolveu número:
+
+| o quê                                          | medido                                     |
+| ---------------------------------------------- | ------------------------------------------ |
+| o Gabinete rolava a 1440×980                   | página 1011 contra janela 980              |
+| a carta da posse era cortada                   | 875px numa folha de 831                    |
+| vãos da caixa                                  | 24px entre partes · entrelinha 1,65        |
+| texto cortado com reticência dentro das cartas | **13 linhas** em 24 meses                  |
+| os glifos da posse                             | 96px — classe sem tamanho em folha nenhuma |
+
+⚠ **A CARTA ABERTA NUNCA TEVE CONTENÇÃO, e só o discurso revelou.** A bandeja esquerda rola por
+dentro desde o ciclo 14; a carta crescia e empurrava a página para fora da janela travada.
+**Qualquer carta longa furava a tela** — a da posse só foi a primeira a ser longa.
+
+⚠ **E o passeio era cego para a página rolar — quinta ocorrência da mesma família.** Ele media
+recorte DENTRO dos elementos e transbordo lateral. `checkNoPageScroll` nasceu vermelha.
+
+⭐ **E a captura decidiu duas coisas que o tipo não via:** o fecho imprimia `1 → 1` para uma
+dívida que foi de 78% a 90% (o veredito não declarava a grandeza), e os três eixos da posse
+trocaram a frase inteira pelo NOME do compromisso com o glifo da área — **−79px de carta**, e
+foi a primeira entrega na direção que ele deu no mesmo dia.
+
+### As duas direções que ele declarou, e nenhuma delas é plano
+
+1. _"tudo parece escrito por IA, quero menos texto, mais minimalismo, mais visual... gráficos,
+   mapas, isso tudo é melhor do que só texto e mais texto"_;
+2. _"nós vamos criar o brasil todo com dados reais... estados, capitais, empresas"_, com a regra
+   do nome definida na mesma conversa: **empresas reais com nomes alterados**, como os partidos
+   já são.
+
+**As duas foram registradas e nenhuma foi começada** — a primeira porque ele ainda não escolheu
+por onde, a segunda porque ela custa o save inteiro.
+
 ## ⭐ A SESSÃO MAIS LONGA DO PROJETO — 30/08/2026
 
 Seis achados fechados, dois ciclos (o 15 inteiro e quatro sextos do 16), um dossiê externo

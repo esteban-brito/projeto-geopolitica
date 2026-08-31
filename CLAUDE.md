@@ -81,7 +81,12 @@ npm run serve      # http://127.0.0.1:5173/
 **Estado verde:** 13 guardas · 60 provas sintéticas · 145 arquivos · 299 provas · passeio
 verde em duas janelas. **Save na versão 20** — partida salva antes de 30/08 não abre. Branch de trabalho: `caixa-de-entrada`.
 
-**Há QUATRO planos na mesa**, e o 13 é o único aberto:
+**Há CINCO planos na mesa**, e o 13 é o único aberto:
+
+- [`cycles/17-o-brasil-inteiro.md`](docs/cycles/17-o-brasil-inteiro.md) — **direção declarada em
+  31/08/2026, e NÃO é plano**: estados, capitais e **empresas reais com nomes alterados** — a
+  mesma regra que os partidos já seguem. Ele traz o **inventário inteiro do cargo**: o que roda,
+  o que está escrito no ciclo 13 e o que não existe em lugar nenhum;
 
 - [`cycles/16-o-gabinete-profissional.md`](docs/cycles/16-o-gabinete-profissional.md) —
   **fechado em 30/08/2026.** O tipo dentro dos blocos subiu para 13,6px, o rail passou a
@@ -101,7 +106,12 @@ verde em duas janelas. **Save na versão 20** — partida salva antes de 30/08 n
   **25 de 49 itens**. Os passos 4 e 5 fecharam em 30/08: o **D4** (a corrente causal, no DELTA)
   e o **C5/C6** (a plataforma de posse). Retomar no **passo 6**: A1, A2 e A3.
 
-**Nenhum item espera decisão hoje.** A fila que pedia "o mesmo bump de esquema" tinha quatro
+⚠ **SETE DECISÕES ESPERAM ELE**, e as três primeiras travam o trabalho seguinte — a fila mora
+em `handoff.md`: a **caixa vira Email e o Gabinete nasce vazio** (sem botão em mensagem
+nenhuma), o **save** (versão a versão ou `semente + ordens`), e **por onde começar o "menos
+texto, mais visual"**.
+
+**Nenhum item de ciclo espera decisão hoje.** A fila que pedia "o mesmo bump de esquema" tinha quatro
 itens e **não existe mais**: o `last` fechou na versão 19, e o `events`, o `weight` e os anexos
 saíram **sem bump nenhum** — o validador do save não olha dentro de uma carta. ⚠ **Meça antes
 de bumpar:** cada subida de versão custa a partida em andamento.

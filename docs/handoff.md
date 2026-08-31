@@ -303,14 +303,49 @@ para `--ink-soft`. Quem separa ela do rótulo acima é a caixa e o traqueamento,
 ⚠ **E `directionOf` SAIU DE `cabinet.mjs` PARA `shared/trend.mjs`:** a faixa precisava da
 mesma conta, e refazê-la aqui faria a faísca discordar da seta do Gabinete no primeiro empate.
 
-### As decisões que esperam ele
+### ▶ AS SETE DECISÕES QUE ESPERAM ELE — atualizada em 31/08/2026
 
-1. **as duas cartas sem número** — a Mesa pautou e a gaveta continuam sem bloco, e o número
-   delas não está gravado em lugar nenhum. Puxá-lo é motor;
-2. **o dossiê externo está dividido em quatro partes** no fim do [ciclo
-   16](cycles/16-o-gabinete-profissional.md) — o que entra agora (A), o que é do Gabinete mas
-   depois (B), o que é de outra tela (C: hemiciclo → Congresso, barra empilhada → Finanças,
-   ghosting → áreas) e o que foi recusado com a razão medida (D).
+> **Nenhuma delas se toma sozinha, e nenhuma tem prazo.** Elas estão aqui em ordem de quanto
+> travam o trabalho seguinte. As três primeiras são da conversa de 31/08 e ainda não foram
+> debatidas.
+
+**1 · ⭐ A CAIXA VIRA EMAIL, E O GABINETE NASCE VAZIO.** Palavras dele: _"em nenhuma mensagem eu
+quero que tenha botões, eu quero que sejam EMAIL, exatamente igual a um EMAIL"_, e _"vamos mudar
+o nome dessa aba Gabinete pra Email, e criar uma nova aba, totalmente vazia, chamada Gabinete"_.
+
+⚠ **Isso reabre o ciclo 9 e o C6 desta sessão:** hoje a carta é o único lugar onde o jogador
+decide — a emenda pergunta com prazo (o silêncio aceita), a chantagem do lobby pergunta, e a
+posse pergunta os três compromissos. **Ele já respondeu para onde vão:** _"algumas no gabinete
+novo, algumas nas outras telas, vamos reformular e reestruturar muita coisa"_ — e **qual vai
+para onde não está decidido**. Os seis blocos da coluna direita: _"ainda não decidi"_.
+
+**2 · ⭐ O SAVE — versão a versão, ou `semente + ordens`.** É a opção 2 da Restrição 3 do
+[ciclo 13](cycles/13-o-glorioso.md), e o [ciclo 17](cycles/17-o-brasil-inteiro.md) a tornou
+urgente: 27 estados e um cadastro de empresas **não cabem em um bump**. Medido: 48 meses se
+refazem em **10,3ms**. Um save de repetição tolera mudança de estado por construção.
+
+**3 · MENOS TEXTO, MAIS VISUAL — por onde começar.** Palavras dele: _"tudo parece escrito por
+IA... gráficos, mapas, isso tudo é melhor do que só texto e mais texto"_. As quatro candidatas
+que ofereci, e ele não escolheu: **hemiciclo da Câmara** (já é o C1 da Parte C do ciclo 16, e a
+tela certa é o Congresso) · **barras no lugar de linhas** (dinheiro do mês, aprovação por renda)
+· **curvas de histórico** nos blocos (a série existe e só a tela de Área a desenha) · **varrer e
+cortar texto redundante**. ⛔ **E o mapa por estado não entra sem dado por estado.**
+
+**4 · O GABINETE ROLA ABAIXO DE 940px DE JANELA.** Decisão de 24/08 (`40-shell.css`): travar a
+altura ali esconderia um cartão atrás de uma dobra muda. **Medido a 1440×900: rola 314px no mês 9.** ⚠ Desde aquela decisão a coluna, a bandeja e — desde 31/08 — a carta passaram a rolar por
+dentro. **A premissa mudou; a decisão não.**
+
+**5 · as duas cartas sem número** — a Mesa pautou e a gaveta continuam sem bloco, e o número
+delas não está gravado em lugar nenhum. Puxá-lo é motor;
+
+**6 · o dossiê externo dividido em quatro partes** no fim do [ciclo
+16](cycles/16-o-gabinete-profissional.md) — o que entra agora (A), o que é do Gabinete mas
+depois (B), o que é de outra tela (C: hemiciclo → Congresso, barra empilhada → Finanças,
+ghosting → áreas) e o que foi recusado com a razão medida (D);
+
+**7 · o glossário do termo** (B3 do dossiê) — _"Obrigatória do ano"_ não é explicado em lugar
+nenhum. A falta procede; **a forma fica em aberto**, e não é hover: o C11 e o ciclo 15 recusaram
+esconder leitura atrás do mouse.
 
 ⚠ **A FILA DE "ESPERA O BUMP" É DE UM.** `src/state/save.mjs` confere a **presença** de 18
 campos de topo e a **forma** de 8 deles — e **não olha dentro de uma carta**. Três dos quatro
