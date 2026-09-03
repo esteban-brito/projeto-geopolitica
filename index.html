@@ -61,14 +61,36 @@
            14/08/2026, e e por isso que esta barra so nasceu agora: com um quarto
            do conteudo inventado, ela ensinaria a desconfiar dos outros tres. -->
       <header class="topbar glass-support">
-        <div class="topbar__when">
-          <p class="topbar__date" id="turn"></p>
+        <div class="topbar__zone">
+          <span class="topbar__brand">
+            <span class="topbar__seal" id="seal" aria-hidden="true"></span>
+            <span class="topbar__name"><b>República</b><b>Simulator</b></span>
+          </span>
         </div>
 
-        <div class="topbar__vitals" id="vitals"></div>
-
-        <div class="topbar__act">
-          <button class="action action--primary glass-action" id="advance" type="button"></button>
+        <!-- O CACHO — as tres pecas encostadas. Juntas elas sao uma pergunta so: em que mes
+             estamos, o que o pais diz, e o que fazer agora. A marca fica sozinha do outro
+             lado, e o vao entre as duas e o preco declarado dessa composicao. -->
+        <div class="topbar__cluster">
+          <span class="piece piece--vitals">
+            <span class="topbar__vitals" id="vitals"></span>
+          </span>
+          <span class="piece piece--when" id="turn"></span>
+          <span class="go-env topbar__act">
+            <span class="go-float">
+              <span class="go-shade"></span>
+              <span class="go-shade--high"></span>
+              <button class="go go--glass" id="advance" type="button">
+                <span class="go__edge"></span>
+                <span class="go__warm"></span>
+                <span class="go__stack">
+                  <span class="go__label"></span>
+                  <span class="go__hint"></span>
+                  <span class="go__arrow" id="advanceArrow" aria-hidden="true"></span>
+                </span>
+              </button>
+            </span>
+          </span>
         </div>
       </header>
 

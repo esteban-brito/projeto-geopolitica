@@ -1,5 +1,8 @@
-/* roda as PROVAS SINTETICAS — versoes fabricadas do projeto que contem o defeito de proposito
-   — e exige que a guarda acuse cada uma. */
+/* O RUNNER DAS GUARDAS, e ele faz DUAS coisas em cada uma — a segunda e a que importa:
+   1. AUDITA o projeto real e imprime os achados;
+   2. roda as PROVAS SINTETICAS — versoes fabricadas do projeto que contem o defeito de
+      proposito — e exige que a guarda acuse cada uma.
+   Sem (2), uma guarda verde nao distingue "o projeto esta certo" de "o casador nao casa". */
 
 import { readdirSync } from "node:fs";
 import { join } from "node:path";

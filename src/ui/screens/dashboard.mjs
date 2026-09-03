@@ -2,130 +2,191 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats } from "../shared/format.mjs";
+import { iconHtml } from "../shared/icons.mjs";
 import { UI } from "../strings.mjs";
-import { monthLabel } from "../../state/state.mjs";
-import { MONTHS_PER_TERM, MONTHS_PER_YEAR } from "../../data/regime.mjs";
+import { monthParts } from "../../state/state.mjs";
 
 /** @typedef {import("../../state/state.mjs").GameState} GameState */
-/** @typedef {import("../../state/state.mjs").Approval} Approval */
-/** @typedef {import("../../state/state.mjs").Situation} Situation */
+/** @typedef {import("../../data/calendar.mjs").Landmark} Landmark */
+
+/* ⚠ A REFERENCIA E DE PREVIA e nao do motor: a regua de verdade sai das constantes de escala
+   de Financas, e traze-las para ca seria uma segunda verdade sobre volatilidade. */
+const REFERENCE = 0.25;
+const SPARK_W = 88;
 
 /**
- * O TURNO, no alto do rail da direita.
+ * A FAISCA — o mandato no eixo X, e o movimento no eixo Y.
  *
- * @param {GameState} state
- * @param {{ over: boolean, months: number }} closing o mandato, perguntado a `termOf`
+ * ⛔ O EIXO X ERA A SERIE, e isso mentia sobre o tempo: com tres meses a linha ja cruzava a
+ * largura inteira e o ponto nascia na direita, como se o mandato tivesse acabado. Agora o
+ * eixo e o MANDATO, e o trilho mostra desde o mes 1 o caminho que o ponto ainda vai andar.
+ * ⭐ E o sinal vai so no ponto: quatro linhas coloridas viram quatro alarmes.
+ *
+ * @param {number[]} series
+ * @param {number} good 1 quando subir e bom, -1 quando subir e ruim
+ * @param {number} horizon quantos meses o mandato inteiro tem
+ * @returns {string}
  */
-export function turnHtml(state, closing) {
-  if (closing.over) {
-    return (
-      `<b>${escapeHtml(monthLabel(closing.months))}</b>` +
-      `<small>${escapeHtml(UI.closing.ended)}</small>`
-    );
-  }
+function sparkHtml(series, good, horizon) {
+  const drawn = series.length > 1;
+  const min = drawn ? Math.min(...series) : 0;
+  const max = drawn ? Math.max(...series) : 0;
+  const mean = drawn ? series.reduce((a, b) => a + b, 0) / series.length : 0;
+  const relative = mean === 0 ? 0 : (max - min) / Math.abs(mean);
+  const height = Math.min(1, relative / REFERENCE) * 9;
+  const spread = max - min || 1;
+  const base = 6 + height / 2;
+  /* O ultimo mes do mandato cai na borda; o primeiro, na origem. */
+  /** @param {number} i @returns {number} */
+  const at = i => (i / Math.max(1, horizon - 1)) * SPARK_W;
 
-  const term = Math.floor(state.month / MONTHS_PER_TERM) + 1;
-  const year = Math.floor((state.month % MONTHS_PER_TERM) / MONTHS_PER_YEAR) + 1;
-
-  /* ⚠ QUANTOS MESES RESTAM, e num jogo com fim duro ele e o numero mais importante da faixa:
-     e ele que decide se uma reforma de 24 meses ainda cabe. A faixa dizia `ANO 1` e mais
-     nada sobre QUANDO — o mandato tinha 46 meses e nenhum deles era diferente do outro.
-     ⚠ O FIM VEM DO MOTOR: `termOf` encerra em `month >= MONTHS_PER_TERM`, e refazer a conta
-     aqui daria a faixa uma data de fim propria — que e como duas verdades comecam. */
-  const left = Math.max(0, MONTHS_PER_TERM - state.month);
+  const points = drawn
+    ? series
+        .map(
+          (value, i) =>
+            `${at(i).toFixed(1)},${(base - ((value - min) / spread) * height).toFixed(2)}`,
+        )
+        .join(" ")
+    : "";
+  const last = drawn ? (points.split(" ").pop() ?? "0,6").split(",") : ["0", "6"];
+  const delta = drawn ? (series[series.length - 1] ?? 0) - (series[0] ?? 0) : 0;
+  const sign = !drawn || Math.abs(delta) < 1e-9 ? "flat" : delta * good > 0 ? "up" : "down";
 
   return (
-    `<b>${escapeHtml(monthLabel(state.month))}</b>` +
-    `<small>${term}º mandato · ano ${year} · ` +
-    `<b class="topbar__left" data-numeric>${left}</b> ` +
-    `${escapeHtml(left === 1 ? UI.closing.monthLeft : UI.closing.monthsLeft)}</small>`
+    `<svg class="vit__spark" viewBox="0 0 90 12" preserveAspectRatio="none" aria-hidden="true">` +
+    `<line class="vit__track" x1="0" y1="6" x2="${SPARK_W}" y2="6" ` +
+    `vector-effect="non-scaling-stroke"/>` +
+    (drawn
+      ? `<polyline points="${points}" fill="none" stroke="currentColor" stroke-width="1.4" ` +
+        `stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`
+      : "") +
+    `<circle cx="${last[0]}" cy="${last[1]}" r="1.9" class="vit__end" data-sign="${sign}"/></svg>`
   );
 }
 
 /**
- * OS SINAIS VITAIS — quatro numeros com tendencia, e o botao de avancar ao lado.
+ * O MEDIDOR — para a leitura que tem LIMIAR em vez de historia.
  *
- * dependia de SONDA, que nao existia, e por tres sessoes a barra teria nascido
- * com um quarto do conteudo inventado. O projeto ja pagou por isso uma vez — um
- * indicador congelado ao lado de indicadores vivos ensina a desconfiar da tela
- * inteira —, e por isso a barra so nasceu agora.
- * @param {object} input
- * @param {{ gdp: number, inflation: number }} input.macro
- * @param {number} input.approval - "otimo/bom", em pontos
- * @param {number} input.base - cadeiras que respondem ao governo
- * @param {number} input.majority
- * @param {{ gdp: number, inflation: number, approval: number, base: number } | null} input.before
- *   o mes anterior, ou `null` quando nao ha passado nenhum para comparar
+ * ⭐ A MARCA DA MAIORIA ERA UM RISCO SEM SIGNIFICADO, e o conserto nao e texto, e FORMA: o
+ * preenchimento troca de cor no limiar, e o risco passa a ser lido como "e aqui que a cor
+ * muda" sem uma palavra a mais.
+ *
+ * @param {number} value
+ * @param {number} total
+ * @param {number} mark
  * @returns {string}
  */
-export function vitalsHtml({ macro, approval, base, majority, before }) {
+function meterHtml(value, total, mark) {
+  return (
+    `<div class="vit__meter"><i style="width:${((value / total) * 100).toFixed(1)}%"></i>` +
+    `<b style="left:${((mark / total) * 100).toFixed(1)}%"></b></div>`
+  );
+}
+
+/**
+ * O QUANDO — o mes em cima, o prazo mais proximo embaixo.
+ *
+ * @param {object} input
+ * @param {number} input.month
+ * @param {{ label: string, due: number } | null} input.deadline o marco mais proximo
+ * @param {number} input.left quantos meses restam de mandato
+ * @param {boolean} input.over
+ * @returns {string}
+ */
+export function whenHtml({ month, deadline, left, over }) {
+  const { name, year } = monthParts(month);
+  /* ⚠ SEM PRAZO A LINHA NAO FICA VAZIA: ela volta a dizer o que a barra sempre disse — o que
+     resta de mandato. Uma peca que muda de altura conforme o calendario empurra a barra
+     inteira, e a linha de baixo e o que da largura ao bloco. */
+  const note = over
+    ? `<b>${escapeHtml(UI.closing.ended)}</b>`
+    : deadline
+      ? `<b>${escapeHtml(deadline.label)}</b><em class="when__rule"></em>` +
+        `<i>${deadline.due === 0 ? escapeHtml(UI.closing.now) : `${deadline.due} ${escapeHtml(deadline.due === 1 ? UI.window.month : UI.window.months)}`}</i>`
+      : `<b>${left}</b><em class="when__rule"></em>` +
+        `<i>${escapeHtml(left === 1 ? UI.closing.monthLeft : UI.closing.monthsLeft)}</i>`;
+
+  return (
+    `<span class="when__date"><b>${escapeHtml(name)}</b><i>${year}</i></span>` +
+    `<span class="when__note">${note}</span>`
+  );
+}
+
+/**
+ * OS SINAIS VITAIS — quatro leituras, cada uma com o desenho que ela pode sustentar.
+ *
+ * ⚠ NENHUM DESENHO E INVENTADO. PIB e inflacao tem serie no motor; aprovacao e base tem a
+ * delas nos cartoes do mes; a base ainda tem limiar, e por isso ela desenha medidor e nao
+ * faisca. Sem historia a linha nao existe — o que existe e o ponto, e ele fica cinza.
+ *
+ * @param {object} input
+ * @param {{ gdp: number, inflation: number }} input.macro
+ * @param {number} input.approval "otimo/bom", em pontos
+ * @param {number} input.base cadeiras que respondem ao governo
+ * @param {number} input.majority
+ * @param {number} input.seatsTotal
+ * @param {number} input.streetFloor a aprovacao abaixo da qual a rua rompe, do catalogo
+ * @param {number} input.ceiling o teto da banda de inflacao, do catalogo
+ * @param {number} input.horizon o mandato inteiro, em meses — o eixo X das faiscas
+ * @param {{ gdp: number[], inflation: number[], approval: number[] }} input.series
+ * @returns {string}
+ */
+export function vitalsHtml({
+  macro,
+  approval,
+  base,
+  majority,
+  seatsTotal,
+  streetFloor,
+  ceiling,
+  horizon,
+  series,
+}) {
+  /* ⛔ OS DOIS LIMIARES ERAM DAQUI, e os dois tinham envelhecido: a rua acendia em 20
+     enquanto o catalogo rompe em 16, e a inflacao acendia em 7,5% enquanto Financas acusa
+     desde 4,5%. Numero de catalogo copiado para dentro da tela e a segunda verdade, e ela
+     nao e recalibrada junto. */
   const items = [
     {
+      icon: "gdp",
       label: UI.vitals.gdp,
       value: money(macro.gdp),
-      delta: before ? macro.gdp - before.gdp : null,
       /* CRESCER E BOM: o sinal do delta e o sinal da leitura. */
-      good: 1,
-      alert: false,
+      draw: sparkHtml(series.gdp, 1, horizon),
+      low: false,
     },
     {
+      icon: "prices",
       label: UI.vitals.inflation,
       value: percent(macro.inflation, 1),
-      delta: before ? macro.inflation - before.inflation : null,
       /* ⚠ INFLACAO SUBINDO E RUIM, e por isso o sinal se inverte. */
-      good: -1,
-      alert: macro.inflation > 0.075,
+      draw: sparkHtml(series.inflation, -1, horizon),
+      low: macro.inflation > ceiling,
     },
     {
+      icon: "opinion",
       label: UI.vitals.approval,
       value: `${seats(approval)}%`,
-      delta: before ? approval - before.approval : null,
-      good: 1,
-      alert: approval < 20,
+      draw: sparkHtml(series.approval, 1, horizon),
+      low: approval < streetFloor,
     },
     {
+      icon: "congress",
       label: UI.vitals.base,
       value: seats(base),
-      delta: before ? base - before.base : null,
-      good: 1,
-      alert: base < majority,
+      draw: meterHtml(base, seatsTotal, majority),
+      low: base < majority,
     },
   ];
 
   return items
-    .map(item => {
-      /* ⚠ AUSENCIA NAO E RESULTADO, e aqui ela era desenhada como "nao moveu".
-         `painted` e variavel de modulo, entao numa RECARGA nao existe mes
-         anterior nenhum: as quatro setas saiam em `—` no mes 30, afirmando que nada tinha
-         andado num mandato em que tudo andou. O traco e um veredito; a falta de passado
-         nao e. Sem base de comparacao, a seta simplesmente nao existe. */
-      const direction =
-        item.delta === null
-          ? null
-          : Math.abs(item.delta) < 1e-9
-            ? "flat"
-            : item.delta * item.good > 0
-              ? "up"
-              : "down";
-
-      /* ⚠ O ROTULO VEM ANTES DO VALOR, NA MESMA LINHA — Parte B do ciclo 11. */
-      /* ⚠ O QUE NAO EXISTE E ESPACO, e a captura provou duas vezes. */
-
-      return (
-        `<div class="vital${item.alert ? " vital--alert" : ""}">` +
-        `<span class="vital__label">${escapeHtml(item.label)}</span>` +
-        `<span class="vital__value" data-numeric>${escapeHtml(item.value)}` +
-        (direction === null
-          ? ""
-          : `<i class="trend" data-direction="${direction}" aria-hidden="true">` +
-            `${UI.trend[direction]}</i>`) +
-        `</span>` +
-        `</div>`
-      );
-    })
+    .map(
+      item =>
+        `<div class="vit${item.low ? " vit--low" : ""}">` +
+        `<span class="vit__icon">${iconHtml(item.icon, "icon")}</span>` +
+        `<span class="vit__label">${escapeHtml(item.label)}</span>` +
+        `<span class="vit__value" data-numeric>${escapeHtml(item.value)}</span>` +
+        `<span class="vit__draw">${item.draw}</span></div>`,
+    )
     .join("");
 }
-
-/* As duas eram puras, corretas, e ninguem as importava: a faixa morreu quando a barra
-   superior absorveu os tres campos dela, e a tela de aprovacao morreu quando SONDA nasceu e
-   deu outra casa ao numero — a propria barra, e o cartao da Rua no Gabinete. */

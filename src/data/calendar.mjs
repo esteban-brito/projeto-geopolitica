@@ -37,14 +37,14 @@ export const CALENDAR = [
   },
   {
     id: "ldo",
-    label: "LDO",
+    label: "Meta fiscal",
     month: 4,
     what: "as diretrizes do orçamento do ano que vem vão ao Congresso",
     source: "CF art. 35, §2º, II do ADCT",
   },
   {
     id: "loa",
-    label: "LOA",
+    label: "Orçamento do ano",
     month: 8,
     what: "a proposta de orçamento do ano que vem vai ao Congresso",
     source: "CF art. 35, §2º, III do ADCT",

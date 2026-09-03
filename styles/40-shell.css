@@ -88,111 +88,429 @@
 
   /* ── A BARRA SUPERIOR ─────────────────────────────────────────────────────── Ela atravessa
      as duas colunas: o status do governo vale para a navegacao tambem, e uma barra que
-     comecasse depois da sidebar leria como parte do tabuleiro. */
+     comecasse depois da sidebar leria como parte do tabuleiro.
+     ⭐ ELA E TRES PECAS DE VIDRO E UMA MARCA. As tres tem a mesma altura, a mesma quina, a
+     mesma aresta e a mesma lente — o que muda entre elas e a tinta do corpo. */
   .topbar {
     grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    /* ⚠ ERA `--radius-stage` (24px), e ele era o unico 24 da tela: painel, rail, botao e
-       bandeja fecham todos em 16. Um raio sozinho nao le como hierarquia, le como descuido. */
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 0 var(--space-4);
     border-radius: 0 0 var(--radius-piece) var(--radius-piece);
   }
 
-  .topbar__date {
+  .topbar__zone {
+    display: flex;
+    align-items: center;
+    min-height: var(--topbar-h);
+    min-width: 0;
+  }
+
+  .topbar__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--mark-gap);
+    min-width: 0;
+  }
+
+  .topbar__seal {
     display: grid;
-    font-family: var(--font-display);
+    flex: none;
+    place-items: center;
+    color: var(--brand);
+  }
+
+  /* ⛔ `iconHtml` SEM CLASSE PROPRIA NASCE SEM TAMANHO: os vitais so aparecem porque a coluna
+     deles tem largura fixa, e o selo e a seta viviam em caixa `auto` — zero por zero. */
+  .topbar__seal svg {
+    width: var(--seal-size);
+    height: var(--seal-size);
+  }
+
+  .go__arrow svg {
+    width: var(--go-glyph);
+    height: var(--go-glyph);
+  }
+
+  .topbar__name {
+    display: grid;
+    min-width: 0;
     line-height: 1.15;
   }
 
-  .topbar__date b {
-    font-size: var(--text-title);
+  .topbar__name b {
+    font-family: var(--font-display);
+    font-size: var(--mark-size);
     font-weight: 800;
-    color: var(--ink);
+    letter-spacing: var(--mark-track);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    color: var(--ink);
   }
 
-  .topbar__date small {
-    font-size: var(--text-label);
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
+  .topbar__name b + b {
     color: var(--ink-dim);
   }
 
-  /* ⚠ SO PESO E TINTA, e nenhum tamanho novo: o corpo continua sendo o do `small` que o
-     abriga, entao o par nao abre combinacao nova no censo de tipografia. */
-  .topbar__left {
-    font-weight: 700;
-    color: var(--ink-soft);
+  /* O CACHO — as tres pecas encostadas, porque juntas elas sao uma pergunta so: em que mes
+     estamos, o que o pais diz, e o que fazer agora. */
+  .topbar__cluster {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--topbar-gap);
   }
 
-  /* OS VITAIS ROLAM POR DENTRO quando a janela aperta, e nao quebram em duas fileiras: uma
-     barra que muda de altura empurra o tabuleiro inteiro para baixo toda vez que um numero
-     cresce um digito. */
-  .topbar__vitals {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .vital {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    padding: 0 clamp(var(--space-3), 1.6vw, var(--space-6));
+  /* ⚠ O RAIO AQUI NAO DESENHA A PECA — a forma sai do filtro, como no botao. Ele so recorta a
+     sombra, que e a mesma pilha de tres camadas que o botao usa. */
+  .piece {
+    display: grid;
+    flex: none;
+    align-self: center;
+    align-content: center;
+    justify-items: center;
+    min-height: var(--piece-h);
+    border-radius: var(--piece-radius);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.5),
+      0 3px 8px rgba(0, 0, 0, 0.3),
+      0 6px 18px rgba(0, 0, 0, 0.16);
+    font-family: var(--font-display);
+    line-height: 1;
     white-space: nowrap;
   }
 
-  /* O FIO SO ENTRE, E NUNCA NAS PONTAS: um fio pendurado na quina e o defeito que `:first-
-     child` existe para evitar, e a faixa de indices da Mesa ja o aprendeu. */
-  .vital + .vital {
-    border-left: 1px solid rgba(var(--brand-rgb), 0.16);
-    box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.35);
+  /* ── A PECA DOS VITAIS ─────────────────────────────────────────────────────── */
+  .piece--vitals {
+    padding: 0 var(--stats-pad) var(--stats-pad-b);
   }
 
-  .vital__label {
-    font-family: var(--font-display);
+  .topbar__vitals {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--vit-col);
+    align-items: center;
+  }
+
+  .vit {
+    display: grid;
+    grid-template-columns: var(--vit-icon-col) minmax(0, 1fr);
+    grid-template-rows: var(--vit-label-row) var(--vit-row) var(--vit-draw-row);
+    align-items: center;
+    column-gap: var(--vit-gap);
+    min-width: 0;
+    padding: 0 var(--stats-vit);
+  }
+
+  .vit__icon {
+    display: grid;
+    grid-row: 1 / 4;
+    place-items: center;
+    color: var(--ink-dim);
+  }
+
+  /* ⚠ O ROTULO E O VALOR DESCEM JUNTOS e o desenho NAO: eles sao a leitura, e ele e a
+     moldura dela. Por transformacao, entao a fileira nao muda de altura. */
+  .vit__label,
+  .vit__value {
+    transform: translateY(var(--vit-drop));
+  }
+
+  .vit__label {
+    grid-column: 2;
+    grid-row: 1;
     font-size: var(--text-label);
-    letter-spacing: var(--track-label);
+    letter-spacing: var(--vit-track);
     text-transform: uppercase;
     color: var(--ink-dim);
   }
 
-  /* ⚠ O PESO CAIU DE 700 PARA 600, e isso e o resto do conserto: quatro numeros em 800
-     disputando com a data em 800 nao formam hierarquia, formam quatro manchetes. */
-  .vital__value {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-    font-family: var(--font-display);
-    font-weight: 600;
+  .vit__value {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: var(--vit-value);
+    font-weight: 800;
+    letter-spacing: var(--when-track);
     color: var(--ink);
   }
 
-  /* O ALERTA TINGE O NUMERO, e nao o cartao: quatro cartoes acesos ao mesmo tempo seriam
-     quatro alarmes, e alarme que toca sempre e alarme que ninguem ouve. */
-  .vital--alert .vital__value {
+  /* O ALERTA TINGE O NUMERO, e nao a peca: quatro pecas acesas ao mesmo tempo seriam quatro
+     alarmes, e alarme que toca sempre e alarme que ninguem ouve. */
+  .vit--low .vit__value {
     color: var(--signal-down);
   }
 
-  /* ⚠ A ESCADA DE TENDENCIA NAO CABE NESTA BARRA, e o intervalo entre "cabe" e "le" e
-     VAZIO: a fileira tem 248px por leitura, rotulo e valor gastam ~150, e uma escada
-     legivel pede ~120. A captura reprovou os dois tamanhos tentados — 0,5rem cabe e vira
-     um traco, 0,85rem le e empurra o rotulo do PIB para fora da barra. */
-
-  /* A seta acompanha o valor, e era 0,7em — 9,5px, abaixo do menor degrau da escala. */
-  .vital .trend {
-    font-size: var(--text-label);
+  .vit__draw {
+    display: grid;
+    grid-column: 2;
+    grid-row: 3;
+    align-content: center;
+    width: var(--vit-spark);
+    height: var(--vit-draw-row);
   }
 
-  .topbar__act .action {
+  /* A LINHA FICA CALMA e quem carrega o sinal e o ponto final: quatro linhas coloridas viram
+     quatro alarmes, e a barra passa a gritar em vez de informar. */
+  .vit__spark {
+    width: var(--vit-spark);
+    height: var(--vit-spark-h);
+    overflow: visible;
+    color: rgba(var(--ink-rgb), 0.46);
+  }
+
+  /* O TRILHO — o caminho que o ponto ainda vai andar. Ele existe desde o primeiro mes, e e
+     ele que torna o desenho legivel antes de haver historia. */
+  .vit__track {
+    stroke: rgba(var(--ink-rgb), 0.14);
+    stroke-width: 1;
+    stroke-linecap: round;
+  }
+
+  .vit__end {
+    fill: var(--ink-dim);
+  }
+
+  .vit__end[data-sign="up"] {
+    fill: var(--signal-up);
+  }
+
+  .vit__end[data-sign="down"] {
+    fill: var(--signal-down);
+  }
+
+  .vit__meter {
+    position: relative;
+    width: var(--vit-spark);
+    height: var(--vit-meter-h);
+    border-radius: var(--radius-dot);
+    background: rgba(var(--ink-rgb), 0.1);
+  }
+
+  .vit__meter i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: var(--radius-dot);
+    background: var(--stable);
+  }
+
+  .vit--low .vit__meter i {
+    background: var(--signal-down);
+  }
+
+  .vit__meter b {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    background: var(--brand);
+  }
+
+  /* ── A PECA DO QUANDO ──────────────────────────────────────────────────────── */
+  .piece--when {
+    width: var(--when-w);
+    gap: var(--when-gap-rows);
+    padding: var(--when-pad-top) var(--when-pad) 0;
+  }
+
+  /* ⚠ AS DUAS SUBIDAS SAO POR POSICAO E NAO POR TRANSFORMACAO: a justificacao reescreve a
+     escala horizontal nas duas linhas a cada rearranjo, e as regras disputariam o atributo. */
+  /* ⚠ A COMPRESSAO NASCE NA FOLHA e o quadro so a refina: sem ela aqui, o bloco apareceria
+     largo por um quadro — o tempo que a fonte leva para chegar. */
+  .when__date,
+  .when__note {
+    transform: scaleX(var(--when-squeeze));
+    transform-origin: left center;
+  }
+
+  .when__date {
+    position: relative;
+    top: calc(-1 * var(--when-rise));
+    display: flex;
+    align-items: center;
+    gap: var(--when-gap-date);
+    font-size: var(--when-size);
+    font-weight: 800;
+    letter-spacing: var(--when-track);
+    text-transform: uppercase;
+  }
+
+  .when__note {
+    position: relative;
+    top: calc(-1 * var(--note-rise));
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--when-note);
+    font-weight: 400;
+    letter-spacing: var(--when-track);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .when__date b {
+    color: var(--ink);
+  }
+
+  .when__date i,
+  .when__note i {
+    font-style: normal;
+    color: var(--ink-dim);
+  }
+
+  .when__note b {
+    font-weight: 400;
+    color: var(--ink-dim);
+  }
+
+  .when__note i {
+    color: var(--brand);
+  }
+
+  /* A regua separa o nome do numero DENTRO de uma leitura so — nao e a linha entre stats que
+     ja foi recusada, que separava leituras irmas. */
+  .when__rule {
+    width: 1px;
+    align-self: stretch;
+    margin: 2px 0;
+    background: rgba(var(--ink-rgb), 0.16);
+  }
+
+  /* ── O BOTAO ───────────────────────────────────────────────────────────────── */
+  .topbar__act {
+    display: flex;
+    flex: none;
+    align-self: center;
+  }
+
+  /* ⚠ O ROTULO ENCOSTA NA ESQUERDA E A SETA NA DIREITA, e o vao do meio existe para a leitura
+     entrar nele sem empurrar nada. */
+  .go__stack {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center;
+    width: 100%;
+    padding: 0 var(--go-pad-r) 0 var(--go-pad-l);
+    column-gap: var(--go-gap);
+  }
+
+  .go__label {
+    justify-self: start;
+    font-family: var(--font-display);
+    font-size: var(--go-size);
+    font-weight: 800;
+    letter-spacing: var(--when-track);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* ⛔ SEM A TRAVA DE QUEBRA A LEITURA VIRAVA DUAS LINHAS no hover, e o botao ganhava uma
+     segunda linha so quando o mouse chegava. */
+  .go__hint {
+    justify-self: start;
+    font-family: var(--font-display);
+    font-size: var(--go-size);
+    font-weight: 400;
+    letter-spacing: var(--when-track);
+    text-transform: uppercase;
+    line-height: 1;
     white-space: nowrap;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  /* ⚠ A SETA TEM 2,4px DE SANGRIA DENTRO DA PROPRIA CAIXA e a letra tem 0,3: sem a margem
+     negativa, caixa simetrica da TINTA assimetrica — e o olho ve a tinta. */
+  .go__arrow {
+    justify-self: end;
+    display: grid;
+    margin-right: -9.4px;
+  }
+
+  /* ⭐ `.go-env` FICA PARADA E ESCUTA O MOUSE; `.go-float` e quem se move. A area que recebe o
+     ponteiro nao pode se mexer: perto da aresta de baixo a peca saia de sob o cursor,
+     disparava a saida, comecava a voltar, reencontrava o ponteiro no caminho e disparava a
+     entrada de novo — um pingue-pongue que nao e travamento e por isso ninguem descreve. */
+  .go-env {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+  }
+
+  .go-float {
+    position: relative;
+    display: grid;
+    place-items: center;
+    will-change: transform;
+  }
+
+  /* ⛔ A SOMBRA NAO PODE TER CORPO: um irmao OPACO atras entra no backdrop, e o vidro passa a
+     refratar a propria sombra. Ela e so `box-shadow` numa caixa sem preenchimento. */
+  .go-shade,
+  .go-shade--high {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--piece-radius);
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  .go-shade {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.5),
+      0 3px 8px rgba(0, 0, 0, 0.3),
+      0 6px 18px rgba(0, 0, 0, 0.16);
+  }
+
+  .go-shade--high {
+    opacity: 0;
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.6),
+      0 10px 20px rgba(0, 0, 0, 0.44),
+      0 22px 44px rgba(0, 0, 0, 0.32);
+  }
+
+  /* A forma, a refracao e o desfoque saem TODOS do filtro — ver `glass.mjs`. */
+  .go {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: var(--go-w);
+    height: var(--piece-h);
+    min-width: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    color: var(--bg-deep);
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+
+  /* AS DUAS ARESTAS SAO ESTATICAS e so a opacidade da quente anda: regerar a imagem por quadro
+     obriga o navegador a reparsar e redecodificar um SVG sessenta vezes por segundo. */
+  .go__edge,
+  .go__warm {
+    position: absolute;
+    inset: 0;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  .go__warm {
+    opacity: 0;
+  }
+
+  .go:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
   }
 
   /* ── O TABULEIRO ──────────────────────────────────────────────────────────── A tela
@@ -241,10 +559,10 @@
     z-index: -2;
     /* O CAMPO DE LUZ, em gradiente CSS e nao em SVG com desfoque. */
     background:
-      radial-gradient(62% 48% at 14% 12%, rgba(var(--stable-rgb), 0.58), transparent 70%),
-      radial-gradient(48% 42% at 84% 20%, rgba(var(--ink-rgb), 0.2), transparent 66%),
-      radial-gradient(70% 56% at 78% 92%, rgba(var(--stable-rgb), 0.5), transparent 72%),
-      radial-gradient(52% 44% at 34% 78%, rgba(var(--stable-rgb), 0.26), transparent 70%),
+      radial-gradient(62% 48% at 14% 12%, rgba(var(--stable-rgb), 0.3), transparent 70%),
+      radial-gradient(48% 42% at 84% 20%, rgba(var(--ink-rgb), 0.09), transparent 66%),
+      radial-gradient(70% 56% at 78% 92%, rgba(var(--stable-rgb), 0.26), transparent 72%),
+      radial-gradient(52% 44% at 34% 78%, rgba(var(--stable-rgb), 0.13), transparent 70%),
       var(--bg-deep);
     /* O gel abaixo usa `mix-blend-mode`. */
     isolation: isolate;
@@ -273,7 +591,12 @@
   .backdrop::after {
     content: "";
     position: absolute;
-    inset: 0;
+    /* ⭐ ELA COMECA DEPOIS DAS DUAS MOLDURAS — abaixo da barra e a direita do rail —, e e o que
+       deixa as duas serem vidro sem herdar o estado do pais. Vidro amostra o que esta atras:
+       enquanto a tinta passava por baixo delas, a barra mudava de cor com o mes (medido, de
+       `4,10,16` para `2,5,8`) e o rail mudava junto. Agora as duas amostram so a aurora, que e
+       a mesma o mandato inteiro — e por isso elas sao o MESMO material, e nao dois parecidos. */
+    inset: var(--topbar-h) 0 0 calc(var(--rail) + var(--space-6));
     pointer-events: none;
     mix-blend-mode: overlay;
     opacity: 0.55;

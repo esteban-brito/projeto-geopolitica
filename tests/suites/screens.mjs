@@ -143,6 +143,7 @@ function financeOf(months, series = {}) {
     premium,
     series: { ...state.series, ...series },
     target: CATALOG.macro.inflationTarget,
+    ceiling: CATALOG.macro.inflationTarget + CATALOG.macro.inflationTolerance,
     areas,
     index: state.capacity.index,
     history: state.capacity.history,
@@ -589,6 +590,7 @@ test("A VARIACAO DE UM INDICE DIZ EM QUANTOS MESES, e cala onde nao ha passado",
        pais que o presidente recebeu. */
     premium: 0,
     target: CATALOG.macro.inflationTarget,
+    ceiling: CATALOG.macro.inflationTarget + CATALOG.macro.inflationTolerance,
     areas: [health],
     index: { health: 62 },
     history: { health: history },
@@ -890,35 +892,101 @@ test("NENHUM ROTULO DE INSTRUMENTO CAI NO ID CRU — e id cru aqui e INGLES", ()
   }
 });
 
-/* ⚠ AUSENCIA NAO E RESULTADO, E A BARRA A DESENHAVA COMO "NAO MOVEU". `painted` e variavel
-   de modulo do entrypoint: numa recarga nao ha mes anterior, e a barra caia no proprio mes
-   como passado — as quatro setas saiam em `—` no mes 30 de um mandato em que tudo andou. */
-test("A SETA SO EXISTE QUANDO HA PASSADO: sem mes anterior, a barra nao opina", () => {
+/* ⚠ AUSENCIA NAO E RESULTADO, E A BARRA A DESENHAVA COMO "NAO MOVEU". A regra sobreviveu a
+   troca de desenho: onde antes uma seta afirmava "nao moveu" sobre um passado que nao existe,
+   hoje uma linha reta afirmaria a mesma coisa. Serie curta demais nao desenha. */
+test("O DESENHO SO EXISTE QUANDO HA HISTORIA: sem serie, a barra nao opina", () => {
   const agora = {
     macro: { gdp: 12500, inflation: 0.04 },
     approval: 40,
     base: 400,
     majority: 257,
+    seatsTotal: 513,
+    streetFloor: CATALOG.pressure.streetFloor,
+    ceiling: CATALOG.macro.inflationTarget + CATALOG.macro.inflationTolerance,
+    horizon: 48,
   };
 
-  const mudo = vitalsHtml({ ...agora, before: null });
+  const mudo = vitalsHtml({ ...agora, series: { gdp: [], inflation: [], approval: [] } });
   assert.equal(
-    mudo.includes("data-direction"),
-    false,
-    "sem mes anterior a barra desenhou seta, e seta e veredito sobre um passado que nao existe",
+    (mudo.match(/<polyline/g) ?? []).length,
+    0,
+    "sem serie a barra desenhou LINHA, e reta e veredito sobre um passado que nao existe",
+  );
+  /* ⚠ MAS O PONTO EXISTE, e cinza: a leitura nasce na tela no primeiro mes, e a ausencia de
+     direcao se declara pela cor em vez de sumir com o desenho inteiro. */
+  assert.equal(
+    (mudo.match(/data-sign="flat"/g) ?? []).length,
+    3,
+    "sem serie os tres pontos tem de existir e ficar cinzas",
+  );
+  /* A BASE DESENHA MESMO ASSIM, e a diferenca e de natureza: ela nao tem historia, tem
+     LIMIAR — o medidor compara com a maioria, e a maioria existe desde o primeiro mes. */
+  assert.match(
+    mudo,
+    /vit__meter/,
+    "a base tem limiar e nao historia: o medidor nao depende de serie",
   );
 
   const falado = vitalsHtml({
     ...agora,
-    before: { gdp: 12000, inflation: 0.05, approval: 44, base: 436 },
+    series: {
+      gdp: [12000, 12200, 12500],
+      inflation: [0.05, 0.045, 0.04],
+      approval: [44, 42, 40],
+    },
   });
   assert.equal(
-    (falado.match(/data-direction/g) ?? []).length,
-    4,
-    "com mes anterior os quatro vitais tem de opinar",
+    (falado.match(/vit__spark/g) ?? []).length,
+    3,
+    "com serie as tres leituras de historia tem de desenhar",
   );
-  /* A INFLACAO CAIU, E CAIR E BOM: o sinal dela se inverte, e a seta sobe. */
-  assert.match(falado, /data-direction="up"[^>]*>▲<\/i><\/span><\/div><div class="vital/);
+  /* A INFLACAO CAIU, E CAIR E BOM: o sinal dela se inverte, e o ponto final sobe. */
+  assert.match(falado, /class="vit__end" data-sign="up"/);
+  assert.match(falado, /class="vit__end" data-sign="down"/);
+});
+
+/* ⛔ OS DOIS LIMIARES DA BARRA ERAM COPIA, e as duas copias tinham envelhecido: a rua acendia
+   em 20 quando o catalogo ja rompia em 16, e a inflacao acendia em 7,5% quando Financas ja
+   acusava desde 4,5%. A prova compara com o CATALOGO e nao com um numero escrito aqui — um
+   literal seria a terceira copia da mesma regua. */
+test("O ALARME DA BARRA E O LIMIAR DO CATALOGO, e nao uma copia envelhecida", () => {
+  const floor = CATALOG.pressure.streetFloor;
+  const ceiling = CATALOG.macro.inflationTarget + CATALOG.macro.inflationTolerance;
+
+  /** @param {number} approval @param {number} inflation @returns {number} */
+  const acesos = (approval, inflation) => {
+    const html = vitalsHtml({
+      macro: { gdp: 12500, inflation },
+      approval,
+      /* A base fica larga de proposito: quem acende nesta prova sao as outras duas. */
+      base: 400,
+      majority: 257,
+      seatsTotal: 513,
+      streetFloor: floor,
+      ceiling,
+      horizon: 48,
+      series: { gdp: [], inflation: [], approval: [] },
+    });
+    return (html.match(/vit--low/g) ?? []).length;
+  };
+
+  assert.equal(
+    acesos(floor - 1, CATALOG.macro.inflationTarget),
+    1,
+    "abaixo do piso do catalogo a rua tem de acender",
+  );
+  assert.equal(
+    acesos(floor + 3, CATALOG.macro.inflationTarget),
+    0,
+    "acima do piso a rua nao acende: tres pontos acima de 16 e onde a copia do 20 antigo acendia",
+  );
+  assert.equal(
+    acesos(50, ceiling + 0.005),
+    1,
+    "passou da banda, a inflacao acende: meio ponto acima do teto e onde a copia do 7,5% ficava muda",
+  );
+  assert.equal(acesos(50, CATALOG.macro.inflationTarget), 0, "na meta a inflacao nao acende");
 });
 
 /* ── A LINHA DE ANEXO SUBSTITUIU AS QUATRO TABELAS ─────────────────────────── ⚠ AS DUAS

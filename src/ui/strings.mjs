@@ -232,7 +232,9 @@ export const UI = {
   /* ── DE QUEM É ESTE GOVERNO ──────────────────────────────────────────────── ⚠ O JOGADOR
      ERA A ÚNICA PESSOA SEM NOME num jogo em que sete outras tinham. */
   gov: {
-    /* se aproxima é a mesma distância euclidiana que ECLUSA usa para votar. */
+    /* ⚠ "MAIS PERTO DE", E NÃO "É": dizer "seu governo é de centro-esquerda" importaria uma
+       taxonomia que o modelo não tem. Dizer de quem ele se aproxima é a mesma distância
+       euclidiana que ECLUSA usa para votar. */
     nearest: "governa mais perto",
     /* ⚠ QUEM NÃO MOVEU NADA NÃO É DE CENTRO. */
     untouched: "ainda governa o orçamento que herdou",
@@ -409,7 +411,9 @@ export const UI = {
       "vault.fell": "Caixa cai a",
     },
     headlineSeats: TERMOS.seatsWord,
-    /* a que menos sustenta vêm de `weighed` e `notes`, que SONDA passou a devolver hoje. */
+    /* ⚠ NADA AQUI É INVENTADO: o número e a direção vêm da carta, e a nota que mais sustenta
+       e a que menos sustenta vêm de `weighed` e `notes`. Recomendação sem número atrás
+       seria o modelo opinando, e isso o projeto recusa. */
     pollClosed: "A pesquisa fechou o mês em",
     pollGood: "de ótimo ou bom",
     pollDown: "abaixo do mês passado.",
@@ -788,9 +792,11 @@ export const UI = {
     country: TERMOS.country,
   },
   actions: {
-    /* vocabulario de CASCATA, e nao de presidente) e ocupa a segunda linha do unico
-       botao que o jogador aperta todo mes. */
-    advance: "Avançar o mês",
+    /* ⚠ UMA LEGENDA SÓ SE PAGA QUANDO DIZ O QUE O RÓTULO NÃO DIZ. "Avançar o mês" seguido
+       de "resolve o turno e propaga os efeitos" falhava nos dois lados: repetia o rótulo em
+       jargão de motor ("propagar" é vocabulário de CASCATA, e não de presidente) e ocupava
+       a segunda linha do único botão que o jogador aperta todo mês. */
+    advance: "Avançar",
     /* O BOTÃO DO MÊS PASSADO SAIU. */
     /* ⚠ O BOTAO DO FIM DIZ O QUE ACONTECEU e aponta o que fazer, e a legenda aqui se paga
        pela mesma regra do reinicio: ela chega no momento em que a informacao muda a decisao —
@@ -830,6 +836,9 @@ export const UI = {
     ended: "mandato encerrado",
     /* ⚠ QUANTOS FALTAM, e a faixa nunca disse: ela anunciava o ANO e o jogador nao tinha como
        saber se uma reforma de 24 meses ainda cabia no que sobrava. */
+    /* O PRAZO QUE VENCE NESTE MES: ele nao tem numero, e escrever "0 meses" seria pior
+       que nao dizer nada. */
+    now: "agora",
     monthLeft: `${TERMOS.month} restante`,
     monthsLeft: `${TERMOS.months} restantes`,
     title: "O mandato",

@@ -1,5 +1,12 @@
-/* promessa quebrada custa base — e e por isso que contingenciamento, que e aritmetica e nao
-   evento, produz crise politica; 4. */
+/* SUITE · O TURNO — o acoplamento entre o caixa e o Congresso.
+
+   As suites dos dois motores provam cada um por dentro. Esta prova o que so existe quando
+   eles se encostam, e que nenhuma das duas consegue ver:
+     1. o teto MANDA. Nao existe ordem do jogador que gaste mais do que cabe;
+     2. o Congresso responde ao que FOI PAGO, e nao ao que foi prometido;
+     3. promessa quebrada custa base — e e por isso que contingenciamento, que e aritmetica
+        e nao evento, produz crise politica;
+     4. o mandato inteiro e reproduzivel a partir da semente e das ordens. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -572,8 +579,13 @@ test("a base derretendo derruba o governo em minoria", () => {
   assert.equal(standing.reason, "minority");
 });
 
-/* inflacao, a MALHA media a arrecadacao contra o ponto neutro em vez da abertura,
-   e o dividendo das estatais era somado por cima de uma carga que ja o continha. */
+/* ═══ O PAIS NAO SE DESENDIVIDA SOZINHO ══════════════════════════════════════
+   As duas provas abaixo travam o achado numero um do handoff. Ele nao era calibragem
+   frouxa: era um modelo que NAO CONSEGUIA rodar deficit primario, por tres motivos
+   somados — a obrigatoria crescia sem inflacao, a MALHA media a arrecadacao contra o
+   ponto neutro em vez da abertura, e o dividendo das estatais era somado por cima de uma
+   carga que ja o continha. Sem estas provas, a proxima recalibragem reabre tudo em
+   silencio. */
 
 test("O PRESIDENTE AUSENTE TERMINA MAIS ENDIVIDADO, e isso e o mundo", () => {
   /* A afirmacao mais simples que o modelo tem de sustentar, e ela esteve INVERTIDA por tres

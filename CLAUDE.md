@@ -78,8 +78,8 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 13 guardas · 60 provas sintéticas · 145 arquivos · 299 provas · passeio
-verde em duas janelas. **Save na versão 20** — partida salva antes de 30/08 não abre. Branch de trabalho: `caixa-de-entrada`.
+**Estado verde:** 13 guardas · 61 provas sintéticas · 152 arquivos · 300 provas · passeio
+verde. **A barra superior nova está no jogo** desde 01/09/2026. **Save na versão 20** — partida salva antes de 30/08 não abre. Branch de trabalho: `caixa-de-entrada`.
 
 **Há CINCO planos na mesa**, e o 13 é o único aberto:
 
@@ -106,10 +106,38 @@ verde em duas janelas. **Save na versão 20** — partida salva antes de 30/08 n
   **25 de 49 itens**. Os passos 4 e 5 fecharam em 30/08: o **D4** (a corrente causal, no DELTA)
   e o **C5/C6** (a plataforma de posse). Retomar no **passo 6**: A1, A2 e A3.
 
-⚠ **SETE DECISÕES ESPERAM ELE**, e as três primeiras travam o trabalho seguinte — a fila mora
-em `handoff.md`: a **caixa vira Email e o Gabinete nasce vazio** (sem botão em mensagem
-nenhuma), o **save** (versão a versão ou `semente + ordens`), e **por onde começar o "menos
-texto, mais visual"**.
+✔ **A BASE FOI DEFINIDA EM 31/08/2026** — as quatro decisões que travavam trabalho fecharam, e o
+critério de cada uma mora em `handoff.md`. **Nenhuma foi executada:**
+
+1. **o email leva até a tela** — a carta mostra a pergunta e o prazo, e o único gesto é um link
+   para onde se responde. A emenda vai ao Congresso, o lobby à tela da área, a posse a uma tela
+   de abertura. ⛔ Os botões da carta da posse saem;
+2. **o save fica como está** — decidido "depois", com o custo declarado;
+3. **o piso da saúde e da educação passa a andar com a receita** — mexe em `src/data/`, logo a
+   série se remede no mesmo commit;
+4. **a votação passa a olhar quem compareceu** — com as quatro regras do equilíbrio, que são o
+   critério de aceitação: nada novo para gerenciar · nunca surpresa · o texto não morre · um
+   número e não uma tela.
+
+⚠ **SOBRAM TRÊS, e nenhuma trava nada:** a rolagem abaixo de 940px, **por onde começar o "menos
+texto, mais visual"**, e as duas cartas sem número com o glossário do termo.
+
+📗 **DUAS PESQUISAS NOVAS, e as duas são de 31/08:**
+
+- [`research/04-o-cargo-de-presidente.md`](docs/research/04-o-cargo-de-presidente.md) — a tese:
+  **o jogo modela o VOTO, e a presidência brasileira é feita de AGENDA.** O A4 está pela metade
+  no plano (a caducidade da MP é o preço; o trancamento de pauta é o poder), e o canal mais
+  barato do jogo é o **decreto tributário**: `taxDelta` já é lido pela CORRENTE e ninguém o escreve;
+- [`research/05-o-material-e-o-gesto.md`](docs/research/05-o-material-e-o-gesto.md) — **o estudo
+  do material**, nascido de sete gestos recusados. Mola no modelo da Apple (duração e quique, e
+  **o quique padrão dela é zero**), quina de curvatura contínua, refração real por
+  `feDisplacementMap`, e o líquido por deformação que conserva volume.
+
+✔ **A BARRA SUPERIOR ENTROU NO JOGO em 01/09/2026** — três peças de vidro encostadas (os
+vitais, o quando e o botão), com lente refrativa, quina de curvatura contínua e o gesto da
+mola. **A geometria dela mora em 44 tokens** em `00-tokens.css`, e cada um foi girado por ele
+num painel de 51 campos no clone: mexer na barra é mexer em token, não em regra. O clone
+continua em `tmp/barra.html`, com o painel, e serve de bancada.
 
 **Nenhum item de ciclo espera decisão hoje.** A fila que pedia "o mesmo bump de esquema" tinha quatro
 itens e **não existe mais**: o `last` fechou na versão 19, e o `events`, o `weight` e os anexos

@@ -24,6 +24,18 @@ export const ICONS = /** @type {Record<string, string>} */ ({
   security: '<path d="M8 2.5 13 4.5v4c0 3-2.2 4.6-5 5.5-2.8-.9-5-2.5-5-5.5v-4z"/>',
   opinion: '<path d="M13.5 9a2 2 0 0 1-2 2H6l-3.5 2.5V4.5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2z"/>',
   estado: '<path d="M8 2.5 2.5 5.5v1h11v-1z"/><path d="M4 6.5v5M8 6.5v5M12 6.5v5M2 13.5h12"/>',
+  /* ⚠ DOIS VITAIS USAVAM GLIFO DE OUTRO SIGNIFICADO ate a barra ser refeita: `finance` e a
+     tela de Financas — uma linha dentro de uma MOLDURA, a mesma caixa que saiu dos icones —,
+     e `graph` e o grafo de causas. Nenhum dos dois nomeia PIB nem preco.
+     ⚠ E O TRACO DO PIB E 1,9 E NAO 1,3: com o traco comum a mancha media 11 contra 18, 19 e
+     20 dos outros tres — tres hastes soltas poem menos tinta que um contorno fechado. */
+  /* A seta dupla do botao de avancar: o gesto de atravessar o mes, e nao um enfeite. */
+  chevron: '<path d="M3.5 3.5 8 8l-4.5 4.5"/><path d="M9 3.5 13.5 8 9 12.5"/>',
+  gdp: '<g stroke-width="1.9"><path d="M3.6 13V9"/><path d="M8 13V5.8"/><path d="M12.4 13V3"/></g>',
+  /* A etiqueta de preco: nenhum outro glifo do conjunto e uma etiqueta. */
+  prices:
+    '<path d="M8.7 2.6h4a.7.7 0 0 1 .7.7v4a1 1 0 0 1-.3.7l-5.4 5.4a1 1 0 0 1-1.4 0' +
+    'L2.6 9.7a1 1 0 0 1 0-1.4L8 2.9a1 1 0 0 1 .7-.3z"/><circle cx="10.9" cy="5.1" r="1"/>',
   /* ⚠ OS DOIS ULTIMOS NASCERAM COM A COLUNA DO GABINETE, e nao com o rail: nenhuma tela
      tinha glifo para RISCO nem para GRUPO DE PRESSAO. O triangulo de aviso e o unico simbolo
      de alerta que nao precisa ser aprendido; o grupo e tres silhuetas, porque quem derruba um

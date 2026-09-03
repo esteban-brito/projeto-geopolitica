@@ -63,10 +63,10 @@
   }
 
   :root {
-    --bg: #090d15;
-    --bg-rgb: 9, 13, 21;
-    --bg-deep: #05070c;
-    --bg-deep-rgb: 5, 7, 12;
+    --bg: #060a13;
+    --bg-rgb: 6, 10, 19;
+    --bg-deep: #02040a;
+    --bg-deep-rgb: 2, 4, 10;
 
     --ink: #eef2f8;
     --ink-rgb: 238, 242, 248;
@@ -172,18 +172,13 @@
 
     /* O MATIZ estava certo o tempo todo — 35 graus, ambar —, e o que estava errado era a
        LUMINOSIDADE: 33,5%. */
-    --glass-brand-bg: linear-gradient(
-      var(--light-angle),
-      rgba(var(--brand-rgb), 0.82),
-      rgba(var(--brand-rgb), 0.62)
-    );
-
-    /* oficio   dy=0 `77,72,66`  dy=1 `78,77,75`  brilhos iguais: le como 2px indice dy=0
-       `54,66,80`  dy=1 `80,91,103` o realce mais CLARO que a borda .glass-action dy=0
-       `177,153,108` dy=1 `184,171,149` .glass-support dy=0 `43,51,60`  dy=1 `64,70,79` ⚠ E A
-       BASE E OS LADOS JA ESTAVAM CERTOS, o que prova que o defeito era so o realce de cima:
-       embaixo o bisel poe a sombra ANTES do fio da borda — luz e sombra, e e o par que da
-       espessura —, e nos lados so ha o fio da borda. */
+    /* ⚠ A BASE E OS LADOS JA ESTAVAM CERTOS, o que prova que o defeito era so o realce de
+       cima: embaixo o bisel poe a sombra ANTES do fio da borda — luz e sombra, e e o par que
+       da espessura —, e nos lados so ha o fio da borda. Medido em dy=0 contra dy=1:
+         oficio          `77,72,66`     `78,77,75`     brilhos iguais: le como 2px
+         indice          `54,66,80`     `80,91,103`    o realce mais CLARO que a borda
+         `.glass-action` `177,153,108`  `184,171,149`
+         `.glass-support`  `43,51,60`     `64,70,79` */
     --bevel-under: inset 0 -1px 0 rgba(0, 0, 0, 0.26);
 
     --radius-stage: 24px;
@@ -251,6 +246,58 @@
     --text-note: 0.78rem;
     --text-name: 1.05rem;
     --track-label: 0.18em;
+
+    /* ── A BARRA SUPERIOR ──────────────────────────────────────────────────────
+       Cada numero daqui foi girado no clone e escolhido a olho: a barra ganhou um
+       painel de 51 campos para que a escolha fosse dele e nao deduzida por mim. */
+    --topbar-h: 78px;
+    --topbar-gap: 5px;
+    --piece-h: 57px;
+    --piece-radius: 16px;
+
+    --mark-size: 15px;
+    --mark-track: 0.25em;
+    --mark-gap: 9px;
+    --seal-size: 22px;
+    --go-glyph: 15px;
+
+    --vit-col: 132px;
+    --vit-icon-col: 18px;
+    --vit-gap: 10px;
+    --vit-track: 0.16em;
+    --vit-value: 15px;
+    --vit-label-row: 12px;
+    --vit-row: 19px;
+    --vit-draw-row: 14px;
+    --vit-spark: 88px;
+    --vit-spark-h: 12px;
+    --vit-meter-h: 4px;
+    --vit-drop: 1px;
+    --stats-pad: 6px;
+    --stats-pad-b: 1px;
+    --stats-vit: 8px;
+
+    --when-size: 22px;
+    --when-note: 11.5px;
+    --when-squeeze: 0.9;
+    --when-track: 0.01em;
+    --when-gap-date: 0px;
+    --when-gap-rows: 3px;
+    /* ⛔ A LARGURA DA PECA E FIXA, e e o que faz a barra ser MENU. Medida no conteudo mais
+       largo que o catalogo produz — `relatório bimestral · 3 meses`, 198px naturais, 154,4
+       no piso de compressao — mais as duas sangrias. Sem isto ela ia de 140 a 167 conforme o
+       mes, empurrava o botao e a barra inteira parecia se refazer a cada virada. */
+    --when-w: 175px;
+    --when-pad: 10px;
+    --when-pad-top: 3.6px;
+    --when-rise: 1.5px;
+    --note-rise: 1px;
+
+    --go-w: 315px;
+    --go-size: 15px;
+    --go-pad-l: 15.7px;
+    --go-pad-r: 18px;
+    --go-gap: 7px;
 
     /* Foi para 90ms, que e reacao; PECA e uma coisa se rearranjando na tela. */
     --dur-touch: 90ms;

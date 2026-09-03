@@ -129,11 +129,13 @@ export function premiumOf({ debtRatio, tolerance, slope }) {
 }
 
 /**
- * de taxa basica custa cerca de R$ 40 bi ao ano ao Tesouro.
+ * O QUE A DIVIDA CUSTA NUM MES, em bilhoes.
  *
  * Separado de `step` porque o estoque da divida mora no LASTRO e nao aqui, e
  * motor nenhum chama outro motor: quem tem os dois na mao e a camada de
  * aplicacao, que passa o estoque e recebe a conta.
+ * ⚠ A ANCORA E PUBLICA: cada 1 p.p. de taxa basica custa cerca de R$ 40 bi ao ano ao
+ * Tesouro, e com divida perto de R$ 9,4 tri isso da os 45% que `floatingDebt` declara.
  * @param {object} input
  * @param {number} input.debt - o estoque bruto
  * @param {number} input.rate - a taxa basica nominal ao ano

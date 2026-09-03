@@ -12,6 +12,206 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO QUE LEVOU A BARRA PARA O JOGO — 31/08 e 01/09/2026
+
+Ela começou com _"vamos melhorar ela"_ sobre a barra do clone e terminou com a barra rodando
+em `src/`, o portão verde e dois achados de catálogo fechados. No meio houve **uma troca de
+método** que vale mais que a barra.
+
+### A lição da sessão é sobre QUEM gira o número
+
+Passei horas ajustando por medição enquanto ele julgava com o olho, e cada volta custava uma
+rodada inteira: eu media, ele olhava, ele recusava. Quando ele perguntou _"cara eu posso
+mexer? em tamanhos, espaçamentos, vãos, etc? pq parece que voce nao consegue"_, a resposta
+certa não era ajustar melhor — era **entregar o controle**.
+
+⭐ **O clone ganhou um painel de 51 campos.** Toda geometria da barra virou token, e o painel
+gira cada um ao vivo: corpo, rastreio, compressão, vãos, sangrias, altura da peça, raio da
+quina, força da aresta, bisel e escala da lente. Em três mensagens ele fechou o desenho que
+oito rodadas minhas não tinham fechado, e me mandou a lista de valores para eu gravar.
+
+⚠ **E o painel só serve se ele refizer o que não é CSS.** A largura do botão entra na lente,
+na aresta e no mapa de deslocamento — girar o token sem refazer as imagens deixaria o vidro
+descrito para uma peça que não existe mais, e a costura apareceria na quina.
+
+### O defeito mais caro do painel foi meu, e era invisível
+
+O campo `compressão da letra` **não fazia nada**. O código lia `--enxuta` de
+`document.documentElement`, e o token mora em `.v2` — a leitura caía sempre na reserva
+(`0,86`), e a folha dizendo `0,78` era ficção. Nenhuma guarda pega isso: o CSS estava certo,
+o JS estava certo, e a ponte entre os dois lia do lugar errado.
+
+⭐ **A varredura nasceu daí.** Quando ele disse _"com certeza tem varios outros problemas além
+desses"_, escrevi um instrumento que **gira os 51 campos, um por um, e confere que a barra
+sobrevive** — sem erro de console, sem transbordo, com a altura dentro do razoável. Ela achou
+três defeitos de uma vez, e o pior era de escrita: a expressão que extraía a unidade tinha
+perdido as barras invertidas ao ser gravada no arquivo e virado `[-+.ds]+`, que não casa com
+`10px`. O painel concatenava `14` com `10px` e escrevia **`1410px`**.
+
+### E a exportação achou seis defeitos que o clone não podia ter
+
+Todos da mesma família: **o clone tinha um caso só, e o jogo tem todos.**
+
+1. `iconHtml` sem classe própria nasce sem tamanho — os vitais só apareciam porque a coluna
+   deles tem largura fixa;
+2. a justificação esmagava a nota a **0,49**: o clone só via `meta fiscal · 1 mês`, o
+   calendário tem `relatório bimestral · agora`. Agora há piso de 0,78, e abaixo dele a peça
+   cresce em vez de esmagar;
+3. a largura "natural" já vinha com escala dentro — limpar o estilo inline devolve a regra da
+   folha, e a conta a aplicava duas vezes;
+4. **a lente morria na primeira repintura**: remover e recriar o filtro faz o navegador perder
+   a referência `url(#id)` em silêncio, e o botão ficava sem vidro do segundo mês em diante;
+5. **botão desabilitado não recebe evento de ponteiro**, e ele desabilita durante a virada do
+   mês — se o mouse saísse ali, o `pointerleave` nunca chegava e a peça ficava presa erguida;
+6. a barra **piscava a cada mês**: a View Transition fotografa a página inteira, e a barra ia
+   junto. Ele descreveu exatamente o sintoma — _"era pra ser fixo e só mudar os numeros"_.
+
+### O que a barra provou sobre o motor
+
+⭐ **A aprovação tinha série e ninguém sabia.** A faísca dela parecia impossível — `series` só
+guarda PIB, inflação, juro, desemprego, dívida e primário —, mas `state.months[].balance`
+guarda a rua e as cadeiras de **cada fechamento**. A série existia inteira, dentro dos cartões
+do mês. Foi isso que permitiu exportar a barra **sem motor novo e sem bump de save**.
+
+### E dois números do catálogo caíram
+
+⛔ **O achado 58 morreu.** `LDO` e `LOA` estavam no campo `label` — o que o schema descreve
+como _"como o jogador o chama"_ — enquanto a explicação morava em `what`, que a barra não
+mostra. Ele perguntou _"o jogo usa LDO, e outros, eu quero usar igual está no barra.html"_, e
+a correção é de catálogo e não de tela.
+
+⛔ **A partida começava em março, e a razão não existia.** `OPENING_MONTH` era `2`, extraído de
+dois literais soltos, e **por que dois nunca foi escrito** — procurei no código, no diário e
+nos ADR. A posse presidencial é em 1º de janeiro e a semente padrão do projeto já aponta para
+ela. Ele perguntou _"por que a partida começa em março e nao em janeiro"_, e a pergunta valia:
+o mandato nascia com 46 dos 48 meses.
+
+## A SESSÃO DO VIDRO — sete gestos recusados, e o que cada recusa ensinou — 31/08/2026
+
+Ela começou com _"a data deve ficar em extenso"_ e terminou com uma gota que deforma. No meio,
+**sete gestos recusados** — e o valor da sessão está neles, porque cada recusa apontou um erro
+de método meu, e não de gosto dele.
+
+### A lição que atravessa a sessão inteira
+
+**Girei um parâmetro seis vezes antes de perguntar se o MODELO era o certo.** E quando troquei
+de modelo, ainda faltavam três trocas. O padrão só apareceu quando comecei a traduzir cada
+parâmetro em PIXEL antes de oferecê-lo:
+
+| o que eu ofereci                       | o que ele valia na tela           |
+| -------------------------------------- | --------------------------------- |
+| quatro durações de mola                | 7,5px de viagem — indistinguíveis |
+| quique 0,15                            | **0,047px** de ultrapassagem      |
+| a assimetria do toque, com quique 0,22 | **0,03px**                        |
+
+⭐ **Três vezes eu girei um número abaixo do limiar do olho e chamei aquilo de opção.** A regra
+que ficou: _antes de oferecer um parâmetro, calcule o que ele produz em pixel._
+
+### As quatro trocas de modelo, e nenhuma se alcança girando número
+
+1. **a mola não se parametriza por rigidez** — a Apple expõe duração e quique, e **o quique
+   padrão dela é ZERO**. Eu vinha pondo ultrapassagem achando que era isso que fazia flutuar;
+2. **transição CSS não preserva velocidade** — interrompida, recomeça do zero. O gesto virou
+   mola integrada por quadro, e a prova é numérica: ao tirar o dedo, a peça **continua** no
+   sentido antigo antes de virar;
+3. **a quina não é arco** — `border-radius` salta de curvatura zero para 1/r num ponto.
+   **0,27px de desvio máximo**, e é tudo de taxa e quase nada de posição;
+4. **desfoque em texto não é idioma da Apple** — o iOS materializa com escala e opacidade.
+
+### E o vidro só existiu depois de três armadilhas que eu mesmo armei
+
+`clip-path` mata o `backdrop-filter`. Um `filter` num ancestral também mata. Um irmão opaco
+atrás entra no backdrop e o vidro passa a refratar a sombra. ⭐ **E as três se encadearam:** o
+squircle pediu `clip-path` → ele recortava a `box-shadow` → mudei a sombra para `drop-shadow` no
+envoltório → **o filter do envoltório matou o vidro.** Cada conserto criava o próximo. A saída
+foi tirar a forma do CSS e pôr dentro do filtro.
+
+### Os dois defeitos que só ele podia achar
+
+**1 · _"não está animando nada"_** — e não estava mesmo: o Windows dele tem animações
+desligadas, e eu tinha escrito um caminho de `prefers-reduced-motion` que desligava o gesto e
+punha no lugar uma classe **que nunca existiu em folha nenhuma**. Sem movimento a leitura tem de
+continuar, e eu tinha escrito essa regra e quebrado.
+
+**2 · _"o que é ldo?"_** — e isso é achado, não dúvida. Se o dono do jogo não sabe, o jogador não
+sabe. O bloco "O que este mês cobra" imprime siglas do orçamento público **enquanto o catálogo
+guarda a explicação em prosa**. Está no jogo publicado, e virou o achado 58.
+
+### E a intuição que destravou o líquido foi dele
+
+_"talvez a cor da barra, a textura, tudo isso tenha que ser mudado"_ — e a medição concordava:
+atrás do botão o gradiente é **0,041 em 255**. Refração desloca a amostragem; sem aresta atrás,
+não há o que dobrar.
+
+⭐ **Mas a conclusão certa não era mudar o fundo: era que LÍQUIDO NÃO SE LÊ NA REFRAÇÃO.** Ele se
+lê na silhueta — e uma silhueta que deforma é visível sobre preto. A peça passou a esmagar
+conservando volume (164×54 → **170,6×49,9**) e a ultrapassar o repouso em **1,3px no sentido
+contrário** na volta. **O botão virou gota sem depender de nada atrás dele.**
+
+## A SESSÃO QUE FECHOU A BASE E PAROU NUM GESTO — 31/08/2026
+
+Ela tinha duas metades que não se pareciam. A primeira foi de **decisão**: ele pediu para
+_"focar no que falta definir, reformular, pra ter uma base pronta"_, e as quatro que travavam
+trabalho seguinte fecharam. A segunda foi de **desenho**, e terminou parada.
+
+### A lição da primeira metade é minha, e ela é sobre a pergunta
+
+Levei as quatro decisões escritas em `RCL`, `quórum de maioria absoluta`, `CF art. 47`,
+`piso proporcional` e `bump de esquema`. Ele respondeu: _"eu nao entendo quase nada do que um
+presidente realmente faz e serve, voce precisa explicar com mais clareza, e entendo menos ainda
+de programação"_.
+
+⚠ **A memória do projeto já tinha essa regra escrita, e eu a quebrei assim mesmo.** O que ela
+ganhou hoje é a metade que faltava: **jargão jurídico e fiscal é tão impossível quanto nome de
+variável**. Reescrita — _"de cada R$ 100 que o governo arrecada, uns R$ 90 já têm dono antes de
+ele sentar na cadeira"_ —, as quatro decisões saíram em uma mensagem.
+
+⭐ **E ele decide muito bem quando a pergunta é legível.** Escolheu o save mais barato e mais
+arriscado com o custo na mão, e pediu o quórum realista com a única ressalva que importava:
+_"quero realismo, mas que não fica maçante, quero algo equilibrado"_ — que virou o critério de
+aceitação do item, e não um comentário.
+
+### O clone, e por que ele foi a ferramenta certa
+
+Ele desconfiou de um passo do plano — tirar o liquid glass da barra — e perguntou se dava para
+ver antes: _"você consegue aplicar esse plano como um clone sei la um site clone?"_.
+
+⭐ **O clone importa as folhas reais do projeto**, então não é maquete: é o jogo com outra
+barra. E ele decidiu duas coisas em cinco segundos que uma descrição não decidiria — que o vidro
+fica, e que a casca sólida não ganha nada. **A medição concordou pelo outro lado:** com o fundo
+meia-noite que entrou na mesma sessão, o topo da tela é quase preto, e vidro sobre preto não
+refrata. **Eu ia contra a doutrina da casa sem precisar.**
+
+### O que a captura pegou, três vezes
+
+Nenhum dos três defeitos falhava em teste nenhum, porque não havia teste: **`MESES RESTANTES`
+passando por baixo do botão**, o **`46` colando no `436` da Base**, e a **data duplicada** —
+`MAR · 2027` embaixo da marca e `MARÇO DE 2027` na ponta direita.
+
+⚠ **E o segundo não tinha conserto de espaço.** Dois números grandes vizinhos leem como um par
+por mais folga que se ponha entre eles; o conserto foi de **agrupamento**, e ele deu à barra uma
+lógica que ela não tinha: **quando · o que o país diz · o que fazer**.
+
+### E o achado de padronização veio de olhar o resto da tela
+
+A queixa dele foi _"remova esse quadrado que vc colocou de fundo como moldura de cada ícone"_, e
+ele estava certo por uma razão maior que a estética: **nenhum glifo deste jogo tem caixa** — nem
+no rail, nem na coluna do Gabinete. Eu tinha aberto um objeto novo sem perceber. Tirá-lo
+padronizou **e** matou dois dos quatro raios da barra, dois deles fora da escala do projeto.
+
+### A sessão parou num gesto, e é onde ela recomeça
+
+O botão foi refeito três vezes. A primeira era **duas animações independentes** — o rótulo subia
+8px e a dica entrava ancorada em `bottom` —, então em nenhum momento o par ficava centrado; ele
+nomeou isso de _"animação mal feita"_ e estava certo. A segunda unificou curva e tempo. A
+terceira virou gesto de verdade: a peça subindo 1px com a sombra abrindo, a pilha deslizando, e
+a leitura entrando 70ms depois, tudo na curva de folha do iOS.
+
+⛔ **E ele recusou as quatro velocidades** — 360, 460, 580 e 700ms. O pedido é
+_"smooth, clean, flutuante, lento (...) uma animação tão boa que poderemos reutilizá-la no
+futuro"_, e é isso que impede fechar no chute: **o gesto é para virar vocabulário**, e um
+vocabulário errado se paga em toda peça que o usar depois.
+
 ## A SESSÃO QUE COMEÇOU COM O PC DELE TRAVANDO — 30 e 31/08/2026
 
 Ela abriu com uma pergunta que não era sobre o jogo: _"meu pc desligou ou reiniciou sozinho?

@@ -911,8 +911,9 @@ function stanceOf(state, catalog = CATALOG) {
 
   if (!walked.proposal) return null;
 
-  /* de quem ele mais se APROXIMA, com a mesma distancia euclidiana que ECLUSA usa
-     para decidir quem vota a favor. */
+  /* ⚠ "MAIS PERTO DE", E NAO "E": o modelo nao tem regiao batizada no plano, so quatro
+     blocos com posicao declarada. A tela nao diz o que o governo E — ela diz de quem ele
+     mais se APROXIMA, com a mesma distancia euclidiana que ECLUSA usa para decidir voto. */
   let near = "";
   let article = "";
   let best = Infinity;

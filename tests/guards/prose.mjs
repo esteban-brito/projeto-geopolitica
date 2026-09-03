@@ -13,12 +13,14 @@
    ⚠ LINHA DE TIPO NAO CONTA. `@typedef`, `@param` e `@property` sao contrato, e puni-las
    empurraria o projeto para tipagem implicita — o oposto do que se quer.
 
-   ── ELA TEM QUATRO TRABALHOS, e tres nasceram em 23/08/2026 ────────────────
+   ── ELA TEM CINCO TRABALHOS ───────────────────────────────────────────────
    1. o TETO, acima;
    2. a DATA — o `CLAUDE.md` a proibe com todas as letras, e havia 56, 18 no entrypoint;
    3. o BLOCO CORTADO NO MEIO — um corte automatico de prosa ja passou por aqui;
    4. o IDENTIFICADOR MORTO — prosa que cita `--token`, `.classe` ou `arquivo.mjs` que o
-      projeto nao tem mais.
+      projeto nao tem mais;
+   5. o BLOCO DECAPITADO — o mesmo corte comeu o INICIO de treze paragrafos, e a 3 so
+      olhava o fim deles.
 
    ⚠ O QUARTO PEGA A FAMILIA MAIS CARA DAQUI, e so metade dela — ver `standards.md` §7.
    Prosa que continua valida e para de ser verdade: `trend.mjs` afirmou por sessoes que
@@ -63,6 +65,14 @@ const ENTRY = "app.mjs";
    Medido antes de escrever: com esta lista, ZERO falso positivo no projeto inteiro. Um
    casador mais largo (frase sem ponto final) acusava 25, dos quais 21 eram cabecalho de
    secao e contrato de tipo — e alarme que dispara sem defeito ensina a desligar o alarme. */
+/* ⚠ A ASSINATURA DE UM BLOCO DECAPITADO, e ela e o espelho de `CUT`: a PRIMEIRA palavra
+   comeca em minuscula, que nenhuma frase inteira faz. O mesmo corte automatico deixou NOVE
+   assim — "de Selic custa cerca de R$ 40 bi ao ano" era o que restava de um paragrafo com
+   ancora e conta. Medido antes de escrever: exigindo LETRA minuscula, zero falso positivo
+   no projeto; com qualquer caractere, os `≈` do catalogo de partidos e o `⚅` do save
+   acusavam onze. */
+const HEADLESS = /^[a-zà-ÿ]/;
+
 const CUT =
   /\b(?:e|de|em|que|com|para|ou|a|o|as|os|do|da|dos|das|no|na|nos|nas|pela|pelo|por|se|ao|aos|um|uma|nem|mas|como|entre|sem|sob|ate|apos|desde|onde|quando|porque|ja)\s*$/i;
 
@@ -257,14 +267,22 @@ export function audit(files) {
       );
     }
 
-    /* 3 — O BLOCO CORTADO NO MEIO. Ver `CUT`. */
+    /* 3 — O BLOCO CORTADO NO MEIO, e 5 — O BLOCO DECAPITADO. Ver `CUT` e `HEADLESS`. */
     for (const block of blocksFrom(comments)) {
-      if (!CUT.test(block.text)) continue;
-      add(
-        `${path}:${block.line} tem um bloco que para no meio de uma frase — ` +
-          `"…${block.text.slice(-56)}". Um corte automatico de prosa ja fez isso aqui e o ` +
-          `registro da epoca deu como falso positivo: complete a frase do original`,
-      );
+      if (CUT.test(block.text)) {
+        add(
+          `${path}:${block.line} tem um bloco que para no meio de uma frase — ` +
+            `"…${block.text.slice(-56)}". Um corte automatico de prosa ja fez isso aqui e o ` +
+            `registro da epoca deu como falso positivo: complete a frase do original`,
+        );
+      }
+      if (HEADLESS.test(block.text)) {
+        add(
+          `${path}:${block.line} tem um bloco que comeca no meio de uma frase — ` +
+            `"${block.text.slice(0, 56)}…". O mesmo corte automatico comeu o inicio de nove ` +
+            `paragrafos: devolva a frase do original, que o git guarda`,
+        );
+      }
     }
 
     /* 4 — O IDENTIFICADOR MORTO. */
@@ -320,6 +338,12 @@ export const synthetic = [
     files: new Map([
       ["src/x.mjs", "/* um evento a mais num turno deslocaria o indice e */\nconst a = 1;"],
     ]),
+  },
+  {
+    /* ⚠ ELA REINTRODUZ UM DEFEITO CONSUMADO, e nao inventado: e o que sobrou em
+       `macro.mjs` depois de o corte comer o inicio do paragrafo do juro. */
+    label: "bloco que comeca no meio de uma frase",
+    files: new Map([["src/x.mjs", "/* de Selic custa cerca de R$ 40 bi ao ano. */\nconst a = 1;"]]),
   },
   {
     /* ⚠ E ESTA ENTREGA O ENTRYPOINT, sem o qual a quarta auditoria nem roda. O

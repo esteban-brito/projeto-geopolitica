@@ -401,10 +401,7 @@ try {
     (await page.locator("#main input, #main select").count()) === 0,
     "[gabinete] a tela inicial ofereceu um controle",
   );
-  expect(
-    (await page.locator(".vital").count()) === 4,
-    "[barra] os quatro sinais vitais nao vieram",
-  );
+  expect((await page.locator(".vit").count()) === 4, "[barra] os quatro sinais vitais nao vieram");
   await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
 
   /* 1a — A POSSE PERGUNTA, e ela e a primeira decisao do mandato. ⚠ A ASSERCAO ACIMA CONTINUA

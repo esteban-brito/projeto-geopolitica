@@ -76,8 +76,22 @@
     background: rgba(var(--bg-deep-rgb), 0.72);
   }
 
+  /* ⛔ SO O TABULEIRO ATRAVESSA A TRANSICAO. A raiz cruzava as duas fotos do documento
+     inteiro — fundo, rail e barra —, e avancar o mes fazia a tela toda piscar. O que troca de
+     conteudo e o tabuleiro; o resto e moldura, e moldura nao se refaz. */
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  .board {
+    view-transition-name: board;
+  }
+
   /* A duracao da troca de tela sai do token, e nao do padrao do navegador. */
-  ::view-transition-group(root) {
+  ::view-transition-group(board) {
     animation-duration: var(--dur-screen);
   }
 }

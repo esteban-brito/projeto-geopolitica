@@ -14,13 +14,6 @@ import { UI } from "../strings.mjs";
  * @typedef {import("../../state/state.mjs").Series} Series
  */
 
-/* A barra superior passou a desenhar a mesma escada, e copiar as reguas para o segundo
-   consumidor daria dois lugares afirmando em que faixa a inflacao vive — o primeiro a ser
-   recalibrado divergiria do outro. */
-
-/* A BANDA DE TOLERANCIA DA META, para cada lado. */
-const TOLERANCE = 0.015;
-
 /**
  * UMA LINHA DO PAINEL: rotulo, valor, e a curva do que ele vem fazendo.
  *
@@ -76,6 +69,7 @@ function blockHtml({ title, rows }) {
  * @param {number} input.debtRatio o mesmo estoque sobre o PIB
  * @param {number} input.premium o spread que o mercado cobra acima da basica, ao ano
  * @param {number} input.target a meta de inflacao, do catalogo
+ * @param {number} input.ceiling o teto da banda da meta, somado na composicao
  * @param {ReadonlyArray<Area>} input.areas
  * @param {Record<string, number>} input.index
  * @param {Record<string, number[]>} input.history
@@ -90,6 +84,7 @@ export function financeHtml({
   debtRatio,
   premium,
   target,
+  ceiling,
   areas,
   index,
   history,
@@ -120,9 +115,8 @@ export function financeHtml({
         past: series.inflation,
         range: SCALE.inflation,
         note: `${UI.finance.target} ${percent(target, 0)}`,
-        /* O regime brasileiro tem tolerancia de 1,5 ponto para cada lado, e o alvo e o CENTRO
-           — nao um teto. */
-        tone: macro.inflation > target + TOLERANCE ? "down" : "flat",
+        /* O alvo e o CENTRO da banda e nao um teto, e por isso quem julga e o teto dela. */
+        tone: macro.inflation > ceiling ? "down" : "flat",
       }) +
       lineHtml({
         label: UI.finance.rate,

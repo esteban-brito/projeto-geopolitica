@@ -105,14 +105,18 @@ export const PRESSURE_SCHEMA = {
   spite: { kind: "number", min: 0, max: 1 },
 };
 
-/* Medido em 48 meses, com o mercado parando em 65 num governo que promete tudo e nao paga:
-   passivo, nao paga ninguem     nunca abre paga metade            abre no mes 48 promete tudo
-   e nao honra      abre no mes 47 corta tudo e nao paga       nunca abre ⚠ E O GOVERNO
-   PASSIVO SOBREVIVER E UM RESULTADO, e nao um defeito de calibragem: nao gastar AGRADA o
-   mercado, e o capital o abriga.
-   ECLUSA, o TABLE da Mesa e o ANSWER_TIME da carta.
-   a rua — mas nao cai. A CALDEIRA torna a passividade perigosa e nao a torna fatal, e
-   forcar numeros ate ela ser fatal seria calibrar para obter a conclusao desejada. */
+/* A CALIBRAGEM DA CALDEIRA E PRIMEIRO CHUTE DECLARADO — como o PIVOT de ECLUSA, o TABLE da
+   Mesa e o ANSWER_TIME da carta. O que NAO e chute sao duas desigualdades:
+   ⚠ `cool` MENOR que `rise`, porque reputacao se perde mais rapido do que se recupera: a
+   0,18 contra 0,06, um mes de descaso custa tres meses de atencao para desfazer, e uma
+   caldeira simetrica seria um pendulo — bastaria alternar quem se agrada para nunca
+   esquentar nada;
+   ⚠ `brokerBoil` MAIOR que `boil`, porque o fisiologismo e o ultimo a virar: ele ganha
+   dinheiro sustentando, e enquanto houver torneira ele fica. */
+/* ⚠ O GOVERNO PASSIVO SOBREVIVER E UM RESULTADO, e nao um defeito de calibragem: nao
+   gastar AGRADA o mercado, e o capital o abriga. Ele perde o baixo clero e perde a rua —
+   mas nao cai. A CALDEIRA torna a passividade perigosa e nao a torna fatal, e forcar
+   numeros ate ela ser fatal seria calibrar para obter a conclusao desejada. */
 /* ⚠ Comecei em 35, sem razao nenhuma alem de gosto, e a medicao mostrou o preco de um chute:
    DUAS exigencias em 48 meses, as duas depois do mes 45 — instrumento que nunca dispara e o
    achado 3 deste projeto se repetindo. */

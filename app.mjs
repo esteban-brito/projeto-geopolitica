@@ -22,6 +22,7 @@ import {
   NEUTRAL,
   pollFrom,
   THRESHOLDS,
+  MONTHS_PER_TERM,
   SEATS,
   SIMPLE_MAJORITY,
   bandsOf,
@@ -70,7 +71,9 @@ import { financeHtml } from "./src/ui/screens/finance.mjs";
    escrita aqui: "quem a produz e SONDA, que nao existe". O motor
    nasceu, e o numero passou a se mover quando o mes e resolvido de verdade —
    que era a unica condicao. */
-import { turnHtml, vitalsHtml } from "./src/ui/screens/dashboard.mjs";
+import { vitalsHtml, whenHtml } from "./src/ui/screens/dashboard.mjs";
+import { bindAdvance, dressTopbar } from "./src/ui/shared/topbar.mjs";
+import { iconHtml } from "./src/ui/shared/icons.mjs";
 import { cabinetHtml } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
 import { describeMail, describeMonth, trayHtml } from "./src/ui/screens/inbox.mjs";
@@ -79,6 +82,11 @@ import { DEFAULT_TREATMENT, UI } from "./src/ui/strings.mjs";
 /** @typedef {import("./src/state/state.mjs").GameState} GameState */
 /** @typedef {import("./src/public/index.mjs").Orders} Orders */
 /** @typedef {import("./src/public/index.mjs").Report} Report */
+
+/* ⛔ A SOMA E FEITA UMA VEZ SO, e nao em cada tela: as duas que perguntam se a inflacao
+   esta ruim tem de dar a MESMA resposta, e a soma repetida e como a barra acusava desde
+   7,5% enquanto Financas acusava desde 4,5%. */
+const INFLATION_CEILING = CATALOG.macro.inflationTarget + CATALOG.macro.inflationTolerance;
 
 const el = {
   /* A CASCA INTEIRA, e ela so ganhou id: ate entao nada precisava
@@ -89,7 +97,9 @@ const el = {
   turn: must("turn"),
   vitals: must("vitals"),
   main: must("main"),
+  seal: must("seal"),
   advance: /** @type {HTMLButtonElement} */ (must("advance")),
+  advanceArrow: must("advanceArrow"),
   restart: must("restart"),
   swearDialog: /** @type {HTMLDialogElement} */ (must("swearDialog")),
   swearForm: /** @type {HTMLFormElement} */ (must("swearForm")),
@@ -429,6 +439,7 @@ function financeInput() {
     premium,
     series: state.series,
     target: CATALOG.macro.inflationTarget,
+    ceiling: INFLATION_CEILING,
     areas: CATALOG.areas,
     index: state.capacity.index,
     /* ⚠ A FONTE MUDOU, e ela era a ERRADA desde que a coluna nasceu. Isto
@@ -841,7 +852,16 @@ function paint() {
   const before = standing;
 
   if (!previous || previous.month !== state.month) {
-    el.turn.innerHTML = turnHtml(state, term);
+    /* ⚠ O PRAZO VEM DO CALENDARIO e nao de uma segunda conta aqui: `calendarOf` e funcao
+       pura do mes, e refazer a distancia na tela daria a barra uma data de fim propria. */
+    const ahead = calendarOf(state.month);
+    const due = ahead.now[0] ?? ahead.soon[0] ?? null;
+    el.turn.innerHTML = whenHtml({
+      month: state.month,
+      deadline: due ? { label: due.label, due: Number("due" in due ? due.due : 0) } : null,
+      left: Math.max(0, MONTHS_PER_TERM - state.month),
+      over: term.over,
+    });
   }
 
   if (!previous || previous !== state) {
@@ -851,19 +871,25 @@ function paint() {
        Numa RECARGA `painted` volta nulo, entao a barra afirmava que nada tinha andado no
        mes 30 de um mandato em que tudo andou. Ausencia nao e resultado: agora a barra
        recebe `null` e nao desenha seta nenhuma. */
+    /* ⭐ AS QUATRO SERIES EXISTEM SEM MOTOR NOVO. PIB e inflacao vem de `series`; aprovacao
+       vem dos cartoes do mes, que guardam a rua de cada fechamento. Nenhuma linha desenhada
+       aqui e inventada, e a que nao tem historia nao desenha. */
+    const past = [...state.months].reverse();
     el.vitals.innerHTML = vitalsHtml({
       macro: state.macro,
       approval: poll.good,
       base: current.base,
       majority: SIMPLE_MAJORITY,
-      before: previous
-        ? {
-            gdp: previous.macro.gdp,
-            inflation: previous.macro.inflation,
-            approval: pollFrom(previous.mood, CATALOG.segments, CATALOG.opinion).good,
-            base: standing?.base ?? current.base,
-          }
-        : null,
+      seatsTotal: SEATS,
+      /* ⚠ OS DOIS LIMIARES SAO DO CATALOGO: o da rua e o mesmo com que a CALDEIRA rompe. */
+      streetFloor: CATALOG.pressure.streetFloor,
+      ceiling: INFLATION_CEILING,
+      horizon: MONTHS_PER_TERM,
+      series: {
+        gdp: state.series.gdp,
+        inflation: state.series.inflation,
+        approval: past.map(card => card.balance.streetNow),
+      },
     });
   }
 
@@ -890,6 +916,12 @@ function paint() {
       back.focus({ preventScroll: true });
     }
   }
+
+  /* ⚠ O VIDRO SE VESTE NA MESMA VOLTA, e nao no quadro seguinte: entre a escrita e o
+     proximo quadro cabe uma pintura, e nela o bloco aparecia sem a justificacao — largo, e
+     so depois encolhendo. A barra e menu fixo, e menu fixo nao se refaz na tela. */
+  dressTopbar(document);
+  bindAdvance(el.advance);
 
   painted = state;
   standing = current;
@@ -1263,10 +1295,14 @@ el.advance.addEventListener("click", () => {
     /* ⚠ O FECHO PUXA A TELA PARA SI no mes em que o mandato acaba, e so nesse mes. */
     if (termOf(state, CATALOG).over) screen = "cabinet";
 
-    transition(() => {
-      resolving = false;
-      endLabel();
-    });
+    /* ⛔ AVANCAR O MES NAO E TROCAR DE TELA, e tratar os dois igual era o defeito. Numa View
+       Transition o navegador congela a pagina numa IMAGEM, e `backdrop-filter` nao sobrevive
+       a um instantaneo: a barra piscava de vidro para chapado e de volta, uma vez por mes. O
+       rail nao piscava so porque o conteudo dele nao muda — o olho nao tinha onde notar.
+       ⭐ A troca de TELA continua com transicao; a virada do MES pinta direto. */
+    paint();
+    resolving = false;
+    endLabel();
   } catch {
     resolving = false;
     el.advance.disabled = false;
@@ -1380,6 +1416,15 @@ document.documentElement.style.setProperty("--neutral", String(NEUTRAL));
  * @param {string} hint
  */
 function label(node, text, hint) {
+  /* ⚠ O BOTAO DE AVANCAR TEM DUAS LINHAS PROPRIAS, e escrever nele apagaria a aresta, o
+     realce e a seta — todos filhos dele. O resto da tela continua recebendo texto direto. */
+  const own = node.querySelector(".go__label");
+  if (own) {
+    own.textContent = text;
+    const note = node.querySelector(".go__hint");
+    if (note) note.textContent = hint;
+    return;
+  }
   node.textContent = text;
   /* ⚠ A LEGENDA E OPCIONAL, e o teste dela e um so: ela se paga
      quando diz algo que o rotulo nao diz. "Avancar o mes" nao precisa de "resolve o
@@ -1429,7 +1474,7 @@ function endLabel(/** @type {ReturnType<typeof termOf> | null} */ term_ = null) 
     term.over
       ? UI.actions.endedHint
       : quiet.length === 0
-        ? ""
+        ? `${Math.max(0, MONTHS_PER_TERM - state.month)} ${UI.closing.monthsLeft}`
         : /* ⚠ COM UMA SO, O ROTULO NOMEIA; com duas ou mais, ele conta. O assunto vem da
              carta que o motor devolveu, e nao de uma segunda montagem aqui — `silences` e
              `settle` filtrada, entao o que se imprime e a carta que de fato vai fechar. */
@@ -1438,6 +1483,11 @@ function endLabel(/** @type {ReturnType<typeof termOf> | null} */ term_ = null) 
           : `${quiet.length} ${UI.actions.silenceMany}`,
   );
 }
+
+/* OS DOIS GLIFOS FIXOS DA BARRA — o brasao da marca e a seta do botao. Eles nao mudam com o
+   estado, entao nascem na abertura e nao a cada pintura. */
+el.seal.innerHTML = iconHtml("estado", "icon");
+el.advanceArrow.innerHTML = iconHtml("chevron", "icon");
 
 endLabel();
 label(el.restart, UI.actions.restart, "");

@@ -18,9 +18,19 @@
 
 ## ▶ COMECE POR AQUI
 
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 60 provas sintéticas · 146
-arquivos · 299 provas · passeio verde em DUAS janelas**. Branch `caixa-de-entrada`, **21
-commits à frente de `main`**, árvore limpa, e **nada foi enviado ao remoto**.
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 61 provas sintéticas · 152
+arquivos · 300 provas · passeio verde**. Branch `caixa-de-entrada`, **21 commits à frente de
+`main`**, e **nada foi enviado ao remoto**.
+
+⚠ **A ÁRVORE NÃO ESTÁ LIMPA:** a barra superior, os dois achados de catálogo e a documentação
+desta sessão estão no disco e **não commitados** — a decisão de commitar é dele.
+
+⚠ **E A PESQUISA 04 ENTROU — [`research/04-o-cargo-de-presidente.md`](research/04-o-cargo-de-presidente.md)**,
+o estudo do cargo contra o motor. A tese dele: **o jogo modela o VOTO, e o cargo brasileiro é
+feito de AGENDA** — o A4 está pela metade no plano, porque a caducidade da MP é o preço e o
+trancamento de pauta (CF art. 62, §6º) é o poder. Os dois buracos mais baratos: o **decreto
+tributário** (`taxDelta` já é lido pela CORRENTE e ninguém o escreve) e o **piso proporcional**
+(saúde e educação encolhem sozinhas na recessão, e o conserto está escrito desde 13/08).
 
 ⚠ **O SAVE SUBIU PARA A VERSÃO 20, e ele recusa versão diferente em vez de converter:** toda
 partida salva antes desta sessão **não abre mais**. O campo novo é `platform`, e o custo estava
@@ -141,6 +151,53 @@ só até o mês 8. **A auditoria completa mora em `tmp/auditar-caixa.mjs`**, que
 Medido a 1440×900: **rola 314px no mês 9**. ⚠ **A decisão é de 24/08 e pode estar vencida** —
 desde então a coluna, a bandeja e agora a carta rolam por dentro. **Espera ele.**
 
+### ✔ A BARRA PAROU DE INVENTAR LIMIAR — 03/09/2026
+
+**Os dois alarmes dos sinais vitais eram cópia, e as duas cópias tinham envelhecido.** A guarda
+`prose` acusou um bloco de 11 linhas em `dashboard.mjs` (teto 10); a leitura do arquivo achou o
+resto.
+
+| o quê                       | a barra dizia | a verdade do projeto                         |
+| --------------------------- | ------------- | -------------------------------------------- |
+| a rua acende abaixo de…     | **20**        | `PRESSURE.streetFloor` = **16**              |
+| a inflação acende acima de… | **7,5%**      | Finanças acusa desde **4,5%** (meta + banda) |
+
+⚠ **O 20 É O VALOR PRÉ-RECALIBRAGEM:** `streetFloor` foi de 20 para 16 em `95681c3`, e a tela
+ficou com a cópia velha — a barra gritava quatro pontos antes de a rua romper de verdade.
+
+⚠ **E O 7,5% SÓ EXISTIA NA BARRA.** `finance.mjs` já declarava a regra (`meta + tolerância`), e o
+comentário dela **previa este defeito com todas as letras**: _"copiar as réguas para o segundo
+consumidor daria dois lugares afirmando em que faixa a inflação vive"_. O segundo consumidor
+nasceu e copiou.
+
+**Agora a banda mora no catálogo** — `inflationTolerance: 0.015` em `src/data/macro.mjs`, com
+fonte (CMN, 1,5 ponto para cada lado) —, a soma é feita **uma vez** em `app.mjs`
+(`INFLATION_CEILING`) e as duas telas recebem o mesmo número. A prova
+_"O ALARME DA BARRA E O LIMIAR DO CATALOGO"_ **morde**: com os literais antigos ela falha em
+`acesos(floor + 3)`.
+
+⚠ **MEXEU EM `src/data/`, E A SÉRIE FOI REMEDIDA:** nenhum motor lê o campo novo (`grep` em
+`domain/`, `application/` e `state/` volta vazio) e a linha `agenda` saiu **idêntica** —
+90,0% · 26 de 43 · ind 48→20 · seg 38→20. **A tabela abaixo continua válida.**
+
+✔ **E TREZE COMENTÁRIOS EMBARALHADOS FORAM RECOMPOSTOS.** O commit `672291a` ("a prosa cai
+60%") cortou prosa em massa e **comeu o início de treze parágrafos**, deixando frases órfãs
+como _"de Selic custa cerca de R$ 40 bi ao ano"_ — o que restava de um parágrafo com âncora e
+conta. Dois blocos ficaram piores: um trecho de um parágrafo foi **enxertado dentro de outro**
+(o prêmio de risco em `macro.mjs`, a CALDEIRA em `lobbies.mjs`). **O original estava no `git`**
+— cada bloco foi recomposto de `672291a^`, sem inventar texto.
+
+⚠ **E TRÊS NÚMEROS DO ORIGINAL NÃO VOLTARAM, porque envelheceram:** a fervura "em 60" (hoje
+`boil` é 68), o piso da rua "em 20%" (hoje 16) e a tabela de meses medida com a calibragem
+antiga. Restaurar texto velho ao pé da letra teria devolvido três afirmações falsas ao
+catálogo.
+
+✔ **A GUARDA `prose` GANHOU A REGRA 5 — o BLOCO DECAPITADO**, espelho da regra 3 (que só olhava
+o fim da frase). Ela acusa bloco cuja primeira palavra começa em minúscula. **Medido antes de
+escrever: zero falso positivo** — com qualquer caractere em vez de letra, os `≈` do catálogo de
+partidos e o `⚅` do save davam onze alarmes falsos. **Ela achou o 13º bloco sozinha**, em
+`30-components.css`, que a varredura manual não pegou.
+
 ### ▶ O BRASIL INTEIRO — a direção declarada em 31/08/2026
 
 Palavras dele: _"nós vamos criar o brasil todo com dados reais, tudo mesmo, estados, capitais,
@@ -174,8 +231,11 @@ pensar no que colocar lá."_
 
 ⚠ **ISSO REABRE O CICLO 9 E O C6 DESTA SESSÃO:** hoje a carta é o lugar onde o jogador decide —
 a emenda pergunta com duas saídas (`accept`/`block`), a posse pergunta os três compromissos, e
-o silêncio é resposta com prazo. **Sem botão, essas decisões precisam de outro lugar**, e o
-lugar não está decidido.
+o silêncio é resposta com prazo.
+
+✔ **E O DESTINO FOI DECIDIDO NO MESMO DIA — a decisão 1 abaixo:** a carta vira **ponteiro**. Ela
+mostra a pergunta, o que está em jogo e o prazo, e o único gesto dela é um link para a tela onde
+se responde — Congresso, a tela da área, e uma tela de abertura para a posse.
 
 ### ▶ A DIREÇÃO QUE ELE DEU — menos texto, mais visual
 
@@ -303,55 +363,182 @@ para `--ink-soft`. Quem separa ela do rótulo acima é a caixa e o traqueamento,
 ⚠ **E `directionOf` SAIU DE `cabinet.mjs` PARA `shared/trend.mjs`:** a faixa precisava da
 mesma conta, e refazê-la aqui faria a faísca discordar da seta do Gabinete no primeiro empate.
 
-### ▶ AS SETE DECISÕES QUE ESPERAM ELE — atualizada em 31/08/2026
+### ✔ A BARRA SUPERIOR ENTROU NO JOGO — 01/09/2026
 
-> **Nenhuma delas se toma sozinha, e nenhuma tem prazo.** Elas estão aqui em ordem de quanto
-> travam o trabalho seguinte. As três primeiras são da conversa de 31/08 e ainda não foram
-> debatidas.
+Ela viveu quatro dias em `tmp/barra.html`, foi ajustada por ele num painel de 51 campos, e
+**foi levada para `src/` com o portão verde**. O que roda hoje na barra é a barra do clone.
 
-**1 · ⭐ A CAIXA VIRA EMAIL, E O GABINETE NASCE VAZIO.** Palavras dele: _"em nenhuma mensagem eu
-quero que tenha botões, eu quero que sejam EMAIL, exatamente igual a um EMAIL"_, e _"vamos mudar
-o nome dessa aba Gabinete pra Email, e criar uma nova aba, totalmente vazia, chamada Gabinete"_.
+**A composição, e ela é a que ele escolheu entre três:** a marca à esquerda, e à direita um
+**cacho de três peças de vidro encostadas** — os quatro vitais numa peça, o bloco do quando,
+e o botão. As três têm a mesma altura, a mesma quina, a mesma aresta e a mesma lente; o que
+muda entre elas é a tinta do corpo.
 
-⚠ **Isso reabre o ciclo 9 e o C6 desta sessão:** hoje a carta é o único lugar onde o jogador
-decide — a emenda pergunta com prazo (o silêncio aceita), a chantagem do lobby pergunta, e a
-posse pergunta os três compromissos. **Ele já respondeu para onde vão:** _"algumas no gabinete
-novo, algumas nas outras telas, vamos reformular e reestruturar muita coisa"_ — e **qual vai
-para onde não está decidido**. Os seis blocos da coluna direita: _"ainda não decidi"_.
+| medido no jogo             |                                         |
+| -------------------------- | --------------------------------------- |
+| alturas das três peças     | **57 · 57 · 57**                        |
+| vão entre elas             | **5**                                   |
+| margens da barra           | **16 · 16**                             |
+| eixos verticais            | marca, bloco e botão todos em **39,0**  |
+| bloco — as duas linhas     | começam e terminam no **mesmo pixel**   |
+| botão — margens de tinta   | 16 · 18, e os vãos internos em 8,8 e 20 |
+| custo de quadro, uma lente | **16,67 ms · 0 quadros longos**         |
+| tipo                       | **1 família · 2 pesos**                 |
 
-**2 · ⭐ O SAVE — versão a versão, ou `semente + ordens`.** É a opção 2 da Restrição 3 do
-[ciclo 13](cycles/13-o-glorioso.md), e o [ciclo 17](cycles/17-o-brasil-inteiro.md) a tornou
-urgente: 27 estados e um cadastro de empresas **não cabem em um bump**. Medido: 48 meses se
-refazem em **10,3ms**. Um save de repetição tolera mudança de estado por construção.
+⭐ **E NENHUM DESENHO É INVENTADO.** PIB e inflação saem de `series`; **a aprovação saiu dos
+cartões do mês**, que já guardavam a rua de cada fechamento — por isso a exportação não pediu
+motor novo nem bump de save. A Base desenha **medidor** e não faísca porque ela tem _limiar_ e
+não história. Sem história a linha não existe: o que existe é o ponto, e ele fica **cinza**.
 
-**3 · MENOS TEXTO, MAIS VISUAL — por onde começar.** Palavras dele: _"tudo parece escrito por
-IA... gráficos, mapas, isso tudo é melhor do que só texto e mais texto"_. As quatro candidatas
-que ofereci, e ele não escolheu: **hemiciclo da Câmara** (já é o C1 da Parte C do ciclo 16, e a
-tela certa é o Congresso) · **barras no lugar de linhas** (dinheiro do mês, aprovação por renda)
-· **curvas de histórico** nos blocos (a série existe e só a tela de Área a desenha) · **varrer e
-cortar texto redundante**. ⛔ **E o mapa por estado não entra sem dado por estado.**
+**O que a exportação levou para `src/`:**
 
-**4 · O GABINETE ROLA ABAIXO DE 940px DE JANELA.** Decisão de 24/08 (`40-shell.css`): travar a
+| arquivo                    | o quê                                                    |
+| -------------------------- | -------------------------------------------------------- |
+| `ui/shared/squircle.mjs`   | a quina de curvatura contínua                            |
+| `ui/shared/glass.mjs`      | a lente (`feDisplacementMap`) e a pele (Fresnel + corpo) |
+| `ui/shared/spring.mjs`     | a mola do modelo da Apple, integrada por quadro          |
+| `ui/shared/topbar.mjs`     | veste as três peças, justifica o bloco e liga o gesto    |
+| `ui/screens/dashboard.mjs` | as quatro leituras e o bloco do quando                   |
+| `ui/shared/icons.mjs`      | `gdp`, `prices` e `chevron`                              |
+
+⛔ **SEIS DEFEITOS SÓ APARECERAM DEPOIS DE A BARRA ENTRAR NO JOGO**, e nenhum deles existia no
+clone — todos são da família "o clone tinha um caso só":
+
+1. **`iconHtml` sem classe própria nasce sem tamanho.** Os vitais só apareciam porque a coluna
+   deles tem largura fixa; o selo e a seta viviam em caixa `auto` — zero por zero;
+2. **a justificação esmagava a nota a 0,49.** O clone só via `meta fiscal · 1 mês`; o
+   calendário tem `relatório bimestral · agora`, quase o dobro. Agora há **piso de 0,78**:
+   abaixo dele a peça CRESCE em vez de esmagar;
+3. **a largura "natural" já vinha com escala dentro** — limpar o estilo inline devolve a regra
+   da folha, que já comprime, e a conta a aplicava duas vezes;
+4. **a lente morria na primeira repintura.** Remover e recriar o filtro faz o navegador perder
+   a referência `url(#id)` **em silêncio**: o botão ficava sem vidro do segundo mês em diante.
+   Agora ela só se refaz quando o tamanho muda;
+5. **botão desabilitado não recebe evento de ponteiro**, e ele desabilita durante a virada do
+   mês: se o mouse saísse ali, o `pointerleave` nunca chegava e a peça ficava presa erguida. O
+   gesto passou a escutar no **envoltório**, que nunca desabilita;
+6. **`.action--primary` virou regra órfã** — a lâmina âmbar morreu com o botão novo, e o token
+   `--glass-brand-bg` foi junto.
+
+⚠ **A GEOMETRIA DELA MORA EM 44 TOKENS** em `00-tokens.css`, e cada um foi girado por ele no
+painel do clone e escolhido a olho. Mexer na barra é mexer em token, não em regra.
+
+### ✔ DOIS ACHADOS DE CATÁLOGO FECHARAM COM ELA — 01/09/2026
+
+⛔ **O ACHADO 58 MORREU.** `LDO` e `LOA` estavam no campo `label`, que o schema descreve como
+_"como o jogador o chama"_, enquanto a explicação morava em `what` — que a barra não mostra.
+Viraram **`Meta fiscal`** e **`Orçamento do ano`**; a norma continua citada em `source`.
+
+⛔ **A PARTIDA COMEÇAVA EM MARÇO, E NINGUÉM SABIA POR QUÊ.** `OPENING_MONTH` era `2`, extraído
+de dois literais soltos, e **a razão do número não estava escrita em lugar nenhum** — nem no
+código, nem no diário, nem em ADR. A posse presidencial brasileira é em 1º de janeiro e a
+semente padrão já aponta para ela (`20270101`). Agora é **`0`**: a partida abre em **jan/2027**
+e o mandato nasce com **48 dos 48 meses** — antes nascia com 46.
+
+⚠ **E ELE TOCA O MOTOR FISCAL**, não só a tela: a banda de despesa usa `state.month −
+OPENING_MONTH` para saber que fração do ano passou. A série abaixo foi remedida por causa
+disto, e **o primário continua podendo ser negativo — 25 dos 48 meses, de −4,9 a +2,6**.
+
+### ✔ O FUNDO FICOU MEIA-NOITE — 31/08/2026
+
+Pedido dele. `validate` verde com o passeio nas duas janelas, e **o contraste do texto só
+melhora quando o fundo escurece** — nada precisou ser reajustado.
+
+|                      | antes                     | agora                         |
+| -------------------- | ------------------------- | ----------------------------- |
+| `--bg-deep`          | `#05070c`                 | **`#02040a`**                 |
+| `--bg`               | `#090d15`                 | **`#060a13`**                 |
+| as 4 luzes da aurora | 0,58 · 0,20 · 0,50 · 0,26 | **0,30 · 0,09 · 0,26 · 0,13** |
+
+⭐ **E ele decidiu uma pergunta de desenho de graça:** com o topo da tela quase preto, o vidro
+não tem o que refratar ali. Tirar o liquid glass da barra **não ganha nada** — foi por isso que
+a proposta de casca sólida caiu.
+
+### ▶ O ESTUDO DO CARGO — [`research/04`](research/04-o-cargo-de-presidente.md), 31/08/2026
+
+A tese: **o jogo modela o VOTO, e a presidência brasileira é feita de AGENDA.** Os dois buracos
+mais baratos: o **decreto tributário** (`taxDelta` já é lido pela CORRENTE e ninguém o escreve) e
+o **piso proporcional** — que virou a decisão 3 abaixo. O arquivo marca grau de confiança linha a
+linha e **não traz número novo**: os seis que faltam viraram as perguntas 44 a 49 do briefing.
+
+### ▶ AS QUATRO DECISÕES QUE ELE FECHOU — 31/08/2026
+
+> **A base ficou definida.** Ele pediu para _"focar no que falta definir, reformular, pra ter uma
+> base pronta"_, e as quatro que travavam o trabalho seguinte foram decididas na mesma conversa.
+> ⚠ **Nenhuma delas foi executada** — o que segue é o CRITÉRIO, e não entrega.
+
+**1 · ⚖ O EMAIL LEVA ATÉ A TELA, e não decide dentro de si.** A carta continua mostrando a
+pergunta, o que está em jogo e o prazo — e o único gesto dela é **um link que leva ao lugar onde
+se responde**. Nenhuma mensagem tem botão de escolha.
+
+⭐ **E isso confirma o C4 do ciclo 13 por outro caminho:** ele já recusava botão de decisão na
+carta porque _"o preço só a outra tela mostra"_. A diferença é que agora a carta **assume** o
+papel de ponteiro, em vez de fingir que não decide.
+
+⚠ **As três perguntas precisam de destino, e nenhuma tela nova nasce disto:** a emenda do
+relator vai ao **Congresso**, a exigência do lobby vai à **tela da área**, e a posse vai a uma
+**tela de abertura**. ⛔ **A carta da posse do passo 5 é a primeira a mudar** — os `data-pledge`
+que entraram em 30/08 saem da carta.
+
+**2 · O SAVE FICA COMO ESTÁ, e a decisão é "depois".** Nem `semente + ordens`, nem bump por onda.
+⚠ **O custo está declarado e é conhecido:** cada item da Parte A que mexer no estado mata a
+partida em andamento, e quanto mais se construir sobre o formato de hoje, mais caro fica trocar.
+**Enquanto ninguém joga um mandato inteiro, isto não machuca ninguém.**
+
+**3 · ⭐ O PISO DA SAÚDE E DA EDUCAÇÃO PASSA A ANDAR COM A RECEITA.** Aposentadoria e folha são
+valor absoluto e não cedem; saúde e educação são fração da arrecadação e **encolhem sozinhas**
+quando ela cai. É o [achado 2 da pesquisa 02](research/02-respostas-brasil-2026.md), escrito em
+13/08 e nunca construído.
+
+⚠ **O que ele custa:** `floor` deixa de ser número e ganha tipo, e o LASTRO passa a devolver
+**duas bases de receita** em vez de uma. **Mexe em `src/data/` — logo a série inteira se remede
+no mesmo commit** (Restrição 2), e a prova de âncora de `agenda.mjs` acompanha.
+
+**4 · ⭐ A VOTAÇÃO PASSA A OLHAR QUEM COMPARECEU** — e ele pediu o equilíbrio com todas as
+letras: _"quero realismo, mas que não fica maçante, quero algo equilibrado"_.
+
+A leitura do plenário já mostra `você tem 295 ± 40 · precisa de 257`. Entra **uma linha** e o
+`precisa de` deixa de ser constante:
+
+```
+comparecem   380 de 513          <- nova
+precisa de   191                 <- era sempre 257
+você tem     240 ± 38
+```
+
+⚖ **AS QUATRO REGRAS DO EQUILÍBRIO, e elas são o critério de aceitação do item:**
+
+1. **nada novo para gerenciar** — presença é CONSEQUÊNCIA da lealdade que ele já constrói. Não
+   há botão de convocar, nem recurso novo;
+2. **nunca surpresa** — o número aparece ANTES de mandar votar, no painel que ele já lê;
+3. **o texto não morre** — sessão que não abre devolve o projeto à fila. Perde-se tempo, não o
+   projeto;
+4. **um número, e não uma tela** — sem lista deputado a deputado, sem tela de presença.
+
+⭐ **O que se ganha:** a oposição passa a poder derrotar o governo **sem votar contra**, que é
+como obstrução funciona no Brasil. E a lei ordinária para de custar o dobro do que a
+Constituição cobra — hoje o jogo exige 257 para tudo que não é emenda.
+
+### ▶ AS TRÊS DECISÕES QUE SOBRARAM — e nenhuma trava trabalho
+
+**5 · O GABINETE ROLA ABAIXO DE 940px DE JANELA.** Decisão de 24/08 (`40-shell.css`): travar a
 altura ali esconderia um cartão atrás de uma dobra muda. **Medido a 1440×900: rola 314px no mês 9.** ⚠ Desde aquela decisão a coluna, a bandeja e — desde 31/08 — a carta passaram a rolar por
 dentro. **A premissa mudou; a decisão não.**
 
-**5 · as duas cartas sem número** — a Mesa pautou e a gaveta continuam sem bloco, e o número
-delas não está gravado em lugar nenhum. Puxá-lo é motor;
+**6 · MENOS TEXTO, MAIS VISUAL — por onde começar.** Palavras dele: _"tudo parece escrito por
+IA... gráficos, mapas, isso tudo é melhor do que só texto e mais texto"_. As candidatas:
+**hemiciclo da Câmara** (é o C1 da Parte C do ciclo 16, e a tela certa é o Congresso) · **barras
+no lugar de linhas** · **curvas de histórico** nos blocos · **varrer e cortar texto redundante**.
+⛔ **E o mapa por estado não entra sem dado por estado.**
 
-**6 · o dossiê externo dividido em quatro partes** no fim do [ciclo
-16](cycles/16-o-gabinete-profissional.md) — o que entra agora (A), o que é do Gabinete mas
-depois (B), o que é de outra tela (C: hemiciclo → Congresso, barra empilhada → Finanças,
-ghosting → áreas) e o que foi recusado com a razão medida (D);
-
-**7 · o glossário do termo** (B3 do dossiê) — _"Obrigatória do ano"_ não é explicado em lugar
-nenhum. A falta procede; **a forma fica em aberto**, e não é hover: o C11 e o ciclo 15 recusaram
-esconder leitura atrás do mouse.
+**7 · as duas cartas sem número** — a Mesa pautou e a gaveta continuam sem bloco, e o número
+delas não está gravado em lugar nenhum. Puxá-lo é motor. **Junto vem o glossário do termo** (B3
+do dossiê): _"Obrigatória do ano"_ não é explicado em lugar nenhum, e a forma fica em aberto —
+**não é hover**, que o C11 e o ciclo 15 já recusaram.
 
 ⚠ **A FILA DE "ESPERA O BUMP" É DE UM.** `src/state/save.mjs` confere a **presença** de 18
 campos de topo e a **forma** de 8 deles — e **não olha dentro de uma carta**. Três dos quatro
 itens que a justificavam saíram sem custo nenhum; sobra o placar na carta, e **meça antes de
-bumpar**: cada subida de versão custa a partida em andamento, e o save recusa versão diferente
-em vez de converter.
+bumpar**.
 
 ### Como validar
 
@@ -381,6 +568,34 @@ vermelha, e **o mobile** — _"a perfeição que eu almejo é no desktop sempre"
 ---
 
 ## Achados abertos
+
+**58. ⛔ O CALENDÁRIO FALA EM SIGLA, E O JOGO PUBLICADO FAZ ISSO — ACHADO NOVO em 31/08/2026, e
+quem o encontrou foi ELE, perguntando.** A pergunta foi _"o que é ldo?"_ — e ela é um achado, e
+não uma dúvida: **se o dono do jogo não sabe, o jogador não sabe.**
+
+O bloco **"O que este mês cobra"**, no Gabinete, imprime `LDO — em 1 mês` e `LOA — em 1 mês`.
+Duas siglas do orçamento público, sem uma palavra de explicação, na tela que abre o jogo.
+
+⚠ **E O CATÁLOGO GUARDA A EXPLICAÇÃO.** `src/data/calendar.mjs` traz, em cada marco:
+
+| campo    | o que tem                                                      |
+| -------- | -------------------------------------------------------------- |
+| `label`  | `"LDO"` — o que a tela mostra                                  |
+| `what`   | `"as diretrizes do orçamento do ano que vem vão ao Congresso"` |
+| `source` | `"CF art. 35, §2º, II do ADCT"`                                |
+
+⭐ **É a família de defeito mais produtiva deste projeto** — _um dado que já existe no motor e
+nunca chegou à tela_ —, e ela não custa motor nem número novo.
+
+⚠ **E o nome certo não precisa ser inventado:** a carta da posse já chama esse eixo de **"a meta
+fiscal"**, e é nela que o jogador escolheu uma promessa. **O rótulo deve apontar para uma
+palavra que ele já conhece, em vez de abrir uma segunda.** No clone a etiqueta passou a dizer
+`META FISCAL · 1 MÊS`, e coube com 19px de folga.
+
+**O conserto tem duas metades, e a segunda é a que importa:** `label` ganha um par em linguagem
+de jogador, e a sigla desce para onde `what` e `source` moram. ⚠ **E vale para os quatro
+marcos** — `LOA` tem o mesmo problema, e `Relatório bimestral` não diz que é ali que o
+contingenciamento se decide.
 
 **53. ⛔ NÃO RECALIBRAR A CAPACIDADE ANTES DA REFORMULAÇÃO — decisão dele, registrada em
 21/08/2026.** Com o achado 52 na mão eu ia recomendar girar `decay` e `yield`, e ele avisou
@@ -743,15 +958,16 @@ ajustar o parafuso contra um jogo que não existe mais** — por isso elas ficar
 [`journal.md`](journal.md), e esta ficou aqui.
 
 ⚠ **E O HORIZONTE É DECLARADO NA TABELA porque a coluna de votações já misturou dois.**
-Todas as células abaixo são de **48 meses**, semente padrão, remedidas em **30/08/2026**.
+Todas as células abaixo são de **48 meses**, semente padrão, remedidas em **01/09/2026** —
+depois de `OPENING_MONTH` ir de 2 para 0, que é mudança de motor e obriga a remedição.
 
 | política     | dívida/PIB | votações     | indústria   | segurança   |
 | ------------ | ---------- | ------------ | ----------- | ----------- |
-| `herdado`    | **90,0%**  | 0 de 0       | 48 → **26** | 38 → **24** |
-| `agenda`     | 90,1%      | **30 de 42** | 48 → 19     | 38 → 19     |
-| `base`       | 90,7%      | **36 de 41** | 48 → 19     | 38 → 20     |
+| `herdado`    | **89,9%**  | 0 de 0       | 48 → **27** | 38 → **25** |
+| `agenda`     | 90,0%      | **26 de 43** | 48 → 20     | 38 → 20     |
+| `base`       | 90,7%      | **34 de 41** | 48 → 20     | 38 → 20     |
 | `piso`       | 90,9%      | 5 de 17      | 48 → **15** | 38 → **15** |
-| `explorador` | 91,7%      | 0 de 0       | 48 → **25** | 38 → 17     |
+| `explorador` | 91,8%      | 0 de 0       | 48 → **25** | 38 → 17     |
 | `promessa`   | **93,3%**  | 0 de 3       | 48 → **17** | 38 → 15     |
 
 ⭐ **CINCO DAS SEIS LINHAS ESTAVAM VENCIDAS, e a causa é legítima: o item 0.1.** A tabela
@@ -884,7 +1100,7 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### A verificação
 
-**Treze guardas** com **60 provas sintéticas** e **269 provas**, e o **passeio**
+**Treze guardas** com **61 provas sintéticas** e **300 provas**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.

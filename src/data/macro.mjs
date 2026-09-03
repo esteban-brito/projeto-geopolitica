@@ -10,6 +10,7 @@ export const MACRO_SCHEMA = {
   rateDrag: { kind: "number", min: 0, max: 5 },
   fiscalMultiplier: { kind: "number", min: 0, max: 5 },
   inflationTarget: { kind: "number", min: 0, max: 0.2 },
+  inflationTolerance: { kind: "number", min: 0, max: 0.1 },
   anchoring: { kind: "number", min: 0, max: 1 },
   phillips: { kind: "number", min: 0, max: 5 },
   neutralRate: { kind: "number", min: 0, max: 0.2 },
@@ -36,6 +37,7 @@ export const MACRO_SCHEMA = {
  * @property {number} rateDrag - quanto 1 ponto de juro real tira do PIB
  * @property {number} fiscalMultiplier - quanto o impulso fiscal soma ao PIB
  * @property {number} inflationTarget - a meta
+ * @property {number} inflationTolerance - a banda da meta, para cada lado
  * @property {number} anchoring - o quanto a expectativa gruda na meta, de 0 a 1
  * @property {number} phillips - quanto o hiato pressiona preco
  * @property {number} neutralRate - o juro real que nem estimula nem freia
@@ -74,6 +76,10 @@ export const MACRO = {
 
   /* Meta de inflacao continua, 3%. Fonte: CMN. */
   inflationTarget: 0.03,
+  /* A banda de tolerancia do regime, 1,5 ponto para cada lado. Fonte: CMN.
+     ⚠ ELA MORA AQUI E NAO NA TELA: duas telas liam a mesma pergunta com reguas
+     diferentes — Financas acusava a partir de 4,5% e a barra so a partir de 7,5%. */
+  inflationTolerance: 0.015,
   /* A 0,6, a expectativa e 60% meta e 40% inflacao passada — um pais com credibilidade
      imperfeita, que e o caso. */
   anchoring: 0.6,
@@ -90,16 +96,20 @@ export const MACRO = {
   naturalUnemployment: 0.08,
   okun: 0.4,
 
-  /* de Selic custa cerca de R$ 40 bi ao ano. */
+  /* ⚠ A FRACAO DA DIVIDA QUE ACOMPANHA A SELIC, e ela e a peca que faz juro alto virar
+     crise fiscal. A ancora e publica: cada 1 p.p. de Selic custa cerca de R$ 40 bi ao ano,
+     e com divida bruta perto de R$ 9,4 tri isso da 45% do estoque atrelado a taxa basica. */
   floatingDebt: 0.45,
   /* ⚠ O RESTO DO ESTOQUE TAMBEM PAGA JURO, e esquecer isso foi o defeito que a simulacao
      pegou. */
   legacyRate: 0.09,
 
-  /* A INCLINACAO DO PREMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT O que
-     este numero significa, em cima da divida herdada de 78%: +10 p.p.
-     de ECLUSA e o TABLE da Mesa. O que NAO e chute e a forma: convexa, porque o
-     mercado tolera e depois foge. Ver `premiumOf` em `src/domain/economy/`. */
+  /* A INCLINACAO DO PREMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT de
+     ECLUSA e o TABLE da Mesa. O que NAO e chute e a forma: convexa, porque o mercado
+     tolera e depois foge. Em cima da divida herdada de 78%, +10 p.p. custam 0,5 ponto de
+     juro a mais e incomodam; +20 p.p. custam 2,0 e doem; +50 p.p. custam 12,5 e sao crise.
+     Um premio LINEAR ensinaria que "mais um pouco" custa igual no comeco e na beira do
+     abismo. Ver `premiumOf` em `src/domain/economy/`. */
   riskPremium: 0.5,
 
   initialInflation: 0.042,

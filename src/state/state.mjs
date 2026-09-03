@@ -141,10 +141,11 @@ export const TREATMENTS = /** @type {const} */ (["senhor", "senhora"]);
 /* O HUMOR DE ABERTURA da base. */
 export const INITIAL_LOYALTY = 70;
 
-/* Dois, e ele estava escrito como literal solto ate — o que nao doeu enquanto so
-   `createState` o usava, e passou a doer quando a carta de posse precisou nascer no MESMO
-   mes: dois literais iguais em dois lugares e um lugar que vai divergir. */
-export const OPENING_MONTH = 2;
+/* ⛔ ERA DOIS, E NINGUEM SABIA POR QUE. A constante foi extraida de dois literais soltos e
+   a razao do numero nunca foi escrita — nem aqui, nem no diario, nem em ADR. A posse
+   presidencial brasileira e em 1º de janeiro, e a semente padrao do projeto ja aponta para
+   ela: com dois, a partida abria em marco e o mandato nascia com 46 dos 48 meses. */
+export const OPENING_MONTH = 0;
 
 /* A semente de uma partida sem semente escolhida. */
 export const DEFAULT_SEED = 20270101;
@@ -350,11 +351,13 @@ export function reduce(state, action) {
 }
 
 /**
- * Rotulo do mes de calendario a partir do numero de meses desde a posse.
+ * O mes de calendario, em duas partes — a barra superior escreve o nome e o ano em
+ * corpos diferentes, e juntar aqui obrigaria a tela a separar de novo.
  *
  * @param {number} month
+ * @returns {{ name: string, year: number }}
  */
-export function monthLabel(month) {
+export function monthParts(month) {
   const names = [
     "jan",
     "fev",
@@ -371,5 +374,16 @@ export function monthLabel(month) {
   ];
   const name = names[month % 12] ?? "jan";
   const year = 2027 + Math.floor(month / 12);
+  return { name, year };
+}
+
+/**
+ * O mes escrito, na forma que a prosa usa.
+ *
+ * @param {number} month
+ * @returns {string}
+ */
+export function monthLabel(month) {
+  const { name, year } = monthParts(month);
   return `${name} · ${year}`;
 }

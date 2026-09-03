@@ -91,8 +91,11 @@
     max-width: 46ch;
     color: var(--ink-dim);
     line-height: 1.5;
-  } /* fecho, e uma frase solta no cartao da CALDEIRA. Quatro maneiras de dizer "nao
-     ha nada aqui" e o que faz uma tela parecer montada por quatro pessoas. */
+  } /* ── O SEGUNDO PESO, e ele existe porque o jogo tem DOIS tipos de ausencia ──
+       ⚠ HAVIA QUATRO FORMAS para a mesma coisa: `.empty` com chamada e prosa no Congresso,
+       uma no relatorio, uma no fecho, e uma frase solta no cartao da CALDEIRA. Quatro
+       maneiras de dizer "nao ha nada aqui" e o que faz uma tela parecer montada por quatro
+       pessoas. */
   .empty--quiet {
     align-content: start;
     justify-items: start;
@@ -139,37 +142,6 @@
     text-transform: none;
     color: var(--ink);
   } /* A MARCA E A LAMINA, e nao uma demao sobre a lamina neutra. */
-  .action--primary {
-    /* A aresta acompanha a lamina. */
-    border-color: rgba(var(--brand-rgb), 0.72);
-    background: var(
-      --glass-brand-bg
-    ); /* A tinta escurece PORQUE a lamina clareou — e a mesma razao que poe preto sobre amarelo
-       em sinalizacao de transito. */
-    color: var(--bg-deep);
-  }
-
-  .action--primary .action__hint {
-    color: var(--bg-deep);
-  } /* ⚠ E O BORDÔ É FUNDO, E NÃO TINTA — a primeira versão pintou o texto de bordô sobre a
-     lâmina âmbar, e a CONTA reprova: a lâmina compõe rgb(193, 137, 55) e o bordô dá *2,8:1**
-     contra ela, num texto de 10px.
-     A captura mostrou o que a conta dizia — um borrão escuro debaixo do rótulo. */
-  .action--primary[data-price="true"] {
-    border-color: rgba(var(--bordo-rgb), 0.85);
-  } /* ⚠ A TINTA ERA `--sheet`, E ELA VIROU ESCURA: quando o documento deixou de ser pergaminho
-     e virou lâmina, `--sheet` passou a `#0c1220` e esta linha ficou escuro sobre bordô —
-     **2,58:1 num texto de 10px**, contra um piso de 4,5. A regra não mudou; o token que ela
-     citava mudou debaixo dela.
-     ⚠ E o portão só viu isto hoje, porque o estado só passou a ser alcançável quando a carta
-     clicada passou a atravessar a virada do mês. */
-  .action--primary[data-price="true"] .action__hint {
-    padding: 2px 7px;
-    border-radius: var(--radius-stamp);
-    background: var(--bordo);
-    font-weight: 700;
-    color: var(--ink);
-  }
 
   .action[disabled] {
     cursor: not-allowed;
@@ -214,11 +186,6 @@
       background:
         linear-gradient(0deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),
         var(--glass-action-bg);
-    }
-    .action--primary:not([disabled]):hover {
-      background:
-        linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
-        var(--glass-brand-bg);
     }
   } /* ── O RAIL ───────────────────────────────────────────────────────────────── Navegacao
      primaria na estrutura do FM2020: lateral fixa, icone a esquerda, rotulo ao lado, item
