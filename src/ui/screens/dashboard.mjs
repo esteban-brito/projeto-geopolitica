@@ -25,9 +25,10 @@ const SPARK_W = 88;
  * @param {number[]} series
  * @param {number} good 1 quando subir e bom, -1 quando subir e ruim
  * @param {number} horizon quantos meses o mandato inteiro tem
+ * @param {number} [from] o mes do PRIMEIRO ponto, para a serie curta cair no lugar certo
  * @returns {string}
  */
-function sparkHtml(series, good, horizon) {
+function sparkHtml(series, good, horizon, from = 0) {
   const drawn = series.length > 1;
   const min = drawn ? Math.min(...series) : 0;
   const max = drawn ? Math.max(...series) : 0;
@@ -36,9 +37,12 @@ function sparkHtml(series, good, horizon) {
   const height = Math.min(1, relative / REFERENCE) * 9;
   const spread = max - min || 1;
   const base = 6 + height / 2;
-  /* O ultimo mes do mandato cai na borda; o primeiro, na origem. */
+  /* ⛔ O EIXO E O MES E NAO O INDICE, e a diferenca so aparece na serie CURTA: a aprovacao
+     vem dos cartoes do mes, que o motor limita a 24. Desenhada do indice zero, ela punha
+     os dois ultimos anos no lugar dos dois primeiros — no mes 36 o ponto dela parava na
+     metade do trilho enquanto o do PIB estava a tres quartos, no mesmo mes. */
   /** @param {number} i @returns {number} */
-  const at = i => (i / Math.max(1, horizon - 1)) * SPARK_W;
+  const at = i => ((from + i) / Math.max(1, horizon - 1)) * SPARK_W;
 
   const points = drawn
     ? series
@@ -128,6 +132,7 @@ export function whenHtml({ month, deadline, left, over }) {
  * @param {number} input.streetFloor a aprovacao abaixo da qual a rua rompe, do catalogo
  * @param {number} input.ceiling o teto da banda de inflacao, do catalogo
  * @param {number} input.horizon o mandato inteiro, em meses — o eixo X das faiscas
+ * @param {number} input.approvalFrom o mes do primeiro ponto da serie de aprovacao
  * @param {{ gdp: number[], inflation: number[], approval: number[] }} input.series
  * @returns {string}
  */
@@ -140,6 +145,7 @@ export function vitalsHtml({
   streetFloor,
   ceiling,
   horizon,
+  approvalFrom,
   series,
 }) {
   /* ⛔ OS DOIS LIMIARES ERAM DAQUI, e os dois tinham envelhecido: a rua acendia em 20
@@ -167,7 +173,7 @@ export function vitalsHtml({
       icon: "opinion",
       label: UI.vitals.approval,
       value: `${seats(approval)}%`,
-      draw: sparkHtml(series.approval, 1, horizon),
+      draw: sparkHtml(series.approval, 1, horizon, approvalFrom),
       low: approval < streetFloor,
     },
     {

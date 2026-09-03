@@ -1,5 +1,11 @@
-/* LASTRO — receita do PIB, obrigatoria em valor absoluto, teto do arcabouco e o
-   gatilho de contingenciamento. */
+/* LASTRO — receita do PIB, obrigatoria em valor absoluto, teto do arcabouco, e OS DOIS
+   GATILHOS DE APERTO, que no Brasil tem nomes diferentes porque sao coisas diferentes:
+
+   ⚠ BLOQUEIO e o teto do arcabouco nao caber na despesa. E aritmetica, e ninguem escolhe;
+   ⚠ CONTINGENCIAMENTO e a receita frustrar contra a META de resultado primario. Ele e
+   escolha, e no mundo ele se desfaz quando a receita volta.
+
+   O motor tratava os dois como um, e chamava o primeiro pelo nome do segundo. */
 
 /* A razao despesa/receita passa a ser EMERGENTE: nasce perto de 90%, sobe sozinha quando o
    PIB decepciona, e espreme o discricionario contra o zero.
@@ -37,7 +43,11 @@ const MONTHS_PER_YEAR = 12;
  * @property {number} balance - saldo primario DO MES
  * @property {number} debt
  * @property {number} debtRatio - divida sobre PIB
- * @property {boolean} contingency - a obrigatoria sozinha ja fura o teto
+ * @property {boolean} blocked - a obrigatoria sozinha ja fura o teto do arcabouco
+ * @property {number} primary - o resultado primario do mes, ANUALIZADO e em fracao do PIB
+ * @property {number} primaryTarget - a meta do ano, na mesma unidade
+ * @property {number} primaryFloor - o piso da banda da meta, na mesma unidade
+ * @property {boolean} atRisk - o primario caiu abaixo da banda: contingenciamento
  */
 
 /**
@@ -140,18 +150,23 @@ export function step(input) {
   /* O espaco que a REGRA abre, que nao e o mesmo que o caixa disponivel. */
   const room = ceiling - mandatory;
 
-  /* CONTINGENCIAMENTO e o caso em que nem a obrigatoria cabe no teto.
-     e ECLUSA, porque emenda sai daqui. */
-  const contingency = room < 0;
+  /* BLOQUEIO e o caso em que nem a obrigatoria cabe no teto — e daqui sai a emenda, que e
+     o que liga este motor a ECLUSA. */
+  const blocked = room < 0;
 
   /* Medido em 48 meses: um governo que poe os 38 programas no MAXIMO e paga verba cheia a
      todas as bancadas fecha o mes com o mesmo saldo de um que nao faz nada. */
-  const allowance = contingency ? 0 : Math.max(0, room);
+  const allowance = blocked ? 0 : Math.max(0, room);
 
   /* O saldo e do MES: o caixa anualizado dividido por doze, menos o que foi efetivamente
      empenhado neste turno. */
   const balance = cash / MONTHS_PER_YEAR - input.spent;
   const debt = input.debt - balance;
+
+  /* ⚠ A META E ANUAL E O TURNO E MENSAL, entao o mes se anualiza para ser comparavel — a
+     mesma unidade em que a LDO escreve a meta. */
+  const primary = input.gdp > 0 ? (balance * MONTHS_PER_YEAR) / input.gdp : 0;
+  const primaryFloor = parameters.primaryTarget - parameters.primaryBand;
 
   return {
     revenue,
@@ -164,6 +179,10 @@ export function step(input) {
     balance,
     debt,
     debtRatio: input.gdp > 0 ? debt / input.gdp : 0,
-    contingency,
+    blocked,
+    primary,
+    primaryTarget: parameters.primaryTarget,
+    primaryFloor,
+    atRisk: primary < primaryFloor,
   };
 }

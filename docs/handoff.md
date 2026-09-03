@@ -18,12 +18,18 @@
 
 ## ▶ COMECE POR AQUI
 
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 61 provas sintéticas · 152
-arquivos · 300 provas · passeio verde**. Branch `caixa-de-entrada`, **21 commits à frente de
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 61 provas sintéticas · 153
+arquivos · 304 provas · passeio verde**. Branch `caixa-de-entrada`, **22 commits à frente de
 `main`**, e **nada foi enviado ao remoto**.
 
-⚠ **A ÁRVORE NÃO ESTÁ LIMPA:** a barra superior, os dois achados de catálogo e a documentação
-desta sessão estão no disco e **não commitados** — a decisão de commitar é dele.
+⚠ **A ÁRVORE NÃO ESTÁ LIMPA:** o passo 6 (o A3), a pesquisa 06 e a documentação desta sessão
+estão no disco e **não commitados** — a decisão de commitar é dele. O último commit é
+`4890015`, que levou a barra superior e os limiares de catálogo.
+
+⚠ **UMA RODADA DE `npm test` FALHOU UMA VEZ e não se repetiu em DEZ tentativas seguidas.** A
+prova instável conhecida (`A BASE PARTE EM DUAS`) foi consertada nesta sessão; se o portão
+voltar a piscar vermelho sem defeito atrás, **procure outra comparação de `Math.round` sobre
+somas acumuladas em ordens diferentes** — é a mesma família.
 
 ⚠ **E A PESQUISA 04 ENTROU — [`research/04-o-cargo-de-presidente.md`](research/04-o-cargo-de-presidente.md)**,
 o estudo do cargo contra o motor. A tese dele: **o jogo modela o VOTO, e o cargo brasileiro é
@@ -197,6 +203,107 @@ o fim da frase). Ela acusa bloco cuja primeira palavra começa em minúscula. **
 escrever: zero falso positivo** — com qualquer caractere em vez de letra, os `≈` do catálogo de
 partidos e o `⚅` do save davam onze alarmes falsos. **Ela achou o 13º bloco sozinha**, em
 `30-components.css`, que a varredura manual não pegou.
+
+### ▶ O PASSO 6 COMEÇOU PELO A3, E A ORDEM FOI INVERTIDA — 03/09/2026
+
+**A pesquisa 06 mudou a ordem do plano.** O ciclo 13 manda A1 → A2 → A3; a
+[pesquisa 06](research/06-a-obrigatoria-e-quem-a-decide.md) mediu que **os três itens dão ao
+presidente uma caneta que ele não tem**, e que o A3 é o único que não depende de motor novo.
+**Ele aprovou a inversão.**
+
+#### ⛔ Dois defeitos de motor, e o segundo ninguém tinha visto
+
+| o quê                                           | medido                                          |
+| ----------------------------------------------- | ----------------------------------------------- |
+| **achado 36** — o rateio gravava o corte na lei | pedido de 92 por seis meses parava em **89,70** |
+| **as seis REGRAS sumiam do estado todo mês**    | **44 chaves viravam 38** no primeiro mês        |
+
+⭐ **O SEGUNDO É O MAIS CARO, e ele é irmão do primeiro:** `honour` só devolve PROGRAMA, e o
+retorno dele era gravado por cima do mapa inteiro. Resultado: `poder-do-executivo` caía de
+**30 para o `?? 0`** de quatro leitores no mês 1 — o decreto perdia força sozinho —, e
+`payrollOf` e `saleOf` passavam a ler `rule.initial` em vez do que o jogador tinha feito.
+**Nenhuma prova via, porque as duas moram no que o turno ESCREVE.** Agora há duas, e as duas
+**mordem**: com o código antigo elas falham.
+
+#### ✔ OS DOIS INSTRUMENTOS GANHARAM NOMES DIFERENTES, porque são coisas diferentes
+
+| no jogo                | o que é                                        | escolha?                |
+| ---------------------- | ---------------------------------------------- | ----------------------- |
+| `blocked` (BLOQUEIO)   | a despesa não cabe no teto do arcabouço        | não — é aritmética      |
+| `atRisk` (CONTINGENC.) | o primário caiu abaixo da banda da meta da LDO | **sim, e é reversível** |
+
+O motor tratava os dois como um e chamava o primeiro pelo nome do segundo. A meta entrou no
+catálogo com fonte — **`primaryTarget: 0,005` e `primaryBand: 0,0025`**, que são os 0,5% do
+PIB (R$ 73,2 bi) da LDO 2027 e o intervalo de 0,25 ponto.
+
+⛔ **E A TELA MENTIA SOBRE O PRIMÁRIO:** ela pintava de verde qualquer saldo positivo. Um
+primário de **+0,1% do PIB contra meta de +0,5% é meta PERDIDA** — e é exatamente o que o
+governo real projeta para 2027. A linha de Finanças agora imprime
+_"meta de 0,5% do PIB · 0,1% · abaixo da banda"_ **em vermelho**, e quem julga é o LASTRO.
+
+#### ▶ A MEDIDA DO NOVO INSTRUMENTO, por política
+
+| política     | bloqueio | contingenciamento |
+| ------------ | -------- | ----------------- |
+| `agenda`     | 0 meses  | **45 de 48**      |
+| `base`       | 0 meses  | 48 de 48          |
+| `explorador` | 4 meses  | 48 de 48          |
+| `piso`       | 12 meses | **33 de 48**      |
+
+⭐ **A META É ALCANÇÁVEL, e é isso que a torna um sinal e não um alarme:** o governo passivo
+sai de **−0,49%** no mês 1 e chega a **+0,17%** no mês 36, contra um piso de banda de 0,25% —
+ele encosta e não entra. Só a política de austeridade (`piso`) escapa, e por 15 meses.
+
+⚠ **O QUE FALTA DO A3, e é o nome do item:** o contingenciamento ainda não é ESCOLHIDO. Falta
+o aviso chegar ao jogador no relatório bimestral — que o C7 já pôs no calendário — e falta o
+decreto poder proteger uma área e deixar outra pagar, como o governo real faz.
+
+⚠ **E UMA PROVA INSTÁVEL FOI CONSERTADA NO CAMINHO:** `A BASE PARTE EM DUAS` comparava dois
+`Math.round` de somas acumuladas em ordens diferentes, e divergia em ~1e-13 — **o portão ficava
+vermelho em cerca de uma rodada em cinco, sem defeito nenhum atrás.** Agora a comparação é por
+tolerância.
+
+### ✔ A BARRA SUPERIOR FOI AUDITADA E BLINDADA — 03/09/2026
+
+Pedido dele (via dossiê externo): auditoria profunda, correção de bugs e teste de estresse da
+barra, **sem elemento novo**. **Oito defeitos, todos medidos no navegador** com
+`tmp/auditar-barra.mjs`, `tmp/estresse-barra.mjs` e `tmp/varrer-larguras.mjs`.
+
+| o quê                                            | medido                                    | agora                           |
+| ------------------------------------------------ | ----------------------------------------- | ------------------------------- |
+| a marca passava **por baixo** da peça dos vitais | abaixo de **1228px** de janela            | letreiro sai em 1245px          |
+| a barra media 80px e o token dizia 78            | `glass-support` põe 1px em cima e embaixo | `height` declarada — 78px reais |
+| a legenda invisível empurrava a seta para fora   | glifo **193px** além da aresta            | coluna `minmax(0, 1fr)`         |
+| `O mandato acabou` quebrava em **três** linhas   | 60px de altura num botão de 57            | `white-space: nowrap`           |
+| o valor do PIB pintava por cima do vizinho       | **89px** numa célula de 88                | célula de 92, e recorte         |
+| um marco de catálogo mais longo vazava da peça   | **212px** para fora                       | `overflow: hidden`              |
+| a faísca da aprovação caía no mês errado         | ponto na metade do trilho no mês 36       | eixo por MÊS, não por índice    |
+| botão morto acendia no hover                     | erguia e abria a leitura sem fazer nada   | `enter` sai se `disabled`       |
+
+⭐ **A FAÍSCA DA APROVAÇÃO ERA O PIOR, porque mentia sem parecer errada:** ela vem dos cartões
+do mês, que o motor limita a **24** (`CARRY`), e era desenhada do índice zero — os dois últimos
+anos apareciam no lugar dos dois primeiros. **Medido no mês 34:** as três linhas agora terminam
+no mesmo **x=61,8 de 88**, e a da aprovação começa em 18,7, que é onde a memória começa.
+
+⛔ **E A LEGENDA DO BOTÃO PERDEU O SUBSTANTIVO, por medida:** a coluna dela tem **185px**, e
+_"7 perguntas fecham sem resposta"_ pedia **226**. Ficou _"7 fecham sem resposta"_ — o preço
+está no verbo. **E a legenda do fim do mandato saiu inteira**: o botão está desabilitado, e
+desabilitado não ergue nem recebe foco — era texto que ninguém podia ler.
+
+⚠ **A REGRA DE 1180px ERA MORTA:** ela punha `grid-template-columns` e `grid-column`/`order`
+numa barra que é **flex**. Nada daquilo valia — a barra não tinha comportamento responsivo
+nenhum. Saiu, e entrou a de 1245px, que é a medida real da colisão.
+
+✔ **O PASSEIO GANHOU O QUINTO IRMÃO — `checkTopbar`.** Peça de largura fixa não rola, não põe
+reticência e não move `scrollWidth` do pai: ela só pinta por cima do vizinho, e as quatro
+checagens antigas eram cegas para isso. Ela nasceu vermelha e pegou a legenda de 208px numa
+coluna de 185.
+
+✔ **O PISO DA BARRA É 1103px DE JANELA, e ele DECIDIU deixar assim:** as três peças somam
+1040px fixos e não encolhem. Abaixo do piso o botão é cortado na direita. As três alternativas
+foram postas com o custo de cada uma — encolher os vitais, sumir com as faíscas, sumir com uma
+leitura — e as três custam o que faz a barra ler como MENU: peça que não muda de tamanho de um
+mês para o outro. **Não reabrir sem pedido.**
 
 ### ▶ O BRASIL INTEIRO — a direção declarada em 31/08/2026
 
@@ -958,8 +1065,11 @@ ajustar o parafuso contra um jogo que não existe mais** — por isso elas ficar
 [`journal.md`](journal.md), e esta ficou aqui.
 
 ⚠ **E O HORIZONTE É DECLARADO NA TABELA porque a coluna de votações já misturou dois.**
-Todas as células abaixo são de **48 meses**, semente padrão, remedidas em **01/09/2026** —
-depois de `OPENING_MONTH` ir de 2 para 0, que é mudança de motor e obriga a remedição.
+Todas as células abaixo são de **48 meses**, semente padrão, remedidas em **03/09/2026** —
+depois de o rateio deixar de gravar o corte no estado (achado 36), que é mudança de motor e
+obriga a remedição. ⭐ **SÓ A `promessa` MOVEU, e as quatro colunas dela**: é a política que o
+rateio mais mordia, e a única em que o corte permanente se acumulava mês após mês. As outras
+cinco saíram idênticas.
 
 | política     | dívida/PIB | votações     | indústria   | segurança   |
 | ------------ | ---------- | ------------ | ----------- | ----------- |
@@ -968,7 +1078,7 @@ depois de `OPENING_MONTH` ir de 2 para 0, que é mudança de motor e obriga a re
 | `base`       | 90,7%      | **34 de 41** | 48 → 20     | 38 → 20     |
 | `piso`       | 90,9%      | 5 de 17      | 48 → **15** | 38 → **15** |
 | `explorador` | 91,8%      | 0 de 0       | 48 → **25** | 38 → 17     |
-| `promessa`   | **93,3%**  | 0 de 3       | 48 → **17** | 38 → 15     |
+| `promessa`   | **92,4%**  | 0 de 2       | 48 → **19** | 38 → **17** |
 
 ⭐ **CINCO DAS SEIS LINHAS ESTAVAM VENCIDAS, e a causa é legítima: o item 0.1.** A tabela
 anterior foi medida em 24/08/2026 e a renúncia de receita entrou em `fc1c6b4` no mesmo dia,
@@ -1100,7 +1210,7 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### A verificação
 
-**Treze guardas** com **61 provas sintéticas** e **300 provas**, e o **passeio**
+**Treze guardas** com **61 provas sintéticas** e **304 provas**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.

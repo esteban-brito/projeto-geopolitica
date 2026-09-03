@@ -163,12 +163,18 @@ export function financeHtml({
         value: money(budget.allowance),
         note: UI.finance.perYear,
       }) +
-      /* O PRIMARIO NAO GANHA ESCADA, e a ausencia e escolha. */
+      /* O PRIMARIO NAO GANHA ESCADA, e a ausencia e escolha.
+         ⛔ E O SINAL NAO E O TOM, e essa era a mentira: um primario de +0,1% do PIB com meta
+         de +0,5% e uma meta PERDIDA, e a linha o pintava de verde por ser positivo. Quem
+         julga e o LASTRO, que compara com a banda da LDO — a tela nao refaz a conta. */
       lineHtml({
         label: UI.finance.primary,
         value: money(budget.balance),
-        note: UI.finance.perMonth,
-        tone: budget.balance >= 0 ? "up" : "down",
+        note:
+          `${UI.finance.target} ${percent(budget.primaryTarget, 1)} ${UI.finance.ofGdp}` +
+          ` · ${percent(budget.primary, 1)}` +
+          (budget.atRisk ? ` · ${UI.finance.missing}` : ""),
+        tone: budget.atRisk ? "down" : "up",
       }) +
       /* O SERVICO DA DIVIDA FICA NESTE BLOCO E FORA DO PRIMARIO, exatamente como o arcabouco
          o trata. */
@@ -209,8 +215,8 @@ export function financeHtml({
       lineHtml({
         label: UI.finance.headroom,
         value: money(ceilingRoom),
-        note: budget.contingency ? UI.finance.squeezed : UI.finance.untilCeiling,
-        tone: budget.contingency ? "down" : "flat",
+        note: budget.blocked ? UI.finance.squeezed : UI.finance.untilCeiling,
+        tone: budget.blocked ? "down" : "flat",
       }),
   });
 

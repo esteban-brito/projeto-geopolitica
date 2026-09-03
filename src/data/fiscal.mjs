@@ -8,6 +8,8 @@
 export const FISCAL_SCHEMA = {
   taxLoad: { kind: "number", min: 0, max: 1 },
   mandatoryGrowth: { kind: "number", min: 0, max: 0.2 },
+  primaryTarget: { kind: "number", min: -0.1, max: 0.1 },
+  primaryBand: { kind: "number", min: 0, max: 0.05 },
   expenseGrowthShare: { kind: "number", min: 0, max: 1 },
   expenseGrowthFloor: { kind: "number", min: 0, max: 0.2 },
   expenseGrowthCap: { kind: "number", min: 0, max: 0.2 },
@@ -22,6 +24,8 @@ export const FISCAL_SCHEMA = {
  * @typedef {object} FiscalParameters
  * @property {number} taxLoad - carga tributaria como fracao do PIB
  * @property {number} mandatoryGrowth - crescimento vegetativo real ao ano
+ * @property {number} primaryTarget - a meta de resultado primario, em fracao do PIB
+ * @property {number} primaryBand - a tolerancia da meta, para cada lado
  * @property {number} expenseGrowthShare - o teto do arcabouco
  * @property {number} expenseGrowthFloor - crescimento REAL minimo da despesa, ao ano
  * @property {number} expenseGrowthCap - crescimento REAL maximo da despesa, ao ano
@@ -46,6 +50,13 @@ export const FISCAL = {
      crescem sozinhos, ~3% real ao ano, por demografia e pela regra do salario minimo; R$  398
      bi (18%) folha e inativos, civis e militares — ~0% real. */
   mandatoryGrowth: 0.0216,
+  /* A META DE RESULTADO PRIMARIO. Fonte: LDO 2027 — superavit de 0,5% do PIB, R$ 73,2 bi.
+     ⚠ ELA E O QUE SEPARA OS DOIS INSTRUMENTOS: o BLOQUEIO nasce do teto do arcabouco e e
+     aritmetica; o CONTINGENCIAMENTO nasce daqui, da receita que frustrou contra a meta. */
+  primaryTarget: 0.005,
+  /* A banda da meta, para cada lado. Fonte: a LDO fixa 0,25 ponto do PIB — em 2025, meta
+     de 0,5% com intervalo de 0,25% a 0,75%. */
+  primaryBand: 0.0025,
   /* 70% do crescimento da receita — o numero do arcabouco de verdade. */
   expenseGrowthShare: 0.7,
   /* ── A BANDA REAL, e ela era a OMISSAO DECLARADA no topo deste arquivo ─────── A LC

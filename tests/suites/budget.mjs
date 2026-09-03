@@ -67,7 +67,7 @@ test("GASTAR ACIMA DO CAIXA E POSSIVEL, e produz deficit — o muro caiu", () =>
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
-      if (out.contingency) return;
+      if (out.blocked) return;
 
       /* Empenhando tudo o que o teto autoriza, o saldo do mes e o caixa menos isso — e ele e
          NEGATIVO sempre que o teto abre mais espaco do que o caixa tem. */
@@ -87,7 +87,7 @@ test("contingenciamento zera o discricionario, sempre", () => {
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
-      if (out.contingency) assert.equal(out.allowance, 0);
+      if (out.blocked) assert.equal(out.allowance, 0);
     }),
   );
 });
@@ -99,7 +99,7 @@ test("A ARMADILHA EXISTE: ha entradas validas que disparam o contingenciamento",
   let squeezed = 0;
   fc.assert(
     fc.property(anyInput, input => {
-      if (step(input).contingency) squeezed++;
+      if (step(input).blocked) squeezed++;
     }),
     { numRuns: 400 },
   );
@@ -120,7 +120,7 @@ test("PROVA SINTETICA: o PISO segura o teto na recessao, e a OBRIGATORIA ainda o
   };
 
   const calmo = step(base);
-  assert.equal(calmo.contingency, false, "o cenario base ja devia estar folgado");
+  assert.equal(calmo.blocked, false, "o cenario base ja devia estar folgado");
   assert.ok(calmo.allowance > 0);
 
   /* Mesma partida, PIB 15% menor. */
@@ -135,13 +135,13 @@ test("PROVA SINTETICA: o PISO segura o teto na recessao, e a OBRIGATORIA ainda o
     recessao.ceiling >= base.anchorExpense,
     `o teto caiu para ${recessao.ceiling} numa recessao — o piso da banda nao segurou`,
   );
-  assert.equal(recessao.contingency, false, "com o piso valendo, esta recessao nao aperta");
+  assert.equal(recessao.blocked, false, "com o piso valendo, esta recessao nao aperta");
 
   /* 2 — E O GATILHO CONTINUA ALCANCAVEL, que e a outra metade e a mais importante: um
      contingenciamento que nunca dispara e um instrumento morto, e este projeto ja pagou por
      isso uma vez (achado 3). */
   const pesada = step({ ...base, gdp: base.gdp * 0.85, mandatory: 2320 });
-  assert.equal(pesada.contingency, true, "a obrigatoria acima do teto tinha de apertar");
+  assert.equal(pesada.blocked, true, "a obrigatoria acima do teto tinha de apertar");
   assert.equal(pesada.allowance, 0);
 });
 
@@ -204,4 +204,55 @@ test("GDP zero nao produz NaN ou infinito", () => {
   assert.ok(Number.isFinite(zero.revenue), "receita com PIB=0 deve ser finita");
   assert.ok(Number.isFinite(zero.mandatory), "obrigatoria com PIB=0 deve ser finita");
   assert.ok(Number.isFinite(zero.ceiling), "teto com PIB=0 deve ser finito");
+});
+
+/* ⛔ ELA REINTRODUZ A MENTIRA QUE A TELA CONTAVA: um primario POSITIVO abaixo da banda da meta
+   e uma meta PERDIDA, e a linha de Financas o pintava de verde por ser maior que zero. Medido
+   na partida padrao: o mes 35 fecha em +0,17% do PIB contra um piso de banda de 0,25%. */
+test("O PRIMARIO E JULGADO PELA META, e nao pelo sinal", () => {
+  /* Um mes que fecha POSITIVO, e ainda assim abaixo da banda. */
+  const base = {
+    gdp: 12000,
+    mandatory: 2139,
+    anchorRevenue: 2280,
+    anchorExpense: 2310,
+    debt: 9360,
+    parameters: FISCAL,
+  };
+
+  const alvo = FISCAL.primaryTarget - FISCAL.primaryBand;
+  assert.ok(alvo > 0, "a banda da LDO tem piso positivo, e e isso que torna a prova possivel");
+
+  /* O EMPENHO E DERIVADO E NAO CHUTADO: parte-se do mes sem gasto nenhum e desconta-se o
+     saldo que se quer. Um numero escrito a mao aqui viraria falso negativo na primeira
+     recalibragem da carga tributaria. */
+  const seco = step({ ...base, spent: 0 });
+  /** @param {number} share o primario desejado, em fracao do PIB */
+  const gastando = share => step({ ...base, spent: seco.balance - (share * base.gdp) / 12 });
+
+  const magro = gastando(alvo * 0.5);
+  assert.ok(magro.balance > 0, "o mes desta prova tem de fechar POSITIVO");
+  assert.ok(magro.primary < alvo, "e ainda assim abaixo da banda");
+  assert.ok(magro.atRisk, "primario positivo abaixo da banda tem de acusar contingenciamento");
+
+  /* E acima da banda ele para de acusar. */
+  const gordo = gastando(FISCAL.primaryTarget * 1.5);
+  assert.ok(gordo.primary > alvo, "o mes de controle tem de ficar acima da banda");
+  assert.equal(gordo.atRisk, false, "acima da banda nao ha contingenciamento");
+});
+
+/* ⚠ OS DOIS INSTRUMENTOS SAO INDEPENDENTES, e confundi-los era o defeito: o BLOQUEIO nasce do
+   teto do arcabouco e o CONTINGENCIAMENTO da meta. Um mes pode ter um sem o outro. */
+test("BLOQUEIO E CONTINGENCIAMENTO NAO SAO A MESMA COISA", () => {
+  const folgado = step({
+    gdp: 12000,
+    mandatory: 2139,
+    anchorRevenue: 2280,
+    anchorExpense: 2310,
+    debt: 9360,
+    spent: 20,
+    parameters: FISCAL,
+  });
+  assert.equal(folgado.blocked, false, "o teto cabe neste mes");
+  assert.ok(folgado.atRisk, "e a meta continua perdida — os dois nao andam juntos");
 });

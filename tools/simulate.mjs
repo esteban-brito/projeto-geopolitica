@@ -324,7 +324,7 @@ function averageLoyalty(loyalty) {
  */
 function flagsOf(report) {
   const flags = [];
-  if (report.budget.contingency) flags.push("contingenciado");
+  if (report.budget.blocked) flags.push("bloqueado");
   const shortfall = report.promisedCost - report.paidCost;
   if (shortfall > 0.05) flags.push(`prometeu ${num(shortfall)} a mais`);
 
@@ -412,7 +412,8 @@ if (!values.quiet) {
 
 const voted = history.filter(report => report.tally);
 const won = voted.filter(report => report.tally?.passed);
-const contingent = history.filter(report => report.budget.contingency);
+const blocked = history.filter(report => report.budget.blocked);
+const contingent = history.filter(report => report.budget.atRisk);
 const promisedTotal = history.reduce((sum, report) => sum + report.promisedCost, 0);
 const paidTotal = history.reduce((sum, report) => sum + report.paidCost, 0);
 const last = history.at(-1);
@@ -441,7 +442,10 @@ out.write(
     "\n",
 );
 out.write(
-  `  contingenciamento   ${contingent.length} meses` +
+  `  bloqueio            ${blocked.length} meses` +
+    (blocked[0] ? ` — a partir de ${monthLabel(blocked[0].month)}` : "") +
+    `
+  contingenciamento   ${contingent.length} meses` +
     (contingent[0] ? ` — a partir de ${monthLabel(contingent[0].month)}` : "") +
     "\n",
 );

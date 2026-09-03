@@ -91,9 +91,14 @@
      comecasse depois da sidebar leria como parte do tabuleiro.
      ⭐ ELA E TRES PECAS DE VIDRO E UMA MARCA. As tres tem a mesma altura, a mesma quina, a
      mesma aresta e a mesma lente — o que muda entre elas e a tinta do corpo. */
+  /* ⛔ A ALTURA E DECLARADA E NAO DEDUZIDA: `glass-support` poe 1px de aresta em cima e
+     embaixo, e sem `height` a barra fechava em 80px enquanto `--topbar-h` dizia 78 — os 2px
+     de diferenca eram a aurora do mes vazando por baixo da peca, que e o que a mascara de
+     `.backdrop::after` existe para impedir. */
   .topbar {
     grid-column: 1 / -1;
     position: relative;
+    height: var(--topbar-h);
     display: flex;
     justify-content: space-between;
     align-items: stretch;
@@ -101,11 +106,15 @@
     border-radius: 0 0 var(--radius-piece) var(--radius-piece);
   }
 
+  /* ⛔ SEM RECORTE A MARCA PASSAVA POR BAIXO DO CACHO: o cacho e `flex: none` e a zona
+     encolhe sozinha, entao abaixo de 1228px o letreiro atravessava a peca dos vitais e era
+     refratado por ela — ilegivel, e invisivel para as tres checagens do passeio, porque
+     nao ha reticencia nem rolagem. */
   .topbar__zone {
     display: flex;
     align-items: center;
-    min-height: var(--topbar-h);
     min-width: 0;
+    overflow: hidden;
   }
 
   .topbar__brand {
@@ -151,6 +160,16 @@
 
   .topbar__name b + b {
     color: var(--ink-dim);
+  }
+
+  /* ⛔ O LETREIRO SAI ANTES DE COLIDIR, e o brasao fica: o cacho e `flex: none` e nao
+     encolhe, entao abaixo desta largura a zona da marca fica menor que o letreiro. A
+     alternativa era o cacho encolher, e ela custa o que faz a barra ser menu — peca de
+     largura fixa, que nao se refaz de um mes para o outro. */
+  @media (max-width: 1245px) {
+    .topbar__name {
+      display: none;
+    }
   }
 
   /* O CACHO — as tres pecas encostadas, porque juntas elas sao uma pergunta so: em que mes
@@ -228,9 +247,14 @@
     color: var(--ink-dim);
   }
 
+  /* ⛔ E ELE NAO SAI DA CELULA: `R$ -999,85 tri` pedia 108px em 88 e pintava por cima do
+     vizinho — sem rolagem e sem reticencia, entao nenhuma checagem via. */
   .vit__value {
     grid-column: 2;
     grid-row: 2;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: var(--vit-value);
     font-weight: 800;
     letter-spacing: var(--when-track);
@@ -309,8 +333,12 @@
   }
 
   /* ── A PECA DO QUANDO ──────────────────────────────────────────────────────── */
+  /* ⛔ LARGURA FIXA SEM RECORTE VAZA: um marco de catalogo mais longo empurrava 212px de
+     texto para fora da peca, por cima do botao. A compressao tem piso em 0,78 e o piso nao
+     salva tudo — o recorte e o que fecha a peca. */
   .piece--when {
     width: var(--when-w);
+    overflow: hidden;
     gap: var(--when-gap-rows);
     padding: var(--when-pad-top) var(--when-pad) 0;
   }
@@ -319,6 +347,15 @@
      escala horizontal nas duas linhas a cada rearranjo, e as regras disputariam o atributo. */
   /* ⚠ A COMPRESSAO NASCE NA FOLHA e o quadro so a refina: sem ela aqui, o bloco apareceria
      largo por um quadro — o tempo que a fonte leva para chegar. */
+  /* ⚠ ALGARISMO DE LARGURA FIXA EM TODA LEITURA DA BARRA: sem ele o mes muda de largura ao
+     virar o ano, e a justificacao remede e reescala — a peca chacoalha na virada. */
+  .when__date,
+  .when__note,
+  .go__label,
+  .go__hint {
+    font-variant-numeric: tabular-nums;
+  }
+
   .when__date,
   .when__note {
     transform: scaleX(var(--when-squeeze));
@@ -387,17 +424,27 @@
 
   /* ⚠ O ROTULO ENCOSTA NA ESQUERDA E A SETA NA DIREITA, e o vao do meio existe para a leitura
      entrar nele sem empurrar nada. */
+  /* ⛔ A LEGENDA OCUPAVA COLUNA `auto` E EMPURRAVA A SETA PARA FORA: invisivel em repouso,
+     ela media 366px e jogava o glifo 193px alem da aresta, onde `overflow: hidden` o
+     apagava — o botao perdia a seta justamente no mes em que ha preco a pagar. */
   .go__stack {
     display: grid;
-    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
     align-items: center;
     width: 100%;
     padding: 0 var(--go-pad-r) 0 var(--go-pad-l);
     column-gap: var(--go-gap);
   }
 
+  /* ⛔ A TRAVA DE QUEBRA FALTAVA AQUI, e so a legenda a tinha: `O mandato acabou` virava
+     TRES linhas dentro de um botao de 57px. */
+  /* ⛔ `justify-self: start` DIMENSIONA O ITEM PELO CONTEUDO e nao pela coluna: com ele o
+     recorte nunca chegava a valer, e a leitura passava por baixo da seta e da aresta. */
   .go__label {
-    justify-self: start;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-family: var(--font-display);
     font-size: var(--go-size);
     font-weight: 800;
@@ -409,9 +456,11 @@
   /* ⛔ SEM A TRAVA DE QUEBRA A LEITURA VIRAVA DUAS LINHAS no hover, e o botao ganhava uma
      segunda linha so quando o mouse chegava. */
   .go__hint {
-    justify-self: start;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: var(--font-display);
-    font-size: var(--go-size);
+    font-size: var(--go-hint);
     font-weight: 400;
     letter-spacing: var(--when-track);
     text-transform: uppercase;
@@ -637,18 +686,6 @@
   @media (max-width: 1180px) {
     .shell {
       grid-template-columns: minmax(0, 1fr);
-    }
-
-    /* A BARRA VIRA DUAS FILEIRAS, e a data sai. */
-    .topbar {
-      grid-template-columns: minmax(0, 1fr) auto;
-      row-gap: var(--space-2);
-    }
-
-    .topbar__vitals {
-      grid-column: 1 / -1;
-      order: 3;
-      justify-content: flex-start;
     }
 
     /* A lamina continua COLUNA e so perde a altura da janela. */

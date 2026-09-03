@@ -12,6 +12,90 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO DA BARRA E DO ORÇAMENTO — 03/09/2026
+
+Ela começou com um achado de comentário e terminou dentro do motor fiscal. **Quatro blocos, e
+os três primeiros nasceram de perguntas dele, não de plano.**
+
+### 1 · Um bloco de 11 linhas virou uma auditoria de catálogo
+
+A guarda `prose` acusou um docbloco acima do teto em `dashboard.mjs`. Ler o arquivo para
+cortá-lo revelou que **os dois alarmes dos sinais vitais eram cópia de números do catálogo**, e
+as duas cópias tinham envelhecido: a rua acendia em 20 quando `streetFloor` já era 16 desde
+`95681c3`, e a inflação acendia em 7,5% quando Finanças já acusava desde 4,5%. O comentário de
+`finance.mjs` **previa este defeito com todas as letras** — _"copiar as réguas para o segundo
+consumidor daria dois lugares afirmando em que faixa a inflação vive"_. O segundo consumidor
+nasceu e copiou.
+
+A banda da inflação foi para o catálogo (`inflationTolerance: 0,015`, fonte CMN) e a soma
+passou a ser feita uma vez só, em `app.mjs`.
+
+### 2 · Treze comentários embaralhados, e o original estava no git
+
+Eu disse que o texto original não existia. **Estava.** O commit `672291a` (_"a prosa cai 60%"_)
+comeu o INÍCIO de treze parágrafos e, em dois casos, enxertou um pedaço dentro de outro bloco.
+Cada um foi recomposto de `672291a^`, sem inventar texto — e **três números do original não
+voltaram, porque envelheceram** (a fervura "em 60", o piso da rua "em 20%", e uma tabela medida
+com a calibragem antiga).
+
+A guarda `prose` ganhou a **regra 5 — o bloco decapitado**, espelho da regra 3. Medida antes de
+escrever: zero falso positivo exigindo letra minúscula; com qualquer caractere, os `≈` do
+catálogo de partidos e o `⚅` do save davam onze alarmes falsos. **Ela achou sozinha o décimo
+terceiro bloco**, que a varredura manual tinha deixado passar.
+
+### 3 · A barra superior, auditada ao limite
+
+Pedido dele por dossiê externo: auditoria, correção e **teste de estresse absoluto**. Oito
+defeitos, todos medidos no navegador. O pior foi silencioso: **a faísca da Aprovação caía no mês
+errado** — ela vem dos cartões do mês, limitados a 24 pelo motor, e era desenhada do índice
+zero, pondo os dois últimos anos no lugar dos dois primeiros. No mês 36 o ponto dela parava na
+metade do trilho enquanto o do PIB estava a três quartos, **no mesmo mês**.
+
+Os outros sete: a marca passava por baixo da peça dos vitais abaixo de 1228px; a legenda
+invisível do botão jogava a seta 193px para fora; `O mandato acabou` quebrava em três linhas; o
+valor do PIB pedia 89px numa célula de 88; um marco de catálogo mais longo vazava 212px da peça;
+a barra media 80px enquanto o token dizia 78; e o botão morto acendia no hover. **A regra
+responsiva de 1180px era MORTA** — punha `grid-template-columns` numa barra que é flex.
+
+O passeio ganhou o **quinto irmão**, `checkTopbar`: peça de largura fixa não rola, não põe
+reticência e não move `scrollWidth` do pai. Ela nasceu vermelha.
+
+⚖ **E uma decisão dele fechou aqui:** o piso da barra é **1103px de janela**, e fica assim. As
+três alternativas foram postas com o custo de cada uma, e as três custam o que faz a barra ler
+como MENU.
+
+### 4 · O passo 6 começou pelo A3, e a pesquisa inverteu a ordem do plano
+
+Ele pediu avaliação do próximo passo **com fidelidade acima de tudo**. A
+[pesquisa 06](research/06-a-obrigatoria-e-quem-a-decide.md) foi contra fontes públicas de 2025 e
+2026 e concluiu que **os três itens dão ao presidente uma caneta que ele não tem**: o mínimo é
+regra de lei com teto de 2,5% real, a folha é acordo plurianual pago em parcelas, e o
+contingenciamento são **dois instrumentos diferentes**. Ele aprovou a inversão da ordem.
+
+O A3 abriu com **dois defeitos de motor**, e o segundo ninguém tinha visto: além do achado 36
+(o rateio gravava o corte na lei — um pedido de 92 parava em 89,70), **as seis regras sumiam do
+estado todo mês**. `honour` só devolve programa, e o retorno dele era gravado por cima do mapa
+inteiro: 44 chaves viravam 38 no primeiro mês, e `poder-do-executivo` caía de 30 para o `?? 0`
+de quatro leitores. **Nenhuma prova via, porque as duas moram no que o turno ESCREVE.**
+
+Depois vieram os nomes certos — `blocked` para o teto do arcabouço, `atRisk` para a meta
+primária da LDO — e a correção da mentira mais visível: **a tela pintava de verde qualquer
+primário positivo.** Um primário de +0,1% do PIB contra meta de +0,5% é meta perdida, e é
+exatamente o que o governo real projeta para 2027.
+
+⭐ **A meta é alcançável, e é isso que a torna sinal e não alarme:** o governo passivo sai de
+−0,49% no mês 1 e chega a +0,17% no mês 36, contra um piso de banda de 0,25% — ele encosta e não
+entra. Só a política de austeridade escapa, e por 15 meses.
+
+### A lição de método desta sessão
+
+**Duas vezes eu afirmei sem medir, e as duas vezes estava errado.** Disse que o texto dos
+comentários não estava no git — estava, num commit que o `git log -S` acha em um comando. E
+medi a legenda do botão com um script que clampava a largura, concluí que cabia, e foi o passeio
+que me corrigiu com o número certo. **A ferramenta de medição também precisa ser conferida.**
+
+---
+
 ## A SESSÃO QUE LEVOU A BARRA PARA O JOGO — 31/08 e 01/09/2026
 
 Ela começou com _"vamos melhorar ela"_ sobre a barra do clone e terminou com a barra rodando

@@ -183,8 +183,8 @@ function moneyBlock(report) {
         `<b data-numeric>${percent(cut)}</b> — ${escapeHtml(UI.report.cutWhy)}</p>`
       : "";
 
-  const squeezed = report.budget.contingency
-    ? `<p class="report__line" data-alert="true">${escapeHtml(UI.report.contingency)}</p>`
+  const squeezed = report.budget.blocked
+    ? `<p class="report__line" data-alert="true">${escapeHtml(UI.report.blocked)}</p>`
     : "";
 
   return (

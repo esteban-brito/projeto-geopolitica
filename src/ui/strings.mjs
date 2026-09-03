@@ -655,6 +655,8 @@ export const UI = {
     ofRevenue: "da receita",
     room: "Discricionário",
     primary: "Resultado primário",
+    ofGdp: "do PIB",
+    missing: "abaixo da banda",
     interest: "Juros da dívida",
     /* A DISTINCAO QUE O ARCABOUCO FAZ, dita na linha: juro não disputa com hospital — ele
        engorda a dívida. */
@@ -755,7 +757,7 @@ export const UI = {
      sessao acreditar que a peca existia. */
   /* O VEREDITO É POR MOTIVO, e não por nível. */
   verdict: {
-    contingency: "O teto fechou: a obrigatória consome o orçamento, e não há emenda a pagar",
+    blocked: "O teto fechou: a obrigatória consome o orçamento, e não há emenda a pagar",
     rupture: "Bancada rompida — ela vota contra por menos do que custa trazê-la de volta",
     minority: "A base não chega à maioria; cada voto agora tem preço de leilão",
     obstruction: "Há bancada obstruindo: o governo ainda passa, mas paga pedágio em tudo",
@@ -788,7 +790,7 @@ export const UI = {
     room: "cabia",
     cut: "o rateio cortou",
     cutWhy: "a promessa não cabia no mês",
-    contingency: "o teto fechou: a obrigatória sozinha já fura o arcabouço",
+    blocked: "o teto fechou: a obrigatória sozinha já fura o arcabouço",
     country: TERMOS.country,
   },
   actions: {
@@ -802,10 +804,12 @@ export const UI = {
        pela mesma regra do reinicio: ela chega no momento em que a informacao muda a decisao —
        o jogador acabou de descobrir que nao ha mais mes, e precisa saber que ha outra
        partida. */
-    silenceOne: "fecha sem resposta:",
-    silenceMany: "perguntas fecham sem resposta",
+    /* ⛔ O SUBSTANTIVO SAIU E O VERBO FICOU: a coluna da legenda tem 185px, e
+       "7 perguntas fecham sem resposta" pedia 226. O que a legenda existe para dizer e o
+       PRECO de avancar, e o preco esta no verbo. */
+    silenceOne: "fecha sem resposta",
+    silenceMany: "fecham sem resposta",
     ended: "O mandato acabou",
-    endedHint: "nova partida, ao pé da coluna",
     restart: "Nova partida",
     /* ── A POSSE ─────────────────────────────────────────────────────────────
        O jogador era a unica pessoa sem nome proprio num jogo em que oito outras tinham,

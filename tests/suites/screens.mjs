@@ -905,6 +905,7 @@ test("O DESENHO SO EXISTE QUANDO HA HISTORIA: sem serie, a barra nao opina", () 
     streetFloor: CATALOG.pressure.streetFloor,
     ceiling: CATALOG.macro.inflationTarget + CATALOG.macro.inflationTolerance,
     horizon: 48,
+    approvalFrom: 0,
   };
 
   const mudo = vitalsHtml({ ...agora, series: { gdp: [], inflation: [], approval: [] } });
@@ -966,6 +967,7 @@ test("O ALARME DA BARRA E O LIMIAR DO CATALOGO, e nao uma copia envelhecida", ()
       streetFloor: floor,
       ceiling,
       horizon: 48,
+      approvalFrom: 0,
       series: { gdp: [], inflation: [], approval: [] },
     });
     return (html.match(/vit--low/g) ?? []).length;

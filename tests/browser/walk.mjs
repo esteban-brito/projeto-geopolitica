@@ -175,6 +175,50 @@ try {
   }
 
   /**
+   * ⚠ O QUINTO IRMAO, e ele ve o que os outros quatro nao veem: peca de largura FIXA nao
+   * rola, nao poe reticencia e nao move `scrollWidth` do pai — ela so pinta por cima do
+   * vizinho. Tres defeitos moravam ai: a marca atravessava a peca dos vitais abaixo de
+   * 1228px, a legenda invisivel do botao jogava a seta 193px alem da aresta, e um marco de
+   * catalogo mais longo empurrava 212px de texto para fora da peca do quando.
+   *
+   * @param {string} where
+   */
+  async function checkTopbar(where) {
+    const found = await page.evaluate(() => {
+      /** @param {string} s @returns {DOMRect | null} */
+      const r = s => document.querySelector(s)?.getBoundingClientRect() ?? null;
+      const bar = r(".topbar");
+      const brand = r(".topbar__brand");
+      const cluster = r(".topbar__cluster");
+      const go = r(".go");
+      const arrow = r(".go__arrow");
+      /** @type {string[]} */
+      const out = [];
+      if (!bar || !brand || !cluster || !go || !arrow) return ["a barra nao veio inteira"];
+      if (brand.right > cluster.x + 0.5) {
+        out.push(`a marca invade o cacho em ${(brand.right - cluster.x).toFixed(1)}px`);
+      }
+      if (cluster.right > bar.right + 0.5) {
+        out.push(`o cacho passa da barra em ${(cluster.right - bar.right).toFixed(1)}px`);
+      }
+      if (arrow.right > go.right + 0.5 || arrow.x < go.x - 0.5) {
+        out.push(
+          `a seta saiu do botao: ${arrow.x.toFixed(0)}→${arrow.right.toFixed(0)} contra ${go.x.toFixed(0)}→${go.right.toFixed(0)}`,
+        );
+      }
+      for (const node of document.querySelectorAll(".topbar *")) {
+        const style = getComputedStyle(node);
+        if (style.overflow === "hidden" || style.overflowX === "hidden") continue;
+        if (node.clientWidth > 0 && node.scrollWidth > node.clientWidth + 1) {
+          out.push(`${node.className} vaza ${node.scrollWidth - node.clientWidth}px`);
+        }
+      }
+      return out;
+    });
+    expect(found.length === 0, `[${where}] a barra superior vaza: ${found.join(" | ")}`);
+  }
+
+  /**
    * ⚠ O QUARTO IRMAO, e ele ve o que os outros tres nao veem. `-webkit-line-clamp` nao rola,
    * nao poe reticencia no eixo X e NAO MOVE `scrollHeight`: a caixa de `-webkit-box` so
    * diagrama as linhas que sobraram, entao o sinal padrao de estouro simplesmente nao existe.
@@ -402,6 +446,7 @@ try {
     "[gabinete] a tela inicial ofereceu um controle",
   );
   expect((await page.locator(".vit").count()) === 4, "[barra] os quatro sinais vitais nao vieram");
+  await checkTopbar("barra");
   await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
 
   /* 1a — A POSSE PERGUNTA, e ela e a primeira decisao do mandato. ⚠ A ASSERCAO ACIMA CONTINUA

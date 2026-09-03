@@ -483,10 +483,14 @@ test("A BASE PARTE EM DUAS E A SOMA E A PROPRIA BASE — conviccao mais aluguel"
         const total = baseCount({ parties: PARTIES, loyalty });
 
         /* ⚠ A SOMA E CONFERIDA ANTES DO ARREDONDAMENTO, como manda a prosa de `baseSplit`:
-           repartir inteiro faria as partes divergirem do total em ate uma cadeira. */
-        assert.equal(
-          Math.round(split.bought + split.convinced),
-          total,
+           repartir inteiro faria as partes divergirem do total em ate uma cadeira.
+           ⛔ E A COMPARACAO E POR TOLERANCIA, e nao por igualdade de inteiro: `baseCount`
+           acumula as cadeiras numa soma so e `baseVenality` em duas, e as duas ordens de
+           ponto flutuante divergem em ~1e-13. Numa carga que caia exatamente no meio, os
+           dois `Math.round` iam para lados opostos — o portao ficava vermelho em cerca de
+           uma rodada em cinco, sem defeito nenhum atras. */
+        assert.ok(
+          Math.abs(split.bought + split.convinced - total) <= 0.5 + 1e-9,
           "as duas metades nao fecham a base",
         );
         assert.ok(split.bought >= 0 && split.convinced >= 0, "nenhuma metade e negativa");

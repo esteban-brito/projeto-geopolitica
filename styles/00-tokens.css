@@ -275,7 +275,9 @@
     --vit-drop: 1px;
     --stats-pad: 6px;
     --stats-pad-b: 1px;
-    --stats-vit: 8px;
+    /* ⛔ ERA 8, E A SANGRIA COMIA A CELULA: o valor do PIB pedia 89px numa celula de 88 e
+       pintava por cima do vizinho. Com 6 a celula vai a 92, e a maior leitura real cabe. */
+    --stats-vit: 6px;
 
     --when-size: 22px;
     --when-note: 11.5px;
@@ -295,6 +297,8 @@
 
     --go-w: 315px;
     --go-size: 15px;
+    /* A LEGENDA E NOTA, E NAO ACAO: mesmo corpo da nota do quando, na peca ao lado. */
+    --go-hint: 11.5px;
     --go-pad-l: 15.7px;
     --go-pad-r: 18px;
     --go-gap: 7px;

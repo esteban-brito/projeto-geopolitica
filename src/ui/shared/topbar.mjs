@@ -281,7 +281,13 @@ export function bindAdvance(button) {
     { duration: 0.42, bounce: 0.2 },
   );
 
-  const enter = () => open(1);
+  /* ⛔ BOTAO MORTO NAO SE ACENDE: quem escuta e o envoltorio, que nunca desabilita, entao
+     no fim do mandato a peca erguia, clareava e abria a leitura de um botao que nao faz
+     nada. A saida continua livre, que e o que impede o hover preso. */
+  const enter = () => {
+    if (button.disabled) return;
+    open(1);
+  };
   const leave = () => {
     open(0);
     pour(0, POUR);

@@ -78,8 +78,15 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 13 guardas · 61 provas sintéticas · 152 arquivos · 300 provas · passeio
+**Estado verde:** 13 guardas · 61 provas sintéticas · 152 arquivos · 304 provas · passeio
 verde. **A barra superior nova está no jogo** desde 01/09/2026. **Save na versão 20** — partida salva antes de 30/08 não abre. Branch de trabalho: `caixa-de-entrada`.
+
+▶ **O PASSO 6 DO CICLO 13 COMEÇOU, e a ordem foi INVERTIDA** — a
+[pesquisa 06](docs/research/06-a-obrigatoria-e-quem-a-decide.md) mediu que A1, A2 e A3 dão ao
+presidente uma caneta que ele não tem, e que o **A3 é o único que não pede motor novo**. Ele
+aprovou. **O A3 está pela metade:** os dois instrumentos já têm nomes diferentes (`blocked` para
+o teto do arcabouço, `atRisk` para a meta primária da LDO) e o rateio deixou de gravar o corte
+na lei — **falta o contingenciamento ser ESCOLHIDO**, que é o nome do item.
 
 **Há CINCO planos na mesa**, e o 13 é o único aberto:
 

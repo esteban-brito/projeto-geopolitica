@@ -885,6 +885,9 @@ function paint() {
       streetFloor: CATALOG.pressure.streetFloor,
       ceiling: INFLATION_CEILING,
       horizon: MONTHS_PER_TERM,
+      /* ⚠ A SERIE DA APROVACAO E CURTA: o motor guarda os ultimos `CARRY` cartoes, entao
+         ela comeca no mes em que a janela comeca — e nao no mes 1. */
+      approvalFrom: Math.max(0, state.month - past.length),
       series: {
         gdp: state.series.gdp,
         inflation: state.series.inflation,
@@ -1471,16 +1474,18 @@ function endLabel(/** @type {ReturnType<typeof termOf> | null} */ term_ = null) 
   label(
     el.advance,
     term.over ? UI.actions.ended : UI.actions.advance,
+    /* ⛔ O FIM NAO TEM LEGENDA: o botao esta desabilitado, e desabilitado nao ergue nem
+       recebe foco — a frase era texto que ninguem podia ler, e so ocupava a coluna. Com o
+       rotulo do fim em 166px sobram 95, e ela pedia 194. Quem chama a nova partida e o
+       botao ao pe da coluna, que continua la. */
     term.over
-      ? UI.actions.endedHint
+      ? ""
       : quiet.length === 0
         ? `${Math.max(0, MONTHS_PER_TERM - state.month)} ${UI.closing.monthsLeft}`
-        : /* ⚠ COM UMA SO, O ROTULO NOMEIA; com duas ou mais, ele conta. O assunto vem da
-             carta que o motor devolveu, e nao de uma segunda montagem aqui — `silences` e
-             `settle` filtrada, entao o que se imprime e a carta que de fato vai fechar. */
-          quiet.length === 1
-          ? `${UI.actions.silenceOne} ${quiet[0]?.subject ?? ""}`.trim()
-          : `${quiet.length} ${UI.actions.silenceMany}`,
+        : /* ⛔ ELE CONTA E NAO NOMEIA, e a medida decidiu: nomeando a carta a legenda pedia
+             366px numa coluna de 185, e o pedaco que sobrava era metade de um assunto. O
+             numero cabe, e quem nomeia e a Caixa — que e onde se responde. */
+          `${quiet.length} ${quiet.length === 1 ? UI.actions.silenceOne : UI.actions.silenceMany}`,
   );
 }
 

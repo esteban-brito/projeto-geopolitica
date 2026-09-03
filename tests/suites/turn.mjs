@@ -169,7 +169,7 @@ test("CONTINGENCIAMENTO ENTREGA ZERO, por mais que se prometa", () => {
       const state = createState(3, SQUEEZED);
       const { report } = playMonth(state, orders, { catalog: SQUEEZED });
 
-      assert.ok(report.budget.contingency, "a posicao montada para apertar nao apertou");
+      assert.ok(report.budget.blocked, "a posicao montada para apertar nao apertou");
       assert.equal(report.paidCost, 0);
       for (const party of PARTIES) {
         assert.equal(report.paid[party.id], 0, `${party.id} recebeu verba sob contingenciamento`);
@@ -488,7 +488,7 @@ test("O PLACAR E O TURNO FECHAM A MESMA CONTA: o painel de Financas nao inventa 
       assert.equal(shown.budget.mandatory, played.report.budget.mandatory);
       assert.equal(shown.budget.ceiling, played.report.budget.ceiling);
       assert.equal(shown.budget.allowance, played.report.budget.allowance);
-      assert.equal(shown.budget.contingency, played.report.budget.contingency);
+      assert.equal(shown.budget.blocked, played.report.budget.blocked);
       assert.equal(shown.budget.balance, played.report.budget.balance);
       assert.equal(shown.interest, played.report.interest);
 
@@ -549,7 +549,7 @@ test("O TETO FECHADO E CRISE, e ele vem antes de qualquer outra leitura", () => 
   const standing = situationOf(squeezed, SQUEEZED);
 
   assert.equal(standing.level, "crisis");
-  assert.equal(standing.reason, "contingency");
+  assert.equal(standing.reason, "blocked");
 });
 
 test("bancada rompida e crise mesmo com o caixa livre", () => {
@@ -922,7 +922,7 @@ test("O TETO QUE VAI FECHAR AVISA ANTES, e o aviso chega uma vez so", () => {
     const played = playMonth(state, {}, { catalog });
     avisos += played.state.mail.filter(letter => letter.kind === "ceiling").length - avisos;
 
-    if (played.report.budget.contingency) {
+    if (played.report.budget.blocked) {
       assert.ok(avisos > 0, "o teto fechou e nenhum aviso chegou antes");
       return;
     }
@@ -983,4 +983,52 @@ test("A PROJECAO MOSTRA A DECISAO — a area que recebe verba separa da que nao 
     return Math.abs(last - first) >= 1;
   });
   assert.ok(moved, "nenhuma area andou um ponto em 24 meses — a curva nao mostra decisao");
+});
+
+/* ═══ O QUE O MES GRAVA NO ESTADO ════════════════════════════════════════════
+   As duas provas abaixo travam defeitos que nenhuma suite via, porque as duas moram no que o
+   turno ESCREVE — e o que ele escreve so aparece no mes seguinte. */
+
+/* ⛔ ACHADO 36: o rateio gravava o nivel CORTADO no estado, e nada nunca o devolvia. Medido
+   antes do conserto: um pedido de 92 repetido seis meses parava em 89,70 e nunca mais subia —
+   um mes apertado virava lei orcamentaria nova sem ninguem decidir. No mundo o
+   contingenciamento aperta EMPENHO e se desfaz quando a receita volta. */
+test("O RATEIO E DO MES E NAO DA LEI — o nivel pedido sobrevive ao aperto", () => {
+  const alvo = PROGRAMS[0];
+  if (!alvo) throw new Error("o catalogo nao tem programa");
+  const pedido = Math.min(100, alvo.ceiling);
+  let state = createState(1);
+
+  for (let month = 0; month < 6; month++) {
+    const played = playMonth(state, { levels: { [alvo.id]: pedido } }, { catalog: CATALOG });
+    state = played.state;
+  }
+
+  assert.equal(
+    state.levels[alvo.id],
+    pedido,
+    "o nivel que o jogador manteve seis meses tem de continuar sendo o dele",
+  );
+});
+
+/* ⛔ E O ESTADO PERDIA AS SEIS REGRAS TODO MES: `honour` so devolve PROGRAMA, e o retorno dele
+   era gravado por cima do mapa inteiro. Medido: 44 chaves viravam 38 no primeiro mes, e
+   `poder-do-executivo` caia de 30 para o `?? 0` de quatro leitores — o decreto perdia forca
+   sozinho no mes 1. */
+test("AS REGRAS NAO SOMEM DO ESTADO — o mapa de niveis atravessa o mes inteiro", () => {
+  const before = createState(1);
+  const after = playMonth(before, {}, { catalog: CATALOG }).state;
+
+  assert.equal(
+    Object.keys(after.levels).length,
+    Object.keys(before.levels).length,
+    "o mes nao pode apagar alavanca nenhuma do estado",
+  );
+  for (const rule of CATALOG.rules) {
+    assert.equal(
+      after.levels[rule.id],
+      before.levels[rule.id],
+      `a regra ${rule.id} sumiu ou mudou sem ninguem decidir`,
+    );
+  }
 });

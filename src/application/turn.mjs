@@ -455,7 +455,7 @@ export function situationOf(state, catalog = CATALOG) {
 
   /* O teto fechado vem primeiro porque ele nao se negocia: sem discricionario nao ha emenda,
      e sem emenda a base nao se compra de volta. */
-  if (budget.contingency) return { level: "crisis", reason: "contingency", base };
+  if (budget.blocked) return { level: "crisis", reason: "blocked", base };
   if (ruptured) return { level: "crisis", reason: "rupture", base };
   if (base < SIMPLE_MAJORITY) return { level: "crisis", reason: "minority", base };
 
@@ -1136,8 +1136,8 @@ const NOTICED = new Set(["tabled", "forgotten", "passed", "rejected"]);
  * @param {object} after o que o mes acabou de produzir
  * @param {Record<string, number>} after.pressure
  * @param {Record<string, number>} after.loyalty
- * @param {boolean} after.contingency se o teto do arcabouco esta fechado NESTE mes
- * @param {boolean} after.contingencyNext se ele estara fechado no mes que vem
+ * @param {boolean} after.blocked se o teto do arcabouco esta fechado NESTE mes
+ * @param {boolean} after.blockedNext se ele estara fechado no mes que vem
  * @returns {import("../state/state.mjs").Letter[]}
  */
 function alarmsOf(state, now, impeachment, catalog, after) {
@@ -1170,7 +1170,7 @@ function alarmsOf(state, now, impeachment, catalog, after) {
      a carta nunca saiu uma vez.
      ⚠ E O AVISO CHEGA ANTES DE PROPOSITO. O mes que esta fechando ja sabe a posicao com que o
      seguinte abre, e informacao que chega depois da decisao e recibo. */
-  if (!after.contingency && after.contingencyNext) {
+  if (!after.blocked && after.blockedNext) {
     written.push(alarm({ kind: "ceiling", id: "ceiling", subject: "ceiling", month: state.month }));
   }
 
@@ -1491,7 +1491,7 @@ function advanceBills(state, { share, standing, catalog, resolved, mail }) {
  */
 export function playMonth(state, orders = {}, options = {}) {
   const catalog = options.catalog ?? CATALOG;
-  const { areas, parties, programs } = catalog;
+  const { areas, parties } = catalog;
 
   const position = positionOf(state, catalog);
 
@@ -1576,12 +1576,23 @@ export function playMonth(state, orders = {}, options = {}) {
   /* ⚠ O QUE FOI CEDIDO ENTRA POR CIMA, e depois do texto aprovado: se as duas coisas tocarem
      a mesma alavanca no mesmo mes, quem manda e a exigencia — porque ela e a que o jogador
      acabou de responder, e o texto foi assinado ha tres meses. */
-  const applied = honour({
-    programs,
-    levels: { ...(approved ? { ...held, ...approved.levels } : held), ...conceded },
-    ratio,
-    bands,
-  });
+  /* O QUE FICOU ESCRITO, antes de o caixa ratear. */
+  const intended = { ...(approved ? { ...held, ...approved.levels } : held), ...conceded };
+
+  /* ⚠ O RATEIO NAO SE REFAZ AQUI: quem o executa e `settlement`, e o que ele produz ja
+     alimentou o gasto, a MALHA e o caixa. Refaze-lo neste ponto so servia para gravar o
+     nivel cortado no estado, que e exatamente o achado 36. */
+
+  /* ⛔ O ESTADO GUARDA O QUE FOI ESCRITO, E NAO O QUE O CAIXA HONROU — achado 36. O rateio
+     e execucao do MES: no mundo ele aperta empenho e se desfaz quando a receita volta, e
+     nao reescreve a lei orcamentaria. Gravando o nivel rateado, um pedido de 92 mantido
+     seis meses seguidos parava em 89,70 e nunca mais subia — o corte de um mes apertado
+     virava permanente sem ninguem decidir.
+     ⛔ E O MERGE E O CONSERTO DE UM SEGUNDO DEFEITO: `honour` so devolve PROGRAMA, entao
+     gravar o retorno dele apagava as seis REGRAS do estado no primeiro mes. Medido:
+     44 chaves viravam 38, e `poder-do-executivo` caia de 30 para o `?? 0` de quatro
+     leitores. */
+  const settled = { ...state.levels, ...intended };
 
   /* ── A LEI SO MUDA SE O PLENARIO DEIXAR, e nao ha meio-termo aqui ──────────── Movimento de
      faixa NUNCA e execucao orcamentaria: mexer no que a lei obriga custa lei, no minimo. */
@@ -1617,7 +1628,7 @@ export function playMonth(state, orders = {}, options = {}) {
      e o saldo do mes e o mesmo nos dois casos. Passa por aqui porque o LASTRO
      raciocina em empenho liquido, e criar uma terceira porta para o mesmo real
      seria duas contas para uma coisa. */
-  const proceeds = saleOf(catalog.rules, state.levels, applied);
+  const proceeds = saleOf(catalog.rules, state.levels, settled);
   const budget = budgetStep({ ...position, spent: paidCost + allocatedTotal - proceeds });
 
   /* 8 — A ECONOMIA, e ela vem DEPOIS do orcamento porque le o que ele empenhou. */
@@ -1737,7 +1748,7 @@ export function playMonth(state, orders = {}, options = {}) {
   const fallen = state.fallen ?? (survivors && !survivors.passed ? state.month : null);
 
   /* Calculada duas vezes, as duas divergiriam no primeiro remendo. */
-  const nextFiscal = nextPosition(state, budget, applied, catalog, interest, bands, appliedBands);
+  const nextFiscal = nextPosition(state, budget, settled, catalog, interest, bands, appliedBands);
 
   /* Ate entao so os relatorios avulsos as usavam, e podiam medi-las por dentro; agora o
      balanco da Casa Civil imprime os mesmos seis numeros, e dois lugares medindo a mesma
@@ -1769,7 +1780,7 @@ export function playMonth(state, orders = {}, options = {}) {
         capacity.index,
       ),
       capacity: { index: capacity.index, history: capacity.history },
-      levels: applied,
+      levels: settled,
       /* ⚠ A POSSE ACONTECE UMA VEZ: enquanto os tres eixos estao vazios, o que o jogador
          marcou na carta entra; depois disso a plataforma e imutavel, e reescreve-la no mes 30
          daria um presidente sem promessa nenhuma — so um espelho do que ele ja fez. */
@@ -1790,13 +1801,13 @@ export function playMonth(state, orders = {}, options = {}) {
         ...alarmsOf(state, rupturas, impeachment, catalog, {
           pressure,
           loyalty,
-          contingency: budget.contingency,
+          blocked: budget.blocked,
           /* A POSICAO COM QUE O MES SEGUINTE ABRE, e ela ja esta calculada: e a mesma fonte
              que `closed.room` usa para dizer quanto vai sobrar. */
-          contingencyNext: budgetStep({
+          blockedNext: budgetStep({
             ...positionOf({ ...state, fiscal: nextFiscal }, catalog),
             spent: 0,
-          }).contingency,
+          }).blocked,
         }),
         ...passage.asked,
         ...demandsOf(state, pressure, catalog),
@@ -1886,7 +1897,7 @@ export function playMonth(state, orders = {}, options = {}) {
       month: state.month,
       agenda,
       enacted,
-      levels: applied,
+      levels: settled,
       bands: appliedBands,
       capacity,
       economy,
