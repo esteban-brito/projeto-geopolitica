@@ -13,14 +13,21 @@
    ⚠ LINHA DE TIPO NAO CONTA. `@typedef`, `@param` e `@property` sao contrato, e puni-las
    empurraria o projeto para tipagem implicita — o oposto do que se quer.
 
-   ── ELA TEM CINCO TRABALHOS ───────────────────────────────────────────────
+   ── ELA TEM SEIS TRABALHOS ────────────────────────────────────────────────
    1. o TETO, acima;
    2. a DATA — o `CLAUDE.md` a proibe com todas as letras, e havia 56, 18 no entrypoint;
    3. o BLOCO CORTADO NO MEIO — um corte automatico de prosa ja passou por aqui;
    4. o IDENTIFICADOR MORTO — prosa que cita `--token`, `.classe` ou `arquivo.mjs` que o
       projeto nao tem mais;
    5. o BLOCO DECAPITADO — o mesmo corte comeu o INICIO de treze paragrafos, e a 3 so
-      olhava o fim deles.
+      olhava o fim deles;
+   6. o CORTE NO MIOLO — e ele e a metade que faltava das duas acima.
+
+   ⚠ AS REGRAS 3 E 5 SO OLHAM AS DUAS PONTAS DE UM BLOCO, e e por isso que a sexta
+   existe: `blocksFrom` cola as linhas vizinhas num texto so, entao `CUT` mede a ULTIMA
+   linha e `HEADLESS` a PRIMEIRA. Remover um paragrafo do MEIO de um bloco longo nao
+   move nenhuma das duas — e e exatamente isso que o corte automatico fez em
+   `state.mjs`, onde um paragrafo parou em "porque tudo" com as duas pontas intactas.
 
    ⚠ O QUARTO PEGA A FAMILIA MAIS CARA DAQUI, e so metade dela — ver `standards.md` §7.
    Prosa que continua valida e para de ser verdade: `trend.mjs` afirmou por sessoes que
@@ -285,6 +292,55 @@ export function audit(files) {
       }
     }
 
+    /* ── 6 — O CORTE NO MIOLO, e ele tem duas metades ───────────────────────
+       A primeira e mecanica: um `/*` que abre DENTRO de outro bloco quer dizer que o de
+       cima nunca fechou, e os dois viram um comentario so. Nada falha — o verificador de
+       tipos le os `@typedef` do bloco fundido —, e por isso ele atravessa o portao.
+       A segunda e a frase que para no meio: `CUT` ja sabe reconhece-la, e so nao a via
+       porque a regra 3 mede a ULTIMA linha do bloco colado. */
+    let openedAt = 0;
+    for (const comment of comments) {
+      const text = comment.text.trim();
+      if (openedAt === 0) {
+        if (text.startsWith("/*") && !text.includes("*/")) openedAt = comment.line;
+        continue;
+      }
+      if (text.startsWith("/*")) {
+        add(
+          `${path}:${comment.line} abre um bloco dentro do que comecou em ${openedAt} — ` +
+            `o de cima nunca fechou, e os dois viraram um comentario so. Feche o primeiro`,
+        );
+        openedAt = comment.line;
+      }
+      if (text.includes("*/")) openedAt = 0;
+    }
+
+    /* A CERCA DO JSDOC SAI PARA A FRASE APARECER: sem tirar o `*` de continuacao, toda
+       linha comecaria pelo mesmo caractere e `CUT` mediria a cerca. */
+    const bodies = comments.map(comment => ({
+      line: comment.line,
+      body: comment.text
+        .trim()
+        .replace(/^\/\*+/, "")
+        .replace(/\*+\/$/, "")
+        .replace(/^\*\s?/, "")
+        .trim(),
+    }));
+
+    for (const [index, item] of bodies.entries()) {
+      const next = bodies[index + 1];
+      if (!next || next.line !== item.line + 1) continue;
+      /* ⚠ SO ONDE A PROSA ENCOSTA NUM TIPO: e ali que o paragrafo removido deixa a frase
+         pendurada, e e o unico recorte em que `CUT` nao acusa quebra legitima de `@param`. */
+      if (item.body === "" || TYPE.test(item.body) || !TYPE.test(next.body)) continue;
+      if (!CUT.test(item.body)) continue;
+      add(
+        `${path}:${item.line} tem uma frase que para no meio do bloco — ` +
+          `"…${item.body.slice(-56)}". As regras 3 e 5 medem as PONTAS do bloco colado, ` +
+          `entao um paragrafo removido do miolo passa: complete a frase do original`,
+      );
+    }
+
     /* 4 — O IDENTIFICADOR MORTO. */
     if (!whole || isGuardSource(path)) continue;
     for (const comment of comments) {
@@ -344,6 +400,24 @@ export const synthetic = [
        `macro.mjs` depois de o corte comer o inicio do paragrafo do juro. */
     label: "bloco que comeca no meio de uma frase",
     files: new Map([["src/x.mjs", "/* de Selic custa cerca de R$ 40 bi ao ano. */\nconst a = 1;"]]),
+  },
+  {
+    /* ⚠ ELA REINTRODUZ UM DEFEITO CONSUMADO: o bloco que declarava as series em `state.mjs`
+       nunca fechava, e o `/*` seguinte abria dentro dele. As duas pontas ficam intactas,
+       entao as regras 3 e 5 passam — e o verificador de tipos tambem, porque ele le os
+       `@typedef` do bloco fundido. O texto e maiusculo de proposito: em minuscula a regra 5
+       o acusaria, e prova que passa pela razao errada nao prova nada. */
+    label: "bloco que abre dentro de outro que nunca fechou",
+    files: new Map([["src/x.mjs", "/**\n * O pais\n/**\n * O mes\n */\nconst a = 1;"]]),
+  },
+  {
+    /* ⚠ E ESTA E O CORTE NO MIOLO: a frase para num conectivo e a linha seguinte e CONTRATO,
+       que e onde o paragrafo removido deixa a ponta pendurada. A regra 3 mede a ULTIMA linha
+       do bloco colado — aqui um `@param` —, entao ela nao ve. */
+    label: "frase que para no meio do bloco, encostada num tipo",
+    files: new Map([
+      ["src/x.mjs", "/**\n * A conta nasce de dois motores e\n * @param {number} x\n */\nlet a;"],
+    ]),
   },
   {
     /* ⚠ E ESTA ENTREGA O ENTRYPOINT, sem o qual a quarta auditoria nem roda. O

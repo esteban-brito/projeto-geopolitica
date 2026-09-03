@@ -449,9 +449,23 @@ try {
   await checkTopbar("barra");
   await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
 
-  /* 1a — A POSSE PERGUNTA, e ela e a primeira decisao do mandato. ⚠ A ASSERCAO ACIMA CONTINUA
-     VALENDO e nao foi afrouxada: os tres eixos sao BOTOES, e nao `input` nem `select` — a tela
-     inicial continua sem controle, e passou a ter pergunta. */
+  /* 1a — O EMAIL E A OUTRA METADE DA TELA QUE SE PARTIU, e a geometria se remede aqui porque
+     o vao mudou de TAMANHO e nao so de lugar: a caixa deixou a coluna de 432px e ficou com a
+     largura do tabuleiro. */
+  await page.click('.rail [data-section="email"]');
+  await page.waitForTimeout(400);
+  await checkOverflow("email");
+  await checkClipped("email");
+  await checkSwallowed("email");
+  await checkEllipsized("email");
+  await checkClamped("email");
+  await checkContrast("email");
+  await checkNoPageScroll("email");
+  await page.screenshot({ path: join(OUT, "email.png"), fullPage: true });
+
+  /* 1b — A POSSE PERGUNTA, e ela e a primeira decisao do mandato. ⚠ A ASSERCAO DO GABINETE
+     CONTINUA VALENDO e nao foi afrouxada: os tres eixos sao BOTOES, e nao `input` nem
+     `select` — a pergunta mora na carta, e a carta mudou de tela e nao de forma. */
   expect(
     (await page.locator(".letter__pledge").count()) === 3,
     "[posse] a carta de posse nao trouxe os tres eixos do discurso",
@@ -620,7 +634,7 @@ try {
   /* ⚠ 7a-bis — A CARTA ABERTA MORRE COM O MES. `openDispatch` so era escrito no clique e nunca
      limpo: um clique num aviso velho prendia o jogador nele por 20 meses medidos, com o painel
      mostrando o aviso enquanto o botao cobrava o silencio de outra carta. */
-  await page.click('.rail [data-section="cabinet"]');
+  await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(400);
   const linhas = await page.locator(".tray__row").count();
   if (linhas > 1) {
@@ -672,6 +686,12 @@ try {
     );
   }
 
+  /* ⚠ E ELA MEDE O GABINETE, entao o passeio VOLTA para la: depois da separacao a etapa
+     acima acaba no email, e `.cards__side` nao existe nele — a medicao vinha `null` e a
+     acusacao dizia "nullpx alem do limite" 24 vezes seguidas. */
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(400);
+
   /* ⚠ VINTE E QUATRO MESES, e o numero e medido: os dois meses em que a coluna estourava eram
      o 23 e o 35, e uma janela de doze nao alcancava nenhum dos dois. */
   for (let month = 0; month < 24; month++) {
@@ -716,7 +736,7 @@ try {
       await buy.nth(index).focus();
       for (let step = 0; step < 10; step++) await page.keyboard.press("ArrowRight");
     }
-    await page.click('[data-section="cabinet"]');
+    await page.click('[data-section="email"]');
     await page.waitForTimeout(300);
     await page.click("#advance");
     await page.waitForTimeout(700);
@@ -786,12 +806,21 @@ try {
      de vitais escapava so porque ela nao repinta quando o estado nao muda. */
   const direcoes = () =>
     page.$$eval(".cards__side .trend", nodes => nodes.map(node => node.dataset["direction"]));
+  /* ⚠ E ELA ATRAVESSA AS DUAS TELAS desde a separacao: a tendencia mora no Gabinete e o
+     clique mora no email. O defeito que ela pega e o de uma pintura mexer na outra, e agora
+     sao tres pinturas entre as duas leituras em vez de uma. */
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(300);
   const antesDoClique = await direcoes();
   expect(
     antesDoClique.some(direction => direction !== "flat"),
     `[gabinete] a coluna nao trouxe tendencia nenhuma — a checagem do clique nao mede nada`,
   );
+  await page.click('.rail [data-section="email"]');
+  await page.waitForTimeout(300);
   await page.locator(".tray__row").first().click();
+  await page.waitForTimeout(300);
+  await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(300);
   const depoisDoClique = await direcoes();
   expect(
@@ -799,6 +828,10 @@ try {
     `[gabinete] um clique na caixa mexeu na tendencia da coluna: ` +
       `${antesDoClique.join(" ")} → ${depoisDoClique.join(" ")}`,
   );
+
+  /* E A ETAPA SEGUINTE E DA CAIXA OUTRA VEZ. */
+  await page.click('.rail [data-section="email"]');
+  await page.waitForTimeout(300);
 
   /* 7d — O FOCO ATRAVESSA O CLIQUE NUMA CARTA NAO LIDA, e esta checagem nasceu VERMELHA. A
      de 7a-bis ja cobrava foco, e passava: ela clica no mes 2, quando a unica carta ja esta
@@ -896,6 +929,14 @@ try {
     `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
   );
 
+  /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e memoria de
+     sessao e nao entra no save. ⚠ E ELA SUBIU PARA CA na separacao: la embaixo media DEPOIS
+     de o passeio ja ter trocado de tela duas vezes, e provava o proprio clique. */
+  expect(
+    (await page.locator(".cards__side .annex").count()) === 6,
+    "[save] a tela retomada nao renderizou",
+  );
+
   await page.click('.rail [data-section="health"]');
   await page.waitForTimeout(400);
   const voltou = await page.locator(".dial__slider").first().inputValue();
@@ -903,7 +944,7 @@ try {
     voltou === rascunho,
     `[rascunho] o mes estava em ${rascunho} e voltou ${voltou} depois de recarregar`,
   );
-  await page.click('.rail [data-section="cabinet"]');
+  await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(400);
   /* ⚠ PARA BAIXO O INDICE ROLA DE PROPOSITO, e esta checagem ja cobrou o contrario: ela
      defendia o teto de 7 linhas, e o teto caiu porque com blocos de mes ele mostrava "MAR" com
@@ -969,13 +1010,6 @@ try {
     );
   }
 
-  /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e memoria de
-     sessao e nao entra no save. */
-  expect(
-    (await page.locator(".cards__side .annex").count()) === 6,
-    "[save] a tela retomada nao renderizou",
-  );
-
   /* E RECOMECAR PEDE DOIS CLIQUES. */
   await page.click("#restart");
   await page.waitForTimeout(150);
@@ -1012,6 +1046,11 @@ try {
     "[posse] o nome digitado nao chegou a tela",
   );
 
+  /* ⚠ E A CARTA DA POSSE MORA NO EMAIL desde a separacao: recomecar devolve o jogador ao
+     Gabinete, e a bandeja passou a estar a uma tela de distancia. */
+  await page.click('.rail [data-section="email"]');
+  await page.waitForTimeout(400);
+
   /* ⚠ E O TRATAMENTO ATRAVESSA A CARTA: sete frases da interface dependiam dele, e ate hoje
      diziam "o senhor" para toda presidenta. */
   expect(
@@ -1032,7 +1071,7 @@ try {
      ⚠ ELA MEDIA `.annex__line`, QUE SAIU: as quatro tabelas viraram `.annex__line`, e a
      guarda `annexes` recusa o retorno de qualquer uma. O que continua sendo medido aqui e o
      que so o navegador ve — se a peca CORTA na largura da folha. */
-  await page.click('.rail [data-section="cabinet"]');
+  await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(400);
   for (let month = 0; month < 10 && (await page.locator(".annex__line").count()) === 0; month++) {
     await page.click("#advance");
@@ -1059,7 +1098,7 @@ try {
      cabia: a 900 um cartao inteiro descia para baixo da dobra e nada acusava, porque a
      pagina nao crescia. 900 e a altura util de laptop mais comum que existe. */
   await page.setViewportSize({ width: 1440, height: 900 });
-  for (const secao of ["cabinet", "congress", "finance"]) {
+  for (const secao of ["cabinet", "email", "congress", "finance"]) {
     await page.click(`.rail [data-section="${secao}"]`);
     await page.waitForTimeout(600);
     await checkOverflow(`900px/${secao}`);

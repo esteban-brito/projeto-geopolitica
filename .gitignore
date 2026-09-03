@@ -10,3 +10,6 @@ captures/*
 
 # Material de origem de assets, como no draft9-0: entra grande, sai otimizado.
 assets-source/
+
+# O `settings.local.json` e a preferencia da maquina, e nao do projeto.
+.claude/settings.local.json

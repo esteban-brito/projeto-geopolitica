@@ -75,6 +75,9 @@ export function railGovHtml({ president, stance, treatment = DEFAULT_TREATMENT }
  */
 export function railNavHtml(current, areas, alerts = {}) {
   const cabinet = itemHtml({ key: "cabinet", label: UI.nav.cabinet }, current);
+  /* ⚠ O EMAIL VEM LOGO DEPOIS DO GABINETE, e nao no fim: as duas eram a MESMA tela ate a
+     separacao, e o jogador que abre o jogo no painel vai para a caixa em seguida. */
+  const email = itemHtml({ key: "email", label: UI.nav.email }, current);
   const congress = itemHtml({ key: "congress", label: UI.nav.congress }, current);
   const finance = itemHtml({ key: "finance", label: UI.nav.finance }, current);
 
@@ -106,5 +109,5 @@ export function railNavHtml(current, areas, alerts = {}) {
      pessoas agindo sozinhas; Bastidor e a coalizao, e depende de nomear ministro. */
   const rule = '<li class="rail__rule" aria-hidden="true"></li>';
 
-  return cabinet + congress + finance + rule + ministries + rule + estado;
+  return cabinet + email + congress + finance + rule + ministries + rule + estado;
 }

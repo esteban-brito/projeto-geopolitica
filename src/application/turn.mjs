@@ -64,6 +64,10 @@ import { OPENING_MONTH, reduce } from "../state/state.mjs";
  * @property {Record<string, number>} [levels] a intensidade PEDIDA de cada programa
  * @property {Record<string, import("../state/state.mjs").Band>} [bands] as leis PEDIDAS
  * @property {Record<string, string>} [mail] o que o jogador respondeu a cada carta
+ * @property {ReadonlyArray<string>} [protect] as AREAS que o decreto de contingenciamento
+ * poupa neste mes. ⚠ ELA E ORDEM E NAO ESTADO, como a verba e a resposta de carta: o
+ * decreto e execucao do mes, e no mundo ele se desfaz quando a receita volta — gravar a
+ * escolha no estado seria a catraca do achado 36 de volta, agora com nome novo
  * @property {Partial<Record<string, string | null>>} [platform] os tres compromissos marcados
  * na carta da posse. Eles so entram no estado uma vez — ver `spoken`
  * @typedef {object} Options
@@ -195,16 +199,6 @@ export function bandsOf(state, catalog = CATALOG) {
   }).bands;
 }
 
-/**
- * A RECEITA SOBRE A QUAL A VINCULACAO INCIDE.
- *
- * ⚠ ELA E PERGUNTADA AO LASTRO, e nao remontada aqui: `revenueOf` e a mesma funcao
- * que o turno usa para fechar o mes, e um segundo lugar multiplicando PIB por carga
- * daria dois pisos da saude divergindo no primeiro mes em que a formula mudasse.
- * @param {GameState} state
- * @param {typeof CATALOG} catalog
- */
-
 /* ── O DESCONTENTAMENTO DE CADA GRUPO, e ele e a UNICA coisa que a CALDEIRA nao sabe fazer
    sozinha. */
 /**
@@ -283,6 +277,12 @@ function premiumNow(state, catalog) {
 }
 
 /**
+ * A RECEITA SOBRE A QUAL A VINCULACAO INCIDE.
+ *
+ * ⚠ ELA E PERGUNTADA AO LASTRO, e nao remontada aqui: `revenueOf` e a mesma funcao
+ * que o turno usa para fechar o mes, e um segundo lugar multiplicando PIB por carga
+ * daria dois pisos da saude divergindo no primeiro mes em que a formula mudasse.
+ *
  * @param {GameState} state
  * @param {typeof CATALOG} catalog
  */
@@ -540,22 +540,40 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
 
   const room = discretionaryRoom(state, catalog);
 
+  /* ── O DECRETO DE CONTINGENCIAMENTO — quem o mes POUPA ─────────────────────
+     ⚠ O ID VEM DE FORA E E PENEIRADO AQUI, e nao na tela: um rascunho editado a mao ou uma
+     ordem antiga com a area de um catalogo que mudou poria no rateio uma chave que ninguem
+     sabe cobrar, e ela sairia protegendo nada em silencio. */
+  const protect = new Set(
+    (orders.protect ?? []).filter((/** @type {string} */ id) =>
+      catalog.areas.some(area => area.id === id),
+    ),
+  );
+
   /* QUANTO CUSTA. */
   /* ⚠ O LEILAO: COM O PROCESSO ABERTO, A CADEIRA CUSTA MAIS. */
   const seatPrice = fiscal.seatPrice * (state.impeachment === null ? 1 : SIEGE_PRICE);
   const promisedCost = costOf(promised, parties, seatPrice);
   const demand = promisedCost + askedTotal;
 
-  const ratio = demand <= room ? 1 : room <= 0 ? 0 : room / demand;
+  /* ⚠ O QUE ESTA PROTEGIDO SAI DOS DOIS LADOS DA RAZAO, e e isso que faz o corte cair mais
+     fundo no resto em vez de sumir. Proteger mais do que cabe leva a razao a zero e o gasto
+     ACIMA da bolsa — e esse e o preco, e nao um muro: quem blinda o orcamento inteiro perde a
+     meta primaria, que e exatamente o que o contingenciamento existe para defender. */
+  const shielded = [...protect].reduce((sum, id) => sum + (asked[id] ?? 0), 0);
+  const cuttable = demand - shielded;
+  const ratio = demand <= room ? 1 : cuttable <= 0 ? 0 : clamp((room - shielded) / cuttable, 0, 1);
 
   /** @type {Record<string, number>} */
   const paid = {};
   for (const party of parties) {
+    /* ⚠ A EMENDA NAO E IMUNE, e no mundo tambem nao: num decreto so, R$ 4,71 bi de emendas
+       foram contingenciados. Cortar emenda economiza caixa e cobra em lealdade. */
     paid[party.id] = (promised[party.id] ?? 0) * ratio;
   }
   /* O CORTE EMPURRA CADA PROGRAMA DE VOLTA NA DIRECAO DO PISO, e nao multiplica a alocacao
      por fora. */
-  const levels = honour({ programs, levels: held, ratio, bands });
+  const levels = honour({ programs, levels: held, ratio, bands, protect });
   const honoured = spendOf({ programs, levels, bands });
   const allocated = honoured.byArea;
 
@@ -620,8 +638,15 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     allocated,
     promisedCost,
     funded,
+    /* AS AREAS POUPADAS E O QUANTO ELAS TIRAM DO RATEIO, para a tela dizer o preco sem
+       remontar a conta. */
+    protect,
+    shielded,
     paidCost: promisedCost * ratio,
-    allocatedTotal: askedTotal * ratio,
+    /* ⚠ O EMPENHO SAI DO QUE O RATEIO DE FATO DEIXOU, e nao de `askedTotal × ratio`: as duas
+       formas dao o MESMO numero enquanto o corte e proporcional, e divergem no mes em que uma
+       area e poupada — que e o mes em que o caixa precisa estar certo. */
+    allocatedTotal: honoured.total,
   };
 }
 
@@ -1040,12 +1065,13 @@ function blocsOf(state, share, whip, byBloc, catalog) {
 }
 
 /**
- * Ele e o mesmo que o turno vai cobrar neste mes — refeito na view, ele divergiria no dia em
- * que a forma da curva mudasse, e o jogador leria um spread que o Tesouro nao paga.
+ * O PLACAR FISCAL DO MES, e ele e o mesmo que o turno vai cobrar: refeito na view, ele
+ * divergiria no dia em que a forma da curva mudasse, e o jogador leria um spread que o
+ * Tesouro nao paga.
  *
- * numeros que sairiam de dois motores — LASTRO e CORRENTE —, e o entrypoint nao
- * alcanca motor: a fachada so abre a camada de aplicacao, e a guarda de
- * fronteiras cobra isso. Sem esta funcao, a saida seria expor `budgetStep` e
+ * ⚠ E O PAINEL NAO PODE REFAZER A CONTA: Financas mostra dez numeros de dois motores e o
+ * entrypoint nao alcanca motor. Sem esta funcao a saida seria expor `budgetStep` e `carry`
+ * crus na fachada, e a tela montaria a posicao orcamentaria por fora — a conta que diverge.
  * @param {GameState} state
  * @param {Orders} [orders]
  * @param {typeof CATALOG} [catalog]

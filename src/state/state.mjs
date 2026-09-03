@@ -16,26 +16,45 @@ import { streamFrom } from "./random.mjs";
  * 14 e informacao que so existe se alguem a guardou.
  *
  * @typedef {"crisis" | "stable" | "growth"} Situation
- * com a razao escrita: "quem a produz e SONDA, que nao existe". Agora existe — e
- * o que se guarda nao e a pesquisa, e a SATISFACAO de cada segmento. A pesquisa
- * e a conversao dela, e valor derivado guardado e um segundo lugar para a mesma
- * verdade divergir.
+ */
+
+/**
+ * A APROVACAO E DERIVADA, E O QUE ATRAVESSA OS MESES E O HUMOR.
+ *
+ * ⚠ Ela esteve fora da tela por tres sessoes com a razao escrita: "quem a produz e SONDA,
+ * que nao existe". Agora existe — e o que se guarda nao e a pesquisa, e a SATISFACAO de
+ * cada segmento. A pesquisa e a conversao dela, e valor derivado guardado e um segundo
+ * lugar para a mesma verdade divergir.
+ *
  * @typedef {import("../domain/opinion/index.mjs").Approval} Approval
  * @typedef {import("./random.mjs").Stream} Stream
  * @typedef {object} Streams
  * @property {Stream} congress - o fluxo de ECLUSA, e o unico: quem sorteia e a tramitacao
+ */
+
+/**
+ * O PIB E ESTADO DA CORRENTE, e nao um campo da posicao fiscal: quem o move e o motor
+ * macroeconomico, e o orcamento passa a ler em vez de guardar. Duas verdades sobre quanto o
+ * pais produz seria a divergencia mais cara que este modelo poderia ter, porque tudo —
+ * receita, divida sobre PIB, hiato — se pendura nela.
+ *
  * @typedef {import("../domain/economy/index.mjs").MacroState} MacroState
- * o orcamento passa a ler em vez de guardar. Duas verdades sobre quanto o pais
- * produz seria a divergencia mais cara que este modelo poderia ter, porque tudo
  * @typedef {object} Fiscal
  * @property {number} mandatory - despesa obrigatoria anualizada, ja crescida
  * @property {number} anchorRevenue - receita do exercicio anterior; a ancora da regra
  * @property {number} anchorExpense - despesa total do exercicio anterior
  * @property {number} debt - divida bruta
- * existir — com uma diferenca declarada: aquele alimenta a CASCATA, este so
- * alimenta os olhos.
+ */
+
+/**
+ * A SERIE — a memoria do painel, e nao entrada de motor nenhum. E a mesma razao do
+ * historico da capacidade existir — com uma diferenca declarada: aquele alimenta a CASCATA,
+ * este so alimenta os olhos.
+ *
+ * QUEM A MANTEM E O TURNO, e nao a CORRENTE. O motor faz equacao; guardar
  * historico para desenhar linha e trabalho de quem compoe, e po-lo dentro do
  * motor faria a economia carregar uma responsabilidade de interface.
+ *
  * @typedef {object} Series
  * @property {number[]} gdp
  * @property {number[]} inflation
@@ -44,6 +63,8 @@ import { streamFrom } from "./random.mjs";
  * @property {number[]} debtRatio
  * @property {number[]} primary - o resultado primario do mes, em bilhoes
  * @property {Record<string, number[]>} areas - o indice de cada area, mes a mes
+ */
+
 /**
  * O FECHAMENTO DE UM MES, no tamanho em que a carta o mostra — e nao o relatorio inteiro, que
  * tem vinte e quatro campos e nao caberia vinte e quatro vezes no save.

@@ -36,12 +36,12 @@ import { enact } from "../../src/domain/norms/index.mjs";
 import { closingHtml } from "../../src/ui/screens/closing.mjs";
 import { UI } from "../../src/ui/strings.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
-import { areaHtml } from "../../src/ui/screens/area.mjs";
+import { areaHtml, decreeHtml } from "../../src/ui/screens/area.mjs";
 import { financeHtml } from "../../src/ui/screens/finance.mjs";
 import { money, num, percent, signed } from "../../src/ui/shared/format.mjs";
 import { trendOf, windowLabel } from "../../src/ui/shared/trend.mjs";
 import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/mesa.mjs";
-import { cabinetHtml } from "../../src/ui/screens/cabinet.mjs";
+import { cabinetHtml, emailHtml } from "../../src/ui/screens/cabinet.mjs";
 
 const { areas, bills, parties, fiscal } = CATALOG;
 
@@ -310,12 +310,12 @@ test("o rotulo do catalogo e ESCAPADO, e o catalogo e dado editavel", () => {
  * @param {import("../../src/state/state.mjs").GameState} state
  * @param {Record<string, unknown>} [extra]
  */
-function cabinetOf(state, extra = {}) {
+function cabinetInputOf(state, extra = {}) {
   const situation = situationOf(state, CATALOG);
   const share = settlement(state, {}, CATALOG);
   const { budget } = ledger(state, {}, CATALOG);
 
-  return cabinetHtml({
+  return {
     base: situation.base,
     seats: CATALOG.parties.reduce((sum, party) => sum + party.seats, 0),
     majority: 257,
@@ -345,8 +345,14 @@ function cabinetOf(state, extra = {}) {
       fallen: null,
     },
     ...extra,
-  });
+  };
 }
+
+/** A MESMA MONTAGEM, nas duas telas que nasceram de uma. */
+const cabinetOf = (/** @type {any} */ state, /** @type {any} */ extra = {}) =>
+  cabinetHtml(cabinetInputOf(state, extra));
+const emailOf = (/** @type {any} */ state, /** @type {any} */ extra = {}) =>
+  emailHtml(cabinetInputOf(state, extra));
 
 test("A BASE REPARTIDA SOMA A BASE INTEIRA, e nao o plenario", () => {
   /* A prova que impede as duas verdades. */
@@ -474,7 +480,7 @@ test("A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO, e ela tem duas frases", () 
   const abertura = createState();
   assert.equal(abertura.month, OPENING_MONTH, "a partida nao abre no mes de abertura");
 
-  const primeiro = cabinetOf(abertura);
+  const primeiro = emailOf(abertura);
   assert.ok(
     primeiro.includes(UI.inbox.firstLead),
     "no mes 1 a bandeja vazia parou de dizer que nenhum mes foi resolvido",
@@ -488,7 +494,7 @@ test("A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO, e ela tem duas frases", () 
   let depois = abertura;
   for (let i = 0; i < 3; i += 1) depois = playMonth(depois, {}).state;
 
-  const tarde = cabinetOf(depois);
+  const tarde = emailOf(depois);
   assert.ok(
     !tarde.includes(UI.inbox.firstLead),
     "com meses resolvidos, a bandeja vazia continuou dizendo que o primeiro nao foi",
@@ -1509,4 +1515,32 @@ test("A CARTA DO PLENARIO LE O PLACAR DO CARTAO DO MESMO MES", () => {
   /* AUSENTE E DECLARADO: sem votacao, e sem cartao, nao ha bloco. */
   assert.ok(!render([mes(9, null)]).includes(UI.inbox.blockPlenary), "mes sem votacao deu placar");
   assert.ok(!render([]).includes(UI.inbox.blockPlenary), "sem cartao a carta inventou um placar");
+});
+
+test("O DECRETO E UM BOTAO COM ESTADO, e a area diz se ela esta poupada", () => {
+  const area = CATALOG.areas[0];
+  assert.ok(area);
+
+  const solta = decreeHtml({ area, protectedNow: false, ratio: 0.4 });
+  const poupada = decreeHtml({ area, protectedNow: true, ratio: 0.4 });
+
+  /* ⚠ O GESTO E `data-protect`, e nao `data-section`: os dois moram na mesma tela, e um
+     seletor emprestado faria clicar em "proteger" trocar de tela. */
+  assert.ok(solta.includes(`data-protect="${area.id}"`));
+  assert.ok(solta.includes('aria-pressed="false"'));
+  assert.ok(poupada.includes('aria-pressed="true"'));
+
+  /* O PRECO TROCA DE LADO, e nenhum dos dois estados fica mudo. */
+  assert.ok(solta.includes("40%"));
+  assert.ok(poupada.includes(UI.area.decreeCost));
+  assert.ok(!poupada.includes("40%"));
+});
+
+test("SEM CORTE O DECRETO NAO INVENTA UM, e diz que o mes honra tudo", () => {
+  const area = CATALOG.areas[0];
+  assert.ok(area);
+
+  const html = decreeHtml({ area, protectedNow: false, ratio: 1 });
+  assert.ok(html.includes(UI.area.decreeWhole));
+  assert.ok(!html.includes("100%"));
 });

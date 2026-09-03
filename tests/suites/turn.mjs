@@ -1032,3 +1032,49 @@ test("AS REGRAS NAO SOMEM DO ESTADO — o mapa de niveis atravessa o mes inteiro
     );
   }
 });
+
+/* O PEDIDO QUE NAO CABE — duas areas no TETO da faixa, que e caneta e nao espera voto: acima
+   do teto o rito vira lei, e `held` segura o nivel ate o plenario decidir. */
+const OVER_ASK = Object.fromEntries(
+  PROGRAMS.filter(program => program.area === "health" || program.area === "security").map(
+    program => [program.id, program.ceiling],
+  ),
+);
+
+test("PROTEGER UMA AREA APROFUNDA O CORTE NAS OUTRAS, e a bolsa nao cresce", () => {
+  const state = createState();
+  const sem = settlement(state, { levels: OVER_ASK });
+  assert.ok(sem.ratio < 1, `o mes precisa ter corte para a prova valer: a razao veio ${sem.ratio}`);
+
+  const com = settlement(state, { levels: OVER_ASK, protect: ["health"] });
+
+  assert.ok((com.allocated["health"] ?? 0) > (sem.allocated["health"] ?? 0));
+  assert.ok((com.allocated["security"] ?? 0) < (sem.allocated["security"] ?? 0));
+  /* O MESMO BURACO CABE EM MENOS GENTE, entao a razao cai. */
+  assert.ok(com.ratio < sem.ratio);
+});
+
+test("PROTEGER TUDO ESTOURA A BOLSA — o preco e a meta, e nao um muro", () => {
+  const state = createState();
+  const orders = { levels: OVER_ASK, protect: CATALOG.areas.map(area => area.id) };
+
+  const share = settlement(state, orders);
+  assert.equal(share.ratio, 0);
+  assert.ok(share.allocatedTotal > share.room);
+
+  /* E QUEM PAGA E O PRIMARIO, que e o numero que o contingenciamento existe para defender. */
+  const com = ledger(state, orders).budget.balance;
+  const sem = ledger(state, { levels: OVER_ASK }).budget.balance;
+  assert.ok(com < sem, `o primario com decreto deu ${com} e sem decreto ${sem}`);
+});
+
+test("SEM DECRETO O RATEIO CONTINUA PROPORCIONAL — a razao e caixa sobre demanda", () => {
+  const share = settlement(createState(), { levels: OVER_ASK });
+  assert.ok(Math.abs(share.ratio - share.room / share.demand) < EPSILON);
+
+  /* ⚠ E O EMPENHO E O PEDIDO RATEADO: as duas contas dao o MESMO numero enquanto ninguem e
+     poupado, e e essa igualdade que prova que trocar a fonte de `allocatedTotal` nao moveu o
+     caixa de nenhum mes que ja existia. */
+  const pedido = share.demand - share.promisedCost;
+  assert.ok(Math.abs(share.allocatedTotal - pedido * share.ratio) < EPSILON);
+});

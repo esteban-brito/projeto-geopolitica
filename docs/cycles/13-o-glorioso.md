@@ -17,6 +17,10 @@
 > | **4** | 0.3 · B10 · C7 · D4       | ✔ os quatro — 30/08/2026 |
 > | **5** | C5 · C6                   | ✔ os dois — 30/08/2026   |
 >
+> **26 de 49, e o passo 6 abriu pelo A3** — o contingenciamento passou a ser **escolhido**: o
+> decreto poupa a área que o presidente decidir, e o corte cai mais fundo em quem sobrou.
+> Custo no save: **zero** — a escolha é ordem do mês. Falta o aviso do relatório bimestral.
+>
 > **25 de 49, e o passo 5 fechou.** O jogo ganhou **critério**: o presidente assume três
 > compromissos na posse — a prioridade, a meta fiscal e a reforma —, a rua os cobra por
 > `betrayal` (que já existia e só olhava o orçamento) e o fecho passou a mostrar **prometido ×
@@ -123,7 +127,7 @@ está morto) · **abre motor** (constrói mecânica nova).
 | ------- | ------------------------------------ | ---------- | ------- | ---------- |
 | **A1**  | o salário mínimo                     | liga canal | médio   | 0.3        |
 | **A2**  | o reajuste da folha                  | liga canal | pequeno | A1         |
-| **A3**  | o contingenciamento escolhido        | não        | pequeno | —          |
+| **A3**  | ✔ o contingenciamento escolhido      | ✔ feito    | pequeno | —          |
 | **A4**  | Medida Provisória, com caducidade    | não        | médio   | B10        |
 | **A5**  | o decreto tributário                 | liga canal | médio   | 0.3        |
 | **A6**  | nomear e demitir — a segunda moeda   | abre motor | grande  | 0.3        |
@@ -307,12 +311,34 @@ concede, parcela ou segura — e greve de servidor é a resposta.
 obrigatória para sempre; segurar economiza e cobra em **serviço entregue**, que a MALHA já
 sabe ler.
 
-### A3 · O contingenciamento escolhido
+### ✔ A3 · O contingenciamento escolhido — FEITO
 
 **Na vida real:** decreto de contingenciamento, rubrica a rubrica. É como um governo
 brasileiro atravessa o ano.
 
-**No jogo hoje:** existe só **automático**, quando a obrigatória fura o teto.
+**No jogo hoje:** o decreto escolhe **quem o corte poupa**, por área, e a escolha é ordem do
+mês — não vai para o estado, e portanto **custou zero no save**. O que está protegido sai dos
+**dois lados** da razão do rateio, e por isso o corte cai mais fundo em quem sobrou.
+
+| medido no mês 1, com Saúde e Segurança pedindo o teto | razão | Saúde     | Segurança |
+| ----------------------------------------------------- | ----- | --------- | --------- |
+| sem decreto                                           | 0,47  | 6,09      | 2,61      |
+| poupando a Saúde                                      | 0,07  | **12,88** | **0,39**  |
+
+⛔ **E PROTEGER TUDO NÃO É MURO, É PREÇO:** com as oito áreas poupadas a razão vai a zero, o
+empenho fecha em **R$ 29,7 bi contra uma bolsa de 14,1** e quem paga é o **resultado
+primário** — que é exatamente o número que o contingenciamento existe para defender. Há prova
+cobrando isso.
+
+⚠ **A EMENDA NÃO É IMUNE**, e no mundo também não: num único decreto real, R$ 4,71 bi de
+emendas foram contingenciados. Ela continua caindo pela mesma razão, e o preço é lealdade.
+
+⚠ **A SÉRIE NÃO MOVEU** — 26 de 43, dívida 90,0%, indústria 20, segurança 20. Nenhuma
+política-sonda usa o decreto, então o mandato de referência é o mesmo.
+
+⚠ **O QUE FICOU DE FORA, e é declarado:** o aviso do **relatório bimestral** não chegou. O
+marco já está no calendário (C7) e a carta que o anuncia não existe — o jogador descobre o
+corte pela bolsa, e não pelo prazo que o decide.
 
 ⚠ **E o achado 36 cai junto:** hoje o rateio grava o corte no estado e **nada nunca o
 devolve** — um mês de aperto encolhe o orçamento para sempre, e a permanência não está escrita
@@ -1313,7 +1339,7 @@ Seis sessões de desenho caíram na metade sem portão.
 
 ### O mínimo, e ele vale para os 49
 
-1. `npm run validate` verde — 12 guardas · 54 provas sintéticas · 253 provas · o passeio;
+1. `npm run validate` verde — **13 guardas · 63 provas sintéticas · 304 provas** · o passeio;
 2. ⚠ **abrir a captura em `captures/passeio/`.** O portão não sabe olhar, e três defeitos já
    atravessaram tipo, guarda e cem provas para morrer na imagem.
 
@@ -1352,8 +1378,10 @@ Seis sessões de desenho caíram na metade sem portão.
 
 ## RESTRIÇÃO 3 · O save recusa, e o plano tem dez motivos para quebrá-lo
 
-`SCHEMA_VERSION = 18` (`src/state/state.mjs:109`), e `deserialize` **recusa** versão diferente
-em vez de converter (`src/state/save.mjs:44`).
+`SCHEMA_VERSION` está em **20** (`src/state/state.mjs`), e `deserialize` **recusa** versão
+diferente em vez de converter (`src/state/save.mjs`). ⚠ **O plano dizia 18, com número de
+linha**, e as duas coisas envelheceram: o C5 subiu a versão e o arquivo cresceu. Número de
+linha em prosa é a citação que envelhece mais rápido — o nome do arquivo basta.
 
 ⚠ **E A RECUSA ESTÁ CERTA — a razão já está escrita no arquivo**, e é boa demais para se
 reabrir: _"ausência de norma é ausência de restrição: o save abriria com a Constituição inteira

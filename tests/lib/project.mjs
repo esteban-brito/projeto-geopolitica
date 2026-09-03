@@ -7,7 +7,18 @@ import { join, relative, resolve, sep } from "node:path";
 
 export const ROOT = resolve(import.meta.dirname, "..", "..");
 
-const IGNORED = new Set(["node_modules", ".git", "vendor", "tmp", "captures", "assets-source"]);
+/* ⚠ `.claude` E CONFIGURACAO DO AGENTE, e nao fonte do jogo: o script que sobe o servidor no
+   inicio da sessao mora la, e sem esta linha ele entrava na contagem de arquivos do portao e
+   era lintado com os globais do jogo. */
+const IGNORED = new Set([
+  "node_modules",
+  ".git",
+  ".claude",
+  "vendor",
+  "tmp",
+  "captures",
+  "assets-source",
+]);
 
 /**
  * @typedef {object} Finding

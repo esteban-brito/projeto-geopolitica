@@ -117,6 +117,10 @@ export const UI = {
   /* A NAVEGACAO E POR PODERES E LUGARES, e nao por area de governo. */
   nav: {
     cabinet: TERMOS.cabinet,
+    /* ⚠ A CAIXA GANHOU ENDERECO PROPRIO, e a palavra e dele: "quero que sejam EMAIL,
+       exatamente igual a um EMAIL". O Gabinete que sobrou e o painel — o que o pais esta —, e
+       o email e o que o mundo diz. Duas perguntas diferentes disputavam a mesma tela. */
+    email: "Email",
     congress: "Congresso & Leis",
     finance: TERMOS.finance,
     ministries: "Ministérios",
@@ -553,6 +557,17 @@ export const UI = {
     committed: "já comprometidos nas outras áreas",
     holding: "parado",
     perYear: TERMOS.perYear,
+    /* ── O DECRETO DE CONTINGENCIAMENTO ───────────────────────────────────────
+       ⚠ ELE FALA EM CORTE, e não em "rateio": o jogador vê o dinheiro sumir, e a palavra do
+       motor não explica nada a quem está decidindo onde ele some. E a nota diz o PREÇO nos
+       dois estados — proteger empurra o corte para o vizinho, e não protegê-la mostra quanto
+       do pedido o mês honra. Um botão que só dissesse "proteger" seria um botão sem preço. */
+    decree: "Proteger do corte",
+    decreeOn: "Protegida do corte",
+    decreeCost: "o corte cai mais fundo nas outras áreas",
+    decreeHonours: "o mês honra",
+    decreeAsked: "do que você pediu",
+    decreeWhole: "o mês honra tudo o que você pediu",
     /* OS TITULOS DAS TRES COLUNAS DE NUMERO. */
     /* A COLUNA DO BOTÃO tem título só para quem lê por leitor de tela: na tela ele seria um
        rótulo em cima de um botão que já diz o que faz. */

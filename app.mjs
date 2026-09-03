@@ -51,6 +51,7 @@ import { closingHtml } from "./src/ui/screens/closing.mjs";
 import {
   areaHtml,
   chainHtml,
+  decreeHtml,
   estadoHtml,
   lawReadHtml,
   outlookHtml,
@@ -74,7 +75,7 @@ import { financeHtml } from "./src/ui/screens/finance.mjs";
 import { vitalsHtml, whenHtml } from "./src/ui/screens/dashboard.mjs";
 import { bindAdvance, dressTopbar } from "./src/ui/shared/topbar.mjs";
 import { iconHtml } from "./src/ui/shared/icons.mjs";
-import { cabinetHtml } from "./src/ui/screens/cabinet.mjs";
+import { cabinetHtml, emailHtml } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
 import { describeMail, describeMonth, trayHtml } from "./src/ui/screens/inbox.mjs";
 import { DEFAULT_TREATMENT, UI } from "./src/ui/strings.mjs";
@@ -270,6 +271,13 @@ function resumeDraft(month) {
     for (const [key, value] of Object.entries(read.orders?.platform ?? {})) {
       if (typeof value === "string") draft.platform[key] = value;
     }
+    /* ⚠ SO TEXTO ENTRA, e quem confere se a area existe e o TURNO: peneirar aqui daria dois
+       lugares dizendo o que e uma area valida, e o de fora e o que decide. */
+    if (Array.isArray(read.orders?.protect)) {
+      draft.protect = read.orders.protect.filter(
+        (/** @type {unknown} */ id) => typeof id === "string",
+      );
+    }
     for (const [key, value] of Object.entries(read.orders?.bands ?? {})) {
       const band = draft.bands[key];
       if (!band || !value || typeof value !== "object") continue;
@@ -351,6 +359,11 @@ function blankOrders() {
        nao disse a que veio", e avancar calado e uma resposta: governar sem plataforma. */
     /** @type {Record<string, string>} */
     platform: {},
+    /* ⚠ O DECRETO NASCE VAZIO E MORRE COM O MES, como a verba: contingenciamento e execucao
+       do mes, e no mundo ele se desfaz quando a receita volta. Guardar a escolha entre meses
+       seria a catraca do achado 36 outra vez — um aperto que nunca se libera. */
+    /** @type {string[]} */
+    protect: [],
     /** @type {Record<string, number>} */
     levels: { ...state.levels },
     /* AS LEIS TAMBEM NASCEM NAS VIGENTES, e pelo mesmo motivo dos niveis: o
@@ -663,6 +676,11 @@ function areaInput(area) {
        Na Previdencia sao R$ 2,4 bi contra R$ 126,7, e a linha do orcamento anunciaria +0,02
        onde o motor poe +1,22. Duas leituras da mesma alavanca, na mesma tela. */
     chain: chainOf(state, area.id, share.funded[area.id] ?? 0),
+    /* ⚠ A RAZAO DO CORTE VEM DO RATEIO DO TURNO, e nao de `room / demand` refeito aqui: o
+       decreto muda a conta — o que esta protegido sai dos DOIS lados dela —, e uma divisao
+       feita na tela anunciaria um corte que o mes nao vai executar. */
+    protectedNow: orders.protect.includes(area.id),
+    ratio: share.ratio,
     areas: CATALOG.areas,
   };
 }
@@ -691,6 +709,7 @@ const IDENTITY = /** @type {const} */ ([
   "letter",
   "party",
   "program",
+  "protect",
   "rite",
   "band",
   "side",
@@ -826,9 +845,12 @@ function paint() {
        continuam no rail de proposito — o pais que ele deixou e consultavel. */
     el.main.innerHTML = closingHtml(term, governmentOf(state, CATALOG).treatment);
     el.main.dataset["screen"] = "closing";
-  } else {
-    el.main.innerHTML = cabinetHtml(cabinetInput(current));
-    el.main.dataset["screen"] = "cabinet";
+  } else if (screen === "email") {
+    /* ⚠ AS DUAS TELAS DIVIDEM O MESMO INPUT, e nao dois: o email le a bandeja e a heranca, o
+       Gabinete le os seis blocos, e as duas leituras saem do MESMO `settlement` do mes. Dois
+       montadores dariam duas verdades sobre o mesmo mes na mesma virada. */
+    el.main.innerHTML = emailHtml(cabinetInput(current));
+    el.main.dataset["screen"] = "email";
     /* ⚠ MARCA DEPOIS DE PINTAR, E LENDO O QUE FOI PINTADO. A alternativa era marcar
        antes, calculando qual carta a bandeja VAI abrir — e isso seria o entrypoint
        refazendo a decisao dela, que e o defeito recorrente numero um deste projeto. O
@@ -838,6 +860,9 @@ function paint() {
        ⚠ E A PODA ACONTECE AQUI, contra as linhas que a bandeja de fato mostrou. Sem ela
        o conjunto guardaria id de carta morta pelos 48 meses do mandato. */
     rememberRead();
+  } else {
+    el.main.innerHTML = cabinetHtml(cabinetInput(current));
+    el.main.dataset["screen"] = "cabinet";
   }
 
   /* RENDER POR IDENTIDADE DE REFERENCIA na barra superior. Como o estado e
@@ -1079,6 +1104,12 @@ function refresh() {
   const pool = document.getElementById("areaPool");
   if (pool) pool.innerHTML = poolHtml(input);
 
+  /* ⚠ O DECRETO ACOMPANHA O ARRASTO, e nao so o clique: a nota dele diz que fracao do pedido
+     o mes honra, e essa fracao muda a cada ponto que o controle anda. Parada, ela anunciaria
+     um corte de um pedido que o jogador acabou de trocar. */
+  const decree = document.getElementById("areaDecree");
+  if (decree) decree.innerHTML = decreeHtml(input);
+
   const outlook = document.getElementById("areaOutlook");
   if (outlook) outlook.innerHTML = outlookHtml(input);
 
@@ -1180,6 +1211,22 @@ document.addEventListener("click", event => {
   if (dispatch instanceof HTMLElement && dispatch.dataset["dispatch"]) {
     openDispatch = dispatch.dataset["dispatch"];
     persistSeen();
+    paint();
+    return;
+  }
+
+  /* ── O DECRETO DE CONTINGENCIAMENTO ─────────────────────────────────────────
+     ⚠ ELE VEM ANTES DA NAVEGACAO pela mesma razao das duas escolhas acima, e clicar de novo
+     SOLTA a area: proteger e uma decisao do mes, e toda decisao do mes tem caminho de volta.
+     Ele repinta a tela inteira e nao so a leitura, porque proteger uma area muda a razao do
+     corte — e portanto a bolsa e a projecao de TODAS as outras. */
+  const decree = target.closest("[data-protect]");
+  if (decree instanceof HTMLElement && decree.dataset["protect"]) {
+    const id = decree.dataset["protect"];
+    orders.protect = orders.protect.includes(id)
+      ? orders.protect.filter(other => other !== id)
+      : [...orders.protect, id];
+    persistDraft();
     paint();
     return;
   }

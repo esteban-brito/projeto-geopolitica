@@ -71,8 +71,8 @@ function cardHtml({ body, span }) {
  * como a das setas da barra de cima. Numa recarga ele volta nulo e nenhuma seta e desenhada
  * @returns {string}
  */
-export function cabinetHtml(input) {
-  /* ── A CAIXA DE ENTRADA E A COLUNA DA ESQUERDA, CHEIA OU VAZIA ───────────── ⚠ O VAZIO
+export function emailHtml(input) {
+  /* ── A CAIXA OCUPA A TELA INTEIRA ───────────────────────────────────────── ⚠ O VAZIO
      OCUPA A COLUNA, e nao um paragrafo no alto dela: num vao de 700px o paragrafo encostado
      no teto le como carregamento que travou. A chamada vem antes da explicacao porque ela
      responde em cinco palavras a pergunta que o olho faz primeiro. */
@@ -90,6 +90,16 @@ export function cabinetHtml(input) {
         : input.inbox,
   });
 
+  return `<section class="area cabinet"><div class="cards">${inbox}</div></section>`;
+}
+
+/**
+ * O GABINETE — os seis blocos, e nada mais.
+ *
+ * @param {Parameters<typeof emailHtml>[0]} input
+ * @returns {string}
+ */
+export function cabinetHtml(input) {
   /* ── 1 · O RISCO DE QUEDA ──────────────────────────────────────────────────
      ⚠ ELE ERA UMA FAIXA DE LARGURA INTEIRA no topo, e dizia a MESMA coisa que o bloco da
      caldeira 300px abaixo — com "Parlamentares" saindo nos dois com o mesmo 83 e limiares
@@ -121,9 +131,9 @@ export function cabinetHtml(input) {
        meio que solto ali dentro". Os blocos ja tem superficie propria desde o ciclo 15 — a
        moldura era a terceira camada de fundo empilhada sob eles. */
     `<section class="area cabinet">` +
-    /* ⚠ A ORDEM DA COLUNA E A DA CONSEQUENCIA, e ela era a da contabilidade: o que decide se a
-       PARTIDA ACABA dividia espaco igual com a nota de rodape do cofre. */
-    `<div class="cards">${inbox}` +
+    /* ⚠ A ORDEM E A DA CONSEQUENCIA, e ela era a da contabilidade: o que decide se a PARTIDA
+       ACABA dividia espaco igual com a nota de rodape do cofre. */
+    `<div class="cards">` +
     `<div class="cards__side">${risk}${boiler}${chamber}${calendar}${vault}${street}</div>` +
     `</div>` +
     `</section>`

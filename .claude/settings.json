@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/subir-o-jogo.mjs",
+            "timeout": 20,
+            "statusMessage": "Subindo o jogo em 127.0.0.1:5173"
+          }
+        ]
+      }
+    ]
+  }
+}

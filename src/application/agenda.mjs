@@ -358,16 +358,28 @@ export function spendOf({ programs, levels, bands }) {
  *
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
+ * ⚠ E O DECRETO ESCOLHE ONDE O CORTE CAI, que e o instrumento inteiro: no Brasil o
+ * contingenciamento e rubrica a rubrica, e a escolha do que PROTEGER e publica. Sem `protect`
+ * o rateio e proporcional e ninguem decide nada — que era o estado anterior deste motor.
+ *
  * @param {Record<string, number>} input.levels - o pedido
  * @param {number} input.ratio - de 0 a 1
  * @param {Record<string, Band>} [input.bands] - as faixas VIGENTES
+ * @param {ReadonlySet<string>} [input.protect] - as AREAS que o decreto poupa
  * @returns {Record<string, number>}
  */
-export function honour({ programs, levels, ratio, bands }) {
+export function honour({ programs, levels, ratio, bands, protect }) {
   /** @type {Record<string, number>} */
   const next = {};
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
+
+    /* AREA PROTEGIDA NAO CEDE, e o que ela deixa de ceder o resto paga: quem calcula a razao
+       ja tirou este dinheiro dos dois lados da conta. */
+    if (protect?.has(program.area)) {
+      next[program.id] = level;
+      continue;
+    }
     /* ⚠ O RATEIO NAO ALCANCA RENUNCIA, e a razao e do mundo: contingenciamento aperta empenho,
        e uma desoneracao esta em LEI — o caixa curto do mes nao revoga um beneficio fiscal.
        Sem esta linha, um mes apertado mudaria a politica tributaria sem ninguem decidir. */

@@ -22,7 +22,7 @@
      com a página sem crescer um pixel e o portão verde ao lado.
      Numa janela de 390px, travar a altura esconderia metade do Gabinete sem nada que avisasse. */
   @media (min-height: 940px) {
-    .shell:has(> .board[data-screen="cabinet"]) {
+    .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) {
       height: 100dvh;
     }
 
@@ -31,7 +31,7 @@
        var(--space-4))` — **948px numa janela de 980** — e mora na linha 2 da casca, que começa
        ABAIXO da barra superior e tem 904.
        Ele sempre transbordou 44px, em toda tela, desde que foi escrito. */
-    .shell:has(> .board[data-screen="cabinet"]) .rail {
+    .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) .rail {
       height: auto;
       align-self: stretch;
       /* ⚠ O MESMO PE DO TABULEIRO, e nao um proprio: a aresta de baixo do menu e a linha de
@@ -45,7 +45,7 @@
 
   /* A LISTA ROLA POR DENTRO e o pé fica preso, que é a mesma regra da coluna da direita do
      Gabinete: o que se corta é o meio, e nunca o gesto. */
-  .shell:has(> .board[data-screen="cabinet"]) .rail__list {
+  .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) .rail__list {
     min-height: 0;
     overflow-y: auto;
   }

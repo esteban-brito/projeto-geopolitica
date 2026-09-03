@@ -18,13 +18,14 @@
 
 ## ▶ COMECE POR AQUI
 
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 61 provas sintéticas · 153
-arquivos · 304 provas · passeio verde**. Branch `caixa-de-entrada`, **22 commits à frente de
-`main`**, e **nada foi enviado ao remoto**.
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 63 provas sintéticas · 152
+arquivos · 311 provas · passeio verde**. Branch `caixa-de-entrada`, **23 commits à frente de
+`main`**, e **nada foi enviado ao remoto**. O último commit é `80a6d9f`.
 
-⚠ **A ÁRVORE NÃO ESTÁ LIMPA:** o passo 6 (o A3), a pesquisa 06 e a documentação desta sessão
-estão no disco e **não commitados** — a decisão de commitar é dele. O último commit é
-`4890015`, que levou a barra superior e os limiares de catálogo.
+⚠ **A ÁRVORE NÃO ESTÁ LIMPA, e são QUATRO entregas:** a **regra 6 da guarda `prose`** com os
+três consertos que ela achou; o **A3 fechado** — o contingenciamento passou a ser escolhido; a
+**separação Gabinete × Email**; e o **passeio remendado**, que a reprovou seis vezes. A decisão
+de commitar é dele.
 
 ⚠ **UMA RODADA DE `npm test` FALHOU UMA VEZ e não se repetiu em DEZ tentativas seguidas.** A
 prova instável conhecida (`A BASE PARTE EM DUAS`) foi consertada nesta sessão; se o portão
@@ -41,6 +42,114 @@ tributário** (`taxDelta` já é lido pela CORRENTE e ninguém o escreve) e o **
 ⚠ **O SAVE SUBIU PARA A VERSÃO 20, e ele recusa versão diferente em vez de converter:** toda
 partida salva antes desta sessão **não abre mais**. O campo novo é `platform`, e o custo estava
 previsto na Restrição 3 do ciclo 13 — C5 é o único item do plano inteiro que o cobra.
+
+### ✔ A GUARDA `prose` GANHOU A REGRA 6 — o corte no MIOLO
+
+**As regras 3 e 5 só olham as duas PONTAS de um bloco, e por isso três defeitos consumados
+atravessaram o portão.** `blocksFrom` cola as linhas vizinhas num texto só: `CUT` mede a
+**última** linha e `HEADLESS` a **primeira**. Remover um parágrafo do MEIO de um bloco longo
+não move nenhuma das duas.
+
+| o quê                                                           | onde                                        |
+| --------------------------------------------------------------- | ------------------------------------------- |
+| o bloco das séries **nunca fechava**, e o seguinte abria dentro | `state.mjs` — 33 linhas fundidas em uma     |
+| a frase do placar fiscal parava em _"expor `budgetStep` e"_     | `turn.mjs`, no bloco de `ledger`            |
+| a prosa de `revenueNow` estava **90 linhas acima** da função    | `turn.mjs` — ela descrevia a função ao lado |
+
+⭐ **O PRIMEIRO É O MAIS CARO, e ele não falha em lugar nenhum:** o verificador de tipos lê os
+`@typedef` do bloco fundido, então tipo, lint e as 304 provas passam. **A regra nasceu vermelha
+e acusou exatamente os dois primeiros — zero falso positivo nos 152 arquivos.**
+
+⚠ **E OS ORIGINAIS NÃO VOLTARAM AO PÉ DA LETRA:** o texto inteiro está em `672291a^`, e ele
+carrega **três datas de diário** que a regra 2 proíbe. As frases foram completadas com a
+redação do original, sem o diário — é a mesma decisão da sessão que recompôs os treze blocos.
+
+⚠ **O QUE A REGRA 6 AINDA NÃO PEGA:** o corte que termina numa palavra que **não é conectivo**.
+Em `state.mjs` um parágrafo parava em _"porque tudo"_, e `tudo` não está na lista de `CUT` —
+quem o achou foi a leitura, e o que levou até ele foi o bloco não fechado.
+
+### ✔ DOIS NÚMEROS VENCIDOS SAÍRAM DO CICLO 13 — e os dois eram CRITÉRIO
+
+A Restrição 2 exigia `validate` com **12 guardas · 54 provas sintéticas · 253 provas**, e a
+Restrição 3 dizia `SCHEMA_VERSION = 18` com **número de linha**. Hoje são 13 · 63 · 304, e a
+versão é 20. ⚠ **Número de linha em prosa é a citação que envelhece mais rápido**, e a guarda
+`prose` só alcança o **nome** — `standards.md` §7. O nome do arquivo ficou; a linha saiu.
+
+### ✔ A SEPARAÇÃO GABINETE × EMAIL FECHOU — e o passeio a reprovou seis vezes
+
+**A sessão anterior morreu de orçamento de token com a separação no disco e o passeio NÃO
+rodado.** Ele rodou: **seis reprovações em sequência**, e nenhuma delas falhava em guarda, tipo
+ou prova. Hoje fecha em **passeio verde**.
+
+**A decisão dele:** o Gabinete novo **abre o jogo** (uma tela de menu virá depois); o **jornal
+fala do PAÍS**, com veículos inspirados na imprensa real e **nomes alterados** — a regra do
+ciclo 17 e do ADR 0003; **A Rua** ficou a meu critério.
+
+**O que entrou:**
+
+- o rail tem **Gabinete** e **Email**, com glifo de envelope novo em `icons.mjs`;
+- `cabinetHtml` ficou com os **seis blocos** e `emailHtml` nasceu no mesmo arquivo, levando a
+  **Caixa na largura inteira**;
+- a casca (`40-shell.css`, `45-screen-cabinet.css`) vale para as **duas** telas, por
+  `:is([data-screen="cabinet"], [data-screen="email"])`;
+- a suíte ganhou `cabinetInputOf`, e as provas do vazio apontam para `emailOf`.
+
+⛔ **A GRADE DE 3 COLUNAS NUNCA EXISTIU, e é o achado mais caro desta sessão.**
+`.annex[data-wide="true"]` atravessa a grade inteira desde o ciclo 15, então os seis blocos
+continuaram numa coluna só — agora de **1197px** em vez de 432. Nada acusava: guarda, tipo e as
+311 provas passavam, e a prosa do ciclo já afirmava as três colunas.
+
+| medido a 1440×980, no mês 22 | vão | conteúdo | sobra    |
+| ---------------------------- | --- | -------- | -------- |
+| uma coluna (o que existia)   | 838 | 895      | **57px** |
+| três colunas de 380px        | 838 | 375      | 0        |
+| **duas colunas de 586px**    | 838 | 575      | **0**    |
+
+⛔ **E TRÊS COLUNAS FORAM REPROVADAS PELA CAPTURA:** em 380px o nome da linha fica com 138 e
+**sete linhas reticenciam** — "Apoiam o governo" pede 222 e "Preso por lei" 227. Encolher a
+pista e o valor devolveria 180, e não chega. **Duas colunas** é o que passa.
+
+⚠ **O PASSEIO NAVEGAVA PELA TELA ERRADA em cinco pontos**, e cada um deu uma reprovação
+diferente: a posse, a bandeja depois do relatório, o laço da carta com prazo, o índice depois
+do save e a carta da posse depois do `#restart` moram no **email**; a coluna que não rola e o
+"a tela retomada abre no Gabinete" moram no **Gabinete**. Essa última **subiu de lugar**: media
+depois de duas trocas de tela, e provava o próprio clique. A varredura de 900px passou a cobrir
+as **quatro** telas.
+
+⚠ **A PROSA DO HANDOFF ESTAVA CORROMPIDA:** ela foi escrita num heredoc sem aspas, o shell
+substituiu as crases, e oito trechos perderam o nome do arquivo — `npm run walk` chegou a
+**executar** e colou a própria saída no meio de uma frase. Reconstruídos com o nome que o
+código tem hoje.
+
+**O que FALTA, na ordem:**
+
+1. **o jornal ainda não existe** — a coluna liberada do Email está vazia, e essa é a entrega 2;
+2. decidir **A Rua**: a recomendação registrada é matá-la como tela — o jornal passa a ser a
+   rua falando, e a aprovação por renda continua sendo bloco do Gabinete;
+3. ⭐ **a separação destravou a Restrição 1**: os seis blocos deixaram a coluna de 432px. O C13
+   passo 1 (hierarquia entre os blocos) fica **aberto** — hoje a ordem é a da consequência, e o
+   tamanho ainda é igual para os seis.
+
+**A MEDIÇÃO QUE SUSTENTA O JORNAL** (`tmp/manchetes.mjs`, 48 meses):
+
+| governo             | fatos noticiáveis | meses com notícia |
+| ------------------- | ----------------- | ----------------- |
+| passivo             | 20                | **16 de 48**      |
+| legislando todo mês | 56                | **32 de 48**      |
+
+⛔ **MESMO O GOVERNO ATIVO PASSA 16 MESES SEM UMA LINHA**, e é a mesma família do achado 37. O
+jornal precisa noticiar **o ordinário** — o PIB saiu, a inflação veio, a Saúde caiu 2 — ou a
+coluna lê como tela quebrada. A imprensa que **age** continua sendo o **A9**, que depende do A6.
+
+### ▶ O JOGO SOBE SOZINHO NO INÍCIO DA SESSÃO
+
+**Ordem dele em 03/09/2026.** Um hook `SessionStart` em `.claude/settings.json` roda
+`node .claude/subir-o-jogo.mjs`, que **sonda a 5173** e só sobe `tools/serve-static.mjs` se ela
+não responder — sem a sonda, cada sessão deixaria um processo órfão segurando a porta.
+
+⚠ **E NUNCA RODE DOIS PASSEIOS AO MESMO TEMPO:** `walk` sobe o próprio servidor na **5201**, e
+dois deles disputam a porta — o segundo morre com `ERR_CONNECTION_REFUSED`, que **não é
+defeito da tela**. Aconteceu nesta sessão e custou uma leitura errada.
 
 ### O que está em execução
 
@@ -254,9 +363,32 @@ _"meta de 0,5% do PIB · 0,1% · abaixo da banda"_ **em vermelho**, e quem julga
 sai de **−0,49%** no mês 1 e chega a **+0,17%** no mês 36, contra um piso de banda de 0,25% —
 ele encosta e não entra. Só a política de austeridade (`piso`) escapa, e por 15 meses.
 
-⚠ **O QUE FALTA DO A3, e é o nome do item:** o contingenciamento ainda não é ESCOLHIDO. Falta
-o aviso chegar ao jogador no relatório bimestral — que o C7 já pôs no calendário — e falta o
-decreto poder proteger uma área e deixar outra pagar, como o governo real faz.
+### ✔ O A3 FECHOU — o contingenciamento passou a ser ESCOLHIDO
+
+**O decreto escolhe quem o corte poupa, e a escolha é por ÁREA.** O que está protegido sai dos
+**dois lados** da razão do rateio — por isso o corte não some, ele cai mais fundo em quem
+sobrou. O controle mora na tela da área, colado na bolsa, e diz o preço nos dois estados.
+
+| medido no mês 1, com Saúde e Segurança pedindo o teto | razão | Saúde     | Segurança |
+| ----------------------------------------------------- | ----- | --------- | --------- |
+| sem decreto                                           | 0,47  | 6,09      | 2,61      |
+| poupando a Saúde                                      | 0,07  | **12,88** | **0,39**  |
+
+⛔ **PROTEGER TUDO NÃO É MURO, É PREÇO:** com as oito áreas poupadas a razão vai a zero, o
+empenho fecha em **R$ 29,7 bi contra uma bolsa de 14,1**, e quem paga é o **primário** — o
+número que o contingenciamento existe para defender. Três provas cobram isso, e as três mordem.
+
+⭐ **E CUSTOU ZERO NO SAVE.** A escolha é **ordem do mês**, como a verba e a resposta de carta:
+no mundo o contingenciamento se desfaz quando a receita volta, e gravá-la no estado seria a
+catraca do achado 36 de volta com nome novo.
+
+⚠ **A SÉRIE NÃO MOVEU** — 26 de 43 · dívida 90,0% · ind 20 · seg 20. Nenhuma política-sonda usa
+o decreto, então o mandato de referência é o mesmo. **E o primário continua podendo ser
+negativo**, que é a verificação que a Restrição 2 exige da Parte A.
+
+⛔ **O QUE FICOU DE FORA, e é ausência declarada:** o **aviso do relatório bimestral**. O marco
+já está no calendário desde o C7, e a carta que o anuncia não existe — hoje o jogador descobre
+o corte pela bolsa, e não pelo prazo que o decide. É o que sobra do A3.
 
 ⚠ **E UMA PROVA INSTÁVEL FOI CONSERTADA NO CAMINHO:** `A BASE PARTE EM DUAS` comparava dois
 `Math.round` de somas acumuladas em ordens diferentes, e divergia em ~1e-13 — **o portão ficava
@@ -1210,7 +1342,7 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### A verificação
 
-**Treze guardas** com **61 provas sintéticas** e **304 provas**, e o **passeio**
+**Treze guardas** com **63 provas sintéticas** e **304 provas**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.

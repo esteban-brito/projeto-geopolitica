@@ -7,6 +7,9 @@ export const ICONS = /** @type {Record<string, string>} */ ({
   cabinet:
     '<rect x="2.5" y="4.5" width="11" height="9" rx="2"/><path d="M6 4.5V3.2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.3"/><path d="M2.5 8.5h11"/>',
   congress: '<path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/><circle cx="12" cy="11.5" r="1.6"/>',
+  /* O envelope, e ele e o unico glifo do conjunto que desenha um OBJETO: a caixa de entrada e
+     a unica entrada do menu que nao e um lugar do Estado — e a que recebe. */
+  email: '<rect x="2.5" y="3.5" width="11" height="9" rx="2"/><path d="m3.2 5.2 4.8 3.9 4.8-3.9"/>',
   /* Uma linha subindo dentro de uma moldura: o placar e uma serie, e nao um cofre. */
   finance:
     '<rect x="2.5" y="2.5" width="11" height="11" rx="3"/><path d="m5 10.5 2.4-2.6 2 1.7 2.6-3"/>',

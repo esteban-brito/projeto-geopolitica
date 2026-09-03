@@ -26,7 +26,7 @@
     gap: var(--space-4);
   }
 
-  .board[data-screen="cabinet"] {
+  .board:is([data-screen="cabinet"], [data-screen="email"]) {
     padding-bottom: var(--shell-floor);
   } /* ⚠ ABAIXO DO CANVAS A CARTA NAO ESTICA, e o que ela esticava era VAZIO. O indice e o
      documento dividem a mesma linha de grade, entao a carta crescia ate a altura do indice —
@@ -41,11 +41,11 @@
      Travar a altura aqui é o mesmo defeito que a casca já recusa no telefone, na outra ponta
      da régua: metade da tela atrás de uma dobra muda. */
   @media (min-height: 940px) {
-    .board[data-screen="cabinet"] {
+    .board:is([data-screen="cabinet"], [data-screen="email"]) {
       height: 100%;
       min-height: 0;
     } /* ⚠ `flex: 1` E NÃO `height: 100%`, e a diferença custou uma medição. */
-    .board[data-screen="cabinet"] > .area {
+    .board:is([data-screen="cabinet"], [data-screen="email"]) > .area {
       display: grid;
       grid-template-rows: minmax(0, 1fr);
       /* ⚠ ELE OCUPA A JANELA, e a alavanca contraria foi um erro meu — palavras dele: "voce
@@ -56,21 +56,21 @@
     } /* ⚠ CADA NÍVEL PRECISA DO `min-height: 0`, e esquecer UM basta para o canvas não valer
        nada: o mínimo automático de um item de grade é o tamanho do conteúdo dele, então uma
        linha `1fr` cresce para caber o filho em vez de obrigar o filho a se virar. */
-    .board[data-screen="cabinet"] .cards,
-    .board[data-screen="cabinet"] .cards__side,
-    .board[data-screen="cabinet"] .card[data-span="lead"],
-    .board[data-screen="cabinet"] .card[data-span="lead"] .card__body,
-    .board[data-screen="cabinet"] .tray {
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .cards,
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .cards__side,
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .card[data-span="lead"],
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .card[data-span="lead"] .card__body,
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .tray {
       min-height: 0;
     } /* ── O QUE ROLA POR DENTRO ────────────────────────────────────────────────── A coluna da
        direita e o índice da bandeja, e só eles. */ /* Num canvas isso INVERTE: com altura de conteúdo, a coluna da direita fica com os 661px
        dela dentro de uma trilha de 560 e transborda para fora da dobra, e `overflow-y` não tem
        o que aparar porque o elemento nunca foi limitado. */
-    .board[data-screen="cabinet"] .cards {
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .cards {
       align-items: stretch;
     }
 
-    .board[data-screen="cabinet"] .cards__side {
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .cards__side {
       overflow-y: auto;
       padding-right: var(--space-2);
     }
@@ -1047,4 +1047,40 @@
 
   /* O vão vem da margem e não de um `gap`: o valor é uma célula de grade alinhada à direita,
      e virar `flex` mudaria o alinhamento da coluna inteira para acertar 4px. */
+
+  /* ── AS DUAS TELAS QUE NASCERAM DE UMA ─────────────────────────────────────
+     ⚠ O GABINETE ERA UMA COLUNA DE 432px ESPREMIDA AO LADO DA CAIXA, e a restricao 1 do plano
+     mestre media o preco disso: 639px de conteudo numa coluna de 639: zero folga, e todo item
+     novo tinha de dizer de onde tirava altura. Separadas, a caixa fica com a largura inteira e
+     os blocos deixam de disputar com ela. */
+  .board[data-screen="cabinet"] .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .board[data-screen="cabinet"] .cards__side {
+    /* A ORDEM E A DA CONSEQUENCIA, e a grade a respeita: o que decide se a partida acaba vem
+       primeiro, e o que so informa desce. */
+    grid-column: 1;
+    /* ⚠ DUAS COLUNAS E NAO TRES, e a captura reprovou as tres: em 380px o nome da linha
+       fica com 138 e SETE linhas reticenciaram — "Apoiam o governo" pedia 222 e "Preso por
+       lei" 227. Encolher a pista e o valor devolveria 180, e nao chega. Em 586px nenhuma
+       corta, e as tres fileiras fecham em 575 de 838. */
+    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+    align-content: start;
+    gap: var(--gutter);
+  }
+
+  /* ⚠ A GRADE DE TRES COLUNAS NAO EXISTIA, e nada acusava: `annex[data-wide]` atravessa a
+     grade inteira desde o ciclo 15, e com ela os seis blocos continuaram numa coluna so —
+     agora de 1197px em vez de 432. O passeio mediu 895px de conteudo em 838 de vao no mes 22,
+     e a ordem e que esta coluna NAO ROLA. Em duas linhas ela fecha em 375. */
+  .board[data-screen="cabinet"] .cards__side > .annex[data-wide="true"] {
+    grid-column: auto;
+  }
+
+  /* ⚠ A CAIXA PASSA A OCUPAR A LARGURA TODA: ela ja era uma peca de duas colunas por dentro —
+     indice e oficio —, e o que ela ganha e o oficio, que era a metade estreita. */
+  .board[data-screen="email"] .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

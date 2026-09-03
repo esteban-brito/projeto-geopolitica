@@ -5,7 +5,7 @@ import test from "node:test";
 import fc from "fast-check";
 /* O HUMOR DE ABERTURA VEM DO ESTADO. */
 import { INITIAL_LOYALTY } from "../../src/state/state.mjs";
-import { compose } from "../../src/application/agenda.mjs";
+import { compose, honour } from "../../src/application/agenda.mjs";
 import { FISCAL } from "../../src/data/fiscal.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
@@ -457,4 +457,32 @@ test("A PROPOSTA COMPOSTA CABE NO MOTOR DE VOTACAO sem conversao nenhuma", async
 
   assert.ok(Number.isFinite(forecast.votes));
   assert.ok(forecast.votes >= 0 && forecast.votes <= 513);
+});
+
+test("O DECRETO POUPA A AREA ESCOLHIDA — e ela nao cede um ponto no rateio", () => {
+  const poupada = PROGRAMS.find(
+    program => program.area === "health" && program.initial > program.floor,
+  );
+  const paga = PROGRAMS.find(
+    program => program.area !== "health" && program.initial > program.floor,
+  );
+  assert.ok(poupada && paga);
+
+  const cortado = honour({
+    programs: PROGRAMS,
+    levels: OPENING,
+    ratio: 0.5,
+    protect: new Set(["health"]),
+  });
+
+  assert.equal(cortado[poupada.id], poupada.initial);
+  assert.ok((cortado[paga.id] ?? 0) < paga.initial);
+});
+
+test("SEM DECRETO O RATEIO ALCANCA TODO MUNDO, como sempre alcancou", () => {
+  const alvo = PROGRAMS.find(program => program.initial > program.floor);
+  assert.ok(alvo);
+
+  const cortado = honour({ programs: PROGRAMS, levels: OPENING, ratio: 0.5 });
+  assert.ok((cortado[alvo.id] ?? 0) < alvo.initial);
 });
