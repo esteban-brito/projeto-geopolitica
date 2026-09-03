@@ -847,7 +847,7 @@ export const UI = {
       "O save guardado é de uma versão anterior do jogo e não pode ser convertido sem inventar o que faltava nele. " +
       "Ele foi preservado no navegador, e esta partida começa do primeiro mês.",
   },
-  /* O Planalto não tem tela de derrota — a partida JÁ é um mandato de 48 meses, sem vitória e
+  /* O jogo não tem tela de derrota — a partida JÁ é um mandato de 48 meses, sem vitória e
      sem placar. */
   closing: {
     eyebrow: "a prestação de contas",

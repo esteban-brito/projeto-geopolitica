@@ -11,11 +11,11 @@
 
 ## O diagnóstico, e ele é mais fundo que o da auditoria
 
-A auditoria diz que o Planalto _"parece um SaaS corporativo"_ e que falta "sabor".
+A auditoria diz que o jogo _"parece um SaaS corporativo"_ e que falta "sabor".
 O sintoma está certo. A causa não é fonte nem textura.
 
 Um simulador de 95% tabelas como o Football Manager nunca deixa de parecer futebol
-por três razões, e o Planalto não tem nenhuma:
+por três razões, e o jogo não tem nenhuma:
 
 1. **Ninguém se dirige ao jogador.** Toda tela descreve um sistema em terceira
    pessoa. A coisa mais próxima de alguém falando com o presidente é a linha do

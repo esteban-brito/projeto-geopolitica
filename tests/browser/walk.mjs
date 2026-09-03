@@ -954,7 +954,7 @@ try {
   const tray = await page.evaluate(() => {
     const list = document.querySelector(".tray__list");
     if (!list) return null;
-    const save = JSON.parse(window.localStorage.getItem("planalto:partida") ?? "{}");
+    const save = JSON.parse(window.localStorage.getItem("republica-simulator:partida") ?? "{}");
 
     /* ⚠ DUAS LINHAS QUE LEEM IGUAL DENTRO DO MESMO BLOCO. Entre blocos e permitido: o
        cabecalho do mes separa. Dentro dele nao ha nada separando, e ai o jogador escolhe no

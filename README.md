@@ -1,4 +1,4 @@
-# Planalto
+# República Simulator
 
 Simulador de presidência do Brasil: política, economia e opinião pública ligadas
 por um grafo de causas e efeitos. Site estático — sem build, sem framework e sem

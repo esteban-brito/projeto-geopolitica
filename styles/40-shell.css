@@ -91,10 +91,12 @@
      comecasse depois da sidebar leria como parte do tabuleiro.
      ⭐ ELA E TRES PECAS DE VIDRO E UMA MARCA. As tres tem a mesma altura, a mesma quina, a
      mesma aresta e a mesma lente — o que muda entre elas e a tinta do corpo. */
-  /* ⛔ A ALTURA E DECLARADA E NAO DEDUZIDA: `glass-support` poe 1px de aresta em cima e
-     embaixo, e sem `height` a barra fechava em 80px enquanto `--topbar-h` dizia 78 — os 2px
-     de diferenca eram a aurora do mes vazando por baixo da peca, que e o que a mascara de
-     `.backdrop::after` existe para impedir. */
+  /* ⛔ ELA E PAINEL, E NAO SANGRIA — e e a MESMA peca que o rail, deitada. Ordem dele: "os
+     dois menus tem de ser parecidos". Os dois sempre foram `glass-support`; o que diferia era
+     a geometria — o rail e um painel de margem 16 e quina inteira, e a barra ia de x=0 a 1440
+     com quina so embaixo. Uma aresta que atravessa a tela nao le como aresta de movel, le como
+     troca de fundo: medido, y=77 dava `47,55,70` contra `11,21,38` acima.
+     ⛔ A QUINA VEM DE `glass-support` e nao daqui: uma so origem para o canto dos dois. */
   .topbar {
     grid-column: 1 / -1;
     position: relative;
@@ -102,8 +104,10 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    padding: 0 var(--space-4);
-    border-radius: 0 0 var(--radius-piece) var(--radius-piece);
+    /* ⚠ A MARGEM E A DO RAIL, e o vao entre os dois sai da margem DELE: dois valores para o
+       mesmo respiro dariam duas distancias na mesma quina. */
+    margin: var(--space-4) var(--space-4) 0;
+    padding: 0 var(--space-2);
   }
 
   /* ⛔ SEM RECORTE A MARCA PASSAVA POR BAIXO DO CACHO: o cacho e `flex: none` e a zona
@@ -117,10 +121,14 @@
     overflow: hidden;
   }
 
+  /* ⚠ OS 4px DE RECUO SAO O QUE MOVE O SELO E NAO O NOME: encurtar so o vao puxaria o NOME
+     para a esquerda, e o pedido e o contrario — o selo anda para a direita e o texto fica.
+     4 + 5 fecham os 9 que o vao tinha, entao a palavra nao se move um pixel. */
   .topbar__brand {
     display: flex;
     align-items: center;
     gap: var(--mark-gap);
+    padding-left: var(--space-1);
     min-width: 0;
   }
 
@@ -645,26 +653,41 @@
        enquanto a tinta passava por baixo delas, a barra mudava de cor com o mes (medido, de
        `4,10,16` para `2,5,8`) e o rail mudava junto. Agora as duas amostram so a aurora, que e
        a mesma o mandato inteiro — e por isso elas sao o MESMO material, e nao dois parecidos. */
-    inset: var(--topbar-h) 0 0 calc(var(--rail) + var(--space-6));
+    inset: calc(var(--space-4) + var(--topbar-h)) 0 0 calc(var(--rail) + var(--space-6));
     pointer-events: none;
     mix-blend-mode: overlay;
     opacity: 0.55;
     background: var(--situation-tint);
     transition: background var(--dur-stage) linear;
-    -webkit-mask-image: radial-gradient(
-      86% 70% at 50% 46%,
-      transparent 0%,
-      rgba(0, 0, 0, 0.18) 34%,
-      rgba(0, 0, 0, 0.66) 60%,
-      rgba(0, 0, 0, 1) 82%
-    );
-    mask-image: radial-gradient(
-      86% 70% at 50% 46%,
-      transparent 0%,
-      rgba(0, 0, 0, 0.18) 34%,
-      rgba(0, 0, 0, 0.66) 60%,
-      rgba(0, 0, 0, 1) 82%
-    );
+    /* ⚠ E AS DUAS QUINAS DO RECORTE SE ESFUMAM, senao ele APARECE: o `inset` acima e reto, e a
+       mascara radial esta no MAXIMO justamente na borda — medido no pixel, o fundo saltava de
+       `17,25,40` para `9,36,41` num passo de 20px ao lado do rail, e de `11,21,38` para
+       `6,24,29` sob a barra. Duas cores de fundo, e o recorte era a fronteira.
+       ⛔ E A TINTA NAO VOLTA PARA BAIXO DELAS: o `inset` fica onde esta. Deixa-la passar por
+       tras do vidro e o defeito que este bloco existe para impedir — a barra mudava de
+       `4,10,16` para `2,5,8` com o mes. */
+    -webkit-mask-image:
+      radial-gradient(
+        86% 70% at 50% 46%,
+        transparent 0%,
+        rgba(0, 0, 0, 0.18) 34%,
+        rgba(0, 0, 0, 0.66) 60%,
+        rgba(0, 0, 0, 1) 82%
+      ),
+      linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 1) 200px),
+      linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 1) 140px);
+    -webkit-mask-composite: source-in, source-in;
+    mask-image:
+      radial-gradient(
+        86% 70% at 50% 46%,
+        transparent 0%,
+        rgba(0, 0, 0, 0.18) 34%,
+        rgba(0, 0, 0, 0.66) 60%,
+        rgba(0, 0, 0, 1) 82%
+      ),
+      linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 1) 200px),
+      linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 1) 140px);
+    mask-composite: intersect;
   }
 
   .shell::before {
@@ -697,10 +720,6 @@
       min-width: 0;
       margin: var(--space-3);
       padding: var(--space-3);
-    }
-
-    .rail__mark {
-      padding: 0 var(--space-2) var(--space-2);
     }
 
     /* A LISTA e que deita, e rola por DENTRO. */

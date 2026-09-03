@@ -1,4 +1,4 @@
-# Planalto — instruções para o agente
+# República Simulator — instruções para o agente
 
 Simulador de presidência do Brasil. Site estático: zero build, zero dependência de
 runtime, ESM puro servido como arquivo.

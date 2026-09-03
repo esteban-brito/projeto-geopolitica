@@ -70,10 +70,10 @@
       align-items: stretch;
     }
 
-    .board:is([data-screen="cabinet"], [data-screen="email"]) .cards__side {
-      overflow-y: auto;
-      padding-right: var(--space-2);
-    }
+    /* ⛔ A CALHA DA ROLAGEM SAIU COM A ROLAGEM: os 8px existiam para a barra de rolagem da
+       coluna estreita, e ela nao rola mais — a ordem e que ela SE ENXUGUE, e `checkColumnFits`
+       cobra isso em 24 meses. Com eles, o ultimo bloco parava em 1416 contra os 1424 da barra
+       de cima: oito pixels de desalinho na aresta que o olho usa para prumo. */
   }
 
   /* ⚠ O VAO ENTRE AS COLUNAS CAIU DE 32 PARA 24, por queixa dele — "sobrar menos espaco":

@@ -27,7 +27,7 @@ construído.** Isso muda a natureza da seção 3 do dossiê — não é "abandon
 quadrantes coloridos", é **"construa um gráfico do zero"**, que é decisão diferente e
 bem mais cara.
 
-> É o quinto dossiê seguido que descreve o Planalto que ele imagina. Os quatro
+> É o quinto dossiê seguido que descreve o jogo que ele imagina. Os quatro
 > primeiros descreviam uma captura velha; este descreve uma tela que não existe.
 
 ## O que ele propõe e já roda — e roda mais fino

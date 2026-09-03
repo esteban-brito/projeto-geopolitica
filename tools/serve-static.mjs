@@ -45,5 +45,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, "127.0.0.1", () => {
-  process.stdout.write(`planalto em http://127.0.0.1:${PORT}/\n`);
+  process.stdout.write(`republica simulator em http://127.0.0.1:${PORT}/\n`);
 });

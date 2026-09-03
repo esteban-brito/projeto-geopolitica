@@ -31,7 +31,7 @@ dossiê novo, o que já existe do que falta.
 | _"botões precisam de hover que afunde"_  | **4 `:active`** já existem, e a prosa diz por quê: afundar é `:active`, não `:hover` — passar o mouse não é apertar            |
 | _"verde neon"_                           | `--brand` é `#e8a33d`, âmbar. O verde é semântico (alta/leal). **Terceira vez que isso é dito e terceira vez que está errado** |
 
-Boa parte do dossiê descreve o Planalto **antes do ciclo 5** e pede o que foi feito
+Boa parte do dossiê descreve o jogo **antes do ciclo 5** e pede o que foi feito
 no dia anterior.
 
 ## O que se recusa, e por quê

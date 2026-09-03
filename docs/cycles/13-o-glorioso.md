@@ -409,7 +409,7 @@ bancada e derruba a eficiência.
 ⚠ **Tensão registrada:** o ciclo 10 **recusou uma segunda moeda** uma vez. A recusa de lá era
 sobre a chantagem cobrar em bilhões quando a alavanca já era a moeda. Aqui é outro **bem**, e
 o projeto declarou a falta com todas as letras: _"o preço de um voto não é uma escala, é um
-tipo. Dinheiro, cargo e pauta são moedas diferentes, e hoje o Planalto só tem uma."_
+tipo. Dinheiro, cargo e pauta são moedas diferentes, e hoje o jogo só tem uma."_
 
 ⚠ **Risco:** cargo não custa caixa, então pode dominar a emenda inteira. **O custo em
 eficiência tem de morder de verdade**, e isso se mede antes de fechar.

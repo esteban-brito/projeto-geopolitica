@@ -141,6 +141,87 @@ código tem hoje.
 jornal precisa noticiar **o ordinário** — o PIB saiu, a inflação veio, a Saúde caiu 2 — ou a
 coluna lê como tela quebrada. A imprensa que **age** continua sendo o **A9**, que depende do A6.
 
+### ✔ OS DOIS MENUS VIRARAM A MESMA PEÇA — e o fundo voltou a ser um só
+
+**Observação dele:** _"por que o plano de fundo tem duas cores separadas, uma atrás do menu
+lateral e uma atrás do jogo?"_ Ele estava certo, e eram **duas** costuras — nenhuma guarda via
+nenhuma das duas.
+
+⚠ **E A PRIMEIRA CORREÇÃO FOI A ERRADA, registrada porque a lição é boa:** tirei a lâmina de
+vidro da barra. O fundo ficou contínuo e **ele recusou** — _"eu gostava daquele menu superior
+como estava"_. O defeito nunca foi o vidro. Era a **geometria**.
+
+|       | material        | geometria ANTES                              | geometria AGORA                  |
+| ----- | --------------- | -------------------------------------------- | -------------------------------- |
+| rail  | `glass-support` | painel: margem 16, quina inteira             | igual                            |
+| barra | `glass-support` | **sangria total** x 0→1440, quina só embaixo | painel: margem 16, quina inteira |
+
+**Os dois sempre foram o mesmo material.** O que fazia um ler como móvel e o outro como fundo
+era que a barra ia de borda a borda — e uma aresta que atravessa a tela inteira não lê como
+aresta de móvel, lê como troca de fundo. Medido: y=77 dava `47,55,70` contra `11,21,38` acima.
+
+**O que ficou padronizado, e cada número fecha:**
+
+| aresta                | barra           | rail / conteúdo        |
+| --------------------- | --------------- | ---------------------- |
+| esquerda              | 16              | rail 16                |
+| direita               | 1424            | `.cards` 1424          |
+| linha de base de cima | fundo em 94     | rail e conteúdo em 110 |
+| recuo interno         | `--space-2`     | `--space-2`            |
+| quina                 | `glass-support` | `glass-support`        |
+
+⛔ **A CALHA DA ROLAGEM SAIU JUNTO:** `.cards__side` tinha `overflow-y: auto` e 8px de
+`padding-right` para a barra de rolagem da coluna estreita. A ordem dele é que essa coluna
+**não role**, `checkColumnFits` cobra isso em 24 meses, e os 8px deixavam o último bloco parando
+em **1416** contra os 1424 da barra — desalinho na aresta que o olho usa de prumo.
+
+**2 · E o recorte da tinta do país era reto.** `.backdrop::after` é insetado para que a barra e
+o rail, que são vidro, **não mudem de cor com o mês** — razão medida (`4,10,16` → `2,5,8`) e que
+continua valendo. ⚠ **Mas a máscara radial está no MÁXIMO justo na borda do recorte.** As duas
+quinas passaram a esfumar por `mask-composite: intersect` — 200px na horizontal, 140 na
+vertical. A tinta **não** voltou para baixo do vidro: o `inset` ficou, e subiu para
+`calc(var(--space-4) + var(--topbar-h))` junto com a barra.
+
+| costura                    | onde              | antes                                    | agora                   |
+| -------------------------- | ----------------- | ---------------------------------------- | ----------------------- |
+| vertical, na borda do rail | y=90, x 204→224   | `17,25,40` → `9,36,41`                   | `18,27,43` → `18,29,44` |
+| horizontal, no pé da barra | x=350, y 74→77→80 | `11,21,38` → **`47,55,70`** → `11,19,31` | contínuo                |
+
+⚠ **E O QUE JÁ ESTAVA PADRONIZADO CONTINUOU** — medido antes de mexer, para não churnar: a
+guarda `tokens` já recusa hex solto, `rgba()` cru, `color-mix()` e token órfão; as transições
+são **15 no projeto inteiro** e toda duração sai de `var(--dur-*)`; as animações são duas, ambas
+9s, com a rede de `prefers-reduced-motion` sob guarda própria. **Não havia lixo em cor nem em
+movimento — havia uma barra sangrada.**
+
+### ✔ O JOGO SE CHAMA REPÚBLICA SIMULATOR — e três lugares NÃO trocaram
+
+**Ordem dele:** o nome do jogo é **República Simulator** em todo lugar que hoje era Planalto.
+Trocaram: o `<title>`, o `README`, o título do `CLAUDE.md`, o `name` do `package.json`, a linha
+do servidor e o comentário do fecho em `strings.mjs`.
+
+⛔ **E TRÊS FAMÍLIAS FICARAM, com o motivo declarado:**
+
+1. **o Palácio do Planalto é LUGAR, e não marca** — `strings.mjs:729` diz _"quer o Planalto em
+   2030"_, que é texto que o jogador lê e quer dizer _quer a presidência_. Trocado, vira uma
+   frase sem sentido. Mesma coisa em `cast.mjs` e no nome de uma prova. **É o ADR 0003:** o
+   mundo é real;
+2. **as quatro chaves do save** (`planalto:partida`, `-recusada`, `:interface`, `:rascunho` em
+   `app.mjs`) — elas são endereço no navegador e não nome. Renomear **não dá erro**: o jogo não
+   acha o save e começa do mês 1, em silêncio. Pior que subir a versão, que ao menos recusa e
+   avisa. ⚠ **Dá para trocar com migração** — ler a chave velha uma vez, gravar na nova, apagar
+   — e aí é seguro. **Está na mesa e é decisão dele;**
+3. **as 21 ocorrências em `docs/`** — quase todas são citação de auditoria entre aspas, ADR ou
+   ciclo fechado. Reescrever citação falsifica o registro. **Também está na mesa.**
+
+⛔ **E A MARCA SAIU DO RAIL:** com o nome do jogo nos dois, _"REPÚBLICA SIMULATOR"_ aparecia
+**duas vezes a 60px uma da outra**, quase no mesmo tratamento — antes não repetia porque o rail
+dizia "Planalto", que é outra palavra. A barra é quem assina; o rail navega, e ele já abre pelo
+presidente. `.rail__mark` saiu do HTML e das duas folhas.
+
+⭐ **O SELO ENCOSTOU NO NOME:** `--mark-gap` foi de 9px para 5, e a marca ganhou 4px de recuo à
+esquerda. Os dois valores fecham os 9 de antes, então o selo anda 4px para a direita
+(`25→47` virou `29→51`) e **a palavra não se move um pixel** (`56→179` nos dois).
+
 ### ▶ O JOGO SOBE SOZINHO NO INÍCIO DA SESSÃO
 
 **Ordem dele em 03/09/2026.** Um hook `SessionStart` em `.claude/settings.json` roda
@@ -868,8 +949,8 @@ e isso é herdado de uma identidade aritmética — **ninguém escolheu**. No mo
 merece ser escolhida.
 
 **52. ⚠ O ACHADO 49 ESTÁ ERRADO, E EU O ESCREVI HOJE — a correção é de MÉTODO e é a terceira
-da mesma família em uma sessão, 21/08/2026.** Ele dizia: _"o país é quase inerte; hoje o
-Planalto é um jogo de sobrevivência no Congresso com um país decorativo"_.
+da mesma família em uma sessão, 21/08/2026.** Ele dizia: _"o país é quase inerte; hoje
+República Simulator é um jogo de sobrevivência no Congresso com um país decorativo"_.
 
 **O país não é inerte. As SONDAS é que espalham tudo por igual.**
 

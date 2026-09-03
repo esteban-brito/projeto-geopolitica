@@ -2915,7 +2915,7 @@ marca de leitura. **E o reducer tem uma ação só, de propósito** — uma segu
 proposta e recusada, e marcar carta como lida abriria esse caminho por um motivo muito
 menor.
 
-**A saída foi uma chave própria — `planalto:interface`.** O estado continua puro, a guarda
+**A saída foi uma chave própria — `republica-simulator:interface`.** O estado continua puro, a guarda
 de fronteiras continua valendo, e a leitura sobrevive ao F5, que era o único requisito real.
 
 ⚠ **E "LIDA" SIGNIFICA "ESTEVE ABERTA NA TELA", e não "foi clicada"**: a bandeja abre a mais
@@ -4654,7 +4654,7 @@ código e estilo que nenhum seletor alcançava. Enquanto ela não existir, isto 
 ## ▶ A auditoria externa CHEGOU, e virou o ciclo 5
 
 A parte 2 chegou em 15/08/2026 e **não era sobre widgets** — era sobre o jogo não
-ter diegese: _"o Planalto deixou de parecer um jogo e assumiu a estética de um SaaS
+ter diegese: _"República Simulator deixou de parecer um jogo e assumiu a estética de um SaaS
 corporativo... faz você se sentir um contador analisando planilhas"_. Ela virou o
 [ciclo 5](cycles/05-a-republica-ganha-rosto.md), com o diagnóstico reescrito e as
 quatro decisões respondidas lá dentro.
@@ -4987,7 +4987,7 @@ foram plugadas à UI" enquanto o cartão da Rua, na mesma tela, é saída da SON
 
 **Recusado, e por quê:** a taxonomia "verde governista, cinza Centrão, vermelho
 oposição" importa um conceito que o modelo não tem — não existe "oposição" no
-Planalto, existem quatro blocos com lealdade e dois limiares. As duas auditorias
+jogo, existem quatro blocos com lealdade e dois limiares. As duas auditorias
 propuseram isso, e as duas vezes a resposta é a mesma.
 
 **Já era verdade e a auditoria não podia ver:** o buraco na grade estava fechado e
@@ -5376,7 +5376,7 @@ funciona hoje"_. Rodado com `simulate` sobre a semente padrão, 48 meses, sem ch
 mesmo país. E o legislador, que aloca **quase o dobro**, move a Saúde em **3 pontos em
 quatro anos**.
 
-**O que muda é o Congresso**, que vai de 0 a 58 conforme a jogada. **Hoje o Planalto é um
+**O que muda é o Congresso**, que vai de 0 a 58 conforme a jogada. **Hoje o jogo é um
 jogo de sobrevivência no Congresso com um país decorativo.** Isso não é defeito de código:
 é onde a calibragem parou, e ninguém escolheu que fosse assim.
 
@@ -5634,7 +5634,7 @@ consequência fiscal nenhuma.
 
 ⚠ **E o enquadramento é o que importa: `spent ≤ allowance` é `if (proibido) return`
 escrito em aritmética.** O rateio é o último MURO do jogo, e a regra central do
-projeto é "tudo tem preço, nada tem muro". Em todo lugar do Planalto a pergunta é
+projeto é "tudo tem preço, nada tem muro". Em todo lugar do jogo a pergunta é
 _quanto custa_; aqui, e só aqui, ela é _pode?_.
 
 **O desenho da correção está escrito** na Parte 2 do
@@ -6279,7 +6279,7 @@ Abrir toda carta em 30 meses, com uma sonda que reclama de invariante quebrada, 
 defeitos que nenhuma guarda via:
 
 1. **o rascunho do mês morria inteiro no F5** — a resposta marcada, os níveis, as faixas e a
-   verba. O plano só registrava a resposta. Agora mora em `planalto:rascunho`, peneirado por
+   verba. O plano só registrava a resposta. Agora mora em `republica-simulator:rascunho`, peneirado por
    tipo na leitura, **sem bump de esquema**: rascunho não é mandato;
 2. **o foco do teclado caía em `BODY`** a cada pintura;
 3. **assunto escapado duas vezes** em duas espécies;

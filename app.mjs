@@ -135,8 +135,8 @@ function must(id) {
    TUDO ENVOLVIDO EM `try`: aba anonima, cota estourada e armazenamento desligado por
    politica sao rotina, e nenhuma delas pode derrubar o jogo. Quem nao consegue guardar
    joga assim mesmo — o que nao pode e travar na abertura. */
-const SAVE_KEY = "planalto:partida";
-const REFUSED_KEY = "planalto:partida-recusada";
+const SAVE_KEY = "republica-simulator:partida";
+const REFUSED_KEY = "republica-simulator:partida-recusada";
 
 /* ── A INTERFACE TEM CHAVE PROPRIA, e ela NAO entra no estado do jogo ───────────
    ⚠ QUAL CARTA FOI LIDA NAO E ESTADO DE JOGO: nao move numero, nao decide mes e nao
@@ -147,14 +147,14 @@ const REFUSED_KEY = "planalto:partida-recusada";
    ⚠ E SO A LEITURA ENTRA: `openDispatch` fica de fora porque um F5 sem ele nao perde
    nada, e sem a leitura a bandeja inteira volta ao estado de nunca-vista e a marca
    deixa de significar qualquer coisa. */
-const UI_KEY = "planalto:interface";
+const UI_KEY = "republica-simulator:interface";
 
 /* ⚠ O RASCUNHO DO MES ATRAVESSA O F5, E ANTES ELE MORRIA INTEIRO. Medido: a resposta marcada
    numa carta some no recarregamento — `aria-pressed="accept"` antes, nenhuma marcada depois —
    e com ela vao os niveis, as faixas e a verba que o jogador montou no mes.
    ⚠ E ELE NAO ENTRA NO SAVE, pela mesma razao da marca de leitura: rascunho nao e mandato, e
    po-lo em `GameState` custaria um bump de esquema num save que RECUSA versao diferente. */
-const DRAFT_KEY = "planalto:rascunho";
+const DRAFT_KEY = "republica-simulator:rascunho";
 
 /**
  * O que a interface lembra entre uma sessao e outra.

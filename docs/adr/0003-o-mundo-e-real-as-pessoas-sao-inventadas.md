@@ -6,7 +6,7 @@ nomes fictícios sempre, inspirados em pessoas reais"_.
 
 ## Contexto
 
-O ciclo 4 põe **gente** no jogo. Até aqui o Planalto negociava com quatro blocos
+O ciclo 4 põe **gente** no jogo. Até aqui o jogo negociava com quatro blocos
 partidários abstratos; a partir dele existem o presidente da Câmara, o relator, os
 líderes, ministros do STF, governadores e editores de veículo — pessoas com
 ambição própria, memória do que foi feito com elas, e mandato que começa e acaba.
@@ -43,7 +43,7 @@ fenômenos, e não pessoas.
 ## Por quê — e as duas razões pesam igual
 
 **1. Um jogo em que se corrompe, chantageia e derruba gente não pode fazer isso com
-gente que existe.** A mecânica central do Planalto é comprar voto, quebrar
+gente que existe.** A mecânica central do jogo é comprar voto, quebrar
 promessa, medir venalidade e explorar ambição. Atribuir isso a uma pessoa real é
 uma afirmação sobre ela que nenhum motor sustenta — e é exatamente a regra que
 governa os números do projeto, aplicada a pessoas. O catálogo pode dizer que um

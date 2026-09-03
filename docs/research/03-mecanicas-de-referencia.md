@@ -56,7 +56,7 @@ o jogador a clicar sem ler.
 
 ### 2. A promessa condicional — e metade dela já roda, mas é a metade errada
 
-Hoje a promessa do Planalto é **verba**: `offered`, o rateio, o calote, a memória que
+Hoje a promessa do jogo é **verba**: `offered`, o rateio, o calote, a memória que
 cobra depois. Ela é **implícita** — o jogador nunca promete nada, ele apenas deixa de
 pagar. O que o dossiê acrescenta é uma promessa que é **ato com data**: _"libere R$ X
 na saúde em até dois meses"_.
@@ -131,5 +131,5 @@ A ordem não muda:
   por um terceiro, e vale guardar para o dia em que a rua ganhar dentes. Consequência
   que aparece como aviso modal é consequência que o jogador dispensa com um clique;
 - **o preço de um voto não é uma escala, é um tipo.** Dinheiro, cargo e pauta são
-  moedas diferentes, e hoje o Planalto só tem uma. A venalidade por eixo é o começo
+  moedas diferentes, e hoje o jogo só tem uma. A venalidade por eixo é o começo
   disso e não o fim — mas isto é anotação de longo prazo, e não fila.

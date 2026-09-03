@@ -49,7 +49,7 @@ escuro.
 
 ## O diagnóstico, e ele é anterior ao pedido
 
-O Planalto hoje é um **simulador de orçamento com Congresso acoplado**, e é bom
+O jogo hoje é um **simulador de orçamento com Congresso acoplado**, e é bom
 nisso. Não é um simulador de presidência, e a razão é estrutural:
 
 **O jogador é o único ator do jogo.** Ninguém propõe nada além dele. Ninguém
@@ -91,7 +91,7 @@ Constituição o protege, e não porque marcou "Radical" numa caixa.
 
 **O que ela acerta, e é grande:** os ALVOS que ela lista — aborto, armas,
 jornada de trabalho, crimes hediondos, fundo partidário — **não cabem no jogo**.
-O Planalto tem duas famílias de alavanca: verba (quanto se gasta) e propriedade
+O jogo tem duas famílias de alavanca: verba (quanto se gasta) e propriedade
 (o que a União possui). Não existe a família que diz **o que é permitido**.
 
 Por isso o eixo de liberdades civis do plano de Nolan é hoje decorativo: ele só
@@ -429,7 +429,7 @@ orçamento — que o ciclo 2 declarou ser o jogo — não tem consequência fisc
 > `spent ≤ allowance` é `if (proibido) return` escrito em aritmética.
 
 E a regra central do projeto é **"tudo tem preço, nada tem muro"**. Em todo lugar do
-Planalto a pergunta é _quanto custa_; aqui, e só aqui, ela é _pode?_. O governo não
+jogo a pergunta é _quanto custa_; aqui, e só aqui, ela é _pode?_. O governo não
 consegue gastar mais do que arrecada — o que nenhum governo do mundo real respeita,
 e o Brasil menos que a média.
 

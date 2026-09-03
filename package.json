@@ -1,5 +1,5 @@
 {
-  "name": "planalto",
+  "name": "republica-simulator",
   "version": "0.1.0",
   "private": true,
   "description": "Simulador de presidente do Brasil — site estatico, sem build e sem dependencia de runtime.",

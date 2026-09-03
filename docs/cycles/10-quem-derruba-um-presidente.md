@@ -93,7 +93,7 @@ coisas independentes criaria duas verdades sobre o mesmo poder. **Uma nasce da o
 
 ### 2. A QUEDA — e ela é um PROCESSO, não um dado
 
-Impeachment no Planalto tem de ser o que ele é no mundo: um **rito**, com autor,
+Impeachment no jogo tem de ser o que ele é no mundo: um **rito**, com autor,
 estágios e quórum. E o projeto já sabe fazer rito — é a tramitação.
 
 | estágio        | quem decide             | o que já existe para isso      |
@@ -208,7 +208,7 @@ impossível**. É "tudo tem preço, nada tem muro" aplicado ao mesmo botão.
 
 **A queda ENCERRA A PARTIDA**, e a razão é que a partida já é isso.
 
-O Planalto não tem vitória. Não há placar, não há condição de ganhar: a partida **é**
+O jogo não tem vitória. Não há placar, não há condição de ganhar: a partida **é**
 um mandato de 48 meses, e o jogo é governar e ver o que sai. Então "fim de jogo" não é
 o oposto de nada — **cair é o mandato terminar antes**, e isso basta. Nenhuma tela de
 derrota, nenhum score: o mesmo relatório de fim de mandato, com uma data mais curta.

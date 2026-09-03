@@ -189,7 +189,7 @@ somem no F5, e **o único sinal é o rótulo do botão voltar a cobrar o silênc
 ⚠ **E O DEFEITO ERA MAIOR QUE O REGISTRADO:** some a resposta, e somem junto **os níveis, as
 faixas e a verba** que o jogador montou no mês. O item falava só da resposta.
 
-⭐ **Fechado sem bump de esquema:** o rascunho mora em `planalto:rascunho`, ao lado da marca de
+⭐ **Fechado sem bump de esquema:** o rascunho mora em `republica-simulator:rascunho`, ao lado da marca de
 leitura, e é peneirado por tipo na leitura — rascunho não é mandato. Mês diferente é rascunho de
 outro mês, e esse morre. **Guarda no passeio, verificada mordendo:** `o mês estava em 58 e voltou
 64 depois de recarregar`.
