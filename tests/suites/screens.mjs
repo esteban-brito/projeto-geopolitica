@@ -1043,6 +1043,51 @@ function anexoHtml(attach, kind = "street") {
   return dispatch.annex ?? "";
 }
 
+/* ⚠ ELE E O UNICO AVISO QUE NAO E TRAVESSIA: nada piorou, venceu um PRAZO. E o numero que
+   ele mostra e o da CARTA e nao o de hoje — a mesma regra dos alarmes de fervura e de minoria,
+   e pela mesma razao medida. */
+test("A CARTA DO BIMESTRAL DIZ O PRAZO E A FRACAO, e a fracao e a da carta", () => {
+  /** @param {number} pontos */
+  const carta = pontos =>
+    describeMail({
+      mail: [
+        {
+          id: `contingency:4`,
+          kind: "contingency",
+          month: 4,
+          due: null,
+          subject: "contingency",
+          bill: null,
+          except: [],
+          saved: null,
+          was: null,
+          now: pontos,
+          from: null,
+          lever: null,
+          level: null,
+          answer: null,
+          closedAt: 4,
+        },
+      ],
+      people: [],
+      left: () => null,
+      inherited: { mandatory: 0, room: 0 },
+      answered: {},
+      segments: [],
+      parties: [],
+    })[0];
+
+  const noventa = carta(94);
+  assert.ok(noventa, "a carta do bimestral nao chegou a bandeja");
+  assert.ok(noventa.subject.includes(UI.inbox.contingencySubject), "ela nao anuncia o prazo");
+  assert.ok(noventa.annex?.includes("94%"), "ela nao traz a fracao que o mes honrou");
+  assert.ok(noventa.annex?.includes(UI.inbox.contingencyLegend));
+
+  /* ⛔ E ELA NAO INVENTA UM CORTE ONDE NAO HOUVE: cem por cento e um mes sem aperto. */
+  assert.ok(carta(100)?.annex?.includes("100%"), "o mes sem corte perdeu o numero");
+  assert.ok(!noventa.annex?.includes("100%"), "a carta de 94 imprimiu 100");
+});
+
 test("A CAIXA NAO TEM MAIS TABELA NENHUMA, e a peca de dado e uma so", () => {
   /* ⚠ MEDIDO ANTES: 19 de 23 cartas abertas num mandato de 14 meses traziam tabela, com 306
      celulas por mes e CINCO formatos de anexo para quinze especies. */

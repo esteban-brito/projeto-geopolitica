@@ -17,9 +17,10 @@
 > | **4** | 0.3 · B10 · C7 · D4       | ✔ os quatro — 30/08/2026 |
 > | **5** | C5 · C6                   | ✔ os dois — 30/08/2026   |
 >
-> **26 de 49, e o passo 6 abriu pelo A3** — o contingenciamento passou a ser **escolhido**: o
-> decreto poupa a área que o presidente decidir, e o corte cai mais fundo em quem sobrou.
-> Custo no save: **zero** — a escolha é ordem do mês. Falta o aviso do relatório bimestral.
+> **26 de 49, e o passo 6 abriu pelo A3, que fechou INTEIRO** — o contingenciamento passou a
+> ser **escolhido** (o decreto poupa a área que o presidente decidir, e o corte cai mais fundo
+> em quem sobrou) e o **relatório bimestral passou a avisar antes**, seis vezes no ano, com a
+> fração que o rateio honrou. Custo no save: **zero** — a escolha é ordem do mês.
 >
 > **25 de 49, e o passo 5 fechou.** O jogo ganhou **critério**: o presidente assume três
 > compromissos na posse — a prioridade, a meta fiscal e a reforma —, a rua os cobra por
@@ -336,9 +337,11 @@ emendas foram contingenciados. Ela continua caindo pela mesma razão, e o preço
 ⚠ **A SÉRIE NÃO MOVEU** — 26 de 43, dívida 90,0%, indústria 20, segurança 20. Nenhuma
 política-sonda usa o decreto, então o mandato de referência é o mesmo.
 
-⚠ **O QUE FICOU DE FORA, e é declarado:** o aviso do **relatório bimestral** não chegou. O
-marco já está no calendário (C7) e a carta que o anuncia não existe — o jogador descobre o
-corte pela bolsa, e não pelo prazo que o decide.
+✔ **E O AVISO DO BIMESTRAL CHEGOU:** o alarme `contingency` sai no mês anterior ao marco,
+seis vezes no ano, e carrega a fração que o rateio honrou. **O A3 fechou inteiro.**
+
+⚠ **Sobra uma ausência declarada:** a carta não leva à tela. O decreto mora nas oito telas de
+área, então não há uma porta só — e nenhuma carta do jogo tem link hoje.
 
 ⚠ **E o achado 36 cai junto:** hoje o rateio grava o corte no estado e **nada nunca o
 devolve** — um mês de aperto encolhe o orçamento para sempre, e a permanência não está escrita

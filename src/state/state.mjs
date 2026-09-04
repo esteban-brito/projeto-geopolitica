@@ -85,7 +85,7 @@ import { streamFrom } from "./random.mjs";
  * @typedef {object} Letter
  * @property {string} id - deterministico, e por isso a mesma carta nao chega duas vezes
  * @property {"posse" | "tabled" | "reported" | "forgotten" | "passed" | "rejected" | "demand"
- * | "rupture" | "siege" | "ceiling" | "minority" | "boiling"
+ * | "rupture" | "siege" | "ceiling" | "contingency" | "minority" | "boiling"
  * | "street" | "seats" | "vault"} kind
  * @property {number} month - o mes em que ela chegou
  * @property {number | null} due - o mes em que ela vence; nulo no aviso

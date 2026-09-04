@@ -24,6 +24,7 @@ import { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 import { CATALOG } from "../data/catalog.mjs";
 import { waivedOf } from "../data/programs.mjs";
 import { bandOf, compose, honour, spendOf } from "./agenda.mjs";
+import { calendarOf } from "./calendar.mjs";
 import { breachOf, chosenOf, platformOf, spoken } from "./platform.mjs";
 import { DRAWER_LIFE, forgotten, proposalOf, reports, tables } from "./passage.mjs";
 import {
@@ -1164,6 +1165,7 @@ const NOTICED = new Set(["tabled", "forgotten", "passed", "rejected"]);
  * @param {Record<string, number>} after.loyalty
  * @param {boolean} after.blocked se o teto do arcabouco esta fechado NESTE mes
  * @param {boolean} after.blockedNext se ele estara fechado no mes que vem
+ * @param {number} after.ratio a fracao do pedido que o rateio honrou, de 0 a 1
  * @returns {import("../state/state.mjs").Letter[]}
  */
 function alarmsOf(state, now, impeachment, catalog, after) {
@@ -1198,6 +1200,27 @@ function alarmsOf(state, now, impeachment, catalog, after) {
      seguinte abre, e informacao que chega depois da decisao e recibo. */
   if (!after.blocked && after.blockedNext) {
     written.push(alarm({ kind: "ceiling", id: "ceiling", subject: "ceiling", month: state.month }));
+  }
+
+  /* ── O RELATORIO BIMESTRAL, E ELE E O PRAZO QUE DECIDE O CORTE ──────────────
+     ⚠ O JOGADOR DESCOBRIA O CONTINGENCIAMENTO PELA BOLSA QUE ENCOLHEU, e nunca pelo prazo: o
+     marco esta no calendario desde o C7 e nenhuma carta o anunciava. Sem ele o A3 entrega a
+     caneta e esconde a data em que ela se usa.
+     ⚠ O ID CARREGA O MES porque este e o UNICO marco que se repete dentro do ano — com um id
+     fixo, o de marco e o de maio seriam a mesma carta e so a primeira chegaria.
+     ⚠ E ELE OLHA O MES QUE VEM, pela mesma razao escrita no teto acima. */
+  if (calendarOf(state.month + 1).now.some(landmark => landmark.id === "bimestral")) {
+    written.push(
+      alarm({
+        kind: "contingency",
+        id: String(state.month),
+        subject: "contingency",
+        month: state.month,
+        /* A FRACAO QUE O RATEIO DE FATO HONROU, em pontos: ela sai do MESMO `settlement` que o
+           mes executou, e e o numero que o contingenciamento decide. */
+        now: Math.round(after.ratio * 100),
+      }),
+    );
   }
 
   /* ── A BASE CRUZOU A MAIORIA, PARA BAIXO ──────────────────────────────────── ⚠ E ELA E
@@ -1828,6 +1851,7 @@ export function playMonth(state, orders = {}, options = {}) {
           pressure,
           loyalty,
           blocked: budget.blocked,
+          ratio,
           /* A POSICAO COM QUE O MES SEGUINTE ABRE, e ela ja esta calculada: e a mesma fonte
              que `closed.room` usa para dizer quanto vai sobrar. */
           blockedNext: budgetStep({

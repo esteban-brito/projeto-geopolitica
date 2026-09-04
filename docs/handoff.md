@@ -467,9 +467,33 @@ catraca do achado 36 de volta com nome novo.
 o decreto, então o mandato de referência é o mesmo. **E o primário continua podendo ser
 negativo**, que é a verificação que a Restrição 2 exige da Parte A.
 
-⛔ **O QUE FICOU DE FORA, e é ausência declarada:** o **aviso do relatório bimestral**. O marco
-já está no calendário desde o C7, e a carta que o anuncia não existe — hoje o jogador descobre
-o corte pela bolsa, e não pelo prazo que o decide. É o que sobra do A3.
+### ✔ E O AVISO DO BIMESTRAL CHEGOU — o A3 fechou inteiro
+
+**Era a metade que faltava:** o decreto já escolhia quem o corte poupa, e o jogador descobria o
+corte **pela bolsa que encolheu** — nunca pela data que o decide. O marco estava no calendário
+desde o C7 e nenhuma carta o anunciava.
+
+**O alarme `contingency`** sai no mês em que o bimestral vence no mês seguinte, pela razão que
+o alarme do teto já tinha escrita: _"informação que chega depois da decisão é recibo"_. Ele
+carrega **a fração que o rateio de fato honrou**, do mesmo `settlement` que o mês executou.
+
+| medido em 12 meses, semente 7 |                                                                 |
+| ----------------------------- | --------------------------------------------------------------- |
+| avisos no ano                 | **6** — o mesmo número que a suíte do calendário cobra do marco |
+| espaçamento                   | 2 meses, conferido par a par                                    |
+| a fração, mês a mês           | 100 · 97 · 94 · 95 · 96 · 99                                    |
+
+⚠ **O ID CARREGA O MÊS**, e é o único alarme que precisa disso: o bimestral é o único marco que
+se repete dentro do ano, e com id fixo o de março e o de maio seriam a mesma carta — só a
+primeira chegaria. **Três provas cobram isso, e as três mordem.**
+
+⚠ **A SÉRIE NÃO MOVEU** — `26 de 43 · dívida 90,0% · ind 48→20 · seg 38→20`, idêntica. Era o
+esperado: o aviso não muda número nenhum, ele conta o que já acontecia.
+
+⛔ **E O QUE CONTINUA FALTANDO, declarado:** a carta **não leva à tela**. A decisão da base de
+31/08 diz que o único gesto de uma carta é o link para onde se responde — e o decreto mora nas
+oito telas de área, então não há uma porta só. Nenhuma carta do jogo tem link hoje; abrir a
+exceção aqui seria inventar mecanismo que o resto da caixa não tem.
 
 ⚠ **E UMA PROVA INSTÁVEL FOI CONSERTADA NO CAMINHO:** `A BASE PARTE EM DUAS` comparava dois
 `Math.round` de somas acumuladas em ordens diferentes, e divergia em ~1e-13 — **o portão ficava

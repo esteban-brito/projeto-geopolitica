@@ -121,7 +121,7 @@ export function notice({ kind, id, subject, month }) {
  * passivo chegam ZERO cartas em 44 meses.
  *
  * @param {object} input
- * @param {"rupture" | "siege" | "ceiling" | "minority" | "boiling"} input.kind
+ * @param {"rupture" | "siege" | "ceiling" | "contingency" | "minority" | "boiling"} input.kind
  * @param {string} input.id - qual ruptura, qual grupo, ou o cerco
  * @param {string} input.subject
  * @param {number} input.month

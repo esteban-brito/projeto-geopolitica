@@ -932,6 +932,46 @@ test("O TETO QUE VAI FECHAR AVISA ANTES, e o aviso chega uma vez so", () => {
   assert.fail("o catalogo montado para fechar o teto nunca fechou");
 });
 
+/* ── O PRAZO QUE DECIDE O CORTE AVISA ANTES ───────────────────────────────────
+   ⚠ ELA E O QUE FALTAVA DO A3: o decreto ja escolhia quem o corte poupa, e o jogador descobria
+   o corte pela BOLSA que encolheu — nunca pela data que o decide. E o bimestral e o unico marco
+   que se repete dentro do ano, entao um id fixo faria o de marco e o de maio virarem a mesma
+   carta e so a primeira chegaria. */
+test("O AVISO DO BIMESTRAL CHEGA SEIS VEZES NO ANO, e o de marco nao e o de maio", () => {
+  let state = createState(7);
+  for (let month = 0; month < 12; month++) state = playMonth(state, {}, {}).state;
+
+  const avisos = state.mail.filter(letter => letter.kind === "contingency");
+  /* SEIS, e o numero e o mesmo que a suite do calendario ja cobra do marco bimestral. */
+  assert.equal(avisos.length, 6, `o bimestral avisou ${avisos.length} vezes em doze meses`);
+  assert.equal(new Set(avisos.map(letter => letter.id)).size, 6, "duas cartas dividiram um id");
+
+  /* ⚠ E ELE E DE DOIS EM DOIS, e nao "seis em qualquer lugar": um marco anual que disparasse
+     seis vezes em janeiro passaria na contagem acima. */
+  const meses = avisos.map(letter => letter.month).sort((a, b) => a - b);
+  const vaos = meses.slice(1).map((mes, i) => mes - (meses[i] ?? 0));
+  assert.deepEqual(vaos, [2, 2, 2, 2, 2], `os vaos entre os avisos foram ${vaos.join(", ")}`);
+});
+
+/* ⚠ CARTA QUE MUDA DEPOIS DE CHEGAR NAO E CARTA — a mesma regra que os alarmes de fervura e de
+   minoria ja cobram, e pela mesma razao medida: lida do estado corrente, a fracao de janeiro
+   mostrava o rateio de marco. */
+test("O AVISO CARREGA O RATEIO DO MES QUE O ESCREVEU, e ele nao se move depois", () => {
+  const state = createState(7);
+  const played = playMonth(state, {}, {});
+  const carta = played.state.mail.find(letter => letter.kind === "contingency");
+  assert.ok(carta, "o mes 0 fecha com o bimestral vencendo no mes 1, e nenhuma carta saiu");
+
+  /* O NUMERO SAI DO MESMO `settlement` QUE O MES EXECUTOU, e nao de uma conta paralela. */
+  assert.equal(carta.now, Math.round(settlement(state, {}).ratio * 100));
+
+  /* E DOIS MESES DEPOIS ELE CONTINUA O MESMO, com o rateio do mundo ja outro. */
+  let depois = played.state;
+  for (let month = 0; month < 2; month++) depois = playMonth(depois, {}, {}).state;
+  const guardada = depois.mail.find(letter => letter.id === carta.id);
+  assert.equal(guardada?.now, carta.now, "a carta guardada trocou de numero depois de chegar");
+});
+
 test("A PROJECAO E `outlook` COM HORIZONTE — a UM mes as duas dao o mesmo numero", () => {
   /* ⚠ ELA EXISTE PORQUE SAO DUAS CONTAS PARA A MESMA PERGUNTA, e esse e o defeito nº 1 deste
      projeto: cinco ocorrencias registradas. No dia em que divergirem, uma das duas telas passa

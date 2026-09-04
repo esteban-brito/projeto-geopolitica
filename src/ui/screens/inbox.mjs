@@ -484,6 +484,21 @@ export function describeMail({
             ),
           });
 
+        /* ⚠ ELE NAO E TRAVESSIA, e e a diferenca deste aviso para os tres acima: nada
+           piorou — venceu um PRAZO. O calendario e quem o dispara, e por isso ele volta de dois
+           em dois meses enquanto os outros chegam uma vez. */
+        case "contingency":
+          return paper({
+            from: by("chief"),
+            subject: UI.inbox.contingencySubject,
+            body: `<div class="letter__lines"><span>${escapeHtml(UI.inbox.contingencyBody)}</span></div>`,
+            /* ⚠ O NUMERO E O DA CARTA, e nao o de hoje — a mesma regra do alarme de minoria. */
+            annex: linesHtml(
+              UI.inbox.contingencyLegend,
+              lineHtml({ who: UI.inbox.contingencyNote, value: `${letter.now ?? 0}%` }),
+            ),
+          });
+
         case "minority":
           return paper({
             from: by("leader"),

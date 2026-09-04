@@ -302,6 +302,15 @@ export const UI = {
     ceilingBody:
       "O gasto do ano vai encostar no limite da regra. Com ele fechado não há discricionário para emenda — e sem emenda a base não se compra de volta.",
     ceilingNote: "o que sobra para o mês:",
+    /* ⚠ ELA ANUNCIA O PRAZO, e é a metade que faltava do A3: o decreto já escolhe quem o corte
+       poupa, e o jogador descobria o corte pela bolsa encolhida — nunca pela data que o decide.
+       ⛔ E ELA NÃO DIZ "rateio": o jogador vê o dinheiro sumir, e a palavra do motor não
+       explica nada a quem está decidindo onde ele some. */
+    contingencySubject: "O relatório bimestral fecha no mês que vem",
+    contingencyBody:
+      "Receitas e despesas do bimestre vão a público, e é nele que o contingenciamento se decide. Proteger uma área do corte é ordem do mês, e o que ela deixa de ceder o resto paga.",
+    contingencyLegend: "O corte deste mês",
+    contingencyNote: "o mês honrou, do que foi pedido:",
     minoritySubject: "O governo perdeu a maioria",
     minorityBody: "As cadeiras que respondem ao governo caíram abaixo da maioria simples.",
     /* ⚠ ELA ERA UMA COSTURA ENTRE DOIS NUMEROS — "436 de 513, e a maioria fecha em 257" — e os
