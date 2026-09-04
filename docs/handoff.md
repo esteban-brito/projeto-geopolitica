@@ -18,6 +18,26 @@
 
 ## ▶ COMECE POR AQUI
 
+## ✔ 04/09/2026 — a barra media o tipo ANTES de a fonte chegar
+
+⛔ **O PASSEIO PISCAVA VERMELHO SEM DEFEITO ATRÁS, e tinha defeito atrás.** `[barra] a barra
+superior vaza: when__date vaza 5px | when__note vaza 5px`, em cerca de uma rodada em cinco.
+
+**A causa:** `justify` mede as duas linhas do bloco do mês e grava a largura em **pixel**, para
+comprimir as duas no mesmo eixo. Ela roda **uma vez** — o cache `said` é
+`texto|texto|compressão`, e nenhum dos três muda depois. Medida antes de a fonte chegar, a
+largura gravada é a da fonte de reserva, e o texto real passa 5px dela **para sempre**.
+
+📐 **Reproduzido com 300ms de atraso em `vendor/fonts/`: as duas linhas vazam 5px, toda vez;
+sem atraso, nunca.** A fonte é local e quase sempre chega a tempo — era isso que fazia o defeito
+parecer instabilidade do portão.
+
+**O conserto é de duas metades:** o estado da fonte entra no cache `said`, e `dressTopbar` agenda
+**uma** repintura para quando `document.fonts.ready` resolver. ⭐ **E a prova entrou no passeio** —
+uma página com a fonte atrasada, medida pelo mesmo `checkTopbar`. Sem o conserto, ela reprova.
+
+---
+
 ## 📋 A SESSÃO DE 03/09/2026 — o índice do que foi definido
 
 **Foi a sessão mais longa do projeto.** Este índice existe para nada se perder. Cada linha
@@ -89,19 +109,25 @@ Tudo com fonte e data no [ciclo 18 · §2](cycles/18-a-caneta.md). O que mais mu
 **O [ciclo 21](cycles/21-a-mesa.md), passos 1 a 4.** Não há decisão pendente nele: o arranjo, as
 canetas e os números já foram escolhidos. O passo 5 (a MP) pede sessão própria.
 
-⚠ **E o passo 1 tem de reescrever a asserção do passeio** que exige zero controles no Gabinete,
-com a razão registrada — senão o portão reprova a mesa inteira.
+⚠ **E o passo 1 tem de reescrever DUAS asserções do passeio, não uma:** a que exige zero
+controles no Gabinete (`#main input, #main select`) e a que exige **seis** blocos na coluna
+(`.cards__side .annex`) — o arranjo novo não tem essa coluna. Com a razão nas duas, senão o
+portão reprova a mesa inteira.
+
+⚠ **E O NOME `mesa` JÁ ESTÁ OCUPADO:** `src/ui/screens/mesa.mjs` e `styles/50-screen-mesa.css`
+são a tela do **Congresso**, e não a mesa de trabalho. O passo 1 escolhe outro nome de arquivo
+ou renomeia a que existe — as duas coisas custam, e a decisão vem antes da primeira linha.
 
 ---
 
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 63 provas sintéticas · 152
-arquivos · 311 provas · passeio verde**. Branch `caixa-de-entrada`, **23 commits à frente de
-`main`**, e **nada foi enviado ao remoto**. O último commit é `80a6d9f`.
+**Estado: verde.** `npm run validate` fecha com **13 guardas · 63 provas sintéticas · 156
+arquivos · 314 provas · passeio verde**. Branch `caixa-de-entrada`, à frente de `main` e
+**nada foi enviado ao remoto**. ⚠ **A contagem de commits não mora mais aqui, e a razão é que ela
+se vencia sozinha:** todo commit que a corrigia a vencia de novo. `git log --oneline
+main..caixa-de-entrada` dá a lista, e ele nunca envelhece.
 
-⚠ **A ÁRVORE NÃO ESTÁ LIMPA, e são QUATRO entregas:** a **regra 6 da guarda `prose`** com os
-três consertos que ela achou; o **A3 fechado** — o contingenciamento passou a ser escolhido; a
-**separação Gabinete × Email**; e o **passeio remendado**, que a reprovou seis vezes. A decisão
-de commitar é dele.
+**A árvore está limpa.** As quatro entregas de 03/09 foram commitadas: a regra 6 da guarda
+`prose`, o A3 fechado, a separação Gabinete × Email e o passeio remendado.
 
 ⚠ **UMA RODADA DE `npm test` FALHOU UMA VEZ e não se repetiu em DEZ tentativas seguidas.** A
 prova instável conhecida (`A BASE PARTE EM DUAS`) foi consertada nesta sessão; se o portão
@@ -1021,33 +1047,11 @@ vermelha, e **o mobile** — _"a perfeição que eu almejo é no desktop sempre"
 
 ## Achados abertos
 
-**58. ⛔ O CALENDÁRIO FALA EM SIGLA, E O JOGO PUBLICADO FAZ ISSO — ACHADO NOVO em 31/08/2026, e
-quem o encontrou foi ELE, perguntando.** A pergunta foi _"o que é ldo?"_ — e ela é um achado, e
-não uma dúvida: **se o dono do jogo não sabe, o jogador não sabe.**
-
-O bloco **"O que este mês cobra"**, no Gabinete, imprime `LDO — em 1 mês` e `LOA — em 1 mês`.
-Duas siglas do orçamento público, sem uma palavra de explicação, na tela que abre o jogo.
-
-⚠ **E O CATÁLOGO GUARDA A EXPLICAÇÃO.** `src/data/calendar.mjs` traz, em cada marco:
-
-| campo    | o que tem                                                      |
-| -------- | -------------------------------------------------------------- |
-| `label`  | `"LDO"` — o que a tela mostra                                  |
-| `what`   | `"as diretrizes do orçamento do ano que vem vão ao Congresso"` |
-| `source` | `"CF art. 35, §2º, II do ADCT"`                                |
-
-⭐ **É a família de defeito mais produtiva deste projeto** — _um dado que já existe no motor e
-nunca chegou à tela_ —, e ela não custa motor nem número novo.
-
-⚠ **E o nome certo não precisa ser inventado:** a carta da posse já chama esse eixo de **"a meta
-fiscal"**, e é nela que o jogador escolheu uma promessa. **O rótulo deve apontar para uma
-palavra que ele já conhece, em vez de abrir uma segunda.** No clone a etiqueta passou a dizer
-`META FISCAL · 1 MÊS`, e coube com 19px de folga.
-
-**O conserto tem duas metades, e a segunda é a que importa:** `label` ganha um par em linguagem
-de jogador, e a sigla desce para onde `what` e `source` moram. ⚠ **E vale para os quatro
-marcos** — `LOA` tem o mesmo problema, e `Relatório bimestral` não diz que é ali que o
-contingenciamento se decide.
+✔ **O 58 FECHOU — o calendário falava em sigla, e não fala mais.** O Gabinete imprimia `LDO`
+e `LOA` na tela que abre o jogo. Hoje `src/data/calendar.mjs` traz **"Meta fiscal"** e
+**"Orçamento do ano"**, e o `what` do bimestral já diz que é ali que o contingenciamento se
+decide. Conferido na captura em `captures/passeio/gabinete.png`, e nenhuma sigla sobrou em
+rótulo de tela.
 
 **53. ⛔ NÃO RECALIBRAR A CAPACIDADE ANTES DA REFORMULAÇÃO — decisão dele, registrada em
 21/08/2026.** Com o achado 52 na mão eu ia recomendar girar `decay` e `yield`, e ele avisou
@@ -1555,7 +1559,7 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### A verificação
 
-**Treze guardas** com **63 provas sintéticas** e **304 provas**, e o **passeio**
+**Treze guardas** com **63 provas sintéticas** e **314 provas**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.

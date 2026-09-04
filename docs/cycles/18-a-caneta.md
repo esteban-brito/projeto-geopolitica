@@ -342,7 +342,7 @@ total por desvio.**
 
 ## 7 · ⚖ A RESTRIÇÃO, e ela vale para os onze
 
-1. `npm run validate` verde — 📐 hoje **13 guardas · 63 provas sintéticas · 152 arquivos · 314
+1. `npm run validate` verde — 📐 hoje **13 guardas · 63 provas sintéticas · 156 arquivos · 314
    provas · passeio verde**;
 2. ⚠ **abrir a captura.** Três defeitos já atravessaram tipo, guarda e trezentas provas para
    morrer na imagem;

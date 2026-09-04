@@ -113,7 +113,7 @@ function dress(node, { body, edge, gleam = 0 }) {
 function justify(block, squeeze) {
   const lines = [block.querySelector(".when__date"), block.querySelector(".when__note")];
   if (!lines[0] || !lines[1]) return;
-  const said = `${lines[0].textContent}|${lines[1].textContent}|${squeeze}`;
+  const said = `${lines[0].textContent}|${lines[1].textContent}|${squeeze}|${document.fonts.status}`;
   if (block.dataset["said"] === said) return;
   block.dataset["said"] = said;
   for (const line of lines) {
@@ -153,6 +153,12 @@ function justify(block, squeeze) {
   }
 }
 
+/* ⛔ A FONTE PODE CHEGAR DEPOIS DA PRIMEIRA MEDIDA, e ai a largura fica PRESA na metrica
+   errada: `justify` grava `width` em pixel e o `said` recusa a segunda passada, porque texto e
+   compressao continuam os mesmos. Medido com a fonte atrasada em 300ms: as duas linhas do bloco
+   do mes vazam 5px, e nada as devolve. */
+let awaited = false;
+
 /**
  * VESTE A BARRA — a cada pintura, porque toda peca aqui depende do proprio tamanho.
  *
@@ -160,6 +166,11 @@ function justify(block, squeeze) {
  * @returns {void}
  */
 export function dressTopbar(root) {
+  if (!awaited && document.fonts.status !== "loaded") {
+    awaited = true;
+    document.fonts.ready.then(() => dressTopbar(root));
+  }
+
   const style = getComputedStyle(document.documentElement);
   const squeeze = Number(style.getPropertyValue("--when-squeeze")) || 0.9;
 

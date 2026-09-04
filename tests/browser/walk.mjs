@@ -183,8 +183,8 @@ try {
    *
    * @param {string} where
    */
-  async function checkTopbar(where) {
-    const found = await page.evaluate(() => {
+  async function checkTopbar(where, on = page) {
+    const found = await on.evaluate(() => {
       /** @param {string} s @returns {DOMRect | null} */
       const r = s => document.querySelector(s)?.getBoundingClientRect() ?? null;
       const bar = r(".topbar");
@@ -1110,6 +1110,22 @@ try {
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(600);
   await page.screenshot({ path: join(OUT, "gabinete-900.png"), fullPage: true });
+
+  /* ── A FONTE QUE CHEGA TARDE ────────────────────────────────────
+     ⚠ A BARRA MEDE TIPO PARA SE JUSTIFICAR, E MEDE UMA VEZ SO. Medida antes de a fonte chegar,
+     ela grava a largura da fonte de reserva e nada a revisa. A fonte e local e costuma chegar a
+     tempo, entao o defeito ficava invisivel — e o portao piscava vermelho sem nada por tras.
+     Com 300ms de atraso as duas linhas do bloco do mes vazavam 5px, toda vez. */
+  const late = await context.newPage();
+  await late.route("**/vendor/fonts/**", async route => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    await route.continue();
+  });
+  await late.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
+  await late.evaluate(() => document.fonts.ready);
+  await late.waitForTimeout(300);
+  await checkTopbar("barra com a fonte atrasada", late);
+  await late.close();
 
   expect(noise.length === 0, `console sujo: ${noise.join(" | ")}`);
 

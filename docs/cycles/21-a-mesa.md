@@ -141,9 +141,14 @@ nesta sessão:
   carrega os quatro vitais em **toda** tela desde 01/09/2026;
 - _"não há um pixel livre"_ — 📐 a separação Gabinete × Email deixou **45% do tabuleiro vazio**.
 
-⚠ **E o passeio cobra `#main input, #main select === 0` no Gabinete há seis ciclos.** Essa
-asserção **tem de ser reescrita no mesmo passo 1**, com a razão registrada — senão o portão
+⚠ **E o passeio cobra DUAS asserções que a mesa quebra, e não uma:** `#main input, #main select
+=== 0` no Gabinete, e `.cards__side .annex === 6` — a coluna de seis blocos deixa de existir no
+arranjo novo. **As duas se reescrevem no mesmo passo 1**, com a razão registrada, senão o portão
 reprova a mesa inteira.
+
+⚠ **E O NOME `mesa` JÁ ESTÁ OCUPADO:** `src/ui/screens/mesa.mjs` e `styles/50-screen-mesa.css`
+são a tela do **Congresso**. O passo 1 escolhe outro nome de arquivo ou renomeia a que existe —
+as duas coisas custam, e a decisão vem antes da primeira linha.
 
 **O resto continua valendo:** `validate` verde, a captura aberta, e a coluna do Gabinete **não
 rola** — `checkColumnFits` cobra isso em 24 meses.

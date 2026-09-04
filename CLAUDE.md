@@ -88,15 +88,16 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 13 guardas · 61 provas sintéticas · 152 arquivos · 304 provas · passeio
+**Estado verde:** 13 guardas · 63 provas sintéticas · 156 arquivos · 314 provas · passeio
 verde. **A barra superior nova está no jogo** desde 01/09/2026. **Save na versão 20** — partida salva antes de 30/08 não abre. Branch de trabalho: `caixa-de-entrada`.
 
-▶ **O PASSO 6 DO CICLO 13 COMEÇOU, e a ordem foi INVERTIDA** — a
+▶ **O PASSO 6 DO CICLO 13 COMEÇOU PELO A3, E O A3 FECHOU INTEIRO em 03/09/2026** — a
 [pesquisa 06](docs/research/06-a-obrigatoria-e-quem-a-decide.md) mediu que A1, A2 e A3 dão ao
-presidente uma caneta que ele não tem, e que o **A3 é o único que não pede motor novo**. Ele
-aprovou. **O A3 está pela metade:** os dois instrumentos já têm nomes diferentes (`blocked` para
-o teto do arcabouço, `atRisk` para a meta primária da LDO) e o rateio deixou de gravar o corte
-na lei — **falta o contingenciamento ser ESCOLHIDO**, que é o nome do item.
+presidente uma caneta que ele não tem, e que o **A3 era o único que não pedia motor novo**. Ele
+aprovou, e entrou tudo: os dois instrumentos ganharam nomes diferentes (`blocked` para o teto do
+arcabouço, `atRisk` para a meta primária), o rateio deixou de gravar o corte na lei, o
+contingenciamento passou a ser **escolhido por área**, e o relatório bimestral avisa antes.
+**Sobram o A1 e o A2, e os dois mexem em calibragem fiscal — logo, os dois são decisão dele.**
 
 **Há NOVE planos na mesa**, e o 13, o 18, o 19, o 20 e o 21 são os abertos:
 
@@ -104,8 +105,9 @@ na lei — **falta o contingenciamento ser ESCOLHIDO**, que é o nome do item.
   a próxima sessão começa.** O Gabinete vira mesa: assinar no centro, a margem com **seis** linhas
   escolhidas a dedo (hoje são vinte), a promessa da posse em cima e o calendário no pé. O arranjo
   e as canetas — **contingenciamento e MP** — já foram escolhidos por ele, então **não há decisão
-  pendente**. ⚠ O passo 1 tem de reescrever a asserção do passeio que exige zero controles no
-  Gabinete;
+  pendente**. ⚠ O passo 1 tem de reescrever **duas** asserções do passeio — a de zero controles
+  no Gabinete e a de seis blocos na coluna — e escolher outro nome de arquivo, porque
+  `src/ui/screens/mesa.mjs` já é a tela do Congresso;
 
 - [`cycles/20-as-empresas.md`](docs/cycles/20-as-empresas.md) — **as empresas, de 03/09/2026.**
   A lei trata criar e vender de formas OPOSTAS, e isso vira jogo: fundar estatal pede **lei
@@ -144,8 +146,9 @@ na lei — **falta o contingenciamento ser ESCOLHIDO**, que é o nome do item.
   o vocabulário dela é de três peças com guarda. **Sobra um item**: as duas cartas sem número
   (a Mesa pautou, a gaveta), e ele pede motor;
 - [`cycles/13-o-glorioso.md`](docs/cycles/13-o-glorioso.md) — **em execução**, e o plano mestre:
-  **25 de 49 itens**. Os passos 4 e 5 fecharam em 30/08: o **D4** (a corrente causal, no DELTA)
-  e o **C5/C6** (a plataforma de posse). Retomar no **passo 6**: A1, A2 e A3.
+  **26 de 49 itens**. Os passos 4 e 5 fecharam em 30/08 — o **D4** (a corrente causal, no DELTA)
+  e o **C5/C6** (a plataforma de posse) —, e o passo 6 abriu pelo **A3**, que fechou em 03/09.
+  Sobram o **A1** e o **A2**.
 
 ✔ **A BASE FOI DEFINIDA EM 31/08/2026** — as quatro decisões que travavam trabalho fecharam, e o
 critério de cada uma mora em `handoff.md`. **Nenhuma foi executada:**
@@ -163,7 +166,7 @@ critério de cada uma mora em `handoff.md`. **Nenhuma foi executada:**
 ⚠ **SOBRAM TRÊS, e nenhuma trava nada:** a rolagem abaixo de 940px, **por onde começar o "menos
 texto, mais visual"**, e as duas cartas sem número com o glossário do termo.
 
-📗 **DUAS PESQUISAS NOVAS, e as duas são de 31/08:**
+📗 **A PESQUISA MAIS NOVA É A 06**, citada no passo 6 acima. As duas de 31/08:
 
 - [`research/04-o-cargo-de-presidente.md`](docs/research/04-o-cargo-de-presidente.md) — a tese:
   **o jogo modela o VOTO, e a presidência brasileira é feita de AGENDA.** O A4 está pela metade
@@ -180,7 +183,9 @@ mola. **A geometria dela mora em 44 tokens** em `00-tokens.css`, e cada um foi g
 num painel de 51 campos no clone: mexer na barra é mexer em token, não em regra. O clone
 continua em `tmp/barra.html`, com o painel, e serve de bancada.
 
-**Nenhum item de ciclo espera decisão hoje.** A fila que pedia "o mesmo bump de esquema" tinha quatro
+**UMA decisão de ciclo espera hoje, e é a do ciclo 19: onde mora a chave da IA** (§6) — o jogo é
+site estático, e chamar modelo é a primeira coisa que pediria rede em partida. O ciclo 21 não
+espera nada. A fila que pedia "o mesmo bump de esquema" tinha quatro
 itens e **não existe mais**: o `last` fechou na versão 19, e o `events`, o `weight` e os anexos
 saíram **sem bump nenhum** — o validador do save não olha dentro de uma carta. ⚠ **Meça antes
 de bumpar:** cada subida de versão custa a partida em andamento.
