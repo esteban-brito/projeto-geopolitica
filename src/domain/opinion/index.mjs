@@ -69,6 +69,21 @@ function higherIsBetter(value, anchor, span) {
 }
 
 /**
+ * QUANTO A PROMESSA QUEBRADA COBRA POR MES, em pontos de satisfacao.
+ *
+ * ⚠ ELA E EXTRAIDA DE `step` E NAO COPIADA DELE, e a razao e a regra: o Gabinete precisa
+ * anunciar este preco ANTES do fechamento, e informacao que chega depois da decisao e recibo.
+ * Refeita na tela, ela divergiria no dia em que `broken` mudasse.
+ *
+ * @param {number} breach a fracao da plataforma quebrada, de 0 a 1
+ * @param {OpinionParameters} parameters
+ * @returns {number}
+ */
+export function betrayalCost(breach, parameters) {
+  return Math.min(1, Math.max(0, breach)) * parameters.broken;
+}
+
+/**
  * Um mes de opiniao publica.
  *
  * @param {OpinionInput} input
@@ -87,7 +102,7 @@ export function step(input) {
   };
 
   /* A PROMESSA QUEBRADA CHEGA A RUA, e nao so ao Congresso. */
-  const betrayal = Math.min(1, Math.max(0, input.betrayal ?? 0)) * p.broken;
+  const betrayal = betrayalCost(input.betrayal ?? 0, p);
 
   /* ⚠ O DESGASTE DO CARGO, e ele cresce com o mandato. */
   const wear = Math.max(0, input.tenure ?? 0) * p.wearRate;

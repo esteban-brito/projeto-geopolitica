@@ -6,6 +6,7 @@
    ⚠ E NADA AQUI E MURO: quebrar promessa e caro, e nao proibido. Quem cobra e a rua, por
    `betrayal`, que ja existia e so olhava o orcamento. */
 
+import { betrayalCost } from "../domain/opinion/index.mjs";
 import { PLEDGES, PRIORITY_COUNT } from "../data/platform.mjs";
 import { CATALOG } from "../data/catalog.mjs";
 import { MONTHS_PER_YEAR } from "../data/regime.mjs";
@@ -194,4 +195,19 @@ export function breachOf(state, catalog = CATALOG) {
   const verdicts = platformOf(state, catalog);
   if (verdicts.length === 0) return 0;
   return verdicts.filter(verdict => verdict.kept === false).length / verdicts.length;
+}
+
+/**
+ * QUANTO A PLATAFORMA QUEBRADA COBRA DE HUMOR POR MES.
+ *
+ * ⚠ ELA COMPOE AQUI, e nao na tela: `breachOf` da a fracao e `betrayalCost` da o preco, e o
+ * turno ja usa os dois exatamente nesta ordem. Somados na view, seriam dois lugares montando
+ * a mesma pergunta — e a divergencia so apareceria no mes em que `broken` mudasse.
+ *
+ * @param {GameState} state
+ * @param {typeof CATALOG} [catalog]
+ * @returns {number}
+ */
+export function betrayalOf(state, catalog = CATALOG) {
+  return betrayalCost(breachOf(state, catalog), catalog.opinion);
 }

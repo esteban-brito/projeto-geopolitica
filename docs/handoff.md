@@ -18,6 +18,194 @@
 
 ## ▶ COMECE POR AQUI
 
+### ⭐ O PRÓXIMO PASSO, e ele é uma escolha entre três
+
+**Estado em 04/09/2026: verde e limpo.** `npm run validate` fecha com **13 guardas · 63 provas
+sintéticas · 315 provas · passeio verde**. Branch `caixa-de-entrada`, à frente de `main`, e
+**nada foi enviado ao remoto**.
+
+⚠ **Não há decisão pendente travando nada.** As três candidatas, na minha ordem:
+
+| #   | o quê                     | onde                                         | custo   | por que ela                                                                      |
+| --- | ------------------------- | -------------------------------------------- | ------- | -------------------------------------------------------------------------------- |
+| 1   | ⭐⭐⭐ **o TEMPO**        | [ciclo 23](cycles/23-o-corpo-politico.md) A1 | médio   | **o único item de qualquer plano que dá peso ao que já existe**                  |
+| 2   | ⭐⭐ **o BANCO CENTRAL**  | ciclo 23, C1                                 | médio   | a Selic sai de uma regra de Taylor, e ninguém decide o juro                      |
+| 3   | **as 4 AMBIÇÕES INERTES** | [ciclo 19](cycles/19-a-voz.md), item 2       | pequeno | o mais barato, e é o alicerce do [ciclo 22](cycles/22-a-lei-que-voce-escreve.md) |
+
+⚠ **E o passo 5 do ciclo 21 — a MP — continua aberto**, mas ele é o item 6 do ciclo 18 e pede
+sessão própria.
+
+**Antes de escrever a primeira linha:** `docs/standards.md`, o ciclo escolhido, e a captura em
+`captures/passeio/` da tela que você for tocar.
+
+---
+
+## ✔ 04/09/2026 — O GABINETE VIROU MESA, e os passos 1 a 4 do ciclo 21 entraram
+
+**Quatro zonas com lugar fixo, e nenhuma reflui:** a promessa em cima, o que se assina no centro
+em dois terços, a margem num terço à direita, o prazo no pé.
+
+| o que mudou                  | antes                         | agora                          |
+| ---------------------------- | ----------------------------- | ------------------------------ |
+| a grade                      | 6 blocos iguais, refluindo    | 4 zonas, `grid-template-areas` |
+| leituras na tela             | **20**                        | **6**                          |
+| controles                    | **0**                         | as 8 pastas do decreto         |
+| `breachOf` lido por uma tela | ⛔ nenhuma                    | a faixa de cima                |
+| o contingenciamento          | 8 botões, um por tela de área | 1 decreto, 8 pastas            |
+
+⭐ **A SÉRIE NÃO MUDOU** — `agenda` fecha em **26 de 43** e dívida **90,0%**, `base` em **34 de
+41** e **90,7%**. Era o resultado desenhado: o passo inteiro é de tela.
+
+⚠ **E A CAPTURA REPROVOU DUAS VEZES o que guarda, tipo e 315 provas aprovaram** — as duas de
+hierarquia, e a primeira é a lição:
+
+1. **600px pretos no centro.** As linhas esticavam, e a pasta de uma caneta só abria um buraco
+   embaixo dela — **o mesmo vazio que a tela existe para fechar, mudado de lugar**. A mesa passou
+   a medir o conteúdo: ela é um objeto, e o vazio fica fora dela;
+2. **a peça principal era a única sem superfície.** O que se assina flutuava no preto enquanto o
+   que se consulta tinha lâmina.
+
+⚠ **O passeio pegou um terceiro, esse mecânico:** na margem estreita, `Preso por lei` + `da
+receita de` pedia **227px num campo de 149** e saía com reticência. O qualificador desceu para a
+própria linha.
+
+⚠ **E ERAM TRÊS ASSERÇÕES DO PASSEIO, não duas** — o plano previa a dos seis blocos e a de zero
+controles; a terceira era a mesma contagem dentro da prova do **save**. ⭐ **E o nome `mesa`
+nunca esteve ocupado:** o Gabinete sempre morou em `cabinet.mjs`, e `mesa.mjs` é o Congresso.
+
+**Sobra o passo 5 do ciclo 21 — a MP —, e ele é o item 6 do [ciclo 18](cycles/18-a-caneta.md),
+com sessão própria.**
+
+---
+
+## ▶ 04/09/2026 — a arquitetura ficou fechada, e são TRÊS planos novos
+
+**Ele pediu duas coisas nesta sessão, e a segunda é a que reordena o projeto:** _"o que falta HOJE
+no meu jogo que um presidente como o Lula tem a capacidade de fazer… além de tudo que está
+registrado, planejado"_ — e depois _"arquite tudo, quero realismo máximo"_.
+
+| plano                                                     | o que ele é                                          |
+| --------------------------------------------------------- | ---------------------------------------------------- |
+| [ciclo 19](cycles/19-a-voz.md), **reescrito**             | o avaliador, as ambições, o mundo que protocola      |
+| [ciclo 22](cycles/22-a-lei-que-voce-escreve.md), **novo** | os seis verbos da lei que o jogador escreve          |
+| [ciclo 23](cycles/23-o-corpo-politico.md), **novo**       | os **17 itens** que faltam depois de todos os planos |
+
+⭐ **A TESE DO 23, e ela é o diagnóstico mais fundo que este projeto já produziu:** somando os
+ciclos 13, 17, 18, 19, 20, 21 e 22, o presidente ganha as **quatro moedas** — dinheiro, cargo,
+tempo de tramitação e caneta. **O que ele continua não tendo é corpo político.** Sem partido, sem
+vice, sem entorno, sem tempo finito e sem voz, ele é uma função que assina papel — **ninguém
+depende dele, ninguém o sucede, ninguém o trai por conta própria, e ele nunca precisa escolher
+entre duas coisas boas.**
+
+**As quatro medições que abriram o 23:**
+
+| 📐 medido                                        | consequência                                            |
+| ------------------------------------------------ | ------------------------------------------------------- |
+| a Selic sai de uma **regra de Taylor**           | ninguém decide o juro. Não há Banco Central             |
+| a palavra **vice** não aparece uma vez no `src/` | o impeachment derruba e não diz quem ganha              |
+| **nenhuma das nove bancadas é a sua**            | o presidente não tem partido                            |
+| **não existe orçamento de atenção**              | escolher não custa nada, porque não escolher também não |
+
+⭐⭐⭐ **O item 1 do 23 é O TEMPO, e ele é o único item de qualquer plano que dá peso às jogadas
+que JÁ EXISTEM** — os outros dezesseis acrescentam peça. 📐 E o motor já provou a mecânica: o
+achado 52 mediu **+10,5 concentrando 48 meses na Saúde contra +4 rodando o foco a cada 12**. O
+país já premia compromisso sustentado, e nenhuma tela diz isso.
+
+⭐⭐ **E o item 2 é um presente do calendário real.** 📗 LC 179/2021: o mandato do presidente do
+BC começa em **1º de janeiro do terceiro ano** do mandato presidencial, e exonerar exige maioria
+absoluta do Senado. Num jogo que abre em janeiro de 2027:
+
+> **meses 1 a 24 com o banqueiro central do seu adversário · o seu entra no mês 25 · e ele te
+> sobrevive dois anos.**
+
+⚠ **Nada disso foi construído.** A ordem recomendada do 23 é **tempo → Banco Central → vice →
+partido**, e os quatro cabem em duas sessões.
+
+---
+
+## ⛔ 04/09/2026 — a IA por API está FORA, e a resposta virou a pesquisa 07
+
+**Decisão dele, e ela não se reabre:** _"não quero gastar mais nenhum centavo com o jogo, então
+não pretendo integrar uma IA, o que eu quero é de alguma forma criar uma IA, ou algo parecido, no
+meu jogo, por exemplo, pretendo criar personalidades para as pessoas, mídia, e tudo mais, assim
+as coisas vão acontecendo naturalmente"_.
+
+**O [ciclo 19](cycles/19-a-voz.md) não morre — ele fica registrado e será reescrito.** Morre a
+seção 6 (a chave), o cache da seção 3 e o V4. Sobrevivem o jornal, a voz das pessoas e o
+veredito, e os três saem de graça.
+
+⭐ **E ele fez a pergunta certa:** _"se a Lei funcionasse plenamente dentro do meu jogo, acredito
+que muitas outras leis funcionariam também"_. Está medido, e está certo — a
+[pesquisa 07](research/07-a-lei-que-o-jogador-escreve.md) pegou **33 propostas de um plano de
+governo real** e as passou pela gramática do motor:
+
+| o que se achou                                                 | número |
+| -------------------------------------------------------------- | ------ |
+| encaixes que a gramática de norma **já tem** e ninguém escreve | **10** |
+| verbos que existem em `kind`                                   | **1**  |
+| verbos que as 33 propostas pedem                               | **7**  |
+| propostas que **rodam hoje**, sem uma linha nova               | **6**  |
+| propostas que `spend` + `tax` abrem **sem abrir motor**        | **10** |
+| propostas travadas atrás do mapa federativo                    | **9**  |
+
+⭐ **E o achado que responde ao "quero algo próximo a uma IA":** a IA que faz um mundo parecer
+vivo é **o AVALIADOR, e não o gerador**. Hoje o preço de uma lei sai de `threat`, escrito à mão —
+e uma lei que o jogador inventa não tem `threat`, porque ninguém a previu. **As quatro peças que
+sabem responder "isto é bom para mim?" já rodam:** a bancada (eixo e venalidade), o lobby (lê a
+MALHA), o segmento (aprovação por renda) e a pessoa (ambição e memória). O preço deixa de ser
+autoral e passa a ser a soma de quem a lei machuca.
+
+⚠ **Três coisas ficam para ele:** a ordem dos seis verbos, se o mapa federativo entra, e a
+reescrita do ciclo 19.
+
+---
+
+## ✔ 04/09/2026 — os documentos foram auditados contra o repositório, e 21 afirmações caíram
+
+**Toda afirmação numérica dos docs foi medida contra o código.** O que fechou:
+
+| onde                   | dizia                                      | é                                                   |
+| ---------------------- | ------------------------------------------ | --------------------------------------------------- |
+| `calendar.mjs:52`      | `` `everyMonths` existe ``                 | não existe; quem repete é `REPEATS`                 |
+| handoff, decisões      | exceção: `d3-force` vendorizado            | `vendor/` só tem fontes                             |
+| handoff, o que não tem | TEMPORAL, CASCATA **e DELTA** são contrato | o DELTA roda desde 30/08                            |
+| `standards.md` §2 e §6 | seis camadas · **doze** guardas            | onze folhas · **treze**, e faltava a `annexes`      |
+| `standards.md` §2      | persistência em `src/application/`         | `save.mjs` mora em `src/state/`                     |
+| `CLAUDE.md`            | 44 tokens de barra · sete passos no 14     | 41 · oito                                           |
+| `README.md`            | cinco políticas · doze telas               | nove · treze endereços                              |
+| `README.md`            | SONDA e DELTA são contrato                 | os dois rodam; só sobram TEMPORAL e CASCATA         |
+| ciclo 17 (2×)          | ciclo 13 em 25 de 49                       | **26** — o commit de 03/09 esqueceu este arquivo    |
+| ciclo 20 §5            | seis catálogos com esquema                 | treze módulos, dezesseis esquemas                   |
+| ciclo 19 §1            | `"dependencies": {}`                       | a chave não existe                                  |
+| ciclo 14, cabeçalho    | **FALTA O PASSO 4**                        | o próprio arquivo o marca ✔ FEITO em 29/08          |
+| handoff, achado 22     | `agenda` 29 de 43                          | **26 de 43** — a série já dizia, e ele não foi lido |
+| handoff, achado 40     | a tela imprime **um** gasto preso          | imprime **dois** (`GASTOS_PRESOS`)                  |
+
+⭐ **E TRÊS ERAM CONTRADIÇÃO DE FUNDO, não número velho:**
+
+1. **A tese do ciclo 18 estava errada no censo.** Ele dizia _"o jogo tem SEIS gestos"_ e a
+   tabela pulava **três que são jogada**: a verba (`data-program`), a emenda (`data-party`) e a
+   resposta de carta (`data-letter`) — a emenda ficou de fora do censo do plano que diz, dois
+   parágrafos depois, que **ela é a única moeda do jogo**. A tabela foi refeita com a linha do
+   `app.mjs` ao lado de cada gesto, e **a tese sobrevive melhor com o censo certo**: nenhuma das
+   seis jogadas CRIA um instrumento;
+2. **O ciclo 19 §4 contraria a letra do ADR 0001** — `demandsOf` roda dentro do turno
+   (`turn.mjs:1863`), e o ADR dizia _"a IA nunca entra dentro de `playMonth`"_. ⭐ **Resolvido a
+   favor do ciclo, por decisão dele:** o ADR ganhou uma emenda datada. A IA entra escolhendo
+   entre opções que o motor precificou, e o determinismo passa a vir do cache;
+3. **A série que calibra cobre SEIS das NOVE sondas**, e dizia-se única. `concentra`,
+   `favoritos` e `legislador` ficam de fora porque medem outra coisa — e agora isso está escrito.
+
+⚠ **A REGRA QUE SAIU DAQUI, e ela decide todo empate futuro: o documento mais RECENTE vale.**
+Foi assim que os catorze acima se resolveram — a série de 03/09 contra o achado de 24/08, o
+ciclo 13 de 03/09 contra o ciclo 17 de 31/08, o passo marcado ✔ contra o cabeçalho que o negava.
+
+⚠ **E as referências cruzadas de achado agora avisam:** o 22 manda ver o **54**, o 35 depende do
+**31**, o 45 do **44**, o 52 discute o **49** — e nenhum dos quatro mora mais nesta lista. Eles
+estão no [`journal.md`](journal.md), como medição datada.
+
+---
+
 ## ✔ 04/09/2026 — a barra parou de medir tipo antes da fonte
 
 **O passeio piscava vermelho em uma rodada em cinco, e tinha defeito atrás.** `justify` grava a
@@ -99,23 +287,18 @@ Tudo com fonte e data no [ciclo 18 · §2](cycles/18-a-caneta.md). O que mais mu
 
 ### ▶ POR ONDE A PRÓXIMA SESSÃO COMEÇA
 
-**O [ciclo 21](cycles/21-a-mesa.md), passos 1 a 4.** Não há decisão pendente nele: o arranjo, as
-canetas e os números já foram escolhidos. O passo 5 (a MP) pede sessão própria.
+⚠ **A escolha e o estado verde moram no TOPO deste arquivo**, e não aqui — dois lugares dizendo
+qual é o próximo passo é como um deles envelhece calado.
 
-⚠ **E o passo 1 tem de reescrever DUAS asserções do passeio, não uma:** a que exige zero
-controles no Gabinete (`#main input, #main select`) e a que exige **seis** blocos na coluna
-(`.cards__side .annex`) — o arranjo novo não tem essa coluna. Com a razão nas duas, senão o
-portão reprova a mesa inteira.
+⚠ **A CONTAGEM DE ARQUIVOS SAIU DAQUI em 04/09/2026, e é a SEGUNDA da mesma família.** A guarda
+conta `docs/` também — então **escrever o documento que registra o número muda o número**. Ela
+foi de 156 para 159 numa sessão em que nenhuma linha de código nasceu, só três planos. É
+literalmente a lição do achado dos commits, uma classe acima: **um número que o próprio ato de
+registrar altera não pode morar em prosa.** `npm run check` o imprime em dois segundos, e ele
+nunca envelhece. **As outras três contagens ficam** — guarda, prova sintética e prova só mudam
+quando alguém decide que mudem.
 
-⚠ **E O NOME `mesa` JÁ ESTÁ OCUPADO:** `src/ui/screens/mesa.mjs` e `styles/50-screen-mesa.css`
-são a tela do **Congresso**, e não a mesa de trabalho. O passo 1 escolhe outro nome de arquivo
-ou renomeia a que existe — as duas coisas custam, e a decisão vem antes da primeira linha.
-
----
-
-**Estado: verde.** `npm run validate` fecha com **13 guardas · 63 provas sintéticas · 156
-arquivos · 314 provas · passeio verde**. Branch `caixa-de-entrada`, à frente de `main` e
-**nada foi enviado ao remoto**. ⚠ **A contagem de commits não mora mais aqui, e a razão é que ela
+⚠ **A contagem de commits não mora mais aqui, e a razão é que ela
 se vencia sozinha:** todo commit que a corrigia a vencia de novo. `git log --oneline
 main..caixa-de-entrada` dá a lista, e ele nunca envelhece.
 
@@ -265,7 +448,8 @@ aresta de móvel, lê como troca de fundo. Medido: y=77 dava `47,55,70` contra `
 | recuo interno         | `--space-2`     | `--space-2`            |
 | quina                 | `glass-support` | `glass-support`        |
 
-⛔ **A CALHA DA ROLAGEM SAIU JUNTO:** `.cards__side` tinha `overflow-y: auto` e 8px de
+⛔ **A CALHA DA ROLAGEM SAIU JUNTO** — ⚠ **e a própria coluna morreu em 04/09/2026, com a
+mesa**; `checkColumnFits` passou a medir `.desk`. `.cards__side` tinha `overflow-y: auto` e 8px de
 `padding-right` para a barra de rolagem da coluna estreita. A ordem dele é que essa coluna
 **não role**, `checkColumnFits` cobra isso em 24 meses, e os 8px deixavam o último bloco parando
 em **1416** contra os 1424 da barra — desalinho na aresta que o olho usa de prumo.
@@ -1040,6 +1224,12 @@ vermelha, e **o mobile** — _"a perfeição que eu almejo é no desktop sempre"
 
 ## Achados abertos
 
+⚠ **UM ACHADO CITADO AQUI PODE NÃO MORAR MAIS AQUI.** Os que fecharam saíram para
+[`journal.md`](journal.md) com a data em que fecharam, e as referências cruzadas ficaram: o **22**
+manda ver o **54**, o **35** depende do **31**, o **45** do **44**, e o **52** discute o **49**.
+**Nenhum dos quatro está nesta lista.** Procure-os no `journal.md` — e leia o número de lá como
+medição datada, nunca como estado de hoje.
+
 ✔ **O 58 FECHOU — o calendário falava em sigla, e não fala mais.** O Gabinete imprimia `LDO`
 e `LOA` na tela que abre o jogo. Hoje `src/data/calendar.mjs` traz **"Meta fiscal"** e
 **"Orçamento do ano"**, e o `what` do bimestral já diz que é ali que o contingenciamento se
@@ -1242,7 +1432,7 @@ dinheiro"_.
 O meio-termo entregue foi **o maior travador, nomeado, numa frase**: `Aposentadoria urbana
 trava R$ 66,7 bi`. Custou ~80px e quatro linhas. ⚠ **O segundo e o terceiro estão a um
 parâmetro de distância** — `lockedBy(state, catalog, top)` continua devolvendo três, e é a
-tela que imprime um. **A pergunta que fica aberta não é de layout: é se um só basta.** Um
+tela que imprime dois — `GASTOS_PRESOS` em `cabinet.mjs`. **A pergunta que fica aberta não é de layout: é se um só basta.** Um
 governo que corta previdência vê o número mudar; um que não corta vê a mesma linha por 48
 meses, e aí ela vira legenda estática — que é exatamente o defeito que as frases de desejo
 da CALDEIRA acabaram de pagar.
@@ -1347,9 +1537,14 @@ remedido em 24/08/2026, ver o achado 54.** Este item já mudou de número duas v
 24", depois "4 de 11", e as duas leituras vinham de instrumento quebrado ou de horizonte
 misturado.
 
-**Medido a 48 meses, semente padrão:** a `agenda` aprova **29 de 43 (67%)** e a `base`
-**35 de 42 (83%)**. Um Congresso que aprova dois terços do que o governo protocola não está
-estrangulado — isso é "legislar custa, e o preço se paga", que é o efeito pretendido.
+**Remedido em 03/09/2026, a 48 meses e semente padrão:** a `agenda` aprova **26 de 43 (60%)** e a
+`base` **34 de 41 (83%)**. Um Congresso que aprova de 60% a 83% do que o governo protocola não
+está estrangulado — isso é "legislar custa, e o preço se paga", que é o efeito pretendido.
+
+⚠ **ESTE ITEM JÁ MUDOU DE NÚMERO QUATRO VEZES**, e a quarta é a lição: ele ficou parado em
+**29 de 43** enquanto a série que calibra, no mesmo arquivo, já dizia **26**. A série é a fonte —
+ela se remede a cada mudança de motor, e o achado não. **Antes de citar a taxa, leia-a na tabela
+de "A SÉRIE QUE CALIBRA", nunca aqui.**
 
 ⚠ **O QUE SOBREVIVE DO ITEM É OUTRA PERGUNTA, e ela não é sobre a taxa de aprovação:** é
 sobre o que morre **antes** do plenário. As 43 votações da `agenda` são o que CHEGOU lá; a
@@ -1400,7 +1595,14 @@ governo do estado). Não é defeito de hash; é amostra pequena. Sortear estrati
 
 ## ▶ A SÉRIE QUE CALIBRA — e ela é a ÚNICA que serve para calibrar
 
-⚠ **ESTA É A ÚNICA SÉRIE DO PROJETO, e é de propósito.** O arquivo guarda outras quatro,
+⚠ **ELA COBRE SEIS DAS NOVE SONDAS, e a ausência é declarada.** `simulate` tem nove políticas;
+ficam de fora `concentra`, `favoritos` e `legislador`, que nasceram depois e **escolhem** em vez
+de espalhar. Elas não entram aqui porque não medem a mesma coisa: as seis da tabela repartem
+verba e emenda por igual e servem de linha de base, e as três de fora existem para achar o que a
+repartição igual esconde (achado 52). **Rodá-las é trabalho à parte, e a tabela abaixo não o
+substitui.**
+
+⚠ **ESTA É A ÚNICA SÉRIE DE BASE DO PROJETO, e é de propósito.** O arquivo guarda outras quatro,
 e as quatro são HISTÓRICAS: cada uma mediu o efeito de uma mudança no dia em que ela
 entrou, e cada uma foi superada pela seguinte. **Calibrar contra qualquer uma delas seria
 ajustar o parafuso contra um jogo que não existe mais** — por isso elas ficaram em
@@ -1465,22 +1667,28 @@ lugares**, com as oito áreas um nível abaixo em Ministérios. Vidro em três n
 (`stage` · `action` · `support`) e substrato de aurora em CSS puro. O rail duplo e a
 Mesa morreram na sétima sessão.
 
-**Doze telas**: o Gabinete, Congresso & Leis, Finanças, as oito áreas e O Estado.
-A Rua e Bastidor saíram do rail no D7, e voltam com dono: a primeira depende da
-imprensa e das pessoas agindo sozinhas, a segunda da coalizão.
+**Treze endereços no rail**: Gabinete, Email, Congresso & Leis, Finanças, as oito
+áreas e O Estado. O fecho ocupa o endereço do Gabinete quando o mandato acaba. A Rua
+e Bastidor saíram do rail no D7, e voltam com dono: a primeira depende da imprensa e
+das pessoas agindo sozinhas, a segunda da coalizão.
 
-O **Gabinete** é duas colunas, com a Trindade do risco atravessando as duas por
-cima: a Caixa de Entrada à esquerda (5fr) e **cinco** blocos empilhados à direita
-(4fr) — Risco de queda, a Câmara neste mês, Quem pode derrubar, Dinheiro do mês e
-Aprovação por renda. ⚠ **Eles são a MESMA peça do anexo da carta** desde o ciclo 15
+⭐ **O Gabinete é a MESA desde 04/09/2026** — quatro zonas com lugar fixo, e nenhuma
+reflui: a promessa da posse atravessa em cima, o que se **assina** ocupa o centro em
+dois terços, a margem com **seis** leituras fica num terço à direita, e o prazo
+atravessa no pé. ⚠ **Ela decide**, e a regra do C4 que proibia controle nela morreu
+com as duas razões dela. Hoje mora uma caneta: o contingenciamento, com as oito
+pastas. ⚠ **Os blocos são a MESMA peça do anexo da carta** desde o ciclo 15
 (`src/ui/shared/annex.mjs`), e a guarda `annexes` fecha o vocabulário das duas telas.
 
-Regras que valem para toda tela nova: **uma lâmina por tela** (os cartões do
-Gabinete são a exceção declarada), a tela **pergunta** ao motor em vez de refazer a
-conta, número que vai para atributo passa por `attr`, toda view traz o próprio
-elemento de fora, e **ausência não é resultado** — com o corolário que a oitava
-sessão acrescentou: **ausência declarada não é ausência disfarçada**, e são dois
-estados vazios diferentes.
+**O Email é a Caixa de Entrada** ocupando a tela inteira, e ela é a única superfície
+por onde o mundo escreve para o presidente.
+
+Regras que valem para toda tela nova: **uma lâmina por tela** (os blocos da mesa são a
+exceção declarada), a tela **pergunta** ao motor em vez de refazer a conta, número que
+vai para atributo passa por `attr`, toda view traz o próprio elemento de fora, e
+**ausência não é resultado** — com o corolário que a oitava sessão acrescentou:
+**ausência declarada não é ausência disfarçada**, e são dois estados vazios
+diferentes.
 
 ### Os dados (`src/data/`)
 
@@ -1552,27 +1760,27 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### A verificação
 
-**Treze guardas** com **63 provas sintéticas** e **314 provas**, e o **passeio**
+**Treze guardas** com **63 provas sintéticas** e **315 provas**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.
 
 ## O que ainda não existe
 
-- **TEMPORAL, CASCATA, DELTA** — só os contratos;
+- **TEMPORAL e CASCATA** — só os contratos, e os dois são `export {}` e mais nada;
 - **tensão institucional** — decidido que será variável de estado e não motor
   novo: `risco = f(tensão − escudo)`;
 - **contraste de texto que NÃO é folha** — o medidor existe e está no portão, mas só
   alcança elemento sem filho elemento: num `<p>` com `<b>` dentro, o texto próprio do
   pai não é medido por ninguém. Ver `standards.md` §7;
-- **`d3-force`** — entra quando DELTA existir, em Worker;
+- **um layout de força para o DELTA** — o grafo existe e é lido do catálogo desde 30/08; o que não existe é a peça que o desenha espalhado;
 - **GitHub Pages** — decidido ficar só com o CI por enquanto.
 
 ## Decisões fechadas que não se reabrem sem pedido
 
 Fase 1 só o Brasil · turno mensal (48 por mandato) · inglês no código e português
-na prosa · seis camadas de estilo · codinomes de motor · zero build e zero
-dependência de runtime (exceção: `d3-force` vendorizado) · lealdade é estado
+na prosa · onze folhas de estilo em cascata declarada · codinomes de motor · zero build e zero
+dependência de runtime, e hoje sem exceção nenhuma · lealdade é estado
 serializado · motor nenhum chama outro motor · o Congresso responde ao que foi
 PAGO · o rateio da falta é proporcional · a âncora do arcabouço é o TETO que
 vigorou · a tela pergunta ao motor e não refaz a conta · a previsão usa o que

@@ -430,20 +430,33 @@ try {
   await checkEllipsized("gabinete");
   await checkClamped("gabinete");
   await checkContrast("gabinete");
-  await checkNoOverlap("gabinete", ".cards__side .annex");
+  await checkNoOverlap("gabinete", ".desk > div");
   await checkNoPageScroll("gabinete");
 
-  /* 1 — O GABINETE E A TELA INICIAL, e ele nao decide nada. */
-  /* ⚠ SEIS BLOCOS, E ELES SAO `.annex` DESDE O CICLO 15: a coluna deixou de ser quatro cartoes
-     com gramatica propria e passou a falar a lingua da caixa. O sexto e o calendario, do C7 —
-     e o numero e conferido aqui porque bloco que some nao falha em lugar nenhum. */
+  /* 1 — O GABINETE E A MESA, e ele DECIDE.
+     ⚠ AS DUAS ASSERCOES DAQUI FORAM REESCRITAS, e as duas mediam o desenho anterior: a coluna
+     de SEIS blocos deixou de existir, e a regra que proibia controle na tela inicial morreu
+     com as duas razoes dela — a barra superior carrega os vitais em toda tela, e a separacao
+     Gabinete x Email deixou 45% do tabuleiro vazio.
+     ⚠ AS QUATRO ZONAS TEM LUGAR FIXO, e o numero e conferido aqui porque zona que some nao
+     falha em lugar nenhum. */
+  for (const zone of [".desk__band", ".desk__sign", ".desk__margin", ".desk__when"]) {
+    expect((await page.locator(zone).count()) === 1, `[gabinete] a zona ${zone} nao veio`);
+  }
+
+  /* ⚠ A MARGEM TEM SEIS LINHAS, e o filtro que as escolheu e uma pergunta so: este numero muda
+     o que ele esta prestes a assinar? Vinte viraram seis, e o numero e cobrado aqui. */
   expect(
-    (await page.locator(".cards__side .annex").count()) === 6,
-    "[gabinete] os seis blocos da coluna nao vieram",
+    (await page.locator(".desk__margin .annex__line").count()) === 6,
+    "[gabinete] a margem nao trouxe as seis linhas",
   );
+
+  /* ⚠ E A TELA INICIAL AGORA OFERECE UMA CANETA: as oito pastas do contingenciamento. Ela
+     deixou as oito telas de area, e duas portas para o mesmo gesto e o defeito recorrente
+     numero um deste projeto. */
   expect(
-    (await page.locator("#main input, #main select").count()) === 0,
-    "[gabinete] a tela inicial ofereceu um controle",
+    (await page.locator(".desk__sign [data-protect]").count()) === 8,
+    "[gabinete] a pasta do decreto nao trouxe as oito areas",
   );
   expect((await page.locator(".vit").count()) === 4, "[barra] os quatro sinais vitais nao vieram");
   await checkTopbar("barra");
@@ -676,7 +689,7 @@ try {
   /** @param {string} where */
   async function checkColumnFits(where) {
     const over = await page.evaluate(() => {
-      const side = document.querySelector(".cards__side");
+      const side = document.querySelector(".desk");
       if (!side) return null;
       return side.scrollHeight - side.clientHeight;
     });
@@ -687,7 +700,7 @@ try {
   }
 
   /* ⚠ E ELA MEDE O GABINETE, entao o passeio VOLTA para la: depois da separacao a etapa
-     acima acaba no email, e `.cards__side` nao existe nele — a medicao vinha `null` e a
+     acima acaba no email, e `.desk` nao existe nele — a medicao vinha `null` e a
      acusacao dizia "nullpx alem do limite" 24 vezes seguidas. */
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(400);
@@ -805,7 +818,7 @@ try {
      causa era `painted` valer o mes CORRENTE a partir da segunda pintura do mes, e a barra
      de vitais escapava so porque ela nao repinta quando o estado nao muda. */
   const direcoes = () =>
-    page.$$eval(".cards__side .trend", nodes => nodes.map(node => node.dataset["direction"]));
+    page.$$eval(".desk .trend", nodes => nodes.map(node => node.dataset["direction"]));
   /* ⚠ E ELA ATRAVESSA AS DUAS TELAS desde a separacao: a tendencia mora no Gabinete e o
      clique mora no email. O defeito que ela pega e o de uma pintura mexer na outra, e agora
      sao tres pinturas entre as duas leituras em vez de uma. */
@@ -933,7 +946,7 @@ try {
      sessao e nao entra no save. ⚠ E ELA SUBIU PARA CA na separacao: la embaixo media DEPOIS
      de o passeio ja ter trocado de tela duas vezes, e provava o proprio clique. */
   expect(
-    (await page.locator(".cards__side .annex").count()) === 6,
+    (await page.locator(".desk__margin .annex__line").count()) === 6,
     "[save] a tela retomada nao renderizou",
   );
 

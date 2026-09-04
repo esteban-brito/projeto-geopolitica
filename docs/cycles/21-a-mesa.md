@@ -1,7 +1,10 @@
 # CICLO 21 — A MESA
 
-> **Estado:** ▶ plano, com o arranjo e as canetas **já escolhidos por ele** em 03/09/2026.
-> Pronto para executar — nenhuma decisão pendente.
+> ✔ **OS PASSOS 1 A 4 FECHARAM em 04/09/2026.** Sobra o passo 5 — a MP —, e ele é o item 6 do
+> [ciclo 18](18-a-caneta.md), com sessão própria.
+>
+> **Estado:** ✔ executado, exceto o passo 5. O arranjo e as canetas foram **escolhidos por ele**
+> em 03/09/2026.
 >
 > Pedido: _"A aba gabinete tem que ser totalmente reformulada, ela tem que parecer uma mesa
 > real, sabe? como um gabinete."_
@@ -120,13 +123,13 @@ por mês.
 
 ## 6 · A ORDEM DE EXECUÇÃO
 
-| passo | o quê                                                              | custo   |
-| ----- | ------------------------------------------------------------------ | ------- |
-| **1** | o arranjo: três zonas com lugar fixo, no lugar da grade que reflui | médio   |
-| **2** | a margem: as seis linhas, e as vinte de hoje saem                  | pequeno |
-| **3** | a faixa da promessa — liga `breachOf`, que já existe               | pequeno |
-| **4** | o contingenciamento muda de tela e vira a primeira linha da pasta  | mínimo  |
-| **5** | a MP entra na pasta — **sessão própria**, é o item 6 do ciclo 18   | grande  |
+| passo | o quê                                                              | custo   | estado   |
+| ----- | ------------------------------------------------------------------ | ------- | -------- |
+| **1** | o arranjo: três zonas com lugar fixo, no lugar da grade que reflui | médio   | ✔ 04/09  |
+| **2** | a margem: as seis linhas, e as vinte de hoje saem                  | pequeno | ✔ 04/09  |
+| **3** | a faixa da promessa — liga `breachOf`, que já existe               | pequeno | ✔ 04/09  |
+| **4** | o contingenciamento muda de tela e vira a primeira linha da pasta  | mínimo  | ✔ 04/09  |
+| **5** | a MP entra na pasta — **sessão própria**, é o item 6 do ciclo 18   | grande  | ▶ aberto |
 
 ⚠ **O passo 5 não divide sessão com os outros quatro.**
 
@@ -152,3 +155,56 @@ as duas coisas custam, e a decisão vem antes da primeira linha.
 
 **O resto continua valendo:** `validate` verde, a captura aberta, e a coluna do Gabinete **não
 rola** — `checkColumnFits` cobra isso em 24 meses.
+
+---
+
+## 8 · ✔ O QUE ENTROU, em 04/09/2026
+
+**Quatro zonas com lugar fixo, e nenhuma reflui:** a promessa atravessa em cima, o que se assina
+ocupa o centro em dois terços, a margem fica num terço à direita, e o prazo atravessa no pé.
+
+| o que mudou                  | antes                         | agora                          |
+| ---------------------------- | ----------------------------- | ------------------------------ |
+| a grade                      | 6 blocos iguais, refluindo    | 4 zonas, `grid-template-areas` |
+| leituras na tela             | **20**                        | **6**                          |
+| controles                    | **0**                         | as 8 pastas do decreto         |
+| `breachOf` lido por uma tela | ⛔ nenhuma                    | a faixa de cima                |
+| o contingenciamento          | 8 botões, um por tela de área | 1 decreto, 8 pastas            |
+
+⭐ **E a série NÃO mudou** — `agenda` fecha em 26 de 43 e dívida 90,0%, igual a antes. Era o
+resultado desenhado: o passo inteiro é de tela, e nenhum motor mudou de comportamento.
+
+### ⚠ O que a CAPTURA reprovou, e o portão não via
+
+**Duas vezes, e as duas eram de hierarquia — nenhuma falhava em guarda, tipo ou prova:**
+
+1. **600px pretos no centro.** As linhas da mesa esticavam (`minmax(0, 1fr)`), e a pasta de uma
+   caneta só abria um buraco embaixo dela — **o mesmo vazio que esta tela existe para fechar,
+   mudado de lugar**. A mesa passou a medir o conteúdo: ela é um objeto com altura própria, e o
+   vazio fica fora dela;
+2. **a peça principal era a única sem superfície.** O contingenciamento flutuava no fundo preto
+   enquanto a margem e o prazo tinham lâmina — peso visual invertido, com o que decide lendo
+   como legenda. A pasta ganhou a mesma substância, e o que separa passou a ser o tamanho.
+
+⚠ **E o passeio pegou um terceiro, esse sim mecânico:** com o nome e o qualificador na mesma
+linha, `Preso por lei` + `da receita de` pedia **227px num campo de 149** e saía com reticência.
+Na margem o qualificador desceu para a própria linha.
+
+### As três asserções do passeio, reescritas
+
+⚠ **O plano previa duas e eram três**, e a terceira só apareceu na execução:
+
+| asserção                          | por que caiu                                           |
+| --------------------------------- | ------------------------------------------------------ |
+| `.cards__side .annex === 6`       | a coluna de seis blocos deixou de existir              |
+| `#main input, #main select === 0` | a regra do C4 morreu, e a mesa oferece as oito pastas  |
+| a mesma contagem, no **save**     | a retomada media a coluna, e ela media o desenho velho |
+
+**No lugar delas:** as quatro zonas existem, a margem tem **seis** linhas, e a pasta oferece as
+**oito** pastas. ⭐ E `checkColumnFits` continua rodando 24 meses — agora sobre `.desk`.
+
+### ⚠ E o nome `mesa` nunca esteve ocupado
+
+O plano avisava que `src/ui/screens/mesa.mjs` colidia. **Não colide:** o Gabinete sempre morou em
+`cabinet.mjs` + `45-screen-cabinet.css`, e o arranjo novo foi escrito lá dentro. `mesa.mjs`
+continua sendo a tela do Congresso, e não se tocou nela.

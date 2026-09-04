@@ -72,6 +72,93 @@ viraram **30** — e a correção venceu a si mesma no instante em que entrou.
 pode morar em prosa. Ele saiu, e no lugar ficou `git log --oneline main..caixa-de-entrada`, que
 não envelhece. **A pergunta que acha os irmãos dele é: escrever isto muda isto?**
 
+### 5 · A varredura completa — 21 afirmações caíram, e três eram de fundo
+
+Ele pediu o que a seção 2 tinha feito por amostra: _"leia todos os ciclos, docs, planos, etc
+etc, e compare eles, quero saber se tem alguns desacordos, erros, etc"_. **Vinte e um
+achados**, e a diferença entre eles importa mais que o total.
+
+**Catorze eram número velho** — a família de sempre, e a lista está no `handoff.md`. Dois deles
+mereciam nota:
+
+- **o handoff se contradizia consigo mesmo em 300 linhas.** O achado 22 dizia `agenda` **29 de
+  43**; a série que calibra, no mesmo arquivo, dizia **26 de 43**. Pior: a própria seção da série
+  cita o achado 22 como exemplo de conclusão tirada de número velho — e não o corrigiu;
+- **a exceção de dependência era fantasma.** A seção "decisões fechadas" — a parte mais
+  autoritativa do arquivo — dizia _"zero dependência de runtime (exceção: `d3-force`
+  vendorizado)"_. `vendor/` tem quatro fontes e uma licença. Sete linhas acima, a seção "o que
+  ainda não existe" dizia que o `d3-force` entraria **quando o DELTA existisse** — e o DELTA
+  existe desde 30/08. **Duas afirmações contraditórias sobre a mesma coisa, a sete linhas de
+  distância, e as duas erradas.**
+
+⭐ **As três de fundo não se acham medindo número — só lendo o código contra a tese:**
+
+1. **O ciclo 18 abre dizendo _"o jogo tem SEIS gestos"_, e o censo dá nove.** Faltavam três, e as
+   três eram jogada: mover verba, oferecer emenda e responder carta. **A emenda ficou de fora do
+   censo do plano que diz, dois parágrafos abaixo, que ela é a única moeda do jogo.** A tabela foi
+   refeita com a linha do `app.mjs` ao lado de cada gesto — e a tese fica **mais forte**, não mais
+   fraca: com o censo certo, o que se diz é que nenhuma das seis jogadas **cria** um instrumento;
+2. **O ciclo 19 propõe a IA dentro do turno, e o ADR 0001 proibia isso por escrito.** `demandsOf`
+   roda em `turn.mjs:1863`. Aqui a decisão foi dele e veio no meio da sessão — _"não quero que
+   você leve os limites e travas em conta, pq tem coisa que eu propus, e eu que mando"_ —, então o
+   **ADR foi emendado**, com data, e o ciclo ficou como estava;
+3. **a série que calibra cobria seis das nove sondas e se dizia única.** As três de fora
+   (`concentra`, `favoritos`, `legislador`) são justamente as que **escolhem** em vez de espalhar,
+   e foi uma delas que produziu o achado 52. A ausência passou a ser declarada.
+
+### A lição de método, e ela virou regra em `CLAUDE.md`
+
+Ele deu o critério de desempate no meio da sessão: _"quanto mais recente mais correto"_. **Ele
+resolve sozinho os catorze primeiros achados** — a série de 03/09 contra o achado de 24/08, o
+ciclo 13 de 03/09 contra o ciclo 17 de 31/08, o passo marcado ✔ FEITO contra o cabeçalho do mesmo
+arquivo que dizia que ele faltava.
+
+⛔ **E o segundo critério é mais forte que o primeiro:** limite escrito por mim não trava pedido
+dele. O ADR 0001 não foi invocado contra o ciclo 19 — ele foi emendado. **Documento antigo se
+corrige; ele não se usa como argumento.**
+
+### 6 · A sessão derivou para o papel, e ele a trouxe de volta
+
+**Quatro documentos escritos e zero linha de jogo mudada** — a pesquisa 07, o ciclo 22, o ciclo 23
+e a reescrita do 19. Cada um saiu de uma pergunta dele, e nenhum era desnecessário. Mas quando
+propus começar pelo tempo, ele perguntou: _"vc nao ia começar pelo gabinete ou algo do tipo"_.
+
+⛔ **É o mesmo defeito que ele já nomeou uma vez em quatro palavras — _"mudou bosta nenhuma"_.**
+Planejar é barato e parece progresso; o jogo não muda. **A sessão virou para o ciclo 21 e os
+passos 1 a 4 entraram.**
+
+### 7 · O buraco não fechou, ele mudou de lugar — e só a imagem viu
+
+**O portão ficou verde com a mesa errada.** 13 guardas, 315 provas, passeio verde — e a captura
+mostrou **600px pretos no centro da tela**.
+
+📐 A causa: as linhas da mesa esticavam (`grid-template-rows: auto minmax(0, 1fr) auto`), e a
+pasta com **uma** caneta não preenchia a celha. Antes eram seis blocos ocupando a coluna; agora é
+um instrumento numa zona de 600px.
+
+⭐ **E a lição não é o CSS — é o que o defeito era:** a tela existe para fechar 45% de tabuleiro
+preto, e a primeira versão dela **reproduziu exatamente o mesmo vazio, deslocado**. O conserto foi
+conceitual: a mesa é um **objeto com altura própria**, e o vazio fica fora dela, não dentro.
+
+**E a segunda reprovação da mesma captura foi de hierarquia:** o contingenciamento — a peça
+principal, a única coisa que se assina — era **a única sem superfície**. A margem e o prazo
+tinham lâmina; o que decide flutuava no preto e lia como legenda.
+
+> ⚠ **Nenhuma das duas falha em guarda, tipo ou prova, e as duas são a tela mentindo sobre o que
+> importa.** É a quarta vez que a captura pega o que o portão inteiro aprovou.
+
+### 8 · O plano previa duas asserções do passeio e eram três
+
+O ciclo 21 avisava, em maiúsculas e duas vezes, que o passo 1 tinha de reescrever **duas**
+asserções: os seis blocos da coluna e os zero controles no Gabinete. **A terceira era a mesma
+contagem dentro da prova do SAVE** — a retomada media `.cards__side .annex === 6` para provar que
+a tela renderizou.
+
+⭐ **E o outro aviso do plano estava errado:** ele dizia que o nome `mesa` já estava ocupado e que
+a decisão vinha antes da primeira linha. Não colide — o Gabinete sempre morou em `cabinet.mjs`, e
+`mesa.mjs` é o Congresso. **Uma verificação de trinta segundos apagou um item que o plano tratava
+como bloqueador.**
+
 ## A SESSÃO DA BARRA E DO ORÇAMENTO — 03/09/2026
 
 Ela começou com um achado de comentário e terminou dentro do motor fiscal. **Quatro blocos, e

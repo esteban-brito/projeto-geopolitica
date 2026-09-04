@@ -17,7 +17,7 @@ import { OPENING_MONTH, createState } from "./src/state/state.mjs";
 import { deserialize, serialize } from "./src/state/save.mjs";
 import {
   alertsOf,
-  baseVenality,
+  betrayalOf,
   CATALOG,
   NEUTRAL,
   pollFrom,
@@ -29,7 +29,7 @@ import {
   boilerOf,
   chainOf,
   pledgesOf,
-  lockedBy,
+  platformOf,
   forecast,
   passageOf,
   governmentOf,
@@ -51,7 +51,6 @@ import { closingHtml } from "./src/ui/screens/closing.mjs";
 import {
   areaHtml,
   chainHtml,
-  decreeHtml,
   estadoHtml,
   lawReadHtml,
   outlookHtml,
@@ -481,9 +480,16 @@ function cabinetInput(current) {
     base: current.base,
     seats: SEATS,
     majority: SIMPLE_MAJORITY,
-    /* ⚠ A BASE REPARTIDA POR PRECO, e quem reparte e o motor: a tela mostrava "436 apoiam"
-       sem dizer quantos sao conviccao e quantos sao aluguel. */
-    venality: baseVenality({ parties: CATALOG.parties, loyalty: state.loyalty }),
+    /* ⚠ A PLATAFORMA JULGADA, e ela e o CRITERIO do jogo: `breachOf` rodava todo turno e
+       nenhuma tela o lia. O preco vem composto de `betrayalOf` porque a tela nao multiplica
+       fracao por parametro — quem compoe e a camada de aplicacao. */
+    platform: platformOf(state, CATALOG),
+    betrayal: betrayalOf(state, CATALOG),
+    /* AS OITO PASTAS E O DECRETO DO MES: o contingenciamento deixou as telas de area e virou
+       a primeira caneta da mesa. */
+    areas: CATALOG.areas,
+    protect: orders.protect ?? [],
+    ratio: share.ratio,
     /* ⚠ A PRIMEIRA DATA DO JOGO, e ela e funcao pura do mes — sem relogio, com prova. */
     calendar: calendarOf(state.month),
     /* A BASE REPARTIDA PELO ESTADO DE QUEM A ENTREGA, e quem reparte e o motor:
@@ -581,14 +587,11 @@ function cabinetInput(current) {
       ],
     }),
     room: share.room,
-    committed: share.demand,
     mandatory: budget.mandatory,
     revenue: budget.revenue,
-    /* QUEM TRAVA O ORCAMENTO, perguntado ao motor de normas: a tela nao redescobre
-       qual lei venceu a disputa de precedencia — ela pergunta a quem julgou. */
-    locked: lockedBy(state, CATALOG),
-    segments: CATALOG.segments,
-    street: pollBySegment(),
+    /* A RUA COMO UM NUMERO SO, e nao repartida: enquanto se assina, a repartição por renda e
+       analise, e analise mora em A Rua. */
+    standing: pollFrom(state.mood, CATALOG.segments, CATALOG.opinion),
     /* A CALDEIRA, perguntada ao motor: a tela nao remonta pressao nem redecide
        ruptura. */
     boiler: boilerOf(state, CATALOG),
@@ -599,33 +602,10 @@ function cabinetInput(current) {
     before: framed
       ? {
           pressure: framed.pressure,
-          street: pollBySegment(framed.mood),
-          /* ⚠ O GASTO PRESO DO MES PASSADO, e ele e a metade que faltava do C11: um governo
-             que nao corta previdencia via a MESMA linha por 48 meses, e ela virava legenda. */
-          locked: lockedBy(framed, CATALOG),
+          standing: pollFrom(framed.mood, CATALOG.segments, CATALOG.opinion),
         }
       : null,
   };
-}
-
-/**
- * A pesquisa de cada segmento, que e o que o termometro da rua desenha.
- *
- * @param {Record<string, number>} [mood] a satisfacao a ler; a do estado corrente por padrao
- */
-function pollBySegment(mood = state.mood) {
-  /** @type {Record<string, import("./src/public/index.mjs").Approval>} */
-  const byId = {};
-  for (const segment of CATALOG.segments) {
-    /* UM SEGMENTO DE CADA VEZ, com a fatia dele valendo o pais inteiro: e assim
-       que `pollFrom` devolve a leitura daquele grupo isolado, sem a media. */
-    byId[segment.id] = pollFrom(
-      { [segment.id]: mood[segment.id] ?? segment.initial },
-      [{ ...segment, share: 1 }],
-      CATALOG.opinion,
-    );
-  }
-  return byId;
 }
 
 /**
@@ -679,7 +659,6 @@ function areaInput(area) {
     /* ⚠ A RAZAO DO CORTE VEM DO RATEIO DO TURNO, e nao de `room / demand` refeito aqui: o
        decreto muda a conta — o que esta protegido sai dos DOIS lados dela —, e uma divisao
        feita na tela anunciaria um corte que o mes nao vai executar. */
-    protectedNow: orders.protect.includes(area.id),
     ratio: share.ratio,
     areas: CATALOG.areas,
   };
@@ -1103,12 +1082,6 @@ function refresh() {
 
   const pool = document.getElementById("areaPool");
   if (pool) pool.innerHTML = poolHtml(input);
-
-  /* ⚠ O DECRETO ACOMPANHA O ARRASTO, e nao so o clique: a nota dele diz que fracao do pedido
-     o mes honra, e essa fracao muda a cada ponto que o controle anda. Parada, ela anunciaria
-     um corte de um pedido que o jogador acabou de trocar. */
-  const decree = document.getElementById("areaDecree");
-  if (decree) decree.innerHTML = decreeHtml(input);
 
   const outlook = document.getElementById("areaOutlook");
   if (outlook) outlook.innerHTML = outlookHtml(input);

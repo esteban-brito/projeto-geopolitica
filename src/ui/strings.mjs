@@ -82,6 +82,10 @@ const TERMOS = {
   delivers: "entrega",
   /* ⚠ CANETA E UM RITO SO. */
   pen: "caneta",
+  /* ⚠ A MESA E O FECHO JULGAM A MESMA PROMESSA, e por isso o veredito e uma palavra so: duas
+     copias diriam "quebrada" no mes 6 e "nao cumprida" no mes 48 sobre o mesmo compromisso. */
+  kept: "cumprida",
+  broken: "não cumprida",
 };
 
 /**
@@ -149,7 +153,6 @@ export const UI = {
        retirada era que o numero grande nomeava o bloco sozinho; sem numero grande, uma lista
        que abre em "O mercado" nao diz de que assunto ela e. A da Rua nao se redigita — ela e
        a mesma palavra do rail, e teclar de novo e como um vocabulario comeca a divergir. */
-    blockCongress: "A Câmara",
     /* ⚠ O CALENDARIO E O QUE DA PULSO AO JOGO: sem ele os 48 meses tem a mesma forma, e
        avancar parece apertar um botao em vez de governar. */
     blockCalendar: "O que este mês cobra",
@@ -157,35 +160,12 @@ export const UI = {
     calendarNow: "vence agora",
     calendarIn: (/** @type {number} */ months) =>
       `em ${months} ${months === 1 ? TERMOS.month : TERMOS.months}`,
-    blockVault: "Dinheiro do mês",
-    blockBoiler: "Quem pode derrubar",
-    blockStreet: "Aprovação por renda",
     baseLine: "Apoiam o governo",
     congressAction: "negociar",
     vaultFree: TERMOS.roomLine,
     /* ⚠ A FRASE DA A BASE DO PERCENTUAL, e sem ela "95%" nao diz 95% de que. */
     vaultOfRevenue: "da receita de",
     vaultLocked: "Preso por lei",
-    /* O defeito é real mesmo fora do teste: duas leituras vizinhas passariam a abrir com a
-       mesma palavra. */
-    vaultTaken: "Já comprometido",
-    /* ⚠ ELE DIZ O EXCESSO, e nao repete o total. */
-    vaultOver: "Passa do que cabe",
-    /* A LEGENDA DO ARCO. */
-    /* ⚠ A RESPOSTA A PERGUNTA QUE O JOGADOR FAZ PRIMEIRO. */
-    /* ── A CALDEIRA ──────────────────────────────────────────────────────────── ⚠ ELA MEDE
-       QUEM CONSEGUE TE DERRUBAR, e a Rua logo abaixo mede quem te aprova. */
-    /* Ele esta certo, e o defeito tem nome — a metafora estava fazendo o trabalho que o
-       SUBTITULO de cada linha ja faz: cada grupo diz o que quer, logo abaixo do nome. */
-    /* AS TRÊS RUPTURAS, e o processo só abre com as três juntas — presidentes não caem por um
-       fator só. */
-    ruptureSocial: TERMOS.social,
-    ruptureEconomic: TERMOS.economic,
-    rupturePolitical: TERMOS.political,
-    rompeu: "rompeu:",
-    /* Os três nomes são os mesmos de `ruptureSocial` e irmãs, e não uma segunda tradução:
-       dois nomes para a mesma ruptura é como um vocabulário começa a divergir. */
-    trinityTitle: "Risco de queda",
     /* OS TRES NOMES DIZEM QUEM ABANDONA, e nao uma imagem. */
     trinity: {
       social: TERMOS.social,
@@ -196,32 +176,35 @@ export const UI = {
        duas quando SOBEM. */
     trinityBelow: "abaixo de",
     trinityAbove: "acima de",
-    /* O rótulo do medidor, para leitor de tela. */
-    boilerMeter: "de 100 de pressão",
-    /* A MESMA FORMA DA CAMARA: uma frase curta explica o risco de latao na barra, e o numero
-       dentro dela usa a cor da marca. */
-    /* ⚠ O VERBO ERA "rompem acima de" E COLIDIA COM A FAIXA DO TOPO, que diz "rompe acima de"
-       sobre o MESMO grupo com outro numero — mesma palavra, mesmo verbo, 86 e 68 a um palmo
-       numa tela que nao rola. O que este limiar significa esta escrito no motor: em `boil` o
-       grupo ABANDONA o governo; quem "rompe" e a ruptura, e ela tem limiar proprio e maior. */
-    boilerBreaks: "abandonam acima de",
     /* ⚠ A FORMA CURTA E PARA O QUALIFICADOR, e ela nasceu de uma medicao: com a frase inteira
        ao lado do peso o nome pedia 313px num campo de 271, e quatro linhas cortavam. */
     boilerBreaksShort: "sai em",
-    /* A ponte entre a frase e a segunda marca da barra do fiador. */
-    boilerAt: TERMOS.at,
-    /* ⚠ E O PESO ZERO PRECISA DE FRASE PROPRIA, e não de "0%". */
-    /* ⚠ O QUARTO CANAL MORTO DO PLANO: a fatia de cada grupo na ruptura economica era
-       calculada, formatada e entregue SO ao leitor de tela. Um dos quatro pesa zero, e quem
-       enxerga gastava capital acalmando um grupo que nao conta para a conta que ele tenta
-       nao perder. O rotulo passou a diz-lo, e o `aria-label` continua dizendo tambem. */
-    boilerNoWeight: TERMOS.noWeight,
     /* ⚠ E O CARIMBO DO CERCO. */
     siege: "PROCESSO ABERTO",
     /* ⚠ O CARIMBO DO FIM. */
     fallen: TERMOS.removed,
-    fallenNote: TERMOS.removedNote,
-    siegeNote: "cada voto custa o triplo até o plenário decidir",
+    /* ── A MESA ──────────────────────────────────────────────────────────────── ⚠ A MARGEM
+       TINHA VINTE LINHAS e passou a ter seis. O que saiu nao morreu: a aposentadoria em reais
+       e Financas, os quatro grupos um a um e a rua repartida por renda sao A Rua. */
+    marginLegend: "A Casa Civil anotou",
+    ofNeeded: TERMOS.of,
+    approvalLine: TERMOS.approval,
+    processLine: "Processo de impeachment",
+    processNone: "nenhum",
+    /* ── A PROMESSA ──────────────────────────────────────────────────────────── ⚠ ELA E O
+       UNICO CRITERIO DO JOGO, e era invisivel durante o jogo: o jogador escolhia no mes 1 e
+       so reencontrava no fecho, no mes 48. */
+    pledgeLegend: "O que você prometeu",
+    pledgeNone: "Você assumiu sem dizer a que veio, e a rua não cobra o que não foi dito.",
+    pledgeKept: TERMOS.kept,
+    pledgeBroken: TERMOS.broken,
+    pledgeOpen: "em aberto",
+    pledgeCount: (/** @type {number} */ broken, /** @type {number} */ total) =>
+      `${broken} de ${total} quebradas`,
+    pledgeCost: "de humor por mês",
+    /* ── A PASTA ─────────────────────────────────────────────────────────────── */
+    signLegend: "Para assinar",
+    penDecree: "Contingenciamento",
   },
   /* A JANELA DA TENDENCIA — e ela e dita porque ela VARIA.
      ATRASO dela — a MALHA guarda `lag + 1` valores —, entao a Educacao consegue
@@ -571,8 +554,6 @@ export const UI = {
        motor não explica nada a quem está decidindo onde ele some. A nota diz o preço nos dois
        estados: protegida, quem paga são as outras áreas; solta, ela mostra quanto do pedido o
        mês paga. Um botão que só dissesse "proteger" seria um botão sem preço. */
-    decree: "Proteger do corte",
-    decreeOn: "Protegida do corte",
     decreeCost: "o corte cai mais fundo nas outras áreas",
     decreeHonours: "o mês paga",
     decreeAsked: "do que você pediu",
@@ -885,8 +866,8 @@ export const UI = {
        ⚠ ELE É O CRITÉRIO QUE O FECHO NUNCA TEVE: até aqui ele mostrava de-onde-para-onde, e
        de-onde-para-onde sem promessa não é julgamento — é extrato. */
     promised: "O que {v} prometeu",
-    kept: "cumprida",
-    broken: "não cumprida",
+    kept: TERMOS.kept,
+    broken: TERMOS.broken,
     /* Não prometer nada é uma escolha, e o preço dela aparece aqui: um mandato sem nada
        contra o que ser medido. */
     noPledges:

@@ -23,7 +23,6 @@ import {
   governmentOf,
   discretionaryRoom,
   ledger,
-  lockedBy,
   outlook,
   playMonth,
   settlement,
@@ -33,10 +32,11 @@ import {
 import { OPENING_MONTH, createState, monthLabel } from "../../src/state/state.mjs";
 import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
 import { enact } from "../../src/domain/norms/index.mjs";
+import { pollFrom } from "../../src/domain/opinion/index.mjs";
 import { closingHtml } from "../../src/ui/screens/closing.mjs";
 import { UI } from "../../src/ui/strings.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
-import { areaHtml, decreeHtml } from "../../src/ui/screens/area.mjs";
+import { areaHtml } from "../../src/ui/screens/area.mjs";
 import { financeHtml } from "../../src/ui/screens/finance.mjs";
 import { money, num, percent, signed } from "../../src/ui/shared/format.mjs";
 import { trendOf, windowLabel } from "../../src/ui/shared/trend.mjs";
@@ -325,12 +325,16 @@ function cabinetInputOf(state, extra = {}) {
     inbox: "",
     resolved: state.month > OPENING_MONTH,
     room: share.room,
-    committed: share.demand,
     mandatory: budget.mandatory,
     revenue: budget.revenue,
-    locked: lockedBy(state, CATALOG),
-    segments: CATALOG.segments,
-    street: {},
+    ratio: 1,
+    standing: pollFrom(state.mood, CATALOG.segments, CATALOG.opinion),
+    areas: CATALOG.areas,
+    protect: [],
+    /* A POSSE MUDA NA PROVA QUE PRECISA DELA, e o padrao e o presidente que nao prometeu:
+       um mandato sem plataforma e estado valido e e o que a maioria das provas quer medir. */
+    platform: [],
+    betrayal: 0,
     /* A CALDEIRA FRIA e as tres rupturas fechadas: este caso mede o VAZIO do Gabinete, e um
        governo em vespera de queda nao e vazio. */
     boiler: {
@@ -403,10 +407,17 @@ test("A REGUA DA CAMARA MEDE A BASE CONTRA A MAIORIA, e as duas na mesma escala"
       `a marca da maioria caiu em ${gauge?.[2]}% e a maioria e 257 de ${total}`,
     );
 
-    /* ⚠ E O NUMERO ESCRITO E O MESMO QUE A REGUA DESENHA. */
+    /* ⚠ E O NUMERO ESCRITO E O MESMO QUE A REGUA DESENHA. Na mesa o denominador deixou de ser
+       o plenario e passou a ser a MAIORIA: o que decide se a lei passa e 257, e nao 513. */
     assert.ok(
-      html.includes(`>${Math.round(base)}<small>${UI.inbox.of} ${total}</small>`),
-      `no mes ${month} a leitura escrita nao diz ${Math.round(base)} de ${total}`,
+      html.includes(`data-numeric>${Math.round(base)}`),
+      `no mes ${month} a leitura escrita nao diz ${Math.round(base)}`,
+    );
+    assert.ok(
+      html.includes(
+        `aria-label="${UI.cabinet.baseLine}: ${Math.round(base)} ${UI.cabinet.ofNeeded} 257"`,
+      ),
+      `no mes ${month} quem le por som nao recebeu a base contra a maioria`,
     );
 
     state = playMonth(state, {}).state;
@@ -510,36 +521,128 @@ test("A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO, e ela tem duas frases", () 
   );
 });
 
-test("O ESTOURO DO COFRE TEM COR, e so quando a LEITURA e maior que zero", () => {
-  /* O cartao dizia "cabe R$ 14,2 bi" e, uma linha abaixo, "ja consome R$ 14,5 bi" — no mesmo
-     cinza das outras leituras. */
+test("A PROMESSA QUEBRADA APARECE DURANTE O JOGO, e ela cobra um numero", () => {
+  /* ⚠ `breachOf` RODAVA TODO TURNO E NENHUMA TELA O LIA: o jogador escolhia tres compromissos
+     no mes 1 e so os reencontrava no mes 48. O unico criterio do jogo, invisivel durante o
+     jogo inteiro. */
   const state = createState();
 
-  /* ⚠ O MARCADOR MUDOU DE `data-over` PARA `data-tone="crisis"` quando a coluna virou uma
-     gramatica so: quem tinge agora e a LINHA, e nao um campo dentro de um paragrafo. */
-  const over = cabinetOf(state, { room: 10, committed: 10.3 });
-  assert.ok(over.includes('data-tone="crisis"'), "o estouro nao acendeu");
-  assert.ok(over.includes(UI.cabinet.vaultOver), "o estouro nao foi dito");
-  /* ⚠ ELA PERGUNTA AO TERMO, E NAO AO LITERAL, — e a mudanca veio de esta prova quebrar por
-     uma razao errada. */
-  assert.ok(!over.includes(UI.cabinet.vaultTaken), "o estouro repetiu o total em vez do excesso");
-
-  /* ⚠ E SO A LINHA DO ESTOURO ACENDE: a linha da obrigatoria vem ANTES dela e fica fora. */
-  const lit = over.slice(over.indexOf('data-tone="crisis"'));
-  assert.ok(!lit.includes(UI.cabinet.vaultLocked), "o vermelho do estouro engoliu o contexto");
-
-  const tight = cabinetOf(state, { room: 10, committed: 10.01 });
+  const mudo = cabinetOf(state);
+  assert.ok(mudo.includes(UI.cabinet.pledgeNone), "o presidente sem plataforma nao foi dito");
   assert.ok(
-    !tight.includes('data-tone="crisis"'),
-    "um excesso que imprime R$ 0,0 bi acendeu o vermelho mesmo assim",
+    !mudo.includes(UI.cabinet.pledgeCost),
+    "quem nao prometeu nada foi cobrado por promessa quebrada",
   );
 
-  const room = cabinetOf(state, { room: 10, committed: 4 });
-  assert.ok(!room.includes('data-tone="crisis"'));
-  assert.ok(
-    room.includes(UI.cabinet.vaultTaken),
-    "sem estouro, o cartao parou de dizer o que foi gasto",
-  );
+  const quebrou = cabinetOf(state, {
+    platform: [
+      { axis: "priority", id: "a", label: "Segurança", judged: "índice da área", kept: false },
+      { axis: "fiscal", id: "b", label: "O ano no azul", judged: "primário", kept: false },
+      { axis: "reform", id: "c", label: "Uma lei", judged: "normas", kept: true },
+    ],
+    betrayal: 8,
+  });
+
+  assert.ok(quebrou.includes(UI.cabinet.pledgeCount(2, 3)), "a conta das quebradas nao saiu");
+  assert.ok(quebrou.includes(UI.cabinet.pledgeCost), "o preco mensal nao foi dito");
+  /* ⚠ O SINAL E NEGATIVO PORQUE ELA TIRA: um `8,00` sem sinal leria como ganho. */
+  assert.ok(quebrou.includes("−8,00"), `o preco saiu sem sinal: ${quebrou.slice(0, 400)}`);
+  assert.ok(quebrou.includes('data-tone="crisis"'), "a promessa quebrada nao acendeu");
+
+  /* ⚠ E A CUMPRIDA NAO ACENDE: tingir as tres faria a cor deixar de separar. */
+  const cumpriu = cabinetOf(state, {
+    platform: [{ axis: "reform", id: "c", label: "Uma lei", judged: "normas", kept: true }],
+    betrayal: 0,
+  });
+  assert.ok(!cumpriu.includes('data-tone="crisis"'), "a promessa cumprida acendeu vermelho");
+  assert.ok(!cumpriu.includes(UI.cabinet.pledgeCost), "sem quebra, a mesa cobrou um preco");
+});
+
+test("A MARGEM MOSTRA O PIOR GRUPO, e o pior e o mais perto do PROPRIO limiar", () => {
+  /* ⚠ COMPARAR PRESSAO CRUA POE NA FRENTE O GRUPO ERRADO: quem esta em 40 de um limiar de 90
+     esta longe; quem esta em 38 de um limiar de 40 esta na porta. A margem tem UMA linha de
+     grupo, entao escolher errado e mostrar o grupo que nao vai romper. */
+  const state = createState();
+
+  const html = cabinetOf(state, {
+    boiler: {
+      lobbies: [
+        {
+          id: "alto",
+          label: "Longe",
+          wants: "",
+          share: 0.5,
+          pressure: 40,
+          boiling: false,
+          boil: 90,
+          fall: null,
+        },
+        {
+          id: "porta",
+          label: "Na porta",
+          wants: "",
+          share: 0.5,
+          pressure: 38,
+          boiling: false,
+          boil: 40,
+          fall: null,
+        },
+      ],
+      rupture: { social: false, economic: false, political: false, open: false },
+      ruptures: [],
+      impeachment: null,
+      fallen: null,
+    },
+  });
+
+  assert.ok(html.includes("Na porta"), "a margem escolheu o grupo errado");
+  assert.ok(!html.includes("Longe"), "a margem mostrou os dois grupos, e ela tem uma linha so");
+});
+
+test("A MARGEM DIZ SE HA PROCESSO, e o silencio tambem e uma leitura", () => {
+  const state = createState();
+
+  const calmo = cabinetOf(state);
+  assert.ok(calmo.includes(UI.cabinet.processNone), "a mesa calou sobre o processo");
+  assert.ok(!calmo.includes(UI.cabinet.siege), "a mesa abriu processo num governo tranquilo");
+
+  const cercado = cabinetOf(state, {
+    boiler: {
+      lobbies: [],
+      rupture: { social: true, economic: true, political: true, open: true },
+      ruptures: [],
+      impeachment: 12,
+      fallen: null,
+    },
+  });
+  assert.ok(cercado.includes(UI.cabinet.siege), "o cerco nao chegou a mesa");
+});
+
+test("O CONTINGENCIAMENTO MORA NA MESA, e ele oferece as oito pastas", () => {
+  /* ⚠ ELE MORAVA NAS OITO TELAS DE AREA, uma porta por tela — e o decreto e UM ato, rubrica a
+     rubrica. Duas portas para o mesmo gesto e o defeito recorrente numero um deste projeto. */
+  const state = createState();
+
+  const html = cabinetOf(state);
+  for (const area of CATALOG.areas) {
+    assert.ok(html.includes(`data-protect="${area.id}"`), `a pasta ${area.id} nao chegou a mesa`);
+  }
+
+  const poupada = cabinetOf(state, { protect: ["health"] });
+  assert.ok(poupada.includes(UI.area.decreeCost), "a area poupada nao disse quem paga");
+
+  const apertado = cabinetOf(state, { ratio: 0.6 });
+  assert.ok(apertado.includes(UI.area.decreeHonours), "o mes apertado nao disse quanto honra");
+  assert.ok(apertado.includes("60%"), "o mes apertado nao disse a fracao");
+
+  /* ⚠ O BOTAO TEM ESTADO, e o gesto e `data-protect` e nao `data-section`: os dois moram na
+     mesma tela agora, e um seletor emprestado faria proteger trocar de tela. */
+  assert.ok(html.includes('aria-pressed="false"'), "a pasta solta nao disse que esta solta");
+  assert.ok(poupada.includes('aria-pressed="true"'), "a pasta poupada nao disse que esta poupada");
+
+  /* SEM CORTE ELE NAO INVENTA UM. */
+  assert.ok(html.includes(UI.area.decreeWhole), "o mes inteiro nao foi dito");
+  assert.ok(!html.includes("100%"), "o mes sem corte imprimiu uma fracao de 100%");
 });
 
 /* ── O ZERO ARREDONDADO NAO CARREGA SINAL ────────────────────────────────────── ⚠ DEFEITO
@@ -1560,32 +1663,4 @@ test("A CARTA DO PLENARIO LE O PLACAR DO CARTAO DO MESMO MES", () => {
   /* AUSENTE E DECLARADO: sem votacao, e sem cartao, nao ha bloco. */
   assert.ok(!render([mes(9, null)]).includes(UI.inbox.blockPlenary), "mes sem votacao deu placar");
   assert.ok(!render([]).includes(UI.inbox.blockPlenary), "sem cartao a carta inventou um placar");
-});
-
-test("O DECRETO E UM BOTAO COM ESTADO, e a area diz se ela esta poupada", () => {
-  const area = CATALOG.areas[0];
-  assert.ok(area);
-
-  const solta = decreeHtml({ area, protectedNow: false, ratio: 0.4 });
-  const poupada = decreeHtml({ area, protectedNow: true, ratio: 0.4 });
-
-  /* ⚠ O GESTO E `data-protect`, e nao `data-section`: os dois moram na mesma tela, e um
-     seletor emprestado faria clicar em "proteger" trocar de tela. */
-  assert.ok(solta.includes(`data-protect="${area.id}"`));
-  assert.ok(solta.includes('aria-pressed="false"'));
-  assert.ok(poupada.includes('aria-pressed="true"'));
-
-  /* O PRECO TROCA DE LADO, e nenhum dos dois estados fica mudo. */
-  assert.ok(solta.includes("40%"));
-  assert.ok(poupada.includes(UI.area.decreeCost));
-  assert.ok(!poupada.includes("40%"));
-});
-
-test("SEM CORTE O DECRETO NAO INVENTA UM, e diz que o mes honra tudo", () => {
-  const area = CATALOG.areas[0];
-  assert.ok(area);
-
-  const html = decreeHtml({ area, protectedNow: false, ratio: 1 });
-  assert.ok(html.includes(UI.area.decreeWhole));
-  assert.ok(!html.includes("100%"));
 });

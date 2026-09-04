@@ -3,7 +3,7 @@
    jogador escolhia uma. */
 
 import { escapeHtml } from "../shared/html.mjs";
-import { attr, money, num, percent, seats, signed, sparkline } from "../shared/format.mjs";
+import { attr, money, num, seats, signed, sparkline } from "../shared/format.mjs";
 import { lineHtml } from "../shared/annex.mjs";
 import { headHtml } from "../shared/head.mjs";
 import { WINDOW, trendOf, windowLabel } from "../shared/trend.mjs";
@@ -375,9 +375,6 @@ export function areaHtml(input) {
     `<p class="allot__pool" id="areaPool">` +
     poolHtml(input) +
     `</p>` +
-    /* O DECRETO FICA COLADO NA BOLSA, e nao no fim do bloco: a bolsa e onde o corte aparece,
-       e a escolha de quem o absorve tem de estar onde ele e visto. */
-    `<div class="decree__slot" id="areaDecree">${decreeHtml(input)}</div>` +
     `<div class="dials" id="areaDials">${dials}</div>` +
     `</section>`;
 
@@ -425,36 +422,6 @@ export function poolHtml({ room, committed, spent }) {
     `${escapeHtml(UI.area.ofMonth)} <b data-numeric>${money(room)}</b> ` +
     `${escapeHtml(UI.area.available)} · <b data-numeric>${money(committed)}</b> ` +
     `${escapeHtml(UI.area.committed)}</span>`
-  );
-}
-
-/**
- * O DECRETO DE CONTINGENCIAMENTO — a escolha de QUEM o corte poupa.
- *
- * ⚠ ELE MOSTRA O PRECO NOS DOIS ESTADOS: protegida, a nota diz quem paga; solta, ela diz
- * quanto do pedido o mes honra. Um botao que so dissesse "proteger" seria a jogada sem preco.
- *
- * ⛔ E ELE NAO TRAVA NADA: proteger tudo e permitido e caro — o empenho passa da bolsa, e
- * quem paga e a meta primaria, que e o numero que o corte existe para defender.
- * @param {object} input
- * @param {{ id: string }} input.area
- * @param {boolean} [input.protectedNow] se o decreto deste mes ja poupa esta area
- * @param {number} [input.ratio] a fracao do pedido que o caixa honra; 1 e mes sem corte
- * @returns {string}
- */
-export function decreeHtml({ area, protectedNow = false, ratio = 1 }) {
-  const note = protectedNow
-    ? UI.area.decreeCost
-    : ratio < 1
-      ? `${UI.area.decreeHonours} ${percent(ratio)} ${UI.area.decreeAsked}`
-      : UI.area.decreeWhole;
-
-  return (
-    `<button class="decree" type="button" aria-pressed="${protectedNow}" ` +
-    `data-protect="${escapeHtml(area.id)}">` +
-    `<b class="decree__name">${escapeHtml(protectedNow ? UI.area.decreeOn : UI.area.decree)}</b>` +
-    `<span class="decree__note">${escapeHtml(note)}</span>` +
-    `</button>`
   );
 }
 

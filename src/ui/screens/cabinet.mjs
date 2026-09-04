@@ -1,21 +1,22 @@
-/* GABINETE — a tela inicial, e a unica que so resume.
-   ⚠ ELA FALA A LINGUA DA CAIXA DESDE O CICLO 15, e antes falava a propria: 18 classes de
-   estilo em quatro blocos e TRES instrumentos para a mesma pergunta — `gauge`, `meter` e
-   `poles` respondiam todos "onde este numero esta na regua dele?". Cada bloco tinha sido
-   desenhado sozinho, e cada um resolveu o mesmo problema de um jeito.
-   ⚠ AGORA SAO BLOCOS DENTRO DE BLOCOS, e a peca vem de `src/ui/shared/`: a coluna e a mesma
-   moldura da caixa, com a mesma linha dentro. O que muda entre as duas e a SUBSTANCIA, e ela
-   e do contexto — papel na carta, vidro na coluna. */
+/* GABINETE — a mesa de trabalho, e ela nao e mais um painel.
+   ⚠ ELA ERA SEIS BLOCOS DO MESMO TAMANHO numa grade que reflui, com vinte leituras e ZERO
+   controle, ocupando 55% do tabuleiro. O filtro que a cortou e um so: cada linha tem de mudar
+   uma decisao que o jogador esta prestes a tomar. Vinte viraram seis.
+   ⚠ E AS ZONAS TEM LUGAR FIXO, e nao refluem: o que se assina ocupa o centro, o que se
+   consulta fica na margem, a promessa em cima e o prazo no pe. Numa grade que reflui o
+   telefone muda de lado quando a janela encolhe.
+   ⚠ A LINGUA E A DA CAIXA, e a guarda `annexes` a fecha: nada de tabela, nada de regua
+   desenhada aqui dentro. Quem desenha regua e a peca; a tela pede. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, signed } from "../shared/format.mjs";
-import { chamberRows, lineHtml, linesHtml, rupturesRows } from "../shared/annex.mjs";
+import { lineHtml, linesHtml, noteHtml } from "../shared/annex.mjs";
 import { directionOf } from "../shared/trend.mjs";
 import { UI } from "../strings.mjs";
 
 /**
  * @typedef {import("../../domain/opinion/index.mjs").Approval} Approval
- * @typedef {import("../../data/opinion.mjs").Segment} Segment
+ * @typedef {import("../../application/platform.mjs").Verdict} Verdict
  */
 
 /**
@@ -33,42 +34,14 @@ function cardHtml({ body, span }) {
 }
 
 /**
- * A tela inteira.
+ * A CAIXA DE ENTRADA — ela ocupa a tela inteira, e e outra tela.
  *
  * @param {object} input
- * @param {number} input.base cadeiras que respondem ao governo
- * @param {number} input.seats o plenario inteiro
- * @param {number} input.majority
- * @param {{ bought: number, convinced: number }} [input.venality] a base repartida por PRECO
  * @param {boolean} input.resolved se ALGUM mes ja foi resolvido. ⚠ Ele existe para o
  * estado vazio escolher a frase verdadeira, e sai do MES do estado e nao do relatorio
  * em memoria: o relatorio nao vai para o save, e o mes vai
  * @param {string} input.inbox a BANDEJA ja montada — lista e oficio aberto —, e vazia
- * enquanto o mundo nao escreve. ⚠ Ela chega pronta de `trayHtml` em vez de as cartas
- * chegarem soltas: quem decide qual oficio esta aberto e a bandeja, e o Gabinete nao
- * tem por que saber que existe um aberto
- * @param {number} input.room o discricionario que cabe no mes
- * @param {number} input.committed o que as ordens do mes ja comprometeram
- * @param {number} input.mandatory a despesa obrigatoria anualizada
- * @param {number} input.revenue a receita anualizada
- * @param {ReadonlyArray<{ id: string, label: string, spend: number, guard: string }>} input.locked
- * o que mais prende a obrigatoria, e a natureza da norma que prende
- * @param {ReadonlyArray<Segment>} input.segments
- * @param {Record<string, Approval>} input.street a pesquisa de cada segmento
- * @param {{ lobbies: ReadonlyArray<{ id: string, label: string, wants: string,
- * share: number, pressure: number, boiling: boolean, boil: number,
- * fall: number | null }>,
- * rupture: { social: boolean, economic: boolean, political: boolean, open: boolean },
- * ruptures: ReadonlyArray<{ id: string, value: number, threshold: number,
- * breaks: string, open: boolean }>,
- * impeachment: number | null, fallen: number | null }} input.boiler a CALDEIRA, perguntada a `boilerOf`
- * @param {{ now: ReadonlyArray<{ id: string, label: string, what: string }>,
- * soon: ReadonlyArray<{ id: string, label: string, what: string, due: number }> }} [input.calendar]
- * o que o mes cobra, e o que o trimestre ja cobra
- * @param {{ pressure: Record<string, number>, street: Record<string, Approval>,
- * locked?: ReadonlyArray<{ id: string, spend: number }> } | null}
- * [input.before] o quadro do mes passado, e ele NAO vem do save: e a memoria de uma pintura,
- * como a das setas da barra de cima. Numa recarga ele volta nulo e nenhuma seta e desenhada
+ * enquanto o mundo nao escreve
  * @returns {string}
  */
 export function emailHtml(input) {
@@ -94,143 +67,225 @@ export function emailHtml(input) {
 }
 
 /**
- * O GABINETE — os seis blocos, e nada mais.
+ * A MESA — quatro objetos com lugar fixo.
  *
- * @param {Parameters<typeof emailHtml>[0]} input
+ * @param {object} input
+ * @param {number} input.base cadeiras que respondem ao governo
+ * @param {number} input.seats o plenario inteiro
+ * @param {number} input.majority
+ * @param {number} input.room o discricionario que cabe no mes
+ * @param {number} input.mandatory a despesa obrigatoria anualizada
+ * @param {number} input.revenue a receita anualizada
+ * @param {number} input.ratio a fracao do pedido que o rateio honra, de 0 a 1
+ * @param {Approval} input.standing a pesquisa do pais inteiro, ja pesada
+ * @param {ReadonlyArray<{ id: string, label: string, short?: string }>} input.areas as oito
+ * @param {ReadonlyArray<string>} input.protect quais o decreto deste mes poupa
+ * @param {ReadonlyArray<Verdict>} input.platform os compromissos da posse, ja julgados
+ * @param {number} input.betrayal quanto a promessa quebrada cobra de humor por mes,
+ * perguntado a `betrayalCost` — a tela nao multiplica a fracao pelo parametro
+ * @param {{ lobbies: ReadonlyArray<{ id: string, label: string, wants: string,
+ * share: number, pressure: number, boiling: boolean, boil: number,
+ * fall: number | null }>,
+ * rupture: { social: boolean, economic: boolean, political: boolean, open: boolean },
+ * ruptures: ReadonlyArray<{ id: string, value: number, threshold: number,
+ * breaks: string, open: boolean }>,
+ * impeachment: number | null, fallen: number | null }} input.boiler a CALDEIRA
+ * @param {{ now: ReadonlyArray<{ id: string, label: string, what: string }>,
+ * soon: ReadonlyArray<{ id: string, label: string, what: string, due: number }> }} [input.calendar]
+ * @param {{ pressure: Record<string, number>, standing?: Approval } | null} [input.before] o
+ * quadro do mes passado, e ele NAO vem do save: e a memoria de uma pintura
  * @returns {string}
  */
 export function cabinetHtml(input) {
-  /* ── 1 · O RISCO DE QUEDA ──────────────────────────────────────────────────
-     ⚠ ELE ERA UMA FAIXA DE LARGURA INTEIRA no topo, e dizia a MESMA coisa que o bloco da
-     caldeira 300px abaixo — com "Parlamentares" saindo nos dois com o mesmo 83 e limiares
-     DIFERENTES: "rompe acima de 86" em cima, "abandonam acima de 68" embaixo. Os dois numeros
-     estavam certos e mediam coisas diferentes, e nada na tela dizia isso. */
-  const risk = linesHtml(UI.cabinet.trinityTitle, rupturesRows(input.boiler.ruptures), {
-    icon: "risk",
-  });
-
-  const boiler = boilerBlock(input);
-
-  /* ── 3 · A CAMARA — a mesma leitura que a carta do plenario ja da ─────────── */
-  const chamber = linesHtml(
-    UI.cabinet.blockCongress,
-    chamberRows(input.base, input.majority, input.seats, input.venality),
-    { door: "congress", icon: "congress" },
-  );
-
-  const calendar = calendarBlock(input);
-  const vault = vaultBlock(input);
-  const street = streetBlock(input);
-
   return (
-    /* ⚠ ELA NAO TEM CABECA, e e a unica tela assim: o titulo dizia o nome de uma tela que o
-       rail ja marca, em 25,6px de serifa, e a faixa de risco que morava logo abaixo desceu
-       para a coluna. Quem nomeia agora e a legenda da bandeja, na fonte das outras legendas. */
-    /* ⚠ E ELA E A UNICA TELA SEM LAMINA, por ordem dele: "nao to gostando desse fundo atras
-       de tudo, esse retangulo que fica como moldura de todo o gabinete. Remova, quero tudo
-       meio que solto ali dentro". Os blocos ja tem superficie propria desde o ciclo 15 — a
-       moldura era a terceira camada de fundo empilhada sob eles. */
     `<section class="area cabinet">` +
-    /* ⚠ A ORDEM E A DA CONSEQUENCIA, e ela era a da contabilidade: o que decide se a PARTIDA
-       ACABA dividia espaco igual com a nota de rodape do cofre. */
-    `<div class="cards">` +
-    `<div class="cards__side">${risk}${boiler}${chamber}${calendar}${vault}${street}</div>` +
+    `<div class="desk">` +
+    `<div class="desk__band">${pledgeBand(input)}</div>` +
+    `<div class="desk__sign">${signHtml(input)}</div>` +
+    `<div class="desk__margin">${marginHtml(input)}</div>` +
+    `<div class="desk__when">${whenHtml(input)}</div>` +
     `</div>` +
     `</section>`
   );
 }
 
 /**
- * ⚠ ELE E UM BLOCO SEPARADO DA RUA, e a separacao e a modelagem: a Rua mede quem APROVA o
- * governo; este mede quem consegue DERRUBA-LO.
+ * A FAIXA DE CIMA — o que ele prometeu, e o que a promessa quebrada cobra.
+ *
+ * ⚠ ELA LIGA UM CANAL QUE RODAVA CEGO: `breachOf` e recalculado todo turno e nenhuma tela o
+ * lia. O jogador escolhia tres compromissos no mes 1 e so os reencontrava no mes 48 — o
+ * unico criterio do jogo, invisivel durante o jogo inteiro.
  *
  * @param {Parameters<typeof cabinetHtml>[0]} input
  * @returns {string}
  */
-function boilerBlock({ boiler, before }) {
-  /* ⚠ O PONTO DE FERVURA E UM SO PARA OS QUATRO GRUPOS, e por isso ele cabe no qualificador.
-     No dia em que um grupo tiver o proprio, `same` fica falso e o numero cala em vez de mentir. */
-  const boil = boiler.lobbies[0]?.boil ?? 0;
-  const same = boiler.lobbies.every(lobby => lobby.boil === boil);
+function pledgeBand({ platform, betrayal }) {
+  if (platform.length === 0) return noteHtml(UI.cabinet.pledgeLegend, UI.cabinet.pledgeNone);
 
-  const rows = boiler.lobbies
-    .map(lobby =>
+  const broken = platform.filter(verdict => verdict.kept === false).length;
+
+  const rows = platform
+    .map(verdict =>
       lineHtml({
-        who: lobby.label,
-        /* ⚠ O PESO DO GRUPO E LEITURA, e nao rotulo de leitor de tela: um dos quatro pesa
-           ZERO, e quem enxergava via quatro barras iguais e gastava capital acalmando um
-           grupo que nao conta para a conta. E o zero nao imprime "0%": ele nao pesa POUCO. */
-        aside: lobby.share > 0 ? percent(lobby.share) : UI.cabinet.boilerNoWeight,
-        /* ⚠ PRESSAO SUBINDO E RUIM, e por isso o sinal se inverte. */
-        trend: directionOf(lobby.pressure, before?.pressure[lobby.id], -1),
-        share: lobby.pressure,
-        /* ⚠ A SEGUNDA MARCA E DO FIADOR: um grupo tem DUAS linhas na mesma regua — abandona o
-           governo em `boil`, e em `fall` a ruptura politica abre. */
-        mark: lobby.boil,
-        danger: "above",
-        ...(lobby.fall === null ? {} : { fall: lobby.fall }),
-        past: lobby.boiling,
-        label:
-          `${lobby.label}: ${Math.round(lobby.pressure)} ${UI.cabinet.boilerMeter}, ` +
-          `${UI.cabinet.boilerBreaks} ${lobby.boil}` +
-          (lobby.fall === null
-            ? ""
-            : `, ${UI.cabinet.trinityTitle.toLowerCase()} ${UI.cabinet.boilerAt} ${lobby.fall}`),
-        value: String(Math.round(lobby.pressure)),
-        ...(lobby.boiling ? { tone: "crisis" } : {}),
+        who: verdict.label,
+        aside: verdict.judged,
+        value:
+          verdict.kept === false
+            ? UI.cabinet.pledgeBroken
+            : verdict.kept === true
+              ? UI.cabinet.pledgeKept
+              : UI.cabinet.pledgeOpen,
+        ...(verdict.kept === false ? { tone: "crisis" } : {}),
       }),
     )
     .join("");
 
-  /* AS RUPTURAS ABERTAS, NOMEADAS. ⚠ E O SILENCIO E O ESTADO NORMAL, ENTAO ELE NAO IMPRIME
-     LINHA: uma legenda que lista "em ruptura: 0" todo mes ensina o olho a ignorar a linha, e
-     ai, no mes em que a ruptura acontecer, ela aparece onde o jogador ja parou de ler. */
-  const open = [
-    boiler.rupture.social ? UI.cabinet.ruptureSocial : "",
-    boiler.rupture.economic ? UI.cabinet.ruptureEconomic : "",
-    boiler.rupture.political ? UI.cabinet.rupturePolitical : "",
-  ].filter(Boolean);
-
+  /* ⚠ O PRECO SO IMPRIME QUANDO EXISTE, pela mesma regra do resto da tela: uma linha que diz
+     "custa 0,00 todo mes" ensina o olho a pular a linha, e ai, no mes em que ela passar a
+     cobrar, ela aparece onde o jogador ja parou de ler. */
   const foot =
-    boiler.fallen !== null
-      ? `<p class="boiler__siege"><b class="stamp">${escapeHtml(UI.cabinet.fallen)}</b> ` +
-        `${escapeHtml(UI.cabinet.fallenNote)}</p>`
-      : boiler.impeachment !== null
-        ? `<p class="boiler__siege"><b class="stamp">${escapeHtml(UI.cabinet.siege)}</b> ` +
-          `${escapeHtml(UI.cabinet.siegeNote)}</p>`
-        : open.length > 0
-          ? `<p class="boiler__ruptures">${escapeHtml(UI.cabinet.rompeu)} ` +
-            `<b>${open.map(escapeHtml).join(" · ")}</b></p>`
-          : "";
+    broken > 0
+      ? `<p class="desk__price"><b class="stamp">` +
+        `${escapeHtml(UI.cabinet.pledgeCount(broken, platform.length))}</b> ` +
+        `<b data-numeric>${escapeHtml(signed(-betrayal, 2))}</b> ` +
+        `${escapeHtml(UI.cabinet.pledgeCost)}</p>`
+      : "";
 
-  /* ⚠ O LIMIAR VAI NA LEGENDA, e nao numa linha nem em quatro qualificadores: ele e UM numero
-     para os quatro grupos. Como linha custava 26px numa coluna que ja estourava; repetido nos
-     quatro, virava a legenda estatica que esta folha proibe por escrito. Na legenda ele e dito
-     uma vez e nao custa altura nenhuma. No dia em que um grupo tiver o proprio, ele cala. */
-  const legend = same
-    ? `${UI.cabinet.blockBoiler} · ${UI.cabinet.boilerBreaksShort} ${boil}`
-    : UI.cabinet.blockBoiler;
-
-  return linesHtml(legend, rows, { foot, icon: "pressure" });
+  return linesHtml(UI.cabinet.pledgeLegend, rows, { foot, icon: "risk" });
 }
 
-/* ⚠ O TETO DO CALENDARIO, e ele existe porque a coluna NAO ROLA — ordem dele. Os outros cinco
-   blocos tem numero fixo de linhas ou teto proprio (`GASTOS_PRESOS`); este era o unico que
-   crescia sozinho: num mes em que dois marcos vencem e tres se aproximam, ele pediria cinco
-   linhas. Medido, a coluna estoura em 20 linhas a 1440x980. */
-const PRAZOS = 2;
-
 /**
- * O QUE O MES COBRA — e o que o trimestre ja cobra.
+ * ⭐ O CENTRO — o que se assina. Hoje mora uma caneta so.
  *
- * ⚠ O QUE VENCE AGORA E LEITURA, e o que vem e QUALIFICADOR: uma linha por marco do trimestre
- * dobraria o bloco numa coluna que nao rola. O prazo vai ao lado do nome, como o limiar do
- * risco ja vai.
+ * ⚠ A PASTA E UMA LISTA, E NAO UMA TELA POR CANETA: no dia em que a MP e o decreto
+ * tributario existirem, eles entram como irmaos desta linha e nada aqui muda de forma.
  *
  * @param {Parameters<typeof cabinetHtml>[0]} input
  * @returns {string}
  */
-function calendarBlock(input) {
+function signHtml({ areas, protect, ratio }) {
+  /* ⚠ A NOTA DIZ O PRECO NOS DOIS ESTADOS: com area poupada ela diz quem paga; sem nenhuma,
+     ela diz quanto do pedido o mes honra. Um botao que so dissesse "proteger" seria a jogada
+     sem preco, que e o que esta folha proibe por escrito. */
+  const note =
+    protect.length > 0
+      ? UI.area.decreeCost
+      : ratio < 1
+        ? `${UI.area.decreeHonours} ${percent(ratio)} ${UI.area.decreeAsked}`
+        : UI.area.decreeWhole;
+
+  const doors = areas
+    .map(area => {
+      const spared = protect.includes(area.id);
+      return (
+        `<button class="decree" type="button" aria-pressed="${spared}" ` +
+        `data-protect="${escapeHtml(area.id)}">` +
+        `${escapeHtml(area.short ?? area.label)}</button>`
+      );
+    })
+    .join("");
+
+  return (
+    `<section class="pen">` +
+    `<h2 class="pen__legend">${escapeHtml(UI.cabinet.signLegend)}</h2>` +
+    `<b class="pen__name">${escapeHtml(UI.cabinet.penDecree)}</b>` +
+    `<p class="pen__note">${escapeHtml(note)}</p>` +
+    `<div class="pen__doors">${doors}</div>` +
+    `</section>`
+  );
+}
+
+/**
+ * A MARGEM — as seis leituras que mudam uma assinatura.
+ *
+ * ⚠ ELAS ERAM VINTE, e o filtro que as cortou e uma pergunta so: este numero muda o que ele
+ * esta prestes a assinar? A aposentadoria em reais nao muda — ela e estrutura, e mora em
+ * Financas. Os quatro grupos um a um nao mudam — ele age sobre o PIOR, e os outros tres sao
+ * consulta. A rua repartida em tres faixas nao muda — enquanto se assina, a rua e UM numero.
+ *
+ * @param {Parameters<typeof cabinetHtml>[0]} input
+ * @returns {string}
+ */
+function marginHtml(input) {
+  const locked = input.revenue > 0 ? Math.min(1, input.mandatory / input.revenue) : 0;
+
+  /* ⚠ O PIOR GRUPO, E NAO OS QUATRO: quem esta mais perto do proprio ponto de fervura, medido
+     em fracao do limiar dele. Comparar pressao crua poria na frente o grupo que ferve a 90
+     em vez do que ferve a 40 e ja esta em 38. */
+  const worst = [...input.boiler.lobbies].sort(
+    (one, other) => other.pressure / (other.boil || 1) - one.pressure / (one.boil || 1),
+  )[0];
+
+  const process =
+    input.boiler.fallen !== null
+      ? { value: UI.cabinet.fallen, tone: "crisis" }
+      : input.boiler.impeachment !== null
+        ? { value: UI.cabinet.siege, tone: "crisis" }
+        : { value: UI.cabinet.processNone };
+
+  const rows =
+    /* ⚠ SEM BARRA, e a ausencia e honesta: nao existe teto MENSAL contra o que medir o que
+       sobra — o teto do arcabouco mede o ano. */
+    lineHtml({ who: UI.cabinet.vaultFree, value: money(input.room) }) +
+    lineHtml({
+      who: UI.cabinet.vaultLocked,
+      share: locked * 100,
+      value: percent(locked),
+      aside: `${UI.cabinet.vaultOfRevenue} ${money(input.revenue)}`,
+      label: `${percent(locked)} ${UI.cabinet.vaultLocked}`,
+    }) +
+    lineHtml({
+      who: UI.cabinet.baseLine,
+      share: (input.base / input.seats) * 100,
+      mark: (input.majority / input.seats) * 100,
+      danger: "below",
+      past: input.base < input.majority,
+      /* ⚠ A BASE E FRACIONARIA NO MOTOR — o alcance de cada lider e uma fracao da bancada —,
+         e a leitura escrita tem de ser a MESMA que a regua desenha. */
+      value: String(Math.round(input.base)),
+      aside: `${UI.cabinet.ofNeeded} ${input.majority}`,
+      label: `${UI.cabinet.baseLine}: ${Math.round(input.base)} ${UI.cabinet.ofNeeded} ${input.majority}`,
+    }) +
+    (worst
+      ? lineHtml({
+          who: worst.label,
+          share: worst.pressure,
+          mark: worst.boil,
+          danger: "above",
+          past: worst.boiling,
+          trend: directionOf(worst.pressure, input.before?.pressure[worst.id], -1),
+          value: String(Math.round(worst.pressure)),
+          aside: `${UI.cabinet.boilerBreaksShort} ${worst.boil}`,
+          ...(worst.boiling ? { tone: "crisis" } : {}),
+        })
+      : "") +
+    lineHtml({
+      who: UI.cabinet.approvalLine,
+      share: input.standing.good,
+      trend: directionOf(input.standing.good, input.before?.standing?.good, 1),
+      value: `${input.standing.good}%`,
+      label: `${input.standing.good}% ${UI.approvalParts.good}`,
+    }) +
+    lineHtml({ who: UI.cabinet.processLine, ...process });
+
+  return linesHtml(UI.cabinet.marginLegend, rows, { icon: "estado" });
+}
+
+/* ⚠ O TETO DO PRAZO, e ele existe porque a mesa NAO ROLA. Os outros tres objetos tem numero
+   fixo de linhas; este era o unico que crescia sozinho: num mes em que dois marcos vencem e
+   tres se aproximam, ele pediria cinco linhas no pe da tela. */
+const PRAZOS = 2;
+
+/**
+ * O PE — o que o mes cobra, e o que o trimestre ja cobra.
+ *
+ * ⚠ O QUE VENCE AGORA E LEITURA, e o que vem e QUALIFICADOR: uma linha por marco do trimestre
+ * dobraria a faixa. O prazo vai ao lado do nome, como o limiar do risco ja vai.
+ *
+ * @param {Parameters<typeof cabinetHtml>[0]} input
+ * @returns {string}
+ */
+function whenHtml(input) {
   const agenda = input.calendar;
   if (!agenda) return "";
 
@@ -251,7 +306,7 @@ function calendarBlock(input) {
             }),
           )
           .join("") +
-        /* O QUE VENCE AGORA TEM PRECEDENCIA sobre o que vem: o teto e do bloco, e nao de cada
+        /* O QUE VENCE AGORA TEM PRECEDENCIA sobre o que vem: o teto e da faixa, e nao de cada
            metade. Num mes cheio o trimestre cala, e quem cala e a metade menos urgente. */
         agenda.soon
           .slice(0, Math.max(0, PRAZOS - agenda.now.length))
@@ -265,97 +320,4 @@ function calendarBlock(input) {
           .join("");
 
   return linesHtml(UI.cabinet.blockCalendar, rows, { icon: "estado" });
-}
-
-/* Quantos gastos presos cabem na coluna. `lockedBy` devolve tres; o terceiro so aparece em
-   Financas, que e a tela do assunto. */
-const GASTOS_PRESOS = 2;
-
-/**
- * ⚠ ELE RESPONDE NA ORDEM EM QUE A PERGUNTA NASCE: quanto sobra, por que sobra tao pouco, e o
- * que ja foi comprometido. A nota abaixo do percentual da a base — sem ela, "95%" nao diz 95%
- * de que.
- *
- * @param {Parameters<typeof cabinetHtml>[0]} input
- * @returns {string}
- */
-function vaultBlock(input) {
-  /* A obrigatoria nao e contexto: e a razao de o discricionario ser pequeno. */
-  const locked = input.revenue > 0 ? Math.min(1, input.mandatory / input.revenue) : 0;
-  const excess = Math.max(0, input.committed - input.room);
-  /* ⚠ O ESTOURO E MEDIDO NA LEITURA, E NAO NO VALOR CHEIO. */
-  const over = money(excess) === money(0) ? 0 : excess;
-
-  const rows =
-    /* ⚠ SEM BARRA, e a ausencia e honesta: nao existe teto MENSAL contra o que medir o que
-       sobra — o teto do arcabouco mede o ano. */
-    lineHtml({ who: UI.cabinet.vaultFree, value: money(input.room) }) +
-    lineHtml({
-      who: UI.cabinet.vaultLocked,
-      share: locked * 100,
-      value: percent(locked),
-      /* ⚠ ELA VOLTOU A SER NOTA, e agora cabe: a coluna do valor tem largura FIXA desde a
-         padronizacao, entao a base do percentual nao estica mais a pista dos outros blocos. */
-      aside: `${UI.cabinet.vaultOfRevenue} ${money(input.revenue)}`,
-      label: `${percent(locked)} ${UI.cabinet.vaultLocked}`,
-    }) +
-    /* ⚠ O COMPROMETIDO SO APARECE QUANDO DIFERE DO QUE SOBRA: num governo que nao toca em
-       nada as duas leituras imprimem o MESMO numero em 44 de 49 meses. */
-    (over > 0
-      ? lineHtml({ who: UI.cabinet.vaultOver, value: money(over), tone: "crisis" })
-      : money(input.committed) === money(input.room)
-        ? ""
-        : lineHtml({ who: UI.cabinet.vaultTaken, value: money(input.committed) })) +
-    /* ── DO REAL TRAVADO ATE O TEXTO QUE O TRAVOU ────────────────────────────
-       ⚠ ERA UMA FRASE CORRIDA EM LETRA MIUDA — tres numeros um atras do outro — e virou tres
-       linhas. Uma lista escrita como frase e uma lista que ninguem le. */
-    /* ⚠ DOIS, E NAO TRES: com o tipo maior cada linha custa 26px, e o terceiro maior gasto
-       preso e o primeiro item que a porta `DINHEIRO DO MES ›` ja entrega inteiro em Financas. */
-    /* ⚠ ELA MOSTRA O QUE MUDOU, e nao so o que e: sem isso, um governo que nao corta
-       previdencia le a MESMA linha por 48 meses e ela vira legenda estatica. A variacao vai na
-       NOTA do valor, que ja existe — custo de altura zero, numa coluna que nao rola.
-       ⚠ E O ZERO NAO IMPRIME, pela mesma regra que o comprometido ja usa duas linhas acima: a
-       diferenca e medida na LEITURA, e nao no valor cheio. */
-    input.locked
-      .slice(0, GASTOS_PRESOS)
-      .map(item => {
-        const was = input.before?.locked?.find(other => other.id === item.id)?.spend;
-        const moved = was === undefined ? 0 : item.spend - was;
-        return lineHtml({
-          who: item.label,
-          value: money(item.spend),
-          ...(money(Math.abs(moved)) === money(0) ? {} : { note: signed(moved, 1) }),
-        });
-      })
-      .join("");
-
-  return linesHtml(UI.cabinet.blockVault, rows, { door: "finance", icon: "finance" });
-}
-
-/**
- * O TERMOMETRO DA RUA.
- *
- * ⚠ AS TRES FATIAS SAIRAM: a pergunta que o bloco responde e "qual classe esta pior", e uma
- * pista responde. E a mesma decisao que a carta da rua ja tomou, e la ela tirou 15 celulas.
- *
- * @param {Parameters<typeof cabinetHtml>[0]} input
- * @returns {string}
- */
-function streetBlock({ segments, street, before }) {
-  const rows = segments
-    .map(segment => {
-      const poll = street[segment.id];
-      if (!poll) return "";
-
-      return lineHtml({
-        who: segment.label,
-        trend: directionOf(poll.good, before?.street[segment.id]?.good, 1),
-        share: poll.good,
-        value: `${poll.good}%`,
-        label: `${segment.label}: ${poll.good}% ${UI.approvalParts.good}`,
-      });
-    })
-    .join("");
-
-  return linesHtml(UI.cabinet.blockStreet, rows, { icon: "opinion" });
 }

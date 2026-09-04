@@ -57,7 +57,8 @@
        nada: o mínimo automático de um item de grade é o tamanho do conteúdo dele, então uma
        linha `1fr` cresce para caber o filho em vez de obrigar o filho a se virar. */
     .board:is([data-screen="cabinet"], [data-screen="email"]) .cards,
-    .board:is([data-screen="cabinet"], [data-screen="email"]) .cards__side,
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .desk,
+    .board:is([data-screen="cabinet"], [data-screen="email"]) .desk > div,
     .board:is([data-screen="cabinet"], [data-screen="email"]) .card[data-span="lead"],
     .board:is([data-screen="cabinet"], [data-screen="email"]) .card[data-span="lead"] .card__body,
     .board:is([data-screen="cabinet"], [data-screen="email"]) .tray {
@@ -78,33 +79,143 @@
 
   /* ⚠ O VAO ENTRE AS COLUNAS CAIU DE 32 PARA 24, por queixa dele — "sobrar menos espaco":
      32px entre duas colunas que ja tem moldura propria e ar sobre ar. */
+  /* ⚠ A GRADE ERA 5fr/4fr E CADA TELA USAVA UMA COLUNA SO: depois da separacao Gabinete ×
+     Email, o email ocupava a esquerda e o painel a direita, e os dois deixavam a outra metade
+     preta. Medido a 1440x980: 45% do tabuleiro vazio nas duas telas. */
   .cards {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
     gap: var(--gutter);
-  } /* CALDEIRA logo abaixo mostravam pressao sem dizer onde e o ponto de fervura. */ /* ── A COLUNA DA DIREITA E UM ELEMENTO ────────────────────────────────────── Ver a prosa
-     em `cabinet.mjs`: com os resumos soltos na grade, a Caixa de Entrada precisava declarar
-     quantas linhas atravessar, e o numero envelheceu no dia em que
-     a CALDEIRA nasceu. Agora sao duas celulas. */
-  .cards__side {
+  }
+
+  /* ── A MESA — QUATRO OBJETOS COM LUGAR FIXO ────────────────────────────────
+     ⚠ A GRADE ANTERIOR REFLUIA com a largura, e numa mesa o telefone esta sempre a esquerda.
+     O que se ASSINA ocupa o centro e a maior celula; o que se CONSULTA fica na margem, num
+     terco; a promessa atravessa em cima e o prazo atravessa no pe. */
+  /* ⚠ AS LINHAS MEDEM O CONTEUDO, e a primeira versao as esticava: com a do meio em `1fr` a
+     pasta de UMA caneta abria 600px pretos abaixo dela, medidos na captura — o mesmo buraco
+     que esta tela existe para fechar, mudado de lugar. A mesa e um OBJETO com altura propria,
+     e o vazio fica fora dela, e nao dentro. */
+  .desk {
+    display: grid;
+    min-height: 0;
+    align-content: start;
+    gap: var(--gutter);
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "band band"
+      "sign margin"
+      "when when";
+  }
+
+  /* ⚠ OS DOIS POUSAM NA MESMA LINHA, e centrar a pasta desalinhava o topo dela do topo da
+     margem em 60px medidos na captura. Numa mesa, dois objetos lado a lado encostam na mesma
+     borda — o que difere e a altura de cada um, e nao onde cada um comeca. */
+  .desk__sign {
+    align-self: start;
+  }
+
+  .desk__band {
+    grid-area: band;
+  }
+
+  .desk__sign {
+    grid-area: sign;
+  }
+
+  .desk__margin {
+    grid-area: margin;
+  }
+
+  .desk__when {
+    grid-area: when;
+  }
+
+  /* O PRECO DA PROMESSA QUEBRADA, e ele atravessa a largura da faixa. */
+  .desk__price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding-top: var(--space-2);
+    font-size: var(--text-note);
+    color: var(--ink-soft);
+  }
+
+  /* ── A PASTA — o que se assina ─────────────────────────────────────────────
+     ⚠ ELA E UMA LISTA E NAO UMA TELA POR CANETA: hoje mora uma so, e a segunda entra como
+     irma desta sem que nada aqui mude de forma. */
+  /* ⚠ O QUE SE ASSINA E A PECA PRINCIPAL, E ERA A UNICA SEM SUPERFICIE: na captura o
+     contingenciamento flutuava no fundo preto enquanto a margem e o prazo tinham lamina. Peso
+     visual invertido — quem decide lia como legenda, e quem se consulta lia como objeto.
+     A substancia e a mesma dos outros dois, e o que separa e o TAMANHO. */
+  .pen {
     display: grid;
     align-content: start;
-    grid-column: 2;
-  } /* A pagina tinha 1495px numa janela de 900 e por-los lado a lado economizava ~110. */
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    border: 1px solid var(--sheet-edge);
+    border-radius: var(--radius-piece);
+    background: var(--sheet-raise);
+  }
 
-  .card[data-span="lead"] {
-    grid-column: 1; /* `.card` e uma grade com `align-content: start`, entao as linhas medem o conteudo e o
-       corpo para na altura do texto — o estado vazio ficava encostado no teto de uma coluna
-       de 700px, que e exatamente o que ele existe para evitar. */
-    grid-template-rows: minmax(0, 1fr);
-    align-content: stretch; /* O ciclo 10 acrescentou a CALDEIRA e ninguem voltou aqui: a coluna da esquerda passou a
-       terminar uma linha antes da direita, e o rodape do Gabinete ficou com um degrau que so
-       a captura mostra. */
-    grid-row: 1; /* ⚠ E O ESTIRAMENTO FICA — eu o TIREI e devolvi na mesma sessao, contra a captura. */
-    align-self: stretch;
-  } /* ⚠ O AR ENCOLHEU EM, e a razão é uma medição: a coluna da direita media 899px numa janela
-     de 980 e a página inteira rolava 367. */
+  .pen__legend {
+    margin: 0;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .pen__name {
+    font-size: var(--text-name);
+    /* ⚠ A SERIFA E OPT-IN e ela e o que se ASSINA: o nome de um instrumento e texto de
+       registro, e e a mesma familia do nome de uma norma na Mesa. */
+    font-family: var(--font-record);
+    color: var(--ink);
+  }
+
+  .pen__note {
+    margin: 0;
+    font-size: var(--text-note);
+    color: var(--ink-soft);
+  }
+
+  /* ── AS OITO PASTAS ────────────────────────────────────────────────────────
+     ⚠ ELAS ERAM UM BOTAO POR TELA DE AREA, e o decreto e UM ato, rubrica a rubrica. Em fila,
+     a escolha inteira se le de uma vez — que e o que um decreto e. */
+  .pen__doors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding-top: var(--space-2);
+  }
+
+  /* ⚠ ELE E UM BOTAO E NAO UMA PASTILHA DE ESTADO: o que ele faz e uma JOGADA do mes, e a cor
+     da marca e a do que se pressiona. Solto, ele e um fio; apertado, ele ganha a tinta. */
+  .decree {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--glass-edge);
+    border-radius: var(--radius-sheet);
+    background: transparent;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: var(--text-note);
+    cursor: pointer;
+    transition: border-color var(--dur-touch) var(--ease-enter);
+  }
+
+  .decree:hover {
+    border-color: rgba(var(--brand-rgb), 0.55);
+  }
+
+  .decree[aria-pressed="true"] {
+    border-color: rgba(var(--brand-rgb), 0.55);
+    background: rgba(var(--brand-rgb), 0.12);
+    color: var(--brand);
+  }
+
   .card {
     display: grid;
     align-content: start;
@@ -116,11 +227,8 @@
   } /* O da esquerda e a bandeja, e ela e um objeto so: um recuo de 24px ali nao separaria
      assunto nenhum — apenas encolheria a escavacao em 24 pixels e devolveria o vao que a
      regra de cima acabou de fechar. */
-  .cards__side > .card {
-    padding-bottom: var(--space-6);
-  } /* ⚠ E A BANDEJA PERDE O RECUO INTEIRO, pelo mesmo motivo e por SIMETRIA medida: com 8px
-     embaixo e nada em cima, a escavacao encostava no teto da coluna em 305 e parava 8 pixels
-     antes do pe em 927. */
+  /* ⚠ A BANDEJA NAO TEM RECUO, por SIMETRIA medida: com 8px embaixo e nada em cima, a
+     escavacao encostava no teto da coluna em 305 e parava 8 pixels antes do pe em 927. */
   .card[data-span="lead"] {
     padding-bottom: 0;
   }
@@ -945,18 +1053,8 @@
     background: rgba(var(--brand-rgb), 0.16);
   } /* ⚠ FERVENDO USA O VERMELHO SEMÂNTICO, e aqui ele é literal: um grupo que ferveu abandonou
      o governo, e isso é a definição de crise no modelo. */
-  .boiler__ruptures,
-  .boiler__siege {
-    margin-top: var(--space-2);
-    font-size: var(--text-label);
-    color: var(--ink-soft);
-  }
-
-  .boiler__ruptures b {
-    color: var(--signal-down);
-  } /* O CARIMBO DO CERCO — mono, porque é a máquina do Estado carimbando, e não uma medição nem
-     um nome. */
-  .boiler__siege .stamp {
+  /* O CARIMBO — mono, porque é a máquina do Estado carimbando, e não uma medição nem um nome. */
+  .desk__price .stamp {
     display: inline-block;
     margin-right: var(--space-2);
     padding: 1px var(--space-2);
@@ -974,9 +1072,12 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .cards__side,
-    .card[data-span="lead"] {
-      grid-column: 1;
+    /* ⚠ A MESA DESEMPILHA EM UMA COLUNA, e a ordem passa a ser a de leitura: promessa,
+       o que se assina, a margem e o prazo. */
+    .desk {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto auto auto;
+      grid-template-areas: "band" "sign" "margin" "when";
     }
   }
 
@@ -984,9 +1085,6 @@
      O MESMO da carta — mesma moldura, mesma linha —, e o que muda é a MATÉRIA: papel na
      carta, vidro na coluna. Escrever uma segunda peça para trocar duas cores seria o
      vocabulário dobrando pelo mesmo motivo que ele dobrou da primeira vez. */
-  .cards__side {
-    gap: var(--space-2);
-  }
 
   /* ⚠ O AR DA COLUNA E MENOR QUE O DA CARTA, e a razao e medida: com o recuo da carta os
      cinco blocos pediam 851px numa coluna de 732, e o quinto ficava fora da dobra. A carta
@@ -1000,8 +1098,7 @@
      EMPILHAVA NO TOPO e deixava o resto em branco: o vao sobrava embaixo do quinto bloco em
      vez de virar ar entre as leituras. Com `stretch` nos dois niveis, a sobra se reparte
      entre os cinco blocos e, dentro deles, entre as linhas. Quando nao ha sobra, nada muda. */
-  .cards__side,
-  .cards__side .annex {
+  .desk .annex {
     align-content: stretch;
   }
 
@@ -1014,25 +1111,48 @@
      agora cada bloco flutua sozinho no fundo ao lado de uma bandeja de 16 — cinco retangulos
      de 3px contra um painel de 16 leem como duas gramaticas. Dentro da carta o anexo continua
      em 3px, porque la ele e peca DENTRO de papel, e nao painel. */
-  .cards__side .annex {
+  .desk .annex {
     border-radius: var(--radius-piece);
   }
 
-  .cards__side .annex__legend {
+  .desk .annex__legend {
     display: flex;
     align-items: center;
     gap: var(--space-2);
   }
 
-  .cards__side .annex__icon {
+  .desk .annex__icon {
     flex: 0 0 auto;
     width: 14px;
     height: 14px;
     opacity: 0.75;
   }
 
-  .cards__side .annex__line > .gauge {
+  .desk .annex__line > .gauge {
     box-shadow: none;
+  }
+
+  /* ── NA MARGEM O QUALIFICADOR DESCE PARA A PROPRIA LINHA ───────────────────
+     ⚠ O PASSEIO REPROVOU A PRIMEIRA VERSAO DESTA TELA, e o numero e dele: com o nome e o
+     qualificador na mesma linha, `Preso por lei` + `da receita de` pedia 227px num campo de
+     149 e saia com reticencia. A margem e um terco da mesa por decisao — quem tem de encolher
+     e a LINHA, e nao a zona. Empilhados, o nome cabe e o qualificador tambem. */
+  .desk__margin .annex__who {
+    display: grid;
+    align-content: center;
+    min-width: 0;
+  }
+
+  .desk__margin .annex__aside {
+    margin-left: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ⚠ E A LINHA CRESCE COM O EMPILHAMENTO: com 24px de teto o nome de duas linhas encostava
+     nos vizinhos, e `align-items: center` alinhava o valor pelo meio de um campo alto demais. */
+  .desk__margin .annex__line {
+    min-height: 34px;
   }
 
   /* ⚠ O QUALIFICADOR DO NOME NÃO É UMA SEGUNDA LEITURA: é a mesma leitura dizendo o próprio
@@ -1053,34 +1173,6 @@
      mestre media o preco disso: 639px de conteudo numa coluna de 639: zero folga, e todo item
      novo tinha de dizer de onde tirava altura. Separadas, a caixa fica com a largura inteira e
      os blocos deixam de disputar com ela. */
-  .board[data-screen="cabinet"] .cards {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .board[data-screen="cabinet"] .cards__side {
-    /* A ORDEM E A DA CONSEQUENCIA, e a grade a respeita: o que decide se a partida acaba vem
-       primeiro, e o que so informa desce. */
-    grid-column: 1;
-    /* ⚠ DUAS COLUNAS E NAO TRES, e a captura reprovou as tres: em 380px o nome da linha
-       fica com 138 e SETE linhas reticenciaram — "Apoiam o governo" pedia 222 e "Preso por
-       lei" 227. Encolher a pista e o valor devolveria 180, e nao chega. Em 586px nenhuma
-       corta, e as tres fileiras fecham em 575 de 838. */
-    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
-    align-content: start;
-    gap: var(--gutter);
-  }
-
-  /* ⚠ A GRADE DE TRES COLUNAS NAO EXISTIA, e nada acusava: `annex[data-wide]` atravessa a
-     grade inteira desde o ciclo 15, e com ela os seis blocos continuaram numa coluna so —
-     agora de 1197px em vez de 432. O passeio mediu 895px de conteudo em 838 de vao no mes 22,
-     e a ordem e que esta coluna NAO ROLA. Em duas linhas ela fecha em 375. */
-  .board[data-screen="cabinet"] .cards__side > .annex[data-wide="true"] {
-    grid-column: auto;
-  }
-
   /* ⚠ A CAIXA PASSA A OCUPAR A LARGURA TODA: ela ja era uma peca de duas colunas por dentro —
      indice e oficio —, e o que ela ganha e o oficio, que era a metade estreita. */
-  .board[data-screen="email"] .cards {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }

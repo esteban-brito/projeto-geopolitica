@@ -93,7 +93,7 @@ export { chainOf } from "../application/chain.mjs";
    catalogo — as tres areas que o pais entrega piores. A tela que a montasse teria uma segunda
    verdade sobre onde o pais esta pior, e o julgamento de cada promessa e motor: o indice contra
    a posse, a divida contra a herdada, a norma contra `enactedAt`. */
-export { pledgesOf, platformOf, spoken } from "../application/platform.mjs";
+export { betrayalOf, pledgesOf, platformOf, spoken } from "../application/platform.mjs";
 /* `left` e a decima porta, e ela e uma linha — o que importa e ela ser a UNICA. */
 /* ⚠ `silences` e a decima quinta porta, e ela nasceu de uma RECUSA. */
 export { left, silences } from "../application/mail.mjs";
