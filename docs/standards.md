@@ -29,12 +29,12 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 
 ```
 index.html · app.mjs        entrypoint: composição e wiring, nunca cálculo
-styles/                     seis camadas, na ordem que o nome declara
+styles/                     onze folhas, na ordem que o numero do nome declara
 vendor/fonts/               Inter e Source Serif 4, sob SIL OFL — 226KB, sem rede
 src/data/                   catálogo; `catalog.mjs` indexa todo dado do projeto
 src/domain/                 os motores, funções puras
-src/state/                  estado imutável e o reducer
-src/application/            turno, persistência, efeitos
+src/state/                  estado imutável, o reducer e o save
+src/application/            turno, correspondência, tramitação, efeitos
 src/public/                 a composição que todo consumidor usa
 src/ui/                     views puras: recebem dado, devolvem string
 tests/                      run.mjs · lib/ · guards/ · suites/ · browser/
@@ -268,12 +268,13 @@ número ao lado dela.
 | `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                                                                                                                  |
 | `prose`      | bloco acima do teto (10 no corpo, 14 no cabeçalho); **data** em comentário; bloco que **para no meio de uma frase**; e o `--token`, `.classe` ou `arquivo.mjs` citado em prosa que o projeto não tem mais |
 | `vocabulary` | a mesma frase da interface teclada duas vezes; e a frase declarada que **nenhum arquivo alcança** — 49 delas em 21/08/2026                                                                                |
+| `annexes`    | tabela na Caixa ou no Gabinete, e régua desenhada pela própria tela: as duas telas falam o vocabulário de `src/ui/shared/annex.mjs`, e só ele                                                             |
 
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.
 
 ⚠ **E o portão tem uma SEGUNDA PERNA desde 23/08/2026, que não mora em
-`tests/guards/`:** o passeio (`tests/browser/walk.mjs`) entrou no `validate`. As doze
+`tests/guards/`:** o passeio (`tests/browser/walk.mjs`) entrou no `validate`. As treze
 guardas leem TEXTO — arquivo, seletor, literal —, e nenhuma delas abre um navegador;
 o passeio mede **geometria e pixel**: rolagem da página, conteúdo cortado dentro do
 próprio recorte **nos dois eixos**, peça desenhada por cima de peça, e contraste no par

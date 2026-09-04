@@ -1,186 +1,202 @@
-# CICLO 19 — A VOZ
+# CICLO 19 — O MUNDO TEM OPINIÃO
 
-> **Estado:** ▶ plano, escrito em 03/09/2026. Pedido dele: _"eu quero uma IA mais aprimorada e
-> abrangente no meu jogo sim"_.
+> **Reescrito em 04/09/2026.** Ele era "A VOZ", e era um plano de integração de IA por API. A
+> decisão dele matou o caminho e manteve o destino:
 >
-> Ele executa os [ADR 0001](../adr/0001-a-ia-fica-fora-do-turno.md) e
-> [0002](../adr/0002-a-ia-gera-vocabulario-nao-efeito.md), que decidiram onde a IA pode entrar e
-> nunca foram construídos. Roda em paralelo ao [ciclo 18](18-a-caneta.md), que é o do cargo.
+> _"não quero gastar mais nenhum centavo com o jogo, então não pretendo integrar uma IA, o que eu
+> quero é de alguma forma criar uma IA, ou algo parecido, no meu jogo, por exemplo, pretendo criar
+> personalidades para as pessoas, mídia, e tudo mais, assim as coisas vão acontecendo
+> naturalmente."_
+>
+> ⭐ **E a [pesquisa 07](../research/07-a-lei-que-o-jogador-escreve.md) §4 achou a resposta: a IA
+> que faz um mundo parecer vivo é o AVALIADOR, e não o gerador.** Este ciclo constrói o
+> avaliador. Ele é o alicerce do [ciclo 22](22-a-lei-que-voce-escreve.md) — **sem ele, uma lei que
+> o jogador inventa não tem preço**, porque `threat` é escrito à mão, texto por texto.
 
 ---
 
-## 1 · Onde o jogo está hoje: zero
+## 1 · 📐 O QUE JÁ EXISTE, e é mais do que qualquer plano deste projeto assumiu
 
-📐 **Medido:** `package.json` tem `"dependencies": {}`. Não existe biblioteca de IA, chave de
-API, nem uma linha chamando modelo nenhum. O jogo roda inteiro sozinho.
+**O avaliador não nasce do zero. Metade dele roda em produção, com prova.**
 
-Os dois ADRs abriram **três lugares** para ela, e os três estão vazios:
-
-| lugar                        | o que é                                                    | construído |
-| ---------------------------- | ---------------------------------------------------------- | ---------- |
-| gerar catálogo antes do jogo | a IA propõe ações; o validador e a revisão filtram         | ⛔ não     |
-| veredito de fim de mandato   | ela lê os 48 meses já calculados e escreve o que aconteceu | ⛔ não     |
-| narração                     | manchete, discurso, reação da rua, sobre estado já fechado | ⛔ não     |
-
-⭐ **Então "mais abrangente" é fácil de entregar: hoje é zero.** Encher os três lugares já é uma
-mudança grande, e nenhum deles quebra nada.
-
----
-
-## 2 · O que trava, e o que não trava
-
-**O que trava é o NÚMERO.** Se a IA decidir quanto uma política custa, a mesma partida com a
-mesma semente passa a dar resultados diferentes. Aí:
-
-- 📐 o `simulate` de 48 meses **deixa de valer como prova** — e ele é o que pega erro de
-  calibragem hoje;
-- 📐 as **314 provas** que comparam duas rodadas passam a falhar sozinhas;
-- o save deixa de reconstruir a partida, porque a semente não basta mais.
-
-**O que NÃO trava é a PALAVRA.** E é aí que está quase tudo o que falta no jogo: o jornal que não
-existe, o ministro que fala por template, o fecho que mostra números e não conta história.
-
----
-
-## 3 · ⭐ A regra que faz os dois caberem: o cache pela semente
-
-**O problema parece "IA ou determinismo". Não é.** A saída da IA vira dado guardado, e o dado
-guardado é determinístico.
+`whipCount`, em `src/domain/congress/index.mjs`, faz hoje isto **para cada bancada**:
 
 ```
-o motor fecha o mês  →  produz a FICHA (só números e ids)
-   →  a IA lê a ficha e escreve o TEXTO
-      →  o texto é guardado com a chave = hash(ficha)
-         →  mesma ficha, mesmo texto, sem chamar de novo
+distância  = a distância ideológica em TRÊS eixos (economia, liberdade, dispersão)
+venalidade = o quanto ESTA bancada se compra NESTA direção
+resistência = distância × (1 − venalidade × verba paga)
+            + ameaça × venalidade × peso
+            − rua × peso
+adesão     = logística(resistência)
 ```
 
-**As quatro consequências, e elas são a garantia inteira:**
+⭐ **Isso já é uma função de utilidade por agente.** Cada bancada olha a sua proposta e responde
+_"isto é bom para mim?"_ com o próprio eixo, a própria venalidade e o próprio humor.
 
-1. **a mesma partida dá o mesmo texto**, porque a ficha é a mesma;
-2. **`simulate` e o passeio nunca chamam IA** — eles leem número, e número não passa por ela;
-3. **IA desligada ou com erro, o jogo mostra o texto de hoje.** A camada é adicional, nunca
-   substituta. Se ela cair, nada quebra;
-4. **o texto é auditável**: a ficha que o gerou fica junto, então dá para ver de onde a frase
-   saiu.
+**E `agenda.mjs` já compõe a proposta a partir do que o jogador moveu**, sem ninguém ter escrito
+aquela lei: economia, liberdade, ameaça e dispersão saem da **média ponderada dos programas
+tocados**, com o peso sendo o quanto cada um se moveu.
 
-⛔ **E a regra que não se quebra:** a ficha entra na IA e **só texto sai**. Nada que a IA
-devolve vira número, índice, preço ou voto.
+📐 **Ou seja: o jogo já precifica uma pauta que ninguém previu.** O que ele não faz é o resto.
 
 ---
 
-## 4 · ⭐⭐ E existe um meio-termo: a IA ESCOLHE, o motor PRECIFICA
+## 2 · ⛔ OS TRÊS BURACOS, e eles são o ciclo inteiro
 
-Isto vai além de narrar, e ainda assim não quebra nada. **A IA nunca inventa a opção — ela
-escolhe entre opções que o motor já validou.**
-
-Exemplo concreto, com o que já existe no jogo:
-
-| passo                                                            | quem faz |
-| ---------------------------------------------------------------- | -------- |
-| calcular a pressão de cada grupo e ver quem passou do ponto      | o motor  |
-| listar as chantagens **possíveis** para aquele grupo, com preço  | o motor  |
-| **escolher qual delas o lobby faz este mês, e com que palavras** | a IA     |
-| cobrar o preço da escolhida                                      | o motor  |
-
-📐 **O jogo já tem a peça:** `demandsOf` monta a chantagem hoje escolhendo por regra fixa. Trocar
-a regra fixa por uma escolha da IA **entre as mesmas opções** dá variedade sem mexer em preço.
-
-⚠ **E o determinismo sobrevive pelo mesmo cache da seção 3:** a escolha é guardada com a chave da
-ficha. Rodar de novo com a mesma semente devolve a mesma escolha, do cache.
-
-⛔ **O limite é este:** a IA escolhe **entre opções que o motor gerou e precificou**. Ela nunca
-cria uma opção nova em partida, nunca muda um preço, e nunca decide se a política funcionou.
+| #   | buraco                                                             | consequência de jogo                                              |
+| --- | ------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| 1   | **só a bancada avalia.** O lobby e a rua não têm opinião sobre lei | você aprova uma lei que destrói o setor produtivo e ele não reage |
+| 2   | **a pessoa não avalia nada.** 📐 4 das 5 ambições são inertes      | oito pessoas com nome e história respondem todas igual            |
+| 3   | **o mundo não AGE.** 📐 100% dos textos nascem do jogador          | a oposição só vota não. Não há o que vetar, nem o que noticiar    |
 
 ---
 
-## 5 · OS QUATRO LUGARES, em ordem de valor
+## 3 · ⭐ ITEM 1 — A RUA E O LOBBY PASSAM A LER A LEI
 
-| #      | o quê                            | o que ele resolve                            | custo   |
-| ------ | -------------------------------- | -------------------------------------------- | ------- |
-| **V1** | ⭐⭐ o **jornal**                | a metade vazia do Email                      | médio   |
-| **V2** | ⭐ a **voz das pessoas**         | 8 arquétipos que falam por template          | médio   |
-| **V3** | o **veredito de fim de mandato** | o fecho mostra número e não conta história   | pequeno |
-| **V4** | o **gerador de catálogo**        | ferramenta de desenvolvimento, não é do jogo | médio   |
+**Hoje a rua entra na votação como UM número global** — `standing`, a aprovação do governo, que
+desloca a resistência de todas as bancadas igualmente. **A rua não sabe do que a lei trata.**
 
-### V1 · O jornal — e ele tem uma medição que manda no desenho
+📐 **E o lobby não olha lei nenhuma.** Ele lê a MALHA, ferve e chantageia. Uma lei que arrasa a
+área dele passa sem que ele diga uma palavra.
 
-📐 **Medido em `tmp/manchetes.mjs`, 48 meses:** um governo passivo produz **20 fatos noticiáveis
-em 16 dos 48 meses**; um governo que legisla todo mês produz **56, em 32 de 48**.
+**As duas peças já sabem o que precisam saber:**
 
-⛔ **Mesmo o governo ativo passa 16 meses sem uma linha.** Uma coluna de jornal vazia em um terço
-do mandato lê como tela quebrada.
+- 📐 `SEGMENT` reparte a rua em **três faixas de renda**, cada uma com aprovação própria;
+- 📐 cada `LOBBY` tem `wants`, alcance e ponto de fervura, e **dois deles já leem a MALHA**;
+- 📐 e a `Proposal` já carrega `byArea` — **quanto de cada área a pauta moveu**.
 
-⭐ **Então o jornal não pode noticiar só o extraordinário — ele tem de noticiar o ordinário:** o
-PIB saiu, a inflação veio, a Saúde caiu 2 pontos, o Congresso não votou nada. **Isso é ficha
-cheia todo mês**, e a IA só precisa escrever.
+⭐ **O encaixe é direto:** a lei move áreas; o lobby quer áreas; o segmento é atendido por áreas.
+Cada um soma o que ganha e o que perde, e devolve **um deslocamento próprio da resistência** no
+lugar do `standing` único.
 
-⚠ **E os veículos seguem o ADR 0003**: imprensa inspirada na real, com **nome alterado** — a
-mesma regra dos partidos.
+**O que muda no jogo:** cortar a Previdência deixa de custar "aprovação" e passa a custar **a
+faixa de baixa renda e o grupo que a defende**, com nome. E aí a mesma lei tem preços diferentes
+em governos diferentes, porque a composição da rua é diferente.
 
-### V2 · A voz das pessoas
-
-📐 O elenco já existe e é fundo: 8 arquétipos, 42 primeiros nomes × 31 sobrenomes, pasta,
-alcance de bancada, ambição, e memória com `favor 14 · traição 30 · esquece 4% ao mês`.
-
-**Hoje toda carta é um template com o nome trocado.** Um líder do centrão pede igual a um líder
-de esquerda. Com a IA, a ficha manda o que ele quer e quanto custa, e ela escreve **como ele
-fala**.
-
-### V3 · O veredito de fim de mandato
-
-O fecho hoje mostra prometido × entregue em número. A IA lê a série inteira e escreve o que
-aconteceu — uma vez por partida, sem pressa, e sem tocar em nenhum valor.
-
-### V4 · O gerador de catálogo — e ele não é do jogo
-
-📐 O gargalo do projeto é o catálogo: 8 áreas, os programas, as leis, as pessoas. **A IA propõe
-entradas novas, o validador de esquema recusa o que não fecha, eu reviso, e vira arquivo
-commitado.** O jogador nunca fala com IA nenhuma, e o jogo publicado não muda.
-
-⭐ **É o de menor risco dos quatro e o de maior efeito no conteúdo.**
+⚖ **Restrição:** o `standing` global **não sai** — ele vira o piso, e o deslocamento por área
+entra por cima. Trocar um pelo outro faria a série se refazer inteira sem ninguém ter escolhido.
 
 ---
 
-## 6 · ⛔ O PROBLEMA QUE NÃO TEM RESPOSTA BONITA: onde mora a chave
+## 4 · ⭐⭐ ITEM 2 — AS QUATRO AMBIÇÕES INERTES GANHAM PREÇO
 
-⚠ **Este é o único ponto do plano que muda o que o projeto É.** A primeira linha do `CLAUDE.md`
-diz: _"Site estático: zero build, zero dependência de runtime"_. Chamar um modelo é a primeira
-coisa do projeto que precisa de rede em partida.
+📐 **Medido:** `offered`, em `src/domain/cast/index.mjs`, traduz dinheiro em adesão pessoal. A
+única linha que olha ambição é esta:
 
-| caminho                                                  | custo                                                                               |
-| -------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **o jogador põe a própria chave**, guardada no navegador | o site continua estático. Mas expõe a chave no cliente e só serve para quem tem uma |
-| **um servidor pequeno no meio**                          | resolve a chave, e **acaba com o "zero dependência de runtime"**                    |
-| **gerar tudo antes e enviar como dado**                  | o site continua estático, mas só cobre o que **não** depende da partida             |
+```js
+const drag = person.ambition === "succession" ? parameters.successionDrag : 0;
+```
 
-⭐ **E o terceiro cobre mais do que parece.** O jornal precisa da partida, mas os **moldes** de
-frase não: dá para gerar antes centenas de formas de dizer _"a inflação subiu"_, guardar como
-dado, e a partida escolher pela ficha. **Isso é IA no jogo sem rede nenhuma em partida** — e é o
-caminho que eu tomaria primeiro.
+**Quem quer um ministério, o governo do estado, uma vaga no tribunal ou só se reeleger recebe o
+mesmo tratamento de quem não quer nada.** As quatro são sorteadas, aparecem na tela do Congresso
+e não movem uma linha do motor. É o achado 16 do handoff e o item 10 do [ciclo 18](18-a-caneta.md).
+
+⭐ **E o conserto não é dar um número diferente a cada uma — é fazer cada uma olhar COISA
+DIFERENTE.** É isso que separa personalidade de constante:
+
+| ambição      | o que ela quer       | o que ela passa a olhar                                                    |
+| ------------ | -------------------- | -------------------------------------------------------------------------- |
+| `succession` | o Planalto em 2030   | ✔ já desconta a verba: aceita o dinheiro e continua querendo o cargo       |
+| `seat`       | continuar onde está  | ⭐ **a RUA.** Ele vota com a sua aprovação, e contra ela quando ela cai    |
+| `cabinet`    | um ministério        | **a área dele.** Lei que engorda a pasta que ele quer o compra mais barato |
+| `state`      | o governo do estado  | **o que desce para os entes**, e não o programa federal                    |
+| `court`      | uma vaga no tribunal | **quem indica.** Dinheiro o move pouco; a indicação o move inteiro         |
+
+⭐ **O `seat` é o mais barato e o mais brasileiro dos cinco:** `standing` já está dentro do
+`whipCount`. O baixo clero que segue a popularidade é uma linha de código e é literatura.
+
+⭐ **E o `court` fecha o círculo com o ciclo 18:** três vagas do Supremo caem nos meses 16, 28 e
+48, e a indicação passa pelo Senado. **A ambição já está sorteada e já está na tela** — falta ela
+ter preço.
+
+**O que muda no jogo:** a mesma oferta sua recebe respostas diferentes, porque as pessoas querem
+coisas diferentes. É a definição de personalidade, e ela sai de graça de um sorteio que já roda.
 
 ---
 
-## 7 · ⛔ O QUE ESTE CICLO RECUSA
+## 5 · ITEM 3 — O MUNDO PROTOCOLA TEXTO
 
-| pedido                                     | por quê                                                                                             |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| **a IA decidir se uma política funcionou** | mata o `simulate` e as 314 provas. É o ADR 0001, e ele continua certo                               |
-| **a IA calcular preço, índice ou voto**    | ADR 0002. Número tem motor atrás, sempre                                                            |
-| **conversa livre com um personagem**       | ⚠ não é recusa, é ordem: só depois de V2. Sem a voz definida, a conversa vira genérica              |
-| **a IA escrever regra de jogo em partida** | o catálogo é revisado à mão antes de virar arquivo. Regra que ninguém leu é regra que ninguém cobra |
+📐 **100% dos textos deste jogo nascem do jogador**, e é por isso que não existe veto: não há o
+que vetar.
+
+**Com o item 2 na mão, isso vira barato:** uma pessoa com ambição e alcance de bancada tem motivo
+próprio para escrever. O que ela protocola sai da ambição dela e do que está ruim para ela —
+**pelo mesmo avaliador, com o sinal invertido**.
+
+⭐ **E isso destrava três itens de outros ciclos de uma vez:** o **veto** (item 8 do ciclo 18)
+passa a ter objeto; a **derrubada de veto** ganha sentido; e o **jornal** ganha o que noticiar
+num mês em que o governo não fez nada.
+
+⚠ **É o item que abre motor deste ciclo**, e ele não divide sessão com os outros dois.
 
 ---
 
-## 8 · POR ONDE COMEÇAR
+## 6 · ITEM 4 — O JORNAL, e ele não precisa de modelo nenhum
 
-1. **V4 primeiro, porque não toca no jogo.** O gerador de catálogo é ferramenta: roda aqui,
-   produz arquivo, e o site publicado continua igual. Ele já rende conteúdo novo sem decidir
-   nada sobre arquitetura;
-2. **depois V1, pelo caminho do dado gerado antes** — moldes de frase gerados e commitados, a
-   partida escolhendo pela ficha do mês. O jornal enche a metade vazia do Email **sem rede em
-   partida**;
-3. **V3 e V2 depois**, quando a decisão da chave (seção 6) estiver tomada.
+📐 **Medido em 03/09/2026:** um governo passivo produz **20 fatos noticiáveis em 16 dos 48
+meses**; um que legisla todo mês produz **56, em 32 de 48**. ⛔ **Mesmo o ativo passa 16 meses sem
+uma linha**, e coluna vazia em um terço do mandato lê como tela quebrada.
 
-⚖ **E a restrição vale para os quatro:** `npm run validate` verde, e **o `simulate` de 48 meses
-tem de dar exatamente a mesma série antes e depois**. Se mudar um número, a IA vazou para dentro
-do motor.
+⭐ **Então o jornal noticia o ORDINÁRIO:** o PIB saiu, a inflação veio, a Saúde caiu 2 pontos, o
+Congresso não votou nada. **Isso é ficha cheia todo mês.**
+
+**E quem escolhe a manchete é uma regra, não um modelo:** o que mais se moveu, medido em desvio
+da própria régua. O texto sai de moldes, e a variedade vem da **combinação** — quem falou, sobre
+o quê, com que ângulo, contra quem.
+
+⭐ **O veículo tem linha editorial, e ela é o mesmo avaliador.** O jornal do mercado e o da rua
+noticiam o mesmo fato com sinais opostos, porque a utilidade deles tem sinais opostos. **Isso é
+uma subtração, não um prompt.**
+
+⚠ **E os veículos seguem o [ADR 0003](../adr/0003-o-mundo-e-real-as-pessoas-sao-inventadas.md):**
+imprensa inspirada na real, com **nome alterado** — a mesma regra dos partidos.
+
+---
+
+## 7 · A ORDEM, POR CUSTO
+
+| passo | o quê                                    | motor      | custo   | depende |
+| ----- | ---------------------------------------- | ---------- | ------- | ------- |
+| **1** | as quatro ambições ganham preço (item 2) | liga canal | pequeno | —       |
+| **2** | a rua e o lobby leem a lei (item 1)      | liga canal | médio   | —       |
+| **3** | o mundo protocola texto (item 3)         | abre motor | grande  | 1       |
+| **4** | o jornal (item 4)                        | abre motor | médio   | 3       |
+
+⭐ **O passo 1 é o item mais barato do projeto inteiro com efeito visível**, e ele é a definição
+do que ele pediu: personalidade.
+
+---
+
+## 8 · ⛔ O QUE ESTE CICLO RECUSA
+
+| pedido                                     | por quê                                                                      |
+| ------------------------------------------ | ---------------------------------------------------------------------------- |
+| **chamar modelo de linguagem**             | decisão dele, 04/09/2026: **zero centavo**. E o avaliador não precisa        |
+| **texto de manchete escrito por IA**       | molde + combinação. A variedade vem de quem fala, não de quem escreve        |
+| **a IA decidir se uma política funcionou** | [ADR 0001](../adr/0001-a-ia-fica-fora-do-turno.md), e ele continua certo     |
+| **nomes reais de veículo**                 | ADR 0003 — nome alterado, como os partidos                                   |
+| **conversa livre com um personagem**       | ⚠ não é recusa, é ordem: depois do item 2. Sem a voz definida, vira genérico |
+
+---
+
+## 9 · ⚖ A RESTRIÇÃO
+
+1. `npm run validate` verde, e **a captura aberta**;
+2. **todo item aqui mexe em motor** — então `simulate` roda e **a série se reescreve no mesmo
+   commit**. ⚠ Os itens 1 e 2 vão mover a série de propósito: eles mudam quem vota o quê;
+3. ⛔ **e nenhum item inventa número.** A ambição já é sorteada, a rua já é repartida, o lobby já
+   tem alcance. **O avaliador não acrescenta dado — ele liga o que já está no catálogo.**
+
+---
+
+## ⛔ O QUE ESTE CICLO ERA, até 04/09/2026
+
+Ele era um plano de integração de IA por API, escrito em 03/09/2026 a pedido dele — _"eu quero
+uma IA mais aprimorada e abrangente no meu jogo sim"_. Tinha quatro lugares (jornal, voz,
+veredito, gerador de catálogo), um cache pela ficha do mês para salvar o determinismo, e uma
+seção 6 sobre onde morar a chave.
+
+**Morreu a arquitetura, não o destino.** O texto inteiro está no `git log`, e a decisão que o
+matou está no [`journal.md`](../journal.md) de 04/09/2026. ⭐ **O ADR 0001 chegou a ser emendado
+para permitir a IA dentro do turno** — a emenda fica de pé e não custa nada, mas hoje ela não
+tem uso.

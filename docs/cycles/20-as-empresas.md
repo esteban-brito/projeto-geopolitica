@@ -136,8 +136,11 @@ ou privada, quanto emprega, quanto exporta e para onde, e quanto ela vale.
 
 ### 1 · O catálogo — e ele vem antes de qualquer mecânica
 
-📐 O projeto já tem seis catálogos com esquema e guarda (`areas`, `programs`, `parties`, `bills`,
-`cast`, `calendar`). Empresas entram como o sétimo, com o mesmo validador.
+📐 O projeto já tem **treze módulos de dado com esquema e guarda** em `src/data/` — dezesseis
+esquemas ao todo, porque `cast`, `lobbies` e `opinion` declaram dois cada. A guarda `schema`
+recusa módulo de dado sem esquema, esquema que o catálogo nunca valida, e esquema fora de
+`src/data/`. **Empresas entram como o décimo quarto, com o mesmo validador e sem uma linha nova
+de infraestrutura.**
 
 ⭐ **E este é o item que casa com o [ciclo 19](19-a-voz.md):** o V4 de lá é o gerador de catálogo
 por IA. **Treze empresas com nome, porte, emprego e exportação é exatamente o tipo de trabalho

@@ -2,7 +2,7 @@
 
 > **Estado:** ▶ direção declarada em 31/08/2026, sem passos acordados. Este arquivo é
 > **registro**, e não plano: nenhuma linha dele foi orçada, medida ou posta em ordem de
-> execução. O plano em vigor continua sendo o [ciclo 13](13-o-glorioso.md), em 25 de 49.
+> execução. O plano em vigor continua sendo o [ciclo 13](13-o-glorioso.md), em 26 de 49.
 >
 > **Palavras dele, em três mensagens:**
 >
@@ -204,5 +204,5 @@ importa mais que a lista.**
 ## 6 · ⛔ O QUE ESTE ARQUIVO NÃO É
 
 - **não é um plano** — não há passo, ordem, orçamento de tela nem critério de aceitação;
-- **não abre trabalho** — o plano em vigor é o ciclo 13, em 25 de 49;
+- **não abre trabalho** — o plano em vigor é o ciclo 13, em 26 de 49;
 - **não reabre o ADR 0003** — pessoa é fictícia, e ponto.

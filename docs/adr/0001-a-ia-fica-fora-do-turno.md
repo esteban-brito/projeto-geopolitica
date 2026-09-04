@@ -92,3 +92,30 @@ IA é, na verdade, a prova de que faltam variáveis de modelo — não inteligê
 - O jogo continua rodando sem rede, sem chave e sem servidor;
 - Qualquer camada de IA que entrar depois é **opcional por construção**: o jogo
   tem de continuar jogável com ela desligada.
+
+## ⭐ EMENDA DE 04/09/2026 — a IA pode ESCOLHER dentro do turno
+
+**Decidida por ele, e ela abre a porta que este ADR tinha fechado por inteiro:** _"só não
+quero que você leve os limites e travas em conta, pq tem coisa que eu propus, e eu que
+mando"_.
+
+A regra de cima dizia _"a IA nunca entra dentro de `playMonth`"_, e o
+[ciclo 19](../cycles/19-a-voz.md) §4 propõe exatamente isso: `demandsOf` — que roda em
+`turn.mjs` — passa a perguntar à IA **qual** chantagem o lobby faz no mês. **O ciclo é de
+03/09/2026 e este ADR é de 13/08; o mais novo vale.**
+
+**O que a emenda troca, e a troca é estreita:**
+
+| antes                                    | agora                                                           |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| a IA não entra em `playMonth`, e ponto   | ela entra **escolhendo entre opções que o motor já precificou** |
+| o determinismo vinha de ela não estar lá | vem do **cache pela ficha do mês** (ciclo 19 §3)                |
+
+⛔ **O que NÃO muda, e é o que este ADR de fato protege:** a IA continua sem criar opção
+nova em partida, sem mexer em preço, índice ou voto, e sem arbitrar se uma política
+funcionou. As quatro razões da seção "Por que a IA não decide" continuam de pé — a emenda
+não as contesta, ela mostra que **escolher entre dois preços que o motor escreveu não é
+decidir um preço.**
+
+⚖ **O critério de aceitação é um só, e ele é mecânico:** `npm run simulate` de 48 meses tem
+de dar **exatamente** a mesma série antes e depois. Se mudar um número, a IA vazou.

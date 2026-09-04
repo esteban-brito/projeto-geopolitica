@@ -25,21 +25,36 @@
 
 ---
 
-## 1 · ⭐ A TESE: o jogo tem SEIS gestos, e o cargo tem QUATRO canetas
+## 1 · ⭐ A TESE: o jogo tem SEIS jogadas, e o cargo tem QUATRO canetas
 
-📐 **Medido no `app.mjs` de hoje** — todo gesto que o jogador pode fazer, o mandato inteiro:
+📐 **Recenseado no `app.mjs` de hoje** — todo gesto que o jogador pode fazer, o mandato inteiro,
+com a linha que o lê:
 
-| gesto           | o que é                                       |
-| --------------- | --------------------------------------------- |
-| `data-section`  | **trocar de tela** — não é jogada             |
-| `data-band`     | mover a faixa de uma lei                      |
-| `data-protect`  | proteger uma área do corte                    |
-| `data-pledge`   | marcar um compromisso — **uma vez, na posse** |
-| `data-dispatch` | abrir uma carta                               |
-| `data-open`     | abrir um bloco                                |
+| gesto                         | linha  | o que é                                       |
+| ----------------------------- | ------ | --------------------------------------------- |
+| `data-program`                | `1264` | mover a verba de um programa                  |
+| `data-band` + `data-side`     | `1279` | mover o piso ou o teto de uma lei             |
+| `data-party`                  | `1253` | oferecer emenda a uma bancada                 |
+| `data-protect`                | `1224` | poupar uma área do corte                      |
+| `data-letter` + `data-answer` | `1189` | responder uma carta                           |
+| `data-pledge` + `data-choice` | `1177` | marcar um compromisso — **uma vez, na posse** |
+| `#advance`                    | `1300` | fechar o mês                                  |
+| `data-section`                | `1235` | **trocar de tela** — não é jogada             |
+| `data-dispatch`               | `1211` | **abrir uma carta** — não é jogada            |
+| `data-open`                   | —      | **abrir um bloco** — não é jogada             |
 
-**Tirando navegação e leitura, o presidente deste jogo faz TRÊS coisas:** mexe em verba, mexe em
-faixa de lei, e escolhe quem o corte poupa. Ele escreve um texto e **espera**.
+⚠ **A primeira versão desta tabela tinha SEIS linhas e faltavam três — e as três eram jogada, não
+navegação:** a verba, a emenda e a resposta de carta. A emenda ficou de fora do censo do plano que
+diz, na seção 2.3, que **ela é a única moeda do jogo**.
+
+**Tirando navegação, leitura e o botão de fechar o mês, o presidente deste jogo faz SEIS coisas** —
+e cinco delas são a mesma família: mover um número que já existe. Ele mexe em verba, em faixa de
+lei e em emenda; escolhe quem o corte poupa; responde sim ou não a quem escreveu; e promete três
+coisas no primeiro mês. **Ele escreve um texto e espera.**
+
+⭐ **E é isso que a tese diz, com o censo certo:** nenhuma das seis **cria** um instrumento. Não há
+uma jogada em que o presidente assine algo que valha por si — que é o que ① a caneta significa, e é
+o buraco que os itens 3 e 6 deste ciclo existem para encher.
 
 📙 **E a presidência brasileira é o contrário disso.** A tese da pesquisa 04, que este ciclo
 executa: _o jogo modela o VOTO, e o cargo é feito de AGENDA_ (Figueiredo & Limongi, 1999). O
@@ -342,7 +357,7 @@ total por desvio.**
 
 ## 7 · ⚖ A RESTRIÇÃO, e ela vale para os onze
 
-1. `npm run validate` verde — 📐 hoje **13 guardas · 63 provas sintéticas · 156 arquivos · 314
+1. `npm run validate` verde — 📐 hoje **13 guardas · 63 provas sintéticas · 315
    provas · passeio verde**;
 2. ⚠ **abrir a captura.** Três defeitos já atravessaram tipo, guarda e trezentas provas para
    morrer na imagem;

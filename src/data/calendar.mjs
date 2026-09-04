@@ -49,9 +49,10 @@ export const CALENDAR = [
     what: "a proposta de orçamento do ano que vem vai ao Congresso",
     source: "CF art. 35, §2º, III do ADCT",
   },
-  /* ⚠ ELE E BIMESTRAL, e por isso nao cabe num campo de mes unico: `everyMonths` existe para
-     ele e a ausencia dela significa "uma vez por ano". Sem o campo, o relatorio da LRF viraria
-     um marco de janeiro e o jogo perderia o unico compromisso que se repete dentro do ano. */
+  /* ⚠ ELE E BIMESTRAL, e por isso nao cabe no campo `month` sozinho: quem diz o passo e
+     `REPEATS`, embaixo, e a ausencia ali significa "uma vez por ano". A repeticao ficou FORA
+     do esquema de proposito — como campo, ela obrigaria os outros tres a escrever
+     `everyMonths: 12`, que e a mesma ausencia com mais bytes. */
   {
     id: "bimestral",
     label: "Relatório bimestral",

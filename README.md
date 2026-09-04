@@ -6,7 +6,7 @@ dependência de runtime.
 
 ```bash
 npm ci
-npm run serve      # http://127.0.0.1:5173/ — doze telas, jogaveis
+npm run serve      # http://127.0.0.1:5173/ — treze enderecos, jogaveis
 npm run simulate   # roda um mandato inteiro no terminal, sem tela
 npm run validate   # guardas + tipos + lint + formato + testes + passeio — o portao
 npm run check      # so as guardas, 2s; `npm test` roda so as suites
@@ -42,9 +42,17 @@ MALHA     ── a capacidade do Estado de entregar              IMPLEMENTADO
 CASCATA   ── efeitos vigentes viram deltas, com defasagem    contrato
 CORRENTE  ── PIB, inflação, juro, desemprego e o custo da dívida  IMPLEMENTADO
 LASTRO    ── receita, despesa, saldo, dívida                 IMPLEMENTADO
-SONDA     ── o que foi divulgado vira aprovação por segmento contrato
-DELTA     ── deriva a rede legível do que acabou de acontecer contrato
+SONDA     ── o que foi divulgado vira aprovação por segmento IMPLEMENTADO
+ESTRATO   ── a pilha de normas lida como faixa vigente       IMPLEMENTADO
+ELENCO    ── as pessoas do mandato, e a memória de cada uma  IMPLEMENTADO
+CALDEIRA  ── a pressão de cada grupo, e as três rupturas     IMPLEMENTADO
+DELTA     ── deriva a rede legível do que acabou de acontecer IMPLEMENTADO
 ```
+
+⚠ **Os dois que são contrato são contrato de verdade:** `src/domain/events/` e
+`src/domain/propagation/` têm `export {}` e mais nada. Os outros nove rodam. A tabela
+completa, com o que cada um recebe e devolve, está em
+[`docs/standards.md`](docs/standards.md) §3.
 
 O espaço discricionário de LASTRO é a moeda com que ECLUSA paga: os dois se
 acoplam pelo orçamento, e não por uma regra escrita para isso. Quem os compõe é
@@ -71,13 +79,21 @@ que a regra vale, não que o número é bom**. A pergunta que faltava instrument
 "como esta partida se comporta ao longo de 48 meses?" — não se responde apertando
 um botão quarenta e oito vezes no navegador.
 
-As cinco políticas são **sondas, e não adversários**: cada uma exagera um
+As nove políticas são **sondas, e não adversários**: cada uma exagera um
 comportamento para isolar um efeito. `herdado` não toca em nada e mede o que o
 orçamento do antecessor faz sozinho, `piso` põe tudo no mínimo legal e mede a
 margem de manobra real, `base` mede o custo de apenas continuar governando,
 `agenda` joga com prudência fiscal e `promessa` oferece verba cheia sem olhar o
 caixa — a distância entre as duas últimas é o preço da imprudência, medido em
-meses de base.
+meses de base. As quatro últimas nasceram depois e **escolhem** em vez de
+espalhar: `explorador` promete a todos e quebra a própria base, `concentra` põe
+tudo numa área só, `favoritos` dá emenda cheia às três maiores bancadas e nada às
+outras seis, e `legislador` protocola texto todo mês.
+
+⚠ **As seis primeiras espalham nos dois eixos** — verba dividida entre as oito áreas,
+emenda oferecida a cada bloco na mesma medida. **Uma sonda que espalha mede o
+espalhamento, e conclui que o mundo é plano.** Foi por isso que as quatro últimas
+existem, e é por isso que a série de calibragem do handoff não substitui rodá-las.
 
 ## Validação
 
@@ -90,7 +106,9 @@ não como exemplos: elas afirmam o que vale para todo estado válido, e não o q
 vale para um. A mesma exigência das guardas se aplica — a suíte do reducer prova
 que sua asserção central consegue falhar.
 
-`npm run walk` faz o que nenhum dos dois faz: **usa** a tela, a 1440×980. Ele entra
+`npm run walk` faz o que nenhum dos dois faz: **usa** a tela, em duas janelas —
+1440×980 e 1440×900, e a segunda nasceu porque a primeira era exatamente a única
+altura em que o Gabinete cabia. Ele entra
 numa área, arrasta o orçamento até furar um piso, compra bancada, estoura o caixa,
 avança o mês, confere o relatório e abre o placar de Finanças — medindo rolagem,
 recorte, sobreposição e contraste no pixel renderizado a cada parada. Ele nasceu

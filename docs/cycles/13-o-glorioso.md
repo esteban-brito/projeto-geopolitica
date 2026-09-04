@@ -1342,7 +1342,7 @@ Seis sessões de desenho caíram na metade sem portão.
 
 ### O mínimo, e ele vale para os 49
 
-1. `npm run validate` verde — **13 guardas · 63 provas sintéticas · 314 provas** · o passeio;
+1. `npm run validate` verde — **13 guardas · 63 provas sintéticas · 315 provas** · o passeio;
 2. ⚠ **abrir a captura em `captures/passeio/`.** O portão não sabe olhar, e três defeitos já
    atravessaram tipo, guarda e cem provas para morrer na imagem.
 

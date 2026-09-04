@@ -1,16 +1,23 @@
 # Ciclo 14 — a Caixa de Entrada
 
-> ⚠ **FALTA O PASSO 4, E DOIS ITENS QUE ESPERAM DECISÃO DELE.** Escrito em 28/08/2026 a pedido dele — _"eu estou
-> vendo diversos bugs, brechas, visual feio e tudo mais, na caixa de entrada. Eu quero testar
-> sua capacidade investigativa"_ —, e executado a partir do passo 1 na mesma data.
+> ✔ **FECHADO em 29/08/2026, com UM item declarado de fora.** Escrito em 28/08/2026 a pedido
+> dele — _"eu estou vendo diversos bugs, brechas, visual feio e tudo mais, na caixa de entrada.
+> Eu quero testar sua capacidade investigativa"_ —, e executado a partir do passo 1 na mesma
+> data.
 >
-> ⚠ **E ELE CONTINUA INCOMPLETO POR DECLARAÇÃO.** A investigação abriu quatro frentes. **Duas
-> fecharam** — o motor da correspondência e a view — e são a origem de tudo o que está aqui.
-> **Duas morreram no limite de sessão** e foram relançadas. ✔ **O _wiring_ do entrypoint
-> fechou** — 15 cenários, ~120 meses dirigidos no navegador — e trouxe o **passo 1½** abaixo.
-> ✔ **A geometria fechou** — três janelas, 24 meses, 14 espécies — e trouxe o **passo 3½**.
+> A investigação abriu quatro frentes, e **as quatro fecharam**: o motor da correspondência e a
+> view são a origem de tudo o que está aqui; o _wiring_ do entrypoint fechou com 15 cenários e
+> ~120 meses dirigidos no navegador, e trouxe o **passo 1½**; a geometria fechou com três
+> janelas, 24 meses e 14 espécies, e trouxe o **passo 3½**.
 >
-> **As quatro frentes fecharam. O plano está completo.**
+> **Os oito passos:** 1 · 1½ · 2 · 3 · 3½ (quatro de cinco) · 3¾ · 4 · 5. ⚠ **O que sobra é o
+> 3¾**, e sobra **uma coisa só** — as duas cartas sem número (a que a Mesa pautou e a que foi
+> para a gaveta). ✔ **O resto do 3¾ fechou:** os dois alarmes viajam com a carta, e o
+> fechamento do mês virou registro guardado na versão 19 do save.
+>
+> ⚠ **E o cabeçalho anterior dizia "FALTA O PASSO 4"** enquanto o próprio arquivo marcava, 500
+> linhas abaixo, _"PASSO 4 — ✔ FEITO em 29/08/2026"_. É a família que `standards.md` §7 declara
+> sem guarda: **prosa que afirma um estado que o código deixou de ter.**
 
 ## Por que ela pesa
 
@@ -531,12 +538,16 @@ tem 24 campos, e 24 deles × 24 meses no save seria peso sem leitor. Teto igual 
 
 ⚠ **O save antigo é recusado** — a versão 19 não converte a 18. É o preço que ele aceitou.
 
-### ⛔ A carta de posse — espera decisão dele
+### ✔ A carta de posse — resolvida por fora, pelo C5/C6
 
-O anexo dela lê `inherited.mandatory`, que o entrypoint calcula com o estado **corrente**. A
-herança é um fato do mês 0, e congelá-la exige o valor gravado na criação da partida — **o mesmo
-bump de esquema que `last` (achado 46) já pede**. Enquanto ele não entrar, o número da primeira
-carta do jogo anda com o mandato.
+O anexo dela lia `inherited.mandatory`, que o entrypoint calculava com o estado **corrente**: a
+herança é um fato do mês 0, e o número da primeira carta do jogo andava com o mandato.
+
+⚠ **A fila de "espera o mesmo bump de esquema" NÃO EXISTE MAIS.** Ela tinha quatro itens; o
+`last` fechou na versão 19, e o `events`, o `weight` e os anexos saíram **sem bump nenhum** — o
+validador do save não olha dentro de uma carta. A posse foi reformada inteira pelo **C5/C6 do
+[ciclo 13](13-o-glorioso.md)** em 30/08/2026, que a transformou na primeira pergunta do mandato
+e custou a versão 20.
 
 ---
 
