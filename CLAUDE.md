@@ -98,7 +98,14 @@ aprovou. **O A3 está pela metade:** os dois instrumentos já têm nomes diferen
 o teto do arcabouço, `atRisk` para a meta primária da LDO) e o rateio deixou de gravar o corte
 na lei — **falta o contingenciamento ser ESCOLHIDO**, que é o nome do item.
 
-**Há OITO planos na mesa**, e o 13, o 18, o 19 e o 20 são os abertos:
+**Há NOVE planos na mesa**, e o 13, o 18, o 19, o 20 e o 21 são os abertos:
+
+- [`cycles/21-a-mesa.md`](docs/cycles/21-a-mesa.md) — ⭐ **PRONTO PARA EXECUTAR, e é por aqui que
+  a próxima sessão começa.** O Gabinete vira mesa: assinar no centro, a margem com **seis** linhas
+  escolhidas a dedo (hoje são vinte), a promessa da posse em cima e o calendário no pé. O arranjo
+  e as canetas — **contingenciamento e MP** — já foram escolhidos por ele, então **não há decisão
+  pendente**. ⚠ O passo 1 tem de reescrever a asserção do passeio que exige zero controles no
+  Gabinete;
 
 - [`cycles/20-as-empresas.md`](docs/cycles/20-as-empresas.md) — **as empresas, de 03/09/2026.**
   A lei trata criar e vender de formas OPOSTAS, e isso vira jogo: fundar estatal pede **lei

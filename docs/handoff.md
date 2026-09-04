@@ -18,6 +18,82 @@
 
 ## ▶ COMECE POR AQUI
 
+## 📋 A SESSÃO DE 03/09/2026 — o índice do que foi definido
+
+**Foi a sessão mais longa do projeto.** Este índice existe para nada se perder. Cada linha
+aponta para onde a coisa mora.
+
+### O que foi CONSTRUÍDO e commitado
+
+| commit    | o quê                                                                                                                                               |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `6561a04` | o **A3** (contingenciamento escolhido), a **regra 6** da guarda `prose`, a **separação Gabinete × Email** e o **passeio remendado** em cinco pontos |
+| `daea7be` | os **dois menus viraram a mesma peça**, o **fundo voltou a ser um só**, e o jogo passou a se chamar **República Simulator**                         |
+| `9d52753` | o **aviso do relatório bimestral** — o A3 fechou inteiro                                                                                            |
+| `3fef5bf` | o **ciclo 18**, com o Brasil de hoje apurado na web e datado                                                                                        |
+| `edfa73c` | os **ciclos 19 e 20**, e o achado das quatro ambições mortas                                                                                        |
+
+### Os QUATRO PLANOS que nasceram hoje
+
+| plano                                            | o que ele resolve                                                      | estado                                 |
+| ------------------------------------------------ | ---------------------------------------------------------------------- | -------------------------------------- |
+| [**18 · A CANETA**](cycles/18-a-caneta.md)       | o cargo. 11 itens em ordem de custo, com o Brasil de 2026 datado       | ▶ recomendação registrada: itens 1 a 4 |
+| [**19 · A VOZ**](cycles/19-a-voz.md)             | a IA. Hoje ela é **zero**, e o plano a liga sem quebrar o determinismo | ▶ decisão pendente: onde mora a chave  |
+| [**20 · AS EMPRESAS**](cycles/20-as-empresas.md) | estatal, privatização, fundar empresa. 9 itens                         | ▶ começa pelo catálogo                 |
+| [**21 · A MESA**](cycles/21-a-mesa.md)           | o Gabinete vira mesa. **Arranjo e canetas já escolhidos por ele**      | ⭐ **pronto para executar**            |
+
+### As DECISÕES que ele tomou hoje, e elas não se reabrem
+
+1. **o jogo se chama República Simulator**, em todo lugar que era Planalto. Ficaram de fora o
+   Palácio (`"quer o Planalto em 2030"`, que é lugar) e uma citação do que a tela dizia em 2026;
+2. ⛔ **ESCREVA COMO GENTE** — está no `CLAUDE.md`, nas regras que não se quebram. Vale para o
+   texto do jogo, os docs e a resposta no terminal. Sai a reviravolta final, a inversão poética,
+   o paralelismo de efeito e a metáfora à toa;
+3. **a mesa do Gabinete: assinar no centro**, margem à direita, promessa em cima, calendário no
+   pé. As canetas escolhidas são **contingenciamento** e **medida provisória** — o decreto
+   tributário e a privatização ficaram fora por ora;
+4. **os números da margem são escolhidos a dedo**, com a regra: _cada linha tem de mudar uma
+   decisão que ele está prestes a tomar_. Vinte linhas viram seis;
+5. **a IA fica dentro dos ADR 0001 e 0002 por enquanto**, e ele quer "mais aprimorada e
+   abrangente" — o que é fácil, porque hoje é zero;
+6. **sem varredura retroativa de prosa.** A regra vale daqui para a frente, e limpo o que eu
+   tocar. Ordem dele: _"primeiro vamos focar no desenvolvimento do jogo"_;
+7. **as chaves do save foram renomeadas sem migração**, porque ele não tem partida salva.
+
+### Os ACHADOS que nasceram hoje
+
+| achado                                                                                                                                           | onde está registrado |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- |
+| ⛔ **a grade de 3 colunas nunca existiu** — `annex[data-wide]` atravessa a grade, e os seis blocos ficaram numa coluna de 1197px estourando 57px | ciclo 21 · §1        |
+| ⛔ **o fundo tinha duas costuras**, e nenhuma guarda via: a lâmina de vidro da barra e o recorte reto da tinta do país                           | handoff, abaixo      |
+| ⛔ **quatro das cinco ambições não fazem nada** — só `succession` tem efeito. Uma delas é `court`, "quer uma vaga no Supremo"                    | ciclo 18 · item 10   |
+| ⛔ **a plataforma da posse é invisível por 48 meses**, e `betrayal` cobra **8 pontos/mês** por quebrá-la. Medido                                 | ciclo 21 · §5        |
+| ⛔ **o jogo tem SEIS gestos**, e um é trocar de tela. O presidente faz três coisas                                                               | ciclo 18 · §1        |
+| ⛔ **a regra do C4 que proibia controle no Gabinete está morta** — as duas premissas dela caíram nesta sessão                                    | ciclo 21 · §7        |
+| ⛔ **o passeio navegava pela tela errada em cinco pontos**, e uma checagem provava o próprio clique                                              | handoff, abaixo      |
+
+### O BRASIL de hoje, apurado na web em 03/09/2026
+
+Tudo com fonte e data no [ciclo 18 · §2](cycles/18-a-caneta.md). O que mais muda o jogo:
+
+- **três vagas do STF caem nos meses 16, 28 e 48** do mandato simulado;
+- **o Congresso derrubou 43 de 87 vetos em três anos** (49%), e usa-se o STF para segurar;
+- **o STF condiciona a execução de emenda**, que é a única moeda do jogo;
+- **a Mesa se renova em fev/2027 e fev/2029**, e o jogo não tem quem preside;
+- **a tarifa americana** deu um caso de choque com destino e desvio;
+- ⚠ e a **calibragem de 2026** (meta, déficit com precatórios, Lei 15.270/2025) está
+  **registrada e não executada** — mexer em `src/data/` é decisão dele.
+
+### ▶ POR ONDE A PRÓXIMA SESSÃO COMEÇA
+
+**O [ciclo 21](cycles/21-a-mesa.md), passos 1 a 4.** Não há decisão pendente nele: o arranjo, as
+canetas e os números já foram escolhidos. O passo 5 (a MP) pede sessão própria.
+
+⚠ **E o passo 1 tem de reescrever a asserção do passeio** que exige zero controles no Gabinete,
+com a razão registrada — senão o portão reprova a mesa inteira.
+
+---
+
 **Estado: verde.** `npm run validate` fecha com **13 guardas · 63 provas sintéticas · 152
 arquivos · 311 provas · passeio verde**. Branch `caixa-de-entrada`, **23 commits à frente de
 `main`**, e **nada foi enviado ao remoto**. O último commit é `80a6d9f`.
