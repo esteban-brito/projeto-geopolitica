@@ -308,9 +308,9 @@ export const UI = {
        explica nada a quem está decidindo onde ele some. */
     contingencySubject: "O relatório bimestral fecha no mês que vem",
     contingencyBody:
-      "Receitas e despesas do bimestre vão a público, e é nele que o contingenciamento se decide. Proteger uma área do corte é ordem do mês, e o que ela deixa de ceder o resto paga.",
+      "O balanço do bimestre é publicado, e é nele que se decide o contingenciamento. Se você proteger uma área do corte, o corte cai mais fundo nas outras.",
     contingencyLegend: "O corte deste mês",
-    contingencyNote: "o mês honrou, do que foi pedido:",
+    contingencyNote: "quanto do pedido o mês pagou:",
     minoritySubject: "O governo perdeu a maioria",
     minorityBody: "As cadeiras que respondem ao governo caíram abaixo da maioria simples.",
     /* ⚠ ELA ERA UMA COSTURA ENTRE DOIS NUMEROS — "436 de 513, e a maioria fecha em 257" — e os
@@ -568,15 +568,15 @@ export const UI = {
     perYear: TERMOS.perYear,
     /* ── O DECRETO DE CONTINGENCIAMENTO ───────────────────────────────────────
        ⚠ ELE FALA EM CORTE, e não em "rateio": o jogador vê o dinheiro sumir, e a palavra do
-       motor não explica nada a quem está decidindo onde ele some. E a nota diz o PREÇO nos
-       dois estados — proteger empurra o corte para o vizinho, e não protegê-la mostra quanto
-       do pedido o mês honra. Um botão que só dissesse "proteger" seria um botão sem preço. */
+       motor não explica nada a quem está decidindo onde ele some. A nota diz o preço nos dois
+       estados: protegida, quem paga são as outras áreas; solta, ela mostra quanto do pedido o
+       mês paga. Um botão que só dissesse "proteger" seria um botão sem preço. */
     decree: "Proteger do corte",
     decreeOn: "Protegida do corte",
     decreeCost: "o corte cai mais fundo nas outras áreas",
-    decreeHonours: "o mês honra",
+    decreeHonours: "o mês paga",
     decreeAsked: "do que você pediu",
-    decreeWhole: "o mês honra tudo o que você pediu",
+    decreeWhole: "o mês paga tudo o que você pediu",
     /* OS TITULOS DAS TRES COLUNAS DE NUMERO. */
     /* A COLUNA DO BOTÃO tem título só para quem lê por leitor de tela: na tela ele seria um
        rótulo em cima de um botão que já diz o que faz. */

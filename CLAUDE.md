@@ -17,6 +17,16 @@ runtime, ESM puro servido como arquivo.
 
 - **Português na prosa e na interface; inglês em código e caminhos.** Sem acento em
   identificador;
+- ⛔ **ESCREVA COMO GENTE, e vale para tudo** — o texto do jogo, os docs e a resposta no
+  terminal. Ordem dele em 03/09/2026: _"tu não ta escrevendo um livro não, nem uma poesia
+  porra, escreve igual uma pessoa normal, não uma IA imbecil"_. **Frase curta, sujeito e verbo
+  na ordem normal, número no lugar do adjetivo.** O que sai:
+  - a **reviravolta final** — _"X é A, e é isso que faz dele B"_. Diga só o que acontece;
+  - a **inversão poética** — _"o que ela deixa de ceder o resto paga"_ vira _"se você proteger
+    uma área, o corte cai mais fundo nas outras"_;
+  - o **paralelismo de efeito** — _"a pauta não morre, ela não acontece"_;
+  - a **metáfora sem necessidade** — _"a caneta mais honesta do jogo"_ vira _"o poder mais
+    direto"_;
 - **A tela não refaz conta do motor — ela pergunta.** Toda leitura mostrada enquanto o
   jogador decide sai da mesma função que o turno vai executar;
 - **Motor nenhum chama outro motor.** Quem compõe é `src/application/`;
@@ -88,7 +98,17 @@ aprovou. **O A3 está pela metade:** os dois instrumentos já têm nomes diferen
 o teto do arcabouço, `atRisk` para a meta primária da LDO) e o rateio deixou de gravar o corte
 na lei — **falta o contingenciamento ser ESCOLHIDO**, que é o nome do item.
 
-**Há SEIS planos na mesa**, e o 13 e o 18 são os abertos:
+**Há OITO planos na mesa**, e o 13, o 18, o 19 e o 20 são os abertos:
+
+- [`cycles/20-as-empresas.md`](docs/cycles/20-as-empresas.md) — **as empresas, de 03/09/2026.**
+  A lei trata criar e vender de formas OPOSTAS, e isso vira jogo: fundar estatal pede **lei
+  específica** (CF art. 37, XIX) e vender **subsidiária** é decreto, porque a autorização
+  genérica da Lei 9.491/1997 basta. Vender o controle da **matriz** volta a pedir o Congresso.
+  Nove itens, e o primeiro é o catálogo;
+- [`cycles/19-a-voz.md`](docs/cycles/19-a-voz.md) — **a IA, de 03/09/2026.** Hoje ela é **zero**:
+  `dependencies: {}`. Os três lugares que os ADR 0001 e 0002 abriram estão vazios. O plano os
+  enche **sem quebrar o determinismo**, por cache do texto com a chave da ficha do mês — e propõe
+  o meio-termo: **a IA escolhe entre opções que o motor precificou**;
 
 - [`cycles/18-a-caneta.md`](docs/cycles/18-a-caneta.md) — **o plano de 03/09/2026, e ele executa a
   pesquisa 04**: o jogo tem **seis gestos** e o cargo tem **quatro canetas**. Onze itens em ordem

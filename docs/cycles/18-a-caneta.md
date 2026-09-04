@@ -298,6 +298,16 @@ quem suspenda.
 
 ### 10 · ⑤ A indicação ao STF passa pelo Senado — custo médio
 
+⛔ **E ela tem um achado próprio: QUATRO DAS CINCO AMBIÇÕES NÃO FAZEM NADA.** 📐 O elenco sorteia
+entre `succession`, `cabinet`, `state`, `court` e `seat`. Só a primeira tem efeito —
+`successionDrag: 0,35` em `cast/index.mjs`. As outras quatro são geradas, aparecem na tela do
+Congresso e **nenhuma muda uma linha do motor**. É o quinto canal morto do projeto.
+
+⭐ **E uma delas é `court` — "quer uma vaga no Supremo".** Um senador com essa ambição negocia a
+indicação de outro jeito que um senador que quer um ministério. **A ambição já está sorteada, já
+está na tela, e já tem a memória do `ELENCO` atrás. Ligar as outras quatro é barato, e este item
+é onde a primeira delas ganha uso.**
+
 📗 CF art. 101, parágrafo único: nomeação pelo presidente **após aprovação por maioria absoluta
 do Senado**.
 
