@@ -88,7 +88,14 @@ aprovou. **O A3 está pela metade:** os dois instrumentos já têm nomes diferen
 o teto do arcabouço, `atRisk` para a meta primária da LDO) e o rateio deixou de gravar o corte
 na lei — **falta o contingenciamento ser ESCOLHIDO**, que é o nome do item.
 
-**Há CINCO planos na mesa**, e o 13 é o único aberto:
+**Há SEIS planos na mesa**, e o 13 e o 18 são os abertos:
+
+- [`cycles/18-a-caneta.md`](docs/cycles/18-a-caneta.md) — **o plano de 03/09/2026, e ele executa a
+  pesquisa 04**: o jogo tem **seis gestos** e o cargo tem **quatro canetas**. Onze itens em ordem
+  de custo, cada um declarando de que peça do cargo vem — a caneta, a pauta, a coalizão, o
+  contrapoder, o calendário. ⚠ **A seção 2 é a atualização do Brasil, apurada na web e datada:**
+  três vagas do STF caem nos meses 16, 28 e 48 do jogo; o Congresso derrubou **43 de 87 vetos**
+  em três anos; o STF condiciona a execução de emenda, que é a única moeda do jogo;
 
 - [`cycles/17-o-brasil-inteiro.md`](docs/cycles/17-o-brasil-inteiro.md) — **direção declarada em
   31/08/2026, e NÃO é plano**: estados, capitais e **empresas reais com nomes alterados** — a

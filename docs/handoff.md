@@ -232,6 +232,38 @@ não responder — sem a sonda, cada sessão deixaria um processo órfão segura
 dois deles disputam a porta — o segundo morre com `ERR_CONNECTION_REFUSED`, que **não é
 defeito da tela**. Aconteceu nesta sessão e custou uma leitura errada.
 
+### ▶ O CICLO 18 NASCEU — e ele é o plano do CARGO
+
+**Pedido dele em 03/09/2026:** _"quero que o meu jogo seja um verdadeiro simulador de presidente
+do brasil"_, com escopo aberto e com uma atualização do Brasil de hoje.
+
+⛔ **A medição que o abre é a mais incômoda do projeto:** 📐 o jogo tem **seis gestos**, e um
+deles é trocar de tela. Tirando navegação e leitura, **o presidente faz três coisas** — mexe em
+verba, mexe em faixa de lei, e escolhe quem o corte poupa.
+
+**A seção 2 do ciclo é a atualização, apurada na web e datada.** O que reordena o plano:
+
+- ⭐⭐ **três vagas do STF caem DENTRO do mandato** — Fux em abr/2028, Cármen Lúcia em abr/2029,
+  Gilmar Mendes em dez/2030, que são os **meses 16, 28 e 48** do jogo. E a indicação passa pelo
+  Senado, o que a torna a única nomeação que se negocia;
+- ⭐⭐ **o Congresso derrubou 43 de 87 vetos em três anos** (49%, recorde), e a sequência que se
+  repete é veto derrubado → AGU no STF → liminar. **O jogo não tem nenhuma das três peças;**
+- ⭐ **o STF condiciona a execução de emenda** (ADPF 854, ADI 7697) — e emenda é a **única** moeda
+  deste jogo;
+- a Mesa da Câmara e do Senado **se renova em fev/2027 e fev/2029**, dentro do jogo, e o jogo não
+  tem quem preside;
+- a tarifa americana deu um caso completo de choque com **destino e desvio**: −6,6% naquele
+  destino e **+3,5% no total exportado**.
+
+⚠ **E a seção 2.6 é calibragem, não item:** a meta de 2026, o déficit com precatórios e a Lei
+15.270/2025 (isenção do IR até R$ 5 mil) estão registrados e **não** executados — número de
+`src/data/` não se mexe sem pedido dele, e a série se remede no mesmo commit.
+
+**A recomendação registrada é começar pelos itens 1 a 4**, que cabem numa sessão: o
+contingenciamento muda para a mesa do Gabinete, as três vagas do STF entram no calendário, o
+decreto tributário liga o canal morto do `taxDelta`, e a presença passa a valer 129 em plenário
+esvaziado em vez de 257. **Depois o 6 — a MP com trancamento de pauta — sozinho.**
+
 ### O que está em execução
 
 | plano                                                                      | estado                                           |
