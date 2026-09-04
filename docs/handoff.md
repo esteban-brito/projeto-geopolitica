@@ -18,23 +18,16 @@
 
 ## ▶ COMECE POR AQUI
 
-## ✔ 04/09/2026 — a barra media o tipo ANTES de a fonte chegar
+## ✔ 04/09/2026 — a barra parou de medir tipo antes da fonte
 
-⛔ **O PASSEIO PISCAVA VERMELHO SEM DEFEITO ATRÁS, e tinha defeito atrás.** `[barra] a barra
-superior vaza: when__date vaza 5px | when__note vaza 5px`, em cerca de uma rodada em cinco.
+**O passeio piscava vermelho em uma rodada em cinco, e tinha defeito atrás.** `justify` grava a
+largura das duas linhas do bloco do mês em **pixel**, uma vez só, e o cache `said` recusa a
+segunda passada. Medida antes de a fonte chegar, a largura é a da fonte de reserva, e o texto
+real passa **5px** dela para sempre. 📐 Com 300ms de atraso em `vendor/fonts/` vaza toda vez;
+sem atraso, nunca.
 
-**A causa:** `justify` mede as duas linhas do bloco do mês e grava a largura em **pixel**, para
-comprimir as duas no mesmo eixo. Ela roda **uma vez** — o cache `said` é
-`texto|texto|compressão`, e nenhum dos três muda depois. Medida antes de a fonte chegar, a
-largura gravada é a da fonte de reserva, e o texto real passa 5px dela **para sempre**.
-
-📐 **Reproduzido com 300ms de atraso em `vendor/fonts/`: as duas linhas vazam 5px, toda vez;
-sem atraso, nunca.** A fonte é local e quase sempre chega a tempo — era isso que fazia o defeito
-parecer instabilidade do portão.
-
-**O conserto é de duas metades:** o estado da fonte entra no cache `said`, e `dressTopbar` agenda
-**uma** repintura para quando `document.fonts.ready` resolver. ⭐ **E a prova entrou no passeio** —
-uma página com a fonte atrasada, medida pelo mesmo `checkTopbar`. Sem o conserto, ela reprova.
+**Consertado, e a prova está no passeio** — uma página com a fonte atrasada, medida pelo mesmo
+`checkTopbar`. A narrativa e as duas lições de método moram no [`journal.md`](journal.md).
 
 ---
 

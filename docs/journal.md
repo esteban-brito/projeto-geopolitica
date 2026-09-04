@@ -12,6 +12,66 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO QUE COMEÇOU COM O PC DELE REINICIANDO — 04/09/2026
+
+Ela abriu com uma pergunta de uma linha — _"o que perdemos?"_ — e terminou dentro da barra
+superior. **Nada tinha se perdido, e o que estava quebrado era outra coisa.**
+
+### 1 · A resposta não era memória, era comando
+
+O crash pegou o repositório **já fechado**: o último commit é de 22:01 e o arquivo mais novo do
+disco também. Árvore limpa, sem stash, sem arquivo solto. `git status`, `git stash list`,
+`git reflog` e o `mtime` dos arquivos respondem isso em quatro segundos.
+
+### 2 · A prosa tinha se soltado do repositório, em seis pontos
+
+Nenhum deles quebrava prova nenhuma — é a família que o `standards.md` §7 declara **sem
+guarda**: a frase que descreve um estado que o código deixou de ter.
+
+| a prosa dizia                             | o repositório tinha                         |
+| ----------------------------------------- | ------------------------------------------- |
+| 61 sintéticas · 152 arquivos · 304 provas | **63 · 156 · 314**                          |
+| o A3 está pela metade                     | fechou inteiro, e o handoff já contava isso |
+| ciclo 13 em 25 de 49                      | **26 de 49**                                |
+| nenhum item de ciclo espera decisão       | o ciclo 19 espera a da chave da IA          |
+| achado 58 aberto                          | fechado no código: "Meta fiscal" na tela    |
+| a árvore não está limpa                   | limpa — as quatro entregas foram commitadas |
+
+⭐ **E a lição é a de sempre, do outro lado:** a guarda `prose` acusa o **nome** morto. Ela não
+acusa a **afirmação** morta, e as seis eram afirmações.
+
+### 3 · O portão piscava vermelho, e tinha defeito atrás
+
+`npm run validate` reprovou com `[barra] a barra superior vaza: when__date vaza 5px |
+when__note vaza 5px`. Três rodadas seguidas depois: verde. **O reflexo é chamar de instável e
+seguir — e teria sido errado.**
+
+`justify` mede as duas linhas do bloco do mês e grava a largura **em pixel**, para comprimir as
+duas no mesmo eixo. Ela roda **uma vez**: o cache `said` é `texto|texto|compressão`, e nenhum
+dos três muda depois. Medida antes de a fonte chegar, a largura gravada é a da fonte de reserva,
+e o texto real passa 5px dela **para sempre**. O cabeçalho da própria função já dizia a
+condição — _"nada pode ser medido antes de a fonte chegar"_ — e nada a fazia valer.
+
+📐 **Com 300ms de atraso em `vendor/fonts/`: vaza 5px toda vez. Sem atraso: nunca.** A fonte é
+local e quase sempre chega a tempo, e era isso que fazia um defeito permanente de tela parecer
+oscilação do portão.
+
+⭐ **A lição de método:** _"instável"_ é um sintoma, e sintoma não é causa. A pergunta que
+resolveu foi qual condição torna o defeito **determinístico** — e a resposta virou a prova.
+
+⭐ **E ela nasceu antes de o conserto valer**, como manda a regra: rodei o passeio novo contra o
+código sem o conserto, e ele reprovou **duas** vezes na mesma rodada — a asserção antiga e a
+nova. Uma prova que não reprova não estava medindo nada.
+
+### 4 · Um número cuja definição inclui o ato de escrevê-lo
+
+O handoff dizia _"23 commits à frente de `main`"_. Medido, eram 29. Corrigido e commitado,
+viraram **30** — e a correção venceu a si mesma no instante em que entrou.
+
+⛔ **Isso não é descuido, é uma classe:** um número que o próprio ato de registrar altera não
+pode morar em prosa. Ele saiu, e no lugar ficou `git log --oneline main..caixa-de-entrada`, que
+não envelhece. **A pergunta que acha os irmãos dele é: escrever isto muda isto?**
+
 ## A SESSÃO DA BARRA E DO ORÇAMENTO — 03/09/2026
 
 Ela começou com um achado de comentário e terminou dentro do motor fiscal. **Quatro blocos, e
