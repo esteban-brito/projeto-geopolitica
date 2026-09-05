@@ -203,7 +203,117 @@ onde o padrão vive na sala real.
 
 ---
 
-## 4 · ⭐⭐⭐ A TESE VISUAL — o modernismo brasileiro, e ele TEM matéria
+## 4 · 📗 O PAPEL DO GOVERNO, e ele tem NORMA ESCRITA — apurado em 05/09/2026
+
+⭐ **Melhor que fotografia: o governo publica as regras.** O **Manual de Redação da Presidência da
+República**, 3ª edição, define fonte, corpo, margem, espaçamento e estrutura de todo documento
+oficial. **Nada abaixo é invenção — é a norma, com o artigo ao lado.**
+
+### 4.1 · A folha
+
+| o quê                       | a norma                                                                 |
+| --------------------------- | ----------------------------------------------------------------------- |
+| papel                       | **A4 — 29,7 × 21 cm**, e a proporção 1 : 1,414 também é norma           |
+| ⭐ margem esquerda          | **no mínimo 3 cm**                                                      |
+| ⭐ margem direita           | **1,5 cm**                                                              |
+| margens superior e inferior | 2 cm                                                                    |
+| área de cabeçalho           | **5 cm** do topo, só na primeira página                                 |
+| cor                         | **texto preto em papel branco**                                         |
+| destaque                    | só **negrito**. ⛔ Sem itálico, sublinhado, maiúsculas, sombra ou borda |
+| estrangeirismo              | em itálico                                                              |
+
+⭐⭐ **A ASSIMETRIA DAS MARGENS É O DETALHE QUE MAIS DENUNCIA UM DOCUMENTO FALSO.** 3 cm de um
+lado e 1,5 do outro — ninguém repara até ver os dois lado a lado, e todo documento fabricado
+por instinto sai simétrico.
+
+### 4.2 · O tipo
+
+| o quê                    | a norma                                                           |
+| ------------------------ | ----------------------------------------------------------------- |
+| fonte                    | **Calibri ou Carlito**                                            |
+| corpo do texto           | **12 pontos**                                                     |
+| citação recuada          | 11 pontos                                                         |
+| nota de rodapé           | 10 pontos                                                         |
+| espaçamento entre linhas | **simples**                                                       |
+| entre parágrafos         | **6 pontos** depois de cada um                                    |
+| recuo de parágrafo       | **2,5 cm** da margem esquerda                                     |
+| numeração de parágrafos  | só quando há **três ou mais**, e **nunca** o vocativo nem o fecho |
+
+### 4.3 · ⭐⭐⭐ O TIMBRE DO PRESIDENTE É EM RELEVO SECO, E ISSO É LEI
+
+📗 **Manual §5.1.1, nota 3:** _"no caso de documento a ser impresso, **exclusivamente quando o
+signatário for o Presidente da República**, Ministro de Estado ou a autoridade máxima de
+autarquia, será utilizado **timbre em relevo branco**"_ — nos termos do **Decreto nº 80.739, de 14
+de novembro de 1977**.
+
+⭐⭐⭐ **O papel do presidente não tem brasão impresso: tem relevo.** Sem tinta, sem cor —
+aparece pela luz rasante, sombra de um lado e realce do outro. **É a distinção física que separa
+o documento dele de todos os outros do governo**, e ela é a mesma ideia que a §5 desta pesquisa
+já tinha proposto por estética. **Aqui ela vira fidelidade.**
+
+### 4.4 · As partes, na ordem
+
+📗 **Cabeçalho** — brasão no topo, nome do órgão principal, depois os secundários **da maior para
+a menor hierarquia**, entrelinhas simples, centralizado.
+
+📗 **Epígrafe** — tipo do expediente **por extenso e em maiúsculas**, `Nº` abreviado, alinhada à
+margem esquerda: `OFÍCIO Nº 652/2018/SAA/SE/MT`.
+
+📗 **Local e data** — alinhados à **margem direita**, mês em **minúscula**, **sem a sigla da UF**,
+**sem zero à esquerda** no dia, e com **ponto-final**: `Brasília, 2 de fevereiro de 2018.`
+
+📗 **Fechos — e há só dois no governo inteiro:** **`Respeitosamente,`** para autoridade de
+hierarquia superior à do remetente, **inclusive o Presidente da República**; **`Atenciosamente,`**
+para os demais. ⭐ **Toda carta que chega à mesa do presidente termina em "Respeitosamente"** — ele
+é o topo da hierarquia, e essa palavra sozinha diz isso.
+
+📗 **Signatário** — nome em **maiúsculas, sem negrito e sem linha acima**; cargo com iniciais
+maiúsculas; tudo centralizado. ⭐ **E há uma exceção, que é a mais bonita:** _"excluídas as
+comunicações assinadas pelo Presidente da República, todas as demais devem informar o
+signatário"_. **O ato dele é o único que dispensa nome e cargo — a rubrica basta.**
+
+### 4.5 · E o decreto tem uma forma própria, verificada num ato real
+
+📗 Conferido no **Decreto nº 664, de 1º de outubro de 1992**:
+
+```
+DECRETO Nº 664, DE 1º DE OUTUBRO DE 1992.
+
+                          Revoga o Decreto nº 323, de 1º de novembro de 1991.
+
+O PRESIDENTE DA REPÚBLICA, no uso das atribuições que lhe confere o art. 84,
+inciso IV, da Constituição, DECRETA:
+
+Art. 1º  Fica revogado o Decreto nº 323, de 1º de novembro de 1991.
+Art. 2º  Este Decreto entra em vigor na data de sua publicação.
+
+Brasília, 1º de outubro de 1992; 171º da Independência e 104º da República.
+
+FERNANDO COLLOR
+Marcílio Marques Moreira
+```
+
+⭐ **A ementa fica recuada à direita**, ocupando a metade da largura — é o que faz o olho
+reconhecer um ato normativo à distância.
+
+⭐⭐ **E o fecho conta os anos da Independência e da República**, em ordinal: 1992 saiu como
+`171º da Independência e 104º da República`. 📐 **A conta é `ano − 1822 + 1` e `ano − 1889 + 1`**,
+conferida contra o ato real. **Para janeiro de 2027 o decreto do jogo fecha em `206º da
+Independência e 139º da República`** — e é o tipo de detalhe que ninguém sabe e todo brasileiro
+reconhece.
+
+📗 **E o rodapé traz sempre:** _"Este texto não substitui o publicado no D.O.U. de …"_
+
+### 4.6 · ⚠ A tensão que sobra, e ela é decisão dele
+
+📗 **A norma manda texto preto em papel branco.** ⚠ **E o `standards.md` do projeto diz que papel
+branco em ambiente escuro é um buraco de luz.** As duas estão certas no terreno delas. **O
+provador `tmp/papel.html` deixa a claridade da folha num controle** — 97% é quase branco, e dá
+para descer sem perder a fidelidade.
+
+---
+
+## 5 · ⭐⭐⭐ A TESE VISUAL — o modernismo brasileiro, e ele TEM matéria
 
 ⛔ **ANTES DE TUDO, UMA TRAVA MINHA QUE CAIU HOJE.** O ciclo 21 dizia _"madeira, couro e papel não
 entram"_ e _"o projeto já matou skeumorfismo"_. **Ele nunca disse isso — eu escrevi.** O que
@@ -288,7 +398,7 @@ saída legítima, e ela nem precisa de justificativa técnica: precisa passar na
 
 ---
 
-## 5 · ⭐⭐ AS IDEIAS — O QUE FICA SOBRE A MESA
+## 6 · ⭐⭐ AS IDEIAS — O QUE FICA SOBRE A MESA
 
 **7. ⭐⭐ A PASTA DE DESPACHOS, e ela é o centro.** No Brasil o presidente recebe a pasta com atos
 para assinar. Ela nasce dizendo **quantos esperam e quantos vencem** — "7 atos · 2 vencem hoje" —
@@ -318,7 +428,7 @@ medir. ⛔ **Sem textura:** silhueta e sombra, e não madeira.
 
 ---
 
-## 6 · ⭐ AS IDEIAS — O GESTO
+## 7 · ⭐ AS IDEIAS — O GESTO
 
 **14. ⭐⭐ ASSINAR É ARRASTAR A CANETA.** Você passa a caneta sobre a linha e a assinatura aparece
 manuscrita, no seu nome. `spring.mjs` existe, e a pesquisa 05 já mediu duração e quique. **É o
@@ -340,7 +450,7 @@ nunca sorteado** — número inventado é proibido.
 
 ---
 
-## 7 · AS IDEIAS — O REALISMO BRASILEIRO
+## 8 · AS IDEIAS — O REALISMO BRASILEIRO
 
 **19. A agenda do dia.** A agenda oficial do presidente é pública no Brasil. _"10h — despacho com
 a Fazenda · 15h — audiência com a bancada ruralista."_ Cada compromisso é uma decisão de onde
@@ -362,7 +472,7 @@ existe e a Caixa já o respeita; o Gabinete não.
 
 ---
 
-## 8 · ⭐⭐⭐ O EMAIL E O GABINETE — a resposta
+## 9 · ⭐⭐⭐ O EMAIL E O GABINETE — a resposta
 
 **Ele perguntou se as duas precisam estar em harmonia. A resposta tem três partes, e elas não
 são a mesma.**
@@ -425,7 +535,7 @@ pode nascer reservado.**
 
 ---
 
-## 9 · ⚖ O QUE EU RECOMENDO, e por que nesta ordem
+## 10 · ⚖ O QUE EU RECOMENDO, e por que nesta ordem
 
 | #   | o quê                                                                                          | custo | por que aqui                                                |
 | --- | ---------------------------------------------------------------------------------------------- | ----- | ----------------------------------------------------------- |
@@ -442,7 +552,7 @@ timbrado, e não 58px na primeira linha do olho.
 
 ---
 
-## 10 · ⚖ A TRAVA QUE CAIU, e a lição
+## 11 · ⚖ A TRAVA QUE CAIU, e a lição
 
 ⛔ **O ciclo 21 dizia _"madeira, couro e papel não entram"_, e essa frase era MINHA.** Ele nunca a
 disse. Eu peguei a recusa de **uma cor** — _"esse marrom cor de bosta"_ — e a transformei numa
@@ -458,7 +568,7 @@ que eu propus, e eu que mando"_. **A frase saiu do ciclo 21 e a matéria está a
 
 ---
 
-## 11 · ⛔ O QUE ESTA PESQUISA RECUSA
+## 12 · ⛔ O QUE ESTA PESQUISA RECUSA
 
 | pedido                           | por quê                                                                              |
 | -------------------------------- | ------------------------------------------------------------------------------------ |
@@ -471,7 +581,7 @@ que eu propus, e eu que mando"_. **A frase saiu do ciclo 21 e a matéria está a
 
 ---
 
-## 12 · ⚖ A RESTRIÇÃO
+## 13 · ⚖ A RESTRIÇÃO
 
 1. **Nada aqui inventa número.** Cada peça lê um motor que já roda e já tem prova;
 2. **a captura é obrigatória** — é a tela que abre o jogo, e o portão não sabe olhar;
@@ -493,4 +603,6 @@ que eu propus, e eu que mando"_. **A frase saiu do ciclo 21 e a matéria está a
 - [Fundação Athos Bulcão](https://www.fundathos.org.br/noticia/304)
 - [Athos Bulcão: aproximação entre arte e arquitetura](https://www.archdaily.com/pt//877687/athos-bulcao-aproximacao-entre-arte-e-arquitetura)
 - [Sergio Rodrigues — Arquivo Contemporâneo](https://arquivocontemporaneo.com.br/designer/88/Sergio-Rodrigues/)
+- [Manual de Redação da Presidência da República, 3ª ed.](https://www4.planalto.gov.br/centrodeestudos/assuntos/manual-de-redacao-da-presidencia-da-republica/manual-de-redacao.pdf)
+- [Decreto nº 664, de 1º de outubro de 1992 — a forma de um decreto real](http://brasil.justia.com/nacionales/decretos/664-de-1o-10-92/gdoc/)
 - [Designers do mobiliário moderno brasileiro](https://www.loraronco.com.br/post/modernariato-lora-ronco-designers-do-mobili%C3%A1rio-moderno-brasileiro-introdu%C3%A7%C3%A3o)
