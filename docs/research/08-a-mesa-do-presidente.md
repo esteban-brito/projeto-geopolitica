@@ -341,7 +341,41 @@ fica. _"Este Decreto entra em vigor na data de sua publicação"_ é reconhecime
 ⭐ **O texto corrido venceu o recuo**, também por escolha dele: os 2,5 cm do manual empurram cada
 parágrafo para dentro e a folha fica difícil de varrer. **A norma manda; o jogo lê.**
 
-### 4.7 · ⚠ A tensão que sobra, e ela é decisão dele
+### 4.7 · ⛔ SEM MARCAS DE USO — decisão dele, e o papel fica limpo
+
+**Ordem dele em 05/09/2026:** _"eu disse que não queria marcas de uso nem aquele URGENTE"_.
+**Saíram o carimbo, a orelha dobrada e o clipe**, com os controles que os giravam.
+
+⭐ **E a decisão tem lógica além do gosto:** carimbo e orelha contam uma história de manuseio que
+o jogo não tem — nenhum papel do Gabinete passou por escaninho nenhum, e a marca de uso num
+documento que acabou de ser impresso é ficção sem lastro. **O realismo aqui é o papel limpo.**
+
+### 4.8 · 📐 O QUE A OTIMIZAÇÃO ACHOU, e são duas coisas medidas
+
+⛔ **Havia TRÊS cópias do gerador de madeira** — uma em cada bancada (`mesa`, `perspectiva`,
+`papel`). É o defeito mais caro deste projeto, e ele apareceu pela sexta vez. As três viraram
+`tmp/materia.mjs`, com `jacaranda()`, `fibra()` e o ajuste padrão do veio num lugar só.
+
+📐 **E `encodeURIComponent` codifica o que não precisa:** espaço vira `%20`, aspas viram `%22`, e
+um SVG de 968 bytes sai com **1562**. Trocando aspas dupla por simples e escapando só o que o
+data URI exige, ele sai com **1068**. **31,6% a menos**, e a economia vale para toda superfície
+gerada do projeto.
+
+| superfície         | tamanho     |
+| ------------------ | ----------- |
+| a madeira do tampo | **1,1 KB**  |
+| a fibra do papel   | **0,33 KB** |
+| total              | **1,4 KB**  |
+
+⭐ **E as duas são rasterizadas uma vez** — nenhuma anima, nenhuma depende de `--light-angle`.
+**Este é o ponto que separa a matéria nova do risco de fps**: o que custou 28,3 fps no
+`.tray__month` foi um fundo que interpolava a cada quadro.
+
+📐 **E a folha foi conferida contra o A4:** `665 / 470 = 1,4149` contra `29,7 / 21 = 1,4143` — **0,04%
+de erro**. ⚠ **A medição de fora dá 1,4006 e isso NÃO é defeito:** `getBoundingClientRect` devolve
+a caixa envolvente do elemento já girado, e a previsão matemática do giro de 0,8° bate em 0,3px.
+
+### 4.9 · ⚠ A tensão que sobra, e ela é decisão dele
 
 📗 **A norma manda texto preto em papel branco.** ⚠ **E o `standards.md` do projeto diz que papel
 branco em ambiente escuro é um buraco de luz.** As duas estão certas no terreno delas. **O
