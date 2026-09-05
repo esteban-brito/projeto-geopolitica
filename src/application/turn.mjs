@@ -12,6 +12,7 @@ import {
   step as opinionStep,
 } from "../domain/opinion/index.mjs";
 import {
+  STANDING_NEUTRAL,
   THRESHOLDS,
   baseCount,
   dispersion,
@@ -599,6 +600,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     firstNames: catalog.firstNames,
     surnames: catalog.surnames,
     ambitions: catalog.ambitions,
+    areas: catalog.areas.map(area => area.id),
     genderOf: catalog.genderOf,
   });
 
@@ -615,8 +617,46 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   const chamberLoyalty = { ...state.loyalty };
   for (const person of people) chamberLoyalty[person.id] = state.loyalty[person.bloc] ?? 0;
 
+  /* ── O QUE AS AMBICOES OLHAM ──────────────────────────────────────────────── A pasta e
+     medida contra a POSSE, e nao contra o mes passado: contra o mes passado o rateio de um
+     mes apertado mudaria o preco de um ministro sem ninguem ter decidido nada. */
+  const wasSpent = spendOf({
+    programs,
+    levels: Object.fromEntries(programs.map(program => [program.id, program.initial])),
+  }).fullByArea;
+
+  /** @type {Record<string, number>} */
+  const byArea = {};
+  for (const [id, was] of Object.entries(wasSpent)) {
+    byArea[id] = was > 0 ? clamp((funded[id] ?? 0) / was - 1, -1, 1) : 0;
+  }
+
+  /* ⚠ A RUA E NORMALIZADA AQUI, e nao dentro do elenco: o ponto neutro e de ECLUSA, e ha um
+     so no jogo inteiro. */
+  const street =
+    (pollFrom(state.mood, catalog.segments, catalog.opinion).good - STANDING_NEUTRAL) / 100;
+
+  /* ⚠ O BLOCO DO PRESIDENTE CHEGA AO PLENARIO REPARTIDO: a bancada restante guarda o id do
+     bloco, e cada lider que arrasta um pedaco dela vira uma bancada com o id DELE. Um id so
+     pegaria o resto e deixaria de fora justamente quem mais arrasta. */
+  const ruling =
+    state.party === null || state.party === undefined
+      ? null
+      : new Set([
+          state.party,
+          ...people.filter(person => person.bloc === state.party).map(person => person.id),
+        ]);
+
   const table = (/** @type {Record<string, number>} */ source) =>
-    offered({ people, parties, funding: source, credit, parameters: catalog.cast });
+    offered({
+      people,
+      parties,
+      funding: source,
+      credit,
+      parameters: catalog.cast,
+      street,
+      byArea,
+    });
 
   return {
     agenda,
@@ -624,6 +664,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     bands,
     people,
     benches,
+    ruling,
     chamberLoyalty,
     offeredPromised: table(promised),
     offeredPaid: table(paid),
@@ -872,6 +913,7 @@ export function governmentOf(state, catalog = CATALOG) {
     firstNames: catalog.firstNames,
     surnames: catalog.surnames,
     ambitions: catalog.ambitions,
+    areas: catalog.areas.map(area => area.id),
     genderOf: catalog.genderOf,
   });
 
@@ -1006,6 +1048,7 @@ export function forecast(state, orders = {}, catalog = CATALOG) {
     funding: share.offeredPaid,
     loyalty: share.chamberLoyalty,
     standing,
+    ruling: share.ruling,
   });
 
   /* ── O QUE CADA BLOCO ENTREGA, somando as bancadas dele ──────────────────── A tela oferece
@@ -1039,6 +1082,7 @@ export function forecast(state, orders = {}, catalog = CATALOG) {
 function blocsOf(state, share, whip, byBloc, catalog) {
   const seatsOf = new Map(share.benches.map(bench => [bench.id, bench.seats]));
   const votesOf = new Map(whip.parties.map(bench => [bench.partyId, bench.votes]));
+  const areaLabel = new Map(catalog.areas.map(area => [area.id, area.label]));
 
   return catalog.parties.map(party => ({
     id: party.id,
@@ -1053,6 +1097,9 @@ function blocsOf(state, share, whip, byBloc, catalog) {
         office: person.office,
         role: person.label,
         ambition: person.ambition,
+        /* A PASTA SO CHEGA A TELA QUANDO A AMBICAO E ELA: quem nao quer ministerio tem uma
+           pasta sorteada que ninguem cobra, e imprimi-la seria caracterizacao inventada. */
+        portfolio: person.ambition === "cabinet" ? (areaLabel.get(person.portfolio) ?? "") : "",
         seats: seatsOf.get(person.id) ?? 0,
         /* Os alcances de um bloco sao NORMALIZADOS quando somam mais que `CROWD` — foi o
            conserto do defeito que fechava a Camara com 730 cadeiras —, entao o cru diz o que
@@ -1370,6 +1417,7 @@ function notices(events, month) {
  * @param {{ benches: Party[], offeredPaid: Record<string, number>,
  * chamberLoyalty: Record<string, number>,
  * people: ReadonlyArray<import("../domain/cast/index.mjs").Person>,
+ * ruling: ReadonlySet<string> | null,
  * bands: Record<string, import("../state/state.mjs").Band> }} world.share
  * @param {number} world.standing
  * @param {typeof CATALOG} world.catalog
@@ -1432,6 +1480,7 @@ function advanceBills(state, { share, standing, catalog, resolved, mail }) {
         funding: share.offeredPaid,
         loyalty: share.chamberLoyalty,
         standing,
+        ruling: share.ruling,
       });
       /* ⚠ QUEM NAO E PAUTADO NAO PERDE — ELE ESPERA. */
       if (tabled) events.push({ kind: "tabled", label: bill.label, detail: null, bill: bill.id });
@@ -1502,6 +1551,7 @@ function advanceBills(state, { share, standing, catalog, resolved, mail }) {
       stream,
       majority: agenda.quorum,
       standing,
+      ruling: share.ruling,
     });
 
     stream = result.stream;
@@ -1558,6 +1608,7 @@ export function playMonth(state, orders = {}, options = {}) {
     funded,
     people,
     benches,
+    ruling,
     chamberLoyalty,
     offeredPaid,
     promisedCost,
@@ -1597,7 +1648,7 @@ export function playMonth(state, orders = {}, options = {}) {
   }
 
   const passage = advanceBills(state, {
-    share: { benches, offeredPaid, chamberLoyalty, people, bands },
+    share: { benches, offeredPaid, chamberLoyalty, people, bands, ruling },
     standing,
     catalog,
     resolved: post.resolved,
@@ -1614,6 +1665,7 @@ export function playMonth(state, orders = {}, options = {}) {
     promised,
     paid,
     parameters: catalog.cast,
+    ruling: state.party ?? null,
   });
 
   /* 6 — A CAPACIDADE DO ESTADO. */
@@ -1791,6 +1843,9 @@ export function playMonth(state, orders = {}, options = {}) {
           stream: passage.stream,
           majority: SEATS - REMOVAL_MAJORITY + 1,
           standing,
+          /* ⚠ E AQUI ELE VALE MAIS QUE EM QUALQUER VOTACAO: no afastamento nao ha emenda que
+             compre ninguem — sobra a lealdade, e a do seu partido nasce 20 pontos acima. */
+          ruling,
         })
       : null;
 

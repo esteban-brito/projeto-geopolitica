@@ -313,15 +313,15 @@ quem suspenda.
 
 ### 10 · ⑤ A indicação ao STF passa pelo Senado — custo médio
 
-⛔ **E ela tem um achado próprio: QUATRO DAS CINCO AMBIÇÕES NÃO FAZEM NADA.** 📐 O elenco sorteia
-entre `succession`, `cabinet`, `state`, `court` e `seat`. Só a primeira tem efeito —
-`successionDrag: 0,35` em `cast/index.mjs`. As outras quatro são geradas, aparecem na tela do
-Congresso e **nenhuma muda uma linha do motor**. É o quinto canal morto do projeto.
+✔ **O ACHADO PRÓPRIO DELA FECHOU em 04/09/2026, pelo [ciclo 19](19-a-voz.md) item 2.** As cinco
+ambições — `succession`, `cabinet`, `state`, `court` e `seat` — passaram a olhar coisa diferente:
+a verba, a pasta, a emenda, o dinheiro e **a rua**. ⚠ **Mas o peso é de 1 cadeira em 380**, e a
+causa não é o parâmetro: **a emenda inteira compra 13 cadeiras de 513** (achado 59). O canal
+morto virou canal ligado num cano estreito.
 
-⭐ **E uma delas é `court` — "quer uma vaga no Supremo".** Um senador com essa ambição negocia a
-indicação de outro jeito que um senador que quer um ministério. **A ambição já está sorteada, já
-está na tela, e já tem a memória do `ELENCO` atrás. Ligar as outras quatro é barato, e este item
-é onde a primeira delas ganha uso.**
+⭐ **E `court` — "quer uma vaga no Supremo" — está pela METADE desde 04/09/2026:** o desconto já
+roda (`courtDrag: 0,5` — dinheiro o move pouco), e **falta o lado que o compra: a indicação.**
+Este item é onde ela entra, e a peça do outro lado já está esperando por ele.
 
 📗 CF art. 101, parágrafo único: nomeação pelo presidente **após aprovação por maioria absoluta
 do Senado**.

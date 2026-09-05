@@ -88,7 +88,7 @@ npm run serve      # http://127.0.0.1:5173/
 
 ## Onde o projeto está
 
-**Estado verde:** 13 guardas · 63 provas sintéticas · 315 provas · passeio verde.
+**Estado verde:** 13 guardas · 63 provas sintéticas · 325 provas · passeio verde.
 ⭐ **O GABINETE É A MESA** desde 04/09/2026 — quatro zonas com lugar fixo, seis leituras, e ele
 **decide**: o contingenciamento mora nele, com as oito pastas. **A barra superior** está no jogo
 desde 01/09/2026. **Save na versão 20** — partida salva antes de 30/08 não abre. Branch de
@@ -102,8 +102,35 @@ arcabouço, `atRisk` para a meta primária), o rateio deixou de gravar o corte n
 contingenciamento passou a ser **escolhido por área**, e o relatório bimestral avisa antes.
 **Sobram o A1 e o A2, e os dois mexem em calibragem fiscal — logo, os dois são decisão dele.**
 
-**Há ONZE planos na mesa**, e o 13, o 18, o 19, o 20, o 21, o 22 e o 23 são os abertos. ⭐ **Os
-três de 04/09/2026 são a espinha do que o jogo vai ser:**
+⛔ **O ACHADO 59, DE 04/09/2026, VEM ANTES DOS PLANOS: a emenda é a moeda do jogo e ela não
+paga.** Medido: comprar o Congresso inteiro — de 0 a 100%, R$ 25,7 bi por mês — move **13
+cadeiras de 513**, numa pauta que já passava sem pagar nada. A verba só reduz distância
+ideológica em `whipCount`, e numa pauta que a Câmara já quer não há o que reduzir. **Toda
+mecânica que module emenda nasce valendo 1 cadeira** — foi o que aconteceu com as ambições, que
+entraram no mesmo dia. As duas saídas estão no handoff, e as duas mexem em ECLUSA.
+
+**Há DOZE planos na mesa**, e o 13, o 18, o 19, o 20, o 21, o 22, o 23 e o 24 são os abertos.
+
+✔ **O ITEM 1 DO CICLO 24 ENTROU em 04/09/2026 — o presidente tem partido.** A posse pergunta
+por qual bancada ele se elegeu, a lealdade dela nasce em 90 contra 70 das outras, **a emenda não
+a compra** e trair custa o dobro. ⭐ **Sem bump de save:** o campo não está entre os obrigatórios
+do validador, então a partida da versão 20 abre sem partido e joga igual. **Sobram a origem, a
+chapa e a tela da eleição.**
+
+▶ **E a medição que escolheu esse caminho:** elevar a lealdade de
+UMA bancada de 70 para 95 entrega **+17 cadeiras** (PLB), contra as **+13** da emenda cheia a
+todas as nove, que custa R$ 25,7 bi por mês. ⭐ **Ter partido vale mais que o orçamento inteiro
+de emendas** — e o ciclo 24 contorna o achado 59 sem tocar em ECLUSA.
+
+- [`cycles/24-o-presidente.md`](docs/cycles/24-o-presidente.md) — **a criação de personagem, de
+  04/09/2026, a pedido dele.** A tese: a ficha deste jogo **é a eleição que você acabou de
+  vencer** — partido, chapa, coligação e origem. Executa o B1 e o B2 do ciclo 23. 📗 **Dez
+  fontes apuradas e datadas**, e três mudaram o desenho: **não existe presidente sem partido**
+  (CF art. 14, §3º, V + STF), **a federação é uma coligação com preço tabelado para romper**
+  (quatro anos, e sair veta coligar em duas eleições), e **a cláusula de barreira pode matar o
+  seu partido no ano 4** (EC 97/2017).
+
+⭐ **Os três de 04/09/2026 são a espinha do que o jogo vai ser:**
 
 - [`cycles/23-o-corpo-politico.md`](docs/cycles/23-o-corpo-politico.md) — **os 17 itens que
   faltam DEPOIS de todos os outros planos**, escrito a pedido dele: _"o que falta além de tudo
@@ -118,7 +145,10 @@ três de 04/09/2026 são a espinha do que o jogo vai ser:**
   (`kind: "band"`). ⚠ **A regra dura dele:** a coordenada de uma lei sai do que ela FAZ, nunca
   do que o jogador digita — escolher a própria ameaça é escolher o próprio preço;
 - [`cycles/19-a-voz.md`](docs/cycles/19-a-voz.md) — **reescrito em 04/09**: o avaliador, as
-  quatro ambições inertes, o mundo protocolando texto e o jornal. **Alicerce do 22.**
+  ambições, o mundo protocolando texto e o jornal. **Alicerce do 22.** ✔ **O ITEM 2 FECHOU em
+  04/09/2026** — as cinco ambições olham coisa diferente (a rua, a pasta, a emenda, o dinheiro),
+  a tela diz o preço de cada uma, e o elenco de toda partida salva ficou idêntico. Sobram os
+  itens 1, 3 e 4.
 
 E os demais:
 

@@ -63,7 +63,11 @@ memória. O que entra é uma ordem por mês e um multiplicador.
 
 # PARTE B — O CORPO
 
-## B1 · ⭐⭐ O vice-presidente
+## B1 · ⭐⭐ O vice-presidente — ▶ **EXECUTADO PELO [CICLO 24](24-o-presidente.md), item 2**
+
+> **Ele saiu daqui em 04/09/2026.** O ciclo 24 o junta com a coligação, porque as duas coisas são
+> a mesma escolha: a chapa. 📗 E a pesquisa datou o que este item só supunha — **oito dos 39
+> presidentes foram vices que assumiram, e três desde 1985** (Sarney, Itamar, Temer).
 
 📐 **Medido: a palavra não aparece uma vez no `src/`.** Não existe vice.
 
@@ -86,7 +90,11 @@ vacância. Art. 80 — a linha segue para o presidente da Câmara, do Senado e d
 ⚖ **Custo:** pequeno. Uma pessoa a mais no `ELENCO`, com um papel novo, e uma leitura na
 CALDEIRA.
 
-## B2 · ⭐⭐ O partido do presidente
+## B2 · ⭐⭐ O partido do presidente — ▶ **EXECUTADO PELO [CICLO 24](24-o-presidente.md), item 1**
+
+> **Ele saiu daqui em 04/09/2026**, e a pesquisa fechou uma pergunta que este item deixava
+> aberta: 📗 **não existe presidente sem partido** — filiação é condição de elegibilidade (CF
+> art. 14, §3º, V) e o STF afastou a candidatura avulsa. **A escolha é obrigatória.**
 
 📐 **Medido: nenhuma das nove bancadas é a sua.** Todas se relacionam com o governo pela mesma
 porta — verba, lealdade, venalidade.
@@ -141,6 +149,12 @@ existe eleição.**
 ⭐ **E o ano 4 de um mandato brasileiro não se parece com nenhum outro:** tudo fica mais caro,
 todo aliado quer palanque, e o adversário não precisa mais negociar. **É o único período do jogo
 em que o tempo corre contra você de verdade.**
+
+📗 **E isso está documentado, apurado em 04/09/2026:** a Esplanada tem **39 ministérios**, e
+**14 trocaram de comando** para os ocupantes disputarem a eleição de 2026. **O êxodo do ano 4 não
+é literatura — é um terço do ministério saindo pela porta.** ⭐ E a cláusula de barreira (EC
+97/2017) põe um segundo relógio no mesmo ano: **o partido que te elegeu pode não sobreviver à
+eleição.** Ver o [ciclo 24 §2](24-o-presidente.md).
 
 ⚖ **Custo:** médio, e ele fecha o mandato como pergunta em vez de placar.
 
@@ -321,8 +335,8 @@ intervenção federal, estado de defesa, estado de sítio e declaração de guer
 | ------ | ------------------------- | ----- | ------- | ---------------- | ----------------------------------------------------------- |
 | **1**  | ⭐⭐⭐ **o tempo**        | A1    | médio   | —                | **dá peso a tudo que já existe.** Nenhum outro faz isso     |
 | **2**  | ⭐⭐ **o Banco Central**  | C1    | médio   | —                | o número já existe; falta o dono. E o calendário é de graça |
-| **3**  | ⭐⭐ **o vice**           | B1    | pequeno | —                | conserta o impeachment que já roda                          |
-| **4**  | ⭐⭐ **o seu partido**    | B2    | pequeno | —                | a bancada que não se compra                                 |
+| ▶ 3    | ⭐⭐ **o vice**           | B1    | pequeno | —                | **foi para o [ciclo 24](24-o-presidente.md), item 2**       |
+| ▶ 4    | ⭐⭐ **o seu partido**    | B2    | pequeno | —                | **foi para o [ciclo 24](24-o-presidente.md), item 1**       |
 | **5**  | **o salário mínimo**      | E1    | pequeno | —                | está a um campo de virar a maior decisão fiscal do ano      |
 | **6**  | **o indulto**             | E4    | mínimo  | ciclo 19         | custo fiscal zero, custo político alto                      |
 | **7**  | **a voz**                 | B4    | pequeno | ciclo 19         | reusa o avaliador inteiro                                   |
@@ -339,6 +353,11 @@ intervenção federal, estado de defesa, estado de sítio e declaração de guer
 
 ⭐ **Os quatro primeiros cabem em duas sessões e mudam o jogo mais que os treze restantes
 juntos** — porque um dá peso a tudo, e três dão ao presidente as pessoas de que ele depende.
+
+▶ **E os itens 3 e 4 saíram daqui em 04/09/2026:** eles viraram o [ciclo 24](24-o-presidente.md),
+que os junta com a origem e a coligação. **A razão é o save** — o partido sobe o
+`SCHEMA_VERSION` para 21 e mata a partida em andamento, e esse preço se paga UMA vez. Fazer os
+dois soltos, em sessões diferentes, o cobraria duas.
 
 ---
 

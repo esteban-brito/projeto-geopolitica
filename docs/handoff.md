@@ -18,25 +18,216 @@
 
 ## ▶ COMECE POR AQUI
 
-### ⭐ O PRÓXIMO PASSO, e ele é uma escolha entre três
+### ⭐ O PRÓXIMO PASSO É O CICLO 24, e o ITEM 1 JÁ ENTROU
+
+✔ **O PARTIDO DO PRESIDENTE ENTROU em 04/09/2026.** A posse pergunta por qual bancada você se
+elegeu, e a escolha é obrigatória (📗 CF art. 14, §3º, V). O que ela muda:
+
+| regra                       | como                                                      |
+| --------------------------- | --------------------------------------------------------- |
+| a lealdade nasce alta       | `RULING_LOYALTY` 90, contra 70 das outras oito            |
+| a emenda não a compra       | o termo `venalidade × verba` zera para ela em `whipCount` |
+| trair custa o dobro         | `betrayalWeight × 2` em `remember`, só para o seu bloco   |
+| e a tela marca qual é a sua | a linha de baixo do nome, na tela do Congresso            |
+
+⭐ **E O SAVE NÃO SUBIU DE VERSÃO — medido, não suposto.** `party` não entrou na lista de campos
+obrigatórios do validador, então um save da versão 20 abre com o campo ausente, que todo
+consumidor lê como `null` — o jogo de ontem, linha por linha. **Há prova cobrando isso**, e ela
+quebra no dia em que alguém puser o campo entre os obrigatórios. O ciclo 24 previa o bump; ele
+não foi preciso.
+
+📐 **O ganho, medido no mês 1 com pauta de três alavancas:**
+
+| emenda a todos | PLB | UPB | PSM | MDN | PTU    |
+| -------------- | --- | --- | --- | --- | ------ |
+| 0%             | +13 | +10 | +7  | +3  | +3     |
+| 100%           | +12 | +9  | +6  | +2  | **−2** |
+
+⭐ **A linha de baixo é o desenho funcionando:** num governo que paga emenda cheia a todo mundo,
+ser do PTU **custa 2 cadeiras** — você paga os outros e o seu partido não aceita dinheiro. **Tudo
+tem preço, nada tem muro.**
+
+⭐ **A série não moveu:** `agenda` fecha em **26 de 43**, dívida **90,0%**, indústria 48→20,
+segurança 38→20 — o simulador roda sem partido, e a prova em 4,3 bilhões de sementes cobra que
+`ruling` ausente devolva o plenário de antes.
+
+⚠ **E O PASSEIO PEGOU UM DEFEITO QUE NÃO ERA MEU, mas que só o passo novo revelou:** a barra
+vazava **5px** com a fonte atrasada **quando a partida foi salva na tela do Congresso**. A causa
+é o conserto de hoje de manhã, pela metade: `document.fonts.status` diz `"loaded"` enquanto
+ninguém pediu face nenhuma, então a barra que pinta antes do primeiro pedido gravava a métrica de
+reserva e recusava a remedida. Trocado por um marcador que só vira verdadeiro **depois** de
+`fonts.ready` resolver. 📐 Verde abrindo no Gabinete, 5px abrindo no Congresso — no mesmo commit.
+
+**Sobram os itens 2, 3 e 4 do ciclo 24:** a origem, a chapa e a coligação, e a tela da eleição.
+
+---
+
+### O QUE A MEDIÇÃO ESCOLHEU, e continua valendo
+
+**Recomendação de 04/09/2026, com o número que a sustenta.** O jogo tem um gargalo medido (o
+achado 59: comprar o Congresso inteiro move **13 cadeiras de 513**), e o
+[ciclo 24](cycles/24-o-presidente.md) o contorna **sem tocar em ECLUSA**:
+
+| jogada                                                 | cadeiras | custo              |
+| ------------------------------------------------------ | -------- | ------------------ |
+| emenda cheia às nove bancadas                          | **+13**  | R$ 25,7 bi por mês |
+| ⭐ **uma bancada sua**, lealdade 95 em vez de 70 (PLB) | **+17**  | **zero**           |
+| a mesma jogada com o PNR, de 6 cadeiras                | +1       | zero               |
+
+📐 **Medido no mês 1, pauta de três alavancas, sem emenda nenhuma (363 de 513 votos).** ⭐ **Ter
+partido vale mais que o orçamento inteiro de emendas, e escolher qual tem 16 cadeiras de
+amplitude.** É a decisão mais pesada que o jogador poderia tomar — e hoje ela não existe.
+
+⚠ **E o ciclo 24 paga o `SCHEMA_VERSION` 21 uma vez só**, cobrindo partido, vice, coligação e
+origem. Feitos soltos, cada um cobra de novo a partida em andamento.
+
+---
+
+### ⛔ A DECISÃO QUE CONTINUA ABERTA — a moeda do jogo não paga
 
 **Estado em 04/09/2026: verde e limpo.** `npm run validate` fecha com **13 guardas · 63 provas
-sintéticas · 315 provas · passeio verde**. Branch `caixa-de-entrada`, à frente de `main`, e
+sintéticas · 319 provas · passeio verde**. Branch `caixa-de-entrada`, à frente de `main`, e
 **nada foi enviado ao remoto**.
 
-⚠ **Não há decisão pendente travando nada.** As três candidatas, na minha ordem:
+⛔ **A decisão que abriu hoje é o achado 59, e ela vem antes das outras duas:** medido, **a
+emenda inteira — de 0 a 100%, R$ 25,7 bi por mês — compra 13 cadeiras de 513**, numa pauta que
+já passava sem pagar nada. O ciclo 18 chama a emenda de _"a única moeda do jogo"_. **Ela é a
+moeda, e ela não paga.** Enquanto isso não se resolve, toda mecânica que modula emenda —
+ambição, memória, lobby — nasce valendo 1 cadeira.
 
-| #   | o quê                     | onde                                         | custo   | por que ela                                                                      |
-| --- | ------------------------- | -------------------------------------------- | ------- | -------------------------------------------------------------------------------- |
-| 1   | ⭐⭐⭐ **o TEMPO**        | [ciclo 23](cycles/23-o-corpo-politico.md) A1 | médio   | **o único item de qualquer plano que dá peso ao que já existe**                  |
-| 2   | ⭐⭐ **o BANCO CENTRAL**  | ciclo 23, C1                                 | médio   | a Selic sai de uma regra de Taylor, e ninguém decide o juro                      |
-| 3   | **as 4 AMBIÇÕES INERTES** | [ciclo 19](cycles/19-a-voz.md), item 2       | pequeno | o mais barato, e é o alicerce do [ciclo 22](cycles/22-a-lei-que-voce-escreve.md) |
+| #   | o quê                          | onde                                         | custo | por que ela                                                        |
+| --- | ------------------------------ | -------------------------------------------- | ----- | ------------------------------------------------------------------ |
+| ▶ 1 | ⭐⭐⭐ **o CICLO 24**          | [ciclo 24](cycles/24-o-presidente.md)        | médio | **contorna o achado 59 sem tocar em ECLUSA, e é o que ele pediu**  |
+| 2   | ⛔ **a emenda passar a pesar** | achado 59, abaixo                            | ?     | o gargalo de fundo. ⚠ Mexe em ECLUSA, e a série se refaz inteira   |
+| 3   | ⭐⭐⭐ **o TEMPO**             | [ciclo 23](cycles/23-o-corpo-politico.md) A1 | médio | dá peso ao que já existe. ⚠ Trava no achado 53 — a MALHA vai mudar |
+| 4   | ⭐⭐ **o BANCO CENTRAL**       | ciclo 23, C1                                 | médio | a Selic sai de uma regra de Taylor, e ninguém decide o juro        |
 
 ⚠ **E o passo 5 do ciclo 21 — a MP — continua aberto**, mas ele é o item 6 do ciclo 18 e pede
 sessão própria.
 
 **Antes de escrever a primeira linha:** `docs/standards.md`, o ciclo escolhido, e a captura em
 `captures/passeio/` da tela que você for tocar.
+
+---
+
+## ▶ 04/09/2026 — ELE QUER CRIAR O PRÓPRIO PRESIDENTE, e isso reordena a PARTE B do ciclo 23
+
+**Ordem dele, registrada:** _"criar o seu personagem, da forma que você quiser, criar o seu
+presidente, escolher um partido, e tudo mais… eu quero REALISMO e fidelidade ao Brasil atual e
+real"_.
+
+📐 **Metade já roda, e é a metade que não muda nada:** o nome e o tratamento (`state.president`,
+o único personagem que entra no save) e as três promessas da posse (`platform`: prioridade,
+fiscal, reforma). **O que falta é de ONDE o presidente vem**, e é isso que muda a partida.
+
+⭐ **E o partido é a escolha que mais pesa, por causa do achado 59:** comprar o Congresso inteiro
+move 13 cadeiras de 513. **Ter partido é a única forma de começar com cadeiras que não se
+compram** — e as nove bancadas dão nove jogos diferentes:
+
+| bancada | cadeiras | como é começar nela                                     |
+| ------- | -------- | ------------------------------------------------------- |
+| PLB     | 145      | 28% da Câmara já sua; a direita não precisa te comprar  |
+| UPB     | 106      | o centrão é a sua casa, e ele cobra por dentro          |
+| PTU     | 80       | base pequena: você negocia desde o mês 1                |
+| PNR     | 6        | presidente sem partido — o cenário mais duro que existe |
+
+✔ **VIROU PLANO NO MESMO DIA: o [ciclo 24 — O PRESIDENTE](cycles/24-o-presidente.md)**, com os
+fatos apurados na web e datados. Ele executa o B1 e o B2 do ciclo 23 e acrescenta os dois itens
+que nenhum plano tinha:
+
+| #   | peça                      | o que muda                                          | onde             |
+| --- | ------------------------- | --------------------------------------------------- | ---------------- |
+| 1   | **o partido**             | lealdade alta, venalidade não funciona, trair dobra | ciclo 24, item 1 |
+| 2   | **a origem/carreira**     | seus eixos de partida e quem confia em você         | ciclo 24, item 3 |
+| 3   | **a chapa e a coligação** | o preço da eleição, e o impeachment ganha destino   | ciclo 24, item 2 |
+| 4   | **a tela da eleição**     | a primeira tela do jogo, antes do mês 1             | ciclo 24, item 4 |
+
+📗 **E três fatos do Brasil real mudaram o desenho antes de ele nascer:**
+
+- **não existe presidente sem partido** — filiação é condição de elegibilidade (CF art. 14, §3º,
+  V) e o STF afastou a candidatura avulsa. **"Sem partido" não é opção; o duro é escolher um
+  partido pequeno**;
+- **a federação partidária é uma coligação que não se desfaz de graça** — mínimo de quatro anos,
+  e sair antes proíbe nova federação, **veta coligar nas duas eleições seguintes** e corta o
+  Fundo Partidário. ⭐ É "tudo tem preço, nada tem muro" escrito na lei brasileira;
+- **a cláusula de barreira (EC 97/2017) pode matar o seu partido no ano 4** — 2,5% dos votos em
+  1/3 das UFs, ou 13 deputados eleitos. **Ao menos 11 partidos estão em risco em 2026.**
+
+⚠ **CUSTO DECLARADO: o partido entra no estado, logo `SCHEMA_VERSION` sobe para 21 e a partida em
+andamento morre.** Faça as quatro de uma vez — o preço se paga uma vez, e hoje ele é pago por
+qualquer uma delas sozinha.
+
+⚠ **A ressalva que eu levo a ele, e é decisão dele:** manter os partidos com nome alterado
+(ADR 0003) é o que sustenta a fidelidade, e não o contrário — partido real traz posição real
+sobre pauta real, e no primeiro mês em que o motor divergir do noticiário o jogador lê como
+defeito. Os números já são fiéis: 145/106/80/71/42 numa Câmara de 513 é o Congresso fragmentado
+de hoje.
+
+---
+
+## ✔ 04/09/2026 — AS CINCO AMBIÇÕES GANHARAM PREÇO, e a medição achou o gargalo do jogo
+
+**O passo 1 do [ciclo 19](cycles/19-a-voz.md) entrou inteiro.** As quatro ambições inertes (o
+achado 16, aberto desde sempre, e o item 10 do ciclo 18) deixaram de ser prosa no catálogo.
+
+| ambição      | o que ela passou a olhar                       | onde             |
+| ------------ | ---------------------------------------------- | ---------------- |
+| `succession` | a verba, descontada — **já era assim**         | `successionDrag` |
+| `seat`       | ⭐ **a RUA.** Sobe e desce com a sua aprovação | `seatStreet`     |
+| `cabinet`    | **a pasta dele**, contra o gasto da POSSE      | `cabinetLift`    |
+| `state`      | **a emenda**, que é o dinheiro que ele carimba | `stateLift`      |
+| `court`      | dinheiro, e ele o move pouco                   | `courtDrag`      |
+
+⭐ **A pasta é sorteada da semente, com chave própria (`:portfolio`)** — nenhum outro sorteio se
+deslocou, e **há prova em 4.294.967.295 sementes cobrando isso**: o elenco de toda partida salva
+é o mesmo de ontem. Nada de save subiu de versão.
+
+⭐ **E a tela diz o preço de cada uma.** Antes, só a sucessão levava a consequência escrita ao
+lado, porque era a única que o motor cobrava.
+
+⚠ **A CAPTURA PEGOU O QUE O PORTÃO NÃO PEGA, e a causa não é a tela:** a semente de abertura dá
+**quatro `state` em oito pessoas**, então quatro linhas seguidas dizem a mesma frase. Encurtei
+as cinco frases (de 45 para ~25 caracteres); **a repetição é do sorteio, e sortear estratificado
+é decisão dele** — o achado 16 já dizia isso em 28/08.
+
+⭐ **A SÉRIE FOI REMEDIDA NAS NOVE SONDAS, e ela não moveu uma casa decimal.** Isso não é a
+mudança ser inócua — é a medição achar o gargalo, e ele virou o **achado 59**.
+
+---
+
+## ⛔ 59. A EMENDA É A MOEDA DO JOGO, E ELA NÃO PAGA — medido em 04/09/2026
+
+📐 **Uma pauta de três alavancas, semente padrão, mês 1:**
+
+| emenda a todo mundo | votos      | custo no mês   |
+| ------------------- | ---------- | -------------- |
+| 0%                  | 363 de 513 | R$ 0,0 bi      |
+| 50%                 | 371        | R$ 12,8 bi     |
+| 100%                | **376**    | **R$ 25,7 bi** |
+
+**Comprar o Congresso inteiro move 13 cadeiras de 513, e o quórum era 308** — a pauta já passava
+sem pagar nada. ⚠ **E o teto do canal foi medido:** com os cinco parâmetros de ambição em 1
+(a emenda valendo o dobro para uns e nada para outros), a diferença é de **4 cadeiras**.
+
+📐 **A causa está em `whipCount`:** a verba entra como `distancia × (1 − venalidade × paga)`.
+**Ela só reduz a distância ideológica** — numa pauta que a Câmara já quer, não há o que reduzir,
+e nenhum dinheiro do mundo muda o placar.
+
+⛔ **A consequência é grande e atravessa os planos:** o ciclo 18 chama a emenda de _"a única moeda
+do jogo"_, e o ciclo 22 vai precificar leis inventadas pela reação de quem elas machucam.
+**Qualquer mecânica que module emenda nasce valendo 1 cadeira.** A ambição é a primeira; a
+memória do elenco e o lobby estão no mesmo canal.
+
+⚠ **As saídas, e a escolha é dele — as duas mexem em ECLUSA, que o achado 7 já declara "primeiro
+chute":**
+
+1. **a ambição deslocar a RESISTÊNCIA direto**, como a rua já faz (`STANDING_WEIGHT = 25`).
+   Contorna o gargalo `distância × venalidade`, e é uma linha em `whipCount`;
+2. **a emenda pesar mais**, girando `venality` ou o próprio termo. ⚠ Isso recalibra toda votação
+   do jogo, e a série se refaz inteira.
+
+⚠ **E falta uma medição:** a amplitude da emenda numa pauta que a Câmara REJEITA. Todas as
+medições acima são de pauta que já passava. **Ausência declarada.**
 
 ---
 
@@ -267,7 +458,7 @@ aponta para onde a coisa mora.
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- |
 | ⛔ **a grade de 3 colunas nunca existiu** — `annex[data-wide]` atravessa a grade, e os seis blocos ficaram numa coluna de 1197px estourando 57px | ciclo 21 · §1        |
 | ⛔ **o fundo tinha duas costuras**, e nenhuma guarda via: a lâmina de vidro da barra e o recorte reto da tinta do país                           | handoff, abaixo      |
-| ⛔ **quatro das cinco ambições não fazem nada** — só `succession` tem efeito. Uma delas é `court`, "quer uma vaga no Supremo"                    | ciclo 18 · item 10   |
+| ✔ **quatro das cinco ambições não faziam nada** — ⭐ **fechado em 04/09/2026**, e as cinco olham coisa diferente                                 | ciclo 19 · item 2    |
 | ⛔ **a plataforma da posse é invisível por 48 meses**, e `betrayal` cobra **8 pontos/mês** por quebrá-la. Medido                                 | ciclo 21 · §5        |
 | ⛔ **o jogo tem SEIS gestos**, e um é trocar de tela. O presidente faz três coisas                                                               | ciclo 18 · §1        |
 | ⛔ **a regra do C4 que proibia controle no Gabinete está morta** — as duas premissas dela caíram nesta sessão                                    | ciclo 21 · §7        |
@@ -1582,16 +1773,17 @@ profissional, entregue por CASCATA) **não pluga** — a SONDA segmenta por rend
 por profissão, e CASCATA é só contrato. É um ciclo, e não um conserto. Ver
 [`research/03-mecanicas-de-referencia.md`](research/03-mecanicas-de-referencia.md).
 
-**16. Quatro das cinco ambições do elenco são INERTES.** Só `succession` tem preço
-— `successionDrag` em `offered`. `cabinet`, `state`, `court` e `seat` estão
-declaradas no catálogo com prosa e não movem nada. A tela passou a mostrá-las como
-caracterização (quem a pessoa é), e **só a sucessão leva a consequência escrita ao
-lado**, porque é a única que o motor cobra. Elas ganham preço na tramitação e na
-queda. Remedido em 28/08/2026: a distribuição é uniforme em 600 sementes
-(20,4/19,7/19,9/20,3/19,6 em 4.800 pessoas) — mas com oito pessoas e cinco
-ambições, uma partida pode dar quatro iguais, e a de abertura dá (quatro querem o
-governo do estado). Não é defeito de hash; é amostra pequena. Sortear estratificado
-é decisão de desenho, não conserto.
+**16. ✔ AS CINCO AMBIÇÕES GANHARAM PREÇO em 04/09/2026 — e SOBRA a metade do
+achado que é de sorteio.** As quatro inertes passaram a olhar coisa diferente
+(`seatStreet`, `cabinetLift`, `stateLift`, `courtDrag` em `src/data/cast.mjs`), e a
+tela diz o preço de cada uma. ⚠ **O que continua aberto é a distribuição:** ela é
+uniforme em 600 sementes (20,4/19,7/19,9/20,3/19,6 em 4.800 pessoas), mas com oito
+pessoas e cinco ambições uma partida pode dar quatro iguais — **e a de abertura dá:
+quatro querem o governo do estado, e a captura mostra as quatro linhas iguais, uma
+debaixo da outra.** Não é defeito de hash; é amostra pequena. **Sortear
+estratificado é decisão de desenho, e é decisão dele** — mexer no sorteio troca a
+ambição de quem já está numa partida em andamento. ⚠ E o preço delas vale 1 cadeira
+em 380: ver o achado 59.
 
 ## ▶ A SÉRIE QUE CALIBRA — e ela é a ÚNICA que serve para calibrar
 
@@ -1607,6 +1799,10 @@ e as quatro são HISTÓRICAS: cada uma mediu o efeito de uma mudança no dia em 
 entrou, e cada uma foi superada pela seguinte. **Calibrar contra qualquer uma delas seria
 ajustar o parafuso contra um jogo que não existe mais** — por isso elas ficaram em
 [`journal.md`](journal.md), e esta ficou aqui.
+
+⭐ **REMEDIDA EM 04/09/2026, DEPOIS DAS AMBIÇÕES, E ELA NÃO MOVEU UMA CASA DECIMAL** — nas
+**nove** sondas, não só nas seis da tabela. Não é a mudança ser inócua: o canal por onde a
+ambição entra satura, e isso virou o **achado 59**. A tabela abaixo continua valendo.
 
 ⚠ **E O HORIZONTE É DECLARADO NA TABELA porque a coluna de votações já misturou dois.**
 Todas as células abaixo são de **48 meses**, semente padrão, remedidas em **03/09/2026** —
@@ -1760,7 +1956,7 @@ Sem isso haveria duas verdades sobre quanto o Estado gasta.
 
 ### A verificação
 
-**Treze guardas** com **63 provas sintéticas** e **315 provas**, e o **passeio**
+**Treze guardas** com **63 provas sintéticas** e **319 provas**, e o **passeio**
 (`npm run walk`), que usa a tela como se joga a 1440×980 e mede rolagem, recorte,
 sobreposição e contraste no pixel renderizado. ⚠ **O passeio está DENTRO do
 `validate`** — o portão vê a tela desde 23/08/2026, e o custo é 42s contra 9s.

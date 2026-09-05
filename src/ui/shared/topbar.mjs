@@ -113,7 +113,7 @@ function dress(node, { body, edge, gleam = 0 }) {
 function justify(block, squeeze) {
   const lines = [block.querySelector(".when__date"), block.querySelector(".when__note")];
   if (!lines[0] || !lines[1]) return;
-  const said = `${lines[0].textContent}|${lines[1].textContent}|${squeeze}|${document.fonts.status}`;
+  const said = `${lines[0].textContent}|${lines[1].textContent}|${squeeze}|${settled}`;
   if (block.dataset["said"] === said) return;
   block.dataset["said"] = said;
   for (const line of lines) {
@@ -156,8 +156,16 @@ function justify(block, squeeze) {
 /* ⛔ A FONTE PODE CHEGAR DEPOIS DA PRIMEIRA MEDIDA, e ai a largura fica PRESA na metrica
    errada: `justify` grava `width` em pixel e o `said` recusa a segunda passada, porque texto e
    compressao continuam os mesmos. Medido com a fonte atrasada em 300ms: as duas linhas do bloco
-   do mes vazam 5px, e nada as devolve. */
+   do mes vazam 5px, e nada as devolve.
+   ⛔ E `document.fonts.status` NAO SERVE DE MARCADOR: ele diz "loaded" enquanto ninguem pediu
+   face nenhuma, entao a barra que pinta antes do primeiro pedido gravava "loaded" com a metrica
+   de reserva e recusava a remedida. Medido: verde abrindo no Gabinete, 5px de vazamento abrindo
+   no Congresso, no mesmo commit. */
 let awaited = false;
+
+/* Ele so vira true DEPOIS de `fonts.ready` resolver, e e a unica coisa que o `said` aceita
+   como prova de que a medida vale. */
+let settled = false;
 
 /**
  * VESTE A BARRA — a cada pintura, porque toda peca aqui depende do proprio tamanho.
@@ -166,9 +174,12 @@ let awaited = false;
  * @returns {void}
  */
 export function dressTopbar(root) {
-  if (!awaited && document.fonts.status !== "loaded") {
+  if (!awaited) {
     awaited = true;
-    document.fonts.ready.then(() => dressTopbar(root));
+    document.fonts.ready.then(() => {
+      settled = true;
+      dressTopbar(root);
+    });
   }
 
   const style = getComputedStyle(document.documentElement);

@@ -35,7 +35,9 @@ const STANDING_WEIGHT = 25;
 
 /* Ele NAO e 50 de proposito — 35% de otimo/bom e um governo mediano no Brasil, e nao um
    governo em crise. */
-const STANDING_NEUTRAL = 35;
+/* ⚠ EXPORTADO PELA MESMA RAZAO DE `THRESHOLDS`: o elenco tambem pergunta o que e um governo
+   mediano, e redigitar o numero la seria um segundo lugar para ele divergir. */
+export const STANDING_NEUTRAL = 35;
 
 /* Dissidencia maxima, em fracao da bancada, quando a lealdade esta cheia. */
 const DISSIDENCE = 0.07;
@@ -222,9 +224,12 @@ export function seating({ parties, loyalty }) {
  * @param {Record<string, number>} input.funding - verba por bancada, de 0 a 1
  * @param {Record<string, number>} input.loyalty - lealdade por bancada, de 0 a 100
  * @param {number} [input.standing] - a aprovacao do governo, em "otimo/bom"
+ * @param {ReadonlySet<string> | null} [input.ruling] - as bancadas do presidente. E um
+ * CONJUNTO, e nao um id: o bloco dele chega ao plenario repartido entre a bancada restante e
+ * as pessoas que arrastam pedacos dela, e todas sao a mesma casa
  * @returns {Forecast}
  */
-export function whipCount({ bill, parties, funding, loyalty, standing }) {
+export function whipCount({ bill, parties, funding, loyalty, standing, ruling = null }) {
   /* A RUA ENTRA COMO DESLOCAMENTO DA RESISTENCIA, e nao como multiplicador da adesao:
      multiplicar mexeria no comparecimento, que e o que a lealdade ja faz. */
   const street = ((standing ?? STANDING_NEUTRAL) - STANDING_NEUTRAL) / 100;
@@ -236,7 +241,12 @@ export function whipCount({ bill, parties, funding, loyalty, standing }) {
        CONSERTA O DEFEITO MEDIDO EM : o preco de uma pauta nao escalava com o TAMANHO dela. */
     const distance = Math.hypot(dx, dy, bill.spread ?? 0);
     const venality = venalityFor(party, dx, dy);
-    const paid = clamp01(funding[party.id] ?? 0);
+
+    /* ── O SEU PARTIDO NAO SE COMPRA ─────────────────────────────────────────── Ele quer
+       participacao, e nao emenda. O que ele da em troca ja veio na lealdade de abertura, que
+       nasce 20 pontos acima da dos outros — e comparecimento vale mais que desconto. */
+    const own = ruling !== null && ruling.has(party.id);
+    const paid = own ? 0 : clamp01(funding[party.id] ?? 0);
 
     const resistance =
       distance * (1 - venality * paid) +
@@ -277,10 +287,11 @@ export function whipCount({ bill, parties, funding, loyalty, standing }) {
  * @param {Stream} input.stream
  * @param {number} input.majority - votos necessarios
  * @param {number} [input.standing] - a aprovacao do governo, em "otimo/bom"
+ * @param {ReadonlySet<string> | null} [input.ruling] - as bancadas do presidente
  * @returns {Tally}
  */
-export function vote({ bill, parties, funding, loyalty, stream, majority, standing }) {
-  const forecast = whipCount({ bill, parties, funding, loyalty, standing });
+export function vote({ bill, parties, funding, loyalty, stream, majority, standing, ruling }) {
+  const forecast = whipCount({ bill, parties, funding, loyalty, standing, ruling });
   let current = stream;
 
   const tallies = forecast.parties.map((prediction, index) => {

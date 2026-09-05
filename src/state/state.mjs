@@ -123,6 +123,10 @@ import { streamFrom } from "./random.mjs";
  *   o nome que o jogador digitou e como ele quer ser tratado; `null` usa o sorteado
  * @property {Platform} platform - os tres compromissos da posse; `null` em cada eixo quer
  * dizer que ele nao prometeu nada naquele eixo
+ * @property {string | null} [party] - a bancada que elegeu o presidente. ⚠ ELE E OPCIONAL NO
+ * TIPO porque e opcional no DISCO: um save da versao 20 nao o tem, e o validador nao o cobra.
+ * Ausente e `null` sao a mesma coisa — o presidente sem partido, que a lei brasileira nao
+ * permite e a tela da posse nao oferece
  * @property {number} month - meses decorridos desde a posse (0 = janeiro do ano 1)
  * @property {Record<string, number>} mood - a satisfacao de cada segmento, de 0 a 100
  * @property {Record<string, number>} loyalty - o humor de cada bancada, de 0 a 100
@@ -162,6 +166,10 @@ export const TREATMENTS = /** @type {const} */ (["senhor", "senhora"]);
 /* O HUMOR DE ABERTURA da base. */
 export const INITIAL_LOYALTY = 70;
 
+/* A DA SUA PROPRIA BANCADA, e a diferenca de 20 pontos e o item inteiro: medido, subir UMA
+   bancada de 70 para 95 entrega ate 17 cadeiras, contra 13 da emenda cheia as nove. */
+export const RULING_LOYALTY = 90;
+
 /* ⛔ ERA DOIS, E NINGUEM SABIA POR QUE. A constante foi extraida de dois literais soltos e
    a razao do numero nunca foi escrita — nem aqui, nem no diario, nem em ADR. A posse
    presidencial brasileira e em 1º de janeiro, e a semente padrao do projeto ja aponta para
@@ -196,9 +204,15 @@ export function deepFreeze(value) {
  * @param {typeof CATALOG} [catalog] o catalogo de onde sai a posicao inicial
  * @param {{ name: string, treatment: "senhor" | "senhora" } | null} [president] o nome
  *   digitado pelo jogador, e como ele quer ser tratado
+ * @param {string | null} [party] a bancada que o elegeu
  * @returns {GameState}
  */
-export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = null) {
+export function createState(
+  seed = DEFAULT_SEED,
+  catalog = CATALOG,
+  president = null,
+  party = null,
+) {
   const { areas, fiscal, macro, parties, programs, rules, segments } = catalog;
   return deepFreeze({
     schemaVersion: SCHEMA_VERSION,
@@ -212,10 +226,20 @@ export function createState(seed = DEFAULT_SEED, catalog = CATALOG, president = 
        discursou. Ela e o UNICO campo do estado que so o jogador preenche, e uma vez so — a
        posse acontece no mes 2 e nao volta. */
     platform: { priority: null, fiscal: null, reform: null },
+    /* ⚠ SEM BUMP DE ESQUEMA, E ISSO FOI MEDIDO: o validador do save cobra a lista de campos
+       obrigatorios, e este nao entrou nela. Um save da versao 20 abre com `party` ausente, que
+       e lido como `null` em todo lugar — e `null` reproduz o jogo de antes, linha por linha.
+       Subir a versao mataria a partida em andamento para nao mudar nada nela. */
+    party,
     month: OPENING_MONTH,
     /* A SATISFACAO DE ABERTURA sai do catalogo, como tudo. */
     mood: opinionOpening(segments),
-    loyalty: Object.fromEntries(parties.map(party => [party.id, INITIAL_LOYALTY])),
+    /* A SUA BANCADA COMECA MAIS LEAL, e e a unica diferenca de abertura que o partido cria:
+       o resto do jogo dele — a emenda que nao o compra e a traicao que custa o dobro — mora
+       no motor, e nao num numero maior aqui. */
+    loyalty: Object.fromEntries(
+      parties.map(item => [item.id, item.id === party ? RULING_LOYALTY : INITIAL_LOYALTY]),
+    ),
     macro: economyOpening(fiscal.initialGdp, macro),
     fiscal: {
       mandatory: fiscal.initialMandatory,

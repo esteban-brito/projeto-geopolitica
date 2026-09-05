@@ -78,7 +78,14 @@ entra por cima. Trocar um pelo outro faria a série se refazer inteira sem ningu
 
 ---
 
-## 4 · ⭐⭐ ITEM 2 — AS QUATRO AMBIÇÕES INERTES GANHAM PREÇO
+## 4 · ✔ ITEM 2 — AS QUATRO AMBIÇÕES INERTES GANHAM PREÇO — **FEITO em 04/09/2026**
+
+> **Entrou inteiro, e o achado que ele produziu é maior que ele.** As cinco ambições passaram a
+> olhar coisa diferente, a tela de cada uma diz o preço, e 4 provas novas cobram o canal. ⚠ **Mas
+> o peso medido é de 1 cadeira em 380 — e com os cinco parâmetros no TETO, 4 em 513.** A causa
+> não é o parâmetro: a emenda inteira, de 0 a 100%, compra **13 cadeiras de 513** por R$ 25,7
+> bi/mês, numa pauta que já passava. **A ambição modula uma moeda que não pesa.** Ver o achado
+> 59 do [handoff](../handoff.md), e a decisão que ele abre.
 
 📐 **Medido:** `offered`, em `src/domain/cast/index.mjs`, traduz dinheiro em adesão pessoal. A
 única linha que olha ambição é esta:
@@ -157,13 +164,14 @@ imprensa inspirada na real, com **nome alterado** — a mesma regra dos partidos
 
 | passo | o quê                                    | motor      | custo   | depende |
 | ----- | ---------------------------------------- | ---------- | ------- | ------- |
-| **1** | as quatro ambições ganham preço (item 2) | liga canal | pequeno | —       |
+| ✔ 1   | as quatro ambições ganham preço (item 2) | liga canal | pequeno | feito   |
 | **2** | a rua e o lobby leem a lei (item 1)      | liga canal | médio   | —       |
 | **3** | o mundo protocola texto (item 3)         | abre motor | grande  | 1       |
 | **4** | o jornal (item 4)                        | abre motor | médio   | 3       |
 
-⭐ **O passo 1 é o item mais barato do projeto inteiro com efeito visível**, e ele é a definição
-do que ele pediu: personalidade.
+⭐ **O passo 1 era o item mais barato do projeto inteiro com efeito visível, e ele foi.** O
+efeito é visível **na tela**, e é lá que ele entrega: cada pessoa diz o que quer e o que isso
+custa. ⚠ **No voto ele não entrega**, e o número está no achado 59.
 
 ---
 

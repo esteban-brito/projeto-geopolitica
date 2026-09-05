@@ -182,3 +182,37 @@ test("NENHUMA CARTA GRAVA UM PESO QUE NINGUEM LE, e nenhum fluxo fica sem consum
   const fluxos = Object.keys(JSON.parse(serialize(state)).streams);
   assert.deepEqual(fluxos, ["congress"], `o save carrega fluxos sem consumidor: ${fluxos}`);
 });
+
+test("O SAVE DA VERSAO ANTERIOR ABRE SEM PARTIDO, e a versao nao subiu", () => {
+  /* ⚠ ESTA E A PROVA QUE POUPOU A PARTIDA EM ANDAMENTO. O campo `party` entrou sem bump de
+     esquema porque ele nao esta na lista de obrigatorios do validador — e um save gravado
+     antes dele abre com o campo ausente, que todo consumidor lê como `null`. Se alguem o
+     puser entre os obrigatorios, esta prova quebra e a decisao volta a ser tomada. */
+  const antigo = JSON.parse(serialize(createState(7)));
+  delete antigo["party"];
+
+  const lido = deserialize(JSON.stringify(antigo));
+  assert.ok(lido.ok, lido.ok ? "" : lido.reason);
+  assert.equal(lido.ok ? lido.state.party : "nao abriu", undefined);
+  assert.equal(antigo["schemaVersion"], SCHEMA_VERSION);
+
+  /* E ele JOGA: um mes inteiro roda com o campo ausente. */
+  if (lido.ok) assert.equal(playMonth(lido.state).state.month, lido.state.month + 1);
+});
+
+test("O PARTIDO ATRAVESSA O SAVE, e o mandato inteiro se refaz com ele", () => {
+  fc.assert(
+    fc.property(anySeed, fc.integer({ min: 0, max: 12 }), (seed, turns) => {
+      const play = () => {
+        let state = createState(seed, undefined, null, "trabalhistas-unidos");
+        for (let i = 0; i < turns; i++) state = idle(state);
+        return serialize(state);
+      };
+      assert.equal(play(), play());
+
+      const lido = deserialize(play());
+      assert.ok(lido.ok);
+      if (lido.ok) assert.equal(lido.state.party, "trabalhistas-unidos");
+    }),
+  );
+});

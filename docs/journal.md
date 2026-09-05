@@ -12,6 +12,74 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO EM QUE AS PESSOAS GANHARAM PREÇO, E A MOEDA PERDEU — 04/09/2026
+
+Ele abriu com _"vamos prosseguir?"_ e, quando lhe ofereci as três candidatas do handoff,
+devolveu a escolha: _"você deve estudar mais o código e os planos, e decidir por conta
+própria"_.
+
+### 1 · Por que as ambições, e não o TEMPO
+
+O handoff colocava o TEMPO em primeiro (⭐⭐⭐), e eu escolhi o terceiro da lista. **Três
+medições decidiram:**
+
+- **o achado 53 é ordem dele** — não recalibrar a capacidade antes da reformulação das
+  empresas. O efeito do TEMPO sai do rendimento por área da MALHA, que é exatamente o modelo
+  marcado para troca. E o mesmo achado diz onde vale investir: **Congresso, tramitação,
+  Caixa**;
+- **o TEMPO e o Banco Central pedem campo novo no estado** — `SCHEMA_VERSION` 21, e a partida
+  em andamento morre. O elenco não entra no save: ele se refaz da semente;
+- **as ambições são o alicerce do ciclo 22.**
+
+### 2 · O plano dizia quatro; o repositório permitia quatro, mas não como estava escrito
+
+O ciclo 19 mandava `state` olhar _"o que desce para os entes"_ e `court` olhar _"quem
+indica"_. **Nenhuma das duas peças existe:** não há marca de repasse a ente nos 38 programas,
+e a indicação ao tribunal é do ciclo 18. As duas foram traduzidas para o que já roda — a
+emenda é o dinheiro que um candidato a governador carimba, e para quem quer a toga o dinheiro
+vale metade. **O lado positivo do `court` fica faltando, e está declarado.**
+
+### 3 · A captura reprovou o que 319 provas aprovaram — de novo
+
+Quatro linhas idênticas, uma debaixo da outra: a semente de abertura dá **quatro `state` em
+oito pessoas**. A frase encolheu de 45 para 25 caracteres, mas **a causa é o sorteio**, e
+mexer no sorteio troca a ambição de quem já está jogando. Ficou para ele.
+
+### 4 · E aí a medição virou a sessão
+
+A série não moveu **em nenhuma das nove sondas**. Não era a mudança ser inócua: o canal por
+onde a ambição entra satura. Medindo o teto dele — os cinco parâmetros em 1 —, a diferença é
+de **4 cadeiras em 513**. Medindo a emenda inteira, **13 cadeiras por R$ 25,7 bi**, numa pauta
+que já passava sem pagar nada.
+
+**A moeda que o ciclo 18 chama de "a única do jogo" compra 2,5% da Câmara.** Virou o achado
+59, e ele vem antes dos planos.
+
+⚠ **E a lição de método é sobre a ferramenta:** as sondas espalham emenda por igual, e uma
+mecânica que faz pessoas diferentes custarem diferente **é invisível para elas por
+construção**. A série de base não teria acusado nada — quem acusou foi a comparação direta
+contra o estado anterior, num worktree.
+
+### 5 · E ela terminou com um plano que a pesquisa reescreveu
+
+Ele mandou registrar o que quer: _"criar o seu personagem… escolher um partido… eu quero REALISMO
+e fidelidade ao Brasil atual e real"_. Virou o [ciclo 24](cycles/24-o-presidente.md), e **três
+fatos apurados na web mudaram o desenho antes de ele nascer**:
+
+- eu ia oferecer "sem partido" como o cenário difícil. 📗 **Não existe:** filiação é condição de
+  elegibilidade (CF art. 14, §3º, V) e o STF afastou a candidatura avulsa. O difícil é escolher
+  um partido pequeno;
+- ⭐ **a federação partidária é a mecânica que o projeto procurava** — quatro anos de duração
+  mínima, e romper proíbe nova federação, veta coligar nas duas eleições seguintes e corta o
+  Fundo Partidário. **"Tudo tem preço, nada tem muro" escrito na lei;**
+- e a cláusula de barreira põe um segundo relógio no ano 4: **o partido que te elegeu pode não
+  sobreviver à eleição.**
+
+**E a medição escolheu o próximo passo, contra a minha ordem anterior:** elevar a lealdade de uma
+bancada de 70 para 95 entrega **+17 cadeiras**; a emenda cheia às nove, **+13** por R$ 25,7 bi ao
+mês. **Ter partido vale mais que o orçamento inteiro de emendas** — e isso contorna o achado 59
+sem tocar em ECLUSA, que é o motor que ninguém quer recalibrar hoje.
+
 ## A SESSÃO QUE COMEÇOU COM O PC DELE REINICIANDO — 04/09/2026
 
 Ela abriu com uma pergunta de uma linha — _"o que perdemos?"_ — e terminou dentro da barra

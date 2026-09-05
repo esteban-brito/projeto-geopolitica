@@ -91,7 +91,7 @@ const MEMORY_FLOOR = 0.08;
  *
  * @param {object} input
  * @param {{ id: string, name: string, office: string, role: string, ambition: string,
- * seats: number, votes: number, reach: number, memory: number,
+ * seats: number, votes: number, reach: number, memory: number, portfolio?: string,
  * gender?: "f" | "m" }} input.person
  * @param {boolean} input.voting
  * @returns {string}
@@ -107,12 +107,14 @@ function personHtml({ person, voting }) {
         ? { tone: "poor", text: UI.congress.memoryBad }
         : null;
 
-  const ambition = labelOf(UI.congress.ambition, person.ambition);
-  /* ⚠ SO A SUCESSAO GANHA O PRECO ESCRITO AO LADO, porque so ela tem preco hoje. */
-  const price =
-    person.ambition === "succession"
-      ? ` <em>— ${escapeHtml(UI.congress.successionPrice)}</em>`
-      : "";
+  /* A PASTA VEM NOMEADA DO MOTOR, e o generico e o que sobra quando ela nao veio: a tela nao
+     escolhe ministerio, ela imprime o que o sorteio deu. */
+  const ambition = person.portfolio
+    ? `${UI.congress.cabinetOf} ${person.portfolio}`
+    : labelOf(UI.congress.ambition, person.ambition);
+
+  const cost = labelOf(UI.congress.ambitionPrice, person.ambition);
+  const price = cost ? ` <em>— ${escapeHtml(cost)}</em>` : "";
 
   return (
     `<div class="person" data-office="${escapeHtml(person.office)}">` +
@@ -153,20 +155,35 @@ function personHtml({ person, voting }) {
  * @param {number} input.seatPrice
  * @param {{ obstruction: number, rupture: number }} input.thresholds
  * @param {boolean} input.voting
+ * @param {boolean} [input.own] - a bancada que elegeu o presidente
  * @param {ReadonlyArray<Parameters<typeof personHtml>[0]["person"]>} [input.people]
  */
-function benchHtml({ party, loyalty, funding, votes, seatPrice, thresholds, voting, people = [] }) {
+function benchHtml({
+  party,
+  loyalty,
+  funding,
+  votes,
+  seatPrice,
+  thresholds,
+  voting,
+  own = false,
+  people = [],
+}) {
   const mood = moodOf(loyalty, thresholds);
 
   /* O CONTROLE FICA FORA DA PARTE QUE SE REPINTA, e isso e requisito de gesto e nao de
      organizacao: trocar o HTML de um `<input type=range>` no meio de um arrasto ARRANCA o
      elemento que o ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
   return (
-    `<div class="bench" data-mood="${mood}" data-party="${escapeHtml(party.id)}">` +
+    `<div class="bench" data-mood="${mood}" data-party="${escapeHtml(party.id)}"` +
+    (own ? ` data-own="true"` : "") +
+    `>` +
     /* "Partido Social Municipalista" numa coluna de 96px quebra em tres linhas e empurra a
        linha inteira; a sigla cabe sempre e e como um Congresso de verdade se cita. */
     `<span class="bench__name"><b>${escapeHtml(party.sigla)}</b>` +
-    `<small>${escapeHtml(party.label)}</small></span>` +
+    /* ⚠ A MARCA SUBSTITUI O NOME LONGO, e nao se soma a ele: a coluna tem 96px, e "Partido
+       Social Municipalista · o seu partido" nao cabe em duas linhas. */
+    `<small>${escapeHtml(own ? UI.mesa.ownParty : party.label)}</small></span>` +
     `<span class="bench__mood" data-numeric title="${escapeHtml(UI.mood[mood])}">` +
     `${seats(loyalty)}<i aria-hidden="true"></i></span>` +
     `<input class="bench__slider" type="range" min="0" max="100" step="5" ` +
@@ -229,6 +246,7 @@ export function benchReadHtml({ party, funding, votes, seatPrice, voting }) {
  * @param {number} input.room o discricionario que cabe no mes
  * @param {number} input.demand tudo o que foi prometido no mes — emenda e areas
  * @param {{ obstruction: number, rupture: number }} input.thresholds
+ * @param {string | null} [input.ruling] - a bancada que elegeu o presidente
  * @returns {string}
  */
 export function mesaHtml(input) {
@@ -275,6 +293,7 @@ export function mesaHtml(input) {
         seatPrice: input.seatPrice,
         thresholds: input.thresholds,
         voting,
+        own: party.id === input.ruling,
         people: peopleOf.get(party.id) ?? [],
       }),
     )

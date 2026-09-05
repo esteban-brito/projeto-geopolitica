@@ -31,6 +31,8 @@
  * @property {number} venalityEconomic
  * @property {number} venalityLiberty
  * @property {string} ambition - o que ela quer; um de `AMBITIONS`
+ * @property {string} portfolio - a pasta que ela quer, e so `cabinet` a cobra: a tela a
+ * nomeia, e quem nao quer ministerio nunca a usa
  * @property {number} reach - fracao da bancada que ela de fato arrasta
  * @typedef {object} Memory o saldo de cada pessoa com o governo, de -cap a +cap
  * @typedef {Record<string, number>} Ledger
@@ -77,10 +79,20 @@ function hashed(text) {
  * @param {ReadonlyArray<string>} input.firstNames
  * @param {ReadonlyArray<string>} input.surnames
  * @param {ReadonlyArray<string>} input.ambitions
+ * @param {ReadonlyArray<string>} input.areas - os ids das pastas que o governo tem
  * @param {ReadonlyMap<string, "f" | "m">} input.genderOf
  * @returns {Person[]}
  */
-export function cast({ seed, parties, archetypes, firstNames, surnames, ambitions, genderOf }) {
+export function cast({
+  seed,
+  parties,
+  archetypes,
+  firstNames,
+  surnames,
+  ambitions,
+  areas,
+  genderOf,
+}) {
   /** @type {Person[]} */
   const people = [];
   /** @type {Set<string>} */
@@ -114,6 +126,11 @@ export function cast({ seed, parties, archetypes, firstNames, surnames, ambition
 
     const ambition = ambitions[Math.floor(hashed(`${base}:ambition`) * ambitions.length)] ?? "seat";
 
+    /* A PASTA SAI DE CHAVE PROPRIA, e por isso ela nao desloca ninguem: nome, ambicao e
+       alcance continuam saindo dos mesmos hashes, e toda partida ja salva refaz o mesmo
+       elenco. */
+    const portfolio = areas[Math.floor(hashed(`${base}:portfolio`) * areas.length)] ?? "";
+
     /* ── O DESVIO DO BLOCO ─────────────────────────────────────────────────── A pessoa nasce
        ONDE O BLOCO ESTA e se desloca pelo arquetipo, e nao num ponto qualquer do plano. */
     const jitter = (/** @type {string} */ axis) => (hashed(`${base}:${axis}`) - 0.5) * 8;
@@ -131,6 +148,7 @@ export function cast({ seed, parties, archetypes, firstNames, surnames, ambition
       venalityEconomic: clamp(bloc.venalityEconomic + archetype.venalityShift, 0, 1),
       venalityLiberty: clamp(bloc.venalityLiberty + archetype.venalityShift, 0, 1),
       ambition,
+      portfolio,
       reach: clamp(
         archetype.reachMin +
           hashed(`${base}:reach`) * Math.max(0, archetype.reachMax - archetype.reachMin),
@@ -195,9 +213,10 @@ export function president({ seed, people, firstNames, surnames }) {
  * @param {Record<string, number>} input.promised - por BLOCO, de 0 a 1
  * @param {Record<string, number>} input.paid - por BLOCO, de 0 a 1
  * @param {CastParameters} input.parameters
+ * @param {string | null} [input.ruling] - a bancada que elegeu o presidente
  * @returns {Ledger}
  */
-export function remember({ people, memory, promised, paid, parameters }) {
+export function remember({ people, memory, promised, paid, parameters, ruling = null }) {
   /** @type {Ledger} */
   const next = {};
 
@@ -209,9 +228,17 @@ export function remember({ people, memory, promised, paid, parameters }) {
 
     /* O DECAIMENTO VEM PRIMEIRO, e o do mes entra por cima. */
     const decayed = was * parameters.memoryDecay;
+
+    /* ⚠ TRAIR O PROPRIO PARTIDO CUSTA O DOBRO, e o favor NAO vale o dobro: a assimetria e a
+       mesma da memoria comum, e aqui ela e mais forte — quem e da casa acha que a verba ja
+       era dele, e cobra a promessa quebrada como deslealdade, nao como negocio ruim. */
+    const betrayal =
+      ruling !== null && person.bloc === ruling
+        ? parameters.betrayalWeight * 2
+        : parameters.betrayalWeight;
+
     const moved =
-      honoured * parameters.favourWeight * person.reach -
-      broken * parameters.betrayalWeight * person.reach;
+      honoured * parameters.favourWeight * person.reach - broken * betrayal * person.reach;
 
     next[person.id] = clamp(decayed + moved, -parameters.memoryCap, parameters.memoryCap);
   }
@@ -287,15 +314,23 @@ export function benches({ people, parties, memory, parameters }) {
 /**
  * A VERBA QUE CADA BANCADA VÊ, com o credito de memoria somado.
  *
+ * ⚠ CADA AMBICAO OLHA COISA DIFERENTE. Um peso proprio para cada uma daria cinco precos da
+ * MESMA oferta; o que muda e a PERGUNTA que o sujeito faz ao que voce poe na mesa. A bancada
+ * continua sem ambicao, e por isso a linha de base do jogo nao se move.
+ *
  * @param {object} input
  * @param {ReadonlyArray<Person>} input.people
  * @param {ReadonlyArray<Party>} input.parties
  * @param {Record<string, number>} input.funding - por BLOCO, de 0 a 1
  * @param {Record<string, number>} input.credit - por PESSOA, de -1 a 1
  * @param {CastParameters} input.parameters
+ * @param {number} [input.street] - a rua contra o ponto neutro, de -1 a 1; quem a normaliza
+ * e quem compoe, porque o ponto neutro e de ECLUSA e ha um so
+ * @param {Record<string, number>} [input.byArea] - quanto cada pasta esta acima ou abaixo do
+ * gasto de abertura, de -1 a 1
  * @returns {Record<string, number>}
  */
-export function offered({ people, parties, funding, credit, parameters }) {
+export function offered({ people, parties, funding, credit, parameters, street = 0, byArea = {} }) {
   /** @type {Record<string, number>} */
   const table = {};
 
@@ -305,10 +340,26 @@ export function offered({ people, parties, funding, credit, parameters }) {
     const fromBloc = clamp(funding[person.bloc] ?? 0, 0, 1);
     const saved = credit[person.id] ?? 0;
 
-    /* A AMBICAO DE SUCESSAO DESCONTA a verba que o sujeito reconhece: ele aceita o dinheiro e
-       continua querendo o cargo. */
-    const drag = person.ambition === "succession" ? parameters.successionDrag : 0;
-    table[person.id] = clamp(fromBloc * (1 - drag) + saved, -1, 1);
+    /* ── O QUE CADA AMBICAO OLHA ────────────────────────────────────────────── A sucessao e
+       o tribunal descontam a verba; o governo do estado a valoriza. Os tres mexem no que o
+       dinheiro compra, e por isso multiplicam. */
+    const drag =
+      person.ambition === "succession"
+        ? parameters.successionDrag
+        : person.ambition === "court"
+          ? parameters.courtDrag
+          : 0;
+    const lift = person.ambition === "state" ? parameters.stateLift : 0;
+
+    /* A rua e a pasta nao sao dinheiro, e por isso SOMAM em vez de multiplicar: elas movem o
+       sujeito mesmo quando a emenda e zero. */
+    const crowd = person.ambition === "seat" ? parameters.seatStreet * street : 0;
+    const desk =
+      person.ambition === "cabinet"
+        ? parameters.cabinetLift * clamp(byArea[person.portfolio] ?? 0, -1, 1)
+        : 0;
+
+    table[person.id] = clamp(fromBloc * (1 - drag + lift) + saved + crowd + desk, -1, 1);
   }
 
   return table;

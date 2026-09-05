@@ -370,6 +370,15 @@
     color: var(--signal-up);
   }
 
+  /* A SUA BANCADA NAO DISPUTA A TARJA COM O HUMOR: a borda esquerda ja diz se ela obstrui ou
+     rompeu, e um segundo sinal no mesmo lugar apagaria o primeiro no mes em que os dois
+     valessem. O que muda e a linha de baixo do nome. */
+  .bench[data-own="true"] .bench__name small {
+    color: var(--brand);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+  }
+
   .bench[data-mood="obstructing"] {
     border-left-color: rgba(var(--crisis-rgb), 0.5);
   }

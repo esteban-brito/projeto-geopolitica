@@ -1046,7 +1046,18 @@ try {
     "[posse] a partida trocou ANTES de o jogador tomar posse",
   );
 
+  expect(
+    await page
+      .locator("#swearParty")
+      .evaluate(
+        node => /** @type {{ value: string }} */ (/** @type {unknown} */ (node)).value === "",
+      ),
+    "[posse] o seletor ja vinha com uma bancada marcada, e a escolha e do jogador",
+  );
   await page.fill("#swearName", "Teste da Silva");
+  /* ⚠ SEM BANCADA O FORMULARIO NAO FECHA, e e de proposito: filiacao e condicao de
+     elegibilidade, entao o `required` do seletor e a regra, e nao um capricho de validacao. */
+  await page.selectOption("#swearParty", "trabalhistas-unidos");
   await page.locator('input[name="treatment"][value="senhora"]').click();
   await page.click("#swearOk");
   await page.waitForTimeout(600);
@@ -1123,6 +1134,40 @@ try {
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(600);
   await page.screenshot({ path: join(OUT, "gabinete-900.png"), fullPage: true });
+
+  /* ── A POSSE, E A BANCADA QUE ELA ESCOLHE ─────────────────────────────────── ⚠ ELA VEM NO
+     FIM DE PROPOSITO: escolher partido recomeca a partida, e o percurso inteiro acima mede o
+     jogo SEM partido, que e como o simulador roda e como um save da versao 20 abre. */
+  await page.click('.rail [data-section="cabinet"]');
+  await page.waitForTimeout(300);
+  await page.click("#restart");
+  await page.waitForTimeout(200);
+  await page.click("#restart");
+  await page.waitForTimeout(400);
+
+  expect(
+    (await page.locator("#swearParty option:not([disabled])").count()) === 9,
+    "[posse] o seletor de partido nao ofereceu as nove bancadas do catalogo",
+  );
+  await checkEllipsized("posse");
+  await page.screenshot({ path: join(OUT, "posse.png"), fullPage: true });
+
+  /* A MAIOR BANCADA, porque e a que mais muda o jogo: 145 das 513 cadeiras. */
+  await page.selectOption("#swearParty", "liberais-conservadores");
+  await page.click("#swearOk");
+  await page.waitForTimeout(700);
+  await page.click('.rail [data-section="congress"]');
+  await page.waitForTimeout(500);
+
+  expect(
+    (await page.locator('.bench[data-own="true"]').count()) === 1,
+    "[congresso] a bancada do presidente nao saiu marcada, ou saiu mais de uma",
+  );
+  await checkOverflow("congresso com partido");
+  await checkClipped("congresso com partido");
+  await checkEllipsized("congresso com partido");
+  await checkContrast("congresso com partido");
+  await page.screenshot({ path: join(OUT, "mesa-partido.png"), fullPage: true });
 
   /* ── A FONTE QUE CHEGA TARDE ────────────────────────────────────
      ⚠ A BARRA MEDE TIPO PARA SE JUSTIFICAR, E MEDE UMA VEZ SO. Medida antes de a fonte chegar,

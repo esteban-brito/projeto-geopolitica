@@ -271,6 +271,10 @@ export const CAST_SCHEMA = {
   betrayalWeight: { kind: "number", min: 0, max: 100 },
   memoryCap: { kind: "number", min: 1, max: 200 },
   successionDrag: { kind: "number", min: 0, max: 1 },
+  courtDrag: { kind: "number", min: 0, max: 1 },
+  stateLift: { kind: "number", min: 0, max: 1 },
+  seatStreet: { kind: "number", min: 0, max: 1 },
+  cabinetLift: { kind: "number", min: 0, max: 1 },
 };
 
 /**
@@ -280,6 +284,12 @@ export const CAST_SCHEMA = {
  * @property {number} betrayalWeight - o quanto promessa quebrada debita
  * @property {number} memoryCap - o teto do saldo, para os dois lados
  * @property {number} successionDrag - o quanto quem quer 2030 resiste a mais
+ * @property {number} courtDrag - o quanto quem quer o tribunal desconta da verba
+ * @property {number} stateLift - o quanto a emenda vale a mais para quem quer o governo do
+ * proprio estado
+ * @property {number} seatStreet - o quanto a rua desloca o que o candidato a reeleicao
+ * reconhece, por ponto cheio de aprovacao
+ * @property {number} cabinetLift - o quanto a pasta atendida vale para quem quer ministerio
  */
 
 /* E A TRAICAO PESA MAIS QUE O FAVOR, pela mesma razao que a satisfacao de SONDA
@@ -296,4 +306,18 @@ export const CAST = {
   /* Quem quer o Planalto em 2030 ganha com o governo fraco, e por isso resiste a mais mesmo
      pago. */
   successionDrag: 0.35,
+  /* ⚠ AS QUATRO SAO PRIMEIRO CHUTE, como as faixas dos arquetipos — o que nao e chute e a
+     RAZAO entre elas, e ela e a mesma em todas: nenhuma chega ao peso da emenda cheia, entao
+     nenhuma ambicao decide uma votacao sozinha. */
+  /* Dinheiro move pouco quem quer uma toga: metade do que move os outros. Falta o outro lado
+     — a indicacao —, e ele nao existe no jogo ainda. */
+  courtDrag: 0.5,
+  /* Quem vai disputar o proprio estado precisa levar obra para casa, e emenda e o unico
+     dinheiro do jogo que ele carimba. */
+  stateLift: 0.3,
+  /* Governo popular compra mais barato o baixo clero, e governo impopular o perde: com 60% de
+     otimo/bom ele reconhece 0,125 de emenda a mais, e com 10% o mesmo tanto a menos. */
+  seatStreet: 0.5,
+  /* Uma pasta 25% acima do gasto de abertura vale 0,1 de emenda para quem a quer. */
+  cabinetLift: 0.4,
 };

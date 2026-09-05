@@ -9,6 +9,7 @@ import fc from "fast-check";
 import { benches, cast, offered, remember } from "../../src/domain/cast/index.mjs";
 import { CATALOG } from "../../src/data/catalog.mjs";
 import { AMBITIONS, ARCHETYPES, FIRST_NAMES, GENDER_OF, SURNAMES } from "../../src/data/cast.mjs";
+import { AREAS } from "../../src/data/areas.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
 import { SEATS } from "../../src/data/regime.mjs";
 import { settlement } from "../../src/application/turn.mjs";
@@ -23,6 +24,7 @@ const castOf = seed =>
     firstNames: FIRST_NAMES,
     surnames: SURNAMES,
     ambitions: AMBITIONS,
+    areas: AREAS.map(area => area.id),
     genderOf: GENDER_OF,
   });
 
@@ -258,6 +260,117 @@ test("A MEMORIA NAO ESTOURA O TETO, em nenhum dos dois lados", () => {
   }
 });
 
+/* UMA PESSOA DE PROVA — so o que `offered` lê. Gerar gente da semente daria uma amostra em
+   que a ambicao que se quer medir pode nao existir. */
+/** @param {string} ambition @param {string} portfolio */
+const someone = (ambition, portfolio = "health") => ({
+  id: ambition,
+  name: ambition,
+  gender: /** @type {"m"} */ ("m"),
+  archetype: ambition,
+  label: ambition,
+  bloc: PARTIES[0]?.id ?? "",
+  office: "leader",
+  economic: 50,
+  liberty: 50,
+  venalityEconomic: 0.5,
+  venalityLiberty: 0.5,
+  ambition,
+  portfolio,
+  reach: 0.5,
+});
+
+const BLOC = PARTIES[0]?.id ?? "";
+
+/** @param {{ street?: number, byArea?: Record<string, number> }} world */
+const tableOf = world =>
+  offered({
+    people: AMBITIONS.map(ambition => someone(ambition)),
+    parties: PARTIES,
+    funding: { [BLOC]: 0.5 },
+    credit: {},
+    parameters: CATALOG.cast,
+    ...world,
+  });
+
+test("A RUA MOVE QUEM QUER CONTINUAR ONDE ESTA, e nao move mais ninguem", () => {
+  /* O baixo clero que segue a popularidade — e a prova cobra os DOIS lados: se a rua passasse
+     a mover todo mundo, ela viraria um segundo `standing`, que ECLUSA ja aplica. */
+  const calm = tableOf({ street: 0 });
+  const loved = tableOf({ street: 0.25 });
+  const hated = tableOf({ street: -0.25 });
+
+  assert.ok((loved.seat ?? 0) > (calm.seat ?? 0), "governo popular nao baixou o preco dele");
+  assert.ok((hated.seat ?? 0) < (calm.seat ?? 0), "governo impopular nao o perdeu");
+
+  for (const ambition of AMBITIONS) {
+    if (ambition === "seat") continue;
+    assert.equal(loved[ambition], hated[ambition], `a rua moveu ${ambition}`);
+  }
+});
+
+test("A PASTA ATENDIDA BARATEIA QUEM A QUER, e so a pasta DELE conta", () => {
+  const dry = tableOf({});
+  const fed = tableOf({ byArea: { health: 0.4 } });
+  const other = tableOf({ byArea: { defense: 0.4 } });
+
+  assert.ok((fed.cabinet ?? 0) > (dry.cabinet ?? 0), "a pasta cheia nao barateou o ministro");
+  assert.equal(other.cabinet, dry.cabinet, "a pasta de OUTRO moveu o ministro");
+
+  for (const ambition of AMBITIONS) {
+    if (ambition === "cabinet") continue;
+    assert.equal(fed[ambition], dry[ambition], `a pasta moveu ${ambition}`);
+  }
+});
+
+test("A MESMA EMENDA VALE COISAS DIFERENTES, e a bancada e o ponto zero", () => {
+  /* ⚠ A BANCADA E A REFERENCIA, e nao um numero escrito na prova: ela nao tem ambicao, entao
+     o que ela reconhece e exatamente o que foi oferecido. */
+  const table = tableOf({});
+  const bench = table[BLOC] ?? 0;
+
+  assert.equal(table.seat, bench, "a rua no neutro deslocou quem quer continuar");
+  assert.equal(table.cabinet, bench, "a pasta na abertura deslocou quem quer ministerio");
+  assert.ok((table.state ?? 0) > bench, "quem disputa o estado nao valorizou a emenda");
+  assert.ok((table.succession ?? 0) < bench, "quem quer 2030 nao descontou");
+  assert.ok(
+    (table.court ?? 0) < (table.succession ?? 0),
+    "dinheiro devia mover menos quem quer a toga do que quem quer o Planalto",
+  );
+});
+
+test("A PASTA SAI DE CHAVE PROPRIA — o elenco de uma partida salva nao mudou", () => {
+  /* ⚠ ESTA E A PROVA QUE PROTEGE O SAVE. O elenco se refaz da semente a cada abertura: se a
+     pasta tivesse entrado no mesmo sorteio da ambicao, toda partida em andamento acordaria
+     com outras pessoas — e nenhuma tela denunciaria. */
+  fc.assert(
+    fc.property(anySeed, seed => {
+      const withAreas = castOf(seed);
+      const withOthers = cast({
+        seed,
+        parties: PARTIES,
+        archetypes: ARCHETYPES,
+        firstNames: FIRST_NAMES,
+        surnames: SURNAMES,
+        ambitions: AMBITIONS,
+        areas: ["outra", "diferente", "qualquer"],
+        genderOf: GENDER_OF,
+      });
+
+      const same = (/** @type {ReturnType<typeof castOf>} */ people) =>
+        people.map(person => ({ ...person, portfolio: "" }));
+
+      assert.deepEqual(same(withAreas), same(withOthers));
+      for (const person of withAreas) {
+        assert.ok(
+          AREAS.some(area => area.id === person.portfolio),
+          `${person.name} quer uma pasta que nao existe`,
+        );
+      }
+    }),
+  );
+});
+
 test("A MEMORIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
   /* O credito chega a ECLUSA como dinheiro ja pago — e por isso o motor de votacao continua
      sem saber que o elenco existe. */
@@ -286,8 +399,16 @@ test("A MEMORIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
     );
 
     const rival = person.ambition === "succession";
-    const same = people.find(other => other.bloc === person.bloc && other.id !== person.id);
-    if (rival && same && same.ambition !== "succession") {
+    /* ⚠ O PAR NAO PODE SER A TOGA: `courtDrag` desconta MAIS que `successionDrag`, e comparar
+       com ela mediria a ordem dos dois descontos, e nao o desconto da sucessao. */
+    const same = people.find(
+      other =>
+        other.bloc === person.bloc &&
+        other.id !== person.id &&
+        other.ambition !== "succession" &&
+        other.ambition !== "court",
+    );
+    if (rival && same) {
       assert.ok(
         (cold[person.id] ?? 0) < (cold[same.id] ?? 0),
         `${person.name} quer 2030 e reconheceu a mesma verba que ${same.name}`,
@@ -311,4 +432,48 @@ test("O TURNO E A TELA VEEM A MESMA CAMARA", () => {
     first.people.map(person => person.id),
     ARCHETYPES.map(archetype => archetype.id),
   );
+});
+
+test("TRAIR O PROPRIO PARTIDO CUSTA O DOBRO, e honrar vale o mesmo", () => {
+  /* A assimetria e o item inteiro: quem e da casa acha que a verba ja era dele. */
+  const people = castOf(DEFAULT_SEED);
+  const meu = people[0]?.bloc ?? "";
+  const prometido = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
+  const nada = Object.fromEntries(PARTIES.map(party => [party.id, 0]));
+
+  const traido = (/** @type {string | null} */ ruling) =>
+    remember({
+      people,
+      memory: {},
+      promised: prometido,
+      paid: nada,
+      parameters: CATALOG.cast,
+      ruling,
+    });
+  const honrado = (/** @type {string | null} */ ruling) =>
+    remember({
+      people,
+      memory: {},
+      promised: prometido,
+      paid: prometido,
+      parameters: CATALOG.cast,
+      ruling,
+    });
+
+  const fora = traido(null);
+  const dentro = traido(meu);
+  const pago = honrado(meu);
+
+  for (const person of people) {
+    const daCasa = person.bloc === meu;
+    if (daCasa && person.reach > 0) {
+      assert.ok(
+        (dentro[person.id] ?? 0) < (fora[person.id] ?? 0),
+        `${person.name} e da casa e a traicao nao doeu mais`,
+      );
+    } else {
+      assert.equal(dentro[person.id], fora[person.id], `${person.name} nao e da casa e mudou`);
+    }
+    assert.equal(pago[person.id], honrado(null)[person.id], "o favor mudou de peso, e nao devia");
+  }
 });

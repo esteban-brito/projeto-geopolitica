@@ -652,9 +652,28 @@
     font-size: var(--text-name);
   }
 
-  input[type="text"].swear__input:focus-visible {
+  input[type="text"].swear__input:focus-visible,
+  select.swear__input:focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
+  } /* O SELETOR REPETE A FORMA DO CAMPO DE TEXTO, e a especificidade e o mesmo caso do vizinho
+     acima: `select` e (0,0,1) e a classe sozinha perderia para a regra do agente. */
+  select.swear__input {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--glass-edge);
+    border-radius: var(--radius-piece);
+    background: var(--glass-base);
+    box-shadow: var(--bevel-under);
+    color: var(--ink);
+    font-family: var(--font-record);
+    font-size: var(--text-name);
+  }
+
+  .swear__hint {
+    margin: calc(var(--space-2) * -1) 0 0;
+    color: var(--ink-dim);
+    font-size: var(--text-note);
   } /* AS DUAS FORMAS DE TRATAMENTO, lado a lado: sao duas e a escolha e binaria, entao uma
      linha basta e uma lista vertical seria altura gasta com duas palavras. */
   .swear__how {

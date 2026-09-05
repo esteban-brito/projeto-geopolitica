@@ -86,9 +86,10 @@ export function proposalOf(bill, { levels, bands, power, catalog }) {
  * @param {Record<string, number>} input.funding - a verba OFERECIDA, por bancada
  * @param {Record<string, number>} input.loyalty
  * @param {number} input.standing - a rua
+ * @param {ReadonlySet<string> | null} [input.ruling] - as bancadas do presidente
  * @returns {{ tabled: boolean, share: number }}
  */
-export function tables({ proposal, speaker, benches, funding, loyalty, standing }) {
+export function tables({ proposal, speaker, benches, funding, loyalty, standing, ruling }) {
   const seat = speaker ? benches.find(bench => bench.id === speaker.id) : undefined;
 
   /* ⚠ SEM PRESIDENTE DA CAMARA, A GAVETA NAO EXISTE — e o texto passa direto. */
@@ -100,6 +101,7 @@ export function tables({ proposal, speaker, benches, funding, loyalty, standing 
     funding: { [seat.id]: funding[seat.id] ?? 0 },
     loyalty: { [seat.id]: loyalty[seat.id] ?? 0 },
     standing,
+    ruling,
   });
 
   const share = seat.seats > 0 ? forecast.votes / seat.seats : 0;

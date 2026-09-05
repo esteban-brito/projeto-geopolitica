@@ -104,8 +104,11 @@ const el = {
   swearDialog: /** @type {HTMLDialogElement} */ (must("swearDialog")),
   swearForm: /** @type {HTMLFormElement} */ (must("swearForm")),
   swearName: /** @type {HTMLInputElement} */ (must("swearName")),
+  swearParty: /** @type {HTMLSelectElement} */ (must("swearParty")),
   swearTitle: must("swearTitle"),
   swearNameLabel: must("swearNameLabel"),
+  swearPartyLabel: must("swearPartyLabel"),
+  swearPartyHint: must("swearPartyHint"),
   swearHowLabel: must("swearHowLabel"),
   swearSir: must("swearSir"),
   swearMadam: must("swearMadam"),
@@ -409,6 +412,9 @@ function mesaInput() {
     areaLabel: CATALOG.areas.find(area => area.id === bill?.area)?.label ?? "",
     quorum: seen.agenda.quorum,
     parties: CATALOG.parties,
+    /* A SUA BANCADA VAI MARCADA, e ela e a unica coisa da tela do Congresso que nao muda de
+       mes para mes: o partido do presidente e escolhido na posse e nao se troca. */
+    ruling: state.party ?? null,
     loyalty: state.loyalty,
     /* A LINHA DA BANCADA MOSTRA A PROMESSA — a fracao e o custo do que o jogador
        ofereceu, que e o que ele controla. Os VOTOS ao lado saem do que sera
@@ -1383,6 +1389,27 @@ el.restart.addEventListener("click", () => {
 
 function openSwear() {
   el.swearName.value = state.president?.name ?? "";
+  /* AS OPCOES SAO MONTADAS AQUI, e nao no HTML: a lista de bancadas mora no catalogo, e
+     escrever nove `<option>` a mao seria uma segunda verdade sobre quantas o jogo tem. */
+  /* ⚠ NENHUMA VEM MARCADA, e a vaga na frente e o item: com a lista crua, quem so clica em
+     "tomar posse" leva a PRIMEIRA do catalogo — a menor bancada da Camara, escolhida por
+     ordem de arquivo e nao por ele. A escolha e obrigatoria na lei e passa a ser na tela. */
+  const vazia = document.createElement("option");
+  vazia.value = "";
+  vazia.textContent = UI.actions.swearPartyEmpty;
+  vazia.disabled = true;
+  vazia.selected = state.party === null || state.party === undefined;
+
+  el.swearParty.replaceChildren(
+    vazia,
+    ...CATALOG.parties.map(party => {
+      const option = document.createElement("option");
+      option.value = party.id;
+      option.textContent = `${party.sigla} — ${party.label} · ${party.seats} cadeiras`;
+      option.selected = party.id === state.party;
+      return option;
+    }),
+  );
   const marcado = /** @type {HTMLInputElement | null} */ (
     el.swearForm.querySelector(
       `input[name="treatment"][value="${state.president?.treatment ?? DEFAULT_TREATMENT}"]`,
@@ -1405,7 +1432,13 @@ el.swearForm.addEventListener("submit", () => {
 
   /* ⚠ NOME VAZIO VOLTA AO SORTEADO, e nao a uma string em branco: a tela cita o presidente
      em quatro lugares, e um vazio ali leria como defeito de carregamento. */
-  state = createState(undefined, CATALOG, nome === "" ? null : { name: nome, treatment });
+  /* ⚠ SEM PARTIDO NAO E UMA OPCAO DA TELA, mas continua sendo um estado valido do motor: e
+     assim que um save da versao 20 abre, e e assim que o simulador roda. */
+  const partido = CATALOG.parties.some(party => party.id === el.swearParty.value)
+    ? el.swearParty.value
+    : null;
+
+  state = createState(undefined, CATALOG, nome === "" ? null : { name: nome, treatment }, partido);
   last = null;
   /* ⚠ E A CARTA ABERTA MORRE NA POSSE, que e o unico lugar onde ela morre: o id do alarme nao
      carrega o mes — `alarm()` monta `kind:id` —, entao um `ceiling:ceiling` clicado na
@@ -1520,6 +1553,8 @@ label(el.restart, UI.actions.restart, "");
 /* OS ROTULOS DA POSSE, como todo texto: do arquivo de frases, e nao do documento. */
 el.swearTitle.textContent = UI.actions.swearTitle;
 el.swearNameLabel.textContent = UI.actions.swearName;
+el.swearPartyLabel.textContent = UI.actions.swearParty;
+el.swearPartyHint.textContent = UI.actions.swearPartyHint;
 el.swearHowLabel.textContent = UI.actions.swearHow;
 el.swearSir.textContent = UI.actions.swearSir;
 el.swearMadam.textContent = UI.actions.swearMadam;

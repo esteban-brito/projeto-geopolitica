@@ -507,3 +507,75 @@ test("O CORTE E POR PRECO, e nao por humor — a base cheia parte 364 contra 149
   assert.equal(Math.round(split.bought), 364, "as cadeiras a venda nao batem com o catalogo");
   assert.equal(Math.round(split.convinced), 149, "as cadeiras de conviccao nao batem");
 });
+
+/* ── O PARTIDO DO PRESIDENTE ────────────────────────────────────────────────── ⚠ ELE NAO E
+   UM BONUS, e as tres provas abaixo cobram os TRES lados: o que ele da, o que ele tira, e o
+   que ele nao mexe. */
+
+test("O SEU PARTIDO NAO SE COMPRA — a emenda para de mover a bancada que te elegeu", () => {
+  const bill = VOTABLE[0];
+  const meu = PARTIES[0];
+  if (!bill || !meu) throw new Error("catalogo vazio");
+
+  const loyalty = everyone(INITIAL_LOYALTY);
+  const conta = (/** @type {number} */ nivel, /** @type {Set<string> | null} */ ruling) =>
+    whipCount({ bill, parties: PARTIES, funding: everyone(nivel), loyalty, ruling }).parties.find(
+      forecast => forecast.partyId === meu.id,
+    );
+
+  const pobre = conta(0, null);
+  const rico = conta(1, null);
+  assert.ok(
+    (rico?.adherence ?? 0) > (pobre?.adherence ?? 0),
+    "sem partido, a emenda tinha de mover esta bancada",
+  );
+
+  const meuPobre = conta(0, new Set([meu.id]));
+  const meuRico = conta(1, new Set([meu.id]));
+  assert.equal(meuRico?.adherence, meuPobre?.adherence, "a emenda moveu o proprio partido");
+  assert.equal(meuPobre?.adherence, pobre?.adherence, "sem verba, a regra mudou alguma coisa");
+});
+
+test("E ELA SO VALE PARA A SUA — as outras oito continuam a venda", () => {
+  const bill = VOTABLE[0];
+  const meu = PARTIES[0];
+  if (!bill || !meu) throw new Error("catalogo vazio");
+
+  const loyalty = everyone(INITIAL_LOYALTY);
+  const solto = whipCount({ bill, parties: PARTIES, funding: everyone(1), loyalty });
+  const dono = whipCount({
+    bill,
+    parties: PARTIES,
+    funding: everyone(1),
+    loyalty,
+    ruling: new Set([meu.id]),
+  });
+
+  for (const [index, party] of PARTIES.entries()) {
+    if (party.id === meu.id) continue;
+    assert.equal(
+      dono.parties[index]?.adherence,
+      solto.parties[index]?.adherence,
+      `${party.sigla} mudou de adesao sem ser o partido do presidente`,
+    );
+  }
+});
+
+test("SEM PARTIDO, O PLENARIO E O DE ANTES — em qualquer pauta", () => {
+  /* ⚠ ESTA E A PROVA QUE PROTEGE A SERIE. O simulador roda sem partido, e as seis politicas
+     da tabela de calibragem sao a linha de base do projeto inteiro: se `ruling` ausente
+     mudasse um voto, toda ela estaria vencida sem ninguem ter escolhido isso. */
+  fc.assert(
+    fc.property(fc.nat({ max: VOTABLE.length - 1 }), fc.nat({ max: 100 }), (indice, nivel) => {
+      const bill = VOTABLE[indice];
+      if (!bill) return;
+      const entrada = {
+        bill,
+        parties: PARTIES,
+        funding: everyone(nivel / 100),
+        loyalty: everyone(INITIAL_LOYALTY),
+      };
+      assert.deepEqual(whipCount({ ...entrada, ruling: null }), whipCount(entrada));
+    }),
+  );
+});

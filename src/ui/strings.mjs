@@ -714,7 +714,6 @@ export const UI = {
       rapporteur: "relator do orçamento",
       leader: "líder de bancada",
     },
-    /* ⚠ SÓ UMA DELAS TEM PREÇO HOJE, e a tela não finge o contrário. */
     ambition: {
       succession: "quer o Planalto em 2030",
       cabinet: "quer um ministério",
@@ -722,15 +721,26 @@ export const UI = {
       court: "quer uma vaga no tribunal",
       seat: "quer continuar onde está",
     },
-    /* O QUE A AMBIÇÃO DE SUCESSÃO CUSTA, dito onde ela aparece: é o único termo do elenco que
-       dinheiro não compra, e o jogador precisa saber disso antes de gastar com ele — não
-       depois. */
-    successionPrice: "reconhece menos do que recebe",
+    /* A pasta entra no lugar do genérico quando o motor a nomeia. */
+    cabinetOf: "quer o ministério da",
+    /* O QUE CADA AMBIÇÃO CUSTA, dito onde ela aparece: o jogador precisa saber disso antes de
+       gastar com o sujeito — não depois. */
+    /* ⚠ CURTAS PORQUE ELAS SE REPETEM: com oito pessoas e cinco ambições, a semente de
+       abertura dá quatro `state` — e a captura mostrou quatro linhas iguais de 45 caracteres,
+       uma debaixo da outra. Encurtar é o que a tela pode fazer; o resto é o sorteio. */
+    ambitionPrice: {
+      succession: "reconhece menos do que recebe",
+      cabinet: "barateia se a pasta receber",
+      state: "emenda vale mais para ele",
+      court: "dinheiro o move pouco",
+      seat: "segue a sua aprovação",
+    },
     /* A MEMÓRIA EM PORTUGUÊS. */
     memoryGood: "negocia como quem já recebeu",
     memoryBad: "cobra a promessa que você não pagou",
   },
   mesa: {
+    ownParty: "o seu partido",
     empty: "Nada em pauta",
     emptyHint: "escolha uma ação numa das áreas — ou avance o mês assim mesmo",
     swap: "trocar",
@@ -821,6 +831,11 @@ export const UI = {
        e o nome sorteado nao era dele. */
     swearTitle: "Quem toma posse",
     swearName: "Seu nome",
+    swearParty: "Seu partido",
+    swearPartyEmpty: "escolha uma bancada",
+    /* A frase diz a REGRA, e não o efeito: o efeito o jogador lê na tela do Congresso, onde a
+       sua bancada aparece marcada. */
+    swearPartyHint: "ele te elege, não se vende a você, e cobra o dobro quando você o trai",
     swearHow: "Como a Casa Civil deve tratá-lo",
     swearSir: TRATAMENTO.senhor.voce,
     swearMadam: TRATAMENTO.senhora.voce,
