@@ -13,3 +13,6 @@ assets-source/
 
 # O `settings.local.json` e a preferencia da maquina, e nao do projeto.
 .claude/settings.local.json
+
+# Artefatos do navegador de medicao — mesma familia de `tmp/`: evidencia, nao fonte.
+.playwright-mcp/

@@ -280,6 +280,17 @@ um plano aberto. **E ela vence ADR também:** o ADR 0001 foi emendado por um cic
 travas em conta, pq tem coisa que eu propus, e eu que mando"_. Regra que ele propôs ou aprovou
 depois **substitui** a que está escrita — o documento antigo se emenda, não se invoca.
 
+⛔ **E ISSO JÁ ACONTECEU DE NOVO, em 05/09/2026.** O ciclo 21 dizia _"madeira, couro e papel não
+entram"_ apoiado em "o projeto já matou skeumorfismo". **Ele nunca disse isso.** O registro tem o
+contrário: em 22/08 ele PEDIU o marrom, e depois recusou **aquela cor**. Eu virei a recusa de um
+tom numa proibição de três materiais, e citei a proibição de volta como decisão dele. Palavras
+dele: _"uma coisa que me irrita muito nesse meu jogo são as travas e limites que você colocou sem
+eu pedir"_.
+
+> ⚖ **A pergunta antes de escrever qualquer proibição num plano:** _isto é uma medição, uma ordem
+> dele, ou uma generalização minha de uma coisa específica?_ **Só as duas primeiras entram — e a
+> terceira se apaga quando aparece.**
+
 ## Como responder
 
 Curto e direto. Entregue o resultado e o número que o sustenta; corte o resto.
