@@ -12,6 +12,92 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO EM QUE O GARGALO MUDOU DE LUGAR — 05/09/2026
+
+Ele abriu com _"onde paramos?"_, mandou commitar a sessão anterior e disse: _"depois de
+commitar, estude mais profundamente o código, planos, docs"_. O estudo achou que **o achado
+escrito no dia anterior estava medido no pior caso possível**, e o que estava embaixo dele é
+maior.
+
+### 1 · O commit que faltava
+
+`6dee755` — 24 arquivos, +1231 linhas. O partido do presidente (ciclo 24, item 1), as cinco
+ambições com preço (ciclo 19, item 2), o conserto da barra que vazava 5px com a fonte atrasada, e
+os três planos novos. **`validate` verde antes: 13 guardas · 325 provas · passeio verde.**
+
+### 2 · O achado 59 se reproduz, e ele descreve a saturação
+
+O achado dizia que comprar o Congresso inteiro move 13 cadeiras. **O número está certo, e eu achei
+a pauta exata que o produz:** `policiamento-de-fronteira + plano-safra + defesa-agropecuaria`, que
+sai de 363 para 376 votos. É agro e segurança, `econ` 52, numa Câmara de direita, **com 106 votos
+de folga sobre o quórum**. Ali não há o que comprar.
+
+**A varredura completa foi feita pelo caminho do jogo** — `settlement` + `whipCount`, as mesmas
+funções que o turno executa, e não os blocos crus do catálogo. Em 675 pautas de duas alavancas, a
+emenda cheia move de **7 a 71 cadeiras**, mediana 16. Em pautas que a Câmara resiste, de **23 a 83**,
+mediana 49.
+
+⚠ **A medição que o próprio achado declarava ausente — a amplitude numa pauta que a Câmara rejeita
+— foi feita, e ela inverte a conclusão:** das 675, **660 já passavam sem pagar um real**. Nenhuma
+ficou fora do alcance da emenda. **A emenda não é fraca; é que 97,8% das votações não estão em
+disputa.**
+
+⚠ **É a quarta ocorrência da mesma lição de método**, e as três primeiras estão no achado 52: eu
+quase registrei como defeito do motor o que era uniformidade do instrumento. Aqui foi pior — o
+instrumento era **uma pauta só**, escolhida sem perguntar quanta folga ela tinha.
+
+### 3 · O que estava embaixo: o penhasco
+
+Variando só a lealdade, a base do governo cai de **385 cadeiras para 228 entre 50 e 48** — dois
+pontos. De 48 até 20, vinte e oito pontos, ela cai outras 43. **Toda a dinâmica do Congresso está
+espremida em dois pontos de lealdade.**
+
+A causa é uma linha em `moodFactor`: `if (mood < OBSTRUCTION) factor *= OBSTRUCTION_TOLL`, com o
+pedágio de 0,6 caindo de uma vez sobre as nove bancadas ao mesmo tempo. **E o mandato simulado
+termina do lado morto** — as nove fecham em 44, e dali nenhuma pauta passa e nenhum dinheiro
+compra.
+
+A alternativa foi medida fora do repositório: interpolar o pedágio entre 50 e 20 em vez de aplicá-lo
+num degrau. Com a rampa, a emenda decide em 45 e em 40, e a faixa em que o jogador negocia passa de
+**2 pontos de lealdade para 15**. **Não entrou** — mexe em ECLUSA, refaz a série inteira, e é
+decisão dele.
+
+### 4 · O instrumento não via a jogada do dia anterior
+
+`simulate` chamava `createState(seed)` sem o quarto argumento. **Nenhuma corrida do simulador jamais
+teve partido**, e a série de 04/09 foi lida como "não moveu" quando ela não tinha como mover.
+`--party` entrou hoje, com validação do id e a marca `← a sua` na base ao fim.
+
+Com ele veio a primeira medição de mandato inteiro com partido, em três sementes: o **PLB vale +5
+aprovações de 43**, o PSM +3,3, o PTU +0,3 e o **PSU −0,7 — pior que não ter partido nenhum**. O
+tamanho não explica: o PSM tem 71 cadeiras e entrega mais que o PTU, que tem 80. **O que explica é
+a posição**, porque a política que o simulador roda derruba pisos, que é pauta de direita fiscal.
+
+⭐ **E isso é o desenho funcionando:** o seu partido é o único que a emenda não compra. Se ele
+discorda de você, a lealdade de 90 não vira voto e o dinheiro não tem por onde entrar.
+
+### 5 · Duas coisas que a leitura do motor entregou de graça
+
+- **`settle` é aditivo puro**, sem termo proporcional ao nível. Os 20 pontos com que o partido do
+  presidente nasce atravessam o mandato inteiro sem estreitar: 64 contra 44 ao fim, iguais para o
+  PLB de 145 cadeiras e para o PNR de 6. **A lealdade não tem reversão à média, e a memória por
+  pessoa tem** (`memoryDecay`);
+- **prometer emenda cheia leva a demanda do mês de R$ 20,4 bi para R$ 46,0 contra uma bolsa de
+  14,1, e o rateio cai de 0,90 para 0,32.** Pagar o Congresso corta a política pública a um terço.
+  Esse preço não estava em documento nenhum.
+
+### 6 · O que ficou registrado, e o que não entrou
+
+**Entrou:** `--party` no `simulate` — instrumento, não jogo. **Não entrou:** nada de ECLUSA, nada
+de calibragem. Os achados 60, 61 e 62 nasceram, o 59 foi corrigido no lugar em que morava, e a
+fila de decisão do handoff foi reescrita — _"a emenda passar a pesar"_ saiu dela.
+
+⚠ **A guarda `prose` escapa dos docs, e isso é declarado:** `SCOPE` é `src|styles|tools|app.mjs`.
+Varri `docs/` à mão atrás de identificadores mortos: 66 citações, e todas menos uma são scripts de
+`tmp/` (evidência legítima) ou registro histórico de peça que saiu. A exceção é o ciclo 13, que
+afirma no presente que `.cards__side` tem `overflow-y: auto` — a classe morreu quando o Gabinete
+virou mesa, e o texto é a narrativa de um item já marcado ✔ FEITO.
+
 ## A SESSÃO EM QUE AS PESSOAS GANHARAM PREÇO, E A MOEDA PERDEU — 04/09/2026
 
 Ele abriu com _"vamos prosseguir?"_ e, quando lhe ofereci as três candidatas do handoff,

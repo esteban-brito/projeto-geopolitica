@@ -47,9 +47,14 @@ não foi preciso.
 ser do PTU **custa 2 cadeiras** — você paga os outros e o seu partido não aceita dinheiro. **Tudo
 tem preço, nada tem muro.**
 
-⭐ **A série não moveu:** `agenda` fecha em **26 de 43**, dívida **90,0%**, indústria 48→20,
-segurança 38→20 — o simulador roda sem partido, e a prova em 4,3 bilhões de sementes cobra que
-`ruling` ausente devolva o plenário de antes.
+⚠ **E A SÉRIE "NÃO MOVEU" PORQUE O INSTRUMENTO ERA CEGO — corrigido em 05/09/2026.** `simulate`
+chamava `createState(seed)` sem o quarto argumento, então **nenhuma corrida do simulador jamais
+teve partido**. Ele ganhou `--party` hoje, e a medição existe: `agenda` sem partido fecha em
+**26 de 43**; com o PLB, **30 de 43**. A linha sem partido continua sendo a série de base, e a
+prova em 4,3 bilhões de sementes cobra que `ruling` ausente devolva o plenário de antes.
+
+⚠ **E A TABELA ACIMA É DO MÊS 1, e ela não se estende ao mandato:** em 48 meses e três sementes, o
+melhor partido vale **+5 aprovações de 43** e o pior vale **−0,7**. Ver o achado 62.
 
 ⚠ **E O PASSEIO PEGOU UM DEFEITO QUE NÃO ERA MEU, mas que só o passo novo revelou:** a barra
 vazava **5px** com a fonte atrasada **quando a partida foi salva na tela do Congresso**. A causa
@@ -62,45 +67,50 @@ reserva e recusava a remedida. Trocado por um marcador que só vira verdadeiro *
 
 ---
 
-### O QUE A MEDIÇÃO ESCOLHEU, e continua valendo
+### O QUE A MEDIÇÃO ESCOLHEU — reescrito em 05/09/2026
 
-**Recomendação de 04/09/2026, com o número que a sustenta.** O jogo tem um gargalo medido (o
-achado 59: comprar o Congresso inteiro move **13 cadeiras de 513**), e o
-[ciclo 24](cycles/24-o-presidente.md) o contorna **sem tocar em ECLUSA**:
+⚠ **A RECOMENDAÇÃO DE 04/09 SAIU DE UM NÚMERO QUE ESTAVA MEDIDO NO PIOR CASO.** Ela dizia que a
+emenda cheia vale +13 cadeiras e uma bancada própria vale +17, e daí concluía que ter partido vale
+mais que o orçamento inteiro de emendas. **As duas metades foram remedidas, e as duas mudaram** —
+ver os achados 59 e 62.
 
-| jogada                                                 | cadeiras | custo              |
-| ------------------------------------------------------ | -------- | ------------------ |
-| emenda cheia às nove bancadas                          | **+13**  | R$ 25,7 bi por mês |
-| ⭐ **uma bancada sua**, lealdade 95 em vez de 70 (PLB) | **+17**  | **zero**           |
-| a mesma jogada com o PNR, de 6 cadeiras                | +1       | zero               |
+| jogada                                 | o que ela vale de verdade                        |
+| -------------------------------------- | ------------------------------------------------ |
+| emenda cheia às nove bancadas          | **7 a 71 cadeiras**, mediana 16 — e não 13 fixos |
+| a mesma, em pauta que a Câmara resiste | **23 a 83 cadeiras**, mediana 49                 |
+| ⭐ o melhor partido (PLB), em 48 meses | **+5 aprovações de 43**                          |
+| o pior partido (PSU), em 48 meses      | **−0,7** — pior que não ter partido              |
 
-📐 **Medido no mês 1, pauta de três alavancas, sem emenda nenhuma (363 de 513 votos).** ⭐ **Ter
-partido vale mais que o orçamento inteiro de emendas, e escolher qual tem 16 cadeiras de
-amplitude.** É a decisão mais pesada que o jogador poderia tomar — e hoje ela não existe.
+⭐ **O ciclo 24 continua sendo o próximo passo, e a razão MUDOU.** Ele não contorna mais um
+gargalo — ele entrega **a escolha mais consequente da criação de personagem**, e a consequência é
+o alinhamento e não o tamanho: com quem você concorda pelos 48 meses.
 
 ⚠ **E o ciclo 24 paga o `SCHEMA_VERSION` 21 uma vez só**, cobrindo partido, vice, coligação e
 origem. Feitos soltos, cada um cobra de novo a partida em andamento.
 
 ---
 
-### ⛔ A DECISÃO QUE CONTINUA ABERTA — a moeda do jogo não paga
+### ⛔ A DECISÃO QUE ABRIU EM 05/09/2026 — o Congresso não disputa
 
-**Estado em 04/09/2026: verde e limpo.** `npm run validate` fecha com **13 guardas · 63 provas
-sintéticas · 319 provas · passeio verde**. Branch `caixa-de-entrada`, à frente de `main`, e
+**Estado em 05/09/2026: verde e limpo.** `npm run validate` fecha com **13 guardas · 63 provas
+sintéticas · 325 provas · passeio verde**. Branch `caixa-de-entrada`, à frente de `main`, e
 **nada foi enviado ao remoto**.
 
-⛔ **A decisão que abriu hoje é o achado 59, e ela vem antes das outras duas:** medido, **a
-emenda inteira — de 0 a 100%, R$ 25,7 bi por mês — compra 13 cadeiras de 513**, numa pauta que
-já passava sem pagar nada. O ciclo 18 chama a emenda de _"a única moeda do jogo"_. **Ela é a
-moeda, e ela não paga.** Enquanto isso não se resolve, toda mecânica que modula emenda —
-ambição, memória, lobby — nasce valendo 1 cadeira.
+⛔ **A decisão nova é o achado 60, e ela substitui a que estava aqui.** Medido em 675 pautas:
+**97,8% delas passam sem o governo pagar um real**, com folga mediana de **54 votos** sobre o
+quórum. E quando a lealdade cruza 50, a base cai de 385 para 228 cadeiras **em dois pontos** e
+nada mais passa. **O jogo tem dois regimes, e nenhum dos dois negocia.**
 
-| #   | o quê                          | onde                                         | custo | por que ela                                                        |
-| --- | ------------------------------ | -------------------------------------------- | ----- | ------------------------------------------------------------------ |
-| ▶ 1 | ⭐⭐⭐ **o CICLO 24**          | [ciclo 24](cycles/24-o-presidente.md)        | médio | **contorna o achado 59 sem tocar em ECLUSA, e é o que ele pediu**  |
-| 2   | ⛔ **a emenda passar a pesar** | achado 59, abaixo                            | ?     | o gargalo de fundo. ⚠ Mexe em ECLUSA, e a série se refaz inteira   |
-| 3   | ⭐⭐⭐ **o TEMPO**             | [ciclo 23](cycles/23-o-corpo-politico.md) A1 | médio | dá peso ao que já existe. ⚠ Trava no achado 53 — a MALHA vai mudar |
-| 4   | ⭐⭐ **o BANCO CENTRAL**       | ciclo 23, C1                                 | médio | a Selic sai de uma regra de Taylor, e ninguém decide o juro        |
+| #   | o quê                         | onde                                         | custo | por que ela                                                         |
+| --- | ----------------------------- | -------------------------------------------- | ----- | ------------------------------------------------------------------- |
+| ▶ 1 | ⭐⭐⭐ **o CICLO 24**         | [ciclo 24](cycles/24-o-presidente.md)        | médio | é o que ele pediu, e os itens 2, 3 e 4 estão prontos para executar  |
+| 2   | ⛔ **o penhasco da lealdade** | achado 60, abaixo                            | baixo | **uma linha em `moodFactor`.** ⚠ Mexe em ECLUSA, e a série se refaz |
+| 3   | ⭐⭐⭐ **o TEMPO**            | [ciclo 23](cycles/23-o-corpo-politico.md) A1 | médio | dá peso ao que já existe. ⚠ Trava no achado 53 — a MALHA vai mudar  |
+| 4   | ⭐⭐ **o BANCO CENTRAL**      | ciclo 23, C1                                 | médio | a Selic sai de uma regra de Taylor, e ninguém decide o juro         |
+
+⛔ **O QUE SAIU DA FILA: "a emenda passar a pesar".** Ela estava em segundo lugar por causa do
+achado 59, e a remedição a tirou — a emenda entrega até 83 cadeiras, e girar `venality` aumentaria
+um canal que já é largo. **Girar não é o conserto; o conserto é o achado 60.**
 
 ⚠ **E o passo 5 do ciclo 21 — a MP — continua aberto**, mas ele é o item 6 do ciclo 18 e pede
 sessão própria.
@@ -195,39 +205,151 @@ mudança ser inócua — é a medição achar o gargalo, e ele virou o **achado 
 
 ---
 
-## ⛔ 59. A EMENDA É A MOEDA DO JOGO, E ELA NÃO PAGA — medido em 04/09/2026
+## ⚠ 59. CORRIGIDO EM 05/09/2026 — A EMENDA PAGA. O CONGRESSO É QUE NÃO DISPUTA
 
-📐 **Uma pauta de três alavancas, semente padrão, mês 1:**
+⛔ **O ACHADO 59 ESTAVA MEDIDO NO PIOR CASO POSSÍVEL, e o número dele se reproduz.** Ele dizia
+que comprar o Congresso inteiro move 13 cadeiras. A pauta que produz esse 13 é
+`policiamento-de-fronteira + plano-safra + defesa-agropecuaria` — agro e segurança, centro-direita
+(econ 52), numa Câmara de direita, **com 106 votos de folga sobre o quórum**. Numa pauta assim não
+há o que comprar, e a medição descreve a saturação, não o canal.
 
-| emenda a todo mundo | votos      | custo no mês   |
-| ------------------- | ---------- | -------------- |
-| 0%                  | 363 de 513 | R$ 0,0 bi      |
-| 50%                 | 371        | R$ 12,8 bi     |
-| 100%                | **376**    | **R$ 25,7 bi** |
+📐 **A varredura completa, pelo caminho do jogo — `settlement` + `whipCount`, as mesmas funções
+que o turno executa. 675 pautas de duas alavancas, semente padrão, mês 1:**
 
-**Comprar o Congresso inteiro move 13 cadeiras de 513, e o quórum era 308** — a pauta já passava
-sem pagar nada. ⚠ **E o teto do canal foi medido:** com os cinco parâmetros de ambição em 1
-(a emenda valendo o dobro para uns e nada para outros), a diferença é de **4 cadeiras**.
+| a emenda cheia move | cadeiras |
+| ------------------- | -------- |
+| mínimo              | 7        |
+| mediana             | **16**   |
+| máximo              | **71**   |
+| média               | 19,2     |
 
-📐 **A causa está em `whipCount`:** a verba entra como `distancia × (1 − venalidade × paga)`.
-**Ela só reduz a distância ideológica** — numa pauta que a Câmara já quer, não há o que reduzir,
-e nenhum dinheiro do mundo muda o placar.
+**E em pautas que a Câmara resiste — nível +20 em vez de derrubar piso — ela move de 23 a 83
+cadeiras, mediana 49.** A causa que o achado apontava em `whipCount` está certa na álgebra e
+errada na conclusão: `distância × (1 − venalidade × paga)` **é** um canal estreito quando a
+distância é pequena, e a distância só é pequena porque a pauta derivada nasce no centro — ela é a
+média ponderada das posições que o jogador moveu.
 
-⛔ **A consequência é grande e atravessa os planos:** o ciclo 18 chama a emenda de _"a única moeda
-do jogo"_, e o ciclo 22 vai precificar leis inventadas pela reação de quem elas machucam.
-**Qualquer mecânica que module emenda nasce valendo 1 cadeira.** A ambição é a primeira; a
-memória do elenco e o lobby estão no mesmo canal.
+⭐ **A MEDIÇÃO QUE FALTAVA — a que o próprio achado declarava ausente — foi feita, e ela inverte a
+conclusão:** das 675 pautas, **660 (97,8%) já passavam sem pagar um real**. A emenda decidiu 15.
+**E nenhuma ficou fora do alcance dela: zero pautas que nem a emenda cheia aprova.**
 
-⚠ **As saídas, e a escolha é dele — as duas mexem em ECLUSA, que o achado 7 já declara "primeiro
-chute":**
+⛔ **O gargalo não é a emenda. É que não existe disputa para ela resolver** — a folga mediana
+sobre o quórum é de **54 votos**, e a pior derrota do catálogo é de 31.
 
-1. **a ambição deslocar a RESISTÊNCIA direto**, como a rua já faz (`STANDING_WEIGHT = 25`).
-   Contorna o gargalo `distância × venalidade`, e é uma linha em `whipCount`;
-2. **a emenda pesar mais**, girando `venality` ou o próprio termo. ⚠ Isso recalibra toda votação
-   do jogo, e a série se refaz inteira.
+⚠ **E as duas saídas propostas pelo achado consertariam o instrumento errado.** Girar `venality`
+ou dar peso próprio à ambição aumenta um canal que já entrega 71 cadeiras no melhor caso.
+**O que falta é resistência de partida**, e onde ela mora está no achado 60.
 
-⚠ **E falta uma medição:** a amplitude da emenda numa pauta que a Câmara REJEITA. Todas as
-medições acima são de pauta que já passava. **Ausência declarada.**
+⚠ **O que sobrevive do 59, e é preciso:** o teto de 4 cadeiras dos cinco parâmetros de ambição
+continua valendo, porque ele foi medido na mesma pauta saturada — **e naquele ponto o teto é
+real.** Fora dela, não foi medido.
+
+📐 **E há um preço da emenda que nenhum documento tinha:** prometer 100% às nove bancadas leva a
+demanda do mês de R$ 20,4 bi para **R$ 46,0 bi contra uma bolsa de R$ 14,1 bi**, e o rateio cai de
+**0,90 para 0,32**. **Pagar o Congresso corta a política pública do jogador a um terço.** Isso é
+"tudo tem preço" funcionando, e ele nunca apareceu numa tela nem num plano.
+
+---
+
+## ⛔ 60. A LEALDADE TEM UM PENHASCO DE DOIS PONTOS, E O MANDATO TERMINA DO LADO MORTO — 05/09/2026
+
+📐 **A mesma amostra de 40 pautas, variando só a lealdade das nove bancadas:**
+
+| lealdade | base em cadeiras | folga mediana | já passa | a emenda vira | fora de alcance |
+| -------- | ---------------- | ------------- | -------- | ------------- | --------------- |
+| 70       | 436              | +53           | 34       | 1             | 0               |
+| 60       | 410              | +33           | 32       | 3             | 0               |
+| 52       | 390              | +15           | 29       | 5             | 1               |
+| **50**   | **385**          | **+11**       | **26**   | **6**         | 3               |
+| **48**   | **228**          | **−113**      | **0**    | **0**         | **35**          |
+| 30       | 200              | −137          | 0        | 0             | 35              |
+
+⛔ **Dois pontos de lealdade custam 157 cadeiras.** De 48 para 20 — vinte e oito pontos — custam
+outras 43. **Toda a dinâmica do Congresso está espremida entre 50 e 48.**
+
+📐 **A causa é uma linha em `moodFactor`:** `if (mood < OBSTRUCTION) factor *= OBSTRUCTION_TOLL`,
+com `OBSTRUCTION = 50` e `OBSTRUCTION_TOLL = 0.6`. O comparecimento da Câmara inteira cai 40% num
+degrau, no mesmo ponto, para as nove bancadas ao mesmo tempo.
+
+⛔ **E o mandato simulado termina do lado morto:** as nove bancadas fecham em **44** nas políticas
+de base. Do mês em que elas cruzam 50, **nenhuma pauta passa e nenhum dinheiro compra** — o jogo
+tem dois regimes, e nenhum dos dois negocia.
+
+⭐ **A alternativa foi medida, e ela é uma linha.** Interpolar o pedágio entre `OBSTRUCTION` (50) e
+`RUPTURE` (20) em vez de aplicá-lo de uma vez:
+
+| lealdade | degrau (hoje) | **rampa** | degrau de 0,85 |
+| -------- | ------------- | --------- | -------------- |
+| 50       | 385 cadeiras  | 385       | 385            |
+| 45       | 223           | **347**   | 316            |
+| 40       | 215           | **311**   | 305            |
+| 35       | 208           | **277**   | 294            |
+| 30       | 200           | **245**   | 283            |
+| 20       | 185           | 185       | 262            |
+
+**Com a rampa, a emenda decide em 45 e em 40** — hoje ela não decide em ponto nenhum abaixo de 50.
+A zona em que o jogador negocia passa de **2 pontos de lealdade para 15**.
+
+⚠ **MEXE EM ECLUSA, E A SÉRIE SE REFAZ INTEIRA. A decisão é dele**, e é a mesma advertência que o
+achado 7 já carrega: os números de ECLUSA são primeiro chute declarado. **O degrau de 0,85 é a
+opção conservadora** — mantém o degrau e o encurta —, mas ele não cria faixa de negociação: a
+curva fica quase plana de 45 para baixo.
+
+---
+
+## ⛔ 61. A LEALDADE NÃO TEM REVERSÃO À MÉDIA, E POR ISSO O PARTIDO É UMA CONSTANTE — 05/09/2026
+
+📐 **`settle` é aditivo puro:** `próxima = anterior − 1,5 + 12 × paga − 25 × quebrada`, com corte
+em [0, 100]. **Não há termo proporcional ao nível.** Duas bancadas que recebem a mesma coisa
+mantêm a diferença de abertura para sempre.
+
+📐 **Medido em 48 meses, política `agenda`:** o partido do presidente fecha em **64** e as outras
+oito em **44**, e a diferença é de **20 pontos exatos** — os mesmos com que ele nasce (90 contra
+70). **Vale igual para o PLB, de 145 cadeiras, e para o PNR, de 6.**
+
+⛔ **A consequência é que a vantagem do partido não é uma relação: é um deslocamento paralelo.**
+Ela não se ganha nem se perde ao longo do mandato — e é exatamente a crítica que a prosa de
+`remember` faz da memória: _"a memória seria um número que anda, e não uma relação"_. **A memória
+por pessoa tem decaimento (`memoryDecay`); a lealdade por bancada não tem.**
+
+⚠ **E é a mesma razão pela qual as nove bancadas terminam com o valor idêntico** numa política que
+paga igual a todas. Não é coincidência da série — é a identidade do motor.
+
+---
+
+## ⭐ 62. TER PARTIDO SÓ VALE SE ELE CONCORDAR COM VOCÊ — medido em 48 meses, 05/09/2026
+
+⚠ **Esta é a primeira medição de mandato inteiro com partido do projeto**, e ela só existe porque
+o `simulate` ganhou `--party` hoje: até então ele chamava `createState(seed)` sem o quarto
+argumento. **O instrumento não via a jogada mais pesada que entrou ontem** — e a série foi lida
+como "não moveu" quando ela não tinha como mover.
+
+📐 **Aprovações de 43 votações, política `agenda`, três sementes:**
+
+| bancada do presidente | cadeiras | econ | 20270101 | 777 | 4242 | média | vs nenhuma |
+| --------------------- | -------- | ---- | -------- | --- | ---- | ----- | ---------- |
+| (nenhuma)             | 0        | —    | 26       | 28  | 18   | 24,0  | —          |
+| **PLB**               | 145      | 78   | 30       | 30  | 27   | 29,0  | **+5,0**   |
+| **PSM**               | 71       | 60   | 32       | 28  | 22   | 27,3  | **+3,3**   |
+| PTU                   | 80       | 30   | 26       | 30  | 17   | 24,3  | +0,3       |
+| PSU                   | 31       | 38   | 25       | 29  | 16   | 23,3  | **−0,7**   |
+
+⭐ **O tamanho da bancada não explica o resultado.** O PSM tem 71 cadeiras e entrega mais que o
+PTU, que tem 80. **O que explica é a posição:** a política `agenda` derruba pisos, que é pauta de
+direita fiscal, e as bancadas que a votam são as de `econ` alto.
+
+⛔ **E governar pela direita com um partido de esquerda é PIOR que não ter partido:** o PSU sai
+0,7 votação abaixo da linha de base. A razão é o desenho funcionando — **o seu partido é o único
+que a emenda não compra.** Se ele discorda de você, a lealdade de 90 não vira voto e o dinheiro
+não tem por onde entrar.
+
+⚠ **E ISSO CORRIGE A LEITURA QUE ESCOLHEU O CICLO 24.** A tabela de "+17 cadeiras contra +13 da
+emenda" é verdadeira **em cadeiras, no mês 1**. Em aprovações de mandato o melhor partido vale
+**+5 de 43**, e o pior vale menos que nada. **Escolher partido é escolher com quem você concorda
+pelos 48 meses**, e não escolher um tamanho.
+
+⚠ **O ruído entre sementes é grande** — a linha de base vai de 18 a 28 —, mas o ordenamento
+PLB > PSM > nenhuma ≈ PTU ≈ PSU se repete nas três.
 
 ---
 
@@ -1393,6 +1515,7 @@ npm run validate   # guardas + tipos + lint + formato + testes + passeio — ~42
 npm run check      # só as guardas, ~2s — o laço curto
 npm test           # só as suítes, ~2s
 npm run simulate   # 48 meses no terminal
+npm run simulate -- --party liberais-conservadores   # o mesmo, com bancada do presidente
 npm run serve      # http://127.0.0.1:5173/
 ```
 
@@ -1801,8 +1924,18 @@ ajustar o parafuso contra um jogo que não existe mais** — por isso elas ficar
 [`journal.md`](journal.md), e esta ficou aqui.
 
 ⭐ **REMEDIDA EM 04/09/2026, DEPOIS DAS AMBIÇÕES, E ELA NÃO MOVEU UMA CASA DECIMAL** — nas
-**nove** sondas, não só nas seis da tabela. Não é a mudança ser inócua: o canal por onde a
-ambição entra satura, e isso virou o **achado 59**. A tabela abaixo continua valendo.
+**nove** sondas, não só nas seis da tabela. A tabela abaixo continua valendo.
+
+⚠ **E O MOTIVO DE ELA NÃO TER MOVIDO FOI CORRIGIDO EM 05/09/2026:** a leitura de 04/09 atribuiu a
+imobilidade à saturação do canal da emenda (o achado 59), e a remedição mostrou que o canal
+entrega até 83 cadeiras. A série não move porque **todas as políticas da tabela pagam igual a
+todas as bancadas** — é a mesma uniformidade do instrumento que o achado 52 já tinha nomeado, pela
+quarta vez.
+
+⚠ **A TABELA É SEM PARTIDO, e agora isso é uma escolha e não um limite.** `simulate --party`
+existe desde 05/09/2026; a linha de base continua sem bancada, porque comparar contra uma corrida
+com partido compararia dois jogos. **Com o PLB, `agenda` fecha em 30 de 43** — o número mora no
+achado 62, e não nesta tabela.
 
 ⚠ **E O HORIZONTE É DECLARADO NA TABELA porque a coluna de votações já misturou dois.**
 Todas as células abaixo são de **48 meses**, semente padrão, remedidas em **03/09/2026** —

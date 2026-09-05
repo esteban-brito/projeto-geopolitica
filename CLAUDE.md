@@ -63,6 +63,7 @@ npm run validate   # guardas + tipos + lint + formato + testes + passeio — 42s
 npm run check      # só as guardas, 2s — o laço curto de quem mexe em folha
 npm test           # só as suítes, 2s — o laço curto de quem mexe em motor
 npm run simulate   # 48 meses no terminal; rode ao mexer em calibragem
+npm run simulate -- --party liberais-conservadores   # o mesmo, com bancada do presidente
 npm run serve      # http://127.0.0.1:5173/
 ```
 
@@ -102,12 +103,17 @@ arcabouço, `atRisk` para a meta primária), o rateio deixou de gravar o corte n
 contingenciamento passou a ser **escolhido por área**, e o relatório bimestral avisa antes.
 **Sobram o A1 e o A2, e os dois mexem em calibragem fiscal — logo, os dois são decisão dele.**
 
-⛔ **O ACHADO 59, DE 04/09/2026, VEM ANTES DOS PLANOS: a emenda é a moeda do jogo e ela não
-paga.** Medido: comprar o Congresso inteiro — de 0 a 100%, R$ 25,7 bi por mês — move **13
-cadeiras de 513**, numa pauta que já passava sem pagar nada. A verba só reduz distância
-ideológica em `whipCount`, e numa pauta que a Câmara já quer não há o que reduzir. **Toda
-mecânica que module emenda nasce valendo 1 cadeira** — foi o que aconteceu com as ambições, que
-entraram no mesmo dia. As duas saídas estão no handoff, e as duas mexem em ECLUSA.
+⛔ **O ACHADO 60, DE 05/09/2026, VEM ANTES DOS PLANOS: o Congresso não disputa.** Medido em 675
+pautas pelo caminho do jogo, **97,8% delas passam sem o governo pagar um real**, com folga
+mediana de **54 votos** sobre o quórum. E quando a lealdade cruza 50, a base cai de **385 para
+228 cadeiras em dois pontos** — o pedágio de `moodFactor` desaba de uma vez sobre as nove
+bancadas. **O jogo tem dois regimes, e nenhum dos dois negocia.** O conserto é uma linha, mexe
+em ECLUSA e é decisão dele.
+
+⚠ **E O ACHADO 59 FOI CORRIGIDO NO MESMO DIA: a emenda PAGA.** Ele media 13 cadeiras numa pauta
+com 106 votos de folga. Na varredura completa ela move de **7 a 71** (mediana 16), e em pauta que
+a Câmara resiste, de **23 a 83**. **Nenhuma pauta ficou fora do alcance dela.** Girar `venality`
+saiu da fila — aumentaria um canal que já é largo.
 
 **Há DOZE planos na mesa**, e o 13, o 18, o 19, o 20, o 21, o 22, o 23 e o 24 são os abertos.
 
@@ -117,10 +123,12 @@ a compra** e trair custa o dobro. ⭐ **Sem bump de save:** o campo não está e
 do validador, então a partida da versão 20 abre sem partido e joga igual. **Sobram a origem, a
 chapa e a tela da eleição.**
 
-▶ **E a medição que escolheu esse caminho:** elevar a lealdade de
-UMA bancada de 70 para 95 entrega **+17 cadeiras** (PLB), contra as **+13** da emenda cheia a
-todas as nove, que custa R$ 25,7 bi por mês. ⭐ **Ter partido vale mais que o orçamento inteiro
-de emendas** — e o ciclo 24 contorna o achado 59 sem tocar em ECLUSA.
+▶ **E O QUE O PARTIDO VALE FOI MEDIDO EM 48 MESES, em 05/09/2026** — a primeira medição de
+mandato do projeto com bancada, e ela só existe porque `simulate` ganhou `--party`. Em três
+sementes: o **PLB vale +5 aprovações de 43**, o PSM +3,3, o PTU +0,3 e o **PSU −0,7, pior que não
+ter partido**. ⭐ **O tamanho não explica — a posição explica.** O seu partido é o único que a
+emenda não compra: se ele discorda de você, a lealdade de 90 não vira voto. **Escolher partido é
+escolher com quem você concorda pelos 48 meses.**
 
 - [`cycles/24-o-presidente.md`](docs/cycles/24-o-presidente.md) — **a criação de personagem, de
   04/09/2026, a pedido dele.** A tese: a ficha deste jogo **é a eleição que você acabou de

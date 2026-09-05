@@ -251,6 +251,7 @@ const { values } = parseArgs({
     months: { type: "string", default: "48" },
     policy: { type: "string", default: "agenda" },
     shock: { type: "string", default: "0" },
+    party: { type: "string" },
     quiet: { type: "boolean", default: false },
   },
 });
@@ -262,6 +263,19 @@ if (!policy) {
   process.stderr.write(
     `politica desconhecida: ${policyName}\n` +
       `as que existem: ${Object.keys(POLICIES).join(", ")}\n`,
+  );
+  process.exit(1);
+}
+
+/* ⚠ SEM ELE O INSTRUMENTO NAO VE A JOGADA MAIS PESADA DO JOGO: medido, o PLB fecha 30 de 43
+   votacoes e a Camara sem partido fecha 26 — e a serie foi lida como "nao moveu" quando o
+   simulador nunca escolhia bancada. */
+const party = values.party ?? null;
+
+if (party !== null && !CATALOG.parties.some(item => item.id === party)) {
+  process.stderr.write(
+    `bancada desconhecida: ${party}\n` +
+      `as que existem: ${CATALOG.parties.map(item => item.id).join(", ")}\n`,
   );
   process.exit(1);
 }
@@ -339,7 +353,7 @@ function flagsOf(report) {
 
 /* ── A CORRIDA ────────────────────────────────────────────────────────────── */
 
-let state = createState(seed);
+let state = createState(seed, undefined, null, party);
 /** @type {Memory} */
 const memory = { passed: new Set() };
 /** @type {Report[]} */
@@ -367,7 +381,8 @@ const out = process.stdout;
 
 out.write(
   `\nMANDATO SIMULADO · politica "${policyName}" · semente ${seed} · ` +
-    `${months} meses · choque ${shock >= 0 ? "+" : ""}${num(shock * 100)} p.p.\n` +
+    `${months} meses · choque ${shock >= 0 ? "+" : ""}${num(shock * 100)} p.p. · ` +
+    `bancada ${party ?? "nenhuma"}\n` +
     `valores em R$ bilhoes; "verba" e o mes, "folga" e o discricionario que cabia nele\n\n`,
 );
 
@@ -464,7 +479,8 @@ out.write(`  base ao fim\n`);
 for (const party of CATALOG.parties) {
   const value = state.loyalty[party.id] ?? 0;
   const mood = value < 20 ? "ruptura" : value < 50 ? "obstrucao" : "com o governo";
-  out.write(`    ${pad(party.label, 18)}${padLeft(num(value, 0), 4)}   ${mood}\n`);
+  const mark = party.id === state.party ? " ← a sua" : "";
+  out.write(`    ${pad(party.label, 18)}${padLeft(num(value, 0), 4)}   ${mood}${mark}\n`);
 }
 
 out.write(`  o pais ao fim\n`);

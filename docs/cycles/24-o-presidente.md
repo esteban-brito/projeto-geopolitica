@@ -112,8 +112,15 @@ real, e o ano 4 tem um êxodo documentado. **Ministro vira candidato.**
 | **trair custa o dobro**       | a memória do `ELENCO` já tem `betrayalWeight`; ele dobra para a sua |
 | e ele cobra primeiro          | a chantagem do lobby tem um irmão: a cobrança de dentro             |
 
-⭐ **E ele é a resposta ao achado 59 que não mexe em ECLUSA:** o jogador passa a ter cadeiras que
-**não precisam ser compradas**. Com o PLB são 145 de 513; com o PNR, 6.
+⭐ **E o jogador passa a ter cadeiras que não precisam ser compradas.** Com o PLB são 145 de 513;
+com o PNR, 6.
+
+⚠ **A JUSTIFICATIVA ORIGINAL DESTE ITEM CAIU EM 05/09/2026, e o item continua de pé.** Ela dizia
+que o partido era _"a resposta ao achado 59 sem mexer em ECLUSA"_; a remedição mostrou que a
+emenda paga (7 a 71 cadeiras) e que o gargalo é outro — o achado 60. 📐 **E o que o partido vale
+foi medido em 48 meses, em três sementes: o PLB entrega +5 aprovações de 43 e o PSU entrega
+−0,7.** O tamanho não explica; a posição explica. **Escolher partido é escolher com quem você
+concorda pelo mandato inteiro** — e isso é um desenho melhor do que o que estava escrito aqui.
 
 ⚖ **Custo:** pequeno no motor (um campo no estado, um caminho em `whipCount`), **médio no
 conjunto** — é ele que obriga o `SCHEMA_VERSION` a subir.
