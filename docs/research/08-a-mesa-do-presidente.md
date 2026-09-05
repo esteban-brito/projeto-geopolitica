@@ -304,7 +304,44 @@ reconhece.
 
 📗 **E o rodapé traz sempre:** _"Este texto não substitui o publicado no D.O.U. de …"_
 
-### 4.6 · ⚠ A tensão que sobra, e ela é decisão dele
+### 4.6 · ⭐⭐⭐ A REGRA QUE ELE DECIDIU: a forma é do governo, a escrita é do jogo
+
+**Ordem dele em 05/09/2026, depois de ver o decreto pronto:** _"gostei… porém só achei meio difícil
+de entender o que está escrito. **A única coisa que vamos fugir do realismo é isso, simplificar um
+pouco a escrita, até porque é um jogo.**"_
+
+⭐ **É a única concessão, e ela tem uma fronteira nítida:**
+
+| fica **fiel** ao governo                               | vira **português normal** |
+| ------------------------------------------------------ | ------------------------- |
+| a folha A4 e as margens 3 cm / 1,5 cm                  | a ementa                  |
+| o timbre em relevo seco                                | o preâmbulo               |
+| a hierarquia dos órgãos no cabeçalho                   | o texto dos artigos       |
+| a epígrafe em maiúsculas, e a ementa recuada à direita | —                         |
+| `Art. 1º`, `Art. 2º` e a cláusula de vigência          | —                         |
+| o fecho com os anos da Independência e da República    | —                         |
+| a nota do D.O.U.                                       | —                         |
+
+📐 **O mesmo artigo, nas duas escritas:**
+
+> **Como o governo escreve:** _"Ficam estabelecidos os limites de movimentação e empenho constantes
+> do Anexo I, honrado o percentual de 100% do empenho solicitado, sobre a margem de R$ 14,1 bi."_
+>
+> ⭐ **Como o jogo escreve:** _"O mês tem R$ 14,1 bi para gastar. Os ministérios recebem 100% do que
+> pediram."_
+
+⭐ **E isso não é uma exceção ao projeto — é a regra dele aplicada ao papel.** O `CLAUDE.md` já
+manda escrever como gente: frase curta, sujeito e verbo na ordem normal, número no lugar do
+adjetivo. **O decreto obedecia ao manual do governo e desobedecia ao manual do jogo.**
+
+⚠ **O que NÃO se simplifica, e é o teste:** se a frase é a que todo brasileiro reconhece, ela
+fica. _"Este Decreto entra em vigor na data de sua publicação"_ é reconhecimento, e não juridiquês
+— trocá-la por "vale a partir de hoje" perderia mais do que ganharia.
+
+⭐ **O texto corrido venceu o recuo**, também por escolha dele: os 2,5 cm do manual empurram cada
+parágrafo para dentro e a folha fica difícil de varrer. **A norma manda; o jogo lê.**
+
+### 4.7 · ⚠ A tensão que sobra, e ela é decisão dele
 
 📗 **A norma manda texto preto em papel branco.** ⚠ **E o `standards.md` do projeto diz que papel
 branco em ambiente escuro é um buraco de luz.** As duas estão certas no terreno delas. **O
