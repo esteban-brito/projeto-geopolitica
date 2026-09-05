@@ -118,7 +118,92 @@ ato, ele vai gastar 66% da largura para dizer uma frase.
 
 ---
 
-## 3 · ⭐⭐⭐ A TESE VISUAL — o modernismo brasileiro, e ele TEM matéria
+## 3 · 📗 O GABINETE REAL, apurado na web em 05/09/2026
+
+⚠ **Cada linha tem fonte. Nenhuma é dedução.** Ele pediu _"realista e fiel ao gabinete do
+presidente do Brasil"_, e a apuração mudou o desenho em três pontos.
+
+### 3.1 · Onde ele fica e do que é feito
+
+📗 O Gabinete Presidencial ocupa o **3º andar do Palácio do Planalto** e é o local de trabalho
+do presidente desde 1960. Ele **não é uma sala** — são **três ambientes**: escritório, sala de
+reunião e quarto de convidado.
+
+📗 **O que há dentro, nomeado:** a **mesa de despacho do presidente**, uma **mesa circular de 14
+lugares**, um conjunto de sofá e poltronas, e um guarda-volumes. O mobiliário é dos anos **1940 a
+1960**, em estilo colonial misto brasileiro que remonta ao **DASP da era Vargas**.
+
+📗 **O sofá Navona é de Sergio Rodrigues.** 📗 Na parede, duas telas de **Djanira da Motta e
+Silva** — _Colhendo Bananas_ e _Praia do Nordeste_. 📗 **No piso, tapeçaria de Norberto Nicola.**
+
+📗 **E a mesa muda de governo para governo:** a de Oscar e Anna Maria Niemeyer serviu até Médici e
+foi aposentada como peça histórica; em 2011 Dilma trocou os sofás por um modelo preto; em 2017
+Temer trouxe móveis de JK.
+
+⭐ **O que isso decide no jogo:** a mesa **não é um monólito** — ela é um conjunto de peças
+datadas, de autores conhecidos, que cada presidente reorganiza. **É exatamente a estrutura de uma
+tela composta**, e ela justifica a mesa ter zonas com dono em vez de uma grade uniforme.
+
+### 3.2 · O palácio inteiro é modernista, e a paleta sai dele
+
+📗 **Fachada de mármore branco**, rampa longa e espelho d'água. 📗 No térreo, poltronas de **Jorge
+Zalszupin** e a escultura _Espaço Circular em Cubo_, de Franz Weissmann. 📗 No 2º andar, _Orixás_
+de Djanira, mesa de mármore de **Anna Maria Niemeyer** e poltronas **"Beto" de Sergio Rodrigues**.
+📗 No 3º, a **"Marquesa" de Oscar Niemeyer** e uma galeria concretista.
+
+📗 **O acervo é Burle Marx, Bruno Giorgi, Di Cavalcanti e Athos Bulcão.**
+
+⭐ **A referência vitoriana está descartada por evidência, e não por gosto:** o gabinete do
+presidente do Brasil **não tem mogno escuro, abajur verde nem estante de livros.** Ele é claro,
+liso, modernista e cheio de arte concreta.
+
+### 3.3 · ⭐⭐ A MADEIRA É JACARANDÁ-DA-BAHIA, e a textura que ele mandou é exatamente ela
+
+📗 **Sergio Rodrigues usou `jacarandá-da-bahia` (Dalbergia nigra) dos anos 1950 aos 1970** — e o
+**couro** é o outro material recorrente dele. 📗 A **Poltrona Mole**, que venceu o concurso de
+Cantù em 1961, é **estrutura de jacarandá com tiras de couro**.
+
+📗 **E Jorge Zalszupin dominava o compensado moldado e reaproveitava SOBRAS de jacarandá para
+fazer mosaicos geométricos.**
+
+⭐⭐ **A textura que ele escolheu em 05/09/2026 é jacarandá** — veio horizontal ondulado,
+avermelhado, de faixa larga. **Ela não é uma escolha estética arbitrária: é a madeira do
+mobiliário que está naquela sala.**
+
+⚠ **E ela não entra como fotografia.** Foto de banco de imagens tem dono, peso e não escala. **O
+veio é gerado**: turbulência assimétrica em SVG — frequência baixa no eixo X e alta no Y produz a
+listra horizontal ondulada —, deslocada sobre um padrão de faixas. 📐 **Quatro tentativas foram
+provadas em `tmp/madeira.html`**, e a que passou tem `baseFrequency 0,0022 × 0,045`, 5 oitavas e
+deslocamento 52.
+
+📐 **Duas coisas medidas na hora de aplicar:**
+
+1. ⛔ **a borda sai serrilhada** se o retângulo tiver o tamanho do `viewBox` — o deslocamento
+   empurra a pintura para fora. **Desenhe o retângulo maior que o quadro**;
+2. ⛔ **a madeira crua é clara demais para ser fundo de interface.** O texto branco não lê sobre
+   ela. **O véu escuro por cima é a decisão inteira:** pouco véu e a tela fica ilegível; muito véu
+   e a matéria vira uma mancha marrom. Ficou em 0,60 no topo e 0,78 no pé, e o painel o gira.
+
+### 3.4 · ⭐⭐ ATHOS BULCÃO — o padrão que o Brasil já inventou
+
+📗 Os grafismos de Athos Bulcão estão **no próprio Palácio do Planalto**, no Congresso e na
+Catedral. 📗 **O painel do Planalto é verde e azul.**
+
+📗 **E a gramática dele é combinatória:** azulejos com **três padrões geométricos e uma cor além
+do branco**, recombinados. O desenho ia para a fábrica com **números de cor de uma paleta que ele
+mesmo criou**.
+
+⭐⭐⭐ **Isto é o achado visual desta pesquisa, e ele cai exatamente no vocabulário deste
+projeto:** um padrão de **três módulos recombinados** é gerado, e não desenhado — **determinístico
+da semente**, como todo o resto do jogo. **Nenhum jogo de política se parece com isso**, e é o
+brasileiro mais reconhecível que existe sem ser clichê de país tropical.
+
+⚠ **Onde ele entra é decisão dele**, e a candidata natural é a **parede atrás da mesa** — o lugar
+onde o padrão vive na sala real.
+
+---
+
+## 4 · ⭐⭐⭐ A TESE VISUAL — o modernismo brasileiro, e ele TEM matéria
 
 ⛔ **ANTES DE TUDO, UMA TRAVA MINHA QUE CAIU HOJE.** O ciclo 21 dizia _"madeira, couro e papel não
 entram"_ e _"o projeto já matou skeumorfismo"_. **Ele nunca disse isso — eu escrevi.** O que
@@ -203,7 +288,7 @@ saída legítima, e ela nem precisa de justificativa técnica: precisa passar na
 
 ---
 
-## 4 · ⭐⭐ AS IDEIAS — O QUE FICA SOBRE A MESA
+## 5 · ⭐⭐ AS IDEIAS — O QUE FICA SOBRE A MESA
 
 **7. ⭐⭐ A PASTA DE DESPACHOS, e ela é o centro.** No Brasil o presidente recebe a pasta com atos
 para assinar. Ela nasce dizendo **quantos esperam e quantos vencem** — "7 atos · 2 vencem hoje" —
@@ -233,7 +318,7 @@ medir. ⛔ **Sem textura:** silhueta e sombra, e não madeira.
 
 ---
 
-## 5 · ⭐ AS IDEIAS — O GESTO
+## 6 · ⭐ AS IDEIAS — O GESTO
 
 **14. ⭐⭐ ASSINAR É ARRASTAR A CANETA.** Você passa a caneta sobre a linha e a assinatura aparece
 manuscrita, no seu nome. `spring.mjs` existe, e a pesquisa 05 já mediu duração e quique. **É o
@@ -255,7 +340,7 @@ nunca sorteado** — número inventado é proibido.
 
 ---
 
-## 6 · AS IDEIAS — O REALISMO BRASILEIRO
+## 7 · AS IDEIAS — O REALISMO BRASILEIRO
 
 **19. A agenda do dia.** A agenda oficial do presidente é pública no Brasil. _"10h — despacho com
 a Fazenda · 15h — audiência com a bancada ruralista."_ Cada compromisso é uma decisão de onde
@@ -277,7 +362,7 @@ existe e a Caixa já o respeita; o Gabinete não.
 
 ---
 
-## 7 · ⭐⭐⭐ O EMAIL E O GABINETE — a resposta
+## 8 · ⭐⭐⭐ O EMAIL E O GABINETE — a resposta
 
 **Ele perguntou se as duas precisam estar em harmonia. A resposta tem três partes, e elas não
 são a mesma.**
@@ -340,7 +425,7 @@ pode nascer reservado.**
 
 ---
 
-## 8 · ⚖ O QUE EU RECOMENDO, e por que nesta ordem
+## 9 · ⚖ O QUE EU RECOMENDO, e por que nesta ordem
 
 | #   | o quê                                                                                          | custo | por que aqui                                                |
 | --- | ---------------------------------------------------------------------------------------------- | ----- | ----------------------------------------------------------- |
@@ -357,7 +442,7 @@ timbrado, e não 58px na primeira linha do olho.
 
 ---
 
-## 9 · ⚖ A TRAVA QUE CAIU, e a lição
+## 10 · ⚖ A TRAVA QUE CAIU, e a lição
 
 ⛔ **O ciclo 21 dizia _"madeira, couro e papel não entram"_, e essa frase era MINHA.** Ele nunca a
 disse. Eu peguei a recusa de **uma cor** — _"esse marrom cor de bosta"_ — e a transformei numa
@@ -373,7 +458,7 @@ que eu propus, e eu que mando"_. **A frase saiu do ciclo 21 e a matéria está a
 
 ---
 
-## 10 · ⛔ O QUE ESTA PESQUISA RECUSA
+## 11 · ⛔ O QUE ESTA PESQUISA RECUSA
 
 | pedido                           | por quê                                                                              |
 | -------------------------------- | ------------------------------------------------------------------------------------ |
@@ -386,7 +471,7 @@ que eu propus, e eu que mando"_. **A frase saiu do ciclo 21 e a matéria está a
 
 ---
 
-## 11 · ⚖ A RESTRIÇÃO
+## 12 · ⚖ A RESTRIÇÃO
 
 1. **Nada aqui inventa número.** Cada peça lê um motor que já roda e já tem prova;
 2. **a captura é obrigatória** — é a tela que abre o jogo, e o portão não sabe olhar;
@@ -395,3 +480,17 @@ que eu propus, e eu que mando"_. **A frase saiu do ciclo 21 e a matéria está a
    `--light-angle` interpola. **Meça os dois braços na mesma rodada**;
 4. ⚠ **cor nova entra como token no par `--x` + `--x-rgb`**, ou a guarda `tokens` reprova. E
    **nenhuma peça nova pode ser vidro dentro de vidro.**
+
+---
+
+## Fontes — apuradas em 05/09/2026
+
+- [Gabinete Presidencial (Brasil)](<https://pt.wikipedia.org/wiki/Gabinete_Presidencial_(Brasil)>)
+- [Palácio do Planalto](https://pt.m.wikipedia.org/wiki/Pal%C3%A1cio_do_Planalto)
+- [Como é o Palácio do Planalto por dentro](https://www.correio24horas.com.br/brasil/como-e-o-palacio-do-planalto-por-dentro-conheca-a-sede-da-presidencia-da-republica-0626)
+- [Mesa de JK no Planalto deve passar por restauração](https://www.cnnbrasil.com.br/politica/mesa-de-jk-no-planalto-deve-passar-por-restauracao-e-ser-aposentada/)
+- [Brasília de Athos Bulcão: azulejos gráficos moldam a identidade da capital](https://www.cnnbrasil.com.br/viagemegastronomia/cultura/brasilia-de-athos-bulcao-azulejos-graficos-moldam-a-identidade-da-capital/)
+- [Fundação Athos Bulcão](https://www.fundathos.org.br/noticia/304)
+- [Athos Bulcão: aproximação entre arte e arquitetura](https://www.archdaily.com/pt//877687/athos-bulcao-aproximacao-entre-arte-e-arquitetura)
+- [Sergio Rodrigues — Arquivo Contemporâneo](https://arquivocontemporaneo.com.br/designer/88/Sergio-Rodrigues/)
+- [Designers do mobiliário moderno brasileiro](https://www.loraronco.com.br/post/modernariato-lora-ronco-designers-do-mobili%C3%A1rio-moderno-brasileiro-introdu%C3%A7%C3%A3o)
