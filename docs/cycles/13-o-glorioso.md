@@ -550,7 +550,7 @@ costume"** é o CK3 que o dossiê pede, com o motor que já existe.
 
 O dossiê quer a ambição como alerta vermelho pulsante.
 
-⛔ **Erra duas vezes:** vermelho é crise nesta paleta e o pulso está **reservado à moldura do
+🗣 **Recusa da época, e ela é de gosto:** vermelho é crise nesta paleta e o pulso está **reservado à moldura do
 cerco** — o estado que decide a partida. E o traço é **inerte**: das cinco ambições, só
 `succession` tem preço (**achado 16**).
 
@@ -1191,18 +1191,23 @@ A9); Bastidor é a coalizão (D1). Quando existirem, cada uma entra com **uma li
 
 ---
 
-# ⛔ O QUE FICA DE FORA, E POR QUÊ
+# 🗣 O QUE FICOU DE FORA NA ÉPOCA, E POR QUÊ
+
+⚠ **Reclassificado em 05/09/2026, e nada aqui trava hoje.** As linhas com **medição** valem até
+alguém remedir; as de **gosto** eram a preferência dele naquele dia e **expiram**; as que eram
+generalização minha **não valem nada**. ⭐ **Escopo continua de pé** — "Fase 1 só o Brasil" é
+recorte de trabalho, e não estética. Ver as três famílias no `CLAUDE.md`.
 
 | o quê                                                | por quê                                                                                                                                                                                                                        |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **hachura, zona bloqueada, ponteiro travado**        | menos fiel, não mais. Ver a regra ⚖                                                                                                                                                                                            |
 | **três colunas no Congresso**                        | **medido: não cabe.** A lâmina tem 1.189px; a 30/40/30 as colunas teriam 325 · 444 · 325, e a bancada precisa de **1.127px**, a pessoa de 1.074, o relatório de 1.099. **Só o slider cabe**                                    |
 | **`blur(24px) saturate(200%)`**                      | segundo material, com guarda. E medido: `glass-support` num painel de 630px custou **−17,9 fps**. O caminho registrado é **forma, não filtro** — aresta e tinta chapada custaram **+5,5 fps**                                  |
-| **cor semântica por setor** (azul ordem, verde agro) | cor de identidade com paleta semântica. Verde é alta, vermelho é crise. Recusado três vezes                                                                                                                                    |
-| **néon e pastel**                                    | _"verde neon de startup"_ foi a crítica que gerou três ciclos de conserto                                                                                                                                                      |
+| **cor semântica por setor** (azul ordem, verde agro) | 🗣 gosto: verde é alta, vermelho é crise. **Recusa da época — se ele quiser identidade por setor, ela cabe**                                                                                                                    |
+| **néon e pastel**                                    | 🗣 _"verde neon de startup"_ foi a crítica dele na época                                                                                                                                                                        |
 | **mono em valor financeiro**                         | não é defeito, é **troca de regra** — e metade já existe em `[data-numeric]`. **Decisão dele**                                                                                                                                 |
 | **pautas sugeridas pela Casa Civil**                 | é a pauta pronta que o ciclo 2 matou                                                                                                                                                                                           |
-| **ambição como alarme pulsante**                     | o pulso é do cerco; o traço é inerte                                                                                                                                                                                           |
+| **ambição como alarme pulsante**                     | ✍ minha — o pulso ser só do cerco é regra que eu escrevi                                                                                                                                                                      |
 | **geopolítica, BRICS, balança comercial**            | exige setor externo em CORRENTE. _"Fase 1 só o Brasil"_ segue de pé. ⚠ **Versão barata registrada:** um quinto lobby com `reads: "external"` lendo um índice ambiental — é entrada de catálogo, não subsistema                 |
 | **greve por categoria profissional**                 | `research/03` já recusou o desenho: SONDA segmenta por **renda**, o efeito viria por CASCATA e TEMPORAL que não rodam, e _"uma greve legítima não é um defeito do país"_. O buraco é real (**achado 20**); o desenho não pluga |
 | **reforma ministerial**                              | as oito áreas são a espinha do catálogo — mexer nelas atinge MALHA, rail, orçamento e save de uma vez. **Candidata ao ciclo 14**                                                                                               |

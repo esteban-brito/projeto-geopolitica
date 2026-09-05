@@ -1528,11 +1528,23 @@ transbordo, recorte e tipografia), `prints-caixa.mjs`, `fontes.mjs`, `medir-colu
 `auditar-faixa.mjs`, `vaos.mjs`, `censo-tipo.mjs`, `quem-foge.mjs`, `cabe-no-gabinete.mjs` e
 `tipos.mjs`.
 
-### ⛔ NÃO REABRIR
+### 🗣 O QUE ELE JÁ RECUSOU UMA VEZ — e nenhum item aqui trava nada
 
-A fita de cinco cores no Gabinete, os botões `NEGOCIAR`/`FINANÇAS`, as três classes da Rua,
-o `letter__why`, o `annex__foot`, o vocativo, a pastilha com fundo, as setas verde e
-vermelha, e **o mobile** — _"a perfeição que eu almejo é no desktop sempre"_.
+⚠ **ESTA SEÇÃO SE CHAMAVA "NÃO REABRIR", e o título estava errado.** Ordem dele em 05/09/2026:
+_"não importa o que eu achava antes… eu posso mudar de ideia a qualquer momento"_. **Isto é
+histórico de preferência, e não uma lista de proibições** — ver as três famílias de recusa no
+`CLAUDE.md`.
+
+A fita de cinco cores no Gabinete, os botões `NEGOCIAR`/`FINANÇAS`, as três classes da Rua, o
+`letter__why`, o `annex__foot`, o vocativo, a pastilha com fundo, e as setas verde e vermelha.
+
+⭐ **O único com razão declarada por ele, e ele continua de pé porque é ESCOPO e não gosto:** o
+mobile — _"a perfeição que eu almejo é no desktop sempre"_.
+
+⭐ **E a base visual é ordem dele de 05/09/2026:** o **liquid glass de hoje é o ponto de partida**
+— e não o teto. Palavras dele: _"se eu quiser construir uma literal MESA, linda, no gabinete, eu
+posso, sem qualquer resquício de liquid glass nela"_. **Arranjo, escala, matéria, luz, gesto e o
+próprio material estão abertos.**
 
 ---
 

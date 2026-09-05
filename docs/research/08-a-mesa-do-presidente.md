@@ -195,6 +195,12 @@ quadro.
 arranjo sem madeira — mármore claro no lugar do jacarandá, e a matéria vindo só do couro e da luz.
 **O arranjo não depende do material; o material decide o tom.**
 
+⭐⭐ **E O TETO DE MATÉRIA NÃO EXISTE — palavras dele em 05/09/2026:** _"se eu quiser construir uma
+literal MESA, linda, no gabinete, eu posso, sem qualquer resquício de liquid glass nela… a base é
+liquid glass, mas se eu quiser ousar, eu posso"_. **O liquid glass é o ponto de partida do
+projeto, e não o teto desta tela.** Uma mesa que não tenha uma única superfície de vidro é uma
+saída legítima, e ela nem precisa de justificativa técnica: precisa passar na captura e no fps.
+
 ---
 
 ## 4 · ⭐⭐ AS IDEIAS — O QUE FICA SOBRE A MESA

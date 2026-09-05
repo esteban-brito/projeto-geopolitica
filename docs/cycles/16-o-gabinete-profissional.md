@@ -143,8 +143,10 @@ que a coluna já engoliu um cartão inteiro em 24/08.
 3. ⭐ **O raio do bloco fica em 3px**, e não vai para os 8px do FM: 3px é o token do papel, e o
    bloco da coluna e o anexo da carta são a MESMA peça desde o ciclo 15. Mudar um muda os dois,
    e o anexo dentro do papel com 8px lê como cartão dentro de carta;
-4. ⛔ **Nenhuma cor nova, e nenhuma cor de acento em rótulo** — o latão é do que se pressiona;
-5. ⛔ **A tela continua sem decisão e sem rolagem**, por decisão dele e do ciclo 15.
+4. 🗣 **Nenhuma cor nova, e nenhuma cor de acento em rótulo** — o latão é do que se pressiona.
+   ⚠ **Preferência da época, e não trava;**
+5. 🗣 **A tela continua sem decisão e sem rolagem.** ⭐ **A primeira metade CAIU em 04/09** — o
+   contingenciamento passou a morar na mesa.
 
 ---
 
@@ -191,20 +193,23 @@ que a coluna já engoliu um cartão inteiro em 24/08.
 | **C2** | barra empilhada da receita    | **Finanças** — a única tela densa do projeto, e ela pode ser densa porque ninguém decide nada nela. No Gabinete é o `meter` que acabou de morrer                                                                             |
 | **C3** | feedback preditivo (ghosting) | **áreas e Congresso** — o Gabinete não decide. E metade já existe: o trilho do orçamento e `outlook`                                                                                                                         |
 
-## ⛔ PARTE D — recusado, e a razão é medida
+## 🗣 PARTE D — recusado NA ÉPOCA, e reclassificado em 05/09/2026
 
-| item                                                          | por que não                                                                                                                                                                                    |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **fonte monospace para números**                              | ⛔ regra escrita: _"uma medição de carimbo não é um carimbo"_. E o payload real dele — números que não dançam — **já está entregue**: `font-variant-numeric: tabular-nums` em `10-base.css:49` |
-| **`M ês`, `O brigatória` (kerning)**                          | ⛔ **medido e falso.** `::first-letter` só aplica caixa alta; a largura do texto com e sem a pseudo é **100,98 × 100,98px** e **88,16 × 88,14px**. Artefato da imagem que ele leu              |
-| **dourado em bordas e títulos**                               | ⛔ o latão é a cor do que se **pressiona** — uma cor, um lugar. Gastá-la num rótulo dilui o botão de avançar                                                                                   |
-| **âmbar como quarta cor de estado**                           | ⛔ o ciclo 15 recusou cor nova para significar estado. O limiar já tem a marca de latão na pista                                                                                               |
-| **textura de papel no documento**                             | ⛔ decidido duas vezes: _"o pergaminho morreu; uma substância só"_                                                                                                                             |
-| **número de protocolo gerado ao acaso**                       | ⛔ viola a regra mais dura do projeto: nada de número inventado                                                                                                                                |
-| **carimbo de URGENTE**                                        | ✔ **já existe** — tarja de gravidade e prazo, desde o ciclo 9                                                                                                                                  |
-| **setas de tendência no topo**                                | ✔ **já existe**, e o achado 56 desta sessão consertou as da coluna                                                                                                                             |
-| **padronizar paddings (Fase 1)**                              | ✔ **feito em 30/08**, com censo de estilo: zero divergências                                                                                                                                   |
-| **apagar as listas da direita e trocar por dataviz (Fase 3)** | ⛔ é o inverso do ciclo 15, aprovado por ele no mesmo dia: _"blocos dentro de blocos, tudo idêntico"_                                                                                          |
+⚠ **Linha com 📐 tem número atrás e vale até ser remedida; 🗣 é gosto dele naquele dia, e gosto
+expira; ✍ era generalização minha, e não vale nada.** Ver as três famílias no `CLAUDE.md`.
+
+| item                                                          | por que não                                                                                                                                                                                                                          |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **fonte monospace para números**                              | ✍ minha — a regra é minha. E o payload dele já entrou: _"uma medição de carimbo não é um carimbo"_. E o payload real dele — números que não dançam — **já está entregue**: `font-variant-numeric: tabular-nums` em `10-base.css:49` |
+| **`M ês`, `O brigatória` (kerning)**                          | ⛔ **medido e falso.** `::first-letter` só aplica caixa alta; a largura do texto com e sem a pseudo é **100,98 × 100,98px** e **88,16 × 88,14px**. Artefato da imagem que ele leu                                                    |
+| **dourado em bordas e títulos**                               | 🗣 o latão é a cor do que se **pressiona** — uma cor, um lugar. Gastá-la num rótulo dilui o botão de avançar                                                                                                                          |
+| **âmbar como quarta cor de estado**                           | ✍ minha, herdada do ciclo 15. O limiar já tem a marca de latão na pista                                                                                                                                                             |
+| **textura de papel no documento**                             | ✍ **MINHA, e ela CAIU em 05/09/2026** — ele recusou uma COR, não a matéria                                                                                                                                                          |
+| **número de protocolo gerado ao acaso**                       | 📐 vale: nada de número inventado. ⭐ **Mas SEQUENCIAL pelo mandato pode**                                                                                                                                                           |
+| **carimbo de URGENTE**                                        | ✔ **já existe** — tarja de gravidade e prazo, desde o ciclo 9                                                                                                                                                                        |
+| **setas de tendência no topo**                                | ✔ **já existe**, e o achado 56 desta sessão consertou as da coluna                                                                                                                                                                   |
+| **padronizar paddings (Fase 1)**                              | ✔ **feito em 30/08**, com censo de estilo: zero divergências                                                                                                                                                                         |
+| **apagar as listas da direita e trocar por dataviz (Fase 3)** | 🗣 é o inverso do ciclo 15, aprovado por ele no mesmo dia: _"blocos dentro de blocos, tudo idêntico"_                                                                                                                                 |
 
 ---
 

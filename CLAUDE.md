@@ -280,16 +280,38 @@ um plano aberto. **E ela vence ADR também:** o ADR 0001 foi emendado por um cic
 travas em conta, pq tem coisa que eu propus, e eu que mando"_. Regra que ele propôs ou aprovou
 depois **substitui** a que está escrita — o documento antigo se emenda, não se invoca.
 
-⛔ **E ISSO JÁ ACONTECEU DE NOVO, em 05/09/2026.** O ciclo 21 dizia _"madeira, couro e papel não
-entram"_ apoiado em "o projeto já matou skeumorfismo". **Ele nunca disse isso.** O registro tem o
-contrário: em 22/08 ele PEDIU o marrom, e depois recusou **aquela cor**. Eu virei a recusa de um
-tom numa proibição de três materiais, e citei a proibição de volta como decisão dele. Palavras
-dele: _"uma coisa que me irrita muito nesse meu jogo são as travas e limites que você colocou sem
-eu pedir"_.
+## ⚖ TODA RECUSA DESTE REPOSITÓRIO PERTENCE A UMA DE TRÊS FAMÍLIAS — 05/09/2026
 
-> ⚖ **A pergunta antes de escrever qualquer proibição num plano:** _isto é uma medição, uma ordem
-> dele, ou uma generalização minha de uma coisa específica?_ **Só as duas primeiras entram — e a
-> terceira se apaga quando aparece.**
+⛔ **E SÓ UMA DELAS TRAVA ALGUMA COISA.** Ordem dele, e ela vale para cada ⛔ escrito em qualquer
+doc deste projeto: _"não importa o que eu achava antes, entende? o jogo está em pleno
+desenvolvimento, **eu posso mudar de ideia a qualquer momento**, isso a IA não entende"_.
+
+| família                    | exemplo                               | trava?                                                 |
+| -------------------------- | ------------------------------------- | ------------------------------------------------------ |
+| 📐 **medição**             | `glass-support` custou 17,9 fps       | ⭐ **sim — até alguém remedir e mostrar outro número** |
+| 🗣 **gosto dele, com data** | _"esse marrom cor de bosta"_          | ⛔ **não.** É a preferência daquele dia, e ela expira  |
+| ✍ **generalização minha** | _"madeira, couro e papel não entram"_ | ⛔ **não vale nada. APAGUE ao encontrar**              |
+
+⭐ **MEDIÇÃO NÃO EXPIRA. GOSTO EXPIRA.** Uma recusa de gosto se cita como _"ele recusou X em
+tal data"_, e nunca como _"X não entra"_ — e ao propor desenho, **ofereça o exótico**: ele quer,
+e cabe.
+
+⛔ **E ISSO JÁ CUSTOU DUAS VEZES.** O ciclo 21 dizia _"madeira, couro e papel não entram"_ apoiado
+em "o projeto já matou skeumorfismo". **Ele nunca disse isso.** O registro tem o contrário: em
+22/08 ele PEDIU o marrom, e depois recusou **aquela cor**. Eu virei a recusa de um tom numa
+proibição de três materiais, e citei a proibição de volta como decisão dele. Palavras dele:
+_"uma coisa que me irrita muito nesse meu jogo são as travas e limites que você colocou sem eu
+pedir"_.
+
+> ⚖ **A pergunta antes de escrever qualquer proibição:** _isto é uma medição, uma ordem dele, ou
+> uma generalização minha de uma coisa específica?_ **Na dúvida, pergunte a ele — nunca invoque o
+> documento.**
+
+⭐ **A BASE VISUAL É O LIQUID GLASS DE HOJE — ordem dele de 05/09/2026.** ⚠ **E ela também não é
+trava, e ele disse isso com todas as letras:** _"se eu quiser construir uma literal MESA, linda,
+no gabinete, eu posso, sem qualquer resquício de liquid glass nela… a base é liquid glass, mas se
+eu quiser ousar, eu posso"_. **Base quer dizer o ponto de partida, e não o teto.** Arranjo, escala,
+matéria, luz e gesto estão todos abertos — e o material também, se ele pedir.
 
 ## Como responder
 

@@ -177,12 +177,16 @@ as classes ficam, e o Gabinete apenas deixa de usá-las.
 
 ---
 
-## ⛔ O QUE ESTE CICLO RECUSA
+## 🗣 O QUE ESTE CICLO RECUSOU NA ÉPOCA — e nada aqui trava hoje
 
-| pedido                                   | por quê                                                                     |
-| ---------------------------------------- | --------------------------------------------------------------------------- |
-| **o Gabinete ganhar um controle**        | ordem dele, e a tela já é a única do jogo que não decide                    |
-| **a coluna rolar para caber mais bloco** | o layout é uma promessa; rolagem aqui é conteúdo demais                     |
-| **esconder leitura atrás de hover**      | recusado no C11, e de novo aqui                                             |
-| **cor nova para significar estado**      | a paleta já diz crise, estável e crescimento. Uma quarta é vocabulário novo |
-| **repetir na direita o número da barra** | é o que a fusão existe para matar                                           |
+⚠ **Reclassificado em 05/09/2026.** Linha com 📐 tem número atrás e vale até ser remedida; linha
+com 🗣 é gosto dele naquele dia, e **gosto expira**; linha com ✍ era generalização minha, e
+**não vale nada**. Ver as três famílias no `CLAUDE.md`.
+
+| pedido                                   | por quê, e de que família                                                       |
+| ---------------------------------------- | ------------------------------------------------------------------------------- |
+| **o Gabinete ganhar um controle**        | 🗣 ordem dele na época. ⭐ **CAIU:** o contingenciamento entrou na mesa em 04/09 |
+| **a coluna rolar para caber mais bloco** | ✍ minha. O layout é uma promessa, e promessa se renegocia                      |
+| **esconder leitura atrás de hover**      | 📐 vale: informação atrás de hover não existe para quem não passa o mouse       |
+| **cor nova para significar estado**      | ✍ minha. A paleta pode crescer se ele quiser                                   |
+| **repetir na direita o número da barra** | 📐 vale: dois lugares montando a mesma leitura é o defeito mais caro do projeto |

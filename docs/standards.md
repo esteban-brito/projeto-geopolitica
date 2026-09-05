@@ -76,6 +76,17 @@ compõe e devolve o resultado pronto; o reducer apenas o dobra no estado.
 
 ## 4. O sistema visual
 
+> ⚖ **LEIA ISTO ANTES DA SEÇÃO — 05/09/2026.** Boa parte do que vem abaixo é **medição** (fps,
+> contraste, largura em pixels) e vale até alguém remedir. O resto é **gosto dele numa data**, e
+> gosto **expira**: _"não importa o que eu achava antes… eu posso mudar de ideia a qualquer
+> momento"_. **Nenhuma frase desta seção é motivo para recusar um pedido dele** — quando as duas
+> famílias se confundirem, a pergunta vai para ele, e não para o documento. Ver as três famílias
+> em `CLAUDE.md`.
+>
+> ⭐ **A base é o liquid glass de hoje** — ordem dele de 05/09/2026. ⚠ **Base é o ponto de
+> partida, e não o teto:** _"se eu quiser construir uma literal MESA, linda, no gabinete, eu
+> posso, sem qualquer resquício de liquid glass nela"_. **Nem o material é trava.**
+
 **Um material, três densidades.** Desfoque, saturação e borda são os mesmos em
 toda a tela; o que distingue os níveis é a densidade do fundo, porque o que eles
 expressam é **papel**:
@@ -106,6 +117,11 @@ só a sombra de baixo, que não duplica nada. Quatro tokens de sombra viraram um
 **Uma lâmina por tela.** As peças de dentro são linhas e seções, não cartões: um
 contorno por informação é peso repetido, e peso repetido é ruído. Vidro dentro de
 vidro são dois materiais empilhados para dizer uma coisa só.
+
+⚠ **E A CONTAGEM DE SUBSTÂNCIAS ABAIXO ESTÁ VENCIDA:** o papel virou lâmina escura quando ele
+recusou o marrom, então hoje **há uma só**, e o documento se distingue por profundidade. ⛔ **Isso
+não é um teto** — matéria nova (madeira, couro, mármore) está aberta desde 05/09/2026, e o que
+mede se ela entra é a captura e o fps, nunca esta frase.
 
 **Duas substâncias, e a fronteira é a regra inteira:**
 
