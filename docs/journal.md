@@ -12,6 +12,86 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO EM QUE A MESA GANHOU MATÉRIA — 05/09/2026, tarde
+
+A manhã fechou o gargalo do jogo; a tarde foi inteira de desenho, e ela começou com uma reclamação
+dele: _"eu vendo a tela do Gabinete novo, eu percebo que está muito ruim, muito pouco conteúdo e
+feia"_.
+
+### 1 · A auditoria, e ela mediu o que a reclamação dizia
+
+📐 **59,3% da mesa vazia**, com **368px de faixa morta contígua** no rodapé — 43,7% da tela
+sozinha. **29 átomos de texto**, oito deles números. E o Email, medido junto, é **pior**: 26
+átomos e 14,9% de densidade, na **mesma classe de raiz** e no mesmo tabuleiro. **Não eram duas
+telas: era a mesma tela vazia duas vezes.**
+
+⚖ **E o diagnóstico foi contra mim:** a hipótese do ciclo 21 — _"o que faz parecer uma mesa é
+hierarquia, lugar fixo e ter o que assinar"_ — **foi executada inteira e ele reprovou o
+resultado.** Ela é necessária e não é suficiente: sem matéria, produz um formulário bem
+organizado.
+
+### 2 · A trava que eu tinha inventado
+
+O ciclo 21 dizia _"madeira, couro e papel não entram"_, apoiado em "o projeto já matou
+skeumorfismo". **Ele nunca disse isso.** O registro tem o contrário: em 22/08 ele **pediu** o
+marrom, e depois recusou **aquela cor**. Eu virei a recusa de um tom numa proibição de três
+materiais e citei a proibição de volta como decisão dele.
+
+**Palavras dele:** _"uma coisa que me irrita muito nesse meu jogo são as travas e limites que você
+colocou sem eu pedir"_ — e depois, mais fundo: _"não importa o que eu achava antes… **eu posso
+mudar de ideia a qualquer momento**, isso a IA não entende"_.
+
+⭐ **Daí saiu a regra das três famílias**, que reclassifica toda recusa do repositório: **medição
+vale até alguém remedir; gosto dele numa data expira; generalização minha não vale nada.** Ela
+está no `CLAUDE.md`, e foi aplicada no handoff e nos ciclos 13, 15, 16 e 21.
+
+### 3 · O que a pesquisa achou, e ela mudou o desenho três vezes
+
+📗 **O Gabinete real não é uma sala — são três ambientes**, no 3º andar do Planalto, com mesa de
+despacho, mesa circular de 14 lugares, sofá Navona de Sergio Rodrigues, duas telas de Djanira e
+tapeçaria de Norberto Nicola no piso. **A referência vitoriana caiu por evidência**: o palácio é
+mármore branco, Zalszupin, Niemeyer e arte concreta.
+
+📗 **A madeira que ele escolheu tem nome:** `jacarandá-da-bahia`, a de Sergio Rodrigues dos anos
+50 aos 70.
+
+⭐⭐⭐ **E o achado:** o timbre do presidente é em **relevo seco branco**, não impresso — Manual
+§5.1.1 nota 3, Decreto nº 80.739/1977, e vale **exclusivamente** para ele, ministro de Estado e
+autoridade máxima de autarquia. **É a distinção física que separa o ato dele de todo o resto do
+governo**, e era o que eu já tinha proposto por estética.
+
+### 4 · A regra que ele deu para a escrita
+
+Vendo o decreto pronto: _"gostei, porém só achei meio difícil de entender o que está escrito. **A
+única coisa que vamos fugir do realismo é isso.**"_
+
+⭐ **A forma é do governo; a escrita é do jogo.** Fica fiel a folha A4, as margens de 3 cm e
+1,5 cm, o relevo seco, a epígrafe, a ementa recuada, `Art. 1º`, o fecho com os anos da
+Independência e a nota do D.O.U. Vira português normal a ementa, o preâmbulo e os artigos.
+
+⚠ **E o que não se simplifica é o que todo brasileiro reconhece:** _"Este Decreto entra em vigor
+na data de sua publicação"_ fica.
+
+### 5 · Os dois bugs que a caça pegou
+
+⛔ **A tábua saiu preta**, e a causa era minha: pré-escapei `#` como `%23` no gerador, e `svgUrl`
+escapa `%` **antes** de `#` — então `%23` virou `%2523` e voltou como `%23`, que não é cor. Todo
+`fill` caiu para o preto inicial do SVG.
+
+⚠ **E dois falsos alarmes do meu próprio conferidor**, os dois registrados porque a lição é a
+mesma: a folha A4 "errada" em 1% era a **caixa envolvente do elemento girado**, e o `%25` no data
+URI é o **escape correto** de `%`. **Um conferidor que grita falso é pior que nenhum.**
+
+### 6 · Onde parou
+
+**O jacarandá deixou de repetir** — a primeira tábua usava um `<pattern>` de passo fixo, e agora
+são cinco camadas com sorteio determinístico: faixas de alturas próprias, linha de anel de
+espessura variável, poros, o arco central e o grão fino.
+
+**E a montagem do Gabinete começou.** O passo 1 — o tampo — está de pé em `tmp/gabinete.html`, com
+33 controles. ⛔ **Ele vai girar antes do passo 2**, e pediu com todas as letras: _"passo a passo,
+com calma"_.
+
 ## A SESSÃO EM QUE O GARGALO MUDOU DE LUGAR — 05/09/2026
 
 Ele abriu com _"onde paramos?"_, mandou commitar a sessão anterior e disse: _"depois de

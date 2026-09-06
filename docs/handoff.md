@@ -18,7 +18,36 @@
 
 ## ▶ COMECE POR AQUI
 
-### ⭐ O PRÓXIMO PASSO É O CICLO 24, e o ITEM 1 JÁ ENTROU
+### ⭐⭐⭐ A SESSÃO PAROU NO MEIO DA MONTAGEM DO GABINETE — 05/09/2026
+
+▶ **O trabalho de amanhã não é código do jogo: é a bancada.** Ele está montando o Gabinete **do
+zero, passo a passo**, em `tmp/gabinete.html`, e cada passo entra no mesmo arquivo para a mesa
+crescer à vista.
+
+| passo | o quê                                              | estado                           |
+| ----- | -------------------------------------------------- | -------------------------------- |
+| **1** | **o tampo** — madeira, luz, reflexo, sombra, borda | ✔ **de pé, esperando ele girar** |
+| 2     | a pasta de despachos, com o decreto dentro         | ▶ **o próximo**                  |
+| 3     | o gesto — pegar, ler, assinar                      | —                                |
+| 4     | a margem — o preço da assinatura                   | —                                |
+| 5     | a antessala — quem está esperando                  | —                                |
+| 6     | o tempo — o calendário do mandato                  | —                                |
+
+⛔ **NÃO AVANCE PARA O PASSO 2 SEM O AVAL DELE.** Palavras dele ao pedir a montagem: _"passo a
+passo, com calma"_, e ao encerrar: _"amanhã faço isso"_ — ele vai girar os **33 controles** do
+passo 1 primeiro.
+
+⚠ **Nada disso está versionado**, e é de propósito: `tmp/` é ignorado pelo git. **O que orienta a
+retomada é `tmp/LEIA.md`**, e ele está atualizado com o estado, as bancadas e as três armadilhas
+que já custaram.
+
+📗 **E o desenho todo tem lastro apurado, na
+[pesquisa 08](research/08-a-mesa-do-presidente.md)** — o Gabinete real do Planalto, o Manual de
+Redação da Presidência, e o timbre em relevo seco do Decreto nº 80.739/1977.
+
+---
+
+### ⭐ O PRÓXIMO PASSO NO JOGO É O CICLO 24, e o ITEM 1 JÁ ENTROU
 
 ✔ **O PARTIDO DO PRESIDENTE ENTROU em 04/09/2026.** A posse pergunta por qual bancada você se
 elegeu, e a escolha é obrigatória (📗 CF art. 14, §3º, V). O que ela muda:
