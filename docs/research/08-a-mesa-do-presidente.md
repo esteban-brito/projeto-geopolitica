@@ -375,7 +375,35 @@ gerada do projeto.
 de erro**. ⚠ **A medição de fora dá 1,4006 e isso NÃO é defeito:** `getBoundingClientRect` devolve
 a caixa envolvente do elemento já girado, e a previsão matemática do giro de 0,8° bate em 0,3px.
 
-### 4.9 · ⚠ A tensão que sobra, e ela é decisão dele
+### 4.9 · ⭐⭐ O JACARANDÁ REFEITO — cinco camadas, e nenhuma repete
+
+⛔ **A primeira tábua usava um `<pattern>` de passo fixo, e era o defeito inteiro:** as faixas
+repetiam a cada **64px exatos**, e o olho pega a repetição antes de reconhecer a madeira.
+**Ordem dele:** _"falta realismo, aleatoriedade, falta parecer madeira de verdade"_.
+
+⭐ **A tábua agora tem cinco camadas, e cada uma conserta uma coisa:**
+
+| camada                                     | o que ela conserta                                            |
+| ------------------------------------------ | ------------------------------------------------------------- |
+| **as faixas** de alturas sorteadas         | a persiana. Uma tábua de faixas iguais não é madeira          |
+| **a linha de anel**, de espessura variável | linha de espessura constante é a assinatura de textura gerada |
+| **os poros** — traços curtos e finos       | é o que separa madeira nobre de MDF pintado                   |
+| **o arco central** — o _cathedral_         | é o que a serra faz ao passar perto do miolo da tora          |
+| **o grão fino**                            | a aspereza da superfície                                      |
+
+⚠ **O SORTEIO É DETERMINÍSTICO**, e isso é a regra do projeto aplicada à textura: nada de
+`Math.random`. Mesma semente, mesma tábua — uma tábua que se refizesse a cada repintura piscaria
+quando o painel girasse qualquer outro valor.
+
+⚠ **E o grão fica FORA do deslocamento.** Passado pelo mesmo filtro do veio, o ruído fino vira
+borrão: ele é aspereza, e não desenho.
+
+⛔ **O BUG QUE ISSO CUSTOU, e a lição vale para todo SVG gerado do projeto:** eu pré-escapei `#`
+como `%23` dentro do gerador, e `svgUrl` escapa `%` **antes** de `#` — então `%23` virou `%2523` e
+voltou como `%23`, que não é cor. **Todo `fill` caiu para o preto inicial do SVG e a tábua saiu
+chapada de preto.** A regra ficou escrita na função: **quem chama não pré-escapa nada.**
+
+### 4.10 · ⚠ A tensão que sobra, e ela é decisão dele
 
 📗 **A norma manda texto preto em papel branco.** ⚠ **E o `standards.md` do projeto diz que papel
 branco em ambiente escuro é um buraco de luz.** As duas estão certas no terreno delas. **O
