@@ -629,6 +629,32 @@
     filter: saturate(1.5);
   }
 
+  /* ⭐ NO GABINETE O SUBSTRATO E A MESA. A foto do jacaranda entra a 1:1 — centrada,
+     sem repetir —, e o que sobrar da janela e o fundo da UI. A barra e o rail passam a
+     refratar madeira, que e o que liquid glass faz: vidro SOBRE o lugar, e nao ao lado dele.
+     ⚠ O TAMANHO E O DA FOTO, e nao `cover`: `cover` ampliaria. Trocou a foto? troque os dois
+     numeros, aqui e em `DESIGN` no `cabinet.mjs`.
+     ⛔ E A FOTO PASSA PURA: a saturacao de 1,5, o grao ladrilhado e a tinta da situacao sao
+     para a aurora, e sobre a madeira os tres mudariam a cor que ele mandou nao mudar. */
+  /* ⭐ E A BEIRA DA MESA ENTRA NA SOMBRA, em vez de terminar num corte: a foto tem 821px e a
+     janela pode ter mais, entao os ultimos 44px dela escurecem para o fundo da UI — a borda de
+     um tampo entrando na penumbra da sala. E a UNICA coisa que toca a foto, e so na aresta.
+     📐 A foto e centrada, entao a beira inferior fica a 410px do centro: o degrade vai de 366 a
+     412, e acima dele a madeira e pura. */
+  body:has(.board[data-screen="cabinet"]) .backdrop {
+    background:
+      linear-gradient(180deg, transparent calc(50% + 366px), var(--bg-deep) calc(50% + 412px)),
+      linear-gradient(0deg, transparent calc(50% + 366px), var(--bg-deep) calc(50% + 412px)),
+      var(--timber, none) center / var(--room-w) var(--room-h) no-repeat,
+      var(--bg-deep);
+    filter: none;
+  }
+
+  body:has(.board[data-screen="cabinet"]) .backdrop::before,
+  body:has(.board[data-screen="cabinet"]) .backdrop::after {
+    content: none;
+  }
+
   /* O GRAO, e por que ele e uma imagem LADRILHADA de tamanho fixo. */
   .backdrop::before {
     content: "";

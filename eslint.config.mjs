@@ -20,6 +20,17 @@ const BROWSER = {
      por controle —, e delegacao obriga a perguntar o que foi tocado. `instanceof
      HTMLInputElement` e essa pergunta para os controles deslizantes. */
   HTMLInputElement: "readonly",
+  /* A mesa tem o tamanho da foto do tampo e so encolhe, e quem mede a janela e ele. */
+  ResizeObserver: "readonly",
+  /* O clique na mesa e DELEGADO na sala, e delegacao obriga a perguntar o que foi tocado: a
+     pasta na mesa se ERGUE, e so a pasta na mao marca e assina. */
+  Element: "readonly",
+  /* O passeio clica no que `elementFromPoint` acha no centro da pasta, e nao no seletor dela:
+     em arvore 3D o ponto que o navegador de teste calcula para a peca cai no tampo. */
+  MouseEvent: "readonly",
+  /* A rubrica do decreto so corre com o comprimento MEDIDO do traco, e quem o mede e
+     `getTotalLength` — a pergunta que autoriza a chamada e `instanceof SVGPathElement`. */
+  SVGPathElement: "readonly",
   /* `CSS.escape` monta o seletor que devolve o foco depois de `paint()` reescrever a tela. */
   CSS: "readonly",
 };

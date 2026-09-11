@@ -38,6 +38,70 @@ const RUNTIME = new Set([
   "--fall",
   "--split",
   "--rail-floor",
+  /* ── A MESA, e as sete sao a MESMA especie: valor de uma peca, e nao do sistema ──
+     --stitch e --stitch-v  o gradiente do ponto de seleiro, montado UMA vez e pousado nas
+     quatro bordas da pasta. Inline nas quatro, o mesmo desenho seria teclado quatro vezes, e
+     e assim que um padrao comeca a divergir; --furrow e --furrow-v  o sulco que a agulha
+     deixa, pela mesma razao; --envelope-size e --envelope-apex  o tamanho da carta e a altura
+     do bico da aba, dos quais TODA medida do envelope deriva — eles sao a escala da peca, e
+     nao uma cor; --stroke-len  o comprimento do traco da rubrica, e ele so existe depois de o
+     `<path>` estar na pagina: quem o escreve e `getTotalLength`, no DOM. */
+  "--stitch",
+  "--stitch-v",
+  "--furrow",
+  "--furrow-v",
+  "--envelope-size",
+  "--envelope-apex",
+  /* --envelope-fit  o quanto o envelope encolhe depois de desenhado: ele nasce a 360px para a
+     diagonal da aba nao sair em escada, e chega a tela com um terco disso. Valor de UMA peca. */
+  "--envelope-fit",
+  "--stroke-len",
+  /* ── E a que a bancada da mesa girava: --rest, que o JS le no voo da pasta. */
+  "--rest",
+  /* ── AS MATERIAS, e quem as escreve e o JS: as tres texturas nascem de `feTurbulence` e
+     chegam como data URI, entao elas nao TEM valor ate a tela rodar. --timber o jacaranda do
+     tampo; --fibre e --felt o grao do papel e o do envelope. */
+  /* ── E O FATOR DE ESCALA DA MESA, que sai de `fitDesk`: a cena tem o tamanho da foto e o JS
+     mede quanto dela cabe na janela. `--lift-rise` sai da mesma conta — o tamanho da
+     pasta erguida depende da altura que sobrou depois do corte. */
+  "--fit",
+  "--lift-rise",
+  /* ── E A MEDIDA DA CENA, que sai de `DESIGN` no `cabinet.mjs` e e a UNICA fonte dela: o
+     `.room` e o `.backdrop` a liam teclada, com um aviso de que as tres copias mudavam
+     juntas — e o aviso falhou em quatro comentarios. */
+  "--room-w",
+  "--room-h",
+  "--timber",
+  "--fibre",
+  "--felt",
+  /* ── O VOO DA PASTA. As duas sombras sao camadas que cruzam opacidade, e estes oito valores
+     dao a forma delas — a mola nao os reescreve mais, e isso valeu 13 fps. */
+  "--folder-tilt",
+  "--folder-near-x",
+  "--folder-near-y",
+  "--folder-near-b",
+  "--folder-near-a",
+  "--folder-far-x",
+  "--folder-far-y",
+  "--folder-far-b",
+  "--folder-far-a",
+  /* ── ONDE CADA CARTA CAIU, em estilo inline: --ex e --ey o lugar, --er o giro, --i o indice
+     na pilha. Sao um valor POR ELEMENTO, e nao do sistema. */
+  "--i",
+  "--ex",
+  "--ey",
+  "--er",
+  /* ── E O QUE MUDA POR ESTADO, declarado na regra `.envelope[data-urgent="true"]`: a carta que
+     vence e vermelha inteira, e a cor e a tinta dela mudam com o papel. E a mesma forma de
+     --part-color, que e trocada na regra do proprio segmento. */
+  "--envelope-tone",
+  "--envelope-lip",
+  "--envelope-sheen",
+  "--envelope-ink-rgb",
+  "--back-dark",
+  "--cut-a",
+  "--flap-light",
+  "--flap-dark",
 ]);
 
 /**

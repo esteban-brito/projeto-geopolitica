@@ -12,6 +12,421 @@
 > ⚠ **Antes de repetir qualquer número daqui, remeça-o.** O que se lê aqui é por que uma
 > decisão foi tomada — nunca qual é o estado do projeto.
 
+## A SESSÃO DA AUDITORIA ANTES DO COMMIT — 11/09/2026
+
+Ele mandou revisar e auditar tudo o que está fora do commit: _"quero zero bugs, zero brechas,
+código robusto"_. No meio dela, duas ordens: tirar o fundo preto de quando a pasta vem à frente,
+e preparar um plano de otimização e limpeza profunda para ele aprovar.
+
+### 1 · ⛔ O gesto da mesa sobrevivia à partida
+
+`lifted`, `at` e `sealed` são variáveis de módulo em `cabinet.mjs`, e a posse não as limpava.
+**Reproduzido no navegador, e não deduzido:** assinar em jan/2027, clicar em NOVA PARTIDA e
+tomar posse devolvia o decreto de jan/2027 **já rubricado**, com a pasta na mão a 710px (448 na
+mesa) e a sala apagada a 0,62. A epígrafe é função pura do mês, então ela se repete entre
+partidas — comparar por ela não separa duas mesas, e por isso o gesto precisa morrer explícito.
+
+⭐ **E o passeio passou a ver os dois lados.** Ele ergue, assina, recomeça e cobra a mesa limpa.
+Sem `forgetDesk()` ele acusa `707px contra 683px`. ⛔ **A primeira versão da prova era cega:**
+ela clicava no centro da folha, e no meio do ato moram as oito pastas do Art. 2º — um
+`[data-protect]` sob o ponto médio devolve o clique como MARCA, e a rubrica nunca corria. O
+toque foi para a epígrafe. ⛔ **E ela era intermitente por outra razão:** clicar 400ms depois de
+trocar de tela pegava o snapshot da view transition, e `elementFromPoint` devolvia o
+pseudo-elemento. É a mesma lição que a etapa do email já tinha pago — espera-se o estado.
+
+### 2 · A carta que vence era a primeira a ser cortada
+
+`app.mjs` ordena as urgentes para o FIM, para caírem por cima; `mail-pile.mjs` fatiava os oito
+primeiros. Com 12 cartas e 3 vencendo: oito envelopes e **nenhum vermelho**. ⚠ Medido, não
+morde hoje — o pico em 48 meses passivos é **4 de 8** —, e morde na etapa 3, que é justamente a
+que faz a Caixa crescer. A prova nova falha na versão anterior do arquivo.
+
+### 3 · O tamanho da cena estava vencido em quatro comentários
+
+A foto virou 1916×821 em 11/09, e `1206x806` sobreviveu em `eslint.config.mjs`, `46-desk.css`
+(duas vezes), `tests/guards/tokens.mjs`. ⛔ **O pior estava em `cabinet.mjs`:** o mesmo bloco
+dizia **1672x940** e **1206x806**, 34 linhas abaixo do aviso _"mexeu na foto? estes dois números
+mudam juntos"_. É a família do §7 outra vez, e ela não tem guarda: prosa que continua gramatical
+e para de ser verdade. Um comentário no CSS ainda reservava a faixa da direita para "o boletim e
+o calendário" — o primeiro não existe no governo real e o segundo ele recusou.
+
+### 4 · E o véu saiu, por ordem dele
+
+_"Quero que vc remova esse fundo preto de quando eu clico na pasta e ela vem pra frente da
+tela."_ `.desk__veil` e `--lift-veil` saíram inteiros. O que sobe continua sendo escala mais as
+duas sombras cruzando opacidade. **O voo em si não foi tocado** — ele segue 0,42s com `bounce`
+0,22, e o "clean, digno de Apple" é a outra metade da etapa 2.
+
+### 5 · A limpeza profunda, e ela se corrigiu com a medição
+
+Ele aprovou o plano e mandou aplicar tudo. **Duas das cinco etapas entregaram; três voltaram com
+um resultado diferente do que o plano previa, e o resultado é o achado.**
+
+⭐ **C e A saíram inteiras.** `REGIME.firstYear` tinha schema e nenhum leitor enquanto 2027
+estava teclado em três arquivos; e o tamanho da cena morava em três lugares com um aviso de que
+mudavam juntos — o aviso que já tinha falhado em quatro comentários. Hoje os dois têm uma fonte.
+
+⛔ **B provou que minha premissa estava errada.** Eu propus cortar a razão comentário/código de
+0,70 para 0,45. Medindo direito, 1.749 das 6.593 linhas são contrato de tipo: a prosa é 0,52. E
+inspecionando os piores arquivos, a gordura era **16 linhas** — cascas de comentário que
+perderam o conteúdo numa poda anterior e viraram anúncio sem informação. O resto cumpre a regra.
+⛔ **E eu não removi as 21 citações de ordem dele**, que o teto proíbe por escrito: apagar a
+autoria de uma decisão de gosto é exatamente o erro que o CLAUDE.md registra como já cometido.
+
+⚠ **E devolveu outra coisa que a pergunta.** Varrendo o CSS contra o DOM real — jogando, e não
+só avançando — 127 de 565 regras nunca casaram. Elas não estão mortas: `.passage` só existe com
+texto em tramitação. O que a lista é de verdade é o mapa do que o passeio não exercita.
+
+⛔ **E D parou na fronteira.** Todo corte mapeado alarga a superfície pública: `inbox.mjs` pediria
+seis funções privadas viradas públicas para mover 382 linhas. Os arquivos são grandes porque
+concentram uma responsabilidade, e trocar isso por arquivos menores é decisão dele, não minha.
+
+### 6 · O que a auditoria NÃO achou, e vale tanto quanto
+
+O passeio ficou mais forte e não mais fraco: `checkNoOverlap(".desk > div")` saiu porque `.desk`
+deixou de existir, e entraram as três matérias escritas, o voo medido, a volta por assentamento,
+o papel que estoura e cartas atrás da pasta. `eslint.config.mjs` só ganhou globals do navegador.
+Tudo que vem de dados passa por `escapeHtml`. E a série não se moveu: `agenda` 26/43, dívida
+90,0% — nenhum arquivo de `src/domain/`, `src/data/` ou `src/application/` nesta árvore.
+
+⚠ **Dois achados ficaram abertos de propósito, porque a decisão é dele:** o parecer soma mês com
+ano na primeira frase do jogo (64), e a promessa da posse saiu do Gabinete sem substituta (63).
+
+## A SESSÃO EM QUE A GUARDA APRENDEU A VER ESTADO — 10/09/2026, tarde
+
+Ele mandou investigar tudo o que estava fora do commit e decidir por onde começar. O que a
+leitura achou não foi um defeito, foi uma **família**: coisa que o portão aprova porque
+ninguém a cobra.
+
+### 1 · O seletor que nunca casou, e ele é o segundo da mesma mesa
+
+⛔ **`.envelope[data-vence="true"]` contra `data-urgent` no HTML.** A carta que vence nunca
+ficou vermelha, e nada falhava. É o mesmo defeito do `data-assinado` de 08/09 — dois na mesma
+tela, os dois nascidos no porte da bancada, quando as classes viraram inglês e um atributo
+ficou para trás.
+
+⭐ **O conserto não é a linha, é a guarda.** `orphans` passou a cobrar também
+`[data-x]`: o nome tem de ser escrito por alguém, como `data-x` no texto ou como `dataset`.
+Ela roda no código inteiro e não só nos literais — quem escreve estado é HTML ou `dataset`.
+
+### 2 · E o casador dela era cego de outro jeito
+
+📐 **`\bdesk\b` casava com o `href="styles/46-desk.css"` do `index.html`.** O nome da folha
+NOVA mantinha viva a classe VELHA: 59 linhas de `.desk` sobreviveram à tela inteira que foi
+refeita, com a guarda verde. O irmão do defeito: `.verdict` casava com uma variável local
+`verdict` em `platform.mjs` — mais 11 linhas.
+
+⭐ **Classe só nasce dentro de texto.** Hoje a guarda lê os literais do `.mjs` e o HTML sem os
+caminhos de `href` e `src`. Três provas sintéticas novas, e as três reintroduzem o que o
+projeto acabou de pagar.
+
+### 3 · O porte tinha atropelado o português
+
+⚠ **38 comentários de CSS com nome de classe no lugar da palavra:** _"a sheet"_, _"a folder"_,
+_"a room"_, _"a wax velha"_, _"a signature de couro desenhado"_, e a **ementa** do decreto
+virada em _"a summary"_. Dois vazaram para `00-tokens.css`, um deles numa linha que nem é da
+mesa. O replace que traduziu as classes traduziu a prosa junto.
+
+### 4 · ⛔ E a carta vermelha, vista pela primeira vez, veio com dois defeitos
+
+O bloco do urgente tinha **11 declarações que nunca chegaram à tela** — o seletor estava
+morto desde o porte. Com ele vivo, a ampliação mostrou o que nenhuma prova pega:
+
+1. ⛔ **a aba saía ROSA.** `.envelope__edge` era o triângulo INTEIRO pintado de branco, e a
+   aba, que é semitransparente, não o escondia: o branco atravessava e lavava a metade de
+   cima. No papel branco isso é invisível — branco sobre branco. Hoje o recorte é a **franja**,
+   e não o triângulo: um polígono côncavo entre os dois bicos;
+2. 📐 **o lacre sumia no rubro**: **1,49** de contraste, e **1,03** na crista, contra **7,46**
+   no papel branco. ⛔ **Escurecer a cera não salvava — com preto puro o teto era 2,6**, porque
+   o papel já era escuro.
+
+⭐ **E a saída foi dele, e não estava entre as três que eu ofereci:** _"o vermelho do papel pode
+ficar mais claro"_. Papel de `#9a2620` para `#bd4436` e a cera escurecida junto — **3,08**. Eu
+tinha montado a escolha entre clarear a cera, trocar por tarja ou deixar como estava; nenhuma
+das três mexia no papel, que era a peça livre.
+
+### 5 · O primeiro laço com o Antigravity, e ele acertou o sintoma e errou a causa
+
+Mandei o copiloto rodar o portão, auditar as capturas e fazer a verificação que eu não podia
+fazer sozinho: **a carta vermelha nunca tinha sido vista numa partida de verdade** — eu forcei
+o atributo à mão. Ele voltou com a tabela certa: mês 1 com uma carta, meses 2 a 24 com zero.
+
+⛔ **E com a causa errada:** _"nenhuma carta nova chega na maioria dos meses passivos"_. Medido
+no motor, a caixa vai de **1 a 25 cartas em 48 meses** e chega alguma em **27** deles. O
+defeito era meu, e era de **um mês**: o turno grava a carta com o mês que fechou e devolve o
+estado no seguinte, então `letter.month === state.month` dava zero em 47 dos 48. Aceitar o
+diagnóstico dele teria mandado mexer no motor, que estava certo.
+
+⭐ **E medir de novo achou o irmão do defeito:** `expiring` conta a caixa inteira e o punhado
+desenha só o que chegou — marcar "as últimas N" pinta de vermelho carta que não vence quando
+as duas listas divergem. Hoje **cada carta chega dizendo se vence**, e a que vence entra na
+mesa mesmo tendo chegado antes: esconder a que fecha sem resposta é a mesa deixando de avisar.
+
+📐 **Depois:** correspondência em **24 de 30 meses**, e a primeira carta vermelha do jogo no
+**mês 28** — abril de 2029, aprovação em 18%. ⚠ **E um achado que sobrou:** a primeira carta
+que PERGUNTA só chega no mês 26.
+
+### 6 · A PASTA GANHOU A SEGUNDA FACE, e o "boletim" não existia
+
+Ele escolheu terminar a mesa, e o passo 4 era o boletim da Casa Civil. 📗 **A pesquisa factual
+matou a peça:** não existe boletim nenhum no governo real. O que vai à mesa é a **pasta de
+despacho** — exposição de motivos, parecer de mérito, parecer jurídico e a minuta. ⭐ **Então as
+seis leituras não eram peça nova: eram a face esquerda da pasta que o jogo já tinha**, e a capa
+de couro vazia de 78px deixou de ser enfeite.
+
+⛔ **E a primeira versão levou as réguas da Caixa para dentro do papel.** Ordem dele, vendo:
+_"nenhum elemento além do que um ser humano escreveria, tipo essas barras, linhas… eu quero
+humanizado, algo realmente presidencial"_. O parecer virou parágrafo numerado, e o limiar
+passou a morar na frase: _"38 pontos de pressão, e o grupo abandona o governo em 40"_ diz o que
+a marca da barra dizia. O rastreio de tipo saiu junto — datilógrafo não espaça letra.
+
+### 7 · O borrão, e ele tinha duas causas
+
+_"o texto fica embaçado quando eu clico na pasta e ela sobe, eu quero qualidade de papel"_.
+⛔ **O headless não reproduz** — ele rasteriza por software e re-rasteriza sempre; quem vê o
+borrão é o compositor de GPU. As duas causas são conhecidas: `-webkit-font-smoothing:
+antialiased` desligava o subpixel do LCD na folha, e a textura era **ampliada**. Hoje o papel
+nasce com `--paper: 720px` e chega à tela com ~500: **textura reduzida é nítida, ampliada
+borra**. Os envelopes foram pela mesma conta — 360px reduzidos a 0,36 —, e as diagonais da aba
+pararam de sair em escada. 📐 `npm run screen`: 64,0 contra 66,1 de controle.
+
+### 8 · ⛔ E a mola andava por QUADRO
+
+Medindo o voo, a pasta levou **3 segundos** para voltar à mesa num gesto de 0,26s. A causa não
+era a mesa pesada: `spring.mjs` integrava com `dt` fixo de 1/60 **por quadro**, então a 12 fps o
+gesto durava cinco vezes mais. ⛔ **E o conserto óbvio explodiu na primeira tentativa:** com
+passo de 1/20 o amortecimento de um gesto curto passa de 2 e inverte de sinal — a pasta foi a
+**12.878px** de altura. O certo é subpasso: o tempo real dividido em fatias de 1/120.
+
+### 9 · A madeira dele, e três ordens em sequência
+
+Ele mandou a foto do jacarandá — 1672×940, depois uma de 1916×821 — e três ordens, uma por
+vez, cada uma vendo a tela: _"quero a imagem como ela está, sem perder nenhum pingo de
+qualidade"_; _"tire essa bosta de verniz, tire tudo"_; _"nao quero ampliação alguma na textura…
+A cor da pasta deve ser preta agora"_. ⛔ **Eu tinha errado três vezes antes de ouvir:** `cover`
+recortava 341px da foto; o véu, o `multiply` do verniz e o grão da cena pintavam cera por cima
+de cera; e a cena ampliava a foto por `--fit`. Hoje o tampo tem o tamanho exato da foto, `fit`
+fecha em 1, e nada toca a imagem.
+
+📐 **E o teto físico é declarado:** com 1916px de foto, a mesa nunca aparece maior que isso.
+Em 1920×1080 cobre a largura; em 2560 sobra fundo. Ou ele manda uma foto maior, ou é isso.
+
+### 10 · O plano de integração, e o diagnóstico veio antes
+
+_"nao quero que a mesa destoe tanto do resto da UI, do liquid glass"_. Lendo `20-material.css`:
+o vidro tem `backdrop-filter: blur(18px)`, **e atrás dele só havia um fundo liso** — o vidro do
+jogo nunca teve o que refratar. A mesa era uma foto AO LADO do vidro, com borda dura e
+temperatura oposta. Vizinhos, não camadas.
+
+Quatro movimentos, aprovados e feitos em ordem: **M2** véu e vinheta apagam para `--bg-deep`;
+**M3** sombras retas como as do `.glass-stage`, uma luz só; **M1** a madeira vira o
+**substrato da janela** — a barra e o rail passam a refratar jacarandá, a cena fica só com as
+peças, e a borda da mesa deixa de existir; **M4** 44px de degradê na beira inferior da foto.
+⛔ No substrato, `saturate(1.5)`, o grão ladrilhado e a tinta da situação se desligam no
+Gabinete — os três mudariam a cor que ele mandou não mudar. 📐 `npm run screen`: 76,3 contra
+73,7 — dentro do ruído.
+
+⛔ **E `place-items: center` não centra uma cena maior que a área:** a célula da grade cresce
+até 1916px e começa em zero; a pasta apareceu cortada na beirada direita. `place-content`.
+
+### 11 · "Finalize o gabinete antes de pensar nisso"
+
+O dock ficou registrado e ele mandou fechar a mesa. Calendário: _"não quero"_. Objetos mudos:
+não agora. **Telefone: sim** — e no meio ele mandou a referência, um telefone vermelho de mesa
+com teclado e cordão espiral. A peça saiu vista de cima, como a mesa: base, fone no berço,
+teclado 3×4 **sem número** (a 6px seria texto falso que o medidor cobraria), etiqueta e o
+cordão em SVG tracejado. Toca quando `boilerOf` diz que um grupo ferveu; o clique abre o Email.
+⛔ **A primeira captura veio sem teclado:** `.phone > i { display: block }` vencia a grade por
+especificidade. Um seletor composto devolveu as doze teclas.
+
+⚠ **E ele fechou a sessão com três ordens para a retomada:** a pasta _"horrível e lenta"_
+tem de virar _"clean, digno de Apple"_ e **sem o fundo preto** quando vem à frente; os
+envelopes são _"inúteis"_ hoje e no futuro abrem com animação e mostram a carta; e _"se for
+muita coisa divida em etapas, não quero bugs"_. Tudo no handoff, em ordem.
+
+**O prompt que ficou para amanhã, para o Antigravity (duas tarefas):** (1) `npm run walk` e um
+script Playwright em `tmp/` a 1440×980 que amostre a cor média de três retângulos de 40×40 —
+no rail atrás de "Congresso & Leis", na barra ao lado de "AVANÇAR", e na madeira nua — e
+devolva os rgb e a razão WCAG contra o texto `#eef2f8`, piso 4,5, sem consertar; (2) pesquisa
+com artigo literal e link: o timbre do decreto diz "Subchefia para Assuntos Jurídicos" — é o
+nome vigente do órgão da Casa Civil que faz o controle de legalidade dos atos presidenciais?
+Se mudou, nome atual e norma; e um decreto publicado no DOU traz o nome da unidade no timbre
+ou só "Presidência da República"? Proibições e devolução fixa de 5 itens como sempre.
+
+### 12 · E ele escolheu o próximo passo
+
+**Terminar a mesa** — ciclo 25, passos 4 a 6. A razão que pesou: as três proibições do
+copiloto são motor, calibragem e save, então num ciclo de motor ele fica sem função. O
+Gabinete tem **2 objetos de 5**, e nenhum passo do 25 abre motor. A rubrica fica gesto até a
+segunda caneta existir. Handshake acertado: **eu aplico e rodo o portão, ele audita a
+imagem** e faz o ajuste fino de pixel.
+
+`npm run validate` verde no fim: 13 guardas · 66 provas sintéticas · 323 provas · passeio.
+
+## A SESSÃO DA DIVISÃO CLAUDE + GEMINI — 10/09/2026
+
+Ele estuda plano mensal (Pro vs Plus) e decide montar co-desenvolvimento: Claude Opus 5
+piloto, Gemini 3.8 Flash via Antigravity copiloto. O Gemini escreveu
+`docs/plano-co-desenvolvimento.txt`; avaliei contra o repo e achei tudo certo nos números
+(20 suites, 13 guardas, 323 provas, passo 4 = boletim/6 leituras, passo 5 = bandeja com
+`left`/`silences`, `num`/`attr` em `format.mjs`) com 5 exigências (3 proibições, 2
+acoplamentos, `.agents/rules`, devolução fixa, quota). A investigação prévia achou um
+segundo acoplamento vivo: `codenames` lê a tabela de motores no `standards.md` §3.
+No meio: dieta do `handoff.md` (2.386 → ~230 linhas) e do `CLAUDE.md` (343 → ~150) com
+laços fixos; a compactação matou a tabela de contagens e o `test` acusou — restaurada
+verbatim. Skills do executor em `.agents/skills/` (4); regravei os 4 em UTF-8 limpo.
+Portão verde no fim: 323 passando, 13 guardas.
+
+## A SESSÃO EM QUE O HANDOFF EMAGRECEU — 10/09/2026
+
+Ele perguntou se dava para otimizar o projeto para gastar menos token — a cota semanal do
+Pro acabava antes do reset. Medido: `handoff.md` com 2.386 linhas e 157K chars (~40K tokens
+estimados), lido todo início de sessão, quando a regra dele manda ser curto. Virou 226
+linhas e 13K chars: as seções datadas de sessão saíram (já moram aqui no journal), e ficou
+só estado, fila, achados em 2–4 linhas cada, série, o que existe/não existe, decisões e
+fontes. Nenhum item vivo perdido. `check` verde depois. E entrou a regra de economia de
+contexto no cabeçalho dele: ler com limite, grep antes de ler, nunca reler o que a guarda
+prova, uma sessão por item.
+
+### A dieta continuou no CLAUDE.md — e a prova mordeu
+
+Ele pediu o passo seguinte (dieta do `CLAUDE.md` + laços fixos), com a condição de não
+quebrar nada. A investigação achou um acoplamento vivo: `tests/suites/catalog.mjs` lê o
+`handoff.md` e cobra as 8 contagens em tabela de duas colunas — e a compactação tinha
+convertido a tabela em prosa. O `npm test` acusou ("o handoff deixou de declarar uma das
+contagens"), a tabela voltou verbatim, 323 passando. É o caso que a prova previa: apagar
+linha a deixa verde para sempre.
+`CLAUDE.md` foi de 343 para ~150 linhas: saiu o "Onde o projeto está" repetido do handoff
+(ele dizia 323 e 325 provas em parágrafos vizinhos), ficaram regras, fluxo, proibições e
+doutrina byte a byte. Entraram os três laços com ordem fixa e o teto de leitura do journal
+(últimas ~150 linhas). `npm test` + `check` verdes depois.
+
+## A SESSÃO EM QUE O CHECKLIST DO CARGO GANHOU REALPOLITIK — 09/09/2026
+
+Ele pediu a reescrita da pesquisa 09 com foco absoluto no cargo real, não no jogo. No meio
+da sessão, o Gemini produziu uma auditoria independente (`GDD - Auditoria e Redesenho do
+Checklist Presidencial.txt`) com 33 itens de três colunas: Fatos/Leis, Realpolitik e UI/UX.
+
+### 1 · O que entrou
+
+- **Realpolitik completa** em todos os 33 itens — vetos como reféns orçamentários, MP como
+  leilão predatório, decretos acumulando atrito invisível, coalizão como mercado de liquidez,
+  CPIs como instrumentos de chantagem, cargos como moeda de fidelização no interior;
+- **Correções normativas apuradas**: LC 200/2023 (teto de 25% no contingenciamento), ADI 6.457
+  (limites ao comando militar), Decreto 12.790/2025 (indulto mais recente);
+- **Quóruns conferidos**: 342 deputados (2/3), 41 senadores (maioria absoluta), 308 (3/5);
+- **Tabela de quorums** com todos os níveis constitucionais, incluindo impeachment;
+- **Bloco "Como ler"** com graus (norma/prática/número), ciclo de sobrevivência e a regra de
+  que nenhum número de dinheiro entra no arquivo.
+
+### 2 · O que o Gemini acertou e o que errou
+
+O Gemini nunca teve acesso ao código do jogo. As comparações com o estado do repositório
+foram feitas por mim na cruzagem. Ele acertou a Realpolitik (melhor camada já produzida
+neste projeto), a estrutura em blocos, e a correção normativa. Errou 54 senadores (é 41),
+172 deputados (é 171), e propôs UI/UX genérico que não se encaixa na filosofia do projeto.
+
+### 3 · A decisão de escrita
+
+A pesquisa 09 virou um checklist puro sobre o cargo — sem referências ao jogo. O documento
+descreve o que um presidente faz na realidade; o jogo se adapta a ele. Isso segue a diretriz
+dele: _"o checklist precede o código, porque é um maldito checklist"_.
+
+`npm run check` verde: 13 guardas · 63 provas sintéticas.
+
+## A SESSÃO EM QUE A MESA VIROU OBJETO — 08/09/2026
+
+Ela começou com o porte parado no meio: `npm run validate` não fechava, e a mesa abria **sem
+madeira**. Terminou com o portão verde, um gesto no jogo e a cena escalando inteira. **Nada foi
+commitado.**
+
+### 1 · Os cinco itens que faltavam, e o que eles esconderam
+
+Os cinco fecharam — as matérias, a rubrica armada, a moldura, os 13 `prose` e o portão inteiro.
+⭐ **`dressDesk` foi parar em `cabinet.mjs` e não no `app.mjs`**, contra o que o handoff pedia:
+quem sabe que o grão é da sala e o feltro é do envelope é quem escreveu o HTML, e o entrypoint
+não pode ter forma nenhuma.
+
+⛔ **E o portão tinha aprovado seis defeitos.** Nenhum falhava em lugar nenhum:
+
+1. **`url()` relativo dentro de custom property resolve contra a FOLHA que a consome**, e não
+   contra a página — `assets/tabua.webp` virava `/styles/assets/tabua.webp`. A mesa abria sem
+   madeira com 404 no console, e o tipo, a guarda e as 323 provas ficavam verdes;
+2. **`--paper-ink` estava declarado duas vezes** em `00-tokens.css`, com 230 linhas de distância:
+   a tinta da linha clicada da Caixa, e a do envelope. A segunda vencia — o remetente da bandeja
+   caiu para **2,84 de contraste**, e quem viu foi o passeio;
+3. **as oito marcas do Art. 2º herdavam o botão do painel antigo** — tinta de interface sobre
+   papel branco, **1,24 nas oito**;
+4. **o ato estourava a folha em 40px**: a rubrica saía cortada e caía por cima da linha do DOU;
+5. **o seletor era `data-assinado` e o HTML escreve `data-signed`** — seletor que não casa não é
+   erro para ninguém;
+6. **a rubrica nascia inteira e se apagava sozinha em 1,1s**, porque a transição pegava a
+   primeira escrita de `--stroke-len`, que sai do JS depois da pintura.
+
+⚖ **Cinco dos seis só existem porque alguém OLHOU.** É o passo que o `validate` não sabe dar, e
+é o que `CLAUDE.md` já avisava com três defeitos anteriores.
+
+### 2 · A pasta que ficou melhor quebrada
+
+No meio do conserto ele mandou: _"essa pasta de couro como está agora nesse exato momento, está
+muito boa, sem você ter importado aquela imagem (só a pasta e a costura)"_. **O que ele estava
+vendo era a foto do couro em 404.** A camada da foto saiu do CSS, e `assets/couro.webp` ficou no
+disco sem dono — 386 KB, apagar é decisão dele.
+
+⭐ **A lição é a mesma de sempre:** o que eu tinha como "a peça pronta" era pior que o acidente.
+
+### 3 · "muito bugado e feio"
+
+Foi o veredito dele com o jogo aberto, e ele estava certo. A causa era minha, do item 3: eu tinha
+esticado a moldura para preencher o `main`, e a 1920 isso dava **1648×922 com as peças do mesmo
+tamanho em px** — pasta na beirada, vazio no meio, folha ilegível.
+
+⭐ **Ele escolheu entre três opções: a cena escala inteira.** Ela é desenhada em 1206×806 e cresce
+como foto, em `cover`: o que muda de janela para janela é a **distância**, e não o arranjo. E a
+faixa preta de 110px no topo era a sala aparecendo acima do tampo — _"era pra mesa ocupar todo o
+gabinete"_ —, então o tampo passou a começar em `-8%`.
+
+### 4 · O gesto, e as três contas que erraram
+
+_"não consigo clicar pra pasta com a folha subir na tela e eu enxergar melhor"_. O voo entrou:
+mola por quadro, quique 0,22 na subida e zero na descida, a sala escurecendo e as duas sombras em
+sentidos opostos. Na mesa o clique **pega**; na mão, a marca marca, o papel assina e o clique fora
+larga.
+
+📐 **E o tamanho de leitura custou três tentativas.** A escala 1 dava uma pasta de **1047px numa
+área de 986** — a peça que existe para ser lida saía dos dois lados. A primeira conta pediu 86% da
+área e entregou 65%; a segunda, 64%. **A pasta vive numa árvore 3D inclinada, e a altura dela na
+tela não é a de layout vezes a escala.** O conserto foi parar de deduzir: o desenho **ergue a peça
+uma vez, mede, e corrige a escala** — 86% da altura visível em qualquer janela.
+
+⚠ **E ele mandou encolher o que está na mesa**, porque ainda faltam objetos: _"desse jeito nada
+vai caber"_. A pasta ocupava **38% da largura e 69% da altura** com um objeto de cinco. Hoje são
+27% × 48%, e o lugar do boletim, do calendário e do telefone está guardado — é a planta do ciclo
+25, com o vazio como reserva.
+
+### 5 · Dois defeitos do próprio instrumento
+
+⛔ **O clique do passeio caía no TAMPO.** Numa árvore 3D o ponto que o Playwright calcula para
+`.folder` não está sobre ela, e a prova acusava a mesa por um defeito do próprio clique. Hoje ela
+pergunta a `elementFromPoint` o que está no centro visual da pasta — que é a pergunta certa — e
+clica **nisso**.
+
+⚠ **E a espera virou assentamento, não relógio:** sem cabeça o quadro chega irregular, e um número
+fixo pegava a mola a caminho — 15px acima da mesa numa rodada, 31 na seguinte.
+
+### 6 · A otimizada, medida
+
+O primeiro número da mesa dizia **custo zero**, e ele media a mesa **parada, sem nada animando**.
+Com o laço de quadro rodando, a conta é outra: a mesa inteira custa **79 fps de folga** (238 → 160),
+o grão sozinho vale 25 e a pasta 43.
+
+✔ **E o voo ficou 13 fps mais barato:** a mola reescrevia a `box-shadow` a cada quadro, o que
+repinta a peça inteira — **156,8 contra 143,8** no mesmo laço. As duas sombras viraram camadas
+prontas que cruzam opacidade, que é trabalho de compositor.
+
+A limpeza tirou a grade `.desk`, a pasta de vidro `.pen`, dez comentários órfãos, a aresta
+distante do tampo e a sombra dela — duas camadas compostas para pintar o que a mesa cobriu.
+
 ## A SESSÃO EM QUE A MESA GANHOU MATÉRIA — 05/09/2026, tarde
 
 A manhã fechou o gargalo do jogo; a tarde foi inteira de desenho, e ela começou com uma reclamação

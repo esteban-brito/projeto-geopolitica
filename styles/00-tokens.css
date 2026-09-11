@@ -78,7 +78,6 @@
        TINTA e nao abandonar o tom: agora o pior par da tela e 4,73. */
     --ink-dim: #a4b1c2;
 
-    /* O CONTRASTE FOI MEDIDO antes de fechar. */
     --brand: #c2a675;
     --brand-rgb: 194, 166, 117;
 
@@ -322,5 +321,84 @@
        dimensionado pelo icone obriga o texto a abreviar, e abreviacao e onde um menu comeca a
        precisar ser decorado. */
     --rail: clamp(184px, 13vw, 216px);
+
+    /* ══ A MESA DO GABINETE ═══════════════════════════════════════════════════
+       📐 A BANCADA TINHA 126 USOS DE COR CRUA em 57 cores, e elas cabem em 33 pares. Preto e
+       branco puros ficam literais: a guarda os permite, e o par seria token sem funcao.
+       ⚠ CONSOLIDAR MUDA A APARENCIA, e e de proposito — seis cremes a um ponto de distancia
+       sao "cores CONCORRENTES para a mesma funcao", que e o defeito que esta guarda existe
+       para impedir. */
+
+    /* ⛔ OS SETE TOKENS DA SALA SAIRAM: a mesa e vista de cima e cobre a cena inteira, entao
+       a sala nao aparece — e o que apaga em volta da pasta e a cor do proprio fundo da UI,
+       `--bg-deep`, para a mesa entrar no vidro em vez de virar outro comodo. */
+
+    /* ⛔ OS OITO TOKENS DO VERNIZ SAIRAM COM ELE — o veu do tampo, o brilho e as duas tintas
+       do molhado. Ordem dele: "tire essa bosta de verniz, tire tudo". A madeira e a foto, e
+       a foto ja tem a cera dela. */
+
+    /* O COURO DA PASTA, e ele e PRETO por ordem dele. ⚠ COURO PRETO NAO E TINTA PRETA: o que
+     se ve nele e a LUZ, e nao a cor — o realce vira cinza frio e a sombra quase fecha, entao a
+     peca so existe pela aresta rebatida e pela costura. Saturacao zero na tinta deixa o
+     `color` do fundo neutro sem mexer no relevo. */
+    --leather-light: #d7d9de;
+    --leather-light-rgb: 215, 217, 222;
+    --leather-shade: #050507;
+    --leather-shade-rgb: 5, 5, 7;
+    --leather-tint: #1b1c20;
+    --leather-tint-rgb: 27, 28, 32;
+    --leather-deep: #0d0e11;
+
+    /* O TELEFONE — o vermelho de mesa classico, referencia dele. ⚠ A COR E SUPERFICIE, e nao
+     tinta: `--crisis` so entra em `color:`, e um aparelho e um preenchimento com luz em cima.
+     As teclas sao o cinza-chumbo do plastico, e o realce e o mesmo cinza frio das arestas. */
+    --phone-body: #c4232b;
+    --phone-body-rgb: 196, 35, 43;
+    --phone-deep: #7a1017;
+    --phone-gleam: #ffd9d6;
+    --phone-gleam-rgb: 255, 217, 214;
+    --phone-key: #35363b;
+
+    /* A COSTURA — o fio encerado e a penumbra do sulco. ⚠ EM COURO PRETO O FIO CLAREIA, e nao
+     escurece: preto sobre preto nao e ponto de seleiro, e uma pasta de despacho real leva
+     linha de tom contrastante. */
+    --thread: #8d8a82;
+    --thread-rgb: 141, 138, 130;
+    --thread-shade: #26262a;
+    --thread-shade-rgb: 38, 38, 42;
+
+    /* O PAPEL — a folha do ato, o envelope e as tres tintas do documento. */
+    --paper-edge: #786852;
+    --paper-edge-rgb: 120, 104, 82;
+    --paper-cover: #fffdf7;
+    /* ⛔ ELA CHAMAVA `--paper-ink`, E ESSE NOME JA TINHA DONO 230 linhas acima: a tinta da
+       linha clicada da Caixa. A segunda declaracao vencia, e o remetente da bandeja caiu para
+       2,84 de contraste — medido pelo passeio, e reprovado. */
+    --letter-ink: #5c5446;
+    --letter-ink-rgb: 92, 84, 70;
+    --ink-act: #0d0d0d;
+    /* ⚠ O PAR RGB EXISTE PORQUE O PARECER O DILUI: o bloco de leitura pede a tinta em
+     opacidade — nome a 72%, filete a 22% —, e `color-mix` a guarda proibe por medicao. */
+    --ink-act-rgb: 13, 13, 13;
+    --ink-organ: #2b2b2b;
+    --ink-gazette: #575757;
+    --ink-sign: #0f1b3a;
+
+    /* A CERA DO LACRE, em quatro degraus: a crista do anel, o corpo, o disco rebaixado e o
+     fundo do escorrido. E o rubro, que e a carta que vence. */
+    --wax-crest: #c04a3c;
+    --wax-body: #9c2a22;
+    --wax-disc: #a02c23;
+    --wax-deep: #58120d;
+    /* 📐 O PAPEL CLAREOU PARA O LACRE EXISTIR, e a decisao do tom e dele. No rubro antigo a
+     cera dava 1,49 de contraste e a crista 1,03 — a peca sumia. ⛔ E escurecer a cera nao
+     salvava: com preto puro o teto era 2,6, porque o papel ja era escuro. Hoje sao 3,08. */
+    --urgent-cover: #bd4436;
+    --urgent-crest: #5e1611;
+    --urgent-body: #450d0a;
+    --urgent-disc: #491009;
+    --urgent-deep: #240605;
+    --urgent-ink: #300907;
+    --urgent-ink-rgb: 48, 9, 7;
   }
 }

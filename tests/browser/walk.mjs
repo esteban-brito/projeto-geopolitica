@@ -430,34 +430,114 @@ try {
   await checkEllipsized("gabinete");
   await checkClamped("gabinete");
   await checkContrast("gabinete");
-  await checkNoOverlap("gabinete", ".desk > div");
   await checkNoPageScroll("gabinete");
 
-  /* 1 — O GABINETE E A MESA, e ele DECIDE.
-     ⚠ AS DUAS ASSERCOES DAQUI FORAM REESCRITAS, e as duas mediam o desenho anterior: a coluna
-     de SEIS blocos deixou de existir, e a regra que proibia controle na tela inicial morreu
-     com as duas razoes dela — a barra superior carrega os vitais em toda tela, e a separacao
-     Gabinete x Email deixou 45% do tabuleiro vazio.
-     ⚠ AS QUATRO ZONAS TEM LUGAR FIXO, e o numero e conferido aqui porque zona que some nao
-     falha em lugar nenhum. */
-  for (const zone of [".desk__band", ".desk__sign", ".desk__margin", ".desk__when"]) {
-    expect((await page.locator(zone).count()) === 1, `[gabinete] a zona ${zone} nao veio`);
+  /* 1 — O GABINETE E A MESA, e o que estava aqui media as QUATRO ZONAS DE VIDRO que sairam.
+     ⚠ AS QUATRO PECAS TEM LUGAR FIXO, e o numero e conferido porque peca que some nao falha em
+     lugar nenhum: a mesa abriu uma sessao inteira sem madeira e o portao ficou verde. */
+  for (const piece of [".room", ".folder", ".mail", ".phone"]) {
+    expect((await page.locator(piece).count()) === 1, `[gabinete] a peca ${piece} nao veio`);
   }
 
-  /* ⚠ A MARGEM TEM SEIS LINHAS, e o filtro que as escolheu e uma pergunta so: este numero muda
-     o que ele esta prestes a assinar? Vinte viraram seis, e o numero e cobrado aqui. */
+  /* ⛔ E AS TRES MATERIAS SAO ESCRITAS PELO JS, entao elas nao existem ate a tela rodar: sem
+     `dressDesk` a mesa abre sem madeira e nada acusa. A madeira vai no CORPO, porque quem a le
+     e o substrato da janela, atras da barra e do rail. */
+  for (const worn of [
+    { piece: "body", material: "--timber" },
+    { piece: ".folder", material: "--fibre" },
+    { piece: ".mail", material: "--felt" },
+  ]) {
+    const written = await page
+      .locator(worn.piece)
+      .evaluate(
+        (node, name) => (node instanceof HTMLElement ? node.style.getPropertyValue(name) : ""),
+        worn.material,
+      );
+    expect(
+      written !== "",
+      `[gabinete] a materia ${worn.material} nao foi escrita em ${worn.piece}`,
+    );
+  }
+
+  /* ⚠ A CANETA CONSTRUIDA E UMA SO, e ela mora DENTRO do decreto: as oito pastas sao marcadas
+     na frase do Art. 2 que fala delas. Elas deixaram as oito telas de area, e duas portas para
+     o mesmo gesto e o defeito recorrente numero um deste projeto. */
   expect(
-    (await page.locator(".desk__margin .annex__line").count()) === 6,
-    "[gabinete] a margem nao trouxe as seis linhas",
+    (await page.locator(".act__folders [data-protect]").count()) === 8,
+    "[gabinete] o decreto nao trouxe as oito pastas",
+  );
+  /* ⭐ E A MESA TEM UM GESTO, que e o unico do Gabinete: a pasta na mesa se ERGUE, e so com ela
+     na mao a folha e legivel. Ordem dele, vendo o jogo rodar: "nao consigo clicar pra pasta com
+     a folha subir na tela e eu enxergar melhor".
+     📐 O TAMANHO NO ALTO DO VOO E MEDIDO: a 1080 de janela a pasta erguida fecha em 837px de
+     altura numa area de 922, e a escala 1 dava 1047 — a peca saia dos dois lados da tela. */
+  const flight = async () =>
+    page.evaluate(() => {
+      const folder = document.querySelector(".folder");
+      const area = document.querySelector(".area.cabinet");
+      if (!folder || !area) return null;
+      const box = folder.getBoundingClientRect();
+      const stage = area.getBoundingClientRect();
+      return {
+        tall: Math.round(box.height),
+        inside: box.top >= stage.top - 1 && box.bottom <= stage.bottom + 1,
+      };
+    });
+
+  /* ⛔ E O CLIQUE E DADO NO QUE ESTA NO CENTRO VISUAL DA PASTA, e nao no seletor dela: a peca
+     vive numa arvore 3D, e o ponto que o navegador de teste calcula para `.folder` caiu no
+     TAMPO — a prova acusava a mesa por um defeito do proprio clique. Quem responde a pergunta
+     "o que o jogador acerta aqui" e `elementFromPoint`, e ela vira a primeira assercao. */
+  const onDesk = await flight();
+  const onTarget = await page.evaluate(() => {
+    const box = document.querySelector(".folder")?.getBoundingClientRect();
+    if (!box) return false;
+    const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+    if (hit?.closest(".folder") === null || hit === null) return false;
+    hit.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    return true;
+  });
+  expect(onTarget, "[gabinete] o centro da pasta nao pertence a pasta — o clique cai na mesa");
+  await page.waitForTimeout(700);
+  const inHand = await flight();
+  expect(
+    onDesk !== null && inHand !== null && inHand.tall > onDesk.tall * 1.05,
+    `[gabinete] a pasta nao subiu no clique: ${onDesk?.tall}px na mesa, ${inHand?.tall}px na mao`,
+  );
+  expect(
+    inHand !== null && inHand.inside,
+    `[gabinete] a pasta erguida saiu da area: ${inHand?.tall}px de altura`,
+  );
+  /* ⚠ E O CLIQUE DE LARGAR VAI NA QUINA DA SALA, por medida: `.mail` e um ponto de ancoragem
+     de 0x0 — as cartas sao filhas absolutas dele —, e o navegador nao clica no que nao tem
+     tamanho. O passeio parou 47 vezes tentando. */
+  /* ⭐ E A PASTA NA MAO VIRA CAPTURA, porque e o estado em que o jogador LE o ato: o portao ve
+     geometria, e so a imagem responde se o texto esta nitido. */
+  await page.screenshot({ path: join(OUT, "gabinete-pasta.png") });
+
+  /* ⚠ E O CLIQUE VAI NA AREA, e nao na cena: a cena tem 1916px e a janela mostra o centro
+     dela, entao o canto (40,40) da cena esta CORTADO a esquerda e ninguem clica nele — o
+     passeio parou 52 vezes tentando. O canto da area e visivel por definicao. */
+  await page.click(".area.cabinet", { position: { x: 40, y: 40 } });
+  /* ⚠ E A ESPERA E POR ASSENTAMENTO, e nao por relogio: sem cabeca o quadro chega irregular, e
+     um numero fixo pegava a mola a caminho — 15px acima da mesa numa rodada, 31 na seguinte. A
+     prova esperava com relogio e acusava a mesa por causa do proprio compasso. */
+  let backDown = await flight();
+  for (let wait = 0; wait < 16; wait++) {
+    await page.waitForTimeout(150);
+    const again = await flight();
+    if (again !== null && backDown !== null && again.tall === backDown.tall) break;
+    backDown = again;
+  }
+  /* ⚠ A VOLTA SE COBRA COM FOLGA DE 20px, e ela e ABSOLUTA: sem cabeca o quadro chega mais
+     devagar e a mola assenta uns pixels acima da mesa. Em porcentagem a folga encolhia junto
+     com a peca — a mesma sobra de 16px passou de 3% para 5% quando a pasta diminuiu. Uma pasta
+     que ficou na mao mede 500px a mais. */
+  expect(
+    backDown !== null && onDesk !== null && Math.abs(backDown.tall - onDesk.tall) <= 20,
+    `[gabinete] a pasta nao voltou para a mesa: ${backDown?.tall}px contra ${onDesk?.tall}px`,
   );
 
-  /* ⚠ E A TELA INICIAL AGORA OFERECE UMA CANETA: as oito pastas do contingenciamento. Ela
-     deixou as oito telas de area, e duas portas para o mesmo gesto e o defeito recorrente
-     numero um deste projeto. */
-  expect(
-    (await page.locator(".desk__sign [data-protect]").count()) === 8,
-    "[gabinete] a pasta do decreto nao trouxe as oito areas",
-  );
   expect((await page.locator(".vit").count()) === 4, "[barra] os quatro sinais vitais nao vieram");
   await checkTopbar("barra");
   await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
@@ -466,7 +546,24 @@ try {
      o vao mudou de TAMANHO e nao so de lugar: a caixa deixou a coluna de 432px e ficou com a
      largura do tabuleiro. */
   await page.click('.rail [data-section="email"]');
-  await page.waitForTimeout(400);
+  /* ⛔ E A ESPERA E PELA MESA SAIR, E NAO PELO RELOGIO: a troca de tela e uma view transition
+     do navegador, e a cena anterior fica na pagina ate ela terminar — medido, 274 a 445ms. Com
+     400 fixos o passeio media o texto da Caixa CONTRA A MADEIRA, e reprovava 21 contrastes de
+     uma vez. ⛔ E TIRAR A MESA DO DOM NAO BASTA: o navegador continua pintando o SNAPSHOT dela
+     ate a animacao do pseudo-elemento acabar, e sobravam 7. E a mesma licao da mola: espera-se
+     o estado, e nao o compasso. */
+  await page.waitForFunction(() => document.querySelectorAll(".room").length === 0);
+  /* ⛔ E A ANIMACAO NASCE DEPOIS DE O DOM TROCAR: `startViewTransition` aplica a pintura e so
+     entao comeca o cross-fade — a espera de cima passava no VAO entre os dois, com o snapshot
+     da mesa ainda na tela. Um quadro de folga para ela existir, e ai espera-se ela acabar. */
+  await page.waitForTimeout(120);
+  await page.waitForFunction(() =>
+    document.getAnimations().every(one => {
+      /* `pseudoElement` mora em `KeyframeEffect`, e o tipo do efeito e o pai dele. */
+      const alvo = /** @type {{ pseudoElement?: string | null }} */ (one.effect ?? {});
+      return !String(alvo.pseudoElement ?? "").startsWith("::view-transition");
+    }),
+  );
   await checkOverflow("email");
   await checkClipped("email");
   await checkSwallowed("email");
@@ -680,28 +777,43 @@ try {
     );
   }
 
-  /* ⚠ 7a½ — A COLUNA DA DIREITA NAO ROLA, E ISSO E ORDEM DELE: "o bloco direito do gabinete,
-     em hipotese alguma ele pode rolar; se atravessar o limite da tela, faca de um jeito que
-     tudo se enxute e caiba". A caixa PODE rolar, e ela e a excecao declarada.
-     ⚠ E ESTA CHECAGEM NASCEU CEGA NO TEMPO: `checkSwallowed` media o Gabinete no MES 1, e no
-     mes 1 a coluna sempre coube — ela rolou 40px no mes 32 com o portao verde. O que varia com
-     o mes e o conteudo: rupturas abertas, cerco, gastos presos e marcos do calendario. */
+  /* ⚠ 7a½ — A MESA CABE, E ELA MUDA COM O MES. Aqui media a coluna de seis blocos, que saiu;
+     o que ficou tem duas medidas, e as duas ja falharam de verdade nesta mesa.
+     📐 O TEXTO DO ATO ESTOUROU A FOLHA em 40px: a rubrica saia cortada pela borda e caia por
+     cima da linha do Diario Oficial. O tamanho do ato anda com o mes, entao a folha se mede
+     mes a mes e nao so no primeiro.
+     ⛔ E CARTA ATRAS DA PASTA E A COISA QUE ELE PROIBIU: numa moldura menor elas cairam 67px
+     atras dela. As posicoes sao em % e as pecas em px, entao encolher a mesa aproxima as duas
+     sem encolher nenhuma. */
   /** @param {string} where */
-  async function checkColumnFits(where) {
-    const over = await page.evaluate(() => {
-      const side = document.querySelector(".desk");
-      if (!side) return null;
-      return side.scrollHeight - side.clientHeight;
-    });
-    expect(
-      over !== null && over <= 1,
-      `[${where}] a coluna da direita nao coube: ${over}px alem do limite`,
+  async function checkDeskFits(where) {
+    /* ⚠ AS DUAS FOLHAS SE MEDEM, e nao a primeira: o parecer cresce com o mes tanto quanto o
+       ato — nome de grupo longo, valor de seis digitos —, e medir so uma deixaria a outra
+       estourar em silencio. */
+    const over = await page.evaluate(() =>
+      [...document.querySelectorAll(".sheet")].reduce(
+        (worst, sheet) => Math.max(worst, sheet.scrollHeight - sheet.clientHeight),
+        0,
+      ),
     );
+    expect(over !== null && over <= 1, `[${where}] o papel nao coube na folha: ${over}px alem`);
+
+    const behind = await page.evaluate(() => {
+      const folder = document.querySelector(".folder");
+      if (!folder) return null;
+      const box = folder.getBoundingClientRect();
+      return [...document.querySelectorAll(".envelope")].filter(letter => {
+        const one = letter.getBoundingClientRect();
+        const across = Math.min(one.right, box.right) - Math.max(one.left, box.left);
+        const down = Math.min(one.bottom, box.bottom) - Math.max(one.top, box.top);
+        return across > 1 && down > 1;
+      }).length;
+    });
+    expect(behind === 0, `[${where}] ${behind} carta(s) cairam atras da pasta`);
   }
 
-  /* ⚠ E ELA MEDE O GABINETE, entao o passeio VOLTA para la: depois da separacao a etapa
-     acima acaba no email, e `.desk` nao existe nele — a medicao vinha `null` e a
-     acusacao dizia "nullpx alem do limite" 24 vezes seguidas. */
+  /* ⚠ E ELA MEDE O GABINETE, entao o passeio VOLTA para la: a etapa acima acaba no email, e a
+     mesa nao existe nele — a medicao vinha `null` e a acusacao se repetia 24 vezes. */
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(400);
 
@@ -710,7 +822,7 @@ try {
   for (let month = 0; month < 24; month++) {
     await page.click("#advance");
     await page.waitForTimeout(45);
-    await checkColumnFits(`gabinete mes ${month + 2}`);
+    await checkDeskFits(`gabinete mes ${month + 2}`);
   }
 
   /* 7b — O MES E REPETIVEL. */
@@ -813,34 +925,26 @@ try {
     await page.screenshot({ path: join(OUT, "carta-pergunta.png"), fullPage: true });
   }
 
-  /* 7c — A COLUNA NAO PERDE A TENDENCIA NUM CLIQUE, e esta checagem nasceu VERMELHA: medido
-     no mes 10, as sete setas caiam de 3 direcoes para 0 assim que uma carta era clicada. A
-     causa era `painted` valer o mes CORRENTE a partir da segunda pintura do mes, e a barra
-     de vitais escapava so porque ela nao repinta quando o estado nao muda. */
-  const direcoes = () =>
-    page.$$eval(".desk .trend", nodes => nodes.map(node => node.dataset["direction"]));
-  /* ⚠ E ELA ATRAVESSA AS DUAS TELAS desde a separacao: a tendencia mora no Gabinete e o
-     clique mora no email. O defeito que ela pega e o de uma pintura mexer na outra, e agora
-     sao tres pinturas entre as duas leituras em vez de uma. */
+  /* 7c — UM CLIQUE NA CAIXA NAO MEXE NA MESA, e esta checagem lia as SETE SETAS da coluna,
+     que sairam com ela. O que a mesa mostra do mes e o ATO, entao o ato virou a leitura: ele
+     recomeca do rateio, que e a mesma funcao que o turno executa.
+     ⚠ ELA ATRAVESSA AS DUAS TELAS de proposito — o defeito que pega e o de uma pintura mexer
+     na outra, e sao tres pinturas entre as duas leituras. */
+  /* ⛔ `.stack .act__body` E NAO `.act__body`: a pasta tem DUAS faces desde o parecer, e as
+     duas usam o corpo do documento — o seletor solto casava com duas e o passeio parava. */
+  const oAto = () => page.locator(".stack .act__body").innerText();
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(300);
-  const antesDoClique = await direcoes();
-  expect(
-    antesDoClique.some(direction => direction !== "flat"),
-    `[gabinete] a coluna nao trouxe tendencia nenhuma — a checagem do clique nao mede nada`,
-  );
+  const antesDoClique = await oAto();
+  expect(antesDoClique.trim() !== "", "[gabinete] o ato veio vazio — a checagem nao mede nada");
   await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(300);
   await page.locator(".tray__row").first().click();
   await page.waitForTimeout(300);
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(300);
-  const depoisDoClique = await direcoes();
-  expect(
-    depoisDoClique.join(" ") === antesDoClique.join(" "),
-    `[gabinete] um clique na caixa mexeu na tendencia da coluna: ` +
-      `${antesDoClique.join(" ")} → ${depoisDoClique.join(" ")}`,
-  );
+  const depoisDoClique = await oAto();
+  expect(depoisDoClique === antesDoClique, "[gabinete] um clique na caixa reescreveu o ato");
 
   /* E A ETAPA SEGUINTE E DA CAIXA OUTRA VEZ. */
   await page.click('.rail [data-section="email"]');
@@ -945,8 +1049,10 @@ try {
   /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e memoria de
      sessao e nao entra no save. ⚠ E ELA SUBIU PARA CA na separacao: la embaixo media DEPOIS
      de o passeio ja ter trocado de tela duas vezes, e provava o proprio clique. */
+  /* ⚠ `.stack .sheet` E NAO `.sheet`: a pasta tem duas faces, e as duas sao assinadas — o
+     parecer pela Casa Civil e o ato pelo presidente. Quem prova que a mesa voltou e o ato. */
   expect(
-    (await page.locator(".desk__margin .annex__line").count()) === 6,
+    (await page.locator(".stack .sheet .signature").count()) === 1,
     "[save] a tela retomada nao renderizou",
   );
 
@@ -1023,6 +1129,54 @@ try {
     );
   }
 
+  /* ⛔ E ANTES DE RECOMECAR, A MESA E USADA: o voo e a rubrica vivem em variavel de modulo, e
+     sem limpa-las a partida NOVA abria com o ato de jan/2027 JA RUBRICADO e a pasta na mao —
+     710px contra 448 na mesa, medido. A epigrafe e funcao pura do mes, entao ela se repete
+     entre partidas e comparar por ela nao separa duas mesas. */
+  await page.click('.rail [data-section="cabinet"]');
+  /* ⛔ E A ESPERA E PELA TROCA DE TELA ACABAR: enquanto a view transition roda, o navegador
+     pinta um SNAPSHOT por cima da pagina, e `elementFromPoint` devolve o pseudo-elemento —
+     o clique caia fora da pasta e a prova acusava a mesa por causa do proprio compasso. */
+  await page.waitForFunction(() => document.querySelectorAll(".room").length === 1);
+  await page.waitForFunction(() =>
+    document.getAnimations().every(one => {
+      const alvo = /** @type {{ pseudoElement?: string | null }} */ (one.effect ?? {});
+      return !String(alvo.pseudoElement ?? "").startsWith("::view-transition");
+    }),
+  );
+  /* ⚠ E O TOQUE DIZ SE ACERTOU: `elementFromPoint` e a pergunta "o que o jogador acerta aqui",
+     e um clique que caiu fora da peca tem de reprovar em vez de virar silencio. */
+  /** @param {string} pick */
+  const tocar = pick =>
+    page.evaluate(seletor => {
+      const box = document.querySelector(seletor)?.getBoundingClientRect();
+      if (!box) return false;
+      const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+      if (hit === null || hit.closest(seletor.split(" ").pop() ?? seletor) === null) return false;
+      hit.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      return true;
+    }, pick);
+  expect(await tocar(".folder"), "[recomecar] o centro da pasta nao pertence a pasta");
+  /* ⚠ E A ESPERA E POR ASSENTAMENTO, e nao por relogio: a rubrica so corre com a pasta parada
+     na mao, e sem cabeca o quadro chega irregular — 700ms fixos pegavam a mola a caminho. */
+  let subindo = await flight();
+  for (let wait = 0; wait < 16; wait++) {
+    await page.waitForTimeout(150);
+    const again = await flight();
+    if (again !== null && subindo !== null && again.tall === subindo.tall) break;
+    subindo = again;
+  }
+  /* ⛔ E O TOQUE VAI NA EPIGRAFE, e nao no centro da folha: as oito pastas do Art. 2 moram no
+     meio do ato, e um `[data-protect]` sob o ponto medio devolve o clique como MARCA — a
+     rubrica nunca corria e a prova acusava a mesa por causa da propria mira. */
+  expect(await tocar(".stack .sheet .epigraph"), "[recomecar] a epigrafe nao recebeu o toque");
+  await page.waitForTimeout(200);
+  expect(
+    (await page.locator(".stack .sheet").getAttribute("data-signed")) === "true",
+    "[recomecar] a prova nao conseguiu assinar, e sem isso ela deixa de medir o que mede",
+  );
+  const naMao = await page.locator(".folder").evaluate(node => node.getBoundingClientRect().height);
+
   /* E RECOMECAR PEDE DOIS CLIQUES. */
   await page.click("#restart");
   await page.waitForTimeout(150);
@@ -1068,6 +1222,19 @@ try {
   expect(
     (await page.locator(".rail").innerText()).includes("Teste da Silva"),
     "[posse] o nome digitado nao chegou a tela",
+  );
+
+  /* ⛔ E A MESA NOVA NASCE LIMPA, nas duas metades: o ato sem rubrica e a pasta na mesa. */
+  expect(
+    (await page.locator(".stack .sheet").getAttribute("data-signed")) === "false",
+    "[posse] a partida nova abriu com o ato ja assinado",
+  );
+  const naMesa = await page
+    .locator(".folder")
+    .evaluate(node => node.getBoundingClientRect().height);
+  expect(
+    naMesa < naMao * 0.95,
+    `[posse] a partida nova abriu com a pasta na mao: ${Math.round(naMesa)}px contra ${Math.round(naMao)}px erguida`,
   );
 
   /* ⚠ E A CARTA DA POSSE MORA NO EMAIL desde a separacao: recomecar devolve o jogador ao

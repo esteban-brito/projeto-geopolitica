@@ -1,10 +1,9 @@
-/* ESTADO — imutavel, e um reducer puro como unica forma de muda-lo.
-   POR QUE IMUTAVEL.
-   Num jogo de turnos, quatro coisas caem de graca quando o estado nunca e mutado no lugar: ·
-   SAVE e serializar o estado. */
+/* ESTADO — imutavel, e um reducer puro como unica forma de muda-lo. Salvar e serializar o
+   estado, e desfazer e guardar a referencia anterior. */
 
 import { CATALOG } from "../data/catalog.mjs";
 import { waivedOf } from "../data/programs.mjs";
+import { MONTHS_PER_YEAR, REGIME } from "../data/regime.mjs";
 import { opening } from "../domain/capacity/index.mjs";
 import { opening as economyOpening } from "../domain/economy/index.mjs";
 import { inherited } from "../domain/norms/index.mjs";
@@ -197,9 +196,6 @@ export function deepFreeze(value) {
 /**
  * O estado de abertura.
  *
- * SONDA e CORRENTE nascerem. Nenhum deles cita fonte porque nenhum deles e
- * afirmacao sobre o Brasil — e essa e a diferenca entre um numero provisorio
- * declarado e um numero inventado que vira dividia silenciosa.
  * @param {number} [seed] a semente da partida
  * @param {typeof CATALOG} [catalog] o catalogo de onde sai a posicao inicial
  * @param {{ name: string, treatment: "senhor" | "senhora" } | null} [president] o nome
@@ -243,9 +239,8 @@ export function createState(
     macro: economyOpening(fiscal.initialGdp, macro),
     fiscal: {
       mandatory: fiscal.initialMandatory,
-      /* A ANCORA E O EXERCICIO ANTERIOR, e por isso ela nasce com a receita e a despesa de
-         quem entregou o governo — nao com as deste mes. */
-      /* ⚠ E ELA NASCE JA LIQUIDA DA RENUNCIA, pela mesma razao que o turno a abate: a ancora
+      /* ⚠ A ANCORA E O EXERCICIO ANTERIOR, E NASCE JA LIQUIDA DA RENUNCIA, pela mesma razao
+         que o turno a abate: a ancora
          e a receita QUE ENTROU no ano anterior, e o antecessor tambem nao arrecadou o que
          desonerou. Bruta aqui, o primeiro exercicio abriria com crescimento negativo de
          receita e o piso da banda do arcabouco dispararia sem ninguem ter feito nada. */
@@ -258,8 +253,6 @@ export function createState(
       anchorExpense: fiscal.initialMandatory + fiscal.initialDiscretionary,
       debt: fiscal.initialGdp * fiscal.initialDebtRatio,
     },
-    /* Preenchido a mao, seria a mesma coisa com mais bytes no save e uma chance a mais de
-       divergir do motor. */
     capacity: opening(areas),
     /* A SERIE NASCE VAZIA, e nao com o mes zero dentro: nada aconteceu ainda, e um ponto na
        abertura seria a tela desenhando uma linha reta que descreve uma historia de um mes so. */
@@ -272,9 +265,6 @@ export function createState(
       primary: [],
       areas: Object.fromEntries(areas.map(area => [area.id, []])),
     },
-    /* ELE SAI DO CATALOGO E NAO E DIGITADO AQUI, pela mesma razao que a capacidade nao nasce
-       preenchida a mao: dois lugares com o mesmo numero e um lugar que vai divergir na
-       primeira recalibragem. */
     /* PROGRAMAS E REGRAS NO MESMO MAPA, e de proposito: as duas familias sao a mesma
        primitiva, e separa-las aqui obrigaria todo consumidor a saber de qual delas um id veio
        — que e informacao do catalogo, e nao do estado. */
@@ -288,7 +278,7 @@ export function createState(
     bills: [],
     /* ⚠ O FECHAMENTO DE CADA MES E CARTA GUARDADA, e nao um cartao montado na hora. Ele era
        lido de `last`, variavel de modulo: o resumo do mes anterior sumia da caixa a cada
-       avanco e sumia inteiro no F5. Palavras dele: "num email ele ficaria la". */
+       avanco e sumia inteiro no F5. */
     /** @type {MonthCard[]} */
     months: [],
     /* ⚠ A CAIXA DE ENTRADA NAO NASCE VAZIA, e essa e a unica excecao a regra de cima — e ela
@@ -417,8 +407,11 @@ export function monthParts(month) {
     "nov",
     "dez",
   ];
-  const name = names[month % 12] ?? "jan";
-  const year = 2027 + Math.floor(month / 12);
+  const name = names[month % MONTHS_PER_YEAR] ?? "jan";
+  /* ⛔ O PRIMEIRO ANO SAI DO CATALOGO. Ele estava teclado aqui e em mais dois documentos da
+     pasta, e `REGIME.firstYear` existia com schema e sem NENHUM leitor — tres copias de um
+     numero que o catalogo ja guardava. */
+  const year = REGIME.firstYear + Math.floor(month / MONTHS_PER_YEAR);
   return { name, year };
 }
 

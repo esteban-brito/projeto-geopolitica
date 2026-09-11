@@ -57,8 +57,6 @@
        nada: o mínimo automático de um item de grade é o tamanho do conteúdo dele, então uma
        linha `1fr` cresce para caber o filho em vez de obrigar o filho a se virar. */
     .board:is([data-screen="cabinet"], [data-screen="email"]) .cards,
-    .board:is([data-screen="cabinet"], [data-screen="email"]) .desk,
-    .board:is([data-screen="cabinet"], [data-screen="email"]) .desk > div,
     .board:is([data-screen="cabinet"], [data-screen="email"]) .card[data-span="lead"],
     .board:is([data-screen="cabinet"], [data-screen="email"]) .card[data-span="lead"] .card__body,
     .board:is([data-screen="cabinet"], [data-screen="email"]) .tray {
@@ -72,9 +70,8 @@
     }
 
     /* ⛔ A CALHA DA ROLAGEM SAIU COM A ROLAGEM: os 8px existiam para a barra de rolagem da
-       coluna estreita, e ela nao rola mais — a ordem e que ela SE ENXUGUE, e `checkColumnFits`
-       cobra isso em 24 meses. Com eles, o ultimo bloco parava em 1416 contra os 1424 da barra
-       de cima: oito pixels de desalinho na aresta que o olho usa para prumo. */
+       coluna estreita, e ela nao rola mais. Com eles, o ultimo bloco parava em 1416 contra os
+       1424 da barra de cima: oito pixels de desalinho na aresta que o olho usa para prumo. */
   }
 
   /* ⚠ O VAO ENTRE AS COLUNAS CAIU DE 32 PARA 24, por queixa dele — "sobrar menos espaco":
@@ -89,132 +86,9 @@
     gap: var(--gutter);
   }
 
-  /* ── A MESA — QUATRO OBJETOS COM LUGAR FIXO ────────────────────────────────
-     ⚠ A GRADE ANTERIOR REFLUIA com a largura, e numa mesa o telefone esta sempre a esquerda.
-     O que se ASSINA ocupa o centro e a maior celula; o que se CONSULTA fica na margem, num
-     terco; a promessa atravessa em cima e o prazo atravessa no pe. */
-  /* ⚠ AS LINHAS MEDEM O CONTEUDO, e a primeira versao as esticava: com a do meio em `1fr` a
-     pasta de UMA caneta abria 600px pretos abaixo dela, medidos na captura — o mesmo buraco
-     que esta tela existe para fechar, mudado de lugar. A mesa e um OBJETO com altura propria,
-     e o vazio fica fora dela, e nao dentro. */
-  .desk {
-    display: grid;
-    min-height: 0;
-    align-content: start;
-    gap: var(--gutter);
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
-    grid-template-areas:
-      "band band"
-      "sign margin"
-      "when when";
-  }
-
-  /* ⚠ OS DOIS POUSAM NA MESMA LINHA, e centrar a pasta desalinhava o topo dela do topo da
-     margem em 60px medidos na captura. Numa mesa, dois objetos lado a lado encostam na mesma
-     borda — o que difere e a altura de cada um, e nao onde cada um comeca. */
-  .desk__sign {
-    align-self: start;
-  }
-
-  .desk__band {
-    grid-area: band;
-  }
-
-  .desk__sign {
-    grid-area: sign;
-  }
-
-  .desk__margin {
-    grid-area: margin;
-  }
-
-  .desk__when {
-    grid-area: when;
-  }
-
-  /* O PRECO DA PROMESSA QUEBRADA, e ele atravessa a largura da faixa. */
-  .desk__price {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
-    padding-top: var(--space-2);
-    font-size: var(--text-note);
-    color: var(--ink-soft);
-  }
-
-  /* ── A PASTA — o que se assina ─────────────────────────────────────────────
-     ⚠ ELA E UMA LISTA E NAO UMA TELA POR CANETA: hoje mora uma so, e a segunda entra como
-     irma desta sem que nada aqui mude de forma. */
-  /* ⚠ O QUE SE ASSINA E A PECA PRINCIPAL, E ERA A UNICA SEM SUPERFICIE: na captura o
-     contingenciamento flutuava no fundo preto enquanto a margem e o prazo tinham lamina. Peso
-     visual invertido — quem decide lia como legenda, e quem se consulta lia como objeto.
-     A substancia e a mesma dos outros dois, e o que separa e o TAMANHO. */
-  .pen {
-    display: grid;
-    align-content: start;
-    gap: var(--space-2);
-    padding: var(--space-4) var(--space-4) var(--space-3);
-    border: 1px solid var(--sheet-edge);
-    border-radius: var(--radius-piece);
-    background: var(--sheet-raise);
-  }
-
-  .pen__legend {
-    margin: 0;
-    font-size: var(--text-label);
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    color: var(--ink-dim);
-  }
-
-  .pen__name {
-    font-size: var(--text-name);
-    /* ⚠ A SERIFA E OPT-IN e ela e o que se ASSINA: o nome de um instrumento e texto de
-       registro, e e a mesma familia do nome de uma norma na Mesa. */
-    font-family: var(--font-record);
-    color: var(--ink);
-  }
-
-  .pen__note {
-    margin: 0;
-    font-size: var(--text-note);
-    color: var(--ink-soft);
-  }
-
-  /* ── AS OITO PASTAS ────────────────────────────────────────────────────────
-     ⚠ ELAS ERAM UM BOTAO POR TELA DE AREA, e o decreto e UM ato, rubrica a rubrica. Em fila,
-     a escolha inteira se le de uma vez — que e o que um decreto e. */
-  .pen__doors {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    padding-top: var(--space-2);
-  }
-
-  /* ⚠ ELE E UM BOTAO E NAO UMA PASTILHA DE ESTADO: o que ele faz e uma JOGADA do mes, e a cor
-     da marca e a do que se pressiona. Solto, ele e um fio; apertado, ele ganha a tinta. */
-  .decree {
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--glass-edge);
-    border-radius: var(--radius-sheet);
-    background: transparent;
-    color: var(--ink-soft);
-    font: inherit;
-    font-size: var(--text-note);
-    cursor: pointer;
-    transition: border-color var(--dur-touch) var(--ease-enter);
-  }
-
-  .decree:hover {
-    border-color: rgba(var(--brand-rgb), 0.55);
-  }
-
-  .decree[aria-pressed="true"] {
-    border-color: rgba(var(--brand-rgb), 0.55);
-    background: rgba(var(--brand-rgb), 0.12);
-    color: var(--brand);
-  }
+  /* ⛔ A GRADE DA MESA ANTIGA E A PASTA DE VIDRO SAIRAM DAQUI, e com elas dez comentarios que
+     descreviam peca que nao existe mais. A mesa de hoje e um objeto em `46-desk.css`, e esta
+     folha ficou com o que ainda esta na tela: a Caixa e os cartoes dela. */
 
   .card {
     display: grid;
@@ -435,8 +309,10 @@
     color: var(--sheet-ink);
   } /* E QUEM ASSINA SEGUE A MESMA TINTA, um degrau abaixo — 60% é a mesma proporção que o
      ofício usa entre o nome e o cargo dele. */
+  /* 📐 E OS 60% VIRARAM 68 POR MEDICAO: a 0,6 sobre o papel branco o nome fecha em 4,40 de
+     contraste, e o piso AA e 4,5. A proporcao do oficio continua legivel a 0,68. */
   .tray__row[aria-current="true"] .tray__from {
-    color: rgba(var(--sheet-ink-rgb), 0.6);
+    color: rgba(var(--sheet-ink-rgb), 0.68);
   } /* ⚠ NA LINHA QUE TEM PRAZO ELE DESCE, e a razão é aritmética: a linha mede 179px, "vence em
      1 mês" come 103 e sobram 68 para o nome. "Letícia Dourado" pede 74 — o relator da carta que
      pergunta reticenciava em toda partida. Sem prazo nenhum nome corta, nem o de 129px.
@@ -1051,19 +927,6 @@
   .letter__choice[aria-pressed="true"] {
     border-color: var(--brand);
     background: rgba(var(--brand-rgb), 0.16);
-  } /* ⚠ FERVENDO USA O VERMELHO SEMÂNTICO, e aqui ele é literal: um grupo que ferveu abandonou
-     o governo, e isso é a definição de crise no modelo. */
-  /* O CARIMBO — mono, porque é a máquina do Estado carimbando, e não uma medição nem um nome. */
-  .desk__price .stamp {
-    display: inline-block;
-    margin-right: var(--space-2);
-    padding: 1px var(--space-2);
-    border: 1px solid var(--crisis);
-    border-radius: var(--radius-stamp);
-    font-family: var(--font-machine);
-    font-size: var(--text-label);
-    letter-spacing: var(--track-label);
-    color: var(--signal-down);
   } /* ⚠ AS DUAS COLUNAS NAO DESEMPILHAVAM, e o defeito e anterior a reformulacao: medido a
      390px, a coluna da direita fechava em 240px e TODA barra dela saia com 0px de largura —
      o rail ja deitava desde os 1180px e a grade dos cartoes nunca acompanhou. */
@@ -1071,108 +934,12 @@
     .cards {
       grid-template-columns: minmax(0, 1fr);
     }
-
-    /* ⚠ A MESA DESEMPILHA EM UMA COLUNA, e a ordem passa a ser a de leitura: promessa,
-       o que se assina, a margem e o prazo. */
-    .desk {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto auto auto auto;
-      grid-template-areas: "band" "sign" "margin" "when";
-    }
   }
 
-  /* ── A COLUNA FALA A LINGUA DA CAIXA, E A SUBSTANCIA E DO CONTEXTO ────────── ⚠ O BLOCO É
-     O MESMO da carta — mesma moldura, mesma linha —, e o que muda é a MATÉRIA: papel na
-     carta, vidro na coluna. Escrever uma segunda peça para trocar duas cores seria o
-     vocabulário dobrando pelo mesmo motivo que ele dobrou da primeira vez. */
-
-  /* ⚠ O AR DA COLUNA E MENOR QUE O DA CARTA, e a razao e medida: com o recuo da carta os
-     cinco blocos pediam 851px numa coluna de 732, e o quinto ficava fora da dobra. A carta
-     tem uma folha inteira; a coluna tem 732px e cinco assuntos. */
-
-  /* ⚠ A PISTA LEVA A SOBRA, E O VALOR TEM LARGURA FIXA — e as duas metades da regra sao a
-     mesma medicao. Com o nome em `1fr` e o valor em `auto`, numa janela de 1656px o nome
-     ficava com 300px de vazio e a pista com 72; e como o valor media o proprio texto, a pista
-     comecava num x diferente em cada bloco. Coluna fixa alinha os cinco blocos. */
-  /* ── A COLUNA PREENCHE A ALTURA QUE TEM ──────────────────────────────────── ⚠ ELA
-     EMPILHAVA NO TOPO e deixava o resto em branco: o vao sobrava embaixo do quinto bloco em
-     vez de virar ar entre as leituras. Com `stretch` nos dois niveis, a sobra se reparte
-     entre os cinco blocos e, dentro deles, entre as linhas. Quando nao ha sobra, nada muda. */
-  .desk .annex {
-    align-content: stretch;
-  }
-
-  /* ⚠ A PISTA NA FOLHA GANHA TINTA DA PRÓPRIA FOLHA porque `.gauge` pinta o vazio com branco
-     a 7%, e sobre a lâmina da carta isso quase não aparece. Sobre o vidro ele aparece. */
-  /* O GLIFO DA LEGENDA — 14px, meio degrau abaixo do rail, e alinhado pela LINHA e nao pelo
-     centro: a legenda e caixa alta de 12,5px, e centrar deixaria o desenho pendurado. */
-  /* ⚠ NA COLUNA O BLOCO E PAINEL, e o raio diz isso: 3px e o token do PAPEL, e ele estava
-     certo enquanto os blocos viviam dentro do palco de 24px. A moldura saiu nesta sessao, e
-     agora cada bloco flutua sozinho no fundo ao lado de uma bandeja de 16 — cinco retangulos
-     de 3px contra um painel de 16 leem como duas gramaticas. Dentro da carta o anexo continua
-     em 3px, porque la ele e peca DENTRO de papel, e nao painel. */
-  .desk .annex {
-    border-radius: var(--radius-piece);
-  }
-
-  .desk .annex__legend {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  .desk .annex__icon {
-    flex: 0 0 auto;
-    width: 14px;
-    height: 14px;
-    opacity: 0.75;
-  }
-
-  .desk .annex__line > .gauge {
-    box-shadow: none;
-  }
-
-  /* ── NA MARGEM O QUALIFICADOR DESCE PARA A PROPRIA LINHA ───────────────────
-     ⚠ O PASSEIO REPROVOU A PRIMEIRA VERSAO DESTA TELA, e o numero e dele: com o nome e o
-     qualificador na mesma linha, `Preso por lei` + `da receita de` pedia 227px num campo de
-     149 e saia com reticencia. A margem e um terco da mesa por decisao — quem tem de encolher
-     e a LINHA, e nao a zona. Empilhados, o nome cabe e o qualificador tambem. */
-  .desk__margin .annex__who {
-    display: grid;
-    align-content: center;
-    min-width: 0;
-  }
-
-  .desk__margin .annex__aside {
-    margin-left: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* ⚠ E A LINHA CRESCE COM O EMPILHAMENTO: com 24px de teto o nome de duas linhas encostava
-     nos vizinhos, e `align-items: center` alinhava o valor pelo meio de um campo alto demais. */
-  .desk__margin .annex__line {
-    min-height: 34px;
-  }
-
-  /* ⚠ O QUALIFICADOR DO NOME NÃO É UMA SEGUNDA LEITURA: é a mesma leitura dizendo o próprio
-     peso, e por isso ele mora DENTRO do rótulo. Solto ao lado do valor, o olho lia os dois
-     como um número de duas partes. */
   /* ⚠ A LINHA INTEIRA TINGE, e não só o valor: quando um grupo ferve ou o mês estoura, o que
      mudou de estado é a leitura, e não um dos dois campos dela. */
   .annex__line[data-tone="crisis"] .annex__who,
   .annex__line[data-tone="crisis"] .annex__value {
     color: var(--signal-down);
   }
-
-  /* O vão vem da margem e não de um `gap`: o valor é uma célula de grade alinhada à direita,
-     e virar `flex` mudaria o alinhamento da coluna inteira para acertar 4px. */
-
-  /* ── AS DUAS TELAS QUE NASCERAM DE UMA ─────────────────────────────────────
-     ⚠ O GABINETE ERA UMA COLUNA DE 432px ESPREMIDA AO LADO DA CAIXA, e a restricao 1 do plano
-     mestre media o preco disso: 639px de conteudo numa coluna de 639: zero folga, e todo item
-     novo tinha de dizer de onde tirava altura. Separadas, a caixa fica com a largura inteira e
-     os blocos deixam de disputar com ela. */
-  /* ⚠ A CAIXA PASSA A OCUPAR A LARGURA TODA: ela ja era uma peca de duas colunas por dentro —
-     indice e oficio —, e o que ela ganha e o oficio, que era a metade estreita. */
 }

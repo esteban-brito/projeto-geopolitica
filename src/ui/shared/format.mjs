@@ -8,13 +8,14 @@
  * @returns {string}
  */
 export function num(value, digits = 1) {
-  /* ⚠ E NAO E SO O `-0` EXATO — foi o que a captura mostrou. */
+  /* ⚠ NAO BASTA PEGAR O `-0` EXATO: -0,04 com uma casa imprime "-0,0", que e um sinal de
+     menos na frente de um zero. Quem decide e o valor JA ARREDONDADO. */
   const safe = Number(value.toFixed(digits)) === 0 ? 0 : value;
   return safe.toFixed(digits).replace(".", ",");
 }
 
 /**
- * ⚠ Ela existe por causa de um defeito medido, e o defeito era invisivel.
+ * O MESMO, PARA ATRIBUTO — sem virgula, que o CSS e o SVG nao leem.
  *
  * @param {number} value
  * @param {number} [digits]
@@ -54,7 +55,7 @@ export function seats(value) {
 }
 
 /**
- * Ja juro e inflacao MUDAM de significado na primeira decimal: 10,5% e 11,0% de Selic sao
+ * Porcentagem, e o padrao e SEM casa. Juro e inflacao pedem uma: 10,5% e 11,0% de Selic sao
  * dois paises diferentes para quem paga a divida, e arredondar os dois para 11% apagaria a
  * decisao do Banco Central.
  *
@@ -79,12 +80,6 @@ export function signed(value, digits = 0) {
   if (rounded < 0) return `−${num(Math.abs(value), digits)}`;
   return num(0, digits);
 }
-
-/* Um bloco tem OITO alturas, e a altura de cada um e uma fracao do CORPO DA FONTE: a 0,5rem —
-   o tamanho que o painel usa — o degrau 1 tem UM PIXEL. */
-
-/* Um indice de 3% contra uma regua de 0 a 15% desenha uma curva de verdade, e nao um risco de
-   um pixel. */
 
 /* O QUADRO INTERNO, e ele e arbitrario de proposito: a caixa real vem do CSS, e estes numeros
    so precisam de proporcao entre si. */

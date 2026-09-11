@@ -67,6 +67,10 @@ const TERMOS = {
   revenueWord: "Receita",
 
   /* Unidades e grandezas, ditas uma vez. */
+  /* ⚠ O PONTO PERCENTUAL E A UNIDADE DA RUA, e ela e dita na barra do topo e no parecer da
+     pasta — duas telas, a mesma grandeza. */
+  point: "ponto",
+  points: "pontos",
   month: "mês",
   months: "meses",
   perYear: "/ano",
@@ -145,27 +149,9 @@ export const UI = {
     inboxSigned: "Todo mês que você resolve chega aqui, assinado pela Casa Civil.",
     inboxWaiting:
       "O que ainda não chega é o resto da república: o líder que cobra a diretoria prometida, a lei que o relator devolveu mudada, o tribunal que derrubou o que passou. Quem escreve primeiro é a tramitação.",
-    /* ⚠ A FRASE DO LEITOR DE TELA MORA AQUI, e não dentro do desenho: quem lê por som recebe
-       a MESMA descrição que o olho recebe, e descrição escrita dentro de uma view é a única
-       frase da interface que ninguém revisa. */
-    /* ── AS LEGENDAS DOS QUATRO BLOCOS ─────────────────────────────────────── ⚠ ELAS
-       VOLTARAM, e cinco delas tinham SAIDO antes. A premissa daquela
-       retirada era que o numero grande nomeava o bloco sozinho; sem numero grande, uma lista
-       que abre em "O mercado" nao diz de que assunto ela e. A da Rua nao se redigita — ela e
-       a mesma palavra do rail, e teclar de novo e como um vocabulario comeca a divergir. */
-    /* ⚠ O CALENDARIO E O QUE DA PULSO AO JOGO: sem ele os 48 meses tem a mesma forma, e
-       avancar parece apertar um botao em vez de governar. */
-    blockCalendar: "O que este mês cobra",
-    calendarNone: "Nada vence este mês",
-    calendarNow: "vence agora",
-    calendarIn: (/** @type {number} */ months) =>
-      `em ${months} ${months === 1 ? TERMOS.month : TERMOS.months}`,
     baseLine: "Apoiam o governo",
     congressAction: "negociar",
     vaultFree: TERMOS.roomLine,
-    /* ⚠ A FRASE DA A BASE DO PERCENTUAL, e sem ela "95%" nao diz 95% de que. */
-    vaultOfRevenue: "da receita de",
-    vaultLocked: "Preso por lei",
     /* OS TRES NOMES DIZEM QUEM ABANDONA, e nao uma imagem. */
     trinity: {
       social: TERMOS.social,
@@ -176,35 +162,6 @@ export const UI = {
        duas quando SOBEM. */
     trinityBelow: "abaixo de",
     trinityAbove: "acima de",
-    /* ⚠ A FORMA CURTA E PARA O QUALIFICADOR, e ela nasceu de uma medicao: com a frase inteira
-       ao lado do peso o nome pedia 313px num campo de 271, e quatro linhas cortavam. */
-    boilerBreaksShort: "sai em",
-    /* ⚠ E O CARIMBO DO CERCO. */
-    siege: "PROCESSO ABERTO",
-    /* ⚠ O CARIMBO DO FIM. */
-    fallen: TERMOS.removed,
-    /* ── A MESA ──────────────────────────────────────────────────────────────── ⚠ A MARGEM
-       TINHA VINTE LINHAS e passou a ter seis. O que saiu nao morreu: a aposentadoria em reais
-       e Financas, os quatro grupos um a um e a rua repartida por renda sao A Rua. */
-    marginLegend: "A Casa Civil anotou",
-    ofNeeded: TERMOS.of,
-    approvalLine: TERMOS.approval,
-    processLine: "Processo de impeachment",
-    processNone: "nenhum",
-    /* ── A PROMESSA ──────────────────────────────────────────────────────────── ⚠ ELA E O
-       UNICO CRITERIO DO JOGO, e era invisivel durante o jogo: o jogador escolhia no mes 1 e
-       so reencontrava no fecho, no mes 48. */
-    pledgeLegend: "O que você prometeu",
-    pledgeNone: "Você assumiu sem dizer a que veio, e a rua não cobra o que não foi dito.",
-    pledgeKept: TERMOS.kept,
-    pledgeBroken: TERMOS.broken,
-    pledgeOpen: "em aberto",
-    pledgeCount: (/** @type {number} */ broken, /** @type {number} */ total) =>
-      `${broken} de ${total} quebradas`,
-    pledgeCost: "de humor por mês",
-    /* ── A PASTA ─────────────────────────────────────────────────────────────── */
-    signLegend: "Para assinar",
-    penDecree: "Contingenciamento",
   },
   /* A JANELA DA TENDENCIA — e ela e dita porque ela VARIA.
      ATRASO dela — a MALHA guarda `lag + 1` valores —, entao a Educacao consegue
@@ -414,8 +371,8 @@ export const UI = {
     pollGood: "de ótimo ou bom",
     pollDown: "abaixo do mês passado.",
     pollUp: "acima do mês passado.",
-    pollPoint: "ponto",
-    pollPoints: "pontos",
+    pollPoint: TERMOS.point,
+    pollPoints: TERMOS.points,
     /* ⚠ AS CINCO VIRARAM DUAS: elas eram os pedacos de duas FRASES coladas em
        volta de um numero — "O que sustenta o senhor é economia, e é na Alta renda que ela pesa
        mais" —, e as duas leituras desceram para cards. Num card a legenda nomeia e o valor
@@ -549,15 +506,6 @@ export const UI = {
     committed: "já comprometidos nas outras áreas",
     holding: "parado",
     perYear: TERMOS.perYear,
-    /* ── O DECRETO DE CONTINGENCIAMENTO ───────────────────────────────────────
-       ⚠ ELE FALA EM CORTE, e não em "rateio": o jogador vê o dinheiro sumir, e a palavra do
-       motor não explica nada a quem está decidindo onde ele some. A nota diz o preço nos dois
-       estados: protegida, quem paga são as outras áreas; solta, ela mostra quanto do pedido o
-       mês paga. Um botão que só dissesse "proteger" seria um botão sem preço. */
-    decreeCost: "o corte cai mais fundo nas outras áreas",
-    decreeHonours: "o mês paga",
-    decreeAsked: "do que você pediu",
-    decreeWhole: "o mês paga tudo o que você pediu",
     /* OS TITULOS DAS TRES COLUNAS DE NUMERO. */
     /* A COLUNA DO BOTÃO tem título só para quem lê por leitor de tela: na tela ele seria um
        rótulo em cima de um botão que já diz o que faz. */
@@ -765,11 +713,6 @@ export const UI = {
     obstructing: TERMOS.obstructing,
     broken: TERMOS.ruptured,
   },
-  approvalParts: {
-    good: "Ótimo/bom",
-  },
-  /* Sao 49 frases nesse estado, e nenhuma delas quebrava nada: elas so faziam a proxima
-     sessao acreditar que a peca existia. */
   /* O VEREDITO É POR MOTIVO, e não por nível. */
   verdict: {
     blocked: "O teto fechou: a obrigatória consome o orçamento, e não há emenda a pagar",
@@ -894,12 +837,95 @@ export const UI = {
     abandoned: "Abandonaram o governo:",
     noneAbandoned: "Nenhum grupo abandonou o governo.",
   },
+  /* 📗 O PARECER — a exposicao de motivos que a Casa Civil junta a minuta, e ela e a face
+     esquerda da pasta de despacho. ⛔ O vocativo NAO leva "Excelentissimo": o Decreto
+     9.758/2019 o vedou, e o Manual de Redacao e de 2018. */
+  brief: {
+    city: "Brasília",
+    unit: "Secretaria Especial de Análise Governamental",
+    /** @param {number} number @param {number} year */
+    kind: (number, year) => `EXPOSIÇÃO DE MOTIVOS Nº ${number}/${year}/CC`,
+    vocative: "Senhor Presidente da República,",
+    lead: "Submeto à sua decisão o corte deste mês. Abaixo, o que a Casa Civil apurou.",
+    /** @param {string} room @param {string} mandatory @param {string} revenue */
+    treasury: (room, mandatory, revenue) =>
+      `O mês tem ${room} para gastar. A despesa obrigatória come ${mandatory} dos ${revenue} de receita, e é ela que aperta o resto.`,
+    /** @param {number} base @param {number} majority */
+    chamber: (base, majority) =>
+      `O governo tem ${Math.round(base)} cadeiras na Câmara. Aprovar uma lei pede ${majority}.`,
+    /** @param {string} label @param {number} pressure @param {number} boil */
+    pressure: (label, pressure, boil) =>
+      `${label} é hoje quem está mais perto de romper: ${pressure} pontos de pressão, e o grupo abandona o governo em ${boil}.`,
+    calm: "Nenhum grupo está perto de romper com o governo.",
+    /** @param {string} now */
+    street: now => `A aprovação está em ${now}.`,
+    /** @param {number} points @param {boolean} up */
+    streetMoved: (points, up) =>
+      `Ela ${up ? "subiu" : "caiu"} ${points} ${points === 1 ? TERMOS.point : TERMOS.points} desde o mês passado.`,
+    processNone: "Não há processo de impeachment aberto contra o senhor.",
+    /** @param {number} month */
+    processOpen: month =>
+      `Há processo de impeachment aberto contra o senhor desde o mês ${month + 1}.`,
+    close: "Respeitosamente,",
+    /** ⚠ O CARGO CONCORDA COM QUEM ASSINA: o elenco sorteia homem e mulher na mesma
+     * proporcao, e "Ministro" sob o nome de uma ministra e o mesmo defeito que o tratamento
+     * do presidente ja consertou.
+     * @param {boolean} she */
+    role: she => `${she ? "Ministra" : "Ministro"} de Estado Chefe da Casa Civil`,
+  },
+  /* O TELEFONE — as duas frases sao para quem le por som; na tela ele e so um objeto. */
+  phone: {
+    quiet: "Telefone. Ninguém ligou.",
+    /** @param {string} who */
+    ringing: who => `O telefone toca: ${who} rompeu com o governo. Abrir a carta.`,
+  },
+  /* 📗 O DECRETO — a forma e do governo e a escrita e do jogo. O que NAO se simplifica e o
+     que todo brasileiro reconhece: "entra em vigor na data de sua publicacao". */
+  decree: {
+    presidency: "Presidência da República",
+    chief: "Casa Civil",
+    legal: "Subchefia para Assuntos Jurídicos",
+    /** @param {string} date */
+    title: date => `DECRETO DE ${date.toUpperCase()}.`,
+    summary: "Diz quanto cada ministério pode gastar este mês, e quais não entram no corte.",
+    preamble:
+      "O PRESIDENTE DA REPÚBLICA, no uso da atribuição que lhe dá o art. 84 da Constituição,",
+    enacts: "D E C R E T A :",
+    /** @param {string} room @param {string} share */
+    first: (room, share) =>
+      `Art. 1º  O mês tem ${room} para gastar. Os ministérios recebem ${share} do que pediram.`,
+    second:
+      "Art. 2º  Ficam fora do corte as pastas marcadas. O que elas deixarem de ceder, as outras pagam:",
+    third: "Art. 3º  Este Decreto entra em vigor na data de sua publicação.",
+    /** @param {string} date @param {number} independence @param {number} republic */
+    close: (date, independence, republic) =>
+      `Brasília, ${date}; ${independence}º da Independência e ${republic}º da República.`,
+    gazette: "Este texto não substitui o publicado no Diário Oficial da União.",
+  },
+
   trend: {
     up: "▲",
     down: "▼",
     flat: "—",
   },
 };
+
+/* 📗 OS MESES POR EXTENSO, e eles moram aqui porque sao TEXTO DE INTERFACE: o motor guarda o
+   indice, e o Manual de Redacao manda a data com o mes em MINUSCULA e sem zero a esquerda. */
+export const MONTHS = [
+  "janeiro",
+  "fevereiro",
+  "março",
+  "abril",
+  "maio",
+  "junho",
+  "julho",
+  "agosto",
+  "setembro",
+  "outubro",
+  "novembro",
+  "dezembro",
+];
 
 /**
  * Troca o marcador `{v}` pelo tratamento escolhido.

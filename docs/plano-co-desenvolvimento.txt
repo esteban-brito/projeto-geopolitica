@@ -1,0 +1,146 @@
+DOSSIE DE CO-DESENVOLVIMENTO — REPUBLICA SIMULATOR
+Divisao Tecnica de Trabalho: Claude Opus 5 & Antigravity
+Versao: 3.0 (Refinada: Claude Autor de Codigo/Design & Antigravity Auditor/Integrador)
+
+===============================================================================
+0. REGRA DE OURO INICIAL (ALWAYS ON)
+===============================================================================
+
+Toda e qualquer sessao de desenvolvimento comeca OBRIGATORIAMENTE lendo:
+1. `CLAUDE.md` — a doutrina, convenções de escrita ("escreva como gente")
+   e limites rígidos do projeto.
+2. `docs/handoff.md` — o ponto único de retomada e estado verificável hoje.
+
+A fonte canonica das regras de atuacao do Antigravity reside exclusivamente em:
+`.agents/rules/co-development.md`. O arquivo `GEMINI.md` atua apenas como
+ponteiro limpo para evitar qualquer duplicacao de regra.
+
+===============================================================================
+1. PAPEIS E LIDERANCA REALISTA
+===============================================================================
+
+A divisao de trabalho respeita as forcas genuinas de cada modelo, sem atribuir
+ao modelo menor tarefas de gosto, refinamento estético ou arquitetura original:
+
+- Claude Opus 5 (Piloto / Arquiteto / Autor Principal de Codigo e Design):
+  * Modela a matematica e mecanica do jogo (`src/domain/`).
+  * Escreve a redacao institucional e politica ("escreva como gente", sem cliches).
+  * Cria a estrutura conceitual e autoral das telas e componentes: escreve o
+    HTML puro (`src/ui/`) e a folha de estilo CSS (`styles/`), definindo as
+    camadas fisicas, sombras, proporcoes e o design modernista da mesa.
+  * Define as pautas dos ciclos (`docs/cycles/`) e a calibragem (`src/data/`).
+
+- Antigravity (Copiloto / Auditor Visual, Integrador Local e Guardiao do Portao):
+  * Aplica o codigo entregue pelo Claude diretamente nos arquivos da arvore.
+  * Inspeciona ativamente as capturas reais geradas pelo Playwright no navegador
+    (`captures/passeio/` a 1440x980 e 1440x900) para detectar defeitos que o
+    Claude nao consegue ver (cortes de texto na dobra, sombras deformadas,
+    colisoes de elementos, quebras de perspectiva).
+  * Realiza o ajuste fino de medidas em CSS (pixels, margens, padding, max-width)
+    para sanar defeitos visuais identificados nas capturas.
+  * Opera o terminal local: executa e debuga falhas de guardas (`npm run check`),
+    testes unitarios (`npm test`), simulador de 48 meses (`simulate.mjs`) e o
+    portao final (`npm run validate`).
+  * Realiza auditorias normativas e pesquisas factuais de dados (leis, decretos,
+    fontes oficiais do Planalto/Congresso).
+
+===============================================================================
+2. O FLUXO DE OPERACAO CONTINUA (HANDSHAKE)
+===============================================================================
+
+1. Passo do Claude:
+   O usuario aciona o Claude, que projeta a funcionalidade e gera o codigo
+   completo (lógica, HTML da view e regras de CSS).
+
+2. Passo de Integracao e Portao (Antigravity):
+   O usuario cola a entrega do Claude para o Antigravity. O Antigravity:
+   a) Aplica o codigo nos arquivos correspondentes;
+   b) Roda `npm run check` (2s) e `npm test` (3s);
+   c) Corrige violacoes mecanicas caso ocorram (ex: token fora do padrao,
+      comentario que estourou o teto de 10 linhas da guarda `prose.mjs`,
+      erro de sintaxe ou formatação do Prettier);
+   d) Roda o passeio (`walk.mjs`) para gerar as capturas de tela.
+
+3. Passo de Auditoria Visual (Antigravity):
+   O Antigravity abre os arquivos PNG gerados em `captures/passeio/` nas duas
+   resolucoes obrigatorias (1440x980 e 1440x900) e confere:
+   * Legibilidade real de fontes serifadas e manuscritas (rubrica e DOU);
+   * Cortes de palavras ou caixas transbordando a dobra de 900px;
+   * Fidelidade das camadas de textura e sombras sobre a madeira.
+   Caso encontre defeitos, aplica o conserto cirurgico de CSS.
+
+4. Fechamento:
+   O Antigravity roda `npm run validate`, atualiza o `docs/handoff.md` e emite
+   a devolucao estruturada para o usuario prosseguir.
+
+===============================================================================
+3. AS 3 PROIBICOES ESTRITAS DO COPILOTO (SEM EXCECAO)
+===============================================================================
+
+1. PROIBIDO EDITAR `tests/` OU GUARDAS PARA FAZER TESTE PASSAR.
+   As 13 guardas e os 323 testes existem por defeito medido em producao. Se um
+   teste falhar, o erro esta exclusivamente no codigo de producao ou interface.
+   O conserto e no codigo implementado, nunca no teste.
+
+2. PROIBIDO MUDAR CALIBRAGEM (`src/data/`) PARA DESTRAVAR PORTAO.
+   Numeros que parecem errados sao "achados" de modelagem, nao bugs mecanicos.
+   Devem ser registrados no `docs/handoff.md` para decisao do Claude.
+
+3. PROIBIDO MUDAR ESQUEMA OU SAVE (`src/state/save.mjs`, `schema.mjs`).
+   A versao do esquema (`SCHEMA_VERSION`) e os campos de save possuem testes
+   rigorosos de regressao para saves antigos. Nao alterar sem ordem expressa.
+
+===============================================================================
+4. OS 2 ACOPLAMENTOS NOMINAIS CRITICOS
+===============================================================================
+
+1. TABELA DAS 8 CONTAGENS NO `docs/handoff.md`:
+   - Arquivo cobrador: `tests/suites/catalog.mjs` (linhas 157-185).
+   - Mecanismo: O teste le o `docs/handoff.md` via regex cobrando linhas exatas
+     com duas colunas: `^\|\s*([^|]+?)\s*\|\s*(\d+)\s*\|$`.
+   - Contagens obrigatorias:
+     | blocos partidários | 9 |
+     | cadeiras | 513 |
+     | áreas | 8 |
+     | programas | 38 |
+     | regras | 6 |
+     | grupos de pressão | 4 |
+     | faixas de renda | 3 |
+     | arquétipos | 8 |
+   - Regra: NUNCA alterar os rotulos, remover linhas ou transformar em 3+ colunas.
+
+2. TABELA DE CODINOMES NO `docs/standards.md` §3:
+   - Arquivo cobrador: `tests/guards/codenames.mjs` (linhas 37-46).
+   - Mecanismo: A guarda le `docs/standards.md` e busca a expressao:
+     `^\|\s*\*\*([A-Z]+)\*\*\s*\|\s*`src\/domain\/([a-z-]+)\/``.
+   - Validacao: Cruza cada codinome com a pasta correspondente em `src/domain/`
+     e com o cabecalho do arquivo `index.mjs` daquele motor.
+   - Regra: NUNCA renomear ou remover linhas de codinome no standards sem que
+     o motor correspondente e seu cabecalho sejam alterados em sincronia.
+
+===============================================================================
+5. DISCIPLINA DE QUOTA E ECONOMIA OPERACIONAL DE CONTEXTO
+===============================================================================
+
+- **Teto por tarefa**: Maximo de 1 a 2 arquivos editados por ciclo.
+- **Sessao curta e fechada**: Uma tarefa por sessao; validar, emitir a devolucao
+  fixa e encerrar para que uma nova sessao comece limpa lendo o handoff.
+- **Leitura cirurgica**: Proibido reler arquivos inteiros (como `turn.mjs` de 2.300+
+  linhas ou `journal.md` de 7.000+ linhas); utilizar `grep_search` e faixas de linhas.
+
+Workflows operacionais criados em `.agents/skills/`:
+- `/checar`: Roda `npm run check` (laço curto de 2s para CSS e guardas).
+- `/simular`: Roda `npm run simulate` (48 meses para aferir calibragem).
+- `/passeio`: Roda `npm run walk` (gerar capturas e verificar geometria).
+- `/validar`: Roda `npm run validate` (o portao completo de 42s).
+
+===============================================================================
+6. FORMATO FIXO DE RESPOSTA (OBRIGATORIO)
+===============================================================================
+
+Toda entrega contera estritamente:
+1. O QUE RODOU (comandos executados).
+2. O QUE PASSOU (guardas e testes verdes).
+3. O QUE QUEBROU (erros encontrados e solucao aplicada no codigo).
+4. AUDITORIA VISUAL (o que foi verificado nas capturas PNG de 1440x980 e 1440x900).
+5. STATUS FINAL (confirmacao de `validate` 100% verde antes de dizer "pronto").

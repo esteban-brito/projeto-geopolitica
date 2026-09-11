@@ -7,6 +7,7 @@ import test from "node:test";
 import fc from "fast-check";
 import { CATALOG } from "../../src/data/catalog.mjs";
 import { quorumOf } from "../../src/data/bills.mjs";
+import { SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 import {
   THRESHOLDS,
   baseCount,
@@ -352,11 +353,46 @@ function cabinetInputOf(state, extra = {}) {
   };
 }
 
-/** A MESMA MONTAGEM, nas duas telas que nasceram de uma. */
-const cabinetOf = (/** @type {any} */ state, /** @type {any} */ extra = {}) =>
-  cabinetHtml(cabinetInputOf(state, extra));
+/* ⚠ AS DUAS TELAS DEIXARAM DE DIVIDIR O INPUT, e a razao e que o Gabinete virou mesa: ele
+   nao le leitura nenhuma, so o ato do mes e o correio. O da caixa continua sendo o antigo. */
 const emailOf = (/** @type {any} */ state, /** @type {any} */ extra = {}) =>
   emailHtml(cabinetInputOf(state, extra));
+
+/** O QUE A MESA CONSOME — o ato, as oito pastas e o punhado de cartas. */
+const deskOf = (/** @type {any} */ state, /** @type {any} */ extra = {}) =>
+  cabinetHtml({
+    room: 14,
+    ratio: 1,
+    president: "Dalva Zamith",
+    month: state.month,
+    areas: CATALOG.areas,
+    protect: [],
+    letters: [],
+    sheets: 0,
+    brief: { ...BRIEF, month: state.month, ...(extra.brief ?? {}) },
+    boiling: null,
+    ...extra,
+  });
+
+/** O PARECER EM REPOUSO — um governo de pe, para a prova mexer so no que ela mede. */
+const BRIEF = {
+  month: 0,
+  chief: "Nadir Quessada",
+  room: 14,
+  mandatory: 900,
+  revenue: 1000,
+  base: 300,
+  majority: SIMPLE_MAJORITY,
+  worst: null,
+  standing: 44,
+  was: null,
+  she: true,
+  impeachment: null,
+};
+
+/** @param {number} many @param {number} urgent as ULTIMAS `urgent` sao as que vencem */
+const mailOf = (many, urgent = 0) =>
+  Array.from({ length: many }, (_, i) => ({ urgent: i >= many - urgent }));
 
 test("A BASE REPARTIDA SOMA A BASE INTEIRA, e nao o plenario", () => {
   /* A prova que impede as duas verdades. */
@@ -371,55 +407,6 @@ test("A BASE REPARTIDA SOMA A BASE INTEIRA, e nao o plenario", () => {
       baseCount({ parties: CATALOG.parties, loyalty: state.loyalty }),
       `no mes ${month} as fatias somaram ${total.toFixed(2)} e a base e outra`,
     );
-    state = playMonth(state, {}).state;
-  }
-});
-
-/* E exatamente o defeito que o ⚠ E ELE TEM DE FECHAR COM O MOTOR, e nao com um numero
-   digitado aqui: as cadeiras cheias sao a base efetiva que `baseCount` devolve.
-   ELENCO ja produziu uma vez, quando os alcances nao normalizados fecharam a Camara
-   em 730 assentos, e o mesmo que `chamberMismatch` pega no catalogo. */
-test("A REGUA DA CAMARA MEDE A BASE CONTRA A MAIORIA, e as duas na mesma escala", () => {
-  let state = createState();
-  const total = CATALOG.parties.reduce((sum, party) => sum + party.seats, 0);
-
-  for (let month = 0; month < 18; month++) {
-    const html = cabinetOf(state);
-    const base = baseCount({ parties: CATALOG.parties, loyalty: state.loyalty });
-
-    /* ⚠ ANCORADA NO ROTULO, e nao na primeira ocorrencia: o bloco do risco desenha tres
-       reguas ACIMA desta na mesma tela, e sem a ancora a prova media outra.
-       ⚠ E ELA VOLTOU A LER UMA REGUA CHEIA no ciclo 15: o medidor composto saiu junto com o
-       instrumento `meter`, por decisao dele — a Camara passou a dizer apoiam · maioria ·
-       faltam. O que a prova cobra nao mudou uma virgula: o desenho nao inventa a base, e ele
-       a compara com a maioria na MESMA escala. */
-    const gauge = html.match(
-      new RegExp(`--index:([0-9.-]+);--mark:([0-9.-]+)" aria-label="${UI.cabinet.baseLine}`),
-    );
-    assert.ok(gauge, `no mes ${month} a base saiu sem regua`);
-
-    assert.ok(
-      Math.abs(Number(gauge?.[1]) - (base / total) * 100) < 0.5,
-      `no mes ${month} a regua encheu ate ${gauge?.[1]}% e a base do motor e ${base} de ${total}`,
-    );
-    assert.ok(
-      Math.abs(Number(gauge?.[2]) - (257 / total) * 100) < 0.1,
-      `a marca da maioria caiu em ${gauge?.[2]}% e a maioria e 257 de ${total}`,
-    );
-
-    /* ⚠ E O NUMERO ESCRITO E O MESMO QUE A REGUA DESENHA. Na mesa o denominador deixou de ser
-       o plenario e passou a ser a MAIORIA: o que decide se a lei passa e 257, e nao 513. */
-    assert.ok(
-      html.includes(`data-numeric>${Math.round(base)}`),
-      `no mes ${month} a leitura escrita nao diz ${Math.round(base)}`,
-    );
-    assert.ok(
-      html.includes(
-        `aria-label="${UI.cabinet.baseLine}: ${Math.round(base)} ${UI.cabinet.ofNeeded} 257"`,
-      ),
-      `no mes ${month} quem le por som nao recebeu a base contra a maioria`,
-    );
-
     state = playMonth(state, {}).state;
   }
 });
@@ -521,128 +508,101 @@ test("A BANDEJA VAZIA DIZ A VERDADE SOBRE O MANDATO, e ela tem duas frases", () 
   );
 });
 
-test("A PROMESSA QUEBRADA APARECE DURANTE O JOGO, e ela cobra um numero", () => {
-  /* ⚠ `breachOf` RODAVA TODO TURNO E NENHUMA TELA O LIA: o jogador escolhia tres compromissos
-     no mes 1 e so os reencontrava no mes 48. O unico criterio do jogo, invisivel durante o
-     jogo inteiro. */
-  const state = createState();
-
-  const mudo = cabinetOf(state);
-  assert.ok(mudo.includes(UI.cabinet.pledgeNone), "o presidente sem plataforma nao foi dito");
-  assert.ok(
-    !mudo.includes(UI.cabinet.pledgeCost),
-    "quem nao prometeu nada foi cobrado por promessa quebrada",
-  );
-
-  const quebrou = cabinetOf(state, {
-    platform: [
-      { axis: "priority", id: "a", label: "Segurança", judged: "índice da área", kept: false },
-      { axis: "fiscal", id: "b", label: "O ano no azul", judged: "primário", kept: false },
-      { axis: "reform", id: "c", label: "Uma lei", judged: "normas", kept: true },
-    ],
-    betrayal: 8,
-  });
-
-  assert.ok(quebrou.includes(UI.cabinet.pledgeCount(2, 3)), "a conta das quebradas nao saiu");
-  assert.ok(quebrou.includes(UI.cabinet.pledgeCost), "o preco mensal nao foi dito");
-  /* ⚠ O SINAL E NEGATIVO PORQUE ELA TIRA: um `8,00` sem sinal leria como ganho. */
-  assert.ok(quebrou.includes("−8,00"), `o preco saiu sem sinal: ${quebrou.slice(0, 400)}`);
-  assert.ok(quebrou.includes('data-tone="crisis"'), "a promessa quebrada nao acendeu");
-
-  /* ⚠ E A CUMPRIDA NAO ACENDE: tingir as tres faria a cor deixar de separar. */
-  const cumpriu = cabinetOf(state, {
-    platform: [{ axis: "reform", id: "c", label: "Uma lei", judged: "normas", kept: true }],
-    betrayal: 0,
-  });
-  assert.ok(!cumpriu.includes('data-tone="crisis"'), "a promessa cumprida acendeu vermelho");
-  assert.ok(!cumpriu.includes(UI.cabinet.pledgeCost), "sem quebra, a mesa cobrou um preco");
-});
-
-test("A MARGEM MOSTRA O PIOR GRUPO, e o pior e o mais perto do PROPRIO limiar", () => {
-  /* ⚠ COMPARAR PRESSAO CRUA POE NA FRENTE O GRUPO ERRADO: quem esta em 40 de um limiar de 90
-     esta longe; quem esta em 38 de um limiar de 40 esta na porta. A margem tem UMA linha de
-     grupo, entao escolher errado e mostrar o grupo que nao vai romper. */
-  const state = createState();
-
-  const html = cabinetOf(state, {
-    boiler: {
-      lobbies: [
-        {
-          id: "alto",
-          label: "Longe",
-          wants: "",
-          share: 0.5,
-          pressure: 40,
-          boiling: false,
-          boil: 90,
-          fall: null,
-        },
-        {
-          id: "porta",
-          label: "Na porta",
-          wants: "",
-          share: 0.5,
-          pressure: 38,
-          boiling: false,
-          boil: 40,
-          fall: null,
-        },
-      ],
-      rupture: { social: false, economic: false, political: false, open: false },
-      ruptures: [],
-      impeachment: null,
-      fallen: null,
-    },
-  });
-
-  assert.ok(html.includes("Na porta"), "a margem escolheu o grupo errado");
-  assert.ok(!html.includes("Longe"), "a margem mostrou os dois grupos, e ela tem uma linha so");
-});
-
-test("A MARGEM DIZ SE HA PROCESSO, e o silencio tambem e uma leitura", () => {
-  const state = createState();
-
-  const calmo = cabinetOf(state);
-  assert.ok(calmo.includes(UI.cabinet.processNone), "a mesa calou sobre o processo");
-  assert.ok(!calmo.includes(UI.cabinet.siege), "a mesa abriu processo num governo tranquilo");
-
-  const cercado = cabinetOf(state, {
-    boiler: {
-      lobbies: [],
-      rupture: { social: true, economic: true, political: true, open: true },
-      ruptures: [],
-      impeachment: 12,
-      fallen: null,
-    },
-  });
-  assert.ok(cercado.includes(UI.cabinet.siege), "o cerco nao chegou a mesa");
-});
-
 test("O CONTINGENCIAMENTO MORA NA MESA, e ele oferece as oito pastas", () => {
   /* ⚠ ELE MORAVA NAS OITO TELAS DE AREA, uma porta por tela — e o decreto e UM ato, rubrica a
      rubrica. Duas portas para o mesmo gesto e o defeito recorrente numero um deste projeto. */
   const state = createState();
 
-  const html = cabinetOf(state);
+  const html = deskOf(state);
   for (const area of CATALOG.areas) {
     assert.ok(html.includes(`data-protect="${area.id}"`), `a pasta ${area.id} nao chegou a mesa`);
   }
 
-  const poupada = cabinetOf(state, { protect: ["health"] });
-  assert.ok(poupada.includes(UI.area.decreeCost), "a area poupada nao disse quem paga");
-
-  const apertado = cabinetOf(state, { ratio: 0.6 });
-  assert.ok(apertado.includes(UI.area.decreeHonours), "o mes apertado nao disse quanto honra");
-  assert.ok(apertado.includes("60%"), "o mes apertado nao disse a fracao");
+  const poupada = deskOf(state, { protect: ["health"] });
+  const apertado = deskOf(state, { ratio: 0.6 });
+  /* ⭐ O PRECO MORA NO ART. 2, e nao numa nota ao lado: "o que elas deixarem de ceder, as
+     outras pagam" e a mesma frase para os dois estados, e e o proprio ato que a diz. */
+  assert.ok(apertado.includes("60%"), "o mes apertado nao disse a fracao no Art. 1");
+  assert.ok(html.includes("100%"), "o mes inteiro nao disse que honra o pedido todo");
 
   /* ⚠ O BOTAO TEM ESTADO, e o gesto e `data-protect` e nao `data-section`: os dois moram na
      mesma tela agora, e um seletor emprestado faria proteger trocar de tela. */
   assert.ok(html.includes('aria-pressed="false"'), "a pasta solta nao disse que esta solta");
   assert.ok(poupada.includes('aria-pressed="true"'), "a pasta poupada nao disse que esta poupada");
+});
 
-  /* SEM CORTE ELE NAO INVENTA UM. */
-  assert.ok(html.includes(UI.area.decreeWhole), "o mes inteiro nao foi dito");
-  assert.ok(!html.includes("100%"), "o mes sem corte imprimiu uma fracao de 100%");
+test("A MESA MOSTRA O QUE CHEGOU, e quem decide o que vence e o motor", () => {
+  /* ⛔ A TELA NAO CONTA PRAZO. Escrever `left(carta) <= 0` na view e a familia de defeito mais
+     cara deste projeto, com sete ocorrencias: quem diz o que este mes fecha sem resposta e
+     `silences`, e cada carta ja chega dizendo se vence. */
+  const state = createState();
+  const conta = (/** @type {string} */ html, /** @type {string} */ marca) =>
+    html.split(marca).length - 1;
+
+  const vazia = deskOf(state);
+  assert.equal(conta(vazia, 'class="envelope"'), 0, "a mesa vazia desenhou carta");
+
+  const tres = deskOf(state, { letters: mailOf(3) });
+  assert.equal(conta(tres, 'class="envelope"'), 3, "tres cartas nao viraram tres envelopes");
+  assert.equal(conta(tres, "data-urgent"), 0, "nenhuma vencia e alguma saiu marcada");
+
+  /* ⚠ O QUE VENCE CAI POR CIMA: e o que uma pessoa faz com a correspondencia urgente. */
+  const urgente = deskOf(state, { letters: mailOf(3, 2) });
+  assert.equal(conta(urgente, "data-urgent"), 2, "as duas que vencem nao ficaram marcadas");
+  assert.ok(
+    urgente.lastIndexOf('class="envelope"') > urgente.indexOf("data-urgent"),
+    "a que vence nao caiu por cima",
+  );
+
+  /* ⛔ E A MARCA E DE CADA CARTA, e nao da POSICAO dela: quem vence sai de `silences`, que
+     olha a caixa inteira, e o punhado desenha o que chegou. Marcando as ultimas N, uma caixa
+     com mais vencendo do que chegando pintava de vermelho carta que nao vence. */
+  const so_a_do_meio = deskOf(state, {
+    letters: [{ urgent: false }, { urgent: true }, { urgent: false }],
+  });
+  assert.equal(conta(so_a_do_meio, "data-urgent"), 1, "a marca nao seguiu a carta");
+
+  /* ⚠ O TETO E A TABELA DE QUEDA, e ele e declarado: acima dele o punhado repetiria posicao, e
+     duas cartas no mesmo lugar leem como uma. */
+  const cheia = deskOf(state, { letters: mailOf(40) });
+  assert.equal(conta(cheia, 'class="envelope"'), 8, "o punhado passou do teto da tabela");
+
+  /* ⛔ E ACIMA DO TETO QUEM FICA E A QUE VENCE. Ela chega no FIM da lista, para cair por cima,
+     e um corte pela frente jogava fora justamente as vermelhas: 12 cartas com 3 vencendo
+     desenhavam oito envelopes e nenhum vermelho — a mesa calada sobre o que ela existe para
+     avisar. */
+  const lotada = deskOf(state, { letters: mailOf(12, 3) });
+  assert.equal(conta(lotada, 'class="envelope"'), 8, "o punhado passou do teto da tabela");
+  assert.equal(conta(lotada, "data-urgent"), 3, "a caixa cheia engoliu as cartas que vencem");
+});
+
+test("O TELEFONE SO TOCA QUANDO ALGUEM FERVEU, e ele aponta para a Caixa", () => {
+  /* ⚠ A TELA NAO TEM LIMIAR PROPRIO: quem diz que um grupo ferveu e `boilerOf`, e aqui chega
+     so o NOME — ou nulo. Um telefone que tocasse por pressao alta sem ruptura seria a view
+     inventando um limiar a mais, e o jogo ja pagou por dois limiares para a mesma coisa. */
+  const state = createState();
+
+  const quieto = deskOf(state);
+  assert.ok(quieto.includes('data-ringing="false"'), "sem fervura o telefone tocou");
+  assert.ok(quieto.includes(UI.phone.quiet), "quem le por som nao soube que ele esta mudo");
+
+  const tocando = deskOf(state, { boiling: "Mercado financeiro" });
+  assert.ok(tocando.includes('data-ringing="true"'), "com fervura o telefone ficou mudo");
+  assert.ok(tocando.includes("Mercado financeiro"), "o telefone nao disse quem ligou");
+  /* O GESTO E O DO RAIL: `data-section` leva a Caixa, onde a carta ja esta. */
+  assert.ok(tocando.includes('data-section="email"'), "o telefone nao aponta para a Caixa");
+});
+
+test("A ESPESSURA DA PASTA E O QUE ESPERA DESPACHO, e nao um numero escolhido", () => {
+  const state = createState();
+  const conta = (/** @type {string} */ html) => html.split('class="stack__under"').length - 1;
+
+  assert.equal(conta(deskOf(state)), 0, "sem despacho a pasta ganhou folha de enfeite");
+  assert.equal(
+    conta(deskOf(state, { sheets: 4 })),
+    4,
+    "quatro despachos nao viraram quatro folhas",
+  );
 });
 
 /* ── O ZERO ARREDONDADO NAO CARREGA SINAL ────────────────────────────────────── ⚠ DEFEITO

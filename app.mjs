@@ -17,7 +17,6 @@ import { OPENING_MONTH, createState } from "./src/state/state.mjs";
 import { deserialize, serialize } from "./src/state/save.mjs";
 import {
   alertsOf,
-  betrayalOf,
   CATALOG,
   NEUTRAL,
   pollFrom,
@@ -29,7 +28,6 @@ import {
   boilerOf,
   chainOf,
   pledgesOf,
-  platformOf,
   forecast,
   passageOf,
   governmentOf,
@@ -74,7 +72,7 @@ import { financeHtml } from "./src/ui/screens/finance.mjs";
 import { vitalsHtml, whenHtml } from "./src/ui/screens/dashboard.mjs";
 import { bindAdvance, dressTopbar } from "./src/ui/shared/topbar.mjs";
 import { iconHtml } from "./src/ui/shared/icons.mjs";
-import { cabinetHtml, emailHtml } from "./src/ui/screens/cabinet.mjs";
+import { cabinetHtml, dressDesk, emailHtml, forgetDesk } from "./src/ui/screens/cabinet.mjs";
 import { noticeHtml, reportPanelHtml } from "./src/ui/screens/report.mjs";
 import { describeMail, describeMonth, trayHtml } from "./src/ui/screens/inbox.mjs";
 import { DEFAULT_TREATMENT, UI } from "./src/ui/strings.mjs";
@@ -470,65 +468,22 @@ function financeInput() {
   };
 }
 
-/**
- * O GABINETE — quatro resumos, e nenhum controle. Tudo o que ele mostra ja existe
- * em outra tela; o que ele faz e reunir e apontar para onde a decisao mora.
- *
- * @param {{ level: string, reason: string, base: number }} current
- */
-function cabinetInput(current) {
+/* O QUE A CAIXA CONSOME — e ela e a UNICA que sobrou deste montador.
+   ⚠ ELE ERA COMPARTILHADO COM O GABINETE, e a razao registrada era boa: "as duas leituras
+   saem do MESMO `settlement` do mes". Ela caiu quando o Gabinete virou mesa — ele nao le mais
+   leitura nenhuma, so o ato do mes. */
+function emailInput() {
+  /* ⚠ A CARTA DA MINORIA PEDE A CAMARA, e ela sai de `situationOf` — a mesma funcao que a
+     barra superior le. Antes ela chegava por parametro do painel do Gabinete, que nao existe
+     mais. */
+  const current = situationOf(state, CATALOG);
   const { budget } = ledger(state, orders, CATALOG);
   const share = settlement(state, orders, CATALOG);
+  /* ⚠ E O GOVERNO TAMBEM SAI UMA VEZ SO: o conselheiro dos cartoes, as pessoas e o
+     tratamento das cartas sao todos do mesmo elenco. */
+  const gov = governmentOf(state, CATALOG);
 
   return {
-    /* QUEM ASSINA A LEITURA DO MES. Ele nao vota e nao tem cadeira — a funcao dele
-       e ser a unica voz do jogo que se dirige ao presidente. */
-    base: current.base,
-    seats: SEATS,
-    majority: SIMPLE_MAJORITY,
-    /* ⚠ A PLATAFORMA JULGADA, e ela e o CRITERIO do jogo: `breachOf` rodava todo turno e
-       nenhuma tela o lia. O preco vem composto de `betrayalOf` porque a tela nao multiplica
-       fracao por parametro — quem compoe e a camada de aplicacao. */
-    platform: platformOf(state, CATALOG),
-    betrayal: betrayalOf(state, CATALOG),
-    /* AS OITO PASTAS E O DECRETO DO MES: o contingenciamento deixou as telas de area e virou
-       a primeira caneta da mesa. */
-    areas: CATALOG.areas,
-    protect: orders.protect ?? [],
-    ratio: share.ratio,
-    /* ⚠ A PRIMEIRA DATA DO JOGO, e ela e funcao pura do mes — sem relogio, com prova. */
-    calendar: calendarOf(state.month),
-    /* A BASE REPARTIDA PELO ESTADO DE QUEM A ENTREGA, e quem reparte e o motor:
-       os limiares que separam obstrucao de ruptura sao calibragem de ECLUSA. */
-    /* AS ONZE BANCADAS, com o que cada uma entrega — e o hemiciclo desenha 513
-       cadeiras a partir disso. Quem conta e o motor. */
-    /* ⚠ A PRIMEIRA CARTA DE VERDADE, e ela existia o tempo todo: o mes que fechou.
-       O relatorio do turno e produzido desde a quinta sessao e vivia enterrado num
-       bloco no rodape do Congresso — uma tela que o jogador pode nao visitar. O
-       resultado de uma decisao chegando onde talvez ninguem olhe e consequencia
-       invisivel, e o Gabinete e onde o mes COMECA.
-       As outras cartas — Congresso propondo, relator devolvendo, tribunal
-       derrubando — seguem sendo as Partes 3, 4 e 8, e a caixa continua dizendo o
-       que falta na nota do estado vazio. */
-    /* ⚠ A ORDEM E A DA URGENCIA, e nao a cronologica: as cartas da TRAMITACAO vem
-       primeiro porque elas pedem uma decisao — a Mesa pautou, o relator emendou, o
-       texto morreu na gaveta —, e o fechamento do mes so informa. Um inbox ordenado
-       por hora poe o aviso na frente do pedido, e ai o jogador aprende a rolar. */
-    /* ⚠ A CAIXA SAI DO ESTADO, e nao do ultimo relatorio. Antes ela lia
-       `last.report.events` — e por isso era um mural: o que chegava sumia no mes
-       seguinte. O que espera mora em `state.mail`, e e ele que tem prazo.
-
-       E A LEITURA DO MES CONTINUA VINDO DO RELATORIO, de proposito: ela nao e
-       correspondencia, e o fechamento do turno. Guarda-la faria o save carregar 48
-       relatorios para reescrever um texto que o turno ja sabe produzir. */
-    /* ⚠ SE ALGUM MES JA FOI RESOLVIDO, e ele existe por um defeito que o responsavel
-       fotografou: recarregar a pagina com partida salva zerava a bandeja
-       — `last` e variavel de modulo e nao vai para o save — e o estado vazio dizia "o
-       primeiro mes ainda nao foi resolvido" em junho de 2027.
-
-       ⚠ E A PERGUNTA E FEITA AO MES, E NAO A `last`. Era exatamente ler `last` que
-       produzia a mentira: ele nasce nulo em toda carga, e o mes nao — ele atravessa o
-       save, que e onde a verdade sobre o mandato mora. */
     resolved: state.month > OPENING_MONTH,
     inbox: trayHtml({
       open: openDispatch,
@@ -541,15 +496,15 @@ function cabinetInput(current) {
         /* ⚠ UM CARTAO POR MES FECHADO, e nao so o ultimo: eles agora moram no save, entao o
            resumo de marco continua na caixa em dezembro — e atravessa o F5. */
         ...state.months.map((/** @type {import("./src/state/state.mjs").MonthCard} */ fechado) =>
-          describeMonth({ report: fechado, adviser: governmentOf(state, CATALOG).adviser }),
+          describeMonth({ report: fechado, adviser: gov.adviser }),
         ),
         /* ⚠ A ORDEM NAO MORA MAIS AQUI, e a mudanca e de endereco e nao de regra: quem
            ordena e `trayHtml`, onde ela e funcao pura e tem prova. No entrypoint ela so era
            alcancavel pelo passeio, e passou meses com as perguntas nao ordenadas entre si. */
         ...describeMail({
           mail: state.mail,
-          people: governmentOf(state, CATALOG).people,
-          treatment: governmentOf(state, CATALOG).treatment,
+          people: gov.people,
+          treatment: gov.treatment,
           left: letter => left(letter, state.month),
           /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
            impacto seria "95% da despesa e obrigatoria" — e a divisao que a produz
@@ -592,25 +547,98 @@ function cabinetInput(current) {
            nao ha o que clicar. Quem ordena agora e a bandeja. */
       ],
     }),
+  };
+}
+
+/**
+ * O GRUPO MAIS PERTO DE ROMPER — e o mais perto do PROPRIO limiar, e nao o de maior pressao.
+ *
+ * ⚠ COMPARAR PRESSAO CRUA POE NA FRENTE O GRUPO ERRADO: quem esta em 40 de um limiar de 90
+ * esta longe; quem esta em 38 de um limiar de 40 esta na porta. O parecer tem UMA linha de
+ * grupo, entao escolher errado e mostrar o grupo que nao vai romper.
+ *
+ * @param {ReadonlyArray<{ label: string, pressure: number, boil: number }>} lobbies
+ */
+function closestToBreak(lobbies) {
+  let worst = null;
+  for (const lobby of lobbies) {
+    if (lobby.boil <= 0) continue;
+    if (worst === null || lobby.pressure / lobby.boil > worst.pressure / worst.boil) worst = lobby;
+  }
+  return worst === null ? null : { label: worst.label, pressure: worst.pressure, boil: worst.boil };
+}
+
+function cabinetInput() {
+  const share = settlement(state, orders, CATALOG);
+  const { budget } = ledger(state, orders, CATALOG);
+  const current = situationOf(state, CATALOG);
+  const boiler = boilerOf(state, CATALOG);
+  const standing = pollFrom(state.mood, CATALOG.segments, CATALOG.opinion);
+  /* ⚠ UMA VEZ POR MONTAGEM, e nao tres: `governmentOf` refaz o elenco da semente a cada
+     chamada, e o presidente, o nome do chefe e o genero dele saem do MESMO governo. */
+  const gov = governmentOf(state, CATALOG);
+
+  /* ⚠ QUEM CONTA O QUE VENCE E O MOTOR. `silences` e `settle` filtrada: a tela nao pergunta se
+     o prazo passou — escrever `left(carta) <= 0` por fora e a familia de defeito mais cara
+     deste projeto, com sete ocorrencias. */
+  const quiet = silences({ mail: state.mail, orders: orders.mail, month: state.month });
+  const dying = new Set(quiet.map(letter => letter.id));
+
+  /* ⛔ O MES DA CARTA E O MES EM QUE ELA CHEGOU, E A TELA PINTA COM O MES JA VIRADO: o turno
+     grava a carta com o mes que fechou e devolve o estado no seguinte. Comparar com
+     `state.month` dava zero em 47 dos 48 meses, e a mesa existia sem correspondencia nenhuma
+     — nada falhava. Quem diz qual mes fechou e o motor, e nao uma subtracao aqui. */
+  const closed = state.months[0]?.month ?? state.month;
+
+  return {
     room: share.room,
-    mandatory: budget.mandatory,
-    revenue: budget.revenue,
-    /* A RUA COMO UM NUMERO SO, e nao repartida: enquanto se assina, a repartição por renda e
-       analise, e analise mora em A Rua. */
-    standing: pollFrom(state.mood, CATALOG.segments, CATALOG.opinion),
-    /* A CALDEIRA, perguntada ao motor: a tela nao remonta pressao nem redecide
-       ruptura. */
-    boiler: boilerOf(state, CATALOG),
-    /* ⚠ O MES PASSADO, E ELE NAO VEM DO SAVE nem de `painted`. A ultima pintura vira o mes
-       CORRENTE ja no segundo repinte do mes, e a coluna repinta a cada clique: medido, um
-       clique na caixa levava as setas de 5 direcoes a 0, e `flat` afirma que nao andou.
-       Numa recarga `framed` volta nulo, e ai nao ha seta: ausencia nao e resultado. */
-    before: framed
-      ? {
-          pressure: framed.pressure,
-          standing: pollFrom(framed.mood, CATALOG.segments, CATALOG.opinion),
-        }
-      : null,
+    ratio: share.ratio,
+    /* ⭐ QUEM ASSINA SAI DA SEMENTE, e nao de um nome escrito na tela: o elenco inteiro se
+       refaz dela, e o presidente e a primeira pessoa dele. */
+    president: gov.president.name,
+    month: state.month,
+    areas: CATALOG.areas,
+    protect: orders.protect ?? [],
+    /* ⭐ O PARECER — as seis leituras do filtro do ciclo 21, cada uma da funcao que o turno
+       executa. A tela nao escolhe o grupo nem soma bancada: ela recebe. */
+    brief: {
+      month: state.month,
+      /* ⚠ QUEM ASSINA O PARECER E O CHEFE DA CASA CIVIL, e o elenco pode nao te-lo: sem ele
+         o documento sai sem signatario, e ausencia declarada e melhor que nome inventado. */
+      chief: gov.adviser?.name ?? "",
+      she: gov.adviser?.gender === "f",
+      room: share.room,
+      mandatory: budget.mandatory,
+      revenue: budget.revenue,
+      base: current.base,
+      majority: SIMPLE_MAJORITY,
+      worst: closestToBreak(boiler.lobbies),
+      standing: standing.good,
+      /* ⚠ O MES PASSADO NAO E `painted`: aquele e a ULTIMA PINTURA, e do segundo repinte do
+         mes em diante ela ja e o mes corrente. Medido: um clique na caixa levava as setas a
+         `flat`, e `flat` afirma que nao andou.
+         ⛔ E O PARECER RECEBE O NUMERO, e nao a direcao: quem escreve "caiu 2 pontos" e uma
+         pessoa; seta e desenho de tela, e no papel ela nao entra. */
+      was: framed === null ? null : pollFrom(framed.mood, CATALOG.segments, CATALOG.opinion).good,
+      impeachment: boiler.impeachment,
+    },
+    /* A BANDEJA MOSTRA O QUE CHEGOU, e nao a caixa inteira: medido em 48 meses, `state.mail`
+       fecha com 25 cartas, e 25 envelopes viram um monte. O fechamento traz 0 ou 1, e em 36
+       dos 48 meses ele traz alguma.
+       ⚠ E O QUE VENCE ENTRA MESMO SEM TER CHEGADO AGORA: ela e a carta que o mes fecha sem
+       resposta, e uma mesa que a esconde e a mesa deixando de avisar. */
+    letters: state.mail
+      .filter(letter => letter.month === closed || dying.has(letter.id))
+      /* O QUE VENCE CAI POR CIMA: e o que uma pessoa faz com a correspondencia urgente. */
+      .sort((a, b) => Number(dying.has(a.id)) - Number(dying.has(b.id)))
+      .map(letter => ({ urgent: dying.has(letter.id) })),
+    /* ⚠ A ESPESSURA DA PASTA E O QUE ESPERA DESPACHO, e nao um numero escolhido: sao as cartas
+       que fizeram uma pergunta e ainda nao foram respondidas. Hoje o jogo tem UMA caneta
+       construida — o contingenciamento —, entao sem elas a pasta teria sempre uma folha so. */
+    sheets: state.mail.filter(letter => letter.due !== null && letter.answer === null).length,
+    /* O TELEFONE TOCA SE ALGUEM FERVEU, e quem diz e o motor — o mesmo `boiling` que a ruptura
+       economica le. O primeiro basta: o telefone toca uma vez, e a Caixa lista todos. */
+    boiling: boiler.lobbies.find(lobby => lobby.boiling)?.label ?? null,
   };
 }
 
@@ -724,7 +752,7 @@ function focusMark() {
 
 function paint() {
   /* ⚠ AQUI, E NAO NO FIM DA PINTURA: `cabinetInput` le `framed` mais abaixo nesta mesma
-     funcao, e fixa-lo depois faria a coluna comparar o mes com o RETRASADO. */
+     funcao, e fixa-lo depois faria o parecer comparar o mes com o RETRASADO. */
   if (painted !== null && painted.month !== state.month) framed = painted;
 
   const focused = focusMark();
@@ -831,10 +859,7 @@ function paint() {
     el.main.innerHTML = closingHtml(term, governmentOf(state, CATALOG).treatment);
     el.main.dataset["screen"] = "closing";
   } else if (screen === "email") {
-    /* ⚠ AS DUAS TELAS DIVIDEM O MESMO INPUT, e nao dois: o email le a bandeja e a heranca, o
-       Gabinete le os seis blocos, e as duas leituras saem do MESMO `settlement` do mes. Dois
-       montadores dariam duas verdades sobre o mesmo mes na mesma virada. */
-    el.main.innerHTML = emailHtml(cabinetInput(current));
+    el.main.innerHTML = emailHtml(emailInput());
     el.main.dataset["screen"] = "email";
     /* ⚠ MARCA DEPOIS DE PINTAR, E LENDO O QUE FOI PINTADO. A alternativa era marcar
        antes, calculando qual carta a bandeja VAI abrir — e isso seria o entrypoint
@@ -846,8 +871,11 @@ function paint() {
        o conjunto guardaria id de carta morta pelos 48 meses do mandato. */
     rememberRead();
   } else {
-    el.main.innerHTML = cabinetHtml(cabinetInput(current));
+    el.main.innerHTML = cabinetHtml(cabinetInput());
     el.main.dataset["screen"] = "cabinet";
+    /* ⚠ A MESA SE VESTE DEPOIS DE PINTAR, e nao no HTML dela: a rubrica so se mede com o
+       traco na pagina, e as materias sao data URI que a folha nao tem como escrever. */
+    dressDesk(el.main);
   }
 
   /* RENDER POR IDENTIDADE DE REFERENCIA na barra superior. Como o estado e
@@ -1444,6 +1472,9 @@ el.swearForm.addEventListener("submit", () => {
      carrega o mes — `alarm()` monta `kind:id` —, entao um `ceiling:ceiling` clicado na
      partida anterior atravessa o recomeco e a bandeja abre ele em vez da mais urgente. */
   openDispatch = state.mail[0]?.id ?? null;
+  /* ⚠ E O GESTO DA MESA MORRE AQUI PELA MESMA RAZAO: a pasta erguida e a rubrica vivem em
+     variavel de modulo, e sem isto a partida nova abria com o ato ja assinado. */
+  forgetDesk();
   persistSeen();
   orders = blankOrders();
   persistDraft();
