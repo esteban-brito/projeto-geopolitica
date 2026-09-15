@@ -4,24 +4,27 @@
    linha 4 e que a carta da fervura conta na Caixa — vista em vez de lida. Quem decide se ele
    toca e `boilerOf`, pelo mesmo limiar que a ruptura le; a tela nao tem limiar proprio.
 
-   ⚠ E ELE APONTA, NAO REPETE: o clique abre o Email, onde a carta do grupo ja esta. Escrever
-   aqui quem ferveu e por quanto seria a terceira copia da mesma frase.
+   ⚠ E ELE APONTA, NAO REPETE: o clique abre o Email, onde a carta do grupo ja esta.
 
-   📗 A FORMA E A DO TELEFONE VERMELHO DE MESA, referencia dele: base com o teclado de doze
-   teclas, o fone deitado no berco atras, o cordao em espiral saindo pela esquerda. Visto de
-   cima, como a mesa. ⚠ AS TECLAS NAO TEM NUMERO: a 220px cada uma tem 6px, e numero de 6px e
-   texto falso que o medidor de contraste cobraria como texto. */
+   📗 E IMAGEM, como a madeira: `assets/phone.webp` e um telefone de teclas vermelho visto de
+   cima, gerado a pedido dele (origem em `assets/CREDITOS.md`), com teclas e cartao em branco.
+   ⛔ O VETOR SAIU (a 78 graus e sem cor literal ele destoava das materias de foto), e a FOTO
+   DO COMMONS TAMBEM: um Dialog de disco a 65 graus, que mesmo recortado lia como imagem colada.
+   A imagem vem em duas copias: a de cima leva as sombras da sala, a de baixo e o halo do toque
+   (mesma silhueta em ambar), que so aparece em opacidade — trabalho de compositor. */
 
 import { escapeHtml } from "./html.mjs";
 import { UI } from "../strings.mjs";
 
-/* O CORDAO: um traco grosso tracejado ao longo de uma curva le como espiral de longe. */
-const CORD =
-  `<svg class="phone__cord" viewBox="0 0 90 120" aria-hidden="true">` +
-  `<path d="M60 8 C 18 14, 6 50, 14 78 S 40 116, 70 112"/>` +
-  `</svg>`;
+const PHOTO = "/assets/phone.webp";
+/* A medida do arquivo, para o navegador reservar a caixa antes de a foto chegar. */
+const SIZE = 'width="720" height="639"';
 
-const KEYS = Array.from({ length: 12 }, () => `<i class="phone__key"></i>`).join("");
+/* AS DOZE TECLAS, na ordem do teclado: a imagem vem com elas em branco, e o algarismo entra por
+   cima, cada um no centro da tecla medida (`46-desk.css`, `.phone__keys`). */
+const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"]
+  .map(key => `<b>${key}</b>`)
+  .join("");
 
 /**
  * @param {object} input
@@ -34,12 +37,10 @@ export function phoneHtml({ boiling }) {
   return (
     `<button class="phone" type="button" data-section="email" data-ringing="${ringing}"` +
     ` aria-label="${escapeHtml(ringing ? UI.phone.ringing(boiling) : UI.phone.quiet)}">` +
-    CORD +
-    `<i class="phone__base"></i>` +
-    `<i class="phone__keys">${KEYS}</i>` +
-    `<i class="phone__label"></i>` +
-    `<i class="phone__cradle"></i>` +
-    `<i class="phone__handset"></i>` +
+    `<img class="phone__glow" src="${PHOTO}" alt="" ${SIZE}>` +
+    `<img class="phone__photo" src="${PHOTO}" alt="" ${SIZE}>` +
+    `<span class="phone__keys">${KEYS}</span>` +
+    `<span class="phone__number">${escapeHtml(UI.phone.number)}</span>` +
     `</button>`
   );
 }

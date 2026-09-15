@@ -122,8 +122,8 @@
        registro —, e a substancia caiu com ele: agora ha uma so, e o documento se distingue por
        PROFUNDIDADE, e nao por materia.
        ⚠ ELA E CHAPADA E NAO TRANSLUCIDA, e o numero e medido: o oficio translucido sobre a
-       lamina custou 9,7 fps, porque `--light-angle` interpola e a superficie inteira recompoe
-       a cada quadro. Uma folha grande usa tinta estatica; o passeio da luz fica na lamina. */
+       lamina custou 9,7 fps quando `--light-angle` ainda interpolava a cada quadro (o passeio
+       da luz saiu, `20-material.css`). Uma folha grande usa tinta estatica. */
     --sheet: #0c1220;
     /* O ANEXO E UM DEGRAU ACIMA DA FOLHA, e nao uma segunda superficie: card sobre documento e
        profundidade, e nao materia nova. */
@@ -179,6 +179,13 @@
          `.glass-action` `177,153,108`  `184,171,149`
          `.glass-support`  `43,51,60`     `64,70,79` */
     --bevel-under: inset 0 -1px 0 rgba(0, 0, 0, 0.26);
+    /* ── O REALCE ZENITAL — a aresta de cima pega a luz que as outras nao pegam ──────
+       📗 Fresnel de Schlick: um vidro reflete 4% de frente e quase tudo na aresta rasante, e e
+       por isso que vidro nao se faz esbranquicando o centro — se faz na BORDA.
+       ⛔ E ELE JA LEU COMO 2px UMA VEZ, quando tinha a forca da propria borda e os dois
+       brilhos somavam. Aqui ele e o DOBRO dela (0,28 contra 0,14): um degrau, e nao dois fios.
+       A base e os lados ficam como estao — a medicao do censo os aprovou. */
+    --bevel-zenith: inset 0 1px 0 rgba(255, 255, 255, 0.28);
 
     --radius-stage: 24px;
     --radius-piece: calc(var(--radius-stage) - var(--space-2));
@@ -337,6 +344,24 @@
        do molhado. Ordem dele: "tire essa bosta de verniz, tire tudo". A madeira e a foto, e
        a foto ja tem a cera dela. */
 
+    /* ══ A LUZ DA SALA — UMA SO, E ESTE E O UNICO LUGAR QUE A DECLARA ═══════════
+       Alta, atras da beira de cima e 20 graus a esquerda; a camera olha de cima. Toda sombra
+       cai para baixo e anda `--light-dx` para a direita por px de queda; toda aresta de cima e
+       da esquerda pega luz, a de baixo e da direita pega sombra. O clarao do tampo
+       (`40-shell.css`) fica onde a luz esta: 290px acima do centro, 105 a esquerda.
+       ⛔ A MESA TINHA DUAS LUZES: as sombras projetadas caiam retas e o lacre, as abas e a
+       pilha de folhas caiam para a direita a 0,5 — e ele viu "sombras que nao parecem
+       padronizadas". Uma direcao, e ela mora aqui. */
+    --light-dx: 0.36;
+    /* AS DUAS CAMADAS DE TODA PECA: o CONTATO, curto e escuro onde ela encosta, e a PENUMBRA,
+       longa e rala, que e a altura. 📐 A queda da penumbra e por classe de espessura, e nao
+       por mm: folha 6 · envelope 10 · pasta 24 · telefone 30. A fisica (altura x cot 75°)
+       daria 0 · 1 · 3 · 28, e a folha e o envelope liam como pintados na madeira. */
+    --cast-contact: calc(var(--light-dx) * 2px) 2px 4px rgba(0, 0, 0, 0.5);
+    --cast-flat: calc(var(--light-dx) * 6px) 6px 14px -4px rgba(0, 0, 0, 0.4);
+    --cast-thin: calc(var(--light-dx) * 10px) 10px 24px -8px rgba(0, 0, 0, 0.5);
+    --cast-thick: calc(var(--light-dx) * 24px) 24px 60px -20px rgba(0, 0, 0, 0.85);
+
     /* O COURO DA PASTA, e ele e PRETO por ordem dele. ⚠ COURO PRETO NAO E TINTA PRETA: o que
      se ve nele e a LUZ, e nao a cor — o realce vira cinza frio e a sombra quase fecha, entao a
      peca so existe pela aresta rebatida e pela costura. Saturacao zero na tinta deixa o
@@ -349,15 +374,10 @@
     --leather-tint-rgb: 27, 28, 32;
     --leather-deep: #0d0e11;
 
-    /* O TELEFONE — o vermelho de mesa classico, referencia dele. ⚠ A COR E SUPERFICIE, e nao
-     tinta: `--crisis` so entra em `color:`, e um aparelho e um preenchimento com luz em cima.
-     As teclas sao o cinza-chumbo do plastico, e o realce e o mesmo cinza frio das arestas. */
-    --phone-body: #c4232b;
-    --phone-body-rgb: 196, 35, 43;
-    --phone-deep: #7a1017;
-    --phone-gleam: #ffd9d6;
-    --phone-gleam-rgb: 255, 217, 214;
-    --phone-key: #35363b;
+    /* O TELEFONE E FOTO (`assets/phone.webp`), entao a cor dele nao mora aqui — so a luz de
+       linha. ⭐ ELA E AMBAR E NAO VERMELHA: num aparelho vermelho um LED vermelho some no
+       proprio corpo. O ambar e a cor de indicador de central telefonica. */
+    --phone-ring: #ffb64a;
 
     /* A COSTURA — o fio encerado e a penumbra do sulco. ⚠ EM COURO PRETO O FIO CLAREIA, e nao
      escurece: preto sobre preto nao e ponto de seleiro, e uma pasta de despacho real leva

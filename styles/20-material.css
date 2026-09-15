@@ -10,10 +10,12 @@
     overflow: hidden;
     border: 1px solid var(--glass-edge);
     border-radius: var(--radius-stage);
+    /* O vidro flutua sobre a mesma sala: a queda e a da classe "pasta", inclinada pela mesma luz. */
     box-shadow:
+      var(--bevel-zenith),
       var(--bevel-under),
-      0 2px 4px rgba(0, 0, 0, 0.55),
-      0 24px 60px -20px rgba(0, 0, 0, 0.85);
+      calc(var(--light-dx) * 2px) 2px 4px rgba(0, 0, 0, 0.55),
+      var(--cast-thick);
   }
 
   .glass-stage::before {
@@ -58,8 +60,9 @@
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
     box-shadow:
+      var(--bevel-zenith),
       var(--bevel-under),
-      0 14px 34px -18px rgba(0, 0, 0, 0.9);
+      calc(var(--light-dx) * 14px) 14px 34px -18px rgba(0, 0, 0, 0.9);
   }
 
   /* ── NIVEL 3 · SUPPORT — informacao que nao se toca ─────────────────────── */
@@ -70,25 +73,15 @@
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
     box-shadow:
+      var(--bevel-zenith),
       var(--bevel-under),
-      0 10px 24px -18px rgba(0, 0, 0, 0.9);
+      calc(var(--light-dx) * 10px) 10px 24px -18px rgba(0, 0, 0, 0.9);
   }
 
-  /* O PASSEIO DA LUZ.
-     9s e lento o bastante para nao competir com a leitura. Vive num `@property`
-     tipado para que o angulo INTERPOLE — sem tipo, ele saltaria entre keyframes
-     e o salto lê como piscada. */
-  :root {
-    animation: light-drift 9s ease-in-out infinite;
-  }
-
-  @keyframes light-drift {
-    0%,
-    100% {
-      --light-angle: 150deg;
-    }
-    50% {
-      --light-angle: 205deg;
-    }
-  }
+  /* ⛔ O PASSEIO DA LUZ SAIU, e o numero e este: `--light-angle` animado no `:root` (150° a
+     205° em 9s) herdava para a arvore inteira, e cada quadro recalculava o estilo de 627
+     elementos (7,9ms) e repintava todo vidro — no voo da pasta, 356ms de thread principal
+     em 700ms e a GPU a 82%. Sem ele: 13ms, 4 pinturas, GPU a 12%, pior quadro 20,1 → 4,2ms.
+     Ja tinha custado 9,7 fps no oficio e 28,3 no `.tray__month`. O angulo parou no valor
+     inicial do `@property`, e a luz do vidro e a mesma, parada. */
 }

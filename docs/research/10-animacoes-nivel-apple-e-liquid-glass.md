@@ -1,7 +1,8 @@
 # Pesquisa 10 — ANIMAÇÕES NÍVEL APPLE E LIQUID GLASS: do modelo físico à engenharia de baixo nível na web
 
 > **Manual definitivo de engenharia para o Claude e a equipe.**  
-> Escrito e auditado em 11/09/2026.  
+> Escrito e auditado em 11/09/2026; emendado em 13/09 nos quatro pontos que a auditoria achou
+> (os blocos **CAUTION** em §1.4, §2.5, §2.6/§2.7/§2.8 e §6.2). O código que vale é `spring.mjs`.  
 > Este documento investiga a arquitetura de baixo nível por trás do CoreAnimation da Apple
 > (`RenderServer`, `CASpringAnimation`), da mecânica dos fluidos do Dynamic Island e dos materiais
 > refrativos de visionOS. Traduz a óptica física (Fresnel de Schlick, conservação volumétrica 3D)
@@ -107,11 +108,19 @@ Diferença crítica entre animações disparadas por evento e animações contí
 
 - **Transição Disparada (State Change):** Quando o jogador clica para abrir a pasta ou fechar um
   painel, a trajetória parte do repouso ($v_0 = 0$) e segue a curva calculada até o alvo. O CSS `linear()`
-  é a solução ótima absoluta.
+  serve — **desde que a interrupção seja tratada** (abaixo).
 - **Gesto Vivo Interrompido (Drag & Release):** Quando o jogador arrasta a peça na tela e a solta em
   alta velocidade ($v_0 \ne 0$), uma curva estática com $v_0 = 0$ frearia o elemento bruscamente.
   Para preservar o momento mecânico da Apple, o código deve instanciar a EDO analítica **injetando o
   vetor de velocidade real de soltura** $v_0$ na geração da curva CSS `linear()`.
+
+> [!CAUTION]
+> **Emenda de 11/09 (auditoria contra a conta):** a pasta do Gabinete NÃO é só mudança de estado.
+> Erguer e largar em sequência interrompe o voo, e uma `transition` CSS interrompida **recomeça do
+> zero** — é o defeito que a mola existia para evitar. O `linear()` só serve com retargeting: no
+> instante do novo clique, ler $x(t)$ e $\dot{x}(t)$ da própria conta e gerar a curva seguinte a
+> partir deles. É o que `curveOf` em `src/ui/shared/spring.mjs` faz (`at` e `rate`), com a
+> animação disparada pela Web Animations API e não por `transition`.
 
 ---
 
@@ -177,13 +186,23 @@ Para o amortecimento crítico ($\zeta = 1$):
 $$\omega_n \approx \frac{2\pi}{\text{duration}}$$
 No instante $t = \text{duration}$:
 $$e^{-2\pi}(1 + 2\pi) \approx 0.001867 \times 7.283 \approx 0.0136 \quad (1,36\%)$$
-O limiar estrito de $\epsilon = 0.002$ é atingido em $t_{\text{settle}} \approx 1.25 \times \text{duration}$.
+O limiar estrito de $\epsilon = 0.002$ é atingido, no caso crítico, em $t_{\text{settle}} = 1.347 \times \text{duration}$.
+
+> [!CAUTION]
+> **Emenda de 11/09: o corte NÃO é uma constante.** A primeira versão deste texto dizia $1.25$
+> aqui, o gerador do §2.7 usava $1.22$, e a conta com o próprio $\epsilon = 0.002$ dá $1.347$. A
+> $1.22$ o resíduo do crítico é $0.41\%$ — o dobro do limiar — e, como o gerador crava o último
+> ponto em $1$, sobra um salto de $2.8\text{px}$ no fim de um curso de $700\text{px}$ (o da pasta
+> é $448 \to 710$). E o número muda com o regime: para um quique de $0.3$ ele passa de $2.0$.
+> **O assentamento se procura**, avaliando a curva até o resíduo e a velocidade caírem abaixo de
+> $\epsilon$ — 200 avaliações por gesto, em `settleOf` de `spring.mjs`. Medido: $0.426\text{s}$
+> para o `LIFT` de $0.30\text{s}$, contra os $0.366$ que $1.22 \times$ daria.
 
 > [!WARNING]
 > **A Armadilha da Dilatação Temporal ($2.5\times$):**
 > Nunca multiplique a duração por constantes altas como $2.5\times$. Isso faz a animação passar mais
 > de metade do seu tempo final imperceptivelmente congelada em $0.999$, gerando sensação de lentidão
-> e arrasto pesado no navegador. O fator correto de assentamento deve variar entre $1.15$ e $1.30$.
+> e arrasto pesado no navegador.
 
 ---
 
@@ -204,9 +223,24 @@ $$t_i = t_{\text{settle}} \cdot \left( \frac{i}{N} \right)^{1.2}$$
 Essa parametrização densifica as amostras nos instantes iniciais de alta energia e espaça suavemente
 as amostras na aproximação final assintótica.
 
+> [!CAUTION]
+> **Emenda de 11/09: cada ponto tem de levar a POSIÇÃO.** `linear()` espaça os pontos por igual no
+> tempo quando eles chegam sem posição — então uma amostragem densa no arranque sai ESTICADA sobre
+> a duração toda. Medido: a pasta chegava a $489\text{px}$ aos $120\text{ms}$ onde a conta pede
+> $635$, porque os $29\text{ms}$ iniciais estavam espalhados sobre $120$. A forma certa é
+> `linear(0 0%, 0.0415 3.59%, …, 1 100%)`, e é assim que `curveOf` emite.
+
 ---
 
 ### 2.7 Gerador de Referência em JavaScript Puro (ESM)
+
+> [!CAUTION]
+> **Emenda de 11/09: o gerador abaixo é o RASCUNHO, e ele erra em dois pontos** — o corte constante
+> (`1.22`, §2.5) e a amostra sem posição (§2.6). O gerador que vale é `curveOf` em
+> `src/ui/shared/spring.mjs`, coberto por seis provas em `tests/suites/spring.mjs` (a analítica
+> contra a derivada numérica nos três regimes, $v_0$ honrado, quique zero que não ultrapassa). Uma
+> delas pegou um erro de sinal no superamortecido — `(r2−r1)` por `(r1−r2)` — que dava posição certa
+> nas duas pontas e caminho errado no meio. O rascunho fica aqui só para a comparação.
 
 Este módulo utilitário é autocontido, não possui nenhuma dependência externa e pode ser consumido
 tanto em tempo de compilação quanto em tempo de execução na interface:
@@ -298,6 +332,13 @@ Ao instanciar a mola padrão da pasta (`duration: 0.30, bounce: 0, v0: 0`):
   transform: translate3d(var(--read-x), var(--read-y), 0) scale(var(--read-scale));
 }
 ```
+
+> [!CAUTION]
+> **Emenda de 11/09: este exemplo NÃO é o que o Gabinete usa, por duas razões medidas.** A lista
+> vem sem posições (§2.6), e `transition` recomeça do zero quando interrompida (§1.4). No
+> `cabinet.mjs` a curva nasce a cada gesto com a velocidade do instante e vai para
+> `element.animate()`, uma animação por peça no compositor: 0 quadros e 0 escritas de estilo na
+> thread principal, contra ~24 `requestAnimationFrame` e ~72 escritas do laço anterior.
 
 ---
 
@@ -509,6 +550,14 @@ export class VelocityTracker {
   em $X$ (`rotateX(-180deg)`), revelando o papel interno que desliza suavemente para cima antes de expandir.
 - **Preservação do Ritmo do Cargo:** O movimento deve durar entre $0.28s$ e $0.34s$, sem quique exagerado,
   simulando o corte limpo de uma espátula de abrir cartas de metal nobre.
+
+> [!CAUTION]
+> **Emenda de 11/09: o `rotateX` reabre uma decisão fechada, e a pergunta é dele.** A árvore 3D saiu
+> inteira da mesa por ordem dele ("a foto da madeira exatamente como ela é" — em projeção a foto é
+> reamostrada), e a mesa inteira é ortográfica, vista de cima. Uma aba que gira em perspectiva é a
+> única peça com ponto de fuga na cena. Antes de desenhar a Etapa 3, perguntar a ele: aba em
+> perspectiva, ou abertura em 2D (a aba sobe pela escala e a carta desliza)? Não é detalhe de
+> implementação.
 
 ### 6.3 O Futuro Dock de Vidro no Rodapé
 

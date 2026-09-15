@@ -873,8 +873,17 @@ export const UI = {
      * @param {boolean} she */
     role: she => `${she ? "Ministra" : "Ministro"} de Estado Chefe da Casa Civil`,
   },
+  /* O ENVELOPE — para quem le por som; na tela ele e um objeto, e o vermelho e o prazo. */
+  envelope: {
+    waiting: "Carta na mesa. Abrir a Caixa.",
+    due: "Carta que vence este mês. Abrir a Caixa.",
+  },
   /* O TELEFONE — as duas frases sao para quem le por som; na tela ele e so um objeto. */
   phone: {
+    /* O numero no quadro do aparelho: inventado, como toda pessoa deste jogo — e nao o do
+       Planalto real. Prefixo que nao existe na lista da Anatel. ⚠ SEM DDD: o cartao da foto
+       tem 52px de largura, e com "(61) " o numero quebrava em duas linhas a 8,5px. */
+    number: "2027-0148",
     quiet: "Telefone. Ninguém ligou.",
     /** @param {string} who */
     ringing: who => `O telefone toca: ${who} rompeu com o governo. Abrir a carta.`,

@@ -17,11 +17,142 @@
 
 ## ▶ COMECE POR AQUI
 
-### ✔ Estado — 10/09/2026
+### ✔ Estado — 15/09/2026 02:05 (portão verde, commitado)
 
-`npm run validate` fecha: **13 guardas · 66 provas sintéticas · 324 provas · passeio verde**.
-Branch `caixa-de-entrada`, **nada commitado desde `e5a0cf7`** — dois dias de trabalho na
-árvore. ⚠ **Commitar é decisão dele, e está na hora de perguntar.**
+Commit mais recente: o de 15/09 02:05 (`git log -1`), que fechou a sessão inteira por ordem
+dele: 18 arquivos modificados + `tests/suites/spring.mjs`, `docs/research/11-fotorealismo-da-mesa.md`,
+`assets/phone.webp` e `assets/CREDITOS.md` novos. Ele mandou revisar antes de commitar; a revisão
+achou e corrigiu um defeito, e no meio dela vieram três ordens: o telefone vira imagem real, o
+voo da pasta fica liso, e algarismos nas teclas. Tudo feito (bloco abaixo). `npm run validate`
+verde na árvore final:
+**13 guardas · 66 sintéticas · 331 provas · passeio verde**. Hierarquia, ordem dele de 15/09:
+**ele, depois Claude, depois Gemini — e sempre delegar algo ao Gemini** (canal `agentapi`,
+conversa `883734d6-…`; receita na memória do Claude).
+
+▶ **15/09 — a revisão, o voo liso e o telefone de foto:**
+
+1. ⛔ **Defeito real, medido e coberto:** marcar uma área com a pasta erguida repinta a sala, e a
+   sala nova nascia sem `--phone-x` (ele só se mede com a pasta na mesa) — o telefone ia para
+   `left: -271px` e ficava lá depois de largar. O passeio nunca marcava com a pasta no ar.
+   Agora o valor é de módulo em `cabinet.mjs` e se reescreve a cada pintura; prova nova na etapa
+   "recomeçar" do passeio (reprova sem a correção: `1130px antes, -271 depois`).
+2. ⭐ **O FPS DO VOO CAÍA POR CAUSA DO PASSEIO DA LUZ, e não do couro.** Trace do Chrome no
+   voo: `--light-angle` animado no `:root` (`20-material.css`) herdava para a árvore inteira —
+   45 recálculos de estilo de 627 elementos (7,9ms cada, 356ms em 700ms), 651 pinturas, GPU a
+   82%. Sem ele: 13ms, 4 pinturas, GPU a 12%, pior quadro 20,1 → 4,2ms. `tmp/jank.mjs`: p95 21ms
+   e 4–6 quadros perdidos com, **p95 4,3ms e 0 perdidos sem** (Gemini mediu o mesmo: mediana
+   8,3 / 4,3 / 0). 📐 **O couro e a fibra não custam nada sem ele** — o "grão ou 20 fps" de 13/09
+   media o passeio, não o grão. O passeio saiu; o ângulo ficou no `initial-value` do
+   `@property`. ⚠ Ele já tinha custado 9,7 fps no ofício e 28,3 no `.tray__month` — três vítimas
+   do mesmo defeito, e só agora a causa.
+3. ⭐ **O TELEFONE É IMAGEM GERADA, VISTA DE CIMA** (`assets/phone.webp`, 720×639, 101 KB):
+   ele propôs gerar no DALL-E; o ChatGPT gerou duas a partir do meu prompt (telefone de teclas
+   vermelho estilo WE 2500, zênite, teclas e cartão em branco, sem sombra no chão, fundo liso) e
+   o Gemini uma; foi a segunda do ChatGPT — a mais zenital, corpo de ~1000px, já com alfa.
+   Origem em `assets/CREDITOS.md`; sem licença de terceiros. Tratamento em `tmp/assar-fone.mjs`
+   (alfa 252/253 → 255, corte, 720 de largura, exposição 0,95 e 1 → 0,88 de cima para baixo).
+   Na tela: **420px** (a 300 media o mesmo que o envelope; a 500 ele viu "demais"), corpo de
+   ~232px; o corpo fica no meio do vão (a caixa recua 32px) e no vão curto o cordão entra por
+   baixo da pasta (`z-index` 2 < 3). Sombras por `drop-shadow` (contato 0,88, penumbra 0,6) e
+   uma poça de contato (`.phone::before`, ideia do Gemini). Número no cartão `2027-0148`, 11px.
+   **Algarismos nas teclas, ordem dele:** 12 `<b>` numa grade 3×4 medida no arquivo (colunas
+   350,5/412/473,5 de 720, linhas 300/355/410,5/466 de 639), 11px; a caixa do algarismo é a da
+   tecla (57%×63% do passo) porque com a célula inteira o passeio media 4,27 de contraste — o
+   corpo vermelho entrava na amostra.
+   ⛔ **Duas versões morreram antes, medidas:** o vetor (553 linhas, 78°, destoava das matérias
+   de foto) e a foto do Commons («Dialog röd», CC BY-SA 3.0, Dialog de disco a 65°) — mesmo
+   recortada por `r − max(g,b)`, desfranjada e com a luz da sala assada, ele viu "muito na cara
+   que é imagem". O fio claro em volta dela era a máscara de nitidez misturando o preto dos
+   pixels transparentes na borda — se voltar a afiar imagem com alfa, só no miolo. O recorte
+   por cor ficou em `tmp/recorte.mjs`. ⚠ O Gemini editou `46-desk.css` por ordem dele
+   (255px, `rotateX(15deg)`): o `rotateX` quebrava a animação do toque e desalinhava o cartão;
+   saiu, e a poça de contato ficou.
+4. **Instrumentos novos em `tmp/`** (fora do git): `trace-voo.mjs` + `trace-lê.mjs` (trace do
+   Chrome no voo, resumo por thread), `recorte.mjs` (o recorte da foto), `thumb.mjs`,
+   `sheet.mjs`, `zoom.mjs`, `fundo-xadrez.mjs`, `anims.mjs`.
+
+▶ **O que sobra da mesa é decisão dele, e está na fila:** a carta aberta NA MESA (Etapa 3) depende
+da pergunta do `rotateX` (pesquisa 10 §6.2); o calendário foi recusado; os objetos mudos, "não
+agora". Achados 63 e 64 são escrita dele.
+
+▶ **Noite de 13/09 — fotorealismo, e onde ele parou (ordem dele: "vamos finalizar por aqui"):**
+
+1. ⛔ **Filtro de luz no telefone: testado e RECUSADO por ele.** O alfa borrado como mapa de altura
+   (`feDiffuseLighting` + `feSpecularLighting`, a receita da cera) dá a toda aresta o mesmo
+   chanfro e ao cabo uma faixa de brilho borrada — _"brilhoso, cartunesco, nada fotorealista"_.
+   Saiu inteiro; e com ele saíram, por ordem dele, o clarão do platô, o tom aceso (`--phone-lit`
+   morreu) e todo gleam. Sobrou: grão de plástico (multiply), fone em contorno único com
+   concordância (o "osso de cachorro" acabou), cabo com volume de tubo (véu preto em gradiente),
+   nicho do berço em gradiente, cordão com lado de sombra. 📐 Custo do voo: o grão do telefone
+   não mede (jank igual com e sem).
+2. **Número no quadro:** inventado, em `UI.phone.number`, 8,5px na tela (hoje `2027-0148`, no
+   cartão da foto — ver 15/09).
+3. **Pasta:** grão de couro calculado (`leather()`: ruído + `feDiffuseLighting` pela luz da sala,
+   branco com alfa = brilho do grão, composto normal sobre o preto — o que `screen` daria), assado
+   em bitmap por `bake()` na carga; borda de 8px com espessura; reflexo 0,15 → 0,2.
+   📐 ~~E ELE CUSTA NA SUBIDA~~ — **remedido em 15/09: não custa.** Os 55–61 fps e 4–10 quadros
+   perdidos "com o grão" eram o passeio da luz (ver 15/09); sem ele o couro e a fibra dão o
+   mesmo p95 de 4,3ms que a pasta nua.
+4. **Papel:** sombra na lombada (10%, oclusão de contato) e fio de luz de cima para baixo.
+   **Lacre e feltro:** a mesma luz de tudo (250°/52°); o lacre tinha ponto de luz próprio.
+5. ⛔ **Grão de foto sobre a cena inteira: tentado e não cabe.** `.shell` isola (o vidro precisa)
+   e a madeira está fora dele — o `mix-blend-mode` nunca a alcança e a área clareava com borda
+   nítida. Cada matéria leva o próprio grão.
+6. **O caminho para o telefone FOTOREALISTA é foto** — feito em 15/09 (ver acima).
+7. **Gemini:** pesquisa 11 (`docs/research/11-fotorealismo-da-mesa.md`) e a tabela de auditoria
+   das 8 regras no journal; `screen` 26,8 × 27,2 na máquina dele ocupada (não cite).
+
+▶ **Tarde de 13/09 — a luz da sala e o telefone:**
+
+1. ⭐ **UMA LUZ para a sala inteira**, declarada em `00-tokens.css`: `--light-dx: 0.36` (alta,
+   atrás da beira de cima, 20° à esquerda) e quatro classes de sombra — `--cast-contact`,
+   `--cast-flat` (folha, 6px), `--cast-thin` (envelope, 10px), `--cast-thick` (pasta e vidro,
+   24px). Pasta, folhas, pilha, emboss, envelope, abas, lacre, telefone e os três níveis de vidro
+   caem todos para baixo e 0,36 para a direita por px de queda. ⛔ **A mesa tinha duas luzes:**
+   as projetadas caíam retas e o lacre, as abas e a pilha caíam para a direita a 0,5 — ele viu
+   "sombras que não parecem padronizadas". O clarão do tampo andou 105px para a esquerda, para
+   onde a luz está. O telefone só diz a queda de cada sombra (`--drop` inline, RUNTIME) e o CSS a
+   inclina; o filtro `#wax-shadow` saiu do SVG (a sombra do lacre é `drop-shadow` CSS).
+2. **Telefone maior, mais alto e mais à direita, ordem dele:** caixa 278×283 = a tinta (era
+   290×268 com 40px de margem transparente), escala 1,22 (9% acima), `top: 45%` (era 52%).
+   ⭐ **O X é medido por `fitDesk`** (`--phone-x`, RUNTIME): meio do vão entre a pasta e a beira
+   visível da janela. Em % da cena ele não andava — na de 1440 o vão tem 309px para 272 de
+   aparelho, e ele pediu "mais à direita" olhando a de 1920 (monitor dele). Medido: 16px de
+   cada lado na de 1440, 128 na de 1920.
+3. **Docs:** pesquisa 10 emendada nos 4 pontos; handoff limpo (blocos cumpridos foram para o
+   journal via `tmp/handoff-para-journal.md`); `--bevel-zenith` (aresta de cima dos três vidros,
+   `20-material.css`) e o feltro do envelope regranulado (`texture.mjs`, 0,95/1,5 → 1,7/0,85)
+   estavam na árvore desde a madrugada sem registro — registrados aqui.
+4. **Medições do Gemini nesta máquina (75Hz):** achado 65, subida da pasta com a promoção de GPU
+   aplicada — pior quadro 23,1ms, p95 18,2, 73–74 fps, 1 perdido (o 83ms não se reproduz); com
+   a penumbra inclinada, 18,2 / 18,1 / 68 fps / 0 perdidos — não custou. Achado 62 —
+   `.go__label` a 19,15 em 4 rodadas, fechado como não reproduzido.
+5. **Cada envelope é um botão para a Caixa** (ciclo 25 §3.3, passo 5: "clicar leva ao Email"):
+   `<button data-section="email">` com `aria-label` que diz se a carta vence (`UI.envelope`),
+   o gesto do rail e do telefone. Prova nova em `screens.mjs` (331ª). A carta aberta NA MESA
+   (Etapa 3) continua sendo ciclo, e depende da pergunta do `rotateX` (pesquisa 10 §6.2).
+
+▶ **Madrugada de 13/09 (Claude + Antigravity):**
+
+1. **Voo da pasta (Etapa 2):** EDO analítica `curveOf` em `spring.mjs`, Web Animations API em `cabinet.mjs`, velocidade na interrupção `whereIs`, 6 provas em `spring.mjs`.
+2. **Telefone Western Electric 2500 refeito** (Claude desenha, Gemini mede/critica/documenta — canal direto pelo `agentapi` do Antigravity): projeção em mm reais a 78°, zero cor literal no JS, zero filtro, teclas e cordão gerados, algarismo a 8,5px (sem letras, sem número no quadro: abaixo de 8px é texto falso). A versão anterior (vista frontal, ~30 cores literais, 4 filtros, letras de 3,5px) foi substituída inteira.
+3. **Envelopes redesenhados:** tamanho nativo de 155px em `46-desk.css` (sem o serrilhado de `clip-path`), recuo para 22,5% e leque 40px/62px sem colisão com a pasta.
+4. **Otimização de GPU da pasta (achado 65):** `FLOOR = 0.001` no JS, `transform: translateZ(0)` nos casts, `will-change: transform; isolation: isolate;` na `.folder`.
+5. **A luz da sala sobre o tampo** (`40-shell.css`, `.backdrop` do Gabinete): clarão branco em `soft-light` no terço superior e `multiply` nas quinas. Croma 80,2% → 73,2%, luz 61,7 → 74,3.
+
+▶ **O punhado saiu de cima da pasta — 13/09, e o diagnóstico anterior estava errado.**
+A proposta de `78px` → `60px` recuperava 9,7px de 57,3. O que a medição no navegador mostrou:
+a janela de 1440 mostra **1196,8px** do Gabinete e punhado + pasta + telefone somam **1207,8**
+encostados — **as três peças não cabem.** A causa é de 11/09: a pasta recuou de 52% para 47% e
+cresceu de 0,40 para 0,44, e o punhado só andou de 27% para 25%.
+⭐ **Resolvido sem encolher peça nenhuma:** `.mail` de 25% para **22,5%** e o leque de
+`78px/92px` para **40px/62px**. Sobram 11px até a pasta, e 34px de envelope saem pela beira
+esquerda — a área corta a cena de propósito (`overflow: hidden`, comentário ao lado).
+📐 **Alternativa medida e recusada:** envelope de 155 para 130 também fechava o portão, e
+custava 16% da carta.
+
+✔ **Telefone v2 fechado em 13/09 03:30** (projeção a 78°, zero cor literal, zero filtro); a
+revisão da v1, o plano e a auditoria (achado 66) estão no journal de 13/09.
 
 ⭐ **A guarda `orphans` passou a ver duas espécies novas, e as três achadas eram reais:** o
 seletor de ESTADO que ninguém escreve (`[data-vence]` contra `data-urgent` — a carta que vence
@@ -46,23 +177,10 @@ de 45ms contra o finger dwell, e substituição de filtros SVG dinâmicos (invi�
 de segurança e queda de fps na CPU em telas Retina) por Liquid Glass analítico em CSS
 (`backdrop-filter` mais Schlick Fresnel em `box-shadow` inset). Base pronta para a etapa 2.
 
-⚠ **E ELA FOI AUDITADA CONTRA A CONTA — 11/09, três achados.** As duas EDOs estão certas
-(conferi crítico e subamortecido derivando de `y(0)=-1`, `ẏ(0)=v₀`), e a convenção `ζ = 1−bounce`
-é a mesma do nosso `spring.mjs`. O que não fecha:
-⛔ **1 · o corte da curva tem TRÊS números para a mesma coisa.** O texto do §2.5 diz
-`t_settle ≈ 1,25 × duration`, o código do §2.7 usa **1,22** no caso crítico, e a conta com o
-ε = 0,002 que ele mesmo define dá **1,347**. A 1,22 o resíduo é **0,41%** — o dobro do ε —, e como
-o gerador crava o último ponto em 1, sobra um salto de **2,8px** no fim, num curso de 700px. O
-curso da nossa pasta é 448→710px: exatamente essa ordem de grandeza.
-⛔ **2 · trocar a mola por `transition` CSS reintroduz um defeito que já medimos.** O §1.4 chama
-o `linear()` de "solução ótima absoluta" para mudança de estado, mas a pasta NÃO é só mudança de
-estado: erguer e largar em sequência interrompe o voo, e **transição interrompida recomeça do
-zero** — está escrito em `cabinet.mjs` e foi por isso que a mola existe. O `linear()` serve se o
-retargeting for tratado; sem isso, é uma regressão.
-⛔ **3 · o §6.2 pede `rotateX(-180deg)` no envelope**, e a árvore 3D saiu inteira da mesa por
-ordem dele ("a foto da madeira exatamente como ela é"; em projeção a foto é reamostrada).
-Reintroduzir perspectiva para o envelope reabre uma decisão fechada — é pergunta para ele, não
-detalhe de implementação.
+✔ **E ELA FOI EMENDADA EM 13/09 nos quatro pontos da auditoria de 11/09** — blocos CAUTION em
+§1.4 (transição interrompida recomeça do zero), §2.5 (o corte se procura: 1,347 e não 1,22),
+§2.6–2.8 (cada ponto leva a posição; o gerador que vale é `curveOf`) e §6.2 (`rotateX` no
+envelope é pergunta para ele). A narrativa da auditoria está no journal de 13/09.
 
 ### ✔ A mesa — 08/09/2026
 
@@ -93,11 +211,12 @@ Gabinete. A única coisa que toca a foto são 44px de degradê na beira inferior
 📐 **Preço declarado:** em janela mais alta que 821px sobra fundo da UI embaixo da beira.
 📐 **Custo:** `npm run screen` 76,3 com material × 73,7 de controle — dentro do ruído.
 
-⭐ **Uma luz só:** as sombras da pasta e dos envelopes caem retas como as do `.glass-stage`
-(`0 2px 4px` + `0 24px 60px −20px`); o véu do gesto e a vinheta apagam para `--bg-deep`, e não
+⭐ **Uma luz só (refeita em 13/09 — ver o Estado):** toda sombra da sala sai de `--light-dx` e das
+quatro classes `--cast-*` de `00-tokens.css`, e cai para baixo e 0,36 para a direita; o véu do gesto e a vinheta apagam para `--bg-deep`, e não
 para o preto. **A pasta é preta**, ordem dele, com a costura clara — fio preto sobre couro preto
-não é ponto de seleiro. Pasta a 52% da cena, punhado a 27% (49px de folga da pasta, 35px da
-janela de 1440, contas no CSS). ⚠ **Trocou a foto?** `DESIGN`, o `.room`, o `.backdrop` e
+não é ponto de seleiro. Pasta a 47% da cena, punhado a 22,5% (11px de folga da pasta; 34px de
+envelope saem pela beira esquerda em 1440, de propósito), telefone no meio do vão medido por
+`fitDesk`. ⚠ **Trocou a foto?** `DESIGN`, o `.room`, o `.backdrop` e
 toda % de `.folder` e `.mail` mudam juntos.
 
 ⛔ **`place-items` não centra a cena:** a célula da grade cresce até 1916px e transborda para a
@@ -139,9 +258,9 @@ levava **3s** num navegador a 12 fps. Hoje o tempo real é dividido em subpassos
 1/20 num gesto de 0,26s o amortecimento inverte de sinal e a peça **explodiu para 12.878px** na
 primeira tentativa. Volta em 700ms no headless.
 
-⚠ **O que falta:** calendário, telefone; rubrica
-não é estado (some ao virar o mês, assinar não custa nada) — **decidido em 10/09: fica gesto
-até a segunda caneta existir**, porque assinar uma coisa só não dá o que decidir.
+⚠ **O que falta na mesa:** a rubrica não é estado (some ao virar o mês, assinar não custa nada)
+— **decidido em 10/09: fica gesto até a segunda caneta existir**, porque assinar uma coisa só
+não dá o que decidir. Calendário: recusado em 11/09. Telefone: pronto.
 
 ▶ **O plano em vigor é terminar a mesa** (ciclo 25, passos 4–6), decisão dele em 10/09: o
 Gabinete tem 2 objetos de 5, e nenhum passo abre motor.
@@ -183,12 +302,8 @@ dele**. `settle` é aditivo puro: os +20 do partido atravessam o mandato sem est
 
 ▶ **A MESA, EM ETAPAS — ordens dele de 11/09. Calendário: recusado. Objetos mudos: não agora.**
 
-✔ **Etapa 1 fechada — o telefone** (`src/ui/shared/phone.mjs`, bloco em `46-desk.css`):
-vermelho de mesa clássico como a referência dele — base, teclado 3×4 sem número (a 6px seria
-texto falso), fone no berço, cordão em SVG tracejado, etiqueta. Toca quando `boilerOf` diz que
-um grupo ferveu (`boiling`, o primeiro; a Caixa lista todos): o fone vibra 2° a 6 Hz e a base
-ganha halo. Clique = `data-section="email"`. Prova em `screens.mjs` (324ª). A 25%/80% da cena
-— canto inferior esquerdo da janela de 1440, contas no CSS. Tokens `--phone-*` (5).
+✔ **Etapa 1 fechada — o telefone.** Hoje é a v2 (ver o Estado); toca quando `boilerOf` diz que um
+grupo ferveu, clique abre o Email, prova em `screens.mjs`. Tokens `--phone-*` (7).
 
 ✔ **Tarefas do Antigravity (journal §11) respondidas — 11/09:** contraste do vidro sobre
 madeira é pleno (todas as áreas com texto `#eef2f8` superam WCAG 4,5); SAJ é o nome vigente
@@ -262,14 +377,30 @@ vale o arquivo menor?
 conclusão dele está certa — está dentro do ruído e abaixo do limiar de 5 do script —, mas o SINAL
 não: aqui o material sempre CUSTA, nunca ganha. ⚠ Número de `screen` é da máquina que mediu.
 
-▶ **Etapa 2, o que falta — o VOO.** Ele segue _"horrível e lento"_; ele quer _"clean, digno de
-Apple"_: ~0,30s, amortecimento crítico (`bounce: 0`), sem quique e sem rotação. A mola por
-relógio já está (`spring.mjs`, subpasso 1/120); hoje `LIFT` é 0,42s com `bounce` 0,22.
+✔ **ETAPA 2 FECHADA — o voo é RESOLVIDO, e não integrado por quadro (11/09).**
+`curveOf` em `spring.mjs` resolve a EDO do oscilador amortecido nos três regimes, com velocidade
+inicial, e entrega a curva como `linear()`. O voo virou **uma animação por peça no compositor**:
+`LIFT` 0,30s e `DROP` 0,26s, os dois com `bounce: 0` — amortecimento crítico, sem quique e sem
+rotação, ordem dele.
+📐 **O número que sustenta:** o gesto pede **0 quadros e 0 escritas de estilo** à thread
+principal, contra ~24 `requestAnimationFrame` e ~72 escritas do laço anterior. `npm run screen`
+não mexe (−2,1 e −6,5, a mesma faixa) — e não devia: ele mede a tela parada, não o gesto.
+⭐ **E A INTERRUPÇÃO NÃO SALTA, que é a razão de tudo isto.** Largar a pasta no meio da subida
+parte do ponto e do impulso em que ela está — quem tem `x(t)` tem `x'(t)`, então posição e
+velocidade saem da CONTA e não de uma medição entre quadros. Prova nova no passeio, e ela
+reprova quando o voo passa a recomeçar do alvo (que é o que a transição CSS faz).
+📗 **Seis provas novas em `tests/suites/spring.mjs`** cobram a física, não o formato: a
+analítica contra a derivada numérica nos três regimes, `v₀` honrado, quique zero que não
+ultrapassa. Uma delas pegou um erro de sinal meu no superamortecido — `(r2−r1)` por `(r1−r2)` —
+que dava posição certa nas duas pontas e caminho errado no meio.
 
-▶ **Etapa 2 — a pasta (Divisão de papéis definida em 11/09):**
-
-- **Piloto (Claude):** ir direto para `src/ui/screens/cabinet.mjs` e `styles/46-desk.css`. Implementar o voo curto (~0.30s), saída suave, amortecimento crítico puro ($\zeta = 1.0, \text{bounce} = 0, v_0 = 0$) operado no Compositor via `transform: translate3d(...) scale(...)` e expansão de sombra; remover `.desk__veil` (madeira Jacarandá 100% visível, sem escurecimento); fechar o portão com `npm run validate` (13 guardas, 324 provas, passeio).
-- **Copiloto (Antigravity):** aguardar a entrega da Etapa 2 para auditar a captura visual (conferir que a pasta aberta em 1440×980 e 1440×900 não colide com o telefone nem com os envelopes, e que os textos da SAG/Decreto mantêm contraste WCAG 4,5 sobre a madeira sem o véu); medir o custo de renderização (`npm run screen`); e preparar o modelo físico de desdobramento para a Etapa 3 (envelopes).
+⛔ **E UM QUARTO ACHADO NA PESQUISA 10, e este quebra o movimento.** O §2.6 manda amostrar em
+`t_i = settle·(i/N)^1.2` e o gerador do §2.7 emite `linear(v0, v1, …)` **sem as posições**. O CSS
+espaça os pontos sozinho, então a amostragem densa no arranque sai esticada: medido, a pasta
+chegava a **489px aos 120ms onde a conta pede 635**. Cada ponto tem de levar a posição
+(`0.0415 3.59%`), e é assim que `curveOf` emite.
+📐 **E o assentamento é PROCURADO, não constante:** a busca fecha em 0,426s para `LIFT`, contra
+os 0,366s que o `1,22 × duração` do §2.7 daria.
 
 ▶ **Etapa 3 — os envelopes.** Hoje _"inúteis"_: só decoram. Mostram o que chegou no fechamento
 (0 a 3 por mês, medido; 23 de 30 meses com alguma) — ele pula meses e acha pouco. 💡 **Futuro
@@ -304,11 +435,6 @@ do jogo é dele** — por isso fica aberto e não foi mexido.
 relatório do turno (`turn.mjs:2337`), então não sumiu do jogo — sumiu da mesa. ⚠ E o ciclo 25
 §3.2 prometia que ela viraria **uma linha do papel**. Aberto: entra como 6º parágrafo do
 parecer, ou fica só no fechamento?
-
-**62. O rótulo do AVANÇAR cruzou o preenchimento (10/09).** Um passeio em quatro mediu
-`go__label` a **1,00** de contraste em `[congresso com partido]`; os outros três passaram. A
-mola do botão agora anda por relógio, e a medição pode ter pego o meio dela. Intermitente não é
-inexistente — remedir antes de mexer.
 
 **53. ⛔ NÃO RECALIBRAR A CAPACIDADE antes da reformulação das empresas (decisão dele,
 21/08).** `decay`/`yield` serão trocados; número girado hoje se gira duas vezes. Onde vale

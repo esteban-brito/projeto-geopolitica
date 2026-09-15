@@ -7596,3 +7596,214 @@ Dois achados de auditoria consertados. 252 testes, 12 guardas, tudo verde.
 | `tests/suites/save.mjs`          | 2 provas novas (impeachment round-trip + campo corrompido)                                                             |
 | `tests/suites/congress.mjs`      | tolerância 20%→25%, amostras 600→1000                                                                                  |
 | `tests/suites/state-reducer.mjs` | `isFrozen` em `fiscal`, `capacity.index`, `series.gdp`; mensagem de assertion corrigida                                |
+
+### 7 · Auditoria da pesquisa 10 contra a conta (11/09)
+
+As duas EDOs estão certas (conferi crítico e subamortecido derivando de `y(0)=-1`, `ẏ(0)=v₀`), e a convenção `ζ = 1−bounce` é a mesma do nosso `spring.mjs`. Três achados que não fechavam:
+
+1. **O corte da curva tinha três números para a mesma coisa.** O texto do §2.5 dizia `t_settle ≈ 1,25 × duration`, o código do §2.7 usava 1,22 no caso crítico, e a conta com o ε = 0,002 dá 1,347. A 1,22 o resíduo era 0,41% (o dobro do ε), e como o gerador cravava o último ponto em 1, sobrava um salto de 2,8px no fim, num curso de 700px (o curso da pasta é 448→710px).
+2. **Trocar a mola por transition CSS reintroduzia defeito medido.** O §1.4 chamava o `linear()` de solução ótima para mudança de estado, mas a pasta não é só mudança de estado: erguer e largar em sequência interrompe o voo, e transição interrompida recomeça do zero. O `linear()` serve se o retargeting for tratado com `curveOf` e velocidade inicial.
+3. **O §6.2 pedia `rotateX(-180deg)` no envelope**, e a árvore 3D saiu inteira da mesa por ordem dele ("a foto da madeira exatamente como ela é"; em projeção a foto é reamostrada). Reintroduzir perspectiva para o envelope reabriria uma decisão fechada.
+
+## 13/09/2026 — O punhado sai de cima da pasta, e a conta que sobrava era outra
+
+O portão estava vermelho com 6 erros iguais: carta atrás da pasta nos meses 2, 3, 4, 6, 10 e 12.
+O handoff mandava recuar `.mail` para 22% ou o leque para 60px. Os dois números estavam errados:
+o leque a 60px recupera 9,7px de um buraco de 57,3.
+
+Medi no navegador em vez de deduzir. A janela de 1440 mostra 1196,8px do Gabinete, e punhado
+(254,7) + pasta (693,1) + telefone (260) somam 1207,8 — as três peças não cabiam nem encostadas.
+E a âncora do punhado ficou a 74,9px da beira da pasta, com meio envelope medindo 90,1: um
+envelope sozinho, parado no centro, já colidia.
+
+Eu tinha descartado "mover para a esquerda" apoiado num comentário antigo do CSS ("a 21% ele
+entrava 61px sob o vidro"). Ele perguntou por que eu não tinha pensado nisso, e estava certo —
+o comentário mede uma sobreposição, não prova que fica feio, e a área corta a cena de propósito.
+
+| leque | `.mail` | folga até a pasta | cortado na beira |
+| ----- | ------- | ----------------- | ---------------- |
+| 78px  | 25,0%   | −57px             | 3px              |
+| 50px  | 22,0%   | 15px              | 47px             |
+| 40px  | 22,5%   | 11px              | 34px             |
+| 30px  | 23,0%   | 7px               | 22px             |
+
+Ficou 40px/22,5%: envelope nos 155, pasta em 0,44, telefone parado. Encolher o envelope de 155
+para 130 também fechava e custava 16% da carta.
+
+Depois do punhado, a luz. A foto do jacarandá é um mostruário, iluminado igual de canto a canto, e
+era isso que fazia a mesa parecer textura. Entrou um clarão branco de cima em `soft-light` e um
+tombo em `multiply` nas quinas, sem tocar na foto. Medido no pixel: chapado em `normal` o croma
+caía de 80,2% para 47,9% e o tampo virava bege; em `soft-light` + `multiply` fica em 73,2%. A guarda
+`tokens` recusou a primeira versão (tinta `rgba(22, 9, 3)`) e a luz virou branco puro.
+
+O `validate` desse item nunca terminou: o PC reiniciou às 01:02 com ele rodando (core 2 da CPU, caso
+à parte). Refeito às 02:50 por outra sessão: tipos, lint, formato e 330 provas verdes. `check` e
+`walk` vermelhos só pelo telefone que o Gemini estava reescrevendo naquele minuto.
+
+## 13/09/2026 — Telefone Western Electric 2500 (v2 do Claude)
+
+### Auditoria original e defeitos identificados (Achado 66)
+
+O telefone de mesa (`src/ui/shared/phone.mjs` e `styles/46-desk.css`) foi auditado a pedido dele ("horrível e nada realista"). Cinco defeitos estruturais identificados:
+
+1. **Monofone em osso de cachorro:** `.phone__handset::before/after` com círculos de 58×56px colados nas pontas criava silhueta de clipart/emoji infantil, sem cavidade de cápsula (auricular/microfone) nem ergonomia de aparelho executivo (padrão Western Electric 2500);
+2. **Cordão em fita tracejada:** SVG com `stroke-dasharray: 2 4.5` num `path` único lia como linha pontilhada plana desenhada na madeira, e não como uma espiral 3D de bobina helicoidal;
+3. **Teclado cego:** 12 caixas cinzas lisas (`.phone__key`) sem diferenciação de teclas (*, #, 0);
+4. **Halo de neon:** animação `phone-halo` aplicava `box-shadow: 0 0 40px 12px`, parecendo neon de jogo arcade em vez de vibração física do aparelho ou led indicador de linha discreto;
+5. **Corte na base inferior:** `top: 80%` com altura 160px encostava na beirada inferior da janela.
+
+### Revisão do Claude e transição para a v2 (13/09 02:58)
+
+O Claude assumiu `phone.mjs` e o bloco `.phone` de `46-desk.css`. O Gemini fechou o portão e registrou medições.
+
+O que a tela mostrava no v1:
+
+1. A base estava em vista frontal (cunha com saia) e o fone e a mesa vistos de cima — lia como foto colada;
+2. O fone era uma barra reta apoiada na borda, e na referência estava inclinado no berço com as conchas encaixadas;
+3. O cordão eram seis paths soltos com brilho rosa, e uma sombra arqueada à esquerda sem fonte de luz coerente;
+4. Teclas creme com legenda de 3,5px — o passeio reprovou (1,05–2,9 contra 4,5), enquanto a referência tem tecla cinza-escura com legenda branca;
+5. Sombra com deslocamento diagonal (4/8px) contra a regra da mesa (uma luz só, de cima);
+6. Etiqueta "GABINETE 01" a 5,5px era texto falso.
+
+O que o código fazia fora do padrão:
+
+- Cerca de 30 cores literais dentro do JS (`#db2833`, `#b81e26`, `#8a131a`…) que a guarda `tokens` não lia;
+- 12 teclas copiadas à mão em vez de geradas por código;
+- Dois `radialGradient` idênticos;
+- Fonte `Carlito, Calibri` fora da tipografia do projeto (Inter e Source Serif 4);
+- 4 filtros `feGaussianBlur`, e o fone com filtro animava a 6 Hz sem medição em `screen`;
+- `style="transform-origin"` inline e classes no SVG sem CSS;
+- `left: 73%` contradizendo comentário de 74%. A decisão das teclas sem número (6px é texto falso) havia sido revertida sem medição nova.
+
+O plano do Claude executado:
+Manter a silhueta do 2500 vista de cima como a mesa: fone em diagonal no berço com as conchas encaixadas, base com teclado 3×4, cordão em espiral gerado por código. Teclas cinza-escuras; legenda branca sem texto falso. Toda cor em token `--phone-*`, teclas geradas, zero filtro SVG (sombra por forma e opacidade), sombra reta como a da pasta. Prova em `screens.mjs` mantida (toca quando `boilerOf` diz; clique abre o Email).
+
+### A entrega da v2
+
+Entrega da v2 do telefone pelo Claude alinhada à câmera de 78° do Gabinete (vista superior combinando com a mesa e a pasta). O painel frontal ganhou o rebaixo esculpido de 104×90mm com matriz de teclas 24×15mm e janela de identificação de número. O monofone foi ajustado para projeção zênite com sombreamento próprio (6px nas conchas, 9px na haste), pinos do gancho embutidos e sombras projetadas idênticas à regra da pasta (2px de contato e 22px de penumbra, sem filtros SVG). O cordão helicoidal foi curvado de forma solta à esquerda sem vazar do botão (290×268px). Portão 100% verde: `npm run walk` sem colisões, estouros ou falhas de contraste; `npm run screen` com 72.8 material × 71.0 controle (delta +1.8 fps).
+
+### Medição do engasgo da pasta nesta máquina — Achado 65 (antes da revisão das sombras)
+
+Medição com `tmp/jank.mjs` no Chromium com aceleração gráfica ativa (`--enable-gpu`, `--ignore-gpu-blocklist`, `--enable-gpu-rasterization`) em viewport 1440×980.
+
+- Rodada fria: pior quadro 46.4ms, p95 22.6ms, 67 fps, 3 quadros perdidos.
+- Três rodadas aquecidas:
+  1. `{"pior": 23.1, "p95": 22.8, "fps": 73, "perdidos": 3}`
+  2. `{"pior": 23.5, "p95": 18.1, "fps": 73, "perdidos": 1}`
+  3. `{"pior": 23.1, "p95": 18.2, "fps": 74, "perdidos": 1}`
+
+Mediana aquecida: pior quadro 23.1ms, p95 18.2ms, 73-74 fps médios, 1 quadro perdido. O engasgo de 83.2ms original não se reproduz nesta máquina com a promoção de camada ativa (`will-change: transform`, `isolation: isolate` e `translateZ(0)`).
+
+### Auditoria de contraste do botão Avançar — Achado 62
+
+O achado relatava medição intermitente de 1.00 em `[congresso com partido]`. Foram executadas 4 rodadas consecutivas de navegação real pelo rito de posse (reinício duplo, escolha de bancada `liberais-conservadores` e abertura do Congresso), aplicando o algoritmo de contraste do `walk.mjs` (luminância do decil de fundo e tinta composta do texto `.go__label`):
+
+- Rodada 1: ratio 19.15 (fundo 0.931, tinta 0.001)
+- Rodada 2: ratio 19.15 (fundo 0.931, tinta 0.001)
+- Rodada 3: ratio 19.15 (fundo 0.931, tinta 0.001)
+- Rodada 4: ratio 19.15 (fundo 0.931, tinta 0.001)
+
+Nenhuma leitura atingiu 1.00 ou ficou abaixo do piso de 4.5. O achado 62 fica fechado como intermitente não reproduzido.
+
+### Padronização global das sombras e reposicionamento do telefone (13/09 tarde)
+
+Unificação das sombras da mesa sob uma fonte de luz única declarada em `styles/00-tokens.css` (`--light-dx: 0.36`, teto alto a 20° à esquerda):
+
+- Quatro classes de sombra (`--cast-contact`, `--cast-flat` a 6px, `--cast-thin` a 10px e `--cast-thick` a 24px) aplicadas à pasta, folhas, envelope, lacre e telefone.
+- O clarão do tampo em `40-shell.css` foi deslocado 105px para a esquerda, casando com a posição da luz.
+- O filtro `#wax-shadow` do SVG do lacre foi substituído por `drop-shadow` CSS em `.envelope__seal`.
+- Telefone ampliado em 9% (caixa de tinta 278×283px) e reposicionado para `top: 45%`, com centralização dinâmica pelo `fitDesk` no vão entre a pasta e a margem da janela.
+
+Medição de desempenho do voo após a penumbra inclinada (`tmp/jank.mjs`, 3 rodadas):
+
+1. `{"pior": 18.2, "p95": 18.1, "fps": 68, "perdidos": 0}`
+2. `{"pior": 18.6, "p95": 18.1, "fps": 68, "perdidos": 0}`
+3. `{"pior": 23.4, "p95": 18.1, "fps": 68, "perdidos": 1}`
+
+O pior quadro caiu para 18.2ms e o p95 cravou em 18.1ms, com zero quadros perdidos na maioria das rodadas. A inclinação das sombras não adicionou custo perceptível à GPU.
+
+Auditoria visual das capturas (`gabinete.png`, `gabinete-900.png` e zooms em `tmp/`):
+
+- `npm run walk`: código 0 (passeio verde, 0 colisões, 0 estouros).
+- Direção das sombras: pasta, folhas, envelope, lacre e telefone agora compartilham o mesmo vetor de projeção (baixo e 0.36 à direita). Nenhuma sombra destoa.
+- Enquadramento: o telefone mantém 16px livres em relação à pasta e 16px até a borda da janela em 1440px (128px em 1920px), sem colisões nem cortes em 980px ou 900px de altura.
+- Lacre de cera: a sombra em `drop-shadow` CSS eliminou o halo esbranquiçado anterior, integrando o selo à textura do envelope.
+
+## 13/09/2026 — Fotorrealismo e Sistema de Matéria da Mesa (noite)
+
+Ordem do responsável: fotorrealismo rigoroso no telefone e padronização física de toda a matéria da mesa para eliminar qualquer aspecto de desenho/cartunesco.
+
+### Auditoria visual das 8 regras de matéria (fotográfica, pixel a pixel)
+
+| Peça           | 1. Luz (250°/52°)            | 2. Sombras (`--cast-*`) | 3. Arestas (topo/esq claro) | 4. Grão de matéria                            | 5. Especular / Fresnel                      | 6. Oclusão de contato                 | 7. Zero contorno                     | 8. Faixa tonal / cor                          |
+| :------------- | :--------------------------- | :---------------------- | :-------------------------- | :-------------------------------------------- | :------------------------------------------ | :------------------------------------ | :----------------------------------- | :-------------------------------------------- |
+| **Madeira**    | ✔ Clarão a 20° esq.          | N/A (plano base)        | N/A                         | ✔ Foto natural                                | ✔ Acetinado natural                         | ✔ Recebe sombras                      | ✔ Sem traços                         | ✔ Calibrada                                   |
+| **Pasta**      | ✔ dx 0.36                    | ✔ Contato + 24px        | ✔ Chanfro 8px               | Granulado homogêneo (precisa células 15-20px) | Falta reflexo difuso de janela              | Falta fenda de 2px na dobra do couro  | Pespontos planos sem rebaixo de furo | ✔ `#111317`                                   |
+| **Folha esq.** | ✔ Gradiente vertical         | ✔ Sobre o forro         | ✔ Corte guilhotina          | Falta microfibra 0.025                        | ✔ Fosco                                     | ✔ Sombra 14px na lombada              | ✔ Sem stroke                         | Alvura `#fff` fria (precisa marfim `#fbfaf7`) |
+| **Folha dir.** | ✔ Gradiente vertical         | ✔ Borda de bloco        | ✔ Aresta de corte           | Falta microfibra 0.025                        | ✔ Fosco                                     | ✔ Sombra na lombada                   | ✔ Sem stroke                         | Alvura fria (precisa `#fbfaf7`)               |
+| **Envelope**   | ✔ 250°/52°                   | ✔ 10px a dx 0.36        | ✔ Abas com relevo           | ✔ Feltro `feDiffuse`                          | ✔ Cartão fosco                              | ✔ Aba triangular                      | ✔ Sem traço                          | ✔ Algodão                                     |
+| **Lacre**      | ✔ `feDistantLight`           | ✔ `drop-shadow` CSS     | ✔ Borda moldada             | ✔ Cera mineral                                | ✔ Especular de cera                         | ✔ Assentado no papel                  | ✔ Sem stroke                         | ✔ Carmim                                      |
+| **Telefone**   | ✔ `feDiffuse` + `feSpecular` | ✔ 2px + 22px a dx 0.36  | ✔ Filetes de quina          | ✔ Textura ABS injetado                        | Reflexo da haste leitoso (precisa hot-spot) | ✔ Nichos com `.phone__cup-rim`        | ✔ Sem contorno                       | ✔ Vermelho token                              |
+| **Cordão**     | ✔ Luz superior               | ✔ Sombra a dx 0.36      | ✔ Elipses tangentes         | ✔ Fio liso                                    | ✔ Brilho de crista                          | Falta oclusão entre anéis sobrepostos | ✔ Sem stroke                         | ✔ Vermelho token                              |
+
+### Fechamento da sessão e decisões abertas
+
+O responsável analisou a tela e recusou o filtro de luz especular no telefone por considerá-lo excessivamente brilhoso e cartunesco. Todo o filtro SVG foi retirado: o telefone retornou ao acabamento fosco, com volume construído por gradientes geométricos controlados, contorno contínuo do monofone e visor de número no quadro.
+
+A pasta recebeu o grão de couro assado em bitmap (`bake` em `texture.mjs`), que foi medido com custo de 10 a 20 fps durante o voo da pasta (55–61 fps contra 76–80 fps de controle). A decisão de manter o grão de couro ou priorizar os 80 fps na subida fica para a avaliação soberana dele.
+
+Para o telefone, se a exigência de fotorrealismo persistir, o caminho viável sem filtros artificiais será o uso de fotografia real recortada e tratada da peça, já que a modelagem puramente vetorial esbarra no limite entre o chapado e o efeito de desenho.
+
+A árvore fecha com portão 100% verde (`validate`: 13 guardas, 66 sintéticas, 331 testes unitários, passeio e prettier limpos). Nada foi commitado.
+
+## 15/09/2026 — O telefone vira foto, o voo fica liso e o defeito do `--phone-x`
+
+### Hierarquia e co-desenvolvimento
+
+Ordem dele de 15/09/2026: ele é soberano (#1), Claude é o piloto e arquiteto técnico (#2), Gemini é o copiloto e auditor do portão (#3). O Claude deve sempre delegar tarefas de medição, pesquisa e auditoria ao Gemini pelo canal de comunicação direta (`agentapi`).
+
+### O defeito real do `--phone-x` (-271px)
+
+Ao marcar uma área com a pasta erguida, a sala repintava e nascia sem `--phone-x`, porque o valor só era medido com a pasta na mesa. O telefone recebia `left: -271px` e permanecia deslocado para fora da tela após largar a pasta. O passeio nunca marcava com a pasta no ar. O valor foi transformado em variável de módulo em `cabinet.mjs` e reescrito a cada pintura. O teste do passeio cobre o caso e reprova sem o conserto (1130px antes, -271px depois).
+
+### Causa real do engasgo no voo da pasta
+
+O trace do Chrome no voo revelou que a queda de taxa de quadros era causada pela animação de `--light-angle` no `:root` (`20-material.css`). A propriedade herdava para 627 elementos, gerando 45 recálculos de estilo (7,9ms cada, totalizando 356ms no curso de 700ms), 651 pinturas e 82% de carga de GPU.
+
+Com a remoção da animação e fixação do ângulo estático no `initial-value` do `@property`:
+
+- Tempo de recálculo de estilo: 13ms (redução de 96%).
+- Pinturas: 4 (redução de 99%).
+- Carga de GPU: 12%.
+- Pior quadro medido: 20,1ms caiu para 4,2ms.
+- Medição de engasgo (`tmp/jank.mjs`): p95 de 21ms com 4 a 6 quadros perdidos caiu para p95 de 4,3ms e 0 quadros perdidos (mediana do Gemini: 8,3ms pior / 4,3ms p95 / 0 perdidos).
+
+A textura de couro e a fibra de celulose não custam desempenho sem o passeio da luz no `:root`. O teste anterior de 13/09 media a animação do ângulo, não o grão da textura.
+
+### Substituição do vetor pela fotografia do telefone
+
+O modelo vetorial de 553 linhas em `src/ui/shared/phone.mjs` e seus tokens associados (`--phone-body`, `--phone-deep`, `--phone-gleam`, `--phone-key`) foram removidos. O aparelho passou a ser a fotografia «Dialog röd» (Ericsson Dialog vermelho ~1975, foto de Holger Ellgaard, Wikimedia Commons, CC BY-SA 3.0), tratada e salva em `assets/phone.webp` (720×599, 76,8 KB).
+
+Tratamento da imagem:
+
+- Recorte por conectividade cromática sobre `r - max(g, b)`.
+- Remoção do cabo de linha e limpeza da etiqueta.
+- Renderização em 300×250px na tela.
+- Sombras da sala por CSS `drop-shadow`, inclinadas por `--light-dx` (as classes `--cast-*` são `box-shadow` e não seguem silhueta).
+- Halo de toque executado por cópia âmbar da foto sob a camada principal com opacidade controlada.
+- Número no cartão fixado em `2027-0148`, sem código DDD para caber na largura de 52px sem quebra de linha.
+- Atribuição de licença e histórico de derivação registrados em `assets/CREDITOS.md`.
+
+### A segunda versão da foto, depois de ele olhar
+
+Ele viu a primeira versão na tela e disse que o telefone continuava destoando: mal cortado e sem sombras. As duas coisas eram reais. A borda tinha um fio rosado: os pixels semitransparentes carregavam a mistura de bege com vermelho, e sobre a madeira escura isso vira um contorno claro. O recorte passou a desfranjar (o pixel de borda leva a cor dos vizinhos opacos). O contato a 50% de alfa não aparecia no jacarandá; foi a 0,85, com penumbra a 0,7, como a pasta. A foto também ganhou a luz da sala assada no arquivo: exposição 0,9 e sombreado de 1 para 0,78 de cima para baixo, porque a foto original tinha luz frontal e chapada. Arquivo final: 63 KB.
+
+### A terceira versão: imagem gerada
+
+Ele propôs gerar a imagem do telefone com IA para resolver ângulo e licença de uma vez. Duas imagens foram produzidas: uma gerada pelo Gemini e outra pelo ChatGPT (`tmp/fone-chatgpt.png`, 1323×1189 com canal alfa). A do ChatGPT foi a escolhida: visão zênite real de 90° (como a mesa), corpo maior preenchendo o quadro (~1000px contra ~500px), teclas e visor de número lisos em branco, acabamento em plástico fosco e sem sombra no chão. Com a imagem gerada por IA, a foto do Wikimedia Commons e o crédito CC BY-SA 3.0 saem do repositório.
+
+O ChatGPT gerou uma segunda, mais zenital, e ele a mandou em seguida. Ficou a segunda: 720×639 no arquivo, 420px na tela (300 media o mesmo que o envelope; 500 ele achou demais), com o corpo no meio do vão e o cordão por baixo da pasta quando o vão é curto. Por ordem dele os algarismos entraram por cima da imagem, cada um no centro da tecla medida no arquivo, a 11px. O passeio reprovou o contraste do "8" em 4,27 porque a caixa do algarismo era a célula inteira e o vermelho do corpo entrava na amostra; a caixa virou a da tecla e passou.
+
+### Estado de fechamento
+
+Árvore validada: 13 guardas, 66 provas sintéticas, 331 provas, passeio verde. Ordem dele às 02:05: finalizar, commitar tudo e desligar o PC.

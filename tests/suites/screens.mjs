@@ -593,6 +593,19 @@ test("O TELEFONE SO TOCA QUANDO ALGUEM FERVEU, e ele aponta para a Caixa", () =>
   assert.ok(tocando.includes('data-section="email"'), "o telefone nao aponta para a Caixa");
 });
 
+test("CADA CARTA E UM BOTAO PARA A CAIXA, e diz por som se vence", () => {
+  /* Ciclo 25 §3.3: "clicar leva ao Email". O gesto e o do rail e do telefone, `data-section`,
+     e a mesa nao absorve a Caixa. Quem vence chega dito por `silences`, nunca contado aqui. */
+  const state = createState();
+  const mesa = deskOf(state, { letters: [{ urgent: false }, { urgent: true }] });
+  const conta = (/** @type {string} */ needle) => mesa.split(needle).length - 1;
+
+  assert.equal(conta('<button class="envelope"'), 2, "a carta deixou de ser botao");
+  assert.equal(conta('data-section="email"'), 3, "carta ou telefone sem caminho para a Caixa");
+  assert.equal(conta(UI.envelope.waiting), 1, "a carta que espera nao se apresentou");
+  assert.equal(conta(UI.envelope.due), 1, "a carta que vence nao avisou por som");
+});
+
 test("A ESPESSURA DA PASTA E O QUE ESPERA DESPACHO, e nao um numero escolhido", () => {
   const state = createState();
   const conta = (/** @type {string} */ html) => html.split('class="stack__under"').length - 1;

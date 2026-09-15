@@ -641,12 +641,29 @@
      um tampo entrando na penumbra da sala. E a UNICA coisa que toca a foto, e so na aresta.
      📐 A foto e centrada, entao a beira inferior fica a 410px do centro: o degrade vai de 366 a
      412, e acima dele a madeira e pura. */
+  /* ⭐ A LUZ DA SALA CAI SOBRE O TAMPO, e e a mesma que as sombras ja declaram: de CIMA. A foto
+     e um amostruario de madeira, iluminado por igual de canto a canto — era isso que fazia a
+     mesa ler como textura, e nao como superficie.
+     ⛔ E ELA NAO PODE SER CHAPADA: medido no pixel, em `normal` o croma do jacaranda cai de
+     80,2% para 47,9% no alto da mesa e o tampo vira bege. Em `soft-light` mais `multiply` ele
+     fica em 73,2%, a luz do alto sobe de 61,7 para 74,3 e a da quina cai de 36,7 para 29,8.
+     ⭐ E A LUZ E BRANCO PURO: qualquer tinta aqui desloca a cor que ele mandou nao mudar.
+     📐 O clarao fica 290px acima do centro, no terco de cima da foto de 821, e 105px a esquerda
+     — os 20 graus da luz declarada em `--light-dx`, para onde toda sombra da sala aponta. O tombo
+     so morde depois de 40% do raio, entao o meio da mesa nao muda. */
   body:has(.board[data-screen="cabinet"]) .backdrop {
     background:
       linear-gradient(180deg, transparent calc(50% + 366px), var(--bg-deep) calc(50% + 412px)),
       linear-gradient(0deg, transparent calc(50% + 366px), var(--bg-deep) calc(50% + 412px)),
+      radial-gradient(
+        74% 58% at calc(50% - 105px) calc(50% - 290px),
+        rgba(255, 255, 255, 0.26),
+        transparent 66%
+      ),
+      radial-gradient(90% 86% at 50% calc(50% - 30px), transparent 40%, rgba(0, 0, 0, 0.5) 100%),
       var(--timber, none) center / var(--room-w) var(--room-h) no-repeat,
       var(--bg-deep);
+    background-blend-mode: normal, normal, soft-light, multiply, normal, normal;
     filter: none;
   }
 

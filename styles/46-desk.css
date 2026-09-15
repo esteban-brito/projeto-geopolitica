@@ -55,6 +55,11 @@
        da barra e do rail, e a cena so carrega as pecas. Um fundo aqui seria a segunda mesa. */
   }
 
+  /* ⛔ UM GRAO DE FOTO SOBRE A CENA INTEIRA FOI TENTADO E NAO CABE: `.shell` isola (e o vidro
+     precisa disso) e o substrato de madeira esta fora dele, entao um `mix-blend-mode` aqui
+     dentro nunca alcanca a madeira — sobre ela o ruido pinta cinza normal e a area inteira
+     clareia com borda nitida. Cada materia leva o proprio grao: couro, feltro, plastico, fibra. */
+
   /* ⛔ O TAMPO, A ARESTA, O VERNIZ, O GRAO E A VINHETA SAIRAM DAQUI, um de cada vez e cada um
      por ordem dele. A madeira e o substrato da janela (`40-shell.css`), e a cena e so o que
      esta em cima dela. */
@@ -78,7 +83,7 @@
     background:
       radial-gradient(
         150% 130% at 16% 4%,
-        rgba(var(--leather-light-rgb), 0.15),
+        rgba(var(--leather-light-rgb), 0.2),
         rgba(255, 255, 255, 0) 72%
       ),
       linear-gradient(122deg, rgba(0, 0, 0, 0) 30%, rgba(var(--leather-shade-rgb), 0.42)),
@@ -108,8 +113,15 @@
            Couro de artigo bom tem a borda dobrada e brunida, e ela tem LADOS: a do lado da
            janela pega luz, a oposta pega sombra. Quatro insets de 1,5px, e nao um contorno
            uniforme — contorno uniforme e a assinatura de caixa desenhada. */
+    /* ⭐ E A BORDA TEM 4mm: o fio de 2px era 0,9px na tela e nao lia como espessura. A faixa de
+       8px (3,5 na tela) e a aresta rolada do couro — clara em cima e a esquerda, escura embaixo
+       e a direita, a mesma luz de tudo — e o fio fica como o vinco onde ela dobra. */
     box-shadow:
       inset 0 0 30px rgba(var(--leather-shade-rgb), 0.5),
+      inset 0 8px 8px -4px rgba(var(--leather-light-rgb), 0.16),
+      inset 8px 0 8px -4px rgba(var(--leather-light-rgb), 0.1),
+      inset 0 -8px 8px -4px rgba(var(--leather-shade-rgb), 0.7),
+      inset -8px 0 8px -4px rgba(var(--leather-shade-rgb), 0.55),
       inset 0 2px 0 rgba(var(--leather-light-rgb), calc(0.24 * 1.7)),
       inset 2px 0 0 rgba(var(--leather-light-rgb), calc(0.24 * 1.1)),
       inset 0 -2px 0 rgba(var(--leather-shade-rgb), 0.5),
@@ -143,7 +155,10 @@
      meio, entao 50% cai no centro dela — e cai no centro da de 1920 tambem. */
   .folder {
     position: absolute;
-    left: 52%;
+    /* 📐 ELA RECUOU DE 52% PARA 46% para abrir o vao do telefone a direita, e o punhado desceu
+       de 23% para 25% junto — as tres pecas dividem a mesma largura util, e as folgas medidas
+       estao no bloco do punhado. */
+    left: 47%;
     top: 52%;
     z-index: 3;
     display: flex;
@@ -157,11 +172,19 @@
            correcao de 83% de saturacao para nao ler como plastico laranja.
            ⭐ `color` fica: ele impoe matiz e saturacao da tinta e mantem a luminancia do fundo.
            A tinta a 80% deixa a cor respirar — a 100% ela matava a variacao e dava cinza. */
+    /* ⭐ O GRAO DO COURO E LUZ BRANCA COM ALFA, composta normal: sobre preto da o que `screen`
+       daria, e e um bitmap assado (`bake`). 📐 ELE CUSTA NA SUBIDA, e o numero fica declarado:
+       55-61 fps e 4-10 quadros perdidos com o grao, 76-80 e 0-1 sem ele (SVG dava 53 e 17;
+       numa camada propria, 37-45 e 24-31 — pior). Sem o grao a pasta lia como cartao. */
     background:
+      var(--leather, none),
       linear-gradient(rgba(var(--leather-tint-rgb), 0.8), rgba(var(--leather-tint-rgb), 0.8)),
       var(--leather-deep);
-    background-blend-mode: color, normal;
-    background-size: cover, cover;
+    background-blend-mode: normal, color, normal;
+    background-size:
+      320px 320px,
+      cover,
+      cover;
     /* O CSS guarda so o REPOUSO; o voo e escrito pelo JS direto em `transform`.
            ⚠ E A RAZAO NAO E A QUE EU TINHA MEDIDO: o travamento que me levou ate aqui era um
            navegador que parou de compor — 1 quadro em 500ms —, e nao a arvore de estilo. O
@@ -178,52 +201,54 @@
     /* 📐 O REPOUSO E 0,4: a folha nasce com 720px e a cena nao escala mais para cima, entao a
        pasta na mesa pode ser maior do que os 0,35 que a razao 500/720 dava — a 0,4 ela fecha
        em 615px de largura na janela de 1440, e o ato ja se le de relance sem erguer. */
-    --rest: 0.4;
+    /* ⚠ ELA CRESCEU 10% por ordem dele — "muito dificil de enxergar" —, e o tamanho ERGUIDA
+       nao muda com isto: quem o decide e `fitDesk`, que mede a altura visivel.
+       📐 E PAROU EM 0,44 POR FALTA DE MESA, e o numero e a conta: a janela de 1440 deixa 1237px
+       uteis depois do rail, e a 0,46 as tres pecas somavam 1161 — 37px por vao. A 0,44 a pasta
+       fecha em 693 e sobram 53px de cada lado dela. */
+    --rest: 0.44;
+    will-change: transform;
+    isolation: isolate;
     transform: translate(-50%, -50%) rotate(var(--folder-tilt, -2deg)) scale(var(--rest, 0.72));
     cursor: pointer;
-    /* ⭐ A SOMBRA E A DO VIDRO: a luz do jogo vem de CIMA, e o `.glass-stage` cai reto —
-       `0 2px 4px` de contato e `0 24px 60px -20px` de altura. A pasta tinha a dela, caindo
-       para a direita (x de 18px), como se a mesa tivesse uma janela que a UI nao tem — e era
-       isso que fazia a mesa parecer outra sala. Mesma direcao, mesma queda: uma luz so.
+    /* ⭐ A SOMBRA E A DA SALA (`--light-dx` e `--cast-*` em `00-tokens.css`): a penumbra e a
+       da classe "pasta", a mesma do `.glass-stage`, e as duas se inclinam pela mesma luz.
        ⚠ O QUE FAZ UM OBJETO POUSAR e a linha escura e curta onde ele encosta, entao o contato
        e mais pesado que o do vidro — a pasta tem 4mm de couro, o vidro nao tem espessura. */
-    --folder-near-x: 0px;
-    --folder-near-y: 3px;
-    --folder-near-b: 6px;
-    --folder-near-a: 0.6;
-    --folder-far-x: 0px;
-    --folder-far-y: 26px;
-    --folder-far-b: 60px;
-    --folder-far-a: 0.55;
   }
 
   /* ⭐ AS DUAS SOMBRAS SAO CAMADAS, e nao uma `box-shadow` reescrita por quadro: reescrever
      repinta a peca inteira, e a medicao deu 13 fps de diferenca — 156,8 contra 143,8 no mesmo
-     laco de mola. Cruzar a opacidade de duas camadas prontas e trabalho de compositor.
-     ⚠ E ELAS TEM DIRECAO: caindo retas para baixo enquanto a janela entra pela esquerda, a
-     pasta le como adesivo. A luz vem de um lado so, e a sombra vai para o outro. */
+     laco de mola. Cruzar a opacidade de duas camadas prontas e trabalho de compositor. */
+  /* ⛔ AS DUAS SOMBRAS SAO CAMADA PROPRIA, e a razao e o unico engasgo que sobrou no voo: com
+     a de altura invisivel em repouso, a GPU so descobria que precisava dela no quarto quadro —
+     e alocar a textura de 132px de desfoque travou o compositor por 75ms, com 2 quadros
+     perdidos. Promovidas, elas ja estao na VRAM quando o gesto comeca. */
   .folder__cast {
     position: absolute;
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
+    will-change: opacity, transform;
+    transform: translateZ(0);
   }
 
   /* NA MESA: a curta cola a peca no tampo, e a longa da altura. Com uma so, ou a pasta flutua
      ou parece pintada na madeira. */
   .folder__cast[data-cast="rest"] {
     box-shadow:
-      var(--folder-near-x) var(--folder-near-y) var(--folder-near-b)
-        rgba(0, 0, 0, var(--folder-near-a)),
-      var(--folder-far-x) var(--folder-far-y) var(--folder-far-b) rgba(0, 0, 0, var(--folder-far-a));
+      calc(var(--light-dx) * 3px) 3px 6px rgba(0, 0, 0, 0.6),
+      var(--cast-thick);
   }
 
-  /* NA MAO: a de contato nao existe — a peca deixou de encostar —, e a de altura cresce e
-     amolece. Os tres fatores sao a mesma proporcao que o JS interpolava por quadro. */
+  /* NA MAO: a de contato nao existe — a peca deixou de encostar —, e a de altura cresce,
+     amolece e CLAREIA: sombra longe da superficie e mais rala. Os fatores (2,6 na queda, 2,2 no
+     desfoque) sao a mesma proporcao que o JS interpolava por quadro. */
   .folder__cast[data-cast="lift"] {
+    /* ⚠ O PISO DE OPACIDADE MORA NO JS, e nao aqui: quem escreve este valor e `draw`, em estilo
+       inline, e inline vence a folha. Um `0.001` nesta linha nao chegaria a tela. */
     opacity: 0;
-    box-shadow: var(--folder-far-x) calc(var(--folder-far-y) * 2.6) calc(var(--folder-far-b) * 2.2)
-      rgba(0, 0, 0, var(--folder-far-a));
+    box-shadow: calc(var(--light-dx) * 62px) 62px 132px -20px rgba(0, 0, 0, 0.55);
   }
 
   /* ── A COSTURA, e ela são DOIS tracejados e não um ─────────────────────────
@@ -334,8 +359,8 @@
          sombra por baixo dele e o que o olho lê como sheet SOLTA em vez de colada. */
   .stack .sheet {
     box-shadow:
-      0 1px 1px rgba(0, 0, 0, 0.34),
-      6px 10px 16px -6px rgba(0, 0, 0, 0.5);
+      calc(var(--light-dx) * 1px) 1px 1px rgba(0, 0, 0, 0.34),
+      var(--cast-flat);
   }
   /* ── O QUE SE VE DE UMA FOLHA DE BAIXO E A ARESTA, e nao a face ────────────
          ⛔ Elas eram lajes creme empilhadas, e a pilha lia como um bloco macico. O que o olho
@@ -353,7 +378,7 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.85),
       inset 0 -1px 0 rgba(var(--paper-edge-rgb), 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.4);
+      calc(var(--light-dx) * 1px) 1px 2px rgba(0, 0, 0, 0.4);
   }
 
   /* A FOLHA — a forma do ato do governo, e ela e a MESMA no provador e na mesa.
@@ -378,6 +403,13 @@
     aspect-ratio: 21 / 29.7;
     overflow: hidden;
     isolation: isolate;
+    /* ⛔ ELA E CAMADA PROPRIA, e este e o item mais caro da mesa inteira: o papel tem textura de
+       ruido, e escalar a pasta obrigava o navegador a RASTERIZAR o ruido de novo a cada quadro.
+       📐 Medido em janela com GPU, so o voo de subida: 32 fps sem isto, 116 com — 3,6x. Nem o
+       `backdrop-filter` da barra (+31) nem os filtros da cera (+47) chegam perto.
+       ⚠ E e `will-change` E NAO `translateZ(0)`: o segundo promove a camada e deixa o navegador
+       sem saber o que vai mudar, entao ele nao reserva a textura na resolucao do destino. */
+    will-change: transform;
     padding: calc(var(--paper) * 0.0673) calc(var(--paper) * 0.0714) calc(var(--paper) * 0.0673)
       calc(var(--paper) * 0.1429);
 
@@ -399,22 +431,22 @@
         hsl(44 calc(10 * 1%) calc(97 * 0.955%))
       );
 
-    /* ⭐ AS DUAS SOMBRAS: a curta cola na mesa, a longa dá altura. Com uma só, ou o
-       papel flutua ou parece pintado no tampo. */
-    box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.5),
-      0 20px 44px rgba(0, 0, 0, 0.45);
+    /* ⭐ AS DUAS SOMBRAS DA SALA, na classe "folha": a curta cola no couro, a longa da a altura
+       de um papel — ela caia 20px, mais que o envelope, e a folha parecia flutuar na pasta. */
+    box-shadow: var(--cast-contact), var(--cast-flat);
     border-radius: 1px;
     transform: rotate(0deg);
     cursor: pointer;
   }
 
-  /* A espessura da folha: a aresta de cima pega luz, a de baixo pega sombra. */
+  /* A espessura da folha: a aresta de cima pega luz, a de baixo pega sombra. ⭐ E A LUZ CAI DE
+     CIMA: o alto da folha e um fio mais claro que o pe — chapada, ela lia como PNG colado. */
   .sheet::before {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.05));
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.7),
       inset 0 -1px 0 rgba(0, 0, 0, 0.13),
@@ -422,6 +454,20 @@
       inset -1px 0 0 rgba(0, 0, 0, 0.09);
     pointer-events: none;
     z-index: 4;
+  }
+
+  /* ⭐ A FOLHA ENTRA NA LOMBADA, e ai ela curva para dentro e escurece: e a oclusao de contato
+     entre o papel e a pasta. A da esquerda tem a lombada a direita; a da direita, a esquerda. */
+  .brief::before {
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0) 84%, rgba(0, 0, 0, 0.1)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.05));
+  }
+
+  .stack .sheet::before {
+    background:
+      linear-gradient(270deg, rgba(0, 0, 0, 0) 84%, rgba(0, 0, 0, 0.1)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.05));
   }
   /* A ondulação — papel não é plano. */
   .sheet::after {
@@ -470,8 +516,8 @@
     stroke: rgba(0, 0, 0, 0.16);
     fill: none;
     stroke-width: 0.9;
-    filter: drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.95))
-      drop-shadow(0 1px 1px rgba(0, 0, 0, calc(0.16 * 0.7)));
+    filter: drop-shadow(calc(var(--light-dx) * -1px) -1px 0 rgba(255, 255, 255, 0.95))
+      drop-shadow(calc(var(--light-dx) * 1px) 1px 1px rgba(0, 0, 0, calc(0.16 * 0.7)));
   }
   /* 📗 §5.1.1: órgão principal, depois os secundários da maior para a menor
      hierarquia, entrelinhas simples. */
@@ -657,18 +703,21 @@
 
   /* ══ O TELEFONE ═══════════════════════════════════════════════════════════
      ⭐ O UNICO OBJETO QUE INTERROMPE: ele toca quando um grupo ferve, e quem decide e
-     `boilerOf`. 📗 A forma e a do telefone vermelho de mesa que ele mandou de referencia — a
-     base com o teclado, o fone no berco atras, o cordao em espiral —, visto de cima como a
-     mesa. Silhueta, luz e sombra; sem textura propria (ciclo 25 §3.6).
-     📐 NO CANTO INFERIOR ESQUERDO DA JANELA DE 1440, e nao da cena: a janela comeca em 360px
-     da cena, e a 25% (479) a base vai de 369 a 589 — 9px de folga. Acima dele o punhado
-     termina em ~532px; a 80% (657) o telefone comeca em 577, com 45px. */
+     `boilerOf`. 📗 E IMAGEM GERADA, vista de cima de verdade: `assets/phone.webp` (720x639,
+     `assets/CREDITOS.md`), um telefone de teclas vermelho gasto, teclas e cartao em branco.
+     ⛔ O VETOR SAIU (destoava das materias de foto) e a FOTO DO COMMONS TAMBEM: era um Dialog
+     de disco a 65 graus, e mesmo recortada e desfranjada ele viu "muito na cara que e imagem".
+     📐 NO MEIO DO VAO entre a pasta e a beira visivel: `fitDesk` escreve `--phone-x`. 420px DE
+     LARGURA: a 300 o aparelho media o mesmo que o envelope, a 500 ele viu "demais". O corpo tem
+     ~232px. ⚠ O CORPO E O QUE FICA NO MEIO DO VAO: o centro dele esta a 57,6% do arquivo, entao
+     a caixa recua 32px. No vao curto o cordao entra por baixo da pasta (`z-index`). */
   .phone {
     position: absolute;
-    left: 25%;
-    top: 80%;
-    width: 220px;
-    height: 160px;
+    left: calc(var(--phone-x) - 32px);
+    top: 45%;
+    width: 420px;
+    height: 373px;
+    margin: -186px 0 0 -210px;
     padding: 0;
     border: 0;
     background: transparent;
@@ -676,176 +725,134 @@
     z-index: 2;
   }
 
-  .phone > i {
-    position: absolute;
-    display: block;
-  }
-
-  /* A BASE — plastico vermelho brilhante. A face de cima pega a luz na aresta, a de baixo
-     (onde mora o teclado) e um degrau mais clara porque esta inclinada para a janela. */
-  .phone__base {
-    inset: 20px 6px 0 6px;
-    border-radius: 16px 16px 12px 12px;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(var(--phone-gleam-rgb), 0.16),
-        rgba(0, 0, 0, 0) 32%,
-        rgba(0, 0, 0, 0.12) 58%,
-        rgba(var(--phone-gleam-rgb), 0.08) 60%,
-        rgba(0, 0, 0, 0) 100%
-      ),
-      var(--phone-body);
-    box-shadow:
-      inset 0 1px 0 rgba(var(--phone-gleam-rgb), 0.45),
-      inset 0 -2px 0 var(--phone-deep),
-      inset 1px 0 0 rgba(var(--phone-gleam-rgb), 0.14),
-      inset -1px 0 0 rgba(0, 0, 0, 0.3),
-      0 2px 4px rgba(0, 0, 0, 0.55),
-      0 24px 60px -20px rgba(0, 0, 0, 0.85);
-  }
-
-  /* O BERCO — a calha onde o fone deita, um vinco escuro atras da base. */
-  .phone__cradle {
-    left: 14px;
-    right: 14px;
-    top: 30px;
-    height: 34px;
-    border-radius: 17px;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.18));
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.55);
-  }
-
-  /* O FONE — deitado no berco, mais grosso nas duas pontas, com o brilho do plastico em cima. */
-  .phone__handset {
-    left: 4px;
-    right: 4px;
-    top: 22px;
-    height: 40px;
-    border-radius: 20px;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(var(--phone-gleam-rgb), 0.5) 0,
-        rgba(var(--phone-gleam-rgb), 0.12) 34%,
-        rgba(0, 0, 0, 0) 55%,
-        rgba(0, 0, 0, 0.32) 100%
-      ),
-      var(--phone-body);
-    box-shadow:
-      inset 0 -1px 0 var(--phone-deep),
-      0 3px 5px rgba(0, 0, 0, 0.55),
-      0 12px 20px -6px rgba(0, 0, 0, 0.7);
-    transform-origin: 50% 50%;
-  }
-
-  .phone__handset::before,
-  .phone__handset::after {
+  /* A POCA DE CONTATO sob o corpo: o `drop-shadow` segue a silhueta inteira e trata o cordao
+     como o corpo, mas o corpo pesa 1,5kg e o cordao nada — sem esta mancha o aparelho lia
+     como colado. Elipse parada, desfocada uma vez. */
+  .phone::before {
     content: "";
     position: absolute;
-    top: -8px;
-    width: 58px;
-    height: 56px;
-    border-radius: 50% 50% 46% 46%;
-    background: inherit;
-    box-shadow: inherit;
+    left: 30%;
+    top: 40%;
+    width: 56%;
+    height: 58%;
+    border-radius: 45%;
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.55) 45%,
+      transparent 72%
+    );
+    filter: blur(10px);
+    transform: translate(calc(var(--light-dx) * 10px), 16px);
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .phone__handset::before {
-    left: -2px;
+  .phone:focus-visible {
+    outline: 2px solid var(--phone-ring);
+    outline-offset: 4px;
+    border-radius: 12px;
   }
 
-  .phone__handset::after {
-    right: -2px;
-  }
-
-  /* O TECLADO — tres por quatro, na face da frente. Sem numero: a 6px seria texto falso. */
-  /* ⛔ `.phone > i` DA `display: block` A TODOS, e vencia a grade por especificidade — o
-     teclado sumiu na primeira captura. O seletor composto e o que devolve a grade. */
-  .phone > .phone__keys {
-    left: 66px;
-    top: 82px;
-    width: 88px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-  }
-
-  .phone__key {
-    display: block;
-    height: 12px;
-    border-radius: 3px;
-    background:
-      linear-gradient(180deg, rgba(var(--phone-gleam-rgb), 0.18), rgba(0, 0, 0, 0.2)),
-      var(--phone-key);
-    box-shadow:
-      inset 0 1px 0 rgba(var(--phone-gleam-rgb), 0.2),
-      0 1px 1px rgba(0, 0, 0, 0.6);
-  }
-
-  /* A ETIQUETA DO NUMERO — a tira branca sob o teclado. */
-  .phone__label {
-    left: 76px;
-    top: 150px;
-    width: 68px;
-    height: 7px;
-    border-radius: 1px;
-    background: rgba(255, 255, 255, 0.88);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-  }
-
-  /* O CORDAO — sai pela esquerda e desce em curva. Traco grosso tracejado le como espiral. */
-  .phone__cord {
+  .phone__photo,
+  .phone__glow {
     position: absolute;
-    left: -48px;
-    top: 34px;
-    width: 90px;
-    height: 120px;
-    overflow: visible;
-    fill: none;
-    stroke: var(--phone-body);
-    stroke-width: 7;
-    stroke-linecap: round;
-    stroke-dasharray: 2 4.5;
-    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55));
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
-  /* ⚠ O FONE VIBRA, e nao pula: 2 graus para cada lado a 6 Hz e o que um aparelho de mesa faz
-     quando toca. E o aparelho inteiro ganha um halo, para o toque ser visto de longe. */
-  .phone[data-ringing="true"] .phone__handset {
+  /* AS DUAS SOMBRAS DA SALA seguem a silhueta da foto: `drop-shadow`, inclinado por
+     `--light-dx`. ⛔ A 0,5 DE ALFA ELAS SUMIAM no jacaranda e o aparelho flutuava — o contato
+     vai a 0,88. A penumbra e curta (12px): comprida ela fazia o cordao flutuar junto. */
+  .phone__photo {
+    filter: drop-shadow(calc(var(--light-dx) * 2px) 2px 3px rgba(0, 0, 0, 0.88))
+      drop-shadow(calc(var(--light-dx) * 12px) 12px 18px rgba(0, 0, 0, 0.6));
+  }
+
+  /* ⭐ O HALO DO TOQUE: a mesma foto por baixo, com a silhueta acesa em ambar, respirando em
+     OPACIDADE a 1 Hz — o filtro nao muda, so a camada aparece. */
+  .phone__glow {
+    filter: drop-shadow(0 0 4px var(--phone-ring)) drop-shadow(0 0 14px var(--phone-ring));
+    opacity: 0;
+  }
+
+  .phone[data-ringing="true"] .phone__glow {
+    animation: phone-halo 1s ease-in-out infinite alternate;
+  }
+
+  /* ⚠ O APARELHO VIBRA, e nao pula: 1,4 graus para cada lado a 6 Hz e o que um telefone de
+     mesa faz quando toca. */
+  .phone[data-ringing="true"] .phone__photo {
     animation: phone-ring 0.16s ease-in-out infinite alternate;
   }
 
-  .phone[data-ringing="true"] .phone__base {
-    animation: phone-halo 1.2s ease-in-out infinite;
+  /* OS ALGARISMOS DAS TECLAS — as teclas da imagem sao em branco, e cada algarismo cai no
+     centro da tecla medida no arquivo: colunas a 350,5 / 412 / 473,5 de 720
+     (passo 61,5) e linhas a 300 / 355 / 410,5 / 466 de 639 (passo 55,3), tecla de 35px. A grade
+     e 3 x 4 com celula do tamanho do passo, entao o centro da celula e o centro da tecla.
+     📐 A 420px a tecla tem 20px e o algarismo 11px — acima dos 8px em que texto vira textura. */
+  .phone__keys {
+    position: absolute;
+    left: 44.4%;
+    top: 42.6%;
+    width: 25.6%;
+    height: 34.6%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    pointer-events: none;
+  }
+
+  /* ⚠ A CAIXA DO ALGARISMO E A DA TECLA (57% x 63% do passo), e nao a celula: o passeio mede o
+     contraste pela caixa, e com a celula inteira o corpo vermelho entrava na amostra — 4,27
+     para o "8" quando o par real, tinta sobre a tecla, passa de 8. */
+  .phone__keys b {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 57%;
+    height: 63%;
+    margin: auto;
+    font: 700 11px/1 var(--font-display);
+    color: var(--paper-ink);
+  }
+
+  /* O NUMERO NO QUADRO — o cartao em branco da imagem, medido no arquivo: de 45,3% a 69,2% na
+     largura e de 80,3% a 85,8% na altura. ⚠ O PASSEIO MEDE O CONTRASTE PELA `color`: o cartao
+     e claro, entao a tinta e a do papel. */
+  .phone__number {
+    position: absolute;
+    left: 45.3%;
+    top: 80.3%;
+    width: 23.9%;
+    height: 5.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 600 11px/1 var(--font-display);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    color: var(--paper-ink);
+    pointer-events: none;
   }
 
   @keyframes phone-ring {
     from {
-      transform: rotate(-2deg) translateY(-1px);
+      transform: rotate(-1.4deg) translateY(-1px);
     }
     to {
-      transform: rotate(2deg) translateY(0);
+      transform: rotate(1.4deg) translateY(0);
     }
   }
 
   @keyframes phone-halo {
-    0%,
-    100% {
-      box-shadow:
-        inset 0 1px 0 rgba(var(--phone-gleam-rgb), 0.45),
-        inset 0 -2px 0 var(--phone-deep),
-        0 2px 4px rgba(0, 0, 0, 0.55),
-        0 24px 60px -20px rgba(0, 0, 0, 0.85);
+    from {
+      opacity: 0.12;
     }
-    50% {
-      box-shadow:
-        inset 0 1px 0 rgba(var(--phone-gleam-rgb), 0.45),
-        inset 0 -2px 0 var(--phone-deep),
-        0 2px 4px rgba(0, 0, 0, 0.55),
-        0 24px 60px -20px rgba(0, 0, 0, 0.85),
-        0 0 0 6px rgba(var(--phone-body-rgb), 0.28),
-        0 0 40px 12px rgba(var(--phone-body-rgb), 0.35);
+    to {
+      opacity: 0.7;
     }
   }
 
@@ -869,12 +876,13 @@
     /* 📐 O ENVELOPE DESCEU DE 208 PARA 130 pela mesma conta da pasta: o punhado inteiro fechava
        431x400 de mesa com oito cartas, e a bandeja e UM dos cinco objetos. Hoje ele fecha em
        239x216, que e 20% por 27%. */
-    /* ⛔ E ELE E DESENHADO GRANDE E REDUZIDO, pela mesma razao do papel: a 130px as duas
-       diagonais da aba sairam em ESCADA — `clip-path` nao suaviza aresta em camada composta, e
-       a cena ainda amplia tudo por `--fit`. A 360px com `--envelope-fit` de 0,36 a peca chega
-       a tela do mesmo tamanho, e cada degrau da diagonal fica com um terco do pixel. */
-    --envelope-size: 360px;
-    --envelope-fit: 0.36;
+    /* ⛔ E ELE DEIXOU DE SER DESENHADO GRANDE E REDUZIDO, que era o que SERRILHAVA. Nascer a
+       360px e cair a 0,36 parecia dar tres vezes mais pixel por degrau; na tela dava o
+       contrario, porque `scale` numa camada composta reamostra o que JA foi rasterizado — o
+       `clip-path` era recortado a 360 e a reducao repetia o degrau com interpolacao dura.
+       ⭐ Desenhado no tamanho de exibicao, quem recorta a diagonal e o rasterizador, que
+       suaviza. E a cena so encolhe em janela menor que a foto, entao aqui `--fit` vale 1. */
+    --envelope-size: 155px;
     /* 📐 MEDIDO NA FOTO, pelos quatro cantos: as duas diagonais da aba se encontram a 55%
        da altura, e o lacre e centrado nesse ponto. */
     --envelope-apex: 55%;
@@ -888,16 +896,15 @@
     --envelope-ink-rgb: var(--letter-ink-rgb);
 
     position: absolute;
-    /* 📐 O PUNHADO DESCEU DE 26% PARA 42%, por ordem dele: "os envelopes estao muito em cima".
-       No alto da mesa eles encostavam na aresta distante do tampo, onde a perspectiva mais
-       comprime — a 42% eles pousam na altura da pasta, que e onde uma pessoa larga a carta.
-       ⛔ E TODA MEDIDA EM % DAQUI SE REFAZ SE A FOTO TROCAR: a porcentagem e da cena, e a
-       cena e a foto. Na de 1672px a mesma fracao ja levou o punhado 36px para fora, medido.
-       📐 A 27% (517px) e a pasta a 52% (996px, meia largura 303 a 0,4 de repouso): a carta
-       mais a direita da tabela de queda fecha em 644, a borda da pasta comeca em 693 — 49px de
-       folga; a mais a esquerda fecha em 395, e a janela de 1440 comeca em 360 — 35px. Eu
-       tinha posto 31% com a meia largura da pasta ANTIGA, e a prova pegou. */
-    left: 27%;
+    /* ⛔ A CENA NAO TEM MESA PARA AS TRES PECAS, e o numero e medido no navegador: a janela de
+       1440 mostra 1196,8px do Gabinete e punhado + pasta + telefone somam 1207,8 encostados.
+       📐 A 25% a carta da ponta entrava 57px na pasta, e o portao pegou 6 dos 24 meses. A
+       22,5% sobram 11px ate a pasta e 34px de envelope saem pela beira esquerda — a area corta
+       a cena de proposito, e a madeira ja sangra pelos mesmos dois lados.
+       ⛔ TODA % DAQUI SE REFAZ SE A FOTO TROCAR: a porcentagem e da cena, e a cena e a foto. */
+    left: 22.5%;
+    /* ⭐ A ALTURA E ORDEM DELE — "os envelopes estao muito em cima": la eles encostavam na
+       aresta distante do tampo. Aqui pousam na altura da pasta, que e onde a carta e largada. */
     top: 50%;
     width: 0;
     height: 0;
@@ -916,17 +923,22 @@
      le como adesivo — e a mesma correcao que a pasta ja pagou. */
   .envelope {
     position: absolute;
-    /* 📐 O PUNHADO ENCOLHEU DE 215 PARA 120 de espalhamento: a 215 as oito cartas abriam 431px
-       de mesa e encostavam na pasta. Um punhado jogado no canto e junto; espalhado, ele vira
-       oito objetos soltos. */
-    left: calc(var(--ex) * 105px);
-    top: calc(var(--ey) * 105px);
+    /* 📐 A 78px O PUNHADO ABRIA 255px NUMA FAIXA DE 218, e o portao pegou em 6 dos 24 meses:
+       a pasta recuou para 47% e cresceu para 0,44, e a mesa entre ela e o rail encurtou. A
+       40px ele fecha em 217 e sobram 11px ate o couro. Um punhado jogado no canto e junto;
+       espalhado, ele vira oito objetos soltos.
+       ⛔ ENCOLHER O ENVELOPE FOI A ALTERNATIVA RECUSADA: 155 para 130 tambem fechava o portao
+       e custava 16% da carta. Fechar o leque custa 34px de papel cortados na beira. */
+    left: calc(var(--ex) * 40px);
+    top: calc(var(--ey) * 62px);
     width: var(--envelope-size);
     /* 📐 A FOTO DA 1,504, e o envelope real e 1,42: a camera olha de cima e comprime a
        altura. 1,42 e o C6 (162 x 114 mm), que e o formato de convite. ⛔ Eu vinha usando 1,24,
        que nao e formato de nada. */
     height: calc(var(--envelope-size) / 1.42);
     margin: calc(var(--envelope-size) / -2.84) 0 0 calc(var(--envelope-size) / -2);
+    /* E um `<button>` para a Caixa: o recheio do navegador sai, senao o papel ganha 1px 6px. */
+    padding: 0;
     border-radius: calc(var(--envelope-size) * 0.008);
     cursor: pointer;
 
@@ -965,22 +977,18 @@
       cover,
       cover;
 
-    /* ⚠ TRES SOMBRAS, E A LUZ E A DO VIDRO: contato, curta e ampla, caindo RETO como o
-       `.glass-stage` — a carta tinha quatro caindo para a direita, com a janela que a UI nao
-       tem. A queda de opacidade segue a do mundo real: cada degrau de distancia perde metade.
-       ⚠ E ELAS SAO EM FRACAO DE `--envelope-size`, porque a peca nasce a 360px e e reduzida a
-       0,36 — em px cru a sombra chegaria a tela com um terco do que foi desenhado. */
+    /* ⚠ AS DUAS SOMBRAS DA SALA, na classe "envelope". ⛔ ELAS ERAM TRES, com alfas de 0,5,
+       0,3 e 0,45 — tres luzes sobre uma mesa que tem UMA, e e por isso que a peca lia como
+       adesivo escuro sobre a madeira. As arestas seguem a mesma luz: cima e esquerda claras. */
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, var(--envelope-lip, 0.55)),
       inset 0 -1px 0 rgba(0, 0, 0, 0.15),
       inset 1px 0 0 rgba(255, 255, 255, 0.14),
       inset -1px 0 0 rgba(0, 0, 0, 0.1),
-      0 calc(var(--envelope-size) * 0.008) calc(var(--envelope-size) * 0.012) rgba(0, 0, 0, 0.5),
-      0 calc(var(--envelope-size) * 0.04) calc(var(--envelope-size) * 0.08) rgba(0, 0, 0, 0.3),
-      0 calc(var(--envelope-size) * 0.11) calc(var(--envelope-size) * 0.24)
-        calc(var(--envelope-size) * -0.05) rgba(0, 0, 0, 0.45);
+      var(--cast-contact),
+      var(--cast-thin);
 
-    transform: scale(var(--envelope-fit)) rotate(var(--er));
+    transform: rotate(var(--er));
     transform-origin: 50% 50%;
   }
 
@@ -1057,11 +1065,11 @@
        a aba virava um X de tinta sem espessura nenhuma. Agora eles saem de `--envelope-size`, e a
        aresta tem o mesmo peso em qualquer tamanho. */
     filter: drop-shadow(
-        calc(var(--envelope-size) * 0.006) calc(var(--envelope-size) * 0.012)
+        calc(var(--light-dx) * var(--envelope-size) * 0.012) calc(var(--envelope-size) * 0.012)
           calc(var(--envelope-size) * 0.008) rgba(var(--envelope-ink-rgb), 0.92)
       )
       drop-shadow(
-        calc(var(--envelope-size) * 0.008) calc(var(--envelope-size) * 0.02)
+        calc(var(--light-dx) * var(--envelope-size) * 0.02) calc(var(--envelope-size) * 0.02)
           calc(var(--envelope-size) * 0.055) rgba(var(--envelope-ink-rgb), 0.5)
       );
   }
@@ -1077,12 +1085,11 @@
     transform: translate(-50%, -50%) rotate(-7deg);
     overflow: visible;
     pointer-events: none;
-  }
-
-  /* A SOMBRA QUE A CERA JOGA NO PAPEL, num grupo proprio: dentro do filtro do domo ela sairia
-     deformada junto com a silhueta. */
-  .seal__shadow {
-    filter: url("#wax-shadow");
+    /* A SOMBRA QUE A CERA JOGA NO PAPEL, e ela e da sala: contato e uma penumbra curta, porque
+       o domo tem 2mm. Fica no `<svg>` e nao no anel, senao o filtro do domo a deformaria junto
+       com a silhueta — e antes ela caia para a direita a 0,55, sozinha. */
+    filter: drop-shadow(calc(var(--light-dx) * 1px) 1px 1px rgba(0, 0, 0, 0.5))
+      drop-shadow(calc(var(--light-dx) * 3px) 3px 4px rgba(0, 0, 0, 0.35));
   }
 
   /* O ANEL — a cera que escorreu por fora do carimbo. Ele leva o filtro inteiro: silhueta

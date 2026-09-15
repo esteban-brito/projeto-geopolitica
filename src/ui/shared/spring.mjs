@@ -91,3 +91,134 @@ export function spring(onStep, { duration = 0.4, bounce = 0, from = 0, dt = 1 / 
 
 /** @param {number} from @param {number} to @param {number} t */
 export const between = (from, to, t) => from + (to - from) * t;
+
+/* ══ A MOLA ANALITICA ═════════════════════════════════════════════════════════
+   ⭐ A MESMA FISICA, RESOLVIDA EM VEZ DE INTEGRADA. A mola de cima anda por quadro na thread
+   principal; esta resolve a EDO uma vez e entrega a curva pronta, que o compositor executa
+   sozinho. O jogo pode engasgar que o voo continua no compasso.
+
+   ⭐ E E ELA QUE PERMITE INTERROMPER SEM RECOMECAR: quem conhece `x(t)` conhece `x'(t)`, entao
+   no instante do novo clique a posicao e a velocidade saem da CONTA, e nao de uma medicao entre
+   dois quadros. E o que a transicao CSS nao faz, e e a diferenca que o olho chama de enlatado. */
+
+/** ⛔ O RESIDUO EM QUE O MOVIMENTO ACABOU PARA O OLHO, e nao para a matematica: a mola
+    analitica leva tempo infinito para fechar em 1. Meio pixel num curso de 700px e 0,0007 —
+    0,002 fica com folga abaixo do que uma tela mostra. */
+const REST = 0.002;
+
+/** Quantos pontos a curva leva ao CSS. Abaixo de 24 a fase de arranque sai poligonal; acima
+    de 40 a string cresce sem a tela mudar. */
+const POINTS = 32;
+
+/**
+ * A SOLUCAO EXATA, e os tres regimes sao tres formulas — nao uma aproximada.
+ *
+ * ⚠ `bounce` E A PARAMETRIZACAO DA APPLE, a mesma da mola de cima: `zeta = 1 - bounce`,
+ * `w = 2pi/duracao`. Quique zero e amortecimento critico, que e o padrao de ato de Estado.
+ *
+ * @param {number} zeta
+ * @param {number} w
+ * @param {number} v0 a velocidade de partida, em cursos por segundo
+ * @returns {(t: number) => { at: number, rate: number }} posicao e velocidade no instante
+ */
+function solve(zeta, w, v0) {
+  if (Math.abs(zeta - 1) < 0.005) {
+    /* Critico: raiz dupla em -w, e o termo linear carrega a velocidade. */
+    const b = v0 - w;
+    return t => {
+      const decay = Math.exp(-w * t);
+      return { at: 1 - decay * (1 - b * t), rate: decay * (b + w * (1 - b * t)) };
+    };
+  }
+  if (zeta < 1) {
+    const wd = w * Math.sqrt(1 - zeta * zeta);
+    const a = -1;
+    const b = (v0 - zeta * w) / wd;
+    return t => {
+      const decay = Math.exp(-zeta * w * t);
+      const cos = Math.cos(wd * t);
+      const sin = Math.sin(wd * t);
+      const y = decay * (a * cos + b * sin);
+      const dy = decay * ((b * wd - zeta * w * a) * cos - (a * wd + zeta * w * b) * sin);
+      return { at: 1 + y, rate: dy };
+    };
+  }
+  /* Superamortecido: duas raizes reais, e nenhuma oscilacao. */
+  const gap = Math.sqrt(zeta * zeta - 1);
+  const r1 = -w * (zeta - gap);
+  const r2 = -w * (zeta + gap);
+  /* De `y(0) = -1` e `y'(0) = v0`: a1 + a2 = -1 e a1*r1 + a2*r2 = v0. */
+  const a1 = (v0 + r2) / (r1 - r2);
+  const a2 = -1 - a1;
+  return t => {
+    const e1 = Math.exp(r1 * t);
+    const e2 = Math.exp(r2 * t);
+    return { at: 1 + a1 * e1 + a2 * e2, rate: a1 * r1 * e1 + a2 * r2 * e2 };
+  };
+}
+
+/**
+ * QUANDO O MOVIMENTO ACABA PARA O OLHO — e ela e PROCURADA, e nao uma constante.
+ *
+ * ⛔ A CONSTANTE ERRA NOS TRES REGIMES DE UMA VEZ. Com `1,22 x duracao` o residuo do critico
+ * fica em 0,41%, o dobro do limiar — e como a curva crava o ultimo ponto em 1, sobra um salto
+ * de 2,8px num curso de 700px. A conta correta para o critico da 1,347; para um quique de 0,3
+ * ela passa de 2,0. Procurar custa 200 avaliacoes uma vez por gesto.
+ *
+ * @param {(t: number) => { at: number, rate: number }} at
+ * @param {number} duration
+ * @returns {number}
+ */
+function settleOf(at, duration) {
+  const ceiling = duration * 4;
+  const step = ceiling / 200;
+  let last = step;
+  for (let t = step; t <= ceiling; t += step) {
+    last = t;
+    if (Math.abs(at(t).at - 1) < REST && Math.abs(at(t).rate) * duration < REST * 4) break;
+  }
+  return last;
+}
+
+/**
+ * UM VOO — a curva para o CSS, e a conta para quem interromper.
+ *
+ * ⚠ A AMOSTRAGEM E DENSA NO ARRANQUE: `(i/n)^1.2` poe mais pontos onde a curvatura esta, que
+ * e o primeiro quinto do tempo. Com passos iguais sobram 7 pontos para 70% da variacao, e a
+ * 120 fps a poligonal aparece.
+ *
+ * @param {object} input
+ * @param {number} input.duration em segundos
+ * @param {number} [input.bounce] 0 e amortecimento critico, que e o padrao
+ * @param {number} [input.velocity] a velocidade de partida, em cursos por segundo
+ * @returns {{ css: string, duration: number, at: (t: number) => number,
+ *   rate: (t: number) => number }}
+ */
+export function curveOf({ duration, bounce = 0, velocity = 0 }) {
+  const d = Math.max(0.05, duration);
+  const zeta = Math.max(0.05, 1 - bounce);
+  const w = (2 * Math.PI) / d;
+  const at = solve(zeta, w, velocity);
+  const settle = settleOf(at, d);
+
+  /* ⛔ O `linear()` ESPACA OS PONTOS SOZINHO, e por isso cada um leva a POSICAO escrita: sem
+     ela o CSS assume passos iguais no tempo, e uma amostragem densa no arranque — que e o que
+     poe pontos onde a curvatura esta — sai DEFORMADA. Medido: a pasta chegava a 489px aos
+     120ms onde a conta pede 635, porque os 29ms iniciais estavam esticados sobre 120. */
+  const points = [];
+  for (let i = 0; i <= POINTS; i++) {
+    const share = Math.pow(i / POINTS, 1.2);
+    points.push(`${Number(at(share * settle).at.toFixed(4))} ${(share * 100).toFixed(2)}%`);
+  }
+  /* ⚠ O ULTIMO PONTO E 1 EXATO: o CSS interpola ATE ele, e 0,9998 deixaria a peca parada fora
+     do lugar para sempre. Ele so pode ser cravado porque `settleOf` garantiu que o salto ja e
+     menor que o limiar visual. */
+  points[points.length - 1] = "1 100%";
+
+  return {
+    css: `linear(${points.join(",")})`,
+    duration: settle,
+    at: t => at(t).at,
+    rate: t => at(t).rate,
+  };
+}

@@ -52,9 +52,6 @@ const RUNTIME = new Set([
   "--furrow-v",
   "--envelope-size",
   "--envelope-apex",
-  /* --envelope-fit  o quanto o envelope encolhe depois de desenhado: ele nasce a 360px para a
-     diagonal da aba nao sair em escada, e chega a tela com um terco disso. Valor de UMA peca. */
-  "--envelope-fit",
   "--stroke-len",
   /* ── E a que a bancada da mesa girava: --rest, que o JS le no voo da pasta. */
   "--rest",
@@ -71,20 +68,17 @@ const RUNTIME = new Set([
      juntas — e o aviso falhou em quatro comentarios. */
   "--room-w",
   "--room-h",
+  /* ── E ONDE O TELEFONE FICA: no meio do vao entre a pasta e a beira visivel da janela, que
+     `fitDesk` mede a cada redimensionamento. */
+  "--phone-x",
   "--timber",
   "--fibre",
   "--felt",
-  /* ── O VOO DA PASTA. As duas sombras sao camadas que cruzam opacidade, e estes oito valores
-     dao a forma delas — a mola nao os reescreve mais, e isso valeu 13 fps. */
+  "--leather",
+  /* ── O VOO DA PASTA: o giro de repouso, que o JS le antes de erguer. As oito medidas das duas
+     sombras sairam — elas viraram as classes `--cast-*` da sala, declaradas no arquivo de
+     tokens como qualquer outra. */
   "--folder-tilt",
-  "--folder-near-x",
-  "--folder-near-y",
-  "--folder-near-b",
-  "--folder-near-a",
-  "--folder-far-x",
-  "--folder-far-y",
-  "--folder-far-b",
-  "--folder-far-a",
   /* ── ONDE CADA CARTA CAIU, em estilo inline: --ex e --ey o lugar, --er o giro, --i o indice
      na pilha. Sao um valor POR ELEMENTO, e nao do sistema. */
   "--i",

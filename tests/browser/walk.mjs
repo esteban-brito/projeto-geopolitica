@@ -404,8 +404,13 @@ try {
           if (ratio + 0.005 < floor) {
             /* O NOME DO PAI ENTRA JUNTO porque metade das acusacoes cai num `<b>` solto, e
                `b` sozinho nao diz em que peca da tela ele mora. */
-            const name = node.className || node.tagName.toLowerCase();
-            const parent = node.parentElement?.className || "";
+            const name =
+              (typeof node.className === "string" ? node.className : node.getAttribute("class")) ||
+              node.tagName.toLowerCase();
+            const pClass = node.parentElement?.className;
+            const parent =
+              (typeof pClass === "string" ? pClass : node.parentElement?.getAttribute("class")) ||
+              "";
             found.push(
               `${parent ? `${parent} > ` : ""}${name} "${(node.textContent ?? "").trim().slice(0, 22)}" ` +
                 `${ratio.toFixed(2)} < ${floor} (${style.fontSize}, ${style.color})`,
@@ -488,6 +493,41 @@ try {
      vive numa arvore 3D, e o ponto que o navegador de teste calcula para `.folder` caiu no
      TAMPO — a prova acusava a mesa por um defeito do proprio clique. Quem responde a pergunta
      "o que o jogador acerta aqui" e `elementFromPoint`, e ela vira a primeira assercao. */
+  /* ⛔ E A ESPERA E PELA ANIMACAO ACABAR, e nao por altura repetida: o voo e uma curva que
+     desacelera, entao dois quadros consecutivos batem no mesmo pixel arredondado ANTES do fim
+     — a prova quebrava o laco cedo e tentava assinar com a pasta a caminho, e falhava uma
+     rodada sim, outra nao. Quem sabe se o voo acabou e o navegador. */
+  const pousou = async () => {
+    await page
+      .waitForFunction(
+        () => (document.querySelector(".folder")?.getAnimations() ?? []).length > 0,
+        undefined,
+        { timeout: 2000 },
+      )
+      .catch(() => {});
+    await page.waitForFunction(
+      () =>
+        (document.querySelector(".folder")?.getAnimations() ?? []).every(
+          one => one.playState === "finished" || one.playState === "idle",
+        ),
+      undefined,
+      { timeout: 4000 },
+    );
+  };
+
+  /* ⚠ E O TOQUE DIZ SE ACERTOU: `elementFromPoint` e a pergunta "o que o jogador acerta aqui",
+     e um clique que caiu fora da peca tem de reprovar em vez de virar silencio. */
+  /** @param {string} pick */
+  const tocar = pick =>
+    page.evaluate(seletor => {
+      const box = document.querySelector(seletor)?.getBoundingClientRect();
+      if (!box) return false;
+      const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+      if (hit === null || hit.closest(seletor.split(" ").pop() ?? seletor) === null) return false;
+      hit.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      return true;
+    }, pick);
+
   const onDesk = await flight();
   const onTarget = await page.evaluate(() => {
     const box = document.querySelector(".folder")?.getBoundingClientRect();
@@ -498,7 +538,7 @@ try {
     return true;
   });
   expect(onTarget, "[gabinete] o centro da pasta nao pertence a pasta — o clique cai na mesa");
-  await page.waitForTimeout(700);
+  await pousou();
   const inHand = await flight();
   expect(
     onDesk !== null && inHand !== null && inHand.tall > onDesk.tall * 1.05,
@@ -515,20 +555,17 @@ try {
      geometria, e so a imagem responde se o texto esta nitido. */
   await page.screenshot({ path: join(OUT, "gabinete-pasta.png") });
 
-  /* ⚠ E O CLIQUE VAI NA AREA, e nao na cena: a cena tem 1916px e a janela mostra o centro
-     dela, entao o canto (40,40) da cena esta CORTADO a esquerda e ninguem clica nele — o
-     passeio parou 52 vezes tentando. O canto da area e visivel por definicao. */
-  await page.click(".area.cabinet", { position: { x: 40, y: 40 } });
+  /* ⛔ E LARGAR DEIXOU DE TER CANTO: com a pasta centralizada na TELA ela ocupa ~1030x707 no
+     meio da janela, e o canto (40,40) da area caiu DENTRO dela — o clique virava marca em vez
+     de largar. Quem manda o evento e a sala, que e onde o ouvinte mora. */
+  await page.evaluate(() =>
+    document.querySelector(".room")?.dispatchEvent(new MouseEvent("click", { bubbles: true })),
+  );
   /* ⚠ E A ESPERA E POR ASSENTAMENTO, e nao por relogio: sem cabeca o quadro chega irregular, e
      um numero fixo pegava a mola a caminho — 15px acima da mesa numa rodada, 31 na seguinte. A
      prova esperava com relogio e acusava a mesa por causa do proprio compasso. */
-  let backDown = await flight();
-  for (let wait = 0; wait < 16; wait++) {
-    await page.waitForTimeout(150);
-    const again = await flight();
-    if (again !== null && backDown !== null && again.tall === backDown.tall) break;
-    backDown = again;
-  }
+  await pousou();
+  const backDown = await flight();
   /* ⚠ A VOLTA SE COBRA COM FOLGA DE 20px, e ela e ABSOLUTA: sem cabeca o quadro chega mais
      devagar e a mola assenta uns pixels acima da mesa. Em porcentagem a folga encolhia junto
      com a peca — a mesma sobra de 16px passou de 3% para 5% quando a pasta diminuiu. Uma pasta
@@ -536,6 +573,75 @@ try {
   expect(
     backDown !== null && onDesk !== null && Math.abs(backDown.tall - onDesk.tall) <= 20,
     `[gabinete] a pasta nao voltou para a mesa: ${backDown?.tall}px contra ${onDesk?.tall}px`,
+  );
+
+  /* ⭐ 1b — O VOO INTERROMPIDO NAO SALTA, e esta e a prova da arquitetura inteira. Largar a
+     pasta no MEIO da subida tem de continuar do ponto em que ela esta: a curva e analitica,
+     entao a posicao e a velocidade do instante saem da conta e o voo novo parte dali.
+     ⛔ COM TRANSICAO CSS ISTO FALHA POR CONSTRUCAO — interrompida, ela recomeca do zero, e a
+     peca salta para o alvo antigo antes de voltar. O salto e o que esta prova mede. */
+  /* ⛔ E O CORTE E MEDIDO DENTRO DA PAGINA, num `evaluate` so: entre esperar do lado do teste e
+     medir do lado da pagina cabe o voo inteiro — a prova via 707px onde queria ver o meio,
+     porque a pagina estrangulada atrasa o `waitForFunction` e o voo acaba na espera. */
+  const salto = await page.evaluate(async () => {
+    const pasta = document.querySelector(".folder");
+    const room = document.querySelector(".room");
+    if (pasta === null) return { parado: 0, meio: 0, logoApos: 0, fim: 0 };
+    const alto = () => pasta.getBoundingClientRect().height;
+    /** @returns {Promise<void>} */
+    const quadro = () => new Promise(r => requestAnimationFrame(() => r()));
+    /* ⚠ E ELA GARANTE O PROPRIO ESTADO INICIAL: o gesto atravessa a pintura, entao uma prova
+       que herda a pasta no ar mede o voo inteiro como se fosse o comeco dele. */
+    const assentar = async () => {
+      for (let i = 0; i < 240; i++) {
+        await quadro();
+        if (pasta.getAnimations().every(one => one.playState !== "running")) return;
+      }
+    };
+    if (alto() > 600) {
+      room?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      await assentar();
+    }
+    const parado = alto();
+    const caixa = pasta.getBoundingClientRect();
+    document
+      .elementFromPoint(caixa.left + caixa.width / 2, caixa.top + caixa.height / 2)
+      ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    /* No meio do voo, que e onde a velocidade e maior e um salto apareceria inteiro. */
+    for (let i = 0; i < 240; i++) {
+      await quadro();
+      const one = pasta.getAnimations().find(each => each.playState === "running");
+      if (one !== undefined && Number(one.currentTime ?? 0) >= 140) break;
+    }
+    const meio = alto();
+    room?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await quadro();
+    await quadro();
+    const logoApos = alto();
+    /* E devolve a pasta a mesa: o gesto atravessa a pintura, e uma prova que sai com ela no ar
+       deixa as 24 medidas seguintes olhando uma pasta que ocupa a tela. */
+    await assentar();
+    return {
+      parado: Math.round(parado),
+      meio: Math.round(meio),
+      logoApos: Math.round(logoApos),
+      fim: Math.round(alto()),
+    };
+  });
+  expect(
+    salto.meio > salto.parado * 1.1,
+    `[gabinete] a pasta nao estava em voo quando a prova a interrompeu: ${salto.meio}px ` +
+      `contra ${salto.parado}px na mesa`,
+  );
+  expect(
+    Math.abs(salto.logoApos - salto.meio) < salto.meio * 0.2,
+    `[gabinete] o voo interrompido SALTOU: ${salto.meio}px no corte, ${salto.logoApos}px dois ` +
+      `quadros depois`,
+  );
+  expect(
+    Math.abs(salto.fim - salto.parado) <= 20,
+    `[gabinete] a prova do salto saiu com a pasta no ar: ${salto.fim}px contra ${salto.parado}px`,
   );
 
   expect((await page.locator(".vit").count()) === 4, "[barra] os quatro sinais vitais nao vieram");
@@ -787,6 +893,18 @@ try {
      sem encolher nenhuma. */
   /** @param {string} where */
   async function checkDeskFits(where) {
+    /* ⛔ O QUE ESTA MEDIDA COBRA E O ARRANJO, e arranjo e o estado de REPOUSO: erguida, a pasta
+       ocupa a tela e cobre as cartas por desenho, que nao e o defeito. O gesto atravessa a
+       pintura de proposito, entao a prova poe a pasta na mesa antes de medir. */
+    await page.evaluate(() => {
+      const room = document.querySelector(".room");
+      const pasta = document.querySelector(".folder");
+      if (room && pasta && pasta.getBoundingClientRect().height > 600) {
+        room.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      }
+    });
+    await pousou();
+
     /* ⚠ AS DUAS FOLHAS SE MEDEM, e nao a primeira: o parecer cresce com o mes tanto quanto o
        ato — nome de grupo longo, valor de seis digitos —, e medir so uma deixaria a outra
        estourar em silencio. */
@@ -802,14 +920,22 @@ try {
       const folder = document.querySelector(".folder");
       if (!folder) return null;
       const box = folder.getBoundingClientRect();
-      return [...document.querySelectorAll(".envelope")].filter(letter => {
+      const cruzam = [...document.querySelectorAll(".envelope")].filter(letter => {
         const one = letter.getBoundingClientRect();
         const across = Math.min(one.right, box.right) - Math.max(one.left, box.left);
         const down = Math.min(one.bottom, box.bottom) - Math.max(one.top, box.top);
         return across > 1 && down > 1;
       }).length;
+      /* ⚠ E A ACUSACAO DIZ O ESTADO DA PASTA: erguida ela ocupa a tela e cobre tudo por
+         desenho, o que nao e o defeito que esta medida existe para pegar — sem isto a prova
+         acusa o arranjo por causa de um gesto que ficou aberto. */
+      return { cruzam, alta: Math.round(box.height), erguida: box.height > 600 };
     });
-    expect(behind === 0, `[${where}] ${behind} carta(s) cairam atras da pasta`);
+    expect(
+      behind !== null && behind.cruzam === 0,
+      `[${where}] ${behind?.cruzam} carta(s) cairam atras da pasta ` +
+        `(pasta a ${behind?.alta}px, ${behind?.erguida ? "ERGUIDA" : "na mesa"})`,
+    );
   }
 
   /* ⚠ E ELA MEDE O GABINETE, entao o passeio VOLTA para la: a etapa acima acaba no email, e a
@@ -1144,28 +1270,8 @@ try {
       return !String(alvo.pseudoElement ?? "").startsWith("::view-transition");
     }),
   );
-  /* ⚠ E O TOQUE DIZ SE ACERTOU: `elementFromPoint` e a pergunta "o que o jogador acerta aqui",
-     e um clique que caiu fora da peca tem de reprovar em vez de virar silencio. */
-  /** @param {string} pick */
-  const tocar = pick =>
-    page.evaluate(seletor => {
-      const box = document.querySelector(seletor)?.getBoundingClientRect();
-      if (!box) return false;
-      const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
-      if (hit === null || hit.closest(seletor.split(" ").pop() ?? seletor) === null) return false;
-      hit.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      return true;
-    }, pick);
   expect(await tocar(".folder"), "[recomecar] o centro da pasta nao pertence a pasta");
-  /* ⚠ E A ESPERA E POR ASSENTAMENTO, e nao por relogio: a rubrica so corre com a pasta parada
-     na mao, e sem cabeca o quadro chega irregular — 700ms fixos pegavam a mola a caminho. */
-  let subindo = await flight();
-  for (let wait = 0; wait < 16; wait++) {
-    await page.waitForTimeout(150);
-    const again = await flight();
-    if (again !== null && subindo !== null && again.tall === subindo.tall) break;
-    subindo = again;
-  }
+  await pousou();
   /* ⛔ E O TOQUE VAI NA EPIGRAFE, e nao no centro da folha: as oito pastas do Art. 2 moram no
      meio do ato, e um `[data-protect]` sob o ponto medio devolve o clique como MARCA — a
      rubrica nunca corria e a prova acusava a mesa por causa da propria mira. */
@@ -1176,6 +1282,22 @@ try {
     "[recomecar] a prova nao conseguiu assinar, e sem isso ela deixa de medir o que mede",
   );
   const naMao = await page.locator(".folder").evaluate(node => node.getBoundingClientRect().height);
+
+  /* ⛔ E MARCAR UMA AREA COM A PASTA ERGUIDA REPINTA A SALA, e a sala nova nascia sem
+     `--phone-x`: ele so se mede com a pasta na mesa, e o telefone ia para -271px e ficava la
+     depois de largar. O passeio nunca marcava com a pasta no ar, e o portao ficou verde. */
+  const foneAntes = await page
+    .locator(".phone")
+    .evaluate(node => node.getBoundingClientRect().left);
+  expect(await tocar(".act__folders [data-protect]"), "[recomecar] a area nao recebeu a marca");
+  await page.waitForFunction(() => document.querySelectorAll(".room").length === 1);
+  const foneDepois = await page
+    .locator(".phone")
+    .evaluate(node => node.getBoundingClientRect().left);
+  expect(
+    Math.abs(foneDepois - foneAntes) < 2,
+    `[recomecar] o telefone mudou de lugar na repintura: ${foneAntes}px antes, ${foneDepois} depois`,
+  );
 
   /* E RECOMECAR PEDE DOIS CLIQUES. */
   await page.click("#restart");

@@ -12,6 +12,8 @@
    ⭐ E A LUZ E CALCULADA, e nao pintada: o domo da cera sai de `feSpecularLighting` com ponto
    de luz sobre a propria silhueta. Gradiente desenhado a mao produziu um botao de plastico. */
 
+import { UI } from "../strings.mjs";
+
 /* ONDE CAI CADA CARTA, em fracao do espalhamento a partir do centro do canto.
    ⚠ A TABELA E FIXA E NAO SORTEADA: o dominio nao tem `Math.random`, e um punhado que muda de
    lugar a cada repintura leria como a mesa tremendo. */
@@ -45,7 +47,9 @@ const DEFS =
      brilho tem de ser um ARCO na crista: constante baixa e expoente alto. */
   `<feSpecularLighting in="height" surfaceScale="3" specularConstant="0.3"` +
   ` specularExponent="34" lighting-color="#fff0e6" result="lit">` +
-  `<fePointLight x="24" y="14" z="34"/>` +
+  /* A luz e a da sala, a mesma de todo relevo da mesa: azimute 250 (20 graus a esquerda de
+     cima), elevacao 52. Era um ponto de luz proprio, e o lacre era a unica peca com luz sua. */
+  `<feDistantLight azimuth="250" elevation="52"/>` +
   `</feSpecularLighting>` +
   `<feComposite in="lit" in2="shape" operator="in" result="onWax"/>` +
   `<feComposite in="onWax" in2="shape" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"` +
@@ -65,11 +69,6 @@ const DEFS =
   `<feComposite in="a" in2="SourceGraphic" operator="in" result="inside"/>` +
   `<feBlend in="SourceGraphic" in2="inside" mode="multiply"/>` +
   `</filter>` +
-  /* A sombra que a cera joga no papel — ela sai do filtro para nao ser deformada junto. */
-  `<filter id="wax-shadow" x="-40%" y="-40%" width="190%" height="190%">` +
-  `<feDropShadow dx="1.4" dy="2.6" stdDeviation="1.6" flood-opacity="0.5"/>` +
-  `<feDropShadow dx="3.4" dy="6" stdDeviation="5" flood-opacity="0.34"/>` +
-  `</filter>` +
   `</defs></svg>`;
 
 /* ⚠ SO O ANEL LEVA A DEFORMACAO: com o disco dentro do mesmo filtro, a borda entre os dois
@@ -78,7 +77,7 @@ const DEFS =
    dava uma rosquinha. */
 const SEAL =
   `<svg class="envelope__seal" viewBox="0 0 100 100" aria-hidden="true">` +
-  `<g class="seal__shadow"><circle class="seal__ring" cx="50" cy="50" r="46"/></g>` +
+  `<circle class="seal__ring" cx="50" cy="50" r="46"/>` +
   `<circle class="seal__disc" cx="50" cy="50" r="33"/>` +
   `<path class="seal__step" d="M17 50 A33 33 0 0 1 83 50"/>` +
   `<path class="seal__gleam" d="M20 58 A33 33 0 0 0 80 58"/>` +
@@ -120,11 +119,15 @@ export function mailPileHtml({ letters }) {
     .map((letter, i) => {
       const where = FALL[i] ?? { x: 0, y: 0, r: 0 };
 
+      /* ⭐ CADA CARTA E UM BOTAO PARA A CAIXA (ciclo 25 §3.3: "clicar leva ao Email"), com o gesto
+         do rail e do telefone — `data-section`. A mesa nao absorve a Caixa: ela vai crescer. */
       return (
-        `<div class="envelope"${letter.urgent ? ' data-urgent="true"' : ""}` +
+        `<button class="envelope" type="button" data-section="email"` +
+        `${letter.urgent ? ' data-urgent="true"' : ""}` +
+        ` aria-label="${letter.urgent ? UI.envelope.due : UI.envelope.waiting}"` +
         ` style="--ex:${where.x};--ey:${where.y};--er:${where.r}deg">` +
         PAPER +
-        `</div>`
+        `</button>`
       );
     })
     .join("");
