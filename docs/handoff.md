@@ -19,7 +19,7 @@
 
 ### ✔ Estado — 15/09/2026 02:05 (portão verde, commitado)
 
-Commit mais recente: o de 15/09 02:05 (`git log -1`), que fechou a sessão inteira por ordem
+Commit mais recente: `49feec4` (15/09 02:08), que fechou a sessão inteira por ordem
 dele: 18 arquivos modificados + `tests/suites/spring.mjs`, `docs/research/11-fotorealismo-da-mesa.md`,
 `assets/phone.webp` e `assets/CREDITOS.md` novos. Ele mandou revisar antes de commitar; a revisão
 achou e corrigiu um defeito, e no meio dela vieram três ordens: o telefone vira imagem real, o
