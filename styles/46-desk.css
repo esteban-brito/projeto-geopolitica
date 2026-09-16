@@ -68,69 +68,12 @@
      escurecia a cena a 0,62 no alto do voo, e o que o gesto precisa mostrar e a folha — nao
      uma sala apagada em volta dela. */
 
-  /* ══ A LUZ NA PASTA ══════════════════════════════════════════════════════
-         ⛔ A TEXTURA ENTREGA COR, E SO. Sem luz da sala em cima dela o couro e um adesivo
-         plano — a mesa tem janela de um lado, e a pasta tem de saber disso.
-         ⚠ E ELA NAO E O VERNIZ DO TAMPO. Verniz e especular: lobulo ESTREITO e forte. Couro
-         e acetinado: lobulo LARGO e FRACO, espalhado pela face inteira. Usar a mesma curva
-         nos dois da couro envernizado, que e plastico. */
-  .folder__light {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    border-radius: inherit;
-    pointer-events: none;
-    background:
-      radial-gradient(
-        150% 130% at 16% 4%,
-        rgba(var(--leather-light-rgb), 0.2),
-        rgba(255, 255, 255, 0) 72%
-      ),
-      linear-gradient(122deg, rgba(0, 0, 0, 0) 30%, rgba(var(--leather-shade-rgb), 0.42)),
-      /* ⚠ A VARIACAO DE ZONA — couro nao e uniforme numa peca inteira: a pele tem partes
-             mais cheias e mais estiradas, e sem isso a face lê como vinil. Ela e de escala
-             GRANDE de proposito; a variacao fina ja mora na textura. */
-        radial-gradient(
-          120% 70% at 78% 28%,
-          rgba(var(--leather-light-rgb), 0.07),
-          rgba(255, 255, 255, 0) 60%
-        ),
-      radial-gradient(
-        90% 60% at 22% 82%,
-        rgba(var(--leather-shade-rgb), 0.13),
-        rgba(0, 0, 0, 0) 62%
-      );
-  }
-  /* ── A OCLUSAO DA QUINA, e ela e o que da ESPESSURA ────────────────────────
-         Toda aresta de couro recebe menos luz que a face, porque a face vizinha a tapa. Sem
-         isso a pasta e um retangulo recortado; com isso ela e um objeto. */
-  .folder__light::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    /* ── A ARESTA REBATIDA, e ela e o que separa PECA de RETANGULO ──────────
-           Couro de artigo bom tem a borda dobrada e brunida, e ela tem LADOS: a do lado da
-           janela pega luz, a oposta pega sombra. Quatro insets de 1,5px, e nao um contorno
-           uniforme — contorno uniforme e a assinatura de caixa desenhada. */
-    /* ⭐ E A BORDA TEM 4mm: o fio de 2px era 0,9px na tela e nao lia como espessura. A faixa de
-       8px (3,5 na tela) e a aresta rolada do couro — clara em cima e a esquerda, escura embaixo
-       e a direita, a mesma luz de tudo — e o fio fica como o vinco onde ela dobra. */
-    box-shadow:
-      inset 0 0 30px rgba(var(--leather-shade-rgb), 0.5),
-      inset 0 8px 8px -4px rgba(var(--leather-light-rgb), 0.16),
-      inset 8px 0 8px -4px rgba(var(--leather-light-rgb), 0.1),
-      inset 0 -8px 8px -4px rgba(var(--leather-shade-rgb), 0.7),
-      inset -8px 0 8px -4px rgba(var(--leather-shade-rgb), 0.55),
-      inset 0 2px 0 rgba(var(--leather-light-rgb), calc(0.24 * 1.7)),
-      inset 2px 0 0 rgba(var(--leather-light-rgb), calc(0.24 * 1.1)),
-      inset 0 -2px 0 rgba(var(--leather-shade-rgb), 0.5),
-      inset -2px 0 0 rgba(var(--leather-shade-rgb), 0.36);
-  }
-  /* As pecas ficam ACIMA da luz: o papel tem a propria sombra, e escurecer o decreto
-         junto com o couro tiraria a legibilidade que a folha existe para ter. */
+  /* ⛔ A LUZ E A OCLUSAO DA QUINA SAIRAM COM O COURO CALCULADO: a foto ja traz o lobulo
+     acetinado, a aresta rolada e a espessura assadas nela. Duas luzes sobre a mesma peca
+     davam dois lados iluminados. */
+  /* As pecas ficam ACIMA da foto: o papel tem a propria sombra, e escurecer o decreto
+     junto com o couro tiraria a legibilidade que a folha existe para ter. */
   .brief,
-  .folder__fold,
   .stack {
     z-index: 3;
   }
@@ -163,8 +106,15 @@
     z-index: 3;
     display: flex;
     align-items: stretch;
-    gap: 24px;
-    padding: 24px;
+    /* 📐 O VAO E A MOLDURA SAIRAM DA FOTO: a lombada dela ocupa 7,3% da largura e a moldura
+       de couro 4%, medidos no arquivo. A 24px de cada a folha entrava na moldura e cobria as
+       cantoneiras. A caixa foi de 1827 para 1690 e `--rest` de 0,44 para 0,408: a pasta fecha
+       em 684px, e a razao dela bate a da foto em 0,4%.
+       ⚠ CADA FOLHA PUXADA 28px PARA O SEU LADO, ordem dele — as duas liam juntas demais no
+       meio. O que saiu do flanco entrou no vao, entao a soma nao muda e a caixa fica onde
+       estava: 40 + 118 + 40 = 68 + 62 + 68. */
+    gap: 118px;
+    padding: 68px 40px;
     border-radius: 6px;
     /* ⛔ COURO CHAPADO, NUNCA TRANSLUCIDO: a 0,66 de translucidez o marrom vira cinza frio.
            ⛔ E SEM FOTO. A pasta rodou na tela sem a imagem de couro e ficou melhor: o que faz
@@ -172,19 +122,13 @@
            correcao de 83% de saturacao para nao ler como plastico laranja.
            ⭐ `color` fica: ele impoe matiz e saturacao da tinta e mantem a luminancia do fundo.
            A tinta a 80% deixa a cor respirar — a 100% ela matava a variacao e dava cinza. */
-    /* ⭐ O GRAO DO COURO E LUZ BRANCA COM ALFA, composta normal: sobre preto da o que `screen`
-       daria, e e um bitmap assado (`bake`). 📐 ELE CUSTA NA SUBIDA, e o numero fica declarado:
-       55-61 fps e 4-10 quadros perdidos com o grao, 76-80 e 0-1 sem ele (SVG dava 53 e 17;
-       numa camada propria, 37-45 e 24-31 — pior). Sem o grao a pasta lia como cartao. */
-    background:
-      var(--leather, none),
-      linear-gradient(rgba(var(--leather-tint-rgb), 0.8), rgba(var(--leather-tint-rgb), 0.8)),
-      var(--leather-deep);
-    background-blend-mode: normal, color, normal;
-    background-size:
-      320px 320px,
-      cover,
-      cover;
+    /* ⭐ A PASTA E FOTO (`assets/folder-open.webp`, 1600x1159), e nao couro calculado: a mesma
+       materia do telefone. Ela vem com costura, lombada, cantoneiras e a luz assadas, entao o
+       couro de `leather()` e as duas costuras de `::before`/`::after` saem com ela.
+       ⚠ ESTICADA E NAO `cover`: a caixa da pasta e o conteudo que manda, e a foto tem 1,380
+       de razao contra 1,409 da caixa — 2% de estiramento, que em couro ninguem ve. `cover`
+       cortaria a cantoneira. */
+    background: url("/assets/folder-open.webp") center / 100% 100% no-repeat;
     /* O CSS guarda so o REPOUSO; o voo e escrito pelo JS direto em `transform`.
            ⚠ E A RAZAO NAO E A QUE EU TINHA MEDIDO: o travamento que me levou ate aqui era um
            navegador que parou de compor — 1 quadro em 500ms —, e nao a arvore de estilo. O
@@ -206,7 +150,7 @@
        📐 E PAROU EM 0,44 POR FALTA DE MESA, e o numero e a conta: a janela de 1440 deixa 1237px
        uteis depois do rail, e a 0,46 as tres pecas somavam 1161 — 37px por vao. A 0,44 a pasta
        fecha em 693 e sobram 53px de cada lado dela. */
-    --rest: 0.44;
+    --rest: 0.408;
     will-change: transform;
     isolation: isolate;
     transform: translate(-50%, -50%) rotate(var(--folder-tilt, -2deg)) scale(var(--rest, 0.72));
@@ -266,83 +210,9 @@
          `z-index` das pecas quem pintava por ultimo ganhava. A ordem e fisica e agora esta
          declarada — couro, costura, luz, conteudo: a costura esta NO couro, e a luz da sala
          cai sobre as duas. */
-  .folder::before,
-  .folder::after {
-    content: "";
-    position: absolute;
-    inset: 9px;
-    z-index: 1;
-    pointer-events: none;
-  }
-  .folder::before {
-    /* ⛔ O PONTO ERA TRES FAIXAS CHAPADAS, e de perto ele lia como tracejado de caneta.
-           ⭐ SAO SEIS AGORA, e elas descrevem um CILINDRO deitado no sulco: a vala antes do
-           fio, o brilho da aresta que pega a janela, o corpo do fio, a penumbra do outro lado
-           e a vala de novo. E a mesma leitura que o veio da madeira ja usa. */
-    --stitch: repeating-linear-gradient(
-      58deg,
-      rgba(0, 0, 0, 0) 0 3.1px,
-      rgba(var(--leather-shade-rgb), 0.42) 3.1px 3.7px,
-      rgba(var(--leather-light-rgb), 0.5) 3.7px 4.4px,
-      rgba(var(--thread-rgb), 0.95) 4.4px 6.4px,
-      rgba(var(--thread-shade-rgb), 0.66) 6.4px 7.2px,
-      rgba(var(--leather-shade-rgb), 0.42) 7.2px 8px,
-      rgba(0, 0, 0, 0) 8px 10.4px
-    );
-    --stitch-v: repeating-linear-gradient(
-      calc(58deg + 90deg),
-      rgba(0, 0, 0, 0) 0 3.1px,
-      rgba(var(--leather-shade-rgb), 0.42) 3.1px 3.7px,
-      rgba(var(--leather-light-rgb), 0.5) 3.7px 4.4px,
-      rgba(var(--thread-rgb), 0.95) 4.4px 6.4px,
-      rgba(var(--thread-shade-rgb), 0.66) 6.4px 7.2px,
-      rgba(var(--leather-shade-rgb), 0.42) 7.2px 8px,
-      rgba(0, 0, 0, 0) 8px 10.4px
-    );
-    background:
-      var(--stitch) top / 100% 4px repeat-x,
-      var(--stitch) bottom / 100% 4px repeat-x,
-      var(--stitch-v) left / 4px 100% repeat-y,
-      var(--stitch-v) right / 4px 100% repeat-y;
-  }
-  /* O SULCO — a linha rasa que a agulha deixa, e ela e continua enquanto o ponto e
-         intervalado. Sem ela o ponto flutua no couro. */
-  .folder::after {
-    /* ⭐ TRES PIXELS, E NAO UM: a agulha AFUNDA o couro e empurra uma crista para os
-           dois lados. Com um pixel so o sulco lia como linha impressa. */
-    --furrow: linear-gradient(
-      180deg,
-      rgba(var(--leather-light-rgb), 0.13),
-      rgba(var(--leather-shade-rgb), 0.46) 55%,
-      rgba(var(--leather-light-rgb), calc(0.13 * 0.6))
-    );
-    --furrow-v: linear-gradient(
-      90deg,
-      rgba(var(--leather-light-rgb), 0.13),
-      rgba(var(--leather-shade-rgb), 0.46) 55%,
-      rgba(var(--leather-light-rgb), calc(0.13 * 0.6))
-    );
-    background:
-      var(--furrow) top / 100% 3px repeat-x,
-      var(--furrow) bottom / 100% 3px repeat-x,
-      var(--furrow-v) left / 3px 100% repeat-y,
-      var(--furrow-v) right / 3px 100% repeat-y;
-  }
-
-  /* A DOBRA — o vinco entre as duas faces. Duas linhas de um pixel: o vale escuro e a crista
-         clara logo ao lado. Uma linha so lê como risco desenhado. */
-  .folder__fold {
-    flex: 0 0 3px;
-    align-self: stretch;
-    margin: calc(24px * -1) 0;
-    background: linear-gradient(
-      90deg,
-      rgba(var(--leather-shade-rgb), 0.42),
-      rgba(var(--leather-light-rgb), 0.16) 60%,
-      rgba(0, 0, 0, 0)
-    );
-  }
-
+  /* ⛔ A COSTURA, O SULCO E A DOBRA SAIRAM JUNTO: a foto tem os tres, e o ponto de seleiro
+     desenhado por cima do fotografado dava costura dupla. O vao entre as folhas continua
+     existindo — ele agora e `gap`, e mostra a lombada da foto. */
   /* ── A PILHA — o decreto em cima, e o resto do mês embaixo ─────────────────
          ⚠ AS DE BAIXO NÃO TÊM TEXTO, e a ausência é declarada: hoje o jogo tem UMA caneta
          construída, o contingenciamento. Escrever ato nas outras seria inventar o que o
@@ -410,8 +280,12 @@
        ⚠ E e `will-change` E NAO `translateZ(0)`: o segundo promove a camada e deixa o navegador
        sem saber o que vai mudar, entao ele nao reserva a textura na resolucao do destino. */
     will-change: transform;
-    padding: calc(var(--paper) * 0.0673) calc(var(--paper) * 0.0714) calc(var(--paper) * 0.0673)
-      calc(var(--paper) * 0.1429);
+    /* ⛔ AS MARGENS LATERAIS ERAM 3cm A ESQUERDA CONTRA 1,5 A DIREITA — a margem de
+       encadernacao do oficio impresso —, e na tela isso joga o texto inteiro 25px para a
+       direita do meio da folha. Ele viu duas vezes: "descentralizado, despadronizado". Iguais
+       em 2,25cm, e a area de texto nao muda de largura (565,7px), entao nenhuma linha reflui.
+       ⚠ Esta folha nao e furada nem grampeada: a margem que a norma pede existe para isso. */
+    padding: calc(var(--paper) * 0.0673) calc(var(--paper) * 0.1071);
 
     color: var(--ink-act);
     /* 📗 Calibri ou Carlito. Carlito é a métrica-compatível livre. */
@@ -431,9 +305,13 @@
         hsl(44 calc(10 * 1%) calc(97 * 0.955%))
       );
 
-    /* ⭐ AS DUAS SOMBRAS DA SALA, na classe "folha": a curta cola no couro, a longa da a altura
-       de um papel — ela caia 20px, mais que o envelope, e a folha parecia flutuar na pasta. */
-    box-shadow: var(--cast-contact), var(--cast-flat);
+    /* ⛔ AS CLASSES DA SALA NAO SERVEM AQUI, e o motivo e a escala: a pasta em repouso vale
+       0,408, entao os 2px de contato de `--cast-contact` chegavam a 0,8px na tela e a folha
+       boiava sobre o couro. Estes numeros sao de LAYOUT — 5px viram 2 na tela e 14 viram 5,7 —,
+       e crescem junto quando a pasta sobe, que e o que a sombra de um papel faz. */
+    box-shadow:
+      calc(var(--light-dx) * 5px) 5px 8px rgba(0, 0, 0, 0.55),
+      calc(var(--light-dx) * 14px) 14px 28px -6px rgba(0, 0, 0, 0.45);
     border-radius: 1px;
     transform: rotate(0deg);
     cursor: pointer;
@@ -500,8 +378,11 @@
   /* 📐 OS QUATRO VAOS DA FOLHA FORAM APERTADOS EM 47px, e o motivo e medido: com os
      originais o texto do ato fechava em 713 numa folha de 707 — a rubrica saia CORTADA pela
      borda e caia por cima da linha do Diario Oficial. Hoje ela para 13px acima dela. */
+  /* ⚠ O TIMBRE CENTRA NA PAGINA, e nao na area de texto: o negativo devolve a largura inteira
+     ao cabecalho, e assim ele fica no meio da folha como o timbre impresso fica. */
   .letterhead {
     text-align: center;
+    margin-inline: calc(var(--paper) * -0.1071);
     margin-bottom: calc(var(--paper) * 0.05);
   }
   .emboss {
@@ -714,7 +595,7 @@
   .phone {
     position: absolute;
     left: calc(var(--phone-x) - 32px);
-    top: 45%;
+    top: 30%;
     width: 420px;
     height: 373px;
     margin: -186px 0 0 -210px;
@@ -722,6 +603,7 @@
     border: 0;
     background: transparent;
     cursor: pointer;
+    transform: rotate(6deg);
     z-index: 2;
   }
 
@@ -815,8 +697,18 @@
     width: 57%;
     height: 63%;
     margin: auto;
-    font: 700 11px/1 var(--font-display);
-    color: var(--paper-ink);
+    font: 600 9.5px/1 var(--font-display);
+    color: var(--phone-print);
+    mix-blend-mode: multiply;
+    filter: blur(0.25px);
+  }
+
+  /* ⚠ O ASTERISCO NASCE ALTO E PEQUENO: na fonte ele e sobrescrito — a 9,5px a tinta dele
+     tem 3,8px contra os 7 do algarismo, e o centro cai 2,6px acima do centro da tecla. A 16px
+     ele mede 6,5 e desce os 2,6 medidos, que e onde a estrela de um teclado fica. */
+  .phone__keys b:nth-child(10) {
+    font-size: 16px;
+    transform: translateY(2.6px);
   }
 
   /* O NUMERO NO QUADRO — o cartao em branco da imagem, medido no arquivo: de 45,3% a 69,2% na
@@ -831,10 +723,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 600 11px/1 var(--font-display);
-    letter-spacing: 0.3px;
+    font: 500 9.5px/1 var(--font-display);
+    letter-spacing: 0.2px;
     white-space: nowrap;
-    color: var(--paper-ink);
+    color: var(--phone-print);
+    mix-blend-mode: multiply;
+    filter: blur(0.25px);
     pointer-events: none;
   }
 

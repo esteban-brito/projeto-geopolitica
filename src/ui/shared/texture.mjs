@@ -1,4 +1,4 @@
-/* AS SUPERFICIES DA MESA — e as tres nascem de ruido, e nao de imagem.
+/* AS SUPERFICIES DA MESA — e as duas nascem de ruido, e nao de imagem.
 
    ⚠ ELAS SAO RASTERIZADAS UMA VEZ. Nenhuma anima e nenhuma entra no laco de quadro: a tela
    as escreve na carga e o compositor cuida do resto. Medido na bancada, a mesa inteira e o
@@ -34,66 +34,6 @@ export function svgUrl(svg) {
 /* A LUZ DE TODO RELEVO E A DA SALA: azimute 250 e a direcao de `--light-dx` (20 graus a
    esquerda de cima), 52 de elevacao — a mesma de `phone.mjs`. O feltro vinha a 135, de baixo. */
 const LIGHT = 'azimuth="250" elevation="52"';
-
-/**
- * O COURO DA PASTA — grao de pele com relevo calculado, como LUZ sobre o preto.
- *
- * ⛔ SOBRE COURO PRETO O MULTIPLY NAO FAZ NADA: o que se ve no couro escuro e a luz pegando o
- * grao. Entao a textura e branca com alfa igual ao brilho do grao, e composta normal sobre o
- * preto da o que `screen` daria — sem `background-blend-mode`, que custava 20 fps na subida.
- * Celulas de ~8px na folha (3,5 na tela a 0,44), e o poro fino por cima.
- *
- * @returns {string} o SVG; quem a poe na pasta a ASSA antes (`bake`), e o motivo esta la
- */
-export function leather() {
-  return svgUrl(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">` +
-      `<filter id="l" x="0" y="0" width="100%" height="100%"` +
-      ` color-interpolation-filters="sRGB">` +
-      `<feTurbulence type="fractalNoise" baseFrequency="0.12" numOctaves="3" seed="21" result="n"/>` +
-      `<feDiffuseLighting in="n" surfaceScale="2.4" diffuseConstant="0.9" lighting-color="#ffffff" result="lit">` +
-      `<feDistantLight ${LIGHT}/>` +
-      `</feDiffuseLighting>` +
-      `<feColorMatrix in="lit" type="matrix" values="` +
-      `0.34 0 0 0 -0.16  0 0.34 0 0 -0.16  0 0 0.34 0 -0.16  0 0 0 0 1" result="grey"/>` +
-      `<feColorMatrix in="grey" type="luminanceToAlpha" result="mask"/>` +
-      `<feFlood flood-color="#ffffff" result="white"/>` +
-      `<feComposite in="white" in2="mask" operator="in"/>` +
-      `</filter>` +
-      `<rect width="320" height="320" filter="url(#l)"/>` +
-      `</svg>`,
-  );
-}
-
-/**
- * ASSA UMA TEXTURA: o SVG vira um bitmap PNG, uma vez, na carga.
- *
- * ⛔ SVG COMO FUNDO DA PASTA CUSTOU 20 FPS NA SUBIDA: a cada tile rasterizado o navegador
- * redesenha o SVG inteiro, com o ruido e o relevo dentro dele — e a pasta em voo rasteriza
- * dezenas de tiles em escalas novas. Medido: 53 fps e 17 quadros perdidos com o SVG, contra 73
- * e 1 sem textura. Um bitmap so se reamostra, e isso o compositor faz de graca.
- *
- * @param {string} svg a `url()` de um SVG, como `leather()` devolve
- * @param {number} size o lado do tile, em px
- * @returns {Promise<string>} a `url()` do PNG, ou o proprio SVG se nao houver canvas
- */
-export function bake(svg, size) {
-  if (typeof Image === "undefined" || typeof document === "undefined") return Promise.resolve(svg);
-  return new Promise(done => {
-    const image = new Image();
-    image.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const brush = canvas.getContext("2d");
-      if (!brush) return done(svg);
-      brush.drawImage(image, 0, 0, size, size);
-      done(`url("${canvas.toDataURL("image/png")}")`);
-    };
-    image.onerror = () => done(svg);
-    image.src = svg.slice(5, -2);
-  });
-}
 
 /**
  * A FIBRA DO PAPEL — ruido cinza puro, sem relevo. E a do ato, que e liso.

@@ -18,7 +18,7 @@ import { briefHtml } from "../shared/brief.mjs";
 import { mailPileHtml } from "../shared/mail-pile.mjs";
 import { phoneHtml } from "../shared/phone.mjs";
 import { curveOf } from "../shared/spring.mjs";
-import { bake, felt, fibre, leather } from "../shared/texture.mjs";
+import { felt, fibre } from "../shared/texture.mjs";
 import { UI } from "../strings.mjs";
 
 /* AS MATERIAS DA MESA, e elas nascem UMA vez. As duas fotos entram por `url()` e as tres
@@ -31,8 +31,6 @@ import { UI } from "../strings.mjs";
 const TIMBER = 'url("/assets/jacaranda.webp")';
 const FIBRE = fibre({ freq: 0.9, octaves: 4, force: 0.13 });
 const FELT = felt();
-/* O couro e ASSADO em bitmap uma vez: como SVG ele custava 20 fps na subida (ver `bake`). */
-const LEATHER = bake(leather(), 320);
 
 /**
  * @param {object} input
@@ -119,12 +117,10 @@ export function cabinetHtml(input) {
     /* ⭐ AS DUAS SOMBRAS SAO CAMADAS PRONTAS, e o voo so cruza a opacidade delas. */
     `<i class="folder__cast" data-cast="rest"></i>` +
     `<i class="folder__cast" data-cast="lift"></i>` +
-    `<div class="folder__light"></div>` +
     /* ⭐ A FACE ESQUERDA E O PARECER, e nao couro vazio: uma pasta de despacho tem o que te
        explica de um lado e o que voce assina do outro. O "boletim" do ciclo 25 nao existe no
        governo real — o que existe e a exposicao de motivos, e ela mora aqui. */
     briefHtml(input.brief) +
-    `<i class="folder__fold"></i>` +
     `<div class="stack">${under}${decreeHtml(input)}</div>` +
     `</div>` +
     `<div class="mail">${mailPileHtml(input)}</div>` +
@@ -164,8 +160,6 @@ export function dressDesk(root) {
   }
   /* A FIBRA DESCE POR HERANCA: quem a le e a `.sheet`, que mora dentro da pasta. */
   wear(".folder", "--fibre", FIBRE);
-  /* ⚠ ASSINCRONO, e a pintura pode ter trocado a pasta ate la: `wear` procura de novo. */
-  LEATHER.then(url => wear(".folder", "--leather", url));
   /* ⚠ O ENVELOPE NAO USA A FIBRA DA FOLHA: papel de carta e liso e envelope de convite e
      feltrado. O feltro tem relevo calculado; a fibra e so ruido cinza. */
   wear(".mail", "--felt", FELT);
@@ -214,9 +208,6 @@ const READING = 0.86;
 /** @type {((seen: number) => void) | null} a calibragem do voo da pintura em curso */
 let tune = null;
 
-/** @type {string | null} onde o telefone parou por ultimo, e ele atravessa a pintura */
-let phoneX = null;
-
 /** @param {Element} area */
 function scale(area) {
   const room = area.querySelector(".room");
@@ -231,22 +222,16 @@ function scale(area) {
   );
   room.style.setProperty("--fit", fit.toFixed(4));
 
-  /* ⭐ O TELEFONE FICA NO MEIO DO VAO entre a pasta e a beira visivel da janela, e o vao so
-     existe medido: a cena e cortada e nao encolhida, entao a beira visivel muda com a janela.
-     📐 Em % da cena ele nao andava: na de 1440 o vao tem 309px para 272 de aparelho, e na de
-     1920 sobravam 280px de madeira a direita dele. Em px da cena, dividido por `fit`.
-     ⚠ SO COM A PASTA NA MESA: erguida ela mede o dobro, e o telefone iria para fora da janela
-     num redimensionamento a meio da leitura. Erguida, o valor anterior fica — E ELE E DE
-     MODULO, porque a pintura troca a sala: marcar uma area com a pasta erguida repintava sem
-     `--phone-x`, e o telefone ia para -271px e ficava la depois de largar. */
-  const folder = room.querySelector(".folder");
-  if (folder instanceof HTMLElement && !lifted) {
-    const seenRight = (DESIGN.width + area.clientWidth / fit) / 2;
-    const folderRight =
-      (folder.getBoundingClientRect().right - room.getBoundingClientRect().left) / fit;
-    phoneX = `${((folderRight + seenRight) / 2).toFixed(1)}px`;
-  }
-  if (phoneX !== null) room.style.setProperty("--phone-x", phoneX);
+  /* ⭐ O TELEFONE ENCOSTA NA BEIRA VISIVEL DA DIREITA, e a beira so existe medida: a cena e
+     cortada e nao encolhida, entao ela muda com a janela. 📐 No meio do vao ate a pasta ele
+     nao chegava ao canto: sobravam 39px de madeira a direita dele na de 1440 e 152 na de 1920.
+     ⛔ E 160 DE RECUO CORTOU O APARELHO em 36px: a imagem nao tem margem transparente e o
+     giro alarga a caixa para 457. Os 220 sao meia caixa rodada (228) menos os 32 do recuo, mais
+     24 de respiro. Em px da cena, dividido por `fit`.
+     ⚠ E A PASTA SAIU DA CONTA: era ela quem obrigava a medir so com a pasta na mesa, e a sala
+     repintada nascia sem `--phone-x` — o telefone ia para -271px e ficava la depois de largar. */
+  const seenRight = (DESIGN.width + area.clientWidth / fit) / 2;
+  room.style.setProperty("--phone-x", `${(seenRight - 220).toFixed(1)}px`);
 
   /* ⛔ E O TAMANHO DE LEITURA NAO SE DEDUZ: ele depende da altura que sobrou depois do corte,
      e a pasta mora numa arvore 3D inclinada — a altura dela na tela nao e a de layout vezes a

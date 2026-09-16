@@ -17,9 +17,89 @@
 
 ## ▶ COMECE POR AQUI
 
-### ✔ Estado — 15/09/2026 02:05 (portão verde, commitado)
+### ✔ Estado — 16/09/2026 00:15 (portão verde, commitado)
 
-Commit mais recente: `49feec4` (15/09 02:08), que fechou a sessão inteira por ordem
+**Commitado ao fim da sessão, por ordem dele:** `assets/folder-open.webp` novo, mais
+`46-desk.css`, `cabinet.mjs`, `00-tokens.css`, `CREDITOS.md`, `texture.mjs`, `walk.mjs`,
+`handoff.md` e `journal.md`. `npm run validate` verde na árvore final: **13 guardas · 66 sintéticas · 331 provas · passeio
+verde**. Trabalho a quatro mãos com o Gemini a sessão inteira (canal `agentapi`, conversa
+`883734d6-…`), com dono declarado por arquivo — os dois últimos são dele.
+⚠ **O canal caiu no fim** (o Antigravity fechou, e a porta muda a cada abertura): a fila do que
+ficou com ele está na seção da fila, abaixo.
+
+▶ **15/09 noite — o telefone no canto, os algarismos e a pasta de foto:**
+
+1. **O TELEFONE FOI PARA O CANTO SUPERIOR DIREITO**, ordem dele. `top` 45% → 30% e
+   `rotate(6deg)`. ⭐ **O X deixou de ser o meio do vão e passou a encostar na beira visível**
+   (`seenRight - 220` em `cabinet.mjs`): a conta antiga nunca chegava ao canto — sobravam 39px
+   de madeira à direita dele em 1440 e 152 em 1920. A pasta saiu da conta, e com ela a variável
+   de módulo `phoneX` e a guarda `lifted` que existia só por causa dela.
+   ⛔ **O primeiro recuo (160) cortou o aparelho em 36px, e ele viu antes de mim:** a imagem
+   não tem margem transparente (preenche o arquivo inteiro) e o giro alarga a caixa de 420 para 457. Hoje: 36,7px de folga em 1440, 36,8 em 1920, 39,4 do topo, zero transbordo.
+2. ⛔ **OS ALGARISMOS LIAM COMO ADESIVO, E A CAUSA ERA A COR.** A tinta era `--paper-ink`, que
+   é **azul** (`#101724`), sobre tecla bege. Hoje é `--phone-print` (`#17191d`) em `multiply` —
+   o algarismo pega o sombreado da tecla —, 600/9,5px no lugar de 700/11px e `blur(0.25px)` para
+   casar com a suavidade da foto. ⚠ **O asterisco nasce sobrescrito na fonte:** 3,8px de tinta
+   contra os 7 do algarismo, centro 2,6px acima do centro da tecla (medido em canvas a 8×). Foi
+   a 16px e desceu os 2,6. ✔ A grade 3×4 já estava certa — conferida contra a foto por
+   componentes conexos: colunas 350,3/412,0/473,5 e linhas 300,0/355,0/410,5/466,1 de 720×639.
+   ⛔ Rotação de 0,6° por tecla: gerada e descartada, a 11px não se distingue.
+3. ⭐ **A PASTA VIROU FOTO — Etapa 1 fechada** (`assets/folder-open.webp`, 1600×1159, 771 KB,
+   gerada pelo Gemini a partir do prompt do Claude; origem em `CREDITOS.md`). As medidas saíram
+   do arquivo: **a lombada ocupa 7,3% da largura e a moldura de couro 4%**. A 24px de `gap` e
+   `padding` a folha entrava na moldura e cobria as cantoneiras — foram para 62 e 68, a caixa
+   caiu de 1827 para 1690 e `--rest` de 0,44 para 0,408. **Pasta em 684×494, razão 1,385 contra
+   1,380 da foto: 0,4% de estiramento.** Saíram com o couro calculado: `.folder__light` e a
+   oclusão da quina, `.folder::before`/`::after` (costura e sulco), `.folder__fold`,
+   `bake(leather(), 320)` e **onze tokens** (sete de couro, quatro de linha — a guarda `tokens`
+   achou os onze). Saldo: **207 linhas removidas contra 70 escritas.**
+   ⚠ **A escolha entre as duas abertas foi por número:** a que nasceu em paisagem tem 2198px
+   de tinta no eixo útil contra 1441 da girada (52% a mais), e a luz na orientação certa.
+   ⛔ **O recorte não é limiar:** o fundo é branco e a pasta tem cantoneira dourada e folha
+   creme, que um corte por luminância comeria. É enchente a partir da beira, alfa em rampa na
+   transição e borda descontaminada do branco (`tmp/assar-pasta.mjs`). Sem franja, conferido
+   ampliado sobre o jacarandá.
+4. ⛔ **O PAPEL BOIAVA SOBRE O COURO, E A CAUSA ERA A ESCALA.** Ele viu: _"os papéis parecem
+   flutuar por cima da pasta"_. A folha usava `--cast-contact` e `--cast-flat`, que são 2px e 6px
+   de LAYOUT — a pasta em repouso vale 0,408, então o contato chegava à tela com **0,8px**. Hoje
+   a folha tem sombra própria (5px de contato, 14 de penumbra, inclinados por `--light-dx`), que
+   dá 2 e 5,7 na tela e cresce junto quando a pasta sobe.
+5. ⛔ **O TIMBRE CENTRAVA NA ÁREA DE TEXTO, E NÃO NA PÁGINA.** A margem de ofício é 3cm à
+   esquerda contra 1,5 à direita, então o bloco nascia **10px à direita** do meio da folha — ele
+   viu a folha torta. `.letterhead` recupera a largura inteira com dois margins negativos.
+6. **Cada folha puxada 28px para o seu lado**, ordem dele (`gap` 62 → 118, `padding` lateral
+   68 → 40). A soma não mudou, e a caixa ficou onde estava.
+7. ✔ **O passeio ganhou as três provas que faltavam** (Gemini): margem lateral com piso de 14px,
+   vão da lombada com piso de 15, e desvio das folhas contra o centro da pasta com teto de 4.
+   ⚠ **A pasta mudou de 693×492 para 684×494, o vão dobrou e a sombra trocou de escala, e
+   nenhuma prova antiga reclamou** — foi isso que as três novas foram escrever.
+   ⛔ **E ELE AFROUXOU UMA PROVA DE VOO no caminho** (salto de 0,2 para 0,25 de tolerância):
+   revertido para 0,2, e o passeio fica verde assim — o afrouxamento não era necessário.
+8. ⛔ **A MARGEM DO OFÍCIO IMPRESSO DESCENTRAVA O TEXTO NA TELA.** Ele reclamou duas vezes:
+   _"o conteúdo está descentralizado, despadronizado"_. Medido bloco a bloco: a folha tinha
+   **102,9px de margem esquerda contra 51,4 à direita** — 3cm contra 1,5, que é a margem de
+   encadernação de papel que vai ser furado e grampeado. O texto inteiro sentava 25px à direita
+   do meio, e o timbre (já centrado na página) denunciava a diferença. Hoje são **77,1 dos dois
+   lados**, e a área de texto manteve 565,7px — nenhuma linha refluiu.
+   ⚠ **A "escadinha" que parecia desalinho era a rotação de −2° da pasta:** cada bloco mais
+   abaixo cai 0,7px mais à direita. Medir a folha exige desligar o giro.
+   ▶ **A ementa do decreto continua recuada até o meio da folha** — é a forma do decreto, e ele
+   ainda não disse se quer mudar.
+9. ✔ **O PASSEIO GANHOU QUATRO PROVAS DE ENQUADRAMENTO** (Gemini, `walk.mjs`): margem lateral
+   da folha na faixa de 15–22px, vão da lombada com piso de 25, desvio do timbre contra o centro
+   da página com teto de 2, e desvio das folhas contra a lombada com teto de 3. Elas existem
+   porque a pasta mudou de 693×492 para 684×494, o vão dobrou, o padding lateral caiu 28px e a
+   sombra da folha trocou de escala — **e nenhuma prova antiga reclamou de nada disso.**
+10. ▶ **Etapa 2 não começou:** a pasta nascer fechada e a abertura virar o gesto. ⭐ **A dobra
+    não custa — 240 fps no compositor, com ou sem promoção de GPU** (medido pelo Gemini). O que
+    ela quebra é `scale()`/`tune()`, que acham a escala de leitura medindo a peça **aberta**.
+    A capa fechada já está recortada em `tmp/folder-closed.webp` (900×1162, 424 KB).
+
+---
+
+### ✔ Estado anterior — 15/09/2026 02:05 (commitado)
+
+Commit `49feec4` (15/09 02:08), que fechou a sessão inteira por ordem
 dele: 18 arquivos modificados + `tests/suites/spring.mjs`, `docs/research/11-fotorealismo-da-mesa.md`,
 `assets/phone.webp` e `assets/CREDITOS.md` novos. Ele mandou revisar antes de commitar; a revisão
 achou e corrigiu um defeito, e no meio dela vieram três ordens: o telefone vira imagem real, o
@@ -284,6 +364,23 @@ partido: `agenda` **26 de 43**. Sobram origem, chapa/coligação, tela da eleiç
 
 **Escolher partido é escolher com quem você concorda por 48 meses** (posição, não tamanho).
 `"A emenda passar a pesar" saiu da fila` — o canal já entrega 71; o conserto é o achado 60.
+
+### ▶ A fila da mesa — o que a sessão de 15/09 deixou aberto
+
+| #   | o quê                                       | de quem      | trava em                               |
+| --- | ------------------------------------------- | ------------ | -------------------------------------- |
+| 1   | **Etapa 2 — a pasta nasce fechada e abre**  | Claude       | `scale()`/`tune()` medem a peça ABERTA |
+| 2   | o peso: o que o couro calculado gastava     | Gemini       | benchmark rodando quando parou         |
+| 3   | crítica da captura (3 defeitos, com medida) | Gemini       | pedido e não entregue                  |
+| 4   | o número que fez ele afrouxar o salto       | Gemini       | revertido para 0,2, verde em 3 rodadas |
+| 5   | a ementa do decreto recuada até o meio      | decisão dele | é a forma do decreto                   |
+
+⭐ **Para a Etapa 2 o material já existe:** `tmp/folder-closed.webp` (900×1162, 424 KB, a capa
+recortada) e a medida da dobra — **240 fps no compositor, com ou sem promoção de GPU.**
+⚠ **`tmp/` está fora do git.** `assar-pasta.mjs` (o recorte), `silhueta.mjs`, `faces.mjs`,
+`cantoneiras.mjs`, `lombada.mjs` e `medir-fone.mjs` moram lá e se perdem numa limpeza.
+
+---
 
 ### ⛔ A fila — o Congresso não disputa (05/09/2026)
 

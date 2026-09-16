@@ -471,6 +471,53 @@ try {
     (await page.locator(".act__folders [data-protect]").count()) === 8,
     "[gabinete] o decreto nao trouxe as oito pastas",
   );
+
+  /* 📐 O ENQUADRAMENTO DAS FOLHAS NA PASTA DE FOTO:
+     1. O papel nao pode cobrir a cantoneira de latao (margem lateral >= 15px e <= 22px; na
+        arvore anterior com padding de 68px dava 28,7px; com o primeiro corte de 24px dava 9,8px);
+     2. A folha nao pode invadir a lombada central (vao livre >= 25px; na arvore anterior com
+        gap de 62px o vao medido era de 10,8px; hoje com gap de 118px mede 33,6px);
+     3. O timbre (.letterhead) deve centrar na pagina e nao na area util de texto (desvio <= 2px;
+        na arvore anterior, pelas margens assimetricas de 3cm/1,5cm, nascia 26px a direita). */
+  const fitFolhas = await page.evaluate(() => {
+    const f = document.querySelector(".folder");
+    const br = document.querySelector(".brief");
+    const st = document.querySelector(".stack");
+    const lh = document.querySelector(".brief .letterhead");
+    if (!f || !(br instanceof HTMLElement) || !st || !(lh instanceof HTMLElement)) return null;
+    const fb = f.getBoundingClientRect();
+    const bb = br.getBoundingClientRect();
+    const sb = st.getBoundingClientRect();
+    const folhaCentro = br.offsetWidth / 2;
+    const timbreCentro = lh.offsetLeft + lh.offsetWidth / 2;
+    return {
+      margemEsq: bb.left - fb.left,
+      margemDir: fb.right - sb.right,
+      vaoLombada: sb.left - bb.right,
+      desvioFolhas: Math.abs((bb.right + sb.left) / 2 - (fb.left + fb.width / 2)),
+      desvioTimbre: Math.abs(timbreCentro - folhaCentro),
+    };
+  });
+  expect(
+    fitFolhas !== null &&
+      fitFolhas.margemEsq >= 15 &&
+      fitFolhas.margemEsq <= 22 &&
+      fitFolhas.margemDir >= 15 &&
+      fitFolhas.margemDir <= 22,
+    `[gabinete] a folha cobriu a cantoneira ou ficou longe da borda: esq ${fitFolhas?.margemEsq.toFixed(1)}px, dir ${fitFolhas?.margemDir.toFixed(1)}px (faixa 15-22px)`,
+  );
+  expect(
+    fitFolhas !== null && fitFolhas.vaoLombada >= 25,
+    `[gabinete] a folha invadiu a lombada central da pasta: vao de ${fitFolhas?.vaoLombada.toFixed(1)}px (piso 25px)`,
+  );
+  expect(
+    fitFolhas !== null && fitFolhas.desvioTimbre <= 2,
+    `[gabinete] o timbre da folha esta fora do centro da pagina: desvio de ${fitFolhas?.desvioTimbre.toFixed(1)}px (teto 2px)`,
+  );
+  expect(
+    fitFolhas !== null && fitFolhas.desvioFolhas <= 3,
+    `[gabinete] as folhas estao descentralizadas da lombada: desvio de ${fitFolhas?.desvioFolhas.toFixed(1)}px (teto 3px)`,
+  );
   /* ⭐ E A MESA TEM UM GESTO, que e o unico do Gabinete: a pasta na mesa se ERGUE, e so com ela
      na mao a folha e legivel. Ordem dele, vendo o jogo rodar: "nao consigo clicar pra pasta com
      a folha subir na tela e eu enxergar melhor".

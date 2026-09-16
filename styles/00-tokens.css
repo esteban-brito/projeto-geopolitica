@@ -362,30 +362,18 @@
     --cast-thin: calc(var(--light-dx) * 10px) 10px 24px -8px rgba(0, 0, 0, 0.5);
     --cast-thick: calc(var(--light-dx) * 24px) 24px 60px -20px rgba(0, 0, 0, 0.85);
 
-    /* O COURO DA PASTA, e ele e PRETO por ordem dele. ⚠ COURO PRETO NAO E TINTA PRETA: o que
-     se ve nele e a LUZ, e nao a cor — o realce vira cinza frio e a sombra quase fecha, entao a
-     peca so existe pela aresta rebatida e pela costura. Saturacao zero na tinta deixa o
-     `color` do fundo neutro sem mexer no relevo. */
-    --leather-light: #d7d9de;
-    --leather-light-rgb: 215, 217, 222;
-    --leather-shade: #050507;
-    --leather-shade-rgb: 5, 5, 7;
-    --leather-tint: #1b1c20;
-    --leather-tint-rgb: 27, 28, 32;
-    --leather-deep: #0d0e11;
-
-    /* O TELEFONE E FOTO (`assets/phone.webp`), entao a cor dele nao mora aqui — so a luz de
+    /* ⛔ O COURO E A COSTURA DA PASTA SAIRAM DAQUI: ela e foto (`assets/folder-open.webp`) e
+       leva luz, aresta e ponto de seleiro assados. Sete tokens de couro e quatro de linha
+       morreram com o couro calculado.
+       O TELEFONE E FOTO TAMBEM (`assets/phone.webp`), entao a cor dele nao mora aqui — so a luz de
        linha. ⭐ ELA E AMBAR E NAO VERMELHA: num aparelho vermelho um LED vermelho some no
        proprio corpo. O ambar e a cor de indicador de central telefonica. */
     --phone-ring: #ffb64a;
 
-    /* A COSTURA — o fio encerado e a penumbra do sulco. ⚠ EM COURO PRETO O FIO CLAREIA, e nao
-     escurece: preto sobre preto nao e ponto de seleiro, e uma pasta de despacho real leva
-     linha de tom contrastante. */
-    --thread: #8d8a82;
-    --thread-rgb: 141, 138, 130;
-    --thread-shade: #26262a;
-    --thread-shade-rgb: 38, 38, 42;
+    /* ⛔ A TINTA DAS TECLAS ERA A DO PAPEL, e ela e AZUL (#101724): sobre a tecla bege da foto
+       o algarismo lia como adesivo. Esta e neutra, e entra em `multiply` para pegar o sombreado
+       da tecla. */
+    --phone-print: #17191d;
 
     /* O PAPEL — a folha do ato, o envelope e as tres tintas do documento. */
     --paper-edge: #786852;

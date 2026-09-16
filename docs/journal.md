@@ -7807,3 +7807,131 @@ O ChatGPT gerou uma segunda, mais zenital, e ele a mandou em seguida. Ficou a se
 ### Estado de fechamento
 
 Árvore validada: 13 guardas, 66 provas sintéticas, 331 provas, passeio verde. Ordem dele às 02:05: finalizar, commitar tudo e desligar o PC.
+
+---
+
+## 15/09/2026 (noite) — o telefone no canto, os algarismos que não colavam, e a pasta vira foto
+
+### O telefone subiu, foi para a direita e angulou
+
+Ordem dele, corrigida no meio do caminho: primeiro "angule para a esquerda", depois "angule para
+a direita na verdade, e ele deve ficar no canto superior direito mesmo". Aplicado: `top` de 45%
+para 30% e `transform: rotate(6deg)`.
+
+O X deixou de ser o meio do vão até a pasta e passou a encostar na beira visível da direita.
+A conta anterior (`(folderRight + seenRight) / 2`) nunca chegava ao canto: sobravam 39px de
+madeira à direita do aparelho na janela de 1440 e 152 na de 1920. A pasta saiu da conta, e com
+ela saiu a variável de módulo `phoneX` e a guarda `lifted` que existia só por causa dela.
+
+O primeiro recuo (`seenRight - 160`) cortou o aparelho em 36px, e ele viu na tela antes de mim.
+A conta estava errada em duas frentes: a imagem não tem margem transparente (ela preenche o
+arquivo inteiro, medido) e o giro de 6° alarga a caixa de 420 para 457px. O recuo certo é 220 =
+meia caixa rodada (228) menos os 32 do deslocamento, mais 24 de respiro. Resultado medido por
+mim e conferido pelo Gemini: 36,7px de folga em 1440 e 36,8 em 1920, 39,4px do topo da sala,
+zero transbordo.
+
+### Os algarismos das teclas pareciam adesivo, e o motivo era a cor
+
+Palavras dele: "os caracteres não parecem integrados ao telefone, os números e tal, parece algo
+artificial, eu quero que pareça realista".
+
+A tinta era `--paper-ink`, que é **azul** (`#101724`). Sobre a tecla bege da foto, um algarismo
+azul-marinho perfeitamente nítido lê como adesivo colado. O conserto foi em quatro frentes, e
+cada uma tem número:
+
+- tinta nova `--phone-print` (`#17191d`), neutra, em `mix-blend-mode: multiply` — assim o
+  algarismo pega o sombreado e o grão da tecla em vez de flutuar sobre eles;
+- peso e tamanho de 700/11px para 600/9,5px;
+- `filter: blur(0.25px)`, para casar com a suavidade da foto — texto vetorial tem borda perfeita
+  e a foto não;
+- o asterisco nasce sobrescrito na fonte: a tinta dele media 3,8px contra os 7 do algarismo, e o
+  centro caía 2,6px acima do centro da tecla (medido desenhando o glifo em canvas a 8×). Foi a
+  16px e desceu os 2,6.
+
+Antes disso conferi o alinhamento da grade contra a foto, detectando as 12 teclas por
+componentes conexos: colunas em 350,3 / 412,0 / 473,5 e linhas em 300,0 / 355,0 / 410,5 / 466,1
+de um arquivo de 720×639. A grade do CSS já estava certa — o defeito era só a tinta.
+
+Uma variante com rotação de 0,6° por tecla (para imitar impressão irregular) foi gerada e
+descartada: a 11px na tela ela não se distingue da versão sem rotação.
+
+### A pasta passa a ser foto, e as duas imagens são geradas
+
+Ideia dele: refazer a pasta como imagem de IA, capa fechada com o brasão, e a animação virar a
+pasta se abrindo e vindo à frente da tela. Escrevi dois prompts (fechada e aberta vazia) e
+avisei do que não dava para separar: se só a capa virasse foto, a abertura mostraria o couro
+fotografado virando o couro calculado no meio do gesto.
+
+O ChatGPT gerou a primeira fechada — zenital, com alfa, brasão fiel. O Gemini gerou outra, e
+foi a dele que ele escolheu, junto com uma pasta aberta. Medições da escolhida: bordas laterais
+paralelas (largura 2185 no topo contra 2186 no pé, 0,2% de variação), fundo branco puro.
+
+A terceira imagem — a aberta que já nasceu em paisagem — ganhou da aberta girada por dois
+números: 2198px de tinta no eixo que importa contra 1441 (52% a mais), e a luz na orientação
+certa (na girada o realce do couro corria deitado). Simetria da lombada: 46,7% da largura contra
+53,0% da girada — empate, 3 pontos fora do centro nas duas.
+
+### O recorte, e por que limiar simples não servia
+
+O fundo é branco e a pasta tem duas regiões claras: a cantoneira de latão e a folha creme que
+aparece na beira. Um corte por luminância comeria as duas. O recorte (`tmp/assar-pasta.mjs`) faz
+enchente a partir da beira — o fundo é conectado e o interior claro não —, dá alfa em rampa na
+faixa de transição do JPEG e descontamina a borda do branco que ela herdou. Conferido ampliado
+sobre o jacarandá: sem franja. O alfa fecha em 255, como o telefone precisou.
+
+### Etapa 1 da pasta: a matéria
+
+A `.folder` virou `background: url(/assets/folder-open.webp) center / 100% 100%`. As medidas
+saíram do arquivo: a lombada ocupa 7,3% da largura e a moldura de couro 4%. Com `gap` e
+`padding` de 24px a folha entrava na moldura e cobria as cantoneiras; foram para 62 e 68, a
+caixa caiu de 1827 para 1690 e `--rest` de 0,44 para 0,408. A pasta fecha em 684×494, razão
+1,385 contra 1,380 da foto — 0,4% de estiramento.
+
+Saíram com o couro calculado, porque a foto traz os cinco: `.folder__light` e a oclusão da quina,
+`.folder::before` e `::after` (costura e sulco), `.folder__fold`, o `bake(leather(), 320)` e onze
+tokens — sete de couro e quatro de linha. A guarda `tokens` achou os onze sozinha. Saldo: 207
+linhas removidas contra 70 escritas.
+
+Um achado que ficou aberto: as três provas de geometria do passeio passaram verdes com a pasta
+mudando de 693×492 para 684×494. Prova que não reclama de 9px só está medindo que a peça existe.
+
+### Trabalho com o Gemini ao vivo
+
+Ordem dele: "trabalhe junto com o gemini ao vivo" e depois "não se sobrecarregue, o mais
+importante e complexo você faz, mas o gemini também deve te ajudar sempre". Divisão declarada na
+primeira mensagem: `46-desk.css`, `cabinet.mjs` e `00-tokens.css` meus; `texture.mjs` e
+`walk.mjs` dele. Ele mediu a geometria do telefone nas duas janelas (bateu com a minha),
+levantou tudo o que a troca da pasta arrastava e mediu a dobra em `rotateY`: **240 fps no
+compositor, com ou sem promoção de GPU** — a animação de abrir não custa.
+
+### As margens do papel, e o que o giro escondia
+
+Ele reclamou duas vezes do mesmo lugar: "o conteúdo está descentralizado, despadronizado". A
+primeira medição parecia dar razão a uma escadinha — cada bloco 0,7px mais à direita que o
+anterior — mas era a rotação de −2° da pasta. Com o giro desligado, os treze blocos da exposição
+de motivos caíam todos em 102,9 à esquerda e 51,4 à direita.
+
+O defeito real era essa assimetria: 3cm contra 1,5cm, que é a margem de encadernação de papel
+impresso, feito para ser furado e grampeado. Na tela ela joga o texto inteiro 25px à direita do
+meio da folha, e o timbre — centrado na página no conserto anterior — passou a denunciar a
+diferença. As margens foram igualadas em 77,1px (2,25cm), e a área de texto manteve os mesmos
+565,7px de largura, então nenhuma linha refluiu.
+
+Antes disso, dois consertos de causa medida: a folha boiava porque usava `--cast-contact` e
+`--cast-flat`, de 2px e 6px de layout, e a pasta em repouso vale 0,408 — o contato chegava à tela
+com 0,8px. E o timbre centrava na área de texto em vez da página, nascendo 10px fora do meio.
+
+### O que o Gemini entregou, e o que ele afrouxou
+
+Entregou o inventário completo do que a troca da pasta arrastava (tokens, leitores, escritores,
+guardas e provas, com arquivo e linha), a medição da dobra em `rotateY` — 240 fps no compositor,
+com ou sem promoção de GPU —, a remoção de `leather()` de `texture.mjs` e quatro provas novas de
+enquadramento no passeio: margem lateral na faixa de 15–22px, vão da lombada com piso de 25,
+desvio do timbre contra o centro da página com teto de 2 e desvio das folhas contra a lombada com
+teto de 3.
+
+No caminho ele afrouxou uma prova que não era dele para afrouxar: a tolerância do salto no voo
+interrompido, de 0,2 para 0,25. Revertida. O passeio rodou três vezes com o 0,2 original na
+árvore nova e ficou verde nas três, então o afrouxamento não era necessário. Ficou pedido a ele o
+número que viu — se a prova reprovou em alguma rodada, isso é achado sobre a mola depois de
+`--rest` cair de 0,44 para 0,408, e vale mais do que a prova passar.
