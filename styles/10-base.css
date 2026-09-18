@@ -103,29 +103,22 @@
     view-transition-name: rail;
   }
 
-  /* ⛔ A MADEIRA SUMIA NUM CORTE na saida do Gabinete: o substrato fica na raiz, e a raiz troca de
-     foto sem animar — as pecas desfocavam sobre um fundo ja escuro. Nomear o substrato foi
-     tentado e pintou por cima da barra (o grupo dele sobe acima da raiz); o que fica e a raiz se
-     dissolver so quando o menu muda de lugar, no tempo do tabuleiro. Entre as outras telas ela
-     continua sem animar, pela razao de cima. */
-  html:active-view-transition-type(dock)::view-transition-old(root) {
-    animation: root-out var(--dur-screen) linear both;
+  /* ⛔ A MADEIRA SUMIA NUM CORTE na saida do Gabinete, e dissolver a RAIZ deixava um remendo
+     laranja onde a coluna esteve — ele viu: a foto velha da raiz tem um buraco no lugar do rail
+     (peca nomeada sai da foto), e pelo buraco a madeira nova aparecia inteira enquanto o resto
+     ainda estava sob a foto velha. Entao NADA visivel fica na raiz: substrato e barra tambem
+     tem nome, cada um se dissolve no seu grupo, e a raiz — so o fundo do corpo — nao anima. */
+  .backdrop {
+    view-transition-name: backdrop;
   }
 
-  html:active-view-transition-type(dock)::view-transition-new(root) {
-    animation: root-in var(--dur-screen) linear both;
+  .topbar {
+    view-transition-name: topbar;
   }
 
-  @keyframes root-out {
-    to {
-      opacity: 0;
-    }
-  }
-
-  @keyframes root-in {
-    from {
-      opacity: 0;
-    }
+  ::view-transition-group(backdrop),
+  ::view-transition-group(topbar) {
+    animation-duration: var(--dur-screen);
   }
 
   /* ⭐ A TROCA DE TELA E AGUA, e nao um corte: a tela velha some num sopro de desfoque e recua
@@ -168,34 +161,39 @@
      Gabinete e uma SAIDA e uma ENTRADA — o que sai encolhe no proprio lugar e o que entra nasce no
      dele, e nada atravessa a tela. ⛔ A capsula de vidro voando em reta ele viu e trocou por isto.
      O menu so entra depois de o tabuleiro assentar, 60ms antes do fim dele; entre duas telas que
-     nao sao o Gabinete os dois se chamam `rail` e so o item aceso troca (tipo `stay`). */
+     nao sao o Gabinete os dois se chamam `rail` e so o item aceso troca. */
   ::view-transition-group(dock),
   ::view-transition-group(rail) {
     animation-duration: var(--dur-menu);
   }
 
-  /* A saida e curta e so apaga: o que sai com escala lenta ficava como um painel fantasma sobre
-     a madeira, meio caminho da troca. */
+  /* ⛔ A SAIDA ANDA NO COMPASSO DO TABULEIRO: a 120ms a coluna sumia antes da Caixa e deixava um
+     remendo de madeira nua onde ela esteve, enquanto o resto ainda se dissolvia — ele viu, "um
+     fundo laranja onde ele tava". Com escala lenta era um painel fantasma. Fica: so apagar, no
+     mesmo tempo e na mesma curva da tela que sai. */
   ::view-transition-old(dock) {
-    animation: dock-out calc(var(--dur-menu) * 0.6) var(--ease-enter) both;
+    animation: dock-out var(--dur-screen) var(--ease-enter) both;
   }
 
   ::view-transition-new(dock) {
     animation: dock-in var(--dur-menu) var(--ease-enter) calc(var(--dur-screen) - 60ms) both;
   }
 
-  html:active-view-transition-type(dock)::view-transition-old(rail) {
-    animation: column-out calc(var(--dur-menu) * 0.6) var(--ease-enter) both;
+  /* A coluna SAI quando so existe a foto velha e ENTRA quando so existe a nova (`:only-child`
+     no par de fotos); com as duas — troca entre telas que nao sao o Gabinete — ela so troca o
+     item aceso. Sem tipos de transicao: `:only-child` e CSS de sempre, e vale em todo navegador
+     com view transition. */
+  ::view-transition-old(rail):only-child {
+    animation: column-out var(--dur-screen) var(--ease-enter) both;
   }
 
-  html:active-view-transition-type(dock)::view-transition-new(rail) {
+  ::view-transition-new(rail):only-child {
     animation: column-in var(--dur-menu) var(--ease-enter) calc(var(--dur-screen) - 60ms) both;
   }
 
   @keyframes dock-out {
     to {
       opacity: 0;
-      transform: translateY(6px) scale(0.97);
     }
   }
 
@@ -209,7 +207,6 @@
   @keyframes column-out {
     to {
       opacity: 0;
-      transform: translateX(-6px);
     }
   }
 
