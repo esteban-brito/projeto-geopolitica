@@ -113,16 +113,16 @@
   @keyframes screen-out {
     to {
       opacity: 0;
-      filter: blur(10px);
-      transform: scale(1.015);
+      filter: blur(8px);
+      transform: scale(1.012);
     }
   }
 
   @keyframes screen-in {
     from {
       opacity: 0;
-      filter: blur(12px);
-      transform: scale(0.985);
+      filter: blur(8px);
+      transform: scale(0.988);
     }
   }
 
@@ -133,23 +133,23 @@
      nao sao o Gabinete ele so troca o item aceso. */
   html:active-view-transition-type(dock)::view-transition-group(rail) {
     animation-duration: var(--dur-rail);
-    animation-delay: var(--dur-screen);
+    animation-delay: calc(var(--dur-screen) - 40ms);
     animation-timing-function: var(--ease-move);
-    border: 1px solid var(--glass-edge);
-    border-radius: 22px;
-    background: rgba(var(--bg-deep-rgb), 0.6);
+    /* O vidro da capsula em movimento mora em `20-material.css`: e o mesmo material. */
   }
 
   html:active-view-transition-type(dock)::view-transition-old(rail) {
-    animation: rail-out var(--dur-rail) linear var(--dur-screen) both;
+    animation: rail-out var(--dur-rail) linear calc(var(--dur-screen) - 40ms) both;
   }
 
   html:active-view-transition-type(dock)::view-transition-new(rail) {
-    animation: rail-in var(--dur-rail) linear var(--dur-screen) both;
+    animation: rail-in var(--dur-rail) linear calc(var(--dur-screen) - 40ms) both;
   }
 
+  /* O conteudo velho apaga nos primeiros 20% do caminho e o novo acende nos ultimos 25%: no meio
+     o que anda e o vidro, e as duas fotos — uma coluna e uma capsula — nunca se esticam a vista. */
   @keyframes rail-out {
-    30%,
+    20%,
     100% {
       opacity: 0;
     }
@@ -157,7 +157,7 @@
 
   @keyframes rail-in {
     0%,
-    60% {
+    75% {
       opacity: 0;
     }
   }

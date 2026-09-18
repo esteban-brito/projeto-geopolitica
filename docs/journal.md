@@ -8401,3 +8401,6 @@ sopro de desfoque e a nova chega nitidificando; o rail espera o tabuleiro assent
 escorre como cápsula até o outro lugar — a view transition ganhou tipos (`dock`/`stay`) para a
 cápsula só andar quando muda de lugar. O seletor de tipo só casa com o pseudo-elemento colado na
 raiz, sem espaço — meia hora nisso. O passeio passou a esperar a transição acabar em vez de 500ms.
+Ele recusou a primeira: "muito lento, falta refino e polimento". Ficou 240 + 300 com a cápsula
+partindo 40ms antes do fim do tabuleiro (500ms ao todo), o desfoque a 8px, e a cápsula em voo
+virou o próprio vidro do rail — fundo, borda, bisel e backdrop-filter — em vez de uma caixa escura.

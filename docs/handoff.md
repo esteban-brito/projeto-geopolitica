@@ -46,10 +46,13 @@ carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; 
 ✔ **A TROCA DE TELA VIROU AGUA, ordem dele ("não está nível Apple… quero algo mais liquid glass,
 aquoso; a transição de aba não pode ser junto com a do menu"):** o tabuleiro sai num sopro de
 desfoque (`blur(10px)`, escala 1,015) e o novo chega de um passo atrás nitidificando (`blur(12px)`,
-0,985), em `--dur-screen` 320ms; **o rail só anda depois**: `transition()` escreve o tipo da view
-transition (`dock` quando entra ou sai do Gabinete, `stay` nas outras) e a cápsula
-(`::view-transition-group(rail)` com fundo e borda) escorre em `--dur-rail` 460ms com atraso de
-320 — o conteúdo velho apaga nos primeiros 30% e o novo acende nos últimos 40%. ⛔ O seletor é
+0,985), em `--dur-screen` **240ms** (⛔ 320 + 460 em fila ele recusou: "muito lento, falta refino"); **o
+rail só anda depois**: `transition()` escreve o tipo da view transition (`dock` quando entra ou sai
+do Gabinete, `stay` nas outras) e a cápsula escorre em `--dur-rail` **300ms partindo 40ms antes
+de o tabuleiro acabar** — 500ms ao todo. A cápsula em movimento É o `glass-support` (fundo, borda,
+bisel e `backdrop-filter`, em `20-material.css`, o único lugar onde o desfoque pode morar): o
+conteúdo velho apaga nos primeiros 20% e o novo acende nos últimos 25%, e no meio o que anda é o
+vidro, desfocando o que passa por baixo. ⛔ O seletor é
 `html:active-view-transition-type(dock)::view-transition-group(rail)` SEM espaço: com o
 combinador descendente ele não casa e o rail ficava nos 250ms do navegador. Quadros em
 `tmp/transicao-quadros.mjs`. ⚠ O passeio passou a esperar `document.activeViewTransition === null`

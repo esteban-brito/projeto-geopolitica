@@ -206,9 +206,10 @@
     --go-gap: 7px;
     --dur-touch: 90ms;
     --dur-piece: 180ms;
-    --dur-screen: 320ms;
-    /* A capsula do rail escorre DEPOIS do tabuleiro assentar, e leva mais tempo que ele. */
-    --dur-rail: 460ms;
+    /* ⛔ 320 + 460 em fila ele viu e recusou: "muito lento". A capsula parte 40ms antes de o
+       tabuleiro acabar, quando ele ja assentou a olho, e o todo fecha em 500ms. */
+    --dur-screen: 240ms;
+    --dur-rail: 300ms;
     --dur-stage: 520ms;
     --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-move: cubic-bezier(0.22, 1, 0.36, 1);
