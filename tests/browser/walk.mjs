@@ -102,19 +102,22 @@ try {
      media recorte DENTRO dos elementos e transbordo lateral, e um Gabinete 31px mais alto que
      a janela passava verde. A tela e a unica do jogo que declara nao rolar — acima de 940px de
      altura ela trava em `100dvh` e as listas rolam por dentro (`40-shell.css`).
-     ⚠ E O LIMIAR E O DA FOLHA, e nao um numero desta prova: abaixo de 940 a pagina rolar e
-     DECISAO declarada — travar ali esconderia um cartao inteiro atras de uma dobra muda. */
+     ⛔ E O LIMIAR DELA ERA DE ALTURA, 940px, o que a desligava EXATAMENTE onde o defeito
+     morava: a 1440x900 a pagina rolava 94px e esta funcao saia calada. O limiar continua sendo
+     o da folha, e a folha passou a medir LARGURA — abaixo de 1181 o rail vira faixa no topo, e
+     ali a pagina rolar e decisao declarada. */
   /** @param {string} where */
   async function checkNoPageScroll(where) {
     const scroll = await page.evaluate(() => ({
       page: document.documentElement.scrollHeight,
       window: window.innerHeight,
+      wide: window.innerWidth,
     }));
-    if (scroll.window < 940) return;
+    if (scroll.wide < 1181) return;
     expect(
       scroll.page <= scroll.window + 1,
-      `[${where}] a pagina rola ${scroll.page - scroll.window}px — o Gabinete nao rola acima ` +
-        `de 940px de janela, e quem rola por dentro sao as listas`,
+      `[${where}] a pagina rola ${scroll.page - scroll.window}px — o Gabinete nao rola com o ` +
+        `rail em coluna, e quem rola por dentro sao as listas`,
     );
   }
 
@@ -354,6 +357,15 @@ try {
           const style = getComputedStyle(node);
           if (style.visibility === "hidden" || style.opacity === "0") continue;
 
+          /* ⛔ NAO MEDE O QUE ESTA COBERTO: medir elemento tapado mede a peca de cima.
+             Se o centro da caixa no viewport responde para outro elemento, pula. */
+          const cx = box.left + box.width / 2;
+          const cy = box.top + box.height / 2;
+          if (cx >= 0 && cx <= window.innerWidth && cy >= 0 && cy <= window.innerHeight) {
+            const hit = document.elementFromPoint(cx, cy);
+            if (hit !== null && hit !== node && !node.contains(hit)) continue;
+          }
+
           const parts = style.color.match(/rgba?\(([^)]+)\)/);
           if (!parts || !parts[1]) continue;
           const [r = 0, g = 0, b = 0, alpha = 1] = parts[1].split(",").map(Number);
@@ -429,6 +441,65 @@ try {
   }
 
   await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
+
+  /* ⛔ A PASTA NASCE FECHADA, e as medidas do ATO precisam dela aberta: fechada, a pilha esta
+     em opacidade 0,001 atras da capa e o parecer esta virado para o outro lado. O contraste
+     saia em 1,1 a 3,5 e o enquadramento acusava vao de lombada de -308px — nenhum dos dois era
+     defeito de arranjo, os dois mediam uma pasta que ninguem abriu.
+     ⭐ ABRIR E O GESTO DO JOGADOR, entao a prova o faz: e a mesma peca, no estado em que ela
+     existe para ser lida. A etapa do voo, adiante, fecha de volta e mede o gesto. */
+  /** Abre ou fecha a pasta, e espera o voo assentar.
+   * ⛔ E O CLIQUE NAO VAI NO CENTRO DA CAIXA: fechada, a metade esquerda dela esta VAZIA — a
+   * folha girou para cima da direita —, e o centro cai na mesa, que engole o clique. Quem
+   * responde e a peca pintada: a capa para abrir, e a sala longe dela para fechar.
+   * ⚠ O CLIQUE DE FECHAR TEM DE ACERTAR A SALA VISIVEL: a `.room` transborda a janela e o topo
+   * cai sob a barra de vitais. Quem fecha e um ponto visivel da sala, fora da pasta, conferido
+   * por `elementFromPoint`.
+   * @param {boolean} abrir */
+  async function setFolder(abrir) {
+    const onde = await page.evaluate(() => {
+      const spread = document.querySelector(".folder__open");
+      const cover = document.querySelector(".folder__cover");
+      if (spread === null || cover === null) return null;
+      const aberta = Number(getComputedStyle(spread).opacity) > 0.5;
+      const box = (aberta ? spread : cover).getBoundingClientRect();
+      return { aberta, x: box.left + box.width / 2, y: box.top + box.height / 2 };
+    });
+    if (onde === null || onde.aberta === abrir) return;
+    if (abrir) {
+      await page.mouse.click(onde.x, onde.y);
+    } else {
+      const fora = await page.evaluate(() => {
+        const room = document.querySelector(".room");
+        const folder = document.querySelector(".folder");
+        if (room === null || folder === null) return null;
+        const r = room.getBoundingClientRect();
+        const f = folder.getBoundingClientRect();
+        const candidatos = [
+          {
+            x: f.left + f.width / 2,
+            y: Math.min(window.innerHeight - 20, Math.min(r.bottom - 10, f.bottom + 25)),
+          },
+          {
+            x: Math.min(window.innerWidth - 40, r.right - 40),
+            y: Math.min(window.innerHeight - 30, r.bottom - 30),
+          },
+          { x: Math.min(window.innerWidth - 30, f.right + 40), y: f.bottom + 20 },
+        ];
+        for (const c of candidatos) {
+          const el = document.elementFromPoint(c.x, c.y);
+          if (el !== null && el.closest(".room") !== null && el.closest(".folder") === null) {
+            return { x: c.x, y: c.y };
+          }
+        }
+        return null;
+      });
+      if (fora !== null) await page.mouse.click(fora.x, fora.y);
+    }
+    await page.waitForTimeout(600);
+  }
+  await setFolder(true);
+
   await checkOverflow("gabinete");
   await checkClipped("gabinete");
   await checkSwallowed("gabinete");
@@ -473,12 +544,11 @@ try {
   );
 
   /* 📐 O ENQUADRAMENTO DAS FOLHAS NA PASTA DE FOTO:
-     1. O papel nao pode cobrir a cantoneira de latao (margem lateral >= 15px e <= 22px; na
-        arvore anterior com padding de 68px dava 28,7px; com o primeiro corte de 24px dava 9,8px);
-     2. A folha nao pode invadir a lombada central (vao livre >= 25px; na arvore anterior com
-        gap de 62px o vao medido era de 10,8px; hoje com gap de 118px mede 33,6px);
-     3. O timbre (.letterhead) deve centrar na pagina e nao na area util de texto (desvio <= 2px;
-        na arvore anterior, pelas margens assimetricas de 3cm/1,5cm, nascia 26px a direita). */
+     As quatro medidas sao fracao da peca, invariantes a escala (repouso 684px vs erguida 1003px):
+     1. Margem lateral: 15-22px a 684 vira 2,19%-3,22% (na mao, 24,5px sobre 1003px da 2,44%);
+     2. Vao da lombada: piso de 25px a 684 vira 3,65% (com gap 118px da 7,20%);
+     3. Desvio das folhas do centro da pasta: teto de 3px a 684 vira 0,45%;
+     4. Desvio do timbre do centro da pagina: teto de 2px na folha de 720px (0,28%). */
   const fitFolhas = await page.evaluate(() => {
     const f = document.querySelector(".folder");
     const br = document.querySelector(".brief");
@@ -490,34 +560,43 @@ try {
     const sb = st.getBoundingClientRect();
     const folhaCentro = br.offsetWidth / 2;
     const timbreCentro = lh.offsetLeft + lh.offsetWidth / 2;
+    const fw = fb.width;
     return {
-      margemEsq: bb.left - fb.left,
-      margemDir: fb.right - sb.right,
-      vaoLombada: sb.left - bb.right,
-      desvioFolhas: Math.abs((bb.right + sb.left) / 2 - (fb.left + fb.width / 2)),
+      larguraPasta: fw,
+      margemEsqPct: ((bb.left - fb.left) / fw) * 100,
+      margemDirPct: ((fb.right - sb.right) / fw) * 100,
+      vaoLombadaPct: ((sb.left - bb.right) / fw) * 100,
+      desvioFolhasPct: (Math.abs((bb.right + sb.left) / 2 - (fb.left + fw / 2)) / fw) * 100,
       desvioTimbre: Math.abs(timbreCentro - folhaCentro),
+      margemEsqPx: bb.left - fb.left,
+      margemDirPx: fb.right - sb.right,
+      vaoLombadaPx: sb.left - bb.right,
     };
   });
   expect(
     fitFolhas !== null &&
-      fitFolhas.margemEsq >= 15 &&
-      fitFolhas.margemEsq <= 22 &&
-      fitFolhas.margemDir >= 15 &&
-      fitFolhas.margemDir <= 22,
-    `[gabinete] a folha cobriu a cantoneira ou ficou longe da borda: esq ${fitFolhas?.margemEsq.toFixed(1)}px, dir ${fitFolhas?.margemDir.toFixed(1)}px (faixa 15-22px)`,
+      fitFolhas.margemEsqPct >= 2.19 &&
+      fitFolhas.margemEsqPct <= 3.22 &&
+      fitFolhas.margemDirPct >= 2.19 &&
+      fitFolhas.margemDirPct <= 3.22,
+    `[gabinete] a folha cobriu a cantoneira ou ficou longe da borda: esq ${fitFolhas?.margemEsqPct.toFixed(2)}% (${fitFolhas?.margemEsqPx.toFixed(1)}px), dir ${fitFolhas?.margemDirPct.toFixed(2)}% (${fitFolhas?.margemDirPx.toFixed(1)}px) (faixa 2,19%-3,22%)`,
   );
   expect(
-    fitFolhas !== null && fitFolhas.vaoLombada >= 25,
-    `[gabinete] a folha invadiu a lombada central da pasta: vao de ${fitFolhas?.vaoLombada.toFixed(1)}px (piso 25px)`,
+    fitFolhas !== null && fitFolhas.vaoLombadaPct >= 3.65,
+    `[gabinete] a folha invadiu a lombada central da pasta: vao de ${fitFolhas?.vaoLombadaPct.toFixed(2)}% (${fitFolhas?.vaoLombadaPx.toFixed(1)}px) (piso 3,65%)`,
   );
   expect(
     fitFolhas !== null && fitFolhas.desvioTimbre <= 2,
     `[gabinete] o timbre da folha esta fora do centro da pagina: desvio de ${fitFolhas?.desvioTimbre.toFixed(1)}px (teto 2px)`,
   );
   expect(
-    fitFolhas !== null && fitFolhas.desvioFolhas <= 3,
-    `[gabinete] as folhas estao descentralizadas da lombada: desvio de ${fitFolhas?.desvioFolhas.toFixed(1)}px (teto 3px)`,
+    fitFolhas !== null && fitFolhas.desvioFolhasPct <= 0.45,
+    `[gabinete] as folhas estao descentralizadas da lombada: desvio de ${fitFolhas?.desvioFolhasPct.toFixed(2)}% (teto 0,45%)`,
   );
+  /* ⚠ E A PASTA VOLTA PARA A MESA ANTES DO GESTO: as medidas acima a abriram, e a etapa do voo
+     precisa dela FECHADA para medir o gesto do comeco. */
+  await setFolder(false);
+
   /* ⭐ E A MESA TEM UM GESTO, que e o unico do Gabinete: a pasta na mesa se ERGUE, e so com ela
      na mao a folha e legivel. Ordem dele, vendo o jogo rodar: "nao consigo clicar pra pasta com
      a folha subir na tela e eu enxergar melhor".
@@ -567,8 +646,16 @@ try {
   /** @param {string} pick */
   const tocar = pick =>
     page.evaluate(seletor => {
-      const box = document.querySelector(seletor)?.getBoundingClientRect();
-      if (!box) return false;
+      let el = document.querySelector(seletor);
+      if (!el) return false;
+      if (seletor === ".folder") {
+        const cover = el.querySelector(".folder__cover");
+        const spread = el.querySelector(".folder__open");
+        const shut =
+          cover !== null && spread !== null && Number(getComputedStyle(spread).opacity) < 0.5;
+        if (shut && cover !== null) el = cover;
+      }
+      const box = el.getBoundingClientRect();
       const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
       if (hit === null || hit.closest(seletor.split(" ").pop() ?? seletor) === null) return false;
       hit.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -576,11 +663,17 @@ try {
     }, pick);
 
   const onDesk = await flight();
+  /* ⛔ E O CLIQUE VAI NA PECA PINTADA, e nao no centro da CAIXA: a caixa da pasta deixou de
+     receber ponteiro quando 321px de madeira vazia estavam abrindo a pasta. Fechada, quem
+     responde e a capa; aberta, a foto da pasta. */
   const onTarget = await page.evaluate(() => {
-    const box = document.querySelector(".folder")?.getBoundingClientRect();
-    if (!box) return false;
+    const spread = document.querySelector(".folder__open");
+    const cover = document.querySelector(".folder__cover");
+    if (spread === null || cover === null) return false;
+    const aberta = Number(getComputedStyle(spread).opacity) > 0.5;
+    const box = (aberta ? spread : cover).getBoundingClientRect();
     const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
-    if (hit?.closest(".folder") === null || hit === null) return false;
+    if (hit === null || hit.closest(".folder") === null) return false;
     hit.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     return true;
   });
@@ -650,7 +743,12 @@ try {
       await assentar();
     }
     const parado = alto();
-    const caixa = pasta.getBoundingClientRect();
+    /* ⛔ E O TOQUE VAI NA PECA PINTADA: o centro da CAIXA e madeira vazia desde que a pasta
+       deixou de receber ponteiro pela caixa. */
+    const spread = document.querySelector(".folder__open");
+    const cover = document.querySelector(".folder__cover");
+    const aberta = spread !== null && Number(getComputedStyle(spread).opacity) > 0.5;
+    const caixa = ((aberta ? spread : cover) ?? pasta).getBoundingClientRect();
     document
       .elementFromPoint(caixa.left + caixa.width / 2, caixa.top + caixa.height / 2)
       ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -966,7 +1064,16 @@ try {
     const behind = await page.evaluate(() => {
       const folder = document.querySelector(".folder");
       if (!folder) return null;
-      const box = folder.getBoundingClientRect();
+      /* ⛔ E A CAIXA DA PASTA DEIXOU DE SER A PECA QUE SE VE, quando ela aprendeu a fechar: a
+         face esquerda gira para cima da direita, entao a metade de layout que ela deixou fica
+         vazia e invisivel. Medir por ela acusou 20 meses com a carta mais a direita em 396 e a
+         capa comecando em 588 — 192px de folga chamados de sobreposicao.
+         ⭐ QUEM MANDA E A TINTA: fechada, a peca e a capa; aberta, e a pasta inteira. */
+      const cover = folder.querySelector(".folder__cover");
+      const spread = folder.querySelector(".folder__open");
+      const shut =
+        cover !== null && spread !== null && Number(getComputedStyle(spread).opacity) < 0.5;
+      const box = (shut && cover !== null ? cover : folder).getBoundingClientRect();
       const cruzam = [...document.querySelectorAll(".envelope")].filter(letter => {
         const one = letter.getBoundingClientRect();
         const across = Math.min(one.right, box.right) - Math.max(one.left, box.left);
@@ -1317,7 +1424,7 @@ try {
       return !String(alvo.pseudoElement ?? "").startsWith("::view-transition");
     }),
   );
-  expect(await tocar(".folder"), "[recomecar] o centro da pasta nao pertence a pasta");
+  expect(await tocar(".folder__cover"), "[recomecar] o centro da pasta nao pertence a pasta");
   await pousou();
   /* ⛔ E O TOQUE VAI NA EPIGRAFE, e nao no centro da folha: as oito pastas do Art. 2 moram no
      meio do ato, e um `[data-protect]` sob o ponto medio devolve o clique como MARCA — a
@@ -1466,6 +1573,10 @@ try {
     await checkSwallowed(`900px/${secao}`);
     await checkEllipsized(`900px/${secao}`);
     await checkClamped(`900px/${secao}`);
+    /* ⛔ E A ROLAGEM SO ENTROU AQUI AGORA: a segunda janela nasceu com cinco checagens e sem
+       esta, entao os 94px que o Gabinete rolava a 1440x900 nunca tiveram quem os visse. As
+       outras duas telas rolam de proposito. */
+    if (secao === "cabinet" || secao === "email") await checkNoPageScroll(`900px/${secao}`);
   }
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(600);

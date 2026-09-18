@@ -14,9 +14,17 @@
 
 import { escapeHtml } from "./html.mjs";
 import { money, percent } from "./format.mjs";
-import { iconHtml } from "./icons.mjs";
 import { MONTHS, UI } from "../strings.mjs";
 import { monthParts } from "../../state/state.mjs";
+import { protocolOf } from "./protocol.mjs";
+
+/* A rubrica da ministra: a EM chega ASSINADA, e o traco ja esta inteiro — sem `--stroke-len`
+   o `dasharray` do decreto e invalido e o caminho pinta cheio. Outra mao, outro traco. */
+const CHIEF_SIGN =
+  `<svg viewBox="0 0 420 46" preserveAspectRatio="none" aria-hidden="true">` +
+  `<path d="M22 36 C 18 8, 44 2, 50 16 C 56 30, 34 42, 24 34 C 40 30, 70 10, 92 22` +
+  ` C 108 30, 118 8, 140 20 S 176 34, 198 18 C 214 6, 228 30, 250 22 S 286 10, 308 22` +
+  ` C 326 32, 344 10, 366 16 S 398 28, 408 14"/></svg>`;
 
 /**
  * ⚠ AS SEIS LEITURAS SAO AS DO FILTRO DO CICLO 21 — cada uma muda uma decisao que ele esta
@@ -45,8 +53,8 @@ export function briefHtml(input) {
   const { year } = monthParts(input.month);
   const date = `${UI.brief.city}, 5 de ${MONTHS[input.month % MONTHS.length]} de ${year}.`;
 
-  /* 📗 A EM E NUMERADA POR ANO, e a do mes e a enesima do ano corrente. */
-  const number = (input.month % 12) + 1;
+  /* 📗 A EM E NUMERADA POR ANO, e o processo dela no SEI leva o mesmo numero. */
+  const { number, nup: protocol } = protocolOf(input.month);
 
   /* ⛔ A APROVACAO JA VEM EM PONTOS, e nao de 0 a 1: `pollFrom` arredonda para 0..100, e
      multiplicar de novo escreveu "4400%" na folha — a captura pegou. A fracao que `percent`
@@ -55,6 +63,7 @@ export function briefHtml(input) {
   const moved = input.was === null ? 0 : Math.round(input.standing - input.was);
 
   const paragraphs = [
+    UI.brief.lead,
     UI.brief.treasury(money(input.room), money(input.mandatory), money(input.revenue)),
     UI.brief.chamber(input.base, input.majority),
     /* ⚠ PRESSAO ZERO NAO E "O MAIS PERTO DE ROMPER": no mes 1 ninguem esta perto, e a frase
@@ -72,9 +81,10 @@ export function briefHtml(input) {
   ];
 
   return (
-    `<article class="sheet brief">` +
+    `<article class="sheet brief" data-signed="true">` +
+    `<p class="sheet__protocol">${escapeHtml(protocol)}</p>` +
     `<header class="letterhead">` +
-    `<div class="emboss">${iconHtml("estado", "")}</div>` +
+    `<img class="crest" src="/assets/brasao.webp" alt="">` +
     `<p class="letterhead__org"><b>${escapeHtml(UI.decree.presidency)}</b>` +
     `<span>${escapeHtml(UI.decree.chief)}</span>` +
     `<span>${escapeHtml(UI.brief.unit)}</span></p>` +
@@ -83,15 +93,16 @@ export function briefHtml(input) {
     `<p class="brief__date">${escapeHtml(date)}</p>` +
     `<p class="brief__vocative">${escapeHtml(UI.brief.vocative)}</p>` +
     `<div class="act__body brief__body">` +
-    `<p>${escapeHtml(UI.brief.lead)}</p>` +
-    /* 📗 O NUMERO DO PARAGRAFO E TEXTO, e nao marcador de lista: numa EM ele e digitado. */
+    /* 📗 O NUMERO DO PARAGRAFO E TEXTO, e nao marcador de lista: numa EM ele e digitado, na
+       margem, e o texto comeca no recuo de paragrafo — como nos oficios reais, a partir do 1. */
     paragraphs
-      .map((line, i) => `<p><span class="brief__mark">${i + 2}.</span>${escapeHtml(line)}</p>`)
+      .map((line, i) => `<p><span class="brief__mark">${i + 1}.</span>${escapeHtml(line)}</p>`)
       .join("") +
     `</div>` +
     `<p class="brief__close">${escapeHtml(UI.brief.close)}</p>` +
-    `<div class="signature"><b>${escapeHtml(input.chief)}</b>` +
+    `<div class="signature">${CHIEF_SIGN}<b>${escapeHtml(input.chief)}</b>` +
     `<span class="brief__role">${escapeHtml(UI.brief.role(input.she))}</span></div>` +
+    `<p class="sheet__foot">${escapeHtml(UI.brief.footer(number, protocol))}</p>` +
     `</article>`
   );
 }

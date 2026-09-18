@@ -7935,3 +7935,342 @@ interrompido, de 0,2 para 0,25. Revertida. O passeio rodou três vezes com o 0,2
 árvore nova e ficou verde nas três, então o afrouxamento não era necessário. Ficou pedido a ele o
 número que viu — se a prova reprovou em alguma rodada, isso é achado sobre a mola depois de
 `--rest` cair de 0,44 para 0,408, e vale mais do que a prova passar.
+
+---
+
+## 16/09/2026 — O salto sob contenção, os 940px e o polimento da cena
+
+### O salto de 22% era contenção, e a prova não se move
+
+O salto no voo interrompido da pasta foi medido de novo. Em rodada fria de inicialização, a queda atingiu 21,8% aos 140ms; sob contenção de CPU (duas instâncias disputando o compositor), acusou 670px no corte contra 520px dois quadros depois — 22,4% de salto. Em regime aquecido e máquina limpa, a variação fica estável entre 14,2% e 17,6%.
+
+A conclusão é que a reprova mede a máquina, e não o voo. O teto de 0,2 no passeio (`tests/browser/walk.mjs`) continua intocado: afrouxar para 0,25 esconderia a lentidão de máquina em vez de atestá-la. Quando ela reprova, o diagnóstico é contenção externa de processamento, e não quebra da cinemática da mola.
+
+### O defeito dos 940px, e a guarda que não olhava onde ele morava
+
+O Gabinete rolava em qualquer janela com altura abaixo de 940px. A causa era única: `.area.cabinet` media 821px de `clientHeight` fixo em qualquer janela, então `--fit` travava em 1,000 e a cena nunca encolhia. A 1366×768 a página rolava 211px, a pasta era cortada em 15,9px no rodapé, o envelope entrava 39,5px sob o rail (respondendo `rail__label` ao clique) e a folha do decreto cobria 11,7px do telefone. A 1440×900 a rolagem era de 94px.
+
+A falha permaneceu invisível porque a função `checkNoPageScroll` continha uma cláusula de escape: `if (window < 940) return` — desligando a checagem exatamente onde o defeito ocorria. O conserto em `styles/40-shell.css` trocou o limiar de altura `@media (min-height: 940px)` pelo de largura `@media (min-width: 1181px)`, alinhado ao momento em que o rail vira barra de topo. A prova sintética comprovou o alcance: reintroduzindo o defeito, o passeio acusa imediatamente `[900px/cabinet] a pagina rola 94px` e `[900px/email] a pagina rola 94px`. Em 1440×900 a cena agora encolhe com `--fit: 0,904`, zerando a rolagem e eliminando a faixa preta da captura.
+
+### A caixa não é a tinta, e a cena encolhida esconde o pior caso
+
+Duas lições de método saíram das medições de borda de 16/09:
+
+1. **A caixa não é a tinta:** medindo pelo DOM (`getBoundingClientRect`), a caixa do telefone fica a 39,6px da janela. Mas a tinta inclui `drop-shadow(4,32px 12px 18px)`: nominalmente o desfoque chega a 17,2px, e a varredura de pixel achou resíduo de penumbra a apenas 6px da borda da área. Medição puramente geométrica da caixa ignora a extensão ótica das sombras.
+2. **Medir onde a cena encolhe esconde o defeito:** em janelas como 1181×720 e 1440×900, a cena encolhe (`--fit: 0,68` e `0,904`) e puxa todos os elementos para o interior, abrindo falsas folgas de 62,9px e 52,6px entre o envelope e o rail. O pior caso ocorre em `--fit: 1` (1440×980), onde a cena atinge o tamanho nominal pleno e o envelope sangra 8,1px sob o rail.
+
+Uma tentativa de introduzir `--mail-x` para forçar 24,3px constantes de folga na esquerda revelou o preço do outro lado: o leque de 8 cartas ocupa 217px, enquanto o vão entre o rail e a pasta tem apenas 198,7px — faltam 18,3px. A segunda carta caiu em 428,8px sobre a pasta (que inicia em 425,9px). O teste do passeio reprovou em 6 dos 24 meses (`1 carta(s) caíram atrás da pasta`). O sangramento na beira esquerda é transbordo intencional para proteger a legibilidade do ato, e a reversão foi imediata.
+
+---
+
+## 17/09/2026 — O couro comido no topo, as quatro reprovas com uma causa, e as duas sombras na mesma luz
+
+### Ele viu o couro faltando, e a culpa era da minha limpeza de beira
+
+Palavras dele: "a parte de cima do couro da pasta foi comida um pouco por voce, principalmente o interior".
+
+A causa foi `tmp/limpar-beira.mjs`, a passada que tira o branco do estúdio que sangrou na borda do
+recorte. A regra `sujo()` andava para dentro enquanto o pixel fosse claro (L > 70) e dessaturado
+(croma < 22). O realce do próprio couro é claro e dessaturado, então a varredura atravessava a
+franja e continuava comendo peça. A franja branca real no topo mede 2px de mediana; a varredura
+chegava a 16px de p95, e a 18px no perfil nativo que o Gemini mediu depois.
+
+O estrago: 93 colunas de 1600 comidas até 7px, e o grupo pior em x=679..874 — a lombada, que é o
+interior que ele apontou. Na pasta fechada o mesmo defeito cortou a quina superior esquerda, com
+até 26px perdidos na curvatura entre as linhas 1 e 13.
+
+O conserto foi separar o piso de claro por eixo: 70 nos lados, 160 no topo e no pé. Não serve um
+número só. Com 160 nos lados a franja cinza volta — 1.295 das 1.386 linhas da fechada passam a
+abrir em L > 120, contra 3 antes. Com 70 no topo o realce do couro morre.
+
+Depois: o topo caiu de 93 colunas a 7px para 3 colunas a 2px, 141 colunas recuperaram até 8px de
+couro e costura, e nenhuma linha ou coluna abre em L > 200 nos dois arquivos. Os dois assets
+mantiveram o tamanho — 1600×1157 e 1000×1388 —, então nenhum número de CSS se moveu.
+
+### O portão estava vermelho antes da sessão, e as quatro reprovas tinham uma causa só
+
+O handoff dizia "portão verde" para 16/09 tarde. Estava vencido: rodando o passeio com os assets
+ANTIGOS saíram os mesmos 4 achados, então nada deles era do conserto do couro.
+
+A causa única é `setFolder(false)` em `tests/browser/walk.mjs`. Ele fechava a pasta clicando em
+`y - y*0.9`, que dá y=54 — a barra de cima, fora da sala. `elementFromPoint(772, 54)` responde
+"vit", e não `.room`, e o ouvinte de largar mora no `.room`. A pasta nunca fechava, e todo o resto
+do passeio media uma cena com a pasta no ar:
+
+- `onDesk` já lia a pasta ERGUIDA (707px), daí "a pasta nao subiu no clique: 707 na mesa, 707 na
+  mao" e "a pasta nao voltou para a mesa: 494 contra 707". No jogo o gesto funciona: 494 em
+  repouso, 707 na mão;
+- a pasta na mão ocupa [218, 136, 1221, 843] e o teclado do telefone mora em [1138, 327, 1258,
+  466]. Ela TAPA o teclado, e `checkContrast` media algarismo atrás da folha branca — a coluna da
+  esquerda (1, 4, 7, *) lia luminância 0,79 a 0,86, que é papel. Com a pasta em repouso as doze
+  teclas medem de 5,89 a 6,56 de razão, todas acima do piso AA de 4,5;
+- a folha a 24,5px da cantoneira contra a faixa de 15–22px não é desarranjo, é escala. A faixa foi
+  calibrada com a pasta em repouso, quando ela nascia aberta. Depois da Etapa 2 a prova precisa
+  clicar para abrir, e abrir ergue: 17,3 × 1,431 = 24,8. A prova media proporção disfarçada de
+  pixel, e virou fração da largura da pasta.
+
+### As duas sombras estavam em luzes diferentes, e o giro da peça era metade da causa
+
+Ordem dele: "as sombras da pasta e do telefone estao diferentes, destoam, eu quero que tanto a
+pasta quanto o telefone estejam igualmente integrados e padronizados no gabinete, na mesa".
+
+Três divergências, as três medidas:
+
+1. **a terceira camada da pasta não era sombra, era contorno.** `drop-shadow(0 0 14px
+rgba(0,0,0,0.9))` não tem direção nenhuma, então pintava 6px de preto em volta da peça inteira
+   — inclusive contra a luz, com 0,51 de alfa no topo e 0,54 na esquerda. Saiu;
+2. **o contato era tarja.** A pasta abria em 0,88 de alfa na base com 9px de faixa dura, contra
+   0,71 e 1px do telefone. As duas camadas que ficaram são as do telefone divididas pela escala de
+   repouso (0,4277): 0,72 × 2px de contato e 2,9 × 8 de penumbra. A penumbra ficou em dois terços
+   da dele porque a pasta é plana e o aparelho tem corpo — o que tem de ser igual é a luz, e não o
+   comprimento;
+3. **o filtro resolve no espaço da peça, e a peça está girada.** Este era o que eu não tinha, e
+   veio do Gemini. `--light-dx` é a razão na TELA, mas a pasta está a −2° e o telefone a +6°, então
+   escrever 0,36 nos dois faz a sombra sair girada junto com a peça: 18,3° contra 13,8° da
+   vertical, 11,6° de desvio máximo contando a poça do telefone. `--cast-dx` nasce em
+   `00-tokens.css` valendo `var(--light-dx)`, e peça girada redeclara a sua contragirada por
+   (0,36 cosθ + senθ) / (cosθ − 0,36 senθ): 0,325 na pasta e 0,483 no telefone.
+
+Depois, medido por varredura de pixel sobre o jacarandá: contato de 0,58 na pasta contra 0,57 no
+telefone, faixa dura de 1px nas duas, vazamento no topo de 0,15 contra 0,13, e as duas sombras a
+20,0° e 19,8° da vertical — 0,2° de desvio contra os 11,6° de antes.
+
+### O canal com o Gemini, e o que ele entregou
+
+O canal voltou por CDP na porta de depuração do Antigravity (`tmp/gemini.mjs enviar|ler`), na
+conversa `883734d6-…`. Dono declarado por arquivo: `assets/`, `tmp/limpar-beira.mjs`,
+`46-desk.css` e `00-tokens.css` meus; `tests/browser/walk.mjs` dele.
+
+Ele entregou o perfil da contaminação nos quatro lados em resolução nativa, que é o número que
+fixou o piso em 160 e não em 120 ou 200; o achado da quina da pasta fechada, que eu não tinha
+visto; o inventário de todas as sombras da mesa com arquivo e linha; e a medição ótica antes e
+depois, com o alfa por lado.
+
+### A pasta embaçada era o arquivo, e os suspeitos caíram por medida
+
+Ele viu: "a nitidez e qualidade da pasta ta meio ruim, meio embaçado".
+
+Não era o `scale()` da cena, nem `will-change`, nem o filtro de sombra. A mesma foto por três
+caminhos no mesmo tamanho de tela deu **44,09 · 44,07 · 44,09** de energia de gradiente: `<img>`
+direto, caixa de 832px reduzida por `scale()`, e caixa já no tamanho final. O Chrome rasteriza na
+escala composta, então reduzir por transform não custa nitidez nenhuma.
+
+Era o arquivo. A pasta na mão pede **2006px a 1440×980, 2250 a 1920×1080 e 3130 a 2560×1440** com
+dpr 2, e o arquivo tinha 1600 — ampliação de 1,25× a 1,96×. E a tinta nativa era 2196×1588: o corte
+para 1600 jogou fora 27% do detalhe que já existia.
+
+Os dois assets voltaram para a largura nativa — 2196×1588 e 1434×1991 — em qualidade 0,90, que é o
+joelho da curva: 0,94 custa +20% de byte para menos de 0,8% de gradiente. Medido no navegador, no
+couro da lombada com a pasta na mão: **41,1 contra 51,6, 25,4% a mais**. Peso: 1,54 MB e 1,13 MB.
+
+### As folhas do interior viraram o creme da própria foto
+
+Ordem dele: "as folhas que saem pelo lado direito da pasta são meio amareladas... quero que você
+faça as folhas do interior serem iguais, idênticas mesmo a essas".
+
+A tira de papel que aparece pela direita da pasta fechada mede **hsl(42,4 44% 84,7%)** na tela. A
+folha do decreto era `hsl(44 12% 97%)` — o matiz certo, com um quarto da saturação e 13 pontos de
+luz a mais.
+
+Escrever a cor medida crua não bastou: a folha leva fibra, o véu de `.sheet::before` e a luz da
+pasta em cima, e a face chegava a 31% de saturação contra 42 — e o `::before` dobrava a queda do
+pé, 5,1 pontos de luz contra os 2,6 da foto. Os números declarados saíram de iterar até a TELA
+bater: **hsl(43 67% 88,8%) → hsl(40 100% 92%)** entrega face em hsl(43,6 42% 84,5%) no topo e
+hsl(41,1 41% 83,3%) no pé, contra hsl(42,4 44% 84,7%) da foto. Em rgb: 232, 223, 199 da folha
+contra 233, 223, 199 da tira.
+
+### O fio branco no pé da capa, e por que a regra não o via
+
+Ele viu: "na parte de baixo da capa da pasta, tem um pouco de resquício branco... tem que ter ultra
+precisão".
+
+A regra de descontaminação só COMEÇA se o primeiro pixel opaco for quase branco (L > 200). No pé da
+capa ele media 142 a 198, então ela saía calada. Eram **851 das 1.434 colunas, 2px de mediana e até
+5, a L=188 contra couro de 45**.
+
+A passada nova reconhece o fio pelo precipício, e não pelo brilho: claro (L > 120), neutro
+(croma < 20), no máximo 6px, e o couro atrás dele — a mediana de quatro pixels — abaixo de 45% do
+pico do fio. Latão e beira de papel creme escapam pelo croma, que neles é 40+ e 34 contra 3 do fio.
+Um detalhe custou uma rodada: medir o precipício pelo pixel seguinte ao fio reprovava o próprio
+caso que o comprova — em x=247 esse pixel dava 87 contra 43 do couro logo atrás, porque ele ainda é
+transição. Depois: **110 colunas de 1.434, mediana de 1px, e nenhum trecho contíguo de 8 colunas**.
+
+### E as sombras de todas as peças, não só as duas
+
+A conta contragirada valia para a mesa inteira, e não só para a pasta e o telefone. Os quatro
+tokens `--cast-*` passaram a consumir `--cast-dx`, então quem gira só declara o número: envelope
+0,102 a −14° e lacre −0,021 a −21°, que soma os −7 próprios dele aos −14 do envelope. Antes o
+envelope caía a 33,8° e o lacre a 26,8° contra os 19,8 da sala. Hoje as sete peças medem de 19,8° a
+20,0° — **0,2° de desvio máximo, contra 27,1° antes**.
+
+### A sombra da pasta erguida deixou de ser retângulo, e o número aprovou
+
+`.folder__cast[data-cast="lift"]` era `box-shadow` na caixa, então uma peça com quina rolada,
+cantoneira de latão e beira de papel projetava um retângulo. A camada passou a pintar a própria foto
+apagada — `brightness(0) opacity(0.55) blur(66px)` —, que guarda o alfa e joga fora a cor. Continua
+sendo uma camada promovida que só cruza opacidade, que era o que valia os 13 fps da medição antiga.
+
+Medido por diferença com a pasta na mão: pico de 39,1% para 41,7% no pé, 19,7% para 21,3% na quina,
+e o alcance da quina caiu de 112 para 98px — o retângulo deixando de projetar além do latão.
+
+O custo, medido pelo Gemini nas duas versões na mesma rodada: **239,9 fps contra 240,0**, 0,1 fps
+contra o teto de recusa de 5. Zero quadro perdido, zero tarefa de rasterização durante o voo, e o
+primeiro gesto responde em 4,2ms nos três primeiros quadros — o engasgo histórico de 75ms não voltou.
+
+### O envelope virou foto, e com ele saíram treze tokens e dois filtros de cera
+
+Ordem dele: "todos os elementos de cima da mesa serão coisas reais, imagens por IA". O ChatGPT gerou
+dois envelopes, com prompt escrito pelo Gemini.
+
+A escolha foi por número. O creme mede rgb(227, 220, 208) — **85% de luz, a mesma da folha do
+decreto e da beira de papel da pasta**. O rubro põe uma segunda massa vermelha ao lado do telefone e
+o lacre some no papel, porque os dois estão na mesma matiz. Ele não foi descartado: virou a **carta
+que vence**, que é onde a cor tem de gritar, e é exatamente o que o CSS antigo já modelava com
+`--urgent-cover`.
+
+Saíram com o desenho: as duas abas recortadas, o lacre em `<svg>` de quatro peças com
+`feTurbulence`, `feDisplacementMap` e `feSpecularLighting`, os dois filtros de cera, o feltro, a
+barriga do papel e o brilho — mais **treze tokens** que a guarda `tokens` achou um a um. A caixa
+passou a ter a razão da foto, 1,529: forçar o C6 de 1,42 esticaria o papel 7,5% na altura.
+
+Largura de 720px, e o número é de tela: o envelope mede 177 CSS px em qualquer janela, então pede
+354 a dpr 2 e 531 a dpr 3. Pesam 74 e 76 KB.
+
+### O contragiro virou fórmula, e três números escritos à mão morreram
+
+O `--cast-dx` de cada peça vinha calculado por mim — 0,325 na pasta, 0,483 no telefone, 0,102 no
+envelope, −0,021 no lacre. **O punhado de cartas não aceitava isso:** cada envelope tem o seu `--er`,
+e um número na mão só serviria para um deles. Hoje quem gira declara `--cast-turn`, e `--cast-dx`
+sai de uma conta em CSS com `sin()` e `cos()`.
+
+⛔ **E a conta tem de ser refeita em cada peça, não herdada.** `var()` dentro de custom property é
+substituído ONDE A PROPRIEDADE É DECLARADA: escrever a fórmula em `:root` congela o ângulo da raiz e
+o filho herda o número pronto. Foi assim que o envelope continuou saindo a 0,36 depois de a fórmula
+entrar. Um seletor na mesa (`.folder, .folder *, .phone, .phone *, .mail, .mail *`) redeclara por
+peça, e o alcance é a mesa e não `*` — redeclarar propriedade em todo elemento da página é custo sem
+dono.
+
+O mesmo defeito estava nos tokens `--cast-*`: eles pareciam seguir `--cast-dx` e congelavam a raiz.
+Voltaram a `--light-dx`, com o motivo escrito, e a folha do decreto passou a escrever as duas
+camadas dela.
+
+### Os cinco ajustes finos, e o que cada um custou
+
+**1. A caixa da pasta não é a peça.** Ele viu: "clicar na área vazia da mesa ao lado esquerdo da
+pasta está acionando a abertura". Fechada, a metade esquerda da caixa está vazia — a folha girou
+para cima da direita —, e `elementFromPoint` respondia `.folder` de x=273 a 633 com a capa pintada só
+a partir de 594. Hoje a caixa e a folha são transparentes ao ponteiro e quem responde é a camada
+pintada, por estado (`data-open`, escrito uma vez por gesto e não por quadro). **343px de madeira
+deixaram de abrir a pasta.**
+
+⛔ **E isso quebrou o passeio em três lugares:** ele clicava no centro da CAIXA em `onTarget`, em
+`tocar(".folder")` e no salto do voo interrompido. Os três passaram a mirar a peça pintada.
+
+**2. O texto borrado não existe mais, e não era `will-change`.** Medido: a folha com e sem
+`will-change: transform` dá **194,78 de gradiente nos dois** — o promovido não custa nitidez. E não
+há haste cortada: `scrollHeight` é igual a `clientHeight` em todo bloco da folha, e a captura a dpr 3
+mostra cedilha, til e acento inteiros. O que ele viu era a foto da pasta a 1600px sendo ampliada
+1,41× e o papel saturado, e os dois já tinham saído.
+
+**3. O creme baixou pela metade.** Ele recusou o resultado da ordem anterior: "o fundo amarelado dos
+papéis está muito saturado/forte... reduza para um creme ou off-white suave". A folha saía em 42% de
+saturação, que é o número da tira de papel da pasta; hoje sai em **19%**, com o mesmo matiz e a mesma
+luz — rgb(224, 219, 209). A tira da foto continua em 44%, então as duas deixaram de casar: é a
+escolha dele, e está registrada.
+
+**5. O papel virou paisagem.** `user-select: none` na folha inteira, `pointer-events: none` nos
+blocos estáticos. ⛔ **E as exceções são TRÊS, não uma:** a assinatura, a epígrafe — que é o gesto
+que assina — e `[data-protect]`, que é o de marcar ministério. Calar as duas últimas junto derrubou
+três provas do passeio.
+
+**Mais o tamanho:** pasta 8% maior (`--rest` de 0,408 para 0,4406) e envelope 15% (`--envelope-size`
+de 155 para 178px), ordem dele. A pasta na mão não mudou — ela é calculada pela área —, então o voo
+encurtou de 1,43× para 1,33×.
+
+⚠ **O item 4 — padronização tipográfica entre o parecer e o decreto — ficou para a próxima:** o
+levantamento está com o Gemini.
+
+### O texto "cortado" era tamanho, e não renderização
+
+A captura dele fechou a questão. Medido a 1440×980 com dpr 1: a folha tem 720px de layout e chega à
+tela com 441 — escala de 0,612 —, e o corpo do ato saía em **10,5px na tela**, com 14,1 de entrelinha.
+A 10px o antialiasing come a haste, e é isso que lê como letra cortada.
+
+⛔ **Não era promoção de camada, e os cinco casos deram o MESMO número:** com e sem `will-change` na
+pasta, com e sem na folha, sem os dois e sem `isolation` — **68,61 de gradiente nos cinco**. O Chrome
+rasteriza na escala composta, e nenhum truque de renderização conserta tamanho.
+
+O corpo subiu 14% nos três níveis e `READING` foi de 0,86 para 0,90 — a pasta erguida passou a ocupar
+90% da altura visível. Na tela: **12,5px a 1440×980 e 14,0 a 1920×1080**, contra 10,5 e 11,8.
+`scrollHeight` continua igual a `clientHeight` em toda folha, então nada refluiu para fora. A pasta
+erguida ficou a 10px do topo da área e 72 do pé — dentro, e o passeio confirma.
+
+## A SESSÃO DA PADRONIZAÇÃO TIPOGRÁFICA E NITIDEZ DO ENVELOPE — 18/09/2026
+
+O item 1 da fila fechou. O Claude unificou a anatomia das duas folhas e resolveu os vãos, enquanto o
+Gemini isolou as causas da queixa de nitidez do envelope e auditou a geometria final das páginas.
+
+### 1 · A padronização das folhas e a escala de três vãos
+
+As duas folhas da pasta (`brief.mjs` e `decree.mjs`) tinham nove vãos verticais arbitrários (de 0,022 a
+0,050 de `--paper`). Eles viraram três tokens em `.sheet`: `--sheet-gap-s` (0,022 / 15,8px),
+`--sheet-gap-m` (0,032 / 23,0px) e `--sheet-gap-l` (0,045 / 32,4px).
+
+A anatomia da assinatura foi equalizada por ordem do usuário: ambas as folhas ganharam linha horizontal
+de assinatura na borda do SVG com largura idêntica de 62% (224,82px na tela). O parecer ganhou a
+rubrica pré-assinada da ministra Chefe da Casa Civil (`CHIEF_SIGN`), garantindo fecho, traço e nome
+nas duas faces.
+
+Para acomodar a rubrica sem estourar o papel, a caixa de assinatura encolheu de 54 para 36px de layout,
+o fecho recuou de gap-l para gap-m e a abertura do parecer perdeu uma linha redundante. A folga no pé do
+parecer no mês 1 saltou de 47,8 para 109px (medido em tela: 100,9px livres até o corte), suportando com
+margem os 87,8px exigidos pelo pior mês do passeio. No decreto, o texto do Diário Oficial subiu para
+45,5px da assinatura, deixando 13,8px de respiro até a margem inferior.
+
+### 2 · O anel de caneta do Art. 2º e a auditoria de glifos
+
+O relatório tipográfico inicial apontou quatro pontos de atrito. Dois não procediam e foram
+descartados após verificação a DPR 3:
+
+1. O corte das hastes descendentes pelo sublinhado pontilhado não ocorre porque o motor do Chrome liga
+   `text-decoration-skip-ink: auto` por padrão, contornando `g`, `p` e `ç`.
+2. A proximidade do circunflexo ao topo da caixa da linha não é defeito de corte, pois caixas de linha
+   não aplicam clipping sem propriedade explícita de overflow.
+
+O anel de caneta do Art. 2º, contudo, colidia com as extremidades das palavras marcadas. Ele migrou da
+borda do botão para um pseudo-elemento `::after` com inset negativo (`calc(var(--paper) * -0.004)` e
+`calc(var(--paper) * -0.007)` — -2,88px vertical e -5,04px horizontal). A auditoria na tela confirmou:
+hastes de `p` (Previdência), `g` e `ç` (Segurança) 100% livres, com 5,04px de folga nas laterais.
+
+### 3 · O diagnóstico e a cura da nitidez do envelope
+
+A queixa de envelope "embaçado" não vinha de foto mole: a fibra existe a 1297px na origem e se perdia ao
+ser reduzida 4:1 em runtime pelo navegador para 178px CSS. O que desaparecia era a aresta de contraste.
+
+A receita foi assar os envelopes na largura real de tela com uma única reamostragem a partir da origem
+limpa (`assets/envelope.webp` e `envelope-urgent.webp` a 392×256px, para `--envelope-size: 196px`),
+aplicando máscara de nitidez (unsharp raio 1, ganho 1,4, qualidade 0,90).
+
+Remeção com Sobel na tela a 1440×980 confirma o salto:
+
+- DPR 1: envelope sobe de 36,93 para **40,54** (+9,8%); sem filtro salta para 46,47 (+54,5%);
+- DPR 2: envelope salta de 25,80 para **32,89** (+27,5%) e o lacre salta de 33,70 para **44,55** (+32,2%);
+- Asset nativo: Sobel salta de 23,78 para **38,53** (+62,0%), emparelhando com o telefone (38,33).
+
+### 4 · Os papéis na forma dos ofícios reais, e a caneta — fechamento de 18/09, 02:50
+
+Ele mandou dois ofícios da Presidência (736/2022 e 986/2021, do GPPR) e o brasão a cores, e deu
+carta branca: "o mais realista possível, e sempre padronizado". Os dois papéis foram refeitos nessa
+forma: brasão a cores no timbre (9% da largura; o real tem 9,5), PRESIDÊNCIA DA REPÚBLICA em caixa
+alta e peso normal, NUP no alto à direita, `EM nº 00001/2027 CC`, parágrafos numerados do 1 com o
+número na margem e o texto no recuo de 2,5 cm, decreto numerado com ementa "Dispõe sobre", preâmbulo
+com o art. 84, IV, e o art. 8º da LRF, referendo da ministra sob o presidente, rodapés do SEI e do
+Planalto. Sem hifenização. O dígito do NUP é a conta real (módulo 11 da Portaria MJ/MP 11/2019) e
+reproduz os dois ofícios dele: 97 e 59 — virou prova.
+
+Para caber: entrelinha 1,24 → 1,18, parágrafo a 0,006 do papel, rubrica de 36 para 30px. Folga do
+parecer 90,4px (o pior mês do passeio pede 83), decreto 32,1.
+
+A caneta dele entrou na mesa (`assets/pen.webp`, 420×42), no vão entre o punhado e a pasta, a −78°.
+A bandeirinha fica para amanhã. Portão verde: 13 guardas · 66 sintéticas · 332 provas · passeio
+verde. Ele mandou commitar tudo e desligar.

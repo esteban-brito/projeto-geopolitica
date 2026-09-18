@@ -353,13 +353,22 @@
        pilha de folhas caiam para a direita a 0,5 — e ele viu "sombras que nao parecem
        padronizadas". Uma direcao, e ela mora aqui. */
     --light-dx: 0.36;
+    /* ⛔ O FILTRO RESOLVE NO ESPACO DA PECA, e a peca gira: escrever `--light-dx` numa peca
+       girada joga a sombra junto com ela — o envelope a -14 graus caia a 33,8 da vertical
+       contra os 19,8 da sala, e o lacre a 26,8.
+       ⭐ QUEM GIRA DECLARA O ANGULO, e a conta e uma so e mora aqui. `--cast-turn` e o giro
+       ACUMULADO da peca, e `--cast-dx` sai contragirado dele. A 0 graus da `--light-dx`.
+       ⚠ O punhado de cartas nao aceitava numero na mao: cada envelope tem o seu `--er`. */
+    --cast-turn: 0deg;
+    --cast-dx: var(--light-dx);
     /* AS DUAS CAMADAS DE TODA PECA: o CONTATO, curto e escuro onde ela encosta, e a PENUMBRA,
        longa e rala, que e a altura. 📐 A queda da penumbra e por classe de espessura, e nao
        por mm: folha 6 · envelope 10 · pasta 24 · telefone 30. A fisica (altura x cot 75°)
        daria 0 · 1 · 3 · 28, e a folha e o envelope liam como pintados na madeira. */
-    --cast-contact: calc(var(--light-dx) * 2px) 2px 4px rgba(0, 0, 0, 0.5);
-    --cast-flat: calc(var(--light-dx) * 6px) 6px 14px -4px rgba(0, 0, 0, 0.4);
-    --cast-thin: calc(var(--light-dx) * 10px) 10px 24px -8px rgba(0, 0, 0, 0.5);
+    /* ⛔ E ELE LEVA `--light-dx`, E NAO `--cast-dx`, de proposito: `var()` dentro de custom
+       property e substituido ONDE ELA E DECLARADA, entao escrever `--cast-dx` aqui congela o
+       angulo da RAIZ e a peca girada recebe 0,36 de qualquer jeito. Quem gira escreve a
+       propria sombra com `var(--cast-dx)` na regra dela. */
     --cast-thick: calc(var(--light-dx) * 24px) 24px 60px -20px rgba(0, 0, 0, 0.85);
 
     /* ⛔ O COURO E A COSTURA DA PASTA SAIRAM DAQUI: ela e foto (`assets/folder-open.webp`) e
@@ -392,21 +401,8 @@
     --ink-gazette: #575757;
     --ink-sign: #0f1b3a;
 
-    /* A CERA DO LACRE, em quatro degraus: a crista do anel, o corpo, o disco rebaixado e o
-     fundo do escorrido. E o rubro, que e a carta que vence. */
-    --wax-crest: #c04a3c;
-    --wax-body: #9c2a22;
-    --wax-disc: #a02c23;
-    --wax-deep: #58120d;
-    /* 📐 O PAPEL CLAREOU PARA O LACRE EXISTIR, e a decisao do tom e dele. No rubro antigo a
-     cera dava 1,49 de contraste e a crista 1,03 — a peca sumia. ⛔ E escurecer a cera nao
-     salvava: com preto puro o teto era 2,6, porque o papel ja era escuro. Hoje sao 3,08. */
-    --urgent-cover: #bd4436;
-    --urgent-crest: #5e1611;
-    --urgent-body: #450d0a;
-    --urgent-disc: #491009;
-    --urgent-deep: #240605;
-    --urgent-ink: #300907;
-    --urgent-ink-rgb: 48, 9, 7;
+    /* ⛔ OS TREZE TOKENS DA CERA E DO RUBRO SAIRAM COM O ENVELOPE CALCULADO: quatro degraus de
+     cera, sete do papel que vence e as duas classes de sombra que so ele consumia. As duas
+     cartas sao foto (`assets/envelope.webp` e `envelope-urgent.webp`), e a cera vem nelas. */
   }
 }

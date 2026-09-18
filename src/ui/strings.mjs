@@ -843,10 +843,14 @@ export const UI = {
   brief: {
     city: "Brasília",
     unit: "Secretaria Especial de Análise Governamental",
+    /* 📗 A EPÍGRAFE E O NUP SÃO OS DO MANUAL (3ª ed., §7) e dos ofícios reais que ele mandou:
+       "EM nº 00012/2019 MP" e "00037.002019/2022-97" no alto à direita. */
     /** @param {number} number @param {number} year */
-    kind: (number, year) => `EXPOSIÇÃO DE MOTIVOS Nº ${number}/${year}/CC`,
+    kind: (number, year) => `EM nº ${String(number).padStart(5, "0")}/${year} CC`,
+    /** @param {number} number @param {string} protocol */
+    footer: (number, protocol) => `EM ${number} SEI ${protocol} / pg. 1`,
     vocative: "Senhor Presidente da República,",
-    lead: "Submeto à sua decisão o corte deste mês. Abaixo, o que a Casa Civil apurou.",
+    lead: "Submeto à sua decisão a minuta do decreto deste mês.",
     /** @param {string} room @param {string} mandatory @param {string} revenue */
     treasury: (room, mandatory, revenue) =>
       `O mês tem ${room} para gastar. A despesa obrigatória come ${mandatory} dos ${revenue} de receita, e é ela que aperta o resto.`,
@@ -894,12 +898,15 @@ export const UI = {
     presidency: "Presidência da República",
     chief: "Casa Civil",
     legal: "Subchefia para Assuntos Jurídicos",
-    /** @param {string} date */
-    title: date => `DECRETO DE ${date.toUpperCase()}.`,
-    summary: "Diz quanto cada ministério pode gastar este mês, e quais não entram no corte.",
+    /* 📗 A FORMA É A DO DECRETO PUBLICADO: numerado, ementa com "Dispõe sobre", preâmbulo com o
+       inciso IV do art. 84 e o art. 8º da LRF (LC 101/2000, a programação financeira do mês),
+       e o rodapé do Planalto com a data do DOU. A escrita dos artigos continua sendo a do jogo. */
+    /** @param {string} number @param {string} date */
+    title: (number, date) => `DECRETO Nº ${number}, DE ${date.toUpperCase()}`,
+    summary: "Dispõe sobre o limite de gasto dos ministérios no mês.",
     preamble:
-      "O PRESIDENTE DA REPÚBLICA, no uso da atribuição que lhe dá o art. 84 da Constituição,",
-    enacts: "D E C R E T A :",
+      "O PRESIDENTE DA REPÚBLICA, no uso da atribuição que lhe confere o art. 84, caput, inciso IV, da Constituição, e tendo em vista o disposto no art. 8º da Lei Complementar nº 101, de 4 de maio de 2000,",
+    enacts: "DECRETA:",
     /** @param {string} room @param {string} share */
     first: (room, share) =>
       `Art. 1º  O mês tem ${room} para gastar. Os ministérios recebem ${share} do que pediram.`,
@@ -909,7 +916,8 @@ export const UI = {
     /** @param {string} date @param {number} independence @param {number} republic */
     close: (date, independence, republic) =>
       `Brasília, ${date}; ${independence}º da Independência e ${republic}º da República.`,
-    gazette: "Este texto não substitui o publicado no Diário Oficial da União.",
+    /** @param {string} date o dia da publicação, "5.1.2027" */
+    gazette: date => `Este texto não substitui o publicado no DOU de ${date}`,
   },
 
   trend: {

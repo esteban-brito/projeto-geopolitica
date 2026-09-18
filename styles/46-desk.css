@@ -78,6 +78,87 @@
     z-index: 3;
   }
 
+  /* ══ A DOBRA ═════════════════════════════════════════════════════════════
+     ⭐ A PASTA NASCE FECHADA E ABRIR E O GESTO: a folha da esquerda gira sobre a lombada, e
+     o verso dela e a capa. Fechada ela pousa em cima do ato; aberta, fica de costas.
+     ⛔ E A CAIXA DE `.folder` NAO MUDA COM ISSO, medido: `getBoundingClientRect` de um pai
+     nao soma o transform dos filhos — 684,3x494 com a folha virada ou nao. Era por isso que
+     `tune()` parecia travar a Etapa 2, e ele nunca travou. */
+  .folder__leaf {
+    position: relative;
+    display: flex;
+    /* ⛔ ACIMA DA PILHA, e o numero e medido: virada, a folha pousa em [618, 926] e a pilha esta
+       em [618, 926] — a MESMA caixa. Com o `z-index: 3` das duas, quem pinta por ultimo ganha, e
+       o decreto aparecia POR CIMA da capa fechada. Aberta ela nao alcanca a pilha. */
+    z-index: 4;
+    /* ⚠ A ORIGEM E A LOMBADA, e nao a beira da folha: entre as duas mora meio `gap`, e girar
+       pela beira deixa a capa meio vao curta. 59 e metade dos 118 do vao. */
+    transform-origin: calc(100% + 59px) center;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* ⛔ E AS DUAS FACES SE ESCONDEM UMA A OUTRA, senao o parecer aparece espelhado por cima da
+     capa: sem `backface-visibility` as duas pintam juntas e a de cima ganha por ordem. */
+  .folder__leaf > * {
+    backface-visibility: hidden;
+  }
+
+  /* A PASTA ABERTA — a foto, numa camada que cruza opacidade com a capa. */
+  .folder__open {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    background: url("/assets/folder-open.webp") center / 100% 100% no-repeat;
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  /* ⚠ E O ESTADO DECIDE QUEM RESPONDE, e nao a opacidade: uma camada a 0,001 continua
+     recebendo clique. */
+  .folder[data-open="true"] .folder__cover {
+    pointer-events: none;
+  }
+
+  .folder[data-open="true"] .folder__open {
+    pointer-events: auto;
+  }
+
+  /* A CAPA — o verso da folha, e ela e a MESMA foto da pasta, fotografada fechada. */
+  .folder__cover {
+    position: absolute;
+    /* FECHADA, QUEM ABRE E A CAPA. Aberta ela e o verso da folha, virado para o outro lado. */
+    pointer-events: auto;
+    /* ⚠ ELA E O VERSO, e por isso nasce virada: sem o giro proprio ela vira face da FRENTE, e
+       com a folha a 180 graus o `backface-visibility` a esconde — a pasta some da mesa. */
+    transform: rotateY(180deg);
+    /* ⛔ E ELA NAO ESTICA: esticada a 100% da caixa o emboss e o grao do couro deformavam 11%.
+       `auto 100%` deixa a foto mandar na propria razao, e quem esconde o papel e a pilha, que
+       apaga — cobrir com a capa inflada arrastava a franja do recorte para dentro da tela.
+       📐 E A ALTURA E A DA PASTA, e nao a da folha: a caixa da folha exclui os 68px de couro de
+       cima e de baixo, entao a 100% dela a pasta ENCOLHIA 14% ao fechar — 425px contra 494. Os
+       6,7% sao esse `padding` sobre os 1018 da folha. */
+    /* ⛔ E A CAIXA TEM DE TER A RAZAO DA FOTO: a 100% da altura a imagem sai com 347px de
+       largura numa caixa de 308, e o `no-repeat` cortava 19,5px de CADA flanco — as bordas da
+       pasta sumiam. 1154 de altura por 0,7213 da foto pedem 832 de largura contra os 720 da
+       folha: 7,81% para cada lado. */
+    inset: -6.7% -7.81%;
+    background: url("/assets/folder-closed.webp") center / auto 100% no-repeat;
+    /* ⛔ E A SOMBRA SEGUE O ALFA, e nao a caixa: a peca tem quina rolada, cantoneira de latao e
+       a beira de papel, e uma `box-shadow` desenha o RETANGULO em volta disso.
+       ⛔ E A TERCEIRA CAMADA ERA UM CONTORNO: `0 0 14px` a 0,9 nao tem direcao, entao a luz
+       nao a explicava e ela pintava 6px de preto em volta da peca INTEIRA — sombra contra a
+       luz, 0,51 de alfa no topo e 0,54 na esquerda. A pasta caia 75,7% da luminancia da
+       madeira contra 24,7% do telefone.
+       📐 As duas que ficaram sao as do telefone divididas pela escala de repouso (0,4277),
+       porque esta peca mora dentro dela: na tela dao 0,72 x 2px de contato e 2,9 x 8 de
+       penumbra. A penumbra e DOIS TERCOS da dele porque a pasta e plana e o aparelho tem
+       corpo — o que tem de ser igual e a luz, e nao o comprimento. */
+    filter: drop-shadow(calc(var(--cast-dx) * 4.7px) 4.7px 7px rgba(0, 0, 0, 0.88))
+      drop-shadow(calc(var(--cast-dx) * 18.7px) 18.7px 28px rgba(0, 0, 0, 0.6));
+  }
+
   /* ══ A PASTA DE DESPACHOS ════════════════════════════════════════════════
          📗 O presidente não assina UMA coisa por mês — ele recebe uma PASTA, e a pesquisa 08
          §2 chama isso de erro de premissa do arranjo antigo: a tela foi desenhada em torno de
@@ -96,6 +177,25 @@
      o ato vira mancha, e o pedido foi "diminua sem que fique impossivel de ver". */
   /* 📐 A PASTA NO CENTRO DA CENA, e a cena e a foto: a janela de 1440 mostra os 1197px do
      meio, entao 50% cai no centro dela — e cai no centro da de 1920 tambem. */
+  /* ⛔ A CONTA SE REFAZ POR PECA, e nao se herda: `var()` dentro de custom property e
+     substituido ONDE A PROPRIEDADE E DECLARADA — escrever a formula em `:root` congela o
+     angulo da raiz e o filho herda o numero pronto, o mesmo para todo mundo. Este seletor a
+     redeclara em cada peca da mesa, e cada uma le o `--cast-turn` que herdou.
+     ⚠ E o alcance e a mesa, e nao `*`: a folha do decreto tem texto, e redeclarar propriedade
+     em todo elemento da pagina e custo sem dono. */
+  .folder,
+  .folder *,
+  .phone,
+  .phone *,
+  .pen,
+  .mail,
+  .mail * {
+    --cast-dx: calc(
+      (var(--light-dx) * cos(var(--cast-turn)) + sin(var(--cast-turn))) /
+        (cos(var(--cast-turn)) - var(--light-dx) * sin(var(--cast-turn)))
+    );
+  }
+
   .folder {
     position: absolute;
     /* 📐 ELA RECUOU DE 52% PARA 46% para abrir o vao do telefone a direita, e o punhado desceu
@@ -128,7 +228,8 @@
        ⚠ ESTICADA E NAO `cover`: a caixa da pasta e o conteudo que manda, e a foto tem 1,380
        de razao contra 1,409 da caixa — 2% de estiramento, que em couro ninguem ve. `cover`
        cortaria a cantoneira. */
-    background: url("/assets/folder-open.webp") center / 100% 100% no-repeat;
+    /* ⛔ O COURO ABERTO SAIU DAQUI e virou `.folder__open`: como fundo ele nao tinha como
+       apagar sozinho, e fechada a pasta mostrava a aberta por baixo da capa. */
     /* O CSS guarda so o REPOUSO; o voo e escrito pelo JS direto em `transform`.
            ⚠ E A RAZAO NAO E A QUE EU TINHA MEDIDO: o travamento que me levou ate aqui era um
            navegador que parou de compor — 1 quadro em 500ms —, e nao a arvore de estilo. O
@@ -150,11 +251,21 @@
        📐 E PAROU EM 0,44 POR FALTA DE MESA, e o numero e a conta: a janela de 1440 deixa 1237px
        uteis depois do rail, e a 0,46 as tres pecas somavam 1161 — 37px por vao. A 0,44 a pasta
        fecha em 693 e sobram 53px de cada lado dela. */
-    --rest: 0.408;
+    /* 📐 8% MAIOR, ordem dele. Era 0,408. */
+    --rest: 0.4406;
     will-change: transform;
     isolation: isolate;
     transform: translate(-50%, -50%) rotate(var(--folder-tilt, -2deg)) scale(var(--rest, 0.72));
+    /* O GIRO DA PECA, e `--cast-dx` sai dele em `00-tokens.css`. */
+    --cast-turn: var(--folder-tilt, -2deg);
     cursor: pointer;
+    /* ⛔ A CAIXA NAO E A PECA, e ele viu: "clicar na area vazia da mesa ao lado esquerdo da
+       pasta esta acionando a abertura". Fechada, a metade esquerda da caixa esta VAZIA — a
+       folha girou para cima da direita —, e `elementFromPoint` respondia `.folder` de x=273
+       a 633 com a capa pintada so a partir de 594: 321px de madeira que abriam a pasta.
+       ⭐ QUEM RESPONDE E A TINTA: a caixa vira transparente ao ponteiro e cada camada pintada
+       assume por estado, com `data-open` escrito uma vez por gesto. */
+    pointer-events: none;
     /* ⭐ A SOMBRA E A DA SALA (`--light-dx` e `--cast-*` em `00-tokens.css`): a penumbra e a
        da classe "pasta", a mesma do `.glass-stage`, e as duas se inclinam pela mesma luz.
        ⚠ O QUE FAZ UM OBJETO POUSAR e a linha escura e curta onde ele encosta, entao o contato
@@ -177,14 +288,6 @@
     transform: translateZ(0);
   }
 
-  /* NA MESA: a curta cola a peca no tampo, e a longa da altura. Com uma so, ou a pasta flutua
-     ou parece pintada na madeira. */
-  .folder__cast[data-cast="rest"] {
-    box-shadow:
-      calc(var(--light-dx) * 3px) 3px 6px rgba(0, 0, 0, 0.6),
-      var(--cast-thick);
-  }
-
   /* NA MAO: a de contato nao existe — a peca deixou de encostar —, e a de altura cresce,
      amolece e CLAREIA: sombra longe da superficie e mais rala. Os fatores (2,6 na queda, 2,2 no
      desfoque) sao a mesma proporcao que o JS interpolava por quadro. */
@@ -192,7 +295,17 @@
     /* ⚠ O PISO DE OPACIDADE MORA NO JS, e nao aqui: quem escreve este valor e `draw`, em estilo
        inline, e inline vence a folha. Um `0.001` nesta linha nao chegaria a tela. */
     opacity: 0;
-    box-shadow: calc(var(--light-dx) * 62px) 62px 132px -20px rgba(0, 0, 0, 0.55);
+    /* ⛔ ERA `box-shadow`, E `box-shadow` DESENHA A CAIXA: a pasta tem quina rolada, cantoneira
+       de latao e a beira de papel saindo pela direita, e o retangulo aparecia em volta de tudo
+       isso — o mesmo defeito que a capa em repouso ja tinha perdido.
+       ⭐ A SILHUETA E A PROPRIA FOTO APAGADA: `brightness(0)` guarda o alfa e joga fora a cor,
+       entao a sombra tem a forma da peca. Continua sendo UMA camada promovida que so cruza
+       opacidade — o desfoque e a cor sao calculados uma vez, e o voo nao repinta nada.
+       📐 66px de `blur` e o desvio-padrao equivalente aos 132 de raio do `box-shadow`, e o
+       `scale` de 0,976 faz o que o espalhamento de -20px fazia nos 1638 de largura da caixa. */
+    background: url("/assets/folder-open.webp") center / 100% 100% no-repeat;
+    filter: brightness(0) opacity(0.55) blur(66px);
+    transform: translateZ(0) translate(calc(var(--cast-dx) * 62px), 62px) scale(0.976);
   }
 
   /* ── A COSTURA, e ela são DOIS tracejados e não um ─────────────────────────
@@ -228,9 +341,11 @@
   /* ⚠ PAPEL POUSADO NUMA PILHA NAO ENCOSTA INTEIRO: o canto de fora sobe um fio, e a
          sombra por baixo dele e o que o olho lê como sheet SOLTA em vez de colada. */
   .stack .sheet {
+    /* As duas camadas vao escritas: um token de classe congela o angulo da raiz, e esta folha
+       mora dentro da pasta girada. */
     box-shadow:
-      calc(var(--light-dx) * 1px) 1px 1px rgba(0, 0, 0, 0.34),
-      var(--cast-flat);
+      calc(var(--cast-dx) * 1px) 1px 1px rgba(0, 0, 0, 0.34),
+      calc(var(--cast-dx) * 6px) 6px 14px -4px rgba(0, 0, 0, 0.4);
   }
   /* ── O QUE SE VE DE UMA FOLHA DE BAIXO E A ARESTA, e nao a face ────────────
          ⛔ Elas eram lajes creme empilhadas, e a pilha lia como um bloco macico. O que o olho
@@ -242,13 +357,13 @@
     inset: 0;
     z-index: 0;
     border-radius: 1px;
-    background: hsl(44 calc(12 * 1%) calc(97 * (0.985 - var(--i) * 0.012)));
+    background: hsl(42 calc(48 * 1%) calc(86.3 * (0.985 - var(--i) * 0.012)));
     transform: rotate(calc(var(--i) * 1.1deg))
       translate(calc(var(--i) * 1.5px), calc(var(--i) * 2px));
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.85),
       inset 0 -1px 0 rgba(var(--paper-edge-rgb), 0.3),
-      calc(var(--light-dx) * 1px) 1px 2px rgba(0, 0, 0, 0.4);
+      calc(var(--cast-dx) * 1px) 1px 2px rgba(0, 0, 0, 0.4);
   }
 
   /* A FOLHA — a forma do ato do governo, e ela e a MESMA no provador e na mesa.
@@ -268,6 +383,12 @@
      fracoes do Manual de Redacao sobre esta largura. */
   .sheet {
     --paper: 720px;
+    /* 📐 AS DUAS FOLHAS TINHAM NOVE VAOS VERTICAIS DIFERENTES (0,022 a 0,05 do papel), e ele viu
+       "falta consistencia entre os documentos". Sao tres: dentro do bloco, entre blocos, e antes
+       de titulo ou fecho. O decreto ganha 8,6px de folga no pe com a troca. */
+    --sheet-gap-s: calc(var(--paper) * 0.022);
+    --sheet-gap-m: calc(var(--paper) * 0.032);
+    --sheet-gap-l: calc(var(--paper) * 0.045);
     position: relative;
     width: var(--paper);
     aspect-ratio: 21 / 29.7;
@@ -287,31 +408,47 @@
        ⚠ Esta folha nao e furada nem grampeada: a margem que a norma pede existe para isso. */
     padding: calc(var(--paper) * 0.0673) calc(var(--paper) * 0.1071);
 
+    /* ⛔ O PAPEL NAO SE SELECIONA NEM SE CLICA, ordem dele: "textos estaticos do papel estao
+       permitindo selecao por arraste de mouse e cliques indesejados". A excecao e a
+       assinatura, que e o unico ato que a folha tem. */
+    user-select: none;
+    -webkit-user-select: none;
+
     color: var(--ink-act);
     /* 📗 Calibri ou Carlito. Carlito é a métrica-compatível livre. */
     font-family: Carlito, Calibri, "Segoe UI", system-ui, sans-serif;
-    font-size: calc(var(--paper) * 0.0286);
-    line-height: 1.24;
+    font-size: calc(var(--paper) * 0.0326);
+    /* 📐 1,18 E O QUE CABE: com o brasao, o recuo e o referendo o decreto estourava 99px a 1,24.
+       O "simples" do SEI e o natural da Calibri, 1,22 — 1,18 fica a 3% dele. */
+    line-height: 1.18;
 
     /* ⛔ O FALLBACK NAO E ENFEITE — sem ele a folha fica SEM FUNDO. `var()` sem alternativa
        invalida a DECLARACAO INTEIRA quando a variavel nao existe, e nao so a camada dela: o
        `gabinete.html` nunca escreveu `--fibre`, e a folha perdeu a fibra E o gradiente creme.
        O branco que restava eram as folhas de baixo aparecendo atraves da de cima. */
+    /* ⭐ A COR DO PAPEL SAI DA FOTO: a tira de folha que aparece pela direita da pasta fechada
+       mede hsl(42,4 42% 84,3%) NA TELA. O que estava aqui era hsl(44 12% 97%) — o matiz certo
+       com um quarto da saturacao e 13 pontos de luz a mais.
+       ⛔ E O NUMERO DECLARADO NAO E O DA FOTO, porque a folha leva tres camadas em cima: a
+       fibra, o veu de `::before` e a luz da pasta. Escrevendo a cor medida crua a face chegava
+       a 31% de saturacao contra 42, e o `::before` DOBRAVA a queda do pe — 5,1 pontos de luz
+       contra os 2,6 da foto. Estes vieram de iterar ate a TELA bater: a face sai em
+       hsl(43,6 42% 84,5%) no topo e hsl(41,1 41% 83,3%) no pe, 1 ponto da foto nos dois. */
     background:
       var(--fibre, none),
       linear-gradient(
         168deg,
-        hsl(44 calc(12 * 1%) calc(97 * 1%)),
-        hsl(44 calc(10 * 1%) calc(97 * 0.955%))
+        hsl(43 calc(32 * 1%) calc(90 * 1%)),
+        hsl(40 calc(48 * 1%) calc(93 * 1%))
       );
 
-    /* ⛔ AS CLASSES DA SALA NAO SERVEM AQUI, e o motivo e a escala: a pasta em repouso vale
-       0,408, entao os 2px de contato de `--cast-contact` chegavam a 0,8px na tela e a folha
-       boiava sobre o couro. Estes numeros sao de LAYOUT — 5px viram 2 na tela e 14 viram 5,7 —,
-       e crescem junto quando a pasta sobe, que e o que a sombra de um papel faz. */
+    /* ⛔ UMA SOMBRA DE 2px NAO SERVE AQUI, e o motivo e a escala: a pasta em repouso vale
+       0,408, entao 2px de contato chegam a 0,8 na tela e a folha boia sobre o couro. Estes
+       numeros sao de LAYOUT — 5px viram 2 na tela e 14 viram 5,7 —, e crescem junto quando a
+       pasta sobe, que e o que a sombra de um papel faz. */
     box-shadow:
-      calc(var(--light-dx) * 5px) 5px 8px rgba(0, 0, 0, 0.55),
-      calc(var(--light-dx) * 14px) 14px 28px -6px rgba(0, 0, 0, 0.45);
+      calc(var(--cast-dx) * 5px) 5px 8px rgba(0, 0, 0, 0.55),
+      calc(var(--cast-dx) * 14px) 14px 28px -6px rgba(0, 0, 0, 0.45);
     border-radius: 1px;
     transform: rotate(0deg);
     cursor: pointer;
@@ -383,62 +520,60 @@
   .letterhead {
     text-align: center;
     margin-inline: calc(var(--paper) * -0.1071);
-    margin-bottom: calc(var(--paper) * 0.05);
+    margin-bottom: var(--sheet-gap-l);
   }
-  .emboss {
-    width: 46px;
-    height: 46px;
+  /* ⛔ O RELEVO SECO SAIU: ele mandou os oficios reais da Presidencia, e todos levam o brasao a
+     cores no alto — "a terceira imagem e muito importante para deixar identico a realidade".
+     📐 9,5% da largura da pagina no oficio 736/2022/GPPR (95px em 1000); aqui 9%, porque o
+     corpo do texto e 60% maior que o corpo 12 do papel e a folha nao tem a sobra. */
+  .crest {
+    display: block;
+    width: calc(var(--paper) * 0.09);
+    height: auto;
     margin: 0 auto calc(var(--paper) * 0.012);
   }
-  .emboss svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    stroke: rgba(0, 0, 0, 0.16);
-    fill: none;
-    stroke-width: 0.9;
-    filter: drop-shadow(calc(var(--light-dx) * -1px) -1px 0 rgba(255, 255, 255, 0.95))
-      drop-shadow(calc(var(--light-dx) * 1px) 1px 1px rgba(0, 0, 0, calc(0.16 * 0.7)));
-  }
-  /* 📗 §5.1.1: órgão principal, depois os secundários da maior para a menor
-     hierarquia, entrelinhas simples. */
+  /* 📗 §5.1.1 e os dois oficios dele: o orgao principal em MAIUSCULAS e peso normal, os
+     secundarios em caixa normal, tudo na mesma tinta, entrelinhas simples. */
   /* ⛔ O ESPACAMENTO ENTRE LETRAS SAIU DO PAPEL, e a ordem foi dele: "esse espacamento entre
      as letras tambem ta ruim, eu quero humanizado". Rastreio de tipo e recurso de INTERFACE —
      uma maquina de escrever nao o tem, e o timbre de um oficio sai da propria familia. */
   .letterhead__org {
-    font-size: calc(var(--paper) * 0.0238);
+    font-size: calc(var(--paper) * 0.0271);
     line-height: 1.34;
-    text-transform: uppercase;
   }
   .letterhead__org b {
     display: block;
-    font-weight: 700;
+    font-weight: 400;
+    text-transform: uppercase;
   }
   .letterhead__org span {
     display: block;
-    color: var(--ink-organ);
   }
 
   /* 📗 §5.1.2: tipo por extenso em maiúsculas, "Nº" abreviado, à margem esquerda. */
+  /* 📗 A DATA E A EMENTA VEM NA LINHA SEGUINTE a epigrafe nos dois oficios dele e no Planalto:
+     vao pequeno aqui, e o vao grande fica depois da data. */
   .epigraph {
     font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: calc(var(--paper) * 0.045);
+    margin-bottom: var(--sheet-gap-s);
   }
   /* A ementa recuada à direita, na metade da largura — é o que faz o olho reconhecer
      um ato normativo à distância. */
   .summary {
-    margin: 0 0 calc(var(--paper) * 0.04) 50%;
+    margin: 0 0 var(--sheet-gap-m) 50%;
     text-align: justify;
   }
 
-  /* ⭐ TEXTO CORRIDO, e é escolha dele: o recuo de 2,5 cm que o manual manda empurra
-     cada parágrafo para dentro e a folha fica difícil de varrer. A norma manda; o
-     jogo lê. */
+  /* 📗 O RECUO DE PARAGRAFO E O DO MANUAL (2,5 cm em 21) e dos oficios dele: a primeira linha
+     entra, as outras voltam a margem. O texto corrido de antes foi escolha dele em 09/09; em
+     18/09 ele pediu "identico a realidade", e a realidade recua. */
   .act__body p {
-    margin: 0 0 8px;
+    /* Com recuo, quem separa paragrafo e o recuo: o vao cai para 4px. */
+    margin: 0 0 calc(var(--paper) * 0.006);
+    text-indent: calc(var(--paper) * 0.119);
     text-align: justify;
-    hyphens: auto;
+    hyphens: manual;
   }
 
   /* ⛔ ELE ERA `!important`, e com `@layer` isso INVERTE a ordem das camadas: a declaracao
@@ -446,30 +581,51 @@
      em vez de reforca-la. O que ele resolvia era especificidade — `.act__body p` tem 0,1,1 e
      `.act__enacts` tinha 0,1,0 —, e isso se resolve nomeando o pai. */
   .act__body p.act__enacts {
-    font-weight: 700;
-    margin: calc(var(--paper) * 0.032) 0;
+    margin: var(--sheet-gap-s) 0;
   }
 
-  /* 📗 §5.1.3: local e data à margem DIREITA, mês em minúscula, sem UF, sem zero à
-     esquerda, com ponto-final. E o decreto fecha com os anos da Independência e da
-     República — a conta é ano−1822+1 e ano−1889+1, conferida contra um ato real. */
+  /* 📗 O FECHO DO DECRETO E UM PARAGRAFO, no recuo, como o Planalto publica: local e data, mês
+     em minúscula, e os anos da Independência e da República — a conta é ano−1822+1 e
+     ano−1889+1, conferida contra um ato real. */
   .act__close {
-    margin-top: calc(var(--paper) * 0.042);
-    text-align: right;
+    margin-top: var(--sheet-gap-m);
+    text-indent: calc(var(--paper) * 0.119);
+  }
+
+  /* A EXCECAO DO PONTEIRO: o texto estatico e paisagem, e so o que e ATO responde. ⛔ E sao
+     DOIS, e nao um: a assinatura e as areas protegidas do decreto — `[data-protect]` e o gesto
+     de marcar ministerio, e o passeio pegou as tres reprovas quando eu o calei junto. */
+  .sheet > * {
+    pointer-events: none;
+  }
+
+  .sheet .epigraph,
+  .sheet .signature,
+  .sheet [data-protect] {
+    pointer-events: auto;
   }
 
   .signature {
-    margin-top: calc(var(--paper) * 0.024);
+    margin-top: var(--sheet-gap-s);
     text-align: center;
   }
+  /* ⛔ A LINHA DE ASSINATURA E ORDEM DELE, e o Manual (§5.1.4) nao a pede: "uma linha horizontal
+     embaixo, padronizada em todos os papeis, para que a assinatura fique acima da linha". Ela e a
+     borda da caixa do traco, entao tem a largura dele nas duas folhas, e o traco desce 4 unidades
+     para cruza-la — assinatura de verdade nao flutua sobre a linha.
+     📐 E A CAIXA ENCOLHEU DE 54 PARA 36px: com a rubrica no parecer, o pior mes do passeio
+     estourava a folha em 40px. Os 18px daqui, os 9 do fecho, os 10 dos paragrafos e a linha a
+     menos na abertura dao 117px de folga no mes 1, que e o que 4 linhas a mais custam. */
   .signature svg {
     width: 62%;
-    height: calc(var(--paper) * 0.075);
+    height: calc(var(--paper) * 0.042);
     display: block;
     margin: 0 auto;
     overflow: visible;
+    border-bottom: 1px solid var(--ink-act);
   }
   .signature path {
+    transform: translateY(4px);
     fill: none;
     stroke: var(--ink-sign);
     stroke-width: 1.5;
@@ -486,10 +642,16 @@
     stroke-dashoffset: 0;
     transition: stroke-dashoffset 1100ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
+  /* 📗 O NOME EM MAIUSCULAS E PESO NORMAL, como nos oficios dele; quem referenda vem embaixo
+     em caixa normal, como no DOU. */
   .signature b {
     display: block;
-    font-weight: 700;
+    padding-top: 3px;
+    font-weight: 400;
     text-transform: uppercase;
+  }
+  .act__referendum {
+    display: block;
   }
   /* ⛔ AS OITO MARCAS SAO TEXTO DO ATO, E NAO BOTAO DE TELA. Elas herdavam o botao do painel
      antigo — tinta de interface sobre papel branco —, e o passeio mediu 1,24 de contraste nas
@@ -497,6 +659,7 @@
      ⭐ MARCADA E RABISCADA A CANETA, na mesma tinta da rubrica: o gesto do cargo e circular o
      nome na minuta, e o circulo e torto de proposito — quatro raios diferentes. */
   .act__folders .decree {
+    position: relative;
     padding: 0 calc(var(--paper) * 0.008);
     border: 0;
     background: transparent;
@@ -514,19 +677,39 @@
   .act__folders .decree[aria-pressed="true"] {
     color: var(--ink-sign);
     text-decoration: none;
-    border-radius: 46% 54% 50% 50% / 62% 38% 62% 38%;
-    box-shadow: 0 0 0 1px var(--ink-sign);
   }
 
-  .act__gazette {
+  /* 📐 O CIRCULO FICA FORA DA CAIXA DA PALAVRA: desenhado nela, com padding vertical zero, ele
+     cruzava o P e o a de "Previdencia" e o S e o ç de "Seguranca" na captura a DPR 3. Com 3px
+     acima e abaixo e 5 de cada lado ele passa 4px acima da versal e 3px abaixo da cedilha. */
+  .act__folders .decree[aria-pressed="true"]::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--paper) * -0.004) calc(var(--paper) * -0.007);
+    border: 1px solid var(--ink-sign);
+    border-radius: 46% 54% 50% 50% / 62% 38% 62% 38%;
+    pointer-events: none;
+  }
+
+  /* 📗 O RODAPE E O DO SEI e o do Planalto: pequeno, cinza, na margem de baixo. E o NUP do SEI
+     mora na margem de cima, a direita — os dois estao nos oficios dele. */
+  .sheet__foot,
+  .sheet__protocol {
     position: absolute;
     left: 0;
     right: 0;
+    font-size: calc(var(--paper) * 0.0238);
+    z-index: 2;
+  }
+  .sheet__foot {
     bottom: calc(var(--paper) * 0.03);
     text-align: center;
-    font-size: calc(var(--paper) * 0.0209);
     color: var(--ink-gazette);
-    z-index: 2;
+  }
+  .sheet__protocol {
+    top: calc(var(--paper) * 0.03);
+    right: calc(var(--paper) * 0.1071);
+    text-align: right;
   }
 
   /* ══ O PARECER — a face esquerda da pasta ═══════════════════════════════
@@ -546,19 +729,20 @@
   /* 📗 §5.1.3: local e data a margem DIREITA. */
   .brief__date {
     text-align: right;
-    margin-bottom: calc(var(--paper) * 0.03);
+    margin-bottom: var(--sheet-gap-m);
   }
 
   /* 📗 O VOCATIVO LEVA VIRGULA e vem antes do texto. ⛔ E ele NAO diz "Excelentissimo": o
      Decreto 9.758/2019 vedou o termo, e o Manual de Redacao e de 2018. */
   .brief__vocative {
-    margin-bottom: calc(var(--paper) * 0.022);
+    margin-bottom: var(--sheet-gap-s);
   }
 
   /* 📗 O FECHO E UM DOS DOIS QUE EXISTEM na administracao federal, e para autoridade superior
-     ele e este. Centrado nao: o Manual manda a margem esquerda, com recuo de paragrafo. */
+     ele e este. No recuo de paragrafo, como no oficio 736/2022. */
   .brief__close {
-    margin-top: calc(var(--paper) * 0.024);
+    margin-top: var(--sheet-gap-m);
+    text-indent: calc(var(--paper) * 0.119);
   }
 
   /* 📗 §5.1.4: o cargo vai sob o nome, e sem linha para assinar em cima dele. */
@@ -576,9 +760,10 @@
     text-indent: 0;
   }
 
+  /* 📐 O NUMERO OCUPA O RECUO: "1." na margem e o texto no mesmo 2,5 cm dos outros paragrafos. */
   .brief__mark {
     display: inline-block;
-    width: calc(var(--paper) * 0.032);
+    width: calc(var(--paper) * 0.119);
     font-variant-numeric: tabular-nums;
   }
 
@@ -604,6 +789,7 @@
     background: transparent;
     cursor: pointer;
     transform: rotate(6deg);
+    --cast-turn: 6deg;
     z-index: 2;
   }
 
@@ -625,7 +811,7 @@
       transparent 72%
     );
     filter: blur(10px);
-    transform: translate(calc(var(--light-dx) * 10px), 16px);
+    transform: translate(calc(var(--cast-dx) * 16px), 16px);
     pointer-events: none;
     z-index: 0;
   }
@@ -649,8 +835,8 @@
      `--light-dx`. ⛔ A 0,5 DE ALFA ELAS SUMIAM no jacaranda e o aparelho flutuava — o contato
      vai a 0,88. A penumbra e curta (12px): comprida ela fazia o cordao flutuar junto. */
   .phone__photo {
-    filter: drop-shadow(calc(var(--light-dx) * 2px) 2px 3px rgba(0, 0, 0, 0.88))
-      drop-shadow(calc(var(--light-dx) * 12px) 12px 18px rgba(0, 0, 0, 0.6));
+    filter: drop-shadow(calc(var(--cast-dx) * 2px) 2px 3px rgba(0, 0, 0, 0.88))
+      drop-shadow(calc(var(--cast-dx) * 12px) 12px 18px rgba(0, 0, 0, 0.6));
   }
 
   /* ⭐ O HALO DO TOQUE: a mesma foto por baixo, com a silhueta acesa em ambar, respirando em
@@ -750,6 +936,29 @@
     }
   }
 
+  /* ══ A CANETA ═════════════════════════════════════════════════════════════
+     📗 IMAGEM GERADA por ele (`assets/pen.webp`, 420x42, `CREDITOS.md`): tinteiro preta com
+     guarnicao dourada, tampada, vista de cima. E paisagem — o gesto de assinar e a rubrica.
+     📐 NO VAO ENTRE O PUNHADO E A PASTA, quase em pe: o vao mede 186px na cena (527 → 713) e a
+     caneta tem 210 de comprimento, entao ela so cabe inclinada — a 78 graus ocupa 66px de
+     largura. 210px e 0,61 da capa fechada, que e a razao de uma caneta de 14cm sobre um A4. */
+  .pen {
+    position: absolute;
+    left: 32.4%;
+    top: 52%;
+    width: 210px;
+    height: 21px;
+    margin: -10.5px 0 0 -105px;
+    background: url("/assets/pen.webp") center / 100% 100% no-repeat;
+    --cast-turn: -78deg;
+    transform: rotate(-78deg);
+    /* Redonda e fina: a sombra de contato e curta, e a penumbra e metade da do envelope. */
+    filter: drop-shadow(calc(var(--cast-dx) * 1.5px) 1.5px 2px rgba(0, 0, 0, 0.6))
+      drop-shadow(calc(var(--cast-dx) * 6px) 6px 9px rgba(0, 0, 0, 0.45));
+    pointer-events: none;
+    z-index: 2;
+  }
+
   /* AS CARTAS — um punhado em leque na mesa, e todas iguais.
 
      📗 A FORMA E A DA REFERENCIA: envelope de convite, aba triangular grande descendo do topo,
@@ -776,7 +985,8 @@
        `clip-path` era recortado a 360 e a reducao repetia o degrau com interpolacao dura.
        ⭐ Desenhado no tamanho de exibicao, quem recorta a diagonal e o rasterizador, que
        suaviza. E a cena so encolhe em janela menor que a foto, entao aqui `--fit` vale 1. */
-    --envelope-size: 155px;
+    /* 📐 10% MAIOR, ordem dele em 18/09; e antes 15%, em 17/09. Era 155px. */
+    --envelope-size: 196px;
     /* 📐 MEDIDO NA FOTO, pelos quatro cantos: as duas diagonais da aba se encontram a 55%
        da altura, e o lacre e centrado nesse ponto. */
     --envelope-apex: 55%;
@@ -805,13 +1015,6 @@
     z-index: 2;
   }
 
-  /* O `<svg>` dos filtros nao desenha nada: ele so guarda as definicoes. */
-  .mail__defs {
-    position: absolute;
-    width: 0;
-    height: 0;
-  }
-
   /* ── O ENVELOPE ──────────────────────────────────────────────────────────────
      ⚠ A LUZ VEM DA ESQUERDA, entao a sombra vai para a direita. Reta para baixo, o envelope
      le como adesivo — e a mesma correcao que a pasta ja pagou. */
@@ -826,200 +1029,34 @@
     left: calc(var(--ex) * 40px);
     top: calc(var(--ey) * 62px);
     width: var(--envelope-size);
-    /* 📐 A FOTO DA 1,504, e o envelope real e 1,42: a camera olha de cima e comprime a
-       altura. 1,42 e o C6 (162 x 114 mm), que e o formato de convite. ⛔ Eu vinha usando 1,24,
-       que nao e formato de nada. */
-    height: calc(var(--envelope-size) / 1.42);
-    margin: calc(var(--envelope-size) / -2.84) 0 0 calc(var(--envelope-size) / -2);
+    /* 📐 A RAZAO E A DA FOTO, medida na tinta dela: 1297 x 848. Forcar o C6 de 1,42 esticaria
+       o papel 7,5% na altura, e o grao denuncia. A margem e metade da caixa. */
+    height: calc(var(--envelope-size) / 1.529);
+    margin: calc(var(--envelope-size) / -3.058) 0 0 calc(var(--envelope-size) / -2);
     /* E um `<button>` para a Caixa: o recheio do navegador sai, senao o papel ganha 1px 6px. */
     padding: 0;
     border-radius: calc(var(--envelope-size) * 0.008);
     cursor: pointer;
 
-    /* ⛔ A ALTERNATIVA NAO E ENFEITE: `var()` sem ela invalida a DECLARACAO INTEIRA, e o
-       envelope ficaria sem fundo nenhum. A folha do decreto ja pagou esse defeito.
+    /* ⭐ O ENVELOPE E FOTO, e nao papel calculado. Ordem dele: "todos os elementos de cima da
+       mesa serao coisas reais, imagens por IA". Sairam com o desenho: as duas abas
+       recortadas, o lacre em `<svg>` com quatro degraus de cera, o feltro, a barriga do papel
+       e o brilho — a foto ja traz tudo isso, e traz de verdade.
+       ⚠ A CARTA QUE VENCE E OUTRA FOTO, e nao um tom: num papel vermelho um lacre vermelho
+       some, e a foto rubra ja veio com a cera escura. */
+    background: url("/assets/envelope.webp") center / 100% 100% no-repeat;
 
-       ⚠ O FELTRO ENTRA EM `multiply`, que e o unico modo em que ele escurece a fibra em vez de
-       lavar a cor. Chapado por cima, ele clareava o papel inteiro. */
-    /* ⭐ A CURVATURA — papel nao e chapa. O envelope cede um pouco no meio, e essa barriga
-       pega mais luz que as bordas. E a diferenca entre um retangulo e uma folha pousada. */
-    background:
-      var(--felt, none),
-      linear-gradient(
-        152deg,
-        rgba(0, 0, 0, 0.05) 0,
-        rgba(255, 255, 255, calc(0.05 * 1.6)) 42%,
-        rgba(0, 0, 0, 0.05) 100%
-      ),
-      radial-gradient(
-        140% 110% at 18% 8%,
-        rgba(255, 255, 255, var(--envelope-sheen, 0.13)),
-        transparent 70%
-      ),
-      /* ⛔ ELES ERAM `color-mix()`, e a guarda `tokens` o proibe: na tela ele diverge de
-         `rgba()` em 1/255, e 21 de 21 capturas sairam deslocadas por isso. O claro e o escuro
-         viram camadas de luz e sombra por cima da cor, que e a mesma conta sem a divergencia. */
-        linear-gradient(152deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.13)),
-      linear-gradient(var(--envelope-tone), var(--envelope-tone));
-    background-blend-mode: multiply, soft-light, screen, screen, normal;
-    /* ⚠ O FELTRO ACOMPANHA A PECA, e nao a tela: com o envelope desenhado a 360 e reduzido a
-       0,36, um grao de 128px chegaria a tela com 46 — o papel viraria lixa. */
-    background-size:
-      calc(var(--envelope-size) * 0.99) auto,
-      cover,
-      cover,
-      cover,
-      cover;
-
-    /* ⚠ AS DUAS SOMBRAS DA SALA, na classe "envelope". ⛔ ELAS ERAM TRES, com alfas de 0,5,
-       0,3 e 0,45 — tres luzes sobre uma mesa que tem UMA, e e por isso que a peca lia como
-       adesivo escuro sobre a madeira. As arestas seguem a mesma luz: cima e esquerda claras. */
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, var(--envelope-lip, 0.55)),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15),
-      inset 1px 0 0 rgba(255, 255, 255, 0.14),
-      inset -1px 0 0 rgba(0, 0, 0, 0.1),
-      var(--cast-contact),
-      var(--cast-thin);
+    /* ⛔ E ELAS CAIAM A 33,8 GRAUS DA VERTICAL contra os 19,8 da sala: o filtro resolve no
+       espaco da peca, e cada carta do punhado tem o seu proprio `--er`. */
+    --cast-turn: var(--er, -14deg);
+    /* ⚠ SEGUE O ALFA, e nao a caixa: o lacre faz barriga fora do retangulo do papel, e uma
+       `box-shadow` desenharia o retangulo em volta dele. `drop-shadow` nao tem espalhamento,
+       entao o -8px da penumbra virou 16 de desfoque no lugar de 24. */
+    filter: drop-shadow(calc(var(--cast-dx) * 2px) 2px 4px rgba(0, 0, 0, 0.5))
+      drop-shadow(calc(var(--cast-dx) * 10px) 10px 16px rgba(0, 0, 0, 0.4));
 
     transform: rotate(var(--er));
     transform-origin: 50% 50%;
-  }
-
-  /* ── AS DUAS ABAS ────────────────────────────────────────────────────────────
-     ⛔ ELAS ERAM `<path>` COM TRACO FINO, e de perto o envelope virava um X desenhado. Cada
-     aba agora e uma FORMA recortada: ela tem luz propria e projeta sombra na de baixo, que e
-     o que faz papel dobrado parecer papel dobrado. */
-  .envelope__back,
-  .envelope__edge,
-  .envelope__flap {
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-  }
-
-  /* A DE BAIXO — sobe do fundo e fica POR BAIXO da de cima. Mais escura, porque a luz vem de
-     cima e ela e a que recebe sombra. */
-  .envelope__back {
-    clip-path: polygon(0 100%, 100% 100%, 50% var(--envelope-apex));
-    background: linear-gradient(
-      2deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(var(--envelope-ink-rgb), var(--back-dark, 0.075))
-    );
-    /* ⛔ ELA NAO TINHA ARESTA NENHUMA, e na foto as duas costuras sao NITIDAS. Sem isso o
-       triangulo de baixo era so uma mancha mais escura. */
-    filter: drop-shadow(
-      0 calc(var(--envelope-size) * -0.004) calc(var(--envelope-size) * 0.005)
-        rgba(var(--envelope-ink-rgb), 0.5)
-    );
-  }
-
-  /* ⭐ A ARESTA DO CORTE — a franja que sobra quando a aba tem o bico um degrau mais alto, e o
-     que se ve nela e o corte do papel pegando a luz da janela.
-     ⛔ Sem ela a diagonal era so uma sombra, e papel cortado tem os DOIS: a aresta clara em
-     cima e a sombra embaixo. */
-  .envelope__edge {
-    /* ⛔ ELA ERA O TRIANGULO INTEIRO, e a aba nao a escondia: a aba e semitransparente, entao
-       o branco atravessava e LAVAVA a metade de cima. No papel branco isso nao aparecia —
-       branco sobre branco —, e no rubro, que so agora chegou a tela, a aba saia rosa.
-       ⛔ A FRANJA ERA 1,1% DA ALTURA, e isso e RELATIVO: num envelope de 700px ela saia com
-       5,4px e virava uma faixa branca. Aresta de papel tem a mesma espessura em qualquer
-       tamanho, entao ela e fixa. */
-    clip-path: polygon(
-      0 0,
-      50% calc(var(--envelope-apex) + 1.6px),
-      100% 0,
-      50% var(--envelope-apex)
-    );
-    background: rgba(255, 255, 255, var(--cut-a, 0.62));
-  }
-
-  /* A DE CIMA — a grande, a que o lacre fecha. As duas sombras dao a espessura: a curta e a
-     aresta do papel, a larga e o vao entre a aba e o corpo.
-     ⭐ E A DOBRA DO TOPO E A TERCEIRA CAMADA, pedida por ele: na referencia o papel vira sobre
-     si mesmo na borda de cima, e essa curva pega sombra. Sem ela a aba nasce colada, e o
-     envelope le como um triangulo pintado em cima de um retangulo. */
-  .envelope__flap {
-    clip-path: polygon(0 0, 100% 0, 50% var(--envelope-apex));
-    background:
-      linear-gradient(
-        180deg,
-        rgba(var(--envelope-ink-rgb), 0.3) 0,
-        rgba(var(--envelope-ink-rgb), calc(0.3 * 0.35)) 3%,
-        transparent calc(3% + 3%)
-      ),
-      linear-gradient(
-        152deg,
-        rgba(255, 255, 255, var(--flap-light, 0.075)),
-        rgba(var(--envelope-ink-rgb), var(--flap-dark, 0.035))
-      );
-    /* ⛔ OS DESLOCAMENTOS ERAM ABSOLUTOS — 0,5px e 1px —, e num envelope de 470px eles somiam:
-       a aba virava um X de tinta sem espessura nenhuma. Agora eles saem de `--envelope-size`, e a
-       aresta tem o mesmo peso em qualquer tamanho. */
-    filter: drop-shadow(
-        calc(var(--light-dx) * var(--envelope-size) * 0.012) calc(var(--envelope-size) * 0.012)
-          calc(var(--envelope-size) * 0.008) rgba(var(--envelope-ink-rgb), 0.92)
-      )
-      drop-shadow(
-        calc(var(--light-dx) * var(--envelope-size) * 0.02) calc(var(--envelope-size) * 0.02)
-          calc(var(--envelope-size) * 0.055) rgba(var(--envelope-ink-rgb), 0.5)
-      );
-  }
-
-  /* ── O LACRE DE CERA ─────────────────────────────────────────────────────────
-     📐 Medido na referencia: 19% da largura do envelope, centrado no bico da aba. */
-  .envelope__seal {
-    position: absolute;
-    left: 50%;
-    top: var(--envelope-apex);
-    width: 20%;
-    aspect-ratio: 1;
-    transform: translate(-50%, -50%) rotate(-7deg);
-    overflow: visible;
-    pointer-events: none;
-    /* A SOMBRA QUE A CERA JOGA NO PAPEL, e ela e da sala: contato e uma penumbra curta, porque
-       o domo tem 2mm. Fica no `<svg>` e nao no anel, senao o filtro do domo a deformaria junto
-       com a silhueta — e antes ela caia para a direita a 0,55, sozinha. */
-    filter: drop-shadow(calc(var(--light-dx) * 1px) 1px 1px rgba(0, 0, 0, 0.5))
-      drop-shadow(calc(var(--light-dx) * 3px) 3px 4px rgba(0, 0, 0, 0.35));
-  }
-
-  /* O ANEL — a cera que escorreu por fora do carimbo. Ele leva o filtro inteiro: silhueta
-     deformada, mapa de altura e o especular por ponto de luz. */
-  .seal__ring {
-    fill: var(--wax-body);
-    filter: url("#wax");
-  }
-
-  /* O DISCO — o que o carimbo afundou. Fosco, e com uma borda escura que e o degrau: sem
-     ela o anel e o disco liam como uma peca so, e na foto a separacao e nitida. */
-  .seal__disc {
-    fill: var(--wax-disc);
-    stroke: var(--wax-deep);
-    stroke-width: 2.6;
-    stroke-opacity: 0.55;
-    filter: url("#wax-matte");
-  }
-
-  /* ⭐ A PAREDE DO REBAIXO, e ela e um ARCO e nao um circulo: a luz vem de cima e da esquerda,
-     entao o degrau pega sombra em cima e devolve luz embaixo. Um circulo inteiro escuro dava
-     uma rosquinha; meio arco de cada lado da profundidade. */
-  .seal__step {
-    fill: none;
-    stroke: var(--wax-deep);
-    stroke-width: 3.4;
-    stroke-opacity: 0.5;
-    stroke-linecap: round;
-  }
-
-  .seal__gleam {
-    fill: none;
-    stroke: var(--wax-crest);
-    stroke-width: 2.4;
-    stroke-opacity: 0.42;
-    stroke-linecap: round;
   }
 
   /* ⚠ QUEM DECIDE ISTO E `silences`, e nao a folha: o vermelho so aparece nos envelopes que o
@@ -1029,22 +1066,6 @@
      vence nunca ficava vermelha, e nada falhava — seletor que nao casa nao e erro para
      ninguem. E o segundo desta familia na mesma mesa, depois de `data-assinado`. */
   .envelope[data-urgent="true"] {
-    --envelope-tone: var(--urgent-cover);
-    /* ⚠ A CERA ESCURECE, e nao clareia: num papel vermelho um lacre vermelho some, e um lacre
-       claro leria como adesivo. O que sobra e a cera velha, que e mais escura que o papel. */
-    --wax-crest: var(--urgent-crest);
-    --wax-body: var(--urgent-body);
-    --wax-disc: var(--urgent-disc);
-    --wax-deep: var(--urgent-deep);
-    --envelope-lip: 0.22;
-    --envelope-sheen: 0.13;
-    /* ⛔ A ARESTA DO CORTE A 0,62 DE BRANCO VIRA ROSA sobre o papel rubro, e o triangulo da aba
-       ficava com outra cor. No vermelho ela clareia um terco. */
-    --cut-a: 0.26;
-    /* No papel vermelho o branco da aba vira rosa: ela clareia menos e escurece mais. */
-    --flap-light: 0.022;
-    --flap-dark: 0.055;
-    --back-dark: 0.12;
-    --envelope-ink-rgb: var(--urgent-ink-rgb);
+    background-image: url("/assets/envelope-urgent.webp");
   }
 }

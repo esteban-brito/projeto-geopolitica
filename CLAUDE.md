@@ -102,8 +102,9 @@ handoff, e a pesquisa 09 é o checklist do cargo.
 
 ✔ **Base de 31/08, nenhuma executada:** o email leva até a tela · o save fica para
 depois · o piso da saúde e da educação anda com a receita (remede a série) · a votação olha
-quem compareceu (4 regras de equilíbrio). Sobram: rolagem abaixo de 940px, por onde começar
-o "menos texto, mais visual", e as duas cartas sem número.
+quem compareceu (4 regras de equilíbrio). Sobram: por onde começar o "menos texto, mais
+visual", e as duas cartas sem número. ✔ **A rolagem abaixo de 940px saiu em 16/09** — o
+limiar virou largura (1181px) e o que sobra dela é o layout estreito, no handoff.
 ⛔ **IA por API: NÃO (04/09).** Nem em partida nem fora dela; a "IA" é o avaliador (§4 da 07).
 ⚠ **Caixa e Gabinete têm um vocabulário só** (`annex.mjs`, guarda `annexes`); tabela nas duas
 telas reprova. **Número de catálogo envelhece na prosa** — meça antes de repetir.

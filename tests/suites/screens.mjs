@@ -19,6 +19,7 @@ import { alarm, left } from "../../src/application/mail.mjs";
 import { describeMail, describeMonth, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
 import { vitalsHtml } from "../../src/ui/screens/dashboard.mjs";
 import { addressed } from "../../src/ui/strings.mjs";
+import { nupCheck, protocolOf } from "../../src/ui/shared/protocol.mjs";
 import {
   boilerOf,
   governmentOf,
@@ -1636,4 +1637,18 @@ test("A CARTA DO PLENARIO LE O PLACAR DO CARTAO DO MESMO MES", () => {
   /* AUSENTE E DECLARADO: sem votacao, e sem cartao, nao ha bloco. */
   assert.ok(!render([mes(9, null)]).includes(UI.inbox.blockPlenary), "mes sem votacao deu placar");
   assert.ok(!render([]).includes(UI.inbox.blockPlenary), "sem cartao a carta inventou um placar");
+});
+
+/* 📗 OS DOIS OFICIOS REAIS QUE ELE MANDOU sao a prova da conta do digito: 736/2022/GPPR leva o NUP
+   00037.002019/2022-97 e 986/2021/GPPR leva 00001.008493/2021-59. A regra (Portaria MJ/MP 11/2019)
+   reproduz os dois; uma conta inventada nao reproduz nenhum. */
+test("O DIGITO DO NUP REPRODUZ OS DOIS OFICIOS REAIS DA PRESIDENCIA", () => {
+  assert.equal(nupCheck("000370020192022"), "97");
+  assert.equal(nupCheck("000010084932021"), "59");
+  const first = protocolOf(0);
+  assert.equal(first.number, 1);
+  assert.match(first.nup, /^00001\.000001\/\d{4}-\d{2}$/);
+  /* O treze e o segundo mes do segundo ano: EM numero 2, e o ano anda. */
+  assert.equal(protocolOf(13).number, 2);
+  assert.equal(protocolOf(13).year, first.year + 1);
 });

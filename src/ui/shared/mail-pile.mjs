@@ -29,69 +29,10 @@ const FALL = [
   { x: -0.28, y: -0.72, r: 30 },
 ];
 
-/* ⭐ O LACRE EM DUAS PECAS: um ANEL de cera derramada por fora e um DISCO REBAIXADO por
-   dentro, onde o carimbo apertou. Chapado numa peca so, ele saiu botao.
-   ⚠ E OS `id` MORAM NUM `<svg>` SO: um filtro por envelope repetiria o `id`, e ai o primeiro
-   venceria para todos os oito — sem erro nenhum no console. */
-const DEFS =
-  `<svg class="mail__defs" aria-hidden="true"><defs>` +
-  /* O domo: a silhueta escorre, o desfoque do alfa vira mapa de altura, o especular le esse
-     mapa e o brilho volta recortado na silhueta. */
-  `<filter id="wax" x="-30%" y="-30%" width="160%" height="160%">` +
-  `<feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="11"` +
-  ` result="wave"/>` +
-  `<feDisplacementMap in="SourceGraphic" in2="wave" scale="4.6"` +
-  ` xChannelSelector="R" yChannelSelector="G" result="shape"/>` +
-  `<feGaussianBlur in="shape" stdDeviation="2.6" result="height"/>` +
-  /* ⛔ COM `specularConstant` EM 0,62 O ANEL INTEIRO ACENDIA e o disco virava um buraco. O
-     brilho tem de ser um ARCO na crista: constante baixa e expoente alto. */
-  `<feSpecularLighting in="height" surfaceScale="3" specularConstant="0.3"` +
-  ` specularExponent="34" lighting-color="#fff0e6" result="lit">` +
-  /* A luz e a da sala, a mesma de todo relevo da mesa: azimute 250 (20 graus a esquerda de
-     cima), elevacao 52. Era um ponto de luz proprio, e o lacre era a unica peca com luz sua. */
-  `<feDistantLight azimuth="250" elevation="52"/>` +
-  `</feSpecularLighting>` +
-  `<feComposite in="lit" in2="shape" operator="in" result="onWax"/>` +
-  `<feComposite in="onWax" in2="shape" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"` +
-  ` result="dome"/>` +
-  `<feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="3" seed="5" result="g"/>` +
-  `<feColorMatrix in="g" type="matrix" values="` +
-  `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.17 0 0 0 0" result="grainA"/>` +
-  `<feComposite in="grainA" in2="shape" operator="in" result="grainOnWax"/>` +
-  `<feBlend in="dome" in2="grainOnWax" mode="multiply"/>` +
-  `</filter>` +
-  /* O grao sozinho, para o disco: ele nao leva a deformacao — se levasse, a borda entre o
-     anel e o disco tremeria e os dois deixariam de ser concentricos. */
-  `<filter id="wax-matte" color-interpolation-filters="sRGB">` +
-  `<feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="3" seed="5" result="g"/>` +
-  `<feColorMatrix in="g" type="matrix" values="` +
-  `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.15 0 0 0 0" result="a"/>` +
-  `<feComposite in="a" in2="SourceGraphic" operator="in" result="inside"/>` +
-  `<feBlend in="SourceGraphic" in2="inside" mode="multiply"/>` +
-  `</filter>` +
-  `</defs></svg>`;
-
-/* ⚠ SO O ANEL LEVA A DEFORMACAO: com o disco dentro do mesmo filtro, a borda entre os dois
-   tremia junto e os dois deixavam de ser concentricos.
-   ⭐ E OS DOIS ARCOS SAO O DEGRAU: sombra no alto, reflexo embaixo. Um circulo escuro inteiro
-   dava uma rosquinha. */
-const SEAL =
-  `<svg class="envelope__seal" viewBox="0 0 100 100" aria-hidden="true">` +
-  `<circle class="seal__ring" cx="50" cy="50" r="46"/>` +
-  `<circle class="seal__disc" cx="50" cy="50" r="33"/>` +
-  `<path class="seal__step" d="M17 50 A33 33 0 0 1 83 50"/>` +
-  `<path class="seal__gleam" d="M20 58 A33 33 0 0 0 80 58"/>` +
-  `</svg>`;
-
-/* ⛔ AS ABAS ERAM `<path>` COM TRACO FINO, e de perto o envelope virava um X desenhado. Cada
-   uma e uma FORMA recortada: tem luz propria e projeta sombra na de baixo.
-   ⭐ E O CORTE E A TERCEIRA PECA: o mesmo triangulo da aba com o bico um degrau mais baixo e
-   claro. O que sobra e a ARESTA do papel pegando luz, e na foto e ela que separa a aba do
-   corpo, antes da sombra. */
-const PAPER =
-  `<div class="envelope__back"></div><div class="envelope__edge"></div>` +
-  `<div class="envelope__flap"></div>` +
-  SEAL;
+/* ⛔ O LACRE, AS ABAS E OS DOIS FILTROS DE CERA SAIRAM COM A FOTO. Eram um `<svg>` de quatro
+   peças com `feTurbulence`, `feDisplacementMap` e `feSpecularLighting`, mais três `<div>` de
+   aba recortada. Ordem dele: "todos os elementos de cima da mesa serao coisas reais, imagens
+   por IA". A cera, a dobra e o grão vêm na foto, e vêm de verdade. */
 
 /**
  * O PUNHADO — todas iguais, e so a cor separa os dois estados.
@@ -126,11 +67,10 @@ export function mailPileHtml({ letters }) {
         `${letter.urgent ? ' data-urgent="true"' : ""}` +
         ` aria-label="${letter.urgent ? UI.envelope.due : UI.envelope.waiting}"` +
         ` style="--ex:${where.x};--ey:${where.y};--er:${where.r}deg">` +
-        PAPER +
         `</button>`
       );
     })
     .join("");
 
-  return DEFS + pile;
+  return pile;
 }

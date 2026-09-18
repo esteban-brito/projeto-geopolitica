@@ -16,12 +16,15 @@
 
   /* As outras sete telas continuam com a casca elástica e a página rolando, que é o certo
      enquanto o conteúdo delas não tiver teto medido.
-     ⚠ E O LIMIAR DE ALTURA FALTAVA: a regra valia em QUALQUER janela, e o Gabinete pede 940px
-     para os quatro cartões caberem. Entre 720 e 939px ela fazia exatamente o que a linha
-     seguinte recusa fazer no telefone — esconder um cartão inteiro atrás de uma dobra muda,
-     com a página sem crescer um pixel e o portão verde ao lado.
-     Numa janela de 390px, travar a altura esconderia metade do Gabinete sem nada que avisasse. */
-  @media (min-height: 940px) {
+     ⛔ E O LIMIAR ERA `min-height: 940px`, escrito para quatro cartões de vidro que não
+     existem mais: a mesa de hoje nunca cabia embaixo dele. A 1366×768 a página rolava 211px,
+     a pasta era cortada em 15,9px, o envelope entrava 39,5px sob o rail e a folha cobria
+     11,7px do telefone — `--fit` lia 821px de altura de área em toda janela, e a cena, que só
+     sabe encolher, nunca encolhia.
+     ⭐ HOJE O LIMIAR É DE LARGURA, e é a mesma em que `.rail` vira faixa no topo: acima dela a
+     mesa tem o arranjo para o qual foi desenhada, e travar a altura só a faz encolher. Abaixo,
+     travar esconderia metade do Gabinete sem nada que avisasse. */
+  @media (min-width: 1181px) {
     .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) {
       height: 100dvh;
     }

@@ -52,6 +52,11 @@ const RUNTIME = new Set([
   "--furrow-v",
   "--envelope-size",
   "--envelope-apex",
+  /* --sheet-gap-s, -m e -l  os tres vaos verticais da folha, fracoes de `--paper` como as
+     medidas do envelope sao de `--envelope-size`. */
+  "--sheet-gap-s",
+  "--sheet-gap-m",
+  "--sheet-gap-l",
   "--stroke-len",
   /* ── E a que a bancada da mesa girava: --rest, que o JS le no voo da pasta. */
   "--rest",

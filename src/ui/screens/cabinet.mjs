@@ -115,16 +115,28 @@ export function cabinetHtml(input) {
        baixo da interface em vez de terminar contra ela. */
     `<div class="folder">` +
     /* ⭐ AS DUAS SOMBRAS SAO CAMADAS PRONTAS, e o voo so cruza a opacidade delas. */
-    `<i class="folder__cast" data-cast="rest"></i>` +
     `<i class="folder__cast" data-cast="lift"></i>` +
+    /* ⭐ A PASTA ABERTA E UMA CAMADA, e nao o fundo de `.folder`: fechada, o couro aberto com
+       lombada e cantoneiras aparecia POR BAIXO da capa — uma pasta aberta com outra fechada
+       dentro. Ela cruza opacidade com a capa, no mesmo `t` das sombras. */
+    `<i class="folder__open"></i>` +
+    /* ⭐ A FOLHA QUE VIRA — e ela e UMA peca com duas faces: o parecer na frente e a capa
+       fechada no verso. Fechada, o verso cobre o ato; aberta, ele fica de costas para a mesa.
+       ⚠ A CAPA NAO E DESENHADA, E FOTO: `assets/folder-closed.webp`, a mesma pasta da aberta,
+       e o corpo dela bate a aba direita da aberta em 0,71%. */
+    `<div class="folder__leaf">` +
     /* ⭐ A FACE ESQUERDA E O PARECER, e nao couro vazio: uma pasta de despacho tem o que te
        explica de um lado e o que voce assina do outro. O "boletim" do ciclo 25 nao existe no
        governo real — o que existe e a exposicao de motivos, e ela mora aqui. */
     briefHtml(input.brief) +
-    `<div class="stack">${under}${decreeHtml(input)}</div>` +
+    `<i class="folder__cover"></i>` +
+    `</div>` +
+    `<div class="stack">${under}${decreeHtml({ ...input, chief: input.brief.chief })}</div>` +
     `</div>` +
     `<div class="mail">${mailPileHtml(input)}</div>` +
     phoneHtml(input) +
+    /* A CANETA E PAISAGEM: nao responde ao ponteiro e nao le por som. */
+    `<div class="pen" aria-hidden="true"></div>` +
     `</div>` +
     `</section>`
   );
@@ -200,10 +212,13 @@ function fitDesk(root) {
   scale(area);
 }
 
-/* 📐 QUANTO DA ALTURA VISIVEL A PASTA ERGUIDA OCUPA. Os 14% que sobram sao a folga que
-   impede o corte: a cena e cortada e nao encolhida, entao numa janela larga a mesa tem mais
-   altura do que se ve dela. */
-const READING = 0.86;
+/* 📐 QUANTO DA ALTURA VISIVEL A PASTA ERGUIDA OCUPA. O que sobra e a folga que impede o corte:
+   a cena e cortada e nao encolhida, entao numa janela larga a mesa tem mais altura do que se ve
+   dela.
+   ⛔ E ERA 0,86, que deixava o corpo do ato em 10,5px na tela a 1440x980 — ele viu: "o texto nao
+   esta tao bem visivel e parece que as letras estao meio cortadas". A 10px o antialiasing come a
+   haste, e nao ha filtro que conserte tamanho. */
+const READING = 0.9;
 
 /** @type {((seen: number) => void) | null} a calibragem do voo da pintura em curso */
 let tune = null;
@@ -232,6 +247,12 @@ function scale(area) {
      repintada nascia sem `--phone-x` — o telefone ia para -271px e ficava la depois de largar. */
   const seenRight = (DESIGN.width + area.clientWidth / fit) / 2;
   room.style.setProperty("--phone-x", `${(seenRight - 220).toFixed(1)}px`);
+
+  /* ⛔ E A BEIRA DA ESQUERDA NAO LEVA A MESMA CONTA, medido: o punhado fecha 217px de leque e
+     entre o rail e a pasta cabem 198,7 — ele nao cabe por 18,3. Ancorar o envelope na beira
+     visivel tirou os 8,1px que ele entrava sob o rail e devolveu 2,9 de carta POR BAIXO DA
+     PASTA, que o passeio pegou em 6 dos 24 meses. O sangramento pela beira e escolha, e nao
+     descuido: o transbordo vai para a aresta da cena em vez de ir para cima do ato. */
 
   /* ⛔ E O TAMANHO DE LEITURA NAO SE DEDUZ: ele depende da altura que sobrou depois do corte,
      e a pasta mora numa arvore 3D inclinada — a altura dela na tela nao e a de layout vezes a
@@ -333,16 +354,28 @@ function armFlight(root) {
     rest: num("--rest", 0.5),
     rise: num("--lift-rise", 0.8),
   };
-  const onDesk = folder.querySelector('[data-cast="rest"]');
   const inHand = folder.querySelector('[data-cast="lift"]');
+  const leaf = folder.querySelector(".folder__leaf");
+  const spread = folder.querySelector(".folder__open");
+  const pile = folder.querySelector(".stack");
 
   /* ⭐ TODO TERMO E LINEAR EM `t` — e e isso que deixa o voo inteiro ir para o compositor: com
      `dx*t`, `rotate(turn*(1-t))` e `scale(rest+(rise-rest)*t)`, dois quadros-chave e a curva
      analitica no `easing` reproduzem exatamente o mesmo caminho que o laco desenhava. */
+  /* ⭐ FECHADA, A PASTA OCUPA A METADE DIREITA DA CAIXA ABERTA, e por isso o repouso anda: o
+     `left: 47%` centra a caixa ABERTA, e a peca fechada mora um quarto dela a direita desse
+     centro. Os 25% sao percentagem da propria caixa, entao a conta se refaz sozinha se o vao
+     ou a moldura mudarem — em px ela viraria a terceira copia da medida. */
   /** @param {number} t */
   const shape = t =>
     `translate(-50%, -50%) translate(${aim.dx * t}px, ${aim.dy * t}px)` +
-    ` rotate(${aim.turn * (1 - t)}deg) scale(${aim.rest + (aim.rise - aim.rest) * t})`;
+    ` rotate(${aim.turn * (1 - t)}deg) scale(${aim.rest + (aim.rise - aim.rest) * t})` +
+    ` translateX(${-25 * (1 - t)}%)`;
+
+  /* ⭐ E A DOBRA E O MESMO `t`: pegar a pasta ABRE ela, e isso e um gesto so. Termo linear,
+     entao o voo inteiro continua indo para o compositor em dois quadros-chave. */
+  /** @param {number} t */
+  const fold = t => `rotateY(${180 * (1 - t)}deg)`;
 
   /* ⛔ A SOMBRA DE ALTURA NUNCA CHEGA A ZERO, e o 0,001 e o item inteiro: em `opacity: 0` o
      navegador descarta a textura, e a primeira subida pagava 75ms para a GPU alocar os 132px de
@@ -357,20 +390,23 @@ function armFlight(root) {
        de contato APAGA e a de altura CRESCE. ⭐ E elas se CRUZAM em opacidade em vez de a
        sombra ser reescrita por quadro: reescrever repinta a peca inteira, e a medicao deu 13
        fps de diferenca — 156,8 contra 143,8 no mesmo laco. */
-    if (onDesk instanceof HTMLElement) onDesk.style.opacity = String(Math.max(FLOOR, 1 - t));
     if (inHand instanceof HTMLElement) inHand.style.opacity = String(Math.max(FLOOR, t));
+    if (leaf instanceof HTMLElement) leaf.style.transform = fold(t);
+    if (spread instanceof HTMLElement) spread.style.opacity = String(Math.max(FLOOR, t));
+    /* ⛔ PASTA FECHADA NAO MOSTRA PAPEL, e cobrir nao e esconder: a capa inflada para tapar a
+       pilha arrastava a franja do recorte para dentro da tela. A pilha apaga, e a capa volta a
+       ter o tamanho da foto. */
+    if (pile instanceof HTMLElement) pile.style.opacity = String(Math.max(FLOOR, t));
   };
 
   /* ⚠ AS TRES PECAS ANDAM NA MESMA CURVA E NO MESMO TEMPO: separadas, a sombra de contato
      apagaria num compasso e a peca subiria noutro, e o olho le isso como duas coisas. */
   const parts = () => [
     { node: folder, key: "transform", of: shape },
-    {
-      node: onDesk,
-      key: "opacity",
-      of: (/** @type {number} */ t) => String(Math.max(FLOOR, 1 - t)),
-    },
     { node: inHand, key: "opacity", of: (/** @type {number} */ t) => String(Math.max(FLOOR, t)) },
+    { node: leaf, key: "transform", of: fold },
+    { node: spread, key: "opacity", of: (/** @type {number} */ t) => String(Math.max(FLOOR, t)) },
+    { node: pile, key: "opacity", of: (/** @type {number} */ t) => String(Math.max(FLOOR, t)) },
   ];
 
   /**
@@ -467,6 +503,7 @@ function armFlight(root) {
     if (target.closest(".folder") === null) {
       if (lifted) {
         lifted = false;
+        folder.dataset["open"] = "false";
         move(0, DROP);
       }
       return;
@@ -477,6 +514,7 @@ function armFlight(root) {
          faria um clique so erguer e marcar. */
       event.stopPropagation();
       lifted = true;
+      folder.dataset["open"] = "true";
       move(1, LIFT);
       return;
     }

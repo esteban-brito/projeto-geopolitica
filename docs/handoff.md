@@ -17,7 +17,241 @@
 
 ## ▶ COMECE POR AQUI
 
-### ✔ Estado — 16/09/2026 00:15 (portão verde, commitado)
+### ▶ Estado — 18/09/2026 02:40 (portão verde, NÃO commitado — ele vai commitar)
+
+✔ **A CANETA ESTÁ NA MESA** (`assets/pen.webp`, 420×42, 7 KB, imagem dele): no vão entre o punhado
+e a pasta, a −78°, 210px de comprimento — 0,61 da capa fechada, a razão de uma caneta de 14cm sobre
+um A4. Paisagem: `pointer-events: none`, `aria-hidden`. Receita dos envelopes (`tmp/assar-caneta.mjs`).
+⚠ **A bandeirinha fica para amanhã** — ele ainda não gerou. Portão: **13 guardas · 66 sintéticas ·
+332 provas · passeio verde** (dois passeios seguidos verdes; um `validate` deu 5 achados enquanto o
+Gemini rodava navegador — contenção da máquina, a de sempre).
+
+---
+
+### ✔ Estado anterior — 18/09/2026 02:10 (portão verde, NÃO commitado)
+
+⭐ **CARTA BRANCA DELE (18/09): "o mais realista possível, e sempre padronizado".** Com ela: (1)
+**hifenização saiu** (`hyphens: manual`) — documento do SEI não hifeniza; custou 7px de folga em
+cada folha (parecer 90,4, decreto 32,1); (2) **o NUP tem o dígito real** — `protocol.mjs`, módulo 11
+da Portaria MJ/MP 11/2019, **provado contra os dois ofícios dele**: 00037.002019/2022 → 97 e
+00001.008493/2021 → 59; (3) a minuta leva o mesmo NUP no alto, no mesmo processo da EM. Portão:
+**13 guardas · 66 sintéticas · 332 provas · passeio verde**.
+
+---
+
+### ✔ Estado anterior — 18/09/2026 01:40 (portão verde, NÃO commitado)
+
+✔ **OS DOIS PAPÉIS FORAM REFEITOS NA FORMA DOS OFÍCIOS REAIS** que ele mandou (ofícios 736/2022 e
+986/2021 do GPPR, e o brasão a cores): `brief.mjs`, `decree.mjs`, `strings.mjs`, `46-desk.css`,
+`assets/brasao.webp` novo (192px, 31 KB). `npm run validate` verde: **13 guardas · 66 sintéticas ·
+331 provas · passeio verde**. ⚠ Um `validate` deu "1 achado" no passeio enquanto o Gemini media
+no navegador; o seguinte, sozinho, passou — é a contenção da porta 5201, já conhecida.
+
+| o quê              | como ficou                                                                                                                                                                                                                        |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| timbre             | brasão a cores, **9% da largura** (real: 9,5%); PRESIDÊNCIA em caixa alta e peso normal, o resto em caixa normal                                                                                                                  |
+| parecer            | NUP no alto à direita, `EM nº 00001/2027 CC`, data à direita, parágrafos **numerados do 1** com o número na margem e o texto no recuo de 2,5 cm, fecho no recuo, rodapé do SEI                                                    |
+| decreto            | `DECRETO Nº 12.600, DE …` (série real, `FIRST_DECREE`), ementa "Dispõe sobre…" a 50%, preâmbulo com art. 84 IV e art. 8º da LRF, `DECRETA:`, fecho no recuo, **referendo da ministra** sob o presidente, rodapé "DOU de 5.1.2027" |
+| assinatura         | nome em caixa alta e peso normal, como no ofício; linha; cargo ou referendo embaixo                                                                                                                                               |
+| o que custou caber | entrelinha **1,24 → 1,18**, parágrafo 0,009 → 0,006, epígrafe→data em `gap-s`, rubrica 36 → 30px, brasão 9% e não 9,5                                                                                                             |
+| folga              | parecer **97,6px** (pior mês do passeio pede 83), decreto **39,3**                                                                                                                                                                |
+
+✔ As duas pendências (hifenização e dígito do NUP) fecharam no estado de 02:10.
+
+---
+
+### ✔ Estado anterior — 18/09/2026 madrugada (portão verde, NÃO commitado)
+
+**Fora do commit:** tudo da lista de 17/09 mais `brief.mjs`, `strings.mjs` e `tests/guards/tokens.mjs`
+(três tokens de vão da folha na lista `RUNTIME`, a mesma espécie de `--envelope-size`).
+`npm run validate` verde: **13 guardas · 66 sintéticas · 331 provas · passeio verde**. Canal com o
+Gemini por CDP na porta `15517` (muda a cada abertura do Antigravity; `Get-NetTCPConnection` acha).
+
+✔ **O ITEM 1 DA FILA FECHOU — tipografia do parecer contra o decreto** (o 5º dos ajustes finos dele):
+
+| o quê                           | o número que sustenta                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------ |
+| vãos verticais das duas folhas  | **9 valores → 3 tokens** (`--sheet-gap-s/m/l` = 0,022 / 0,032 / 0,045 do papel)      |
+| linha de assinatura, ordem dele | borda da caixa do traço, **62%** nas duas folhas; o traço desce 4 unidades e cruza   |
+| rubrica da ministra no parecer  | a EM chega assinada; os dois blocos têm a mesma anatomia (fecho, traço, linha, nome) |
+| caixa da rubrica                | **54 → 36px**: com a rubrica no parecer o passeio estourou 40px em 10 de 24 meses    |
+| folga do parecer no mês 1       | **47,8 → 109px**; o pior mês do passeio pede 87,8                                    |
+| pé do decreto                   | DOU a **45,5px** da assinatura (era 9,5)                                             |
+| círculo da caneta               | `::after` com inset −3/−5px: parava de cruzar P/a e S/ç a DPR 3                      |
+| abertura do parecer             | uma frase a menos (_"Abaixo, o que a Casa Civil apurou."_ saiu), −29px               |
+
+⛔ **DOIS ACHADOS DO GEMINI NÃO PROCEDERAM, medidos:** o pontilhado das marcas NÃO corta g/p/ç
+(`text-decoration-skip-ink: auto` é padrão do Chrome, e a captura mostra o pontilhado abrindo em
+volta) e o circunflexo a 1,9px do topo da caixa da linha não é corte — caixa de linha não recorta.
+
+✔ **O ENVELOPE "EMBAÇADO" ERA O ARQUIVO, e não a origem.** O Gemini leu Sobel 27 na origem e
+concluiu "papel aerografado"; ele disse que as fotos são boas, e tem razão — a fibra existe a
+1297px e some em QUALQUER arquivo a 178 CSS px. O que volta é a aresta. Medido só dentro do
+envelope na mesa (`tmp/envelope-caminho.mjs`): giro −5%, filtros −3%, camada 0. **Assado na largura
+de tela (dpr 2), uma reamostragem só da origem limpa, nitidez raio 1 ganho 1,4:** Sobel a 178px
+**32,2 → 35,4 a dpr 1 e 22,8 → 29,6 a dpr 2**. Um arquivo de 178 só para dpr 1 dava os mesmos 35,4
+e piorava dpr 2 (22,4) — `image-set` não vale. **E ele mandou +10%:** `--envelope-size` 178 → 196px,
+arquivos a **392px** (35 e 33 KB). A 1440×980 o envelope entra **30,3px sob o rail** (era 8,1) e
+fica a 186px da capa; passeio verde nos 24 meses. Receita em `tmp/assar-envelopes-tela.mjs`.
+
+---
+
+### ✔ Estado anterior — 17/09/2026 noite (portão verde, NÃO commitado)
+
+**Fora do commit:** `00-tokens.css`, `46-desk.css`, `40-shell.css`, `cabinet.mjs`, `mail-pile.mjs`,
+`walk.mjs`, `CREDITOS.md`, `CLAUDE.md`, os dois docs, mais **cinco assets novos ou refeitos**
+(`folder-open`, `folder-closed`, `envelope`, `envelope-urgent`). `npm run validate` verde:
+**13 guardas · 66 sintéticas · 331 provas · passeio verde**. Canal com o Gemini por CDP na porta de
+depuração do Antigravity (`tmp/gemini.mjs enviar|ler`), conversa `883734d6-…`.
+
+⭐ **A MESA É FOTO EM TODA PEÇA** — envelope, pasta e telefone. Foi a ordem dele: _"todos os
+elementos de cima da mesa serão coisas reais, imagens por IA"_.
+
+▶ **O QUE ESTA SESSÃO FECHOU, em ordem:**
+
+| o quê                              | o número que sustenta                                           |
+| ---------------------------------- | --------------------------------------------------------------- |
+| couro comido no topo da pasta      | 93 colunas a 7px → **3 colunas a 2px**; 141 recuperaram até 8px |
+| fio branco no pé da capa           | 851 colunas → **20**, e zero pixel de latão ou papel tocado     |
+| as 7 sombras da mesa               | espalhavam **27,1°** → **0,2°**, todas na luz de 19,8°          |
+| contato da pasta contra o telefone | 0,88 vs 0,71 → **0,58 vs 0,57**, faixa dura de 9px → 1px        |
+| nitidez da pasta                   | arquivos na largura NATIVA: **41,1 → 51,6** de gradiente        |
+| sombra da pasta erguida            | segue o alfa, e custa **0,1 fps** (239,9 vs 240,0)              |
+| envelope calculado → foto          | saíram **treze tokens**, dois filtros de cera e quatro peças    |
+| 4 reprovas do passeio              | uma causa só: `setFolder(false)` clicava fora da sala           |
+| área de clique da pasta            | **343px de madeira** deixaram de abrir a pasta                  |
+| texto do ato                       | **10,5px → 12,5px** na tela a 1440×980                          |
+| tom do papel                       | 42% → **19%** de saturação, ordem dele                          |
+| tamanho                            | pasta **+8%**, envelope **+15%**, ordem dele                    |
+
+⛔ **AS TRÊS ARMADILHAS QUE CUSTARAM RODADA, e as três valem para a próxima sessão:**
+
+1. ⭐ **`var()` dentro de custom property é substituído ONDE ELA É DECLARADA.** A fórmula do
+   contragiro em `:root` congela o ângulo da raiz e o filho herda o número pronto — o envelope
+   continuou saindo a 0,36 depois de a fórmula entrar. Um seletor na mesa (`.folder, .folder *,
+.phone, .phone *, .mail, .mail *`) redeclara por peça. **O mesmo defeito estava nos tokens
+   `--cast-*`**, que pareciam seguir `--cast-dx` e congelavam a raiz: voltaram a `--light-dx`;
+2. ⛔ **`pointer-events` É HERDADO.** Pôr `none` na `.folder` cala toda a árvore, e a capa só volta
+   a responder com `auto` explícito — e havia um segundo `pointer-events: none` no fim da mesma
+   regra que anulava o primeiro;
+3. ⛔ **O passeio clicava no CENTRO DA CAIXA da pasta em três lugares.** Quando a caixa deixou de
+   receber ponteiro, os três morreram de uma vez — `onTarget`, `tocar(".folder")` e o salto do voo
+   interrompido. Hoje os três miram a peça pintada.
+
+⚠ **O QUE FICA REGISTRADO COMO DECISÃO DELE, e não como medição:**
+
+- **o papel da folha não casa mais com o da foto.** A tira de papel da pasta mede 44% de saturação
+  na tela; a folha foi para 19% por ordem dele — _"o fundo amarelado dos papéis está muito
+  saturado/forte"_. Um meio-termo seria 28%;
+- **o envelope rubro virou a carta que VENCE**, e não foi descartado;
+- **a pasta e a folha escalam juntas.** Para o texto crescer mais, a folha teria de desacoplar da
+  pasta, e aí o documento deixa de ter a proporção do A4 dentro dela. Decisão dele.
+
+▶ **A NITIDEZ DO TEXTO NÃO ERA RENDERIZAÇÃO, e o número fecha:** com e sem `will-change` na pasta,
+com e sem na folha, sem os dois e sem `isolation` deram **68,61 de gradiente nos cinco**. O Chrome
+rasteriza na escala composta. Era tamanho: 10,5px na tela. Hoje 12,5 a 1440 e 14,0 a 1920, com
+`READING` em 0,90 — **0,94 dá 13,1px mas a pasta sai da área**.
+
+---
+
+---
+
+### ✔ Estado anterior — 16/09/2026 tarde (portão verde, NÃO commitado)
+
+**Fora do commit:** `40-shell.css`, `46-desk.css`, `cabinet.mjs`, `walk.mjs`, `tokens.mjs`,
+`CLAUDE.md` e este arquivo. `npm run validate` verde: **13 guardas · 66 sintéticas · 331 provas ·
+passeio verde**. Canal com o Gemini reaberto (conversa `883734d6-…`); a porta do Antigravity
+muda a cada abertura dele.
+
+⛔ **O GABINETE ROLAVA EM TODA JANELA DE LAPTOP, E O PORTÃO NUNCA VIU.** A causa é uma só:
+`.area.cabinet` media **821px de `clientHeight` em qualquer janela**, porque abaixo de 940px de
+altura a casca era elástica — então `--fit` ficava em 1,000 e a cena, que só sabe encolher,
+nunca encolhia.
+
+| tela      | rolagem     | pasta cortada | envelope vs. rail  | folha sobre o telefone | rail fora  |
+| --------- | ----------- | ------------- | ------------------ | ---------------------- | ---------- |
+| 1280×720  | **259** → 0 | **63,9** → 0  | **−82,5** → +112,4 | **+54,7** → −129,3     | **78** → 0 |
+| 1366×768  | **211** → 0 | **15,9** → 0  | **−39,5** → +118,5 | **+11,7** → −138,9     | **78** → 0 |
+| 1440×900  | **94** → 0  | 0             | −4,1 → +52,6       | −23,8 → −82,7          | **78** → 0 |
+| 1440×980  | 0           | 0             | −8,1 (igual)       | −27,8 (igual)          | 0          |
+| 1920×1080 | 0           | 0             | 217,5 (igual)      | −253,3 (igual)         | 0          |
+
+**Negativo em "envelope vs. rail" é sob o menu** — a 1280 `elementFromPoint` na beira esquerda
+dele responde `rail__label`, e o lacre some inteiro. **Positivo em "folha sobre o telefone" é em
+cima:** a tecla 1 e a esquerda do cartão do número respondem `sheet/ARTICLE`.
+
+1. ⭐ **O LIMIAR VIROU LARGURA** (`40-shell.css`): `@media (min-height: 940px)` → `min-width: 1181px`,
+   que é a mesma largura em que `.rail` vira faixa no topo. Os 940px foram escritos para quatro
+   cartões de vidro que não existem mais, e a mesa de hoje nunca coube embaixo deles.
+   **Inerte nas duas janelas que o portão mede** — nenhum número muda a 1440×980 nem a 1920×1080.
+2. ⛔ **E A CHECAGEM TINHA O DEFEITO DENTRO DELA:** `checkNoPageScroll` fazia
+   `if (window < 940) return` — **desligava-se exatamente na faixa onde o defeito morava.** Hoje
+   mede LARGURA (≥1181), o mesmo limiar da folha, e entrou no laço da segunda janela para
+   Gabinete e Email — que chamava cinco checagens e não chamava essa.
+   ✔ **Prova sintética feita:** com o `min-height: 940px` de volta o passeio acusa
+   `[900px/cabinet] a pagina rola 94px` e o mesmo no Email.
+3. ▶ **SOBRA UMA SEGUNDA CAUSA, e ela é outro item:** abaixo de 1180px de largura o rail vira
+   faixa no topo (`40-shell.css`) e o conserto não alcança — a 1024×600 a página ainda rola
+   379px. Isso é o layout estreito, e não a mesa.
+4. ⭐ **A CAPA FECHADA É MEIA PASTA ABERTA dentro de 0,71%** (Gemini): aba direita da aberta sem
+   lombada 742px contra 738 da capa fechada. **A lombada é o que diverge — 7,31% da largura na
+   aberta contra 17,78% na fechada**, que é o perfil da espessura. A Etapa 2 pode ser uma peça só
+   girando, com a lombada tratada à parte.
+5. 📐 **O SALTO DO VOO REPROVA POR CONTENÇÃO, e não por defeito:** com duas rodadas do passeio
+   disputando a máquina ele deu 670px no corte contra 520 dois quadros depois — **22,4%**, que
+   bate com os 21,8% de rodada fria que o Gemini mediu. O teto de 0,2 fica: afrouxar para 0,25
+   esconderia a contenção em vez de medi-la.
+   ⚠ **E O PASSEIO SOBE SERVIDOR NA PORTA 5201** — duas rodadas juntas se atrapalham. Protocolo
+   acertado com o Gemini: quem vai rodar avisa e espera a porta.
+6. ⛔ **O ENVELOPE SOB O MENU NÃO É DEFEITO, E EU TENTEI CONSERTAR ANTES DE MEDIR O PREÇO.** A
+   1440×980 ele entra 8,1px sob o rail (`elementFromPoint` na beira responde
+   `rail glass-support`). Ancorei-o na beira visível com um `--mail-x`, como o telefone: deu
+   24,3px de folga em oito janelas — **e devolveu 2,9px de carta POR BAIXO DA PASTA**, que uma
+   prova antiga pegou em 6 dos 24 meses. **Revertido.**
+   📐 **A conta que eu devia ter feito primeiro:** o punhado fecha **217px de leque** e entre o
+   rail e a pasta cabem **198,7** — ele não cabe por 18,3. O sangramento pela aresta é a escolha
+   do autor entre transbordar na beira da cena ou por cima do ato, e encolher o envelope
+   (155→130) já tinha sido tentado e recusado.
+   ✔ **E o caso grave já estava resolvido pelo item 1:** os 90px sob o rail a 1280 eram a cena
+   que não encolhia.
+   ⚖ **A lição de método fica, e é do Gemini:** medi a 1181 e a 1440×900, onde a cena encolhe e
+   puxa tudo para dentro. **O pior caso é `--fit` 1, e não a janela menor.**
+7. ⚖ **A CAIXA NÃO É A TINTA, e é a segunda lição da mesma rodada.** A caixa do telefone está a
+   39,6px da janela; a tinta pintada inclui `drop-shadow(4,32px 12px 18px)` e chega a 17,2px pela
+   conta nominal, e a varredura de pixel do Gemini achou 6 — a cauda do desfoque passa do raio.
+   **Quem o jogador vê é o pixel.** Medida de borda por caixa subestima toda peça com sombra.
+8. ⚠ **Entrada morta, não mexida:** `--leather` continua no `RUNTIME` de `tests/guards/tokens.mjs`
+   e o couro calculado não existe mais.
+
+▶ **ETAPA 2 — A PASTA NASCE FECHADA, E ABRIR É O GESTO** (`assets/folder-closed.webp` novo):
+
+**Uma peça, um `t`.** `.folder__leaf` envolve o parecer e gira `rotateY(180 · (1 − t))` — o MESMO
+`t` do voo, então pegar a pasta **abre** ela e não há segundo clique. Termo linear, e o voo inteiro
+continua indo para o compositor em dois quadros-chave. `.folder__cover` é o verso da folha e
+`.folder__open` é a foto aberta numa camada com opacidade `t`.
+
+1. ⭐ **A ORIGEM DO GIRO É A LOMBADA, e não a beira da folha** — entre as duas mora meio `gap`, e
+   por `right center` a capa caía 59px curta. Com `calc(100% + 59px)` a folha virada pousa em
+   **[618, 926]** e a pilha está em **[618, 926]**: encaixe exato.
+2. ⛔ **O `translateX(-25%)` TEM DE VIR DEPOIS DO `scale`.** Antes dele a porcentagem resolve na
+   caixa sem escala e a pasta saltou **409px** para fora da tela.
+3. ⛔ **`z-index: 4` na folha:** as duas caixas são a mesma, e com `3` nas duas o decreto pintava
+   POR CIMA da capa fechada.
+4. ⛔ **A FOTO ABERTA VIROU CAMADA.** Como `background` de `.folder` ela não tinha como apagar, e
+   fechada a mesa mostrava uma pasta aberta com outra fechada dentro.
+5. 📐 **A capa ocupa 826 dos 900px do arquivo**, então a 100% da caixa sobrava margem transparente
+   e o decreto aparecia por baixo dela — saindo pela lombada, que não existe. Cresceu 9% para
+   cobrir a foto e mais 5,6%/6,7% para alcançar a beira do couro: a pasta fechada cobre o
+   `padding`, e as folhas de baixo saem em leque.
+6. ⭐ **A LOMBADA SAI DO LADO CERTO POR DOIS ESPELHOS, e o número do Gemini fechou isso:** a
+   lombada está a **160px (17,78%)** da esquerda do arquivo fechado. A folha espelha e a capa
+   espelha de volta — com um espelho só ela sairia do lado da abertura.
+7. **A sombra de repouso virou meia caixa** (`inset: 0 0 0 50%`): `inset: 0` punha sombra debaixo
+   de um vão que não existe com a pasta fechada.
+
+---
+
+### ✔ Estado anterior — 16/09/2026 00:15 (portão verde, commitado)
 
 **Commitado ao fim da sessão, por ordem dele:** `assets/folder-open.webp` novo, mais
 `46-desk.css`, `cabinet.mjs`, `00-tokens.css`, `CREDITOS.md`, `texture.mjs`, `walk.mjs`,
@@ -186,7 +420,7 @@ agora". Achados 63 e 64 são escrita dele.
 
 1. ⭐ **UMA LUZ para a sala inteira**, declarada em `00-tokens.css`: `--light-dx: 0.36` (alta,
    atrás da beira de cima, 20° à esquerda) e quatro classes de sombra — `--cast-contact`,
-   `--cast-flat` (folha, 6px), `--cast-thin` (envelope, 10px), `--cast-thick` (pasta e vidro,
+   `--cast-thin` (envelope, 10px), `--cast-thick` (pasta e vidro,
    24px). Pasta, folhas, pilha, emboss, envelope, abas, lacre, telefone e os três níveis de vidro
    caem todos para baixo e 0,36 para a direita por px de queda. ⛔ **A mesa tinha duas luzes:**
    as projetadas caíam retas e o lacre, as abas e a pilha caíam para a direita a 0,5 — ele viu
@@ -365,18 +599,57 @@ partido: `agenda` **26 de 43**. Sobram origem, chapa/coligação, tela da eleiç
 **Escolher partido é escolher com quem você concorda por 48 meses** (posição, não tamanho).
 `"A emenda passar a pesar" saiu da fila` — o canal já entrega 71; o conserto é o achado 60.
 
-### ▶ A fila da mesa — o que a sessão de 15/09 deixou aberto
+### ▶ A fila da mesa — 18/09/2026
 
-| #   | o quê                                       | de quem      | trava em                               |
-| --- | ------------------------------------------- | ------------ | -------------------------------------- |
-| 1   | **Etapa 2 — a pasta nasce fechada e abre**  | Claude       | `scale()`/`tune()` medem a peça ABERTA |
-| 2   | o peso: o que o couro calculado gastava     | Gemini       | benchmark rodando quando parou         |
-| 3   | crítica da captura (3 defeitos, com medida) | Gemini       | pedido e não entregue                  |
-| 4   | o número que fez ele afrouxar o salto       | Gemini       | revertido para 0,2, verde em 3 rodadas |
-| 5   | a ementa do decreto recuada até o meio      | decisão dele | é a forma do decreto                   |
+| #   | o quê                                       | de quem      | trava em                              |
+| --- | ------------------------------------------- | ------------ | ------------------------------------- |
+| 1   | **a bandeirinha na mesa** (ele gera amanhã) | ordem dele   | a foto dele; o prompt já foi entregue |
+| 2   | **commitar** — 22 arquivos e 8 assets       | decisão dele | nada; a árvore está verde             |
+| 3   | a auditoria do Gemini contra os ofícios     | ninguém      | a devolução dele (tabela real/jogo)   |
+| 4   | **Etapa 3 — a carta aberta NA MESA**        | ninguém      | a pergunta do `rotateX` (pesq. 10)    |
+| 5   | **o menu vira barra de ícones embaixo**     | ordem dele   | é da Etapa 3 em diante                |
+| 6   | **rolagem abaixo de 1180px de LARGURA**     | ninguém      | é o layout estreito, e não a mesa     |
+| 7   | a ementa do decreto recuada até o meio      | decisão dele | é a forma do decreto                  |
+| 8   | o fim guilhotinado da folha na lombada      | gosto dele   | ver abaixo                            |
 
-⭐ **Para a Etapa 2 o material já existe:** `tmp/folder-closed.webp` (900×1162, 424 KB, a capa
-recortada) e a medida da dobra — **240 fps no compositor, com ou sem promoção de GPU.**
+✔ **Os cinco ajustes finos dele estão feitos** (`Documents/Preciso de alguns ajustes finos.txt`);
+o último fechou em 18/09 — ver o Estado. O levantamento está em `tmp/relatorio-tipografia.md`.
+⚠ **Item 1, a receita dos objetos novos:** a mesma dos envelopes — origem limpa, assar na largura
+de TELA × dpr 2 numa reamostragem só, nitidez raio 1 ganho 1,4, q 0,90 (`tmp/assar-envelopes-tela.mjs`).
+A pasta é a exceção: ela cresce na mão e pede a largura nativa da tinta.
+▶ **A mesa é foto em toda peça agora** — envelope, pasta e telefone.
+▶ **O item 3, palavras dele:** na aba Gabinete o menu da esquerda vira barra HORIZONTAL centrada
+embaixo, só com os ícones. _"Nível apple de qualidade mesmo sabe? Mas isso é etapa 3 em diante."_
+
+✔ **Etapa 2 FEITA** — ver o Estado. ✔ **Crítica da captura entregue** (Gemini,
+`tmp/critica-captura.md`), e **nenhum dos três defeitos virou código**:
+
+- **a folha corta reto na lombada** — ⛔ a causa que ele deu está errada. Ele disse "sem gradiente
+  nenhum, σ < 1,1"; o perfil medido (`tmp/perfil-lombada.mjs`) dá **90,6% → 79,2% em 52px**, desvio
+  **22,33**. O gradiente existe, e mora em `.brief::before`. O que é verdade é que o FIM é
+  guilhotinado: 79,2% a −8px direto para 7,5%. **Aprofundar é gosto, e é decisão dele**;
+- **o vértice da folha a 5,8px do latão** — é o conserto de 15/09 funcionando: a folha COBRIA as
+  cantoneiras, e `gap`/`padding` foram para 62 e 68 para tirá-la de lá. A prova pede 15–22px e ela
+  está em 17,3;
+- **132,9px de madeira embaixo da pasta e 162,6 no topo** — confirmado por medida independente, mas
+  o ciclo 25 §3 diz _"cinco objetos, e o vazio é a obra"_. É desenho.
+
+⭐ **Os dois de GOSTO que ele separou valem mais que os três:** o telefone tem reflexo zenital de
+estúdio que destoa da luz da sala (250°/52°), e ele mede **413px contra 160 do envelope — 2,6×**.
+
+⛔ **A tarefa do peso do couro calculado MORREU:** `leather()`/`bake()` não existem mais em `src/`.
+✔ **O número do salto está fechado:** a reprova é contenção da máquina, e o teto de 0,2 fica.
+
+⭐ **A ETAPA 2 NÃO TRAVA MAIS EM `tune()`, e isso foi medido no navegador.** Com a face esquerda
+girando sobre a lombada (`rotateY(180deg)`, origem na direita), **a caixa de `.folder` fica
+684,3×494 antes e depois** — idêntica, porque `getBoundingClientRect` de um pai não soma o
+transform dos filhos. A face dobrada pousa em x=736,8, espelhada sobre a lombada.
+⚠ **O que sobra de verdade são duas coisas, e nenhuma é `tune()`:** as duas `.folder__cast` são
+`inset: 0` da caixa ABERTA e ficariam grandes demais sob uma pasta fechada; e o repouso a
+`left: 47%` centra a caixa aberta, então a peça fechada nasceria fora do centro dela.
+
+⭐ **O material já existe:** `tmp/folder-closed.webp` (900×1162, 424 KB, a capa recortada) e a
+medida da dobra — **240 fps no compositor, com ou sem promoção de GPU.**
 ⚠ **`tmp/` está fora do git.** `assar-pasta.mjs` (o recorte), `silhueta.mjs`, `faces.mjs`,
 `cantoneiras.mjs`, `lombada.mjs` e `medir-fone.mjs` moram lá e se perdem numa limpeza.
 
@@ -517,6 +790,12 @@ Passo 5 do ciclo 21 (a MP) aberto, pede sessão própria. **Antes da primeira li
 
 Um achado citado aqui pode não morar mais aqui — os que fecharam saíram para o
 [`journal.md`](journal.md). Número com data envelhece: antes de repetir um, remeça-o.
+
+**65. `--paper` É COR NO ARQUIVO DE TOKENS E LARGURA NA FOLHA (18/09).** `00-tokens.css:139` declara
+`--paper: #ffffff` (a superfície da linha clicada da Caixa) e `.sheet` redeclara `--paper: 720px`.
+Dentro da folha nenhuma regra lê a cor, então hoje nada quebra — mas a primeira que ler recebe
+`720px`, e a guarda `tokens` não vê colisão de espécie. Renomear a largura (`--sheet-w`?) é troca
+em 15 `calc()` de `46-desk.css`; ficou para quando a folha for mexida de novo.
 
 **64. ⛔ O PARECER SOMA MÊS COM ANO na primeira frase que o jogador lê (11/09).**
 `UI.brief.treasury` escreve _"O mês tem R$ 14,1 bi para gastar. A despesa obrigatória come
