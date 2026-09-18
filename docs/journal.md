@@ -8413,3 +8413,11 @@ que a captura parada não mostrava: a Caixa esticada até a largura da mesa (os 
 tinham o mesmo nome e morfavam), a madeira sumindo num corte, e a coluna saindo devagar como um
 painel fantasma. As três saíram. O engasgo de 150ms na primeira troca é frio de processo e não
 volta na mesma sessão.
+
+### 13 · O pisca laranja — 18/09, noite
+
+Ele mandou o print: uma coluna de madeira desfocada onde o menu esteve, depois de voltar ao
+Gabinete, "aparece e some". Não reproduzia no headless. Filmei cada quadro do compositor no Chrome
+dele com GPU pelo CDP e lá estava: 6 quadros a partir de 460ms, a superfície do backdrop-filter do
+rail com a caixa velha. Cinco variantes não mudaram nada; apagar o desfoque do rail só durante a
+troca zerou. A guarda de material recusou `backdrop-filter: none` e o token é que apaga.

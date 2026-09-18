@@ -78,6 +78,17 @@
       calc(var(--light-dx) * 10px) 10px 24px -18px rgba(0, 0, 0, 0.9);
   }
 
+  /* ⛔ O RAIL FICA SEM DESFOQUE ENQUANTO A TELA TROCA: entre a coluna e o dock a superficie do
+     `backdrop-filter` ficava com a CAIXA VELHA por alguns quadros depois da transicao — uma
+     coluna de madeira desfocada e saturada onde o menu esteve, sem grao (aresta 0,1 contra
+     4,5 do vizinho), em 6 quadros a partir de 460ms, medido no Chrome dele com GPU
+     (tmp/screencast-variantes.mjs). `will-change`, `contain: paint` e `isolation` nao
+     mudam nada; sem o desfoque durante a troca, zero quadros. Nao e um segundo material: e o
+     mesmo token, apagado nesse elemento so enquanto a troca dura. */
+  html:active-view-transition .rail {
+    --glass-blur: none;
+  }
+
   /* ⛔ O PASSEIO DA LUZ SAIU, e o numero e este: `--light-angle` animado no `:root` (150° a
      205° em 9s) herdava para a arvore inteira, e cada quadro recalculava o estilo de 627
      elementos (7,9ms) e repintava todo vidro — no voo da pasta, 356ms de thread principal

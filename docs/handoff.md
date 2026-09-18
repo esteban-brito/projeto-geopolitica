@@ -43,6 +43,16 @@ mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone)
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
 carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
 `tmp/plano-etapa3-gemini.md`). Lote 1 do Gemini: ícone de Defesa, geometria do dock por janela.
+✔ **O PISCA LARANJA NA VOLTA AO GABINETE — achado e morto, medido no Chrome dele com GPU:** depois da
+transição, a superfície do `backdrop-filter` do rail ficava com a caixa VELHA (a coluna) por 6
+quadros a partir de 460ms — madeira desfocada e saturada, sem grão (aresta 0,1 contra 4,5), onde
+o menu esteve. O headless não mostra (sem compositor de GPU); `tmp/screencast.mjs` e
+`screencast-variantes.mjs` filmam todo quadro do compositor pelo CDP. `will-change`, `contain:
+paint`, `isolation` e tirar o nome da transição não mudam nada; **sem o desfoque no rail
+enquanto a troca dura** (`html:active-view-transition .rail { --glass-blur: none }`, em
+`20-material.css`) — zero quadros. ⚠ A guarda `material` conta `backdrop-filter: none` como
+segundo material; por isso é o token que apaga, não a propriedade. ⚠ E a troca dispensou os tipos:
+saída e entrada por `:only-child` no par de fotos.
 ✔ **A TROCA DE TELA, quarta versão — "continua bugado, principalmente os menus":** filmada em
 velocidade real (`tmp/transicao-video.mjs` + `video-quadros.mjs`, prancha por troca) e três defeitos
 viraram código: (1) a Caixa era ESTICADA até a largura da mesa durante a troca, porque os dois
