@@ -8404,3 +8404,7 @@ raiz, sem espaço — meia hora nisso. O passeio passou a esperar a transição 
 Ele recusou a primeira: "muito lento, falta refino e polimento". Ficou 240 + 300 com a cápsula
 partindo 40ms antes do fim do tabuleiro (500ms ao todo), o desfoque a 8px, e a cápsula em voo
 virou o próprio vidro do rail — fundo, borda, bisel e backdrop-filter — em vez de uma caixa escura.
+Terceira versão no mesmo dia, e é a que fica: "gostei da ideia do macOS". O menu deixou de voar —
+o dock encolhe no lugar e a coluna nasce no dela, com nomes diferentes na view transition
+(`dock` no Gabinete, `rail` fora), 360ms ao todo. O Gemini mediu a cápsula voando antes de ela
+sair: o desfoque custava 40ms de GPU por troca e o p95 não mudava.

@@ -43,16 +43,18 @@ mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone)
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
 carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
 `tmp/plano-etapa3-gemini.md`). Lote 1 do Gemini: ícone de Defesa, geometria do dock por janela.
-✔ **A TROCA DE TELA VIROU AGUA, ordem dele ("não está nível Apple… quero algo mais liquid glass,
-aquoso; a transição de aba não pode ser junto com a do menu"):** o tabuleiro sai num sopro de
-desfoque (`blur(10px)`, escala 1,015) e o novo chega de um passo atrás nitidificando (`blur(12px)`,
-0,985), em `--dur-screen` **240ms** (⛔ 320 + 460 em fila ele recusou: "muito lento, falta refino"); **o
-rail só anda depois**: `transition()` escreve o tipo da view transition (`dock` quando entra ou sai
-do Gabinete, `stay` nas outras) e a cápsula escorre em `--dur-rail` **300ms partindo 40ms antes
-de o tabuleiro acabar** — 500ms ao todo. A cápsula em movimento É o `glass-support` (fundo, borda,
-bisel e `backdrop-filter`, em `20-material.css`, o único lugar onde o desfoque pode morar): o
-conteúdo velho apaga nos primeiros 20% e o novo acende nos últimos 25%, e no meio o que anda é o
-vidro, desfocando o que passa por baixo. ⛔ O seletor é
+✔ **A TROCA DE TELA, terceira e última versão do dia (ordem dele: "gostei da ideia do macOS,
+ultra refinado e clean, e mais rápido"):** o tabuleiro sai num sopro de desfoque (8px, 1,012) e o
+novo chega nitidificando (0,988) em `--dur-screen` 220ms; **o menu não voa**: no Gabinete o rail se
+chama `dock` e fora dele `rail` (`view-transition-name` em `40-shell.css`), então entrar ou sair
+do Gabinete é uma SAÍDA e uma ENTRADA — o dock encolhe no lugar (0,92, +10px) e a coluna nasce no
+dela (0,97, −10px), `--dur-menu` 200ms, entrando 60ms antes de o tabuleiro acabar: **360ms ao
+todo**. `transition()` escreve o tipo (`dock`/`stay`) para a coluna só sair e entrar quando o
+lugar muda. ⛔ A primeira versão (320 + 460 em fila) e a segunda (cápsula de vidro voando em reta,
+500ms) ele recusou: "muito lento", "falta refino". ⛔ O seletor de tipo é
+`html:active-view-transition-type(dock)::view-transition-old(rail)` SEM espaço. ⚠ O passeio espera
+`document.activeViewTransition === null` depois de trocar de tela. 📐 Gemini mediu a versão 2
+(`tmp/transicao-custo.md`): o desfoque custava +40ms de GPU por transição, p95 igual (17,2ms). ⛔ O seletor é
 `html:active-view-transition-type(dock)::view-transition-group(rail)` SEM espaço: com o
 combinador descendente ele não casa e o rail ficava nos 250ms do navegador. Quadros em
 `tmp/transicao-quadros.mjs`. ⚠ O passeio passou a esperar `document.activeViewTransition === null`

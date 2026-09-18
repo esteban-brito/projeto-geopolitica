@@ -126,43 +126,58 @@
     }
   }
 
-  /* ⭐ E O RAIL NAO ANDA JUNTO COM A TELA, ordem dele: ele espera o tabuleiro assentar e so
-     entao escorre de um lugar ao outro como uma capsula — o conteudo velho apaga no comeco do
-     caminho e o novo acende no fim, e no meio o que se ve e o vidro andando. So quando ele
-     muda de lugar (tipo `dock`, escrito por `transition` no `app.mjs`); entre duas telas que
-     nao sao o Gabinete ele so troca o item aceso. */
-  html:active-view-transition-type(dock)::view-transition-group(rail) {
-    animation-duration: var(--dur-rail);
-    animation-delay: calc(var(--dur-screen) - 40ms);
-    animation-timing-function: var(--ease-move);
-    /* O vidro da capsula em movimento mora em `20-material.css`: e o mesmo material. */
+  /* ⭐ O MENU NAO VOA, ordem dele ("gostei da ideia do macOS: ultra refinado e clean"): no
+     Gabinete o rail se chama `dock` (`40-shell.css`) e fora dele `rail`, entao entrar ou sair do
+     Gabinete e uma SAIDA e uma ENTRADA — o que sai encolhe no proprio lugar e o que entra nasce no
+     dele, e nada atravessa a tela. ⛔ A capsula de vidro voando em reta ele viu e trocou por isto.
+     O menu so entra depois de o tabuleiro assentar, 60ms antes do fim dele; entre duas telas que
+     nao sao o Gabinete os dois se chamam `rail` e so o item aceso troca (tipo `stay`). */
+  ::view-transition-group(dock),
+  ::view-transition-group(rail) {
+    animation-duration: var(--dur-menu);
+  }
+
+  ::view-transition-old(dock) {
+    animation: dock-out var(--dur-menu) var(--ease-enter) both;
+  }
+
+  ::view-transition-new(dock) {
+    animation: dock-in var(--dur-menu) var(--ease-enter) calc(var(--dur-screen) - 60ms) both;
   }
 
   html:active-view-transition-type(dock)::view-transition-old(rail) {
-    animation: rail-out var(--dur-rail) linear calc(var(--dur-screen) - 40ms) both;
+    animation: column-out var(--dur-menu) var(--ease-enter) both;
   }
 
   html:active-view-transition-type(dock)::view-transition-new(rail) {
-    animation: rail-in var(--dur-rail) linear calc(var(--dur-screen) - 40ms) both;
+    animation: column-in var(--dur-menu) var(--ease-enter) calc(var(--dur-screen) - 60ms) both;
   }
 
-  /* O conteudo velho apaga nos primeiros 20% do caminho e o novo acende nos ultimos 25%: no meio
-     o que anda e o vidro, e as duas fotos — uma coluna e uma capsula — nunca se esticam a vista. */
-  @keyframes rail-out {
-    20%,
-    100% {
+  @keyframes dock-out {
+    to {
       opacity: 0;
+      transform: translateY(10px) scale(0.92);
     }
   }
 
-  @keyframes rail-in {
-    0%,
-    75% {
+  @keyframes dock-in {
+    from {
       opacity: 0;
+      transform: translateY(10px) scale(0.92);
     }
   }
 
-  html:active-view-transition-type(stay)::view-transition-group(rail) {
-    animation-duration: var(--dur-screen);
+  @keyframes column-out {
+    to {
+      opacity: 0;
+      transform: translateX(-10px) scale(0.97);
+    }
+  }
+
+  @keyframes column-in {
+    from {
+      opacity: 0;
+      transform: translateX(-10px) scale(0.97);
+    }
   }
 }

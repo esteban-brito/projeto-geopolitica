@@ -43,6 +43,8 @@
     }
 
     .shell:has(> .board[data-screen="cabinet"]) .rail {
+      /* O nome muda com o lugar: e assim que a troca de tela sabe que ele SAI e a coluna ENTRA. */
+      view-transition-name: dock;
       position: fixed;
       /* `top: auto`: o rail vertical e `sticky` com `top`, e fixo com os dois ele esticava a 905px. */
       top: auto;
