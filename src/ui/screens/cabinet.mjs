@@ -10,6 +10,7 @@ import { escapeHtml } from "../shared/html.mjs";
 import { armSignature, decreeHtml } from "../shared/decree.mjs";
 import { briefHtml } from "../shared/brief.mjs";
 import { mailPileHtml } from "../shared/mail-pile.mjs";
+import { letterHtml } from "./inbox.mjs";
 import { phoneHtml } from "../shared/phone.mjs";
 import { curveOf } from "../shared/spring.mjs";
 import { felt, fibre } from "../shared/texture.mjs";
@@ -79,8 +80,8 @@ export function emailHtml(input) {
  * @param {number} input.month o mes do mandato
  * @param {ReadonlyArray<{ id: string, label: string, short?: string }>} input.areas as oito
  * @param {ReadonlyArray<string>} input.protect quais o decreto deste mes poupa
- * @param {ReadonlyArray<{ urgent: boolean }>} input.letters a correspondencia na mesa, com o
- * que vence ja perguntado a `silences`
+ * @param {ReadonlyArray<{ urgent: boolean, dispatch: Parameters<typeof letterHtml>[0] | null }>} input.letters
+ * a correspondencia na mesa: o que vence ja perguntado a `silences`, e o texto de cada carta.
  * @param {number} input.sheets quantos atos esperam atras do decreto
  * @param {Parameters<typeof briefHtml>[0]} input.brief as seis leituras do parecer, prontas
  * @param {string | null} input.boiling o grupo que ferveu, perguntado a `boilerOf`, ou nulo
@@ -114,6 +115,17 @@ export function cabinetHtml(input) {
     `<div class="stack">${under}${decreeHtml({ ...input, chief: input.brief.chief })}</div>` +
     `</div>` +
     `<div class="mail">${mailPileHtml(input)}</div>` +
+    /* AS CARTAS, uma folha por envelope e na mesma ordem: nascem escondidas e o clique no
+       envelope ergue a dele. O texto e o da Caixa (`letterHtml`), o papel e a `.sheet`. */
+    `<div class="post">` +
+    input.letters
+      .map((letter, i) =>
+        !letter.dispatch
+          ? ""
+          : `<div class="sheet post__sheet" data-letter="${i}" tabindex="-1" aria-label="${escapeHtml(UI.envelope.open)}" hidden>${letterHtml(letter.dispatch)}</div>`,
+      )
+      .join("") +
+    `</div>` +
     phoneHtml(input) +
     /* A caneta e paisagem: nao responde ao ponteiro e nao le por som. */
     `<div class="pen" aria-hidden="true"></div>` +
@@ -158,6 +170,7 @@ export function dressDesk(root) {
   /* O voo primeiro, a medida depois: quem calibra o tamanho de leitura e o proprio desenho do
      voo, e `fitDesk` o chama assim que a escala da cena esta escrita. */
   armFlight(root);
+  armPost(root);
   fitDesk(root);
 }
 
@@ -314,6 +327,7 @@ export function forgetDesk() {
   at = 0;
   flying = null;
   sealed = "";
+  reading = -1;
 }
 
 /** @param {ParentNode} root */
@@ -518,5 +532,129 @@ function armFlight(root) {
       sealed = sealed === act ? "" : act;
       sheet.dataset["signed"] = String(sealed === act);
     }
+  });
+}
+
+/* ══ A CARTA NA MESA ══════════════════════════════════════════════════════════
+   Clicar no envelope ergue a carta dele: a folha nasce no envelope, do tamanho dele e com o
+   giro dele, e sobe ao centro da janela na mola da pasta (`LIFT`), ate a escala de leitura —
+   `READING` da area sobre os 1018px da folha. Uma por vez; Esc, clique fora ou outro envelope
+   largam. Abertura em 2D: a mesa e ortografica e nenhuma peca tem ponto de fuga.
+   ⚠ O envelope aberto e a MESMA foto por enquanto: a foto aberta e dele, e ainda nao existe —
+   `data-open` no envelope e o gancho para ela entrar sem mexer aqui. */
+
+/** A carta erguida, pelo indice do envelope; -1 e nenhuma. Sobrevive a pintura. */
+let reading = -1;
+
+/** @param {ParentNode} root */
+function armPost(root) {
+  const room = root.querySelector(".room");
+  const post = root.querySelector(".post");
+  if (!(room instanceof HTMLElement) || !(post instanceof HTMLElement)) return;
+
+  /** @param {number} i */
+  const sheetOf = i => post.querySelector(`.post__sheet[data-letter="${i}"]`);
+  /** @param {number} i */
+  const envelopeOf = i => room.querySelector(`.envelope[data-letter="${i}"]`);
+
+  /* ONDE A FOLHA NASCE E ONDE ELA LE, em px da cena: a folha mora dentro da cena escalada por
+     `--fit`, entao toda medida de janela divide por ele. */
+  /** @param {HTMLElement} envelope @param {HTMLElement} sheet */
+  const ends = (envelope, sheet) => {
+    const fit = Number(room.style.getPropertyValue("--fit")) || 1;
+    const scene = room.getBoundingClientRect();
+    const env = envelope.getBoundingClientRect();
+    const win = room.ownerDocument.defaultView;
+    const area = room.closest(".area");
+    const seen = area instanceof HTMLElement ? area.clientHeight : scene.height;
+    const turn = parseFloat(getComputedStyle(envelope).getPropertyValue("--er")) || 0;
+    const tall = sheet.offsetHeight || 1018;
+    const rise = Math.min(1, (seen * READING) / tall) / fit;
+    const cx = (env.left + env.width / 2 - (scene.left + scene.width / 2)) / fit;
+    const cy = (env.top + env.height / 2 - (scene.top + scene.height / 2)) / fit;
+    const wx = win ? (win.innerWidth / 2 - (scene.left + scene.width / 2)) / fit : 0;
+    const wy = win ? (win.innerHeight / 2 - (scene.top + scene.height / 2)) / fit : 0;
+    const small = env.width / fit / (sheet.offsetWidth || 720);
+    const from =
+      `translate(-50%, -50%) translate(${cx.toFixed(1)}px, ${cy.toFixed(1)}px)` +
+      ` rotate(${turn}deg) scale(${small.toFixed(4)})`;
+    const to =
+      `translate(-50%, -50%) translate(${wx.toFixed(1)}px, ${wy.toFixed(1)}px)` +
+      ` rotate(0deg) scale(${rise.toFixed(4)})`;
+    return { from, to };
+  };
+
+  /** @param {number} i @param {boolean} animate */
+  const open = (i, animate) => {
+    const sheet = sheetOf(i);
+    const envelope = envelopeOf(i);
+    if (!(sheet instanceof HTMLElement) || !(envelope instanceof HTMLElement)) return;
+    reading = i;
+    sheet.hidden = false;
+    envelope.dataset["open"] = "true";
+    const { from, to } = ends(envelope, sheet);
+    sheet.getAnimations().forEach(one => one.cancel());
+    sheet.style.transform = to;
+    if (animate) {
+      const curve = curveOf({ ...LIFT, velocity: 0 });
+      sheet.animate([{ transform: from }, { transform: to }], {
+        duration: curve.duration * 1000,
+        easing: curve.css,
+        fill: "none",
+      });
+    }
+    sheet.focus({ preventScroll: true });
+  };
+
+  /** @param {boolean} animate */
+  const close = animate => {
+    if (reading < 0) return;
+    const sheet = sheetOf(reading);
+    const envelope = envelopeOf(reading);
+    reading = -1;
+    if (!(sheet instanceof HTMLElement)) return;
+    if (envelope instanceof HTMLElement) envelope.dataset["open"] = "false";
+    const done = () => {
+      sheet.hidden = true;
+      if (envelope instanceof HTMLElement) envelope.focus({ preventScroll: true });
+    };
+    if (!animate || !(envelope instanceof HTMLElement)) return done();
+    const { from, to } = ends(envelope, sheet);
+    const curve = curveOf({ ...DROP, velocity: 0 });
+    const fall = sheet.animate([{ transform: to }, { transform: from }], {
+      duration: curve.duration * 1000,
+      easing: curve.css,
+      fill: "forwards",
+    });
+    fall.finished
+      .catch(() => {})
+      .then(() => {
+        fall.cancel();
+        done();
+      });
+  };
+
+  /* A pintura nova reabre a carta que estava na mao, sem voo. */
+  if (reading >= 0) {
+    if (sheetOf(reading) instanceof HTMLElement) open(reading, false);
+    else reading = -1;
+  }
+
+  room.addEventListener("click", event => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest(".post__sheet") !== null) return;
+    const envelope = target.closest(".envelope[data-letter]");
+    if (envelope instanceof HTMLElement) {
+      const i = Number(envelope.dataset["letter"]);
+      if (i === reading) return close(true);
+      close(false);
+      open(i, true);
+      return;
+    }
+    if (reading >= 0) close(true);
+  });
+  room.ownerDocument.addEventListener("keydown", event => {
+    if (event.key === "Escape" && reading >= 0) close(true);
   });
 }

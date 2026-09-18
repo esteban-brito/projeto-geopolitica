@@ -882,9 +882,12 @@ export const UI = {
     role: she => `${she ? "Ministra" : "Ministro"} de Estado Chefe da Casa Civil`,
   },
   /* O ENVELOPE — para quem le por som; na tela ele e um objeto, e o vermelho e o prazo. */
+  /* A carta abre NA MESA (ciclo 27); a Caixa continua como arquivo, pelo dock. */
   envelope: {
-    waiting: "Carta na mesa. Abrir a Caixa.",
-    due: "Carta que vence este mês. Abrir a Caixa.",
+    waiting: "Carta na mesa. Abrir.",
+    due: "Carta que vence este mês. Abrir.",
+    /* A carta erguida, para quem le por som: Esc larga. */
+    open: "Carta aberta. Esc larga.",
   },
   /* O TELEFONE — as duas frases sao para quem le por som; na tela ele e so um objeto. */
   phone: {

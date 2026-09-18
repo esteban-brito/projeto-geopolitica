@@ -29,23 +29,18 @@ const FALL = [
   { x: -0.28, y: -0.72, r: 30 },
 ];
 
-/* ⛔ O LACRE, AS ABAS E OS DOIS FILTROS DE CERA SAIRAM COM A FOTO. Eram um `<svg>` de quatro
-   peças com `feTurbulence`, `feDisplacementMap` e `feSpecularLighting`, mais três `<div>` de
-   aba recortada. Ordem dele: "todos os elementos de cima da mesa serao coisas reais, imagens
-   por IA". A cera, a dobra e o grão vêm na foto, e vêm de verdade. */
+/* ⛔ O LACRE, AS ABAS E OS DOIS FILTROS DE CERA SAIRAM COM A FOTO: a cera, a dobra e o grao vem
+   nela. */
 
 /**
- * O PUNHADO — todas iguais, e so a cor separa os dois estados.
- *
- * ⚠ ELE MOSTRA O QUE CHEGOU, E NAO A CAIXA INTEIRA: medido em 48 meses, a caixa fecha com 25
- * cartas, e 25 envelopes viram um monte. O fechamento traz 0 ou 1.
- *
- * ⛔ E CADA CARTA DIZ SE VENCE, em vez de o punhado marcar as ULTIMAS N: quem vence sai de
- * `silences`, que olha a caixa inteira, e o punhado desenha so o que chegou.
+ * O PUNHADO — todas iguais, e so a cor separa os dois estados. Ele mostra o que chegou, e nao
+ * a caixa inteira: em 48 meses a caixa fecha com 25 cartas, e 25 envelopes viram um monte.
+ * Cada carta diz se vence (`silences` olha a caixa inteira), e o punhado so desenha.
  *
  * @param {object} input
- * @param {ReadonlyArray<{ urgent: boolean }>} input.letters o que esta na mesa, e o que de
- * verdade vence — perguntado a `silences`, uma carta de cada vez
+ * @param {ReadonlyArray<{ urgent: boolean }>} input.letters o que esta na mesa, e o que vence,
+ * perguntado a `silences`. A ordem e a das folhas de `.post` no `cabinetHtml`: o envelope i
+ * abre a carta i
  * @returns {string}
  */
 export function mailPileHtml({ letters }) {
@@ -55,15 +50,16 @@ export function mailPileHtml({ letters }) {
      o pico medido em 48 meses e 4 de 8, e e no dia em que a Caixa crescer que isto morde. */
   const over = Math.max(0, letters.length - FALL.length);
   const pile = letters
-    .filter((letter, i) => letter.urgent || i >= over)
+    .map((letter, index) => ({ letter, index }))
+    .filter(({ letter, index }) => letter.urgent || index >= over)
     .slice(0, FALL.length)
-    .map((letter, i) => {
+    .map(({ letter, index }, i) => {
       const where = FALL[i] ?? { x: 0, y: 0, r: 0 };
 
-      /* ⭐ CADA CARTA E UM BOTAO PARA A CAIXA (ciclo 25 §3.3: "clicar leva ao Email"), com o gesto
-         do rail e do telefone — `data-section`. A mesa nao absorve a Caixa: ela vai crescer. */
+      /* ⭐ CADA CARTA E UM BOTAO QUE ABRE A PROPRIA CARTA NA MESA (ciclo 27): `data-letter` e o
+         indice da folha em `.post`. A Caixa continua sendo o arquivo, pelo dock. */
       return (
-        `<button class="envelope" type="button" data-section="email"` +
+        `<button class="envelope" type="button" data-letter="${index}"` +
         `${letter.urgent ? ' data-urgent="true"' : ""}` +
         ` aria-label="${letter.urgent ? UI.envelope.due : UI.envelope.waiting}"` +
         ` style="--ex:${where.x};--ey:${where.y};--er:${where.r}deg">` +

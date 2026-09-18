@@ -43,6 +43,19 @@ mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone)
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
 carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
 `tmp/plano-etapa3-gemini.md`). Lote 1 do Gemini: ícone de Defesa, geometria do dock por janela.
+✔ **PARTE B — A CARTA NA MESA — FEITA em 18/09, sem a foto do envelope aberto** (o DALL-E dele
+estourou a cota; `data-open` no envelope é o gancho para a foto entrar depois sem mexer no JS).
+Clicar no envelope ergue a folha dele (`.post__sheet`, uma por carta em `.post`, `armPost` em
+`cabinet.mjs`): nasce no envelope, do tamanho e com o giro dele, e sobe ao centro da janela na
+mola `LIFT` até 0,9 da área (`READING`); Esc, clique fora ou outro envelope largam (`DROP`), foco
+volta ao envelope. O texto é o da Caixa (`letterHtml`, `dispatchesOf` em `app.mjs` monta as duas
+telas com a mesma chamada); o papel é a `.sheet`, e a carta vira tinta sobre papel (escolhas como
+caixas, marcada cheia de tinta; anexo em caixa de traço; o botão de decidir como a marca do
+decreto). As escolhas funcionam na mesa e a repintura reabre a carta sem voo. O envelope perdeu o
+`data-section="email"` (só o telefone leva à Caixa); prova em `screens.mjs` e passo 1b do passeio
+(`gabinete-carta.png`: centrada a < 2px, com foco, contraste AA, Esc larga). ⚠ Gemini fechou o lote
+2 enquanto eu estava fora: teclado do dock provado (`tmp/dock-teclado.md`) e custo medido — 4
+camadas → 4, GPU 27,71 → 27,46 MB (`tmp/dock-custo.md`).
 ✔ **PARTE A — O DOCK — FEITA em 18/09:** no Gabinete o `nav.rail` vira cápsula de vidro fixa no pé
 (`40-shell.css`, ≥ 1181px), **só ícones, ordem dele ao vivo** — nem nome, nem posição, nem texto em
 "Nova partida" (virou glifo `restart`, confirmação acende em `--crisis` com a dica). 7 glifos:

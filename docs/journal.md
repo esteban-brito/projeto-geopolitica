@@ -8381,3 +8381,14 @@ Glass da Apple.
 Bug dele ao vivo: arrastar uma seleção pela tela pintava o telefone junto com o texto. Era a única
 `<img>` da mesa; `user-select: none` e `-webkit-user-drag: none` nas duas cópias da foto. Provado
 com arraste de canto a canto: 227 caracteres selecionados, telefone fora.
+
+### 11 · A carta na mesa — 18/09, noite
+
+Sem a foto do envelope aberto (a cota do DALL-E acabou), a parte B saiu do outro jeito: o envelope
+fica fechado e a carta sobe dele — a folha nasce do tamanho e com o giro do envelope e vai ao
+centro na mola da pasta. O texto é o mesmo da Caixa, montado pela mesma função (`dispatchesOf`),
+e o papel é a folha do ato; a carta vira tinta sobre papel, com as escolhas como caixas a marcar.
+Dois defeitos no caminho: a folha calava o ponteiro dos filhos (regra da `.sheet`) e as escolhas
+não clicavam; e a repintura depois de marcar precisava reabrir a carta sem voo. O passeio ganhou o
+passo 1b. O Gemini, enquanto eu estava sem cota, provou o teclado do dock e mediu o custo dele: 4
+camadas antes e depois, GPU 0,25 MB a menos.

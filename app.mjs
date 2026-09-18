@@ -472,15 +472,56 @@ function financeInput() {
    ⚠ ELE ERA COMPARTILHADO COM O GABINETE, e a razao registrada era boa: "as duas leituras
    saem do MESMO `settlement` do mes". Ela caiu quando o Gabinete virou mesa — ele nao le mais
    leitura nenhuma, so o ato do mes. */
-function emailInput() {
-  /* ⚠ A CARTA DA MINORIA PEDE A CAMARA, e ela sai de `situationOf` — a mesma funcao que a
-     barra superior le. Antes ela chegava por parametro do painel do Gabinete, que nao existe
-     mais. */
+/* AS CARTAS COM CONTEUDO, para a Caixa e para a mesa: a MESMA montagem, com a mesma gente, o
+   mesmo tratamento e as mesmas opcoes. Duas chamadas divergiriam no primeiro parametro novo. */
+/** @param {ReadonlyArray<import("./src/state/state.mjs").Letter>} mail */
+function dispatchesOf(mail) {
   const current = situationOf(state, CATALOG);
   const { budget } = ledger(state, orders, CATALOG);
   const share = settlement(state, orders, CATALOG);
-  /* ⚠ E O GOVERNO TAMBEM SAI UMA VEZ SO: o conselheiro dos cartoes, as pessoas e o
-     tratamento das cartas sao todos do mesmo elenco. */
+  const gov = governmentOf(state, CATALOG);
+  return describeMail({
+    mail,
+    people: gov.people,
+    treatment: gov.treatment,
+    left: letter => left(letter, state.month),
+    /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
+     impacto seria "95% da despesa e obrigatoria" — e a divisao que a produz
+     ja mora no cartao do Cofre, entao escreve-la aqui daria dois lugares
+     fazendo a mesma conta, que e o defeito recorrente numero um deste
+     projeto. Dois valores em reais dizem a mesma coisa sem abrir a segunda
+     porta. */
+    inherited: { mandatory: budget.mandatory, room: share.room },
+    answered: orders.mail,
+    /* ⚠ AS OPCOES VEM DA FACHADA, e o que esta marcado tem DUAS fontes: antes de a posse
+       fechar, o rascunho do mes; depois dela, o estado — a carta continua na caixa e
+       continua mostrando o que foi prometido. */
+    pledges: pledgesOf(CATALOG),
+    platform: { ...state.platform, ...orders.platform },
+    /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
+     mora no catalogo. Uma tabela de nomes nesta view seria a segunda verdade
+     sobre quem sao os quatro. */
+    lobbies: CATALOG.lobbies,
+    /* ⚠ O CERCO SAI DO MOTOR, e a carta dele nao escreve numero proprio: o
+     triplo da cadeira e `SIEGE_PRICE`, e os 342 de 513 sao a CF art. 86 no
+     regime. Copiados na view, os dois mentiriam no dia em que mudassem. */
+    siege: boilerOf(state, CATALOG),
+    /* AS CADEIRAS E O QUORUM, para a carta da MINORIA. Os dois ja estao calculados
+       nesta funcao — a tela nao soma bancada de novo. */
+    chamber: { base: current.base, majority: SIMPLE_MAJORITY, seats: SEATS },
+    /* ⚠ OS MESES FECHADOS, e nao para a carta do mes: a carta do PLENARIO nao guarda o
+       proprio placar, e ele ja mora aqui desde a versao 19. */
+    months: state.months,
+    /* AS CLASSES, so pelo ROTULO: o anexo da carta da rua nomeia as linhas, e os
+         numeros dele ja vem pesados dentro da propria carta. */
+    segments: CATALOG.segments,
+    /* AS BANCADAS, so pelo ROTULO: a lealdade e as cadeiras chegam na propria
+         carta, gravadas no mes em que ela foi escrita. */
+    parties: CATALOG.parties,
+  });
+}
+
+function emailInput() {
   const gov = governmentOf(state, CATALOG);
 
   return {
@@ -501,45 +542,7 @@ function emailInput() {
         /* ⚠ A ORDEM NAO MORA MAIS AQUI, e a mudanca e de endereco e nao de regra: quem
            ordena e `trayHtml`, onde ela e funcao pura e tem prova. No entrypoint ela so era
            alcancavel pelo passeio, e passou meses com as perguntas nao ordenadas entre si. */
-        ...describeMail({
-          mail: state.mail,
-          people: gov.people,
-          treatment: gov.treatment,
-          left: letter => left(letter, state.month),
-          /* ⚠ OS DOIS NUMEROS CRUS, E NAO A RAZAO ENTRE ELES. A frase com mais
-           impacto seria "95% da despesa e obrigatoria" — e a divisao que a produz
-           ja mora no cartao do Cofre, entao escreve-la aqui daria dois lugares
-           fazendo a mesma conta, que e o defeito recorrente numero um deste
-           projeto. Dois valores em reais dizem a mesma coisa sem abrir a segunda
-           porta. */
-          inherited: { mandatory: budget.mandatory, room: share.room },
-          answered: orders.mail,
-          /* ⚠ AS OPCOES VEM DA FACHADA, e o que esta marcado tem DUAS fontes: antes de a posse
-             fechar, o rascunho do mes; depois dela, o estado — a carta continua na caixa e
-             continua mostrando o que foi prometido. */
-          pledges: pledgesOf(CATALOG),
-          platform: { ...state.platform, ...orders.platform },
-          /* QUEM PODE EXIGIR — a carta da chantagem precisa do NOME do grupo, e o nome
-           mora no catalogo. Uma tabela de nomes nesta view seria a segunda verdade
-           sobre quem sao os quatro. */
-          lobbies: CATALOG.lobbies,
-          /* ⚠ O CERCO SAI DO MOTOR, e a carta dele nao escreve numero proprio: o
-           triplo da cadeira e `SIEGE_PRICE`, e os 342 de 513 sao a CF art. 86 no
-           regime. Copiados na view, os dois mentiriam no dia em que mudassem. */
-          siege: boilerOf(state, CATALOG),
-          /* AS CADEIRAS E O QUORUM, para a carta da MINORIA. Os dois ja estao calculados
-             nesta funcao — a tela nao soma bancada de novo. */
-          chamber: { base: current.base, majority: SIMPLE_MAJORITY, seats: SEATS },
-          /* ⚠ OS MESES FECHADOS, e nao para a carta do mes: a carta do PLENARIO nao guarda o
-             proprio placar, e ele ja mora aqui desde a versao 19. */
-          months: state.months,
-          /* AS CLASSES, so pelo ROTULO: o anexo da carta da rua nomeia as linhas, e os
-               numeros dele ja vem pesados dentro da propria carta. */
-          segments: CATALOG.segments,
-          /* AS BANCADAS, so pelo ROTULO: a lealdade e as cadeiras chegam na propria
-               carta, gravadas no mes em que ela foi escrita. */
-          parties: CATALOG.parties,
-        }),
+        ...dispatchesOf(state.mail),
         /* ⚠ O FECHAMENTO DO MES ENTRA NA MESMA LISTA, e nao concatenado depois dela. Ele era
            anexado FORA da ordenacao, entao caia sempre no fim mesmo sendo a carta mais nova —
            o calendario lia "abr → mar → abr" numa partida de dois meses, e do mes 3 em diante o
@@ -566,6 +569,21 @@ function closestToBreak(lobbies) {
     if (worst === null || lobby.pressure / lobby.boil > worst.pressure / worst.boil) worst = lobby;
   }
   return worst === null ? null : { label: worst.label, pressure: worst.pressure, boil: worst.boil };
+}
+
+/* O QUE ESTA NA MESA, com o texto de cada carta: a bandeja mostra o que chegou no fechamento e o
+   que vence, e a carta abre ali mesmo. `dispatchesOf` e a mesma montagem da Caixa. */
+/** @param {number} closed @param {Set<string>} dying */
+function onDesk(closed, dying) {
+  const here = state.mail
+    .filter(letter => letter.month === closed || dying.has(letter.id))
+    /* O QUE VENCE CAI POR CIMA: e o que uma pessoa faz com a correspondencia urgente. */
+    .sort((a, b) => Number(dying.has(a.id)) - Number(dying.has(b.id)));
+  const dispatches = dispatchesOf(here);
+  return here.map(letter => ({
+    urgent: dying.has(letter.id),
+    dispatch: dispatches.find(dispatch => dispatch.id === letter.id) ?? null,
+  }));
 }
 
 function cabinetInput() {
@@ -627,11 +645,7 @@ function cabinetInput() {
        dos 48 meses ele traz alguma.
        ⚠ E O QUE VENCE ENTRA MESMO SEM TER CHEGADO AGORA: ela e a carta que o mes fecha sem
        resposta, e uma mesa que a esconde e a mesa deixando de avisar. */
-    letters: state.mail
-      .filter(letter => letter.month === closed || dying.has(letter.id))
-      /* O QUE VENCE CAI POR CIMA: e o que uma pessoa faz com a correspondencia urgente. */
-      .sort((a, b) => Number(dying.has(a.id)) - Number(dying.has(b.id)))
-      .map(letter => ({ urgent: dying.has(letter.id) })),
+    letters: onDesk(closed, dying),
     /* ⚠ A ESPESSURA DA PASTA E O QUE ESPERA DESPACHO, e nao um numero escolhido: sao as cartas
        que fizeram uma pergunta e ainda nao foram respondidas. Hoje o jogo tem UMA caneta
        construida — o contingenciamento —, entao sem elas a pasta teria sempre uma folha so. */

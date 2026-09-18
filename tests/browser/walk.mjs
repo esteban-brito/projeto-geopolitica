@@ -806,6 +806,38 @@ try {
   await checkTopbar("barra");
   await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
 
+  /* 1b — A CARTA ABRE NA MESA (ciclo 27): o envelope ergue a folha dele ao centro da janela, na
+     escala de leitura; Esc larga e devolve o foco ao envelope. So quando ha carta na mesa. */
+  if ((await page.locator(".envelope[data-letter]").count()) > 0) {
+    await page.click(".envelope[data-letter] >> nth=0");
+    await page.waitForTimeout(500);
+    const carta = await page.evaluate(() => {
+      const sheet = document.querySelector(".post__sheet:not([hidden])");
+      if (!(sheet instanceof HTMLElement)) return null;
+      const r = sheet.getBoundingClientRect();
+      return {
+        cx: r.left + r.width / 2 - window.innerWidth / 2,
+        cy: r.top + r.height / 2 - window.innerHeight / 2,
+        h: r.height,
+        focused: document.activeElement === sheet,
+      };
+    });
+    expect(carta !== null, "[gabinete] o envelope nao ergueu a carta");
+    expect(
+      carta !== null && Math.abs(carta.cx) < 2 && Math.abs(carta.cy) < 2,
+      `[gabinete] a carta erguida nao centrou na janela: ${carta?.cx.toFixed(1)}, ${carta?.cy.toFixed(1)}`,
+    );
+    expect(carta !== null && carta.focused, "[gabinete] a carta erguida nao recebeu o foco");
+    await checkContrast("carta");
+    await page.screenshot({ path: join(OUT, "gabinete-carta.png"), fullPage: true });
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(450);
+    expect(
+      (await page.locator(".post__sheet:not([hidden])").count()) === 0,
+      "[gabinete] Esc nao largou a carta",
+    );
+  }
+
   /* 1a — O EMAIL E A OUTRA METADE DA TELA QUE SE PARTIU, e a geometria se remede aqui porque
      o vao mudou de TAMANHO e nao so de lugar: a caixa deixou a coluna de 432px e ficou com a
      largura do tabuleiro. */

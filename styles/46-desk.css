@@ -726,6 +726,165 @@
     z-index: 2;
   }
 
+  /* ══ A CARTA ERGUIDA ══════════════════════════════════════════════════════
+     A folha de cada carta mora em `.post`, sobre tudo, e nasce escondida; `armPost` escreve o
+     transform e o voo. O papel e a `.sheet`; o texto e o `.letter` da Caixa, que aqui perde a
+     caixa de vidro e vira tinta sobre papel. */
+  .post {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+  }
+
+  .post__sheet {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    pointer-events: auto;
+    will-change: transform;
+    outline: none;
+    /* A tinta da carta e a do papel, como no parecer: `.letter` le `--sheet-ink`. */
+    --sheet-ink: var(--ink-act);
+    --sheet-ink-rgb: var(--ink-act-rgb);
+    --sheet-edge: var(--ink-organ);
+  }
+
+  .post__sheet[hidden] {
+    display: none;
+  }
+
+  /* A carta responde inteira: a regra da folha cala tudo menos o ato, e aqui as escolhas e o
+     botao de decidir sao o ato. */
+  .post__sheet > * {
+    pointer-events: auto;
+  }
+
+  .post .letter {
+    box-shadow: none;
+    padding: 0;
+    gap: var(--sheet-gap-m);
+    background: none;
+    border: 0;
+    color: var(--ink-act);
+    font: inherit;
+  }
+
+  .post .letter__head {
+    padding-bottom: var(--sheet-gap-s);
+    border-bottom: 1px solid var(--ink-organ);
+  }
+
+  .post .letter__name,
+  .post .letter__subject {
+    font-family: inherit;
+    font-size: inherit;
+    color: var(--ink-act);
+  }
+
+  .post .letter__role,
+  .post .letter__date,
+  .post .letter__due {
+    font-family: inherit;
+    font-size: calc(var(--paper) * 0.0271);
+    color: var(--ink-organ);
+  }
+
+  .post .letter__body p {
+    margin: 0 0 calc(var(--paper) * 0.006);
+    text-indent: calc(var(--paper) * 0.119);
+    text-align: justify;
+    hyphens: manual;
+  }
+
+  .post .letter__foot {
+    margin: var(--sheet-gap-m) 0 0;
+    padding: var(--sheet-gap-s) 0 0;
+    border-top: 1px solid var(--ink-organ);
+    border-radius: 0;
+    background: none;
+  }
+
+  /* O que na Caixa e tinta de interface vira tinta de documento: mesma familia, sem rastreio,
+     corpo em fracao do papel. */
+  .post .letter__lines,
+  .post .letter__lines span,
+  .post .letter__axis,
+  .post .annex__legend,
+  .post .annex__who,
+  .post .annex__aside,
+  .post .annex__value,
+  .post .letter__choice,
+  .post .letter__choice b,
+  .post .letter__cost,
+  .post .letter__action {
+    font-family: inherit;
+    letter-spacing: 0;
+    color: var(--ink-act);
+  }
+
+  .post .letter__lines,
+  .post .annex__who,
+  .post .annex__value,
+  .post .letter__choice b {
+    font-size: inherit;
+  }
+
+  .post .letter__role,
+  .post .letter__date,
+  .post .letter__due {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .post .letter__axis,
+  .post .annex__legend,
+  .post .letter__cost,
+  .post .annex__aside {
+    font-size: calc(var(--paper) * 0.0271);
+    color: var(--ink-organ);
+  }
+
+  .post .annex {
+    padding: var(--sheet-gap-s);
+    border: 1px solid var(--ink-organ);
+    border-radius: 2px;
+    background: none;
+  }
+
+  .post .pledge__icon {
+    opacity: 1;
+  }
+
+  /* A escolha e uma caixa a marcar: marcada, ela fica cheia de tinta. */
+  .post .letter__choice {
+    border-color: var(--ink-act);
+    background: none;
+  }
+
+  .post .letter__choice[aria-pressed="true"] {
+    border-color: var(--ink-sign);
+    background: var(--ink-sign);
+    color: var(--paper-cover);
+  }
+
+  .post .letter__choice[aria-pressed="true"] b,
+  .post .letter__choice[aria-pressed="true"] .letter__cost {
+    color: var(--paper-cover);
+  }
+
+  /* O botao de decidir e a marca do decreto: texto do documento, sublinhado pontilhado. */
+  .post .letter__action {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: inherit;
+    text-transform: none;
+    color: var(--ink-sign);
+    text-decoration: underline dotted var(--ink-gazette);
+    text-underline-offset: 2px;
+  }
+
   /* AS CARTAS — um punhado em leque na mesa, e todas iguais: o que muda e um estado so, quem
      vence e vermelho inteiro.
      ⛔ Sem `@property`: `initial-value` nao aceita `var()`, e com o token no lugar do hex os
