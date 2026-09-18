@@ -8424,3 +8424,12 @@ troca zerou. A guarda de material recusou `backdrop-filter: none` e o token é q
 O Gemini voltou da pesquisa: a Apple não desfoca a tela na troca, dissolve com um fio de escala em
 280–320ms na mola padrão do SwiftUI; o desfoque animado em tela inteira é caro. Saiu o desfoque,
 entrou a curva; 380ms ao todo.
+
+### 14 · O ciclo 28, o vidro — 18/09, noite
+
+Ele fechou a Etapa 3 e mandou refazer todo o liquid glass, "esqueça todas as travas e guardas".
+Estudei o que existe: a barra já tem o vidro da Apple em quatro partes (lente de borda por campo
+de distância, desfoque com saturação, aresta de Fresnel, squircle), e o resto do jogo tem o vidro
+antigo — dois vidros. O ciclo 28 faz um: `dress` vira `glaze()` em `glass.mjs` e veste toda
+peça, do dock aos palcos, uma por sessão, com fps nos dois braços e croma no pixel. As guardas: a
+de material é reescrita para aceitar a lente; as que medem ficam.

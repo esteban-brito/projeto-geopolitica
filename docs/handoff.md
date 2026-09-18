@@ -38,7 +38,14 @@ larga, anel cerca a peça e escala por `--rest`; hover com `brightness` recusado
 animada). 4.4 pronta: `tmp/prancha-tampo.png`, o tampo dele × 3 Poly Haven — ele olha. 4.2 medido pelo Gemini
 (`tmp/serrilhado.md`): transição de 1,7 a 1,9 px nas três arestas giradas — antialiasing íntegro; os
 mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone), não na rasterização.
-⭐ **CICLO 26 FECHADO e commitado (65b66d0). O PLANO EM VIGOR É O CICLO 27** — Etapa 3:
+⭐ **A ETAPA 3 ESTÁ FECHADA, declarada por ele em 18/09** (dock, carta na mesa, troca de tela; a
+bandeirinha fica na fila esperando a foto dele). **O PLANO EM VIGOR É O CICLO 28 — O VIDRO:**
+`docs/cycles/28-o-vidro.md`, o Liquid Glass do jogo inteiro refeito a partir do vidro que a barra
+já tem (`glass.mjs`: lente de borda, Fresnel, squircle), uma peça por sessão, cada uma com fps nos
+dois braços e croma do jacarandá no pixel. Ordem dele: "esqueça todas as travas e guardas" — o §5
+do ciclo diz o que isso vira: a guarda `material` é reescrita para aceitar a lente; o que mede
+fica. Gemini está no inventário (`tmp/vidro-inventario.md`). Aguarda a aprovação dele.
+✔ **CICLO 27 fechado** — antes: **CICLO 26 FECHADO e commitado (65b66d0). O PLANO ERA O 27** — Etapa 3:
 `docs/cycles/27-a-carta-na-mesa-e-o-dock.md`, com as três decisões dele de 18/09 (abertura 2D,
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
 carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
