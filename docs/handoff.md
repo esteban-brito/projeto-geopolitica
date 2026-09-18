@@ -17,7 +17,52 @@
 
 ## ▶ COMECE POR AQUI
 
-### ▶ Estado — 18/09/2026 02:40 (portão verde, NÃO commitado — ele vai commitar)
+### ▶ Estado — 18/09/2026 fim de tarde (portão verde, NÃO commitado)
+
+⭐ **O PLANO EM VIGOR É O CICLO 26** (`docs/cycles/26-limpeza-e-polimento-do-gabinete.md`), aprovado
+por ele em 18/09: limpeza → otimização → polimento, antes da Etapa 3, com o Gemini. ✔ **BLOCO 1 (limpeza) FECHADO em 18/09:** prosa `46-desk.css` 43% → 30%, `cabinet.mjs` 38% → 31%
+(Claude); `00-tokens.css` 40% → 6%, `40-shell.css` 24% → 4% (Gemini). Código idêntico sem
+comentário (`tmp/sem-comentario.mjs`) e passeio pixel-igual (`tmp/diff-capturas.mjs`, 0 px nas
+11 telas; `mesa.png` e `area.png` oscilam sozinhas por hover). 2.2: os 3 tokens são a metade hex
+de par consumido, a guarda exige os dois — nada a fazer. 2.4: 194 scripts em `tmp/arquivo/`.
+3.3: 2 quadros por resize, sem laço (`tmp/resize-quadros.md`). ⚠ Regra do portão: UM walk de
+cada vez — dois ao mesmo tempo disputam a porta e um quebra. ✔ **BLOCO 2 (otimização) FECHADO, e nada mudou no código — tudo medido:** 3.1 `preload` do tampo +
+capa a 10 Mbps piorou "pasta visível" 1262 → 2008 ms e tirou 210 ms do `load` (9,6 s) — reprovado,
+`tmp/medir-carga.mjs`; o peso é o tampo lossless (7,2 MB), ordem dele. 3.2: os 10 `will-change`
+estão em camadas que animam (voo da pasta, botão Avançar), e `npm run screen` dá 238,7 × 237,7 —
+nada a tirar. 3.3: 2 quadros por resize.
+✔ **BLOCO 3 (polimento) FECHADO:** 4.1 medido — luz coerente nas 4 peças (sombra/luz: capa 1:3,3,
+envelope 1:4,4, telefone 1:7,2, caneta 1:28; `tmp/luz-pecas.mjs`), nada a mudar. 4.3 feito: anel de
+foco da base nas 3 peças (o âmbar do telefone saiu), pasta com `tabindex`, Enter/Espaço pega e Esc
+larga, anel cerca a peça e escala por `--rest`; hover com `brightness` recusado (filtro em camada
+animada). 4.4 pronta: `tmp/prancha-tampo.png`, o tampo dele × 3 Poly Haven — ele olha. 4.2 medido pelo Gemini
+(`tmp/serrilhado.md`): transição de 1,7 a 1,9 px nas três arestas giradas — antialiasing íntegro; os
+mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone), não na rasterização.
+⭐ **CICLO 26 FECHADO em 18/09.** Próximo: o plano da Etapa 3.
+✔ **A cena não encolhe mais na janela dele:** `fitDesk` mede a faixa das peças e só encolhe quando
+uma sairia da janela; `--room-dy` centra a faixa. A 1920×937: `--fit` 0,9488 → **1**, telefone a
+39px do topo. A 1920×800 encolhe a 0,938 e nada sai.
+✔ **Os algarismos do telefone estão na foto** (`assar-fone-tela.mjs` desenha os 12 e o número em
+Inter sobre as teclas medidas; `.phone__keys` e `.phone__number` saíram do DOM e do CSS,
+`--phone-print` saiu dos tokens): giram e vibram com o aparelho.
+
+✔ **O TELEFONE FOI REASSADO** com a receita do envelope (`tmp/assar-fone-tela.mjs`): na mesa a
+1920×937, Sobel **48,7 → 55,1** a dpr 1 e **35,6 → 46,8** a dpr 2.
+✔ **O TAMPO É A AMPLIAÇÃO 2× DELE, SEM PERDA — ordem dele: "QUERO 0 PERDA":** `assets/jacaranda.webp`
+agora tem 3832×1642 em WebP lossless (7,2 MB; pixel a pixel igual à PNG), servida a 1916 CSS px — 1:1 a dpr 2, reduzida 2:1 pelo navegador a dpr 1. Na mesa a
+1920×937: Sobel 43,4 → 52,3 a dpr 1 e 24,8 → 43,2 a dpr 2.
+⛔ **Nitidez em cima dela ele recusou em 18/09** ("a mesa ficou horrível"): o 1× assado com nitidez
+em `image-set` media 76,5 a dpr 1 e ele não gostou. Gosto dele, com data; receita e medidas em
+`tmp/assar-madeira.mjs` e `tmp/madeira-caminho.mjs`. Ele disse que vê como mexer depois.
+✔ **A CANETA SEM PERDA E COM SOMBRA DE OBJETO:** `assets/pen.webp` é a tinta nativa (2023×201,
+lossless, 381 KB); a sombra deixou de ser halo (queda 6 com desfoque 9 → 12 com 5; lado da luz
+0,35 → 0,25 ponto, lado da sombra 0,72 → 0,90). Ele disse "adesivo colado" — ver se ele aceita. ⚠ O teto continua o monitor dele:
+1920×1080 a dpr 1. Portão: **13 guardas · 66 sintéticas · 332 provas · passeio verde**. Gemini está
+buscando foto real de jacarandá ≥ 3840px em `tmp/madeira-candidatas/`.
+
+---
+
+### ✔ Estado anterior — 18/09/2026 02:40 (commitado em 1698fd0)
 
 ✔ **A CANETA ESTÁ NA MESA** (`assets/pen.webp`, 420×42, 7 KB, imagem dele): no vão entre o punhado
 e a pasta, a −78°, 210px de comprimento — 0,61 da capa fechada, a razão de uma caneta de 14cm sobre

@@ -7,7 +7,7 @@
    ⚠ E ELE APONTA, NAO REPETE: o clique abre o Email, onde a carta do grupo ja esta.
 
    📗 E IMAGEM, como a madeira: `assets/phone.webp` e um telefone de teclas vermelho visto de
-   cima, gerado a pedido dele (origem em `assets/CREDITOS.md`), com teclas e cartao em branco.
+   cima, gerado a pedido dele, com os algarismos e o numero assados nela (`assets/CREDITOS.md`).
    ⛔ O VETOR SAIU (a 78 graus e sem cor literal ele destoava das materias de foto), e a FOTO
    DO COMMONS TAMBEM: um Dialog de disco a 65 graus, que mesmo recortado lia como imagem colada.
    A imagem vem em duas copias: a de cima leva as sombras da sala, a de baixo e o halo do toque
@@ -20,11 +20,8 @@ const PHOTO = "/assets/phone.webp";
 /* A medida do arquivo, para o navegador reservar a caixa antes de a foto chegar. */
 const SIZE = 'width="720" height="639"';
 
-/* AS DOZE TECLAS, na ordem do teclado: a imagem vem com elas em branco, e o algarismo entra por
-   cima, cada um no centro da tecla medida (`46-desk.css`, `.phone__keys`). */
-const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"]
-  .map(key => `<b>${key}</b>`)
-  .join("");
+/* ⛔ OS ALGARISMOS SAIRAM DO DOM: em texto a 9,5px girado 6 graus eles saiam tortos e nao vibravam
+   com a foto no toque. Estao assados na imagem, e o numero vem de `UI.phone.number` no assador. */
 
 /**
  * @param {object} input
@@ -39,8 +36,6 @@ export function phoneHtml({ boiling }) {
     ` aria-label="${escapeHtml(ringing ? UI.phone.ringing(boiling) : UI.phone.quiet)}">` +
     `<img class="phone__glow" src="${PHOTO}" alt="" ${SIZE}>` +
     `<img class="phone__photo" src="${PHOTO}" alt="" ${SIZE}>` +
-    `<span class="phone__keys">${KEYS}</span>` +
-    `<span class="phone__number">${escapeHtml(UI.phone.number)}</span>` +
     `</button>`
   );
 }

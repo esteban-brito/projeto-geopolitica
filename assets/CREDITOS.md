@@ -8,6 +8,14 @@ a partir do prompt escrito pelo Claude: telefone de teclas vermelho ao estilo We
 alfa normalizado, corte pela caixa da tinta, redução para 720×639, luz da sala (exposição 0,95;
 1 → 0,88 de cima para baixo). Sem licença de terceiros.
 
+📐 **Reassado em 18/09/2026 com a nitidez do envelope** (`tmp/assar-fone-tela.mjs`): a mesma
+redução, numa reamostragem só, mais máscara de nitidez de raio 1 e ganho 1,4, q 0,90. Ele viu
+"resolução baixa" na mesa; Sobel dentro do aparelho a 1920×937: **48,7 → 55,1 a dpr 1 e 35,6 →
+46,8 a dpr 2**. Um arquivo de 840px (dpr 2 exato) dava 48,6 a dpr 1 — o navegador reduz 2,1× e
+come a nitidez —, e ganho 2 dava mais 5% de aresta por 50% mais halo. **Os 12 algarismos e o
+número do cartão estão desenhados na foto** (Inter 600 e 500, sobre as teclas medidas em
+`tmp/teclas-angulo.mjs`): em DOM eles saíam tortos e não vibravam com o toque.
+
 ## `folder-open.webp` e `folder-closed.webp` — a pasta de despacho
 
 Imagens geradas por IA a pedido do responsável do projeto: pasta de despacho presidencial em
@@ -43,8 +51,9 @@ moldura e `--rest` do CSS continuam valendo. **A fechada ficou 13% mais larga** 
 
 Imagem gerada por IA (ChatGPT) a pedido dele em 18/09/2026, com o prompt escrito pelo Claude:
 caneta-tinteiro preta de resina com guarnição dourada, tampada, vista de cima, fundo transparente
-(2172×724). Sem licença de terceiros. Cortada pela tinta (2023×201) e assada a 420px
-(`tmp/assar-caneta.mjs`): 210px de layout na mesa, dpr 2. Nitidez raio 1 ganho 1,0, q 0,90.
+(2172×724). Sem licença de terceiros. Cortada pela tinta (2023×201) e **sem perda nenhuma** — WebP
+lossless na largura nativa, 381 KB (`tmp/assar-caneta-integra.mjs`), ordem dele de 18/09. A versão
+assada a 420px com nitidez (`tmp/assar-caneta.mjs`) saiu: 210px de layout na mesa.
 
 ## `brasao.webp` — o timbre dos papéis
 
@@ -78,4 +87,10 @@ da foto**, 1,529: forçar o C6 de 1,42 esticaria o papel 7,5% na altura.
 
 ## `jacaranda.webp` — o tampo
 
-Foto enviada pelo responsável do projeto.
+Imagem gerada por IA (ChatGPT) a pedido do responsável do projeto em 11/09/2026 (1916×821) e
+ampliada por ele a 2× em 18/09/2026 (upscale.media, 3832×1642, `tmp/madeira-nova/upscalemedia.png`).
+Sem licença de terceiros. **Entra sem perda nenhuma, ordem dele em 18/09 ("QUERO 0 PERDA"):** WebP
+lossless (7,2 MB), pixel a pixel igual à PNG dele — Sobel 68,5 e croma 72,1 nos dois. Q 0,90 dava
+1,2 MB por −1,5% de aresta e −1,2% de croma, e ele não quis. É servida a 1916 CSS px (`DESIGN`
+em `cabinet.mjs`): 1:1 a dpr 2, reduzida 2:1 pelo navegador a dpr 1. ⛔ Nitidez em cima dela ele recusou em 18/09
+("a mesa ficou horrível"); a receita e as medidas ficam em `tmp/assar-madeira.mjs`.

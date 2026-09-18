@@ -149,6 +149,8 @@ export const UI = {
     inboxSigned: "Todo mês que você resolve chega aqui, assinado pela Casa Civil.",
     inboxWaiting:
       "O que ainda não chega é o resto da república: o líder que cobra a diretoria prometida, a lei que o relator devolveu mudada, o tribunal que derrubou o que passou. Quem escreve primeiro é a tramitação.",
+    /* A pasta de despachos, para quem chega pelo teclado: Enter pega, Esc larga. */
+    folder: "Pasta de despachos. Enter pega, Esc larga.",
     baseLine: "Apoiam o governo",
     congressAction: "negociar",
     vaultFree: TERMOS.roomLine,
@@ -886,7 +888,7 @@ export const UI = {
   phone: {
     /* O numero no quadro do aparelho: inventado, como toda pessoa deste jogo — e nao o do
        Planalto real. Prefixo que nao existe na lista da Anatel. ⚠ SEM DDD: o cartao da foto
-       tem 52px de largura, e com "(61) " o numero quebrava em duas linhas a 8,5px. */
+       tem 52px de largura. Quem o desenha e o assador da foto (`assets/CREDITOS.md`). */
     number: "2027-0148",
     quiet: "Telefone. Ninguém ligou.",
     /** @param {string} who */

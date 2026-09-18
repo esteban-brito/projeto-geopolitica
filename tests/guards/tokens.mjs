@@ -68,6 +68,8 @@ const RUNTIME = new Set([
      pasta erguida depende da altura que sobrou depois do corte. */
   "--fit",
   "--lift-rise",
+  /* --room-dy  o deslocamento que centra a faixa das pecas, e nao a foto; sai da mesma conta. */
+  "--room-dy",
   /* ── E A MEDIDA DA CENA, que sai de `DESIGN` no `cabinet.mjs` e e a UNICA fonte dela: o
      `.room` e o `.backdrop` a liam teclada, com um aviso de que as tres copias mudavam
      juntas — e o aviso falhou em quatro comentarios. */

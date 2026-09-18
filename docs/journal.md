@@ -8274,3 +8274,71 @@ parecer 90,4px (o pior mês do passeio pede 83), decreto 32,1.
 A caneta dele entrou na mesa (`assets/pen.webp`, 420×42), no vão entre o punhado e a pasta, a −78°.
 A bandeirinha fica para amanhã. Portão verde: 13 guardas · 66 sintéticas · 332 provas · passeio
 verde. Ele mandou commitar tudo e desligar.
+
+### 5 · A mesa de resolução baixa — 18/09, tarde
+
+Ele abriu com "a resolução parece baixa". Medido antes de mexer: o monitor é 1920×1080 a 100% (dpr
+1), a cena entra a `--fit` 0,9488 (custa 4% no envelope e 9% na caneta — pouco), e as duas origens
+grandes são lisas: o tampo é imagem do ChatGPT a 1916×821 servida 1:1 (reduzida à metade e
+ampliada de volta, 51% da aresta sobrevive; a pasta guarda 36%), e o telefone é DALL-E reduzido a
+720 sem nitidez (70% sobrevive). O `CREDITOS.md` dizia "foto" para o tampo — corrigido.
+
+**Telefone:** reassado do original de 1323px com a receita do envelope (720px, nitidez raio 1 ganho
+1,4, q 0,90). Na mesa a 1920×937: Sobel 48,7 → 55,1 a dpr 1 e 35,6 → 46,8 a dpr 2. Um arquivo de
+840 (dpr 2 exato) não ganhava nada a dpr 1 — o navegador reduz 2,1× e come a aresta. Ganho 2 dava
+mais 5% de aresta por 50% mais halo; ficou o 1,4 da receita.
+
+**Tampo:** ele ampliou a imagem a 2× no upscale.media (3832×1642) e mandou "sem perder qualidade
+nem resolução". Ficaram dois arquivos em `image-set`: o 2× como veio (q 0,90, 1,2 MB) e o 1× reduzido
+2:1 numa reamostragem só com nitidez na luminância. Três tentativas de nitidez tiraram croma
+(multiplicar canal por L'/L: −15%; somar ΔL: −9%) porque a madeira é escura e saturada e a aresta
+bate na parede do gama; a que ficou limita o passo ao canal mais perto da parede e o croma fica por
+construção (70,1 → 70,3). Na mesa: dpr 1 **43,4 → 76,5** (o 2× sozinho dava 52,3), dpr 2
+**24,8 → 43,2**. A luminância na mesa ficou a mesma (11,1 → 11,0%). A ampliação dele veio 0,7° mais
+vermelha e 1,5 ponto mais escura que o original — é a imagem que ele mandou, ficou.
+
+O Gemini recebeu a busca de fotos reais de jacarandá ≥ 3840px com licença livre, só em `tmp/`.
+Portão verde: 13 guardas · 66 sintéticas · 332 provas · passeio verde.
+
+Ele olhou e recusou: "a mesa ficou horrível, deixe só a imagem original". O tampo voltou ao arquivo
+do commit 1698fd0, o `image-set` saiu do `cabinet.mjs` e o 2× foi apagado de `assets/`. O telefone
+reassado ficou. Recusa de gosto, com data — as medidas continuam em `tmp/`.
+Correção dele em seguida: "a imagem original que eu digo é a upscaled". Entrou a ampliação 2× como
+veio, um arquivo só (3832×1642, q 0,90), servida a 1916 CSS px pelo `DESIGN` de sempre.
+Perguntou se assar perde qualidade; a resposta foi a tabela (q 0,90: −1,5% de aresta, −1,2% de
+croma, 8× menor) e ele mandou "QUERO 0 PERDA". O tampo virou WebP lossless de 7,2 MB, igual à PNG.
+A caneta: "qualidade ruim e parece adesivo colado". O arquivo virou a tinta nativa sem perda
+(2023×201) e a sombra virou a de um cilindro: contato apertado e queda de 12px com desfoque 5, em
+vez de 6 com 9 — a penumbra mais larga que a queda saía dos dois lados, que é o que faz adesivo.
+Ele pediu, para antes da Etapa 3, uma rodada de otimização, limpeza e polimento do gabinete inteiro,
+com plano prévio para aprovar, feito junto com o Gemini.
+
+### 6 · O plano aprovado, e duas respostas dele — 18/09, fim de tarde
+
+Ele aprovou o ciclo 26 (limpeza → otimização → polimento, com o Gemini) e respondeu as duas
+perguntas: a cena não encolhe mais — "a opção que vise o futuro", com o menu inferior da Etapa 3
+em mente —, então `fitDesk` mede a faixa vertical das peças e só encolhe quando uma sairia da
+janela, e desloca a cena para centrar a faixa (`--room-dy`). Na janela dele a cena foi de 0,9488
+para 1:1. O telefone fica; os algarismos, que em DOM saíam tortos e não vibravam com o toque,
+foram assados na foto. Portão verde. O Gemini fez o inventário (`tmp/inventario-gabinete.md`):
+0 seletores órfãos, 3 tokens mortos, 43% de prosa em `46-desk.css`, 460 scripts em `tmp/`.
+
+### 7 · Bloco 1 do ciclo 26 fechado — 18/09, tarde
+
+Limpeza sem mudar um pixel: os quatro arquivos perderam a prosa de diário e ficaram com a lição
+medida. Claude: `46-desk.css` 43% → 30% e `cabinet.mjs` 38% → 31%; Gemini: `00-tokens.css`
+40% → 6% e `40-shell.css` 24% → 4%, com uma volta para devolver número perdido e apagar
+comentário que só descrevia a declaração. Portão: código idêntico sem comentário, validate verde,
+captura do passeio pixel-igual. Dois walks simultâneos quebraram um — o portão passou a rodar um
+de cada vez, e só o Claude roda. Os 3 "tokens mortos" não eram: a guarda exige o par hex/rgb.
+
+### 8 · Blocos 2 e 3 do ciclo 26 — 18/09, fim de tarde
+
+Otimização fechou sem mudar código: preload do tampo piorou a pasta visível em 746 ms a 10 Mbps
+(o tampo de 7,2 MB disputa banda com o que a tela precisa primeiro) e foi reprovado; os dez
+`will-change` animam de verdade; resize gasta 2 quadros. Polimento: a luz das quatro peças medida
+coerente (sombra sempre mais forte do lado da sombra, 1:3 a 1:28); anel de foco unificado com o da
+base, e a pasta entrou no teclado. O hover que o Gemini propôs (brightness) não entrou. A prancha
+do tampo dele contra as três texturas reais do Poly Haven está em `tmp/prancha-tampo.png`.
+As arestas giradas medidas pelo Gemini: 1,7 a 1,9 px de transição, antialiasing íntegro. Ciclo 26
+fechado; ele mandou commitar e planejar a Etapa 3 com o Gemini.

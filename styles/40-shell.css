@@ -1,10 +1,6 @@
 /* A CASCA E O SUBSTRATO — o que existe embaixo de toda tela. */
 
 @layer screens {
-  /* Numa barra superior o mesmo conteudo ocupa 72px de altura em vez de 216px de largura, e
-     sobra tabuleiro — que e onde o jogo acontece.
-     Foi isso que pos o rail em 658px numa janela de 390px, e a licao continua valendo com uma
-     coluna a menos. */
   .shell {
     position: relative;
     isolation: isolate;
@@ -14,50 +10,25 @@
     grid-template-rows: auto minmax(0, 1fr);
   }
 
-  /* As outras sete telas continuam com a casca elástica e a página rolando, que é o certo
-     enquanto o conteúdo delas não tiver teto medido.
-     ⛔ E O LIMIAR ERA `min-height: 940px`, escrito para quatro cartões de vidro que não
-     existem mais: a mesa de hoje nunca cabia embaixo dele. A 1366×768 a página rolava 211px,
-     a pasta era cortada em 15,9px, o envelope entrava 39,5px sob o rail e a folha cobria
-     11,7px do telefone — `--fit` lia 821px de altura de área em toda janela, e a cena, que só
-     sabe encolher, nunca encolhia.
-     ⭐ HOJE O LIMIAR É DE LARGURA, e é a mesma em que `.rail` vira faixa no topo: acima dela a
-     mesa tem o arranjo para o qual foi desenhada, e travar a altura só a faz encolher. Abaixo,
-     travar esconderia metade do Gabinete sem nada que avisasse. */
+  /* ⛔ Limiar anterior (min-height: 940px) fazia a pagina rolar 211px a 1366x768, cortando a pasta em 15,9px. */
   @media (min-width: 1181px) {
     .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) {
       height: 100dvh;
     }
 
-    /* ── O RAIL DENTRO DO CANVAS ────────────────────────────────────────────── ⚠ DEFEITO
-       ANTIGO, ACHADO PELA MEDIÇÃO DO CANVAS : o rail declara `height: calc(100dvh - 2 *
-       var(--space-4))` — **948px numa janela de 980** — e mora na linha 2 da casca, que começa
-       ABAIXO da barra superior e tem 904.
-       Ele sempre transbordou 44px, em toda tela, desde que foi escrito. */
+    /* ⚠ Rail transbordava 44px (948px declarados numa janela de 980px onde a casca tem 904px). */
     .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) .rail {
       height: auto;
       align-self: stretch;
-      /* ⚠ O MESMO PE DO TABULEIRO, e nao um proprio: a aresta de baixo do menu e a linha de
-         base da tela inteira, por ordem dele. Dois valores fariam as duas pararem em alturas
-         diferentes, que e exatamente o que ele viu. */
       margin-bottom: var(--shell-floor);
-      /* ⚠ 8 + os 16 do tabuleiro FECHAM O VAO UNICO de 24px. Escrever 24 aqui daria 40. */
+      /* ⚠ 8px + 16px do tabuleiro fecham o vao unico de 24px (declarar 24px aqui daria 40px). */
       margin-right: var(--space-2);
     }
   }
-
-  /* A LISTA ROLA POR DENTRO e o pé fica preso, que é a mesma regra da coluna da direita do
-     Gabinete: o que se corta é o meio, e nunca o gesto. */
   .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) .rail__list {
     min-height: 0;
     overflow-y: auto;
   }
-
-  /* ── O CERCO NA MOLDURA ───────────────────────────────────────────────────── ⚠ ELE FALTAVA
-     DESDE QUE O IMPEACHMENT EXISTE, e era o ultimo item aberto da Parte 3 do dossie da Sala
-     de Guerra: com um processo correndo havia carimbo no bloco da caldeira e frase na carta,
-     e a tela — o objeto que o jogador olha o tempo todo — continuava identica ao mes
-     tranquilo. */
   .shell[data-siege="true"]::after {
     content: "";
     position: absolute;
@@ -70,9 +41,6 @@
       inset 0 0 60px -12px rgba(var(--bordo-rgb), 0.55);
     animation: siege-breath 9s ease-in-out infinite;
   }
-
-  /* ⚠ E QUEM PEDIU MENOS MOVIMENTO NAO RECEBE PULSO, e a moldura FICA — ela e informacao, e
-     nao enfeite. */
   @media (prefers-reduced-motion: reduce) {
     .shell[data-siege="true"]::after {
       animation: none;
@@ -88,18 +56,6 @@
       opacity: 1;
     }
   }
-
-  /* ── A BARRA SUPERIOR ─────────────────────────────────────────────────────── Ela atravessa
-     as duas colunas: o status do governo vale para a navegacao tambem, e uma barra que
-     comecasse depois da sidebar leria como parte do tabuleiro.
-     ⭐ ELA E TRES PECAS DE VIDRO E UMA MARCA. As tres tem a mesma altura, a mesma quina, a
-     mesma aresta e a mesma lente — o que muda entre elas e a tinta do corpo. */
-  /* ⛔ ELA E PAINEL, E NAO SANGRIA — e e a MESMA peca que o rail, deitada. Ordem dele: "os
-     dois menus tem de ser parecidos". Os dois sempre foram `glass-support`; o que diferia era
-     a geometria — o rail e um painel de margem 16 e quina inteira, e a barra ia de x=0 a 1440
-     com quina so embaixo. Uma aresta que atravessa a tela nao le como aresta de movel, le como
-     troca de fundo: medido, y=77 dava `47,55,70` contra `11,21,38` acima.
-     ⛔ A QUINA VEM DE `glass-support` e nao daqui: uma so origem para o canto dos dois. */
   .topbar {
     grid-column: 1 / -1;
     position: relative;
@@ -107,16 +63,9 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    /* ⚠ A MARGEM E A DO RAIL, e o vao entre os dois sai da margem DELE: dois valores para o
-       mesmo respiro dariam duas distancias na mesma quina. */
     margin: var(--space-4) var(--space-4) 0;
     padding: 0 var(--space-2);
   }
-
-  /* ⛔ SEM RECORTE A MARCA PASSAVA POR BAIXO DO CACHO: o cacho e `flex: none` e a zona
-     encolhe sozinha, entao abaixo de 1228px o letreiro atravessava a peca dos vitais e era
-     refratado por ela — ilegivel, e invisivel para as tres checagens do passeio, porque
-     nao ha reticencia nem rolagem. */
   .topbar__zone {
     display: flex;
     align-items: center;
@@ -124,9 +73,6 @@
     overflow: hidden;
   }
 
-  /* ⚠ OS 4px DE RECUO SAO O QUE MOVE O SELO E NAO O NOME: encurtar so o vao puxaria o NOME
-     para a esquerda, e o pedido e o contrario — o selo anda para a direita e o texto fica.
-     4 + 5 fecham os 9 que o vao tinha, entao a palavra nao se move um pixel. */
   .topbar__brand {
     display: flex;
     align-items: center;
@@ -141,9 +87,6 @@
     place-items: center;
     color: var(--brand);
   }
-
-  /* ⛔ `iconHtml` SEM CLASSE PROPRIA NASCE SEM TAMANHO: os vitais so aparecem porque a coluna
-     deles tem largura fixa, e o selo e a seta viviam em caixa `auto` — zero por zero. */
   .topbar__seal svg {
     width: var(--seal-size);
     height: var(--seal-size);
@@ -173,27 +116,19 @@
     color: var(--ink-dim);
   }
 
-  /* ⛔ O LETREIRO SAI ANTES DE COLIDIR, e o brasao fica: o cacho e `flex: none` e nao
-     encolhe, entao abaixo desta largura a zona da marca fica menor que o letreiro. A
-     alternativa era o cacho encolher, e ela custa o que faz a barra ser menu — peca de
-     largura fixa, que nao se refaz de um mes para o outro. */
+  /* ⛔ Com nome longo, a marca colidia com os vitais a 1245px antes de o rail deitar a 1180px. */
   @media (max-width: 1245px) {
     .topbar__name {
       display: none;
     }
   }
 
-  /* O CACHO — as tres pecas encostadas, porque juntas elas sao uma pergunta so: em que mes
-     estamos, o que o pais diz, e o que fazer agora. */
   .topbar__cluster {
     display: flex;
     flex: none;
     align-items: center;
     gap: var(--topbar-gap);
   }
-
-  /* ⚠ O RAIO AQUI NAO DESENHA A PECA — a forma sai do filtro, como no botao. Ele so recorta a
-     sombra, que e a mesma pilha de tres camadas que o botao usa. */
   .piece {
     display: grid;
     flex: none;
@@ -242,8 +177,6 @@
     color: var(--ink-dim);
   }
 
-  /* ⚠ O ROTULO E O VALOR DESCEM JUNTOS e o desenho NAO: eles sao a leitura, e ele e a
-     moldura dela. Por transformacao, entao a fileira nao muda de altura. */
   .vit__label,
   .vit__value {
     transform: translateY(var(--vit-drop));
@@ -258,8 +191,7 @@
     color: var(--ink-dim);
   }
 
-  /* ⛔ E ELE NAO SAI DA CELULA: `R$ -999,85 tri` pedia 108px em 88 e pintava por cima do
-     vizinho — sem rolagem e sem reticencia, entao nenhuma checagem via. */
+  /* ⛔ R$ -999,85 tri pedia 108px em 88 e pintava por cima do vizinho; sem reticencia nenhuma checagem via. */
   .vit__value {
     grid-column: 2;
     grid-row: 2;
@@ -272,8 +204,6 @@
     color: var(--ink);
   }
 
-  /* O ALERTA TINGE O NUMERO, e nao a peca: quatro pecas acesas ao mesmo tempo seriam quatro
-     alarmes, e alarme que toca sempre e alarme que ninguem ouve. */
   .vit--low .vit__value {
     color: var(--signal-down);
   }
@@ -287,8 +217,6 @@
     height: var(--vit-draw-row);
   }
 
-  /* A LINHA FICA CALMA e quem carrega o sinal e o ponto final: quatro linhas coloridas viram
-     quatro alarmes, e a barra passa a gritar em vez de informar. */
   .vit__spark {
     width: var(--vit-spark);
     height: var(--vit-spark-h);
@@ -296,8 +224,6 @@
     color: rgba(var(--ink-rgb), 0.46);
   }
 
-  /* O TRILHO — o caminho que o ponto ainda vai andar. Ele existe desde o primeiro mes, e e
-     ele que torna o desenho legivel antes de haver historia. */
   .vit__track {
     stroke: rgba(var(--ink-rgb), 0.14);
     stroke-width: 1;
@@ -344,9 +270,7 @@
   }
 
   /* ── A PECA DO QUANDO ──────────────────────────────────────────────────────── */
-  /* ⛔ LARGURA FIXA SEM RECORTE VAZA: um marco de catalogo mais longo empurrava 212px de
-     texto para fora da peca, por cima do botao. A compressao tem piso em 0,78 e o piso nao
-     salva tudo — o recorte e o que fecha a peca. */
+  /* ⛔ Sem recorte, rotulo longo empurrava 212px para fora da peca (compressao tem piso em 0,78). */
   .piece--when {
     width: var(--when-w);
     overflow: hidden;
@@ -354,12 +278,7 @@
     padding: var(--when-pad-top) var(--when-pad) 0;
   }
 
-  /* ⚠ AS DUAS SUBIDAS SAO POR POSICAO E NAO POR TRANSFORMACAO: a justificacao reescreve a
-     escala horizontal nas duas linhas a cada rearranjo, e as regras disputariam o atributo. */
-  /* ⚠ A COMPRESSAO NASCE NA FOLHA e o quadro so a refina: sem ela aqui, o bloco apareceria
-     largo por um quadro — o tempo que a fonte leva para chegar. */
-  /* ⚠ ALGARISMO DE LARGURA FIXA EM TODA LEITURA DA BARRA: sem ele o mes muda de largura ao
-     virar o ano, e a justificacao remede e reescala — a peca chacoalha na virada. */
+  /* ⚠ Algarismos tabulares evitam que a justificacao remedida chacoalhe a barra na virada do ano. */
   .when__date,
   .when__note,
   .go__label,
@@ -417,8 +336,6 @@
     color: var(--brand);
   }
 
-  /* A regua separa o nome do numero DENTRO de uma leitura so — nao e a linha entre stats que
-     ja foi recusada, que separava leituras irmas. */
   .when__rule {
     width: 1px;
     align-self: stretch;
@@ -432,12 +349,6 @@
     flex: none;
     align-self: center;
   }
-
-  /* ⚠ O ROTULO ENCOSTA NA ESQUERDA E A SETA NA DIREITA, e o vao do meio existe para a leitura
-     entrar nele sem empurrar nada. */
-  /* ⛔ A LEGENDA OCUPAVA COLUNA `auto` E EMPURRAVA A SETA PARA FORA: invisivel em repouso,
-     ela media 366px e jogava o glifo 193px alem da aresta, onde `overflow: hidden` o
-     apagava — o botao perdia a seta justamente no mes em que ha preco a pagar. */
   .go__stack {
     display: grid;
     grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
@@ -447,10 +358,7 @@
     column-gap: var(--go-gap);
   }
 
-  /* ⛔ A TRAVA DE QUEBRA FALTAVA AQUI, e so a legenda a tinha: `O mandato acabou` virava
-     TRES linhas dentro de um botao de 57px. */
-  /* ⛔ `justify-self: start` DIMENSIONA O ITEM PELO CONTEUDO e nao pela coluna: com ele o
-     recorte nunca chegava a valer, e a leitura passava por baixo da seta e da aresta. */
+  /* ⛔ Sem trava de quebra, rotulo longo virava 3 linhas dentro de botao de 57px de altura. */
   .go__label {
     min-width: 0;
     overflow: hidden;
@@ -464,8 +372,6 @@
     line-height: 1;
   }
 
-  /* ⛔ SEM A TRAVA DE QUEBRA A LEITURA VIRAVA DUAS LINHAS no hover, e o botao ganhava uma
-     segunda linha so quando o mouse chegava. */
   .go__hint {
     min-width: 0;
     overflow: hidden;
@@ -481,18 +387,14 @@
     will-change: transform, opacity;
   }
 
-  /* ⚠ A SETA TEM 2,4px DE SANGRIA DENTRO DA PROPRIA CAIXA e a letra tem 0,3: sem a margem
-     negativa, caixa simetrica da TINTA assimetrica — e o olho ve a tinta. */
+  /* ⚠ A seta tem 2,4px de sangria interna na caixa contra 0,3px da letra. */
   .go__arrow {
     justify-self: end;
     display: grid;
     margin-right: -9.4px;
   }
 
-  /* ⭐ `.go-env` FICA PARADA E ESCUTA O MOUSE; `.go-float` e quem se move. A area que recebe o
-     ponteiro nao pode se mexer: perto da aresta de baixo a peca saia de sob o cursor,
-     disparava a saida, comecava a voltar, reencontrava o ponteiro no caminho e disparava a
-     entrada de novo — um pingue-pongue que nao e travamento e por isso ninguem descreve. */
+  /* ⭐ .go-env escuta eventos e .go-float se move; mover a area interativa causava pingue-pongue no hover. */
   .go-env {
     position: relative;
     display: grid;
@@ -507,8 +409,7 @@
     will-change: transform;
   }
 
-  /* ⛔ A SOMBRA NAO PODE TER CORPO: um irmao OPACO atras entra no backdrop, e o vidro passa a
-     refratar a propria sombra. Ela e so `box-shadow` numa caixa sem preenchimento. */
+  /* ⛔ Sombra sem preenchimento opaco para o vidro nao refratar a propria sombra. */
   .go-shade,
   .go-shade--high {
     position: absolute;
@@ -552,8 +453,7 @@
     will-change: transform;
   }
 
-  /* AS DUAS ARESTAS SAO ESTATICAS e so a opacidade da quente anda: regerar a imagem por quadro
-     obriga o navegador a reparsar e redecodificar um SVG sessenta vezes por segundo. */
+  /* Arestas estaticas com animacao restrita a opacidade para evitar reparsing de SVG. */
   .go__edge,
   .go__warm {
     position: absolute;
@@ -573,87 +473,38 @@
     opacity: 0.55;
   }
 
-  /* ── O TABULEIRO ──────────────────────────────────────────────────────────── A tela
-     corrente inteira, trocada por completo a cada pintura. */
+  /* ── O TABULEIRO ──────────────────────────────────────────────────────────── */
   .board {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--space-4);
-    /* O RODAPE E MAIOR QUE O TOPO, e nao por simetria quebrada: a tela rola, e o ultimo bloco
-       de uma tela que rola precisa de folga embaixo para nao parecer cortado pela borda da
-       janela.
-       A MARGEM LATERAL ENCOLHEU (era `clamp(24px, 5vw, 64px)`) porque ela estava cobrando
-       duas vezes: o tabuleiro ja vive entre dois rails de 216px, entao os 64px de cada lado
-       somavam 128px de vazio a uma peca que ja parava antes da borda. */
-    /* Medido em 1440px: com 32px de cada lado a peca fechava em 77,6% da janela; com 24px ela
-       passa de 80%. */
-    /* Medido a 1440px, e ele estava certo nas duas: vertical  rail y=106 · lamina y=122   →
-       16px de desnivel horizontal margem esquerda 16 · direita 21,6 O rail usa `--space-4` na
-       margem — 16 em cima e 16 na esquerda —, e o tabuleiro usava `--space-8` no topo e um
-       `clamp` de ~21,6 nas laterais.
-       So medindo a geometria renderizada — que e o que a captura do passeio faz com o resto. */
     padding: var(--space-4) var(--space-4) var(--space-11);
-    /* O conteudo nao pode ser mais estreito que a coluna sem empurrar a janela: `1fr` num
-       grid tem minimo automatico igual ao conteudo, e sem esta linha a peca de 780px cria
-       rolagem horizontal no tablet. */
     min-width: 0;
   }
-
-  /* A LARGURA E DO TABULEIRO, e nao de cada tela.
-     Se cada peca declarasse a propria, a Mesa e a area divergiriam em algum ajuste e a troca
-     de tela passaria a mexer na coluna — que e o tipo de instabilidade que ninguem atribui a
-     causa certa. */
   .board > * {
     width: min(var(--column), 100%);
   }
 
-  /* ── O SUBSTRATO ──────────────────────────────────────────────────────────── Ele cobre a
-     JANELA e nao a area de conteudo: o rail tambem e vidro, e vidro sobre nada nao refrata.
-     `fixed` para que o fundo nao deslize quando o conteudo rolar — fundo em movimento sob
-     `backdrop-filter` e a condicao dos 31 fps, e aqui ele nao se move nem quando a pagina
-     rola. */
+  /* Substrato fixo: fundo em movimento sob backdrop-filter reproduziu queda para 31 fps. */
   .backdrop {
     position: fixed;
     inset: 0;
     z-index: -2;
-    /* O CAMPO DE LUZ, em gradiente CSS e nao em SVG com desfoque. */
     background:
       radial-gradient(62% 48% at 14% 12%, rgba(var(--stable-rgb), 0.3), transparent 70%),
       radial-gradient(48% 42% at 84% 20%, rgba(var(--ink-rgb), 0.09), transparent 66%),
       radial-gradient(70% 56% at 78% 92%, rgba(var(--stable-rgb), 0.26), transparent 72%),
       radial-gradient(52% 44% at 34% 78%, rgba(var(--stable-rgb), 0.13), transparent 70%),
       var(--bg-deep);
-    /* O gel abaixo usa `mix-blend-mode`. */
     isolation: isolate;
     overflow: hidden;
     pointer-events: none;
-    /* A saturacao amplifica o croma da situacao onde o scrim ja derrubou a luminancia. */
     filter: saturate(1.5);
   }
 
-  /* ⭐ NO GABINETE O SUBSTRATO E A MESA. A foto do jacaranda entra a 1:1 — centrada,
-     sem repetir —, e o que sobrar da janela e o fundo da UI. A barra e o rail passam a
-     refratar madeira, que e o que liquid glass faz: vidro SOBRE o lugar, e nao ao lado dele.
-     ⚠ O TAMANHO E O DA FOTO, e nao `cover`: `cover` ampliaria. Trocou a foto? troque os dois
-     numeros, aqui e em `DESIGN` no `cabinet.mjs`.
-     ⛔ E A FOTO PASSA PURA: a saturacao de 1,5, o grao ladrilhado e a tinta da situacao sao
-     para a aurora, e sobre a madeira os tres mudariam a cor que ele mandou nao mudar. */
-  /* ⭐ E A BEIRA DA MESA ENTRA NA SOMBRA, em vez de terminar num corte: a foto tem 821px e a
-     janela pode ter mais, entao os ultimos 44px dela escurecem para o fundo da UI — a borda de
-     um tampo entrando na penumbra da sala. E a UNICA coisa que toca a foto, e so na aresta.
-     📐 A foto e centrada, entao a beira inferior fica a 410px do centro: o degrade vai de 366 a
-     412, e acima dele a madeira e pura. */
-  /* ⭐ A LUZ DA SALA CAI SOBRE O TAMPO, e e a mesma que as sombras ja declaram: de CIMA. A foto
-     e um amostruario de madeira, iluminado por igual de canto a canto — era isso que fazia a
-     mesa ler como textura, e nao como superficie.
-     ⛔ E ELA NAO PODE SER CHAPADA: medido no pixel, em `normal` o croma do jacaranda cai de
-     80,2% para 47,9% no alto da mesa e o tampo vira bege. Em `soft-light` mais `multiply` ele
-     fica em 73,2%, a luz do alto sobe de 61,7 para 74,3 e a da quina cai de 36,7 para 29,8.
-     ⭐ E A LUZ E BRANCO PURO: qualquer tinta aqui desloca a cor que ele mandou nao mudar.
-     📐 O clarao fica 290px acima do centro, no terco de cima da foto de 821, e 105px a esquerda
-     — os 20 graus da luz declarada em `--light-dx`, para onde toda sombra da sala aponta. O tombo
-     so morde depois de 40% do raio, entao o meio da mesa nao muda. */
+  /* Substrato do Gabinete: foto do jacaranda com degrade nas bordas (366 a 412px).
+     Iluminacao zenital em soft-light e multiply preserva o croma em 73,2% (normal caia para 47,9%). */
   body:has(.board[data-screen="cabinet"]) .backdrop {
     background:
       linear-gradient(180deg, transparent calc(50% + 366px), var(--bg-deep) calc(50% + 412px)),
@@ -675,7 +526,7 @@
     content: none;
   }
 
-  /* O GRAO, e por que ele e uma imagem LADRILHADA de tamanho fixo. */
+  /* Opacidade 0,05 (e nao 0,34): ruido perceptivel lia como imagem de baixa qualidade. */
   .backdrop::before {
     content: "";
     position: absolute;
@@ -683,10 +534,6 @@
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 140px 140px;
-    /* 0,05 e nao 0,34.
-       O grao existe para dar ao desfoque o que apagar, e nao para ser visto: ruido que o olho
-       enxerga sem procurar lê como imagem de qualidade ruim, que foi exatamente o defeito da
-       versao anterior. */
     opacity: 0.05;
     mix-blend-mode: overlay;
   }
@@ -694,24 +541,13 @@
   .backdrop::after {
     content: "";
     position: absolute;
-    /* ⭐ ELA COMECA DEPOIS DAS DUAS MOLDURAS — abaixo da barra e a direita do rail —, e e o que
-       deixa as duas serem vidro sem herdar o estado do pais. Vidro amostra o que esta atras:
-       enquanto a tinta passava por baixo delas, a barra mudava de cor com o mes (medido, de
-       `4,10,16` para `2,5,8`) e o rail mudava junto. Agora as duas amostram so a aurora, que e
-       a mesma o mandato inteiro — e por isso elas sao o MESMO material, e nao dois parecidos. */
+    /* ⛔ Sem o recuo a barra mudava de 4,10,16 para 2,5,8 com o mes; mascaras esfumam salto de 20px na borda. */
     inset: calc(var(--space-4) + var(--topbar-h)) 0 0 calc(var(--rail) + var(--space-6));
     pointer-events: none;
     mix-blend-mode: overlay;
     opacity: 0.55;
     background: var(--situation-tint);
     transition: background var(--dur-stage) linear;
-    /* ⚠ E AS DUAS QUINAS DO RECORTE SE ESFUMAM, senao ele APARECE: o `inset` acima e reto, e a
-       mascara radial esta no MAXIMO justamente na borda — medido no pixel, o fundo saltava de
-       `17,25,40` para `9,36,41` num passo de 20px ao lado do rail, e de `11,21,38` para
-       `6,24,29` sob a barra. Duas cores de fundo, e o recorte era a fronteira.
-       ⛔ E A TINTA NAO VOLTA PARA BAIXO DELAS: o `inset` fica onde esta. Deixa-la passar por
-       tras do vidro e o defeito que este bloco existe para impedir — a barra mudava de
-       `4,10,16` para `2,5,8` com o mes. */
     -webkit-mask-image:
       radial-gradient(
         86% 70% at 50% 46%,
@@ -742,40 +578,32 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    /* AFROUXADO junto com a troca do substrato, e nao por gosto. */
     background:
       linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.42), transparent 24%),
       radial-gradient(124% 84% at 50% 48%, transparent 38%, rgba(var(--bg-deep-rgb), 0.52) 100%);
   }
 
-  /* ── QUANDO O RAIL NAO CABE ───────────────────────────────────────────────── Abaixo de
-     1180px a lateral vira uma FAIXA no topo.
-     A conta e direta: com a lamina preenchendo o tabuleiro, ela ocupa `janela − rail −
-     respiro`, e o pedido e que isso passe de 80% da janela. */
+  /* ── ABAIXO DE 1180px: o rail lateral passa a faixa horizontal superior. ── */
   @media (max-width: 1180px) {
     .shell {
       grid-template-columns: minmax(0, 1fr);
     }
 
-    /* A lamina continua COLUNA e so perde a altura da janela. */
     .rail {
       position: static;
       width: auto;
       height: auto;
-      /* Item de grid tambem nasce com minimo automatico. */
       min-width: 0;
       margin: var(--space-3);
       padding: var(--space-3);
     }
 
-    /* A LISTA e que deita, e rola por DENTRO. */
     .rail__list {
       flex-direction: row;
       min-width: 0;
       overflow-x: auto;
     }
 
-    /* O GRUPO DE MINISTERIOS DEITA JUNTO. */
     .rail__group {
       display: contents;
     }
@@ -788,8 +616,7 @@
       display: contents;
     }
 
-    /* Sem isto cada item pede 100% da faixa — sete vezes a largura inteira, que era a origem
-       da rolagem horizontal no tablet e no celular. */
+    /* ⛔ Sem largura auto cada item pedia 100% da faixa (7x a largura total), gerando rolagem horizontal. */
     .rail__item {
       width: auto;
     }
@@ -804,11 +631,4 @@
       width: auto;
     }
   }
-
-  /* No celular a coluna e uma so, e ai TODA aresta vertical tem de bater. */
-  /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
-     atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
-     rolar.
-     O breakpoint efetivo e 720px (territorio de telefone). 640px e o limiar conceptual
-     onde o layout completamente colapsa, mas nao ha regra CSS separada para la. */
 }
