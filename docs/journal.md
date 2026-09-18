@@ -8342,3 +8342,39 @@ base, e a pasta entrou no teclado. O hover que o Gemini propôs (brightness) nã
 do tampo dele contra as três texturas reais do Poly Haven está em `tmp/prancha-tampo.png`.
 As arestas giradas medidas pelo Gemini: 1,7 a 1,9 px de transição, antialiasing íntegro. Ciclo 26
 fechado; ele mandou commitar e planejar a Etapa 3 com o Gemini.
+
+### 9 · O ciclo 27 — 18/09, noite
+
+Ele respondeu as três perguntas da Etapa 3: abertura do envelope em 2D; a barra fica e nada
+encolhe (a pasta erguida não a cobre nem hoje: 116px livres no pé a 1440×900); seis ícones com os
+ministérios numa gaveta, "do estilo mais Apple possível". O ciclo 27 está escrito: dock → carta →
+bandeirinha. O Gemini mediu o rail (742/779px) e escreveu os prompts dos envelopes abertos.
+
+### 10 · A pesquisa do Liquid Glass da Apple — 18/09, noite
+
+Ele ordenou estudo comparativo profundo, absoluto e matematicamente preciso para refazer o
+Liquid Glass do jogo no futuro e torná-lo praticamente idêntico ao da Apple (visionOS / macOS
+Sequoia / iOS 18). Registrado em `docs/research/12-liquid-glass-apple-avancado.md`:
+
+1. Óptica física: refração perimétrica por Lei de Snell via Signed Distance Field (SDF) cúbico;
+   dispersão cromática de Cauchy com separação RGB nas quinas (~0,8px); aproximação de Schlick para
+   Fresnel com duplo bisel (zenith especular a 20° e nadir difuso/rim light); vibrancy sem acinzentar
+   (saturação 185% + brilho 1.04); curvatura em superelipse de Lamé G²/G³ (n ≈ 3.6, já em `squircle.mjs`).
+2. Performance e engenharia web: bibliotecas prontas em WebGL (como `@ybouane/liquidglass`) são
+   proibitivas por exigirem rasterização do DOM via JS (html2canvas), gastando 25–45ms por quadro e
+   derrubando a taxa para <30fps com o tampo 4K de 7,2 MB.
+3. Rota de implementação futura: SDF pré-calculado em canvas estático no boot e aplicado via
+   `backdrop-filter: url(#dock-lens)` com decomposição de canais RGB por `feColorMatrix` e `feOffset`
+   fracionário no SVG nativo, rodando 100% no compositor de GPU a 120fps sem sobrecarga de CPU.
+
+### 10 · O dock — 18/09, noite
+
+A parte A do ciclo 27 saiu numa sessão: o rail vira cápsula de ícones no pé do Gabinete, sobre a
+mesa, sem tocar na área nem na pasta erguida (29 e 40px de folga). Ele viu ao vivo e cortou o que
+eu tinha posto de placa — nome, posição e "Nova partida" em texto: "só os ícones, até mesmo o NOVA
+PARTIDA será um ícone. NÍVEL APPLE". Ficou: sete glifos, gaveta de ministérios dentro da própria
+cápsula (um segundo vidro seria um segundo material), dica ao pousar, ponto sob o ativo, transição
+do rail com nome próprio. O passeio pegou dois defeitos reais antes dele: o clique no glifo não
+trocava de tela (SVG não é HTMLElement) e os ministérios ficavam invisíveis atrás da gaveta.
+Gemini desenhou o ícone de Defesa e, por ordem direta dele, escreveu a pesquisa 12 sobre o Liquid
+Glass da Apple.

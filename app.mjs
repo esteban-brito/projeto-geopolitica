@@ -44,7 +44,7 @@ import {
   situationOf,
   termOf,
 } from "./src/public/index.mjs";
-import { railGovHtml, railNavHtml } from "./src/ui/shared/rail.mjs";
+import { armRail, railGovHtml, railNavHtml } from "./src/ui/shared/rail.mjs";
 import { closingHtml } from "./src/ui/screens/closing.mjs";
 import {
   areaHtml,
@@ -1395,12 +1395,21 @@ let arming = 0;
 
 function disarm() {
   arming = 0;
+  el.restart.dataset["arming"] = "false";
   label(el.restart, UI.actions.restart, "");
 }
+
+/* A gaveta do dock arma uma vez: o `<ul>` sobrevive as pinturas, e o estado mora nele. */
+armRail(el.railNav);
+
+/* O BOTAO DE RECOMECAR TEM GLIFO E ROTULO PROPRIOS, como o de avancar: no dock so o glifo
+   aparece e o rotulo vira a dica; no rail vertical e o contrario. `label` escreve no rotulo. */
+el.restart.innerHTML = iconHtml("restart", "rail__icon") + '<span class="action__label"></span>';
 
 el.restart.addEventListener("click", () => {
   if (arming === 0) {
     arming = window.setTimeout(disarm, 5000);
+    el.restart.dataset["arming"] = "true";
     label(el.restart, UI.actions.restartConfirm, UI.actions.restartConfirmHint);
     return;
   }
@@ -1505,11 +1514,17 @@ document.documentElement.style.setProperty("--neutral", String(NEUTRAL));
 function label(node, text, hint) {
   /* ⚠ O BOTAO DE AVANCAR TEM DUAS LINHAS PROPRIAS, e escrever nele apagaria a aresta, o
      realce e a seta — todos filhos dele. O resto da tela continua recebendo texto direto. */
-  const own = node.querySelector(".go__label");
+  const own = node.querySelector(".go__label, .action__label");
   if (own) {
     own.textContent = text;
-    const note = node.querySelector(".go__hint");
+    const note = node.querySelector(".go__hint, .action__hint");
     if (note) note.textContent = hint;
+    else if (hint) {
+      const small = document.createElement("span");
+      small.className = "action__hint";
+      small.textContent = hint;
+      node.append(small);
+    }
     return;
   }
   node.textContent = text;

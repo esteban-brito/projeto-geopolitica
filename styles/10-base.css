@@ -90,6 +90,16 @@
     view-transition-name: board;
   }
 
+  /* O rail tambem: no Gabinete ele e o dock no pe da tela, e a troca de tela o leva de um lugar
+     ao outro pela mesma transicao — sem nome ele piscaria de um lado para o outro. */
+  .rail {
+    view-transition-name: rail;
+  }
+
+  ::view-transition-group(rail) {
+    animation-duration: var(--dur-screen);
+  }
+
   /* A duracao da troca de tela sai do token, e nao do padrao do navegador. */
   ::view-transition-group(board) {
     animation-duration: var(--dur-screen);

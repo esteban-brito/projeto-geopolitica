@@ -132,6 +132,8 @@ export const UI = {
     congress: "Congresso & Leis",
     finance: TERMOS.finance,
     ministries: "Ministérios",
+    /* O botao da gaveta no dock, aberta: o mesmo botao fecha. */
+    ministriesClose: "Fechar ministérios",
     estado: TERMOS.estado,
     /* O ponto do rail tem rotulo porque cor sozinha nao e leitura. A queda e de `initial`,
        e nao do nivel: e por isso que a frase fala em CAIU, e nao em "baixo". */

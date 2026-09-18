@@ -252,6 +252,12 @@
     overflow: auto;
   }
 
+  /* O botao da gaveta e o glifo de recomecar so existem no dock (`40-shell.css`); no rail
+     vertical a legenda e o texto mandam. */
+  .rail__item.rail__drawer,
+  .rail__foot .rail__icon {
+    display: none;
+  }
   .rail__item {
     display: flex;
     align-items: center;
@@ -283,6 +289,9 @@
     flex: 0 0 auto;
     width: 16px;
     height: 16px;
+    /* ⛔ O clique no glifo chegava como `SVGElement`, e o escutador da pagina so aceita
+       `HTMLElement`: no dock, onde o glifo e o centro do botao, a secao nao trocava. */
+    pointer-events: none;
   }
 
   .rail__item--active .rail__icon {

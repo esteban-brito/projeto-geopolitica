@@ -83,8 +83,18 @@ export function railNavHtml(current, areas, alerts = {}) {
 
   /* ⚠ A FAZENDA CONTINUA SENDO UMA AREA, e nao um item de primeiro nivel como o plano de tela
      sugeria. */
+  /* No dock (Gabinete, `40-shell.css`) a legenda vira BOTAO e os oito moram numa gaveta: 13
+     icones sem rotulo e demais. No rail vertical o botao nao aparece e a legenda fica. A gaveta
+     e o proprio dock em outro estado — os seis saem e os oito entram —, e nao um painel
+     flutuante: um segundo vidro e um segundo material, que a guarda `material` recusa. */
+  const inside = areas.some(area => area.id === current);
   const ministries =
     `<li class="rail__group">` +
+    `<button class="rail__item rail__drawer${inside ? " rail__item--active" : ""}" type="button"` +
+    ` aria-expanded="false" aria-label="${escapeHtml(UI.nav.ministries)}">` +
+    iconHtml("ministries", "rail__icon") +
+    `<span class="rail__label">${escapeHtml(UI.nav.ministries)}</span>` +
+    `</button>` +
     `<p class="rail__legend">${escapeHtml(UI.nav.ministries)}</p>` +
     `<ul class="rail__sub">` +
     areas
@@ -110,4 +120,39 @@ export function railNavHtml(current, areas, alerts = {}) {
   const rule = '<li class="rail__rule" aria-hidden="true"></li>';
 
   return cabinet + email + congress + finance + rule + ministries + rule + estado;
+}
+
+/**
+ * ARMA A GAVETA DO DOCK — uma vez, no `<ul>` que sobrevive as pinturas. O estado mora no
+ * proprio `<ul>` (`data-drawer`), e por isso atravessa o `innerHTML` de cada pintura; quem o
+ * fecha e a escolha de uma secao, o Esc, ou um clique fora do rail.
+ *
+ * @param {HTMLElement} nav o `ul#railNav`
+ */
+export function armRail(nav) {
+  const set = (/** @type {boolean} */ open) => {
+    nav.dataset["drawer"] = String(open);
+    const drawer = nav.querySelector(".rail__drawer");
+    if (drawer instanceof HTMLElement) {
+      drawer.setAttribute("aria-expanded", String(open));
+      drawer.setAttribute("aria-label", open ? UI.nav.ministriesClose : UI.nav.ministries);
+    }
+  };
+  nav.addEventListener("click", event => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest(".rail__drawer") !== null) {
+      set(nav.dataset["drawer"] !== "true");
+      return;
+    }
+    if (target.closest("[data-section]") !== null) set(false);
+  });
+  nav.ownerDocument.addEventListener("keydown", event => {
+    if (event.key === "Escape" && nav.dataset["drawer"] === "true") set(false);
+  });
+  nav.ownerDocument.addEventListener("click", event => {
+    const target = event.target;
+    if (target instanceof Element && !nav.contains(target) && nav.dataset["drawer"] === "true")
+      set(false);
+  });
 }

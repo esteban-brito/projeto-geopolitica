@@ -38,7 +38,24 @@ larga, anel cerca a peça e escala por `--rest`; hover com `brightness` recusado
 animada). 4.4 pronta: `tmp/prancha-tampo.png`, o tampo dele × 3 Poly Haven — ele olha. 4.2 medido pelo Gemini
 (`tmp/serrilhado.md`): transição de 1,7 a 1,9 px nas três arestas giradas — antialiasing íntegro; os
 mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone), não na rasterização.
-⭐ **CICLO 26 FECHADO em 18/09.** Próximo: o plano da Etapa 3.
+⭐ **CICLO 26 FECHADO e commitado (65b66d0). O PLANO EM VIGOR É O CICLO 27** — Etapa 3:
+`docs/cycles/27-a-carta-na-mesa-e-o-dock.md`, com as três decisões dele de 18/09 (abertura 2D,
+a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
+carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
+`tmp/plano-etapa3-gemini.md`). Lote 1 do Gemini: ícone de Defesa, geometria do dock por janela.
+✔ **PARTE A — O DOCK — FEITA em 18/09:** no Gabinete o `nav.rail` vira cápsula de vidro fixa no pé
+(`40-shell.css`, ≥ 1181px), **só ícones, ordem dele ao vivo** — nem nome, nem posição, nem texto em
+"Nova partida" (virou glifo `restart`, confirmação acende em `--crisis` com a dica). 7 glifos:
+Gabinete · Email · Congresso · Finanças | Ministérios (gaveta) | Estado | Recomeçar. A gaveta é o
+próprio dock em outro estado (`data-drawer` no `ul#railNav`, `armRail` em `rail.mjs`): os seis saem
+e os oito entram; Esc, clique fora ou escolha fecham. Dica (rótulo) aparece ao pousar ou focar.
+O rail leva `view-transition-name: rail` e vai e volta pela transição da troca de tela. 📐 Dock
+376×62 a 1440×900 (top 822) e a 1920×937 (top 859); pasta erguida termina 29 e 40px acima — nada
+encolheu, a área não mudou. `npm run screen` 240,2 × 240,2. ⛔ Dois achados do passeio viraram
+código: o clique no glifo chegava como `SVGElement` e o escutador só aceita `HTMLElement`
+(`.rail__icon { pointer-events: none }`), e o passeio agora abre a gaveta antes de clicar num
+ministério (`viaRail`). ⚠ Setas dentro da gaveta não entraram — Tab percorre. Telas fora do
+Gabinete: 125 px de diferença, o ícone novo de Defesa (Gemini).
 ✔ **A cena não encolhe mais na janela dele:** `fitDesk` mede a faixa das peças e só encolhe quando
 uma sairia da janela; `--room-dy` centra a faixa. A 1920×937: `--fit` 0,9488 → **1**, telefone a
 39px do topo. A 1920×800 encolhe a 0,938 e nada sai.
@@ -969,6 +986,7 @@ CORRENTE (hiato, Phillips, Taylor, Okun, `carry`) · ESTRATO (faixa derivada, nu
 - **tensão institucional** — variável de estado (`risco = f(tensão − escudo)`), não motor;
 - **contraste em texto com filho elemento** — o medidor não alcança (`standards.md` §7);
 - **layout de força para o DELTA** — grafo lido, peça que desenha não;
+- **Liquid Glass Apple de alta fidelidade** — especificação óptica e física completa em `docs/research/12-liquid-glass-apple-avancado.md` (refração SDF, dispersão de Cauchy, Schlick Fresnel, G² squircle, 120fps no compositor via SVG); implementação futura;
 - **GitHub Pages** — só CI por enquanto.
 
 ## Decisões fechadas que não se reabrem sem pedido
@@ -995,4 +1013,4 @@ Referências: Geopolitical Simulator, Football Manager 2020. Liquid glass é a b
 ## Fontes de modelagem
 
 Dossiê externo revisado; correções na prosa de cada arquivo (`parties`, `fiscal`,
-`macro`, `congress`, `economy`, `turn`). Campo real em `docs/research/`.
+`macro`, `congress`, `economy`, `turn`). Campo real em `docs/research/` (pesquisas 01 a 12).

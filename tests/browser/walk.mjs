@@ -36,6 +36,19 @@ let failures = 0;
 /** @type {string[]} */
 const report = [];
 
+/* NO GABINETE OS MINISTERIOS MORAM NA GAVETA DO DOCK: para clicar num deles a gaveta abre antes.
+   Nas outras telas o botao da gaveta nao existe e o clique vai direto. */
+/** @param {import("playwright").Page} page @param {string} key */
+async function viaRail(page, key) {
+  const drawer = page.locator(".rail__drawer");
+  const hidden = await page.locator(`[data-section="${key}"]`).first().isHidden();
+  if (hidden && (await drawer.count()) > 0 && (await drawer.isVisible())) {
+    await drawer.click();
+    await page.waitForTimeout(120);
+  }
+  await page.click(`[data-section="${key}"]`);
+}
+
 /** @param {boolean} condition @param {string} complaint */
 function expect(condition, complaint) {
   if (condition) return;
@@ -872,7 +885,7 @@ try {
   );
 
   /* 2 — UMA AREA, pelo rail. */
-  await page.click('[data-section="health"]');
+  await viaRail(page, "health");
   await page.waitForTimeout(600);
   await checkOverflow("area");
   await checkClipped("area");
@@ -898,7 +911,7 @@ try {
      e onde a diferenca grita: R$ 2,4 bi de discricionario contra R$ 126,7 de gasto cheio, e a
      MALHA consome o segundo. Sem esta checagem a corrente anunciaria +0,02 onde o motor poe
      +1,22, e nada falharia. */
-  await page.click('[data-section="welfare"]');
+  await viaRail(page, "welfare");
   await page.waitForTimeout(400);
   const verba = await page
     .locator(".chain__half")
@@ -910,7 +923,7 @@ try {
     Number(verba.replace("+", "").replace("−", "-").replace(",", ".")) > 0.5,
     `[area] a corrente da Previdencia diz que a verba poe ${verba} — ela le o discricionario, e nao o gasto cheio`,
   );
-  await page.click('[data-section="health"]');
+  await viaRail(page, "health");
   await page.waitForTimeout(400);
 
   /* 3 — O ORCAMENTO GRANULAR. */
@@ -1124,7 +1137,7 @@ try {
     /* ⚠ SEM PAGAR A BANCADA A MESA NUNCA PAUTA, e por isso este trecho compra antes de
        avancar. */
     /* ⚠ E O TEXTO PRECISA SER LEI, e nao remanejamento. */
-    await page.click('[data-section="health"]');
+    await viaRail(page, "health");
     await page.waitForTimeout(400);
     const dials = page.locator(".dial__slider");
     const count = await dials.count();
@@ -1251,7 +1264,7 @@ try {
     `[caixa] o clique numa carta nao lida jogou o foco em "${focoNaoLido}", e nao em "${alvoNaoLido}"`,
   );
 
-  await page.click('[data-section="health"]');
+  await viaRail(page, "health");
   await page.waitForTimeout(600);
   await checkOverflow("area depois do mes");
   await checkClipped("area depois do mes");
@@ -1307,7 +1320,7 @@ try {
   /* ⚠ E O RASCUNHO DO MES TAMBEM, e antes ele morria inteiro: medido, a resposta marcada numa
      carta sumia no recarregamento — `aria-pressed="accept"` antes, nenhuma depois —, e com ela
      iam os niveis, as faixas e a verba montados no mes. */
-  await page.click('.rail [data-section="health"]');
+  await viaRail(page, "health");
   await page.waitForTimeout(400);
   const medidor = page.locator(".dial__slider").first();
   await medidor.focus();
@@ -1336,7 +1349,7 @@ try {
     "[save] a tela retomada nao renderizou",
   );
 
-  await page.click('.rail [data-section="health"]');
+  await viaRail(page, "health");
   await page.waitForTimeout(400);
   const voltou = await page.locator(".dial__slider").first().inputValue();
   expect(
@@ -1495,8 +1508,10 @@ try {
     (await page.locator("#turn").innerText()) !== monthAfter,
     "[posse] tomar posse nao recomecou a partida",
   );
+  /* ⚠ NO GABINETE O RAIL E O DOCK, e o dock e so icones: o nome mora no bloco do governo, que
+     so aparece nas outras telas. Le-se o texto do bloco, e nao o que esta pintado. */
   expect(
-    (await page.locator(".rail").innerText()).includes("Teste da Silva"),
+    ((await page.locator(".rail__gov").textContent()) ?? "").includes("Teste da Silva"),
     "[posse] o nome digitado nao chegou a tela",
   );
 

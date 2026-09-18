@@ -25,6 +25,14 @@ export const ICONS = /** @type {Record<string, string>} */ ({
   education:
     '<path d="M8 3 14.5 6 8 9 1.5 6z"/><path d="M4.5 7.4v3.4c0 .9 1.6 1.7 3.5 1.7s3.5-.8 3.5-1.7V7.4"/>',
   security: '<path d="M8 2.5 13 4.5v4c0 3-2.2 4.6-5 5.5-2.8-.9-5-2.5-5-5.5v-4z"/>',
+  defense:
+    '<path d="M2.5 13.5h11V5.5h-2V3.5h-2v2h-3V3.5h-2v2h-2zM6.5 13.5v-2.5a1.5 1.5 0 0 1 3 0v2.5"/>',
+  /* Recomecar: a seta que volta sobre si mesma, o glifo de "nova partida" no dock. */
+  restart: '<path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 2.5v3h-3"/>',
+  /* A gaveta dos oito ministerios no dock: quatro quadrados, o glifo de "todos os apps". */
+  ministries:
+    '<rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1.2"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1.2"/>' +
+    '<rect x="2.5" y="9" width="4.5" height="4.5" rx="1.2"/><rect x="9" y="9" width="4.5" height="4.5" rx="1.2"/>',
   opinion: '<path d="M13.5 9a2 2 0 0 1-2 2H6l-3.5 2.5V4.5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2z"/>',
   estado: '<path d="M8 2.5 2.5 5.5v1h11v-1z"/><path d="M4 6.5v5M8 6.5v5M12 6.5v5M2 13.5h12"/>',
   /* ⚠ DOIS VITAIS USAVAM GLIFO DE OUTRO SIGNIFICADO ate a barra ser refeita: `finance` e a

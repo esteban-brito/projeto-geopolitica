@@ -29,6 +29,231 @@
     min-height: 0;
     overflow-y: auto;
   }
+
+  /* ══ O DOCK — no Gabinete o rail desce e vira uma barra de icones no pe da tela ═══════════
+     E o MESMO `nav`, no mesmo vidro (`glass-support`): um segundo vidro seria um segundo
+     material. Ele flutua SOBRE a mesa, fora da grade: a area nao encolhe, `fitDesk` nao ve
+     nada e a pasta erguida fica onde esta — ela centra na janela e le 0,9 da area, o que deixa
+     116px livres no pe a 1440x900 e 118 a 1920x937; o dock ocupa 60 + 16 deles.
+     A gaveta dos ministerios e o proprio dock em outro estado (`data-drawer` no `ul`): os seis
+     saem e os oito entram, dentro da mesma capsula. */
+  @media (min-width: 1181px) {
+    .shell:has(> .board[data-screen="cabinet"]) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail {
+      position: fixed;
+      /* `top: auto`: o rail vertical e `sticky` com `top`, e fixo com os dois ele esticava a 905px. */
+      top: auto;
+      left: 50%;
+      bottom: var(--space-4);
+      z-index: 6;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: var(--space-2);
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-1);
+      border-radius: 22px;
+      transform: translateX(-50%);
+    }
+
+    /* So icones, ordem dele: o nome e a posicao do governo ficam nas outras telas. */
+    .shell:has(> .board[data-screen="cabinet"]) .rail__gov {
+      display: none;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__list {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-1);
+      overflow: visible;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__rule {
+      width: 1px;
+      height: 26px;
+      margin: 0 var(--space-1);
+      background: var(--glass-edge);
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__group {
+      display: contents;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__legend {
+      display: none;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__item {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      justify-content: center;
+      border-radius: 14px;
+      /* Apple: o ativo nao tinge, so leva o ponto embaixo. */
+      background: transparent;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__item--active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--brand);
+      transform: translateX(-50%);
+    }
+
+    /* O rotulo vira dica: aparece acima do icone ao pousar ou ao focar pelo teclado. */
+    .shell:has(> .board[data-screen="cabinet"]) .rail__label {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + var(--space-2));
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-pill);
+      background: rgba(var(--bg-deep-rgb), 0.92);
+      font-size: var(--text-note);
+      color: var(--ink);
+      opacity: 0;
+      transform: translate(-50%, 4px);
+      transition:
+        opacity var(--dur-touch) linear,
+        transform var(--dur-touch) var(--ease-enter);
+      pointer-events: none;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__item:hover .rail__label,
+    .shell:has(> .board[data-screen="cabinet"]) .rail__item:focus-visible .rail__label {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__alert {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      margin: 0;
+    }
+
+    /* A gaveta: o botao so existe aqui; aberta, os seis somem e os oito entram. */
+    .shell:has(> .board[data-screen="cabinet"]) .rail__drawer {
+      display: flex;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__sub {
+      display: none;
+      flex-direction: row;
+      gap: var(--space-1);
+      list-style: none;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__list[data-drawer="true"] .rail__sub {
+      display: flex;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"])
+      .rail__list[data-drawer="true"]
+      > li:not(.rail__group),
+    .shell:has(> .board[data-screen="cabinet"]) .rail__list[data-drawer="true"] ~ .rail__foot {
+      display: none;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__drawer[aria-expanded="true"] .rail__icon {
+      transform: rotate(45deg);
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot {
+      margin: 0;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    /* A regua antes de recomecar: acao e nao lugar, como a lixeira no fim do dock. */
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot::before {
+      content: "";
+      width: 1px;
+      height: 26px;
+      margin: 0 var(--space-1);
+      background: var(--glass-edge);
+    }
+
+    /* Recomecar e um icone como os outros; o rotulo e a confirmacao viram a dica, e a
+       confirmacao acende o glifo na cor de crise enquanto o segundo clique nao vem. */
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      justify-content: center;
+      border-radius: 14px;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .rail__icon {
+      display: block;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action__label,
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action__hint {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + var(--space-2));
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-pill);
+      background: rgba(var(--bg-deep-rgb), 0.92);
+      font-size: var(--text-note);
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
+      white-space: nowrap;
+      color: var(--ink);
+      opacity: 0;
+      transform: translate(-50%, 4px);
+      transition:
+        opacity var(--dur-touch) linear,
+        transform var(--dur-touch) var(--ease-enter);
+      pointer-events: none;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action__hint {
+      display: none;
+    }
+
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action:hover .action__label,
+    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action:focus-visible .action__label,
+    .shell:has(> .board[data-screen="cabinet"])
+      .rail__foot
+      .action[data-arming="true"]
+      .action__label {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .shell:has(> .board[data-screen="cabinet"])
+      .rail__foot
+      .action[data-arming="true"]
+      .rail__icon {
+      color: var(--crisis);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .shell:has(> .board[data-screen="cabinet"]) .rail__item:hover {
+        background: transparent;
+        transform: translateY(-3px) scale(1.08);
+      }
+    }
+  }
   .shell[data-siege="true"]::after {
     content: "";
     position: absolute;
