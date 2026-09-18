@@ -8408,3 +8408,8 @@ Terceira versão no mesmo dia, e é a que fica: "gostei da ideia do macOS". O me
 o dock encolhe no lugar e a coluna nasce no dela, com nomes diferentes na view transition
 (`dock` no Gabinete, `rail` fora), 360ms ao todo. O Gemini mediu a cápsula voando antes de ela
 sair: o desfoque custava 40ms de GPU por troca e o p95 não mudava.
+"Continua bugado, principalmente os menus." Filmei a troca em velocidade real e achei três coisas
+que a captura parada não mostrava: a Caixa esticada até a largura da mesa (os dois tabuleiros
+tinham o mesmo nome e morfavam), a madeira sumindo num corte, e a coluna saindo devagar como um
+painel fantasma. As três saíram. O engasgo de 150ms na primeira troca é frio de processo e não
+volta na mesma sessão.

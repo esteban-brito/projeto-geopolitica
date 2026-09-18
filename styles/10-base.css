@@ -90,23 +90,60 @@
     view-transition-name: board;
   }
 
+  /* ⛔ O TABULEIRO DO GABINETE TEM OUTRO NOME: ele ocupa a janela inteira e os outros comecam
+     depois da coluna do rail, e com um nome so a troca MORFAVA a caixa — a foto da Caixa era
+     esticada ate a largura da mesa e sobrava uma banda clara onde a coluna esteve (L 75 contra
+     32 sem o grupo, medido em tmp/banda.mjs). Nomes diferentes: uma sai no lugar dela, a outra
+     nasce no dela. */
+  .board[data-screen="cabinet"] {
+    view-transition-name: desk;
+  }
+
   .rail {
     view-transition-name: rail;
+  }
+
+  /* ⛔ A MADEIRA SUMIA NUM CORTE na saida do Gabinete: o substrato fica na raiz, e a raiz troca de
+     foto sem animar — as pecas desfocavam sobre um fundo ja escuro. Nomear o substrato foi
+     tentado e pintou por cima da barra (o grupo dele sobe acima da raiz); o que fica e a raiz se
+     dissolver so quando o menu muda de lugar, no tempo do tabuleiro. Entre as outras telas ela
+     continua sem animar, pela razao de cima. */
+  html:active-view-transition-type(dock)::view-transition-old(root) {
+    animation: root-out var(--dur-screen) linear both;
+  }
+
+  html:active-view-transition-type(dock)::view-transition-new(root) {
+    animation: root-in var(--dur-screen) linear both;
+  }
+
+  @keyframes root-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes root-in {
+    from {
+      opacity: 0;
+    }
   }
 
   /* ⭐ A TROCA DE TELA E AGUA, e nao um corte: a tela velha some num sopro de desfoque e recua
      um fio; a nova chega de um passo atras, nitidificando. ⛔ O cross-fade do navegador ele viu
      e recusou: "nao esta nivel Apple". */
-  ::view-transition-group(board) {
+  ::view-transition-group(board),
+  ::view-transition-group(desk) {
     animation-duration: var(--dur-screen);
     animation-timing-function: var(--ease-enter);
   }
 
-  ::view-transition-old(board) {
+  ::view-transition-old(board),
+  ::view-transition-old(desk) {
     animation: screen-out var(--dur-screen) var(--ease-enter) both;
   }
 
-  ::view-transition-new(board) {
+  ::view-transition-new(board),
+  ::view-transition-new(desk) {
     animation: screen-in var(--dur-screen) var(--ease-enter) both;
   }
 
@@ -137,8 +174,10 @@
     animation-duration: var(--dur-menu);
   }
 
+  /* A saida e curta e so apaga: o que sai com escala lenta ficava como um painel fantasma sobre
+     a madeira, meio caminho da troca. */
   ::view-transition-old(dock) {
-    animation: dock-out var(--dur-menu) var(--ease-enter) both;
+    animation: dock-out calc(var(--dur-menu) * 0.6) var(--ease-enter) both;
   }
 
   ::view-transition-new(dock) {
@@ -146,7 +185,7 @@
   }
 
   html:active-view-transition-type(dock)::view-transition-old(rail) {
-    animation: column-out var(--dur-menu) var(--ease-enter) both;
+    animation: column-out calc(var(--dur-menu) * 0.6) var(--ease-enter) both;
   }
 
   html:active-view-transition-type(dock)::view-transition-new(rail) {
@@ -156,7 +195,7 @@
   @keyframes dock-out {
     to {
       opacity: 0;
-      transform: translateY(10px) scale(0.92);
+      transform: translateY(6px) scale(0.97);
     }
   }
 
@@ -170,7 +209,7 @@
   @keyframes column-out {
     to {
       opacity: 0;
-      transform: translateX(-10px) scale(0.97);
+      transform: translateX(-6px);
     }
   }
 

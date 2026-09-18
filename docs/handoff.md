@@ -43,7 +43,17 @@ mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone)
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
 carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
 `tmp/plano-etapa3-gemini.md`). Lote 1 do Gemini: ícone de Defesa, geometria do dock por janela.
-✔ **A TROCA DE TELA, terceira e última versão do dia (ordem dele: "gostei da ideia do macOS,
+✔ **A TROCA DE TELA, quarta versão — "continua bugado, principalmente os menus":** filmada em
+velocidade real (`tmp/transicao-video.mjs` + `video-quadros.mjs`, prancha por troca) e três defeitos
+viraram código: (1) a Caixa era ESTICADA até a largura da mesa durante a troca, porque os dois
+tabuleiros tinham o mesmo nome e a caixa morfava — o do Gabinete agora se chama `desk`
+(`tmp/banda.mjs`: L 75 na faixa contra 32 sem o grupo); (2) a madeira sumia num corte na saída
+do Gabinete — a raiz agora se dissolve no tipo `dock` (nomear o `.backdrop` foi tentado e pintou
+por cima da barra); (3) a coluna que saía com escala lenta ficava como painel fantasma — saídas
+em 120ms, só apagando. 📐 O engasgo de 150ms na primeira troca é frio de processo (shader e fonte):
+150/83ms na primeira página do navegador, 33/33 nas seguintes — sem view transition 17ms. Não
+se reproduz na mesma sessão.
+✔ **A TROCA DE TELA, terceira versão do dia (ordem dele: "gostei da ideia do macOS,
 ultra refinado e clean, e mais rápido"):** o tabuleiro sai num sopro de desfoque (8px, 1,012) e o
 novo chega nitidificando (0,988) em `--dur-screen` 220ms; **o menu não voa**: no Gabinete o rail se
 chama `dock` e fora dele `rail` (`view-transition-name` em `40-shell.css`), então entrar ou sair
