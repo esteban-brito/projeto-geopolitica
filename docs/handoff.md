@@ -43,6 +43,11 @@ mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone)
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
 carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
 `tmp/plano-etapa3-gemini.md`). Lote 1 do Gemini: ícone de Defesa, geometria do dock por janela.
+✔ **A TROCA DE TELA, quinta e última versão do dia, com a pesquisa do Gemini
+(`tmp/transicao-apple.md`):** sem desfoque — dissolve com um fio de escala (0,98 → 1), curva da mola
+padrão do SwiftUI (`--ease-screen` cubic-bezier(0.32, 0.72, 0, 1)), `--dur-screen` 280ms; o menu
+entra 100ms antes do fim, `--dur-menu` 200: 380ms ao todo. O desfoque animado custava 40ms de GPU
+por troca e a Apple não desfoca a tela na troca.
 ✔ **O PISCA LARANJA NA VOLTA AO GABINETE — achado e morto, medido no Chrome dele com GPU:** depois da
 transição, a superfície do `backdrop-filter` do rail ficava com a caixa VELHA (a coluna) por 6
 quadros a partir de 460ms — madeira desfocada e saturada, sem grão (aresta 0,1 contra 4,5), onde

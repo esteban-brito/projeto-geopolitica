@@ -209,8 +209,11 @@
     /* ⛔ 320 + 460 em fila ele recusou ("muito lento"), e 240 + 300 tambem. O menu nao voa: o
        dock encolhe no lugar e a coluna nasce no dela, como o dock do macOS, e o todo fecha em
        360ms — o menu entra 60ms antes de o tabuleiro acabar. */
-    --dur-screen: 220ms;
+    --dur-screen: 280ms;
     --dur-menu: 200ms;
+    /* A curva da troca de tela: a mola padrao do SwiftUI (response 0,55, dampingFraction 1)
+       em cubic-bezier, pesquisa do Gemini em tmp/transicao-apple.md. */
+    --ease-screen: cubic-bezier(0.32, 0.72, 0, 1);
     --dur-stage: 520ms;
     --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-move: cubic-bezier(0.22, 1, 0.36, 1);

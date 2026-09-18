@@ -121,38 +121,37 @@
     animation-duration: var(--dur-screen);
   }
 
-  /* ⭐ A TROCA DE TELA E AGUA, e nao um corte: a tela velha some num sopro de desfoque e recua
-     um fio; a nova chega de um passo atras, nitidificando. ⛔ O cross-fade do navegador ele viu
-     e recusou: "nao esta nivel Apple". */
+  /* ⭐ A TROCA DE TELA E A DA APPLE: dissolve com um fio de escala (0,98 → 1), sem desfoque.
+     ⛔ O cross-fade cru do navegador ele recusou ("nao esta nivel Apple"); o desfoque animado em
+     tela inteira saiu depois: custava 40ms de GPU por troca (tmp/transicao-custo.md) e a Apple
+     nao desfoca a tela na troca — desfoque e profundidade parada, nunca animador. */
   ::view-transition-group(board),
   ::view-transition-group(desk) {
     animation-duration: var(--dur-screen);
-    animation-timing-function: var(--ease-enter);
+    animation-timing-function: var(--ease-screen);
   }
 
   ::view-transition-old(board),
   ::view-transition-old(desk) {
-    animation: screen-out var(--dur-screen) var(--ease-enter) both;
+    animation: screen-out var(--dur-screen) var(--ease-screen) both;
   }
 
   ::view-transition-new(board),
   ::view-transition-new(desk) {
-    animation: screen-in var(--dur-screen) var(--ease-enter) both;
+    animation: screen-in var(--dur-screen) var(--ease-screen) both;
   }
 
   @keyframes screen-out {
     to {
       opacity: 0;
-      filter: blur(8px);
-      transform: scale(1.012);
+      transform: scale(1.01);
     }
   }
 
   @keyframes screen-in {
     from {
       opacity: 0;
-      filter: blur(8px);
-      transform: scale(0.988);
+      transform: scale(0.98);
     }
   }
 
@@ -160,7 +159,7 @@
      Gabinete o rail se chama `dock` (`40-shell.css`) e fora dele `rail`, entao entrar ou sair do
      Gabinete e uma SAIDA e uma ENTRADA — o que sai encolhe no proprio lugar e o que entra nasce no
      dele, e nada atravessa a tela. ⛔ A capsula de vidro voando em reta ele viu e trocou por isto.
-     O menu so entra depois de o tabuleiro assentar, 60ms antes do fim dele; entre duas telas que
+     O menu so entra depois de o tabuleiro assentar, 100ms antes do fim dele; entre duas telas que
      nao sao o Gabinete os dois se chamam `rail` e so o item aceso troca. */
   ::view-transition-group(dock),
   ::view-transition-group(rail) {
@@ -172,11 +171,11 @@
      fundo laranja onde ele tava". Com escala lenta era um painel fantasma. Fica: so apagar, no
      mesmo tempo e na mesma curva da tela que sai. */
   ::view-transition-old(dock) {
-    animation: dock-out var(--dur-screen) var(--ease-enter) both;
+    animation: dock-out var(--dur-screen) var(--ease-screen) both;
   }
 
   ::view-transition-new(dock) {
-    animation: dock-in var(--dur-menu) var(--ease-enter) calc(var(--dur-screen) - 60ms) both;
+    animation: dock-in var(--dur-menu) var(--ease-screen) calc(var(--dur-screen) - 100ms) both;
   }
 
   /* A coluna SAI quando so existe a foto velha e ENTRA quando so existe a nova (`:only-child`
@@ -184,11 +183,11 @@
      item aceso. Sem tipos de transicao: `:only-child` e CSS de sempre, e vale em todo navegador
      com view transition. */
   ::view-transition-old(rail):only-child {
-    animation: column-out var(--dur-screen) var(--ease-enter) both;
+    animation: column-out var(--dur-screen) var(--ease-screen) both;
   }
 
   ::view-transition-new(rail):only-child {
-    animation: column-in var(--dur-menu) var(--ease-enter) calc(var(--dur-screen) - 60ms) both;
+    animation: column-in var(--dur-menu) var(--ease-screen) calc(var(--dur-screen) - 100ms) both;
   }
 
   @keyframes dock-out {

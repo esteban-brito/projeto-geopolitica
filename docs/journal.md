@@ -8421,3 +8421,6 @@ Gabinete, "aparece e some". Não reproduzia no headless. Filmei cada quadro do c
 dele com GPU pelo CDP e lá estava: 6 quadros a partir de 460ms, a superfície do backdrop-filter do
 rail com a caixa velha. Cinco variantes não mudaram nada; apagar o desfoque do rail só durante a
 troca zerou. A guarda de material recusou `backdrop-filter: none` e o token é que apaga.
+O Gemini voltou da pesquisa: a Apple não desfoca a tela na troca, dissolve com um fio de escala em
+280–320ms na mola padrão do SwiftUI; o desfoque animado em tela inteira é caro. Saiu o desfoque,
+entrou a curva; 380ms ao todo.
