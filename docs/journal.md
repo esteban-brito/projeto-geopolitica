@@ -8378,3 +8378,6 @@ do rail com nome próprio. O passeio pegou dois defeitos reais antes dele: o cli
 trocava de tela (SVG não é HTMLElement) e os ministérios ficavam invisíveis atrás da gaveta.
 Gemini desenhou o ícone de Defesa e, por ordem direta dele, escreveu a pesquisa 12 sobre o Liquid
 Glass da Apple.
+Bug dele ao vivo: arrastar uma seleção pela tela pintava o telefone junto com o texto. Era a única
+`<img>` da mesa; `user-select: none` e `-webkit-user-drag: none` nas duas cópias da foto. Provado
+com arraste de canto a canto: 227 caracteres selecionados, telefone fora.

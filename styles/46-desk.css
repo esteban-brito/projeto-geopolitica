@@ -648,6 +648,11 @@
     display: block;
     width: 100%;
     height: 100%;
+    /* ⛔ E A UNICA `<img>` DA MESA: arrastar uma selecao pela tela pintava o aparelho de azul
+       junto com o texto, e ele saia como fantasma ao ser arrastado. As outras pecas sao fundo. */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
   }
 
   /* As duas sombras da sala seguem a silhueta da foto. ⛔ A 0,5 de alfa elas sumiam no
