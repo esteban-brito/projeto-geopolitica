@@ -8392,3 +8392,12 @@ Dois defeitos no caminho: a folha calava o ponteiro dos filhos (regra da `.sheet
 não clicavam; e a repintura depois de marcar precisava reabrir a carta sem voo. O passeio ganhou o
 passo 1b. O Gemini, enquanto eu estava sem cota, provou o teclado do dock e mediu o custo dele: 4
 camadas antes e depois, GPU 0,25 MB a menos.
+
+### 12 · A troca de tela vira água — 18/09, noite
+
+Ele viu a troca do Gabinete para outra aba e recusou: "não está nível Apple, quero algo mais
+liquid glass, aquoso, e a transição de aba não pode ser junto com a do menu". A tela agora sai num
+sopro de desfoque e a nova chega nitidificando; o rail espera o tabuleiro assentar e só então
+escorre como cápsula até o outro lugar — a view transition ganhou tipos (`dock`/`stay`) para a
+cápsula só andar quando muda de lugar. O seletor de tipo só casa com o pseudo-elemento colado na
+raiz, sem espaço — meia hora nisso. O passeio passou a esperar a transição acabar em vez de 500ms.

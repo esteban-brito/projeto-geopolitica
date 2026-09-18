@@ -90,18 +90,79 @@
     view-transition-name: board;
   }
 
-  /* O rail tambem: no Gabinete ele e o dock no pe da tela, e a troca de tela o leva de um lugar
-     ao outro pela mesma transicao — sem nome ele piscaria de um lado para o outro. */
   .rail {
     view-transition-name: rail;
   }
 
-  ::view-transition-group(rail) {
+  /* ⭐ A TROCA DE TELA E AGUA, e nao um corte: a tela velha some num sopro de desfoque e recua
+     um fio; a nova chega de um passo atras, nitidificando. ⛔ O cross-fade do navegador ele viu
+     e recusou: "nao esta nivel Apple". */
+  ::view-transition-group(board) {
     animation-duration: var(--dur-screen);
+    animation-timing-function: var(--ease-enter);
   }
 
-  /* A duracao da troca de tela sai do token, e nao do padrao do navegador. */
-  ::view-transition-group(board) {
+  ::view-transition-old(board) {
+    animation: screen-out var(--dur-screen) var(--ease-enter) both;
+  }
+
+  ::view-transition-new(board) {
+    animation: screen-in var(--dur-screen) var(--ease-enter) both;
+  }
+
+  @keyframes screen-out {
+    to {
+      opacity: 0;
+      filter: blur(10px);
+      transform: scale(1.015);
+    }
+  }
+
+  @keyframes screen-in {
+    from {
+      opacity: 0;
+      filter: blur(12px);
+      transform: scale(0.985);
+    }
+  }
+
+  /* ⭐ E O RAIL NAO ANDA JUNTO COM A TELA, ordem dele: ele espera o tabuleiro assentar e so
+     entao escorre de um lugar ao outro como uma capsula — o conteudo velho apaga no comeco do
+     caminho e o novo acende no fim, e no meio o que se ve e o vidro andando. So quando ele
+     muda de lugar (tipo `dock`, escrito por `transition` no `app.mjs`); entre duas telas que
+     nao sao o Gabinete ele so troca o item aceso. */
+  html:active-view-transition-type(dock)::view-transition-group(rail) {
+    animation-duration: var(--dur-rail);
+    animation-delay: var(--dur-screen);
+    animation-timing-function: var(--ease-move);
+    border: 1px solid var(--glass-edge);
+    border-radius: 22px;
+    background: rgba(var(--bg-deep-rgb), 0.6);
+  }
+
+  html:active-view-transition-type(dock)::view-transition-old(rail) {
+    animation: rail-out var(--dur-rail) linear var(--dur-screen) both;
+  }
+
+  html:active-view-transition-type(dock)::view-transition-new(rail) {
+    animation: rail-in var(--dur-rail) linear var(--dur-screen) both;
+  }
+
+  @keyframes rail-out {
+    30%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes rail-in {
+    0%,
+    60% {
+      opacity: 0;
+    }
+  }
+
+  html:active-view-transition-type(stay)::view-transition-group(rail) {
     animation-duration: var(--dur-screen);
   }
 }

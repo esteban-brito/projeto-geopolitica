@@ -1162,7 +1162,11 @@ function transition(depois) {
     return;
   }
 
-  const view = start(paint);
+  /* ⚠ A TRANSICAO DIZ SE O RAIL MUDA DE LUGAR: entrando ou saindo do Gabinete ele vira dock ou
+     volta a coluna, e so entao a capsula escorre (`10-base.css`, tipo `dock`). Entre duas telas
+     que nao sao o Gabinete ele fica onde esta, e o tipo e `stay`. */
+  const moves = (el.main.dataset["screen"] === "cabinet") !== (screen === "cabinet");
+  const view = start({ update: paint, types: [moves ? "dock" : "stay"] });
 
   /* ⚠ PULAR A TRANSICAO NAO E ERRO, e antes virava um. `ready` REJEITA quando
      uma transicao comeca antes de a anterior terminar — o que acontece a cada navegacao

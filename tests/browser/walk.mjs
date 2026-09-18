@@ -1651,7 +1651,14 @@ try {
   await page.click("#swearOk");
   await page.waitForTimeout(700);
   await page.click('.rail [data-section="congress"]');
-  await page.waitForTimeout(500);
+  /* ⛔ ESPERA-SE A TRANSICAO ACABAR, e nao o relogio: a troca de tela leva 320ms de tabuleiro mais
+     460 de rail, e o botao de avancar so destrava no `depois` dela — a 500ms fixos o contraste
+     do rotulo media 1,08 contra o botao ainda escuro. */
+  await page.waitForFunction(
+    () =>
+      /** @type {{ activeViewTransition?: unknown }} */ (document).activeViewTransition === null,
+  );
+  await page.waitForTimeout(150);
 
   expect(
     (await page.locator('.bench[data-own="true"]').count()) === 1,

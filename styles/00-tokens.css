@@ -206,7 +206,9 @@
     --go-gap: 7px;
     --dur-touch: 90ms;
     --dur-piece: 180ms;
-    --dur-screen: 220ms;
+    --dur-screen: 320ms;
+    /* A capsula do rail escorre DEPOIS do tabuleiro assentar, e leva mais tempo que ele. */
+    --dur-rail: 460ms;
     --dur-stage: 520ms;
     --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-move: cubic-bezier(0.22, 1, 0.36, 1);

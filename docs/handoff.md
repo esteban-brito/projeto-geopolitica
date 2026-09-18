@@ -43,6 +43,23 @@ mínimos de 0,64 px estão dentro da foto (clipe da caneta, recorte do telefone)
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →
 carta → bandeirinha. ⚠ A parte B espera as 2 fotos dele (envelopes abertos; prompts em
 `tmp/plano-etapa3-gemini.md`). Lote 1 do Gemini: ícone de Defesa, geometria do dock por janela.
+✔ **A TROCA DE TELA VIROU AGUA, ordem dele ("não está nível Apple… quero algo mais liquid glass,
+aquoso; a transição de aba não pode ser junto com a do menu"):** o tabuleiro sai num sopro de
+desfoque (`blur(10px)`, escala 1,015) e o novo chega de um passo atrás nitidificando (`blur(12px)`,
+0,985), em `--dur-screen` 320ms; **o rail só anda depois**: `transition()` escreve o tipo da view
+transition (`dock` quando entra ou sai do Gabinete, `stay` nas outras) e a cápsula
+(`::view-transition-group(rail)` com fundo e borda) escorre em `--dur-rail` 460ms com atraso de
+320 — o conteúdo velho apaga nos primeiros 30% e o novo acende nos últimos 40%. ⛔ O seletor é
+`html:active-view-transition-type(dock)::view-transition-group(rail)` SEM espaço: com o
+combinador descendente ele não casa e o rail ficava nos 250ms do navegador. Quadros em
+`tmp/transicao-quadros.mjs`. ⚠ O passeio passou a esperar `document.activeViewTransition === null`
+depois de trocar de tela: a 500ms fixos o botão de avançar ainda estava escuro (contraste 1,08).
+⚠ Gemini mediu a carta erguida (`tmp/carta-medidas.md`): corpo 19,3px na tela a 1920×937 e 18,4 a
+1440×900; escolhas com 30–31px de alto — abaixo dos 44 de toque, e o jogo é de mouse acima de
+1181px; fica anotado. Espécies de carta em `tmp/carta-especies.md` (16; anexo em 12, escolhas em
+3, ação em 4). 📗 A pesquisa 12 do Gemini (Liquid Glass da Apple) é o estudo para o refazer do
+vidro, "não agora": lente SDF por `feDisplacementMap` (já prototipada em `topbar.mjs`), aberração
+cromática, bisel de Fresnel, squircle, `saturate(1.85)`.
 ✔ **PARTE B — A CARTA NA MESA — FEITA em 18/09, sem a foto do envelope aberto** (o DALL-E dele
 estourou a cota; `data-open` no envelope é o gancho para a foto entrar depois sem mexer no JS).
 Clicar no envelope ergue a folha dele (`.post__sheet`, uma por carta em `.post`, `armPost` em
