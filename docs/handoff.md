@@ -44,7 +44,14 @@ bandeirinha fica na fila esperando a foto dele). **O PLANO EM VIGOR É O CICLO 2
 já tem (`glass.mjs`: lente de borda, Fresnel, squircle), uma peça por sessão, cada uma com fps nos
 dois braços e croma do jacarandá no pixel. Ordem dele: "esqueça todas as travas e guardas" — o §5
 do ciclo diz o que isso vira: a guarda `material` é reescrita para aceitar a lente; o que mede
-fica. Gemini está no inventário (`tmp/vidro-inventario.md`). Aguarda a aprovação dele.
+fica. **Aprovado por ele em 18/09**, com a ordem: parte pequena hoje, commitar, terminar amanhã.
+✔ **Passo 2 FEITO — `glaze()`:** o `dress` da barra saiu de `topbar.mjs` para `glass.mjs` como
+`glaze(node, { body, edge, gleam })`, com a receita num só lugar (`RECIPE`: bisel 13, força 1,
+escala 17, desfoque 2,6, saturação 1,9, r 16, s 0,6). A barra usa o `glaze` e ficou pixel-igual
+(passeio: 0 px em todas as telas; `carta-pergunta.png` difere só no halo do telefone, que anima).
+▶ **Passo 1 com o Gemini** (`tmp/vidro-base.md`): fps por tela nos dois braços, ΔE do jacarandá
+sob o dock, os 5 piores contrastes sobre vidro. ▶ **Amanhã:** 1b (tokens visionOS, ele olha) e 3
+(o dock, peça-piloto).
 ✔ **CICLO 27 fechado** — antes: **CICLO 26 FECHADO e commitado (65b66d0). O PLANO ERA O 27** — Etapa 3:
 `docs/cycles/27-a-carta-na-mesa-e-o-dock.md`, com as três decisões dele de 18/09 (abertura 2D,
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →

@@ -156,3 +156,53 @@ export function skin({ w, h, r, s, body, edge, gleam = 0 }) {
 /** @param {Ramp} ramp @param {number} k @returns {Ramp} */
 export const scaleRamp = (ramp, k) =>
   /** @type {Ramp} */ (ramp.map(([at, alpha]) => [at, Number((alpha * k).toFixed(4))]));
+
+/* ⭐ A RECEITA DO VIDRO, uma para o jogo inteiro (ciclo 28). Medida na barra, um numero por vez,
+   com o dono girando e olhando: o bisel e a faixa que refrata, a forca e quanto ela desvia, a
+   escala e o ganho do mapa, o desfoque e a saturacao sao a vibrancia. */
+export const RECIPE = { bevel: 13, force: 1, scale: 17, blur: 2.6, saturation: 1.9, r: 16, s: 0.6 };
+
+let glazed = 0;
+
+/**
+ * VESTE UMA PECA DE VIDRO: mede a caixa, instala a lente do tamanho dela, pinta a pele e escreve
+ * o `backdrop-filter`. O que muda entre as pecas e so a tinta do corpo e a forca da aresta.
+ * ⛔ A medida e de LAYOUT: o gesto escala o botao, e `getBoundingClientRect` devolveria a peca
+ * esmagada. ⛔ A lente so se refaz quando o tamanho muda: recriada a cada pintura, o navegador
+ * nao re-resolve `url(#id)` e o `backdrop-filter` vira nada em silencio.
+ *
+ * @param {HTMLElement} node
+ * @param {{ body: Ramp, edge: Ramp, gleam?: number }} paint
+ */
+export function glaze(node, { body, edge, gleam = 0 }) {
+  const w = node.offsetWidth;
+  const h = node.offsetHeight;
+  if (w < 9 || h < 9) return;
+  const stamp = `${w}x${h}x${gleam}x${body[0]?.[1]}`;
+  if (node.dataset["dressed"] !== stamp) {
+    const id = node.dataset["lens"] ?? `glaze-${(glazed += 1)}`;
+    node.dataset["lens"] = id;
+    document.querySelector(`svg[data-lens="${id}"]`)?.remove();
+    if (
+      installLens({
+        id,
+        w,
+        h,
+        r: RECIPE.r,
+        s: RECIPE.s,
+        bevel: RECIPE.bevel,
+        force: RECIPE.force,
+        scale: RECIPE.scale,
+        blur: RECIPE.blur,
+      })
+    ) {
+      const filter = `url(#${id}) saturate(${RECIPE.saturation})`;
+      node.style.backdropFilter = filter;
+      node.style.setProperty("-webkit-backdrop-filter", filter);
+    }
+    node.dataset["dressed"] = stamp;
+  }
+  if (node.dataset["painted"] === stamp) return;
+  node.dataset["painted"] = stamp;
+  node.style.backgroundImage = `url("${skin({ w, h, r: RECIPE.r, s: RECIPE.s, body, edge, gleam })}")`;
+}

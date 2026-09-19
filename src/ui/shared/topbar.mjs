@@ -4,12 +4,11 @@
    tres; o que muda entre elas e a tinta do corpo — vidro escuro nos dois blocos, branco no
    botao. Mexer numa parada muda as tres, e e isso que as mantem uma familia. */
 
-import { installLens, scaleRamp, skin } from "./glass.mjs";
+import { RECIPE, glaze, scaleRamp, skin } from "./glass.mjs";
 import { between, spring } from "./spring.mjs";
 
-/* ⚠ MEDIDO NO CLONE, um por um, com o dono girando o numero e olhando: o bisel e a faixa que
-   refrata, a forca e quanto ela desvia, a escala e o ganho do mapa. */
-const LENS = { bevel: 13, force: 1, scale: 17, blur: 2.6, saturation: 1.9, r: 16, s: 0.6 };
+/* A lente, a quina e o desfoque sao a RECEITA de `glass.mjs` (ciclo 28): a barra so escolhe a
+   tinta do corpo e a forca da aresta. */
 
 /** @typedef {import("./glass.mjs").Ramp} Ramp */
 
@@ -52,51 +51,6 @@ const FLOOR = 0.78;
 
 /* A sangria lateral da peca, para descontar da largura util. */
 const PAD = 10;
-
-let lensCount = 0;
-
-/**
- * @param {HTMLElement} node
- * @param {{ body: Ramp, edge: Ramp, gleam?: number }} paint
- */
-function dress(node, { body, edge, gleam = 0 }) {
-  /* ⛔ A MEDIDA E DE LAYOUT E NAO VISUAL: o gesto escala o botao, e `getBoundingClientRect`
-     devolveria a peca esmagada — a pele nasceria com o tamanho do meio do gesto. */
-  const w = node.offsetWidth;
-  const h = node.offsetHeight;
-  if (w < 9 || h < 9) return;
-
-  /* ⛔ E A LENTE SO SE REFAZ QUANDO O TAMANHO MUDA. Removendo e recriando o filtro a cada
-     pintura, o navegador nao re-resolve `url(#id)`: a referencia morre com o no antigo e o
-     `backdrop-filter` vira nada, EM SILENCIO — o botao perdia o vidro no primeiro mes. */
-  const stamp = `${w}x${h}x${gleam}x${body[0]?.[1]}`;
-  if (node.dataset["dressed"] !== stamp) {
-    const id = node.dataset["lens"] ?? `topbar-lens-${(lensCount += 1)}`;
-    node.dataset["lens"] = id;
-    document.querySelector(`svg[data-lens="${id}"]`)?.remove();
-    if (
-      installLens({
-        id,
-        w,
-        h,
-        r: LENS.r,
-        s: LENS.s,
-        bevel: LENS.bevel,
-        force: LENS.force,
-        scale: LENS.scale,
-        blur: LENS.blur,
-      })
-    ) {
-      const filter = `url(#${id}) saturate(${LENS.saturation})`;
-      node.style.backdropFilter = filter;
-      node.style.setProperty("-webkit-backdrop-filter", filter);
-    }
-    node.dataset["dressed"] = stamp;
-  }
-  if (node.dataset["painted"] === stamp) return;
-  node.dataset["painted"] = stamp;
-  node.style.backgroundImage = `url("${skin({ w, h, r: LENS.r, s: LENS.s, body, edge, gleam })}")`;
-}
 
 /**
  * AS DUAS LINHAS DO BLOCO SAO JUSTIFICADAS AO MESMO EIXO — o M do mes e o M da nota saem do
@@ -189,19 +143,27 @@ export function dressTopbar(root) {
   if (when instanceof HTMLElement) justify(when, squeeze);
 
   for (const piece of root.querySelectorAll(".piece")) {
-    if (piece instanceof HTMLElement) dress(piece, { body: GLASS_BODY, edge: BLOCK_EDGE });
+    if (piece instanceof HTMLElement) glaze(piece, { body: GLASS_BODY, edge: BLOCK_EDGE });
   }
   const advance = root.querySelector(".go");
   if (advance instanceof HTMLElement) {
-    dress(advance, { body: WHITE_BODY, edge: EDGE, gleam: GLEAM });
+    glaze(advance, { body: WHITE_BODY, edge: EDGE, gleam: GLEAM });
     const w = advance.offsetWidth;
     const h = advance.offsetHeight;
-    const cold = skin({ w, h, r: LENS.r, s: LENS.s, body: WHITE_BODY, edge: EDGE, gleam: GLEAM });
+    const cold = skin({
+      w,
+      h,
+      r: RECIPE.r,
+      s: RECIPE.s,
+      body: WHITE_BODY,
+      edge: EDGE,
+      gleam: GLEAM,
+    });
     const warm = skin({
       w,
       h,
-      r: LENS.r,
-      s: LENS.s,
+      r: RECIPE.r,
+      s: RECIPE.s,
       body: WHITE_BODY,
       edge: HOVER_EDGE,
       gleam: GLEAM,

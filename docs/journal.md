@@ -8433,3 +8433,5 @@ de distância, desfoque com saturação, aresta de Fresnel, squircle), e o resto
 antigo — dois vidros. O ciclo 28 faz um: `dress` vira `glaze()` em `glass.mjs` e veste toda
 peça, do dock aos palcos, uma por sessão, com fps nos dois braços e croma no pixel. As guardas: a
 de material é reescrita para aceitar a lente; as que medem ficam.
+Ele aprovou o ciclo 28 e pediu uma parte pequena hoje. Saiu o passo 2: `dress` virou `glaze()` em
+`glass.mjs`, a receita num lugar só, e a barra pixel-igual. O Gemini está na base de medição.
