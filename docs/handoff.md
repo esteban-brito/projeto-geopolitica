@@ -49,9 +49,16 @@ fica. **Aprovado por ele em 18/09**, com a ordem: parte pequena hoje, commitar, 
 `glaze(node, { body, edge, gleam })`, com a receita num só lugar (`RECIPE`: bisel 13, força 1,
 escala 17, desfoque 2,6, saturação 1,9, r 16, s 0,6). A barra usa o `glaze` e ficou pixel-igual
 (passeio: 0 px em todas as telas; `carta-pergunta.png` difere só no halo do telefone, que anima).
-▶ **Passo 1 com o Gemini** (`tmp/vidro-base.md`): fps por tela nos dois braços, ΔE do jacarandá
-sob o dock, os 5 piores contrastes sobre vidro. ▶ **Amanhã:** 1b (tokens visionOS, ele olha) e 3
-(o dock, peça-piloto).
+⚠ **Passo 1 (Gemini, `tmp/vidro-base.md` + `vidro-base.mjs`) SAIU PELA METADE e amanhã se refaz:**
+(A) o fps deu 60,1 em todas as telas e nos dois braços — o script está preso ao vsync; o
+`screen-cost.mjs` do repositório lança o Chromium com a taxa destravada (240 fps) e é ele que
+serve de modelo; (B) a "madeira crua sob o dock" mediu rgb(3,4,10) — com o dock em
+`display:none` ele amostrou o fundo escuro, não o jacarandá (o vizinho exposto deu rgb(62,19,6),
+esse sim é madeira); só o ΔE vizinho×vidro (31,2) diz alguma coisa, e diz que o vidro de hoje
+apaga a madeira; (C) os 5 piores contrastes sobre vidro estão todos em AA (5,49 a 6,55) — esse
+vale. ▶ **AMANHÃ, nesta ordem:** refazer o passo 1 (fps destravado, madeira medida sob o dock
+via canvas do próprio tampo ou dock em `visibility:hidden`), depois 1b (tokens visionOS, ele
+olha) e 3 (o dock, peça-piloto). ⚠ Gemini foi mandado parar por hoje; nada dele está no repositório.
 ✔ **CICLO 27 fechado** — antes: **CICLO 26 FECHADO e commitado (65b66d0). O PLANO ERA O 27** — Etapa 3:
 `docs/cycles/27-a-carta-na-mesa-e-o-dock.md`, com as três decisões dele de 18/09 (abertura 2D,
 a barra fica sobre a mesa e nada encolhe, 6 ícones com gaveta de ministérios). Ordem: dock →

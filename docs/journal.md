@@ -8435,3 +8435,7 @@ peça, do dock aos palcos, uma por sessão, com fps nos dois braços e croma no 
 de material é reescrita para aceitar a lente; as que medem ficam.
 Ele aprovou o ciclo 28 e pediu uma parte pequena hoje. Saiu o passo 2: `dress` virou `glaze()` em
 `glass.mjs`, a receita num lugar só, e a barra pixel-igual. O Gemini está na base de medição.
+A base de medição do Gemini saiu pela metade: fps preso a 60 nos dois braços (vsync) e a
+"madeira crua" medida no fundo escuro em vez do tampo. O que vale: os 5 piores contrastes sobre
+vidro estão em AA. Amanhã se refaz com o modelo do `screen-cost.mjs`. Ele desligou por hoje:
+"quero tudo registrado e atualizado para não esquecermos de nada".
