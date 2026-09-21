@@ -248,6 +248,39 @@ test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {
   );
 });
 
+/* ── SOBREVIVER AO PLENARIO ARQUIVA O PROCESSO ──────────────────────────────── ⚠ O ACHADO E
+   DE REVISAO EXTERNA: `impeachment` nunca voltava a null, e o plenario votava TODO MES ate o fim
+   do mandato, com a cadeira a x3. A carta do cerco ja dizia "quem o encerra e o plenario". */
+test("SOBREVIVER AO PLENARIO ARQUIVA O PROCESSO, e sem ruptura ele nao reabre", () => {
+  /* Um governo saudavel no mes 3, com um processo aberto a forca no mes 2. */
+  let state = createState(7);
+  for (let month = 0; month < 3; month++) state = playMonth(state, {}, {}).state;
+  state = { ...state, impeachment: 2 };
+
+  const votado = playMonth(state, {}, {}).state;
+  assert.equal(votado.fallen, null, "um governo saudavel caiu no plenario");
+  assert.equal(votado.impeachment, null, "o presidente sobreviveu e o processo continuou aberto");
+
+  /* E O MES SEGUINTE NAO REABRE, porque as tres rupturas nao estao abertas. */
+  const seguinte = playMonth(votado, {}, {}).state;
+  assert.equal(seguinte.impeachment, null, "o processo reabriu sem ruptura");
+});
+
+/* O PLENARIO DO AFASTAMENTO SACA DO FLUXO, e a posicao gasta tem de ficar gravada: gravar so
+   a posicao dos projetos fazia a votacao do mes seguinte sacar os MESMOS numeros do plenario. */
+test("O PLENARIO DO AFASTAMENTO GASTA FLUXO — o mes com plenario grava outra posicao", () => {
+  let state = createState(7);
+  for (let month = 0; month < 3; month++) state = playMonth(state, {}, {}).state;
+
+  const sem = playMonth(state, {}, {}).state;
+  const com = playMonth({ ...state, impeachment: 2 }, {}, {}).state;
+  assert.notDeepEqual(
+    com.streams.congress,
+    sem.streams.congress,
+    "o plenario votou e o fluxo do Congresso ficou na mesma posicao",
+  );
+});
+
 test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigencia tem SENTIDO", () => {
   /* E o defeito nao falha em lugar nenhum — a carta sai inteira, com numero e botao. */
 

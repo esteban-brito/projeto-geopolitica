@@ -1534,13 +1534,27 @@ export function playMonth(state, orders = {}, options = {}) {
       : null;
 
   const fallen = state.fallen ?? (survivors && !survivors.passed ? state.month : null);
+  /* SOBREVIVEU: o processo se arquiva, e a cadeira volta ao preco. Sem isto o plenario votava
+     todo mes ate o fim do mandato. Se as tres rupturas coincidirem de novo, outro abre. */
+  const siege = survivors?.passed ? null : impeachment;
 
   const nextFiscal = nextPosition(state, budget, settled, catalog, interest, bands, appliedBands);
+
+  /* A POSICAO COM QUE O MES SEGUINTE ABRE, a mesma que `ledger` vai ler nele. Medida so com
+     `fiscal` trocado, a previsao do teto dava -1,0 de folga onde o mes real deu +6,9. */
+  const opening = {
+    ...state,
+    month: state.month + 1,
+    fiscal: nextFiscal,
+    macro: economy.macro,
+    capacity: { index: capacity.index, history: capacity.history },
+    levels: settled,
+  };
 
   const closed = {
     approval: pollFrom(opinion.mood, catalog.segments, catalog.opinion).good,
     seats: baseCount({ parties, loyalty }),
-    room: discretionaryRoom({ ...state, fiscal: nextFiscal }, catalog),
+    room: discretionaryRoom(opening, catalog),
   };
   const balance = balanceOf(state, closed, catalog);
 
@@ -1572,16 +1586,13 @@ export function playMonth(state, orders = {}, options = {}) {
       bills: protocolled ? [...passage.bills, protocolled] : passage.bills,
 
       mail: [
-        ...alarmsOf(state, rupturas, impeachment, catalog, {
+        ...alarmsOf(state, rupturas, siege, catalog, {
           pressure,
           loyalty,
           blocked: budget.blocked,
           ratio,
 
-          blockedNext: budgetStep({
-            ...positionOf({ ...state, fiscal: nextFiscal }, catalog),
-            spent: 0,
-          }).blocked,
+          blockedNext: budgetStep({ ...positionOf(opening, catalog), spent: 0 }).blocked,
         }),
         ...passage.asked,
         ...demandsOf(state, pressure, catalog),
@@ -1625,11 +1636,13 @@ export function playMonth(state, orders = {}, options = {}) {
         ...post.mail,
       ],
       pressure,
-      impeachment,
+      impeachment: siege,
       fallen,
       memory,
 
-      stream: passage.stream,
+      /* O plenario do afastamento tambem saca do fluxo: gravar so `passage.stream` fazia a
+         votacao de projeto do mes seguinte sacar os mesmos numeros que ele. */
+      stream: survivors?.stream ?? passage.stream,
       /* Mes fechado guarda os 7 valores da carta (evita 24 campos x 24 meses no save). */
       months: [
         {

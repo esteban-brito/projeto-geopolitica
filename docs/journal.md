@@ -8668,3 +8668,16 @@ enquanto a troca dura e se reveste no pouso. Duas grátis sobram, e o plano é o
 numa base com as pastas apagadas, e a UI inteira depois de fechar o ciclo.
 O Gemini, enquanto isso, escreveu uma lista de "bugs vistos" tirada do handoff, com duas
 afirmações que o código desmente. Apaguei e devolvi com a regra: só entra o que ele reproduziu.
+
+### 28 · O motor lido inteiro — 21/09, noite
+
+A segunda revisão grátis foi no motor completo, com um truque: uma branch sem as quatro pastas
+e outra com elas de volta, para o diff ser o motor inteiro pelos dois jeitos de contar. Seis
+achados. Três eram bug e um era decisão. O cerco nunca se arquivava — o plenário votava todo mês
+até derrubar, e a carta do jogo já dizia que quem encerra é o plenário; ele escolheu arquivar e
+reabrir se as rupturas voltarem. O plenário do afastamento gastava fluxo e a posição se perdia,
+então a votação do mês seguinte repetia os mesmos sorteios. E o aviso de teto media o mês
+seguinte com o relógio deste: no mês 40 dizia que fechava, e não fechava. A correção foi montar
+a posição com que o mês seguinte abre e perguntar a ela — o cofre do relatório passou a bater
+exato com a abertura. O save também ganhou a checagem que faltava. A série não se mexeu.
+Duas provas novas caem sem a correção e passam com ela.

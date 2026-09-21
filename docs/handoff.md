@@ -17,7 +17,42 @@
 
 ## ▶ COMECE POR AQUI
 
-### ▶ Estado — 21/09/2026 noite, ⭐ O ULTRAREVIEW ENTROU: 3 achados, 3 confirmados, 3 corrigidos (portão verde, commitado)
+### ▶ Estado — 21/09/2026 noite, ⭐ 2º ULTRA, O MOTOR INTEIRO: 6 achados, 4 corrigidos, 1 decisão dele, 2 na fila (portão verde, commitado)
+
+⭐ **COMO:** branch `base-motor` = HEAD com `src/domain`, `src/application`, `src/state` e
+`src/public` apagadas; branch `motor-review` = `base-motor` + o motor de volta (árvore igual à
+`caixa-de-entrada`, conferida por hash). Rodado de `motor-review` contra `base-motor`: 22
+arquivos, 5.854 linhas, o motor como "arquivo novo". ⚠ **Por três pontos o diff de `base-motor`
+até `caixa-de-entrada` é VAZIO** (ancestral comum = HEAD) — por isso a `motor-review`. **2 de 3
+grátis gastos.** O 3º é `src/ui` inteira (6.907 linhas, mesma mecânica), só depois do ciclo 29.
+📐 **Os achados, conferidos antes de mexer** (`tmp/ultra-motor-3.mjs`, `tmp/ultra-teto*.mjs`,
+`tmp/ultra-cerco*.mjs`):
+- **(1) o cerco nunca se arquivava** — `impeachment` só era escrito na abertura, e o plenário
+  votava **todo mês** até derrubar, cadeira ×3 até o fim. ⚖ **Decisão dele: sobreviveu →
+  arquiva, e reabre se as 3 rupturas coincidirem de novo.** `siege = survivors?.passed ? null :
+  impeachment` em `turn.mjs`. Prova nova em `pressure.mjs`. ⚠ **Ausência declarada:** não há
+  carta dizendo "o plenário rejeitou e arquivou" — o jogador vê a cadeira voltar ao preço e o
+  anexo do cerco sumir. Fila.
+- **(2) o plenário do afastamento sacava do fluxo e jogava a posição fora** — o mês gravava
+  `passage.stream`, e a votação de projeto do mês seguinte sacava os **mesmos números**. Agora
+  `survivors?.stream ?? passage.stream`. Prova nova.
+- **(3) `blockedNext` media o mês seguinte com o `elapsed` deste** — no mês 40 da sonda
+  gastadora a previsão dava **−1,0** de folga e o mês real **+6,9**: alarme falso de teto. O
+  `room` do fecho (o "cofre" do relatório) tinha o mesmo defeito. Agora o fecho monta a **posição
+  de abertura do mês seguinte** (mês+1, `nextFiscal`, macro, capacidade, níveis) e pergunta a
+  ela; o cofre bate exato com `discretionaryRoom` do mês seguinte (13,783 = 13,783), e o teto que
+  fecha avisa antes nos dois cenários medidos.
+- **(nit) `deserialize` checava forma de 9 dos 18 campos** — `"mood": null` passava e estourava
+  no primeiro `pollFrom`. Agora 18, com recusa e motivo.
+- **(nit, fila) `settlement()` refaz o elenco a cada leitura** — verdade, mas rodar é barato
+  (pintura 3-5ms). Item 5 do ciclo 29 se quiser.
+- **(nit, fila) `vote()` reimplementa `take()`** — qualidade só, mesmo saque.
+📐 **Série remedida: imóvel** nas 6 sondas (nenhuma abre cerco; aviso e cofre não decidem nada
+no simulate). 334 provas.
+▶ **Fila:** lote 3 ao Gemini (`src/app/paint.mjs`, `src/app/inputs.mjs`) · carta do
+arquivamento · itens 4 e 5 · 3º ultra na `src/ui` ao fechar o ciclo.
+
+### ✔ Estado anterior — 21/09/2026 noite, ⭐ O ULTRAREVIEW ENTROU: 3 achados, 3 confirmados, 3 corrigidos (portão verde, commitado)
 
 ⭐ **O QUE É:** `/code-review ultra <branch-base>`, revisão multi-agente na nuvem que lê o **diff** e
 caça bug de correção; não roda o jogo. Ele tem **3 usos grátis, 1 gasto.** A branch contra `main`
@@ -1501,7 +1536,8 @@ pessoas; estratificar troca a ambição de quem já joga. Decisão dele.
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e
 se medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com
-PLB, `agenda` dá 30/43 — ver fila). Remedida 03/09 após o A3; imóvel em 04/09 nas nove.
+PLB, `agenda` dá 30/43 — ver fila). Remedida 03/09 após o A3; imóvel em 04/09 nas nove, e em
+21/09 nas seis depois do 2º ultra (cerco, fluxo do plenário, previsão do teto).
 
 | política     | dívida/PIB | votações     | indústria | segurança |
 | ------------ | ---------- | ------------ | --------- | --------- |

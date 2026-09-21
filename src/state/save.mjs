@@ -85,17 +85,31 @@ export function deserialize(text) {
   const asObj = (/** @type {unknown} */ v) =>
     v !== null && typeof v === "object" && !Array.isArray(v);
   const asArr = (/** @type {unknown} */ v) => Array.isArray(v);
+  const asNum = (/** @type {unknown} */ v) => typeof v === "number" && Number.isFinite(v);
+  const asMonth = (/** @type {unknown} */ v) => v === null || asNum(v);
 
+  /* Os 18 campos, e nao so os 9 de estrutura: `"mood": null` passava e quebrava no primeiro
+     `pollFrom`. */
   const shape = [
+    ["seed", asNum, "numero"],
+    ["month", asNum, "numero"],
     ["platform", asObj, "objeto"],
+    ["mood", asObj, "objeto"],
+    ["loyalty", asObj, "objeto"],
     ["fiscal", asObj, "objeto"],
     ["macro", asObj, "objeto"],
     ["capacity", asObj, "objeto"],
+    ["levels", asObj, "objeto"],
+    ["memory", asObj, "objeto"],
     ["streams", asObj, "objeto"],
     ["series", asObj, "objeto"],
+    ["pressure", asObj, "objeto"],
     ["mail", asArr, "array"],
     ["bills", asArr, "array"],
     ["norms", asArr, "array"],
+    ["months", asArr, "array"],
+    ["impeachment", asMonth, "numero ou null"],
+    ["fallen", asMonth, "numero ou null"],
   ];
 
   for (const entry of shape) {
