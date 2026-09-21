@@ -8652,3 +8652,19 @@ três chaves no DOM em vez de oito. O passeio oscilava por causa do meu morph �
 no ícone antes de a cápsula chegar nele. Agora espera o pouso.
 O macaco jogou 250 ações ao acaso sem um erro de página. Ele ainda mede a pílula no meio da
 viagem; falta ensiná-lo a esperar.
+
+### 27 · A primeira revisão de fora — 21/09, noite
+
+Ele quis experimentar o ultrareview antes de seguir. Commitei os itens 1 a 3 do ciclo 29 e a
+branch inteira não coube: 33.000 linhas contra `main`, o teto é 8.000. Uma branch-base em 18/09
+deu 7.924, e ele rodou a primeira das três grátis. Voltaram três achados, e os três eram verdade,
+conferidos no navegador antes de mexer: a carta na mão era um índice, e avançar o mês com a carta
+de janeiro aberta punha a de fevereiro na mão sem ninguém abrir; cada pintura do Gabinete pendurava
+outro Esc no documento, e o mais velho, sobre a `.post` já descartada, zerava o estado e deixava a
+carta viva aberta; e a lente do dock, escrita inline, vencia a regra que apaga o vidro do rail
+durante a troca de tela — 9 de 10 quadros com a lente acesa, num "zero quadros" medido antes de o
+dock ter lente. Corrigi os três: a mão guarda o id, o Esc arma uma vez, o rail não se veste
+enquanto a troca dura e se reveste no pouso. Duas grátis sobram, e o plano é o motor inteiro
+numa base com as pastas apagadas, e a UI inteira depois de fechar o ciclo.
+O Gemini, enquanto isso, escreveu uma lista de "bugs vistos" tirada do handoff, com duas
+afirmações que o código desmente. Apaguei e devolvi com a regra: só entra o que ele reproduziu.

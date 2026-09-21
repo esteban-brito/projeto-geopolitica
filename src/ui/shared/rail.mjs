@@ -236,9 +236,23 @@ export function paintRail(screen) {
   movePill();
 }
 
-/* ⛔ A LENTE SO ENTRA NO DOCK: a coluna tem 162 mil px e passa do teto de area de `glaze`. */
+/* ⛔ A LENTE SO ENTRA NO DOCK: a coluna tem 162 mil px e passa do teto de area de `glaze`.
+   ⛔ E NAO ENTRA DURANTE A TROCA DE TELA: `20-material.css` apaga `--glaze` no rail enquanto a
+   View Transition dura, mas o inline de `glaze()` vence a regra — medido, 9 de 10 quadros da
+   troca com a lente acesa. Aqui a peca fica sem inline ate a troca pousar, e `dressRail`
+   a reveste. */
 function dress() {
-  if (menu) glaze(menu.rail, LEVELS.regular);
+  if (!menu) return;
+  if (menu.rail.ownerDocument.documentElement.matches(":active-view-transition")) {
+    menu.rail.style.removeProperty("--glaze");
+    return;
+  }
+  glaze(menu.rail, LEVELS.regular);
+}
+
+/** Reveste o rail depois que a troca de tela pousou. */
+export function dressRail() {
+  dress();
 }
 
 /* ── A PILULA ───────────────────────────────────────────────────────────────────────────── */

@@ -16,7 +16,7 @@ import {
   termOf,
 } from "../public/index.mjs";
 import { LEVELS, glaze } from "../ui/shared/glass.mjs";
-import { paintRail, railGovHtml, railNavHtml } from "../ui/shared/rail.mjs";
+import { dressRail, paintRail, railGovHtml, railNavHtml } from "../ui/shared/rail.mjs";
 import { closingHtml } from "../ui/screens/closing.mjs";
 import {
   areaHtml,
@@ -564,7 +564,12 @@ export function transition(depois) {
      (`resolving = false`). Preso a um `then` sozinho, bastaria `paint` lancar uma vez para
      `finished` rejeitar e o mes nunca mais poder ser avancado — sem erro na tela, sem
      nada: o jogo simplesmente pararia de responder. */
-  view.finished.catch(() => {}).then(() => depois?.());
+  view.finished
+    .catch(() => {})
+    .then(() => {
+      dressRail();
+      depois?.();
+    });
 }
 
 /* ⛔ A PECA DO DIALOGO SO TEM CAIXA DEPOIS DE ABRIR: `<dialog>` fechado mede zero, e `glaze`

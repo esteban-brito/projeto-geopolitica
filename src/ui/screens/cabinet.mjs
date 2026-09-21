@@ -62,7 +62,7 @@ export function emailHtml(input) {
  * @param {number} input.month
  * @param {ReadonlyArray<{ id: string, label: string, short?: string }>} input.areas
  * @param {ReadonlyArray<string>} input.protect
- * @param {ReadonlyArray<{ urgent: boolean, dispatch: Parameters<typeof letterHtml>[0] | null }>} input.letters
+ * @param {ReadonlyArray<{ urgent: boolean, dispatch: import("./inbox.mjs").Dispatch | null }>} input.letters
  * @param {number} input.sheets
  * @param {Parameters<typeof briefHtml>[0]} input.brief
  * @param {string | null} input.boiling
@@ -94,7 +94,7 @@ export function cabinetHtml(input) {
       .map((letter, i) =>
         !letter.dispatch
           ? ""
-          : `<div class="sheet post__sheet" data-letter="${i}" tabindex="-1" aria-label="${escapeHtml(UI.envelope.open)}" hidden>${letterHtml(letter.dispatch)}</div>`,
+          : `<div class="sheet post__sheet" data-letter="${i}" data-id="${escapeHtml(letter.dispatch.id)}" tabindex="-1" aria-label="${escapeHtml(UI.envelope.open)}" hidden>${letterHtml(letter.dispatch)}</div>`,
       )
       .join("") +
     `</div>` +
@@ -238,7 +238,7 @@ export function forgetDesk() {
   at = 0;
   flying = null;
   sealed = "";
-  reading = -1;
+  held = null;
 }
 
 /** @param {ParentNode} root */
@@ -420,8 +420,17 @@ function armFlight(root) {
   });
 }
 
-/* Carta sobe ao centro na mola LIFT ate escala READING sobre os 1018px da folha. */
-let reading = -1;
+/* Carta sobe ao centro na mola LIFT ate escala READING sobre os 1018px da folha.
+   ⛔ A MAO GUARDA O ID, NAO O INDICE: a lista da mesa muda a cada pintura (o mes fecha, a
+   carta e respondida) e o indice 0 de janeiro reabria a carta de fevereiro sozinho. */
+/** @type {string | null} */
+let held = null;
+/* ⛔ O ESC DO DOCUMENTO ARMA UMA VEZ: cada pintura do Gabinete pendurava outro `keydown`, e o
+   mais velho corria primeiro sobre a `.post` descartada — depois de uma repintura o Esc
+   nao largava mais a carta. `drop` aponta sempre para o `close` da pintura corrente. */
+/** @type {(animate: boolean) => void} */
+let drop = () => {};
+let escArmed = false;
 
 /** @param {ParentNode} root */
 function armPost(root) {
@@ -460,12 +469,16 @@ function armPost(root) {
     return { from, to };
   };
 
+  /* O indice e desta pintura; o que sobrevive a ela e `held`. */
+  let reading = -1;
+
   /** @param {number} i @param {boolean} animate */
   const open = (i, animate) => {
     const sheet = sheetOf(i);
     const envelope = envelopeOf(i);
     if (!(sheet instanceof HTMLElement) || !(envelope instanceof HTMLElement)) return;
     reading = i;
+    held = sheet.dataset["id"] ?? null;
     sheet.hidden = false;
     envelope.dataset["open"] = "true";
     const { from, to } = ends(envelope, sheet);
@@ -488,6 +501,7 @@ function armPost(root) {
     const sheet = sheetOf(reading);
     const envelope = envelopeOf(reading);
     reading = -1;
+    held = null;
     if (!(sheet instanceof HTMLElement)) return;
     if (envelope instanceof HTMLElement) envelope.dataset["open"] = "false";
     const done = () => {
@@ -510,11 +524,15 @@ function armPost(root) {
       });
   };
 
-  /* Reabre sem voo a carta que estava na mao. */
-  if (reading >= 0) {
-    if (sheetOf(reading) instanceof HTMLElement) open(reading, false);
-    else reading = -1;
+  /* Reabre sem voo a carta que estava na mao, procurando pelo id dela. */
+  if (held !== null) {
+    const kept = [...post.querySelectorAll(".post__sheet")].find(
+      sheet => sheet instanceof HTMLElement && sheet.dataset["id"] === held,
+    );
+    if (kept instanceof HTMLElement) open(Number(kept.dataset["letter"]), false);
+    else held = null;
   }
+  drop = close;
 
   room.addEventListener("click", event => {
     const target = event.target;
@@ -530,7 +548,9 @@ function armPost(root) {
     }
     if (reading >= 0) close(true);
   });
+  if (escArmed) return;
+  escArmed = true;
   room.ownerDocument.addEventListener("keydown", event => {
-    if (event.key === "Escape" && reading >= 0) close(true);
+    if (event.key === "Escape" && held !== null) drop(true);
   });
 }

@@ -17,7 +17,32 @@
 
 ## ▶ COMECE POR AQUI
 
-### ▶ Estado — 21/09/2026 noite, ⭐ CICLO 29 EM CURSO: itens 1, 2 e 3 andaram (portão verde, commitado)
+### ▶ Estado — 21/09/2026 noite, ⭐ O ULTRAREVIEW ENTROU: 3 achados, 3 confirmados, 3 corrigidos (portão verde, commitado)
+
+⭐ **O QUE É:** `/code-review ultra <branch-base>`, revisão multi-agente na nuvem que lê o **diff** e
+caça bug de correção; não roda o jogo. Ele tem **3 usos grátis, 1 gasto.** A branch contra `main`
+tem 33.073 linhas e o teto é 8.000: a base `base-ultra` (em `679f043`, 18/09) deu 7.924 e coube.
+📐 **Os 3 achados eram verdade, reproduzidos no navegador antes de mexer** (`tmp/ultra-achado*.mjs`):
+(1) a carta na mão era **índice** (`reading`) e a lista da mesa muda a cada pintura — carta de
+janeiro aberta + avançar o mês = a de fevereiro na mão sem ninguém abrir; (2) cada `armPost`
+pendurava **outro `keydown`** no documento, e o mais velho corria sobre a `.post` descartada —
+depois de uma repintura o Esc não largava a carta; (3) a lente do dock, inline por `glaze()`,
+**vencia** `html:active-view-transition .rail { --glaze: none }` — 9 de 10 quadros da troca com
+`backdrop-filter: url(#glaze-4)`; o "zero quadros" de 18/09 foi medido antes de o dock ter lente.
+✔ **Correções:** a folha carrega `data-id` e a mão guarda `held` (id), o índice é local da pintura;
+o Esc arma uma vez e chama o `close` corrente por `drop`; `dress()` do rail não veste durante a
+troca e `dressRail()` reveste no `finished` da transição. Remedido: 0 de 10 quadros com lente na
+troca, e ela volta ao pousar; Esc larga a carta depois de repintar; 40 meses com carta na mão e
+nenhuma troca de id. ⚠ `!important` e `backdrop-filter: none` não passam (guardas `cascade` e
+`material`), por isso a correção 3 é JS. ⚠ O pisca visual de 18/09 **não foi refilmado** com GPU.
+▶ **Fila:** 2º ultra = **o motor inteiro** (`base-motor`: branch com `src/domain`,
+`src/application`, `src/state`, `src/public` apagadas = 5.854 linhas como "arquivo novo") ·
+3º ultra = `src/ui` inteira (6.907), **só depois de fechar o ciclo 29** · lote 3 ao Gemini (parado
+por ordem minha até o commit) · itens 4 e 5.
+⚠ **Gemini:** a lista "Bugs vistos" que ele escreveu era o handoff reescrito, com 2 afirmações
+falsas; apagada. Regra dada: só entra bug que ele reproduziu, com tela e passo.
+
+### ✔ Estado anterior — 21/09/2026 noite, ⭐ CICLO 29 EM CURSO: itens 1, 2 e 3 andaram (portão verde, commitado)
 
 ⭐ **ORDEM DELE:** _"foque em simplificar o código… para você ter mais precisão"_. Plano em
 [`cycles/29-simplificar.md`](cycles/29-simplificar.md). Números de partida: 14.300 linhas de
