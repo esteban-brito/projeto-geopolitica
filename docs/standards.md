@@ -28,7 +28,9 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 ## 2. Estrutura
 
 ```
-index.html · app.mjs        entrypoint: composição e wiring, nunca cálculo
+index.html · app.mjs        entrypoint: 28 linhas de wiring, e nada mais
+src/app/                    o que o navegador compõe: sessão, entradas por tela, pintura,
+                            diálogos e gestos — alcança state/, public/ e ui/, nunca o motor
 styles/                     onze folhas, na ordem que o numero do nome declara
 vendor/fonts/               Inter e Source Serif 4, sob SIL OFL — 226KB, sem rede
 src/data/                   catálogo; `catalog.mjs` indexa todo dado do projeto

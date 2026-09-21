@@ -16,8 +16,12 @@
       height: 100dvh;
     }
 
-    /* ⚠ Rail transbordava 44px (948px declarados numa janela de 980px onde a casca tem 904px). */
-    .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) .rail {
+    /* ⚠ Rail transbordava 44px (948px declarados numa janela de 980px onde a casca tem 904px).
+       ⛔ E ISTO E DA COLUNA: enquanto falava da TELA e nao da orientacao, a margem de 48px do piso
+       caia tambem sobre a barra deitada e empurrava o dock 48px para cima — de `top: 822` para
+       774, o que move a peca inteira sem ninguem pedir. */
+    .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"]))
+      .rail[data-flow="column"] {
       height: auto;
       align-self: stretch;
       margin-bottom: var(--shell-floor);
@@ -25,7 +29,10 @@
       margin-right: var(--space-2);
     }
   }
-  .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"])) .rail__list {
+  /* ⛔ A ROLAGEM INTERNA E DA COLUNA: na barra deitada a lista nao rola, ela cabe. Enquanto esta
+     regra falava da TELA e nao da orientacao, ela vencia a do dock por especificidade e punha
+     `overflow-y: auto` numa barra de 44px de altura — conteudo de 322 numa caixa de 310. */
+  .rail[data-flow="column"] .rail__list {
     min-height: 0;
     overflow-y: auto;
   }
@@ -42,7 +49,7 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail {
+    .rail[data-flow="row"] {
       /* O nome muda com o lugar: e assim que a troca de tela sabe que ele SAI e a coluna ENTRA. */
       view-transition-name: dock;
       position: fixed;
@@ -58,67 +65,79 @@
       flex-direction: row;
       align-items: center;
       gap: var(--space-1);
-      border-radius: 22px;
+      border-radius: var(--radius-piece);
       transform: translateX(-50%);
+      /* ⛔ A PECA VESTIDA JA TEM ARESTA: a borda de 1px desenharia um segundo contorno por cima
+         da rampa de Fresnel. Ela fica, transparente, porque a pele e desenhada com ela na caixa. */
+      border-color: transparent;
     }
 
     /* So icones, ordem dele: o nome e a posicao do governo ficam nas outras telas. */
-    .shell:has(> .board[data-screen="cabinet"]) .rail__gov {
+    .rail[data-flow="row"] .rail__gov {
       display: none;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__list {
+    .rail[data-flow="row"] .rail__list {
       flex-direction: row;
       align-items: center;
       gap: var(--space-1);
       overflow: visible;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__rule {
+    .rail[data-flow="row"] .rail__rule {
       width: 1px;
       height: 26px;
       margin: 0 var(--space-1);
-      background: var(--glass-edge);
+      background: var(--hairline);
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__group {
+    .rail[data-flow="row"] .rail__group {
       display: contents;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__legend {
+    .rail[data-flow="row"] .rail__legend {
       display: none;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__item {
+    .rail[data-flow="row"] .rail__item {
       position: relative;
-      width: 44px;
-      height: 44px;
+      width: var(--target-l);
+      height: var(--target-l);
       padding: 0;
       justify-content: center;
-      border-radius: 14px;
-      /* Apple: o ativo nao tinge, so leva o ponto embaixo. */
+      border-radius: var(--radius-item);
+      /* Apple: o ativo nao tinge — quem marca a selecao e a pilula, que corre ate ele.
+         ⛔ E sem `transition` propria aqui: ela substituia a da base e matava o gesto, porque
+         `transition` e atalho — declarar uma propriedade apaga as outras. */
       background: transparent;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__icon {
-      width: 20px;
-      height: 20px;
+    /* ⛔ O DOCK NAO RESPONDIA AO PONTEIRO: a coluna tinha veu no hover e ele nao tinha nada, e a
+       mesma acao dava resposta diferente em cada tela. O ativo segue sem tingir — e o ponto. */
+    .rail[data-flow="row"] .rail__item:not(.rail__item--active):hover {
+      background: var(--veil-thin);
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__item--active::after {
+    .rail[data-flow="row"] .rail__icon {
+      width: var(--glyph-dock);
+      height: var(--glyph-dock);
+    }
+
+    .rail[data-flow="row"] .rail__item--active::after {
       content: "";
       position: absolute;
       left: 50%;
       bottom: 3px;
-      width: 4px;
-      height: 4px;
+      width: var(--space-1);
+      height: var(--space-1);
       border-radius: 50%;
       background: var(--brand);
       transform: translateX(-50%);
     }
 
-    /* O rotulo vira dica: aparece acima do icone ao pousar ou ao focar pelo teclado. */
-    .shell:has(> .board[data-screen="cabinet"]) .rail__label {
+    /* O rotulo vira dica: BROTA do icone ao pousar ou ao focar pelo teclado — nasce a 0,9 com a
+       origem no pe, e sobe pela mola de soltar; a opacidade e curta para nao arrastar a saida. */
+    .rail[data-flow="row"] .rail__label {
       position: absolute;
       left: 50%;
       bottom: calc(100% + var(--space-2));
@@ -128,20 +147,30 @@
       font-size: var(--text-note);
       color: var(--ink);
       opacity: 0;
-      transform: translate(-50%, 4px);
+      transform-origin: 50% 100%;
+      transform: translate(-50%, var(--space-1)) scale(0.9);
       transition:
         opacity var(--dur-touch) linear,
-        transform var(--dur-touch) var(--ease-enter);
+        transform var(--dur-release) var(--ease-release);
       pointer-events: none;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__item:hover .rail__label,
-    .shell:has(> .board[data-screen="cabinet"]) .rail__item:focus-visible .rail__label {
+    .rail[data-flow="row"] .rail__item:hover .rail__label,
+    .rail[data-flow="row"] .rail__item:focus-visible .rail__label {
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translate(-50%, 0) scale(1);
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__alert {
+    /* ⛔ DUAS DICAS ACESAS AO MESMO TEMPO: com a gaveta aberta pelo teclado e o ponteiro parado
+       sobre outro icone, o foco acendia uma e o hover acendia a outra. Quem tem o foco manda. */
+    .rail[data-flow="row"]:has(.rail__item:focus-visible)
+      .rail__item:hover:not(:focus-visible)
+      .rail__label {
+      opacity: 0;
+      transform: translate(-50%, var(--space-1)) scale(0.9);
+    }
+
+    .rail[data-flow="row"] .rail__alert {
       position: absolute;
       top: 6px;
       right: 6px;
@@ -149,33 +178,52 @@
     }
 
     /* A gaveta: o botao so existe aqui; aberta, os seis somem e os oito entram. */
-    .shell:has(> .board[data-screen="cabinet"]) .rail__drawer {
+    .rail[data-flow="row"] .rail__drawer {
       display: flex;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__sub {
+    .rail[data-flow="row"] .rail__sub {
       display: none;
       flex-direction: row;
       gap: var(--space-1);
       list-style: none;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__list[data-drawer="true"] .rail__sub {
+    .rail[data-flow="row"] .rail__list[data-drawer="true"] .rail__sub {
       display: flex;
     }
 
-    .shell:has(> .board[data-screen="cabinet"])
-      .rail__list[data-drawer="true"]
-      > li:not(.rail__group),
-    .shell:has(> .board[data-screen="cabinet"]) .rail__list[data-drawer="true"] ~ .rail__foot {
+    .rail[data-flow="row"] .rail__list[data-drawer="true"] > li:not(.rail__group),
+    .rail[data-flow="row"] .rail__list[data-drawer="true"] ~ .rail__foot {
       display: none;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__drawer[aria-expanded="true"] .rail__icon {
+    /* O + vira x na curva do quique, e volta por ela. */
+    .rail[data-flow="row"] .rail__drawer .rail__icon {
+      transition: transform var(--dur-piece) var(--ease-settle);
+    }
+
+    .rail[data-flow="row"] .rail__drawer[aria-expanded="true"] .rail__icon {
       transform: rotate(45deg);
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot {
+    /* ── O MORPH: enquanto a capsula anda, o que esta dentro nao vaza nem transiciona ─────────
+       `overflow: hidden` so aqui, porque a dica mora ACIMA da capsula e ficaria cortada; ela
+       apaga durante o morph, como na Apple. E o item nao leva a transicao propria: quem escreve
+       a escala dele por quadro e a mola, e uma transicao por cima atrasaria cada quadro. */
+    .rail[data-flow="row"][data-morph] {
+      overflow: hidden;
+    }
+
+    .rail[data-flow="row"][data-morph] .rail__item {
+      transition: none;
+    }
+
+    .rail[data-flow="row"][data-morph] .rail__label {
+      opacity: 0;
+    }
+
+    .rail[data-flow="row"] .rail__foot {
       margin: 0;
       flex-direction: row;
       align-items: center;
@@ -183,31 +231,51 @@
     }
 
     /* A regua antes de recomecar: acao e nao lugar, como a lixeira no fim do dock. */
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot::before {
+    .rail[data-flow="row"] .rail__foot::before {
       content: "";
       width: 1px;
       height: 26px;
       margin: 0 var(--space-1);
-      background: var(--glass-edge);
+      background: var(--hairline);
     }
 
     /* Recomecar e um icone como os outros; o rotulo e a confirmacao viram a dica, e a
        confirmacao acende o glifo na cor de crise enquanto o segundo clique nao vem. */
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action {
+    .rail[data-flow="row"] .rail__foot .action {
       position: relative;
-      width: 44px;
-      height: 44px;
+      width: var(--target-l);
+      height: var(--target-l);
       padding: 0;
       justify-content: center;
       border-radius: 14px;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .rail__icon {
+    .rail[data-flow="row"] .rail__foot .rail__icon {
       display: block;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action__label,
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action__hint {
+    /* No dock, recomecar e um icone entre icones: o mesmo pousar, premir e soltar do item. A
+       acao discreta apaga o proprio hover na base; aqui ele volta, porque a peca e outra. */
+    .rail[data-flow="row"] .rail__foot .action {
+      transition:
+        background var(--dur-touch) linear,
+        color var(--dur-touch) linear,
+        transform var(--dur-release) var(--ease-release);
+    }
+
+    .rail[data-flow="row"] .rail__foot .action:hover {
+      transform: scale(var(--lift-hover));
+      background: var(--veil-thin);
+    }
+
+    .rail[data-flow="row"] .rail__foot .action:active {
+      transform: scale(var(--sink-press));
+      transition-duration: var(--dur-press);
+      transition-timing-function: var(--ease-press);
+    }
+
+    .rail[data-flow="row"] .rail__foot .action__label,
+    .rail[data-flow="row"] .rail__foot .action__hint {
       position: absolute;
       left: 50%;
       bottom: calc(100% + var(--space-2));
@@ -221,39 +289,27 @@
       white-space: nowrap;
       color: var(--ink);
       opacity: 0;
-      transform: translate(-50%, 4px);
+      transform-origin: 50% 100%;
+      transform: translate(-50%, var(--space-1)) scale(0.9);
       transition:
         opacity var(--dur-touch) linear,
-        transform var(--dur-touch) var(--ease-enter);
+        transform var(--dur-release) var(--ease-release);
       pointer-events: none;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action__hint {
+    .rail[data-flow="row"] .rail__foot .action__hint {
       display: none;
     }
 
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action:hover .action__label,
-    .shell:has(> .board[data-screen="cabinet"]) .rail__foot .action:focus-visible .action__label,
-    .shell:has(> .board[data-screen="cabinet"])
-      .rail__foot
-      .action[data-arming="true"]
-      .action__label {
+    .rail[data-flow="row"] .rail__foot .action:hover .action__label,
+    .rail[data-flow="row"] .rail__foot .action:focus-visible .action__label,
+    .rail[data-flow="row"] .rail__foot .action[data-arming="true"] .action__label {
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translate(-50%, 0) scale(1);
     }
 
-    .shell:has(> .board[data-screen="cabinet"])
-      .rail__foot
-      .action[data-arming="true"]
-      .rail__icon {
+    .rail[data-flow="row"] .rail__foot .action[data-arming="true"] .rail__icon {
       color: var(--crisis);
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .shell:has(> .board[data-screen="cabinet"]) .rail__item:hover {
-        background: transparent;
-        transform: translateY(-3px) scale(1.08);
-      }
     }
   }
   .shell[data-siege="true"]::after {
@@ -339,8 +395,12 @@
     color: var(--ink);
   }
 
+  /* ⛔ `--ink-dim` REPROVAVA sobre a madeira: com a faixa sem vidro, a segunda linha da marca
+     cai direto no veio claro do jacarandá e o pior pixel dava 3,68:1 a 1440 e 4,18 a 1920.
+     A tinta cheia com opacidade guarda a hierarquia e passa em AA. tmp/contraste-pior.mjs */
   .topbar__name b + b {
-    color: var(--ink-dim);
+    color: var(--ink);
+    opacity: 0.9;
   }
 
   /* ⛔ Com nome longo, a marca colidia com os vitais a 1245px antes de o rail deitar a 1180px. */
@@ -366,10 +426,8 @@
     border-radius: var(--piece-radius);
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.5),
-      0 3px 8px rgba(0, 0, 0, 0.3),
-      0 6px 18px rgba(0, 0, 0, 0.16);
+    /* A queda e a do vidro, e nao uma pilha propria: eram tres camadas aqui e duas no resto. */
+    box-shadow: var(--glass-cast);
     font-family: var(--font-display);
     line-height: 1;
     white-space: nowrap;
@@ -647,10 +705,8 @@
   }
 
   .go-shade {
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.5),
-      0 3px 8px rgba(0, 0, 0, 0.3),
-      0 6px 18px rgba(0, 0, 0, 0.16);
+    /* A queda e a do vidro, e nao uma pilha propria: eram tres camadas aqui e duas no resto. */
+    box-shadow: var(--glass-cast);
   }
 
   .go-shade--high {
@@ -719,6 +775,8 @@
     inset: 0;
     z-index: -2;
     background:
+      linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.42), transparent 24%),
+      radial-gradient(124% 84% at 50% 48%, transparent 38%, rgba(var(--bg-deep-rgb), 0.52) 100%),
       radial-gradient(62% 48% at 14% 12%, rgba(var(--stable-rgb), 0.3), transparent 70%),
       radial-gradient(48% 42% at 84% 20%, rgba(var(--ink-rgb), 0.09), transparent 66%),
       radial-gradient(70% 56% at 78% 92%, rgba(var(--stable-rgb), 0.26), transparent 72%),
@@ -730,21 +788,23 @@
     filter: saturate(1.5);
   }
 
-  /* Substrato do Gabinete: foto do jacaranda com degrade nas bordas (366 a 412px).
-     Iluminacao zenital em soft-light e multiply preserva o croma em 73,2% (normal caia para 47,9%). */
+  /* Substrato do Gabinete: o tampo COBRE a janela, ordem dele. A foto tem 3832x1642 e a 1920
+     de largura ela ainda entra reduzida (fator 0,57), entao cobrir nao amplia nada.
+     Iluminacao zenital em soft-light e multiply preserva o croma em 73,2% (normal caia para 47,9%).
+     ⛔ Os dois degrades de borda sairam: eram a faixa preta que comia 366px do centro para cada
+     lado. ⛔ E a vinheta saiu inteira depois deles, ordem dele: o tampo e o tampo ate a beira,
+     sem moldura. O que escurece a cena agora e so a luz da sala, que vem do radial de cima. */
   body:has(.board[data-screen="cabinet"]) .backdrop {
     background:
-      linear-gradient(180deg, transparent calc(50% + 366px), var(--bg-deep) calc(50% + 412px)),
-      linear-gradient(0deg, transparent calc(50% + 366px), var(--bg-deep) calc(50% + 412px)),
+      linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.56), transparent 26%),
       radial-gradient(
         74% 58% at calc(50% - 105px) calc(50% - 290px),
         rgba(255, 255, 255, 0.26),
         transparent 66%
       ),
-      radial-gradient(90% 86% at 50% calc(50% - 30px), transparent 40%, rgba(0, 0, 0, 0.5) 100%),
-      var(--timber, none) center / var(--room-w) var(--room-h) no-repeat,
+      var(--timber, none) center / cover no-repeat,
       var(--bg-deep);
-    background-blend-mode: normal, normal, soft-light, multiply, normal, normal;
+    background-blend-mode: normal, soft-light, normal, normal;
     filter: none;
   }
 
@@ -799,16 +859,11 @@
     mask-composite: intersect;
   }
 
-  .shell::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.42), transparent 24%),
-      radial-gradient(124% 84% at 50% 48%, transparent 38%, rgba(var(--bg-deep-rgb), 0.52) 100%);
-  }
+  /* ⛔ A VINHETA E O VEU MORAM NO `.backdrop`, e nao numa camada por cima: o substrato e o unico
+     que tem `view-transition-name`, entao e ele que a troca de aba dissolve. Como pseudo do
+     `.shell` o fundo SALTAVA no meio da troca — 14,9 de luminancia entre dois quadros vizinhos
+     (tmp/veu-transicao.mjs) — e por `transition: opacity` piorava para 30,2, porque durante a
+     transicao a arvore viva vira retrato e transicao de elemento nao aparece. */
 
   /* ── ABAIXO DE 1180px: o rail lateral passa a faixa horizontal superior. ── */
   @media (max-width: 1180px) {

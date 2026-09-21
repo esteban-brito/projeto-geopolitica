@@ -2,6 +2,7 @@
    Existe porque modulos ES nao carregam por `file://` — o jogo publicado continua sendo
    arquivos estaticos servidos por qualquer coisa. */
 
+import { networkInterfaces } from "node:os";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize, resolve } from "node:path";
@@ -44,6 +45,18 @@ const server = createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, "127.0.0.1", () => {
+/* ⚠ SO A MAQUINA ALCANCA, por padrao. `HOST=0.0.0.0` abre para a rede local — e o unico jeito de
+   o telefone dele abrir o jogo —, e nesse caso a saida imprime o endereco de cada placa. */
+const HOST = process.env["HOST"] ?? "127.0.0.1";
+
+server.listen(PORT, HOST, () => {
   process.stdout.write(`republica simulator em http://127.0.0.1:${PORT}/\n`);
+  if (HOST !== "0.0.0.0") return;
+  for (const [nome, placas] of Object.entries(networkInterfaces())) {
+    for (const placa of placas ?? []) {
+      if (placa.family === "IPv4" && !placa.internal) {
+        process.stdout.write(`  na rede (${nome}): http://${placa.address}:${PORT}/\n`);
+      }
+    }
+  }
 });

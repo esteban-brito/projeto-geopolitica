@@ -60,6 +60,14 @@ const RUNTIME = new Set([
   "--stroke-len",
   /* ── E a que a bancada da mesa girava: --rest, que o JS le no voo da pasta. */
   "--rest",
+  /* ── O TAMANHO DA PILULA: `movePill()` mede o item corrente e escreve os dois na peca. Eles
+     nao TEM valor no arquivo de tokens porque sao a caixa de um elemento, medida na tela. */
+  "--pill-w",
+  "--pill-h",
+  /* ── A RECEITA DA PECA VESTIDA: `glaze()` mede a caixa, instala a lente e escreve --glaze na
+     propria peca. Ela nao TEM valor no arquivo de tokens porque o id da lente nasce na tela;
+     quem nao foi vestida cai no `var(--glass-blur)` do fallback. */
+  "--glaze",
   /* ── AS MATERIAS, e quem as escreve e o JS: as tres texturas nascem de `feTurbulence` e
      chegam como data URI, entao elas nao TEM valor ate a tela rodar. --timber o jacaranda do
      tampo; --fibre e --felt o grao do papel e o do envelope. */

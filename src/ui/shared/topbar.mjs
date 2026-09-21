@@ -4,34 +4,19 @@
    tres; o que muda entre elas e a tinta do corpo — vidro escuro nos dois blocos, branco no
    botao. Mexer numa parada muda as tres, e e isso que as mantem uma familia. */
 
-import { RECIPE, glaze, scaleRamp, skin } from "./glass.mjs";
+import { FRESNEL, LEVELS, RECIPE, glaze, scaleRamp, skin } from "./glass.mjs";
 import { between, spring } from "./spring.mjs";
 
-/* A lente, a quina e o desfoque sao a RECEITA de `glass.mjs` (ciclo 28): a barra so escolhe a
-   tinta do corpo e a forca da aresta. */
+/* A lente, a quina, o desfoque, a tinta e a aresta sao a ESCALA de `glass.mjs` (ciclo 28): a
+   barra so escolhe o NIVEL de densidade. */
 
 /** @typedef {import("./glass.mjs").Ramp} Ramp */
 
-/** @type {Ramp} */
-const EDGE = [
-  [0, 0.5],
-  [0.08, 0.34],
-  [0.2, 0.15],
-  [0.42, 0.07],
-  [0.66, 0.06],
-  [0.86, 0.13],
-  [1, 0.24],
-];
+const EDGE = FRESNEL;
 
-/* ⛔ BRANCO TRANSLUCIDO SOBRE PRETO NAO DA BRANCO — DA CINZA. Em 0,50 o corpo compunha
-   `rgb(116,118,127)` e o botao ficava escuro. Sobre um fundo quase preto o que faz uma peca
-   LER como vidro nao e o que passa por ela: e o brilho e a aresta. */
-/** @type {Ramp} */
-const GLASS_BODY = [
-  [0, 0.085],
-  [0.45, 0.03],
-  [1, 0.022],
-];
+/* ⛔ O UNICO CORPO PROPRIO DO JOGO, e ele nao e um segundo material: e a peca CHEIA do sistema,
+   o botao primario. BRANCO TRANSLUCIDO SOBRE PRETO NAO DA BRANCO — DA CINZA: em 0,50 o corpo
+   compunha `rgb(116,118,127)` e o botao ficava escuro. */
 /** @type {Ramp} */
 const WHITE_BODY = [
   [0, 0.93],
@@ -39,11 +24,7 @@ const WHITE_BODY = [
   [1, 0.77],
 ];
 const GLEAM = 0.7;
-
-/* A aresta do bloco e metade da do botao: nele ela desenha a peca inteira, aqui ela so fecha
-   a silhueta — borda forte sobre corpo transparente le como contorno, e nao como vidro. */
-const BLOCK_EDGE = scaleRamp(EDGE, 0.52);
-const HOVER_EDGE = scaleRamp(EDGE, 1.4);
+const HOVER_EDGE = scaleRamp(EDGE, 1.9);
 
 /* ⚠ 0,78 E O PISO DA CONDENSADA, medido no clone: abaixo disso a haste vertical afina mais
    de um quinto e a letra deixa de ler como condensada e passa a ler como espremida. */
@@ -143,7 +124,7 @@ export function dressTopbar(root) {
   if (when instanceof HTMLElement) justify(when, squeeze);
 
   for (const piece of root.querySelectorAll(".piece")) {
-    if (piece instanceof HTMLElement) glaze(piece, { body: GLASS_BODY, edge: BLOCK_EDGE });
+    if (piece instanceof HTMLElement) glaze(piece, LEVELS.thin);
   }
   const advance = root.querySelector(".go");
   if (advance instanceof HTMLElement) {

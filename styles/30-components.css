@@ -126,6 +126,7 @@
     transition:
       transform var(--dur-touch) var(--ease-enter),
       background var(--dur-touch) linear;
+    min-height: var(--target-m);
   } /* ── A PRESSAO ────────────────────────────────────────────────────────────── ⚠ ELA FALTAVA
      DESDE SEMPRE, e a ausencia estava escrita na propria regra acima: a peca declarava
      `transform` na transicao e NADA nunca lhe dava um `transform` fora do hover.
@@ -191,6 +192,7 @@
      primaria na estrutura do FM2020: lateral fixa, icone a esquerda, rotulo ao lado, item
      corrente destacado, bloco ancorado no rodape. */
   .rail {
+    /* A pilula e absoluta contra ESTA caixa. */
     position: sticky;
     top: var(--space-4);
     align-self: start;
@@ -205,6 +207,19 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+    /* A coluna e peca ALTA, e peca alta e painel: o mesmo raio do palco ao lado dela. O dock,
+       que e a mesma peca deitada, usa o raio de capsula (`40-shell.css`). */
+    border-radius: var(--radius-stage);
+    /* A pele e desenhada no tamanho da caixa; quando a caixa anda (o morph da gaveta), a pele
+       estica com ela em vez de repetir. */
+    background-size: 100% 100%;
+  }
+
+  /* ⛔ O TITULO DO GRUPO ALINHA COM O TEXTO DOS ITENS, e nao com a caixa deles: ele comecava
+     40px a esquerda — 12 de recuo do item, 16 do glifo e 12 do vao — e a coluna lia como duas
+     listas encostadas em vez de uma. */
+  .rail__legend {
+    padding-left: calc(var(--space-3) + var(--glyph) + var(--space-3));
   }
 
   .rail__gov {
@@ -245,9 +260,13 @@
   }
 
   .rail__list {
+    /* ⛔ POSICIONADA, para pintar POR CIMA da pilula: sem isto o vidro da pilula cobria o rotulo
+       do item corrente na coluna — "Email" saia cinza sob o realce. No dock o item ja e
+       `relative` e o glifo ficava em cima; a coluna nao era, e o defeito so aparecia nela. */
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--rule);
     list-style: none; /* O rail rola por DENTRO quando a lista nao cabe. */
     overflow: auto;
   }
@@ -264,7 +283,7 @@
     gap: var(--space-3);
     width: 100%;
     padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-piece);
+    border-radius: var(--radius-item);
     font-family: var(--font-display);
     font-size: var(--text-body);
     font-weight: 600;
@@ -273,22 +292,67 @@
     transition:
       background var(--dur-touch) linear,
       color var(--dur-touch) linear,
-      transform var(--dur-touch) var(--ease-enter);
-  } /* O rail afunda MENOS que a acao, e a diferenca e hierarquia: navegar nao e decidir. */
+      opacity var(--dur-touch) linear,
+      /* Em repouso a transicao e a de SOLTAR: e ela que corre quando o dedo sai. Pousar e
+         premir trocam a duracao e a curva nas regras abaixo. */
+        transform var(--dur-release) var(--ease-release);
+  }
+
+  /* QUEM SAI DA CAPSULA APAGA ANTES de a gaveta trocar de estado (opacidade inline, de
+     `rail.mjs`): depois da troca ja nao esta no layout para apagar. A regua e o rodape saem
+     junto com os itens. */
+  .rail__rule,
+  .rail__foot {
+    transition: opacity var(--dur-touch) linear;
+  }
+
+  /* ⚠ A PECA RESPONDE AO PONTEIRO ANTES DO CLIQUE: pousar levanta 2%, que e o que faz o vidro
+     parecer materia e nao desenho. So onde ha ponteiro fino — no toque, pousar nao existe. */
+  @media (hover: hover) and (pointer: fine) {
+    .rail__item:hover {
+      transform: scale(var(--lift-hover));
+    }
+  }
+
+  /* ⛔ Premir NAO quica: afundar e informacao, e a mola dele e rigida (0,16s, quique 0,05). */
   .rail__item:active {
-    transform: scale(0.99);
+    transform: scale(var(--sink-press));
+    transition-duration: var(--dur-press);
+    transition-timing-function: var(--ease-press);
   } /* O item corrente e o UNICO lugar do rail que recebe ambar, e ele o recebe como tinta rasa
      — a marca e a cor do que se PRESSIONA, e gasta-la cheia num rotulo de navegacao
      enfraqueceria o botao de turno logo abaixo. */
+  /* ⛔ O ITEM CORRENTE NAO PINTA MAIS FUNDO: quem marca a selecao e a pilula, que CORRE ate ele.
+     Fundo no proprio item apaga num lugar e acende no outro, e selecao que pisca nao e material. */
   .rail__item--active {
-    background: rgba(var(--brand-rgb), 0.16);
     color: var(--ink);
+  }
+
+  /* A PILULA — o vidro do item corrente, solto da lista para poder deslizar. O corpo e a
+     aresta sao a pele de `skin()`, no tamanho de repouso; a gota e transformacao, e a pele
+     estica com ela.
+     ⛔ `pointer-events: none`: o dock ja perdeu navegacao uma vez porque o clique caiu em quem
+     nao era o botao. ⛔ E sem filtro proprio: um segundo `backdrop-filter` aqui ressuscita o
+     pisca da troca de tela. ⛔ E sem `transition` de transformacao: quem a move e a mola de
+     `rail.mjs`, quadro a quadro — a transicao CSS recomeca do zero quando interrompida. */
+  .rail__pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--pill-w, 0);
+    height: var(--pill-h, 0);
+    border-radius: var(--radius-item);
+    background-size: 100% 100%;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform;
+    transition: opacity var(--dur-touch) linear;
   }
 
   .rail__icon {
     flex: 0 0 auto;
-    width: 16px;
-    height: 16px;
+    width: var(--glyph);
+    height: var(--glyph);
     /* ⛔ O clique no glifo chegava como `SVGElement`, e o escutador da pagina so aceita
        `HTMLElement`: no dock, onde o glifo e o centro do botao, a secao nao trocava. */
     pointer-events: none;
@@ -343,7 +407,7 @@
     display: inline-flex;
     align-items: center;
     padding: 1px var(--space-2);
-    border: 1px solid var(--glass-edge);
+    border: 1px solid var(--hairline);
     border-radius: var(--radius-stamp);
     background: transparent; /* ⚠ MONOESPACADA, e ela e a terceira familia do projeto: o rito nao e nome nem medicao —
        e o despacho que a maquina do Estado carimba sobre o papel. */
@@ -582,9 +646,9 @@
   .gauge[data-mark="true"]::after {
     content: "";
     position: absolute;
-    inset-block: -2px;
+    inset-block: calc(-1 * var(--rule));
     left: calc(1% * var(--mark));
-    width: 2px;
+    width: var(--rule);
     background: var(--brand);
   } /* ── A SEGUNDA MARCA — a regua que tem DUAS linhas ────────────────────────── Um grupo da
      caldeira tem dois limiares: em `--mark` ele abandona o governo, e em `--fall` a ruptura
@@ -596,9 +660,9 @@
   .gauge[data-fall="true"]::before {
     content: "";
     position: absolute;
-    inset-block: -2px;
+    inset-block: calc(-1 * var(--rule));
     left: calc(1% * var(--fall));
-    width: 2px;
+    width: var(--rule);
     background: var(--bordo);
   } /* DO LADO ERRADO DA LINHA, o preenchimento vira crise — e a cor troca com o ESTADO, e nao
      com a proximidade: uma ruptura ou aconteceu ou nao aconteceu. */
@@ -640,7 +704,7 @@
   input[type="text"].swear__input {
     width: 100%;
     padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--glass-edge);
+    border: 1px solid var(--hairline);
     border-radius: var(--radius-piece);
     background: var(--glass-base);
     box-shadow: var(--bevel-under);
@@ -658,7 +722,7 @@
   select.swear__input {
     width: 100%;
     padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--glass-edge);
+    border: 1px solid var(--hairline);
     border-radius: var(--radius-piece);
     background: var(--glass-base);
     box-shadow: var(--bevel-under);
@@ -870,7 +934,7 @@
      pelo mesmo motivo — borda é peso, e cinco pesos numa tabela de quatro linhas viram grade
      de planilha. */
   .report__table tbody tr:not(:first-child) > * {
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: var(--lip);
   }
 
   .report__mood[data-direction="up"] {

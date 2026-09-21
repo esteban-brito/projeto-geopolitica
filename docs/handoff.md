@@ -17,7 +17,471 @@
 
 ## ▶ COMECE POR AQUI
 
-### ▶ Estado — 18/09/2026 fim de tarde (portão verde, NÃO commitado)
+### ▶ Estado — 21/09/2026 noite, ⭐ CICLO 29 EM CURSO: itens 1, 2 e 3 andaram (portão verde, commitado)
+
+⭐ **ORDEM DELE:** _"foque em simplificar o código… para você ter mais precisão"_. Plano em
+[`cycles/29-simplificar.md`](cycles/29-simplificar.md). Números de partida: 14.300 linhas de
+código e **6.200 de prosa (30%)**; rodar é barato (pintura 3-5ms, abertura 600ms).
+✔ **ITEM 2 — `app.mjs` DIVIDIDO:** 870 → **28 linhas de código**. Nasceu `src/app/`: `session.mjs`
+(um objeto `session` com estado/tela/rascunho/leitura, e a persistência) · `inputs.mjs` (entradas
+por tela) · `paint.mjs` (`paint` virou 4 funções: tabuleiro, barra, foco, vidro) · `dialogs.mjs` ·
+`handlers.mjs` (`armHandlers()`). A guarda `boundaries` ganhou a camada (`src/app/` alcança
+state/public/ui e irmãos; sintética nova); `standards.md` §2 registra. Mecânica: fatiado por
+linha com `session.` reescrito fora de comentário, e o tsc apontou cada sobra.
+✔ **ITEM 3 — O MENU É UM OBJETO** (`rail.mjs`): estado `Menu` num lugar só; API `armRail(nav)` +
+`paintRail(screen)` (orientação, vidro, pílula na mesma volta) + `movePill()`. `armRail` tem 34
+linhas. Chaves `data-*` do menu: 8 → **3** (`flow`, `drawer`, `morph` — as que o CSS lê); `on`,
+`fade` e o carimbo da pele viraram estado JS/opacidade inline. Medições iguais às da manhã
+(gota 91 quadros, morph 389 → 446).
+✔ **ITEM 1 NO GEMINI — dois lotes fechados e conferidos por mim** com `tmp/so-prosa.mjs` (o
+código sem comentários é idêntico): `state.mjs` 54% → 19% · `turn.mjs` 33% → 14% · `inbox.mjs`
+34% → 11% · `cabinet.mjs` 33% → 15%. ⚠ **Lição do lote 2:** ele apagou um `@param` inline e o
+tsc reprovou — o portão do lote passou a incluir `npm run types`. Canal: `tmp/gemini.mjs` acha a
+porta CDP sozinho. Fronteira em vigor: Gemini só toca nos arquivos do lote; `src/app/`, `app.mjs`,
+`rail.mjs`, `tests/`, `docs/` são do Claude.
+📐 **O MACACO** (`tmp/macaco.mjs`, 250 ações ao acaso, semente 7): 0 erros de página. Ele acusa
+"pílula a Npx do item" 28× — **medido no meio da viagem** (a checagem cai antes dos 450ms de
+mola; a lista da coluna não rola a 900 nem a 980). Falta ao macaco esperar o repouso; os cliques
+que falham em `[data-protect]`/`.folder` são peças cobertas até a pasta subir, não defeito.
+✔ **O passeio oscilava** (1 em ~5 rodadas): `viaRail` clicava no ícone da gaveta a 120ms, no meio
+do morph, com o ícone fora da cápsula. Agora espera o morph pousar e, se falhar, diz o que cobre o
+alvo. 4 rodadas seguidas verdes.
+▶ **Fila:** lote 3 ao Gemini: `src/app/paint.mjs` (37%) e
+`src/app/inputs.mjs` (43%), depois `strings.mjs`, `46-desk.css`, `45-screen-cabinet.css` · item
+4 (provas de interação: macaco com espera de repouso vira prova) · item 5 (exports mortos, `tmp/`).
+▶ **Sem resposta dele:** a lista de bugs que ele viu ("são muitos, nem sei como escrever").
+
+### ✔ Estado anterior — 21/09/2026, ⭐ O DOCK NO LIQUID GLASS: as animações (portão verde, commitado)
+
+⛔ **O BRILHO QUE SEGUIA O PONTEIRO SAIU — ordem dele:** _"não ficou nem um pouco aquoso"_.
+`armGleam`, `.rail::after` e os dois canais `--gleam-*` não existem mais. **A ordem que ficou:
+as animações do dock, todas, no Liquid Glass da Apple.** Plano de 7 itens aprovado ("ok"), e os
+7 estão feitos; o que sobrou de decidir está no fim desta seção.
+⛔ **E NO DOCK NÃO HÁ PÍLULA — ordem dele:** o dock só existe no Gabinete, então o item corrente
+é sempre o mesmo; fica só o ponto. A pílula vive na **coluna**.
+✔ **1 · A PÍLULA É VIDRO E CORRE COMO GOTA** (`movePill`/`pillOf` em `rail.mjs`): corpo e aresta
+Fresnel de `skin()` com a tinta da marca, e o movimento é **mola JS, não transição CSS** — a
+cabeça corre em 0,34s/0,2 e a cauda em 0,46s/0,1; o vão entre as duas vira corpo (`STRETCH` 0,5,
+teto 0,3 da peça), o eixo cruzado afina por `1/√` (volume). 📐 Perfil (`tmp/gota-perfil.mjs`): salto
+de 35px alonga 11% e assenta em 0,4s; viagem de 414px bate no teto de 30% e encolhe ao chegar,
+passando 1,5% do ponto. Medido a 240 fps no salto entre ministérios: 108 quadros distintos.
+⛔ **QUATRO DEFEITOS APARECERAM NO CAMINHO, três deles ANTIGOS:** (a) a mola antiga tinha um
+quadro pendente ao trocar de eixo e escrevia por cima — a pílula nascia **53px fora** do rail
+(geração de mola resolve); (b) o vidro da pílula pintava **por cima do rótulo** — "Email" saía
+cinza; a lista é `position: relative` agora e pinta acima; (c) `querySelector(".rail__item--active")`
+pegava **o botão da gaveta**, também marcado ativo e `display: none` na coluna — a pílula **nunca
+apareceu nas 8 áreas**; (d) `getBoundingClientRect` do item com o ponteiro em cima trazia o
+`:hover` de 1,02 (173×36 em vez de 169×35) e a pílula "via outra peça" e saltava — a medida é de
+layout (`offset*`), a lição que `glaze()` já tinha. As provas do passeio cobrem a, b e c.
+✔ **2 · A GAVETA É UM MORPH** (`armRail`): quem sai apaga em `--dur-touch` (90ms) ANTES da troca
+de layout; a cápsula anda **389 → 446px na mola** (0,42s/0,12) escrevendo a largura real, com a
+pele esticando (`background-size: 100% 100%`) e a **lente instalada no tamanho maior antes** e
+refeita no final ao pousar (`LANDED` 0,05px); quem entra nasce 0,8 → 1 conforme a cápsula anda
+(`BORN_AT` 0,15 · passo 0,05 · vão 0,4), não por relógio. 📐 **Custo:** 205-212 fps durante o morph
+contra 232 parado, pior quadro 16,7ms (a lente nova). Se a tela trocar no meio, o morph pousa e a
+mola morre (largura inline numa coluna seria defeito).
+✔ **3-4-5 · POUSAR, PREMIR E SOLTAR SÃO MOLAS EM `linear()`** (tokens `--ease-press`,
+`--ease-release`, gerados por `curveOf` em `tmp/curvas-gesto.mjs`): premir 0,96 em 0,16s/0,05;
+soltar 0,42s/**0,5** — 📐 medido: 0,96 → **1,0297** → 1,0185 → 1,02. Pousar usa a curva de soltar
+porque a transição CSS lê a curva do estado de chegada; num curso de 2% a diferença é 0,3%. O
+recomeçar do dock ganhou o mesmo gesto.
+✔ **6 · A DICA BROTA DO ÍCONE:** escala 0,9 → 1 com origem no pé, pela mola de soltar.
+✔ **7 · O `+` GIRA NA CURVA DO QUIQUE.**
+✔ **A DICA DO DOCK TINHA UMA REGRA MORTA:** `40-shell.css` escrevia `.rail[data-flow="row"]
+.rail:has(…)` — um `.rail` dentro de outro, casava 0 elementos. 📐 Medido: foco em Finanças pelo
+teclado + pouso em Congresso = **2 dicas acesas**. Agora o passeio testa o caso combinado.
+⛔ **A PÍLULA COMO LENTE NÃO ENTRA, e é geometria, não medição:** o bisel refrata 13px, a pílula
+da coluna tem 35px de altura — sobrariam 9px planos e o texto dentro dela seria refratado.
+▶ **O que ele ainda não viu:** tudo isto se vê **em movimento** (F5: abrir/fechar a gaveta,
+navegar na coluna). Ele disse às 21/09 que "não viu diferença alguma" **antes** dos itens 3-7.
+▶ **O exótico, oferecido e sem resposta:** arrastar a pílula (segurar e puxar pela coluna) e a
+magnificação do Dock do macOS.
+
+### ✔ Estado anterior — 20/09/2026, ⭐ O MENU VIROU UM COMPONENTE (portão verde, NÃO commitado)
+
+⭐ **DECISÃO DELE, depois da pergunta "por que o dock difere tanto dos outros menus?":** o menu
+passa a ser **um componente com duas orientações**, e o dock é a referência. Idêntico nas duas
+formas, com **quatro diferenças declaradas**: direção · rótulo (dica na barra, texto na coluna) ·
+gaveta (só na barra) · cabeçalho do governo (só na coluna). Escolhas dele: **pílula deslizante nas
+duas**, gaveta só no dock, governo só na coluna.
+✔ **PASSO 1 — o menu declara a orientação** (`data-flow="row|column"`, escrito por `flowRail`).
+**As regras exclusivas do Gabinete caíram de 29 para 1**, e o limiar de 1181px passou a viver num
+lugar só. 📐 **Prova: 10 das 14 capturas ficaram em 0 px de diferença**; as outras são o halo do
+telefone (que anima), ruído de sub-pixel, e a `gabinete-900`, onde **a própria linha de base é que
+estava errada** — ela pegava o dock num estado transitório.
+⛔ **TRÊS DEFEITOS ESTAVAM ESCONDIDOS ATRÁS DA ESPECIFICIDADE ALTA do seletor antigo:** a lista do
+dock tinha **`overflow-y: auto`** (regra escrita em termos de tela, cobrindo uma barra de 44px de
+altura: conteúdo 322 numa caixa de 310); o dock era **empurrado 48px para cima** pelo
+`--shell-floor` da coluna (de `top: 822` para 774); e ele era **vestido depois do layout assentar**
+— agora `flowRail` roda antes, na mesma volta.
+✔ **PASSO 2 — a pílula desliza.** O item corrente **não pinta mais fundo**; quem marca é a pílula,
+que corre até ele: medido **200 → 221 → 232 → 236 → 237 → 238** na mola de 380ms. Ela vive **fora
+da lista** porque o `<ul>` se repinta a cada mês e uma pílula recriada nasceria no lugar novo em
+vez de correr até ele. Não come o clique (`pointer-events: none`) e não leva filtro próprio — as
+duas armadilhas que o relatório de risco do Gemini levantou.
+✔ **PASSO 3 — o gesto.** Pousar **1,02**, premir **0,98**, e a volta **passa do ponto** (1,02 →
+1,0079 → 1,0014 → **0,999** → 1). ⚠ O menu afunda menos que a ação de propósito: navegar não é
+decidir. ⛔ **E o dock tinha gesto próprio de 1,08 com elevação de 3px** — mais uma divergência
+escondida, agora unificada.
+⛔ **UMA ARMADILHA DE CSS QUE CUSTOU MEIA HORA:** `transition` é atalho — a regra do dock declarava
+`transition: background` e **apagava a transição de `transform` da base**, matando o gesto inteiro
+sem erro nenhum. O computado dizia `background 0.09s linear` e nada mais.
+✔ **DUAS PROVAS NOVAS ANTES DE COMEÇAR:** a **dica** (pousar acende uma, e uma só) e o
+**fechamento da gaveta** (Esc fecha) — as duas eram lacunas que o Gemini apontou, e sem elas o
+portão passaria verde com o menu quebrado.
+⚠ **E a tipografia cobrou:** com `--text-body` em 14px o rótulo "Congresso & Leis" **cortava com
+reticência** (o mesmo aperto medido quando o rail nasceu). Voltou a **13px** — pede 109 em 109.
+
+### ✔ Estado anterior — 19/09/2026 tarde, OS NÚMEROS SOLTOS (portão verde, NÃO commitado)
+
+📐 **O Gemini auditou os 99 valores em px teclados no CSS** (`tmp/px-soltos.md`) e separou em três:
+**39 deveriam ser token · 35 são geometria da peça · 25 são acidentes**. Os 35 ficam: são a lombada
+da pasta, o selo do envelope, a largura do papel — objeto tem medida própria.
+✔ **Aplicados os que tinham token de verdade:** o traço de 2px virou `--rule` (5 lugares), o ponto
+do ativo e o deslocamento da dica viraram `--space-1`, o raio do item virou `--radius-item`.
+`40-shell.css` foi de 21 para 17 px soltos, `30-components.css` de 21 para 16.
+⛔ **E TRÊS SUGESTÕES DELE EU RECUSEI, porque padronizar mal é pior que não padronizar:** usar
+`--text-label` para a **altura de uma calha** e `--space-4` para o **tamanho de um ícone** cria
+acoplamento falso — mudar o espaçamento mexeria no glifo sem motivo. Entrou `--glyph` (16px) e
+`--glyph-dock` (20px): o desenho dentro do alvo tem tamanho próprio, e cresce no dock porque lá o
+ícone É o botão.
+✔ **As durações também fecharam:** só três valores escapavam, e viraram `--dur-lead` (os 100ms que
+o menu entra antes de o tabuleiro acabar) e `--dur-sign` (os 1100ms do traço da rubrica).
+▶ **O que sobrou de px solto no dock é de propósito:** a régua de 26px, o ponto a 3px do pé e a
+altura da cápsula entram no **refino do dock**, que é a ordem seguinte dele — lá a peça é repensada
+inteira, e tokenizar agora seria congelar número que vai mudar.
+⭐ **A PESQUISA DO MOVIMENTO CHEGOU** (`tmp/movimento-apple.md`), com os números para esse refino:
+pousar **escala 1,02**, zênite 0,40 → 0,48, mola 0,32s/0,85 · pressionar **0,96**, corpo +0,08,
+sombra colapsa, 0,16s/0,95 · soltar **quique até 1,012**, 0,42s/0,78 · e o item ativo **desliza**
+entre posições em vez de piscar (0,38s). É essa última que muda o dock de verdade.
+
+### ✔ Estado anterior — 19/09/2026 tarde, A ESCALA DO TEXTO E DO ALVO (portão verde, NÃO commitado)
+
+✔ **A TIPOGRAFIA GANHOU ESCALA, e a troca foi segura por medição:** os `clamp()` com `vw` já
+estavam **no teto a 1440 e a 1920** — idênticos nas duas —, porque a fluidez só operava abaixo de
+1181px, que é o layout estreito. Trocá-los por **degraus fixos em pixel inteiro** não mexeu um
+pixel nas larguras que o jogo suporta. A escala: **10 · 12 · 14 · 15 · 17 · 22 · 26 · 35 · 72**.
+✔ **As peças da barra entraram na escala:** `--mark-size`, `--vit-value`, `--go-size` viraram
+`--text-verdict`; `--when-note` e `--go-hint` viraram `--text-note` (eram **11,5px** teclados);
+`--when-size` virou `--text-lead`.
+📐 **Tamanhos de fonte na tela: 13 → 11**, e os três que sobram fora da escala (23,472 · 19,512 ·
+17,136) são **do papel** — saem de `calc()` sobre a largura da folha, que tem escala própria.
+✔ **A ESCALA DO ALVO** (`--target-m` 36 · `--target-l` 44 · `--target-xl` 56): o botão secundário e
+a escolha da carta entraram no degrau do item de menu; o dock usa o grande; a cápsula da barra e o
+primário usam o extra-grande — eram **57px teclados**. ⚠ O que mede 13, 14 ou 23 **não entra na
+escala**: são ações de texto dentro do papel, e papel tem escala própria.
+📐 **A UI, contada de novo:** tinta 17 · tamanho **11** · peso 5 · raio 9 · sombra 9 · alvo **13** ·
+família 3. Era tamanho 13 e alvo 14.
+
+### ✔ Estado anterior — 19/09/2026 tarde, A UI CONTADA (portão verde, NÃO commitado)
+
+📐 **A UI INTEIRA FOI CONTADA, nas cinco telas** (`tmp/auditoria-ui.mjs`, `tmp/auditoria-ui.md`):
+**16 tintas de texto · 13 tamanhos de fonte · 5 pesos · 9 raios · 9 sombras · 13 alturas de alvo ·
+3 famílias**. Padronização se mede contando o que diverge, e é isto que ainda diverge.
+✔ **O FIO DE LUZ VIROU UM** (`--lip`): quatro alfas diferentes (0,07 · 0,08 · 0,10 · 0,13) faziam
+a mesma coisa em quatro telas — separar uma superfície da de cima. O traço lateral do medidor foi
+para `--hairline`.
+⛔ **E UMA ARMADILHA DE CSS QUE O PASSEIO PEGOU, e vale para todo token composto:**
+`--sheet-ink-soft: rgba(var(--sheet-ink-rgb), 0.72)` declarado no `:root` **congela o valor do
+`:root`** — e a bandeja **redefine** `--sheet-ink-rgb` (a linha selecionada tem papel branco). O
+token levava a tinta clara para cima do branco: **1,13 de contraste** contra o piso 4,5. **Onde o
+valor é redefinido por contexto, a composição fica na regra.** Revertido.
+▶ **O QUE FALTA para "tudo idêntico", por ordem de tamanho:**
+
+1. **A tipografia não tem escala, tem cálculo** — 13 tamanhos, e os quebrados (13,6 · 12,48 ·
+   23,472 · 19,512 · 17,136) vêm de `clamp()` com `vw`. A Apple usa degraus fixos (Dynamic Type).
+   Trocar mexe em toda tela: é ciclo, não ajuste.
+2. **13 alturas de alvo** — 14 · 20 · 23 · 36 · 38 · 44 · 57 · 69 · 92px entre botões. Precisa de
+   três degraus e um piso.
+3. **16 tintas** — seis são papel (legítimo: papel não é vidro), o resto pede revisão.
+   ⚠ **O raio de 1,568px e as sombras do papel NÃO são divergência:** saem de `calc()` sobre o
+   tamanho do envelope e da folha — material com escala própria.
+   ▶ **ORDEM DELE PARA A PRÓXIMA SESSÃO (19/09):** _"vamos refinar ainda mais o dock inferior, deixar
+   ele perfeito mesmo, e com uma animação aquosa"_. E, para testar vidro, **a peça de referência é o
+   dock** — ordem dele: é onde o vidro fica sobre a madeira e tudo aparece.
+
+### ✔ Estado anterior — 19/09/2026 manhã, A PADRONIZAÇÃO (portão verde, NÃO commitado)
+
+⛔ **Ele repetiu a crítica depois da escala:** _"já disse que todos os menus diferem uns dos
+outros, falta excelência, falta padronização"_. Fui ver nas telas reais, e ele tinha razão de novo
+— a escala tinha unificado o MATERIAL, e o que restava divergindo era a FORMA.
+📐 **A varredura de todas as superfícies de painel** (`tmp/superficies.mjs`, cinco telas) achou:
+**quatro raios** em cinco peças de vidro (16 na cápsula, 18 na coluna, 22 no dock, 24 no palco);
+as **cápsulas da barra com sombra própria de três camadas** enquanto o resto usava `--glass-cast`;
+e o **título de grupo do menu 40px fora do alinhamento** dos itens.
+✔ **O RAIO VIROU DOIS DEGRAUS PARA O JOGO INTEIRO** (`radiusFor` em `glass.mjs` e
+`--radius-piece` / `--radius-stage`): peça de até 96px de altura é **cápsula (18)**, acima disso é
+**painel (24)**. ⛔ E o motor passou a **ler o raio do CSS** em vez de tecla própria: a pele é uma
+imagem desenhada na caixa, e se ela curva num raio e o `border-radius` recorta noutro, a peça
+ganha duas silhuetas.
+✔ **UMA SOMBRA SÓ** — as cápsulas da barra entraram no `--glass-cast`.
+✔ **O título "Ministérios" alinha com o texto dos itens** (12 de recuo + 16 do glifo + 12 do vão):
+ele começava na caixa e a coluna lia como duas listas encostadas.
+✔ **`brightness(1.05)` da pesquisa 12 entrou** (`RECIPE.brightness`), e o número que o Gemini
+previu bateu: o dock escurecia ΔL −0,96 e agora escurece 0,2, com o croma da madeira **intacto**
+(ΔC −0,05, croma 34,7 contra 34,7 da madeira nua). Custo zero — o Skia funde `saturate` e
+`brightness` numa matriz só.
+⛔ **E A ARESTA DIVERGIA 30× ENTRE AS PEÇAS — o achado que faltava, e é do Gemini**
+(`tmp/aresta-divergencia.md`): como a rampa de Fresnel era fração da altura, o zênite ocupava
+**6,5px no dock** (62 de altura) e **180px no palco** (1718). Aresta que estica deixa de ser luz
+na quina e vira mancha escorrendo pelo painel — era isso que fazia cada menu parecer de um jogo
+diferente, mesmo com material e raio já unificados.
+✔ **A ARESTA VIROU FAIXA EM PIXEL** (`fresnelFor(h)`): zênite a 0/4,5/11px do topo e rim a
+11/4,5/0px da base, convertidos na fração que o gradiente pede. Numa cápsula de 57px o zênite
+ocupa os 11 primeiros; num palco de 1718, os mesmos 11. **Os `LEVELS` não carregam mais aresta** —
+ela nasce da altura dentro do `glaze`, junto com o raio, porque os dois são geometria e não
+material.
+✔ **A ARESTA FOI CONFERIDA PELO GEMINI depois do conserto: 1,00× em todas as peças** — cápsula,
+dock, coluna e palco com a mesma faixa de 7,5px de zênite pleno e 11px de transição, nas duas
+resoluções. Era 30×.
+✔ **OS ESTADOS DO ITEM DE MENU tinham duas divergências, e as duas saíram:** o raio era **14 no
+dock e 18 na coluna** (agora `--radius-item`, 14px nos dois — em pixel, pela mesma razão da
+aresta), e **o dock não respondia ao ponteiro** (a coluna tinha véu no hover e ele não tinha nada).
+⚠ O ativo segue diferente **de propósito**: ponto no dock, pílula na coluna — é o padrão da Apple
+para cada tipo, e está documentado no CSS. O foco por teclado já era o mesmo nos dois (anel de 2px
+no âmbar, offset 2). ⚠ E cuidado ao medir foco por script: `focus()` depois de um clique não
+acende `:focus-visible`, e isso me deu um falso defeito.
+✔ **`--glass-edge` VIROU `--hairline`:** ele não é mais aresta de vidro — a aresta é a rampa de
+Fresnel na pele. Os oito usos restantes são traço de contorno (campo de formulário, divisor,
+selo). Token com nome errado vira uso errado na próxima peça, e a guarda `prose` ainda pegou a
+minha própria citação do nome morto no comentário.
+⭐ **REGRA DELE, 19/09: _"o que ficar mais próximo do liquid glass da Apple sempre"_.** Ela decide
+os empates daqui para a frente, e já decidiu dois:
+✔ **A ABERRAÇÃO CROMÁTICA ENTROU** (`dispersion: 0,1`): dá os **0,7px** de friso que a Apple tem
+(0,6 a 1,2px). ⚠ **Custa 2,6 fps** com a tela trabalhando — 239,5 → 236,9 —, acima do critério de
+"< 1 fps" que o §4 do ciclo escreveu. **A ordem dele é mais recente e vale mais que a regra
+escrita**; fica registrado o preço.
+✔ **A ARESTA VOLTOU AOS NÚMEROS DA APPLE:** zênite **0,40**, meio **0,08**, rim **0,18** (HIG
+Materials e WWDC23 10076). Eu tinha escalado a rampa inteira por 0,7 e isso me afastava deles;
+`EDGE_FORCE` virou 1 e a aresta sai inteira de `fresnelFor`.
+⭐ **Com isso a paridade com a pesquisa 12 está completa:** squircle s 0,6 · bisel 13 · desvio 3,5px
+· desfoque 3 · saturação 1,9 · brilho 1,05 · sombra dupla · aresta nos valores dela · aberração.
+O que ainda separa o jogo do nível Apple não está mais no vidro: está no **movimento** (só a pasta
+e o botão de avançar têm peso; nada persiste entre telas).
+
+### ✔ Estado anterior — 19/09/2026 manhã, A ESCALA DO VIDRO (portão verde, NÃO commitado)
+
+⛔ **CRÍTICA DELE, e ela estava certa:** _"cada menu do meu jogo tem o liquid glass diferente, eu
+quero igualmente padronizados, todos, nível apple de excelência. Por enquanto está horrível."_
+📐 **Provado antes de mexer (`tmp/auditoria-vidro.png`, as seis peças lado a lado sobre a mesma
+madeira): eram SEIS materiais.** Três tintas (`14,20,31` · `18,26,40` · `24,33,50`), corpo de 0,07
+a 0,72, aresta de 0,5 a 1,0 do Fresnel, e o gradiente correndo em **direções opostas** — o dock
+clareava para baixo e o palco escurecia.
+✔ **AGORA EXISTE UMA ESCALA** (`LEVELS` em `glass.mjs`): uma tinta, uma direção (escurece para
+baixo, porque a luz vem de cima), **uma aresta** (`FRESNEL × 0,7`), e três densidades —
+`thin` (cápsulas da barra) · `regular` (dock, coluna, palco) · `thick` (ações). A peça escolhe
+**densidade e raio**, nada mais. O único corpo próprio que sobrou é o do botão primário, branco.
+⛔ **SEGUNDA CRÍTICA, TAMBÉM CERTA:** _"parece que você não aplicou quase nada do que o gemini
+pesquisou"_. Eu tinha pedido `tmp/lente-textura.md` e **nunca aberto**. Ela me corrigiu:
+📐 **O DESVIO DA LENTE TINHA TETO E EU O ESTOURAVA.** `scale: 17` dá pico de **8,5px**, e acima de
+8px **o veio da madeira se parte** na quina; o ponto da Apple é 2–4px, com a regra
+**desvio ≤ 0,35 × bisel**. Eu tinha "consertado" a madeira parecendo lupa **subindo o desfoque de
+2,6 para 10** — conserto do sintoma. Agora: **scale 10, desfoque 3**, e a rampa do `lensMap` virou
+**Hermite** (`3t² − 2t³`), com derivada zero na junção, para o veio entrar em tangência sem vinco.
+`tmp/desvio.png`. Recalibrado: saturação 1,9 com o corpo ×1,2 dá **ΔL −0,96 e ΔC −1,18** no dock.
+✔ **A SOMBRA DUPLA da pesquisa 12 entrou** (`--glass-cast`): contato curto que assenta a peça +
+penumbra longa que a levanta. **Eram três quedas, uma por nível.** E a limpeza mostrou que as peças
+da **mesa já caíam assim** (`46-desk.css`) — o vidro era o único que pairava sem tocar.
+✔ **A VINHETA DA MESA SAIU INTEIRA — ordem dele.** O tampo é o tampo até a beira; o que escurece a
+cena é só a luz da sala. Contraste remedido sem ela: o pior texto é o rótulo do indicador a
+**4,96:1** (1440) e SIMULATOR a 5,33. ⚠ O brasão dá 4,48, mas ele é **componente gráfico**, cujo
+piso AA é **3,0** — o medidor `tmp/contraste-pior.mjs` aplica 4,5 a tudo e por isso o acusa.
+✔ **A VINHETA NÃO ESTAVA ONDE EU PROCUREI.** Tirei o radial do `.backdrop` e ele disse que não
+saiu — e estava certo: a vinheta morava no **`.shell::before`**, uma camada por cima de tudo, com
+um radial que escurecia a beira até **52% de preto** e um véu de topo a 42%. A medição achou
+(`tmp/camadas.mjs`); antes dela eu tinha medido cantos × centro e a composição já dizia que não
+havia vinheta no substrato (canto superior esquerdo 39,5 contra 31,8 do centro).
+⚠ **O VÉU DO TOPO FICOU, e não é gosto:** sem ele a madeira clara do alto leva o texto da barra a
+**2,6:1** (REPÚBLICA 2,89, rótulo do indicador 2,60) contra o piso de 4,5. Com ele a 0,56 e a
+segunda linha da marca a 0,9 de opacidade, tudo passa: REPÚBLICA 6,97 · SIMULATOR 5,94 · rótulo
+5,21 · nota 5,47.
+⛔ **E O VÉU NÃO ACOMPANHAVA A TROCA DE ABA — achado dele, filmado e medido.** O fundo saltava
+**14,9 de luminância entre dois quadros vizinhos** (`tmp/veu-transicao.mjs`). Duas causas, as duas
+consertadas: (1) como pseudo do `.shell` ele não entrava no retrato da transição — `transition:
+opacity` ali **piorou para 30,2**, porque durante a troca a árvore viva vira imagem; véu e vinheta
+foram para dentro do `.backdrop`, que é quem tem `view-transition-name` (→ 7,6); (2) a duração
+estava só no `::view-transition-group(backdrop)`, e o `old`/`new` seguiam a curva padrão do
+navegador, cruzando em ~60ms enquanto o tabuleiro levava 280 (→ **4,9**).
+▶ **Ainda devendo da pesquisa 12:** o `brightness(1.05)` da vibrância (medido a olho, falta o croma).
+
+### ✔ Estado anterior — 19/09/2026 madrugada, O CICLO 28 FECHADO (portão verde, NÃO commitado)
+
+✔ **PASSO 7, A LIMPEZA — e com ele o ciclo 28 inteiro.** `20-material.css` caiu para **80 linhas**
+e virou só a declaração: o corpo, a aresta e a forma saem de `glaze()`; o que ficou é o filtro (uma
+declaração para o jogo inteiro), a queda de cada nível e o raio.
+✔ **A COLUNA FOI A ÚLTIMA PEÇA a sair do vidro velho** — `dressRail` veste os dois estados agora.
+Ela tem 162 mil px, passa do teto da lente, e fica com a pele e o desfoque do token.
+✔ **Saíram os órfãos** (`--glass-stage-bg`, `--glass-support-bg`, `--glass-veil`, `--bevel-zenith`),
+e quem apontou os quatro foi a guarda `tokens`. A guarda `prose` apontou dois comentários que
+citavam token morto. **Nenhuma das duas precisou ser afrouxada.**
+⭐ **A guarda `material` NÃO precisou ser reescrita** — o §5 do ciclo previa isso, e não foi
+preciso: a declaração `var(--glaze, var(--glass-blur))` ainda contém o token, então ela passa
+dizendo a verdade (todo `backdrop-filter` do jogo é o token ou uma lente de `glass.mjs`).
+✔ **O TETO DA LENTE FOI CONFERIDO PELO GEMINI E BAIXOU PARA 40 MIL PX.** O tracing de GPU dele
+(`tmp/palcos.md` §3) cobra **+0,017 ms/q a 40 mil** e **+0,536 a 59 mil**, e a 180 mil o p95 do
+compositor dobra para 8,4 ms — que é o mesmo 119 fps que eu medi por contagem de quadros nessa
+área. **As duas medições batem.** Nenhuma peça do jogo cai entre 40 e 60 mil (dock 24 mil, cápsula
+da barra 17 mil), então o teto mais apertado não custa nada.
+✔ **Contraste dos palcos: 294 textos, 100% em AA, o pior a 7,02:1** — `tmp/palcos.md` §2, medido
+com o texto escondido depois de o bug do medidor dele ser consertado. E o custo dos palcos vestidos
+sem lente: **+0,126 ms/q no Congresso e +0,161 em Finanças**, dentro do ruído do instrumento.
+⛔ **UMA CAMADA ESCONDIDA APARECEU NA LIMPEZA:** o véu do vidro de apoio era `background-color` e
+**sobrevivia sob a pele** — quando ele saiu, o dock clareou e quase sumiu (croma 30,9 contra 30,1
+da madeira nua). O corpo do dock subiu de 0,32 para **0,40** (ΔL −1,55, ΔC −3,19) e o da coluna de
+0,26 para 0,34. A barra não mexeu: as cápsulas nunca usaram o véu (ΔL −0,91, ΔC −2,82).
+
+⭐ **E A APPLE TAMBÉM DESLIGA A REFRAÇÃO EM MOVIMENTO** (`tmp/lente-movimento.md`, pesquisa do
+Gemini). Eu tinha dito que "a lente não acompanhar o movimento" era a maior distância que faltava
+para o nível deles — **está errado**. No visionOS a lente é um shader paramétrico que acompanha,
+sim, mas durante arrasto e animação a Apple **desliga a dispersão, cai para mipmap no desfoque, e
+em transição de tela nem recalcula o material** — trata a casca como opacidade e escala, e só
+reativa a refração quando a posição se estabiliza. É exatamente a regra que o projeto já segue por
+medição (`--glass-blur: none` durante a troca). A distância nesse ponto é menor do que eu disse.
+▶ **O que a pesquisa deixa como regra para peça em movimento:** lente só em peça parada e pequena;
+no gesto, pele de Fresnel e desfoque de token; refração de volta no repouso.
+
+### ✔ Estado anterior — 19/09/2026 madrugada, O TETO DA LENTE (portão verde, NÃO commitado)
+
+⛔ **A LENTE NO PALCO DERRUBAVA A TELA PARA 13 FPS, e os dois medidores oficiais não viam.**
+`npm run screen` e o instrumento do Gemini medem a tela **em repouso**, e vidro parado não
+recompõe. Com um retângulo animado por cima — que obriga o compositor a refazer a região do filtro
+— o palco vestido deu **13,0 fps** contra **240,2 do desfoque chapado** e 240,4 sem vidro nenhum.
+⭐ **O CUSTO É DE ÁREA, e a curva virou regra** (`tmp/lente-area.mjs`, com a tela trabalhando):
+24 mil px **240** · 40 mil **240** · 59 mil **238** · 81 mil **203** · 112 mil **120** · 2 milhões
+(um palco) **24**. `installLens` recusa acima de **60 mil px** (`LENS_AREA_MAX`) e quem passa do
+teto fica com a pele e o desfoque do token — que não cobra nada.
+✔ **O palco voltou a 239,9 fps e ficou melhor do que era antes do passo 4:** aresta de Fresnel no
+lugar da borda uniforme, e o corpo da pele no lugar do gradiente. O **dock** (24 mil px) e as
+**cápsulas da barra** (17 mil) seguem com lente.
+⚠ **O relatório de contraste do Gemini (`tmp/palcos.md` §2) está inválido:** ele mediu o pior pixel
+do fundo **sem esconder o texto**, então o pixel mais claro era a própria letra — dez linhas deram
+1:1 com tinta e fundo idênticos. Refazendo.
+
+### ✔ Estado anterior — 19/09/2026 madrugada, passos 5 e 6 (portão verde, NÃO commitado)
+
+✔ **AS AÇÕES ESTÃO VESTIDAS — passo 5.** `.glass-action` (os botões de diálogo) com corpo `24,33,50`
+a 0,60 → 0,72, aresta `FRESNEL × 0,9`, raio 16.
+⛔ **E ELAS NUNCA SE VESTIAM NA PINTURA:** `<dialog>` fechado mede **zero**, e `glaze` recusa peça
+menor que 9px. `dressActions()` passou a rodar também no `showModal()`.
+⛔ **A ABERRAÇÃO CROMÁTICA NÃO ENTRA — passo 6 medido e reprovado, e o motivo é o desfoque.** A
+dispersão foi escrita do jeito físico (cada canal atravessa a lente com escala própria, separação
+proporcional ao desvio: zero no centro plano, máxima na aresta — `bend()` em `glass.mjs`). Com
+`blur` **2,6** ela aparece a olho: 0,25 já pinta a quina de vermelho. Com **6 some**, e com **10** —
+o desfoque que a madeira exige para não virar lupa — **não sobra nada nem em 0,5**. Um dos dois
+cabe. ⚠ **Naquele dia ficou o desfoque; hoje ela está LIGADA** — o desvio caiu para o teto da
+Apple, o desfoque voltou a 3 e ela coube (ver o estado do topo). `tmp/aberracao.png`.
+▶ **Falta do ciclo 28:** só o **passo 7, a limpeza** — `20-material.css` fica com o que `glaze` não
+faz, os tokens e biséis velhos saem, e a guarda `material` é revista (hoje ela passa verde porque
+a declaração é `var(--glaze, var(--glass-blur))`, que ainda contém o token).
+
+### ✔ Estado anterior — 19/09/2026 madrugada, passo 4 · os palcos (portão verde, NÃO commitado)
+
+✔ **OS PALCOS ESTÃO VESTIDOS — passo 4 do ciclo 28.** `.glass-stage` (Congresso, Finanças, Estado,
+Email, Área, Posse, Fecho) ganhou lente e pele. Portão verde: 13 guardas, 332 provas, passeio verde.
+⭐ **A lente aprendeu peça grande:** acima de 600px no lado maior o mapa nasce em escala e o
+`feImage` o estica — o desvio é uma rampa suave, então esticar não aparece, e um palco de
+1189×1718 pediria 2 milhões de pixels no laço. `bevel` e `r` vão com a escala (são medidas dentro
+do mapa); `scale` fica, porque é desvio em pixel de tela. O teto subiu para 4000×2400.
+⚠ **Os dois pseudos do nível saem quando a peça é vestida** (`.glass-stage[data-dressed]::before`
+sem conteúdo, `::after` sem fundo): a pele já traz corpo e aresta, e eles pintariam um segundo de
+cada. O `::after` fica porque é ele que carrega o filtro — a variável do pai chega por herança.
+📐 **O palco vestido escurece e o texto ganha:** o corpo é a mesma tinta do `--glass-stage-bg` que
+ele substitui (`18,26,40` a 0,30 → 0,44), aresta `FRESNEL × 0,6`. `tmp/palco-prova.png`.
+⚠ **O halo rosado no topo do palco de Congresso é anterior a isto** — está nas capturas antigas do
+passeio, e não veio da lente (sai igual com `--glaze` removido).
+✔ **SIMULATOR REPROVAVA e foi consertado:** com a faixa sem vidro, a segunda linha da marca caía no
+veio claro do jacarandá e dava **3,68:1** a 1440 e 4,18 a 1920 (`--ink-dim`). Agora é tinta cheia a
+0,82 de opacidade: **5,41** e **6,03**.
+⛔ **E O MEDIDOR DE CONTRASTE TINHA UM VIÉS que vale para todo medidor do projeto:** ler
+`getComputedStyle().color` e ignorar a **opacidade** superestima — dizia 7,14 onde o real era 5,41,
+1,7 ponto de diferença. `tmp/contraste-pior.mjs` compõe a tinta com o fundo antes de medir, e mede
+o **pior pixel** sob o texto, não a média.
+📐 **O mais apertado do jogo agora é o rótulo do indicador: 4,54:1** a 1440 (5,18 a 1920).
+
+### ✔ Estado anterior — 19/09/2026 madrugada, a barra (portão verde, NÃO commitado)
+
+✔ **A BARRA DEIXOU DE SER DOIS VIDROS — decisão dele em 19/09, com a prancha na mão.** A `header`
+perdeu a classe `glass-support` e virou só o lugar; as três cápsulas são as peças, com corpo
+tingido (`14,20,31`) a 0,10/0,07. ⛔ **A causa do leite não era o corpo branco: era VIDRO
+EMPILHADO** — a faixa tinha o vidro dela e as cápsulas tinham a sua por cima, dois desfoques sobre
+a mesma madeira. Tingir o corpo com a faixa ainda envidraçada **piorava** (ΔC −13,26).
+📐 **Medido pareado:** ΔL **+5,46 → −0,91**, ΔC **−9,60 → −2,82**, croma sob o vidro **12,2 → 18,9**
+(a madeira nua ali é 21,8). `tmp/barra-corpo.md`. Portão verde e `npm run screen` 240,3 × 240,2.
+⭐ **E O VIDRO NOVO É DE GRAÇA, medido pelo Gemini em matriz 2×2** (`tmp/decomposicao-gpu-vidro.md`):
+a lente custa **+0,134 ms/q**, o desfoque de 10 custa **−0,116** (é mais barato que o 2,6) e os dois
+juntos dão **+0,017 ms/q**. Os +0,538 ms/q da medição anterior eram ruído (SNR 1,5).
+▶ **Aberto agora:** o contraste da barra nua — sem a faixa, a marca e os rótulos ficam direto sobre
+o jacarandá, que tem veio claro e escuro. O Gemini mede o pior pixel sob cada texto (`tmp/barra-nua.md`).
+
+### ✔ Estado anterior — 19/09/2026 madrugada, passo 3 (portão verde, NÃO commitado)
+
+✔ **O DOCK ESTÁ VESTIDO — passo 3 do ciclo 28 feito.** Portão verde (13 guardas, 332 provas,
+passeio verde) e `npm run screen` 240,2 × 240,2.
+⭐ **O motor mudou de forma, e isso resolveu duas coisas de uma vez:** `glaze()` não escreve mais
+`backdrop-filter` na peça — escreve a receita em `--glaze`, e `20-material.css` declara
+`backdrop-filter: var(--glaze, var(--glass-blur))` nos três níveis e em `[data-dressed]`. Assim a
+guarda `material` fica verde **sem ser reescrita** (a declaração ainda contém o token) e a regra
+que mata o pisca laranja volta a alcançar a peça vestida — filtro inline não se apaga por CSS.
+✔ **O que mais entrou:** `skin()` aceita tinta no corpo (a barra é branca; o dock é `14,20,31`,
+porque branco translúcido sobre madeira quente devolve leite); o raio virou parâmetro, porque é
+geometria da peça; a aresta de Fresnel virou `FRESNEL` em `glass.mjs`, uma só para o jogo (o dock
+usa 0,7 dela); `dressRail()` veste só quando o rail É dock — quem decide é o CSS
+(`flex-direction: row`), e a coluna fica fora porque a lente recusa acima de 400px e ela tem 750.
+⛔ **DOIS ERROS MEUS, os dois com número em cima, e os dois valem como regra daqui para a frente:**
+**(1) O ALVO NÃO É ΔE.** Persegui ΔE < 3 e cheguei num dock invisível — vidro que não muda nada não
+existe. ΔE soma luminância, e vidro escurece; o que ele mandou não mudar é o **croma**. Meça ΔL e
+ΔC separados. **(2) A SATURAÇÃO PAGA O CORPO.** Baixei de 1,9 para 1,6 e o croma piorou: −2,85
+virou −6,57 com o mesmo corpo. Elas se calibram juntas, nunca uma de cada vez.
+📐 **Os números do dock:** corpo 0,32 escurece 2,0 de L e custa 2,85 de croma; 0,40 custa 6,5; sem
+corpo o vidro EXAGERA (croma 40,5 contra 30,1 da madeira nua). `RECIPE.blur` subiu de **2,6 para
+10** — o 2,6 nasceu sobre a aurora lisa e sobre o veio virava lupa; na barra a troca quase não
+aparece, por isso foi para a receita e não virou exceção. Custo medido pelo Gemini: **+0,538 ms/q,
+SNR 1,5**, num orçamento de 4,16. Contraste dos 7 glifos: todos passam, e o pior é o Recomeçar a
+**4,65** (era 5,95) — passa de raspão, e é o único que encostou no piso.
+✔ **DUAS DICAS ACESAS AO MESMO TEMPO — achado na captura do Gemini, reproduzido e morto.**
+`tmp/duas-dicas.mjs` separou os dois casos: **com mouse acende uma só**; **com teclado acendem
+duas** — o foco na gaveta e o ponteiro parado sobre outro ícone. Quem tem o foco manda agora
+(`.rail:has(.rail__item:focus-visible) .rail__item:hover:not(:focus-visible)`), e o teclado voltou
+a acender uma.
+⭐ **O PRÓXIMO PASSO PROVAVELMENTE É A BARRA:** com a mesa cobrindo a tela, as cápsulas dela apagam
+o jacarandá muito mais que o dock — **ΔE 13,57, croma de 20,9 para 9,3**. Elas foram calibradas
+sobre a aurora lisa e agora vivem sobre madeira.
+
+### ✔ Estado anterior — 19/09/2026 madrugada, 1b e a mesa (portão verde, NÃO commitado)
+
+⭐ **O PLANO EM VIGOR É O CICLO 28 — O VIDRO** (`docs/cycles/28-o-vidro.md`). Hoje fecharam o passo 1
+e o 1b, e entrou uma ordem dele no meio.
+✔ **PASSO 1 REFEITO (Gemini):** o fps destravado dá 239–240 nas 6 telas nos dois braços — **o braço
+de fps está saturado no teto de 240 Hz e não decide nada neste ciclo**. Entrou instrumento novo
+(`tmp/custo-vidro.mjs`, tracing do CDP na `CrGpuMain`): GPU por quadro e p50/p95 do compositor.
+⚠ **A primeira rodada dele mediu o Chromium frio** — ordem fixa antes→depois, e a primeira medição
+de cada tela sempre a mais baixa (Congresso 20,5 / 34,5 / 33,6 / 30,0), SNR < 1 em 4 das 6 telas.
+Com aquecimento descartado e ordem ABBA os números caíram de 95 ms/q para 4,7.
+✔ **PASSO 1b FEITO — o véu do vidro de apoio pela metade** (`--glass-veil` e `--glass-support-bg`
+em `00-tokens.css`): o jacarandá sob o dock estava em **ΔE 7,96 com croma caindo de 16,0 para 9,3**;
+agora **ΔE 1,50 e croma 15,9**. Medido pareado — a mesma tira com a peça e com ela em
+`visibility:hidden` (`tmp/croma-vidro.mjs`, `tmp/varredura-vidro.md`).
+⭐ **E O ACHADO CONTRARIA O INVENTÁRIO: quem apaga a madeira é o VÉU do corpo, não o desfoque nem a
+saturação.** Com o véu novo, `saturate(1,85)` supersatura — a madeira sai mais colorida que a real
+(ΔE 5,47). E o desfoque não mexe no croma: de 3px a 30px o ΔE anda de 1,48 a 1,51, então **o número
+do desfoque é escolha de olho** (prancha em `tmp/prancha-vidro.png`, ele olha).
+✔ **A MESA COBRE A TELA INTEIRA DO GABINETE — ordem dele em 19/09:** _"sem sobrar espaço algum"_ e a
+vinheta _"bem pouco, bem embaçada"_. Saíram os dois `linear-gradient` de borda (comiam 366px do
+centro para cada lado), a foto passou a `center / cover` (3832×1642 — a 1920 ainda entra reduzida,
+fator 0,57) e a vinheta virou três paradas até 0,2 (era 0,5 numa parada só). Conferido a 1440×900,
+1920×937, 1280×1024, 2560×1080 e 1100×800.
+✔ **CUSTO E CONTRASTE MEDIDOS DEPOIS DAS DUAS MUDANÇAS:** GPU no Gabinete **−0,132 ms/q com ruído
+±0,295** — não custam nada (`tmp/custo-vidro.md`). Contraste: **todos passam, e o pior subiu de 5,49
+para 5,95** (o glifo Recomeçar) — a mesa clara não custou legibilidade (`tmp/contraste-mesa.md`).
+⚠ **Rótulos da tabela 1 do contraste estão trocados** (o nome da linha, não o número).
+▶ **A FILA DAQUI:** (1) ele olha a prancha do vidro e escolhe o desfoque; (2) **VERNIZ AQUOSO NA
+MESA — ordem dele de 19/09**: _"aplique um verniz aquoso na mesa, inspirado no liquid glass (só no
+liquid mesmo, quero algo aquoso, satisfatório, verniz)"_ — não é o vidro da interface, é o tampo
+parecendo envernizado; o Gemini está na pesquisa (`tmp/verniz-pesquisa.md`); (3) passo 3 do ciclo:
+o dock vestido por `glaze()`. ⚠ **Ao vestir o dock, o pisca laranja volta se nada for feito:** a
+regra que o mata hoje apaga o token `--glass-blur`, e peça vestida escreve o filtro inline pelo JS.
+
+### ✔ Estado anterior — 18/09/2026 fim de tarde (portão verde, NÃO commitado)
 
 ⭐ **O PLANO EM VIGOR É O CICLO 26** (`docs/cycles/26-limpeza-e-polimento-do-gabinete.md`), aprovado
 por ele em 18/09: limpeza → otimização → polimento, antes da Etapa 3, com o Gemini. ✔ **BLOCO 1 (limpeza) FECHADO em 18/09:** prosa `46-desk.css` 43% → 30%, `cabinet.mjs` 38% → 31%

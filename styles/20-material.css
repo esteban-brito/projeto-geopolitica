@@ -1,50 +1,39 @@
 /* MATERIAL — o sistema de vidro, e o UNICO lugar do projeto onde `backdrop-filter` pode
    aparecer.
-   Medido la: 6/255 de refracao. */
+   ⭐ DEPOIS DO CICLO 28 ELE E SO A DECLARACAO: o corpo, a aresta e a forma saem de `glaze()`,
+   que veste toda peca e escreve a receita em `--glaze`. O que fica aqui e o filtro (uma
+   declaracao para o jogo inteiro), a queda de cada nivel e o raio. Medido la: 6/255 de refracao. */
 
 @layer material {
+  /* A PECA VESTIDA traz a receita em `--glaze`; quem nao foi vestida cai no desfoque do token.
+     ⛔ E a lente so vem em peca pequena: acima de 60 mil px ela derrubava o palco a 13 fps. */
+  .glass-stage::after,
+  .glass-action,
+  .glass-support,
+  [data-dressed] {
+    backdrop-filter: var(--glaze, var(--glass-blur));
+    -webkit-backdrop-filter: var(--glaze, var(--glass-blur));
+  }
+
   /* ── NIVEL 1 · STAGE — a peca central da tela ───────────────────────────── */
   .glass-stage {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    border: 1px solid var(--glass-edge);
+    border: 1px solid transparent;
     border-radius: var(--radius-stage);
-    /* O vidro flutua sobre a mesma sala: a queda e a da classe "pasta", inclinada pela mesma luz. */
-    box-shadow:
-      var(--bevel-zenith),
-      var(--bevel-under),
-      calc(var(--light-dx) * 2px) 2px 4px rgba(0, 0, 0, 0.55),
-      var(--cast-thick);
+    box-shadow: var(--glass-cast);
   }
 
-  .glass-stage::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: var(--glass-stage-bg);
-  }
-
-  /* O especular NAO e uma linha uniforme no topo: e um gradiente que corre pela superficie —
-     aceso na quina superior esquerda, apagando no meio, pegando luz de novo na base. */
+  /* ⛔ O `::after` E SO O CARREGADOR DO FILTRO: ele e `inset: 0` sobre o palco, e o especular que
+     morava aqui virou a aresta de Fresnel da pele — tres camadas de luz no mesmo topo eram a
+     borda a 14%, o bisel a 16% e este a 42%. */
   .glass-stage::after {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    background: linear-gradient(
-      calc(var(--light-angle) + 24deg),
-      rgba(255, 255, 255, 0.16),
-      rgba(255, 255, 255, 0.02) 34%,
-      rgba(255, 255, 255, 0) 62%,
-      rgba(255, 255, 255, 0.08)
-    );
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    /* Ela e `inset: 0` sobre o palco, entao as arestas dela caem exatamente nas do pai: eram
-       TRES camadas de luz no mesmo topo — a borda a 14%, o bisel do palco a 16% e este a 42%. */
   }
 
   .glass-stage > * {
@@ -54,28 +43,16 @@
 
   /* ── NIVEL 2 · ACTION — o que se pressiona ──────────────────────────────── */
   .glass-action {
-    border: 1px solid var(--glass-edge);
+    border: 1px solid transparent;
     border-radius: var(--radius-piece);
-    background: var(--glass-action-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    box-shadow:
-      var(--bevel-zenith),
-      var(--bevel-under),
-      calc(var(--light-dx) * 14px) 14px 34px -18px rgba(0, 0, 0, 0.9);
+    box-shadow: var(--glass-cast);
   }
 
   /* ── NIVEL 3 · SUPPORT — informacao que nao se toca ─────────────────────── */
   .glass-support {
-    border: 1px solid var(--glass-edge);
+    border: 1px solid transparent;
     border-radius: var(--radius-pill);
-    background: var(--glass-support-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    box-shadow:
-      var(--bevel-zenith),
-      var(--bevel-under),
-      calc(var(--light-dx) * 10px) 10px 24px -18px rgba(0, 0, 0, 0.9);
+    box-shadow: var(--glass-cast);
   }
 
   /* ⛔ O RAIL FICA SEM DESFOQUE ENQUANTO A TELA TROCA: entre a coluna e o dock a superficie do
@@ -87,6 +64,8 @@
      mesmo token, apagado nesse elemento so enquanto a troca dura. */
   html:active-view-transition .rail {
     --glass-blur: none;
+    /* A peca vestida nao le o token: apagar so ele deixaria a lente acesa, e o pisca volta. */
+    --glaze: none;
   }
 
   /* ⛔ O PASSEIO DA LUZ SAIU, e o numero e este: `--light-angle` animado no `:root` (150° a

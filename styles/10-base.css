@@ -121,6 +121,18 @@
     animation-duration: var(--dur-screen);
   }
 
+  /* ⛔ A DURACAO NO GRUPO NAO CHEGA NO RETRATO: o `old` e o `new` do substrato seguiam a curva
+     padrao do navegador e cruzavam em ~60ms, enquanto o tabuleiro levava 280 — o fundo trocava
+     num pulo no meio da troca de aba. Com a mesma duracao e a mesma curva dos dois lados, a
+     madeira e a aurora se cruzam junto com a tela. */
+  ::view-transition-old(backdrop),
+  ::view-transition-new(backdrop),
+  ::view-transition-old(topbar),
+  ::view-transition-new(topbar) {
+    animation-duration: var(--dur-screen);
+    animation-timing-function: var(--ease-screen);
+  }
+
   /* ⭐ A TROCA DE TELA E A DA APPLE: dissolve com um fio de escala (0,98 → 1), sem desfoque.
      ⛔ O cross-fade cru do navegador ele recusou ("nao esta nivel Apple"); o desfoque animado em
      tela inteira saiu depois: custava 40ms de GPU por troca (tmp/transicao-custo.md) e a Apple
@@ -175,7 +187,8 @@
   }
 
   ::view-transition-new(dock) {
-    animation: dock-in var(--dur-menu) var(--ease-screen) calc(var(--dur-screen) - 100ms) both;
+    animation: dock-in var(--dur-menu) var(--ease-screen) calc(var(--dur-screen) - var(--dur-lead))
+      both;
   }
 
   /* A coluna SAI quando so existe a foto velha e ENTRA quando so existe a nova (`:only-child`
@@ -187,7 +200,8 @@
   }
 
   ::view-transition-new(rail):only-child {
-    animation: column-in var(--dur-menu) var(--ease-screen) calc(var(--dur-screen) - 100ms) both;
+    animation: column-in var(--dur-menu) var(--ease-screen)
+      calc(var(--dur-screen) - var(--dur-lead)) both;
   }
 
   @keyframes dock-out {

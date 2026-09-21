@@ -44,9 +44,26 @@ async function viaRail(page, key) {
   const hidden = await page.locator(`[data-section="${key}"]`).first().isHidden();
   if (hidden && (await drawer.count()) > 0 && (await drawer.isVisible())) {
     await drawer.click();
-    await page.waitForTimeout(120);
+    /* A gaveta e um morph: espera-se ele POUSAR, e nao o relogio — durante a viagem o icone
+       ainda esta fora da capsula e o clique cairia na mesa. */
+    await page.waitForFunction(
+      () => document.querySelector(".rail__list")?.getAttribute("data-drawer") === "true",
+    );
+    await page.waitForFunction(() => !document.querySelector(".rail")?.hasAttribute("data-morph"));
   }
-  await page.click(`[data-section="${key}"]`);
+  try {
+    await page.click(`[data-section="${key}"]`, { timeout: 8000 });
+  } catch (error) {
+    /* O que cobria o alvo, para o achado nao morrer como "timeout". */
+    const cover = await page.evaluate(sel => {
+      const b = document.querySelector(sel);
+      if (!b) return "sem botao";
+      const r = b.getBoundingClientRect();
+      const h = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return `${sel} em ${Math.round(r.left)},${Math.round(r.top)} ${Math.round(r.width)}x${Math.round(r.height)} coberto por ${h?.tagName}.${h?.className} ${JSON.stringify(h instanceof HTMLElement ? h.dataset : {})}`;
+    }, `[data-section="${key}"]`);
+    throw new Error(`viaRail(${key}): ${cover}`, { cause: error });
+  }
 }
 
 /** @param {boolean} condition @param {string} complaint */
@@ -806,6 +823,85 @@ try {
   await checkTopbar("barra");
   await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
 
+  /* ⛔ A DICA DO DOCK NAO TINHA PROVA, e ela e o rotulo da secao — sem ela o dock e sete desenhos
+     sem nome. E ela acende UMA de cada vez: com a gaveta aberta pelo teclado e o ponteiro parado
+     sobre outro icone, o foco acendia uma e o hover acendia a outra. */
+  const dicas = async () =>
+    page.$$eval(".rail__label", nodes =>
+      nodes
+        .filter(node => Number(getComputedStyle(node).opacity) > 0.5)
+        .map(node => (node.textContent ?? "").trim()),
+    );
+  expect((await dicas()).length === 0, "[dock] a dica ja estava acesa sem ninguem pousar nela");
+  await page.hover('.rail__item[data-section="congress"]');
+  await page.waitForTimeout(240);
+  const acesas = await dicas();
+  expect(
+    acesas.length === 1 && acesas[0] === "Congresso & Leis",
+    `[dock] pousar no icone devia acender uma dica so: ${acesas.length} acesa(s) — ${acesas.join(" · ")}`,
+  );
+  await page.mouse.move(40, 400);
+  await page.waitForTimeout(240);
+
+  /* ⛔ O CASO COMBINADO NAO TINHA PROVA, e a regra que o tratava estava MORTA: o seletor pedia um
+     `.rail` dentro de outro `.rail`, casava zero elementos, e o pouso sozinho passava verde.
+     Medido: foco em Finanças pelo teclado + pouso em Congresso = 2 dicas acesas. */
+  await page.focus('.rail__item[data-section="congress"]');
+  await page.keyboard.press("Tab");
+  await page.hover('.rail__item[data-section="congress"]');
+  await page.waitForTimeout(240);
+  const combinadas = await dicas();
+  expect(
+    combinadas.length === 1 && combinadas[0] === "Finanças",
+    `[dock] com o foco em Finanças e o ponteiro em Congresso, quem manda e o foco: ` +
+      `${combinadas.length} acesa(s) — ${combinadas.join(" · ")}`,
+  );
+  await page.evaluate(() =>
+    document.activeElement instanceof HTMLElement ? document.activeElement.blur() : null,
+  );
+  await page.mouse.move(40, 400);
+  await page.waitForTimeout(240);
+
+  /* ⛔ A GAVETA NAO TINHA PROVA DE FECHAR: ela abre no passeio inteiro (`viaRail`), e se travasse
+     aberta o portao passava verde — os seis icones do dock sumiriam e ninguem veria. */
+  const gaveta = page.locator(".rail__drawer");
+  if ((await gaveta.count()) > 0 && (await gaveta.isVisible())) {
+    /* ⛔ A GAVETA E UM MORPH, e nao uma troca de quadro: a capsula anda na mola entre as duas
+       larguras. A prova mede a largura no meio do caminho (200ms: 90 de apagar + 110 de mola)
+       e o pouso — inline limpo, lente refeita no tamanho final. */
+    const largura = () =>
+      page.$eval(".rail", node => (node instanceof HTMLElement ? node.offsetWidth : 0));
+    const fechada = await largura();
+    await gaveta.click();
+    await page.waitForTimeout(200);
+    const noMeio = await largura();
+    await page.waitForTimeout(500);
+    const aberta = await largura();
+    const pouso = await page.$eval(".rail", node => ({
+      inline: node.style.width,
+      morph: node.dataset["morph"] ?? null,
+      lente: (node.dataset["dressed"] ?? "").split("x")[0],
+    }));
+    expect(
+      noMeio > fechada + 4 && noMeio < aberta - 4,
+      `[dock] a gaveta nao fez morph: ${fechada} → ${noMeio} → ${aberta}px`,
+    );
+    expect(
+      pouso.inline === "" && pouso.morph === null && Number(pouso.lente) === aberta,
+      `[dock] o morph nao pousou: ${JSON.stringify(pouso)} para ${aberta}px`,
+    );
+    expect(
+      (await page.locator('.rail__list[data-drawer="true"]').count()) === 1,
+      "[dock] a gaveta nao abriu no clique do botao de ministerios",
+    );
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(240);
+    expect(
+      (await page.locator('.rail__list[data-drawer="true"]').count()) === 0,
+      "[dock] a gaveta ficou aberta depois do Esc",
+    );
+  }
+
   /* 1b — A CARTA ABRE NA MESA (ciclo 27): o envelope ergue a folha dele ao centro da janela, na
      escala de leitura; Esc larga e devolve o foco ao envelope. So quando ha carta na mesa. */
   if ((await page.locator(".envelope[data-letter]").count()) > 0) {
@@ -868,6 +964,53 @@ try {
   await checkContrast("email");
   await checkNoPageScroll("email");
   await page.screenshot({ path: join(OUT, "email.png"), fullPage: true });
+
+  /* ⛔ A PILULA NAO TINHA PROVA, e dois defeitos passaram por ela na mesma tarde: ao trocar de
+     eixo (dock → coluna) uma mola velha escrevia por cima e ela nascia 53px FORA do rail; e o
+     vidro dela pintava POR CIMA do rotulo do item corrente, que saia cinza. A primeira se mede
+     na caixa; a segunda no hit test, com o `pointer-events` dela ligado so para a pergunta. */
+  const pilula = async () => {
+    /* ⚠ O PONTEIRO SAI DO ITEM ANTES DE MEDIR: o `:hover` escala o item em 1,02, e a caixa
+       medida com ele em cima da 3 a 5px de "erro" que nao existe. */
+    await page.mouse.move(720, 500);
+    await page.waitForTimeout(240);
+    return page.evaluate(() => {
+      const rail = document.querySelector(".rail");
+      const pill = rail?.querySelector(".rail__pill");
+      /* O ativo VISIVEL: numa area o botao da gaveta tambem e ativo, e escondido mede zero. */
+      const item = [...(rail?.querySelectorAll(".rail__item--active") ?? [])].find(
+        node => node instanceof HTMLElement && node.offsetWidth > 0,
+      );
+      if (!(pill instanceof HTMLElement) || !(item instanceof HTMLElement)) return null;
+      const a = pill.getBoundingClientRect();
+      const b = item.getBoundingClientRect();
+      const label = item.querySelector(".rail__label");
+      const c = label?.getBoundingClientRect() ?? b;
+      pill.style.pointerEvents = "auto";
+      const hit = document.elementFromPoint(c.left + c.width / 2, c.top + c.height / 2);
+      pill.style.pointerEvents = "";
+      return {
+        off: Math.max(
+          Math.abs(a.left - b.left),
+          Math.abs(a.top - b.top),
+          Math.abs(a.width - b.width),
+          Math.abs(a.height - b.height),
+        ),
+        above: hit === pill,
+        /* Acesa = opacidade computada; a pilula nao carrega mais chave de estado. */
+        on: Number(getComputedStyle(pill).opacity) > 0.5 ? "true" : "false",
+      };
+    });
+  };
+  const naColuna = await pilula();
+  expect(
+    naColuna !== null && naColuna.on === "true" && naColuna.off <= 1.5,
+    `[coluna] a pilula nao pousou no item corrente: ${JSON.stringify(naColuna)}`,
+  );
+  expect(
+    naColuna !== null && !naColuna.above,
+    "[coluna] a pilula pinta por cima do rotulo do item corrente",
+  );
 
   /* 1b — A POSSE PERGUNTA, e ela e a primeira decisao do mandato. ⚠ A ASSERCAO DO GABINETE
      CONTINUA VALENDO e nao foi afrouxada: os tres eixos sao BOTOES, e nao `input` nem
@@ -956,7 +1099,13 @@ try {
     `[area] a corrente da Previdencia diz que a verba poe ${verba} — ela le o discricionario, e nao o gasto cheio`,
   );
   await viaRail(page, "health");
-  await page.waitForTimeout(400);
+  /* A viagem da pilula entre dois itens da coluna assenta em ~450ms (cauda 0,46s). */
+  await page.waitForTimeout(700);
+  const viajou = await pilula();
+  expect(
+    viajou !== null && viajou.on === "true" && viajou.off <= 1.5,
+    `[coluna] a pilula nao chegou ao item depois da viagem: ${JSON.stringify(viajou)}`,
+  );
 
   /* 3 — O ORCAMENTO GRANULAR. */
   const dial = page.locator(".dial__slider").first();

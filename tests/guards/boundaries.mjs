@@ -4,7 +4,15 @@ import { collect } from "../lib/project.mjs";
 
 export const name = "boundaries";
 
-const ALLOWED_FOR_ENTRYPOINT = [/^\.\/src\/state\//, /^\.\/src\/public\//, /^\.\/src\/ui\//];
+const ALLOWED_FOR_ENTRYPOINT = [
+  /^\.\/src\/state\//,
+  /^\.\/src\/public\//,
+  /^\.\/src\/ui\//,
+  /^\.\/src\/app\//,
+];
+
+/* `src/app/` e o entrypoint dividido em modulos: alcanca o mesmo que ele, e os irmaos. */
+const ALLOWED_FOR_APP = [/^\.\.\/state\//, /^\.\.\/public\//, /^\.\.\/ui\//, /^\.\/[\w-]+\.mjs$/];
 
 /**
  * @param {Map<string, string>} files
@@ -24,6 +32,18 @@ export function audit(files) {
           add(
             `app.mjs importa ${specifier} — o entrypoint compoe por state/, public/ e ui/, ` +
               `e nao alcanca dominio nem infraestrutura direto`,
+          );
+        }
+      }
+    }
+
+    /* 1b — A COMPOSICAO DO NAVEGADOR TAMBEM SO COMPOE. */
+    if (path.startsWith("src/app/")) {
+      for (const specifier of imports) {
+        if (!ALLOWED_FOR_APP.some(allowed => allowed.test(specifier))) {
+          add(
+            `${path} importa ${specifier} — src/app/ compoe por state/, public/, ui/ e os ` +
+              `irmaos, e nao alcanca dominio, aplicacao nem dado direto`,
           );
         }
       }
@@ -63,6 +83,10 @@ export const synthetic = [
   {
     label: "entrypoint alcancando o dominio direto",
     files: new Map([["app.mjs", 'import { x } from "./src/domain/economy/index.mjs";']]),
+  },
+  {
+    label: "composicao do navegador alcancando a aplicacao direto",
+    files: new Map([["src/app/paint.mjs", 'import { x } from "../application/turn.mjs";']]),
   },
   {
     label: "dominio importando UI",

@@ -61,7 +61,7 @@
            OS QUATRO INDICADORES TEM MOTOR. A aprovacao foi a ultima a ter, em
            14/08/2026, e e por isso que esta barra so nasceu agora: com um quarto
            do conteudo inventado, ela ensinaria a desconfiar dos outros tres. -->
-      <header class="topbar glass-support">
+      <header class="topbar">
         <div class="topbar__zone">
           <span class="topbar__brand">
             <span class="topbar__seal" id="seal" aria-hidden="true"></span>
@@ -108,6 +108,11 @@
              que ele moveu, nunca escolhida, que é a regra do ciclo 2. O conteúdo
              vem de `governmentOf`; este elemento é só o lugar. -->
         <div class="rail__gov" id="railGov"></div>
+        <!-- A PILULA DO ITEM CORRENTE, e ela mora FORA da lista de proposito: o `<ul>` se
+             repinta a cada mes, e a pilula recriada nasceria no lugar novo em vez de correr
+             ate ele. Aqui ela sobrevive as pinturas e desliza. `aria-hidden` porque quem diz
+             qual item e o corrente e o `aria-current` do proprio botao. -->
+        <span class="rail__pill" id="railPill" aria-hidden="true"></span>
         <ul class="rail__list" id="railNav"></ul>
 
         <div class="rail__foot">

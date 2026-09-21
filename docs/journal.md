@@ -8439,3 +8439,216 @@ A base de medição do Gemini saiu pela metade: fps preso a 60 nos dois braços 
 "madeira crua" medida no fundo escuro em vez do tampo. O que vale: os 5 piores contrastes sobre
 vidro estão em AA. Amanhã se refaz com o modelo do `screen-cost.mjs`. Ele desligou por hoje:
 "quero tudo registrado e atualizado para não esquecermos de nada".
+
+### 15 · O véu, e a mesa até a beira — 19/09, madrugada
+
+A base do Gemini voltou refeita e o croma finalmente fez sentido: a madeira sob o dock ia de
+rgb(13,6,9) crua para rgb(28,25,32) sob o vidro. Fui medir pareado — a mesma tira com a peça e
+com ela em `visibility:hidden` — e o número ficou redondo: ΔE 7,96, croma caindo de 16,0 para 9,3.
+Varri o véu do corpo contra a saturação e a resposta contrariou a receita visionOS do inventário:
+**quem apaga o jacarandá é o véu escuro, não o desfoque nem a saturação.** Com o véu pela metade,
+a saturação de hoje já devolve a madeira inteira (ΔE 1,50, croma 15,9). Subir `saturate` para 1,85
+junto com o véu aliviado supersatura — a madeira sai mais colorida que a real (ΔE 5,47). E o
+desfoque não mexe no croma: de 3px a 30px o ΔE anda de 1,48 a 1,51, então o número dele é escolha
+de olho e não de medição. Foi para a prancha.
+No meio disso ele pediu a mesa cobrindo a tela inteira do Gabinete, "sem sobrar espaço algum", e a
+vinheta "bem pouco, bem embaçada". Eram três camadas: dois degradês lineares que comiam 366px do
+centro para cada lado, a vinheta a 0,5 numa parada só, e a foto desenhada no tamanho da cena. Os
+degradês saíram, a foto passou a `cover` — ela tem 3832×1642 e a 1920 ainda entra reduzida — e a
+vinheta virou três paradas até 0,2. A barra e o dock passaram a flutuar sobre madeira de verdade.
+O instrumento de custo do Gemini nasceu torto e o log dele mostrou por quê: ordem fixa
+antes→depois, e a primeira medição de cada tela sempre a mais baixa (Congresso 20,5 / 34,5 / 33,6
+/ 30,0) — era o Chromium frio, não o vidro velho. SNR abaixo de 1 em 4 das 6 telas pelo critério
+dele mesmo. Voltou para refazer com aquecimento descartado e ordem ABBA.
+
+### 16 · O dock vestido, e o alvo errado — 19/09, madrugada
+
+O passo 3 começou pelo motor: `glaze()` deixou de escrever `backdrop-filter` na peça e passou a
+escrever a receita em `--glaze`, com o CSS declarando `backdrop-filter: var(--glaze,
+var(--glass-blur))` nos três níveis e em `[data-dressed]`. Duas coisas se resolveram de uma vez: a
+guarda `material` ficou verde sem ser reescrita, porque a declaração ainda contém o token, e a
+regra que mata o pisca laranja voltou a alcançar a peça vestida — filtro inline não se apaga por
+CSS. A `skin()` ganhou tinta no corpo (a barra é branca; sobre madeira quente, branco translúcido
+devolve leite) e o raio virou parâmetro, porque raio é geometria da peça e não material.
+Aí vieram dois erros meus, e os dois com número em cima. **Persegui ΔE < 3 e cheguei num dock
+invisível.** ΔE soma luminância, e vidro escurece; o que ele mandou não mudar é o croma. Com ΔL e
+ΔC separados a escolha ficou óbvia num minuto: corpo 0,32 escurece 2,0 de L e custa 2,85 de croma;
+0,40 já custa 6,5; e sem corpo nenhum o vidro EXAGERA a cor, croma 40,5 contra 30,1 da madeira nua.
+**Depois baixei a saturação de 1,9 para 1,6** achando que ela exagerava sobre madeira — e o croma
+piorou, de −2,85 para −6,57 com o mesmo corpo. A saturação é o que paga o corpo: as duas se
+calibram juntas, nunca uma de cada vez. Voltou para 1,9.
+O desfoque foi o contrário: subiu de 2,6 para 10. O 2,6 nasceu sobre a aurora lisa, onde não há
+desenho para embaçar; sobre o veio do jacarandá ele deixava a madeira nítida — lupa, não vidro. Na
+barra a troca quase não aparece, e é por isso que o número pôde ir para a receita em vez de virar
+exceção do dock.
+A conta do Gemini: o dock vestido custa +0,538 ms/q com SNR 1,5, num orçamento de 4,16. E um
+achado que é o próximo passo: com a mesa cobrindo a tela, as cápsulas da barra apagam o jacarandá
+muito mais que o dock — ΔE 13,57, croma de 20,9 para 9,3. Elas foram calibradas sobre a aurora.
+
+### 17 · A barra eram dois vidros — 19/09, madrugada
+
+A medição do Gemini apontou o lugar: as cápsulas da barra clareavam o jacarandá 6,6 de L e levavam
+8,8 de croma, enquanto o dock escurecia 2,6 e levava 4,6. Fui atrás do corpo branco delas, e o
+corpo não era a causa — tingir com a faixa ainda envidraçada piorava tudo (ΔC −13,26). A causa era
+que **a barra tinha dois vidros**: a `header` com `glass-support` e as três cápsulas com o vidro
+delas por cima, dois desfoques sobre a mesma madeira. Tirar o vidro da faixa devolveu sete pontos
+de croma de uma vez. Ele escolheu na prancha: a faixa vira só o lugar, as cápsulas são as peças —
+que é a tese do ciclo, uma peça de vidro e não duas empilhadas. Com corpo tingido leve a 0,10, a
+barra passou a escurecer 0,9 em vez de clarear 5,5, e o croma sob ela foi de 12,2 para 18,9 contra
+21,8 da madeira nua.
+A decomposição de GPU do mesmo dia fechou a conta do ciclo até aqui: a lente custa +0,134 ms/q, o
+desfoque de 10 custa −0,116 (mais barato que o 2,6 que ele substituiu) e os dois juntos, +0,017.
+O vidro novo é de graça.
+
+### 18 · Os palcos, e o medidor que mentia — 19/09, madrugada
+
+O passo 4 esbarrou logo no começo: a lente recusava peça acima de 400px de altura, e um palco tem 1718. A saída foi o mapa em escala — acima de 600px no lado maior ele nasce menor e o `feImage` o
+estica de volta. O desvio é uma rampa suave, então esticar não aparece, e o laço deixa de percorrer
+dois milhões de pixels. Os dois pseudos do nível saem de cena quando a peça é vestida: a pele já
+traz corpo e aresta, e eles pintavam um segundo de cada.
+No meio do caminho, o achado que mais vale: medindo o contraste da barra sem a faixa de vidro,
+**SIMULATOR reprovava** — 3,68:1 sobre o veio claro do jacarandá. E quando fui conferir o conserto,
+descobri que o meu próprio medidor mentia: ler `color` e ignorar a opacidade dizia 7,14 onde o real
+era 5,41. A conta agora compõe a tinta com o fundo, e mede o pior pixel sob o texto em vez da média
+— que é onde o defeito mora quando o fundo é madeira com veio claro e escuro.
+O Gemini entrou em laço: quatro scripts sobre as duas dicas, uma tarefa que eu já tinha cancelado
+três vezes. O monitor ao vivo no transcript dele foi o que mostrou isso em tempo real, e a regra
+nova ficou escrita: lote novo mata lote velho, ninguém roda navegador sem avisar, e travou dez
+minutos manda uma linha.
+
+### 19 · As ações, e a aberração que não coube — 19/09, madrugada
+
+O passo 5 foi curto e achou um defeito calado: os dois botões de diálogo nunca se vestiam, porque
+`<dialog>` fechado mede zero e `glaze` recusa peça menor que nove pixels. Agora eles se vestem no
+`showModal()`.
+O passo 6 foi o contrário — escrevi a dispersão do jeito certo e ela não coube. Cada canal
+atravessa a lente com escala própria, então a separação nasce proporcional ao desvio: zero no
+centro plano, máxima na aresta, que é como o vidro real funciona. Ampliada cinco vezes na quina do
+dock, ela aparece com desfoque 2,6 — a 0,25 de dispersão a quina já fica vermelha. Com desfoque 6
+some, e com 10 não sobra nada nem em 0,5. E 10 é justamente o desfoque que a madeira exige para não
+virar lupa sob o vidro. Os dois não cabem juntos; ficou o desfoque. O código da dispersão fica no
+lugar, desligado, porque reverter é um número — e a imagem que mostra a troca foi para ele.
+
+### 20 · O teto da lente — 19/09, madrugada
+
+O Gemini mediu os palcos e voltou com +7,8 ms/q. O número estava inflado pela carga sintética
+dele, mas a direção estava certa e o defeito era grave: fui medir com a tela trabalhando — um
+retângulo animado por cima, que obriga o compositor a refazer a região do filtro — e o palco
+vestido dava **13 fps** contra 240 do desfoque chapado. Nenhum dos dois medidores oficiais via
+isso, porque os dois medem a tela em repouso, e vidro parado não recompõe. É o tipo de defeito que
+atravessa guarda, prova e portão e só morre quando alguém faz a pergunta certa ao instrumento.
+A curva do custo é de área, e ficou no código: 24 mil px custam nada, 60 mil custam dois fps, 81
+mil custam quarenta, e dois milhões custam a tela inteira. `installLens` recusa acima de 60 mil px,
+e a peça grande fica com a pele e com o desfoque do token. O palco voltou aos 240 e ainda saiu
+ganhando: tem a aresta de Fresnel no lugar da borda uniforme de 1px.
+
+### 21 · A limpeza, e a camada que ninguém via — 19/09, madrugada
+
+O passo 7 fechou o ciclo. A coluna foi a última peça a sair do vidro velho, e o arquivo de material
+caiu para oitenta linhas: virou só a declaração do filtro, a queda de cada nível e o raio. O corpo,
+a aresta e a forma agora saem todos de `glaze()`. Quatro tokens ficaram órfãos e quem os apontou
+foi a guarda `tokens`; dois comentários citavam token morto e quem os apontou foi a `prose`.
+Nenhuma das duas precisou ser afrouxada — e a guarda de material, que o ciclo previa reescrever,
+também não precisou: a declaração continua contendo o token, então ela passa dizendo a verdade.
+No meio da limpeza apareceu uma camada que ninguém via: o véu do vidro de apoio era
+`background-color`, e por isso sobrevivia por baixo da pele. Quando ele saiu, o dock clareou e
+quase sumiu sobre a madeira. O corpo da pele subiu para ocupar o lugar dele — e isso explica por
+que a calibragem de horas antes parecia certa: ela estava medindo duas camadas somadas e creditando
+tudo a uma.
+
+### 22 · A padronização, e a aresta que esticava — 19/09, manhã
+
+Ele olhou o jogo e disse que cada menu tem um liquid glass diferente, que falta excelência e que
+está horrível. Fui provar antes de discutir: pus as seis peças de vidro lado a lado sobre a mesma
+madeira e eram **seis materiais** — três tintas, corpo de 0,07 a 0,72 e o gradiente correndo em
+direções opostas. Virou uma escala só: uma tinta, uma direção, três densidades.
+Ele repetiu a crítica. Fui às telas reais e varri toda superfície de painel: **quatro raios** em
+cinco peças, as cápsulas da barra com sombra própria de três camadas, e o título "Ministérios"
+quarenta pixels fora do alinhamento dos itens. O raio virou dois degraus — cápsula e painel — e o
+motor passou a lê-lo do CSS, porque desenhar a pele num raio e recortar noutro dá duas silhuetas.
+E o achado que fechou a conta foi do Gemini: **a aresta divergia trinta vezes**. Como fração da
+altura, o zênite ocupava seis pixels e meio no dock e cento e oitenta no palco. Aresta que estica
+não é luz na quina, é mancha escorrendo pelo painel. Agora ela é uma faixa em pixel: onze no topo
+e onze na base, tenha a peça cinquenta ou mil e setecentos de altura. Os níveis deixaram de
+carregar aresta — ela nasce da caixa, junto com o raio, porque os dois são geometria e não
+material.
+
+### 23 · A escala do texto e do alvo — 19/09, tarde
+
+Ele pediu perfeição e padronização total, então contei a UI inteira antes de opinar: dezesseis
+tintas, treze tamanhos de fonte, treze alturas de alvo, nove raios, nove sombras. Padronização se
+mede contando o que diverge.
+A tipografia era o maior: treze tamanhos, e os quebrados — 13,6, 12,48, 23,472 — vinham de
+`clamp()` com `vw`. Antes de trocar, medi: os clamps já estavam no teto a 1440 e a 1920, idênticos
+nas duas larguras, porque a fluidez só operava abaixo de 1181px. Ou seja, a escala fluida não
+estava fluindo em lugar nenhum que o jogo suporte — só produzindo frações que ninguém escolheu.
+Virou degrau fixo, e não mexeu um pixel. As peças da barra, que tinham tamanhos teclados de 11,5 e
+15, entraram na escala junto.
+O alvo veio depois: três degraus, 36, 44 e 56, com o botão secundário e a escolha da carta no
+mesmo degrau do item de menu, e a cápsula da barra saindo dos 57 teclados. O que mede treze ou
+vinte e três pixels ficou de fora de propósito: são ações de texto dentro do papel, e papel tem
+escala própria — a do documento, não a da interface.
+No meio disso o passeio me pegou numa armadilha que vale para todo token composto: `rgba(var(--x),
+0.72)` declarado no `:root` congela o valor do `:root`, e a bandeja redefine essa tinta. O token
+levou tinta clara para cima de papel branco e o contraste caiu para 1,13. Onde o valor é
+redefinido por contexto, a composição fica na regra.
+
+### 24 · O menu virou um componente — 20/09
+
+Ele perguntou por que o dock difere tanto dos outros menus, e a resposta estava no CSS: **29 regras
+que só valiam no Gabinete**, reescrevendo 22 partes do componente. O dock não era uma variação do
+menu — era uma segunda implementação dele. Era por isso que o raio era 14 num e 18 no outro, o
+hover existia num e não no outro, e o gesto era 1,08 contra 1,02: eu vinha consertando os dois à
+mão, um de cada vez, a sessão inteira.
+Ele escolheu o caminho: um componente com duas orientações, e o dock como referência. Antes de eu
+escrever uma linha, o Gemini levantou as nove armadilhas que já morderam esse menu e os riscos da
+pílula — e três deles mudaram o desenho. A pílula não podia ser filha do `<ul>`, o item ativo some
+quando a gaveta abre, e ela precisava de `pointer-events: none` para não comer o clique.
+O passo 1 derrubou as 29 regras para 1, e dez das quatorze capturas ficaram idênticas ao pixel. As
+outras eram o halo do telefone, que anima, e uma captura cuja linha de base é que estava errada.
+Três defeitos apareceram escondidos atrás da especificidade alta do seletor antigo: a lista do dock
+com rolagem de coluna, o dock empurrado 48px para cima pelo piso da coluna, e o dock sendo vestido
+depois do layout assentar. Nenhum era visível porque o seletor longo vencia por especificidade —
+encobria o erro em vez de corrigi-lo.
+A pílula veio depois, e ela corre: 200, 221, 232, 236, 238, desacelerando. O item corrente deixou de
+pintar fundo. Depois o gesto, e nele uma armadilha que custou meia hora: `transition` é atalho, e a
+regra do dock declarando `transition: background` apagava a transição de `transform` da base. O
+gesto simplesmente não acontecia, e nada acusava.
+No fim, o realce que segue o ponteiro. É o que faz a cápsula ler como vidro: num vidro real o
+brilho não fica parado.
+
+### 25 · O dock no Liquid Glass, e o brilho que não era aquoso — 21/09
+
+Ele olhou o brilho que seguia o ponteiro e disse que não ficou nem um pouco aquoso. Saiu inteiro,
+e a ordem virou outra: o aquoso são as animações do dock, todas, no Liquid Glass da Apple. Contei
+sete e ele aprovou a lista. No meio, mais uma decisão dele: no dock não há pílula — o dock só
+existe no Gabinete, então o corrente é sempre o mesmo, e um fundo atrás dele não diz nada.
+A pílula virou vidro e gota na coluna: cabeça numa mola rápida, cauda numa lenta, e o vão entre
+as duas é corpo esticado. Direção não importa, e o alongamento sai sozinho — 11% num salto de
+35px, 30% de teto numa viagem de 414. Três defeitos antigos apareceram porque a prova nova
+mediu: a pílula nascia 53px fora do rail ao trocar de eixo (uma mola velha com quadro pendente),
+pintava por cima do rótulo (a lista não era posicionada), e nunca aparecia nas oito áreas (o
+botão da gaveta também é ativo, vem antes, e mede zero escondido). O quarto foi meu: medir o item
+com `getBoundingClientRect` trazia o hover de 1,02 e a pílula saltava achando que a peça mudou.
+A gaveta virou morph: os que saem apagam antes da troca, a cápsula anda na mola escrevendo a
+largura real, e os que entram nascem conforme ela anda. A lente vai no tamanho maior antes e se
+refaz no pouso. Custou 205 contra 232 fps. Depois vieram as três molas do gesto em `linear()`,
+a dica brotando do ícone e o `+` girando com quique.
+Ele disse que não viu diferença — antes dos itens 3 a 7, e sem abrir a gaveta. Tudo isto se vê
+em movimento.
+
+### 26 · Simplificar, com o Gemini ao lado — 21/09, tarde e noite
+
+Ele testou, viu bugs demais para listar, e pediu outra coisa: simplificar, para eu errar menos.
+Medi antes de responder — rodar é barato, o que custa é ler: 6.200 linhas de prosa em 14.300 de
+código, 58 chaves `data-*`, 12 funções acima de 100 linhas, dez provas de interação contra
+trezentas de motor. Escrevi o ciclo 29 e ele abriu uma sessão limpa do Gemini para eu delegar.
+O Gemini recebeu a prosa, com uma prova mecânica que não deixa margem: o arquivo sem comentários
+tem de sair idêntico. Dois lotes, quatro arquivos, todos abaixo de 20%, números medidos
+preservados em forma curta. Um tropeço: ele apagou um `@param` inline e o tsc pegou — o tsc entrou
+no portão dele. Eu fiquei com a estrutura: `app.mjs` virou 28 linhas e cinco módulos em `src/app/`,
+com um objeto `session` no lugar de oito variáveis soltas; o menu virou um objeto com um estado e
+três chaves no DOM em vez de oito. O passeio oscilava por causa do meu morph — o passeio clicava
+no ícone antes de a cápsula chegar nele. Agora espera o pouso.
+O macaco jogou 250 ações ao acaso sem um erro de página. Ele ainda mede a pílula no meio da
+viagem; falta ensiná-lo a esperar.

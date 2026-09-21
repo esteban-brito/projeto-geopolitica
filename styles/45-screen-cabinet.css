@@ -22,7 +22,7 @@
     --sheet-ink: var(--ink);
     --sheet-ink-rgb: var(--ink-rgb);
     --sheet-raise: rgba(var(--ink-rgb), 0.05);
-    --sheet-edge: var(--glass-edge);
+    --sheet-edge: var(--hairline);
     gap: var(--space-4);
   }
 
@@ -143,7 +143,7 @@
     grid-column: 1 / -1;
     margin: 0;
     padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--glass-edge);
+    border: 1px solid var(--hairline);
     border-bottom: 0;
     border-radius: var(--radius-piece) var(--radius-piece) 0 0;
     background: var(--sheet-raise);
@@ -158,7 +158,7 @@
     padding: 0; /* ⚠ O FIO DIVISOR MORREU EM, E QUEM O MATOU FOI A CAPTURA. */
     list-style: none; /* `glass-support` foi tentado aqui e `npm run screen` cobrou 17,9 fps contra o braco de
        controle. */ /* ⚠ A ARESTA DA DIREITA MORREU PARA VIRAR COSTURA. */
-    border: 1px solid var(--glass-edge);
+    border: 1px solid var(--hairline);
     border-right: 0;
     border-radius: 0 0 0 var(--radius-piece); /* ⚠ E A TINTA E CHAPADA, E NAO O GRADIENTE DO MATERIAL — medido, e o segundo numero desta
        mesma regra hoje. */
@@ -183,7 +183,7 @@
        são oito FRASES, e o olho não tem como saber onde uma acaba e a outra começa. */ /* ⚠ A ARESTA DUROU MEIO DIA, e o que a matou foi o print do Football Manager: la o indice
        e UM painel com fios finos dentro. */
     border: 0;
-    border-bottom: 1px solid var(--glass-edge); /* A TARJA DE GRAVIDADE OCUPA LUGAR MESMO QUANDO NÃO HÁ PRAZO — transparente, e não
+    border-bottom: 1px solid var(--hairline); /* A TARJA DE GRAVIDADE OCUPA LUGAR MESMO QUANDO NÃO HÁ PRAZO — transparente, e não
        ausente: sem ela, uma carta com prazo andaria quatro pixels para a direita em relação
        às vizinhas, e a coluna do índice perderia a margem comum. */
     border-left: var(--rule-strong) solid transparent; /* ⚠ O RAIO MORREU COM A CAIXA. */
@@ -242,8 +242,8 @@
     display: flex;
     align-items: center; /* Seriam três materiais numa coluna de 208px. */
     padding: var(--space-3) var(--space-3) var(--space-1);
-    border-bottom: 1px solid var(--glass-edge); /* `--glass-support-bg` foi medido nesta mesma coluna e custou 28,3 fps SEM filtro nenhum:
-       ele seguia `--light-angle`, que interpolava a cada quadro (o passeio da luz saiu,
+    border-bottom: 1px solid var(--hairline); /* O veu de vidro foi medido nesta mesma coluna e custou 28,3 fps SEM filtro nenhum: ele
+       seguia `--light-angle`, que interpolava a cada quadro (o passeio da luz saiu,
        `20-material.css`), e uma superficie de dentro que o usasse repintava por quadro. */
     background: rgba(var(--ink-rgb), 0.05);
     font-family: var(--font-display);
@@ -312,7 +312,7 @@
   /* 📐 E OS 60% VIRARAM 68 POR MEDICAO: a 0,6 sobre o papel branco o nome fecha em 4,40 de
      contraste, e o piso AA e 4,5. A proporcao do oficio continua legivel a 0,68. */
   .tray__row[aria-current="true"] .tray__from {
-    color: rgba(var(--sheet-ink-rgb), 0.68);
+    color: rgba(var(--sheet-ink-rgb), 0.72);
   } /* ⚠ NA LINHA QUE TEM PRAZO ELE DESCE, e a razão é aritmética: a linha mede 179px, "vence em
      1 mês" come 103 e sobram 68 para o nome. "Letícia Dourado" pede 74 — o relator da carta que
      pergunta reticenciava em toda partida. Sem prazo nenhum nome corta, nem o de 129px.
@@ -405,7 +405,7 @@
        papel seguindo. Cabeca · assunto · corpo · anexos · rodape, todos pelo conteudo. */
     grid-template-rows: auto auto auto 1fr auto;
     border-color: var(
-      --glass-edge
+      --hairline
     ); /* Dois fios de 1px a 0px de distância leem como um fio de 2px — o defeito dos "dois
        separadores para uma fronteira", que já matou os cinco fios das legendas em 20/08 e o
        fio divisor desta mesma bandeja em 21/08. */
@@ -682,7 +682,7 @@
     font-weight: 400;
     /* ⚠ 0,55 REPROVOU NO PORTAO — 4,13 contra o piso AA de 4,5 — quando o bloco passou a ser
        vidro: o qualificador vivia sobre a folha, que e mais clara. Clareia-se a TINTA. */
-    color: rgba(var(--sheet-ink-rgb), 0.68);
+    color: rgba(var(--sheet-ink-rgb), 0.72);
   }
 
   /* O vao vem da margem e nao de um `gap`: o valor e celula de grade alinhada a direita. */
@@ -901,6 +901,7 @@
       border-color var(--dur-touch) linear,
       background var(--dur-touch) linear,
       transform var(--dur-touch) var(--ease-enter);
+    min-height: var(--target-m);
   }
 
   .letter__choice b {
