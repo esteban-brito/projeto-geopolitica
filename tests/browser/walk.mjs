@@ -1922,6 +1922,158 @@ try {
     }
   }
 
+  /* ── 10 — A GAVETA, A PILULA, A RAJADA E A LISTA ──────────────────────────────────────── */
+  const activeKey = () =>
+    page.evaluate(() => {
+      const item = [...document.querySelectorAll(".rail__item--active[data-section]")].find(
+        node => node instanceof HTMLElement && node.offsetWidth > 0,
+      );
+      return item instanceof HTMLElement ? item.dataset["section"] : null;
+    });
+
+  /* 10a — OS OITO FICAM DENTRO DA CAPSULA depois do pouso, e um clique num deles navega. O
+     passeio ja oscilou por um icone fora da capsula no meio do morph. */
+  await viaRail(page, "cabinet");
+  await settled();
+  const drawer = page.locator(".rail__drawer");
+  if (await drawer.isVisible()) {
+    await drawer.click();
+    await page.waitForFunction(
+      () => document.querySelector(".rail__list")?.getAttribute("data-drawer") === "true",
+    );
+    await page.waitForFunction(() => !document.querySelector(".rail")?.hasAttribute("data-morph"));
+    const fit = await page.evaluate(() => {
+      const rail = document.querySelector(".rail");
+      if (!rail) return null;
+      const box = rail.getBoundingClientRect();
+      const items = [...rail.querySelectorAll(".rail__sub [data-section]")].filter(
+        node => node instanceof HTMLElement && node.offsetWidth > 0,
+      );
+      const out = items.filter(node => {
+        const r = node.getBoundingClientRect();
+        return (
+          r.left < box.left - 1 ||
+          r.right > box.right + 1 ||
+          r.top < box.top - 1 ||
+          r.bottom > box.bottom + 1
+        );
+      }).length;
+      const covered = items.filter(node => {
+        const r = node.getBoundingClientRect();
+        const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        return !(hit !== null && (hit === node || node.contains(hit)));
+      }).length;
+      return { items: items.length, out, covered };
+    });
+    expect(fit !== null && fit.items === 8, `[gaveta] ${fit?.items} ministerios visiveis, e sao 8`);
+    expect(
+      fit !== null && fit.out === 0 && fit.covered === 0,
+      `[gaveta] ${fit?.out} fora da capsula, ${fit?.covered} cobertos`,
+    );
+    await page.click('.rail__sub [data-section="health"]');
+    await settled();
+    expect((await activeKey()) === "health", "[gaveta] clicar num ministerio nao levou a ele");
+    expect(
+      (await page.locator('.rail__list[data-drawer="true"]').count()) === 0,
+      "[gaveta] a gaveta continuou aberta depois de navegar",
+    );
+  }
+
+  /* 10b — A PILULA SEGUE O ITEM ATIVO nos doze enderecos da coluna, em repouso. */
+  const bad = [];
+  for (const key of [
+    "email",
+    "congress",
+    "finance",
+    ...CATALOG.areas.map(area => area.id),
+    "estado",
+  ]) {
+    await viaRail(page, key);
+    await settled();
+    const p = await pilula();
+    if (p === null || p.on !== "true" || p.off > 1.5 || p.above)
+      bad.push(`${key}: ${JSON.stringify(p)}`);
+  }
+  expect(
+    bad.length === 0,
+    `[pilula] fora do item em ${bad.length} de 12 enderecos: ${bad.join(" | ")}`,
+  );
+
+  /* 10c — A RAJADA: cinco trocas sem esperar terminam na ultima, com o rail em repouso. */
+  await page.evaluate(async () => {
+    for (const key of ["congress", "finance", "email", "estado", "congress"]) {
+      /** @type {HTMLElement | null} */ (
+        document.querySelector(`.rail [data-section="${key}"]`)
+      )?.click();
+      await new Promise(resolve => setTimeout(resolve, 60));
+    }
+  });
+  await settled();
+  expect(
+    (await activeKey()) === "congress",
+    `[rajada] terminou em ${await activeKey()}, e nao no ultimo clique`,
+  );
+  expect(
+    (await page.evaluate(() => document.querySelector("#main")?.getAttribute("data-screen"))) ===
+      "congress",
+    "[rajada] o tabuleiro nao e o do ultimo clique",
+  );
+  const afterBurst = await pilula();
+  expect(
+    afterBurst !== null && afterBurst.on === "true" && afterBurst.off <= 1.5,
+    `[rajada] a pilula nao pousou no ultimo item: ${JSON.stringify(afterBurst)}`,
+  );
+
+  /* 10d — A CARTA CLICADA NO FIM DA LISTA FICA A VISTA, nos dois regimes declarados: abaixo de
+     940px a pagina rola, e a medida e a janela; a 980 a lista rola por dentro, e a medida e a
+     caixa dela (`paint.mjs` rola a linha corrente). O clique e por evento, sem o Playwright
+     rolar por conta propria. */
+  await viaRail(page, "email");
+  await settled();
+  const pageOverflows = () =>
+    page.evaluate(() => document.documentElement.scrollHeight > window.innerHeight + 4);
+  for (let month = 0; month < 14 && !(await pageOverflows()); month++) {
+    await page.click("#advance");
+    await settled();
+  }
+  expect(await pageOverflows(), "[caixa] em 14 meses a Caixa nao chegou a rolar a 900px");
+  const lastRowSeen = async (/** @type {"janela" | "lista"} */ against) => {
+    await page.locator(".tray__row").last().dispatchEvent("click");
+    await page.waitForTimeout(400);
+    return page.evaluate(against => {
+      const list = document.querySelector(".tray__list");
+      const row = document.querySelector('.tray__row[aria-current="true"]');
+      if (!(list instanceof HTMLElement) || !(row instanceof HTMLElement)) return null;
+      const b = row.getBoundingClientRect();
+      const a =
+        against === "lista" ? list.getBoundingClientRect() : { top: 0, bottom: window.innerHeight };
+      return {
+        inside: b.top >= a.top - 1 && b.bottom <= a.bottom + 1,
+        top: Math.round(b.top - a.top),
+      };
+    }, against);
+  };
+  const at900 = await lastRowSeen("janela");
+  expect(
+    at900 !== null && at900.inside,
+    `[caixa] a 900px a carta clicada ficou fora da janela (${at900?.top}px do topo)`,
+  );
+
+  await page.setViewportSize({ width: 1440, height: 980 });
+  await page.waitForTimeout(300);
+  await page.locator(".tray__row").first().dispatchEvent("click");
+  await page.waitForTimeout(300);
+  const listOverflows = await page.evaluate(() => {
+    const list = document.querySelector(".tray__list");
+    return list instanceof HTMLElement && list.scrollHeight > list.clientHeight + 4;
+  });
+  expect(listOverflows, "[caixa] a 980px a lista nao rola por dentro, e a folha diz que rola");
+  const at980 = await lastRowSeen("lista");
+  expect(
+    at980 !== null && at980.inside,
+    `[caixa] a 980px a carta clicada ficou fora da lista (${at980?.top}px do topo dela)`,
+  );
+
   /* ── A FONTE QUE CHEGA TARDE ────────────────────────────────────
      ⚠ A BARRA MEDE TIPO PARA SE JUSTIFICAR, E MEDE UMA VEZ SO. Medida antes de a fonte chegar,
      ela grava a largura da fonte de reserva e nada a revisa. A fonte e local e costuma chegar a

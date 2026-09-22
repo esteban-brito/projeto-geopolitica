@@ -8705,3 +8705,13 @@ O repouso deu trabalho: a pasta guarda a animação terminada, e a mola da pílu
 zero achados; sabotado, acusa. Ele reclamou da demora, com razão: o passeio levava 120s, e o
 "42s" do handoff era de outra época. Medi por trecho: 48s eram `pousou()` esperando por uma
 animação que só existe quando a pasta está erguida. Agora 72s; o portão inteiro 111s.
+
+### 31 · A seção 10, e o fecho por falta de token — 21/09, noite
+
+Ele pediu para dividir com o Gemini: lote 4 de prosa e o inventário do item 5 foram para ele,
+enquanto eu escrevia a seção 10 do passeio — os oito da gaveta dentro da cápsula, a pílula nos
+doze endereços, a rajada de cinco trocas, e a carta clicada à vista nos dois regimes de altura.
+A de 980 caiu com a rolagem sabotada; a de 900 mostrou que ali quem rola é a página e a rolagem
+do `paint.mjs` nunca dispara. Vinte asserções novas, dez a menos que a meta. Os tokens acabaram
+antes do item 4 fechar; o Gemini termina o lote 4 e o item 5 sozinho, e a próxima sessão
+começa lendo o que ele deixou em `tmp/para-claude.md`.

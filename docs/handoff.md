@@ -5,7 +5,7 @@
 > envelhece: remeça antes de repetir. A tabela de contagens é cobrada por
 > `tests/suites/catalog.mjs`; a série, por quem mexe no motor.
 
-## Estado — 21/09/2026, portão verde, commitado
+## Estado — 21/09/2026 fim, portão verde (133s), commitado; o Gemini fecha o lote 4 e o item 5 sozinho
 
 - **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos: `app.mjs` tem 28 linhas e cinco
   módulos em `src/app/`; o menu é um objeto (`rail.mjs`) com 3 chaves `data-*`. Item 1 anda no
@@ -17,7 +17,7 @@
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
   corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
 - **portão:** 13 guardas · 67 sintéticas · 334 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde. `validate` **111s** (21/09): passeio 72s, macaco 24s, o
+  macaco (60 ações, semente 7) verde. `validate` **133s** (21/09, com as seções 9 e 10): passeio 72s, macaco 24s, o
   resto 12s. O passeio levava 120s: 48s eram `pousou()` esperando 2s por uma animação que não
   vinha, 24 vezes. Série do `simulate` imóvel (abaixo);
 - **docs refeitos em 21/09:** handoff 1.622 → 190 linhas (histórico apagado, decisão dele),
@@ -27,21 +27,25 @@
 
 ## Fila, em ordem
 
-1. **item 4 — provas de interação** em `tests/browser/walk.mjs`. Feito em 21/09: a seção 9 com
-   os 3 defeitos do 1º ultra (7 asserções, caem contra o código antigo) e o macaco como prova do
-   portão (`tests/browser/monkey.mjs`: semente fixa, mede só em repouso — troca de tela, morph,
-   Web Animations e a caixa da pílula parada entre dois quadros; 0 achados em 5 sementes × 150
-   ações; acusa erro de página quando sabotado). Falta: gaveta, pílula, diálogo, verba, troca de
-   tela — a meta são 30 asserções de interação;
-2. **item 5 — exports sem consumidor e `tmp/`** (460 scripts): inventário com prova, nada apagado
+1. **⚠ PRIMEIRO: ler `tmp/para-claude.md`** — o Gemini ficou fechando sozinho o lote 4 (prosa de
+   `src/ui/strings.mjs` e `styles/46-desk.css`, com ordem de commitar só os dois se o `validate`
+   ficar verde) e o item 5 (inventário em `tmp/inventario-item5.md`, só leitura). Conferir os
+   dois: `so-prosa` + tsc no lote; a lista do item 5 é proposta, quem apaga é ele;
+2. **item 4 — provas de interação**: 20 asserções novas em 21/09 (seções 9 e 10 do passeio: os 3
+   defeitos do ultra, os 8 da gaveta dentro da cápsula e clicáveis, a pílula nos 12 endereços da
+   coluna, a rajada de 5 trocas, a carta clicada à vista a 900 e a 980) + o macaco no portão
+   (`tests/browser/monkey.mjs`, 60 ações, semente 7). Sabotadas, caem (rolagem, lente, Esc, id).
+   Faltam 10 para a meta de 30: diálogo de aviso (`openNotice` não tem chamador hoje — conferir
+   se é morto), verba, e o que a lista de bugs dele trouxer;
+3. **item 5 — exports sem consumidor e `tmp/`** (460 scripts): inventário com prova, nada apagado
    sem o sim dele. Gemini;
-3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
+4. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
    jogador (ausência declarada em 21/09). Kind novo de carta: `state.mjs`, `inbox.mjs`,
    `strings.mjs`, vocabulário em `annex.mjs`;
-4. **prosa de `src/domain`** (41% → ≤ 20%) — é do Claude, não do Gemini;
-5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
+5. **prosa de `src/domain`** (41% → ≤ 20%) — é do Claude, não do Gemini;
+6. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
    só depois de fechar o ciclo 29;
-6. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
+7. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
    ele marca os candidatos que entram.
 
 ## Decisões vivas
@@ -65,7 +69,7 @@
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
-- **66. A carta do arquivamento não existe (21/09).** Ver fila 3;
+- **66. A carta do arquivamento não existe (21/09).** Ver fila 4;
 - **65. `--paper` é cor nos tokens e largura na folha (18/09).** `00-tokens.css` declara
   `--paper: #ffffff`; `.sheet` redeclara `--paper: 720px`. Hoje nada lê a cor dentro da folha; a
   primeira que ler recebe `720px`. Renomear a largura mexe em 15 `calc()` de `46-desk.css`;
@@ -94,6 +98,9 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   morde fora da faixa jogada;
 - **20. A rua precifica voto e mais nada.** SONDA não toca índice, receita nem despesa. É ciclo;
 - **16. Ambições com preço — sobra o sorteio (04/09).** Decisão dele;
+- **68. A rolagem da linha corrente em `paint.mjs` só vale acima de 940px (21/09).** Abaixo, a
+  página rola e `list.scrollTop` nunca dispara; a carta clicada fica à vista pelo foco. Não é
+  defeito para o jogador (prova 10d cobre os dois regimes), mas o comentário do código não diz;
 - **67. O passeio leva 72s (21/09).** Já foram 120: `pousou()` esperava 2s por animação que não
   vinha, 24 vezes. O que sobra, medido por trecho: laço do anexo 9s, carta na mesa 6s, seção 9
   5s, posse 4s, fonte atrasada 4s; 73 esperas fixas somam 27s. Instrumento: cópia do passeio com
