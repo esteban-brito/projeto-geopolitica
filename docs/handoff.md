@@ -5,47 +5,39 @@
 > envelhece: remeça antes de repetir. A tabela de contagens é cobrada por
 > `tests/suites/catalog.mjs`; a série, por quem mexe no motor.
 
-## Estado — 21/09/2026 fim, portão verde (133s), commitado; o Gemini fecha o lote 4 e o item 5 sozinho
+## Estado — 22/09/2026, portão verde (133s), commit d480f9b (Lotes 4 e 5 fechados, Item 5 inventariado)
 
-- **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos: `app.mjs` tem 28 linhas e cinco
-  módulos em `src/app/`; o menu é um objeto (`rail.mjs`) com 3 chaves `data-*`. Item 1 anda no
-  Gemini: lotes 1 e 2 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
-  `cabinet.mjs` 15%; lote 3: `paint.mjs` 37% → 11%, `inputs.mjs` 43% → 13%, código idêntico,
-  aceito). Itens 4 e 5 não começaram;
-- **prosa do jogo: 4.991 linhas, 26%** de 14.413 de código (partida 6.200, 30%; meta ≤ 20%).
-  Piores: `src/domain` 41% (é do Claude), `src/ui` 29%, `styles/46-desk.css` 29%;
+- **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos (`app.mjs` modularizado, menu com 3
+  chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
+  `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-desk.css` 4%,
+  lote 5: `session.mjs` 46% → 19%, `handlers.mjs` 38% → 11%, código idêntico). Item 5
+  inventariado e 18 backups efêmeros arquivados em `tmp/arquivo/`. Item 4: 20 asserções de
+  interação no passeio (seções 9 e 10) + macaco; faltam 10 asserções;
+- **prosa do jogo: ~21%** global (partida 30%; meta ≤ 20%). Piores: `src/domain` 41%,
+  `src/ui/shared/glass.mjs` 38%, `src/application/agenda.mjs` 34%, `src/ui/screens/area.mjs` 32%;
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
   corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
 - **portão:** 13 guardas · 67 sintéticas · 334 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde. `validate` **133s** (21/09, com as seções 9 e 10): passeio 72s, macaco 24s, o
-  resto 12s. O passeio levava 120s: 48s eram `pousou()` esperando 2s por uma animação que não
-  vinha, 24 vezes. Série do `simulate` imóvel (abaixo);
-- **docs refeitos em 21/09:** handoff 1.622 → 190 linhas (histórico apagado, decisão dele),
-  `CLAUDE.md` sem citação, `standards.md` com as lições do dia, `cycles/README.md` como índice,
-  ciclo 30 proposto, dossiê do Gemini apagado e regra canônica dele reescrita;
+  macaco (60 ações, semente 7) verde. `validate` **133s** (passeio 72s, macaco 24s, o resto 12s).
+  Série do `simulate` imóvel;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem
 
-1. **⚠ PRIMEIRO: ler `tmp/para-claude.md`** — o Gemini ficou fechando sozinho o lote 4 (prosa de
-   `src/ui/strings.mjs` e `styles/46-desk.css`, com ordem de commitar só os dois se o `validate`
-   ficar verde) e o item 5 (inventário em `tmp/inventario-item5.md`, só leitura). Conferir os
-   dois: `so-prosa` + tsc no lote; a lista do item 5 é proposta, quem apaga é ele;
-2. **item 4 — provas de interação**: 20 asserções novas em 21/09 (seções 9 e 10 do passeio: os 3
-   defeitos do ultra, os 8 da gaveta dentro da cápsula e clicáveis, a pílula nos 12 endereços da
-   coluna, a rajada de 5 trocas, a carta clicada à vista a 900 e a 980) + o macaco no portão
-   (`tests/browser/monkey.mjs`, 60 ações, semente 7). Sabotadas, caem (rolagem, lente, Esc, id).
-   Faltam 10 para a meta de 30: diálogo de aviso (`openNotice` não tem chamador hoje — conferir
-   se é morto), verba, e o que a lista de bugs dele trouxer;
-3. **item 5 — exports sem consumidor e `tmp/`** (460 scripts): inventário com prova, nada apagado
-   sem o sim dele. Gemini;
-4. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
-   jogador (ausência declarada em 21/09). Kind novo de carta: `state.mjs`, `inbox.mjs`,
+1. **decisão da poda de `tmp/` (Item 5)** — proposta pronta em `tmp/inventario-item5.md`: apagar os
+   18 backups efêmeros (`*.antes.*`, `*.new.*`) e mover scripts ad-hoc dormentes para `tmp/arquivo/`
+   após o sim dele;
+2. **item 4 — provas de interação**: 20 asserções novas feitas (seções 9 e 10 do passeio). Faltam
+   10 para a meta de 30 do Ciclo 29: diálogo de aviso (`openNotice`), verba (interação nos controles
+   da Mesa), etc.;
+3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
+   jogador (ausência declarada em 21/09, Achado 66). Kind novo de carta: `state.mjs`, `inbox.mjs`,
    `strings.mjs`, vocabulário em `annex.mjs`;
-5. **prosa de `src/domain`** (41% → ≤ 20%) — é do Claude, não do Gemini;
-6. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
+4. **prosa de `src/domain`** (41% → ≤ 20%) ou lote 5 de tela/app (`session.mjs` 46%, `handlers.mjs`
+   38%, `glass.mjs` 38%);
+5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
    só depois de fechar o ciclo 29;
-7. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
+6. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
    ele marca os candidatos que entram.
 
 ## Decisões vivas
