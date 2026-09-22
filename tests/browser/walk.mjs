@@ -1235,14 +1235,16 @@ try {
     /* ⛔ O QUE ESTA MEDIDA COBRA E O ARRANJO, e arranjo e o estado de REPOUSO: erguida, a pasta
        ocupa a tela e cobre as cartas por desenho, que nao e o defeito. O gesto atravessa a
        pintura de proposito, entao a prova poe a pasta na mesa antes de medir. */
-    await page.evaluate(() => {
+    /* So espera o pouso quando houve gesto: na mesa nada anima, e `pousou` esperava 2s por
+       uma animacao que nao vinha — 24 meses x 2s eram 48 dos 120s do passeio. */
+    const lowered = await page.evaluate(() => {
       const room = document.querySelector(".room");
       const pasta = document.querySelector(".folder");
-      if (room && pasta && pasta.getBoundingClientRect().height > 600) {
-        room.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      }
+      if (!(room && pasta && pasta.getBoundingClientRect().height > 600)) return false;
+      room.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      return true;
     });
-    await pousou();
+    if (lowered) await pousou();
 
     /* ⚠ AS DUAS FOLHAS SE MEDEM, e nao a primeira: o parecer cresce com o mes tanto quanto o
        ato — nome de grupo longo, valor de seis digitos —, e medir so uma deixaria a outra

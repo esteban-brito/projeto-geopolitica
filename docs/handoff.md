@@ -17,9 +17,9 @@
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
   corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
 - **portão:** 13 guardas · 67 sintéticas · 334 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde. `validate` ≈ 165s: o passeio sozinho leva **120s** (medido
-  21/09; o "42s" que constava era de antes da janela de 900px e da posse) e o macaco 24s. Série
-  do `simulate` imóvel (abaixo);
+  macaco (60 ações, semente 7) verde. `validate` **111s** (21/09): passeio 72s, macaco 24s, o
+  resto 12s. O passeio levava 120s: 48s eram `pousou()` esperando 2s por uma animação que não
+  vinha, 24 vezes. Série do `simulate` imóvel (abaixo);
 - **docs refeitos em 21/09:** handoff 1.622 → 190 linhas (histórico apagado, decisão dele),
   `CLAUDE.md` sem citação, `standards.md` com as lições do dia, `cycles/README.md` como índice,
   ciclo 30 proposto, dossiê do Gemini apagado e regra canônica dele reescrita;
@@ -94,9 +94,10 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   morde fora da faixa jogada;
 - **20. A rua precifica voto e mais nada.** SONDA não toca índice, receita nem despesa. É ciclo;
 - **16. Ambições com preço — sobra o sorteio (04/09).** Decisão dele;
-- **67. O passeio leva 120s (21/09).** Com ou sem a seção 9 (111s antes dela); a máquina estava
-  quieta (CPU 0%, nenhum Chromium perdido). Onde o tempo vai não foi medido por trecho; a
-  suspeita é clique com retentativa em peça coberta e as esperas fixas. `validate` inteiro ≈ 165s.
+- **67. O passeio leva 72s (21/09).** Já foram 120: `pousou()` esperava 2s por animação que não
+  vinha, 24 vezes. O que sobra, medido por trecho: laço do anexo 9s, carta na mesa 6s, seção 9
+  5s, posse 4s, fonte atrasada 4s; 73 esperas fixas somam 27s. Instrumento: cópia do passeio com
+  `mark()` por seção (feito à mão em 21/09, não ficou no repo).
 
 ## Como revisar de fora
 

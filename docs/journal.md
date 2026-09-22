@@ -8695,3 +8695,13 @@ seguinte, todo saque grava a posição. Os ciclos ganharam um índice, honesto o
 O dossiê do Gemini foi apagado e a regra canônica dele reescrita com a divisão real: ele recebe
 lote, não aplica código meu. O lote 3 chegou no meio: paint.mjs 37% → 11%, inputs.mjs 43% → 13%,
 código idêntico, aceito.
+
+### 30 · O item 4 começa, e o passeio perde 48 segundos — 21/09, noite
+
+Os três defeitos da revisão viraram a seção 9 do passeio, e cada uma cai contra o código de
+antes. O macaco saiu do `tmp/` e virou prova do portão: joga com semente e mede só em repouso.
+O repouso deu trabalho: a pasta guarda a animação terminada, e a mola da pílula é JS e
+`getAnimations` não a vê — ela parou quando a caixa é a mesma em dois quadros. Cinco sementes,
+zero achados; sabotado, acusa. Ele reclamou da demora, com razão: o passeio levava 120s, e o
+"42s" do handoff era de outra época. Medi por trecho: 48s eram `pousou()` esperando por uma
+animação que só existe quando a pasta está erguida. Agora 72s; o portão inteiro 111s.
