@@ -22,6 +22,9 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 | cascata             | camadas declaradas por `@layer`                      | regra fora de camada; `!important`     | `cascade`                   |
 | movimento           | tokens de duração e curva + rede global              | `animation: none`; animação inline     | `motion`                    |
 | aleatoriedade       | fluxo injetado, próprio de cada motor que sorteia    | `Math.random` no domínio               | `boundaries`                |
+| posição de RNG      | quem saca devolve a posição, e o mês a grava         | posição de um saque descartada         | suite `pressure` + revisão  |
+| estado de tela      | id do dado (`data-id`) sobrevive à repintura         | índice na lista repintada              | revisão (ver §7)            |
+| ouvinte global      | `document`/`window` armados uma vez por módulo       | `addEventListener` a cada pintura      | revisão (ver §7)            |
 | identidade          | separada dos atributos; motor compara por `id`       | comparação por nome                    | `identity`                  |
 | dado editável       | esquema ao lado da coleção, validado por `catalog`   | esquema fora de `src/data/`            | `schema` + suite            |
 
@@ -75,6 +78,16 @@ o orçamento resolve antes da votação porque a votação usa a verba **paga**,
 ordem invertida faria promessa comprar voto — o que transforma o orçamento num
 placar que o jogador só lê depois de já ter decidido. A camada de aplicação
 compõe e devolve o resultado pronto; o reducer apenas o dobra no estado.
+
+**Uma previsão pergunta à posição com que o mês seguinte abre.** O fecho do mês monta
+`opening` — mês + 1, o fiscal novo, a macro nova, a capacidade nova, os níveis aplicados — e
+tanto o aviso de teto quanto o cofre do relatório perguntam a ele, com a mesma função que
+`ledger` vai usar no mês seguinte. Medido com só o fiscal trocado: −1,0 de folga prevista
+onde o mês real deu +6,9, e um alarme falso de teto no mês 40.
+
+**Todo saque grava a posição.** `vote()` devolve `stream`; quem o chama grava esse fluxo, e não
+o de antes do saque. O plenário do afastamento jogava a posição fora e a votação de projeto do
+mês seguinte sacava os mesmos números.
 
 ## 4. O sistema visual
 
@@ -197,6 +210,20 @@ mesma pergunta**, e enquanto a porta errada estiver na fachada, alguém entra po
 Foi por isso que `whipCount` e `dispersion` saíram de `src/public/index.mjs`: a tela
 remontava uma câmara de blocos crus enquanto o turno votava com as bancadas do ELENCO, e
 **27,2% dos vereditos anunciados eram o inverso do que o mês produzia**.
+
+**Estado de tela que sobrevive à repintura guarda o id do dado, nunca o índice.** A lista da
+mesa se recompõe a cada pintura; a carta na mão era `reading = 1`, e avançar o mês com a carta
+de janeiro aberta punha a de fevereiro na mão. A folha carrega `data-id` e a mão guarda `held`.
+
+**Ouvinte em `document` ou `window` arma uma vez.** Cada pintura do Gabinete pendurava outro
+`keydown`; o mais velho corria primeiro, sobre a `.post` já descartada, e o Esc parava de largar
+a carta depois da primeira repintura. O manipulador aponta para o `close` da pintura corrente.
+
+**Propriedade escrita inline vence a folha, inclusive custom property.** `glaze()` escreve
+`--glaze` no elemento; a regra `html:active-view-transition .rail { --glaze: none }` perdia
+para ela em 9 de 10 quadros da troca. `!important` não passa por `cascade` e um segundo
+`backdrop-filter` não passa por `material`: quem apaga a lente durante a troca é o JS
+(`dress()` pula e `dressRail()` reveste no `finished`).
 
 **A previsão usa o que será PAGO, nunca o prometido.** É a mesma regra do
 acoplamento, do outro lado: se a Mesa prevê com a promessa, ela anuncia um placar
@@ -365,6 +392,10 @@ Declarado para não ser confundido com cobertura:
   este parágrafo diz?_;
 - **escala de raio, espaço e corpo** — a derivação está no arquivo de tokens e é
   cobrada por revisão, não por máquina;
+- **estado de tela por índice, ouvinte global repetido, previsão com posição parcial.** Os três
+  passaram por 13 guardas, 332 provas e o passeio, e morreram numa revisão externa (21/09). O
+  que os cobre hoje é a prova do passeio para cada um (fila do handoff) e a suite para o fluxo;
+  casador honesto para "índice onde devia ser id" não existe;
 - **nome real de pessoa no catálogo** (ADR 0003). Toda pessoa do jogo é fictícia,
   e não existe casador honesto para isso: uma lista de nomes proibidos seria
   incompleta por definição e acusaria sobrenomes comuns. Fica como regra declarada
@@ -449,6 +480,16 @@ sem trocar o valor — o único erro de exibição que nenhuma prova de igualdad
 e a desigualdade era o último muro do jogo. Quando o muro caiu, a prova tinha de cair
 junto — e ela **não foi apagada**: passou a cobrar a restrição que sobrou, a única com
 lei atrás.
+
+**Previsão com cópia parcial do estado.** `{ ...state, fiscal: nextFiscal }` prevê o mês
+seguinte com o relógio, a macro e os níveis deste — e o erro não é pequeno nem raro: um alarme
+falso de teto no mês 40, em toda semente. A previsão pergunta à posição inteira que o mês
+seguinte vai abrir, ou não é previsão.
+
+**Achado de revisão aceito sem reproduzir — zero ocorrências, e é para continuar.** Os 9
+achados dos dois primeiros ultrareviews eram verdade, e um deles errava o detalhe ("pior em
+dezembro" caiu no meio do ano). Reproduzir antes de mexer custou um script por achado e
+devolveu o número que a correção tem de bater.
 
 **Desempate na granularidade errada.** O gerador recusava nome COMPLETO repetido, e com
 vocabulário largo produziu "Cláudio Espindola" ao lado de "Cláudio Itaparica". Numa

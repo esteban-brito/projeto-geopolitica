@@ -1,9 +1,9 @@
-# República Simulator — Diretrizes do Agente
+# República Simulator — diretrizes do agente
 
-As regras operacionais canônicas e detalhadas do projeto estão centralizadas em:
+1. [`CLAUDE.md`](CLAUDE.md) — as leis, o comentário, o fluxo, a delegação;
+2. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila, decisões vivas, achados;
+3. [`.agents/rules/co-development.md`](.agents/rules/co-development.md) — divisão de trabalho,
+   proibições, portão de lote e canal.
 
-1. [`CLAUDE.md`](CLAUDE.md) — convenções de escrita ("escreva como gente"), arquitetura e proibições do projeto.
-2. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila de desenvolvimento e achados abertos.
-3. [`.agents/rules/co-development.md`](.agents/rules/co-development.md) — regras de co-desenvolvimento, proibições de testes, acoplamentos nominais e laços de validação.
-
-Toda sessão começa obrigatoriamente lendo `CLAUDE.md` e `docs/handoff.md`.
+Toda sessão começa lendo `CLAUDE.md` e `docs/handoff.md`. O Claude manda; o Gemini recebe lote e
+não toca em arquivo fora dele.

@@ -1,51 +1,50 @@
-# Regras de Co-Desenvolvimento — República Simulator (Canônico v3.0)
+# Regras de co-desenvolvimento — República Simulator
 
-## 0. Leitura Inicial Obrigatória (Always On)
+## 0. Leitura obrigatória, nesta ordem
 
-Toda sessão começa OBRIGATORIAMENTE lendo nesta ordem:
+1. `CLAUDE.md` — as leis, o comentário, o fluxo, a delegação;
+2. `docs/handoff.md` — estado verificável hoje, fila, decisões vivas, achados abertos.
 
-1. `CLAUDE.md` — a doutrina, convenções de escrita ("escreva como gente") e limites rígidos do projeto.
-2. `docs/handoff.md` — o ponto único de retomada e estado verificável hoje.
+## 1. Divisão de trabalho
 
-## 1. Papel e Divisão Realista
+- **Claude** manda: modela o motor (`src/domain/`, `src/application/`, `src/state/`), escreve
+  tela e folha (`src/ui/`, `styles/`, `src/app/`, `app.mjs`), escreve provas e guardas (`tests/`),
+  calibra (`src/data/`), escreve os docs e os ciclos, e decide o que o Gemini faz.
+- **Gemini (Antigravity)** recebe lotes fechados: corte de prosa em arquivos nomeados, inventário
+  (exports sem consumidor, `tmp/`), pesquisa factual e normativa, monitoramento do terminal do
+  Claude. Não toca em arquivo fora do lote.
 
-- **Claude Opus 5 (Piloto / Arquiteto / Autor de Código e Design)**:
-  Modela os motores matemáticos, define a arquitetura, cria a estrutura estética e autoral de views (`src/ui/`) e CSS (`styles/`), redige a prosa política e institucional.
-- **Antigravity (Copiloto / Auditor Visual, Integrador e Guardião do Portão)**:
-  Aplica o código do Claude no repositório, audita as capturas PNG em `captures/passeio/` (1440×980 e 1440×900) para pegar cortes e deformações, realiza ajustes finos de pixels/CSS, executa o laço de testes/guardas/simulação no terminal e realiza pesquisas factuais/normativas.
+## 2. Proibições
 
-## 2. As 3 Proibições Rígidas (Sem Exceção)
+1. **Nunca** alterar `tests/` ou guarda para fazer prova passar. O erro está no código.
+2. **Nunca** alterar calibragem em `src/data/` para destravar portão. Número divergente é achado
+   e vai para o handoff.
+3. **Nunca** alterar esquema ou persistência (`src/state/save.mjs`, `schema.mjs`) sem ordem.
+4. **Nunca** apagar linha de tipo (`@param`, `@returns`, `@typedef`, `@property`, `@type`),
+   nem inline: é contrato, e o `tsc` reprova.
+5. **Nunca** relatar bug sem reprodução: tela, o que fez, o que apareceu. Lista tirada de doc
+   é apagada.
 
-1. **NUNCA alterar arquivos em `tests/` ou guardas para fazer teste passar.** O erro está exclusivamente no código de produção ou interface.
-2. **NUNCA alterar calibragem em `src/data/` para destravar portão.** Número divergente é achado de modelo e vai para o `docs/handoff.md`.
-3. **NUNCA alterar esquemas ou persistência (`src/state/save.mjs`, `schema.mjs`)** sem ordem explícita, preservando compatibilidade retroativa.
+## 3. Acoplamentos que uma prova lê
 
-## 3. Os 2 Acoplamentos Nominais Críticos
+1. **A tabela de contagens em `docs/handoff.md`** (`| coleção | quantos |`): cobrada por
+   `tests/suites/catalog.mjs`. Rótulos e formato de 2 colunas não mudam.
+2. **A tabela de codinomes em `docs/standards.md` §3**: cobrada por `tests/guards/codenames.mjs`.
+   Não muda sem sincronizar pastas e cabeçalhos em `src/domain/`.
 
-1. **A tabela das 8 contagens no `docs/handoff.md`**:
-   - Cobrada via regex por `tests/suites/catalog.mjs`.
-   - Proibido renomear rótulos, remover linhas ou alterar o formato de 2 colunas.
-2. **A tabela de codinomes no `docs/standards.md` §3**:
-   - Cobrada via regex por `tests/guards/codenames.mjs`.
-   - Proibido alterar sem sincronizar com as pastas e cabeçalhos em `src/domain/`.
+## 4. Portão de um lote de prosa
 
-## 4. O Fluxo de Trabalho (Handshake)
+1. O código sem comentário sai **idêntico** antes e depois (`node tmp/so-prosa.mjs <arquivo>`);
+2. `npm run check`, `npm run types` e `npm test` verdes;
+3. o resultado vai para `tmp/para-claude.md` com os números (prosa antes → depois por arquivo);
+4. parar. O Claude confere e aceita, ou devolve com a regra.
 
-1. Claude gera a solução completa (código, HTML da view e CSS).
-2. Antigravity aplica no workspace, roda `npm run check` e `npm test`.
-3. Antigravity roda `walk.mjs`, inspeciona os PNGs de 1440×980 e 1440×900, e aplica ajustes finos de layout se houver cortes/deformações.
-4. Antigravity fecha com `npm run validate` e emite a devolução estruturada.
+## 5. Canal
 
-## 5. Disciplina de Quota e Economia de Contexto
+O Claude fala pelo `tmp/gemini.mjs` (enviar / ler / fila / limpar). Mensagem enviada com o
+Gemini trabalhando fica na fila e não é lida — o Gemini termina o que está fazendo e só então
+lê a próxima ordem.
 
-- Teto por tarefa: máximo de 1 a 2 arquivos editados por ciclo.
-- Sessão curta: uma tarefa atômica por sessão com encerramento rápido.
-- Leitura cirúrgica com `grep_search` e limites de linha.
+## 6. Formato da devolução
 
-## 6. Formato Fixo de Resposta
-
-1. **O que rodou**
-2. **O que passou**
-3. **O que quebrou**
-4. **Auditoria visual** (conferência das capturas em 1440×980 e 1440×900)
-5. **Status final** (`npm run validate` 100% verde)
+1. o que rodou · 2. o que passou · 3. o que quebrou · 4. números (prosa por arquivo) · 5. parado.

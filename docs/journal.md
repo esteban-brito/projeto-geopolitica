@@ -8681,3 +8681,17 @@ seguinte com o relógio deste: no mês 40 dizia que fechava, e não fechava. A c
 a posição com que o mês seguinte abre e perguntar a ela — o cofre do relatório passou a bater
 exato com a abertura. O save também ganhou a checagem que faltava. A série não se mexeu.
 Duas provas novas caem sem a correção e passam com ela.
+
+### 29 · Os docs refeitos — 21/09, noite
+
+Ele pediu uma reformulação completa: handoff, CLAUDE.md, planos, tudo mais profissional e com
+menos texto inútil. Três decisões dele antes de eu mexer: o histórico do handoff se apaga (o
+journal já o narra), as regras ficam sem citação, e o ciclo 30 nasce com candidatos para ele
+marcar. O handoff foi de 1.622 linhas para 190: estado, fila, decisões vivas, achados abertos,
+como revisar de fora, a série, o que existe. O CLAUDE.md virou regra limpa: as leis, o comentário,
+o fluxo, bug e prova, delegação, recusa e decisão. O standards ganhou o que hoje ensinou — estado
+por id, ouvinte armado uma vez, inline vence a folha, previsão pergunta à abertura do mês
+seguinte, todo saque grava a posição. Os ciclos ganharam um índice, honesto onde não há registro.
+O dossiê do Gemini foi apagado e a regra canônica dele reescrita com a divisão real: ele recebe
+lote, não aplica código meu. O lote 3 chegou no meio: paint.mjs 37% → 11%, inputs.mjs 43% → 13%,
+código idêntico, aceito.
