@@ -17,7 +17,9 @@
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
   corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
 - **portão:** 13 guardas · 67 sintéticas · 334 provas · passeio verde em 1440×980 e 1440×900 ·
-  `validate` 42s. Série do `simulate` imóvel (abaixo);
+  macaco (60 ações, semente 7) verde. `validate` ≈ 165s: o passeio sozinho leva **120s** (medido
+  21/09; o "42s" que constava era de antes da janela de 900px e da posse) e o macaco 24s. Série
+  do `simulate` imóvel (abaixo);
 - **docs refeitos em 21/09:** handoff 1.622 → 190 linhas (histórico apagado, decisão dele),
   `CLAUDE.md` sem citação, `standards.md` com as lições do dia, `cycles/README.md` como índice,
   ciclo 30 proposto, dossiê do Gemini apagado e regra canônica dele reescrita;
@@ -25,11 +27,12 @@
 
 ## Fila, em ordem
 
-1. **item 4 — provas de interação** em `tests/browser/walk.mjs`. Começar pelos 3 defeitos do 1º
-   ultra (Esc depois de repintura, carta na mão por id, lente do dock apagada na troca de tela —
-   reproduções em `tmp/ultra-achado*.mjs`), depois gaveta, pílula, diálogo, verba e troca de tela.
-   O macaco (`tmp/macaco.mjs`, 250 ações, semente 7, 0 erros de página) vira prova quando
-   aprender a esperar o repouso: hoje acusa "pílula a Npx do item" 28× medindo no meio da mola;
+1. **item 4 — provas de interação** em `tests/browser/walk.mjs`. Feito em 21/09: a seção 9 com
+   os 3 defeitos do 1º ultra (7 asserções, caem contra o código antigo) e o macaco como prova do
+   portão (`tests/browser/monkey.mjs`: semente fixa, mede só em repouso — troca de tela, morph,
+   Web Animations e a caixa da pílula parada entre dois quadros; 0 achados em 5 sementes × 150
+   ações; acusa erro de página quando sabotado). Falta: gaveta, pílula, diálogo, verba, troca de
+   tela — a meta são 30 asserções de interação;
 2. **item 5 — exports sem consumidor e `tmp/`** (460 scripts): inventário com prova, nada apagado
    sem o sim dele. Gemini;
 3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
@@ -91,8 +94,9 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   morde fora da faixa jogada;
 - **20. A rua precifica voto e mais nada.** SONDA não toca índice, receita nem despesa. É ciclo;
 - **16. Ambições com preço — sobra o sorteio (04/09).** Decisão dele;
-- **macaco.** Mede a pílula no meio da viagem (28 acusações falsas em 250 ações); cliques que
-  falham em `[data-protect]` e `.folder` são peça coberta até a pasta subir, não defeito.
+- **67. O passeio leva 120s (21/09).** Com ou sem a seção 9 (111s antes dela); a máquina estava
+  quieta (CPU 0%, nenhum Chromium perdido). Onde o tempo vai não foi medido por trecho; a
+  suspeita é clique com retentativa em peça coberta e as esperas fixas. `validate` inteiro ≈ 165s.
 
 ## Como revisar de fora
 

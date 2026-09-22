@@ -1819,6 +1819,107 @@ try {
   await checkContrast("congresso com partido");
   await page.screenshot({ path: join(OUT, "mesa-partido.png"), fullPage: true });
 
+  /* ── 9 — TRES DEFEITOS QUE O PORTAO NAO VIA (revisao externa de 21/09) ─────────────────────
+     Os tres passaram por tipo, guarda, 332 provas e este passeio. Cada prova aqui caiu contra o
+     codigo de antes da correcao (tmp/ultra-achado*.mjs). */
+  const settled = async () => {
+    await page.waitForFunction(
+      () =>
+        /** @type {{ activeViewTransition?: unknown }} */ (document).activeViewTransition === null,
+    );
+    await page.waitForTimeout(150);
+  };
+
+  /* 9a — A LENTE DO DOCK APAGA DURANTE A TROCA E VOLTA AO POUSAR. `glaze()` escreve `--glaze`
+     inline, e inline vencia `html:active-view-transition .rail { --glaze: none }`: 9 de 10
+     quadros da troca com a lente acesa. */
+  const lensDuring = (/** @type {string} */ key) =>
+    page.evaluate(async key => {
+      const rail = document.querySelector(".rail");
+      const item = document.querySelector(`.rail [data-section="${key}"]`);
+      if (!(rail instanceof HTMLElement) || !(item instanceof HTMLElement)) return null;
+      item.click();
+      let frames = 0;
+      let lit = 0;
+      for (let i = 0; i < 40; i++) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        if (!document.documentElement.matches(":active-view-transition")) continue;
+        frames++;
+        if (getComputedStyle(rail).backdropFilter !== "none") lit++;
+      }
+      return { frames, lit };
+    }, key);
+  await viaRail(page, "cabinet");
+  await settled();
+  const ida = await lensDuring("estado");
+  await settled();
+  const volta = await lensDuring("cabinet");
+  await settled();
+  expect(
+    ida !== null && ida.frames > 0 && volta !== null && volta.frames > 0,
+    "[troca] a medicao nao pegou nenhum quadro com a view transition ativa",
+  );
+  expect(
+    ida !== null && ida.lit === 0 && volta !== null && volta.lit === 0,
+    `[troca] o rail ficou com lente durante a troca: ${ida?.lit} quadros na ida, ${volta?.lit} na volta`,
+  );
+  const lensBack = await page.evaluate(() => {
+    const rail = document.querySelector(".rail");
+    return rail instanceof HTMLElement && rail.style.getPropertyValue("--glaze").startsWith("url(");
+  });
+  expect(lensBack, "[troca] a lente do dock nao voltou depois que a troca pousou");
+
+  /* 9b — A CARTA NA MAO SOBREVIVE A REPINTURA PELO ID, e o Esc a larga depois dela. A mao
+     guardava indice: avancar o mes com a carta de janeiro aberta punha a de fevereiro na mao; e
+     cada pintura pendurava outro Esc no documento, o mais velho zerava o estado sobre a `.post`
+     descartada e a carta viva ficava aberta. */
+  const heldId = () =>
+    page.evaluate(() => {
+      const sheet = document.querySelector(".post__sheet:not([hidden])");
+      return sheet instanceof HTMLElement ? (sheet.dataset["id"] ?? "") : null;
+    });
+  if ((await page.locator(".envelope[data-letter]").count()) > 0) {
+    await setFolder(true);
+    await page.click(".envelope[data-letter] >> nth=0");
+    await page.waitForTimeout(500);
+    const held = await heldId();
+    expect(
+      held !== null && held !== "",
+      "[carta] o envelope nao ergueu a carta, ou ela nao tem id",
+    );
+
+    /* Duas repinturas do Gabinete sem sair dele: marcar e desmarcar uma area protegida. */
+    await page.click(".act__folders [data-protect] >> nth=0", { force: true });
+    await page.waitForTimeout(300);
+    await page.click(".act__folders [data-protect] >> nth=0", { force: true });
+    await page.waitForTimeout(300);
+    expect(
+      (await heldId()) === held,
+      `[carta] a repintura trocou a carta na mao: era ${held}, ficou ${await heldId()}`,
+    );
+
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(450);
+    expect((await heldId()) === null, "[carta] o Esc nao largou a carta depois de repintar");
+
+    /* O mes anda com a carta na mao: ou ela continua a mesma, ou a mao esvazia. */
+    await page.click(".envelope[data-letter] >> nth=0");
+    await page.waitForTimeout(500);
+    const heldBefore = await heldId();
+    await page.click("#advance");
+    await settled();
+    await page.waitForTimeout(400);
+    const heldAfter = await heldId();
+    expect(
+      heldAfter === null || heldAfter === heldBefore,
+      `[carta] avancar o mes trocou a carta na mao: era ${heldBefore}, ficou ${heldAfter}`,
+    );
+    if (heldAfter !== null) {
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(450);
+    }
+  }
+
   /* ── A FONTE QUE CHEGA TARDE ────────────────────────────────────
      ⚠ A BARRA MEDE TIPO PARA SE JUSTIFICAR, E MEDE UMA VEZ SO. Medida antes de a fonte chegar,
      ela grava a largura da fonte de reserva e nada a revisa. A fonte e local e costuma chegar a

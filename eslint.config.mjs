@@ -28,6 +28,7 @@ const BROWSER = {
   /* O passeio clica no que `elementFromPoint` acha no centro da pasta, e nao no seletor dela:
      em arvore 3D o ponto que o navegador de teste calcula para a peca cai no tampo. */
   MouseEvent: "readonly",
+  Event: "readonly",
   /* A rubrica do decreto so corre com o comprimento MEDIDO do traco, e quem o mede e
      `getTotalLength` — a pergunta que autoriza a chamada e `instanceof SVGPathElement`. */
   SVGPathElement: "readonly",
