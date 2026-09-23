@@ -3,8 +3,9 @@
 ## 0. Leitura obrigatória, nesta ordem
 
 1. `AGENTS.md` — contrato universal, as duas verdades e governança dos agentes;
-2. `CLAUDE.md` — as leis, o comentário, o fluxo, a delegação;
-3. `docs/handoff.md` — estado verificável hoje, fila, decisões vivas, achados abertos.
+2. `docs/agent-brief.md` — guia compacto de arquitetura e retomada econômica;
+3. `CLAUDE.md` — as leis, o comentário, o fluxo, a delegação;
+4. `docs/handoff.md` — estado verificável hoje, fila, decisões vivas, achados abertos.
 
 ## 1. Divisão de trabalho (Tríade)
 

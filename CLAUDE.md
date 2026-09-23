@@ -6,15 +6,16 @@ puro servido como arquivo.
 ## Leia nesta ordem
 
 1. [`AGENTS.md`](AGENTS.md) — contrato universal entre agentes, as duas verdades e governança tripartite;
-2. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila, decisões vivas, achados
+2. [`docs/agent-brief.md`](docs/agent-brief.md) — guia compacto de arquitetura e retomada econômica (evita reler ciclos e pesquisas);
+3. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila, decisões vivas, achados
    abertos, a série. Primeira leitura de toda sessão; última escrita de toda sessão que muda algo;
-3. [`docs/standards.md`](docs/standards.md) — as convenções, e qual guarda cobra cada uma;
-4. [`docs/cycles/`](docs/cycles/) — o ciclo mais recente é o plano em vigor; índice em
+4. [`docs/standards.md`](docs/standards.md) — as convenções, e qual guarda cobra cada uma;
+5. [`docs/cycles/`](docs/cycles/) — o ciclo mais recente é o plano em vigor; índice em
    [`docs/cycles/README.md`](docs/cycles/README.md);
-5. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
+6. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
 
 A narrativa mora em [`docs/journal.md`](docs/journal.md) e se lê pelo fim (últimas ~150 linhas),
-nunca inteira. Número de estado se lê no handoff, nunca aqui.
+nunca inteira. Nunca faça varredura integral de pastas para se ambientar. Número de estado se lê no handoff, nunca aqui.
 
 ## As leis
 

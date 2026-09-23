@@ -46,6 +46,9 @@
   separação entre verdade de engenharia (guardas e testes) e verdade de design (sondas de 48 meses);
   regra de independência entre autor e revisor (quem implementa não aprova sozinho); o usuário é a autoridade
   máxima de design;
+- **23/09** — guia compacto [`docs/agent-brief.md`](agent-brief.md) (163 linhas) para retomada econômica:
+  evita que agentes leiam 30 ciclos e 12 pesquisas em loop agêntico (lição: varredura cega no Codex consumiu
+  6,5M tokens e 95% da cota de 5h). Sessões abrem por `agent-brief.md` + Estado/Fila do handoff;
 - **21/09** — sobreviver ao plenário do afastamento **arquiva** o processo; ele reabre se as
   três rupturas coincidirem de novo. Prova em `pressure.mjs`;
 - **21/09** — os 2 nits do ultra (`settlement()` refaz o elenco a cada leitura; `vote()` não usa
