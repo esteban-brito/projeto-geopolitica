@@ -2,17 +2,28 @@
 
 ## 0. Leitura obrigatória, nesta ordem
 
-1. `CLAUDE.md` — as leis, o comentário, o fluxo, a delegação;
-2. `docs/handoff.md` — estado verificável hoje, fila, decisões vivas, achados abertos.
+1. `AGENTS.md` — contrato universal, as duas verdades e governança dos agentes;
+2. `CLAUDE.md` — as leis, o comentário, o fluxo, a delegação;
+3. `docs/handoff.md` — estado verificável hoje, fila, decisões vivas, achados abertos.
 
-## 1. Divisão de trabalho
+## 1. Divisão de trabalho (Tríade)
 
-- **Claude** manda: modela o motor (`src/domain/`, `src/application/`, `src/state/`), escreve
-  tela e folha (`src/ui/`, `styles/`, `src/app/`, `app.mjs`), escreve provas e guardas (`tests/`),
-  calibra (`src/data/`), escreve os docs e os ciclos, e decide o que o Gemini faz.
-- **Gemini (Antigravity)** recebe lotes fechados: corte de prosa em arquivos nomeados, inventário
-  (exports sem consumidor, `tmp/`), pesquisa factual e normativa, monitoramento do terminal do
-  Claude. Não toca em arquivo fora do lote.
+- **Claude** manda no domínio: modela o motor (`src/domain/`, `src/application/`, `src/state/`),
+  escreve tela e folha (`src/ui/`, `styles/`, `src/app/`, `app.mjs`), escreve provas e guardas (`tests/`),
+  calibra (`src/data/`), escreve os docs e os ciclos, e define os lotes técnicos.
+- **GPT (Astra / Codex)** audita de fora e desenha sistemas: Ultrareviews independentes de diffs
+  (`/code-review ultra`), caça a desequilíbrios e exploits nas 48 meses de simulação, análise de
+  incentivos e discussão de novos sistemas conceituais.
+- **Gemini (Antigravity)** centro operacional: recebe lotes fechados (corte de prosa com prova sintática,
+  inventários de exports e arquivos, monitoramento), executa a suíte pesada de validação (`validate`,
+  `walk`, `monkey`), gerencia o servidor estático e opera tarefas assíncronas no sistema. Não toca
+  em arquivo fora do lote sem ordem expressa.
+
+## 1.1. Regra de independência de revisão
+
+Quem implementa uma mudança não é o único modelo que a aprova. Sistemas novos e alterações
+críticas de regras passam por revisão cruzada (Ultrareview ou revisão por par independente).
+O Diretor do Jogo (usuário) é a autoridade máxima de design.
 
 ## 2. Proibições
 

@@ -5,12 +5,13 @@ puro servido como arquivo.
 
 ## Leia nesta ordem
 
-1. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila, decisões vivas, achados
+1. [`AGENTS.md`](AGENTS.md) — contrato universal entre agentes, as duas verdades e governança tripartite;
+2. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila, decisões vivas, achados
    abertos, a série. Primeira leitura de toda sessão; última escrita de toda sessão que muda algo;
-2. [`docs/standards.md`](docs/standards.md) — as convenções, e qual guarda cobra cada uma;
-3. [`docs/cycles/`](docs/cycles/) — o ciclo mais recente é o plano em vigor; índice em
+3. [`docs/standards.md`](docs/standards.md) — as convenções, e qual guarda cobra cada uma;
+4. [`docs/cycles/`](docs/cycles/) — o ciclo mais recente é o plano em vigor; índice em
    [`docs/cycles/README.md`](docs/cycles/README.md);
-4. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
+5. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
 
 A narrativa mora em [`docs/journal.md`](docs/journal.md) e se lê pelo fim (últimas ~150 linhas),
 nunca inteira. Número de estado se lê no handoff, nunca aqui.
@@ -84,7 +85,7 @@ portão (abre janela, mede contra o monitor): meça os dois braços na mesma rod
 
 ## Delegação
 
-O Gemini (Antigravity) trabalha sob ordem do Claude. Regras dele em
+A governança dos agentes (Claude, GPT e Gemini) e o contrato canônico estão em [`AGENTS.md`](AGENTS.md). Regras operacionais em
 [`.agents/rules/co-development.md`](.agents/rules/co-development.md).
 
 - Lote com fronteira de arquivos e portão explícito (`check` + `types` + `test`); ele não toca

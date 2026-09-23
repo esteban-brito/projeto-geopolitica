@@ -5,7 +5,7 @@
 > envelhece: remeça antes de repetir. A tabela de contagens é cobrada por
 > `tests/suites/catalog.mjs`; a série, por quem mexe no motor.
 
-## Estado — 22/09/2026, portão verde (133s), commit d480f9b (Lotes 4 e 5 fechados, Item 5 inventariado)
+## Estado — 23/09/2026, portão verde, contrato universal AGENTS.md e governança tripartite
 
 - **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos (`app.mjs` modularizado, menu com 3
   chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
@@ -42,6 +42,10 @@
 
 ## Decisões vivas
 
+- **23/09** — governança tripartite (Claude, GPT, Gemini) e contrato universal em [`AGENTS.md`](../AGENTS.md):
+  separação entre verdade de engenharia (guardas e testes) e verdade de design (sondas de 48 meses);
+  regra de independência entre autor e revisor (quem implementa não aprova sozinho); o usuário é a autoridade
+  máxima de design;
 - **21/09** — sobreviver ao plenário do afastamento **arquiva** o processo; ele reabre se as
   três rupturas coincidirem de novo. Prova em `pressure.mjs`;
 - **21/09** — os 2 nits do ultra (`settlement()` refaz o elenco a cada leitura; `vote()` não usa
