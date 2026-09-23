@@ -53,7 +53,7 @@ o número que a reprovou. Nada mais entra.
 ## Fluxo
 
 ```bash
-npm run validate   # guardas + tipos + lint + formato + provas + passeio — 42s, tem de ficar verde
+npm run validate   # guardas + tipos + lint + formato + provas + passeio + macaco — ~130s, tem de ficar verde
 npm run check      # só as guardas, 2s — o laço de quem mexe em folha
 npm test           # só as suítes, 2s — o laço de quem mexe em motor
 npm run simulate   # 48 meses no terminal; --policy <sonda>, --party <bancada>, --seed <n>

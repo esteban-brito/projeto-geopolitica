@@ -33,8 +33,8 @@
 3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
    jogador (ausência declarada em 21/09, Achado 66). Kind novo de carta: `state.mjs`, `inbox.mjs`,
    `strings.mjs`, vocabulário em `annex.mjs`;
-4. **prosa de `src/domain`** (41% → ≤ 20%) ou lote 5 de tela/app (`session.mjs` 46%, `handlers.mjs`
-   38%, `glass.mjs` 38%);
+4. **prosa de `src/domain`** (41% → ≤ 20%) ou lote 6 de tela/app (`glass.mjs` 38%, `agenda.mjs`
+   34%, `area.mjs` 32%);
 5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
    só depois de fechar o ciclo 29;
 6. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
@@ -65,7 +65,7 @@
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
-- **66. A carta do arquivamento não existe (21/09).** Ver fila 4;
+- **66. A carta do arquivamento não existe (21/09).** Ver fila 3;
 - **65. `--paper` é cor nos tokens e largura na folha (18/09).** `00-tokens.css` declara
   `--paper: #ffffff`; `.sheet` redeclara `--paper: 720px`. Hoje nada lê a cor dentro da folha; a
   primeira que ler recebe `720px`. Renomear a largura mexe em 15 `calc()` de `46-desk.css`;
