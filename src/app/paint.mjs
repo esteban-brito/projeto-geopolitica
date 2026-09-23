@@ -295,7 +295,9 @@ export function rememberRead() {
   const id = current?.dataset["dispatch"];
   if (id) session.readMail.add(id);
 
-  /* Rola se a linha estiver fora da visao (medido: 68px abaixo da area visivel). */
+  /* Rola se a linha estiver fora da visao (medido: 68px abaixo da area visivel). Abaixo de
+     940px quem rola e a pagina: list.scrollTop fica em 0 e o ramo nunca dispara — a carta
+     clicada fica a vista pelo foco. */
   const list = el.main.querySelector(".tray__list");
   if (current && list instanceof HTMLElement) {
     const acima = current.offsetTop < list.scrollTop;

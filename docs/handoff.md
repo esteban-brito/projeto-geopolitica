@@ -12,9 +12,11 @@
   `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-desk.css` 4%,
   lote 5: `session.mjs` 46% → 19%, `handlers.mjs` 38% → 11%, código idêntico). Item 5
   inventariado e 18 backups efêmeros arquivados em `tmp/arquivo/`. Item 4: 20 asserções de
-  interação no passeio (seções 9 e 10) + macaco; faltam 10 asserções;
-- **prosa do jogo: ~21%** global (partida 30%; meta ≤ 20%). Piores: `src/domain` 41%,
-  `src/ui/shared/glass.mjs` 38%, `src/application/agenda.mjs` 34%, `src/ui/screens/area.mjs` 32%;
+  interação no passeio (seções 9 e 10) + macaco; faltam 10 asserções. Lote 6 conferido
+  (`glass.mjs` 38% → 18%, `agenda.mjs` 34% → 16%, `area.mjs` 32% → 12%, código idêntico), e o
+  lote 6b devolveu as fontes em `tmp/` e a alternativa reprovada que o lote 6 tinha apagado;
+- **prosa do jogo:** os três piores arquivos de tela/aplicação saíram da lista com o lote 6. O
+  global (~21% antes do lote) está por remedir. Pior que resta: `src/domain` 41%;
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
   corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
 - **portão:** 13 guardas · 67 sintéticas · 334 provas · passeio verde em 1440×980 e 1440×900 ·
@@ -33,8 +35,7 @@
 3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
    jogador (ausência declarada em 21/09, Achado 66). Kind novo de carta: `state.mjs`, `inbox.mjs`,
    `strings.mjs`, vocabulário em `annex.mjs`;
-4. **prosa de `src/domain`** (41% → ≤ 20%) ou lote 6 de tela/app (`glass.mjs` 38%, `agenda.mjs`
-   34%, `area.mjs` 32%);
+4. **prosa de `src/domain`** (41% → ≤ 20%) — é o que resta acima da meta;
 5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
    só depois de fechar o ciclo 29;
 6. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
@@ -46,6 +47,10 @@
   separação entre verdade de engenharia (guardas e testes) e verdade de design (sondas de 48 meses);
   regra de independência entre autor e revisor (quem implementa não aprova sozinho); o usuário é a autoridade
   máxima de design;
+- **23/09** — achado 68 fechado: o comentário da rolagem em `src/app/paint.mjs` agora declara o
+  regime (abaixo de 940px quem rola é a página, `list.scrollTop` fica em 0);
+- **23/09** — o Gemini commitou com `git commit -am` e varreu arquivo fora do lote. Regra nova
+  no canal: `git add` por nome, nunca `-am`;
 - **23/09** — guia compacto [`docs/agent-brief.md`](agent-brief.md) (162 linhas) para retomada econômica:
   evita que agentes leiam 30 ciclos e 12 pesquisas em loop agêntico (lição: varredura cega no Codex consumiu
   6,5M tokens e 95% da cota de 5h). Sessões abrem por `agent-brief.md` + Estado/Fila do handoff;
@@ -97,9 +102,6 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   morde fora da faixa jogada;
 - **20. A rua precifica voto e mais nada.** SONDA não toca índice, receita nem despesa. É ciclo;
 - **16. Ambições com preço — sobra o sorteio (04/09).** Decisão dele;
-- **68. A rolagem da linha corrente em `paint.mjs` só vale acima de 940px (21/09).** Abaixo, a
-  página rola e `list.scrollTop` nunca dispara; a carta clicada fica à vista pelo foco. Não é
-  defeito para o jogador (prova 10d cobre os dois regimes), mas o comentário do código não diz;
 - **67. O passeio leva 72s (21/09).** Já foram 120: `pousou()` esperava 2s por animação que não
   vinha, 24 vezes. O que sobra, medido por trecho: laço do anexo 9s, carta na mesa 6s, seção 9
   5s, posse 4s, fonte atrasada 4s; 73 esperas fixas somam 27s. Instrumento: cópia do passeio com
