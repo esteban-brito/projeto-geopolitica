@@ -62,6 +62,18 @@ npm run serve      # servidor de desenvolvimento em http://127.0.0.1:5173/
 
 ## 7. Leitura Obrigatória e Documentação Canônica
 
+### Retomada econômica de contexto
+
+Por pedido do usuário em 23/09/2026, **não repetir o estudo integral do repositório a cada sessão**.
+Comece por [`docs/agent-brief.md`](docs/agent-brief.md), confira `git status --short` e leia
+as seções **Estado**, **Fila** e **Decisões vivas** do handoff. Depois consulte apenas os
+contratos, achados, arquivos e trechos pertinentes à tarefa. A lista abaixo é o mapa das
+fontes canônicas; não exige reler todos os ciclos e pesquisas na abertura.
+
+O guia resume o estudo, não substitui as fontes. Código e handoff atuais prevalecem sobre
+seu retrato datado. Para uma retomada sem tarefa nova, essa leitura curta basta; não rode
+validações nem simulações só para recuperar contexto. Amplie a leitura quando a tarefa exigir.
+
 1. [`docs/handoff.md`](docs/handoff.md) — Estado verificável hoje, fila, decisões vivas e série histórica;
 2. [`CLAUDE.md`](CLAUDE.md) — As 12 leis do projeto, comentário medido e delegação;
 3. [`.agents/rules/co-development.md`](.agents/rules/co-development.md) — Regras operacionais de co-desenvolvimento;
