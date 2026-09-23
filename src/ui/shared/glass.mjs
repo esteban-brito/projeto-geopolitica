@@ -1,9 +1,9 @@
-/* Forma integrada ao filtro via feComposite operator="in" para contornar
-   anulacao de backdrop-filter sob clip-path ou filter ancestral. */
+/* Forma via CSS (clip-path ou filter) anulava backdrop-filter em ancestral:
+   a forma passou para dentro do filtro via feComposite operator="in". */
 
 import { squircle } from "./squircle.mjs";
 
-/* Aspas simples exigem escape manual para evitar fechar precocemente url() de SVG. */
+/* O encodeURIComponent nao escapa aspa simples e fechava url() SVG precocemente. */
 /** @param {string} body @returns {string} */
 const uri = body => `data:image/svg+xml,${encodeURIComponent(body).split("'").join("%27")}`;
 
@@ -38,7 +38,7 @@ function lensMap({ w, h, r, bevel, force }) {
         const gx = sdf(x + 1.5, y + 0.5) - sdf(x - 0.5, y + 0.5);
         const gy = sdf(x + 0.5, y + 1.5) - sdf(x + 0.5, y - 0.5);
         const n = Math.hypot(gx, gy) || 1;
-        /* Rampa cubica (3t² - 2t³) garante derivada zero na juncao com a area plana. */
+        /* Linear le como chanfro: a cubica tem derivada zero na juncao (tmp/lente-textura.md). */
         const t = 1 - -d / bevel;
         const amp = t * t * (3 - 2 * t) * force;
         dx = (-gx / n) * amp;
@@ -56,7 +56,7 @@ function lensMap({ w, h, r, bevel, force }) {
 }
 
 /**
- * Dispersao com blur 10 anulava o friso; blur 3 e escala 0,10 geram friso de 0,7px (+0,738 ms/q).
+ * Blur 10 anulava o friso mesmo em 0,5; com blur 3 e escala 0,10 da 0,7px (+0,738 ms/q).
  * @param {number} scale
  * @param {number} dispersion
  * @returns {string}
@@ -82,10 +82,10 @@ function bend(scale, dispersion) {
   );
 }
 
-/* Acima de 600px o mapa e esticado pelo filtro para evitar calcular 1 milhao de pixels. */
+/* Tamanho real no palco pediria 1 milhao de px; esticar acima de 600px nao cria vinco. */
 const MAP_MAX = 600;
 
-/* Teto de 40 mil px (+0,017 ms/q, 240 fps); a 59 mil salta para +0,536 ms/q e 2 milhoes para 24 fps. */
+/* Teto em 60 mil px cobrava +0,536 ms/q contra +0,017 a 40 mil (tmp/palcos.md); 2 milhoes caia a 24 fps (tmp/lente-area.mjs). */
 const LENS_AREA_MAX = 40000;
 
 /**
@@ -175,21 +175,21 @@ export function skin({ w, h, r, s, body, edge, gleam = 0, tint }) {
 export const scaleRamp = (ramp, k) =>
   /** @type {Ramp} */ (ramp.map(([at, alpha]) => [at, Number((alpha * k).toFixed(4))]));
 
-/* Saturacao 1,6 baixava croma de -2,85 para -6,57; escala 17 causava desvio de 8,5px partindo o veio. */
+/* Saturacao 1,6 degradava croma para -6,57; escala 17 partia o veio a 8,5px (tmp/lente-textura.md, tmp/desvio.png). */
 export const RECIPE = {
   bevel: 13,
   force: 1,
   scale: 10,
   blur: 3,
   saturation: 1.9,
-  /* Brightness 1,05 reduz perda de luminancia de 0,96 para 0,2 de L sem custo adicional no Skia. */
+  /* Sem ganho o dock escurecia 0,96 de L; 1,05 limita perda a 0,2 sem custo extra no Skia. */
   brightness: 1.05,
   r: 16,
   s: 0.6,
   dispersion: 0.1,
 };
 
-/* Aresta em fracao variava de 6,5px no dock a 180px no palco (30x de divergencia); fixada em pixels. */
+/* Aresta em fracao variava de 6,5px no dock a 180px no palco: 30x de divergencia (tmp/aresta-divergencia.md). */
 /** @type {[number, number][]} */
 const ZENITH = [
   [0, 0.4],
@@ -214,7 +214,7 @@ export function fresnelFor(h) {
     [0.5, MIDDLE],
     ...NADIR.map(([px, a]) => /** @type {[number, number]} */ ([1 - px / h, a])),
   ];
-  /* Paradas estritamente crescentes evitam descarte do gradiente pelo parser SVG. */
+  /* Paradas fora de ordem faziam o SVG ignorar o gradiente inteiro, perdendo a aresta. */
   let anterior = -1;
   return /** @type {Ramp} */ (
     cru.map(([at, a]) => {
@@ -225,11 +225,11 @@ export function fresnelFor(h) {
   );
 }
 
-/* A aresta de referencia, para quem precisa da forma sem a peca: a de uma capsula de 57px. */
+/* Aresta de referencia de uma capsula de 57px para desenho sem peca fisica. */
 /** @type {Ramp} */
 export const FRESNEL = fresnelFor(57);
 
-/* Tinta unica (14,20,31) unifica os seis materiais e gradientes opostos anteriores. */
+/* Seis materiais e gradientes opostos pareciam pecas desconexas na madeira (tmp/auditoria-vidro.png). */
 export const GLASS_TINT = "14,20,31";
 
 /** @type {Ramp} */
@@ -241,7 +241,7 @@ const BASE_BODY = [
 
 /** @typedef {{ body: Ramp, tint: string }} Level */
 
-/* Dois degraus de raio (18 e 24) unificam os quatro valores dispersos anteriores (16, 18, 22, 24). */
+/* Quatro raios teclados (16, 18, 22, 24) quebravam a unidade entre pecas de menu. */
 /** @param {number} h @returns {number} */
 export const radiusFor = (/** @type {number} */ h) => (h <= 96 ? 18 : 24);
 
@@ -257,15 +257,14 @@ export const LEVELS = {
 let glazed = 0;
 
 /**
- * Medida via offsetWidth/Height evita deformacao de getBoundingClientRect sob animacao de gesto.
- * Variavel --glaze permite remocao via CSS na troca de tela para evitar piscar de backdrop-filter.
+ * O getBoundingClientRect distorcia com gesto e filtro inline impedia remocao CSS na troca de tela.
  * @param {HTMLElement} node
  * @param {{ body: Ramp, edge?: Ramp, gleam?: number, r?: number, tint?: string }} paint
  */
 export function glaze(node, { body, edge, gleam = 0, r, tint }) {
   const w = node.offsetWidth;
   const h = node.offsetHeight;
-  /* Raio lido do CSS evita divergencia de contorno entre a pele e o border-radius. */
+  /* Raio fixo gerava dupla silhueta quando divergente do border-radius CSS do elemento. */
   r ??= parseFloat(getComputedStyle(node).borderTopLeftRadius) || radiusFor(h);
   edge ??= scaleRamp(fresnelFor(h), EDGE_FORCE);
   if (w < 9 || h < 9) return;

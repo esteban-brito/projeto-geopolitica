@@ -228,7 +228,7 @@ export function compose({
   const centreEconomic = economic / weightTotal;
   const centreLiberty = liberty / weightTotal;
 
-  /* Sem dispersao (spread), 1 alteracao constitucional pedia 358 votos e 85 pediam 334. */
+  /* Sem raio ideologico o preco nao escalava: 1 mudanca pedia 358 votos e 85 pediam 334. */
   let variance = 0;
   for (const move of moves) {
     const program = /** @type {Program & Partial<Rule>} */ (move.program);
@@ -281,18 +281,18 @@ export function spendOf({ programs, levels, bands }) {
 
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
-    /* Abaixo do piso o discricionario e zero; despesa obrigatoria e gerida por reformas. */
+    /* Cortar abaixo do piso nao devolve caixa discricionario: despesa obrigatoria e outra conta. */
     const above = Math.max(0, level - bandOf(program, bands).floor);
     const monthly = (above / 100) * program.cost * MONTHLY;
 
-    /* Renuncia fiscal e abatida da receita por waivedOf, sem consumir caixa discricionario. */
+    /* Cobrar renuncia na bolsa consumia caixa inexistente: desoneracao abate receita via waivedOf. */
     if (program.waiver !== true) {
       byProgram[program.id] = monthly;
       byArea[program.area] = (byArea[program.area] ?? 0) + monthly;
       total += monthly;
     }
 
-    /* Gasto cheio por area fecha o exploit medido pela politica explorador. */
+    /* Sem gasto cheio por area a politica explorador explorava brecha no rateio. */
     fullByArea[program.area] =
       (fullByArea[program.area] ?? 0) + (level / 100) * program.cost * MONTHLY;
   }
@@ -315,11 +315,12 @@ export function honour({ programs, levels, ratio, bands, protect }) {
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
 
+    /* Sem protect o corte era estritamente proporcional, impedindo defender prioridades no rateio. */
     if (protect?.has(program.area)) {
       next[program.id] = level;
       continue;
     }
-    /* Contingenciamento nao reduz renuncia fiscal fixada em lei. */
+    /* Contingenciamento sobre renuncia revogava por aperto mensal beneficio fiscal em lei. */
     if (program.waiver === true) {
       next[program.id] = level;
       continue;
