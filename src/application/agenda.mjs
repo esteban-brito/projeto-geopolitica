@@ -1,14 +1,10 @@
-/* A PAUTA DERIVADA — de quanto o jogador moveu para o que o Congresso vota.
-   CATALOGO e ESTADO, e motor nenhum chama outro motor. O ECLUSA recebe a
-   proposta pronta e nao sabe de onde ela veio — e e justamente por nao saber que
-   ele nao precisou mudar uma linha para o catalogo de pautas prontas morrer. */
+/* Composicao da pauta legislativa a partir das variacoes de programas e regras. */
 
 import { quorumOf } from "../data/bills.mjs";
 import { MONTHS_PER_YEAR } from "../data/regime.mjs";
 import { POWER_STEPS } from "../data/rules.mjs";
 
-/* O catalogo raciocina em ANO, porque orcamento e uma peca anual; o turno e um mes.
-   LASTRO toma com a regra fiscal. */
+/* Fracao mensal do custo orcamentario anual. */
 const MONTHLY = 1 / MONTHS_PER_YEAR;
 
 /**
@@ -44,10 +40,8 @@ const MONTHLY = 1 / MONTHS_PER_YEAR;
  * @property {number} spend - bilhoes/ano que o conjunto acrescenta
  */
 
-/* O RITO DE CADA PAREDE, e a ordem e a da exigencia. */
 const RITES = ["budget", "law", "amendment"];
 
-/* QUE RITO CADA GUARDA COBRA quando o piso e atravessado. */
 const FLOOR_RITE = { none: "budget", law: "law", constitution: "amendment" };
 
 /**
@@ -60,8 +54,6 @@ function harder(a, b) {
 }
 
 /**
- * O RITO DEPOIS DO PODER DO EXECUTIVO — a janela de Overton, em uma funcao.
- *
  * @param {string} rite
  * @param {number} power de 0 a 100
  * @returns {string}
@@ -79,8 +71,6 @@ function clamp100(value) {
 }
 
 /**
- * A FAIXA VIGENTE DE UMA ALAVANCA — a lei que a governa hoje.
- *
  * @param {{ id: string, floor: number, ceiling: number }} lever
  * @param {Record<string, Band>} [bands]
  * @returns {Band}
@@ -94,8 +84,6 @@ export function bandOf(lever, bands) {
 }
 
 /**
- * O RITO DE MEXER NA PROPRIA FAIXA — de LEGISLAR, e nao de gastar.
- *
  * @param {string} guard
  * @returns {string}
  */
@@ -104,8 +92,6 @@ export function riteForBand(guard) {
 }
 
 /**
- * O RITO QUE UMA ALAVANCA SOZINHA EXIGE naquele nivel.
- *
  * @param {{ id?: string, floor: number, ceiling: number, guard: string }} lever
  * @param {number} level
  * @param {number} [power]
@@ -124,8 +110,6 @@ export function riteFor(lever, level, power = 0, bands) {
 }
 
 /**
- * COMPOE A PAUTA a partir do que o jogador moveu.
- *
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
  * @param {ReadonlyArray<Rule>} [input.rules] - as alavancas de regra
@@ -160,8 +144,6 @@ export function compose({
   /** @type {Record<string, number>} */
   const byArea = {};
 
-  /* AS DUAS FAMILIAS ENTRAM NA MESMA VARREDURA, e essa e a decisao de desenho que faz o resto
-     funcionar. */
   for (const lever of [...programs, ...rules]) {
     const program = /** @type {Program & Partial<Rule>} */ (lever);
     const size = program.cost ?? program.reach ?? 0;
@@ -169,15 +151,12 @@ export function compose({
     const to = clamp100(requested[program.id] ?? from);
     const delta = to - from;
 
-    /* ── A LEI DESTA ALAVANCA, ANTES E DEPOIS ───────────────────────────────── `band` e o
-       que vale hoje; `asked` e o que o texto propoe. */
     const band = bandOf(program, bands);
     const asked = requestedBands?.[program.id] ?? band;
 
     const floorDelta = asked.floor - band.floor;
     const ceilingDelta = asked.ceiling - band.ceiling;
 
-    /* ⚠ O NIVEL E JULGADO CONTRA A FAIXA PEDIDA, E NAO CONTRA A VIGENTE. */
     for (const [side, moved] of /** @type {const} */ ([
       ["floor", floorDelta],
       ["ceiling", ceilingDelta],
@@ -187,8 +166,6 @@ export function compose({
       const weightOfBand = Math.abs(moved) * size;
       const towardsBand = moved > 0;
 
-      /* A FAIXA CARREGA A POSICAO DO PROGRAMA, com o mesmo espelho do nivel: ampliar o que a
-         lei obriga e um ato do lado do programa; soltar a obrigacao e o ato oposto. */
       economic += weightOfBand * (towardsBand ? program.economic : 100 - program.economic);
       liberty += weightOfBand * (towardsBand ? program.liberty : 100 - program.liberty);
       threat += weightOfBand * program.threat;
@@ -198,8 +175,6 @@ export function compose({
       const own = underPower(riteForBand(program.guard), power);
       rite = harder(rite, own);
 
-      /* ELE NAO GASTA NO MES, e a omissao e a verdade do modelo: mover um piso nao empenha um
-         real hoje. */
       moves.push({
         program,
         delta: moved,
@@ -210,18 +185,15 @@ export function compose({
       });
     }
 
-    /* PARADO NAO E MOVIMENTO. */
     if (delta === 0) continue;
 
     const weight = Math.abs(delta) * size;
-    /* REGRA NAO CUSTA DISCRICIONARIO. */
     const contribution = program.cost === undefined ? 0 : (delta / 100) * program.cost;
 
     const towards = delta > 0;
     economic += weight * (towards ? program.economic : 100 - program.economic);
     liberty += weight * (towards ? program.liberty : 100 - program.liberty);
 
-    /* A AMEACA NAO ESPELHA, e a assimetria e deliberada. */
     threat += weight * program.threat;
 
     weightTotal += weight;
@@ -236,40 +208,27 @@ export function compose({
       own = harder(own, required);
     }
 
-    /* FURAR O TETO E LEI NO MINIMO, e a guarda pode cobrar mais. */
     if (to > asked.ceiling) {
       const required = riteForBand(program.guard);
       breaches.push({ programId: program.id, side: "ceiling", rite: required });
       own = harder(own, required);
     }
 
-    /* O RITO DE CADA MOVIMENTO FICA GUARDADO NELE, e nao so o do pacote. */
-    /* ⚠ O PODER QUE VALE E O VIGENTE, e nunca o pedido. */
     own = underPower(own, power);
     rite = harder(rite, own);
     moves.push({ program, delta, weight, spend: contribution, rite: own, kind: "level" });
   }
 
-  /* NENHUM MOVIMENTO NAO VIRA PROPOSTA.
-     (50, 50) — uma proposta centrista fantasma, que o ECLUSA votaria com prazer e
-     que ninguem escreveu. Ausencia de pauta e ausencia, e a unica forma honesta
-     de mostra-la e nao mostrar. */
   if (weightTotal === 0) {
     return { moves, breaches, proposal: null, quorum: 0, spend: 0 };
   }
 
-  /* O ASSUNTO E A AREA DE MAIOR PESO. */
   const area = Object.entries(byArea).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "";
 
   const centreEconomic = economic / weightTotal;
   const centreLiberty = liberty / weightTotal;
 
-  /* ── O RAIO DO TEXTO ──────────────────────────────────────────────────────── ⚠ SEM ELE O
-     PRECO NAO ESCALA COM O TAMANHO DO PACOTE, e isso foi MEDIDO : um movimento de piso
-     constitucional saia por 358 votos e oitenta e cinco movimentos saiam por 334 — os dois
-     passavam, no mesmo mes, com a mesma verba.
-     e a informacao que a media apagava, devolvida ao motor. Quem a usa e ECLUSA,
-     e a identidade que a torna exata esta na prosa de `whipCount`. */
+  /* Sem dispersao (spread), 1 alteracao constitucional pedia 358 votos e 85 pediam 334. */
   let variance = 0;
   for (const move of moves) {
     const program = /** @type {Program & Partial<Rule>} */ (move.program);
@@ -291,7 +250,6 @@ export function compose({
     liberty: centreLiberty,
     threat: threat / weightTotal,
     spread,
-    /* O SINAL SEGUE A CONVENCAO DO CATALOGO: positivo POUPA. */
     fiscalImpact: -spend,
   };
 
@@ -299,18 +257,12 @@ export function compose({
     moves,
     breaches,
     proposal,
-    /* O QUORUM SAI DA MESMA FUNCAO QUE O CATALOGO USAVA. */
     quorum: rite === "budget" ? 0 : quorumOf(proposal),
     spend,
   };
 }
 
 /**
- * QUANTO UMA CONFIGURACAO CUSTA NO MES, em bilhoes, e SO A PARTE DISCRICIONARIA.
- *
- * da despesa obrigatoria que o LASTRO recebe. O que este calculo devolve e so o
- * que esta ACIMA do piso — o dinheiro que o presidente decide, e o mesmo de onde
- * sai emenda para o Congresso.
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
  * @param {Record<string, number>} input.levels
@@ -329,23 +281,18 @@ export function spendOf({ programs, levels, bands }) {
 
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
-    /* Abaixo do piso o discricionario e ZERO, e nao negativo: cortar abaixo do que a lei
-       obriga nao devolve dinheiro para o caixa discricionario, devolve para a despesa
-       obrigatoria — que e outra conta, e quem a move e a reforma. */
+    /* Abaixo do piso o discricionario e zero; despesa obrigatoria e gerida por reformas. */
     const above = Math.max(0, level - bandOf(program, bands).floor);
     const monthly = (above / 100) * program.cost * MONTHLY;
 
-    /* ⚠ A RENUNCIA NAO CONSOME A BOLSA DO MES, e essa e a correcao inteira: ninguem empenha
-       uma desoneracao — a Fazenda deixa de arrecadar, e quem abate a receita e `waivedOf`.
-       Cobra-la aqui cobrava um caixa que o jogador nunca teve. */
+    /* Renuncia fiscal e abatida da receita por waivedOf, sem consumir caixa discricionario. */
     if (program.waiver !== true) {
       byProgram[program.id] = monthly;
       byArea[program.area] = (byArea[program.area] ?? 0) + monthly;
       total += monthly;
     }
 
-    /* ── O GASTO CHEIO, E POR QUE ELE PRECISOU EXISTIR ──────────────────────── ⚠ ELE
-       CONSERTA O EXPLOIT QUE A POLITICA `explorador` MEDIU. */
+    /* Gasto cheio por area fecha o exploit medido pela politica explorador. */
     fullByArea[program.area] =
       (fullByArea[program.area] ?? 0) + (level / 100) * program.cost * MONTHLY;
   }
@@ -354,14 +301,8 @@ export function spendOf({ programs, levels, bands }) {
 }
 
 /**
- * O NIVEL QUE O CAIXA REALMENTE HONRA, depois do rateio.
- *
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
- * ⚠ E O DECRETO ESCOLHE ONDE O CORTE CAI, que e o instrumento inteiro: no Brasil o
- * contingenciamento e rubrica a rubrica, e a escolha do que PROTEGER e publica. Sem `protect`
- * o rateio e proporcional e ninguem decide nada — que era o estado anterior deste motor.
- *
  * @param {Record<string, number>} input.levels - o pedido
  * @param {number} input.ratio - de 0 a 1
  * @param {Record<string, Band>} [input.bands] - as faixas VIGENTES
@@ -374,15 +315,11 @@ export function honour({ programs, levels, ratio, bands, protect }) {
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
 
-    /* AREA PROTEGIDA NAO CEDE, e o que ela deixa de ceder o resto paga: quem calcula a razao
-       ja tirou este dinheiro dos dois lados da conta. */
     if (protect?.has(program.area)) {
       next[program.id] = level;
       continue;
     }
-    /* ⚠ O RATEIO NAO ALCANCA RENUNCIA, e a razao e do mundo: contingenciamento aperta empenho,
-       e uma desoneracao esta em LEI — o caixa curto do mes nao revoga um beneficio fiscal.
-       Sem esta linha, um mes apertado mudaria a politica tributaria sem ninguem decidir. */
+    /* Contingenciamento nao reduz renuncia fiscal fixada em lei. */
     if (program.waiver === true) {
       next[program.id] = level;
       continue;
@@ -394,8 +331,6 @@ export function honour({ programs, levels, ratio, bands, protect }) {
 }
 
 /**
- * O NOME DA PAUTA, montado do que ela faz.
- *
  * @param {Move[]} moves
  * @returns {string}
  */
