@@ -21,7 +21,7 @@ Neste projeto existem duas camadas distintas de validação:
 | **Verdade de Engenharia** | "O código cumpre rigorosamente a especificação técnica sem quebrar contratos?"                                      | Guardas de arquitetura, testes unitários, checagens de tipos, linter e testes de navegador.          | `npm run check`<br>`npm run types`<br>`npm test`<br>`npm run walk`<br>`npm run monkey` |
 | **Verdade de Design**     | "A regra produz um jogo equilibrado, politicamente verossímil e sem estratégias dominantes que destruam o desafio?" | Simulação de 48 meses com sondas, distribuições estatísticas, caça a exploits e análise adversarial. | `npm run simulate`<br>`tools/simulate.mjs`<br>Ultrareviews externos                    |
 
-Passar nos 334 testes unitários prova a verdade de engenharia; não garante que a regra seja bom game design. Um exploit econômico dominante destrói o jogo mesmo com portão 100% verde.
+Passar nas provas unitárias prova a verdade de engenharia; não garante que a regra seja bom game design. Um exploit econômico dominante destrói o jogo mesmo com portão 100% verde.
 
 ## 3. Papéis da Tríade de Desenvolvimento
 
@@ -50,11 +50,11 @@ Os papéis são permanentes na arquitetura do projeto; os modelos e ambientes s�
 ## 6. Fluxo de Validação Canônico
 
 ```bash
-npm run check      # 13 guardas de arquitetura (2s)
+npm run check      # guardas de arquitetura
 npm run types      # tsc -p jsconfig.json (tipagem JSDoc estrita)
-npm test           # 334 provas unitárias puras (2s)
-npm run walk       # passeio Playwright em 1440x980 e 1440x900 (72s)
-npm run monkey     # macaco de estabilidade com semente (24s)
+npm test           # provas unitárias puras
+npm run walk       # passeio Playwright em 1440x980 e 1440x900
+npm run monkey     # macaco de estabilidade com semente
 npm run validate   # validação completa de ponta a ponta (~130s)
 npm run simulate   # 48 meses de mandato com as sondas fiscais e políticas
 npm run serve      # servidor de desenvolvimento em http://127.0.0.1:5173/
