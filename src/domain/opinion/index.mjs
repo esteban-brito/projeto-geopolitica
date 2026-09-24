@@ -1,12 +1,4 @@
-/* SONDA — opiniao publica por segmento.
-   Porque so agora existe o que ele consome. Ate a CORRENTE nascer nao havia
-   inflacao nem desemprego, e uma aprovacao construida sobre indice de area
-   sozinho seria um segundo indice de area com outro nome. A aprovacao ficou
-   FORA DA TELA por tres sessoes com esta razao escrita — "quem a produz e SONDA,
-   que nao existe" —, e este arquivo e o que a traz de volta.
-   Evento e escandalo (dependem de TEMPORAL), enquadramento de imprensa (depende
-   do elenco do ciclo 4), recorte regional e religioso. Nenhum e necessario para
-   a aprovacao TER PRECO, que e a razao de este motor existir agora. */
+/* SONDA — opiniao publica por segmento a partir de macroeconomia e servicos. */
 
 /**
  * @typedef {import("../../data/opinion.mjs").Segment} Segment
@@ -47,8 +39,6 @@ function clamp100(value) {
 }
 
 /**
- * NOTA DE 0 A 100 PARA UM INDICADOR EM QUE MENOS E MELHOR.
- *
  * @param {number} value
  * @param {number} anchor
  * @param {number} span
@@ -58,8 +48,6 @@ function lowerIsBetter(value, anchor, span) {
 }
 
 /**
- * A MESMA NOTA para um indicador em que MAIS e melhor.
- *
  * @param {number} value
  * @param {number} anchor
  * @param {number} span
@@ -69,12 +57,6 @@ function higherIsBetter(value, anchor, span) {
 }
 
 /**
- * QUANTO A PROMESSA QUEBRADA COBRA POR MES, em pontos de satisfacao.
- *
- * ⚠ ELA E EXTRAIDA DE `step` E NAO COPIADA DELE, e a razao e a regra: o Gabinete precisa
- * anunciar este preco ANTES do fechamento, e informacao que chega depois da decisao e recibo.
- * Refeita na tela, ela divergiria no dia em que `broken` mudasse.
- *
  * @param {number} breach a fracao da plataforma quebrada, de 0 a 1
  * @param {OpinionParameters} parameters
  * @returns {number}
@@ -84,15 +66,12 @@ export function betrayalCost(breach, parameters) {
 }
 
 /**
- * Um mes de opiniao publica.
- *
  * @param {OpinionInput} input
  * @returns {OpinionOutput}
  */
 export function step(input) {
   const { released, parameters: p, segments } = input;
 
-  /* AS QUATRO NOTAS QUE O PAIS INTEIRO RECEBE. */
   const notes = {
     prices: lowerIsBetter(released.inflation, p.priceAnchor, p.priceSpan),
     jobs: lowerIsBetter(released.unemployment, p.jobAnchor, p.jobSpan),
@@ -101,17 +80,15 @@ export function step(input) {
     economy: higherIsBetter(released.growth, p.growthAnchor, p.growthSpan),
   };
 
-  /* A PROMESSA QUEBRADA CHEGA A RUA, e nao so ao Congresso. */
   const betrayal = betrayalCost(input.betrayal ?? 0, p);
 
-  /* ⚠ O DESGASTE DO CARGO, e ele cresce com o mandato. */
   const wear = Math.max(0, input.tenure ?? 0) * p.wearRate;
 
   /** @type {Record<string, number>} */
   const mood = {};
   /** @type {Record<string, Approval>} */
   const bySegment = {};
-  /* QUANTO CADA NOTA VALEU PARA CADA SEGMENTO, ja pesado. */
+  /* Pesada aqui para evitar duplicar conta na view e divergir se o peso mudar. */
   /** @type {Record<string, Record<string, number>>} */
   const weighed = {};
   let weighted = 0;
@@ -130,7 +107,6 @@ export function step(input) {
 
     const current = input.mood[segment.id] ?? segment.initial;
 
-    /* A INERCIA, E A ASSIMETRIA DENTRO DELA. */
     const pull = Math.min(1, (1 - p.inertia) * (target < current ? p.fallSpeed : 1));
     const next = clamp100(current + (target - current) * pull);
 
@@ -147,19 +123,13 @@ export function step(input) {
     shareTotal += segment.share;
   }
 
-  /* A MEDIA E PONDERADA PELA POPULACAO, e o divisor e a soma real das fatias e nao 1: um
-     catalogo que nao some exatamente 1 devolveria uma aprovacao silenciosamente menor, e o
-     defeito apareceria como "o governo e impopular" tres telas adiante. */
+  /* Divisao pela soma real das fatias evita aprovacao menor quando o catalogo nao soma 1. */
   const national = shareTotal > 0 ? weighted / shareTotal : 0;
 
-  /* A alternativa seria a view multiplicar nota por peso para montar o anexo, e ai haveria
-     dois lugares somando a mesma coisa — o defeito recorrente numero um deste projeto. */
   return { mood, approval: pollOf(national, p), bySegment, notes, betrayal, wear, weighed };
 }
 
 /**
- * A SATISFACAO VIRA PESQUISA — de um numero para as tres fatias.
- *
  * @param {number} mood de 0 a 100
  * @param {OpinionParameters} p
  * @returns {Approval}
@@ -170,8 +140,7 @@ function pollOf(mood, p) {
   const good = 100 * share ** p.goodSlope;
   const poor = 100 * (1 - share) ** p.poorSlope;
 
-  /* O estado ja tinha esse invariante e ha prova dele em `tests/suites/state-reducer.mjs`;
-     quebra-lo aqui apareceria como um medidor que nao fecha a barra. */
+  /* Soma das tres fatias fecha em 100 para manter invariante visual da barra de aprovacao. */
   const fair = Math.max(0, 100 - good - poor);
   const total = good + poor + fair;
 
@@ -183,8 +152,6 @@ function pollOf(mood, p) {
 }
 
 /**
- * A opiniao de abertura, montada do catalogo.
- *
  * @param {ReadonlyArray<Segment>} segments
  * @returns {Record<string, number>}
  */
@@ -193,8 +160,6 @@ export function opening(segments) {
 }
 
 /**
- * A LEITURA NACIONAL de uma satisfacao ja conhecida, sem avancar o mes.
- *
  * @param {Record<string, number>} mood
  * @param {ReadonlyArray<Segment>} segments
  * @param {OpinionParameters} parameters

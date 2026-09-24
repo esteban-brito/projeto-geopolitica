@@ -1132,6 +1132,31 @@ try {
   );
 
   /* 5 — A VERBA MOVE O PLACAR. */
+  const firstFunding = page.locator(".bench__slider").first();
+  await firstFunding.focus();
+  await page.keyboard.press("Home");
+  expect((await firstFunding.inputValue()) === "0", "[verba] Home nao zerou a oferta");
+  await page.keyboard.press("ArrowRight");
+  expect((await firstFunding.inputValue()) === "5", "[verba] a seta nao incrementou a oferta");
+  expect(
+    await firstFunding.evaluate(node => node === document.activeElement),
+    "[verba] editar perdeu o foco",
+  );
+  await viaRail(page, "finance");
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#main")?.getAttribute("data-screen") === "finance" &&
+      /** @type {{ activeViewTransition?: unknown }} */ (document).activeViewTransition === null,
+  );
+  await viaRail(page, "congress");
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#main")?.getAttribute("data-screen") === "congress" &&
+      /** @type {{ activeViewTransition?: unknown }} */ (document).activeViewTransition === null,
+  );
+  expect((await firstFunding.inputValue()) === "5", "[verba] navegar perdeu a oferta do rascunho");
+  await firstFunding.focus();
+  await page.keyboard.press("Home");
   const before = Number((await page.locator(".tally__forecast").innerText()).match(/\d+/)?.[0]);
   const sliders = page.locator(".bench__slider");
   const benches = await sliders.count();
@@ -2072,6 +2097,46 @@ try {
   expect(
     at980 !== null && at980.inside,
     `[caixa] a 980px a carta clicada ficou fora da lista (${at980?.top}px do topo dela)`,
+  );
+
+  /* 11 — O aviso usa a camada modal nativa e devolve o foco ao fechar. */
+  await page.focus("#advance");
+  await page.evaluate(async () => {
+    const path = "/src/app/dialogs.mjs";
+    const { openNotice } = await import(path);
+    openNotice("Aviso de teste", "Mensagem de verificacao do aviso.");
+  });
+  expect(
+    await page.locator("#noticeDialog").evaluate(node => node.matches(":modal")),
+    "[aviso] nao abriu como modal",
+  );
+  expect(
+    (await page.locator("#noticeTitle").innerText()) === "Aviso de teste",
+    "[aviso] o titulo nao corresponde ao aviso",
+  );
+  expect(
+    await page.locator("#noticeDialog").evaluate(node => node.contains(document.activeElement)),
+    "[aviso] o foco ficou fora do modal",
+  );
+  await page.screenshot({ path: join(OUT, "aviso.png"), fullPage: true });
+  await page.click("#noticeClose");
+  expect(
+    (await page.locator("#noticeDialog[open]").count()) === 0,
+    "[aviso] o botao nao fechou o modal",
+  );
+  expect(
+    await page.locator("#advance").evaluate(node => node === document.activeElement),
+    "[aviso] fechar nao devolveu o foco",
+  );
+  await page.evaluate(async () => {
+    const path = "/src/app/dialogs.mjs";
+    const { openNotice } = await import(path);
+    openNotice("Segundo aviso", "Outro aviso.");
+  });
+  await page.keyboard.press("Escape");
+  expect(
+    (await page.locator("#noticeDialog[open]").count()) === 0,
+    "[aviso] Escape nao fechou o aviso reaberto",
   );
 
   /* ── A FONTE QUE CHEGA TARDE ────────────────────────────────────

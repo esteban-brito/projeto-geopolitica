@@ -7,42 +7,80 @@
 
 ## Estado — 23/09/2026, portão verde, contrato universal AGENTS.md e governança tripartite
 
+- **Pesquisa do Gemini entregue; não validada:** triagem rápida em
+  [real-brazil-institutions.md](research/real-brazil-institutions.md). Faltam URLs e comprovação
+  de atualidade; repete erro sobre `Program.yield` e propõe consequências automáticas e números
+  sem fonte suficiente. Cabeçalho corrigido e ressalvas registradas. Gemini declarou repouso;
+  nenhum novo lote enviado. Retomar pela verificação de fontes, sem usar o rascunho como regra;
+- **Direção atual de design:** usuário pediu reformulação para tornar o jogo jogável e realista,
+  com pessoas de personalidades diferentes e empresas fictícias inspiradas na realidade.
+  Estudo e avaliação da resposta do Gemini em [world-design.md](world-design.md); piloto de
+  Energia é proposta do Codex, ainda não implementada nem selecionada pelo usuário;
 - **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos (`app.mjs` modularizado, menu com 3
   chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
   `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-desk.css` 4%,
   lote 5: `session.mjs` 46% → 19%, `handlers.mjs` 38% → 11%, código idêntico). Item 5
-  inventariado e 18 backups efêmeros arquivados em `tmp/arquivo/`. Item 4: 20 asserções de
-  interação no passeio (seções 9 e 10) + macaco; faltam 10 asserções. Lote 6 conferido
+  inventariado e 18 backups efêmeros arquivados em `tmp/arquivo/`. Item 4: 30 asserções de
+  interação no passeio (seções 5, 9, 10 e 11) + macaco; as dez novas cobrem verba e aviso
+  modal. Portão completo verde em 139,2s; oscilação anterior registrada no achado 69. Lote 6 conferido
   (`glass.mjs` 38% → 18%, `agenda.mjs` 34% → 16%, `area.mjs` 32% → 12%, código idêntico), e o
   lote 6b devolveu as fontes em `tmp/` e a alternativa reprovada que o lote 6 tinha apagado;
-- **prosa do jogo:** os três piores arquivos de tela/aplicação saíram da lista com o lote 6. O
-  global (~21% antes do lote) está por remedir. Pior que resta: `src/domain` 41%;
+- **lote Codex/Gemini de 23/09:** `budget/index.mjs` 41% → 22%; `opinion/index.mjs` 44% → 25%.
+  Código sem comentários idêntico e 95 linhas de contrato JSDoc preservadas, conferidos pelo
+  Codex contra as cópias anteriores e o HEAD. A meta global de prosa continua pendente;
+- **prosa do jogo:** os três piores arquivos de tela/aplicação saíram da lista com o lote 6.
+  Global e domínio estão por remedir após o lote Codex/Gemini; referências anteriores: ~21%
+  global antes do lote 6 e 41% no domínio antes desta rodada;
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
   corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
 - **portão:** 13 guardas · 67 sintéticas · 334 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde. `validate` **133s** (passeio 72s, macaco 24s, o resto 12s).
-  Série do `simulate` imóvel;
+  macaco (60 ações, semente 7) verde. `validate` **139,2s** na rodada final de 23/09, após uma
+  falha intermitente do passeio (achado 69). Log: `tmp/codex-validate.log`. Série do `simulate` imóvel;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem
 
-1. **decisão da poda de `tmp/` (Item 5)** — proposta pronta em `tmp/inventario-item5.md`: apagar os
+1. **reformulação da experiência** — desenvolver a proposta de [world-design.md](world-design.md)
+   com foco em iniciativa de pessoas e empresas e consequências distintas das políticas.
+   Revisar a entrega do Gemini a partir da nota de triagem e conferir fontes antes de incorporá-la.
+   A ordem abaixo preserva as pendências anteriores; não bloqueia o estudo da nova direção;
+2. **decisão da poda de `tmp/` (Item 5)** — proposta pronta em `tmp/inventario-item5.md`: apagar os
    18 backups efêmeros (`*.antes.*`, `*.new.*`) e mover scripts ad-hoc dormentes para `tmp/arquivo/`
    após o sim dele;
-2. **item 4 — provas de interação**: 20 asserções novas feitas (seções 9 e 10 do passeio). Faltam
-   10 para a meta de 30 do Ciclo 29: diálogo de aviso (`openNotice`), verba (interação nos controles
-   da Mesa), etc.;
-3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
+3. **achado 69 — investigar oscilação da prova de voo interrompido**. Item 4 concluiu a meta de
+   30 asserções com portão verde; o aviso é exercitado por `openNotice`, sem acionador na interface;
+4. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
    jogador (ausência declarada em 21/09, Achado 66). Kind novo de carta: `state.mjs`, `inbox.mjs`,
    `strings.mjs`, vocabulário em `annex.mjs`;
-4. **prosa de `src/domain`** (41% → ≤ 20%) — é o que resta acima da meta;
-5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
+5. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%) — permanece pendente;
+6. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
    só depois de fechar o ciclo 29;
-6. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
+7. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
    ele marca os candidatos que entram.
 
 ## Decisões vivas
 
+- **23/09, liberdade de projeto político** — o jogador não interpreta Lula. O usuário quer
+  poder tentar transformações radicais, incluindo comunismo, fascismo e trajetórias inspiradas
+  em Milei ou Singapura. Brasil real como ponto de partida, não destino obrigatório. Modelar
+  medidas, resistências e consequências, distinguindo tentativa de sucesso; detalhamento em
+  [world-design.md](world-design.md). Não houve alteração do horizonte de 48 meses;
+- **23/09, experiência presidencial** — usuário escolheu combinar reuniões/conversas e
+  documentos/despachos, usando o funcionamento real do governo brasileiro, do governo Lula
+  e do STF como referência. Proposta e caso documentado do IOF de 2025 em
+  [world-design.md](world-design.md); não confundir episódio histórico com situação atual;
+- **23/09, prioridade reafirmada pelo usuário** — máxima fidelidade ao que um presidente
+  realmente é e faz. O jogo está no início; planos e soluções permanecem revisáveis em discussão
+  entre usuário, Codex, Claude e Gemini, com decisão final do usuário. Preservar essa abertura
+  nas propostas de [world-design.md](world-design.md);
+- **23/09, reformulação** — prioridade do usuário: jogabilidade, realismo, pessoas com inteligência
+  e personalidade e empresas fictícias reconhecíveis. Número de pastas permanece aberto.
+  A revisão do Gemini foi confrontada com código e direção atual em [world-design.md](world-design.md).
+  Não adotar prazos arbitrários de efeito, crise obrigatória por mês ou equivalência entre
+  indicação política e incompetência. São critérios propostos pelo Codex, não calibragem aprovada;
+- **23/09, noite** — usuário autorizou o Codex a assumir implementação e coordenação com Gemini
+  durante a ausência do Claude. Arquivos exclusivos por lote; Codex confere respostas, comandos
+  e diffs do Gemini e centraliza a validação de navegador. Relatório do agente não substitui prova;
 - **23/09** — governança tripartite (Claude, GPT, Gemini) e contrato universal em [`AGENTS.md`](../AGENTS.md):
   separação entre verdade de engenharia (guardas e testes) e verdade de design (sondas de 48 meses);
   regra de independência entre autor e revisor (quem implementa não aprova sozinho); o usuário é a autoridade
@@ -73,7 +111,13 @@
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
-- **66. A carta do arquivamento não existe (21/09).** Ver fila 3;
+- **69. Prova de voo interrompido oscilou (23/09).** Em `npm.cmd run validate`, a pasta mediu
+  719px no corte e 569px dois quadros depois: diferença de 150px, acima do limite de 20%.
+  A prova e o código do voo não foram alterados; a prova roda antes das dez asserções novas.
+  O passeio inicial e a repetição completa passaram. Causa ainda não isolada; nenhum limite
+  foi afrouxado. Evidência: `tmp/codex-validate-flight-failure.log`; rodada final verde em
+  `tmp/codex-validate.log`;
+- **66. A carta do arquivamento não existe (21/09).** Ver fila 4;
 - **65. `--paper` é cor nos tokens e largura na folha (18/09).** `00-tokens.css` declara
   `--paper: #ffffff`; `.sheet` redeclara `--paper: 720px`. Hoje nada lê a cor dentro da folha; a
   primeira que ler recebe `720px`. Renomear a largura mexe em 15 `calc()` de `46-desk.css`;
@@ -123,7 +167,8 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). Remedida em 21/09 depois do 2º ultra: imóvel.
+`agenda` dá 30/43). As seis sondas foram remedidas em 23/09 pelo Codex após o lote de comentários:
+imóveis em todas as colunas abaixo. Logs em `tmp/codex-simulate-*.log`.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
 | ------------ | ---------- | ------------ | --------- | --------- |

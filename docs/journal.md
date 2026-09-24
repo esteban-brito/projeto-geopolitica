@@ -8715,3 +8715,77 @@ A de 980 caiu com a rolagem sabotada; a de 900 mostrou que ali quem rola é a p�
 do `paint.mjs` nunca dispara. Vinte asserções novas, dez a menos que a meta. Os tokens acabaram
 antes do item 4 fechar; o Gemini termina o lote 4 e o item 5 sozinho, e a próxima sessão
 começa lendo o que ele deixou em `tmp/para-claude.md`.
+
+### 32 · Coordenação Codex/Gemini e as dez asserções restantes — 23/09, noite
+
+Com o Claude indisponível, o usuário autorizou o Codex a implementar e coordenar o Gemini.
+Codex ficou com o passeio e os docs; Gemini, somente com comentários de budget e opinion.
+O passeio ganhou quatro asserções de verba (teclado, foco e rascunho após navegar) e seis de
+aviso modal (abertura, título, foco, fechamento e Escape). O aviso é chamado pela função da
+aplicação: não havia um acionador de interface para testar. A primeira rodada passou; a rodada
+final inclui espera explícita pelo término das duas transições da prova de rascunho.
+
+A primeira entrega do Gemini perdeu os codinomes LASTRO/SONDA e encurtou duas descrições
+JSDoc. O relatório dizia guardas verdes, mas o Codex reproduziu duas falhas em codenames e
+devolveu o lote. Gemini restaurou os cabeçalhos e os contratos: código idêntico, 44 linhas de
+contrato em budget e 51 em opinion preservadas contra HEAD. Prosa: 41% → 22% e 44% → 25%;
+a meta global não está fechada. Gemini também iniciou um passeio adicional e o encerrou ao
+receber a divisão de validação; suas mensagens chegam pela fila, não interrompem o trabalho.
+Ele excluiu duas versões intermediárias que havia criado, apesar da ordem de não apagar;
+as cópias pré-edição permaneceram intactas. O relatório foi corrigido para registrar os fatos.
+
+As seis sondas de 48 meses mantiveram dívida, votações, indústria e segurança da série.
+O portão completo parou inicialmente na formatação preexistente do handoff; a documentação
+foi atualizada e formatada. Depois, a prova anterior de voo interrompido acusou 719px no corte
+e 569px dois quadros depois. Sem mudar a prova nem o voo, a repetição passou: `validate` em
+139,2s, 13 guardas, 67 sintéticas, 334 testes, passeio e macaco de 60 ações/seed 7 verdes.
+A oscilação ficou no achado 69; a causa não foi isolada. Captura do aviso inspecionada.
+O item 4 atingiu as 30 asserções; o ciclo 29 permanece aberto. Gemini encerrou sem novo lote;
+nenhum commit ou push foi feito.
+
+### 33 · A prioridade passa a ser a experiência de governar — 23/09
+
+O usuário declarou que considera o jogo atual malfeito e chato. Pediu estudo para reformular
+os ministérios e esclareceu que quer pessoas com personalidades, inteligência e iniciativa,
+além de empresas fictícias com inspiração real. O Codex estudou a agregação dos programas,
+ELENCO e os ciclos 13, 17, 20 e 30, e escreveu um primeiro rascunho em `tmp/world-design-proposal.md`.
+
+O usuário trouxe a revisão do Gemini no arquivo `A proposta do Codex toca no ponto.md` e autorizou
+avaliar e registrar. Foram aproveitados o cuidado com escopo e a diferenciação de programas.
+A revisão atribuiu ao plano 37 telas ministeriais que ele não prescrevia, tratou a fila antiga
+como obrigatória e sugeriu atrasos sem fonte e um `yield` individual de programa inexistente.
+Também confundiu concluir a carta de arquivamento com concluir as pendências do ciclo 29.
+
+A proposta revisada está em `docs/world-design.md`. Ela distingue decisão do usuário de sugestão
+do Codex, remove a exigência de conflito todo mês e detalha primeiro um piloto, sem exigir todo
+o catálogo. Nomeação política e competência variam separadamente; iniciativa inclui poder esperar.
+Energia segue como piloto sugerido, não aprovado. O handoff registra a nova prioridade e mantém
+as pendências anteriores. Esta revisão só alterou documentação; não iniciou motores nem mudou
+calibragem, esquema de save ou regras do jogo.
+
+### 34 · Liberdade política e pesquisa do Brasil real — 23/09
+
+O usuário reafirmou máxima fidelidade ao exercício da Presidência e a abertura dos planos à
+discussão com Codex, Claude e Gemini. Escolheu combinar reuniões/conversas com documentos e
+despachos. Governo Lula e STF são referências institucionais, não personagens ou destinos
+obrigatórios: quer poder tentar transformações radicais, citando comunismo, fascismo, Milei e
+Singapura. A proposta registra tentativa, resistência, execução e consequências distintas de
+sucesso garantido, mantendo explícito que o horizonte de 48 meses ainda não foi alterado.
+
+Essas decisões foram incorporadas a `docs/world-design.md` e ao handoff. A consulta inicial
+documentou o caso do IOF de 2025; não confirmou a agenda presidencial de 23/09/2026.
+O usuário pediu registrar tudo e encarregar Gemini de análise e pesquisa profunda atualizada.
+O briefing `tmp/gemini-real-brazil-brief.md` foi entregue pelo canal Antigravity, sem fila.
+Gemini recebeu exclusividade sobre `docs/research/real-brazil-institutions.md`, com leitura e
+pesquisa autorizadas, sem editar outros arquivos ou executar validação. Codex mantém os docs
+canônicos e revisará fontes, atualidade e conclusões. Entrega ainda pendente neste registro.
+
+### 35 · Entrega do Gemini e encerramento para retomada — 23/09
+
+O usuário pediu leitura rápida e registro antes de desligar o PC. Gemini entregou
+`docs/research/real-brazil-institutions.md` e declarou repouso. A triagem encontrou ausência
+de URLs, atualidade não demonstrada, repetição do `Program.yield` inexistente e propostas
+de reações automáticas com números sem fonte suficiente. O cabeçalho que declarava pesquisa
+canônica concluída e revisada pelo Codex foi corrigido; a nota inicial delimita erros e revisão
+pendente, preservando o corpo recebido. Plano e handoff apontam para essa ressalva. Nenhum
+novo lote, implementação ou validação pesada foi iniciado; retomar pela conferência das fontes.

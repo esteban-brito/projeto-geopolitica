@@ -1,18 +1,5 @@
-/* LASTRO — receita do PIB, obrigatoria em valor absoluto, teto do arcabouco, e OS DOIS
-   GATILHOS DE APERTO, que no Brasil tem nomes diferentes porque sao coisas diferentes:
-
-   ⚠ BLOQUEIO e o teto do arcabouco nao caber na despesa. E aritmetica, e ninguem escolhe;
-   ⚠ CONTINGENCIAMENTO e a receita frustrar contra a META de resultado primario. Ele e
-   escolha, e no mundo ele se desfaz quando a receita volta.
-
-   O motor tratava os dois como um, e chamava o primeiro pelo nome do segundo. */
-
-/* A razao despesa/receita passa a ser EMERGENTE: nasce perto de 90%, sobe sozinha quando o
-   PIB decepciona, e espreme o discricionario contra o zero.
-   O espaco discricionario e a moeda real do jogo: e com ele que ECLUSA paga.
-   Juros sobre a divida. Eles dependem da Selic, que e CORRENTE, e um numero
-   inventado aqui viraria divida silenciosa no momento em que o motor certo
-   nascesse. A divida cresce por deficit primario e so. */
+/* LASTRO — receita do PIB, despesa obrigatoria, teto e gatilhos de aperto.
+   O motor tratava bloqueio (teto) e contingenciamento (meta) como o mesmo conceito. */
 
 const MONTHS_PER_YEAR = 12;
 
@@ -51,8 +38,6 @@ const MONTHS_PER_YEAR = 12;
  */
 
 /**
- * Receita anualizada.
- *
  * @param {number} gdp
  * @param {number} taxLoad
  */
@@ -61,8 +46,7 @@ export function revenueOf(gdp, taxLoad) {
 }
 
 /**
- * ⚠ A INFLACAO ENTRA AQUI, E A AUSENCIA DELA ERA UM DEFEITO MEDIDO.
- *
+ * A inflacao indexa a despesa obrigatoria: sua ausencia distorcia o modelo.
  * @param {number} mandatory
  * @param {number} annualRate crescimento REAL ao ano
  * @param {number} [inflation] ao ano, em fracao; zero reproduz o comportamento antigo
@@ -73,8 +57,7 @@ export function growMandatory(mandatory, annualRate, inflation = 0) {
 }
 
 /**
- * Com PIB nominal a 6% ao ano isso da 4,2% de crescimento do teto — que sao 0,2% REAIS.
- *
+ * Com PIB nominal a 6% ao ano da 4,2% de crescimento do teto (0,2% reais).
  * @param {number} anchorExpense
  * @param {number} anchorRevenue
  * @param {number} revenue
@@ -94,37 +77,27 @@ export function ceilingOf(
   inflation = 0,
   elapsed = 1,
 ) {
-  /* Ancora zerada nao existe em partida valida, mas divisao por zero produz `Infinity` que
-     atravessa o motor inteiro sem lancar — e ai o defeito aparece como um teto absurdo tres
-     telas adiante. */
+  /* Ancora zerada geraria Infinity sem lancar erro, gerando teto absurdo na tela. */
   if (anchorRevenue <= 0) return anchorExpense;
   const growth = (revenue - anchorRevenue) / anchorRevenue;
 
-  /* SEM BANDA DECLARADA, A REGRA ANTIGA. */
   if (floor === undefined || cap === undefined) return anchorExpense * (1 + share * growth);
 
-  /* O REPASSE E SOBRE O CRESCIMENTO REAL, e a banda tambem e real.
-     so, que e a familia do hiato nominal que a CORRENTE ja pagou uma vez. */
   const accrued = (1 + inflation) ** elapsed - 1;
   const real = (1 + growth) / (1 + accrued) - 1;
   const allowed = Math.min(cap, Math.max(floor, share * real));
 
-  /* E o teto volta a ser NOMINAL, porque a despesa se paga em dinheiro do ano. */
   return anchorExpense * (1 + allowed) ** elapsed * (1 + accrued);
 }
 
 /**
- * Resolve um mes de orcamento.
- *
  * @param {BudgetInput} input
  * @returns {BudgetOutput}
  */
 export function step(input) {
   const { parameters } = input;
 
-  /* OS DOIS FATORES ENTRAM POR PARAMETRO e valem 1 quando ninguem os passa. */
-  /* ⚠ A BASE E DEVOLVIDA SEPARADA, e isso nao e conveniencia — e a correcao de um defeito que
-     a simulacao pegou com a divida em 1066% do PIB. */
+  /* A base e devolvida separada: a simulacao pegou divida explodindo em 1066% do PIB. */
   const revenueBase = revenueOf(input.gdp, parameters.taxLoad);
   const mandatoryBase = growMandatory(
     input.mandatory,
@@ -147,24 +120,17 @@ export function step(input) {
     input.elapsed ?? 1,
   );
 
-  /* O espaco que a REGRA abre, que nao e o mesmo que o caixa disponivel. */
   const room = ceiling - mandatory;
 
-  /* BLOQUEIO e o caso em que nem a obrigatoria cabe no teto — e daqui sai a emenda, que e
-     o que liga este motor a ECLUSA. */
   const blocked = room < 0;
 
-  /* Medido em 48 meses: um governo que poe os 38 programas no MAXIMO e paga verba cheia a
-     todas as bancadas fecha o mes com o mesmo saldo de um que nao faz nada. */
+  /* Medido em 48 meses: programas no maximo fechavam o mes com o mesmo saldo de nao fazer nada. */
   const allowance = blocked ? 0 : Math.max(0, room);
 
-  /* O saldo e do MES: o caixa anualizado dividido por doze, menos o que foi efetivamente
-     empenhado neste turno. */
   const balance = cash / MONTHS_PER_YEAR - input.spent;
   const debt = input.debt - balance;
 
-  /* ⚠ A META E ANUAL E O TURNO E MENSAL, entao o mes se anualiza para ser comparavel — a
-     mesma unidade em que a LDO escreve a meta. */
+  /* O resultado primario do mes e anualizado para comparacao direta com a meta da LDO. */
   const primary = input.gdp > 0 ? (balance * MONTHS_PER_YEAR) / input.gdp : 0;
   const primaryFloor = parameters.primaryTarget - parameters.primaryBand;
 
