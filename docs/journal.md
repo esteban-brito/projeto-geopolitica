@@ -8789,3 +8789,57 @@ de reações automáticas com números sem fonte suficiente. O cabeçalho que de
 canônica concluída e revisada pelo Codex foi corrigido; a nota inicial delimita erros e revisão
 pendente, preservando o corpo recebido. Plano e handoff apontam para essa ressalva. Nenhum
 novo lote, implementação ou validação pesada foi iniciado; retomar pela conferência das fontes.
+
+### 36 · A especificação mestra e o mapa — 24/09
+
+Ele trouxe uma especificação de 2.580 linhas, escrita com o ChatGPT: semana no lugar do mês, um
+motor único de atores, informação que não teleporta, iniciativa com cláusulas, Senado,
+contestação judicial. Li inteira e apontei o que colidia com o código; ele respondeu com outra
+ordem: não reescrever por princípio, preservar o que resolve, desafiar a especificação quando
+houver caminho mais simples. Li os motores e o turno inteiros antes de escrever. O achado maior
+foi que metade do jogo já faz o que a especificação pede em escala menor — a `compose` decide
+o rito, a ESTRATO resolve hierarquia e vigência, prometer e pagar já são coisas distintas. O que
+colide de verdade é pouco: o voto sorteado, o afastamento que abre sozinho, o deputado que lê a
+rua verdadeira e um Congresso sem gente. Conferi três premissas na fonte e as três estavam
+erradas: a posse é em 5 de janeiro, a emenda individual é impositiva, e quem julga o afastamento
+é o Senado. O mapa propõe a semana como relógio por cima dos motores mensais, com uma prova de
+equivalência byte a byte, e oito emendas à especificação. Nenhum código mudou.
+
+### 37 · A revisão do mapa — 24/09, noite
+
+O ChatGPT leu o mapa e devolveu correções, e ele assinou as decisões. Quatro correções eram
+minhas e justas: estado byte a byte não prova nada depois que `state.date` existe, então a prova
+de W1 virou uma projeção legada que mora em `tests/`; eu tinha misturado o modo de pensar do ator
+com a camada de processamento, e a separação ganhou uma prova executável — processar todos os
+atores tem de dar o mesmo que processar os escolhidos; eu tinha declarado que informação,
+afirmação e evento eram o mesmo registro, e eles só compartilham conteúdo; e o silêncio não é
+resposta. Também sai o "terça a quinta", que era suposição. Conferi os artigos do afastamento,
+do recesso e da medida provisória; os três estavam certos. A especificação continua 1.0 e só
+recebeu o que ele aceitou. A antiga etapa 4 virou quatro lotes, o afastamento saiu do primeiro
+corte vertical, e o candidato recomendado passou a ser uma medida provisória fictícia. Nenhum
+código mudou.
+
+### 38 · O fecho dos docs antes do A1 — 24/09, noite
+
+Última rodada só de documento. A lei da tela passou a dizer a mesma coisa em quatro lugares, e o
+`standards.md` entrou na conta porque repetia a versão antiga. Ele decidiu manter ação e evento
+separados, adiar o objeto de proposição e escrever a garantia do agendador como equivalência
+semântica, com as causas de despertar como hipótese. A gaveta de seis meses virou legado não
+validado, e o próprio guia dos agentes a descrevia como rito. Pelo critério dele — a menor
+mudança que prova uma propriedade sem carregar riscos alheios —, o calendário sem consumidor
+saiu, e dois lotes que misturavam série e tela se partiram: 19 lotes. Ao preparar o escopo do
+A1 apareceu um bloqueio pequeno: a guarda de codinomes reprova motor novo sem nome, e o nome é
+dele.
+
+### 39 · A1, a VONTADE — 24/09, noite
+
+Ele escolheu o nome e liberou o lote com uma correção: o objetivo não podia sumir entre a crença
+e a intenção. As provas vieram antes e caíram contra um módulo que não existia; duas delas eu
+tive de recalcular à mão, porque a regra de atualização de crença que escolhi tornava os
+números do cenário incoerentes. O motor ficou pequeno: um objetivo é um sujeito acima ou abaixo
+de um alvo, e a prioridade sai da distância que o ator acredita haver até ele; a intenção é o
+plano adotado e as crenças em que se apoiou; a ação é o passo do plano. Para saber em que
+crenças a escolha se apoiou, a avaliação é observada no acesso, e não declarada à mão — uma
+lista esquecida desligaria a reconsideração em silêncio. Um plano concluído espera efeito em vez
+de se repetir, porque sem eventos o ator não tem como saber se deu certo. O portão passou com
+348 provas e a série não se mexeu. No meio, ele avisou que os codinomes são provisórios.

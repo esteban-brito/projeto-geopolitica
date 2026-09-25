@@ -1,5 +1,6 @@
 /* GUARDA · FRONTEIRAS — cada camada so alcanca o que lhe cabe. */
 
+import { posix } from "node:path";
 import { collect } from "../lib/project.mjs";
 
 export const name = "boundaries";
@@ -51,9 +52,16 @@ export function audit(files) {
 
     /* 2 — O DOMINIO E PURO. */
     if (path.startsWith("src/domain/")) {
+      const engine = path.split("/")[2] ?? "";
       for (const specifier of imports) {
         if (/(ui|application|infra)\//.test(specifier)) {
           add(`${path} importa ${specifier} — o dominio nao conhece camada de cima`);
+        }
+        const target = posix.join(posix.dirname(path), specifier).split("/");
+        if (target[0] === "src" && target[1] === "domain" && target[2] !== engine) {
+          add(
+            `${path} importa ${specifier} — motor nenhum chama outro motor; quem compoe e a aplicacao`,
+          );
         }
       }
       for (const forbidden of ["document", "window", "localStorage", "Math.random", "Date.now"]) {
@@ -92,6 +100,12 @@ export const synthetic = [
     label: "dominio importando UI",
     files: new Map([
       ["src/domain/economy/index.mjs", 'import { h } from "../../ui/shared/html.mjs";'],
+    ]),
+  },
+  {
+    label: "motor de dominio importando outro motor",
+    files: new Map([
+      ["src/domain/congress/index.mjs", 'import { step } from "../opinion/index.mjs";'],
     ]),
   },
   {

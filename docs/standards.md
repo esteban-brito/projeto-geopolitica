@@ -67,6 +67,7 @@ aleatoriedade, cada um com fluxo próprio derivado da seed da partida.
 | **ELENCO**   | `src/domain/cast/`        | os blocos, os arquétipos, o vocabulário de nomes, a semente | as pessoas do mandato, a memória de cada uma e o preço dela |
 | **CALDEIRA** | `src/domain/pressure/`    | a pressão de cada grupo, o descontentamento do mês e a rua  | a pressão nova, e se as três rupturas estão abertas juntas  |
 | **DELTA**    | `src/domain/graph/`       | catálogo de ligações, estado, deltas                        | nós e arestas com peso e sinal                              |
+| **VONTADE**  | `src/domain/actors/`      | o ator, as percepções, o repertório, a avaliação, limiares  | crenças, objetivos priorizados, intenção, ação e o trace    |
 
 O codinome é como o responsável cita o motor. Ele vive no cabeçalho do módulo e
 nesta tabela, e **não** aparece em código executável — no código existe um nome
@@ -204,6 +205,9 @@ mostra enquanto o jogador decide sai da mesma função que o turno vai executar
 diverge, e a divergência aparece justamente no caso extremo, que é o caso em que
 o jogador precisava do número.
 
+E o que ela pergunta é o que a Presidência sabe: a tela mostra a visão presidencial,
+nunca o estado oculto (especificação §6.1, invariante 21; lista de migração no mapa §5.6).
+
 ⚠ **E oferecer a porta certa não basta: é preciso FECHAR a errada.** O defeito
 recorrente deste projeto — encontrado quatro vezes — é **dois lugares montando a
 mesma pergunta**, e enquanto a porta errada estiver na fachada, alguém entra por ela.
@@ -305,7 +309,7 @@ número ao lado dela.
 | `tokens`     | literal de cor solto; `color-mix`; par hex/rgb divergente; `var()` órfão; token sem consumidor                                                                                                            |
 | `cascade`    | regra fora de camada; `!important`; ordem de carregamento errada; `motion` deixar de ser a última                                                                                                         |
 | `motion`     | rede incompleta; `animation: none`; falta de alcance a pseudo-elementos e View Transitions; animação inline                                                                                               |
-| `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; dependência de teste vazando                                                                                                   |
+| `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; motor de domínio importando outro; dependência de teste vazando                                                                |
 | `naming`     | `.js`; nome fora do padrão; CommonJS; `export default`; identificador acentuado                                                                                                                           |
 | `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                                                                                                                |
 | `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                                                                                                                   |

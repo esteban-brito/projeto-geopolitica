@@ -5,17 +5,39 @@
 > envelhece: remeça antes de repetir. A tabela de contagens é cobrada por
 > `tests/suites/catalog.mjs`; a série, por quem mexe no motor.
 
-## Estado — 23/09/2026, portão verde, contrato universal AGENTS.md e governança tripartite
+## Estado — 24/09/2026, lote A1 (VONTADE) feito, portão verde
 
+- **lote A1 feito:** `src/domain/actors/` (VONTADE), motor de agência genérico e puro:
+  percepção → crença → objetivo priorizado → intenção → ação → trace. Objetivo, intenção e
+  ação são tipos distintos; modo heurístico ou deliberativo sai só das entradas (gatilhos
+  `unplanned`, `satisfied`, `failure`, `basis`, `conflict`, `risk`); repertório, avaliação e
+  limiares entram por parâmetro; empate pela ordem dos ids; esperar é uma intenção. 14 provas em
+  `tests/suites/actors.mjs`, caídas antes do motor existir. Guarda `boundaries` ganhou "motor de
+  domínio importando outro", com prova sintética. Nada no jogo consome o VONTADE ainda;
+- **Autoridade de design:** [especificação mestra](spec/especificacao-mestra.md), versão 1.0,
+  revisada em 24/09 só com as decisões aceitas por ele (convenção de caixa limitada aos schemas,
+  comunicação, calendário real e posse, visão presidencial, evento mínimo, `GAME_RULE` como
+  projeção, cognição × processamento, silêncio não é resposta, agregado não vira ator,
+  parlamentares individuais, Senado em duas entregas, `ACTION` ≠ `EVENT`, `PROPOSITION` adiada,
+  equivalência semântica do agendador, invariantes 21–23). `world-design.md` superado, preservado;
+- **mapa de migração** revisado em [spec/mapa-migracao.md](spec/mapa-migracao.md): projeção
+  legada no lugar de "byte a byte", calendário civil registrado, visão presidencial com as dez
+  consultas que leem verdade oculta, modelo mínimo de informação, três candidatos de corte
+  vertical (ensaio: contingenciamento; candidata principal: medida provisória fictícia), 19
+  lotes pequenos em três trilhas (A comportamento primeiro, B tempo, C epistemologia) e 4
+  pesquisas. Decisões tomadas e abertas no §11. Nenhum código mudou;
+- **a tela mostra o que a Presidência sabe:** a mesma lei em `CLAUDE.md`, `AGENTS.md`,
+  `agent-brief.md` e `standards.md` §5. Os três primeiros apontam `docs/spec/` como autoridade de
+  design e plano em vigor; o índice dos ciclos também. **ADR 0003** explicita empresa;
+- medido para o mapa: save no mês 48 com 35.387 bytes; `playMonth` 0,64 ms; `settlement`
+  0,125 ms;
 - **Pesquisa do Gemini entregue; não validada:** triagem rápida em
   [real-brazil-institutions.md](research/real-brazil-institutions.md). Faltam URLs e comprovação
   de atualidade; repete erro sobre `Program.yield` e propõe consequências automáticas e números
   sem fonte suficiente. Cabeçalho corrigido e ressalvas registradas. Gemini declarou repouso;
   nenhum novo lote enviado. Retomar pela verificação de fontes, sem usar o rascunho como regra;
-- **Direção atual de design:** usuário pediu reformulação para tornar o jogo jogável e realista,
-  com pessoas de personalidades diferentes e empresas fictícias inspiradas na realidade.
-  Estudo e avaliação da resposta do Gemini em [world-design.md](world-design.md); piloto de
-  Energia é proposta do Codex, ainda não implementada nem selecionada pelo usuário;
+- **direção anterior (23/09) superada pela especificação:** [world-design.md](world-design.md)
+  fica como histórico; o piloto de Energia não é o primeiro passo;
 - **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos (`app.mjs` modularizado, menu com 3
   chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
   `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-desk.css` 4%,
@@ -33,17 +55,17 @@
   global antes do lote 6 e 41% no domínio antes desta rodada;
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
   corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
-- **portão:** 13 guardas · 67 sintéticas · 334 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde. `validate` **139,2s** na rodada final de 23/09, após uma
-  falha intermitente do passeio (achado 69). Log: `tmp/codex-validate.log`. Série do `simulate` imóvel;
+- **portão:** 13 guardas · 68 sintéticas · 348 provas · passeio verde em 1440×980 e 1440×900 ·
+  macaco (60 ações, semente 7) verde. `validate` verde em 24/09 depois do A1. Série do
+  `simulate` remedida em 24/09 nas seis sondas: imóvel;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem
 
-1. **reformulação da experiência** — desenvolver a proposta de [world-design.md](world-design.md)
-   com foco em iniciativa de pessoas e empresas e consequências distintas das políticas.
-   Revisar a entrega do Gemini a partir da nota de triagem e conferir fontes antes de incorporá-la.
-   A ordem abaixo preserva as pendências anteriores; não bloqueia o estudo da nova direção;
+1. **lote A2** do [mapa](spec/mapa-migracao.md#61-os-lotes): evento mínimo, ação `ASSERT` →
+   evento → crença com conteúdo por referência, identidade do evento. Só começa com o sim
+   dele. A pesquisa R1 (emendas) pode correr em paralelo, sem código. A pesquisa do Gemini
+   segue sem validação; os itens 4, 6 e 7 abaixo têm veredito no §10 do mapa;
 2. **decisão da poda de `tmp/` (Item 5)** — proposta pronta em `tmp/inventario-item5.md`: apagar os
    18 backups efêmeros (`*.antes.*`, `*.new.*`) e mover scripts ad-hoc dormentes para `tmp/arquivo/`
    após o sim dele;
@@ -60,6 +82,10 @@
 
 ## Decisões vivas
 
+- **24/09, codinomes provisórios** — os codinomes dos motores (inclusive VONTADE, escolhido
+  por ele para o motor de agência) serão revistos numa etapa própria de nomenclatura. Não
+  influenciam a arquitetura nem aparecem para o jogador; a guarda `codenames` já os barra em
+  código executável, o que inclui os textos da interface;
 - **23/09, liberdade de projeto político** — o jogador não interpreta Lula. O usuário quer
   poder tentar transformações radicais, incluindo comunismo, fascismo e trajetórias inspiradas
   em Milei ou Singapura. Brasil real como ponto de partida, não destino obrigatório. Modelar
@@ -103,13 +129,34 @@
   como avaliador;
 - **31/08 — base acordada, nenhuma executada:** o email leva até a tela · o save fica para depois
   · o piso da saúde e da educação anda com a receita (remede a série) · a votação olha quem
-  compareceu (4 regras de equilíbrio);
+  compareceu (4 regras de equilíbrio). Veredito de cada uma no §10 do mapa: a presença vira ação
+  do deputado, e as 4 regras viram critério de calibragem;
 - **21/08** — não recalibrar a capacidade antes da reformulação das empresas (achado 53);
 - **sem resposta dele:** a lista de bugs que ele viu ("são muitos, nem sei como escrever").
 
 ## Achados abertos
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
+
+- **70. A posse é em 5 de janeiro (24/09) — VERIFICADO.** EC 111/2021, art. 82: mandato de
+  05/01/2027 a 05/01/2031 (Senado, TRE-PR; mapa §3). `state.mjs` diz 1º de janeiro. Lote B1;
+- **71. Emenda individual é impositiva (24/09) — VERIFICADO em parte.** 2% da RCL, execução
+  obrigatória (CF art. 166 §§ 9º e 11, EC 126/2022; nota da CMO). **VERIFICAR** bancada,
+  comissão, cronograma, impedimento técnico e o que o Executivo negocia (pesquisa R1). A ECLUSA
+  usa a verba prometida como moeda discricionária (`turn.mjs:417`). Não se troca por outra moeda
+  simplificada. Lote D1;
+- **72. O afastamento cai na Câmara (24/09) — VERIFICADO.** Perder na Câmara derruba o presidente
+  (`turn.mjs:1523-1536`). Arts. 86 e 52: 2/3 da Câmara admitem, o Senado julga, suspensão ao
+  instaurar, 180 dias, condenação por 2/3 do Senado. Lote F, depois do corte vertical;
+- **73. O senador arrasta deputados (24/09).** `benches()` não filtra cargo: `senate-centrao`
+  leva de 35% a 55% das cadeiras da Câmara do partido dele. Lote D1;
+- **75. A gaveta de 6 meses é legado não validado (24/09) — VERIFICAR.** `DRAWER_LIFE = 6` é
+  parâmetro de design apresentado como rito. Fica só pela compatibilidade; não entra na ESTRATO,
+  no calendário nem no Congresso novo. Na Câmara o arquivamento seria por fim de legislatura
+  (RICD art. 105, a conferir, pesquisa R4). Lote B4. Nada marcado VERIFICAR vira coeficiente,
+  procedimento ou regra canônica antes da pesquisa;
+- **74. O canal tributário está morto (24/09).** `turn.mjs:1451-1452` passa a mesma carga como
+  `taxLoad` e `baseTaxLoad`; `taxDelta` é sempre zero. Liga com o item B4 do ciclo 30;
 
 - **69. Prova de voo interrompido oscilou (23/09).** Em `npm.cmd run validate`, a pasta mediu
   719px no corte e 569px dois quadros depois: diferença de 150px, acima do limite de 20%.
@@ -167,8 +214,8 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 23/09 pelo Codex após o lote de comentários:
-imóveis em todas as colunas abaixo. Logs em `tmp/codex-simulate-*.log`.
+`agenda` dá 30/43). As seis sondas foram remedidas em 24/09, depois do lote A1: imóveis em
+todas as colunas abaixo.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
 | ------------ | ---------- | ------------ | --------- | --------- |
@@ -207,13 +254,14 @@ cheia. Vocabulário único em `src/ui/shared/annex.mjs` (guarda `annexes`).
 **Motores:** LASTRO (receita, teto, `blocked` × `atRisk`) · ECLUSA (`whipCount`/`vote`/`settle`)
 · MALHA (índices, `pushOf`/`liftOf`) · SONDA · ELENCO (semente, sem fluxo de RNG) · CORRENTE
 (hiato, Phillips, Taylor, Okun, `carry`) · ESTRATO (faixa derivada, nunca guardada) · DELTA (lido
-do catálogo) · TEMPORAL e CASCATA só contrato.
+do catálogo) · VONTADE (agência genérica; ainda sem consumidor no jogo) · TEMPORAL e CASCATA só
+contrato.
 
 **Composição:** `agenda.mjs` (proposta, rateio) · `turn.mjs` (`bandsOf` → `settlement` →
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
 `simulate.mjs` (nove sondas).
 
-**Verificação:** 13 guardas · 67 sintéticas · 334 provas · passeio dentro do `validate`
+**Verificação:** 13 guardas · 68 sintéticas · 348 provas · passeio dentro do `validate`
 (geometria, recorte, contraste no pixel, 1440×980 e 1440×900).
 
 ## O que ainda não existe
