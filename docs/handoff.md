@@ -7,18 +7,31 @@
 
 ## Para retomar em um minuto
 
-- **próximo passo:** lote A1.1, endurecimento do VONTADE. O prompt vem dele; não começar sem
-  ele. Depois, A2. Não há outro trabalho pela metade;
+- **próximo passo:** revisão do A1.1 por ele. O A2 só começa depois do sim. Não há outro
+  trabalho pela metade;
 - **o plano:** [mapa de migração](spec/migration-map.md) §6.1 (os lotes) e §11 (decisões
   tomadas e abertas), sob a [especificação mestra](spec/master-spec.md);
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `npm run validate` verde e série do `simulate` imóvel em 24/09;
+- **portão:** `npm run validate` verde e série do `simulate` imóvel em 25/09, depois do A1.1;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
 
-## Estado — 24/09/2026, lote A1 (VONTADE) feito e projeto padronizado, portão verde
+## Estado — 25/09/2026, lote A1.1 (endurecimento do VONTADE) feito, portão verde
 
+- **lote A1.1 feito em 25/09**, pelo prompt dele: cinco defeitos reproduzidos antes do conserto
+  (conflito parado reabria a escolha em 3 de 3 ticks; risco já pesado, em 4 de 4 passos;
+  0 → 0,01 reabria a intenção; `cost: 1e9` somava −1e9 de utilidade; percepção com NaN
+  envenenava a crença, e a avaliação podia alterar os objetivos do ator). Contrato novo: a
+  avaliação só devolve `effects` (na unidade de cada sujeito) e `risk` (0 a 1, fração do
+  ganho); termo estranho, número não finito ou risco fora da faixa param o motor. O efeito só
+  vira valor pelo objetivo do ator (`span`), e o risco pesa contra o ganho do próprio plano.
+  Mudança material de crença é absoluta, por sujeito, em `thresholds.material`, declarada por
+  quem compõe; sujeito sem escala para o motor. A intenção guarda a frente de objetivos e o
+  risco que a escolha viu; só o que mudou desde então a reabre. Saíram `cost`, `uncertainty`,
+  `coherence` e `thresholds.salience`. Prioridade e confiança marcadas provisórias. 8 provas
+  novas, 7 caídas contra o código anterior. Dívida registrada no A4 do mapa: a avaliação
+  montada pela aplicação não pode capturar o estado verdadeiro por closure;
 - **padronização de 24/09, com as decisões dele:** todo caminho versionado em inglês,
   kebab-case e sem acento (docs, assets, licença, skills — agora `check`, `walk`, `simulate`,
   `validate` —, capturas e `tmp/`); nomes da UI que diziam outra coisa corrigidos
@@ -84,15 +97,14 @@
   corrigidos, 2 nits na fila. As branches dos ultrareviews foram apagadas em 24/09 (só locais;
   recriáveis): `base-ultra` 679f043, `base-motor` bb7ce9d, `motor-review` fc78e27. Também
   `acoplamento-e-simulador` 137a94a (segue no remoto) e `backup-auditoria-26-08-2026` 4bf8c51;
-- **portão:** 13 guardas · 68 sintéticas · 348 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde · `links` com zero quebradas. `validate` verde em 24/09
-  depois da padronização. Série do `simulate` remedida em 24/09 nas seis sondas: imóvel;
+- **portão:** 13 guardas · 68 sintéticas · 356 provas · passeio verde em 1440×980 e 1440×900 ·
+  macaco (60 ações, semente 7) verde · `links` com zero quebradas. `validate` verde em 25/09
+  depois do A1.1. Série do `simulate` remedida em 25/09 nas seis sondas: imóvel;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem
 
-1. **lote A1.1 — endurecimento do VONTADE**, antes do A2: sugestão do ChatGPT aceita por ele;
-   o prompt ainda vai chegar. Não começar sem ele. Depois, **lote A2** do
+1. **revisão do A1.1** por ele; depois, **lote A2** do
    [mapa](spec/migration-map.md#61-os-lotes). A pesquisa R1 (emendas) pode correr em paralelo,
    sem código. A pesquisa do Gemini segue sem validação; os itens 3, 5 e 6 abaixo têm veredito
    no §10 do mapa;
@@ -243,7 +255,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 24/09, depois do lote A1: imóveis em
+`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do lote A1.1: imóveis em
 todas as colunas abaixo.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
@@ -290,7 +302,7 @@ e CASCATA saíram em 24/09 e voltam quando tiverem código.
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
 `simulate.mjs` (nove sondas).
 
-**Verificação:** 13 guardas · 68 sintéticas · 348 provas · passeio dentro do `validate`
+**Verificação:** 13 guardas · 68 sintéticas · 356 provas · passeio dentro do `validate`
 (geometria, recorte, contraste no pixel, 1440×980 e 1440×900).
 
 ## O que ainda não existe

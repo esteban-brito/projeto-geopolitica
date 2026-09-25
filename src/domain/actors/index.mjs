@@ -5,25 +5,29 @@
 
    Objetivo, intenção e ação são três coisas: o objetivo é o resultado buscado, a intenção é o
    plano escolhido para buscá-lo, a ação é o passo concreto do plano. O ator nunca lê o mundo:
-   só percepções. Nenhum coeficiente de jogo mora aqui; pesos e limiares entram por parâmetro. */
+   só percepções. Nenhum coeficiente de jogo mora aqui; pesos e limiares entram por parâmetro.
+
+   A avaliação diz o que o plano faria ao mundo, na unidade de cada sujeito, e nunca quanto isso
+   vale: quem converte é o ator, pelos próprios objetivos. A prioridade (peso × distância
+   percebida) e a confiança que só sobe são provisórias; nenhuma prova congela esses números. */
 
 /**
  * @typedef {object} Percept o que chegou ao ator neste tick
  * @property {string} subject
- * @property {number} value
+ * @property {number} value - na unidade do sujeito
  * @property {number} quality - de 0 a 1: o quanto esta percepção move a crença
  * @property {string} source
  * @typedef {object} Belief
- * @property {number} estimate
- * @property {number} confidence - de 0 a 1
+ * @property {number} estimate - na unidade do sujeito
+ * @property {number} confidence - de 0 a 1; provisória: hoje só sobe, e A2 a revê
  * @property {string[]} sources
  * @property {number} updatedAt - o tick da última percepção
  * @typedef {object} Goal o resultado que o ator busca: um sujeito acima ou abaixo de um alvo
  * @property {string} id
  * @property {string} subject
  * @property {"atLeast" | "atMost"} op
- * @property {number} target
- * @property {number} span - a distância do alvo que leva a prioridade ao máximo
+ * @property {number} target - na unidade do sujeito
+ * @property {number} span - maior que zero, na unidade do sujeito: a distância do alvo que leva a prioridade ao máximo e o efeito que vale a prioridade inteira
  * @property {number} weight
  * @typedef {object} Intention o plano adotado para um objetivo; plano nulo é esperar
  * @property {string | null} goal
@@ -32,8 +36,10 @@
  * @property {boolean} done
  * @property {number} since
  * @property {Record<string, number | null>} basis - as crenças em que a escolha se apoiou
+ * @property {string[]} front - os objetivos na frente quando a escolha foi feita
+ * @property {number} risk - o risco do plano quando foi escolhido; zero ao esperar
  * @typedef {object} Core traços que mudam pouco; ausente vale neutro
- * @property {number} [riskAversion] - multiplica o risco avaliado
+ * @property {number} [riskAversion] - multiplica o risco avaliado; 1 é o valor esperado
  * @property {number} [persistence] - multiplica a mudança necessária para reconsiderar
  * @typedef {object} Actor
  * @property {string} id
@@ -47,22 +53,19 @@
  * @typedef {object} Plan um caminho válido para este ator agora, montado por quem compõe
  * @property {string} id
  * @property {Step[]} actions
- * @typedef {object} Appraisal
- * @property {Record<string, number>} effects - a mudança esperada em cada sujeito
- * @property {number} [risk]
- * @property {number} [cost]
- * @property {number} [uncertainty]
- * @property {number} [coherence]
- * @typedef {object} View o que a avaliação pode ler: o próprio ator, e nada do mundo
- * @property {Readonly<Record<string, Belief>>} beliefs
- * @property {Core} core
- * @property {ReadonlyArray<Goal>} goals
- * @property {Intention | null} intention
+ * @typedef {object} Appraisal o que o plano faria ao mundo; nenhum campo é valor para o ator
+ * @property {Record<string, number>} effects - a mudança esperada em cada sujeito, na unidade da crença sobre ele
+ * @property {number} [risk] - de 0 a 1: a fração do ganho do plano que pode não vir
+ * @typedef {object} View o que a avaliação pode ler: o próprio ator, congelado, e nada do mundo
+ * @property {Readonly<Record<string, Readonly<Belief>>>} beliefs
+ * @property {Readonly<Core>} core
+ * @property {ReadonlyArray<Readonly<Goal>>} goals
+ * @property {Readonly<Intention> | null} intention
  * @typedef {(plan: Plan, view: View) => Appraisal} Appraise
  * @typedef {object} Thresholds
- * @property {number} salience - mudança relativa de uma crença de apoio que reabre a intenção
- * @property {number} conflict - distância máxima entre as duas maiores prioridades que obriga deliberar
- * @property {number} risk - risco do plano corrente que obriga deliberar
+ * @property {Record<string, number>} material - por sujeito, na unidade dele: a menor mudança de crença que reabre a intenção
+ * @property {number} conflict - distância máxima de prioridade para um objetivo contar como rival do primeiro
+ * @property {number} risk - risco do plano corrente, de 0 a 1, que reabre a intenção ao ser cruzado
  * @typedef {object} Action
  * @property {string} actor
  * @property {string} kind
@@ -77,8 +80,9 @@
  * @typedef {{ kind: TriggerKind, subject?: string }} Trigger
  * @typedef {object} Candidate
  * @property {string} plan
+ * @property {Required<Appraisal>} appraisal - o efeito esperado no mundo, como a avaliação o deu
  * @property {number} utility
- * @property {Record<string, number>} parts - cada termo já com sinal; `goal:<id>` por objetivo
+ * @property {Record<string, number>} parts - o valor percebido de cada termo, com sinal; `goal:<id>` por objetivo
  * @typedef {object} Reason
  * @property {string} term
  * @property {number} weight
@@ -100,6 +104,8 @@
  * @property {Trace} trace
  */
 
+const TERMS = new Set(["effects", "risk"]);
+
 /** @param {number} value @param {number} min @param {number} max */
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
@@ -108,6 +114,11 @@ function clamp(value, min, max) {
 /** @param {string} a @param {string} b */
 function byId(a, b) {
   return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/** @param {ReadonlyArray<string>} a @param {ReadonlyArray<string>} b */
+function sameIds(a, b) {
+  return a.length === b.length && a.every((id, index) => id === b[index]);
 }
 
 /**
@@ -121,6 +132,9 @@ function perceive(beliefs, percepts, tick) {
   /** @type {Trace["beliefs"]} */
   const changed = [];
   for (const percept of percepts) {
+    if (!Number.isFinite(percept.value) || !Number.isFinite(percept.quality)) {
+      throw new Error(`percepcao de "${percept.subject}" sem numero finito`);
+    }
     const quality = clamp(percept.quality, 0, 1);
     const prior = next[percept.subject];
     const estimate = prior
@@ -152,24 +166,92 @@ function prioritize(goals, beliefs) {
   return [...goals]
     .sort((a, b) => byId(a.id, b.id))
     .map(goal => {
+      if (!(goal.span > 0 && Number.isFinite(goal.span + goal.target) && goal.weight >= 0)) {
+        throw new Error(
+          `objetivo "${goal.id}" sem escala: span maior que zero, alvo e peso finitos`,
+        );
+      }
       const belief = beliefs[goal.subject];
       if (!belief) return { id: goal.id, priority: 0, known: false };
       const gap =
         goal.op === "atLeast" ? goal.target - belief.estimate : belief.estimate - goal.target;
-      const reach = goal.span > 0 ? gap / goal.span : gap > 0 ? 1 : 0;
-      return { id: goal.id, priority: goal.weight * clamp(reach, 0, 1), known: true };
+      return { id: goal.id, priority: goal.weight * clamp(gap / goal.span, 0, 1), known: true };
     });
 }
 
+/* Mudança relativa reprovada: 0 → 0,01 contava 100% e reabria a intenção. Quem sabe a escala de
+   um sujeito é quem compõe; sujeito sem escala declarada é erro, nunca zero nem infinito. */
+/** @param {Thresholds} thresholds @param {string} subject */
+function materialOf(thresholds, subject) {
+  const unit = Object.hasOwn(thresholds.material, subject)
+    ? thresholds.material[subject]
+    : undefined;
+  if (!(unit !== undefined && unit > 0 && Number.isFinite(unit))) {
+    throw new Error(`sujeito "${subject}" sem mudanca material declarada`);
+  }
+  return unit;
+}
+
+/* Custo solto reprovado: 1e9 em reais somava -1e9 de utilidade. Custo é efeito negativo no
+   sujeito que paga; o risco pesa contra o ganho do próprio plano, e não contra um câmbio fixo. */
 /**
- * @param {number | null | undefined} was
- * @param {number | undefined} now
+ * @param {Appraisal} appraisal
+ * @param {string} plan
+ * @returns {Required<Appraisal>}
  */
-function shift(was, now) {
-  if (now === undefined) return 0;
-  if (was === null || was === undefined) return Infinity;
-  const scale = Math.max(Math.abs(was), Math.abs(now));
-  return scale === 0 ? 0 : Math.abs(now - was) / scale;
+function checked(appraisal, plan) {
+  for (const key of Object.keys(appraisal)) {
+    if (!TERMS.has(key)) {
+      throw new Error(`"${key}" em ${plan} nao e termo da avaliacao, que so da efeito e risco`);
+    }
+  }
+  /** @type {Record<string, number>} */
+  const effects = {};
+  for (const [subject, value] of Object.entries(appraisal.effects ?? {})) {
+    if (!Number.isFinite(value)) throw new Error(`efeito de ${plan} em "${subject}" nao e finito`);
+    effects[subject] = value;
+  }
+  const risk = appraisal.risk ?? 0;
+  if (!(risk >= 0 && risk <= 1)) throw new Error(`risco de ${plan} fora de 0 a 1: ${risk}`);
+  return { effects, risk };
+}
+
+/**
+ * @param {Actor} actor
+ * @param {Record<string, Belief>} beliefs
+ * @param {Set<string>} reads
+ * @returns {View}
+ */
+function viewOf(actor, beliefs, reads) {
+  const frozen = Object.freeze(
+    Object.fromEntries(
+      Object.entries(beliefs).map(([subject, belief]) => [
+        subject,
+        Object.freeze({
+          ...belief,
+          sources: /** @type {string[]} */ (Object.freeze([...belief.sources])),
+        }),
+      ]),
+    ),
+  );
+  const current = actor.intention;
+  return {
+    beliefs: new Proxy(frozen, {
+      get(target, key) {
+        if (typeof key === "string") reads.add(key);
+        return Reflect.get(target, key);
+      },
+    }),
+    core: Object.freeze({ ...actor.core }),
+    goals: Object.freeze(actor.goals.map(goal => Object.freeze({ ...goal }))),
+    intention: current
+      ? Object.freeze({
+          ...current,
+          basis: Object.freeze({ ...current.basis }),
+          front: /** @type {string[]} */ (Object.freeze([...current.front])),
+        })
+      : null,
+  };
 }
 
 /**
@@ -189,51 +271,52 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
   const riskAversion = actor.core.riskAversion ?? 1;
   const persistence = actor.core.persistence ?? 1;
   const current = actor.intention;
+  const byGoal = [...actor.goals].sort((a, b) => byId(a.id, b.id));
 
   /* A avaliação declara o que leu por acesso, e não por lista: uma lista escrita à mão que
      esquecesse um sujeito desligaria a reconsideração em silêncio. */
   /** @type {Set<string>} */
   const reads = new Set();
-  const frozen = Object.freeze({ ...beliefs });
-  /** @type {View} */
-  const view = {
-    beliefs: new Proxy(frozen, {
-      get(target, key) {
-        if (typeof key === "string") reads.add(key);
-        return Reflect.get(target, key);
-      },
-    }),
-    core: actor.core,
-    goals: actor.goals,
-    intention: current,
-  };
+  const view = viewOf(actor, beliefs, reads);
+  /** @param {Plan} plan */
+  const appraised = plan => checked(appraise(plan, view), plan.id);
 
   /** @param {Plan} plan @returns {Candidate} */
   const score = plan => {
-    const appraisal = appraise(plan, view);
+    const appraisal = appraised(plan);
     /** @type {Record<string, number>} */
     const parts = {};
-    for (const goal of [...actor.goals].sort((a, b) => byId(a.id, b.id))) {
+    let gain = 0;
+    for (const goal of byGoal) {
       const priority = priorityOf.get(goal.id) ?? 0;
       const effect = appraisal.effects[goal.subject] ?? 0;
       if (priority === 0 || effect === 0) continue;
       const direction = goal.op === "atLeast" ? 1 : -1;
-      parts[`goal:${goal.id}`] = (priority * direction * effect) / (goal.span > 0 ? goal.span : 1);
+      const part = (priority * direction * effect) / goal.span;
+      parts[`goal:${goal.id}`] = part;
+      gain += part;
     }
-    if (appraisal.coherence) parts["coherence"] = appraisal.coherence;
-    if (appraisal.risk) parts["risk"] = -riskAversion * appraisal.risk;
-    if (appraisal.cost) parts["cost"] = -appraisal.cost;
-    if (appraisal.uncertainty) parts["uncertainty"] = -appraisal.uncertainty;
-    const utility = Object.values(parts).reduce((sum, part) => sum + part, 0);
-    return { plan: plan.id, utility, parts };
+    const doubt = riskAversion * appraisal.risk * Math.max(gain, 0);
+    if (doubt) parts["risk"] = -doubt;
+    return { plan: plan.id, appraisal, utility: gain - doubt, parts };
   };
 
   const ranked = [...goals].sort((a, b) => b.priority - a.priority || byId(a.id, b.id));
-  const [first, second] = ranked;
-  const sought = (first?.priority ?? 0) > 0;
+  const [first] = ranked;
+  const top = first?.priority ?? 0;
+  const sought = top > 0;
+  const front = sought
+    ? ranked
+        .filter(goal => goal.priority > 0 && top - goal.priority <= thresholds.conflict)
+        .map(goal => goal.id)
+        .sort(byId)
+    : [];
   const planOf = new Map(plans.map(plan => [plan.id, plan]));
   const active = current?.plan ? planOf.get(current.plan) : undefined;
 
+  /* Conflito e risco presentes reprovados como gatilho: com o estado parado, dois objetivos
+     empatados reabriram a escolha em 3 de 3 ticks, e um plano de risco já pesado em 4 de 4
+     passos. A intenção guarda o que a escolha viu, e só o que mudou desde então a reabre. */
   /** @type {Trigger[]} */
   const triggers = [];
   if (!current && sought) triggers.push({ kind: "unplanned" });
@@ -246,23 +329,19 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
     for (const subject of [
       ...new Set([...Object.keys(current.basis), ...actor.goals.map(g => g.subject)]),
     ].sort(byId)) {
-      if (
-        shift(current.basis[subject], beliefs[subject]?.estimate) >=
-        thresholds.salience * persistence
-      ) {
-        triggers.push({ kind: "basis", subject });
+      const unit = materialOf(thresholds, subject);
+      const now = beliefs[subject]?.estimate;
+      if (now === undefined) continue;
+      const was = current.basis[subject];
+      const moved = was === null || was === undefined ? Infinity : Math.abs(now - was);
+      if (moved >= unit * persistence) triggers.push({ kind: "basis", subject });
+    }
+    if (sought && !sameIds(current.front, front)) triggers.push({ kind: "conflict" });
+    if (active && !current.done) {
+      const risk = appraised(active).risk;
+      if (risk >= thresholds.risk && current.risk < thresholds.risk) {
+        triggers.push({ kind: "risk" });
       }
-    }
-    if (
-      first &&
-      second &&
-      second.priority > 0 &&
-      first.priority - second.priority <= thresholds.conflict
-    ) {
-      triggers.push({ kind: "conflict" });
-    }
-    if (active && !current.done && (appraise(active, view).risk ?? 0) >= thresholds.risk) {
-      triggers.push({ kind: "risk" });
     }
   }
 
@@ -282,6 +361,7 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
     );
     const basis = /** @type {Record<string, number | null>} */ ({});
     for (const subject of [...new Set([...reads, ...actor.goals.map(g => g.subject)])].sort(byId)) {
+      materialOf(thresholds, subject);
       basis[subject] = beliefs[subject]?.estimate ?? null;
     }
     if (best && best.utility > 0) {
@@ -297,10 +377,21 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
         done: false,
         since: same ? current.since : tick,
         basis,
+        front,
+        risk: best.appraisal.risk,
       };
       outcome = same ? "kept" : "adopted";
     } else {
-      intention = { goal: first?.id ?? null, plan: null, step: 0, done: false, since: tick, basis };
+      intention = {
+        goal: first?.id ?? null,
+        plan: null,
+        step: 0,
+        done: false,
+        since: tick,
+        basis,
+        front,
+        risk: 0,
+      };
       outcome = "waiting";
     }
   }

@@ -8866,3 +8866,16 @@ commit próprio, o portão verde e um verificador novo que conta referências qu
 zero no começo, zero no fim. Duas coisas apareceram no caminho: o Python grava CRLF no
 Windows, e o `.playwright-mcp/` vinha sendo lido pelas guardas como se fosse fonte. A
 pasta `cld` e o remoto ficaram como estavam, e o comando das skills mudou de nome.
+
+### 42 · A1.1, o contrato endurecido — 25/09
+
+O prompt dele pedia quatro correções e proibia crescer o motor. Reproduzi antes de mexer, e
+apareceu uma quinta: o risco tinha o mesmo defeito do conflito. Com o estado parado, dois
+objetivos empatados reabriam a escolha em todo tick, e um plano arriscado, em todo passo. A
+correção foi uma só para os dois: a intenção guarda o que a escolha viu, e só o que mudou desde
+então a reabre. Para as unidades, a saída mais simples foi tirar da avaliação tudo que não tinha
+unidade. Ela diz o efeito no mundo, na unidade de cada sujeito, e um risco de 0 a 1; quem
+converte em valor é o objetivo do ator. Custo virou efeito negativo no sujeito que paga, e um
+termo estranho para o motor em vez de ser somado. A mudança de crença passou a ser absoluta, na
+escala que quem compõe declara por sujeito, porque o motor não sabe se 0,01 é voto ou
+probabilidade. A série não se mexeu, e o VONTADE continua sem consumidor no jogo.
