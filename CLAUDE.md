@@ -70,7 +70,7 @@ npm run serve      # http://127.0.0.1:5173/
 
 Três laços, cada um com ordem fixa:
 
-- **folha** (`src/ui/`, `styles/`) → `npm run check` → abrir a captura em `captures/passeio/`. O
+- **folha** (`src/ui/`, `styles/`) → `npm run check` → abrir a captura em `captures/walk/`. O
   portão vê geometria, recorte e contraste, mas não sabe olhar: três defeitos já passaram por tipo,
   guarda e prova e morreram na imagem;
 - **motor** (`src/domain/`, `src/application/`, `src/data/`, `src/state/`) → `npm test` →

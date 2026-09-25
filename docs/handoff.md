@@ -32,7 +32,8 @@
 - **`tmp/` podado em 24/09, com o sim dele:** ficaram 61 entradas (119 MB) — as 59 citadas por
   doc, código, estilo, crédito ou prova, e a proposta `tmp/poda-proposta.md`. As outras 662
   (693 MB) estão em quarentena fora do repositório, em `Desktop/cld-quarentena-tmp/`, com
-  `LEIA.md` listando cada uma; devolver é mover de volta. Nada foi apagado;
+  `LEIA.md` listando cada uma; devolver é mover de volta. Nada foi apagado. A mesma quarentena
+  recebeu as capturas fora da regra de `captures/` (25 MB) e o `.playwright-mcp/` (33 MB);
 - medido para o mapa: save no mês 48 com 35.387 bytes; `playMonth` 0,64 ms; `settlement`
   0,125 ms;
 - **Pesquisa do Gemini entregue; não validada:** triagem rápida em

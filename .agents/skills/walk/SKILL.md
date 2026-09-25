@@ -14,5 +14,5 @@ Executa o navegador headless Chromium nas duas resoluções de referência:
 
 1. Execute no terminal:
    `npm run walk`
-2. Inspecione visualmente as imagens geradas em `captures/passeio/`.
+2. Inspecione visualmente as imagens geradas em `captures/walk/`.
 3. Verifique se há cortes de texto, deformações nas sombras ou elementos desalinhados na mesa.

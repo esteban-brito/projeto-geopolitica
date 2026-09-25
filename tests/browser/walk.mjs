@@ -12,7 +12,7 @@ import { CATALOG } from "../../src/data/catalog.mjs";
 
 const PORT = 5201;
 const BASE = `http://127.0.0.1:${PORT}`;
-const OUT = join(ROOT, "captures", "passeio");
+const OUT = join(ROOT, "captures", "walk");
 
 const server = spawn(process.execPath, [join(ROOT, "tools", "serve-static.mjs")], {
   env: { ...process.env, PORT: String(PORT) },
@@ -723,7 +723,7 @@ try {
      tamanho. O passeio parou 47 vezes tentando. */
   /* ⭐ E A PASTA NA MAO VIRA CAPTURA, porque e o estado em que o jogador LE o ato: o portao ve
      geometria, e so a imagem responde se o texto esta nitido. */
-  await page.screenshot({ path: join(OUT, "gabinete-pasta.png") });
+  await page.screenshot({ path: join(OUT, "cabinet-folder.png") });
 
   /* ⛔ E LARGAR DEIXOU DE TER CANTO: com a pasta centralizada na TELA ela ocupa ~1030x707 no
      meio da janela, e o canto (40,40) da area caiu DENTRO dela — o clique virava marca em vez
@@ -821,7 +821,7 @@ try {
 
   expect((await page.locator(".vit").count()) === 4, "[barra] os quatro sinais vitais nao vieram");
   await checkTopbar("barra");
-  await page.screenshot({ path: join(OUT, "gabinete.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "cabinet.png"), fullPage: true });
 
   /* ⛔ A DICA DO DOCK NAO TINHA PROVA, e ela e o rotulo da secao — sem ela o dock e sete desenhos
      sem nome. E ela acende UMA de cada vez: com a gaveta aberta pelo teclado e o ponteiro parado
@@ -925,7 +925,7 @@ try {
     );
     expect(carta !== null && carta.focused, "[gabinete] a carta erguida nao recebeu o foco");
     await checkContrast("carta");
-    await page.screenshot({ path: join(OUT, "gabinete-carta.png"), fullPage: true });
+    await page.screenshot({ path: join(OUT, "cabinet-letter.png"), fullPage: true });
     await page.keyboard.press("Escape");
     await page.waitForTimeout(450);
     expect(
@@ -1167,7 +1167,7 @@ try {
   await page.waitForTimeout(150);
   const after = Number((await page.locator(".tally__forecast").innerText()).match(/\d+/)?.[0]);
   expect(after > before, `[mesa] comprar verba nao moveu o placar: ${before} → ${after}`);
-  await page.screenshot({ path: join(OUT, "mesa.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "congress.png"), fullPage: true });
   await checkContrast("mesa");
 
   /* 6 — ESTOURAR O CAIXA acende a linha de dinheiro. */
@@ -1180,7 +1180,7 @@ try {
     (await page.locator('.tally__cash[data-fits="false"]').count()) === 1,
     "[mesa] a promessa estourou o caixa e a linha de dinheiro nao acusou",
   );
-  await page.screenshot({ path: join(OUT, "mesa-estourada.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "congress-over-budget.png"), fullPage: true });
 
   /* 7 — O MES ANDA, E ELE PRESTA CONTAS SEM INTERROMPER. */
 
@@ -1208,7 +1208,7 @@ try {
     (await page.locator(".report__table tbody tr").count()) === CATALOG.parties.length,
     `[relatorio] a tabela trouxe ${await page.locator(".report__table tbody tr").count()} bancadas e o catalogo tem ${CATALOG.parties.length}`,
   );
-  await page.screenshot({ path: join(OUT, "relatorio.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "report.png"), fullPage: true });
   await checkContrast("relatorio");
 
   /* ⚠ 7a-bis — A CARTA ABERTA MORRE COM O MES. `openDispatch` so era escrito no clique e nunca
@@ -1423,7 +1423,7 @@ try {
         `[caixa com pergunta] o cabecalho ou o rodape cobre ${tarja.over}px dos ${tarja.edge} da tarja`,
       );
     }
-    await page.screenshot({ path: join(OUT, "carta-pergunta.png"), fullPage: true });
+    await page.screenshot({ path: join(OUT, "letter-question.png"), fullPage: true });
   }
 
   /* 7c — UM CLIQUE NA CAIXA NAO MEXE NA MESA, e esta checagem lia as SETE SETAS da coluna,
@@ -1482,7 +1482,7 @@ try {
      morreu junto com o catalogo de pautas, e a pergunta que ela respondia — o que ja esta
      valendo? */
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento sumiu depois do mes");
-  await page.screenshot({ path: join(OUT, "area-depois.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "area-after.png"), fullPage: true });
 
   /* 7c — O PLACAR, e ele so tem sentido AQUI, depois de quatro meses terem acontecido: numa
      partida recem-aberta a serie esta vazia e o painel nao teria tendencia nenhuma para
@@ -1522,7 +1522,7 @@ try {
 
   /* A CAPTURA ESPERA A TRANSICAO ACABAR. */
   await page.waitForTimeout(600);
-  await page.screenshot({ path: join(OUT, "financas.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "finance.png"), fullPage: true });
 
   /* 8 — A PARTIDA ATRAVESSA O NAVEGADOR. */
   /* ⚠ E O RASCUNHO DO MES TAMBEM, e antes ele morria inteiro: medido, a resposta marcada numa
@@ -1803,7 +1803,7 @@ try {
   }
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(600);
-  await page.screenshot({ path: join(OUT, "gabinete-900.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "cabinet-900.png"), fullPage: true });
 
   /* ── A POSSE, E A BANCADA QUE ELA ESCOLHE ─────────────────────────────────── ⚠ ELA VEM NO
      FIM DE PROPOSITO: escolher partido recomeca a partida, e o percurso inteiro acima mede o
@@ -1820,7 +1820,7 @@ try {
     "[posse] o seletor de partido nao ofereceu as nove bancadas do catalogo",
   );
   await checkEllipsized("posse");
-  await page.screenshot({ path: join(OUT, "posse.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "inauguration.png"), fullPage: true });
 
   /* A MAIOR BANCADA, porque e a que mais muda o jogo: 145 das 513 cadeiras. */
   await page.selectOption("#swearParty", "liberais-conservadores");
@@ -1844,7 +1844,7 @@ try {
   await checkClipped("congresso com partido");
   await checkEllipsized("congresso com partido");
   await checkContrast("congresso com partido");
-  await page.screenshot({ path: join(OUT, "mesa-partido.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "congress-party.png"), fullPage: true });
 
   /* ── 9 — TRES DEFEITOS QUE O PORTAO NAO VIA (revisao externa de 21/09) ─────────────────────
      Os tres passaram por tipo, guarda, 332 provas e este passeio. Cada prova aqui caiu contra o
@@ -2118,7 +2118,7 @@ try {
     await page.locator("#noticeDialog").evaluate(node => node.contains(document.activeElement)),
     "[aviso] o foco ficou fora do modal",
   );
-  await page.screenshot({ path: join(OUT, "aviso.png"), fullPage: true });
+  await page.screenshot({ path: join(OUT, "notice.png"), fullPage: true });
   await page.click("#noticeClose");
   expect(
     (await page.locator("#noticeDialog[open]").count()) === 0,
