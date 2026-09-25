@@ -8843,3 +8843,14 @@ crenças a escolha se apoiou, a avaliação é observada no acesso, e não decla
 lista esquecida desligaria a reconsideração em silêncio. Um plano concluído espera efeito em vez
 de se repetir, porque sem eventos o ator não tem como saber se deu certo. O portão passou com
 348 provas e a série não se mexeu. No meio, ele avisou que os codinomes são provisórios.
+
+### 40 · A poda do tmp/ — 24/09, noite
+
+Ele perguntou se era hora de limpar. A resposta honesta foi que não valia limpar o código que os
+próximos lotes vão reescrever, mas valia tirar o entulho. O `tmp/` tinha 721 entradas e 807 MB,
+e está no `.gitignore`: apagar seria para sempre. O critério foi quem cita cada arquivo, e ele
+achou o que não se podia perder — a evidência das medições que o `glass.mjs` usa para justificar
+as alternativas reprovadas, os scripts que geraram os assets. Ficaram 59; as outras 662 foram
+para uma quarentena fora do repositório, reversível. Cinco branches locais saíram, com os SHAs
+anotados. O dado morto que eu tinha prometido tirar não era morto: `bills.mjs` é o conjunto de
+moções das provas da ECLUSA, e sai com elas no D1.

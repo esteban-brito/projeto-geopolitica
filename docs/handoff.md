@@ -29,6 +29,10 @@
 - **a tela mostra o que a Presidência sabe:** a mesma lei em `CLAUDE.md`, `AGENTS.md`,
   `agent-brief.md` e `standards.md` §5. Os três primeiros apontam `docs/spec/` como autoridade de
   design e plano em vigor; o índice dos ciclos também. **ADR 0003** explicita empresa;
+- **`tmp/` podado em 24/09, com o sim dele:** ficaram 61 entradas (119 MB) — as 59 citadas por
+  doc, código, estilo, crédito ou prova, e a proposta `tmp/poda-proposta.md`. As outras 662
+  (693 MB) estão em quarentena fora do repositório, em `Desktop/cld-quarentena-tmp/`, com
+  `LEIA.md` listando cada uma; devolver é mover de volta. Nada foi apagado;
 - medido para o mapa: save no mês 48 com 35.387 bytes; `playMonth` 0,64 ms; `settlement`
   0,125 ms;
 - **Pesquisa do Gemini entregue; não validada:** triagem rápida em
@@ -54,7 +58,9 @@
   Global e domínio estão por remedir após o lote Codex/Gemini; referências anteriores: ~21%
   global antes do lote 6 e 41% no domínio antes desta rodada;
 - **revisão externa:** 2 dos 3 ultrareviews grátis gastos, 9 achados, os 9 reproduzidos, 7
-  corrigidos, 2 nits na fila. Branches `base-ultra`, `base-motor` e `motor-review` existem;
+  corrigidos, 2 nits na fila. As branches dos ultrareviews foram apagadas em 24/09 (só locais;
+  recriáveis): `base-ultra` 679f043, `base-motor` bb7ce9d, `motor-review` fc78e27. Também
+  `acoplamento-e-simulador` 137a94a (segue no remoto) e `backup-auditoria-26-08-2026` 4bf8c51;
 - **portão:** 13 guardas · 68 sintéticas · 348 provas · passeio verde em 1440×980 e 1440×900 ·
   macaco (60 ações, semente 7) verde. `validate` verde em 24/09 depois do A1. Série do
   `simulate` remedida em 24/09 nas seis sondas: imóvel;
@@ -65,25 +71,17 @@
 1. **lote A1.1 — endurecimento do VONTADE**, antes do A2: sugestão do ChatGPT aceita por ele;
    o prompt ainda vai chegar. Não começar sem ele. Depois, **lote A2** do
    [mapa](spec/mapa-migracao.md#61-os-lotes). A pesquisa R1 (emendas) pode correr em paralelo,
-   sem código. A pesquisa do Gemini segue sem validação; os itens 4, 6 e 7 abaixo têm veredito
+   sem código. A pesquisa do Gemini segue sem validação; os itens 3, 5 e 6 abaixo têm veredito
    no §10 do mapa;
-2. **poda do `tmp/` e das branches — espera o sim dele.** Proposta em `tmp/poda-proposta.md`
-   (24/09): de 721 entradas e 806,7 MB, ficam as 59 que algum doc, código, estilo, crédito ou
-   prova cita (117,3 MB, inclusive a evidência de medição citada em `glass.mjs`); as outras 662
-   (689,4 MB) vão para quarentena **fora do repositório**, reversível — `tmp/` está no
-   `.gitignore` e apagar seria irreversível. Branches locais: `acoplamento-e-simulador`,
-   `backup-auditoria-26-08-2026` e `base-ultra` já estão contidas na atual; `base-motor` e
-   `motor-review` são artificiais, dos ultrareviews. Proposta: apagar as cinco só localmente;
-   `main`, a atual e o remoto ficam. A proposta antiga do item 5 (18 backups) está contida nesta;
-3. **achado 69 — investigar oscilação da prova de voo interrompido**. Item 4 concluiu a meta de
+2. **achado 69 — investigar oscilação da prova de voo interrompido**. Item 4 concluiu a meta de
    30 asserções com portão verde; o aviso é exercitado por `openNotice`, sem acionador na interface;
-4. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
+3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
    jogador (ausência declarada em 21/09, Achado 66). Kind novo de carta: `state.mjs`, `inbox.mjs`,
    `strings.mjs`, vocabulário em `annex.mjs`;
-5. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%) — permanece pendente;
-6. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
+4. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%) — permanece pendente;
+5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
    só depois de fechar o ciclo 29;
-7. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
+6. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
    ele marca os candidatos que entram.
 
 ## Decisões vivas
