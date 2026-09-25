@@ -78,5 +78,5 @@ validações nem simulações só para recuperar contexto. Amplie a leitura quan
 2. [`CLAUDE.md`](CLAUDE.md) — As 12 leis do projeto, comentário medido e delegação;
 3. [`.agents/rules/co-development.md`](.agents/rules/co-development.md) — Regras operacionais de co-desenvolvimento;
 4. [`docs/standards.md`](docs/standards.md) — Padrões técnicos e mapeamento de guardas;
-5. [`docs/spec/`](docs/spec/) — Especificação mestra (autoridade de design) e mapa de migração (plano em vigor);
+5. [`docs/spec/`](docs/spec/) — Especificação mestra (autoridade de design), detalhada pelo jogo em uma página, pela gramática das regras e pelo corte vertical; mapa de migração (plano em vigor);
 6. [`docs/cycles/`](docs/cycles/) — Histórico de planejamento; o ciclo 29 segue aberto.

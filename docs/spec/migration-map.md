@@ -664,13 +664,18 @@ simultâneo: um lote de cada vez.
 | D1   | convergência    | deputados individuais votam no jogo; sai o fluxo `congress`; relação e memória substituem lealdade e memória-escalar; o fato da verba entregue existe uma vez, com efeitos derivados por mecanismos distintos. Exige R1 | §20.3 no jogo; as regressões da ECLUSA                                                                                                                   | muda                 |
 | D2   | convergência    | a estimativa do governo sobre as crenças dele: placar, base e pessoas na tela                                                                                                                                           | a tela nunca mostra adesão verdadeira; a estimativa erra por informação                                                                                  | imóvel               |
 | D3   | convergência    | Senado legislativo (81) no rito ordinário                                                                                                                                                                               | "Câmara e Senado chegam a resultados diferentes"                                                                                                         | muda                 |
-| E0   | convergência    | ensaio: contingenciamento bimestral como Momento Presidencial (calendário real, fisco, informação, decisão, execução)                                                                                                   | §21.4 reduzido, sem Congresso                                                                                                                            | —                    |
-| E1   | convergência    | corte vertical completo: medida provisória fictícia (candidata principal, §6.3)                                                                                                                                         | §21.4, jogado por ele                                                                                                                                    | —                    |
+| E0   | convergência    | ensaio: contingenciamento bimestral como Momento Presidencial. **Implementado sem commit e pausado em 25/09**, depois do playtest (achado 77)                                                                           | §21.4 reduzido, sem Congresso                                                                                                                            | —                    |
+| E1   | convergência    | corte vertical completo: **a estatal de energia** (decidido em 25/09; §6.3), em oito lotes (§6.4)                                                                                                                       | §21.4, jogado por ele                                                                                                                                    | muda                 |
 | F    | depois do corte | CALDEIRA adaptada e Senado no rito de responsabilização; empresas; ministérios; mídia; UI                                                                                                                               | por lote                                                                                                                                                 | —                    |
 
 Ordem decidida em 24/09: a trilha A primeiro. B e C são lotes curtos que podem entrar entre os
 de A quando reduzirem risco, nunca no mesmo lote. A antiga etapa 4 virou B3, B4, B5 e A2, cada
 um com prova menor.
+
+**Ordem de 25/09:** o E1 vem à frente, porque a consequência material precisa existir antes de
+qualquer cena (achado 77). Da trilha A, entra antes só o que um lote do E1 pedir: o A3, se o E1.5
+precisar negociar. O A2b e as trilhas B e C esperam, salvo o B1 se o relógio mensal atrapalhar a
+medida provisória.
 
 O critério para unir ou separar é a menor mudança que prova uma propriedade nova sem carregar
 riscos não relacionados. Pelo critério, três ajustes:
@@ -682,20 +687,29 @@ riscos não relacionados. Pelo critério, três ajustes:
   (não muda a série) são riscos diferentes. O Senado legislativo passou a D3;
 - **E1 virou E0 e E1.** O ensaio do contingenciamento prova o Momento Presidencial com poucos
   sistemas; a medida provisória prova o ciclo inteiro.
+- **Em 25/09 o E1 mudou de assunto.** O ensaio foi jogado e reprovado: faltava consequência
+  material (achado 77). O corte completo passou a ser a estatal de energia, que contém a medida
+  provisória como rota (§6.3).
 
 São 19 lotes. Nenhum dos outros se une a outro sem juntar um lote que muda a série com um que
 não muda, ou uma mudança de motor com uma de tela.
 
 ### 6.2 Pesquisas que destravam lotes (sem código)
 
-| #   | pergunta                                                                                                                                                                 | destrava   |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| R1  | emendas hoje: individuais, de bancada, de comissão; cronograma, impedimento técnico, transparência; o que o Executivo negocia de fato                                    | D1         |
-| R2  | calendário institucional real: sessões deliberativas, reuniões do Copom, divulgações do IBGE e do Tesouro, prazos da LDO e da PLOA, data do relatório bimestral          | B4, C3, E0 |
-| R3  | o rito que o corte vertical escolhido usar (por exemplo, a medida provisória: comissão mista, prazos, sobrestamento)                                                     | E1         |
-| R4  | quando proposição fica sem deliberação, quem controla a pauta, arquivamento, fim de legislatura, desarquivamento, rito por tipo de proposição (RICD art. 105 a conferir) | B4         |
+| #   | pergunta                                                                                                                                                                                                                     | destrava   |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| R1  | emendas hoje: individuais, de bancada, de comissão; cronograma, impedimento técnico, transparência; o que o Executivo negocia de fato                                                                                        | D1         |
+| R2  | calendário institucional real: sessões deliberativas, reuniões do Copom, divulgações do IBGE e do Tesouro, prazos da LDO e da PLOA, data do relatório bimestral                                                              | B4, C3, E0 |
+| R3  | o rito do corte escolhido: **feita em 25/09** para a estatal, com o art. 62 da CF (medida provisória) e o regime das estatais ([pesquisa 14](../research/14-the-state-energy-company.md); [gramática](rules-grammar.md), §2) | E1         |
+| R4  | quando proposição fica sem deliberação, quem controla a pauta, arquivamento, fim de legislatura, desarquivamento, rito por tipo de proposição (RICD art. 105 a conferir)                                                     | B4         |
 
 ### 6.3 Corte vertical — três candidatos
+
+**[DECISÃO — 25/09]** O corte completo é **a estatal de energia** ([corte vertical](vertical-slice-energy.md)).
+O contingenciamento foi o ensaio, e o playtest mostrou que a decisão dele não pesa no modelo
+(achado 77). A estatal se joga para lados opostos e contém a medida provisória como rota: a
+subvenção do diesel sai por uma, e a privatização da Eletrobras começou por outra. A comparação
+abaixo fica como registro de 24/09.
 
 Nenhum reproduz a história: todos são fictícios e podem terminar de formas diferentes.
 
@@ -720,6 +734,30 @@ nasce uma `LEGAL_SOURCE`; a projeção `GAME_RULE` muda; atores percebem; o efei
 o Congresso recebe; negocia; cláusulas mudam; Câmara; Senado; conversão, alteração ou perda de
 eficácia; consequências. Ação, formalização, vigência, aprovação, execução e consolidação
 aparecem separadas, sem depender do Judiciário.
+
+### 6.4 E1 — a estatal, em lotes
+
+Cada lote segue a regra do §6: pequeno, com `validate` verde e a prova caindo antes contra o
+código anterior. Nenhum começa sem ordem dele. As peças são as da [gramática](rules-grammar.md).
+
+| lote  | o quê                                                                                                                                                                                                   | prova que fecha                                                                                 | série   | depende de                              |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------- | --------------------------------------- |
+| E1.0a | as 38 cadeiras de ministro no catálogo (Lei 14.600, com fonte); nomear e exonerar; a pasta dada a outro partido muda a disposição da bancada, com peso [DESENHO] até a calibragem pelos dados da Câmara | nomear muda a base estimada; ninguém vota por ter recebido pasta sem que a VONTADE decida       | muda    | ELENCO com ministros (o E0, sem commit) |
+| E1.0b | a eleição da Mesa da Câmara e do Senado em 1º de fevereiro: candidatos são pessoas, voto secreto, 257 no primeiro turno e segundo turno; o apoio do Presidente pesa                                     | as regras de turno e de empate do RICD, art. 7º, viram prova; o resultado muda com o apoio      | muda    | E1.0a                                   |
+| E1.0c | o presidente da Câmara decide a pauta do mês e se recebe a denúncia de impeachment; o afastamento deixa de abrir sozinho                                                                                | com os mesmos limiares, o afastamento só abre se ele receber a denúncia                         | muda    | E1.0b                                   |
+| E1.0d | o líder do governo e a reorganização dos ministérios por medida provisória                                                                                                                              | a medida vale na hora e cai se não virar lei                                                    | muda    | E1.2                                    |
+| E1.0e | a tela da abertura: posse, as 38 cadeiras, fevereiro                                                                                                                                                    | passeio novo                                                                                    | —       | E1.0a a E1.0d                           |
+| E1.1  | a ficha da Enerbras (`company`, §16.5) no catálogo, com os números da pesquisa 14; substitui a alavanca `petroleo-e-gas`; o LASTRO lê venda, dividendo e folha da ficha                                 | a ficha carrega com fonte e data; o fisco de hoje sai igual pela ficha                          | remedir | ordem de recalibrar                     |
+| E1.2  | as sete rotas com as propriedades da gramática §2: entram o ato de gestão, a medida provisória e a lei complementar                                                                                     | votos e relógio de cada rota; a medida provisória vale antes de aprovada e cai se não virar lei | imóvel  | —                                       |
+| E1.3  | a avaliação por ação da estatal (§13.5): `CLEAR_POWER`, `ROUTE_AVAILABLE`, `CONTESTED`, `BLOCKED`, com o motivo                                                                                         | a tabela da gramática §3 vira prova, linha a linha                                              | imóvel  | E1.2                                    |
+| E1.4  | as consequências nos cinco canais: venda, dividendo, preço pela paridade e pelo peso no IPCA, subvenção, tributo                                                                                        | três estratégias deixam países materialmente diferentes em 48 meses (achado 77)                 | muda    | E1.1                                    |
+| E1.5  | os atores do corte pela VONTADE: presidente da Enerbras, sindicato, caminhoneiros, minoritários, governadores, ministro da Fazenda                                                                      | ninguém reage sem perceber; informação diferente, reação diferente; nenhuma reação automática   | muda    | E1.4; A3 para negociar                  |
+| E1.6  | os portões: TCU, CADE, Justiça e CVM, STF, com prazo dos casos reais e chance [DESENHO]                                                                                                                 | o legitimado decide ir; o portão atrasa ou derruba; o prazo bate com o caso real                | muda    | E1.3, E1.5                              |
+| E1.7  | a tela: a abertura nacional, a ficha, os rostos, as três linhas e a assessora                                                                                                                           | passeio novo; a tela nunca mostra o que a Presidência não sabe                                  | —       | E1.1 a E1.6                             |
+| E1.8  | jogado por ele                                                                                                                                                                                          | o critério do corte (especificação §21.4 e corte vertical §11)                                  | —       | E1.7                                    |
+
+O relógio do corte é o mensal de hoje. Os prazos em dias da medida provisória viram meses, com a
+aproximação declarada, até o lote B1.
 
 ## 7. Desafios à especificação — estado
 
@@ -819,6 +857,20 @@ O ciclo 29 segue aberto (prosa do domínio, poda do `tmp/`) e não bloqueia nada
 | prova que deixa de valer é aposentada por decisão registrada e substituída pela prova da nova propriedade        |
 | corte vertical: ensaio com contingenciamento; medida provisória fictícia como candidata principal, não congelada |
 
+### 11.1b Tomadas em 25/09
+
+| decisão                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------------------- |
+| o jogo é um sandbox ideológico com regras reais; realismo acima de tudo ([jogo em uma página](game-in-one-page.md); especificação §24) |
+| o corte completo é a estatal de energia; o E0 fica pausado, sem commit                                                                 |
+| toda regra real se escreve com as peças da [gramática](rules-grammar.md), com os nomes da especificação                                |
+| `PROVISIONAL_MEASURE` é rota própria; `DIRECT_ENTERPRISE` é ação nova, como hipótese; `[DESENHO]` é marca da especificação             |
+| a rota fora da ordem fica fora do corte da estatal                                                                                     |
+| ~~o primeiro mês abre com o subsídio do diesel~~: revogada no mesmo dia; o jogo abre com o jogador montando o governo (decisão dele)   |
+| foco nacional; o internacional entra por atualização futura, listada no jogo; o mundo lá fora fica parado até lá                       |
+| o jogador escolhe qualquer partido no início                                                                                           |
+| toda pesquisa com fonte é do Claude; o ChatGPT revisa e não pesquisa                                                                   |
+
 ### 11.2 Abertas
 
 | tema                                                 | bloqueia A1?                                                                                                   | quando se decide                             |
@@ -833,7 +885,7 @@ O ciclo 29 segue aberto (prosa do domínio, poda do `tmp/`) e não bloqueia nada
 | retenção e compactação de eventos                    | não                                                                                                            | depois de A5 medido                          |
 | localStorage ou IndexedDB                            | não                                                                                                            | depois de A5                                 |
 | calendário civil contra efeitos mensais (§5.1)       | não                                                                                                            | B3–B5                                        |
-| corte vertical definitivo (§6.3)                     | não                                                                                                            | antes de E1                                  |
+| corte vertical definitivo (§6.3)                     | não                                                                                                            | **decidido em 25/09: a estatal**             |
 | o que o Executivo negocia em torno das emendas       | não                                                                                                            | R1, antes de D1                              |
 | Selic por data do Copom; mandato do presidente do BC | não                                                                                                            | quando houver Momento Presidencial econômico |
 | mercado, produtivo e ordem como organização          | não                                                                                                            | F                                            |

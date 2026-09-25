@@ -8901,3 +8901,104 @@ agrupamento em ticks. Um boato fraco agora quase não move a expectativa da mini
 forte com o mesmo número a faz brigar pelo orçamento. As seis sondas não perceberam nada, porque
 o jogo ainda não usa o motor.
 Na revisão, o ChatGPT achou um furo real: a supersessão apagava a cópia de asOf antigo de uma linhagem inválida antes de a integridade ser checada. A checagem virou etapa própria, antes da supersessão.
+
+### 45 · O decreto que atravessa o mês — 25/09
+
+Ele aprovou as duas decisões do E0 pelo realismo. Só uma podia entrar já: a memória dos
+ministros precisa de ministros. O decreto de proteção agora vale até o próximo relatório
+bimestral, que o renova, e o rascunho do mês do meio nasce dele. O partido já tinha mostrado o
+caminho para não recusar saves: campo fora dos obrigatórios. O motor não mudou a conta, e as seis
+sondas não perceberam.
+
+### 46 · O que o corte custa — 25/09
+
+A revisão pediu para seguir o corte até onde ele chega, antes de declarar que não chega a lugar
+nenhum. A primeira variante de medição tinha dois defeitos meus: pagava a emenda de compra de voto
+de reformas que nunca propunha, e reimpunha o plano de janeiro por cima de uma lei aprovada no ano.
+Foi isso que criou o salto do espaço nos meses 15 e 16. Com a variante limpa, o buraco natural
+existe, mas só para quem continua pagando as emendas de manutenção todo mês. E a emenda é o único
+canal concreto: ela entra no mesmo rateio, e proteger três pastas custa 0,21 bi por mês de emenda,
+0,7 ponto de lealdade em um ano e nenhuma votação. O achado 78 fechou pelo histórico: o ciclo 4
+trocou `min(cash, room)` por `room` de propósito, porque o caixa era um muro, e só o comentário
+ficou para trás.
+
+### 47 · A autorização e o bloqueio — 25/09
+
+O ChatGPT autorizou o E0 com quatro ministros escolhidos pelo dinheiro: Infra, Previdência,
+Segurança e Defesa. Antes de escrever código, somei os pedidos deles: 6,2 bi num espaço de 9,8. O
+Presidente pode proteger os quatro, todos saem satisfeitos, e o corte vai para quem não está na
+sala e para as emendas, quase de graça. Protegendo as oito áreas, o corte inteiro cai nas emendas,
+e isso talvez fira a regra constitucional que limita o corte delas à proporção das demais despesas;
+as três fontes oficiais falharam, e a regra ficou para conferir. A autorização inteira foi
+registrada no ciclo 31, com as correções, e o E0 esperou a decisão dele.
+
+### 48 · O E0 na mesa — 25/09
+
+Ele deixou comigo a escolha do caminho. A regra das emendas foi conferida no texto da EC 100 no
+site da Câmara, e o rateio passou a respeitá-la; as sondas não protegem nada, e a série não se
+mexeu. Os ministros saíram do ELENCO, sete, um por pasta, e a reunião roda o `decide()` de cada um
+a cada rascunho e a cada recusa. A primeira foto mostrou a ata inteira na folha; o primeiro clique
+em "pedir alternativa" não chegou a lugar nenhum, porque as folhas desligam o clique do conteúdo e
+só o decreto tinha exceção. Depois de liberado, o ministro recusado passou a pedir que a
+Infraestrutura saísse da proteção. Eu disse que o portão tinha passado quando só o `echo` tinha
+passado: o lint barrava `URLSearchParams`. Nas sementes, a personalidade some quando contestar a
+maior pasta protegida é a melhor saída para todos, e aparece quando a alternativa é fraca.
+
+### 49 · O que é jogar — 25/09
+
+Ele jogou o E0 e achou horrível. A reunião numa folha de papel não parecia jogo. Fiz três
+protótipos de cena, com cartas, rostos e depois conversa, e nenhum pegou, porque o defeito não era
+de tela: ele não entendia o que estava fazendo, e não tinha como entender, porque proteger uma pasta
+ou outra quase não muda nada no modelo. Quando eu disse isso, ele disse o que o jogo é: um sandbox
+ideológico com regras reais, onde se tenta qualquer projeto de país e se vê, no fim, o que ficou. O
+primeiro corte jogável passou a ser a estatal de energia, que se joga para lados opostos.
+A revisão do ChatGPT pegou três erros da primeira versão: eixos na tela viram bússola política, a
+resistência não cresce com a "radicalidade" e sim com quem perde, e jogadas não levam rótulo
+ideológico. Aceitei os três e acrescentei o que faltava no loop dele: o mundo interrompe, e o
+recurso escasso é a atenção do presidente na semana.
+Depois veio o desenho do corte da estatal. A regra dele é a lição do contingenciamento: duas
+estratégias opostas têm de mudar o mundo de jeitos diferentes. O art. 62 da Lei 9.478 foi conferido
+no texto original, na Câmara; o resto do regime jurídico ficou marcado para conferir.
+
+### 50 · A pesquisa da estatal — 25/09
+
+O ChatGPT não pesquisa, então as seis pesquisas ficaram comigo. Li as leis no Planalto, as
+decisões no STF, o 20-F da Petrobras na SEC, a composição de preços da Petrobras, a síntese
+semanal da ANP e as tabelas do IBGE. Três achados mudam o desenho. A Petrobras está fora do PND, e
+vender o controle pede lei própria. O estatuto só deixa a União segurar o preço com compensação
+prévia. E o mandato de 2027 começa no meio de um choque real: em 2026 o diesel da Petrobras chegou
+a custar 46% menos que o importado, com cinco medidas provisórias de subvenção. Tudo está na
+pesquisa 14, com link. O que não achei em fonte oficial ficou marcado como falta.
+
+### 51 · A gramática — 25/09
+
+Ele viu o tamanho do problema: o Brasil tem leis demais para um jogo. A resposta foi separar a lei
+da tela. O jogador vê três linhas por escolha: quanto custa, quem reage e quanto tempo leva. Por
+baixo, toda mudança se escreve com as mesmas seis peças. Os 9 verbos são os 7 da pesquisa 07, mais
+`own` e `direct`, que a estatal pediu. A escada tem 6 degraus, conferidos na Constituição. A
+burocracia vira portões de tempo e risco, e há uma ficha por tipo de coisa. A pesquisa para de ser
+infinita com as três camadas: fonte para o que o jogador toca, episódio real para o efeito
+agregado e desenho declarado para o resto.
+
+### 52 · A revisão de tudo — 25/09
+
+Ele pediu uma base robusta e padronizada. A revisão achou três problemas. Primeiro, a gramática
+tinha criado nomes próprios para o que a especificação mestra já nomeava: ações, rotas e
+avaliação. Ela foi reescrita com os nomes da especificação, que subiu para a versão 1.1 com três
+acréscimos: a medida provisória como rota própria, a ação de orientar a estatal e a marca
+`[DESENHO]`. Segundo, o corte pedia duas estratégias e a especificação pede três; ficou com três.
+Terceiro, o plano ainda apontava a medida provisória fictícia como corte. O mapa agora tem o E1 da
+estatal em oito lotes, cada um com a prova que o fecha. As datas de 26/09 estavam erradas: tudo
+aconteceu em 25/09. As duas recomendações valeram por ordem dele: a rota fora da ordem fica fora
+do corte, e o jogo abre com o subsídio do diesel.
+
+### 53 · Montar o governo — 25/09
+
+Ele decidiu que toda partida começa com o jogador montando o governo, e mandou o internacional
+para uma atualização futura. A pesquisa 15 achou o que a abertura precisa. São 38 cadeiras de
+ministro, e os presidentes de 2019 e de 2023 reorganizaram os ministérios por medida provisória no
+primeiro dia. Em 1º de fevereiro, a Câmara elege o seu presidente por voto secreto, com 257 votos
+no primeiro turno. Quem vence monta a pauta e decide se recebe um pedido de impeachment, e é essa
+a pessoa que falta ao afastamento do jogo. A Câmara publica o voto de cada deputado e a orientação
+do governo; com isso se calibra quanto vale dar um ministério a um partido. A ordem de construção
+mudou: primeiro a abertura, depois a estatal.

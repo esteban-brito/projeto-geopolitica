@@ -1,14 +1,16 @@
 # República Simulator — Especificação de Arquitetura, Simulação e Design
 
-> **Versão do documento:** 1.0
+> **Versão do documento:** 1.1
 > **Status:** especificação canônica de design e arquitetura
-> **Data:** 24/09/2026
+> **Data:** 24/09/2026; revisão 1.1 em 25/09/2026
 > **Autoridade de design:** direção do projeto
 > **Escopo:** experiência presidencial, simulação social, instituições, política pública, execução e plano de implementação.
 >
 > A versão **1.0 deste documento não corresponde à versão do jogo**. Ela estabelece a primeira baseline formal e coerente da arquitetura de design.
 >
 > Este arquivo não é diário, changelog nem transcrição de discussão. Registra somente decisões vigentes, hipóteses relevantes, questões abertas e critérios verificáveis.
+>
+> **Detalhada por** (em conflito, vale o documento mais recente): [o jogo em uma página](game-in-one-page.md), a promessa e o loop; [a gramática das regras](rules-grammar.md), como toda regra real vira peça de jogo; [o corte vertical da estatal](vertical-slice-energy.md), a primeira aplicação; [o mapa de migração](migration-map.md), o plano.
 
 ## Convenções de maturidade
 
@@ -19,6 +21,7 @@
 - **[DESCARTADO]** — caminho explicitamente abandonado.
 - **[VERIFICAR]** — fato institucional/jurídico que exige fonte primária atual antes de virar regra executável.
 - **[VERIFICADO]** — fato conferido em fonte oficial, com a fonte citada no ponto de uso.
+- **[DESENHO]** — número ou regra de jogo sem fonte, escolhido para calibrar e declarado como tal. Nunca aparece como fato do Brasil.
 
 ## Convenções técnicas
 
@@ -1384,7 +1387,9 @@ Regra:
 
 ### Propriedade, controle e mercado
 
-`ACQUIRE_STAKE`, `SELL_STAKE`, `ASSUME_CONTROL`, `RELINQUISH_CONTROL`, `NATIONALIZE`, `PRIVATIZE`, `CONCESS`, `PUBLIC_PROVIDE`, `OPEN_MARKET`, `RESERVE_MARKET`, `CAP_PRICE`, `SET_MINIMUM_PRICE`.
+`ACQUIRE_STAKE`, `SELL_STAKE`, `ASSUME_CONTROL`, `RELINQUISH_CONTROL`, `NATIONALIZE`, `PRIVATIZE`, `CONCESS`, `PUBLIC_PROVIDE`, `OPEN_MARKET`, `RESERVE_MARKET`, `CAP_PRICE`, `SET_MINIMUM_PRICE`, `DIRECT_ENTERPRISE`.
+
+**[HIPÓTESE — 25/09]** `DIRECT_ENTERPRISE` é orientar a estatal que o Estado controla (preço, investimento). Não é `CAP_PRICE`: vale só para a empresa controlada, decide-se no conselho dela, e preço fora do mercado exige compensação prévia da União (Lei 6.404, art. 238; estatuto da Petrobras, art. 3º; **[VERIFICADO]** na [pesquisa 14](../research/14-the-state-energy-company.md)).
 
 ### Penal e responsabilização
 
@@ -1607,6 +1612,7 @@ legal_resolution:
 
 - `DIRECT_ACT`
 - `REGULATION`
+- `PROVISIONAL_MEASURE`
 - `ORDINARY_LAW`
 - `COMPLEMENTARY_LAW`
 - `CONSTITUTIONAL_AMENDMENT`
@@ -1616,6 +1622,8 @@ legal_resolution:
 - `OUTSIDE_CURRENT_ORDER`
 
 Avaliação jurídica e tipo de rota são dimensões diferentes.
+
+**[DECISÃO — 25/09]** `PROVISIONAL_MEASURE` é rota própria, e não variante de `ORDINARY_LAW`: vale na hora, tem relógio de 60 + 60 dias que para no recesso e tranca a pauta da Casa depois de 45 dias (CF, art. 62, **[VERIFICADO]**). O ato de gestão de uma estatal é `OTHER_INSTITUTION`: o conselho decide, e a União elege a maioria dele. As propriedades padronizadas de cada rota estão na [gramática](rules-grammar.md), §2.
 
 Não usar porcentagem abstrata de “legalidade”.
 
@@ -2101,7 +2109,7 @@ A entidade econômica `company` guarda estado econômico. Quando a empresa possu
 
 Não duplicar campos econômicos dentro do ator: o `ACTOR` decide; `company` contém propriedade, capacidade e saúde econômica.
 
-Estatal pode acrescentar:
+Estatal pode acrescentar (campos e números de partida da Petrobras, com fonte, na [pesquisa 14](../research/14-the-state-energy-company.md)):
 
 - missão pública;
 - supervisão;
@@ -2650,6 +2658,8 @@ Quando fidelidade factual conflitar com uma ideia de gameplay:
 - Constituição Federal, fonte oficial do Planalto: processo legislativo e competências presidenciais.
 - Portal oficial da Câmara dos Deputados: 513 cadeiras.
 - Portal oficial do Senado Federal: 81 cadeiras.
+
+**[ATUAL — verificado em 25/09/2026]** Leis 9.478, 9.491, 13.303 e 6.404; Constituição, arts. 5º XXIV, 37, 47, 49 V, 60, 62, 64, 66, 69, 84, 173 e 177; STF, ADI 5624, 7331 e 7385; 20-F da Petrobras de 2025; ANP e IBGE. Links e trechos na [pesquisa 14](../research/14-the-state-energy-company.md) e na [gramática](rules-grammar.md).
 
 Detalhes de rito continuam sujeitos a verificação específica antes da implementação.
 

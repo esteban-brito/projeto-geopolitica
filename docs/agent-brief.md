@@ -35,6 +35,10 @@ O mandato termina por prazo ou afastamento. O fecho mostra o país deixado, leis
 não há uma pontuação única que defina bom governo. Sobreviver não prova que a estratégia
 produziu um país melhor. Testes verdes tampouco provam equilíbrio ou ausência de exploits.
 
+Desde 25/09 o jogo é um sandbox ideológico com regras reais: o jogador tenta qualquer projeto de
+país, e o Brasil resiste pelas instituições. O corte em construção é a estatal de energia (mapa
+§6.4), escrito com a [gramática das regras](spec/rules-grammar.md).
+
 O mundo se inspira no Brasil; pessoas são fictícias. Valores reais exigem fonte e data.
 As pesquisas contêm propostas, afirmações a conferir e decisões superadas: não são prova
 jurídica nem descrição automática da implementação atual.
@@ -151,8 +155,9 @@ Foi executado `npm run simulate -- --quiet`: sonda `agenda`, semente 20270101, s
 ## Onde buscar e como validar
 
 - Estado/fila/achados/séries: [handoff.md](handoff.md).
-- Direção e plano: [especificação mestra](spec/master-spec.md) e
-  [mapa de migração](spec/migration-map.md).
+- Direção e plano: [especificação mestra](spec/master-spec.md), detalhada por
+  [jogo em uma página](spec/game-in-one-page.md), [gramática das regras](spec/rules-grammar.md) e
+  [corte vertical](spec/vertical-slice-energy.md); o plano é o [mapa de migração](spec/migration-map.md).
 - Intenção de cada sistema: [índice dos ciclos](cycles/README.md); ciclo 13 é plano mestre
   histórico, 29 é simplificação e 30 reúne candidatos de profundidade.
 - Doutrina sobre IA e ficção: `docs/adr/`. Pesquisa histórica: `docs/research/`.

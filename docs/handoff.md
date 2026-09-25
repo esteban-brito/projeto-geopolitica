@@ -7,47 +7,45 @@
 
 ## Para retomar em um minuto
 
-- **próximo passo:** planejamento do E0 (contingenciamento como Momento Presidencial jogável). A trilha A está pausada; o A2b espera o E0 ser jogado. Não há outro trabalho pela metade;
-- **o plano:** [mapa de migração](spec/migration-map.md) §6.1 (os lotes) e §11 (decisões
-  tomadas e abertas), sob a [especificação mestra](spec/master-spec.md);
+- **direção (25/09):** sandbox ideológico com regras reais; realismo acima de tudo. Os documentos
+  de design, do mais geral ao mais concreto: [especificação mestra](spec/master-spec.md) 1.1
+  (autoridade) → [jogo em uma página](spec/game-in-one-page.md) (promessa e loop) →
+  [gramática das regras](spec/rules-grammar.md) (como toda regra real vira peça) →
+  [corte vertical da estatal](spec/vertical-slice-energy.md) (a primeira aplicação) →
+  [mapa de migração](spec/migration-map.md) (o plano). Os fatos estão na
+  [pesquisa 14](research/14-the-state-energy-company.md). Em conflito, vale o mais recente;
+- **próximo passo:** o lote E1.0a, as 38 cadeiras de ministro (mapa §6.4), quando ele mandar. A
+  pesquisa do começo do jogo está feita ([pesquisa 15](research/15-forming-the-government.md)).
+  A estatal vem depois. Nenhum código antes da ordem;
+- **sem commit, à espera dele:** (1) o decreto bimestral e o limite das emendas do § 18: motor com
+  prova e série imóvel; recomendação: dois commits separados; (2) o E0 (ministros, reunião, ensaio
+  do mês 21): pausado; recomendação: guardar numa branch própria, para não misturar com o E1;
+  (3) os documentos de 25/09;
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `npm run validate` verde e série do `simulate` imóvel em 25/09, depois do A1.2;
+- **portão:** `validate` verde em 25/09, depois da revisão dos documentos (387 provas, passeio e
+  macaco); roda de novo antes de qualquer commit;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
 
-## Estado — 25/09/2026, A2a feito e commitado; trilha A pausada; próximo: planejamento do E0
+## Estado — 25/09/2026: direção nova, corte da estatal desenhado, E0 pausado sem commit
 
-- **lote A2a feito em 25/09**, revisado antes do commit. A crença
-  saiu para `src/domain/actors/belief.mjs`: `revise()` pura, única escritora de Belief, que o
-  `decide()` chama. Percept ganhou `source`, `lineage` (a percebida; a causal fica no A2b) e
-  `asOf`; Belief guarda uma entrada por linhagem viva. Dedupe por linhagem; cópia divergente da
-  mesma linhagem é erro, checado antes da supersessão (a revisão achou a cópia de asOf antigo escondida por ela; uma linhagem já superada e fora da crença não é comparada). Supersessão pela política do sujeito (`latest-per-source` ou `none`),
-  declarada no resolver `subjectOf(subject) → { family, material, supersede }`, que substituiu
-  `thresholds.material`. O prior é do ator (`actor.priors[family]`), puxa a estimativa e nunca
-  cria crença; q = 0 é nula; q = 1 é classe à parte, sem infinito. Três defeitos reproduzidos
-  caíram: repetição confirmava (5× q=0,3 → 0,832), a ordem mudava a estimativa (12,5 contra 10)
-  e um boato q=0,01 virava a crença inteira (999). 17 provas novas; uma antiga ganhou a escala
-  de `reserva`, porque agora toda percepção precisa da descrição do sujeito;
-- **lote A1.2 feito em 25/09**, pedido na revisão do A1.1 (commit `98c1abc`): objetivo cumprido
-  tinha prioridade zero, e um plano que o estragava valia zero (inflação de 3 a 8 com teto 5).
-  Valor e urgência se separaram sem parâmetro novo: o valor de um objetivo é peso × H(distância
-  além do alvo em spans), H quadrática até um span e reta depois; o plano vale a queda desse
-  custo entre antes e depois do efeito. A inclinação de H hoje é a prioridade, então efeito
-  pequeno vale o que valia. 2 provas novas, as duas caídas antes do conserto;
-- **lote A1.1 feito em 25/09**, pelo prompt dele: cinco defeitos reproduzidos antes do conserto
-  (conflito parado reabria a escolha em 3 de 3 ticks; risco já pesado, em 4 de 4 passos;
-  0 → 0,01 reabria a intenção; `cost: 1e9` somava −1e9 de utilidade; percepção com NaN
-  envenenava a crença, e a avaliação podia alterar os objetivos do ator). Contrato novo: a
-  avaliação só devolve `effects` (na unidade de cada sujeito) e `risk` (0 a 1, fração do
-  ganho); termo estranho, número não finito ou risco fora da faixa param o motor. O efeito só
-  vira valor pelo objetivo do ator (`span`), e o risco pesa contra o ganho do próprio plano.
-  Mudança material de crença é absoluta, por sujeito, em `thresholds.material`, declarada por
-  quem compõe; sujeito sem escala para o motor. A intenção guarda a frente de objetivos e o
-  risco que a escolha viu; só o que mudou desde então a reabre. Saíram `cost`, `uncertainty`,
-  `coherence` e `thresholds.salience`. Prioridade e confiança marcadas provisórias. 8 provas
-  novas, 7 caídas contra o código anterior. Dívida registrada no A4 do mapa: a avaliação
-  montada pela aplicação não pode capturar o estado verdadeiro por closure;
+- **a direção e os documentos de 25/09.** Depois do playtest do E0, ele definiu o jogo: um sandbox
+  ideológico sob regras reais. A pesquisa da estatal foi feita pelo Claude nas fontes oficiais
+  (pesquisa 14), porque o ChatGPT não pesquisa. A [gramática](spec/rules-grammar.md) padroniza
+  toda regra em sete peças com os nomes da especificação, que subiu para a versão 1.1
+  (`PROVISIONAL_MEASURE`, `DIRECT_ENTERPRISE` e a marca `[DESENHO]`). O corte vertical está na
+  versão 3, e o mapa ganhou os oito lotes do E1 (§6.4) e as decisões de 25/09 (§11.1b);
+- **o E0 está implementado e pausado, sem commit** ([ciclo 31](cycles/31-the-bimonthly-cut.md)):
+  o decreto de proteção até o relatório bimestral (`state.decree`), o limite das emendas pela CF
+  art. 166 § 18, sete ministros no ELENCO, o parecer e a reunião (`contingency.mjs`), o ensaio
+  (`scenario.mjs`) e a cena na mesa. A reunião foi reprovada no playtest, e a causa era o modelo:
+  a decisão do corte não pesa (achado 77);
+- **os lotes A1, A1.1, A1.2 e A2a estão feitos e commitados** (`98c1abc`, `a690248`, `5ba154c`):
+  a VONTADE em `src/domain/actors/`, com contrato endurecido, valor separado da urgência e a
+  crença por evidência (`belief.mjs`). A história está no journal, entradas 42 a 44. A dívida da
+  avaliação montada pela aplicação está no A4 do mapa. A VONTADE ainda não tem consumidor no jogo
+  commitado; no E0, sem commit, ela decide pelos ministros;
 - **padronização de 24/09, com as decisões dele:** todo caminho versionado em inglês,
   kebab-case e sem acento (docs, assets, licença, skills — agora `check`, `walk`, `simulate`,
   `validate` —, capturas e `tmp/`); nomes da UI que diziam outra coisa corrigidos
@@ -57,25 +55,18 @@
   `tools/prose-only.mjs` no lugar de `tmp/so-prosa.mjs`; `npm run links`
   (`tools/check-links.mjs`) dentro do `validate`, com zero referências quebradas. A pasta
   `cld` manteve o nome. `tmp/` agora tem `agents/`, `asset-sources/` e `history/`;
-- **lote A1 feito:** `src/domain/actors/` (VONTADE), motor de agência genérico e puro:
-  percepção → crença → objetivo priorizado → intenção → ação → trace. Objetivo, intenção e
-  ação são tipos distintos; modo heurístico ou deliberativo sai só das entradas (gatilhos
-  `unplanned`, `satisfied`, `failure`, `basis`, `conflict`, `risk`); repertório, avaliação e
-  limiares entram por parâmetro; empate pela ordem dos ids; esperar é uma intenção. 14 provas em
-  `tests/suites/actors.mjs`, caídas antes do motor existir. Guarda `boundaries` ganhou "motor de
-  domínio importando outro", com prova sintética. Nada no jogo consome o VONTADE ainda;
-- **Autoridade de design:** [especificação mestra](spec/master-spec.md), versão 1.0,
-  revisada em 24/09 só com as decisões aceitas por ele (convenção de caixa limitada aos schemas,
+- **Autoridade de design:** [especificação mestra](spec/master-spec.md), versão 1.1 em 25/09; a 1.0 foi revisada em 24/09 só com as decisões aceitas por ele: convenção de caixa limitada aos schemas,
   comunicação, calendário real e posse, visão presidencial, evento mínimo, `GAME_RULE` como
   projeção, cognição × processamento, silêncio não é resposta, agregado não vira ator,
   parlamentares individuais, Senado em duas entregas, `ACTION` ≠ `EVENT`, `PROPOSITION` adiada,
-  equivalência semântica do agendador, invariantes 21–23). `world-design.md` superado, preservado;
+  equivalência semântica do agendador, invariantes 21–23. `world-design.md` superado, preservado;
 - **mapa de migração** revisado em [spec/migration-map.md](spec/migration-map.md): projeção
   legada no lugar de "byte a byte", calendário civil registrado, visão presidencial com as dez
   consultas que leem verdade oculta, modelo mínimo de informação, três candidatos de corte
   vertical (ensaio: contingenciamento; candidata principal: medida provisória fictícia), 19
   lotes pequenos em três trilhas (A comportamento primeiro, B tempo, C epistemologia) e 4
-  pesquisas. Decisões tomadas e abertas no §11;
+  pesquisas. Decisões tomadas e abertas no §11. Em 25/09 o E1 passou a ser a estatal, em oito
+  lotes (§6.4);
 - **a tela mostra o que a Presidência sabe:** a mesma lei em `CLAUDE.md`, `AGENTS.md`,
   `agent-brief.md` e `standards.md` §5. Os três primeiros apontam `docs/spec/` como autoridade de
   design e plano em vigor; o índice dos ciclos também. **ADR 0003** explicita empresa;
@@ -93,7 +84,8 @@
   sem fonte suficiente. Cabeçalho corrigido e ressalvas registradas. Gemini declarou repouso;
   nenhum novo lote enviado. Retomar pela verificação de fontes, sem usar o rascunho como regra;
 - **direção anterior (23/09) superada pela especificação:** [world-design.md](world-design.md)
-  fica como histórico; o piloto de Energia não é o primeiro passo;
+  fica como histórico. O piloto de Energia de 23/09 era o setor inteiro; o corte de 25/09 é uma
+  empresa só;
 - **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos (`app.mjs` modularizado, menu com 3
   chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
   `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-screen-cabinet-desk.css` 4%,
@@ -113,33 +105,72 @@
   corrigidos, 2 nits na fila. As branches dos ultrareviews foram apagadas em 24/09 (só locais;
   recriáveis): `base-ultra` 679f043, `base-motor` bb7ce9d, `motor-review` fc78e27. Também
   `acoplamento-e-simulador` 137a94a (segue no remoto) e `backup-auditoria-26-08-2026` 4bf8c51;
-- **portão:** 13 guardas · 68 sintéticas · 376 provas · passeio verde em 1440×980 e 1440×900 ·
+- **portão:** 13 guardas · 68 sintéticas · 387 provas · passeio verde em 1440×980 e 1440×900 ·
   macaco (60 ações, semente 7) verde · `links` com zero quebradas. `validate` verde em 25/09
   depois do A1.2. Série do `simulate` remedida em 25/09 nas seis sondas: imóvel;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem
 
-1. **planejamento do E0** — ensaio de contingenciamento (lote E0 do
-   [mapa](spec/migration-map.md#61-os-lotes)), trazido para a frente em 25/09; a trilha A retoma depois de ele ser jogado. A pesquisa R1 (emendas) pode correr em paralelo,
-   sem código. A pesquisa do Gemini segue sem validação; os itens 3, 5 e 6 abaixo têm veredito
-   no §10 do mapa;
-2. **achado 69 — investigar oscilação da prova de voo interrompido**. Item 4 concluiu a meta de
-   30 asserções com portão verde; o aviso é exercitado por `openNotice`, sem acionador na interface;
-3. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
-   jogador (ausência declarada em 21/09, Achado 66). Kind novo de carta: `state.mjs`, `inbox.mjs`,
-   `strings.mjs`, vocabulário em `annex.mjs`;
-4. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%) — permanece pendente;
-5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
-   só depois de fechar o ciclo 29;
-6. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](cycles/30-depth-and-proofs.md):
-   ele marca os candidatos que entram.
+1. **E1 — a estatal**, lotes E1.1 a E1.8 do [mapa](spec/migration-map.md) §6.4, cada um com ordem
+   dele. O primeiro é a ficha da Enerbras;
+2. **o trabalho sem commit** (decreto, limite das emendas, E0): decisão dele, com a recomendação
+   do topo;
+3. **a tela das próximas atualizações**: decisão dele. A ordem de construção foi aprovada em
+   25/09: primeiro montar o governo, depois a estatal;
+4. **achado 81**, antes de fechar o E0; não bloqueia o E1;
+5. **achado 69** — investigar a oscilação da prova de voo interrompido;
+6. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
+7. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%);
+8. **3º ultra: `src/ui` inteira**, depois de fechar o ciclo 29;
+9. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](cycles/30-depth-and-proofs.md): ele marca os
+   candidatos que entram.
 
 ## Decisões vivas
 
-- **25/09, mudança de prioridade** — depois do commit do A2a, a trilha A pausa e o E0
-  (contingenciamento como Momento Presidencial jogável) vem à frente; o A2b espera o E0 ser
-  jogado. Revisão: um lote → implementação → uma revisão principal → correção → commit;
+- **25/09, foco nacional** (ordem dele) — o que é internacional (geopolítica, guerras, crises lá
+  fora) entra numa atualização futura, e o jogo mostra ao jogador a lista das próximas
+  atualizações. Até lá, o mundo lá fora fica parado num nível declarado. O jogador escolhe
+  qualquer partido no início;
+- **25/09, as duas recomendações** (ordem dele): a rota fora da ordem fica fora do corte da
+  estatal. A abertura com o subsídio do diesel foi revogada no mesmo dia pelo foco nacional; o jogo
+  abre com o jogador montando o governo (decisão dele): ministros, aliados e a eleição da Mesa;
+- **25/09, a gramática e a especificação 1.1** — toda regra real se escreve com ação, rota,
+  avaliação, portão, ficha, efeito e ciclo, com os nomes da especificação; a tela mostra três
+  linhas (quanto custa, quem reage, quanto tempo). Três camadas de fidelidade: fonte para o que o
+  jogador toca, episódio real para o efeito agregado, `[DESENHO]` declarado para o resto;
+- **25/09, pesquisa** — o ChatGPT não pesquisa; toda pesquisa com fonte é do Claude. No Planalto o
+  WebFetch leva ECONNRESET: baixa-se com `curl` e lê-se o texto. PDF sai com `pdftotext`;
+- **25/09, o que é o jogo** — sandbox ideológico com regras reais: o jogador tenta qualquer
+  projeto de país (comunista, ancap, nacionalista, monarquista...), o Brasil resiste pelas
+  instituições reais, e o fim mostra o país deixado. **Realismo acima de tudo.** Desenho em
+  [game-in-one-page.md](spec/game-in-one-page.md). O primeiro corte jogável passa a ser a estatal
+  de energia fictícia, porque ela se joga para lados opostos. A revisão do ChatGPT, aceita: eixos só internos (a tela mostra fatos concretos), resistência nasce de quem perde (não de "radicalidade"), caminhos com trade-off, a cadeia querer ≠ … ≠ consolidar, fim sem julgamento, jogadas compostas sem rótulo ideológico. Acréscimos do Claude: o mundo interrompe, a atenção é o recurso escasso, janelas reais do mandato;
+- **25/09, playtest do E0** — a reunião em papel foi reprovada ("não parece jogo"). Três protótipos
+  de cena também não pegaram, e a causa não era a tela: a decisão do corte não pesa em nada no
+  modelo (achado 77). Lições: encontro vira cena com rostos, fala curta e humana, nada de pop-up, e
+  toda decisão mostra o que arrisca. O E0 fica pausado, com o motor pronto e sem commit;
+- **25/09, E0 v1 implementado, sem commit** ([ciclo 31](cycles/31-the-bimonthly-cut.md)). Pelo
+  bloqueio, os ministros viraram sete (um por pasta, a Fazenda como guardiã), e o rateio passou a
+  respeitar a CF art. 166, § 18 (EC 100/2019, **VERIFICADO** no site da Câmara): a emenda não perde
+  mais que a proporção das demais discricionárias; as sondas não protegem, e a série ficou imóvel.
+  `src/application/contingency.mjs` (parecer e reunião, pelo `settlement` e pelo `decide()`),
+  `src/application/scenario.mjs` (ensaio do mês 21), ministros em `src/data/ministers.mjs` e no
+  ELENCO. Achado do playtest de bancada: quando contestar a maior pasta protegida é a melhor
+  alternativa, todos os ministros fazem o mesmo e a personalidade some;
+- **25/09, conclusões provisórias do E0** — a Fazenda entra como guardiã e parecerista da
+  restrição fiscal, não como competidora simétrica das pastas: enquanto a proteção cabe no
+  espaço, a distribuição não mexe no primário dela. "≥ 2 ministros materiais" é só hipótese da
+  sonda de medição, não a regra de frequência do Momento Presidencial;
+- **25/09, duas decisões dele para o E0, pelo realismo** — (1) os ministros lembram entre
+  bimestres: entra junto com os ministros, porque campo no save sem consumidor é dado morto;
+  (2) o decreto de proteção vale até o próximo relatório bimestral: **feito, sem commit**.
+  `state.decree` guarda as áreas protegidas; o turno o zera no mês do relatório e o rascunho do
+  mês seguinte nasce dele. Entrou fora dos campos obrigatórios do save, como o partido, e por
+  isso nenhum save antigo foi recusado nem o esquema subiu. Motor e série imóveis;
+- **25/09, mudança de prioridade** — depois do commit do A2a, a trilha A pausou e o E0 veio à
+  frente. No mesmo dia o E0 foi jogado e pausado, e o E1 (a estatal) passou à frente; o A2b
+  espera. Revisão: um lote → implementação → uma revisão principal → correção → commit;
   rodada só de papel apenas diante de bloqueio real. Nota para o A2b: uma evidência causal pode
   gerar várias transmissões (João conta o mesmo a dois jornais) sem virar duas linhagens causais,
   mas pode virar duas linhagens percebidas;
@@ -204,6 +235,28 @@
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
+- **81. O limite do § 18 vale para as emendas do jogo? (25/09) — VERIFICAR antes de fechar o
+  E0.** O art. 166, § 18 limita só as programações dos §§ 11 e 12 (individuais e de bancada de
+  execução obrigatória). A emenda do jogo é a verba prometida às bancadas (`turn.mjs`, achado 71),
+  e pode não ser só isso. Não bloqueia o playtest;
+- **76. Defesa e Previdência não têm custo político (25/09).** Nenhum canal de opinião ou
+  pressão lê essas áreas; a "ordem" lê Segurança e Defesa com peso 0. Proteger Saúde, Educação e
+  Infra por 48 meses no jogo passivo: aprovação 12 → 12, dívida 89,9% → 90,0%, Segurança 25,4 →
+  21,1. Cortar onde ninguém reclama é realista; sair de graça, não. Calibragem é decisão dele;
+- **77. A distribuição do corte quase não tem consequência material (25/09, corrigido). A
+  resposta é o lote E1.4.** A
+  primeira versão dizia "no jogo prudente o corte é 1,5%": era só o primeiro mês de corte do
+  `herdado`, cujo corte cresce até 100%. Medido depois: a `agenda` nunca corta (refaz o gasto
+  mensal ao espaço); um plano anual parado dá cortes de 10%–40% em 10 dos 24 relatórios. Mas
+  proteger Saúde, Educação e Infra em todo relatório por 4 anos: aprovação 6 → 6, dívida 89,8% →
+  89,8%, Infra +1,0, Segurança −0,3. A MALHA lê o gasto total da área; o discricionário cortado é
+  fatia pequena, e a resposta é lenta. Liga com 35 e 53;
+- **80. Lei pode deixar nível abaixo do piso vigente, e a execução a desfaz (25/09) — a investigar.**
+  Na medição do E0 (variante antiga da `agenda` com plano anual), a lei do mês 14 levou
+  `aposentadoria-urbana` de 78 para 66 com o piso vigente ainda em 78 (`bandsOf`): a obrigatória
+  caiu 116 bi/ano pelo `relief` (`turn.mjs:1776`), e no mês 16 um pedido de 78, dentro da faixa,
+  desfez a reforma sem lei. A série oficial não passa por isso (a `agenda` nunca sobe o nível de
+  volta). Pergunta para a ESTRATO: a lei que baixa o nível abaixo do piso deveria baixar o piso?;
 - **70. A posse é em 5 de janeiro (24/09) — VERIFICADO.** EC 111/2021, art. 82: mandato de
   05/01/2027 a 05/01/2031 (Senado, TRE-PR; mapa §3). `state.mjs` diz 1º de janeiro. Lote B1;
 - **71. Emenda individual é impositiva (24/09) — VERIFICADO em parte.** 2% da RCL, execução
@@ -238,7 +291,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   `mandatory` e `revenue` (anualizados) e ninguém diz isso. A frase é dele; aberto;
 - **63. A promessa da posse saiu do Gabinete (11/09).** Segue no relatório do turno, sumiu da
   mesa. Entra como parágrafo do parecer, ou fica só no fechamento?;
-- **53. Não recalibrar a capacidade antes das empresas (21/08).** Pergunta sem resposta: quanto
+- **53. Não recalibrar a capacidade antes das empresas (21/08).** As empresas entram no E1.1. Pergunta sem resposta: quanto
   tempo uma decisão leva para mudar o país — hoje mais que um mandato em 6 de 8 áreas;
 - **52. As sondas espalham; o país premia compromisso sustentado (21/08).** Concentrar 48 meses
   na Saúde: 61 → 71,5; rodar o foco: 61 → 65. Nenhuma tela diz isso;
@@ -329,11 +382,12 @@ e CASCATA saíram em 24/09 e voltam quando tiverem código.
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
 `simulate.mjs` (nove sondas).
 
-**Verificação:** 13 guardas · 68 sintéticas · 376 provas · passeio dentro do `validate`
+**Verificação:** 13 guardas · 68 sintéticas · 387 provas · passeio dentro do `validate`
 (geometria, recorte, contraste no pixel, 1440×980 e 1440×900).
 
 ## O que ainda não existe
 
+- **empresas com estrutura** — a estatal entra nos lotes E1;
 - **choques exógenos** (o antigo TEMPORAL) — o canal `shock` de CORRENTE existe e ninguém o alimenta no jogo;
 - **carta do arquivamento** do processo de afastamento (achado 66);
 - **tensão institucional** — variável de estado, não motor;
@@ -344,10 +398,10 @@ e CASCATA saíram em 24/09 e voltam quando tiverem código.
 
 ## Decisões fechadas que não se reabrem sem pedido
 
-Fase 1 só o Brasil · 48 turnos mensais · inglês no código, português na prosa · cascata
+Fase 1 só o Brasil · 48 turnos mensais hoje, e a semana é direção da especificação · inglês no código, português na prosa · cascata
 declarada · codinomes de motor · zero build/runtime · lealdade serializada · motor nenhum chama
 outro · Congresso responde ao pago · rateio proporcional · âncora é o teto que vigorou · tela
-pergunta, previsão usa o pago · rascunho morre com o mês · tudo é alavanca com preço · posição
+pergunta, previsão usa o pago · rascunho morre com o mês, salvo o decreto de proteção, que vale até o relatório bimestral (ordem dele, 25/09) · tudo é alavanca com preço · posição
 calculada, rito sai do conteúdo, jogador não inventa substantivo · catálogo cita fonte · Finanças
 sem controle · ordem entre normas total (hierarquia, especificidade, recência, escrita) · geral
 não revoga especial sem nomear · faixa derivada, nunca guardada · pessoa é semente (save guarda
@@ -356,10 +410,11 @@ rodar · preço escala com dispersão · layout é promessa · sem presidente se
 V) · federação = coligação com preço para romper · barreira pode matar o partido no ano 4.
 **Princípio: tudo tem um jeito de ser feito — o que separa o possível do impossível é o preço.**
 
-Referências: Geopolitical Simulator, Football Manager 2020.
+Referências de jogo: Football Manager, Democracy 4, Suzerain, Crusader Kings, Victoria 3 e Hearts
+of Iron, da Paradox; Geopolitical Simulator.
 
 ## Fontes de modelagem
 
-Campo real em [`docs/research/`](research/) (pesquisas 01 a 12); a 09 é o checklist do cargo e a
+Campo real em [`docs/research/`](research/) (pesquisas 01 a 15); a 09 é o checklist do cargo e a
 04 lista os sete buracos por realismo ganho. Correções do dossiê externo estão na prosa de cada
 arquivo de dado (`parties`, `fiscal`, `macro`, `congress`, `economy`, `turn`).

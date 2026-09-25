@@ -10,8 +10,9 @@ puro servido como arquivo.
 3. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila, decisões vivas, achados
    abertos, a série. Primeira leitura de toda sessão; última escrita de toda sessão que muda algo;
 4. [`docs/standards.md`](docs/standards.md) — as convenções, e qual guarda cobra cada uma;
-5. [`docs/spec/`](docs/spec/) — a especificação mestra é a autoridade de design; o mapa de
-   migração é o plano em vigor;
+5. [`docs/spec/`](docs/spec/) — a especificação mestra é a autoridade de design; o jogo em uma
+   página, a gramática das regras e o corte vertical a detalham, e em conflito vale o mais
+   recente; o mapa de migração é o plano em vigor;
 6. [`docs/cycles/`](docs/cycles/) — histórico de planejamento; índice em
    [`docs/cycles/README.md`](docs/cycles/README.md);
 7. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
