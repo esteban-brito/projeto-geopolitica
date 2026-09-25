@@ -439,11 +439,95 @@ export function describeMail({
             target: "congress",
           });
 
+        case "ask":
+        case "said": {
+          const [actor = "", deed = "", tone = "plain"] = (letter.voice ?? "").split(".");
+          const key = `${actor}.${deed}`;
+          const bench = parties.find(party => party.label === letter.by?.party);
+          const counts = UI.world;
+          const held = letter.was ?? 0;
+          const fair = letter.now ?? 0;
+          const cut =
+            letter.now && letter.was !== null ? Math.round((1 - letter.was / letter.now) * 100) : 0;
+          const fill = (/** @type {string} */ text) =>
+            text
+              .replaceAll("{programa}", letter.subject ?? "")
+              .replaceAll("{pasta}", seatPhrase(letter.subject ?? ""))
+              .replaceAll("{indicado}", letter.nominee?.name ?? "")
+              .replaceAll("{corte}", String(cut))
+              .replaceAll(
+                "{tem}",
+                held === 0
+                  ? counts.held.none
+                  : held === 1
+                    ? counts.held.one
+                    : counts.held.many.replace("{n}", String(held)),
+              )
+              .replaceAll(
+                "{justo}",
+                fair <= 1 ? counts.fair.one : counts.fair.many.replace("{n}", String(fair)),
+              );
+          /** @type {{ subject: string, polite: string, firm: string, plain: string, choices?: { accept: string, acceptCost: string, block: string, blockCost: string } } | undefined} */
+          const gesture = UI.world.gestures[/** @type {keyof typeof UI.world.gestures} */ (key)];
+          const said = gesture
+            ? fill(gesture[/** @type {"polite" | "firm" | "plain"} */ (tone)] ?? gesture.plain)
+            : "";
+          const choices = gesture?.choices;
+          const author = letter.by
+            ? {
+                name: letter.by.name,
+                office: actor === "minister" ? "minister" : "leader",
+                label:
+                  actor === "minister" && letter.by.party
+                    ? `${letter.by.role}, ${letter.by.party}`
+                    : letter.by.role,
+                reach: bench && "seats" in bench ? Number(bench.seats) / 513 : 0,
+              }
+            : null;
+          const outcome =
+            letter.kind !== "ask"
+              ? ""
+              : letter.answer === "accept"
+                ? UI.world.accepted
+                : letter.answer === "block"
+                  ? UI.world.refused
+                  : letter.answer === "silence"
+                    ? UI.world.silenced
+                    : UI.world.warns;
+          const subjectLine = gesture?.subject;
+          return paper({
+            from: author,
+            subject: subjectLine ? fill(subjectLine) : subject,
+            due: letter.kind === "ask" ? left(letter) : null,
+            body:
+              `<div class="letter__lines">` +
+              `<span class="letter__said">${escapeHtml(said)}</span>` +
+              (outcome ? `<span>${escapeHtml(outcome)}</span>` : "") +
+              `</div>`,
+            choices:
+              letter.kind === "ask" && letter.answer === null && choices
+                ? choicesHtml(letter.id, answered[letter.id] ?? "", choices)
+                : undefined,
+          });
+        }
+
         default:
           return null;
       }
     })
     .filter(part => part !== null);
+}
+
+/**
+ * A CADEIRA COMO GENTE DIZ, e não como a lei a intitula.
+ * @param {string} label - o nome da lei
+ * @returns {string}
+ */
+function seatPhrase(label) {
+  const short = label.replace(" da Presidência da República", "");
+  const [first = "", ...rest] = short.split(" ");
+  if (first === "Ministério") return `a pasta ${rest.join(" ")}`;
+  return `${first === "Gabinete" ? "o" : "a"} ${short}`;
 }
 
 /**

@@ -9082,3 +9082,18 @@ existe e está provado, mas só a reunião do corte o usa. A proposta está em "
 acontecimento com autor e motivo, só acorda quem tem razão, a informação anda por quem pôde ver, e o
 ritmo vem do calendário real, sem diretor de drama. A medida de vida é uma sonda passiva no
 simulador.
+
+### 63 · As pessoas agem — 25/09
+
+Ele mandou criar uma IA viva, com carta branca. O lote 1 pôs 14 pessoas decidindo pela VONTADE
+todo mês: os 7 porta-vozes de partido e os 7 ministros das pastas das áreas. Cada uma quer coisas
+diferentes, pela ambição e pelo temperamento, e age com gestos reais da política brasileira: pede
+pasta para um indicado, ameaça votar com independência, desembarca e entrega os cargos, pede o
+programa cortado de volta, reclama em público, pede demissão. Cada gesto é uma carta com autor e
+fala no tom da pessoa. A medida corrigiu cinco defeitos antes de chegar ao jogo, o mais grave o de
+ninguém aprender: um partido ignorado pedia de novo a cada dois meses, para sempre. Depois das
+correções, apareceu sozinho um comportamento que ninguém escreveu: com o governo impopular, os
+partidos abandonam a base em agosto de 2030, dois meses antes da eleição. O simulador passou a
+começar com o governo montado, porque a posse é obrigatória; sem ministério nenhum, todos os
+partidos saem até o mês 5 e quase nada passa na Câmara. A tela desenha as cartas das pessoas com a
+fala em itálico e os dois botões com preço.

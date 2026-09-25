@@ -810,6 +810,16 @@
   .letter__lines b {
     color: var(--sheet-ink);
     font-weight: 700;
+  }
+
+  /* A fala de quem escreve lê como citação, na letra dos documentos. */
+  .letter__said {
+    margin-block-end: var(--space-1);
+    font-family: var(--font-record);
+    font-style: italic;
+    font-size: calc(var(--text-note) * 1.12);
+    line-height: 1.42;
+    color: var(--sheet-ink);
   } /* A AÇÃO LEVA AO LUGAR ONDE O ASSUNTO SE RESOLVE, como a ação de todo cartão do Gabinete —
      e ela é discreta pela mesma razão: a carta informa, e o botão é a porta. */
   .letter__action {

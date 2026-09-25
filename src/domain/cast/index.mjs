@@ -160,6 +160,20 @@ export function cast({
 }
 
 /**
+ * UM TRAÇO DA PESSOA, tirado da semente dentro de uma faixa: a mesma pessoa tem o mesmo
+ * orgulho em toda partida com a mesma semente, e o save não precisa guardá-lo.
+ * @param {number} seed
+ * @param {string} id - quem
+ * @param {string} name - qual traço
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
+export function trait(seed, id, name, min, max) {
+  return min + (max - min) * hashed(`${seed}:${id}:agency:${name}`);
+}
+
+/**
  * Um presidente com o mesmo nome do lider do Centrao nao e sabor local — e um defeito que o
  * jogador lê como bug, e ha uma prova cobrando isso para o elenco .
  *

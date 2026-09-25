@@ -122,6 +122,76 @@ export const UI = {
     nearest: "governa mais perto",
     untouched: "ainda governa o orçamento que herdou",
   },
+  /* As cartas das pessoas do mundo, uma por gesto: a fala muda com o temperamento de quem
+     escreve, e as chaves entre chaves são preenchidas com o que a carta trouxe do motor. */
+  world: {
+    gestures: {
+      "minister.ask": {
+        subject: "Pede {programa} de volta",
+        polite: "Presidente, {programa} foi cortado em {corte}%. Peço que volte ao nível da posse.",
+        firm: "Com {programa} cortado em {corte}%, eu não entrego o que a pasta prometeu.",
+        plain: "A pasta pede {programa} de volta ao nível da posse. O corte foi de {corte}%.",
+        choices: {
+          accept: "Atender",
+          acceptCost: "o programa volta ao nível da posse neste mês, e sai da mesma bolsa",
+          block: TERMOS.refuse,
+          blockCost: "ela sente, e lembra no próximo pedido",
+        },
+      },
+      "leader.post": {
+        subject: "Quer {pasta} para o partido",
+        polite:
+          "O partido gostaria de indicar {indicado} para {pasta}. {tem}; pela bancada, {justo}.",
+        firm: "Queremos {pasta} para {indicado}. {tem}, e a bancada não se sente parte do governo.",
+        plain: "O partido indica {indicado} para {pasta}. {tem}.",
+        choices: {
+          accept: "Nomear",
+          acceptCost: "o partido se aproxima do governo; quem está na cadeira sai",
+          block: TERMOS.refuse,
+          blockCost: "o partido cobra, e pode ir embora",
+        },
+      },
+      "minister.complain": {
+        subject: "Reclamou do corte em público",
+        polite: 'Disse a jornalistas que a pasta "faz o possível com o que tem".',
+        firm: 'Disse a jornalistas que a pasta "está no osso" e que o Planalto foi avisado.',
+        plain: "Reclamou do corte numa entrevista.",
+      },
+      "minister.resign": {
+        subject: "Deixou o governo",
+        polite:
+          'Entregou a carta de demissão: "Agradeço a confiança, mas não tenho condições de seguir."',
+        firm: 'Pediu demissão: "Não fico num cargo em que não sou ouvido."',
+        plain: "Pediu demissão do cargo.",
+      },
+      "leader.threaten": {
+        subject: "Ameaça votar com independência",
+        polite: 'Avisou que, sem mais espaço, a bancada vai "votar pensando no país".',
+        firm: "Disse que a bancada passa a votar com independência se nada mudar. {tem}.",
+        plain: "Ameaçou votar com independência.",
+      },
+      "leader.leave": {
+        subject: "O partido deixou a base",
+        polite: 'Anunciou que o partido deixa a base "com respeito, mas sem compromisso".',
+        firm: "Anunciou que o partido deixa a base e entrega os cargos.",
+        plain: "O partido deixou a base e entregou os cargos.",
+      },
+    },
+    /* As pastas do partido, e as que a bancada justificaria, ditas como gente diz. */
+    held: {
+      none: "O partido não tem pasta nenhuma",
+      one: "O partido tem uma pasta",
+      many: "O partido tem {n} pastas",
+    },
+    fair: {
+      one: "seria uma",
+      many: "seriam {n}",
+    },
+    warns: "Se você não responder, vale como recusa.",
+    accepted: "Você atendeu.",
+    refused: "Você recusou.",
+    silenced: "O prazo venceu sem resposta, e valeu como recusa.",
+  },
   inbox: {
     title: "Caixa de entrada",
     /* Rupturas do cerco (governo passivo recebia 0 cartas em 44 meses ate abrir no mes 43). */

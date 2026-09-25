@@ -870,6 +870,7 @@ O ciclo 29 segue aberto (prosa do domínio, poda do `tmp/`) e não bloqueia nada
 | foco nacional; o internacional entra por atualização futura, listada no jogo; o mundo lá fora fica parado até lá                                                                                                                                            |
 | o jogador escolhe qualquer partido no início                                                                                                                                                                                                                |
 | a semana: o botão avança uma semana; 7 dias com manhã, tarde e noite; o Vice pode ir no lugar do Presidente; o Congresso de terça a quinta, medido; telefonar sem limite fixo, com os freios de tempo, peso e desgaste ([a semana de governo](the-week.md)) |
+| o mundo vivo começa com 14 pessoas decidindo pela VONTADE; o simulador começa com o governo montado na posse ([o mundo vivo](the-living-world.md))                                                                                                          |
 | toda pesquisa com fonte é do Claude; o ChatGPT revisa e não pesquisa                                                                                                                                                                                        |
 
 ### 11.2 Abertas

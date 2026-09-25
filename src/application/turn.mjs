@@ -1,6 +1,7 @@
 /* O TURNO — onde o orcamento e o Congresso se encontram. */
 
 import { coalitionOf } from "./cabinet.mjs";
+import { rosterOf, worldOf } from "./world.mjs";
 import { revenueOf, step as budgetStep } from "../domain/budget/index.mjs";
 import { pressureOf, step as capacityStep } from "../domain/capacity/index.mjs";
 import { benches as benchesOf, cast, offered, president, remember } from "../domain/cast/index.mjs";
@@ -1389,9 +1390,22 @@ export function playMonth(state, orders = {}, options = {}) {
   const spurned = [];
 
   for (const letter of post.resolved) {
+    if (letter.kind === "ask" && letter.lever !== null && !letter.nominee) {
+      if (letter.answer === "accept") conceded[letter.lever] = letter.level ?? 0;
+      continue;
+    }
     if (letter.kind !== "demand" || letter.lever === null) continue;
     if (letter.answer === "accept") conceded[letter.lever] = letter.level ?? 0;
     else if (letter.from !== null) spurned.push(letter.from);
+  }
+
+  /* O partido atendido ganha a pasta no mês da resposta: quem estava na cadeira sai. */
+  /** @type {Record<string, import("../state/state.mjs").Appointee>} */
+  const cabinetNow = { ...(state.cabinet ?? {}) };
+  for (const letter of post.resolved) {
+    if (letter.kind === "ask" && letter.nominee && letter.lever && letter.answer === "accept") {
+      cabinetNow[letter.lever] = letter.nominee;
+    }
   }
 
   const passage = advanceBills(state, {
@@ -1404,12 +1418,12 @@ export function playMonth(state, orders = {}, options = {}) {
 
   const tally = passage.tally;
 
-  const loyalty = settle({
+  const settled0 = settle({
     parties,
     loyalty: state.loyalty,
     promised,
     paid,
-    cabinet: coalitionOf(state.cabinet ?? {}, catalog),
+    cabinet: coalitionOf(cabinetNow, catalog),
   });
   const memory = remember({
     people,
@@ -1419,6 +1433,45 @@ export function playMonth(state, orders = {}, options = {}) {
     parameters: catalog.cast,
     ruling: state.party ?? null,
   });
+
+  const posse = spendOf({
+    programs: catalog.programs,
+    levels: Object.fromEntries(catalog.programs.map(program => [program.id, program.initial])),
+  }).fullByArea;
+  const government = governmentOf(state, catalog);
+  const taken = [...people.map(person => person.name), government.president.name];
+  const world = worldOf({
+    state,
+    roster: rosterOf({ state: { ...state, cabinet: cabinetNow }, people, taken, catalog }),
+    facts: {
+      /* Contra o que a pasta tinha na posse, e não contra o que o governo pede: cortar o
+         programa corta pedido e pagamento juntos, e o ministro nunca veria o corte. */
+      funding: Object.fromEntries(
+        areas.map(area => {
+          const had = posse[area.id] ?? 0;
+          return [area.id, had > 0 ? (funded[area.id] ?? 0) / had : 1];
+        }),
+      ),
+      served: coalitionOf(cabinetNow, catalog),
+      paid,
+      standing,
+      resolved: post.resolved,
+      open: post.mail.filter(letter => letter.due !== null && letter.answer === null),
+    },
+    cabinet: cabinetNow,
+    taken,
+    catalog,
+  });
+
+  /* O partido que desembarca vota contra a partir do mês seguinte: a lealdade cai para a
+     obstrução, e só verba ou pasta o trazem de volta. */
+  const loyalty = { ...settled0 };
+  for (const bloc of world.left) {
+    loyalty[bloc] = Math.min(loyalty[bloc] ?? 0, THRESHOLDS.obstruction - 1);
+  }
+  const cabinetNext = Object.fromEntries(
+    Object.entries(cabinetNow).filter(([seat]) => !world.vacate.includes(seat)),
+  );
 
   const approved = passage.passed;
   const enacted = approved !== null;
@@ -1586,6 +1639,8 @@ export function playMonth(state, orders = {}, options = {}) {
       decree: calendarOf(state.month + 1).now.some(landmark => landmark.id === "bimestral")
         ? []
         : [...protect].sort(),
+      cabinet: cabinetNext,
+      agents: world.agents,
       fiscal: nextFiscal,
       macro: economy.macro,
       mood: opinion.mood,
@@ -1618,6 +1673,7 @@ export function playMonth(state, orders = {}, options = {}) {
 
           blockedNext: budgetStep({ ...positionOf(opening, catalog), spent: 0 }).blocked,
         }),
+        ...world.letters,
         ...passage.asked,
         ...demandsOf(state, pressure, catalog),
         ...notices(passage.events, state.month),

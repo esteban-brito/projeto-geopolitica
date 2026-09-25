@@ -252,7 +252,7 @@ const { values } = parseArgs({
     policy: { type: "string", default: "agenda" },
     shock: { type: "string", default: "0" },
     party: { type: "string" },
-    cabinet: { type: "string", default: "none" },
+    cabinet: { type: "string", default: "proportional" },
     quiet: { type: "boolean", default: false },
   },
 });
@@ -356,8 +356,9 @@ function flagsOf(report) {
 
 let state = createState(seed, undefined, null, party);
 
-/* `--cabinet proportional` reparte as 38 pastas pelas bancadas, pelo maior resto: a coalizão
-   inteira servida, para medir o peso da pasta contra o jogo sem gabinete. */
+/* A POSSE É OBRIGATÓRIA, e por isso a sonda padrão começa com as 38 pastas repartidas pelas
+   bancadas, pelo maior resto. Sem gabinete (`--cabinet none`), nenhum partido é atendido e as
+   pessoas do mundo desmontam a base: `agenda` caiu de 26 para 2 votações aprovadas em 43. */
 if (values.cabinet === "proportional") {
   const seats = CATALOG.cabinet;
   const total = CATALOG.parties.reduce((sum, item) => sum + item.seats, 0);
@@ -392,6 +393,8 @@ if (values.cabinet === "proportional") {
 const memory = { passed: new Set() };
 /** @type {Report[]} */
 const history = [];
+/** @type {Map<string, import("../src/state/state.mjs").Letter>} */
+const deeds = new Map();
 
 const opening = state;
 
@@ -407,6 +410,9 @@ for (let i = 0; i < months; i++) {
 
   history.push(played.report);
   state = played.state;
+  for (const letter of state.mail) {
+    if (letter.kind === "ask" || letter.kind === "said") deeds.set(letter.id, letter);
+  }
 }
 
 /* ── A SAIDA ──────────────────────────────────────────────────────────────── */
@@ -516,6 +522,25 @@ for (const party of CATALOG.parties) {
   const mark = party.id === state.party ? " ← a sua" : "";
   out.write(`    ${pad(party.label, 18)}${padLeft(num(value, 0), 4)}   ${mood}${mark}\n`);
 }
+
+/* A VIDA: o que as pessoas fizeram sem o Presidente pedir. */
+const GESTURES = [
+  ["leader.post", "pedidos de pasta"],
+  ["leader.threaten", "ameaças"],
+  ["leader.leave", "desembarques"],
+  ["minister.ask", "pedidos de verba"],
+  ["minister.complain", "queixas públicas"],
+  ["minister.resign", "demissões"],
+];
+const deedList = [...deeds.values()];
+out.write(`  a vida\n`);
+out.write(
+  `    ${GESTURES.map(([key, label]) => `${label} ${deedList.filter(letter => (letter.voice ?? "").startsWith(key ?? "")).length}`).join(" · ")}\n`,
+);
+const gone = deedList
+  .filter(letter => (letter.voice ?? "").startsWith("leader.leave"))
+  .map(letter => `${letter.by?.party ?? letter.from} (mês ${letter.month})`);
+if (gone.length > 0) out.write(`    saíram da base: ${gone.join(", ")}\n`);
 
 out.write(`  o pais ao fim\n`);
 /* A COLUNA SE MEDE PELO NOME MAIS LONGO DO CATALOGO, e nao por uma largura digitada. */

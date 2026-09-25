@@ -1,5 +1,6 @@
 /* O CATALOGO — o indice de todo dado do projeto. */
 
+import { AGENCY, AGENCY_SCHEMA, DRIVES, DRIVE_SCHEMA } from "./agency.mjs";
 import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
 import { CABINET, SEAT_SCHEMA } from "./cabinet.mjs";
@@ -49,6 +50,8 @@ export const CATALOG = {
   cabinet: CABINET,
   ministers: MINISTERS,
   contingency: CONTINGENCY,
+  agency: AGENCY,
+  drives: DRIVES,
 };
 
 /**
@@ -79,6 +82,8 @@ export function catalogViolations() {
     ...collectionViolations(MINISTER_SCHEMA, MINISTERS, "ministers"),
     ...danglingSeats(),
     ...violations(CONTINGENCY_SCHEMA, CONTINGENCY, "contingency"),
+    ...violations(AGENCY_SCHEMA, AGENCY, "agency"),
+    ...collectionViolations(DRIVE_SCHEMA, DRIVES, "drives"),
     ...violations(PRESSURE_SCHEMA, PRESSURE, "pressure"),
     /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. */
     ...danglingAreas(),

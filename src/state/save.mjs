@@ -134,6 +134,10 @@ export function deserialize(text) {
     return { ok: false, reason: `"cabinet" deveria ser objeto de nomeados` };
   }
 
+  if (candidate["agents"] !== undefined && !asObj(candidate["agents"])) {
+    return { ok: false, reason: `"agents" deveria ser objeto` };
+  }
+
   for (const entry of shape) {
     const field = /** @type {string} */ (entry[0]);
     const test = /** @type {(v: unknown) => boolean} */ (entry[1]);

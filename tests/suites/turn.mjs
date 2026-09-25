@@ -940,9 +940,18 @@ test("O TETO QUE VAI FECHAR AVISA ANTES, e o aviso chega uma vez so", () => {
    carta e so a primeira chegaria. */
 test("O AVISO DO BIMESTRAL CHEGA SEIS VEZES NO ANO, e o de marco nao e o de maio", () => {
   let state = createState(7);
-  for (let month = 0; month < 12; month++) state = playMonth(state, {}, {}).state;
+  /* CONTA O QUE CHEGOU, mês a mês, e não o que sobrou na bandeja: com as pessoas do mundo
+     escrevendo, a bandeja de 24 cartas fechadas empurra o aviso de janeiro para fora antes de
+     dezembro, e a prova passaria a medir a capacidade da bandeja. */
+  /** @type {Map<string, import("../../src/state/state.mjs").Letter>} */
+  const chegaram = new Map();
+  for (let month = 0; month < 12; month++) {
+    state = playMonth(state, {}, {}).state;
+    for (const letter of state.mail)
+      if (letter.kind === "contingency") chegaram.set(letter.id, letter);
+  }
 
-  const avisos = state.mail.filter(letter => letter.kind === "contingency");
+  const avisos = [...chegaram.values()];
   /* SEIS, e o numero e o mesmo que a suite do calendario ja cobra do marco bimestral. */
   assert.equal(avisos.length, 6, `o bimestral avisou ${avisos.length} vezes em doze meses`);
   assert.equal(new Set(avisos.map(letter => letter.id)).size, 6, "duas cartas dividiram um id");

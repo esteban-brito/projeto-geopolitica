@@ -17,19 +17,16 @@
   [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
   [checklist do Presidente](spec/presidential-checklist.md); a interface nova, no
   [mapa das telas](spec/interface-map.md). Em conflito, vale o mais recente;
-- **próximo passo:** o lote E1.0a está em curso, com ordem dele de 25/09. Passo 1 feito: as 38
-  cadeiras de ministro no catálogo (`src/data/cabinet.mjs`, prova em `tests/suites/cabinet.mjs`), e
-  os 7 ministros do E0 sentam nelas. Passo 2 feito: `appoint` e `dismiss` no estado (`state.cabinet`,
-  opcional no save, sem subir o esquema). Na revisão de 25/09 o nomeado ganhou `id`. Passo 3 feito: quem senta na cadeira
-  vai à reunião do corte (achado 82 fechado), e a pasta puxa a lealdade do partido até 80
-  (`coalitionOf` em `src/application/cabinet.mjs`; `settle` com `cabinet`). Falta a tela, que é o
-  E1.0e; antes dela vêm E1.0b a E1.0d;
+- **próximo passo:** o lote 2 do [mundo vivo](spec/the-living-world.md), oposição e ideologia. O
+  lote 1 está no jogo: 14 pessoas decidem pela VONTADE e escrevem cartas com autor. O E1.0a (as 38
+  cadeiras, nomear e demitir, a pasta que puxa a lealdade até 80) está feito; a abertura segue com
+  o E1.0b, a eleição da Mesa, e a tela da posse espera a escolha dele entre os protótipos;
 - **commits de 25/09:** `febd0b5` (E0), `2482ce7` (documentos), `916a80f` e `97483ec` (passos 1 e 2
   do E1.0a), `d2684ce` (checklist de 40). Ele autorizou commit ao fim de cada etapa validada;
   push e merge seguem pedindo ordem;
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `validate` verde em 25/09, depois do E1.0a (399 provas, passeio e
+- **portão:** `validate` verde em 25/09, depois do lote 1 do mundo vivo (407 provas, passeio e
   macaco); roda de novo antes de qualquer commit;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
@@ -134,7 +131,12 @@
 
 ## Decisões vivas
 
-- **25/09, o mundo vivo (proposta)** — revisão da "IA": hoje o mundo é feito de termômetros (16
+- **25/09, o mundo vivo, lote 1 no jogo** (ordem dele: "crie uma IA viva", carta branca) — 14 pessoas
+  (7 porta-vozes e 7 ministros) decidem pela VONTADE todo mês e escrevem cartas com autor: pedem
+  pasta ou verba, ameaçam, reclamam, desembarcam, pedem demissão. Sem diretor de drama; a imprensa
+  entra como atores no lote 3. O simulador começa com o governo montado na posse (`--cabinet
+proportional`, o padrão), porque a posse é obrigatória;
+- **25/09, o mundo vivo (proposta, histórico)** — revisão da "IA": hoje o mundo é feito de termômetros (16
   tipos de carta nascem de limiares; o Congresso vota por fórmula; só a reunião do corte usa a
   VONTADE). A proposta põe cada acontecimento com autor e motivo, o agendador acordando só quem tem
   motivo, o filtro da Casa Civil e o ritmo vindo do calendário real. Duas decisões dele pendentes
@@ -261,6 +263,16 @@
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
+- **83. O êxodo é sincronizado (25/09).** Com o governo montado, 5 dos 6 desembarques de
+  `agenda` caem no mesmo mês, 44: todos os porta-vozes leem a mesma aprovação publicada. Realista
+  no rumo (governo impopular às vésperas da eleição), irreal no compasso. Resolve-se com a
+  ideologia e a oposição, no lote 2 do mundo vivo;
+- **84. O PSU socialista tem um "líder do centro" (25/09).** O arquétipo `leader-centro-esquerda`
+  (`src/data/cast.mjs`) mora no bloco `socialistas` com rótulo "líder do centro", e a carta assina
+  assim. Dado a revisar com ele;
+- **85. As provas do lote 1 do mundo vivo nasceram depois do código (25/09).** Fora da ordem da
+  regra. Compensação feita: duas sabotagens (a recusa que não fere; aceitar sem nomear) derrubaram
+  as provas certas;
 - **81. O limite do § 18 vale para as emendas do jogo? (25/09) — VERIFICAR antes de fechar o
   E0.** O art. 166, § 18 limita só as programações dos §§ 11 e 12 (individuais e de bancada de
   execução obrigatória). A emenda do jogo é a verba prometida às bancadas (`turn.mjs`, achado 71),
@@ -361,20 +373,24 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do E1.0a: imóveis em
+`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do lote 1 do mundo vivo, com o governo montado na posse: imóveis em
 todas as colunas abaixo.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
 | ------------ | ---------- | ------------ | --------- | --------- |
 | `herdado`    | 89,9%      | 0 de 0       | 48 → 27   | 38 → 25   |
-| `agenda`     | 90,0%      | **26 de 43** | 48 → 20   | 38 → 20   |
-| `base`       | 90,7%      | **34 de 41** | 48 → 20   | 38 → 20   |
-| `piso`       | 90,9%      | 5 de 17      | 48 → 15   | 38 → 15   |
+| `agenda`     | 90,0%      | **32 de 42** | 48 → 20   | 38 → 20   |
+| `base`       | 90,7%      | **32 de 42** | 48 → 20   | 38 → 20   |
+| `piso`       | 91,0%      | 8 de 30      | 48 → 15   | 38 → 15   |
 | `explorador` | 91,8%      | 0 de 0       | 48 → 25   | 38 → 17   |
-| `promessa`   | 92,4%      | 0 de 2       | 48 → 19   | 38 → 17   |
+| `promessa`   | 92,4%      | 0 de 3       | 48 → 19   | 38 → 17   |
 
 Mexeu em `src/data/`, `src/domain/`, `src/application/` ou `src/state/`? remeça esta tabela no
 mesmo commit, mesmo que ela não mude.
+
+**A série mudou em 25/09 por duas razões medidas:** as pessoas do mundo agem, e a sonda passou a
+começar com o governo montado. Sem gabinete (`--cabinet none`), `agenda` aprova 2 de 43 e todos os
+partidos saem até o mês 5. A linha "a vida" do simulador conta os gestos de cada sonda.
 
 **O peso da pasta** (`--cabinet proportional`: as 38 pastas repartidas pelas 9 bancadas, na
 proporção das cadeiras; 25/09): `agenda` 26 de 43 → 34 de 41; `base` 34 de 41 → 35 de 41;
@@ -406,7 +422,7 @@ cheia. Vocabulário único em `src/ui/shared/annex.mjs` (guarda `annexes`).
 **Motores:** LASTRO (receita, teto, `blocked` × `atRisk`) · ECLUSA (`whipCount`/`vote`/`settle`)
 · MALHA (índices, `pushOf`/`liftOf`) · SONDA · ELENCO (semente, sem fluxo de RNG) · CORRENTE
 (hiato, Phillips, Taylor, Okun, `carry`) · ESTRATO (faixa derivada, nunca guardada) · DELTA (lido
-do catálogo) · VONTADE (agência genérica; ainda sem consumidor no jogo). Os contratos vazios TEMPORAL
+do catálogo) · VONTADE (agência genérica; o mundo vivo a usa todo mês, em `application/world.mjs`). Os contratos vazios TEMPORAL
 e CASCATA saíram em 24/09 e voltam quando tiverem código.
 
 **Composição:** `agenda.mjs` (proposta, rateio) · `turn.mjs` (`bandsOf` → `settlement` →

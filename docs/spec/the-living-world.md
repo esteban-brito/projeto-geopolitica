@@ -1,6 +1,7 @@
 # O mundo vivo — a "IA" do jogo
 
-> Proposta, versão 0, 25/09/2026, a pedido dele: revisar a "IA" do jogo e quão vivo ele será.
+> Versão 1, 25/09/2026. A proposta v0 foi aceita pela ordem dele ("crie uma IA viva", carta
+> branca, realismo acima de tudo), e o lote 1 está no jogo.
 > Detalha a [especificação mestra](master-spec.md) §9 (atores), §10 (protocolo social), §11
 > (mídia) e §14.11 (agenda autônoma do Congresso). "IA" aqui é decisão determinística de pessoas
 > simuladas; IA por API não entra (ADR 0001 e 0002, e a decisão de 04/09).
@@ -87,7 +88,52 @@ No `simulate`, uma sonda passiva, em que o jogador não faz nada por 48 meses, d
 - **A abertura já começa isso:** os ministros nomeados decidem pela VONTADE, e o presidente da Câmara
   vira uma pessoa no E1.0c.
 
-## Decisões dele
+## Decidido em 25/09
 
-- **Sem diretor de drama:** o ritmo vem só do calendário real e das pessoas?
-- **A imprensa como atores com interesses próprios,** que decidem o que investigar e publicar?
+- **Sem diretor de drama:** o ritmo vem do calendário real e das pessoas.
+- **A imprensa entra como atores com interesses próprios,** no lote 3.
+
+## Lote 1, no jogo desde 25/09
+
+- **Quem age:** 14 pessoas. São os 7 porta-vozes de partido do elenco (o cacique da Mesa, o chefe
+  do Senado, o relator do orçamento e os líderes de PTU, PSU, PSM e Livre) e os 7 ministros das
+  pastas das áreas, nomeados ou interinos. O código está em `src/application/world.mjs`, e os
+  parâmetros, todos [DESENHO], em `src/data/agency.mjs`.
+- **O que querem:** o ministro quer a verba da pasta contra o nível da posse, a dignidade e o cargo.
+  O porta-voz quer pastas na proporção da bancada, a verba das emendas, não se desgastar com governo
+  impopular e a dignidade. A ambição dele (ministério, estado, sucessão, reeleição, tribunal) decide
+  o peso de cada coisa.
+- **O que podem fazer:** o ministro pede o programa cortado de volta, reclama em público ou pede
+  demissão. O porta-voz pede pasta para um indicado do partido, ameaça votar com independência ou
+  desembarca e entrega os cargos. Cada gesto é uma carta com autor, fala no tom da pessoa (educada,
+  firme ou seca) e, quando é pedido, dois botões com preço.
+- **O que aprendem:** a resposta do Presidente vira crença com qualidade 0,6: uma recusa ensina, mas
+  não é certeza. O silêncio vale como recusa. Pedir tem preço: a chance de ouvir não fere a dignidade,
+  e o orgulhoso para de pedir antes do humilde. A ameaça repetida vale menos a cada vez. Quem saiu
+  espera ser chamado e só volta a pedir com o governo 15 pontos acima do neutro.
+- **O que muda no mundo:** a pasta aceita senta o indicado no mês da resposta; o programa aceito
+  volta ao nível da posse; o desembarque tira os ministros do partido e leva a bancada à obstrução; a
+  demissão deixa a cadeira vaga.
+
+## O que a medida mostrou
+
+Em 48 meses, com o simulador (`npm run simulate`, linha "a vida"):
+
+- **Com o governo montado na posse** (`agenda`): 8 pedidos de pasta, 13 ameaças, 49 pedidos de verba,
+  9 queixas públicas e 6 desembarques. O Partido Livre sai no mês 21; os outros saem juntos no mês
+  44, agosto de 2030, com o governo impopular às vésperas da eleição. Nenhuma regra manda isso.
+- **Sem ministério nenhum** (`--cabinet none`): os 7 partidos saem até o mês 5, e `agenda` aprova
+  2 de 43 votações, contra 32 de 42 com o governo montado.
+- **Defeitos achados pela medida e corrigidos:** ninguém aprendia (39 pedidos repetidos em 24
+  meses); a ameaça repetida não perdia força; a verba não segurava ninguém; pedir não custava nada; o
+  ministro não via o corte, porque a verba era medida contra o próprio pedido do governo.
+
+## Os próximos lotes
+
+1. **Oposição e ideologia:** quem saiu faz oposição (critica, obstrui); cada partido reage ao que o
+   governo aprova pela distância ideológica, e o êxodo deixa de ser sincronizado (achado 83).
+2. **Imprensa e Casa Civil:** veículos com linha editorial investigam e publicam; vazamentos têm
+   autor; o chefe da Casa Civil filtra o que chega à mesa.
+3. **Calendário:** saída de ministros para disputar eleição, eleições de 2028 e 2030.
+4. **Governadores, sindicatos e setores:** os grupos de pressão viram organizações que decidem.
+5. **Os 594 parlamentares,** com o lote D1 do mapa.

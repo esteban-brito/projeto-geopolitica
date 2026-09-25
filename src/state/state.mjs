@@ -53,7 +53,7 @@ import { streamFrom } from "./random.mjs";
 /**
  * @typedef {object} Letter
  * @property {string} id
- * @property {"posse" | "tabled" | "reported" | "forgotten" | "passed" | "rejected" | "demand" | "rupture" | "siege" | "ceiling" | "contingency" | "minority" | "boiling" | "street" | "seats" | "vault"} kind
+ * @property {"posse" | "tabled" | "reported" | "forgotten" | "passed" | "rejected" | "demand" | "rupture" | "siege" | "ceiling" | "contingency" | "minority" | "boiling" | "street" | "seats" | "vault" | "ask" | "said"} kind
  * @property {number} month
  * @property {number | null} due
  * @property {string | null} subject
@@ -68,6 +68,19 @@ import { streamFrom } from "./random.mjs";
  * @property {number | null} level
  * @property {"accept" | "block" | "silence" | null} answer
  * @property {number | null} closedAt
+ * @property {{ name: string, role: string, party: string | null } | null} [by] - quem escreveu, como assinou naquele mês
+ * @property {string | null} [voice] - o gesto e o tom da fala, que a tela transforma em texto
+ * @property {Appointee | null} [nominee] - quem o partido indica, quando pede pasta
+ */
+
+/**
+ * @typedef {object} Agent o que uma pessoa do mundo carrega de um mês para outro
+ * @property {Record<string, import("../domain/actors/belief.mjs").Belief>} beliefs
+ * @property {import("../domain/actors/index.mjs").Intention | null} intention
+ * @property {number} dignity - de 0 a 1: o quanto ela se sente ouvida
+ * @property {number | null} spoke - o mês do último gesto público
+ * @property {boolean} [out] - o partido dela deixou a base
+ * @property {number} [threats] - ameaças feitas sem ser atendida; cada uma vale menos
  */
 
 /** @typedef {{ index: Record<string, number>, history: Record<string, number[]> }} Capacity */
@@ -85,6 +98,7 @@ import { streamFrom } from "./random.mjs";
  * @property {Platform} platform
  * @property {string | null} [party]
  * @property {string[]} [decree] - as áreas que o decreto de contingenciamento protege; vale até o próximo relatório bimestral, e ausente é nenhuma
+ * @property {Record<string, Agent>} [agents] - as pessoas do mundo; save sem o campo começa com todas sem memória
  * @property {Record<string, Appointee>} [cabinet] - quem senta em cada cadeira do gabinete; cadeira ausente é vaga, e save sem o campo é gabinete vazio
  * @property {number} month
  * @property {Record<string, number>} mood
@@ -152,6 +166,7 @@ export function createState(
     party,
     decree: [],
     cabinet: {},
+    agents: {},
     month: OPENING_MONTH,
     mood: opinionOpening(segments),
     loyalty: Object.fromEntries(
@@ -236,6 +251,8 @@ export function createState(
  * @property {number | null} fallen
  * @property {Record<string, number>} memory
  * @property {string[]} decree
+ * @property {Record<string, Appointee>} [cabinet]
+ * @property {Record<string, Agent>} [agents]
  * @property {Stream} stream
  */
 
@@ -263,6 +280,8 @@ export function reduce(state, action) {
         fallen: action.fallen,
         memory: action.memory,
         decree: action.decree,
+        ...(action.cabinet ? { cabinet: action.cabinet } : {}),
+        ...(action.agents ? { agents: action.agents } : {}),
         streams: { ...state.streams, congress: action.stream },
       });
     }
