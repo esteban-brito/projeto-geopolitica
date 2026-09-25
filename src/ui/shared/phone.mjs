@@ -7,7 +7,7 @@
    ⚠ E ELE APONTA, NAO REPETE: o clique abre o Email, onde a carta do grupo ja esta.
 
    📗 E IMAGEM, como a madeira: `assets/phone.webp` e um telefone de teclas vermelho visto de
-   cima, gerado a pedido dele, com os algarismos e o numero assados nela (`assets/CREDITOS.md`).
+   cima, gerado a pedido dele, com os algarismos e o numero assados nela (`assets/CREDITS.md`).
    ⛔ O VETOR SAIU (a 78 graus e sem cor literal ele destoava das materias de foto), e a FOTO
    DO COMMONS TAMBEM: um Dialog de disco a 65 graus, que mesmo recortado lia como imagem colada.
    A imagem vem em duas copias: a de cima leva as sombras da sala, a de baixo e o halo do toque

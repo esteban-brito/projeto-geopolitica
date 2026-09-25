@@ -21,7 +21,7 @@ Atualize este guia quando a arquitetura mudar; mantenha progresso e medições n
 ## O jogo e a intenção
 
 Simulador de presidência brasileira: mandato de 05/01/2027 a 05/01/2031 (achado 70), hoje jogado
-em 48 turnos mensais; a [especificação mestra](spec/especificacao-mestra.md) leva o avanço para a semana.
+em 48 turnos mensais; a [especificação mestra](spec/master-spec.md) leva o avanço para a semana.
 Governar significa escolher prioridades sob restrições herdadas e pagar as consequências.
 O rito e o custo de uma decisão vêm do seu conteúdo. Liberdade com preço é a direção de
 design; não é uma afirmação de que toda liberdade planejada já exista no código.
@@ -151,8 +151,8 @@ Foi executado `npm run simulate -- --quiet`: sonda `agenda`, semente 20270101, s
 ## Onde buscar e como validar
 
 - Estado/fila/achados/séries: [handoff.md](handoff.md).
-- Direção e plano: [especificação mestra](spec/especificacao-mestra.md) e
-  [mapa de migração](spec/mapa-migracao.md).
+- Direção e plano: [especificação mestra](spec/master-spec.md) e
+  [mapa de migração](spec/migration-map.md).
 - Intenção de cada sistema: [índice dos ciclos](cycles/README.md); ciclo 13 é plano mestre
   histórico, 29 é simplificação e 30 reúne candidatos de profundidade.
 - Doutrina sobre IA e ficção: `docs/adr/`. Pesquisa histórica: `docs/research/`.

@@ -69,7 +69,7 @@ export function decreeHtml({ room, ratio, president, chief, month, areas, protec
     /* A MINUTA CORRE NO MESMO PROCESSO DA EM, e leva o mesmo NUP no alto. */
     `<p class="sheet__protocol">${escapeHtml(protocolOf(month).nup)}</p>` +
     `<header class="letterhead">` +
-    `<img class="crest" src="/assets/brasao.webp" alt="">` +
+    `<img class="crest" src="/assets/coat-of-arms.webp" alt="">` +
     `<p class="letterhead__org"><b>${escapeHtml(UI.decree.presidency)}</b>` +
     `<span>${escapeHtml(UI.decree.chief)}</span>` +
     `<span>${escapeHtml(UI.decree.legal)}</span></p>` +

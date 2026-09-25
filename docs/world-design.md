@@ -1,9 +1,9 @@
 # Reformulação do mundo e dos ministérios — proposta em discussão
 
-> **Superado como direção em 24/09/2026** pela [especificação mestra](spec/especificacao-mestra.md).
+> **Superado como direção em 24/09/2026** pela [especificação mestra](spec/master-spec.md).
 > Fica como histórico e evidência: o estudo do código, a avaliação da revisão do Gemini e o caso
 > do IOF de 2025 continuam válidos como registro. O piloto de Energia não é o primeiro passo; o
-> primeiro passo está no [mapa de migração](spec/mapa-migracao.md).
+> primeiro passo está no [mapa de migração](spec/migration-map.md).
 
 ## Direção do usuário e estado da proposta
 
@@ -16,7 +16,7 @@ são propostas do Codex; ainda não são sistemas implementados nem escolhas apr
 Este documento substitui o rascunho `tmp/world-design-proposal.md` como referência desta proposta.
 O estado do trabalho e a fila continuam no [handoff](handoff.md).
 
-A [pesquisa entregue pelo Gemini](research/real-brazil-institutions.md) recebeu apenas triagem
+A [pesquisa entregue pelo Gemini](research/13-real-brazil-institutions.md) recebeu apenas triagem
 rápida: faltam fontes rastreáveis e há erros e generalizações sinalizados na abertura. Não é
 base factual validada nem substitui as decisões deste plano; revisão aprofundada fica para retomada.
 

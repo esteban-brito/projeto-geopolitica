@@ -84,7 +84,7 @@ export function briefHtml(input) {
     `<article class="sheet brief" data-signed="true">` +
     `<p class="sheet__protocol">${escapeHtml(protocol)}</p>` +
     `<header class="letterhead">` +
-    `<img class="crest" src="/assets/brasao.webp" alt="">` +
+    `<img class="crest" src="/assets/coat-of-arms.webp" alt="">` +
     `<p class="letterhead__org"><b>${escapeHtml(UI.decree.presidency)}</b>` +
     `<span>${escapeHtml(UI.decree.chief)}</span>` +
     `<span>${escapeHtml(UI.brief.unit)}</span></p>` +

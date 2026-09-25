@@ -14,13 +14,13 @@
   limiares entram por parâmetro; empate pela ordem dos ids; esperar é uma intenção. 14 provas em
   `tests/suites/actors.mjs`, caídas antes do motor existir. Guarda `boundaries` ganhou "motor de
   domínio importando outro", com prova sintética. Nada no jogo consome o VONTADE ainda;
-- **Autoridade de design:** [especificação mestra](spec/especificacao-mestra.md), versão 1.0,
+- **Autoridade de design:** [especificação mestra](spec/master-spec.md), versão 1.0,
   revisada em 24/09 só com as decisões aceitas por ele (convenção de caixa limitada aos schemas,
   comunicação, calendário real e posse, visão presidencial, evento mínimo, `GAME_RULE` como
   projeção, cognição × processamento, silêncio não é resposta, agregado não vira ator,
   parlamentares individuais, Senado em duas entregas, `ACTION` ≠ `EVENT`, `PROPOSITION` adiada,
   equivalência semântica do agendador, invariantes 21–23). `world-design.md` superado, preservado;
-- **mapa de migração** revisado em [spec/mapa-migracao.md](spec/mapa-migracao.md): projeção
+- **mapa de migração** revisado em [spec/migration-map.md](spec/migration-map.md): projeção
   legada no lugar de "byte a byte", calendário civil registrado, visão presidencial com as dez
   consultas que leem verdade oculta, modelo mínimo de informação, três candidatos de corte
   vertical (ensaio: contingenciamento; candidata principal: medida provisória fictícia), 19
@@ -36,7 +36,7 @@
 - medido para o mapa: save no mês 48 com 35.387 bytes; `playMonth` 0,64 ms; `settlement`
   0,125 ms;
 - **Pesquisa do Gemini entregue; não validada:** triagem rápida em
-  [real-brazil-institutions.md](research/real-brazil-institutions.md). Faltam URLs e comprovação
+  [13-real-brazil-institutions.md](research/13-real-brazil-institutions.md). Faltam URLs e comprovação
   de atualidade; repete erro sobre `Program.yield` e propõe consequências automáticas e números
   sem fonte suficiente. Cabeçalho corrigido e ressalvas registradas. Gemini declarou repouso;
   nenhum novo lote enviado. Retomar pela verificação de fontes, sem usar o rascunho como regra;
@@ -70,7 +70,7 @@
 
 1. **lote A1.1 — endurecimento do VONTADE**, antes do A2: sugestão do ChatGPT aceita por ele;
    o prompt ainda vai chegar. Não começar sem ele. Depois, **lote A2** do
-   [mapa](spec/mapa-migracao.md#61-os-lotes). A pesquisa R1 (emendas) pode correr em paralelo,
+   [mapa](spec/migration-map.md#61-os-lotes). A pesquisa R1 (emendas) pode correr em paralelo,
    sem código. A pesquisa do Gemini segue sem validação; os itens 3, 5 e 6 abaixo têm veredito
    no §10 do mapa;
 2. **achado 69 — investigar oscilação da prova de voo interrompido**. Item 4 concluiu a meta de
@@ -81,7 +81,7 @@
 4. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%) — permanece pendente;
 5. **3º ultra: `src/ui` inteira** (6.907 linhas) — branch sem `src/ui` + branch com ela de volta,
    só depois de fechar o ciclo 29;
-6. **ciclo 30** — [`cycles/30-profundidade-e-provas.md`](cycles/30-profundidade-e-provas.md):
+6. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](cycles/30-depth-and-proofs.md):
    ele marca os candidatos que entram.
 
 ## Decisões vivas

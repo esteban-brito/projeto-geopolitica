@@ -644,7 +644,7 @@ contra o estado anterior, num worktree.
 ### 5 · E ela terminou com um plano que a pesquisa reescreveu
 
 Ele mandou registrar o que quer: _"criar o seu personagem… escolher um partido… eu quero REALISMO
-e fidelidade ao Brasil atual e real"_. Virou o [ciclo 24](cycles/24-o-presidente.md), e **três
+e fidelidade ao Brasil atual e real"_. Virou o [ciclo 24](cycles/24-the-president.md), e **três
 fatos apurados na web mudaram o desenho antes de ele nascer**:
 
 - eu ia oferecer "sem partido" como o cenário difícil. 📗 **Não existe:** filiação é condição de
@@ -863,7 +863,7 @@ como MENU.
 ### 4 · O passo 6 começou pelo A3, e a pesquisa inverteu a ordem do plano
 
 Ele pediu avaliação do próximo passo **com fidelidade acima de tudo**. A
-[pesquisa 06](research/06-a-obrigatoria-e-quem-a-decide.md) foi contra fontes públicas de 2025 e
+[pesquisa 06](research/06-mandatory-spending-and-who-decides-it.md) foi contra fontes públicas de 2025 e
 2026 e concluiu que **os três itens dão ao presidente uma caneta que ele não tem**: o mínimo é
 regra de lei com teto de 2,5% real, a folha é acordo plurianual pago em parcelas, e o
 contingenciamento são **dois instrumentos diferentes**. Ele aprovou a inversão da ordem.
@@ -1668,7 +1668,7 @@ apoiam, obstruem e romperam — era calculado todo quadro, declarado no contrato
 
 ## ✔ O PLANO MESTRE, E O DEFEITO QUE ELE ACHOU AO SER ESCRITO — 24/08/2026
 
-A sessão 20 não abriu motor nenhum. Ela escreveu `docs/cycles/13-o-glorioso.md` — 43 itens em
+A sessão 20 não abriu motor nenhum. Ela escreveu `docs/cycles/13-the-glorious.md` — 43 itens em
 quatro partes — e o processo de escrevê-lo achou um defeito na tela publicada.
 
 ### A PARTE C nasceu de um terceiro dossiê, e ele foi o mais afiado dos três
@@ -3066,7 +3066,7 @@ precisa de um verbo próprio.
 | `budget/index.mjs`   | repasse nominal, sem banda       | banda real de 0,6% a 2,5% (LC 200/2023)         |
 | `fiscal.mjs`         | `mandatoryGrowth 2,5%`           | **2,16%** — a média ponderada rubrica a rubrica |
 
-### E o que ela mudou na TELA — o [ciclo 11](cycles/11-o-estado-nao-e-um-aplicativo.md)
+### E o que ela mudou na TELA — o [ciclo 11](cycles/11-the-state-is-not-an-app.md)
 
 Pedido do responsável, com as palavras dele: _"tirar essa cara de site de
 investimentos"_. **É a quinta vez que a queixa chega** e as quatro anteriores vieram de
@@ -3100,16 +3100,16 @@ npm run validate   # verde de ponta a ponta é obrigatório antes de dizer "pron
 
 ### Os ciclos, num quadro só
 
-| ciclo                                                                              | estado                                                                                            |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| **4** — a república responde                                                       | Partes 6, 10a, 10b, 1, 5, **3** e **2** feitas. Falta a **queda** (→ ciclo 10), a **4** e a **8** |
-| [**5** — a república ganha rosto](cycles/05-a-republica-ganha-rosto.md)            | **inteiro**                                                                                       |
-| [**6** — a sala de guerra](cycles/06-a-sala-de-guerra.md)                          | **inteiro** — o item que faltava virou o ciclo 9                                                  |
-| [**7** — o Congresso tem cara](cycles/07-o-congresso-tem-cara.md)                  | ✔ **Parte A feita**; B e C não começadas                                                          |
-| [**8** — o mapa e o rastro](cycles/08-o-mapa-e-o-rastro.md)                        | ⚠ proposta · não começada                                                                         |
-| [**10** — quem derruba um presidente](cycles/10-quem-derruba-um-presidente.md)     | ✔ **onda 1 feita** · a onda 2 tem plano no ANEXO II                                               |
-| [**11** — o Estado não é um aplicativo](cycles/11-o-estado-nao-e-um-aplicativo.md) | ✔ **INTEIRO** (A–F) em 16/08 — a linha de rubrica, a barra, o Gabinete, a régua e a moldura       |
-| [**9** — a carta pede resposta](cycles/09-a-carta-pede-resposta.md)                | ✔ **FEITO** — o jogador ganhou um verbo na tramitação                                             |
+| ciclo                                                                           | estado                                                                                            |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **4** — a república responde                                                    | Partes 6, 10a, 10b, 1, 5, **3** e **2** feitas. Falta a **queda** (→ ciclo 10), a **4** e a **8** |
+| [**5** — a república ganha rosto](cycles/05-the-republic-gets-a-face.md)        | **inteiro**                                                                                       |
+| [**6** — a sala de guerra](cycles/06-the-war-room.md)                           | **inteiro** — o item que faltava virou o ciclo 9                                                  |
+| [**7** — o Congresso tem cara](cycles/07-congress-gets-faces.md)                | ✔ **Parte A feita**; B e C não começadas                                                          |
+| [**8** — o mapa e o rastro](cycles/08-the-map-and-the-trail.md)                 | ⚠ proposta · não começada                                                                         |
+| [**10** — quem derruba um presidente](cycles/10-who-brings-down-a-president.md) | ✔ **onda 1 feita** · a onda 2 tem plano no ANEXO II                                               |
+| [**11** — o Estado não é um aplicativo](cycles/11-the-state-is-not-an-app.md)   | ✔ **INTEIRO** (A–F) em 16/08 — a linha de rubrica, a barra, o Gabinete, a régua e a moldura       |
+| [**9** — a carta pede resposta](cycles/09-the-letter-asks-for-an-answer.md)     | ✔ **FEITO** — o jogador ganhou um verbo na tramitação                                             |
 
 ### ▶ O QUE VEM AGORA — em 18/08/2026
 
@@ -3151,8 +3151,8 @@ achado 39: o achado 30 já estava medido). A ordem de hoje:
 5. ▶ **os DOIS ESTADOS VAZIOS do Congresso** ocupam ~400px juntos numa tela de 1900. Não é
    defeito: é decisão de peso, e ela nunca foi tomada de propósito;
 6. ▶ recalibrar a tramitação (achados **22** e **28**), e os achados **26**, **32**,
-   **33**, **35** e **36**; depois o [ciclo 8](cycles/08-o-mapa-e-o-rastro.md) e as
-   partes B e C do [ciclo 7](cycles/07-o-congresso-tem-cara.md).
+   **33**, **35** e **36**; depois o [ciclo 8](cycles/08-the-map-and-the-trail.md) e as
+   partes B e C do [ciclo 7](cycles/07-congress-gets-faces.md).
 
 ### ▶ A ORDEM DE 18/08, que a de cima revisa
 
@@ -3173,13 +3173,13 @@ achado 39: o achado 30 já estava medido). A ordem de hoje:
    "Nada em pauta" e "Nada tramitando", cada um com chamada e três linhas. Não é defeito:
    é decisão de peso, e ela nunca foi tomada de propósito;
 5. ▶ recalibrar a tramitação (achados **22** e **28**), e os achados **26**, **32**,
-   **33**, **35** e **36**; depois o [ciclo 8](cycles/08-o-mapa-e-o-rastro.md) e as
-   partes B e C do [ciclo 7](cycles/07-o-congresso-tem-cara.md).
+   **33**, **35** e **36**; depois o [ciclo 8](cycles/08-the-map-and-the-trail.md) e as
+   partes B e C do [ciclo 7](cycles/07-congress-gets-faces.md).
 
 ### ▶ O QUE VINHA ANTES — a ordem de 16/08
 
 **A ordem foi acordada com o responsável em 16/08, e os dois primeiros passos estão
-feitos.** Ela está escrita no [ANEXO II do ciclo 10](cycles/10-quem-derruba-um-presidente.md).
+feitos.** Ela está escrita no [ANEXO II do ciclo 10](cycles/10-who-brings-down-a-president.md).
 
 ✔ **1. Achado 2** — morto, e ele nunca foi um defeito de modelo: o instrumento contava
 o **complemento exato** da verdade.
@@ -3188,7 +3188,7 @@ o **complemento exato** da verdade.
 Levou junto os achados **29** (o passivo agora cai) e **1d** (que deixou de ser
 problema fiscal e virou consequência política).
 
-✔ **3. A INTERFACE, bloco A** — o [ciclo 11](cycles/11-o-estado-nao-e-um-aplicativo.md),
+✔ **3. A INTERFACE, bloco A** — o [ciclo 11](cycles/11-the-state-is-not-an-app.md),
 partes **A, B e C**. Pedido do responsável em 16/08: _"tirar essa cara de site de
 investimentos"_. **Nenhuma delas toca em motor.**
 
@@ -3213,12 +3213,12 @@ projeto recusa.
 
 **5. O bloco B da interface** — a Trindade, o clipping e a chantagem —, junto do achado
 30 (dois lobbies ainda decorativos). É a onda 2 do
-[ciclo 10](cycles/10-quem-derruba-um-presidente.md). ⚠ **Reavalie o achado 30 antes de
+[ciclo 10](cycles/10-who-brings-down-a-president.md). ⚠ **Reavalie o achado 30 antes de
 começar:** o país passou a se degradar, então o setor produtivo e as forças de ordem
 podem já ter deixado de ser decorativos — foi o que aconteceu com o achado 29.
 
 **6.** Recalibrar a tramitação (22 e 28), o achado 26, os achados novos **32, 33, 35 e
-36**, e o [ciclo 8](cycles/08-o-mapa-e-o-rastro.md).
+36**, e o [ciclo 8](cycles/08-the-map-and-the-trail.md).
 
 ### O que o ciclo 10 deixou pronto
 
@@ -4727,7 +4727,7 @@ um problema que não existia.
 ## A décima sessão — o país parou de se consertar sozinho
 
 Ela começou pela retomada e por um **décimo dossiê externo**, que virou o
-[ANEXO II do ciclo 10](cycles/10-quem-derruba-um-presidente.md) por decisão do
+[ANEXO II do ciclo 10](cycles/10-who-brings-down-a-president.md) por decisão do
 responsável: _"trate o dossiê como anexo do ciclo 10, onda 2"_. A ordem de execução
 saiu dessa conversa e é a que está em _O QUE VEM AGORA_.
 
@@ -4805,16 +4805,16 @@ o país parou de se desendividar sozinho.**
 - **o achado 1c morreu junto:** o preço passou a escalar com o tamanho do pacote.
 
 O que veio antes dela, e continua valendo: **o orçamento é o jogo, a economia tem
-preço, o país tem placar.** O [ciclo 2](cycles/02-tudo-e-uma-alavanca.md) aposentou o
+preço, o país tem placar.** O [ciclo 2](cycles/02-everything-is-a-lever.md) aposentou o
 catálogo de pautas prontas — o presidente escreve o orçamento programa a programa
 e a pauta é **derivada** do que ele moveu. O
-[ciclo 3](cycles/03-a-lei-vira-alavanca.md) fechou quase inteiro: a CORRENTE
+[ciclo 3](cycles/03-the-law-becomes-a-lever.md) fechou quase inteiro: a CORRENTE
 existe, Finanças mostra o que ela faz, a Produção virou duas áreas e as faixas
 saíram do catálogo para o estado.
 
 > ## ⚠ O NORTE MUDOU na sétima sessão — leia o ciclo 4 antes de retomar
 >
-> [`cycles/04-a-republica-responde.md`](cycles/04-a-republica-responde.md) é o
+> [`cycles/04-the-republic-responds.md`](cycles/04-the-republic-responds.md) é o
 > plano acordado, e ele **reformula o jogo**. Três coisas chegaram na mesma
 > sessão e viraram uma só:
 >
@@ -5452,7 +5452,7 @@ código e estilo que nenhum seletor alcançava. Enquanto ela não existir, isto 
 A parte 2 chegou em 15/08/2026 e **não era sobre widgets** — era sobre o jogo não
 ter diegese: _"República Simulator deixou de parecer um jogo e assumiu a estética de um SaaS
 corporativo... faz você se sentir um contador analisando planilhas"_. Ela virou o
-[ciclo 5](cycles/05-a-republica-ganha-rosto.md), com o diagnóstico reescrito e as
+[ciclo 5](cycles/05-the-republic-gets-a-face.md), com o diagnóstico reescrito e as
 quatro decisões respondidas lá dentro.
 
 ⚠ **E o padrão se repetiu pela terceira vez, nas duas direções.** Ela estava
@@ -5471,7 +5471,7 @@ vereditos.
 ## ▶ O PRÓXIMO PASSO, depois disso
 
 **Parte 3 do ciclo 4 — a tramitação**, e o desenho dela **já está fechado** em
-`cycles/04-a-republica-responde.md`, na seção da Parte 3. Ele foi escrito e
+`cycles/04-the-republic-responds.md`, na seção da Parte 3. Ele foi escrito e
 descartado como código na oitava sessão por não estar ligado ao turno — módulo que
 ninguém chama é o andaime que o projeto proíbe —, mas as duas decisões que
 importam sobreviveram lá: a Mesa não ganha fórmula própria (é `whipCount` sobre
@@ -6434,7 +6434,7 @@ projeto é "tudo tem preço, nada tem muro". Em todo lugar do jogo a pergunta é
 _quanto custa_; aqui, e só aqui, ela é _pode?_.
 
 **O desenho da correção está escrito** na Parte 2 do
-[ciclo 4](cycles/04-a-republica-responde.md): a receita se divide em três
+[ciclo 4](cycles/04-the-republic-responds.md): a receita se divide em três
 (transferida, vinculada, discricionária), **a vinculação vira NORMA e não
 parâmetro** — reformável pelo jogador, como a DRU no mundo real —, e o empenho deixa
 de ser limitado pelo caixa: gastar acima dele vira **déficit**, e o déficit vira
@@ -6508,7 +6508,7 @@ números de hoje estão em _A SÉRIE DE HOJE_, no topo.
 **E o diagnóstico mudou de natureza em 16/08:** enquanto o orçamento não rodava
 déficit, isto era distorção fiscal. Com o muro derrubado, ele sobreviveu — e aí ficou
 claro que **não é um defeito de calibragem**: governar custa, não governar não custa, e
-nada pode te derrubar. É o [ciclo 10](cycles/10-quem-derruba-um-presidente.md).
+nada pode te derrubar. É o [ciclo 10](cycles/10-who-brings-down-a-president.md).
 
 O texto original:
 
@@ -7792,7 +7792,7 @@ Tratamento da imagem:
 - Sombras da sala por CSS `drop-shadow`, inclinadas por `--light-dx` (as classes `--cast-*` são `box-shadow` e não seguem silhueta).
 - Halo de toque executado por cópia âmbar da foto sob a camada principal com opacidade controlada.
 - Número no cartão fixado em `2027-0148`, sem código DDD para caber na largura de 52px sem quebra de linha.
-- Atribuição de licença e histórico de derivação registrados em `assets/CREDITOS.md`.
+- Atribuição de licença e histórico de derivação registrados em `assets/CREDITS.md`.
 
 ### A segunda versão da foto, depois de ele olhar
 
@@ -8281,7 +8281,7 @@ Ele abriu com "a resolução parece baixa". Medido antes de mexer: o monitor é 
 1), a cena entra a `--fit` 0,9488 (custa 4% no envelope e 9% na caneta — pouco), e as duas origens
 grandes são lisas: o tampo é imagem do ChatGPT a 1916×821 servida 1:1 (reduzida à metade e
 ampliada de volta, 51% da aresta sobrevive; a pasta guarda 36%), e o telefone é DALL-E reduzido a
-720 sem nitidez (70% sobrevive). O `CREDITOS.md` dizia "foto" para o tampo — corrigido.
+720 sem nitidez (70% sobrevive). O `CREDITS.md` dizia "foto" para o tampo — corrigido.
 
 **Telefone:** reassado do original de 1323px com a receita do envelope (720px, nitidez raio 1 ganho
 1,4, q 0,90). Na mesa a 1920×937: Sobel 48,7 → 55,1 a dpr 1 e 35,6 → 46,8 a dpr 2. Um arquivo de
@@ -8354,7 +8354,7 @@ bandeirinha. O Gemini mediu o rail (742/779px) e escreveu os prompts dos envelop
 
 Ele ordenou estudo comparativo profundo, absoluto e matematicamente preciso para refazer o
 Liquid Glass do jogo no futuro e torná-lo praticamente idêntico ao da Apple (visionOS / macOS
-Sequoia / iOS 18). Registrado em `docs/research/12-liquid-glass-apple-avancado.md`:
+Sequoia / iOS 18). Registrado em `docs/research/12-advanced-apple-liquid-glass.md`:
 
 1. Óptica física: refração perimétrica por Lei de Snell via Signed Distance Field (SDF) cúbico;
    dispersão cromática de Cauchy com separação RGB nas quinas (~0,8px); aproximação de Schlick para
@@ -8776,14 +8776,14 @@ Essas decisões foram incorporadas a `docs/world-design.md` e ao handoff. A cons
 documentou o caso do IOF de 2025; não confirmou a agenda presidencial de 23/09/2026.
 O usuário pediu registrar tudo e encarregar Gemini de análise e pesquisa profunda atualizada.
 O briefing `tmp/gemini-real-brazil-brief.md` foi entregue pelo canal Antigravity, sem fila.
-Gemini recebeu exclusividade sobre `docs/research/real-brazil-institutions.md`, com leitura e
+Gemini recebeu exclusividade sobre `docs/research/13-real-brazil-institutions.md`, com leitura e
 pesquisa autorizadas, sem editar outros arquivos ou executar validação. Codex mantém os docs
 canônicos e revisará fontes, atualidade e conclusões. Entrega ainda pendente neste registro.
 
 ### 35 · Entrega do Gemini e encerramento para retomada — 23/09
 
 O usuário pediu leitura rápida e registro antes de desligar o PC. Gemini entregou
-`docs/research/real-brazil-institutions.md` e declarou repouso. A triagem encontrou ausência
+`docs/research/13-real-brazil-institutions.md` e declarou repouso. A triagem encontrou ausência
 de URLs, atualidade não demonstrada, repetição do `Program.yield` inexistente e propostas
 de reações automáticas com números sem fonte suficiente. O cabeçalho que declarava pesquisa
 canônica concluída e revisada pelo Codex foi corrigido; a nota inicial delimita erros e revisão

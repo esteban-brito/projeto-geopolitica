@@ -32,7 +32,7 @@ nunca inteira. Nunca faça varredura integral de pastas para se ambientar. Núme
   estado oculto, salvo o fato que a Presidência de fato conhece. A estimativa mostrada é a do
   governo, feita pela mesma função que os atores do governo usam. Onde o motor ainda não separa o
   oculto do conhecido, a leitura atual vale até a migração; a lista está em
-  [`docs/spec/mapa-migracao.md`](docs/spec/mapa-migracao.md);
+  [`docs/spec/migration-map.md`](docs/spec/migration-map.md);
 - **Motor nenhum chama outro motor.** Quem compõe é `src/application/`;
 - **O domínio é puro:** sem DOM, sem relógio, sem `Math.random`. Aleatoriedade entra por fluxo
   injetado, todo saque grava a posição que gastou, e o mandato inteiro se refaz da semente;

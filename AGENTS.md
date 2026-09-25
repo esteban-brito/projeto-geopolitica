@@ -5,7 +5,7 @@ Evita desvio de contexto (_context drift_) e fixa a autoridade das regras.
 
 ## 1. Identidade e Runtime
 
-- **Simulador de presidência do Brasil.** Mandato de quatro anos; hoje em 48 turnos mensais, e a [especificação mestra](docs/spec/especificacao-mestra.md) leva o avanço para a semana;
+- **Simulador de presidência do Brasil.** Mandato de quatro anos; hoje em 48 turnos mensais, e a [especificação mestra](docs/spec/master-spec.md) leva o avanço para a semana;
 - **Site estático puro:** zero build, zero dependência de runtime, ESM puro de navegador servido como arquivo;
 - **Domínio puro (`src/domain/`):** sem DOM, sem relógio, sem `Math.random`. Aleatoriedade entra apenas por fluxo injetado com semente; todo saque grava a posição gasta;
 - **A tela pergunta ao motor, nunca refaz conta — e pergunta o que a Presidência sabe:** toda informação exibida sai da mesma função que o motor usa, e mostra a visão presidencial, nunca o estado oculto (especificação §6.1, invariante 21);
