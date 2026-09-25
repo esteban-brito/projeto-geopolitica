@@ -7,8 +7,7 @@
 
 ## Para retomar em um minuto
 
-- **próximo passo:** revisão do A1.2 por ele. O A2 só começa depois do sim. Não há outro
-  trabalho pela metade;
+- **próximo passo:** planejamento do E0 (contingenciamento como Momento Presidencial jogável). A trilha A está pausada; o A2b espera o E0 ser jogado. Não há outro trabalho pela metade;
 - **o plano:** [mapa de migração](spec/migration-map.md) §6.1 (os lotes) e §11 (decisões
   tomadas e abertas), sob a [especificação mestra](spec/master-spec.md);
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
@@ -17,8 +16,19 @@
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
 
-## Estado — 25/09/2026, lotes A1.1 e A1.2 (endurecimento do VONTADE) feitos, portão verde
+## Estado — 25/09/2026, A2a feito e commitado; trilha A pausada; próximo: planejamento do E0
 
+- **lote A2a feito em 25/09**, revisado antes do commit. A crença
+  saiu para `src/domain/actors/belief.mjs`: `revise()` pura, única escritora de Belief, que o
+  `decide()` chama. Percept ganhou `source`, `lineage` (a percebida; a causal fica no A2b) e
+  `asOf`; Belief guarda uma entrada por linhagem viva. Dedupe por linhagem; cópia divergente da
+  mesma linhagem é erro, checado antes da supersessão (a revisão achou a cópia de asOf antigo escondida por ela; uma linhagem já superada e fora da crença não é comparada). Supersessão pela política do sujeito (`latest-per-source` ou `none`),
+  declarada no resolver `subjectOf(subject) → { family, material, supersede }`, que substituiu
+  `thresholds.material`. O prior é do ator (`actor.priors[family]`), puxa a estimativa e nunca
+  cria crença; q = 0 é nula; q = 1 é classe à parte, sem infinito. Três defeitos reproduzidos
+  caíram: repetição confirmava (5× q=0,3 → 0,832), a ordem mudava a estimativa (12,5 contra 10)
+  e um boato q=0,01 virava a crença inteira (999). 17 provas novas; uma antiga ganhou a escala
+  de `reserva`, porque agora toda percepção precisa da descrição do sujeito;
 - **lote A1.2 feito em 25/09**, pedido na revisão do A1.1 (commit `98c1abc`): objetivo cumprido
   tinha prioridade zero, e um plano que o estragava valia zero (inflação de 3 a 8 com teto 5).
   Valor e urgência se separaram sem parâmetro novo: o valor de um objetivo é peso × H(distância
@@ -103,15 +113,15 @@
   corrigidos, 2 nits na fila. As branches dos ultrareviews foram apagadas em 24/09 (só locais;
   recriáveis): `base-ultra` 679f043, `base-motor` bb7ce9d, `motor-review` fc78e27. Também
   `acoplamento-e-simulador` 137a94a (segue no remoto) e `backup-auditoria-26-08-2026` 4bf8c51;
-- **portão:** 13 guardas · 68 sintéticas · 358 provas · passeio verde em 1440×980 e 1440×900 ·
+- **portão:** 13 guardas · 68 sintéticas · 376 provas · passeio verde em 1440×980 e 1440×900 ·
   macaco (60 ações, semente 7) verde · `links` com zero quebradas. `validate` verde em 25/09
   depois do A1.2. Série do `simulate` remedida em 25/09 nas seis sondas: imóvel;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem
 
-1. **revisão do A1.2** por ele; depois, **lote A2** do
-   [mapa](spec/migration-map.md#61-os-lotes). A pesquisa R1 (emendas) pode correr em paralelo,
+1. **planejamento do E0** — ensaio de contingenciamento (lote E0 do
+   [mapa](spec/migration-map.md#61-os-lotes)), trazido para a frente em 25/09; a trilha A retoma depois de ele ser jogado. A pesquisa R1 (emendas) pode correr em paralelo,
    sem código. A pesquisa do Gemini segue sem validação; os itens 3, 5 e 6 abaixo têm veredito
    no §10 do mapa;
 2. **achado 69 — investigar oscilação da prova de voo interrompido**. Item 4 concluiu a meta de
@@ -127,6 +137,12 @@
 
 ## Decisões vivas
 
+- **25/09, mudança de prioridade** — depois do commit do A2a, a trilha A pausa e o E0
+  (contingenciamento como Momento Presidencial jogável) vem à frente; o A2b espera o E0 ser
+  jogado. Revisão: um lote → implementação → uma revisão principal → correção → commit;
+  rodada só de papel apenas diante de bloqueio real. Nota para o A2b: uma evidência causal pode
+  gerar várias transmissões (João conta o mesmo a dois jornais) sem virar duas linhagens causais,
+  mas pode virar duas linhagens percebidas;
 - **25/09, notas da revisão do A1.1, antes do A2** — `risk` como fração do ganho é provisório:
   não cobre a alternativa que perde além do ganho. `cost` genérico não volta; custo material é
   efeito, e tempo, atenção e oportunidade nascem dos mecanismos que os produzirem. No A2 a
@@ -313,7 +329,7 @@ e CASCATA saíram em 24/09 e voltam quando tiverem código.
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
 `simulate.mjs` (nove sondas).
 
-**Verificação:** 13 guardas · 68 sintéticas · 358 provas · passeio dentro do `validate`
+**Verificação:** 13 guardas · 68 sintéticas · 376 provas · passeio dentro do `validate`
 (geometria, recorte, contraste no pixel, 1440×980 e 1440×900).
 
 ## O que ainda não existe

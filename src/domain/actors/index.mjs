@@ -1,6 +1,6 @@
 /* VONTADE — o que um ator faz com o que lhe chega.
-   recebe   o estado do ator, as percepções do tick, o repertório de planos, a avaliação e os
-            limiares — os três últimos vêm de quem compõe
+   recebe   o estado do ator, as percepções do tick, o repertório de planos, a avaliação, o
+            resolver de sujeitos e os limiares — os quatro últimos vêm de quem compõe
    devolve  crenças, objetivos priorizados, intenção e ação, e o trace que explica a escolha
 
    Objetivo, intenção e ação são três coisas: o objetivo é o resultado buscado, a intenção é o
@@ -8,20 +8,18 @@
    só percepções. Nenhum coeficiente de jogo mora aqui; pesos e limiares entram por parâmetro.
 
    A avaliação diz o que o plano faria ao mundo, na unidade de cada sujeito, e nunca quanto isso
-   vale: quem converte é o ator, pelos próprios objetivos. A prioridade (peso × distância
-   percebida) e a confiança que só sobe são provisórias; nenhuma prova congela esses números. */
+   vale: quem converte é o ator, pelos próprios objetivos. A crença sai de `belief.mjs`, a única
+   escritora dela. A prioridade (peso × distância percebida) é provisória. */
+
+import { revise, specified } from "./belief.mjs";
 
 /**
- * @typedef {object} Percept o que chegou ao ator neste tick
- * @property {string} subject
- * @property {number} value - na unidade do sujeito
- * @property {number} quality - de 0 a 1: o quanto esta percepção move a crença
- * @property {string} source
- * @typedef {object} Belief
- * @property {number} estimate - na unidade do sujeito
- * @property {number} confidence - de 0 a 1; provisória: hoje só sobe, e A2 a revê
- * @property {string[]} sources
- * @property {number} updatedAt - o tick da última percepção
+ * @typedef {import("./belief.mjs").Evidence} Percept o que chegou ao ator neste tick
+ * @typedef {import("./belief.mjs").Belief} Belief
+ * @typedef {import("./belief.mjs").Entry} Entry
+ * @typedef {import("./belief.mjs").Prior} Prior
+ * @typedef {import("./belief.mjs").SubjectSpec} SubjectSpec
+ * @typedef {(subject: string) => SubjectSpec} SubjectOf a descrição de cada sujeito, dada por quem compõe
  * @typedef {object} Goal o resultado que o ator busca: um sujeito acima ou abaixo de um alvo
  * @property {string} id
  * @property {string} subject
@@ -47,6 +45,7 @@
  * @property {Record<string, Belief>} beliefs
  * @property {Goal[]} goals
  * @property {Intention | null} intention
+ * @property {Record<string, Prior>} priors - a expectativa do ator por família de sujeito, antes de qualquer evidência
  * @typedef {object} Step
  * @property {string} kind
  * @property {string | null} target
@@ -63,7 +62,6 @@
  * @property {Readonly<Intention> | null} intention
  * @typedef {(plan: Plan, view: View) => Appraisal} Appraise
  * @typedef {object} Thresholds
- * @property {Record<string, number>} material - por sujeito, na unidade dele: a menor mudança de crença que reabre a intenção
  * @property {number} conflict - distância máxima de prioridade para um objetivo contar como rival do primeiro
  * @property {number} risk - risco do plano corrente, de 0 a 1, que reabre a intenção ao ser cruzado
  * @typedef {object} Action
@@ -91,7 +89,7 @@
  * @property {number} tick
  * @property {"heuristic" | "deliberative"} mode
  * @property {Trigger[]} triggers
- * @property {{ subject: string, was: number | null, now: number, confidence: number, sources: string[] }[]} beliefs
+ * @property {{ subject: string, was: number | null, now: number, confidence: number, lineages: string[] }[]} beliefs
  * @property {Priority[]} goals
  * @property {string[]} decisive - as crenças que a avaliação leu
  * @property {Candidate[]} candidates - vazio no modo heurístico
@@ -106,11 +104,6 @@
 
 const TERMS = new Set(["effects", "risk"]);
 
-/** @param {number} value @param {number} min @param {number} max */
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
-}
-
 /** @param {string} a @param {string} b */
 function byId(a, b) {
   return a < b ? -1 : a > b ? 1 : 0;
@@ -122,38 +115,39 @@ function sameIds(a, b) {
 }
 
 /**
- * @param {Record<string, Belief>} beliefs
+ * @param {Actor} actor
  * @param {ReadonlyArray<Percept>} percepts
+ * @param {SubjectOf} subjectOf
  * @param {number} tick
  */
-function perceive(beliefs, percepts, tick) {
+function perceive(actor, percepts, subjectOf, tick) {
   /** @type {Record<string, Belief>} */
-  const next = { ...beliefs };
+  const next = { ...actor.beliefs };
   /** @type {Trace["beliefs"]} */
   const changed = [];
+  /** @type {Map<string, Percept[]>} */
+  const bySubject = new Map();
   for (const percept of percepts) {
-    if (!Number.isFinite(percept.value) || !Number.isFinite(percept.quality)) {
-      throw new Error(`percepcao de "${percept.subject}" sem numero finito`);
-    }
-    const quality = clamp(percept.quality, 0, 1);
-    const prior = next[percept.subject];
-    const estimate = prior
-      ? prior.estimate + (percept.value - prior.estimate) * quality
-      : percept.value;
-    const confidence = prior ? prior.confidence + (1 - prior.confidence) * quality : quality;
-    const sources = prior?.sources.includes(percept.source)
-      ? prior.sources
-      : [...(prior?.sources ?? []), percept.source];
-    next[percept.subject] = { estimate, confidence, sources, updatedAt: tick };
+    bySubject.set(percept.subject, [...(bySubject.get(percept.subject) ?? []), percept]);
+  }
+  for (const subject of [...bySubject.keys()].sort(byId)) {
+    const spec = specified(subjectOf(subject), subject);
+    const prior = Object.hasOwn(actor.priors ?? {}, spec.family)
+      ? actor.priors[spec.family]
+      : undefined;
+    if (!prior) throw new Error(`ator "${actor.id}" sem prior para a familia "${spec.family}"`);
+    const was = next[subject];
+    const now = revise(was, bySubject.get(subject) ?? [], spec, prior, tick);
+    if (!now || now === was) continue;
+    next[subject] = now;
     changed.push({
-      subject: percept.subject,
-      was: prior?.estimate ?? null,
-      now: estimate,
-      confidence,
-      sources,
+      subject,
+      was: was?.estimate ?? null,
+      now: now.estimate,
+      confidence: now.confidence,
+      lineages: now.entries.map(entry => entry.lineage),
     });
   }
-  changed.sort((a, b) => byId(a.subject, b.subject));
   return { beliefs: next, changed };
 }
 
@@ -198,19 +192,6 @@ function prioritize(goals, beliefs) {
     });
 }
 
-/* Mudança relativa reprovada: 0 → 0,01 contava 100% e reabria a intenção. Quem sabe a escala de
-   um sujeito é quem compõe; sujeito sem escala declarada é erro, nunca zero nem infinito. */
-/** @param {Thresholds} thresholds @param {string} subject */
-function materialOf(thresholds, subject) {
-  const unit = Object.hasOwn(thresholds.material, subject)
-    ? thresholds.material[subject]
-    : undefined;
-  if (!(unit !== undefined && unit > 0 && Number.isFinite(unit))) {
-    throw new Error(`sujeito "${subject}" sem mudanca material declarada`);
-  }
-  return unit;
-}
-
 /* Custo solto reprovado: 1e9 em reais somava -1e9 de utilidade. Custo material é efeito
    negativo no sujeito que paga; tempo, atenção e oportunidade entram quando o mecanismo que os
    produz existir. O risco pesa contra o ganho do próprio plano, e não contra um câmbio fixo. */
@@ -249,7 +230,9 @@ function viewOf(actor, beliefs, reads) {
         subject,
         Object.freeze({
           ...belief,
-          sources: /** @type {string[]} */ (Object.freeze([...belief.sources])),
+          entries: /** @type {Entry[]} */ (
+            Object.freeze(belief.entries.map(entry => Object.freeze({ ...entry })))
+          ),
         }),
       ]),
     ),
@@ -281,11 +264,12 @@ function viewOf(actor, beliefs, reads) {
  * @param {ReadonlyArray<Plan>} input.plans
  * @param {Appraise} input.appraise
  * @param {Thresholds} input.thresholds
+ * @param {SubjectOf} input.subjectOf
  * @param {number} input.tick
  * @returns {Decision}
  */
-export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
-  const { beliefs, changed } = perceive(actor.beliefs, percepts, tick);
+export function decide({ actor, percepts, plans, appraise, thresholds, subjectOf, tick }) {
+  const { beliefs, changed } = perceive(actor, percepts, subjectOf, tick);
   const goals = prioritize(actor.goals, beliefs);
   const priorityOf = new Map(goals.map(goal => [goal.id, goal.priority]));
   const riskAversion = actor.core.riskAversion ?? 1;
@@ -298,6 +282,10 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
   /** @type {Set<string>} */
   const reads = new Set();
   const view = viewOf(actor, beliefs, reads);
+  /* Mudança relativa reprovada: 0 → 0,01 contava 100% e reabria a intenção. A escala de um
+     sujeito vem do resolver de quem compõe; sujeito sem escala é erro, nunca zero nem infinito. */
+  /** @param {string} subject */
+  const materialOf = subject => specified(subjectOf(subject), subject).material;
   /** @param {Plan} plan */
   const appraised = plan => checked(appraise(plan, view), plan.id);
 
@@ -350,7 +338,7 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
     for (const subject of [
       ...new Set([...Object.keys(current.basis), ...actor.goals.map(g => g.subject)]),
     ].sort(byId)) {
-      const unit = materialOf(thresholds, subject);
+      const unit = materialOf(subject);
       const now = beliefs[subject]?.estimate;
       if (now === undefined) continue;
       const was = current.basis[subject];
@@ -382,7 +370,7 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
     );
     const basis = /** @type {Record<string, number | null>} */ ({});
     for (const subject of [...new Set([...reads, ...actor.goals.map(g => g.subject)])].sort(byId)) {
-      materialOf(thresholds, subject);
+      materialOf(subject);
       basis[subject] = beliefs[subject]?.estimate ?? null;
     }
     if (best && best.utility > 0) {

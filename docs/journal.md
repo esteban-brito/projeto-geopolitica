@@ -8888,3 +8888,16 @@ precisou de número novo. A fórmula antiga, prioridade vezes efeito, era a deri
 de custo avaliada só no ponto de partida. Integrar a mesma derivada ao longo do efeito dá o
 valor: quadrática perto do alvo, reta depois de um span, zero dentro dele. Efeito pequeno vale o
 mesmo de antes, e as seis sondas e as 22 provas antigas não perceberam a troca.
+
+### 44 · A2a, a crença por evidência — 25/09
+
+Foram três rodadas de papel com o ChatGPT antes do código, e duas delas pegaram erros meus: a
+linhagem montada com os atributos da evidência fazia duas amostras do mesmo instituto colidirem,
+e a deduplicação pela origem verdadeira daria ao presidente um conhecimento que ele não recebeu.
+Depois ele perguntou minha opinião sobre o projeto, e a resposta foi que havia papel demais e jogo
+de menos. O ChatGPT concordou, e o E0 veio para a frente. O código saiu pequeno: uma função pura
+que revê a crença a partir do conjunto de evidências, e que por isso não depende da ordem nem do
+agrupamento em ticks. Um boato fraco agora quase não move a expectativa da ministra, e uma notícia
+forte com o mesmo número a faz brigar pelo orçamento. As seis sondas não perceberam nada, porque
+o jogo ainda não usa o motor.
+Na revisão, o ChatGPT achou um furo real: a supersessão apagava a cópia de asOf antigo de uma linhagem inválida antes de a integridade ser checada. A checagem virou etapa própria, antes da supersessão.

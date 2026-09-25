@@ -13,12 +13,26 @@ import { deepFreeze } from "../../src/state/state.mjs";
 /** @typedef {import("../../src/domain/actors/index.mjs").Thresholds} Thresholds */
 /** @typedef {import("../../src/domain/actors/index.mjs").Decision} Decision */
 /** @typedef {import("../../src/domain/actors/index.mjs").Goal} Goal */
+/** @typedef {import("../../src/domain/actors/index.mjs").SubjectOf} SubjectOf */
+/** @typedef {Omit<Percept, "lineage" | "asOf"> & Partial<Pick<Percept, "lineage" | "asOf">>} Heard */
+/** @typedef {{ plans?: Plan[], appraise?: Appraise, thresholds?: Thresholds, subjectOf?: SubjectOf }} Over */
 
 /** @type {Thresholds} */
-const THRESHOLDS = {
-  material: { "boa-vontade-do-lider": 0.15, verba: 10, apoio: 10 },
-  conflict: 0.05,
-  risk: 0.5,
+const THRESHOLDS = { conflict: 0.05, risk: 0.5 };
+
+/** @type {Record<string, number>} */
+const MATERIAL = { "boa-vontade-do-lider": 0.15, verba: 10, apoio: 10 };
+
+/* O que a ministra espera antes de ouvir qualquer coisa. Com quality 1 o prior não pesa. */
+const PRIORS = {
+  "boa-vontade-do-lider": { value: 0.5, weight: 1 },
+  verba: { value: 50, weight: 1 },
+  apoio: { value: 50, weight: 1 },
+  "chance-de-veto": { value: 0, weight: 1 },
+  votos: { value: 100, weight: 1 },
+  reais: { value: 5000, weight: 1 },
+  inflacao: { value: 4, weight: 1 },
+  reserva: { value: 100, weight: 1 },
 };
 
 /** @type {Plan[]} */
@@ -73,6 +87,7 @@ function minister(over = {}) {
     beliefs: {},
     goals: [MORE_MONEY],
     intention: null,
+    priors: PRIORS,
     ...over,
   };
 }
@@ -85,7 +100,7 @@ function torn() {
 /**
  * @param {number} goodwill
  * @param {number} [money]
- * @returns {Percept[]}
+ * @returns {Heard[]}
  */
 function news(goodwill, money = 60) {
   return [
@@ -97,42 +112,54 @@ function news(goodwill, money = 60) {
 /**
  * @param {string} subject
  * @param {number} value
- * @returns {Percept}
+ * @returns {Heard}
  */
 function heard(subject, value) {
   return { subject, value, quality: 1, source: "conversa" };
 }
 
+/* Cada percepção sem linhagem é uma medição nova do tick: a fonte, o sujeito e o tick a nomeiam. */
 /**
  * @param {Actor} actor
- * @param {Percept[]} percepts
+ * @param {Heard[]} percepts
  * @param {number} [tick]
- * @param {{ plans?: Plan[], appraise?: Appraise, thresholds?: Thresholds }} [over]
+ * @param {Over} [over]
  */
 function run(actor, percepts, tick = 0, over = {}) {
   return decide({
     actor,
-    percepts,
+    percepts: percepts.map(p => ({
+      lineage: `${p.source}:${p.subject}:${tick}`,
+      asOf: tick,
+      ...p,
+    })),
     plans: over.plans ?? PLANS,
     appraise: over.appraise ?? appraise,
     thresholds: over.thresholds ?? THRESHOLDS,
+    subjectOf: over.subjectOf ?? scaled({}),
     tick,
   });
 }
 
 /**
  * @param {Record<string, number>} material
- * @returns {Thresholds}
+ * @returns {SubjectOf}
  */
 function scaled(material) {
-  return { ...THRESHOLDS, material: { ...THRESHOLDS.material, ...material } };
+  /** @type {Record<string, number>} */
+  const table = { ...MATERIAL, ...material };
+  return subject => ({
+    family: subject,
+    material: /** @type {number} */ (table[subject]),
+    supersede: "latest-per-source",
+  });
 }
 
 /**
  * @param {Actor} start
- * @param {Percept[]} percepts
+ * @param {Heard[]} percepts
  * @param {number} ticks
- * @param {{ plans?: Plan[], appraise?: Appraise, thresholds?: Thresholds }} [over]
+ * @param {Over} [over]
  */
 function modes(start, percepts, ticks, over) {
   let actor = start;
@@ -166,7 +193,10 @@ test("A CRENCA SAI DA PERCEPCAO, e o ator nunca le o mundo", () => {
   const { actor } = run(minister(), news(0.8), 3, { appraise: spy });
 
   assert.equal(actor.beliefs["verba"]?.estimate, 60);
-  assert.deepEqual(actor.beliefs["verba"]?.sources, ["orcamento"]);
+  assert.deepEqual(
+    actor.beliefs["verba"]?.entries.map(entry => entry.source),
+    ["orcamento"],
+  );
   assert.equal(actor.beliefs["verba"]?.updatedAt, 3);
   assert.ok(seen.length > 0);
   for (const keys of seen) assert.deepEqual(keys, ["beliefs", "core", "goals", "intention"]);
@@ -231,7 +261,7 @@ test("O EFEITO SO VIRA VALOR PELO OBJETIVO DO ATOR: trocar a unidade de um sujei
     };
     return run(actor, [...news(0.8, 60 * unit), heard("apoio", 60)], 0, {
       appraise: inUnit,
-      thresholds: scaled({ verba: 10 * unit }),
+      subjectOf: scaled({ verba: 10 * unit }),
     });
   };
 
@@ -276,7 +306,7 @@ test("PERTO DE ZERO, POUCO CONTINUA POUCO: a mudanca se mede na escala do sujeit
     ...appraise(plan, view),
     risk: 0.5 * (view.beliefs["chance-de-veto"]?.estimate ?? 0),
   });
-  const over = { appraise: odds, thresholds: scaled({ "chance-de-veto": 0.1 }) };
+  const over = { appraise: odds, subjectOf: scaled({ "chance-de-veto": 0.1 }) };
   const start = run(minister(), [...news(0.8), heard("chance-de-veto", 0)], 0, over);
 
   const tiny = run(start.actor, [heard("chance-de-veto", 0.01)], 1, over);
@@ -292,7 +322,7 @@ test("O MESMO DELTA PESA DIFERENTE EM ESCALAS DIFERENTES, e sujeito sem escala e
     const money = view.beliefs["reais"]?.estimate ?? 0;
     return { effects: { verba: plan.id === "negociar" ? votes / 10 : money / 1e4 } };
   };
-  const over = { appraise: reads, thresholds: scaled({ votos: 3, reais: 1000 }) };
+  const over = { appraise: reads, subjectOf: scaled({ votos: 3, reais: 1000 }) };
   const start = run(minister(), [...news(0.8), heard("votos", 100), heard("reais", 5000)], 0, over);
   const both = run(start.actor, [heard("votos", 105), heard("reais", 5005)], 1, over);
   assert.deepEqual(
@@ -371,7 +401,7 @@ test("CONFLITO PARADO NAO REABRE A ESCOLHA; conflito que surge reabre uma vez", 
   const same = [...news(0.8), heard("apoio", 48)];
   assert.deepEqual(modes(torn(), same, 4), ["deliberative", "heuristic", "heuristic", "heuristic"]);
 
-  const over = { thresholds: scaled({ apoio: 15 }) };
+  const over = { subjectOf: scaled({ apoio: 15 }) };
   const calm = run(torn(), [...news(0.8), heard("apoio", 60)], 0, over);
   const tight = run(calm.actor, [heard("apoio", 48)], 1, over);
   assert.deepEqual(
@@ -485,7 +515,7 @@ function partsOf(effects) {
   const [candidate] = run(minister({ goals: [MORE_MONEY, CEILING, RESERVE] }), KNOWN, 0, {
     plans: [{ id: "plano", actions: [{ kind: "agir", target: null }] }],
     appraise: () => ({ effects }),
-    thresholds: scaled({ inflacao: 1, reserva: 10 }),
+    subjectOf: scaled({ inflacao: 1, reserva: 10 }),
   }).trace.candidates;
   return candidate?.parts ?? {};
 }
@@ -510,10 +540,62 @@ test("UM PLANO QUE MELHORA UM OBJETIVO E QUEBRA OUTRO paga pelos dois", () => {
   const decision = run(minister({ goals: [MORE_MONEY, CEILING] }), KNOWN, 0, {
     plans,
     appraise: both,
-    thresholds: scaled({ inflacao: 1 }),
+    subjectOf: scaled({ inflacao: 1, reserva: 10 }),
   });
   const mixed = decision.trace.candidates.find(c => c.plan === "verba-com-inflacao");
   assert.ok((mixed?.parts["goal:mais-verba"] ?? 0) > 0);
   assert.ok((mixed?.parts["goal:teto-da-inflacao"] ?? 0) < 0);
   assert.equal(decision.actor.intention?.plan, "so-verba");
+});
+
+/* A ministra espera verba no alvo (prior 100). Um corte para 20 muda o plano só se a notícia for
+   forte: pedir pouco basta se ela acha que quase nada falta; pedir muito arrisca metade do ganho. */
+/** @type {Plan[]} */
+const ASKS = [
+  { id: "pedir-pouco", actions: [{ kind: "pedir-reforco", target: null }] },
+  { id: "pedir-muito", actions: [{ kind: "brigar-pelo-orcamento", target: null }] },
+];
+/** @type {Appraise} */
+const asks = plan =>
+  plan.id === "pedir-pouco" ? { effects: { verba: 10 } } : { effects: { verba: 60 }, risk: 0.5 };
+
+/**
+ * @param {number} quality
+ * @param {number} [expects]
+ */
+function cut(quality, expects = 100) {
+  const actor = minister({ priors: { ...PRIORS, verba: { value: expects, weight: 1 } } });
+  return run(actor, [{ subject: "verba", value: 20, quality, source: "boato" }], 0, {
+    plans: ASKS,
+    appraise: asks,
+  });
+}
+
+test("EVIDENCIA FRACA NAO E FORTE: o mesmo valor com quality 0,05 e 0,95 muda o plano", () => {
+  const weak = cut(0.05);
+  const strong = cut(0.95);
+  assert.ok((weak.actor.beliefs["verba"]?.estimate ?? 0) > 90, "o boato quase nao move o prior");
+  assert.ok((strong.actor.beliefs["verba"]?.estimate ?? 100) < 30);
+  assert.equal(weak.actor.intention?.plan, "pedir-pouco");
+  assert.equal(strong.actor.intention?.plan, "pedir-muito");
+});
+
+test("PRIORS DIFERENTES, A MESMA EVIDENCIA FRACA, DECISOES DIFERENTES", () => {
+  const calm = cut(0.2, 100);
+  const alarmed = cut(0.2, 20);
+  const estimate = (/** @type {Decision} */ decision) =>
+    decision.actor.beliefs["verba"]?.estimate ?? 0;
+  assert.ok(estimate(calm) > estimate(alarmed));
+  assert.notEqual(calm.actor.intention?.plan, alarmed.actor.intention?.plan);
+});
+
+test("O PRIOR NAO CRIA CONHECIMENTO: sem evidencia valida, o objetivo continua desconhecido", () => {
+  const empty = run(minister(), [{ subject: "verba", value: 999, quality: 0, source: "ruido" }]);
+  assert.equal(empty.actor.beliefs["verba"], undefined);
+  assert.deepEqual(empty.trace.goals, [{ id: "mais-verba", priority: 0, known: false }]);
+  assert.throws(
+    () => run(minister({ priors: {} }), news(0.8)),
+    /prior/,
+    "familia sem prior e erro, nunca base inventada",
+  );
 });
