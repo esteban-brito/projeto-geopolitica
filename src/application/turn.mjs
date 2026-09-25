@@ -1,5 +1,6 @@
 /* O TURNO — onde o orcamento e o Congresso se encontram. */
 
+import { coalitionOf } from "./cabinet.mjs";
 import { revenueOf, step as budgetStep } from "../domain/budget/index.mjs";
 import { pressureOf, step as capacityStep } from "../domain/capacity/index.mjs";
 import { benches as benchesOf, cast, offered, president, remember } from "../domain/cast/index.mjs";
@@ -1403,7 +1404,13 @@ export function playMonth(state, orders = {}, options = {}) {
 
   const tally = passage.tally;
 
-  const loyalty = settle({ parties, loyalty: state.loyalty, promised, paid });
+  const loyalty = settle({
+    parties,
+    loyalty: state.loyalty,
+    promised,
+    paid,
+    cabinet: coalitionOf(state.cabinet ?? {}, catalog),
+  });
   const memory = remember({
     people,
     memory: state.memory,

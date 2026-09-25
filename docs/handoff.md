@@ -19,14 +19,16 @@
 - **próximo passo:** o lote E1.0a está em curso, com ordem dele de 25/09. Passo 1 feito: as 38
   cadeiras de ministro no catálogo (`src/data/cabinet.mjs`, prova em `tests/suites/cabinet.mjs`), e
   os 7 ministros do E0 sentam nelas. Passo 2 feito: `appoint` e `dismiss` no estado (`state.cabinet`,
-  opcional no save, sem subir o esquema). Na revisão de 25/09 o nomeado ganhou `id`. Passo 3: o efeito no Congresso, que
-  resolve antes o achado 82. Depois, a tela;
+  opcional no save, sem subir o esquema). Na revisão de 25/09 o nomeado ganhou `id`. Passo 3 feito: quem senta na cadeira
+  vai à reunião do corte (achado 82 fechado), e a pasta puxa a lealdade do partido até 80
+  (`coalitionOf` em `src/application/cabinet.mjs`; `settle` com `cabinet`). Falta a tela, que é o
+  E1.0e; antes dela vêm E1.0b a E1.0d;
 - **commits de 25/09:** `febd0b5` (E0), `2482ce7` (documentos), `916a80f` e `97483ec` (passos 1 e 2
   do E1.0a), `d2684ce` (checklist de 40). Ele autorizou commit ao fim de cada etapa validada;
   push e merge seguem pedindo ordem;
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `validate` verde em 25/09, depois da revisão do E1.0a (394 provas, passeio e
+- **portão:** `validate` verde em 25/09, depois do E1.0a (399 provas, passeio e
   macaco); roda de novo antes de qualquer commit;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
@@ -116,7 +118,7 @@
 ## Fila, em ordem
 
 1. **E1.0 — a abertura, montar o governo**, lotes E1.0a a E1.0e do [mapa](spec/migration-map.md)
-   §6.4. O E1.0a está nos passos 1 e 2 feitos; o passo 3 começa pelo achado 82;
+   §6.4. O E1.0a está feito; o próximo é o E1.0b, a eleição da Mesa;
 2. **E1.1 a E1.8 — a estatal**, depois da abertura;
 3. **a tela das próximas atualizações**: decisão dele;
 4. **achado 81**, antes de fechar o E0; não bloqueia o E1;
@@ -236,10 +238,6 @@
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
-- **82. Dois ministros para a mesma cadeira (25/09).** O E0 gera os ministros pela semente
-  (`ministers()` no ELENCO, `CATALOG.ministers`), e o jogador agora nomeia outro na mesma cadeira
-  (`state.cabinet`). A reunião do corte ainda falaria com o gerado. Antes do passo 3 do E1.0a, o
-  nomeado vira a pessoa que a VONTADE move, e o gerado vira só a sugestão da posse;
 - **81. O limite do § 18 vale para as emendas do jogo? (25/09) — VERIFICAR antes de fechar o
   E0.** O art. 166, § 18 limita só as programações dos §§ 11 e 12 (individuais e de bancada de
   execução obrigatória). A emenda do jogo é a verba prometida às bancadas (`turn.mjs`, achado 71),
@@ -340,7 +338,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois da revisão do E1.0a: imóveis em
+`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do E1.0a: imóveis em
 todas as colunas abaixo.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
@@ -354,6 +352,11 @@ todas as colunas abaixo.
 
 Mexeu em `src/data/`, `src/domain/`, `src/application/` ou `src/state/`? remeça esta tabela no
 mesmo commit, mesmo que ela não mude.
+
+**O peso da pasta** (`--cabinet proportional`: as 38 pastas repartidas pelas 9 bancadas, na
+proporção das cadeiras; 25/09): `agenda` 26 de 43 → 34 de 41; `base` 34 de 41 → 35 de 41;
+`piso` 5 de 17 → 15 de 15. A primeira versão, que somava 3 por mês sem teto, levou as 9 bancadas
+a 100 e aprovou 41 de 41. O teto de 80 e a atração de 10% são [DESENHO].
 
 ## O que existe
 

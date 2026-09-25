@@ -59,6 +59,11 @@ export const THRESHOLDS = { obstruction: OBSTRUCTION, rupture: RUPTURE };
 const DECAY = 1.5;
 const PATRONAGE = 12;
 const BETRAYAL = 25;
+/* A pasta puxa a lealdade para perto de 80, abaixo dos 90 do partido do Presidente, e para ali.
+   Somar 3 por mês sem teto levou as 9 bancadas a 100 e aprovou 41 de 41 votações. [DESENHO], a
+   calibrar pela orientação do governo nos dados abertos da Câmara (pesquisa 15). */
+const CABINET_CEILING = 80;
+const CABINET_PULL = 0.1;
 
 /**
  * @typedef {object} PartyForecast
@@ -351,9 +356,10 @@ export function dispersion({ parties, loyalty }) {
  * @param {Record<string, number>} input.loyalty - o humor de entrada, de 0 a 100
  * @param {Record<string, number>} input.promised - verba prometida, de 0 a 1
  * @param {Record<string, number>} input.paid - verba que o caixa realmente honrou
+ * @param {Record<string, number>} [input.cabinet] - o quanto as pastas servem cada partido, de 0 a 1
  * @returns {Record<string, number>} o humor de saida
  */
-export function settle({ parties, loyalty, promised, paid }) {
+export function settle({ parties, loyalty, promised, paid, cabinet = {} }) {
   /** @type {Record<string, number>} */
   const next = {};
 
@@ -364,7 +370,13 @@ export function settle({ parties, loyalty, promised, paid }) {
        ja esta paga pelo afago. */
     const broken = Math.max(0, clamp01(promised[party.id] ?? 0) - honoured);
 
-    next[party.id] = clamp(before - DECAY + PATRONAGE * honoured - BETRAYAL * broken, 0, 100);
+    const desk =
+      CABINET_PULL * clamp01(cabinet[party.id] ?? 0) * Math.max(0, CABINET_CEILING - before);
+    next[party.id] = clamp(
+      before - DECAY + PATRONAGE * honoured - BETRAYAL * broken + desk,
+      0,
+      100,
+    );
   }
 
   return next;

@@ -86,7 +86,7 @@ export function briefingOf(state, orders, catalog = CATALOG) {
 }
 
 /**
- * Os ministros da partida: mesma semente, mesmas pessoas, nenhum homônimo do elenco.
+ * Os ministros da partida: quem o Presidente nomeou; na cadeira vaga, o interino da semente.
  * @param {GameState} state
  * @param {typeof CATALOG} [catalog]
  * @returns {Minister[]}
@@ -100,6 +100,7 @@ export function cabinetOf(state, catalog = CATALOG) {
     firstNames: catalog.firstNames,
     surnames: catalog.surnames,
     genderOf: catalog.genderOf,
+    sitting: state.cabinet ?? {},
   });
 }
 

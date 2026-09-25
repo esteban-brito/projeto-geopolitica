@@ -65,7 +65,7 @@ o número que a reprovou. Nada mais entra.
 npm run validate   # guardas + links + tipos + lint + formato + provas + passeio + macaco — ~130s, tem de ficar verde
 npm run check      # só as guardas, 2s — o laço de quem mexe em folha
 npm test           # só as suítes, 2s — o laço de quem mexe em motor
-npm run simulate   # 48 meses no terminal; --policy <sonda>, --party <bancada>, --seed <n>
+npm run simulate   # 48 meses no terminal; --policy <sonda>, --party <bancada>, --seed <n>, --cabinet proportional
 npm run serve      # http://127.0.0.1:5173/
 ```
 

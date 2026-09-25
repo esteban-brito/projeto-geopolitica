@@ -9029,3 +9029,14 @@ nomeado pelo jogador. Virou o achado 82, e o passo 3 começa por ele. Nos docume
 ainda diziam que o E0 estava sem commit; a fila começava pela estatal quando a ordem aprovada é a
 abertura; e dois itens do checklist afirmavam mais do que a fonte conferida. Tudo corrigido. Série
 imóvel.
+
+### 57 · A pasta vale voto, até um teto — 25/09
+
+O passo 3 fechou o E1.0a. Primeiro o achado 82: agora quem o Presidente nomeia é quem vai à reunião
+do corte, com traços tirados da própria pessoa; a cadeira vaga fica com o interino que a semente
+gera. Depois o Congresso: a pasta vira lealdade mensal, na proporção da bancada. A primeira versão
+somava 3 por mês sem limite, e a medida denunciou o erro: com as 38 pastas repartidas por todos, as
+9 bancadas chegaram a 100 e o governo aprovou 41 de 41 votações. Nenhum governo vive assim. A pasta
+passou a puxar a lealdade até 80 e parar ali, e a mesma medida deu 34 de 41 contra 26 de 43 sem
+ministros. A prova do teto falha contra a versão sem limite e passa contra a atual. O simulador
+ganhou `--cabinet proportional` para essa medida. Série imóvel.

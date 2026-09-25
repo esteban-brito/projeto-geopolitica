@@ -201,6 +201,8 @@ export function president({ seed, people, firstNames, surnames }) {
  * @typedef {object} Minister
  * @property {string} id
  * @property {string} area
+ * @property {string} person - quem ocupa a cadeira: o nomeado, ou o papel quando a cadeira está vaga
+ * @property {string | null} party
  * @property {string} name
  * @property {"f" | "m"} gender
  * @property {number} riskAversion
@@ -219,9 +221,11 @@ export function president({ seed, people, firstNames, surnames }) {
  * @param {ReadonlyArray<string>} input.firstNames
  * @param {ReadonlyArray<string>} input.surnames
  * @param {ReadonlyMap<string, "f" | "m">} input.genderOf
+ * @param {Record<string, { id: string, name: string, party: string | null }>} [input.sitting] - quem o
+ * Presidente nomeou, por cadeira; cadeira vaga fica com o interino que a semente gera
  * @returns {Minister[]}
  */
-export function ministers({ seed, roles, taken, firstNames, surnames, genderOf }) {
+export function ministers({ seed, roles, taken, firstNames, surnames, genderOf, sitting = {} }) {
   /** @type {Set<string>} */
   const used = new Set();
   for (const name of taken) {
@@ -240,13 +244,19 @@ export function ministers({ seed, roles, taken, firstNames, surnames, genderOf }
     }
     used.add(first);
     used.add(last);
+    const named = sitting[role.seat];
+    const person = named ? named.id : role.id;
+    const self = named ? `${seed}:${named.id}` : base;
     /** @param {string} trait @param {number} min @param {number} max */
-    const pick = (trait, min, max) => min + (max - min) * hashed(`${base}:${trait}`);
+    const pick = (trait, min, max) => min + (max - min) * hashed(`${self}:${trait}`);
+    const name = named ? named.name : `${first} ${last}`;
     return {
       id: role.id,
       area: role.area,
-      name: `${first} ${last}`,
-      gender: genderOf.get(first) ?? "m",
+      person,
+      party: named ? named.party : null,
+      name,
+      gender: genderOf.get(name.split(" ")[0] ?? "") ?? "m",
       riskAversion: pick("risk", role.riskMin, role.riskMax),
       persistence: pick("persist", role.persistMin, role.persistMax),
       hope: pick("hope", role.hopeMin, role.hopeMax),

@@ -8,7 +8,7 @@ import { parseArgs } from "node:util";
 import { costOf, discretionaryRoom, forecast, playMonth } from "../src/application/turn.mjs";
 import { compose, spendOf } from "../src/application/agenda.mjs";
 import { CATALOG } from "../src/data/catalog.mjs";
-import { DEFAULT_SEED, createState, monthLabel } from "../src/state/state.mjs";
+import { DEFAULT_SEED, createState, monthLabel, reduce } from "../src/state/state.mjs";
 
 /**
  * @typedef {import("../src/state/state.mjs").GameState} GameState
@@ -252,6 +252,7 @@ const { values } = parseArgs({
     policy: { type: "string", default: "agenda" },
     shock: { type: "string", default: "0" },
     party: { type: "string" },
+    cabinet: { type: "string", default: "none" },
     quiet: { type: "boolean", default: false },
   },
 });
@@ -354,6 +355,39 @@ function flagsOf(report) {
 /* ── A CORRIDA ────────────────────────────────────────────────────────────── */
 
 let state = createState(seed, undefined, null, party);
+
+/* `--cabinet proportional` reparte as 38 pastas pelas bancadas, pelo maior resto: a coalizão
+   inteira servida, para medir o peso da pasta contra o jogo sem gabinete. */
+if (values.cabinet === "proportional") {
+  const seats = CATALOG.cabinet;
+  const total = CATALOG.parties.reduce((sum, item) => sum + item.seats, 0);
+  const quota = CATALOG.parties.map(item => ({
+    id: item.id,
+    exact: (item.seats / total) * seats.length,
+  }));
+  const given = new Map(quota.map(item => [item.id, Math.floor(item.exact)]));
+  const left = seats.length - [...given.values()].reduce((sum, n) => sum + n, 0);
+  for (const item of [...quota].sort((a, b) => (b.exact % 1) - (a.exact % 1)).slice(0, left)) {
+    given.set(item.id, (given.get(item.id) ?? 0) + 1);
+  }
+  let next = 0;
+  for (const [bloc, count] of given) {
+    for (let n = 0; n < count; n++, next++) {
+      const seat = seats[next];
+      if (!seat) continue;
+      state = reduce(state, {
+        type: "appoint",
+        seat: seat.id,
+        appointee: { id: `sonda-${next}`, name: `Sonda ${next}`, party: bloc },
+      });
+    }
+  }
+} else if (values.cabinet !== "none") {
+  process.stderr.write(
+    `gabinete desconhecido: ${values.cabinet}; os que existem: none, proportional\n`,
+  );
+  process.exit(1);
+}
 /** @type {Memory} */
 const memory = { passed: new Set() };
 /** @type {Report[]} */
@@ -382,7 +416,7 @@ const out = process.stdout;
 out.write(
   `\nMANDATO SIMULADO · politica "${policyName}" · semente ${seed} · ` +
     `${months} meses · choque ${shock >= 0 ? "+" : ""}${num(shock * 100)} p.p. · ` +
-    `bancada ${party ?? "nenhuma"}\n` +
+    `bancada ${party ?? "nenhuma"} · gabinete ${values.cabinet}\n` +
     `valores em R$ bilhoes; "verba" e o mes, "folga" e o discricionario que cabia nele\n\n`,
 );
 
