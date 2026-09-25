@@ -5,6 +5,18 @@
 > envelhece: remeça antes de repetir. A tabela de contagens é cobrada por
 > `tests/suites/catalog.mjs`; a série, por quem mexe no motor.
 
+## Para retomar em um minuto
+
+- **próximo passo:** lote A1.1, endurecimento do VONTADE. O prompt vem dele; não começar sem
+  ele. Depois, A2. Não há outro trabalho pela metade;
+- **o plano:** [mapa de migração](spec/migration-map.md) §6.1 (os lotes) e §11 (decisões
+  tomadas e abertas), sob a [especificação mestra](spec/master-spec.md);
+- **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
+  O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
+- **portão:** `npm run validate` verde e série do `simulate` imóvel em 24/09;
+- **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
+  capturas; ele pode apagar quando quiser.
+
 ## Estado — 24/09/2026, lote A1 (VONTADE) feito e projeto padronizado, portão verde
 
 - **padronização de 24/09, com as decisões dele:** todo caminho versionado em inglês,
@@ -15,8 +27,7 @@
   citada pelo código versionada em `docs/evidence/` (30 arquivos, 2,2 MB, congelada);
   `tools/prose-only.mjs` no lugar de `tmp/so-prosa.mjs`; `npm run links`
   (`tools/check-links.mjs`) dentro do `validate`, com zero referências quebradas. A pasta
-  `cld` e o repositório remoto ficaram como estavam. `tmp/` agora tem `agents/`,
-  `asset-sources/` e `history/`;
+  `cld` manteve o nome. `tmp/` agora tem `agents/`, `asset-sources/` e `history/`;
 - **lote A1 feito:** `src/domain/actors/` (VONTADE), motor de agência genérico e puro:
   percepção → crença → objetivo priorizado → intenção → ação → trace. Objetivo, intenção e
   ação são tipos distintos; modo heurístico ou deliberativo sai só das entradas (gatilhos
@@ -35,12 +46,13 @@
   consultas que leem verdade oculta, modelo mínimo de informação, três candidatos de corte
   vertical (ensaio: contingenciamento; candidata principal: medida provisória fictícia), 19
   lotes pequenos em três trilhas (A comportamento primeiro, B tempo, C epistemologia) e 4
-  pesquisas. Decisões tomadas e abertas no §11. Nenhum código mudou;
+  pesquisas. Decisões tomadas e abertas no §11;
 - **a tela mostra o que a Presidência sabe:** a mesma lei em `CLAUDE.md`, `AGENTS.md`,
   `agent-brief.md` e `standards.md` §5. Os três primeiros apontam `docs/spec/` como autoridade de
   design e plano em vigor; o índice dos ciclos também. **ADR 0003** explicita empresa;
-- **`tmp/` podado em 24/09, com o sim dele:** ficaram 61 entradas (119 MB) — as 59 citadas por
-  doc, código, estilo, crédito ou prova, e a proposta `tmp/history/prune-proposal.md`. As outras 662
+- **`tmp/` podado em 24/09, com o sim dele:** ficaram as 59 entradas citadas por doc, código,
+  estilo, crédito ou prova; depois a evidência leve foi para `docs/evidence/` e o resto se
+  organizou em `tmp/agents/`, `tmp/asset-sources/` e `tmp/history/`. As outras 662
   (693 MB) estão em quarentena fora do repositório, em `Desktop/cld-quarentena-tmp/`, com
   `LEIA.md` listando cada uma; devolver é mover de volta. Nada foi apagado. A mesma quarentena
   recebeu as capturas fora da regra de `captures/` (25 MB) e o `.playwright-mcp/` (33 MB);
