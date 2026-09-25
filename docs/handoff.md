@@ -11,24 +11,27 @@
   de design, do mais geral ao mais concreto: [especificação mestra](spec/master-spec.md) 1.1
   (autoridade) → [jogo em uma página](spec/game-in-one-page.md) (promessa e loop) →
   [gramática das regras](spec/rules-grammar.md) (como toda regra real vira peça) →
-  [corte vertical da estatal](spec/vertical-slice-energy.md) (a primeira aplicação) →
+  [corte vertical](spec/vertical-slice-energy.md) (a abertura e a estatal) →
   [mapa de migração](spec/migration-map.md) (o plano). Os fatos estão na
-  [pesquisa 14](research/14-the-state-energy-company.md). Em conflito, vale o mais recente;
+  [pesquisa 14](research/14-the-state-energy-company.md) e na
+  [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
+  [checklist do Presidente](spec/presidential-checklist.md). Em conflito, vale o mais recente;
 - **próximo passo:** o lote E1.0a está em curso, com ordem dele de 25/09. Passo 1 feito: as 38
   cadeiras de ministro no catálogo (`src/data/cabinet.mjs`, prova em `tests/suites/cabinet.mjs`), e
   os 7 ministros do E0 sentam nelas. Passo 2 feito: `appoint` e `dismiss` no estado (`state.cabinet`,
-  opcional no save, sem subir o esquema). Passo 3: o efeito no Congresso. Depois, a tela. O [checklist do Presidente](spec/presidential-checklist.md) lista as 40
-  ações e a etapa de cada uma;
-- **commits de 25/09, com ordem dele:** `febd0b5` (decreto, limite das emendas e E0) e `2482ce7`
-  (documentos). O passo 1 do E1.0a também; ele autorizou commit ao fim de cada etapa validada;
+  opcional no save, sem subir o esquema). Na revisão de 25/09 o nomeado ganhou `id`. Passo 3: o efeito no Congresso, que
+  resolve antes o achado 82. Depois, a tela;
+- **commits de 25/09:** `febd0b5` (E0), `2482ce7` (documentos), `916a80f` e `97483ec` (passos 1 e 2
+  do E1.0a), `d2684ce` (checklist de 40). Ele autorizou commit ao fim de cada etapa validada;
+  push e merge seguem pedindo ordem;
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `validate` verde em 25/09, depois do passo 2 do E1.0a (393 provas, passeio e
+- **portão:** `validate` verde em 25/09, depois da revisão do E1.0a (394 provas, passeio e
   macaco); roda de novo antes de qualquer commit;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
 
-## Estado — 25/09/2026: direção nova, corte da estatal desenhado, E0 pausado sem commit
+## Estado — 25/09/2026: direção nova, abertura em construção, E0 pausado
 
 - **a direção e os documentos de 25/09.** Depois do playtest do E0, ele definiu o jogo: um sandbox
   ideológico sob regras reais. A pesquisa da estatal foi feita pelo Claude nas fontes oficiais
@@ -36,7 +39,7 @@
   toda regra em sete peças com os nomes da especificação, que subiu para a versão 1.1
   (`PROVISIONAL_MEASURE`, `DIRECT_ENTERPRISE` e a marca `[DESENHO]`). O corte vertical está na
   versão 3, e o mapa ganhou os oito lotes do E1 (§6.4) e as decisões de 25/09 (§11.1b);
-- **o E0 está implementado e pausado, sem commit** ([ciclo 31](cycles/31-the-bimonthly-cut.md)):
+- **o E0 está implementado, commitado (`febd0b5`) e pausado** ([ciclo 31](cycles/31-the-bimonthly-cut.md)):
   o decreto de proteção até o relatório bimestral (`state.decree`), o limite das emendas pela CF
   art. 166 § 18, sete ministros no ELENCO, o parecer e a reunião (`contingency.mjs`), o ensaio
   (`scenario.mjs`) e a cena na mesa. A reunião foi reprovada no playtest, e a causa era o modelo:
@@ -44,8 +47,8 @@
 - **os lotes A1, A1.1, A1.2 e A2a estão feitos e commitados** (`98c1abc`, `a690248`, `5ba154c`):
   a VONTADE em `src/domain/actors/`, com contrato endurecido, valor separado da urgência e a
   crença por evidência (`belief.mjs`). A história está no journal, entradas 42 a 44. A dívida da
-  avaliação montada pela aplicação está no A4 do mapa. A VONTADE ainda não tem consumidor no jogo
-  commitado; no E0, sem commit, ela decide pelos ministros;
+  avaliação montada pela aplicação está no A4 do mapa. No E0, a VONTADE decide pelos ministros
+  na reunião do corte, que o jogo ainda não abre fora do ensaio;
 - **padronização de 24/09, com as decisões dele:** todo caminho versionado em inglês,
   kebab-case e sem acento (docs, assets, licença, skills — agora `check`, `walk`, `simulate`,
   `validate` —, capturas e `tmp/`); nomes da UI que diziam outra coisa corrigidos
@@ -112,12 +115,10 @@
 
 ## Fila, em ordem
 
-1. **E1 — a estatal**, lotes E1.1 a E1.8 do [mapa](spec/migration-map.md) §6.4, cada um com ordem
-   dele. O primeiro é a ficha da Enerbras;
-2. **o trabalho sem commit** (decreto, limite das emendas, E0): decisão dele, com a recomendação
-   do topo;
-3. **a tela das próximas atualizações**: decisão dele. A ordem de construção foi aprovada em
-   25/09: primeiro montar o governo, depois a estatal;
+1. **E1.0 — a abertura, montar o governo**, lotes E1.0a a E1.0e do [mapa](spec/migration-map.md)
+   §6.4. O E1.0a está nos passos 1 e 2 feitos; o passo 3 começa pelo achado 82;
+2. **E1.1 a E1.8 — a estatal**, depois da abertura;
+3. **a tela das próximas atualizações**: decisão dele;
 4. **achado 81**, antes de fechar o E0; não bloqueia o E1;
 5. **achado 69** — investigar a oscilação da prova de voo interrompido;
 6. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
@@ -149,8 +150,8 @@
 - **25/09, playtest do E0** — a reunião em papel foi reprovada ("não parece jogo"). Três protótipos
   de cena também não pegaram, e a causa não era a tela: a decisão do corte não pesa em nada no
   modelo (achado 77). Lições: encontro vira cena com rostos, fala curta e humana, nada de pop-up, e
-  toda decisão mostra o que arrisca. O E0 fica pausado, com o motor pronto e sem commit;
-- **25/09, E0 v1 implementado, sem commit** ([ciclo 31](cycles/31-the-bimonthly-cut.md)). Pelo
+  toda decisão mostra o que arrisca. O E0 fica pausado (commitado depois, `febd0b5`);
+- **25/09, E0 v1 implementado** (commitado depois, `febd0b5`; [ciclo 31](cycles/31-the-bimonthly-cut.md)). Pelo
   bloqueio, os ministros viraram sete (um por pasta, a Fazenda como guardiã), e o rateio passou a
   respeitar a CF art. 166, § 18 (EC 100/2019, **VERIFICADO** no site da Câmara): a emenda não perde
   mais que a proporção das demais discricionárias; as sondas não protegem, e a série ficou imóvel.
@@ -164,7 +165,7 @@
   sonda de medição, não a regra de frequência do Momento Presidencial;
 - **25/09, duas decisões dele para o E0, pelo realismo** — (1) os ministros lembram entre
   bimestres: entra junto com os ministros, porque campo no save sem consumidor é dado morto;
-  (2) o decreto de proteção vale até o próximo relatório bimestral: **feito, sem commit**.
+  (2) o decreto de proteção vale até o próximo relatório bimestral: **feito** (`febd0b5`).
   `state.decree` guarda as áreas protegidas; o turno o zera no mês do relatório e o rascunho do
   mês seguinte nasce dele. Entrou fora dos campos obrigatórios do save, como o partido, e por
   isso nenhum save antigo foi recusado nem o esquema subiu. Motor e série imóveis;
@@ -235,6 +236,10 @@
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
+- **82. Dois ministros para a mesma cadeira (25/09).** O E0 gera os ministros pela semente
+  (`ministers()` no ELENCO, `CATALOG.ministers`), e o jogador agora nomeia outro na mesma cadeira
+  (`state.cabinet`). A reunião do corte ainda falaria com o gerado. Antes do passo 3 do E1.0a, o
+  nomeado vira a pessoa que a VONTADE move, e o gerado vira só a sugestão da posse;
 - **81. O limite do § 18 vale para as emendas do jogo? (25/09) — VERIFICAR antes de fechar o
   E0.** O art. 166, § 18 limita só as programações dos §§ 11 e 12 (individuais e de bancada de
   execução obrigatória). A emenda do jogo é a verba prometida às bancadas (`turn.mjs`, achado 71),
@@ -335,7 +340,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do passo 2 do E1.0a: imóveis em
+`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois da revisão do E1.0a: imóveis em
 todas as colunas abaixo.
 
 | política     | dívida/PIB | votações     | indústria | segurança |

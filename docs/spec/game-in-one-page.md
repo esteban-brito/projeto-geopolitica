@@ -153,7 +153,7 @@ jogador quer: transformar o país.
 
 ## O que isso muda no plano
 
-- **O E0 fica pausado.** O motor está pronto e sem commit, e volta como rotina de governo.
+- **O E0 fica pausado.** O motor está salvo (`febd0b5`) e volta como rotina de governo.
 - **A consequência material vem antes de qualquer cena** (achado 77). É o lote E1.4.
 - **A pesquisa da estatal está feita** ([pesquisa 14](../research/14-the-state-energy-company.md)).
   Seguem abertos: como medir cada fato concreto do país e o ponto de partida em 2027, e o

@@ -20,16 +20,16 @@
 
 ## O Congresso
 
-| #   | o que ele faz                                          | como se faz de verdade                                                                             | fonte                                                     | etapa                       |
-| --- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | --------------------------- |
-| 5   | montar a base de aliados                               | dar ministérios e cargos a outros partidos em troca de votos. Prática, não lei                     | dados abertos da Câmara para calibrar                     | abertura                    |
-| 6   | indicar o líder do governo                             | um deputado e 20 vice-líderes na Câmara                                                            | VERIFICADO: RICD, art. 11                                 | abertura                    |
-| 7   | apoiar um candidato a presidente da Câmara e do Senado | eleição em 1º de fevereiro, voto secreto; quem vence controla a pauta e o pedido de impeachment    | VERIFICADO: CF, art. 57 §4º; RICD, arts. 5º, 7º, 17 e 218 | abertura                    |
-| 8   | propor leis e emendas à Constituição                   | envia o projeto; a emenda precisa de 3/5 em dois turnos em cada Casa                               | VERIFICADO: CF, arts. 60 e 84 III                         | no jogo, e completo no E1.2 |
-| 9   | pedir urgência                                         | cada Casa tem 45 dias; depois a pauta tranca                                                       | VERIFICADO: CF, art. 64                                   | estatal                     |
-| 10  | editar medidas provisórias                             | vale na hora; o Congresso tem 60 + 60 dias; aos 45 tranca a pauta; há temas proibidos              | VERIFICADO: CF, art. 62                                   | estatal                     |
-| 11  | sancionar ou vetar                                     | veta tudo ou parte; o Congresso derruba o veto com maioria absoluta                                | VERIFICADO: CF, arts. 66 e 84 V                           | depois                      |
-| 12  | negociar as emendas parlamentares                      | a verba que cada deputado indica; parte é obrigatória, e o corte não pode ser maior que o do resto | VERIFICADO: CF, art. 166 §§ 9º, 11 e 18                   | no jogo                     |
+| #   | o que ele faz                                          | como se faz de verdade                                                                                                            | fonte                                                     | etapa                       |
+| --- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | --------------------------- |
+| 5   | montar a base de aliados                               | dar ministérios e cargos a outros partidos em troca de votos. Prática, não lei                                                    | dados abertos da Câmara para calibrar                     | abertura                    |
+| 6   | indicar o líder do governo                             | um deputado e 20 vice-líderes na Câmara                                                                                           | VERIFICADO: RICD, art. 11                                 | abertura                    |
+| 7   | apoiar um candidato a presidente da Câmara e do Senado | eleição em 1º de fevereiro, voto secreto; quem vence controla a pauta e o pedido de impeachment                                   | VERIFICADO: CF, art. 57 §4º; RICD, arts. 5º, 7º, 17 e 218 | abertura                    |
+| 8   | propor leis e emendas à Constituição                   | envia o projeto; a emenda precisa de 3/5 em dois turnos em cada Casa                                                              | VERIFICADO: CF, arts. 60 e 84 III                         | no jogo, e completo no E1.2 |
+| 9   | pedir urgência                                         | cada Casa tem 45 dias; depois a pauta tranca                                                                                      | VERIFICADO: CF, art. 64                                   | estatal                     |
+| 10  | editar medidas provisórias                             | vale na hora; o Congresso tem 60 + 60 dias; aos 45 tranca a pauta; há temas proibidos                                             | VERIFICADO: CF, art. 62                                   | estatal                     |
+| 11  | sancionar ou vetar                                     | veta tudo ou parte; o Congresso derruba o veto com maioria absoluta                                                               | VERIFICADO: CF, arts. 66 e 84 V                           | depois                      |
+| 12  | negociar as emendas parlamentares                      | a verba que cada deputado indica; a individual e a de bancada são obrigatórias, e o corte delas não pode ser maior que o do resto | VERIFICADO: CF, art. 166 §§ 9º, 11 e 18                   | no jogo                     |
 
 ## O dinheiro
 
@@ -44,11 +44,11 @@
 
 ## As empresas e a economia
 
-| #   | o que ele faz                           | como se faz de verdade                                                                        | fonte                                                         | etapa   |
-| --- | --------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ------- |
-| 19  | vender, comprar ou orientar uma estatal | vender o controle pede lei; vender ações ou subsidiárias, não; segurar preço pede compensação | VERIFICADO: pesquisa 14                                       | estatal |
-| 20  | privatizar ou conceder serviços         | pelo programa de privatização (PND), com decreto e o conselho do programa                     | VERIFICADO: Lei 9.491                                         | estatal |
-| 21  | indicar o presidente do Banco Central   | com aprovação do Senado; o mandato é fixo e ele não pode ser demitido à vontade               | VERIFICADO: CF, art. 84 XIV; mandato: VERIFICAR (LC 179/2021) | depois  |
+| #   | o que ele faz                           | como se faz de verdade                                                                         | fonte                                                         | etapa   |
+| --- | --------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ------- |
+| 19  | vender, comprar ou orientar uma estatal | vender o controle pede lei; vender ações ou subsidiárias, não; segurar preço pede compensação  | VERIFICADO: pesquisa 14                                       | estatal |
+| 20  | privatizar ou conceder serviços         | pelo programa de privatização (PND), com decreto e o conselho do programa                      | VERIFICADO: Lei 9.491                                         | estatal |
+| 21  | indicar o presidente do Banco Central   | com aprovação do Senado; o mandato fixo, que impede demitir à vontade, ainda está por conferir | VERIFICADO: CF, art. 84 XIV; mandato: VERIFICAR (LC 179/2021) | depois  |
 
 ## A Justiça e o controle
 

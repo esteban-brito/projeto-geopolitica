@@ -120,8 +120,12 @@ export function deserialize(text) {
   const cabinet = candidate["cabinet"];
   const named = (/** @type {unknown} */ seat) => {
     if (!asObj(seat)) return false;
-    const { name, party } = /** @type {Record<string, unknown>} */ (seat);
-    return typeof name === "string" && (party === null || typeof party === "string");
+    const { id, name, party } = /** @type {Record<string, unknown>} */ (seat);
+    return (
+      typeof id === "string" &&
+      typeof name === "string" &&
+      (party === null || typeof party === "string")
+    );
   };
   if (
     cabinet !== undefined &&

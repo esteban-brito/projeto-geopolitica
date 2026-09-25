@@ -75,7 +75,7 @@ import { streamFrom } from "./random.mjs";
 /** @typedef {import("../domain/norms/index.mjs").Norm} Norm */
 /** @typedef {import("../application/passage.mjs").Bill} Bill */
 /** @typedef {{ priority: string | null, fiscal: string | null, reform: string | null }} Platform */
-/** @typedef {{ name: string, party: string | null }} Appointee */
+/** @typedef {{ id: string, name: string, party: string | null }} Appointee */
 
 /**
  * @typedef {object} GameState

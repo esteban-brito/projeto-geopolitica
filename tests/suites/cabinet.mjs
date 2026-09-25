@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { CATALOG, catalogViolations } from "../../src/data/catalog.mjs";
+import { playMonth } from "../../src/application/turn.mjs";
 import { deserialize, serialize } from "../../src/state/save.mjs";
 import { createState, reduce } from "../../src/state/state.mjs";
 
@@ -33,7 +34,7 @@ test("os ministros do corte sentam em cadeiras que existem", () => {
 
 /* ── NOMEAR E DEMITIR (E1.0a, passo 2) ─────────────────────────────────────── */
 
-const minister = { name: "Helena Prado", party: "democratas-nacionais" };
+const minister = { id: "person-1", name: "Helena Prado", party: "democratas-nacionais" };
 
 test("nomear senta a pessoa na cadeira, e demitir deixa a cadeira vaga", () => {
   const start = createState();
@@ -44,7 +45,7 @@ test("nomear senta a pessoa na cadeira, e demitir deixa a cadeira vaga", () => {
   const other = reduce(named, {
     type: "appoint",
     seat: "fazenda",
-    appointee: { name: "Rui Tavares", party: null },
+    appointee: { id: "person-2", name: "Rui Tavares", party: null },
   });
   assert.equal(other.cabinet?.["fazenda"]?.name, "Rui Tavares", "nomear por cima troca o ministro");
   const empty = reduce(other, { type: "dismiss", seat: "fazenda" });
@@ -69,6 +70,14 @@ test("o gabinete atravessa o save, e o save de antes dele abre sem ele", () => {
   delete legacy.cabinet;
   assert.ok(deserialize(JSON.stringify(legacy)).ok, "save sem gabinete foi recusado");
   const broken = JSON.parse(serialize(createState()));
-  broken.cabinet = { saude: { name: 7, party: null } };
+  broken.cabinet = { saude: { id: "person-3", name: 7, party: null } };
   assert.equal(deserialize(JSON.stringify(broken)).ok, false);
+  broken.cabinet = { saude: { name: "Sem Id", party: null } };
+  assert.equal(deserialize(JSON.stringify(broken)).ok, false);
+});
+
+test("o gabinete atravessa a virada do mês", () => {
+  const named = reduce(createState(), { type: "appoint", seat: "fazenda", appointee: minister });
+  const { state } = playMonth(named);
+  assert.deepEqual(state.cabinet, named.cabinet);
 });

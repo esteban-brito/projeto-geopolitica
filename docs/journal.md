@@ -9018,3 +9018,14 @@ troca o ministro, e demitir deixa a cadeira vaga. Cadeira que a lei não tem nã
 gabinete atravessa o save, e o save de antes dele abre com o gabinete vazio, sem subir o esquema.
 Duas das três provas novas caíram antes do código; a da cadeira inventada já passava, porque o
 redutor ignorava ações desconhecidas, e fica para guardar o comportamento. Série imóvel.
+
+### 56 · A revisão antes do passo 3 — 25/09
+
+Ele pediu para revisar tudo antes de seguir. No código, o ministro nomeado não tinha identidade:
+guardava só nome e partido, e duas pessoas com o mesmo nome se confundiriam. Ganhou `id`, com
+prova caída antes. Entrou também a prova de que o gabinete atravessa a virada do mês; ela passou de
+primeira e fica de guarda. A revisão achou dois ministros para a mesma cadeira: o gerado pelo E0 e o
+nomeado pelo jogador. Virou o achado 82, e o passo 3 começa por ele. Nos documentos, três lugares
+ainda diziam que o E0 estava sem commit; a fila começava pela estatal quando a ordem aprovada é a
+abertura; e dois itens do checklist afirmavam mais do que a fonte conferida. Tudo corrigido. Série
+imóvel.
