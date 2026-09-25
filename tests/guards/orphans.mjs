@@ -184,7 +184,10 @@ export const synthetic = [
     /* As DUAS da mesa: o seletor em portugues e o HTML em ingles. Nenhuma falhava. */
     label: "o seletor de estado ficou num nome que o HTML nao escreve",
     files: new Map([
-      ["styles/46-screen-cabinet-desk.css", '@layer screens { .envelope[data-vence="true"] { color: red; } }'],
+      [
+        "styles/46-screen-cabinet-desk.css",
+        '@layer screens { .envelope[data-vence="true"] { color: red; } }',
+      ],
       ["src/ui/shared/mail-pile.mjs", 'export const html = `<i class="envelope" data-urgent>`;'],
     ]),
   },
