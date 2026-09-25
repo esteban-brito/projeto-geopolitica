@@ -1,8 +1,6 @@
-/* TELA · GABINETE — o resumo da república, em cartões.
-   ELA SUBSTITUI A MESA, E NAO E A MESA COM OUTRO NOME.
-   A Mesa misturava o resumo do mes com a mesa de negociacao: quem abria o jogo caia no meio
-   de uma decisao — placar, bancadas e controles de verba — sem antes saber como o pais
-   estava. */
+/* TELA · GABINETE — a correspondência, a carta em leitura e os anexos. O tampo da mesa e os
+   objetos sobre ele moram em `46-screen-cabinet-desk.css`; a tela do Congresso, em
+   `50-screen-congress.css`. */
 
 @layer screens {
   /* ── UMA SUBSTANCIA PARA A TELA INTEIRA ──────────────────────────────────── ⚠ O
@@ -87,7 +85,7 @@
   }
 
   /* ⛔ A GRADE DA MESA ANTIGA E A PASTA DE VIDRO SAIRAM DAQUI, e com elas dez comentarios que
-     descreviam peca que nao existe mais. A mesa de hoje e um objeto em `46-desk.css`, e esta
+     descreviam peca que nao existe mais. A mesa de hoje e um objeto em `46-screen-cabinet-desk.css`, e esta
      folha ficou com o que ainda esta na tela: a Caixa e os cartoes dela. */
 
   .card {

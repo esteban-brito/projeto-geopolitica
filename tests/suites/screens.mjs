@@ -17,7 +17,7 @@ import {
 } from "../../src/domain/congress/index.mjs";
 import { alarm, left } from "../../src/application/mail.mjs";
 import { describeMail, describeMonth, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
-import { vitalsHtml } from "../../src/ui/screens/dashboard.mjs";
+import { vitalsHtml } from "../../src/ui/shared/vitals.mjs";
 import { addressed } from "../../src/ui/strings.mjs";
 import { nupCheck, protocolOf } from "../../src/ui/shared/protocol.mjs";
 import {
@@ -42,7 +42,7 @@ import { areaHtml } from "../../src/ui/screens/area.mjs";
 import { financeHtml } from "../../src/ui/screens/finance.mjs";
 import { money, num, percent, signed } from "../../src/ui/shared/format.mjs";
 import { trendOf, windowLabel } from "../../src/ui/shared/trend.mjs";
-import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/mesa.mjs";
+import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/congress.mjs";
 import { cabinetHtml, emailHtml } from "../../src/ui/screens/cabinet.mjs";
 
 const { areas, bills, parties, fiscal } = CATALOG;

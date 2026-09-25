@@ -124,7 +124,7 @@
     --bevel-under: inset 0 -1px 0 rgba(0, 0, 0, 0.26);
     /* A QUEDA DO VIDRO E UMA SO, E E DUPLA: um contato curto que assenta a peca e uma penumbra
        longa que a levanta. Eram tres quedas, uma por nivel, e a peca pairava sem tocar — as
-       pecas da MESA ja caiam assim (`46-desk.css`, 4,7px de contato e 18,7 de ambiente), e o
+       pecas da MESA ja caiam assim (`46-screen-cabinet-desk.css`, 4,7px de contato e 18,7 de ambiente), e o
        vidro era o unico que nao. A penumbra segue a luz da sala; o contato nao tem angulo. */
     --glass-cast:
       0 2px 4px rgba(0, 0, 0, 0.25), calc(var(--light-dx) * 12px) 12px 32px -8px rgba(0, 0, 0, 0.5);

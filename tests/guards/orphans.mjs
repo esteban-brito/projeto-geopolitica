@@ -21,7 +21,7 @@ function produces(path) {
  * O QUE O JOGO ESCREVE NA PAGINA — e so isso conta como produzir.
  *
  * ⛔ ANTES ELE ERA O ARQUIVO INTEIRO, e duas coisas que nao pintam nada mantinham classe
- * morta viva: o `href` de `46-desk.css` no `<link>` casava com `.desk`, e uma variavel local
+ * morta viva: o `href` de `46-screen-cabinet-desk.css` no `<link>` casava com `.desk`, e uma variavel local
  * chamada `desk` em `cast/index.mjs` casava sozinha. Sessenta linhas de `.desk` sobreviveram
  * a uma tela inteira que foi refeita, com a guarda verde.
  *
@@ -141,8 +141,8 @@ export const synthetic = [
   {
     label: "o seletor amarrado a um nome de tela que mudou",
     files: new Map([
-      ["styles/50-screen-mesa.css", "@layer screens { .report--mesa { padding: 8px; } }"],
-      ["src/ui/screens/mesa.mjs", 'export const html = `<section class="report"></section>`;'],
+      ["styles/50-screen-congress.css", "@layer screens { .report--mesa { padding: 8px; } }"],
+      ["src/ui/screens/congress.mjs", 'export const html = `<section class="report"></section>`;'],
     ]),
   },
   {
@@ -152,7 +152,7 @@ export const synthetic = [
         "styles/30-components.css",
         "@layer components { .strip { gap: 4px; } .chip__value { color: red; } }",
       ],
-      ["src/ui/screens/mesa.mjs", 'export const html = `<b class="chip__value">7</b>`;'],
+      ["src/ui/screens/congress.mjs", 'export const html = `<b class="chip__value">7</b>`;'],
     ]),
   },
   {
@@ -164,11 +164,11 @@ export const synthetic = [
   },
   {
     /* O caso medido: `.desk` sobreviveu a tela inteira que foi refeita porque o `<link>` da
-       folha NOVA se chama `46-desk.css`, e o nome do arquivo casava com o nome da classe. */
+       folha NOVA se chama `46-screen-cabinet-desk.css`, e o nome do arquivo casava com o nome da classe. */
     label: "o CAMINHO da folha mantem viva a classe que ela nao pinta",
     files: new Map([
-      ["styles/46-desk.css", "@layer screens { .desk { display: grid; } }"],
-      ["index.html", '<link rel="stylesheet" href="styles/46-desk.css" />'],
+      ["styles/46-screen-cabinet-desk.css", "@layer screens { .desk { display: grid; } }"],
+      ["index.html", '<link rel="stylesheet" href="styles/46-screen-cabinet-desk.css" />'],
     ]),
   },
   {
@@ -184,7 +184,7 @@ export const synthetic = [
     /* As DUAS da mesa: o seletor em portugues e o HTML em ingles. Nenhuma falhava. */
     label: "o seletor de estado ficou num nome que o HTML nao escreve",
     files: new Map([
-      ["styles/46-desk.css", '@layer screens { .envelope[data-vence="true"] { color: red; } }'],
+      ["styles/46-screen-cabinet-desk.css", '@layer screens { .envelope[data-vence="true"] { color: red; } }'],
       ["src/ui/shared/mail-pile.mjs", 'export const html = `<i class="envelope" data-urgent>`;'],
     ]),
   },

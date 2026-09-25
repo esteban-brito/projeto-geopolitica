@@ -35,9 +35,9 @@ import {
   mesaHtml,
   passageHtml,
   tallyHtml,
-} from "../ui/screens/mesa.mjs";
+} from "../ui/screens/congress.mjs";
 import { financeHtml } from "../ui/screens/finance.mjs";
-import { vitalsHtml, whenHtml } from "../ui/screens/dashboard.mjs";
+import { vitalsHtml, whenHtml } from "../ui/shared/vitals.mjs";
 import { bindAdvance, dressTopbar } from "../ui/shared/topbar.mjs";
 import { cabinetHtml, dressDesk, emailHtml } from "../ui/screens/cabinet.mjs";
 import { reportPanelHtml } from "../ui/screens/report.mjs";

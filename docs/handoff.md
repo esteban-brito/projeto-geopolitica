@@ -44,7 +44,7 @@
   fica como histórico; o piloto de Energia não é o primeiro passo;
 - **Ciclo 29 (simplificar) em curso.** Itens 2 e 3 feitos (`app.mjs` modularizado, menu com 3
   chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
-  `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-desk.css` 4%,
+  `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-screen-cabinet-desk.css` 4%,
   lote 5: `session.mjs` 46% → 19%, `handlers.mjs` 38% → 11%, código idêntico). Item 5
   inventariado e 18 backups efêmeros arquivados em `tmp/arquivo/`. Item 4: 30 asserções de
   interação no passeio (seções 5, 9, 10 e 11) + macaco; as dez novas cobrem verba e aviso
@@ -171,7 +171,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 - **66. A carta do arquivamento não existe (21/09).** Ver fila 4;
 - **65. `--paper` é cor nos tokens e largura na folha (18/09).** `00-tokens.css` declara
   `--paper: #ffffff`; `.sheet` redeclara `--paper: 720px`. Hoje nada lê a cor dentro da folha; a
-  primeira que ler recebe `720px`. Renomear a largura mexe em 15 `calc()` de `46-desk.css`;
+  primeira que ler recebe `720px`. Renomear a largura mexe em 15 `calc()` de `46-screen-cabinet-desk.css`;
 - **64. O parecer soma mês com ano (11/09).** `UI.brief.treasury` põe `room` (do mês) ao lado de
   `mandatory` e `revenue` (anualizados) e ninguém diz isso. A frase é dele; aberto;
 - **63. A promessa da posse saiu do Gabinete (11/09).** Segue no relatório do turno, sumiu da
