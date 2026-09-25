@@ -17,7 +17,7 @@
 - **próximo passo:** o lote E1.0a está em curso, com ordem dele de 25/09. Passo 1 feito: as 38
   cadeiras de ministro no catálogo (`src/data/cabinet.mjs`, prova em `tests/suites/cabinet.mjs`), e
   os 7 ministros do E0 sentam nelas. Passo 2 feito: `appoint` e `dismiss` no estado (`state.cabinet`,
-  opcional no save, sem subir o esquema). Passo 3: o efeito no Congresso. Depois, a tela. O [checklist do Presidente](spec/presidential-checklist.md) lista as 30
+  opcional no save, sem subir o esquema). Passo 3: o efeito no Congresso. Depois, a tela. O [checklist do Presidente](spec/presidential-checklist.md) lista as 40
   ações e a etapa de cada uma;
 - **commits de 25/09, com ordem dele:** `febd0b5` (decreto, limite das emendas e E0) e `2482ce7`
   (documentos). O passo 1 do E1.0a também; ele autorizou commit ao fim de cada etapa validada;

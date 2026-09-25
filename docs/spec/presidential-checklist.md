@@ -1,4 +1,4 @@
-# O checklist do Presidente — 30 coisas que ele pode fazer
+# O checklist do Presidente — 40 coisas que ele pode fazer
 
 > 25/09/2026, pedido dele: tudo o que um presidente do Brasil pode fazer, realista e fiel. A base é
 > a lista de poderes da Constituição (art. 84, conferido no Planalto em 25/09) e a
@@ -79,7 +79,27 @@
 | --- | ------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------- | ------------- |
 | 30  | relações exteriores, tratados, guerra e paz | mantém relações com outros países; tratado e guerra dependem do Congresso | VERIFICADO: CF, art. 84 VII, VIII, XIX e XX | internacional |
 
+## O que ficou de fora dos 30
+
+Ele perguntou se faltava algo, e faltava. Estes dez completam o cargo:
+
+| #   | o que ele faz                                                 | como se faz de verdade                                                                  | fonte                                                 | etapa  |
+| --- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------ |
+| 31  | negociar com governadores e prefeitos                         | repasses, obras e a dívida dos estados; é onde se ganha ou perde a bancada de um estado | FALTA pesquisa                                        | depois |
+| 32  | usar os bancos públicos (BNDES, Caixa, Banco do Brasil)       | crédito barato para um setor, com risco no balanço do banco                             | FALTA pesquisa                                        | depois |
+| 33  | cuidar dos servidores: concursos, reajustes e greves          | cargos por lei; salário pesa no gasto obrigatório                                       | VERIFICADO: CF, art. 84 XXV; o resto FALTA            | depois |
+| 34  | fazer reforma agrária                                         | desapropria terra que não cumpre a função social, pagando antes                         | VERIFICADO: CF, art. 184                              | depois |
+| 35  | demarcar terras indígenas                                     | homologação por decreto                                                                 | VERIFICAR: Decreto 1.775/1996                         | depois |
+| 36  | pedir ao Congresso uma lei delegada                           | o Congresso autoriza, e o Presidente escreve a lei                                      | VERIFICADO: CF, art. 68                               | depois |
+| 37  | disputar a reeleição e apoiar candidatos nas eleições de 2028 | uma reeleição só; a lei eleitoral proíbe usar a máquina na campanha                     | VERIFICADO: CF, art. 14 §5º; lei eleitoral: VERIFICAR | depois |
+| 38  | prestar contas todo ano                                       | manda as contas ao Congresso em 60 dias; o TCU dá parecer                               | VERIFICADO: CF, art. 84 XXIV                          | depois |
+| 39  | lidar com o vice e com a sucessão                             | o vice substitui e sucede; depois vêm os presidentes da Câmara, do Senado e do STF      | VERIFICADO: CF, art. 80                               | depois |
+| 40  | renunciar                                                     | sai por vontade própria, e o vice assume                                                | VERIFICAR                                             | depois |
+
+Não entram como ação porque são reação a outros: CPI, escândalo e impeachment. O Presidente se
+defende deles com as ações acima.
+
 ## O que o jogo cobre hoje
 
-5 de 30 itens: 8 em parte, 12, 13, 14 e 15. A abertura acrescenta 5 (1, 2, 5, 6 e 7), e a estatal
+5 de 40 itens: 8 em parte, 12, 13, 14 e 15. A abertura acrescenta 5 (1, 2, 5, 6 e 7), e a estatal
 mais 7 (3, 9, 10, 17, 19, 20 e 24). O resto entra em ondas, pela gramática, depois da estatal.
