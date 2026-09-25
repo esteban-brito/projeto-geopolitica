@@ -14,16 +14,16 @@
   [corte vertical da estatal](spec/vertical-slice-energy.md) (a primeira aplicação) →
   [mapa de migração](spec/migration-map.md) (o plano). Os fatos estão na
   [pesquisa 14](research/14-the-state-energy-company.md). Em conflito, vale o mais recente;
-- **próximo passo:** o lote E1.0a, as 38 cadeiras de ministro (mapa §6.4), quando ele mandar. A
-  pesquisa do começo do jogo está feita ([pesquisa 15](research/15-forming-the-government.md)).
-  A estatal vem depois. Nenhum código antes da ordem;
-- **sem commit, à espera dele:** (1) o decreto bimestral e o limite das emendas do § 18: motor com
-  prova e série imóvel; recomendação: dois commits separados; (2) o E0 (ministros, reunião, ensaio
-  do mês 21): pausado; recomendação: guardar numa branch própria, para não misturar com o E1;
-  (3) os documentos de 25/09;
+- **próximo passo:** o lote E1.0a está em curso, com ordem dele de 25/09. Passo 1 feito: as 38
+  cadeiras de ministro no catálogo (`src/data/cabinet.mjs`, prova em `tests/suites/cabinet.mjs`), e
+  os 7 ministros do E0 sentam nelas. Passo 2: nomear e exonerar no estado do jogo. Depois, o efeito
+  no Congresso e a tela. O [checklist do Presidente](spec/presidential-checklist.md) lista as 30
+  ações e a etapa de cada uma;
+- **commits de 25/09, com ordem dele:** `febd0b5` (decreto, limite das emendas e E0) e `2482ce7`
+  (documentos). O passo 1 do E1.0a também; ele autorizou commit ao fim de cada etapa validada;
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `validate` verde em 25/09, depois da revisão dos documentos (387 provas, passeio e
+- **portão:** `validate` verde em 25/09, depois do passo 1 do E1.0a (390 provas, passeio e
   macaco); roda de novo antes de qualquer commit;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
@@ -335,7 +335,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do lote A1.2: imóveis em
+`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do passo 1 do E1.0a: imóveis em
 todas as colunas abaixo.
 
 | política     | dívida/PIB | votações     | indústria | segurança |

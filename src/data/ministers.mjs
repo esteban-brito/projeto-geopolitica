@@ -11,6 +11,7 @@
  * @typedef {object} MinisterRole
  * @property {string} id
  * @property {string} area - a pasta que ele defende; o nome vem do catálogo de áreas
+ * @property {string} seat - a cadeira do gabinete que ele ocupa
  * @property {number} riskMin - aversão a risco: abaixo de 1 insiste depois de uma recusa
  * @property {number} riskMax
  * @property {number} persistMin - persistência: multiplica a mudança que reabre a posição
@@ -25,6 +26,7 @@
 export const MINISTER_SCHEMA = {
   id: { kind: "id" },
   area: { kind: "id" },
+  seat: { kind: "id" },
   riskMin: { kind: "number", min: 0, max: 3 },
   riskMax: { kind: "number", min: 0, max: 3 },
   persistMin: { kind: "number", min: 0.5, max: 4 },
@@ -48,13 +50,13 @@ const TEMPER = {
 
 /** @type {ReadonlyArray<MinisterRole>} */
 export const MINISTERS = [
-  { id: "minister-agriculture", area: "agriculture", ...TEMPER },
-  { id: "minister-industry", area: "industry", ...TEMPER },
-  { id: "minister-welfare", area: "welfare", ...TEMPER },
-  { id: "minister-health", area: "health", ...TEMPER },
-  { id: "minister-education", area: "education", ...TEMPER },
-  { id: "minister-security", area: "security", ...TEMPER },
-  { id: "minister-defense", area: "defense", ...TEMPER },
+  { id: "minister-agriculture", area: "agriculture", seat: "agricultura-e-pecuaria", ...TEMPER },
+  { id: "minister-industry", area: "industry", seat: "desenvolvimento-industria", ...TEMPER },
+  { id: "minister-welfare", area: "welfare", seat: "previdencia-social", ...TEMPER },
+  { id: "minister-health", area: "health", seat: "saude", ...TEMPER },
+  { id: "minister-education", area: "education", seat: "educacao", ...TEMPER },
+  { id: "minister-security", area: "security", seat: "justica-e-seguranca-publica", ...TEMPER },
+  { id: "minister-defense", area: "defense", seat: "defesa", ...TEMPER },
 ];
 
 /**

@@ -2,6 +2,7 @@
 
 import { AREAS, AREA_SCHEMA } from "./areas.mjs";
 import { BILLS, BILL_SCHEMA } from "./bills.mjs";
+import { CABINET, SEAT_SCHEMA } from "./cabinet.mjs";
 import { CALENDAR, LANDMARK_SCHEMA } from "./calendar.mjs";
 import {
   AMBITIONS,
@@ -45,6 +46,7 @@ export const CATALOG = {
   genderOf: GENDER_OF,
   surnames: SURNAMES,
   ambitions: AMBITIONS,
+  cabinet: CABINET,
   ministers: MINISTERS,
   contingency: CONTINGENCY,
 };
@@ -73,7 +75,9 @@ export function catalogViolations() {
     ...collectionViolations(ARCHETYPE_SCHEMA, ARCHETYPES, "archetypes"),
     ...violations(CAST_SCHEMA, CAST, "cast"),
     ...collectionViolations(LOBBY_SCHEMA, LOBBIES, "lobbies"),
+    ...collectionViolations(SEAT_SCHEMA, CABINET, "cabinet"),
     ...collectionViolations(MINISTER_SCHEMA, MINISTERS, "ministers"),
+    ...danglingSeats(),
     ...violations(CONTINGENCY_SCHEMA, CONTINGENCY, "contingency"),
     ...violations(PRESSURE_SCHEMA, PRESSURE, "pressure"),
     /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. */
@@ -148,6 +152,20 @@ function danglingAreas() {
   return BILLS.filter(bill => !known.has(bill.area)).map(
     bill => `bills: "${bill.id}" aponta para a area "${bill.area}", que nao existe`,
   );
+}
+
+/** @returns {string[]} */
+function danglingSeats() {
+  const areas = new Set(AREAS.map(area => area.id));
+  const seats = new Set(CABINET.map(seat => seat.id));
+  return [
+    ...CABINET.filter(seat => seat.area !== undefined && !areas.has(seat.area)).map(
+      seat => `cabinet: "${seat.id}" aponta para a area "${seat.area}", que nao existe`,
+    ),
+    ...MINISTERS.filter(minister => !seats.has(minister.seat)).map(
+      minister => `ministers: "${minister.id}" senta na cadeira "${minister.seat}", que nao existe`,
+    ),
+  ];
 }
 
 /** @returns {string[]} */

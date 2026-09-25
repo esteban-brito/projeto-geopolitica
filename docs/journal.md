@@ -9002,3 +9002,11 @@ no primeiro turno. Quem vence monta a pauta e decide se recebe um pedido de impe
 a pessoa que falta ao afastamento do jogo. A Câmara publica o voto de cada deputado e a orientação
 do governo; com isso se calibra quanto vale dar um ministério a um partido. A ordem de construção
 mudou: primeiro a abertura, depois a estatal.
+
+### 54 · As 38 cadeiras — 25/09
+
+Com a ordem dele, salvei o E0 e os documentos em dois commits e comecei a abertura. O primeiro passo
+do E1.0a pôs no catálogo as 38 cadeiras de Ministro de Estado da Lei 14.600: 32 ministérios, 5 da
+Presidência e a AGU. Cada área do jogo tem a sua cadeira, e os 7 ministros do E0 sentam nelas. A
+prova nasceu antes e caiu nos 3 testes. A série não mexeu, porque o turno ainda não lê o gabinete.
+Também escrevi o checklist do Presidente: 30 ações, com a fonte e a etapa de cada uma.
