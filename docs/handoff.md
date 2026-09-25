@@ -5,8 +5,18 @@
 > envelhece: remeça antes de repetir. A tabela de contagens é cobrada por
 > `tests/suites/catalog.mjs`; a série, por quem mexe no motor.
 
-## Estado — 24/09/2026, lote A1 (VONTADE) feito, portão verde
+## Estado — 24/09/2026, lote A1 (VONTADE) feito e projeto padronizado, portão verde
 
+- **padronização de 24/09, com as decisões dele:** todo caminho versionado em inglês,
+  kebab-case e sem acento (docs, assets, licença, skills — agora `check`, `walk`, `simulate`,
+  `validate` —, capturas e `tmp/`); nomes da UI que diziam outra coisa corrigidos
+  (`screens/congress.mjs`, `shared/vitals.mjs`, `50-screen-congress.css`,
+  `46-screen-cabinet-desk.css`); contratos vazios TEMPORAL e CASCATA removidos; a evidência
+  citada pelo código versionada em `docs/evidence/` (30 arquivos, 2,2 MB, congelada);
+  `tools/prose-only.mjs` no lugar de `tmp/so-prosa.mjs`; `npm run links`
+  (`tools/check-links.mjs`) dentro do `validate`, com zero referências quebradas. A pasta
+  `cld` e o repositório remoto ficaram como estavam. `tmp/` agora tem `agents/`,
+  `asset-sources/` e `history/`;
 - **lote A1 feito:** `src/domain/actors/` (VONTADE), motor de agência genérico e puro:
   percepção → crença → objetivo priorizado → intenção → ação → trace. Objetivo, intenção e
   ação são tipos distintos; modo heurístico ou deliberativo sai só das entradas (gatilhos
@@ -63,8 +73,8 @@
   recriáveis): `base-ultra` 679f043, `base-motor` bb7ce9d, `motor-review` fc78e27. Também
   `acoplamento-e-simulador` 137a94a (segue no remoto) e `backup-auditoria-26-08-2026` 4bf8c51;
 - **portão:** 13 guardas · 68 sintéticas · 348 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde. `validate` verde em 24/09 depois do A1. Série do
-  `simulate` remedida em 24/09 nas seis sondas: imóvel;
+  macaco (60 ações, semente 7) verde · `links` com zero quebradas. `validate` verde em 24/09
+  depois da padronização. Série do `simulate` remedida em 24/09 nas seis sondas: imóvel;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem

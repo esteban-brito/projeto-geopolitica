@@ -8854,3 +8854,15 @@ as alternativas reprovadas, os scripts que geraram os assets. Ficaram 59; as out
 para uma quarentena fora do repositório, reversível. Cinco branches locais saíram, com os SHAs
 anotados. O dado morto que eu tinha prometido tirar não era morto: `bills.mjs` é o conjunto de
 moções das provas da ECLUSA, e sai com elas no D1.
+
+### 41 · A padronização — 24/09, noite
+
+Ele pediu tudo arrumado, da pasta mãe ao último arquivo. Antes de mexer, o levantamento: o
+código já seguia o padrão, mas a lei dizia inglês nos caminhos e cinquenta documentos
+estavam em português, a tela do Congresso morava num arquivo chamado `mesa.mjs`, e a
+evidência que o `glass.mjs` cita para justificar alternativas reprovadas vivia numa pasta
+que o git ignora. Ele decidiu quatro coisas e eu fiz o resto em seis fases, cada uma com
+commit próprio, o portão verde e um verificador novo que conta referências quebradas —
+zero no começo, zero no fim. Duas coisas apareceram no caminho: o Python grava CRLF no
+Windows, e o `.playwright-mcp/` vinha sendo lido pelas guardas como se fosse fonte. A
+pasta `cld` e o remoto ficaram como estavam, e o comando das skills mudou de nome.

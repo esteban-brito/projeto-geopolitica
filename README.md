@@ -66,7 +66,8 @@ efeito. Prova verde diz que a regra vale; a série diz se o número é bom.
 - `npm test` — as suítes de `tests/suites/`, escritas como propriedades;
 - `npm run walk` — usa a tela em 1440×980 e 1440×900 e mede rolagem, recorte, sobreposição e
   contraste no pixel. Está dentro do `validate`;
-- `node tools/check-links.mjs` — todo caminho citado num arquivo versionado vivo existe;
+- `npm run links` — todo caminho citado num arquivo versionado vivo existe. Está dentro do
+  `validate`;
 - `npm run screen` — mede o custo do material com GPU. Fica fora do `validate`: sem GPU, os dois
   braços caem juntos e o número mente.
 

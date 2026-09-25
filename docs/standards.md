@@ -320,6 +320,11 @@ número ao lado dela.
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.
 
+Fora das guardas, `npm run links` (`tools/check-links.mjs`) cobra que todo caminho citado num
+arquivo versionado vivo exista. Journal, ciclos e pesquisas são registro: neles só os links
+contam, porque citam arquivos pelo nome que tinham na época. `docs/evidence/` é congelada e
+fica de fora.
+
 ⚠ **E o portão tem uma SEGUNDA PERNA desde 23/08/2026, que não mora em
 `tests/guards/`:** o passeio (`tests/browser/walk.mjs`) entrou no `validate`. As treze
 guardas leem TEXTO — arquivo, seletor, literal —, e nenhuma delas abre um navegador;
