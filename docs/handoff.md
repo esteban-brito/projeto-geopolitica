@@ -134,6 +134,11 @@
 
 ## Decisões vivas
 
+- **25/09, o mundo vivo (proposta)** — revisão da "IA": hoje o mundo é feito de termômetros (16
+  tipos de carta nascem de limiares; o Congresso vota por fórmula; só a reunião do corte usa a
+  VONTADE). A proposta põe cada acontecimento com autor e motivo, o agendador acordando só quem tem
+  motivo, o filtro da Casa Civil e o ritmo vindo do calendário real. Duas decisões dele pendentes
+  em [o mundo vivo](spec/the-living-world.md);
 - **25/09, a semana** (decisões dele) — o botão avança uma semana; dentro dela, 7 dias com manhã,
   tarde e noite; o Vice pode ir no lugar do Presidente; o Congresso fica de terça a quinta, o que a
   Câmara confirma: 89% dos 169 dias com votação em plenário desde fev/2025. Telefonar não tem

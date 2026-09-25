@@ -9073,3 +9073,12 @@ agenda real do Planalto não pôde ser medida, porque o site bloqueia leitura au
 Ele aceitou os freios do telefone, se fossem viáveis, e são: ligar ocupa um turno, a ligação vale
 menos que o encontro e não fecha acordo grande, e insistir com a mesma pessoa desgasta. O motor já
 tem onde apoiar cada um: a qualidade da evidência na crença, a regra dos compromissos e a memória.
+
+### 62 · Termômetros ou pessoas — 25/09
+
+Ele pediu uma revisão da "IA" do jogo. A nota honesta: hoje o mundo é de termômetros. As 16 cartas
+nascem de limiares, o Congresso vota por fórmula e o afastamento abre sozinho. O motor de decisão
+existe e está provado, mas só a reunião do corte o usa. A proposta está em "o mundo vivo": cada
+acontecimento com autor e motivo, só acorda quem tem razão, a informação anda por quem pôde ver, e o
+ritmo vem do calendário real, sem diretor de drama. A medida de vida é uma sonda passiva no
+simulador.
