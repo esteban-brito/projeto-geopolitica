@@ -1,5 +1,5 @@
 /* O FLUXO DE ALEATORIEDADE — semeado, contado e serializavel.
-   TEMPORAL e ECLUSA sacam de fluxos INDEPENDENTES, derivados do nome. Com um
+   Cada motor que sorteia saca de um fluxo proprio, derivado do nome. Com um
    fluxo unico compartilhado, um evento a mais num turno deslocaria o indice e mudaria o
    resultado de uma votacao que nao tem relacao nenhuma com ele. */
 

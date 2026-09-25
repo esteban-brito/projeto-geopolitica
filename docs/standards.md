@@ -51,23 +51,21 @@ CLAUDE.md                   as regras que o agente lê antes de tudo
 
 ## 3. Os motores
 
-Ordem de resolução de um turno (mês). Apenas **TEMPORAL** e **ECLUSA** consomem
-aleatoriedade, cada um com fluxo próprio derivado da seed da partida.
+Ordem de resolução de um turno (mês). Só **ECLUSA** consome aleatoriedade hoje, com fluxo
+próprio derivado da seed da partida; choques exógenos, quando existirem, terão o seu.
 
-| codinome     | módulo                    | o que recebe                                                | o que devolve                                               |
-| ------------ | ------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| **TEMPORAL** | `src/domain/events/`      | estado do turno, catálogo, fluxo de RNG                     | evento disparado, com efeitos e duração                     |
-| **ECLUSA**   | `src/domain/congress/`    | bancadas, proposta, moeda oferecida, histórico de barganha  | votos por bancada, resultado, custo pago, ressentimento     |
-| **MALHA**    | `src/domain/capacity/`    | índices por área, alocação do mês, impacto das aprovações   | índices novos, histórico, pressão em receita e despesa      |
-| **CASCATA**  | `src/domain/propagation/` | efeitos vigentes com defasagem, estado atual                | delta do mês por indicador                                  |
-| **CORRENTE** | `src/domain/economy/`     | estado macro, carga tributária, capacidade, impulso fiscal  | PIB, potencial, inflação, juro, desemprego, população       |
-| **LASTRO**   | `src/domain/budget/`      | receita e despesa, obrigatório × discricionário             | saldo, dívida/PIB, espaço discricionário                    |
-| **SONDA**    | `src/domain/opinion/`     | indicadores divulgados, eventos, histórico                  | aprovação por segmento                                      |
-| **ESTRATO**  | `src/domain/norms/`       | as normas escritas, as alavancas, o mês, os indicadores     | a faixa vigente de cada alavanca; o que dorme, e por quê    |
-| **ELENCO**   | `src/domain/cast/`        | os blocos, os arquétipos, o vocabulário de nomes, a semente | as pessoas do mandato, a memória de cada uma e o preço dela |
-| **CALDEIRA** | `src/domain/pressure/`    | a pressão de cada grupo, o descontentamento do mês e a rua  | a pressão nova, e se as três rupturas estão abertas juntas  |
-| **DELTA**    | `src/domain/graph/`       | catálogo de ligações, estado, deltas                        | nós e arestas com peso e sinal                              |
-| **VONTADE**  | `src/domain/actors/`      | o ator, as percepções, o repertório, a avaliação, limiares  | crenças, objetivos priorizados, intenção, ação e o trace    |
+| codinome     | módulo                 | o que recebe                                                | o que devolve                                               |
+| ------------ | ---------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| **ECLUSA**   | `src/domain/congress/` | bancadas, proposta, moeda oferecida, histórico de barganha  | votos por bancada, resultado, custo pago, ressentimento     |
+| **MALHA**    | `src/domain/capacity/` | índices por área, alocação do mês, impacto das aprovações   | índices novos, histórico, pressão em receita e despesa      |
+| **CORRENTE** | `src/domain/economy/`  | estado macro, carga tributária, capacidade, impulso fiscal  | PIB, potencial, inflação, juro, desemprego, população       |
+| **LASTRO**   | `src/domain/budget/`   | receita e despesa, obrigatório × discricionário             | saldo, dívida/PIB, espaço discricionário                    |
+| **SONDA**    | `src/domain/opinion/`  | indicadores divulgados, eventos, histórico                  | aprovação por segmento                                      |
+| **ESTRATO**  | `src/domain/norms/`    | as normas escritas, as alavancas, o mês, os indicadores     | a faixa vigente de cada alavanca; o que dorme, e por quê    |
+| **ELENCO**   | `src/domain/cast/`     | os blocos, os arquétipos, o vocabulário de nomes, a semente | as pessoas do mandato, a memória de cada uma e o preço dela |
+| **CALDEIRA** | `src/domain/pressure/` | a pressão de cada grupo, o descontentamento do mês e a rua  | a pressão nova, e se as três rupturas estão abertas juntas  |
+| **DELTA**    | `src/domain/graph/`    | catálogo de ligações, estado, deltas                        | nós e arestas com peso e sinal                              |
+| **VONTADE**  | `src/domain/actors/`   | o ator, as percepções, o repertório, a avaliação, limiares  | crenças, objetivos priorizados, intenção, ação e o trace    |
 
 O codinome é como o responsável cita o motor. Ele vive no cabeçalho do módulo e
 nesta tabela, e **não** aparece em código executável — no código existe um nome

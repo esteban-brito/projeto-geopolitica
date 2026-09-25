@@ -31,15 +31,13 @@ npm run check      # so as guardas, 2s; `npm test` roda so as suites
 
 ## Os motores
 
-Um turno é um mês. Apenas TEMPORAL e ECLUSA consomem aleatoriedade, cada um do
-seu próprio fluxo — fluxo único faria um evento a mais deslocar o índice e mudar
-o resultado de uma votação sem relação com ele.
+Um turno é um mês. Só ECLUSA consome aleatoriedade hoje, de um fluxo próprio — fluxo
+único faria um saque a mais deslocar o índice e mudar o resultado de uma votação sem
+relação com ele.
 
 ```
-TEMPORAL  ── o mês traz um choque?                           contrato
 ECLUSA    ── o que estava na pauta é votado, e a que preço   IMPLEMENTADO
 MALHA     ── a capacidade do Estado de entregar              IMPLEMENTADO
-CASCATA   ── efeitos vigentes viram deltas, com defasagem    contrato
 CORRENTE  ── PIB, inflação, juro, desemprego e o custo da dívida  IMPLEMENTADO
 LASTRO    ── receita, despesa, saldo, dívida                 IMPLEMENTADO
 SONDA     ── o que foi divulgado vira aprovação por segmento IMPLEMENTADO
@@ -47,12 +45,11 @@ ESTRATO   ── a pilha de normas lida como faixa vigente       IMPLEMENTADO
 ELENCO    ── as pessoas do mandato, e a memória de cada uma  IMPLEMENTADO
 CALDEIRA  ── a pressão de cada grupo, e as três rupturas     IMPLEMENTADO
 DELTA     ── deriva a rede legível do que acabou de acontecer IMPLEMENTADO
+VONTADE   ── o que um ator faz com o que lhe chega            IMPLEMENTADO, sem consumidor
 ```
 
-⚠ **Os dois que são contrato são contrato de verdade:** `src/domain/events/` e
-`src/domain/propagation/` têm `export {}` e mais nada. Os outros nove rodam. A tabela
-completa, com o que cada um recebe e devolve, está em
-[`docs/standards.md`](docs/standards.md) §3.
+A tabela completa, com o que cada um recebe e devolve, está em
+[`docs/standards.md`](docs/standards.md) §3. Os codinomes são provisórios.
 
 O espaço discricionário de LASTRO é a moeda com que ECLUSA paga: os dois se
 acoplam pelo orçamento, e não por uma regra escrita para isso. Quem os compõe é

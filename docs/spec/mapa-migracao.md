@@ -116,14 +116,14 @@ mudança · **8** o que quebra · **9** provas que continuam · **10** prova nov
 9. As 14 de `random`.
 10. Uma por fluxo novo.
 
-| uso hoje                               | classe                   | onde                         | destino                         |
-| -------------------------------------- | ------------------------ | ---------------------------- | ------------------------------- |
-| desvio do voto por bancada             | **substituindo agência** | `congress/index.mjs:300`     | temporário; sai na etapa D1     |
-| plenário do afastamento (mesmo `vote`) | **substituindo agência** | `turn.mjs:1523`              | sai com a CALDEIRA adaptada (F) |
-| nome, ambição, pasta, desvio, alcance  | geração, por hash        | `cast/index.mjs`             | fica; padrão a copiar           |
-| nome do presidente                     | geração, por hash        | `cast/index.mjs` `president` | fica                            |
-| choque de oferta                       | mundo, injetado de fora  | `economy/index.mjs:79`       | TEMPORAL, com fluxo próprio     |
-| pesquisa                               | observação — não existe  | `opinion/index.mjs` `pollOf` | nasce na etapa C1               |
+| uso hoje                               | classe                   | onde                         | destino                           |
+| -------------------------------------- | ------------------------ | ---------------------------- | --------------------------------- |
+| desvio do voto por bancada             | **substituindo agência** | `congress/index.mjs:300`     | temporário; sai na etapa D1       |
+| plenário do afastamento (mesmo `vote`) | **substituindo agência** | `turn.mjs:1523`              | sai com a CALDEIRA adaptada (F)   |
+| nome, ambição, pasta, desvio, alcance  | geração, por hash        | `cast/index.mjs`             | fica; padrão a copiar             |
+| nome do presidente                     | geração, por hash        | `cast/index.mjs` `president` | fica                              |
+| choque de oferta                       | mundo, injetado de fora  | `economy/index.mjs:79`       | choque exógeno, com fluxo próprio |
+| pesquisa                               | observação — não existe  | `opinion/index.mjs` `pollOf` | nasce na etapa C1                 |
 
 O comentário "Sorteio 50%" em `state.mjs:108` está velho: o tratamento é escolha do jogador
 (`handlers.mjs:174-176`).

@@ -1,9 +1,6 @@
 /* MALHA — os indices por area: decaimento, rendimento da alocacao, e a pressao que
    os indices devolvem a receita e a despesa. */
 
-/* Medido, e as duas coisas foram medidas.
-   sao TEMPORAL e ECLUSA. */
-
 /**
  * @typedef {import("../../data/areas.mjs").Area} Area
  * @typedef {object} Pressure

@@ -72,7 +72,7 @@ jurídica nem descrição automática da implementação atual.
 | `src/domain/cast/` — ELENCO                                 | Pessoas, influência, ambições e memória                           |
 | `src/domain/pressure/` — CALDEIRA                           | Pressão dos quatro grupos e três rupturas                         |
 | `src/domain/graph/` — DELTA                                 | Relações causais extraídas dos parâmetros de capacidade           |
-| `src/domain/events/`, `propagation/`                        | TEMPORAL e CASCATA: contratos sem implementação                   |
+| `src/domain/actors/` — VONTADE                              | Agência genérica: crença, objetivo, intenção, ação e trace        |
 | `src/application/turn.mjs`                                  | Composição mensal e consultas do estado/previsão                  |
 | `src/application/agenda.mjs`                                | Deriva proposta, ideologia, dispersão e rito dos movimentos       |
 | `src/application/passage.mjs`, `mail.mjs`                   | Tramitação e correspondência com prazo                            |

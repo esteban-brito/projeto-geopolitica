@@ -260,8 +260,8 @@ cheia. Vocabulário único em `src/ui/shared/annex.mjs` (guarda `annexes`).
 **Motores:** LASTRO (receita, teto, `blocked` × `atRisk`) · ECLUSA (`whipCount`/`vote`/`settle`)
 · MALHA (índices, `pushOf`/`liftOf`) · SONDA · ELENCO (semente, sem fluxo de RNG) · CORRENTE
 (hiato, Phillips, Taylor, Okun, `carry`) · ESTRATO (faixa derivada, nunca guardada) · DELTA (lido
-do catálogo) · VONTADE (agência genérica; ainda sem consumidor no jogo) · TEMPORAL e CASCATA só
-contrato.
+do catálogo) · VONTADE (agência genérica; ainda sem consumidor no jogo). Os contratos vazios TEMPORAL
+e CASCATA saíram em 24/09 e voltam quando tiverem código.
 
 **Composição:** `agenda.mjs` (proposta, rateio) · `turn.mjs` (`bandsOf` → `settlement` →
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
@@ -272,7 +272,7 @@ contrato.
 
 ## O que ainda não existe
 
-- **TEMPORAL e CASCATA** — só os contratos;
+- **choques exógenos** (o antigo TEMPORAL) — o canal `shock` de CORRENTE existe e ninguém o alimenta no jogo;
 - **carta do arquivamento** do processo de afastamento (achado 66);
 - **tensão institucional** — variável de estado, não motor;
 - **contraste em texto com filho elemento** — o medidor não alcança (`standards.md` §7);

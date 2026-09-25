@@ -49,11 +49,9 @@ function clamp(value, min, max) {
 /**
  * UM NUMERO DERIVADO DE UM TEXTO, entre 0 e 1 — deterministico e sem estado.
  *
- * unicos motores autorizados a sortear sao TEMPORAL e ECLUSA, e cada um tem o
- * fluxo dele justamente para que calibrar um nao desloque o outro. Um elenco que
- * puxasse do mesmo fluxo faria acrescentar um personagem mudar o resultado de
- * todas as votacoes do mandato — o defeito que `streamFrom` existe para impedir,
- * visto de outro angulo.
+ * Cada motor que sorteia tem o fluxo dele, para que calibrar um nao desloque o outro. Um
+ * elenco que puxasse do mesmo fluxo faria acrescentar um personagem mudar o resultado de
+ * todas as votacoes do mandato — o defeito que `streamFrom` existe para impedir.
  * @param {string} text
  * @returns {number} de 0 (inclusive) a 1 (exclusive)
  */

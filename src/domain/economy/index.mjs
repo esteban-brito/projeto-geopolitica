@@ -43,8 +43,8 @@ function monthly(annual) {
 /**
  * Um mes de economia.
  *
- * evento e TEMPORAL — um sorteio feito aqui dentro tornaria o mandato
- * irreproduzivel, que e a unica coisa que este projeto nao abre mao.
+ * O choque exogeno entra por parametro (`shock`): um sorteio feito aqui dentro
+ * tornaria o mandato irreproduzivel.
  * @param {EconomyInput} input
  * @returns {EconomyOutput}
  */
