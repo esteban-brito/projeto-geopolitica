@@ -46,7 +46,7 @@ O Diretor do Jogo (usuário) é a autoridade máxima de design.
 
 ## 4. Portão de um lote de prosa
 
-1. O código sem comentário sai **idêntico** antes e depois (`node tmp/so-prosa.mjs <arquivo>`);
+1. O código sem comentário sai **idêntico** antes e depois (`node tools/prose-only.mjs <arquivo>`);
 2. `npm run check`, `npm run types` e `npm test` verdes;
 3. o resultado vai para `tmp/para-claude.md` com os números (prosa antes → depois por arquivo);
 4. parar. O Claude confere e aceita, ou devolve com a regra.

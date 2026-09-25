@@ -4,17 +4,17 @@
 
 Imagem gerada por IA (ChatGPT/DALL-E, OpenAI) a pedido do responsável do projeto em 15/09/2026,
 a partir do prompt escrito pelo Claude: telefone de teclas vermelho ao estilo Western Electric
-2500, visto de cima, teclas e cartão em branco, sem sombra no chão. Tratamento (`tmp/assar-fone.mjs`):
+2500, visto de cima, teclas e cartão em branco, sem sombra no chão. Tratamento (`docs/evidence/assets/bake-phone.mjs`):
 alfa normalizado, corte pela caixa da tinta, redução para 720×639, luz da sala (exposição 0,95;
 1 → 0,88 de cima para baixo). Sem licença de terceiros.
 
-📐 **Reassado em 18/09/2026 com a nitidez do envelope** (`tmp/assar-fone-tela.mjs`): a mesma
+📐 **Reassado em 18/09/2026 com a nitidez do envelope** (`docs/evidence/assets/bake-phone-screen.mjs`): a mesma
 redução, numa reamostragem só, mais máscara de nitidez de raio 1 e ganho 1,4, q 0,90. Ele viu
 "resolução baixa" na mesa; Sobel dentro do aparelho a 1920×937: **48,7 → 55,1 a dpr 1 e 35,6 →
 46,8 a dpr 2**. Um arquivo de 840px (dpr 2 exato) dava 48,6 a dpr 1 — o navegador reduz 2,1× e
 come a nitidez —, e ganho 2 dava mais 5% de aresta por 50% mais halo. **Os 12 algarismos e o
 número do cartão estão desenhados na foto** (Inter 600 e 500, sobre as teclas medidas em
-`tmp/teclas-angulo.mjs`): em DOM eles saíam tortos e não vibravam com o toque.
+`docs/evidence/assets/keys-angle.mjs`): em DOM eles saíam tortos e não vibravam com o toque.
 
 ## `folder-open.webp` e `folder-closed.webp` — a pasta de despacho
 
@@ -24,11 +24,11 @@ vazia, outra fechada com o brasão. A referência foi uma foto de pasta presiden
 brasão oficial, enviados por ele. **Ele mesmo removeu o fundo** (Adobe Firefly) e entregou as
 duas em PNG com alfa. Sem licença de terceiros.
 
-⛔ **E o recorte por luminância foi trocado pelo dele, medido:** o meu (`tmp/assar-pasta.mjs`,
+⛔ **E o recorte por luminância foi trocado pelo dele, medido:** o meu (`docs/evidence/assets/bake-folder.mjs`,
 enchente a partir da beira) deixava **9 a 14 colunas de alfa parcial** na beira da abertura, com
 luminância 197 contra 26 do couro — a folha creme da borda tem 210–219 e caía no limiar de 215
 da enchente, então ela era comida. O dele tem **1 a 2 colunas** e nenhuma sobra clara na base.
-Tratamento que ficou (`tmp/limpar-beira.mjs`): corte pela caixa do alfa, descontaminação da
+Tratamento que ficou (`docs/evidence/assets/trim-edge.mjs`): corte pela caixa do alfa, descontaminação da
 franja branca do estúdio e nenhuma redução — os dois arquivos saem na largura nativa da tinta,
 **2196×1588** e **1434×1991**, em WebP de qualidade 0,90.
 
@@ -52,15 +52,15 @@ moldura e `--rest` do CSS continuam valendo. **A fechada ficou 13% mais larga** 
 Imagem gerada por IA (ChatGPT) a pedido dele em 18/09/2026, com o prompt escrito pelo Claude:
 caneta-tinteiro preta de resina com guarnição dourada, tampada, vista de cima, fundo transparente
 (2172×724). Sem licença de terceiros. Cortada pela tinta (2023×201) e **sem perda nenhuma** — WebP
-lossless na largura nativa, 381 KB (`tmp/assar-caneta-integra.mjs`), ordem dele de 18/09. A versão
-assada a 420px com nitidez (`tmp/assar-caneta.mjs`) saiu: 210px de layout na mesa.
+lossless na largura nativa, 381 KB (`docs/evidence/assets/bake-pen-whole.mjs`), ordem dele de 18/09. A versão
+assada a 420px com nitidez (`docs/evidence/assets/bake-pen.mjs`) saiu: 210px de layout na mesa.
 
 ## `coat-of-arms.webp` — o timbre dos papéis
 
 O Brasão da República, a cores, no alto do parecer e do decreto — como nos ofícios reais da
 Presidência que ele mandou em 18/09/2026. Imagem gerada por IA (ChatGPT) a pedido dele, com
 fundo transparente (1254×1254); as Armas Nacionais são símbolo oficial (Lei 5.700/1971), sem
-licença de terceiros. Cortado pela tinta e assado a 192px (`tmp/assar-brasao.mjs`): 65px de
+licença de terceiros. Cortado pela tinta e assado a 192px (`docs/evidence/assets/bake-coat-of-arms.mjs`): 65px de
 layout na folha de 720, 42px na tela a dpr 1 e 125 a dpr 3. Nitidez raio 1 ganho 0,8, q 0,92.
 
 ## `envelope.webp` e `envelope-urgent.webp` — a carta na mesa
@@ -77,11 +77,11 @@ vence, que é justamente onde a cor tem de gritar.
 
 📐 **Largura de 356px, e o número é de tela:** o envelope mede 178 CSS px em qualquer janela, então
 o arquivo é o de dpr 2, assado numa reamostragem só a partir da origem limpa de 1297px
-(`tmp/assar-envelopes-tela.mjs`), com máscara de nitidez de raio 1 e ganho 1,4, qualidade 0,90.
+(`docs/evidence/assets/bake-envelopes-screen.mjs`), com máscara de nitidez de raio 1 e ganho 1,4, qualidade 0,90.
 Ele disse "embaçado" com o arquivo de 720px, e o número deu razão: Sobel dentro do envelope na mesa
 **32,2 → 35,4 a dpr 1 e 22,8 → 29,6 a dpr 2**. A origem não era o problema — a fibra do papel some
 em qualquer arquivo a 178px; o que volta é a aresta. Tratamento antes disso: a mesma receita da
-pasta (`tmp/limpar-beira.mjs`), corte pela caixa do alfa. O halo esfarrapado do creme estava fora
+pasta (`docs/evidence/assets/trim-edge.mjs`), corte pela caixa do alfa. O halo esfarrapado do creme estava fora
 da caixa e saiu no corte — sobraram 62 pixels sujos, e o rubro já veio limpo. **A caixa tem a razão
 da foto**, 1,529: forçar o C6 de 1,42 esticaria o papel 7,5% na altura.
 
@@ -93,4 +93,4 @@ Sem licença de terceiros. **Entra sem perda nenhuma, ordem dele em 18/09 ("QUER
 lossless (7,2 MB), pixel a pixel igual à PNG dele — Sobel 68,5 e croma 72,1 nos dois. Q 0,90 dava
 1,2 MB por −1,5% de aresta e −1,2% de croma, e ele não quis. É servida a 1916 CSS px (`DESIGN`
 em `cabinet.mjs`): 1:1 a dpr 2, reduzida 2:1 pelo navegador a dpr 1. ⛔ Nitidez em cima dela ele recusou em 18/09
-("a mesa ficou horrível"); a receita e as medidas ficam em `tmp/assar-madeira.mjs`.
+("a mesa ficou horrível"); a receita e as medidas ficam em `docs/evidence/assets/bake-wood.mjs`.

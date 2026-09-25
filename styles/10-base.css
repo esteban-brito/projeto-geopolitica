@@ -93,7 +93,7 @@
   /* ⛔ O TABULEIRO DO GABINETE TEM OUTRO NOME: ele ocupa a janela inteira e os outros comecam
      depois da coluna do rail, e com um nome so a troca MORFAVA a caixa — a foto da Caixa era
      esticada ate a largura da mesa e sobrava uma banda clara onde a coluna esteve (L 75 contra
-     32 sem o grupo, medido em tmp/banda.mjs). Nomes diferentes: uma sai no lugar dela, a outra
+     32 sem o grupo, medido em docs/evidence/styles/banding.mjs). Nomes diferentes: uma sai no lugar dela, a outra
      nasce no dela. */
   .board[data-screen="cabinet"] {
     view-transition-name: desk;
@@ -135,7 +135,7 @@
 
   /* ⭐ A TROCA DE TELA E A DA APPLE: dissolve com um fio de escala (0,98 → 1), sem desfoque.
      ⛔ O cross-fade cru do navegador ele recusou ("nao esta nivel Apple"); o desfoque animado em
-     tela inteira saiu depois: custava 40ms de GPU por troca (tmp/transicao-custo.md) e a Apple
+     tela inteira saiu depois: custava 40ms de GPU por troca (docs/evidence/styles/transition-cost.md) e a Apple
      nao desfoca a tela na troca — desfoque e profundidade parada, nunca animador. */
   ::view-transition-group(board),
   ::view-transition-group(desk) {

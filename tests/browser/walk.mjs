@@ -1848,7 +1848,7 @@ try {
 
   /* ── 9 — TRES DEFEITOS QUE O PORTAO NAO VIA (revisao externa de 21/09) ─────────────────────
      Os tres passaram por tipo, guarda, 332 provas e este passeio. Cada prova aqui caiu contra o
-     codigo de antes da correcao (tmp/ultra-achado*.mjs). */
+     codigo de antes da correcao (docs/evidence/review/ultra-finding*.mjs). */
   const settled = async () => {
     await page.waitForFunction(
       () =>

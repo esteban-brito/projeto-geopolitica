@@ -18,6 +18,7 @@ const IGNORED = new Set([
   "tmp",
   "captures",
   "assets-source",
+  "evidence",
 ]);
 
 /**

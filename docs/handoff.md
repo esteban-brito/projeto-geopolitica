@@ -166,8 +166,8 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   719px no corte e 569px dois quadros depois: diferença de 150px, acima do limite de 20%.
   A prova e o código do voo não foram alterados; a prova roda antes das dez asserções novas.
   O passeio inicial e a repetição completa passaram. Causa ainda não isolada; nenhum limite
-  foi afrouxado. Evidência: `tmp/codex-validate-flight-failure.log`; rodada final verde em
-  `tmp/codex-validate.log`;
+  foi afrouxado. Evidência: `docs/evidence/gate/validate-flight-failure-2026-09-23.log`; rodada final verde em
+  `docs/evidence/gate/validate-final-2026-09-23.log`;
 - **66. A carta do arquivamento não existe (21/09).** Ver fila 4;
 - **65. `--paper` é cor nos tokens e largura na folha (18/09).** `00-tokens.css` declara
   `--paper: #ffffff`; `.sheet` redeclara `--paper: 720px`. Hoje nada lê a cor dentro da folha; a

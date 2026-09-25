@@ -44,7 +44,7 @@ Um dono por arquivo; o Gemini recebe 2 ou 3 tarefas por lote; só o Claude roda 
 
 ## 4 · C · A bandeirinha
 
-A foto dele entra na mesa pela receita dos envelopes (`tmp/assar-envelopes-tela.mjs`): origem
+A foto dele entra na mesa pela receita dos envelopes (`docs/evidence/assets/bake-envelopes-screen.mjs`): origem
 limpa, largura de tela × 2 numa reamostragem só, sem perda se ele mandar.
 
 ## 5 · O que não entra

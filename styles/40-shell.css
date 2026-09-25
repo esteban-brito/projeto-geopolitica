@@ -397,7 +397,7 @@
 
   /* ⛔ `--ink-dim` REPROVAVA sobre a madeira: com a faixa sem vidro, a segunda linha da marca
      cai direto no veio claro do jacarandá e o pior pixel dava 3,68:1 a 1440 e 4,18 a 1920.
-     A tinta cheia com opacidade guarda a hierarquia e passa em AA. tmp/contraste-pior.mjs */
+     A tinta cheia com opacidade guarda a hierarquia e passa em AA. docs/evidence/styles/worst-contrast.mjs */
   .topbar__name b + b {
     color: var(--ink);
     opacity: 0.9;
@@ -862,7 +862,7 @@
   /* ⛔ A VINHETA E O VEU MORAM NO `.backdrop`, e nao numa camada por cima: o substrato e o unico
      que tem `view-transition-name`, entao e ele que a troca de aba dissolve. Como pseudo do
      `.shell` o fundo SALTAVA no meio da troca — 14,9 de luminancia entre dois quadros vizinhos
-     (tmp/veu-transicao.mjs) — e por `transition: opacity` piorava para 30,2, porque durante a
+     (docs/evidence/styles/veil-transition.mjs) — e por `transition: opacity` piorava para 30,2, porque durante a
      transicao a arvore viva vira retrato e transicao de elemento nao aparece. */
 
   /* ── ABAIXO DE 1180px: o rail lateral passa a faixa horizontal superior. ── */

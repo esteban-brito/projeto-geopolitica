@@ -37,7 +37,7 @@ escrita achou três deles.
 - **Um dono por arquivo.** O Gemini recebe 2 arquivos por lote e não toca em mais nada. Claude
   não toca nos arquivos do lote enquanto ele está aberto;
 - **Prosa só muda prosa.** A devolução de um lote de comentários vem com a prova mecânica: o
-  arquivo sem comentários é **idêntico** antes e depois (`tmp/so-prosa.mjs`);
+  arquivo sem comentários é **idêntico** antes e depois (`tools/prose-only.mjs`);
 - **Nada de motor, calibragem ou prova existente.** `src/domain/`, `src/data/` e `tests/` só
   mudam pela mão do Claude, e só com prova nova antes;
 - cada lote fecha com `npm run check` e `npm test` verdes; cada item do Claude fecha com

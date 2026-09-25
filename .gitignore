@@ -1,5 +1,6 @@
 node_modules/
 *.log
+!docs/evidence/**/*.log
 
 # Artefatos de medicao e capturas — evidencia, nao fonte.
 tmp/

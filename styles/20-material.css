@@ -59,7 +59,7 @@
      `backdrop-filter` ficava com a CAIXA VELHA por alguns quadros depois da transicao — uma
      coluna de madeira desfocada e saturada onde o menu esteve, sem grao (aresta 0,1 contra
      4,5 do vizinho), em 6 quadros a partir de 460ms, medido no Chrome dele com GPU
-     (tmp/screencast-variantes.mjs). `will-change`, `contain: paint` e `isolation` nao
+     (docs/evidence/styles/screencast-variants.mjs). `will-change`, `contain: paint` e `isolation` nao
      mudam nada; sem o desfoque durante a troca, zero quadros. Nao e um segundo material: e o
      mesmo token, apagado nesse elemento so enquanto a troca dura. */
   html:active-view-transition .rail {

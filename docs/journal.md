@@ -7874,7 +7874,7 @@ certa (na girada o realce do couro corria deitado). Simetria da lombada: 46,7% d
 ### O recorte, e por que limiar simples não servia
 
 O fundo é branco e a pasta tem duas regiões claras: a cantoneira de latão e a folha creme que
-aparece na beira. Um corte por luminância comeria as duas. O recorte (`tmp/assar-pasta.mjs`) faz
+aparece na beira. Um corte por luminância comeria as duas. O recorte (`docs/evidence/assets/bake-folder.mjs`) faz
 enchente a partir da beira — o fundo é conectado e o interior claro não —, dá alfa em rampa na
 faixa de transição do JPEG e descontamina a borda do branco que ela herdou. Conferido ampliado
 sobre o jacarandá: sem franja. O alfa fecha em 255, como o telefone precisou.
@@ -7969,7 +7969,7 @@ Uma tentativa de introduzir `--mail-x` para forçar 24,3px constantes de folga n
 
 Palavras dele: "a parte de cima do couro da pasta foi comida um pouco por voce, principalmente o interior".
 
-A causa foi `tmp/limpar-beira.mjs`, a passada que tira o branco do estúdio que sangrou na borda do
+A causa foi `docs/evidence/assets/trim-edge.mjs`, a passada que tira o branco do estúdio que sangrou na borda do
 recorte. A regra `sujo()` andava para dentro enquanto o pixel fosse claro (L > 70) e dessaturado
 (croma < 22). O realce do próprio couro é claro e dessaturado, então a varredura atravessava a
 franja e continuava comendo peça. A franja branca real no topo mede 2px de mediana; a varredura
@@ -8038,7 +8038,7 @@ telefone, faixa dura de 1px nas duas, vazamento no topo de 0,15 contra 0,13, e a
 ### O canal com o Gemini, e o que ele entregou
 
 O canal voltou por CDP na porta de depuração do Antigravity (`tmp/gemini.mjs enviar|ler`), na
-conversa `883734d6-…`. Dono declarado por arquivo: `assets/`, `tmp/limpar-beira.mjs`,
+conversa `883734d6-…`. Dono declarado por arquivo: `assets/`, `docs/evidence/assets/trim-edge.mjs`,
 `46-desk.css` e `00-tokens.css` meus; `tests/browser/walk.mjs` dele.
 
 Ele entregou o perfil da contaminação nos quatro lados em resolução nativa, que é o número que

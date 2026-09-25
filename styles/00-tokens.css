@@ -245,7 +245,7 @@
     --dur-menu: 200ms;
     /* O GESTO NA PECA, nos numeros da Apple: pousar cresce 2%, premir afunda a 0,96, e soltar
        volta passando do ponto. As curvas sao MOLAS resolvidas em `linear()` por `curveOf`
-       (tmp/curvas-gesto.mjs): premir 0,16s/quique 0,05 · soltar 0,42s/0,5 — e pousar usa a de
+       (docs/evidence/styles/gesture-curves.mjs): premir 0,16s/quique 0,05 · soltar 0,42s/0,5 — e pousar usa a de
        soltar, porque a transicao CSS le a curva do estado de CHEGADA e nao sabe de onde veio;
        num curso de 2% a diferenca entre as duas e 0,3%, invisivel.
        ⛔ Um `cubic-bezier` nao e mola: o quique dele e fixo em 0,1%, e soltar lia como seco. Com
@@ -332,7 +332,7 @@
     /* O TRACO DA RUBRICA correndo no papel: o unico tempo longo do jogo, e ele e gesto de mao. */
     --dur-sign: 1100ms;
     /* A curva da troca de tela: a mola padrao do SwiftUI (response 0,55, dampingFraction 1)
-       em cubic-bezier, pesquisa do Gemini em tmp/transicao-apple.md. */
+       em cubic-bezier, pesquisa do Gemini em docs/evidence/styles/apple-transition.md. */
     --ease-screen: cubic-bezier(0.32, 0.72, 0, 1);
     --dur-stage: 520ms;
     --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);

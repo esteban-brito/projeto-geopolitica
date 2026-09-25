@@ -29,17 +29,17 @@ outro filtro.
 
 ## 2 · O que já foi medido, e vale (medição não expira)
 
-| o quê                                                            | número                                                              | onde                        |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------- |
-| um segundo filtro numa peça que já tem gradiente animado         | −17,9 fps (`glass-support` no `.tray__month`), −28,3 noutra peça    | `45-screen-cabinet.css`     |
-| fundo em movimento sob `backdrop-filter`                         | tela a 31 fps                                                       | `40-shell.css`              |
-| luz animada em `:root` (`--light-angle`)                         | 627 elementos recalculados por quadro, 7,9ms; GPU 82% → 12% sem ela | `20-material.css`           |
-| `clip-path` ou `filter` num ancestral de vidro                   | mata o `backdrop-filter` — a forma tem de sair de dentro do filtro  | `glass.mjs`                 |
-| lente maior que 2200×400                                         | estoura a memória do canvas do mapa                                 | `glass.mjs` (`installLens`) |
-| `backdrop-filter` em elemento que muda de lugar na troca de tela | superfície com a caixa velha por 6 quadros — o pisca laranja        | `20-material.css` (18/09)   |
-| desfoque animado em tela inteira na troca                        | +40ms de GPU por troca                                              | `tmp/transicao-custo.md`    |
-| saturação do vidro sobre o jacarandá                             | o croma do tampo é o que ele mandou não mudar — mede-se no pixel    | `40-shell.css`              |
-| vidro hoje: `npm run screen`                                     | 240 fps material × 240 controle a 1440×900                          | 18/09                       |
+| o quê                                                            | número                                                              | onde                                      |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------- |
+| um segundo filtro numa peça que já tem gradiente animado         | −17,9 fps (`glass-support` no `.tray__month`), −28,3 noutra peça    | `45-screen-cabinet.css`                   |
+| fundo em movimento sob `backdrop-filter`                         | tela a 31 fps                                                       | `40-shell.css`                            |
+| luz animada em `:root` (`--light-angle`)                         | 627 elementos recalculados por quadro, 7,9ms; GPU 82% → 12% sem ela | `20-material.css`                         |
+| `clip-path` ou `filter` num ancestral de vidro                   | mata o `backdrop-filter` — a forma tem de sair de dentro do filtro  | `glass.mjs`                               |
+| lente maior que 2200×400                                         | estoura a memória do canvas do mapa                                 | `glass.mjs` (`installLens`)               |
+| `backdrop-filter` em elemento que muda de lugar na troca de tela | superfície com a caixa velha por 6 quadros — o pisca laranja        | `20-material.css` (18/09)                 |
+| desfoque animado em tela inteira na troca                        | +40ms de GPU por troca                                              | `docs/evidence/styles/transition-cost.md` |
+| saturação do vidro sobre o jacarandá                             | o croma do tampo é o que ele mandou não mudar — mede-se no pixel    | `40-shell.css`                            |
+| vidro hoje: `npm run screen`                                     | 240 fps material × 240 controle a 1440×900                          | 18/09                                     |
 
 ## 3 · A receita — o que a Apple faz, e o que entra
 

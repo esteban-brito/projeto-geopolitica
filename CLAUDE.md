@@ -98,7 +98,7 @@ A governança dos agentes (Claude, GPT e Gemini) e o contrato canônico estão e
 
 - Lote com fronteira de arquivos e portão explícito (`check` + `types` + `test`); ele não toca
   em mais nada. `src/app/`, `app.mjs`, `rail.mjs`, `src/domain/`, `tests/` e `docs/` são do Claude;
-- toda entrega dele se confere contra o código antes de aceitar (`tmp/so-prosa.mjs` para prosa,
+- toda entrega dele se confere contra o código antes de aceitar (`tools/prose-only.mjs` para prosa,
   `tsc`, `grep`). Errada, volta com a regra concreta;
 - bug relatado por ele só entra com reprodução: tela, passo, o que apareceu. Lista tirada de doc
   se apaga;

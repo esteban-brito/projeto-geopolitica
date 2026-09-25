@@ -9,7 +9,7 @@ import { dirname, join, normalize } from "node:path";
 const ROOT = join(import.meta.dirname, "..");
 const TEXT = /\.(md|mjs|css|html|json|yml)$/;
 const ROOTS = /^(src|docs|tests|tools|styles|assets|vendor|captures|\.agents|\.claude|\.github)\//;
-const IGNORED_DIRS = /^(tmp|captures)\//;
+const IGNORED_DIRS = /^(tmp|captures|docs\/evidence)\//;
 /* Registro historico cita arquivos pelo nome que tinham na epoca, e prova sintetica de guarda
    cita caminho inventado de proposito: nos dois, so os links sao cobrados. */
 const HISTORY = /^(docs\/(journal\.md|cycles\/|research\/)|tests\/guards\/)/;
@@ -22,6 +22,7 @@ const tracked = execFileSync("git", ["ls-files"], { cwd: ROOT, encoding: "utf8" 
 const broken = [];
 
 for (const file of tracked) {
+  if (IGNORED_DIRS.test(file)) continue;
   const text = readFileSync(join(ROOT, file), "utf8");
   if (file.endsWith(".md")) {
     for (const hit of text.matchAll(/\]\(([^)\s]+)\)/g)) {

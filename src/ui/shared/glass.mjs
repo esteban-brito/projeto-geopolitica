@@ -38,7 +38,7 @@ function lensMap({ w, h, r, bevel, force }) {
         const gx = sdf(x + 1.5, y + 0.5) - sdf(x - 0.5, y + 0.5);
         const gy = sdf(x + 0.5, y + 1.5) - sdf(x + 0.5, y - 0.5);
         const n = Math.hypot(gx, gy) || 1;
-        /* Linear le como chanfro: a cubica tem derivada zero na juncao (tmp/lente-textura.md). */
+        /* Linear le como chanfro: a cubica tem derivada zero na juncao (docs/evidence/glass/lens-texture.md). */
         const t = 1 - -d / bevel;
         const amp = t * t * (3 - 2 * t) * force;
         dx = (-gx / n) * amp;
@@ -85,7 +85,7 @@ function bend(scale, dispersion) {
 /* Tamanho real no palco pediria 1 milhao de px; esticar acima de 600px nao cria vinco. */
 const MAP_MAX = 600;
 
-/* Teto em 60 mil px cobrava +0,536 ms/q contra +0,017 a 40 mil (tmp/palcos.md); 2 milhoes caia a 24 fps (tmp/lente-area.mjs). */
+/* Teto em 60 mil px cobrava +0,536 ms/q contra +0,017 a 40 mil (docs/evidence/glass/stages.md); 2 milhoes caia a 24 fps (docs/evidence/glass/lens-area.mjs). */
 const LENS_AREA_MAX = 40000;
 
 /**
@@ -175,7 +175,7 @@ export function skin({ w, h, r, s, body, edge, gleam = 0, tint }) {
 export const scaleRamp = (ramp, k) =>
   /** @type {Ramp} */ (ramp.map(([at, alpha]) => [at, Number((alpha * k).toFixed(4))]));
 
-/* Saturacao 1,6 degradava croma para -6,57; escala 17 partia o veio a 8,5px (tmp/lente-textura.md, tmp/desvio.png). */
+/* Saturacao 1,6 degradava croma para -6,57; escala 17 partia o veio a 8,5px (docs/evidence/glass/lens-texture.md, docs/evidence/glass/deviation.png). */
 export const RECIPE = {
   bevel: 13,
   force: 1,
@@ -189,7 +189,7 @@ export const RECIPE = {
   dispersion: 0.1,
 };
 
-/* Aresta em fracao variava de 6,5px no dock a 180px no palco: 30x de divergencia (tmp/aresta-divergencia.md). */
+/* Aresta em fracao variava de 6,5px no dock a 180px no palco: 30x de divergencia (docs/evidence/glass/edge-divergence.md). */
 /** @type {[number, number][]} */
 const ZENITH = [
   [0, 0.4],
@@ -229,7 +229,7 @@ export function fresnelFor(h) {
 /** @type {Ramp} */
 export const FRESNEL = fresnelFor(57);
 
-/* Seis materiais e gradientes opostos pareciam pecas desconexas na madeira (tmp/auditoria-vidro.png). */
+/* Seis materiais e gradientes opostos pareciam pecas desconexas na madeira (docs/evidence/glass/glass-audit.png). */
 export const GLASS_TINT = "14,20,31";
 
 /** @type {Ramp} */
