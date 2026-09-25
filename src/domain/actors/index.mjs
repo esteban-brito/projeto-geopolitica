@@ -55,7 +55,7 @@
  * @property {Step[]} actions
  * @typedef {object} Appraisal o que o plano faria ao mundo; nenhum campo é valor para o ator
  * @property {Record<string, number>} effects - a mudança esperada em cada sujeito, na unidade da crença sobre ele
- * @property {number} [risk] - de 0 a 1: a fração do ganho do plano que pode não vir
+ * @property {number} [risk] - de 0 a 1: a fração do ganho do plano que pode não vir; provisório, não cobre a perda além do ganho
  * @typedef {object} View o que a avaliação pode ler: o próprio ator, congelado, e nada do mundo
  * @property {Readonly<Record<string, Readonly<Belief>>>} beliefs
  * @property {Readonly<Core>} core
@@ -157,6 +157,23 @@ function perceive(beliefs, percepts, tick) {
   return { beliefs: next, changed };
 }
 
+/** @param {Goal} goal @param {number} value - quantos spans o valor está além do alvo */
+function shortfall(goal, value) {
+  const gap = goal.op === "atLeast" ? goal.target - value : value - goal.target;
+  return Math.max(gap / goal.span, 0);
+}
+
+/* Prioridade × efeito reprovada: com a meta cumprida a prioridade é zero, e levar a inflação de
+   3 a 8 com teto 5 valia 0. O valor de um objetivo é o custo de estar fora dele: peso × H, com
+   H quadrática até um span além do alvo e reta depois. A inclinação de H no ponto de hoje é a
+   prioridade, então efeito pequeno vale o que valia; efeito grande soma a urgência pelo caminho,
+   e sair de um objetivo cumprido custa. */
+/** @param {Goal} goal @param {number} value */
+function strain(goal, value) {
+  const beyond = shortfall(goal, value);
+  return beyond <= 1 ? (beyond * beyond) / 2 : beyond - 0.5;
+}
+
 /**
  * @param {ReadonlyArray<Goal>} goals
  * @param {Record<string, Belief>} beliefs
@@ -173,9 +190,11 @@ function prioritize(goals, beliefs) {
       }
       const belief = beliefs[goal.subject];
       if (!belief) return { id: goal.id, priority: 0, known: false };
-      const gap =
-        goal.op === "atLeast" ? goal.target - belief.estimate : belief.estimate - goal.target;
-      return { id: goal.id, priority: goal.weight * clamp(gap / goal.span, 0, 1), known: true };
+      return {
+        id: goal.id,
+        priority: goal.weight * Math.min(shortfall(goal, belief.estimate), 1),
+        known: true,
+      };
     });
 }
 
@@ -192,8 +211,9 @@ function materialOf(thresholds, subject) {
   return unit;
 }
 
-/* Custo solto reprovado: 1e9 em reais somava -1e9 de utilidade. Custo é efeito negativo no
-   sujeito que paga; o risco pesa contra o ganho do próprio plano, e não contra um câmbio fixo. */
+/* Custo solto reprovado: 1e9 em reais somava -1e9 de utilidade. Custo material é efeito
+   negativo no sujeito que paga; tempo, atenção e oportunidade entram quando o mecanismo que os
+   produz existir. O risco pesa contra o ganho do próprio plano, e não contra um câmbio fixo. */
 /**
  * @param {Appraisal} appraisal
  * @param {string} plan
@@ -288,11 +308,12 @@ export function decide({ actor, percepts, plans, appraise, thresholds, tick }) {
     const parts = {};
     let gain = 0;
     for (const goal of byGoal) {
-      const priority = priorityOf.get(goal.id) ?? 0;
+      const belief = beliefs[goal.subject];
       const effect = appraisal.effects[goal.subject] ?? 0;
-      if (priority === 0 || effect === 0) continue;
-      const direction = goal.op === "atLeast" ? 1 : -1;
-      const part = (priority * direction * effect) / goal.span;
+      if (!belief || effect === 0) continue;
+      const before = belief.estimate;
+      const part = goal.weight * (strain(goal, before) - strain(goal, before + effect));
+      if (part === 0) continue;
       parts[`goal:${goal.id}`] = part;
       gain += part;
     }

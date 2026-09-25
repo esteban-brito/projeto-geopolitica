@@ -8879,3 +8879,12 @@ converte em valor é o objetivo do ator. Custo virou efeito negativo no sujeito 
 termo estranho para o motor em vez de ser somado. A mudança de crença passou a ser absoluta, na
 escala que quem compõe declara por sujeito, porque o motor não sabe se 0,01 é voto ou
 probabilidade. A série não se mexeu, e o VONTADE continua sem consumidor no jogo.
+
+### 43 · A1.2, valor não é urgência — 25/09
+
+A revisão aprovou o A1.1, pediu o commit e cobrou o defeito que eu tinha deixado anotado: um
+objetivo cumprido não tinha prioridade, e por isso estragá-lo não custava nada. A saída não
+precisou de número novo. A fórmula antiga, prioridade vezes efeito, era a derivada de uma curva
+de custo avaliada só no ponto de partida. Integrar a mesma derivada ao longo do efeito dá o
+valor: quadrática perto do alvo, reta depois de um span, zero dentro dele. Efeito pequeno vale o
+mesmo de antes, e as seis sondas e as 22 provas antigas não perceberam a troca.

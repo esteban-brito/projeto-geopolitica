@@ -456,3 +456,64 @@ test("TRES ATORES, QUATRO RODADAS: o cenario se refaz igual e cada um decide pel
   const [first] = play();
   assert.deepEqual(first, ["pedir-reuniao", "convocar-bancada", "pedir-reuniao"]);
 });
+
+/** @type {Goal} */
+const CEILING = {
+  id: "teto-da-inflacao",
+  subject: "inflacao",
+  op: "atMost",
+  target: 5,
+  span: 5,
+  weight: 1,
+};
+/** @type {Goal} */
+const RESERVE = {
+  id: "reserva-minima",
+  subject: "reserva",
+  op: "atLeast",
+  target: 100,
+  span: 50,
+  weight: 1,
+};
+const KNOWN = [...news(0.8), heard("inflacao", 3), heard("reserva", 120)];
+
+/**
+ * @param {Record<string, number>} effects
+ * @returns {Record<string, number>}
+ */
+function partsOf(effects) {
+  const [candidate] = run(minister({ goals: [MORE_MONEY, CEILING, RESERVE] }), KNOWN, 0, {
+    plans: [{ id: "plano", actions: [{ kind: "agir", target: null }] }],
+    appraise: () => ({ effects }),
+    thresholds: scaled({ inflacao: 1, reserva: 10 }),
+  }).trace.candidates;
+  return candidate?.parts ?? {};
+}
+
+test("OBJETIVO CUMPRIDO NAO COBRA O QUE FICA DENTRO DO ALVO, e cobra o que sai dele", () => {
+  assert.equal(partsOf({ inflacao: 1 })["goal:teto-da-inflacao"], undefined, "3 -> 4, teto 5");
+  assert.ok((partsOf({ inflacao: 5 })["goal:teto-da-inflacao"] ?? 0) < 0, "3 -> 8, teto 5");
+  assert.equal(partsOf({ reserva: -5 })["goal:reserva-minima"], undefined, "120 -> 115, piso 100");
+  assert.ok((partsOf({ reserva: -40 })["goal:reserva-minima"] ?? 0) < 0, "120 -> 80, piso 100");
+  assert.ok((partsOf({ verba: 20 })["goal:mais-verba"] ?? 0) > 0, "o que ainda falta vale");
+});
+
+test("UM PLANO QUE MELHORA UM OBJETIVO E QUEBRA OUTRO paga pelos dois", () => {
+  /** @type {Plan[]} */
+  const plans = [
+    { id: "so-verba", actions: [{ kind: "cortar-gasto", target: null }] },
+    { id: "verba-com-inflacao", actions: [{ kind: "emitir-moeda", target: null }] },
+  ];
+  /** @type {Appraise} */
+  const both = plan =>
+    plan.id === "so-verba" ? { effects: { verba: 30 } } : { effects: { verba: 30, inflacao: 6 } };
+  const decision = run(minister({ goals: [MORE_MONEY, CEILING] }), KNOWN, 0, {
+    plans,
+    appraise: both,
+    thresholds: scaled({ inflacao: 1 }),
+  });
+  const mixed = decision.trace.candidates.find(c => c.plan === "verba-com-inflacao");
+  assert.ok((mixed?.parts["goal:mais-verba"] ?? 0) > 0);
+  assert.ok((mixed?.parts["goal:teto-da-inflacao"] ?? 0) < 0);
+  assert.equal(decision.actor.intention?.plan, "so-verba");
+});
