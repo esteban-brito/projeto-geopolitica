@@ -62,13 +62,19 @@
 
 ## Fila, em ordem
 
-1. **lote A2** do [mapa](spec/mapa-migracao.md#61-os-lotes): evento mínimo, ação `ASSERT` →
-   evento → crença com conteúdo por referência, identidade do evento. Só começa com o sim
-   dele. A pesquisa R1 (emendas) pode correr em paralelo, sem código. A pesquisa do Gemini
-   segue sem validação; os itens 4, 6 e 7 abaixo têm veredito no §10 do mapa;
-2. **decisão da poda de `tmp/` (Item 5)** — proposta pronta em `tmp/inventario-item5.md`: apagar os
-   18 backups efêmeros (`*.antes.*`, `*.new.*`) e mover scripts ad-hoc dormentes para `tmp/arquivo/`
-   após o sim dele;
+1. **lote A1.1 — endurecimento do VONTADE**, antes do A2: sugestão do ChatGPT aceita por ele;
+   o prompt ainda vai chegar. Não começar sem ele. Depois, **lote A2** do
+   [mapa](spec/mapa-migracao.md#61-os-lotes). A pesquisa R1 (emendas) pode correr em paralelo,
+   sem código. A pesquisa do Gemini segue sem validação; os itens 4, 6 e 7 abaixo têm veredito
+   no §10 do mapa;
+2. **poda do `tmp/` e das branches — espera o sim dele.** Proposta em `tmp/poda-proposta.md`
+   (24/09): de 721 entradas e 806,7 MB, ficam as 59 que algum doc, código, estilo, crédito ou
+   prova cita (117,3 MB, inclusive a evidência de medição citada em `glass.mjs`); as outras 662
+   (689,4 MB) vão para quarentena **fora do repositório**, reversível — `tmp/` está no
+   `.gitignore` e apagar seria irreversível. Branches locais: `acoplamento-e-simulador`,
+   `backup-auditoria-26-08-2026` e `base-ultra` já estão contidas na atual; `base-motor` e
+   `motor-review` são artificiais, dos ultrareviews. Proposta: apagar as cinco só localmente;
+   `main`, a atual e o remoto ficam. A proposta antiga do item 5 (18 backups) está contida nesta;
 3. **achado 69 — investigar oscilação da prova de voo interrompido**. Item 4 concluiu a meta de
    30 asserções com portão verde; o aviso é exercitado por `openNotice`, sem acionador na interface;
 4. **carta do arquivamento** — quando o presidente sobrevive ao plenário, nada diz isso ao
@@ -188,7 +194,9 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   `legislador`: 2 de 39. `ANSWER_TIME = 2` é primeiro chute;
 - **23. Travar custa só o relógio.** Se sair de graça, mexer na memória do relator;
 - **7/8/10/11/12/26/28.** ECLUSA é primeiro chute (`PIVOT 58`, `SPREAD 16`, `THREAT 85`);
-  `bills.mjs` é catálogo morto; `state.norms` cresce sem poda e sem tela; vinculação incide sobre
+  `bills.mjs` não é catálogo morto: o jogo não o usa, mas é o conjunto de moções das provas da
+  ECLUSA (`congress.mjs`) e o catálogo o valida — sai em D1, com essas provas (24/09);
+  `Program.weight` e `Program.lag` ninguém lê — decide-se na adaptação da MALHA; `state.norms` cresce sem poda e sem tela; vinculação incide sobre
   a bruta e no mundo é sobre a líquida (RCL — pede terceira fatia de receita); prêmio de risco só
   morde fora da faixa jogada;
 - **20. A rua precifica voto e mais nada.** SONDA não toca índice, receita nem despesa. É ciclo;
