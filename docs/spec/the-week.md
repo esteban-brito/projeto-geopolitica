@@ -14,8 +14,8 @@
   - jantar político no Alvorada, onde se negocia voto: a noite;
   - entrevista ou fala à imprensa: 1 turno;
   - reunião com todos os ministros: meio dia.
-    Os custos de cada compromisso são [DESENHO] até a medição da agenda real (FALTA: o site do Planalto
-    publica a agenda do dia, mas bloqueia leitura automática; medir no navegador).
+- **Os custos de cada compromisso são [DESENHO]** até a medição da agenda real (FALTA: o site do
+  Planalto publica a agenda do dia, mas bloqueia leitura automática; medir no navegador).
 - **Algumas coisas já vêm marcadas:** votação agendada, prazo legal, reunião do Banco Central, datas
   nacionais.
 
