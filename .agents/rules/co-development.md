@@ -14,7 +14,9 @@
   calibra (`src/data/`), escreve os docs e os ciclos, e define os lotes técnicos.
 - **GPT (Astra / Codex)** audita de fora e desenha sistemas: Ultrareviews independentes de diffs
   (`/code-review ultra`), caça a desequilíbrios e exploits nas 48 meses de simulação, análise de
-  incentivos e discussão de novos sistemas conceituais.
+  incentivos e discussão de novos sistemas conceituais. Qual modelo GPT-6 usar em cada tarefa, e
+  quanto custa, está na [pesquisa 16](../../docs/research/16-openai-gpt6-for-the-project.md). Tudo o que
+  ele trouxer é hipótese até o Claude reproduzir ou conferir na fonte.
 - **Gemini (Antigravity)** centro operacional: recebe lotes fechados (corte de prosa com prova sintática,
   inventários de exports e arquivos, monitoramento), executa a suíte pesada de validação (`validate`,
   `walk`, `monkey`), gerencia o servidor estático e opera tarefas assíncronas no sistema. Não toca

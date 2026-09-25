@@ -157,7 +157,9 @@ Foi executado `npm run simulate -- --quiet`: sonda `agenda`, semente 20270101, s
 - Estado/fila/achados/séries: [handoff.md](handoff.md).
 - Direção e plano: [especificação mestra](spec/master-spec.md), detalhada por
   [jogo em uma página](spec/game-in-one-page.md), [gramática das regras](spec/rules-grammar.md) e
-  [corte vertical](spec/vertical-slice-energy.md); o plano é o [mapa de migração](spec/migration-map.md).
+  [corte vertical](spec/vertical-slice-energy.md); as 40 ações do cargo no
+  [checklist do Presidente](spec/presidential-checklist.md); as telas novas no
+  [mapa das telas](spec/interface-map.md); o plano é o [mapa de migração](spec/migration-map.md).
 - Intenção de cada sistema: [índice dos ciclos](cycles/README.md); ciclo 13 é plano mestre
   histórico, 29 é simplificação e 30 reúne candidatos de profundidade.
 - Doutrina sobre IA e ficção: `docs/adr/`. Pesquisa histórica: `docs/research/`.

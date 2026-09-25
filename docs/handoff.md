@@ -15,7 +15,8 @@
   [mapa de migração](spec/migration-map.md) (o plano). Os fatos estão na
   [pesquisa 14](research/14-the-state-energy-company.md) e na
   [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
-  [checklist do Presidente](spec/presidential-checklist.md). Em conflito, vale o mais recente;
+  [checklist do Presidente](spec/presidential-checklist.md); a interface nova, no
+  [mapa das telas](spec/interface-map.md). Em conflito, vale o mais recente;
 - **próximo passo:** o lote E1.0a está em curso, com ordem dele de 25/09. Passo 1 feito: as 38
   cadeiras de ministro no catálogo (`src/data/cabinet.mjs`, prova em `tests/suites/cabinet.mjs`), e
   os 7 ministros do E0 sentam nelas. Passo 2 feito: `appoint` e `dismiss` no estado (`state.cabinet`,
@@ -133,6 +134,15 @@
 
 ## Decisões vivas
 
+- **25/09, laboratório sem pressa** — ele gosta de experimentos e não tem pressa de entregar o
+  jogo pronto. Toda tela nova nasce em dois ou três protótipos para ele comparar antes do código;
+- **25/09, a interface será quase toda reformulada** — o motor, a regra da visão presidencial e as
+  provas ficam; as telas saem do [mapa das telas](spec/interface-map.md), uma por lote, e a antiga só
+  sai quando a nova cobre tudo. Os três protótipos da posse esperam a escolha dele;
+- **25/09, o GPT-6** — o Astra vale para a revisão adversarial de um lote inteiro e para jogar o
+  jogo como leigo; pesquisa e crítica de desenho vão no Sol, mais barato
+  ([pesquisa 16](research/16-openai-gpt6-for-the-project.md)). Ele tem o Plus (R$ 100 por mês): o
+  Astra está no Codex e no Work, com 5 a 45 mensagens a cada cinco horas;
 - **25/09, foco nacional** (ordem dele) — o que é internacional (geopolítica, guerras, crises lá
   fora) entra numa atualização futura, e o jogo mostra ao jogador a lista das próximas
   atualizações. Até lá, o mundo lá fora fica parado num nível declarado. O jogador escolhe
@@ -425,6 +435,6 @@ of Iron, da Paradox; Geopolitical Simulator.
 
 ## Fontes de modelagem
 
-Campo real em [`docs/research/`](research/) (pesquisas 01 a 15); a 09 é o checklist do cargo e a
+Campo real em [`docs/research/`](research/) (pesquisas 01 a 16); a 09 é o checklist do cargo e a
 04 lista os sete buracos por realismo ganho. Correções do dossiê externo estão na prosa de cada
 arquivo de dado (`parties`, `fiscal`, `macro`, `congress`, `economy`, `turn`).

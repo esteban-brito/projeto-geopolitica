@@ -27,11 +27,11 @@ Passar nas provas unitárias prova a verdade de engenharia; não garante que a r
 
 Os papéis são permanentes na arquitetura do projeto; os modelos e ambientes são os executores padrão atuais:
 
-| Papel                               | Responsabilidade Central                                                                                                                     | Foco de Atuação                      | Executor Padrão Atual         |
-| :---------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- | :---------------------------- |
-| **Arquiteto de Domínio**            | Modela motores (`src/domain/`), escreve testes de especificação antes do código, conduz novos ciclos e refatorações conceituais.             | Integridade de domínio e contratos   | Claude (Claude Code / CLI)    |
-| **Auditor Adversarial / Red Team**  | Caça a exploits sistêmicos, análise de incentivos, desequilíbrios em simulações de 48 meses e Ultrareviews de diffs (`/code-review ultra`).  | Game design e resistência a exploits | GPT (ChatGPT / Codex / Astra) |
-| **Centro Operacional & Engenharia** | Execução de lotes com prova sintática (`so-prosa.mjs`), validação pesada (`validate`), automação local, inventários e tarefas em background. | Execução determinística e portão     | Gemini (Antigravity)          |
+| Papel                               | Responsabilidade Central                                                                                                                             | Foco de Atuação                      | Executor Padrão Atual         |
+| :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- | :---------------------------- |
+| **Arquiteto de Domínio**            | Modela motores (`src/domain/`), escreve testes de especificação antes do código, conduz novos ciclos e refatorações conceituais.                     | Integridade de domínio e contratos   | Claude (Claude Code / CLI)    |
+| **Auditor Adversarial / Red Team**  | Caça a exploits sistêmicos, análise de incentivos, desequilíbrios em simulações de 48 meses e Ultrareviews de diffs (`/code-review ultra`).          | Game design e resistência a exploits | GPT (ChatGPT / Codex / Astra) |
+| **Centro Operacional & Engenharia** | Execução de lotes com prova sintática (`tools/prose-only.mjs`), validação pesada (`validate`), automação local, inventários e tarefas em background. | Execução determinística e portão     | Gemini (Antigravity)          |
 
 ## 4. Regra de Independência entre Autor e Revisor
 

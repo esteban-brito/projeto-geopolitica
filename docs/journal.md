@@ -9049,3 +9049,12 @@ telas, cada uma uma forma de governar, e a regra de que toda tela nova nasce em 
 virar código. Ele gosta de laboratório, e por isso a posse ganhou três estruturas com o mesmo
 visual: a lista com ficha, o plenário que acende e a conversa de uma cadeira por vez. No plenário,
 o partido indica o nome e o Presidente aceita, como na política real.
+
+### 59 · O que o Astra vale — 25/09
+
+Ele perguntou se o ChatGPT Astra ajudaria, e pediu precisão porque é caro. A pesquisa nas páginas
+oficiais achou uma família inteira: Astra, o mais capaz; Sol, perto dele em fatos por um quinto do
+preço; e Luna, o mais barato. No plano Plus, o Astra só existe no Work e no Codex, com 5 a 45
+mensagens a cada cinco horas, e não no chat comum. A recomendação é usar o Astra onde ele é o
+melhor, que é revisar o código de um lote inteiro e jogar o jogo pelo navegador, e deixar o resto no
+Sol. Está na pesquisa 16 e nas regras dos agentes.
