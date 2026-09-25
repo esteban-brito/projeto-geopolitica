@@ -134,6 +134,11 @@
 
 ## Decisões vivas
 
+- **25/09, a semana** (decisões dele) — o botão avança uma semana; dentro dela, 7 dias com manhã,
+  tarde e noite; o Vice pode ir no lugar do Presidente; o Congresso fica de terça a quinta, o que a
+  Câmara confirma: 89% dos 169 dias com votação em plenário desde fev/2025. Ele recusou limite fixo
+  de telefonemas; a proposta de freio realista espera resposta. Tudo em
+  [a semana de governo](spec/the-week.md);
 - **25/09, laboratório sem pressa** — ele gosta de experimentos e não tem pressa de entregar o
   jogo pronto. Toda tela nova nasce em dois ou três protótipos para ele comparar antes do código;
 - **25/09, a interface será quase toda reformulada** — o motor, a regra da visão presidencial e as

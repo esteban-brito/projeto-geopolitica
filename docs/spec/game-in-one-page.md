@@ -32,8 +32,9 @@ ESCOLHO UMA TRANSFORMAÇÃO
 **Semana a semana:** o mundo não espera. Chegam crise, escândalo, pedido, prazo, resultado do que
 você fez antes. O que falta é a sua atenção: a agenda da semana só cabe algumas coisas, e cada uma
 cobra o seu preço. Não existe ponto de ação. Você escolhe entre empurrar o seu projeto e apagar o
-incêndio de hoje. A semana é a direção da especificação (§4); hoje o jogo avança por mês, e a
-semana chega com a trilha B do [mapa de migração](migration-map.md).
+incêndio de hoje. As regras da semana (três turnos por dia, o Congresso de terça a quinta, o que
+acontece com o que você não cuidou) estão em [a semana de governo](the-week.md). Hoje o jogo avança
+por mês; a semana chega com a trilha B do [mapa de migração](migration-map.md).
 
 **O mandato tem janelas reais:** a lua de mel do primeiro ano; as eleições municipais de outubro
 de 2028 e as gerais de 2030, que mudam o comportamento do Congresso; as crises, que tornam possível

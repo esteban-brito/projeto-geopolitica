@@ -9058,3 +9058,12 @@ preço; e Luna, o mais barato. No plano Plus, o Astra só existe no Work e no Co
 mensagens a cada cinco horas, e não no chat comum. A recomendação é usar o Astra onde ele é o
 melhor, que é revisar o código de um lote inteiro e jogar o jogo pelo navegador, e deixar o resto no
 Sol. Está na pesquisa 16 e nas regras dos agentes.
+
+### 60 · A semana de sete dias — 25/09
+
+Ele decidiu o relógio: o botão avança uma semana, e dentro dela há sete dias com manhã, tarde e
+noite para marcar compromissos. Aceitou o Vice indo no lugar do Presidente, e o Congresso só de
+terça a quinta, se fosse realista. Conferi nos dados abertos da Câmara: de 169 dias com votação em
+plenário desde fevereiro de 2025, 150 caíram de terça a quinta, e nenhum no fim de semana. Ele
+recusou limitar telefonemas, com razão: o freio tem de ser o tempo e o desgaste, e não um número. A
+agenda real do Planalto não pôde ser medida, porque o site bloqueia leitura automática.
