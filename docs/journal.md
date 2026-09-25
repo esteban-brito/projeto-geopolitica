@@ -9067,3 +9067,9 @@ terça a quinta, se fosse realista. Conferi nos dados abertos da Câmara: de 169
 plenário desde fevereiro de 2025, 150 caíram de terça a quinta, e nenhum no fim de semana. Ele
 recusou limitar telefonemas, com razão: o freio tem de ser o tempo e o desgaste, e não um número. A
 agenda real do Planalto não pôde ser medida, porque o site bloqueia leitura automática.
+
+### 61 · O telefone — 25/09
+
+Ele aceitou os freios do telefone, se fossem viáveis, e são: ligar ocupa um turno, a ligação vale
+menos que o encontro e não fecha acordo grande, e insistir com a mesma pessoa desgasta. O motor já
+tem onde apoiar cada um: a qualidade da evidência na crença, a regra dos compromissos e a memória.

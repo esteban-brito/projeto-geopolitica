@@ -859,18 +859,18 @@ O ciclo 29 segue aberto (prosa do domínio, poda do `tmp/`) e não bloqueia nada
 
 ### 11.1b Tomadas em 25/09
 
-| decisão                                                                                                                                                                                 |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| o jogo é um sandbox ideológico com regras reais; realismo acima de tudo ([jogo em uma página](game-in-one-page.md); especificação §24)                                                  |
-| o corte completo é a estatal de energia; o E0 fica pausado (commitado depois, com ordem dele)                                                                                           |
-| toda regra real se escreve com as peças da [gramática](rules-grammar.md), com os nomes da especificação                                                                                 |
-| `PROVISIONAL_MEASURE` é rota própria; `DIRECT_ENTERPRISE` é ação nova, como hipótese; `[DESENHO]` é marca da especificação                                                              |
-| a rota fora da ordem fica fora do corte da estatal                                                                                                                                      |
-| ~~o primeiro mês abre com o subsídio do diesel~~: revogada no mesmo dia; o jogo abre com o jogador montando o governo (decisão dele)                                                    |
-| foco nacional; o internacional entra por atualização futura, listada no jogo; o mundo lá fora fica parado até lá                                                                        |
-| o jogador escolhe qualquer partido no início                                                                                                                                            |
-| a semana: o botão avança uma semana; 7 dias com manhã, tarde e noite; o Vice pode ir no lugar do Presidente; o Congresso de terça a quinta, medido ([a semana de governo](the-week.md)) |
-| toda pesquisa com fonte é do Claude; o ChatGPT revisa e não pesquisa                                                                                                                    |
+| decisão                                                                                                                                                                                                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| o jogo é um sandbox ideológico com regras reais; realismo acima de tudo ([jogo em uma página](game-in-one-page.md); especificação §24)                                                                                                                      |
+| o corte completo é a estatal de energia; o E0 fica pausado (commitado depois, com ordem dele)                                                                                                                                                               |
+| toda regra real se escreve com as peças da [gramática](rules-grammar.md), com os nomes da especificação                                                                                                                                                     |
+| `PROVISIONAL_MEASURE` é rota própria; `DIRECT_ENTERPRISE` é ação nova, como hipótese; `[DESENHO]` é marca da especificação                                                                                                                                  |
+| a rota fora da ordem fica fora do corte da estatal                                                                                                                                                                                                          |
+| ~~o primeiro mês abre com o subsídio do diesel~~: revogada no mesmo dia; o jogo abre com o jogador montando o governo (decisão dele)                                                                                                                        |
+| foco nacional; o internacional entra por atualização futura, listada no jogo; o mundo lá fora fica parado até lá                                                                                                                                            |
+| o jogador escolhe qualquer partido no início                                                                                                                                                                                                                |
+| a semana: o botão avança uma semana; 7 dias com manhã, tarde e noite; o Vice pode ir no lugar do Presidente; o Congresso de terça a quinta, medido; telefonar sem limite fixo, com os freios de tempo, peso e desgaste ([a semana de governo](the-week.md)) |
+| toda pesquisa com fonte é do Claude; o ChatGPT revisa e não pesquisa                                                                                                                                                                                        |
 
 ### 11.2 Abertas
 

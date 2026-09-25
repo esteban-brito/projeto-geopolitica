@@ -36,9 +36,13 @@ lê o encontro do seu jeito.
 ## O telefone
 
 - **Receber ligações:** chegam como assuntos na mesa, que a Casa Civil filtra.
-- **Ligar:** proposta em aberto. Ele recusou um limite fixo de ligações. Os freios propostos são
-  realistas: uma rodada de ligações ocupa um turno, a ligação vale menos que o encontro e não fecha
-  acordo grande, e ligar demais para a mesma pessoa desgasta.
+- **Ligar:** sem limite fixo (decisão dele). Três freios, aceitos por ele em 25/09:
+  - **o tempo:** uma rodada de ligações ocupa um turno, e nela cabem várias pessoas;
+  - **o peso:** a ligação vale menos que o encontro; serve para pedir, pressionar ou acalmar, e não
+    fecha acordo grande, que pede encontro;
+  - **o desgaste:** ligações seguidas para a mesma pessoa perdem efeito e começam a irritar.
+- **No motor:** o peso é a qualidade da evidência na crença (A2a); o acordo grande é regra dos
+  compromissos (A3); o desgaste é a memória de cada pessoa. Os números são [DESENHO].
 
 ## O que acontece com o que o Presidente não cuidou
 
