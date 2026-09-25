@@ -102,7 +102,7 @@ A governança dos agentes (Claude, GPT e Gemini) e o contrato canônico estão e
   `tsc`, `grep`). Errada, volta com a regra concreta;
 - bug relatado por ele só entra com reprodução: tela, passo, o que apareceu. Lista tirada de doc
   se apaga;
-- canal: `node tmp/gemini.mjs enviar|ler|fila|limpar`. Mensagem enviada com ele trabalhando vai
+- canal: `node tmp/agents/gemini.mjs enviar|ler|fila|limpar`. Mensagem enviada com ele trabalhando vai
   para a fila e não chega — cheque `fila` antes.
 
 ## Não faça sem pedido

@@ -445,7 +445,7 @@ glifos fora do latim na barra inteira, e uma face carregada.
 resolve faz o navegador tentar buscar e falhar.
 
 **O restante da limpeza:** o modo fosco do botão morreu junto com a bancada de molas, e as
-sondas de uma pergunta só saíram de `tmp/` — o que ficou está inventariado em `tmp/LEIA.md`, com
+sondas de uma pergunta só saíram de `tmp/` — o que ficou está inventariado em `tmp/history/material-readme.md`, com
 a pergunta que cada instrumento responde.
 
 ### O estado final, medido

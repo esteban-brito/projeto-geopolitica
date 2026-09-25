@@ -88,7 +88,7 @@ da foto**, 1,529: forçar o C6 de 1,42 esticaria o papel 7,5% na altura.
 ## `jacaranda.webp` — o tampo
 
 Imagem gerada por IA (ChatGPT) a pedido do responsável do projeto em 11/09/2026 (1916×821) e
-ampliada por ele a 2× em 18/09/2026 (upscale.media, 3832×1642, `tmp/madeira-nova/upscalemedia.png`).
+ampliada por ele a 2× em 18/09/2026 (upscale.media, 3832×1642, `tmp/asset-sources/wood/upscalemedia.png`).
 Sem licença de terceiros. **Entra sem perda nenhuma, ordem dele em 18/09 ("QUERO 0 PERDA"):** WebP
 lossless (7,2 MB), pixel a pixel igual à PNG dele — Sobel 68,5 e croma 72,1 nos dois. Q 0,90 dava
 1,2 MB por −1,5% de aresta e −1,2% de croma, e ele não quis. É servida a 1916 CSS px (`DESIGN`

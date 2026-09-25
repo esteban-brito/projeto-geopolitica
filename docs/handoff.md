@@ -30,7 +30,7 @@
   `agent-brief.md` e `standards.md` §5. Os três primeiros apontam `docs/spec/` como autoridade de
   design e plano em vigor; o índice dos ciclos também. **ADR 0003** explicita empresa;
 - **`tmp/` podado em 24/09, com o sim dele:** ficaram 61 entradas (119 MB) — as 59 citadas por
-  doc, código, estilo, crédito ou prova, e a proposta `tmp/poda-proposta.md`. As outras 662
+  doc, código, estilo, crédito ou prova, e a proposta `tmp/history/prune-proposal.md`. As outras 662
   (693 MB) estão em quarentena fora do repositório, em `Desktop/cld-quarentena-tmp/`, com
   `LEIA.md` listando cada uma; devolver é mover de volta. Nada foi apagado. A mesma quarentena
   recebeu as capturas fora da regra de `captures/` (25 MB) e o `.playwright-mcp/` (33 MB);
@@ -47,7 +47,7 @@
   chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
   `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-screen-cabinet-desk.css` 4%,
   lote 5: `session.mjs` 46% → 19%, `handlers.mjs` 38% → 11%, código idêntico). Item 5
-  inventariado e 18 backups efêmeros arquivados em `tmp/arquivo/`. Item 4: 30 asserções de
+  inventariado e 18 backups efêmeros arquivados em `tmp/history/archive/`. Item 4: 30 asserções de
   interação no passeio (seções 5, 9, 10 e 11) + macaco; as dez novas cobrem verba e aviso
   modal. Portão completo verde em 139,2s; oscilação anterior registrada no achado 69. Lote 6 conferido
   (`glass.mjs` 38% → 18%, `agenda.mjs` 34% → 16%, `area.mjs` 32% → 12%, código idêntico), e o

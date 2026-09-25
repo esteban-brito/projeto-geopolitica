@@ -1,7 +1,7 @@
 # CICLO 27 — ETAPA 3: A CARTA NA MESA E O DOCK
 
 > **Escrito em 18/09/2026, por ordem dele.** Planejado por Claude e Gemini
-> (`tmp/plano-etapa3-gemini.md`), e as três decisões são dele, do mesmo dia:
+> (`tmp/history/plan-stage-3-gemini.md`), e as três decisões são dele, do mesmo dia:
 >
 > 1. **A abertura do envelope é em 2D** — a aba sobe, a carta desliza. Sem `rotateX`: a mesa é
 >    ortográfica, vista de cima, e nenhuma peça ganha ponto de fuga.
@@ -33,14 +33,14 @@ Um dono por arquivo; o Gemini recebe 2 ou 3 tarefas por lote; só o Claude roda 
 
 ## 3 · B · A carta na mesa
 
-| o quê                                                                                                                                                                                 | número                                        | dono   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | ------ |
-| **Duas fotos dele:** envelope creme aberto e rubro aberto, aba levantada, vista de cima, sem sombra, ≥ 2000px (prompts em `tmp/plano-etapa3-gemini.md` §3). Sem elas B não começa     | 2 imagens                                     | ele    |
-| Clicar no envelope: a foto troca para a aberta e a carta desliza para fora (2D), depois sobe ao centro na mola da pasta (`curveOf`, `LIFT`/`DROP`), na escala de leitura de `fitDesk` | 0,30s subida, 0,26s descida — os mesmos       | Claude |
-| Uma por vez: clicar em outro envelope troca; clicar fora ou Esc larga, e o envelope volta a fechado                                                                                   | 0 a 3 cartas por mês                          | Claude |
-| O papel é a `.sheet` (A4, tipografia, textura); o conteúdo é `letterHtml` de `inbox.mjs`: remetente, assunto, corpo, anexos, o botão de decidir e as duas saídas                      | mesmo vocabulário da Caixa — guarda `annexes` | Claude |
-| A Caixa continua como arquivo; o botão da carta leva ao mesmo lugar que leva hoje                                                                                                     | prova: mesmo `target`                         | Gemini |
-| A pilha: a carta que vence abre primeiro se o clique for na pilha e não num envelope                                                                                                  | `silences` decide, a tela pergunta            | Claude |
+| o quê                                                                                                                                                                                     | número                                        | dono   |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | ------ |
+| **Duas fotos dele:** envelope creme aberto e rubro aberto, aba levantada, vista de cima, sem sombra, ≥ 2000px (prompts em `tmp/history/plan-stage-3-gemini.md` §3). Sem elas B não começa | 2 imagens                                     | ele    |
+| Clicar no envelope: a foto troca para a aberta e a carta desliza para fora (2D), depois sobe ao centro na mola da pasta (`curveOf`, `LIFT`/`DROP`), na escala de leitura de `fitDesk`     | 0,30s subida, 0,26s descida — os mesmos       | Claude |
+| Uma por vez: clicar em outro envelope troca; clicar fora ou Esc larga, e o envelope volta a fechado                                                                                       | 0 a 3 cartas por mês                          | Claude |
+| O papel é a `.sheet` (A4, tipografia, textura); o conteúdo é `letterHtml` de `inbox.mjs`: remetente, assunto, corpo, anexos, o botão de decidir e as duas saídas                          | mesmo vocabulário da Caixa — guarda `annexes` | Claude |
+| A Caixa continua como arquivo; o botão da carta leva ao mesmo lugar que leva hoje                                                                                                         | prova: mesmo `target`                         | Gemini |
+| A pilha: a carta que vence abre primeiro se o clique for na pilha e não num envelope                                                                                                      | `silences` decide, a tela pergunta            | Claude |
 
 ## 4 · C · A bandeirinha
 

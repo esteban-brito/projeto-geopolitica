@@ -4,7 +4,7 @@
 > bom polimento em todo o gabinete, mesa, elementos, css, tudo. Você e Gemini trabalhando
 > juntos, bolem um plano antes para eu aprovar."_ Ele aprovou o plano no mesmo dia.
 >
-> O inventário que sustenta os números é do Gemini (`tmp/inventario-gabinete.md`, 18/09).
+> O inventário que sustenta os números é do Gemini (`tmp/history/inventory-cabinet.md`, 18/09).
 
 ---
 
@@ -23,7 +23,7 @@ validate` verde, captura aberta e handoff reescrito. **Um dono por arquivo.** O 
 | 2.1 | Prosa nos comentários. Fica só a alternativa reprovada com o número; sai data, citação, histórico (regra do CLAUDE.md). Meta: ≤ 20% de linhas de prosa | `46-desk.css` 43% (462 linhas) · `cabinet.mjs` 44% · `00-tokens.css` 40% · `40-shell.css` 24% | Claude: `46-desk`, `cabinet.mjs` · Gemini: `00-tokens`, `40-shell` |
 | 2.2 | Tokens mortos                                                                                                                                          | 3: `--bg`, `--paper-edge`, `--letter-ink`                                                     | Gemini                                                             |
 | 2.3 | CSS morto                                                                                                                                              | **0** seletores órfãos — medido, nada a fazer                                                 | —                                                                  |
-| 2.4 | `tmp/`: os scripts sem citação no handoff ou nos créditos vão para `tmp/arquivo/`. Não se apaga; ele decide depois                                     | 460 scripts, 28 citados                                                                       | Gemini                                                             |
+| 2.4 | `tmp/`: os scripts sem citação no handoff ou nos créditos vão para `tmp/history/archive/`. Não se apaga; ele decide depois                             | 460 scripts, 28 citados                                                                       | Gemini                                                             |
 
 ## 3 · Otimização — peso e pintura
 
@@ -40,7 +40,7 @@ validate` verde, captura aberta e handoff reescrito. **Um dono por arquivo.** O 
 | 4.1 | Luz coerente nas 5 peças: a medição da caneta (lado da luz × lado da sombra) em envelope, pasta e telefone; penumbra nunca mais larga que a queda | Claude                        |
 | 4.2 | Bordas das peças giradas (envelope, caneta, telefone): medir serrilhado na aresta                                                                 | Claude                        |
 | 4.3 | Hover/foco/cursor nas 3 peças clicáveis, iguais entre si, foco visível no teclado                                                                 | Gemini levanta, Claude aplica |
-| 4.4 | Prancha lado a lado: o tampo dele × as 3 texturas reais do Poly Haven (CC0, 4096²) em `tmp/madeira-candidatas/`                                   | Claude                        |
+| 4.4 | Prancha lado a lado: o tampo dele × as 3 texturas reais do Poly Haven (CC0, 4096²) em `tmp/asset-sources/wood-candidates/`                        | Claude                        |
 
 ## 5 · O que ele já decidiu em 18/09, e entrou antes do ciclo
 

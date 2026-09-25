@@ -13,5 +13,6 @@ lint nem formatação, e não se edita — se a medição mudar, entra um arquiv
 | `assets/` | os scripts que assaram os assets a partir das fontes originais | `assets/CREDITS.md`           |
 | `gate/`   | os logs do portão que registram o achado 69                    | `docs/handoff.md`             |
 
-Os scripts de `assets/` leem fontes pesadas que continuam fora do git, em `tmp/`. Eles
-documentam como o asset foi feito; não rodam a partir de um clone limpo.
+Os scripts de `assets/` leem fontes pesadas que continuam fora do git, hoje em
+`tmp/asset-sources/`. Eles citam os caminhos da época em que rodaram, documentam como o asset
+foi feito e não rodam a partir de um clone limpo.

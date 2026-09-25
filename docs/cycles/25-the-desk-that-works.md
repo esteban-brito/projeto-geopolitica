@@ -50,7 +50,7 @@ já proíbe tabela e régua desenhada à mão. 📐 **E ela já troca de substâ
 ⛔ **O que muda é a SUBSTÂNCIA embaixo dela, e ela é um token:** 📐 hoje `--sheet` é `#0c1220`,
 uma lâmina azul-escura. **Ninguém escreve peça nova — o papel vira papel.**
 
-📐 **E a bancada já provou a matéria**, em `tmp/gabinete.html`, com 63 controles: jacarandá de
+📐 **E a bancada já provou a matéria**, em `tmp/history/cabinet.html`, com 63 controles: jacarandá de
 cinco camadas, couro de três, a folha A4 pelo Manual de Redação e o relevo seco do
 Decreto nº 80.739/1977.
 

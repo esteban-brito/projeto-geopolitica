@@ -13,7 +13,7 @@ e empresas fictícias com inspiração clara na vida real. Essa direção preval
 anterior das tarefas de manutenção. Quantidade de pastas, modelo de atores e piloto abaixo
 são propostas do Codex; ainda não são sistemas implementados nem escolhas aprovadas pelo usuário.
 
-Este documento substitui o rascunho `tmp/world-design-proposal.md` como referência desta proposta.
+Este documento substitui o rascunho `tmp/history/world-design-proposal.md` como referência desta proposta.
 O estado do trabalho e a fila continuam no [handoff](handoff.md).
 
 A [pesquisa entregue pelo Gemini](research/13-real-brazil-institutions.md) recebeu apenas triagem

@@ -48,12 +48,12 @@ O Diretor do Jogo (usuário) é a autoridade máxima de design.
 
 1. O código sem comentário sai **idêntico** antes e depois (`node tools/prose-only.mjs <arquivo>`);
 2. `npm run check`, `npm run types` e `npm test` verdes;
-3. o resultado vai para `tmp/para-claude.md` com os números (prosa antes → depois por arquivo);
+3. o resultado vai para `tmp/agents/to-claude.md` com os números (prosa antes → depois por arquivo);
 4. parar. O Claude confere e aceita, ou devolve com a regra.
 
 ## 5. Canal
 
-O Claude fala pelo `tmp/gemini.mjs` (enviar / ler / fila / limpar). Mensagem enviada com o
+O Claude fala pelo `tmp/agents/gemini.mjs` (enviar / ler / fila / limpar). Mensagem enviada com o
 Gemini trabalhando fica na fila e não é lida — o Gemini termina o que está fazendo e só então
 lê a próxima ordem.
 

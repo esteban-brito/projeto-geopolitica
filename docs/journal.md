@@ -503,7 +503,7 @@ URI é o **escape correto** de `%`. **Um conferidor que grita falso é pior que 
 são cinco camadas com sorteio determinístico: faixas de alturas próprias, linha de anel de
 espessura variável, poros, o arco central e o grão fino.
 
-**E a montagem do Gabinete começou.** O passo 1 — o tampo — está de pé em `tmp/gabinete.html`, com
+**E a montagem do Gabinete começou.** O passo 1 — o tampo — está de pé em `tmp/history/cabinet.html`, com
 33 controles. ⛔ **Ele vai girar antes do passo 2**, e pediu com todas as letras: _"passo a passo,
 com calma"_.
 
@@ -7684,7 +7684,7 @@ Entrega da v2 do telefone pelo Claude alinhada à câmera de 78° do Gabinete (v
 
 ### Medição do engasgo da pasta nesta máquina — Achado 65 (antes da revisão das sombras)
 
-Medição com `tmp/jank.mjs` no Chromium com aceleração gráfica ativa (`--enable-gpu`, `--ignore-gpu-blocklist`, `--enable-gpu-rasterization`) em viewport 1440×980.
+Medição com `tmp/history/jank.mjs` no Chromium com aceleração gráfica ativa (`--enable-gpu`, `--ignore-gpu-blocklist`, `--enable-gpu-rasterization`) em viewport 1440×980.
 
 - Rodada fria: pior quadro 46.4ms, p95 22.6ms, 67 fps, 3 quadros perdidos.
 - Três rodadas aquecidas:
@@ -7714,7 +7714,7 @@ Unificação das sombras da mesa sob uma fonte de luz única declarada em `style
 - O filtro `#wax-shadow` do SVG do lacre foi substituído por `drop-shadow` CSS em `.envelope__seal`.
 - Telefone ampliado em 9% (caixa de tinta 278×283px) e reposicionado para `top: 45%`, com centralização dinâmica pelo `fitDesk` no vão entre a pasta e a margem da janela.
 
-Medição de desempenho do voo após a penumbra inclinada (`tmp/jank.mjs`, 3 rodadas):
+Medição de desempenho do voo após a penumbra inclinada (`tmp/history/jank.mjs`, 3 rodadas):
 
 1. `{"pior": 18.2, "p95": 18.1, "fps": 68, "perdidos": 0}`
 2. `{"pior": 18.6, "p95": 18.1, "fps": 68, "perdidos": 0}`
@@ -7776,7 +7776,7 @@ Com a remoção da animação e fixação do ângulo estático no `initial-value
 - Pinturas: 4 (redução de 99%).
 - Carga de GPU: 12%.
 - Pior quadro medido: 20,1ms caiu para 4,2ms.
-- Medição de engasgo (`tmp/jank.mjs`): p95 de 21ms com 4 a 6 quadros perdidos caiu para p95 de 4,3ms e 0 quadros perdidos (mediana do Gemini: 8,3ms pior / 4,3ms p95 / 0 perdidos).
+- Medição de engasgo (`tmp/history/jank.mjs`): p95 de 21ms com 4 a 6 quadros perdidos caiu para p95 de 4,3ms e 0 quadros perdidos (mediana do Gemini: 8,3ms pior / 4,3ms p95 / 0 perdidos).
 
 A textura de couro e a fibra de celulose não custam desempenho sem o passeio da luz no `:root`. O teste anterior de 13/09 media a animação do ângulo, não o grão da textura.
 
@@ -7800,7 +7800,7 @@ Ele viu a primeira versão na tela e disse que o telefone continuava destoando: 
 
 ### A terceira versão: imagem gerada
 
-Ele propôs gerar a imagem do telefone com IA para resolver ângulo e licença de uma vez. Duas imagens foram produzidas: uma gerada pelo Gemini e outra pelo ChatGPT (`tmp/fone-chatgpt.png`, 1323×1189 com canal alfa). A do ChatGPT foi a escolhida: visão zênite real de 90° (como a mesa), corpo maior preenchendo o quadro (~1000px contra ~500px), teclas e visor de número lisos em branco, acabamento em plástico fosco e sem sombra no chão. Com a imagem gerada por IA, a foto do Wikimedia Commons e o crédito CC BY-SA 3.0 saem do repositório.
+Ele propôs gerar a imagem do telefone com IA para resolver ângulo e licença de uma vez. Duas imagens foram produzidas: uma gerada pelo Gemini e outra pelo ChatGPT (`tmp/asset-sources/phone-chatgpt.png`, 1323×1189 com canal alfa). A do ChatGPT foi a escolhida: visão zênite real de 90° (como a mesa), corpo maior preenchendo o quadro (~1000px contra ~500px), teclas e visor de número lisos em branco, acabamento em plástico fosco e sem sombra no chão. Com a imagem gerada por IA, a foto do Wikimedia Commons e o crédito CC BY-SA 3.0 saem do repositório.
 
 O ChatGPT gerou uma segunda, mais zenital, e ele a mandou em seguida. Ficou a segunda: 720×639 no arquivo, 420px na tela (300 media o mesmo que o envelope; 500 ele achou demais), com o corpo no meio do vão e o cordão por baixo da pasta quando o vão é curto. Por ordem dele os algarismos entraram por cima da imagem, cada um no centro da tecla medida no arquivo, a 11px. O passeio reprovou o contraste do "8" em 4,27 porque a caixa do algarismo era a célula inteira e o vermelho do corpo entrava na amostra; a caixa virou a da tecla e passou.
 
@@ -8037,7 +8037,7 @@ telefone, faixa dura de 1px nas duas, vazamento no topo de 0,15 contra 0,13, e a
 
 ### O canal com o Gemini, e o que ele entregou
 
-O canal voltou por CDP na porta de depuração do Antigravity (`tmp/gemini.mjs enviar|ler`), na
+O canal voltou por CDP na porta de depuração do Antigravity (`tmp/agents/gemini.mjs enviar|ler`), na
 conversa `883734d6-…`. Dono declarado por arquivo: `assets/`, `docs/evidence/assets/trim-edge.mjs`,
 `46-desk.css` e `00-tokens.css` meus; `tests/browser/walk.mjs` dele.
 
@@ -8320,7 +8320,7 @@ perguntas: a cena não encolhe mais — "a opção que vise o futuro", com o men
 em mente —, então `fitDesk` mede a faixa vertical das peças e só encolhe quando uma sairia da
 janela, e desloca a cena para centrar a faixa (`--room-dy`). Na janela dele a cena foi de 0,9488
 para 1:1. O telefone fica; os algarismos, que em DOM saíam tortos e não vibravam com o toque,
-foram assados na foto. Portão verde. O Gemini fez o inventário (`tmp/inventario-gabinete.md`):
+foram assados na foto. Portão verde. O Gemini fez o inventário (`tmp/history/inventory-cabinet.md`):
 0 seletores órfãos, 3 tokens mortos, 43% de prosa em `46-desk.css`, 460 scripts em `tmp/`.
 
 ### 7 · Bloco 1 do ciclo 26 fechado — 18/09, tarde
@@ -8339,7 +8339,7 @@ Otimização fechou sem mudar código: preload do tampo piorou a pasta visível 
 `will-change` animam de verdade; resize gasta 2 quadros. Polimento: a luz das quatro peças medida
 coerente (sombra sempre mais forte do lado da sombra, 1:3 a 1:28); anel de foco unificado com o da
 base, e a pasta entrou no teclado. O hover que o Gemini propôs (brightness) não entrou. A prancha
-do tampo dele contra as três texturas reais do Poly Haven está em `tmp/prancha-tampo.png`.
+do tampo dele contra as três texturas reais do Poly Haven está em `tmp/asset-sources/desk-board.png`.
 As arestas giradas medidas pelo Gemini: 1,7 a 1,9 px de transição, antialiasing íntegro. Ciclo 26
 fechado; ele mandou commitar e planejar a Etapa 3 com o Gemini.
 
@@ -8714,7 +8714,7 @@ doze endereços, a rajada de cinco trocas, e a carta clicada à vista nos dois r
 A de 980 caiu com a rolagem sabotada; a de 900 mostrou que ali quem rola é a página e a rolagem
 do `paint.mjs` nunca dispara. Vinte asserções novas, dez a menos que a meta. Os tokens acabaram
 antes do item 4 fechar; o Gemini termina o lote 4 e o item 5 sozinho, e a próxima sessão
-começa lendo o que ele deixou em `tmp/para-claude.md`.
+começa lendo o que ele deixou em `tmp/agents/to-claude.md`.
 
 ### 32 · Coordenação Codex/Gemini e as dez asserções restantes — 23/09, noite
 
@@ -8748,7 +8748,7 @@ nenhum commit ou push foi feito.
 O usuário declarou que considera o jogo atual malfeito e chato. Pediu estudo para reformular
 os ministérios e esclareceu que quer pessoas com personalidades, inteligência e iniciativa,
 além de empresas fictícias com inspiração real. O Codex estudou a agregação dos programas,
-ELENCO e os ciclos 13, 17, 20 e 30, e escreveu um primeiro rascunho em `tmp/world-design-proposal.md`.
+ELENCO e os ciclos 13, 17, 20 e 30, e escreveu um primeiro rascunho em `tmp/history/world-design-proposal.md`.
 
 O usuário trouxe a revisão do Gemini no arquivo `A proposta do Codex toca no ponto.md` e autorizou
 avaliar e registrar. Foram aproveitados o cuidado com escopo e a diferenciação de programas.
@@ -8775,7 +8775,7 @@ sucesso garantido, mantendo explícito que o horizonte de 48 meses ainda não fo
 Essas decisões foram incorporadas a `docs/world-design.md` e ao handoff. A consulta inicial
 documentou o caso do IOF de 2025; não confirmou a agenda presidencial de 23/09/2026.
 O usuário pediu registrar tudo e encarregar Gemini de análise e pesquisa profunda atualizada.
-O briefing `tmp/gemini-real-brazil-brief.md` foi entregue pelo canal Antigravity, sem fila.
+O briefing `tmp/history/gemini-real-brazil-brief.md` foi entregue pelo canal Antigravity, sem fila.
 Gemini recebeu exclusividade sobre `docs/research/13-real-brazil-institutions.md`, com leitura e
 pesquisa autorizadas, sem editar outros arquivos ou executar validação. Codex mantém os docs
 canônicos e revisará fontes, atualidade e conclusões. Entrega ainda pendente neste registro.

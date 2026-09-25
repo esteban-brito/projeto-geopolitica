@@ -4,8 +4,8 @@
 > deixar tudo mais barato e eficiente, para você ter mais precisão também na hora de programar,
 > toda hora você cria bugs."_ Ele aprovou o uso do Gemini para o que o Gemini faz bem.
 >
-> Os números são de 21/09 (`tmp/inventario-simplificar.mjs`, `tmp/inventario-3.mjs`,
-> `tmp/custo-pintura.mjs`).
+> Os números são de 21/09 (`tmp/history/inventory-simplify.mjs`, `tmp/history/inventory-3.mjs`,
+> `tmp/history/paint-cost.mjs`).
 
 ---
 

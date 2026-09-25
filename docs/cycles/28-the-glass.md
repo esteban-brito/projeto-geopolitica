@@ -6,7 +6,7 @@
 > praticamente idêntico ao liquid glass da Apple, o último mais atualizado."_
 >
 > O estudo: a [pesquisa 12](../research/12-advanced-apple-liquid-glass.md) do Gemini (a ótica
-> do visionOS e o que a Web faz), o inventário dele (`tmp/vidro-inventario.md`), e o que o
+> do visionOS e o que a Web faz), o inventário dele (`tmp/history/glass-inventory.md`), e o que o
 > projeto já mediu sobre vidro (abaixo, §2). Este ciclo é escrito por Claude e Gemini.
 
 ---
@@ -55,7 +55,7 @@ outro filtro.
 | sombra         | contato + penumbra pela luz da sala      | a mesma família da mesa (`--cast-*`)                                                             |
 | troca de tela  | vidro sem desfoque enquanto a troca dura | a mesma regra, agora para toda peça vestida (a lente é `backdrop-filter` também)                 |
 
-**Os números propostos pelo Gemini** (`tmp/vidro-inventario.md` §3, com as fontes dele — HIG
+**Os números propostos pelo Gemini** (`tmp/history/glass-inventory.md` §3, com as fontes dele — HIG
 Materials e WWDC23 10076): `blur(24px) saturate(1.85) brightness(1.05)`; corpo `rgba(255,255,255,
 0.05)` no topo e `rgba(18,22,28, 0.42)` no dock; aresta em gradiente de Fresnel 0,32 → 0,06 em vez
 da borda uniforme de 0,14; bisel topo 0,40 / meio 0,08 / base 0,18; squircle n = 4,4 (s 0,6);

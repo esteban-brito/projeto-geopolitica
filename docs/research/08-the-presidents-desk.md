@@ -173,7 +173,7 @@ mobiliário que está naquela sala.**
 ⚠ **E ela não entra como fotografia.** Foto de banco de imagens tem dono, peso e não escala. **O
 veio é gerado**: turbulência assimétrica em SVG — frequência baixa no eixo X e alta no Y produz a
 listra horizontal ondulada —, deslocada sobre um padrão de faixas. 📐 **Quatro tentativas foram
-provadas em `tmp/madeira.html`**, e a que passou tem `baseFrequency 0,0022 × 0,045`, 5 oitavas e
+provadas em `tmp/history/wood.html`**, e a que passou tem `baseFrequency 0,0022 × 0,045`, 5 oitavas e
 deslocamento 52.
 
 📐 **Duas coisas medidas na hora de aplicar:**
@@ -407,7 +407,7 @@ chapada de preto.** A regra ficou escrita na função: **quem chama não pré-es
 
 📗 **A norma manda texto preto em papel branco.** ⚠ **E o `standards.md` do projeto diz que papel
 branco em ambiente escuro é um buraco de luz.** As duas estão certas no terreno delas. **O
-provador `tmp/papel.html` deixa a claridade da folha num controle** — 97% é quase branco, e dá
+provador `tmp/history/paper.html` deixa a claridade da folha num controle** — 97% é quase branco, e dá
 para descer sem perder a fidelidade.
 
 ---
