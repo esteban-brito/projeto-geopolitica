@@ -216,3 +216,19 @@ test("O PARTIDO ATRAVESSA O SAVE, e o mandato inteiro se refaz com ele", () => {
     }),
   );
 });
+
+test("O SAVE SEM DECRETO ABRE, e o decreto em vigor e nenhum", () => {
+  /* O decreto entrou como o partido: fora dos obrigatorios, para nao recusar a partida em
+     andamento. Um save anterior a ele abre, joga, e o mes seguinte ja grava o decreto. */
+  const antigo = JSON.parse(serialize(createState(7)));
+  delete antigo["decree"];
+  const lido = deserialize(JSON.stringify(antigo));
+  assert.ok(lido.ok, lido.ok ? "" : lido.reason);
+  if (lido.ok) assert.deepEqual(playMonth(lido.state).state.decree, []);
+
+  const torto = JSON.parse(serialize(createState(7)));
+  torto["decree"] = "health";
+  const recusado = deserialize(JSON.stringify(torto));
+  assert.equal(recusado.ok, false);
+  if (!recusado.ok) assert.ok(recusado.reason.includes("decree"));
+});

@@ -42,9 +42,19 @@ const SIGN_PATH =
  * @param {number} input.month o mes do mandato, de onde saem a data e o ano
  * @param {ReadonlyArray<{ id: string, label: string, short?: string }>} input.areas as oito
  * @param {ReadonlyArray<string>} input.protect quais o decreto deste mes poupa
+ * @param {import("./moment.mjs").MomentView | null} [input.moment] na reunião do corte, o corte de cada pasta
  * @returns {string}
  */
-export function decreeHtml({ room, ratio, president, chief, month, areas, protect }) {
+export function decreeHtml({
+  room,
+  ratio,
+  president,
+  chief,
+  month,
+  areas,
+  protect,
+  moment = null,
+}) {
   /* 📗 §5.1.3: mes em MINUSCULA, sem a sigla da UF e sem zero a esquerda no dia. O dia 5 e o
      do fecho do mes anterior, e nao uma escolha. */
   /* ⛔ E O ANO SAI DO MOTOR: ele estava teclado aqui, no parecer e em `monthParts`, e o
@@ -56,10 +66,15 @@ export function decreeHtml({ room, ratio, president, chief, month, areas, protec
   const folders = areas
     .map(area => {
       const spared = protect.includes(area.id);
+      const cut = moment?.briefing.areas.find(item => item.id === area.id)?.cut ?? 0;
+      const mark =
+        moment && !spared && cut > 0
+          ? ` <small class="decree__cut">${escapeHtml(UI.moment.decreeCut(percent(cut)))}</small>`
+          : "";
       return (
         `<button class="decree" type="button" aria-pressed="${spared}" ` +
         `data-protect="${escapeHtml(area.id)}">` +
-        `${escapeHtml(area.short ?? area.label)}</button>`
+        `${escapeHtml(area.short ?? area.label)}${mark}</button>`
       );
     })
     .join("");

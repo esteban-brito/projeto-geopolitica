@@ -198,6 +198,64 @@ export function president({ seed, people, firstNames, surnames }) {
 }
 
 /**
+ * @typedef {object} Minister
+ * @property {string} id
+ * @property {string} area
+ * @property {string} name
+ * @property {"f" | "m"} gender
+ * @property {number} riskAversion
+ * @property {number} persistence
+ * @property {number} hope - o prior de que o Presidente aceite o que ele pede
+ * @property {number} fiscal - o peso do espaço fiscal contra a verba da pasta
+ */
+
+/**
+ * OS MINISTROS DO CORTE: mesma semente, mesmas pessoas. O cargo vem do papel; a semente escolhe
+ * o nome e os traços dentro das faixas dele.
+ * @param {object} input
+ * @param {number} input.seed
+ * @param {ReadonlyArray<import("../../data/ministers.mjs").MinisterRole>} input.roles
+ * @param {ReadonlyArray<string>} input.taken - nomes já usados na partida
+ * @param {ReadonlyArray<string>} input.firstNames
+ * @param {ReadonlyArray<string>} input.surnames
+ * @param {ReadonlyMap<string, "f" | "m">} input.genderOf
+ * @returns {Minister[]}
+ */
+export function ministers({ seed, roles, taken, firstNames, surnames, genderOf }) {
+  /** @type {Set<string>} */
+  const used = new Set();
+  for (const name of taken) {
+    const [first = "", ...rest] = name.split(" ");
+    used.add(first);
+    used.add(rest.join(" "));
+  }
+  return roles.map(role => {
+    const base = `${seed}:${role.id}`;
+    let first = "";
+    let last = "";
+    for (let attempt = 0; attempt < firstNames.length * surnames.length; attempt++) {
+      first = firstNames[Math.floor(hashed(`${base}:first:${attempt}`) * firstNames.length)] ?? "";
+      last = surnames[Math.floor(hashed(`${base}:last:${attempt}`) * surnames.length)] ?? "";
+      if (first && last && !used.has(first) && !used.has(last)) break;
+    }
+    used.add(first);
+    used.add(last);
+    /** @param {string} trait @param {number} min @param {number} max */
+    const pick = (trait, min, max) => min + (max - min) * hashed(`${base}:${trait}`);
+    return {
+      id: role.id,
+      area: role.area,
+      name: `${first} ${last}`,
+      gender: genderOf.get(first) ?? "m",
+      riskAversion: pick("risk", role.riskMin, role.riskMax),
+      persistence: pick("persist", role.persistMin, role.persistMax),
+      hope: pick("hope", role.hopeMin, role.hopeMax),
+      fiscal: pick("fiscal", role.fiscalMin, role.fiscalMax),
+    };
+  });
+}
+
+/**
  * Se fosse outro fato, existiriam duas versoes do que aconteceu naquele mes — e elas
  * divergiriam exatamente no mes em que o teto fechou, que e o mes em que o jogador precisa
  * entender por que todo mundo o abandonou.

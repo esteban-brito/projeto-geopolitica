@@ -80,6 +80,12 @@ export {
   HORIZON,
 } from "../application/turn.mjs";
 export { compose, honour, spendOf } from "../application/agenda.mjs";
+/* O corte do bimestre (E0): a reunião e o ensaio passam pela porta, e a tela não refaz a conta. */
+export { briefingOf, momentOf } from "../application/contingency.mjs";
+/** @typedef {import("../application/contingency.mjs").Step} Step */
+/** @typedef {import("../application/contingency.mjs").Stance} Stance */
+/** @typedef {import("../application/contingency.mjs").Briefing} Briefing */
+export { rehearsal, upkeepOf } from "../application/scenario.mjs";
 /* O caminho da tramitacao, em ordem: a tela desenha onde o texto esta, e nao redeclara a fila. */
 export { STAGES } from "../application/passage.mjs";
 /* ⚠ O CALENDARIO E A PRIMEIRA DATA DO JOGO, e ele passa pela porta como funcao pura de `month`:

@@ -23,6 +23,7 @@ import {
   settlement,
   situationOf,
 } from "../../src/application/turn.mjs";
+import { calendarOf } from "../../src/application/calendar.mjs";
 import { CATALOG } from "../../src/data/catalog.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";
@@ -1108,6 +1109,23 @@ test("PROTEGER TUDO ESTOURA A BOLSA — o preco e a meta, e nao um muro", () => 
   assert.ok(com < sem, `o primario com decreto deu ${com} e sem decreto ${sem}`);
 });
 
+test("A EMENDA NAO PERDE MAIS QUE A PROPORCAO DAS DEMAIS DISCRICIONARIAS (CF art. 166, par. 18)", () => {
+  const state = createState();
+  const funding = Object.fromEntries(CATALOG.parties.map(party => [party.id, 1]));
+  const sem = settlement(state, { levels: OVER_ASK, funding });
+  assert.ok(sem.ratio < 1 && sem.promisedCost > 0, "o mes precisa ter corte e emenda");
+  const even = sem.paidCost / sem.promisedCost;
+
+  for (const protect of [["health"], CATALOG.areas.map(area => area.id)]) {
+    const com = settlement(state, { levels: OVER_ASK, funding, protect });
+    assert.ok(
+      Math.abs(com.paidCost / com.promisedCost - even) < EPSILON,
+      `com ${protect.length} pasta(s) protegida(s) a emenda recebeu ${com.paidCost / com.promisedCost}, e a proporcao geral e ${even}`,
+    );
+    assert.ok(com.ratio <= sem.ratio + EPSILON, "quem nao foi protegido absorve o resto do corte");
+  }
+});
+
 test("SEM DECRETO O RATEIO CONTINUA PROPORCIONAL — a razao e caixa sobre demanda", () => {
   const share = settlement(createState(), { levels: OVER_ASK });
   assert.ok(Math.abs(share.ratio - share.room / share.demand) < EPSILON);
@@ -1117,4 +1135,17 @@ test("SEM DECRETO O RATEIO CONTINUA PROPORCIONAL — a razao e caixa sobre deman
      caixa de nenhum mes que ja existia. */
   const pedido = share.demand - share.promisedCost;
   assert.ok(Math.abs(share.allocatedTotal - pedido * share.ratio) < EPSILON);
+});
+
+test("O DECRETO DE PROTECAO VALE ATE O PROXIMO RELATORIO BIMESTRAL, que o renova", () => {
+  /** @param {number} month */
+  const report = month => calendarOf(month).now.some(landmark => landmark.id === "bimestral");
+  let state = createState();
+  const seen = [];
+  for (let step = 0; step < 4; step++) {
+    state = playMonth(state, { protect: ["health", "nao-existe"] }).state;
+    assert.deepEqual(state.decree, report(state.month) ? [] : ["health"]);
+    seen.push(report(state.month));
+  }
+  assert.ok(seen.includes(true) && seen.includes(false), "os dois casos precisam aparecer");
 });

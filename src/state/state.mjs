@@ -83,6 +83,7 @@ import { streamFrom } from "./random.mjs";
  * @property {{ name: string, treatment: "senhor" | "senhora" } | null} president
  * @property {Platform} platform
  * @property {string | null} [party]
+ * @property {string[]} [decree] - as áreas que o decreto de contingenciamento protege; vale até o próximo relatório bimestral, e ausente é nenhuma
  * @property {number} month
  * @property {Record<string, number>} mood
  * @property {Record<string, number>} loyalty
@@ -147,6 +148,7 @@ export function createState(
     president,
     platform: { priority: null, fiscal: null, reform: null },
     party,
+    decree: [],
     month: OPENING_MONTH,
     mood: opinionOpening(segments),
     loyalty: Object.fromEntries(
@@ -228,6 +230,7 @@ export function createState(
  * @property {number | null} impeachment
  * @property {number | null} fallen
  * @property {Record<string, number>} memory
+ * @property {string[]} decree
  * @property {Stream} stream
  */
 
@@ -254,6 +257,7 @@ export function reduce(state, action) {
         impeachment: action.impeachment,
         fallen: action.fallen,
         memory: action.memory,
+        decree: action.decree,
         streams: { ...state.streams, congress: action.stream },
       });
     }

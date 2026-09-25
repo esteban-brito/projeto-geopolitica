@@ -464,13 +464,24 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   /* Protegido sai dos dois lados da razao: blindar tudo estoura a meta primaria. */
   const shielded = [...protect].reduce((sum, id) => sum + (asked[id] ?? 0), 0);
   const cuttable = demand - shielded;
-  const ratio = demand <= room ? 1 : cuttable <= 0 ? 0 : clamp((room - shielded) / cuttable, 0, 1);
+  const pooled = demand <= room ? 1 : cuttable <= 0 ? 0 : clamp((room - shielded) / cuttable, 0, 1);
+  /* CF art. 166, § 18 (EC 100/2019): a emenda só perde "até a mesma proporção da limitação
+     incidente sobre o conjunto das demais despesas discricionárias". Rateada junto das pastas não
+     protegidas, ela absorvia o corte de quem foi poupado: 56,5% com as oito pastas protegidas. */
+  const capped = shielded > 0 && demand > room;
+  const amended = capped ? Math.max(pooled, room / demand) : pooled;
+  const unshielded = askedTotal - shielded;
+  const ratio = !capped
+    ? pooled
+    : unshielded <= 0
+      ? 0
+      : clamp((room - shielded - promisedCost * amended) / unshielded, 0, 1);
 
   /** @type {Record<string, number>} */
   const paid = {};
   for (const party of parties) {
     /* Emenda entra no contingenciamento (referencia real: R$ 4,71 bi). */
-    paid[party.id] = (promised[party.id] ?? 0) * ratio;
+    paid[party.id] = (promised[party.id] ?? 0) * amended;
   }
 
   const levels = honour({ programs, levels: held, ratio, bands, protect });
@@ -565,7 +576,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
 
     protect,
     shielded,
-    paidCost: promisedCost * ratio,
+    paidCost: promisedCost * amended,
     /* Empenho sai do rateio efetivo: proporcional e por area dao o mesmo numero ate contingenciar. */
     allocatedTotal: honoured.total,
   };
@@ -1360,6 +1371,7 @@ export function playMonth(state, orders = {}, options = {}) {
     paidCost,
     allocatedTotal,
     ratio,
+    protect,
     requestedBands,
   } = settlement(state, orders, catalog);
 
@@ -1562,6 +1574,11 @@ export function playMonth(state, orders = {}, options = {}) {
     state: reduce(state, {
       type: "monthResolved",
       loyalty,
+      /* O decreto vale até o relatório seguinte, que o renova (LRF art. 9º). Morrer com o mês
+         obrigava a remarcar no mês do meio a escolha que o relatório já tinha feito. */
+      decree: calendarOf(state.month + 1).now.some(landmark => landmark.id === "bimestral")
+        ? []
+        : [...protect].sort(),
       fiscal: nextFiscal,
       macro: economy.macro,
       mood: opinion.mood,

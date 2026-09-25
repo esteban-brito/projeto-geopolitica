@@ -15,6 +15,7 @@ import {
 } from "./cast.mjs";
 import { FISCAL, FISCAL_SCHEMA } from "./fiscal.mjs";
 import { MACRO, MACRO_SCHEMA } from "./macro.mjs";
+import { CONTINGENCY, CONTINGENCY_SCHEMA, MINISTERS, MINISTER_SCHEMA } from "./ministers.mjs";
 import { OPINION, OPINION_SCHEMA, SEGMENTS, SEGMENT_SCHEMA } from "./opinion.mjs";
 import { PARTIES, PARTY_SCHEMA } from "./parties.mjs";
 import { PLEDGES, PLEDGE_SCHEMA } from "./platform.mjs";
@@ -44,6 +45,8 @@ export const CATALOG = {
   genderOf: GENDER_OF,
   surnames: SURNAMES,
   ambitions: AMBITIONS,
+  ministers: MINISTERS,
+  contingency: CONTINGENCY,
 };
 
 /**
@@ -70,6 +73,8 @@ export function catalogViolations() {
     ...collectionViolations(ARCHETYPE_SCHEMA, ARCHETYPES, "archetypes"),
     ...violations(CAST_SCHEMA, CAST, "cast"),
     ...collectionViolations(LOBBY_SCHEMA, LOBBIES, "lobbies"),
+    ...collectionViolations(MINISTER_SCHEMA, MINISTERS, "ministers"),
+    ...violations(CONTINGENCY_SCHEMA, CONTINGENCY, "contingency"),
     ...violations(PRESSURE_SCHEMA, PRESSURE, "pressure"),
     /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. */
     ...danglingAreas(),

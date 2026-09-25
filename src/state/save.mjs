@@ -111,6 +111,10 @@ export function deserialize(text) {
     ["impeachment", asMonth, "numero ou null"],
     ["fallen", asMonth, "numero ou null"],
   ];
+  /* Fora dos obrigatorios, como o partido: um save anterior ao decreto abre sem ele. */
+  if (candidate["decree"] !== undefined && !asArr(candidate["decree"])) {
+    return { ok: false, reason: `"decree" deveria ser array` };
+  }
 
   for (const entry of shape) {
     const field = /** @type {string} */ (entry[0]);

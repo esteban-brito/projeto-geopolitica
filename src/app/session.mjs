@@ -2,7 +2,7 @@
 
 import { createState } from "../state/state.mjs";
 import { deserialize, serialize } from "../state/save.mjs";
-import { CATALOG, bandsOf } from "../public/index.mjs";
+import { CATALOG, bandsOf, rehearsal, upkeepOf } from "../public/index.mjs";
 
 /** @typedef {import("../state/state.mjs").GameState} GameState */
 /** @typedef {import("../public/index.mjs").Report} Report */
@@ -53,8 +53,25 @@ export function persist() {
   } catch {}
 }
 
-/** @returns {{ state: GameState, refused: boolean }} */
+/* O ensaio do E0 abre pelo endereço (`?ensaio=<semente>`) e segue como partida comum. */
+function rehearsed() {
+  try {
+    const seed = Number(new window.URLSearchParams(window.location.search).get("ensaio"));
+    return Number.isInteger(seed) && seed > 0 ? seed : null;
+  } catch {
+    return null;
+  }
+}
+
+/** @returns {{ state: GameState, refused: boolean, rehearsal?: boolean }} */
 function resume() {
+  const seed = rehearsed();
+  if (seed !== null) {
+    try {
+      window.localStorage.removeItem(DRAFT_KEY);
+    } catch {}
+    return { state: rehearsal(seed), refused: false, rehearsal: true };
+  }
   let text = null;
   try {
     text = window.localStorage.getItem(SAVE_KEY);
@@ -120,6 +137,19 @@ export function resumeDraft(month) {
         }
       }
     }
+    const moment = read.orders?.moment;
+    if (moment && Array.isArray(moment.steps)) {
+      draft.moment = {
+        steps: moment.steps.filter(
+          (/** @type {any} */ step) =>
+            (step?.kind === "draft" && Array.isArray(step.protect)) ||
+            (step?.kind === "refuse" &&
+              typeof step.minister === "string" &&
+              typeof step.plan === "string"),
+        ),
+        closed: moment.closed === true,
+      };
+    }
     return draft;
   } catch {
     return null;
@@ -139,16 +169,22 @@ export function persistDraft() {
 export function blankOrders() {
   return {
     /** @type {Record<string, number>} */
-    funding: Object.fromEntries(CATALOG.parties.map(party => [party.id, 0])),
+    funding:
+      opening.rehearsal && session.state.month === opening.state.month
+        ? upkeepOf(session.state, CATALOG)
+        : Object.fromEntries(CATALOG.parties.map(party => [party.id, 0])),
+    /* A reunião do corte: rascunhos e recusas, na ordem; fechada, o decreto não muda mais. */
+    moment: { steps: /** @type {import("../public/index.mjs").Step[]} */ ([]), closed: false },
     /* Respostas vazias representam silencio formal; prazo encerra aceitando. */
     /** @type {Record<string, string>} */
     mail: {},
     /* Plataforma e imutavel apos a posse; avancar calado governa sem plataforma. */
     /** @type {Record<string, string>} */
     platform: {},
-    /* Decreto morre com o mes: contingenciamento nao se perpetua sem renovacao (Achado 36). */
+    /* O decreto em vigor abre o rascunho; o turno o zera no relatorio bimestral, que o renova.
+       O corte nunca vai para a lei (achado 36): so a lista de areas protegidas atravessa o mes. */
     /** @type {string[]} */
-    protect: [],
+    protect: [...(session.state.decree ?? [])],
     /** @type {Record<string, number>} */
     levels: { ...session.state.levels },
     /* Leis nascem das bandas vigentes avaliadas pelo motor com gatilhos e prazos. */

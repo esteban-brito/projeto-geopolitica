@@ -20,9 +20,11 @@ import {
   silences,
   situationOf,
   trajectory,
+  calendarOf,
+  momentOf,
 } from "../public/index.mjs";
 import { describeMail, describeMonth, trayHtml } from "../ui/screens/inbox.mjs";
-import { INFLATION_CEILING, lawNow, session } from "./session.mjs";
+import { INFLATION_CEILING, lawNow, session, opening } from "./session.mjs";
 
 /* ── O QUE A TELA PRECISA SABER, derivado e nunca guardado ────────────────── */
 
@@ -154,6 +156,25 @@ export function onDesk(closed, dying) {
   }));
 }
 
+/* A reunião do corte sobe no mês do relatório bimestral, ou quando o rascunho mexe no decreto em
+   vigor, e só se o pedido não couber no espaço (ciclo 31). A conta e as posições vêm prontas. */
+/** @param {{ demand: number, room: number }} share */
+function momentInput(share) {
+  const decree = [...(session.state.decree ?? [])].sort();
+  const report = calendarOf(session.state.month).now.some(landmark => landmark.id === "bimestral");
+  const moved = [...(session.orders.protect ?? [])].sort().join(",") !== decree.join(",");
+  const steps = session.orders.moment.steps;
+  if (share.demand <= share.room || !(report || moved || steps.length > 0)) return null;
+  const { briefing, stances } = momentOf(
+    session.state,
+    { ...session.orders, protect: decree },
+    steps,
+    { catalog: CATALOG },
+  );
+  const rehearsal = opening.rehearsal === true && session.state.month === opening.state.month;
+  return { briefing, stances, closed: session.orders.moment.closed, report, rehearsal };
+}
+
 export function cabinetInput() {
   const share = settlement(session.state, session.orders, CATALOG);
   const { budget } = ledger(session.state, session.orders, CATALOG);
@@ -180,6 +201,7 @@ export function cabinetInput() {
     month: session.state.month,
     areas: CATALOG.areas,
     protect: session.orders.protect ?? [],
+    moment: momentInput(share),
     brief: {
       month: session.state.month,
       chief: gov.adviser?.name ?? "",

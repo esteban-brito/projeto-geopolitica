@@ -46,13 +46,35 @@ export function armHandlers() {
       return;
     }
 
+    /* Na reunião do corte, recusar uma posição é um ato que só o ministro recusado observa. */
+    const refuse = target.closest("[data-refuse]");
+    if (refuse instanceof HTMLElement && refuse.dataset["refuse"] && refuse.dataset["plan"]) {
+      if (session.orders.moment.closed) return;
+      session.orders.moment.steps.push({
+        kind: "refuse",
+        minister: refuse.dataset["refuse"],
+        plan: refuse.dataset["plan"],
+      });
+      persistDraft();
+      paint();
+      return;
+    }
+    if (target.closest("[data-close-cut]") !== null) {
+      session.orders.moment.closed = true;
+      persistDraft();
+      paint();
+      return;
+    }
+
     /* Decreto protege ou solta a area e repinta projecoes de todas as pastas. */
     const decree = target.closest("[data-protect]");
     if (decree instanceof HTMLElement && decree.dataset["protect"]) {
+      if (session.orders.moment.closed) return;
       const id = decree.dataset["protect"];
       session.orders.protect = session.orders.protect.includes(id)
         ? session.orders.protect.filter(other => other !== id)
         : [...session.orders.protect, id];
+      session.orders.moment.steps.push({ kind: "draft", protect: [...session.orders.protect] });
       persistDraft();
       paint();
       return;

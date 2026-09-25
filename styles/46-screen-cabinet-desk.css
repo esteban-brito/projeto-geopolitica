@@ -310,7 +310,9 @@
 
   .sheet .epigraph,
   .sheet .signature,
-  .sheet [data-protect] {
+  .sheet [data-protect],
+  .sheet .moment__ask,
+  .sheet .moment__close {
     pointer-events: auto;
   }
 
@@ -397,6 +399,44 @@
     top: calc(var(--paper) * 0.03);
     right: calc(var(--paper) * 0.1071);
     text-align: right;
+  }
+
+  /* A ATA DO CORTE — a mesma folha do parecer, com uma linha por ministro. */
+  .moment .brief__body {
+    font-size: 0.88em;
+  }
+  .moment__list {
+    margin: var(--sheet-gap-s) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .moment__row {
+    margin-bottom: var(--sheet-gap-s);
+  }
+  .moment__note {
+    font-style: italic;
+  }
+  .moment__ask,
+  .moment__close {
+    font: inherit;
+    color: var(--sheet-ink);
+    background: none;
+    border: 0;
+    padding: 0;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .moment__ask {
+    margin-left: 0.4em;
+  }
+
+  .moment__close {
+    margin-top: var(--sheet-gap-m);
+    font-weight: 700;
+  }
+  .decree__cut {
+    font-size: 0.8em;
+    opacity: 0.8;
   }
 
   /* O PARECER — face esquerda da pasta. */

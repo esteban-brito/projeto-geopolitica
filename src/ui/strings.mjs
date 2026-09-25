@@ -555,6 +555,36 @@ export const UI = {
     abandoned: "Abandonaram o governo:",
     noneAbandoned: "Nenhum grupo abandonou o governo.",
   },
+  moment: {
+    title: "Reunião de contingenciamento",
+    kind: "Relatório bimestral de avaliação de receitas e despesas",
+    /** @param {string} hole @param {string} room @param {string} cut */
+    treasury: (hole, room, cut) =>
+      `A Fazenda informa: o pedido do mês passa em ${hole} o espaço de ${room}. Sem proteção, cada pasta perde ${cut}; as emendas perdem, no máximo, a mesma proporção (CF, art. 166, § 18).`,
+    /** @param {string} amount */
+    overflow: amount => `O rascunho gasta ${amount} acima do espaço, e a diferença vira déficit.`,
+    rehearsal:
+      "Ensaio: o plano de janeiro foi mantido, e as emendas de manutenção do mês já estão no rascunho.",
+    /** @param {string} area */
+    protect: area => `pede proteção para ${area}`,
+    /** @param {string} area */
+    contest: area => `pede que ${area} saia da proteção`,
+    /** @param {string} cut */
+    accepts: cut => `aceita o corte de ${cut}`,
+    satisfied: "está com a pasta protegida",
+    /** @param {string} cut */
+    loses: cut => `Com este rascunho, a pasta perde ${cut}.`,
+    /** @param {string} cut @param {string} relief */
+    relieves: (cut, relief) => `Assim, o corte da pasta cai de ${cut} para ${relief}.`,
+    insists: "Insiste depois da sua recusa.",
+    afterRefusal: "Cedeu depois da sua recusa.",
+    refuse: "pedir alternativa",
+    close: "Fechar o contingenciamento",
+    agrees: "aceita a decisão",
+    dissents: "registra discordância",
+    /** @param {string} cut */
+    decreeCut: cut => `−${cut}`,
+  },
   brief: {
     city: "Brasília",
     unit: "Secretaria Especial de Análise Governamental",

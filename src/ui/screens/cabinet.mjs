@@ -2,6 +2,7 @@
 
 import { escapeHtml } from "../shared/html.mjs";
 import { armSignature, decreeHtml } from "../shared/decree.mjs";
+import { momentHtml } from "../shared/moment.mjs";
 import { briefHtml } from "../shared/brief.mjs";
 import { mailPileHtml } from "../shared/mail-pile.mjs";
 import { letterHtml } from "./inbox.mjs";
@@ -62,6 +63,7 @@ export function emailHtml(input) {
  * @param {number} input.month
  * @param {ReadonlyArray<{ id: string, label: string, short?: string }>} input.areas
  * @param {ReadonlyArray<string>} input.protect
+ * @param {import("../shared/moment.mjs").MomentView | null} [input.moment] a reunião do corte, no mês do relatório
  * @param {ReadonlyArray<{ urgent: boolean, dispatch: import("./inbox.mjs").Dispatch | null }>} input.letters
  * @param {number} input.sheets
  * @param {Parameters<typeof briefHtml>[0]} input.brief
@@ -83,7 +85,7 @@ export function cabinetHtml(input) {
     `<i class="folder__open"></i>` +
     /* Aba direita da folha bate com aberta em 0,71%. */
     `<div class="folder__leaf">` +
-    briefHtml(input.brief) +
+    (input.moment ? momentHtml(input.moment, input.areas) : briefHtml(input.brief)) +
     `<i class="folder__cover"></i>` +
     `</div>` +
     `<div class="stack">${under}${decreeHtml({ ...input, chief: input.brief.chief })}</div>` +
@@ -410,7 +412,7 @@ function armFlight(root) {
       return;
     }
 
-    if (target.closest("[data-protect]") !== null) return;
+    if (target.closest("[data-protect], [data-refuse], [data-close-cut]") !== null) return;
 
     /* Rubrica leva 1,1s e so corre com pasta assentada na mao (at > 0,94). */
     if (target.closest(".stack .sheet") !== null && whereIs(performance.now()).at > 0.94) {

@@ -29,6 +29,7 @@ function resolutionOf(state) {
   return {
     type: "monthResolved",
     loyalty: state.loyalty,
+    decree: state.decree ?? [],
     platform: state.platform,
     fiscal: state.fiscal,
     capacity: state.capacity,
