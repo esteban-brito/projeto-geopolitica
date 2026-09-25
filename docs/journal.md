@@ -9040,3 +9040,12 @@ somava 3 por mês sem limite, e a medida denunciou o erro: com as 38 pastas repa
 passou a puxar a lealdade até 80 e parar ali, e a mesma medida deu 34 de 41 contra 26 de 43 sem
 ministros. A prova do teto falha contra a versão sem limite e passa contra a atual. O simulador
 ganhou `--cabinet proportional` para essa medida. Série imóvel.
+
+### 58 · Três jeitos de tomar posse — 25/09
+
+Ele perguntou se a interface seria reformulada, e a resposta é sim, quase toda: ela foi feita para
+o jogo do orçamento, e o jogo agora começa montando um governo. O mapa das telas propõe poucas
+telas, cada uma uma forma de governar, e a regra de que toda tela nova nasce em protótipos antes de
+virar código. Ele gosta de laboratório, e por isso a posse ganhou três estruturas com o mesmo
+visual: a lista com ficha, o plenário que acende e a conversa de uma cadeira por vez. No plenário,
+o partido indica o nome e o Presidente aceita, como na política real.

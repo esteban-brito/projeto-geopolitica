@@ -120,7 +120,9 @@
 1. **E1.0 — a abertura, montar o governo**, lotes E1.0a a E1.0e do [mapa](spec/migration-map.md)
    §6.4. O E1.0a está feito; o próximo é o E1.0b, a eleição da Mesa;
 2. **E1.1 a E1.8 — a estatal**, depois da abertura;
-3. **a tela das próximas atualizações**: decisão dele;
+3. **a interface nova**: o [mapa das telas](spec/interface-map.md) e três protótipos da posse no
+   [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM) esperam a escolha dele; a tela das
+   próximas atualizações entra na mesma reformulação;
 4. **achado 81**, antes de fechar o E0; não bloqueia o E1;
 5. **achado 69** — investigar a oscilação da prova de voo interrompido;
 6. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
