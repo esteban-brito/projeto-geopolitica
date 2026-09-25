@@ -75,6 +75,7 @@ import { streamFrom } from "./random.mjs";
 /** @typedef {import("../domain/norms/index.mjs").Norm} Norm */
 /** @typedef {import("../application/passage.mjs").Bill} Bill */
 /** @typedef {{ priority: string | null, fiscal: string | null, reform: string | null }} Platform */
+/** @typedef {{ name: string, party: string | null }} Appointee */
 
 /**
  * @typedef {object} GameState
@@ -84,6 +85,7 @@ import { streamFrom } from "./random.mjs";
  * @property {Platform} platform
  * @property {string | null} [party]
  * @property {string[]} [decree] - as áreas que o decreto de contingenciamento protege; vale até o próximo relatório bimestral, e ausente é nenhuma
+ * @property {Record<string, Appointee>} [cabinet] - quem senta em cada cadeira do gabinete; cadeira ausente é vaga, e save sem o campo é gabinete vazio
  * @property {number} month
  * @property {Record<string, number>} mood
  * @property {Record<string, number>} loyalty
@@ -149,6 +151,7 @@ export function createState(
     platform: { priority: null, fiscal: null, reform: null },
     party,
     decree: [],
+    cabinet: {},
     month: OPENING_MONTH,
     mood: opinionOpening(segments),
     loyalty: Object.fromEntries(
@@ -211,8 +214,10 @@ export function createState(
   });
 }
 
+/** @typedef {MonthResolved | { type: "appoint", seat: string, appointee: Appointee } | { type: "dismiss", seat: string }} Action */
+
 /**
- * @typedef {object} Action
+ * @typedef {object} MonthResolved
  * @property {"monthResolved"} type
  * @property {Record<string, number>} loyalty
  * @property {Fiscal} fiscal
@@ -260,6 +265,17 @@ export function reduce(state, action) {
         decree: action.decree,
         streams: { ...state.streams, congress: action.stream },
       });
+    }
+
+    case "appoint":
+    case "dismiss": {
+      if (!CATALOG.cabinet.some(seat => seat.id === action.seat)) return state;
+      const kept = Object.fromEntries(
+        Object.entries(state.cabinet ?? {}).filter(([seat]) => seat !== action.seat),
+      );
+      const cabinet =
+        action.type === "appoint" ? { ...kept, [action.seat]: action.appointee } : kept;
+      return deepFreeze({ ...state, cabinet });
     }
 
     default:

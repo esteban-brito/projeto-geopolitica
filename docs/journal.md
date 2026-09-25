@@ -9010,3 +9010,11 @@ do E1.0a pôs no catálogo as 38 cadeiras de Ministro de Estado da Lei 14.600: 3
 Presidência e a AGU. Cada área do jogo tem a sua cadeira, e os 7 ministros do E0 sentam nelas. A
 prova nasceu antes e caiu nos 3 testes. A série não mexeu, porque o turno ainda não lê o gabinete.
 Também escrevi o checklist do Presidente: 30 ações, com a fonte e a etapa de cada uma.
+
+### 55 · Nomear e demitir — 25/09
+
+O passo 2 do E1.0a pôs o gabinete no estado. Nomear senta a pessoa na cadeira, nomear por cima
+troca o ministro, e demitir deixa a cadeira vaga. Cadeira que a lei não tem não recebe ninguém. O
+gabinete atravessa o save, e o save de antes dele abre com o gabinete vazio, sem subir o esquema.
+Duas das três provas novas caíram antes do código; a da cadeira inventada já passava, porque o
+redutor ignorava ações desconhecidas, e fica para guardar o comportamento. Série imóvel.

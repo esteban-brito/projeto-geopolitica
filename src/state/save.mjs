@@ -116,6 +116,20 @@ export function deserialize(text) {
     return { ok: false, reason: `"decree" deveria ser array` };
   }
 
+  /* Fora dos obrigatorios, como o decreto: um save anterior ao gabinete abre vazio. */
+  const cabinet = candidate["cabinet"];
+  const named = (/** @type {unknown} */ seat) => {
+    if (!asObj(seat)) return false;
+    const { name, party } = /** @type {Record<string, unknown>} */ (seat);
+    return typeof name === "string" && (party === null || typeof party === "string");
+  };
+  if (
+    cabinet !== undefined &&
+    !(asObj(cabinet) && Object.values(/** @type {object} */ (cabinet)).every(named))
+  ) {
+    return { ok: false, reason: `"cabinet" deveria ser objeto de nomeados` };
+  }
+
   for (const entry of shape) {
     const field = /** @type {string} */ (entry[0]);
     const test = /** @type {(v: unknown) => boolean} */ (entry[1]);
