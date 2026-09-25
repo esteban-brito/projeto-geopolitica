@@ -5,10 +5,10 @@ Evita desvio de contexto (_context drift_) e fixa a autoridade das regras.
 
 ## 1. Identidade e Runtime
 
-- **Simulador de presidência do Brasil.** Mandato de 48 meses;
+- **Simulador de presidência do Brasil.** Mandato de quatro anos; hoje em 48 turnos mensais, e a [especificação mestra](docs/spec/especificacao-mestra.md) leva o avanço para a semana;
 - **Site estático puro:** zero build, zero dependência de runtime, ESM puro de navegador servido como arquivo;
 - **Domínio puro (`src/domain/`):** sem DOM, sem relógio, sem `Math.random`. Aleatoriedade entra apenas por fluxo injetado com semente; todo saque grava a posição gasta;
-- **A tela pergunta ao motor, nunca refaz conta:** toda informação exibida sai da mesma função que o turno executa;
+- **A tela pergunta ao motor, nunca refaz conta — e pergunta o que a Presidência sabe:** toda informação exibida sai da mesma função que o motor usa, e mostra a visão presidencial, nunca o estado oculto (especificação §6.1, invariante 21);
 - **Sem paredes artificiais:** nada de `if (proibido) return`. A pergunta é sempre quanto custa;
 - **Português na interface e na prosa; inglês em código, caminhos e identificadores.**
 
@@ -78,4 +78,5 @@ validações nem simulações só para recuperar contexto. Amplie a leitura quan
 2. [`CLAUDE.md`](CLAUDE.md) — As 12 leis do projeto, comentário medido e delegação;
 3. [`.agents/rules/co-development.md`](.agents/rules/co-development.md) — Regras operacionais de co-desenvolvimento;
 4. [`docs/standards.md`](docs/standards.md) — Padrões técnicos e mapeamento de guardas;
-5. [`docs/cycles/`](docs/cycles/) — Ciclo ativo e histórico de planejamento.
+5. [`docs/spec/`](docs/spec/) — Especificação mestra (autoridade de design) e mapa de migração (plano em vigor);
+6. [`docs/cycles/`](docs/cycles/) — Histórico de planejamento; o ciclo 29 segue aberto.

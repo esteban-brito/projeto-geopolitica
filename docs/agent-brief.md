@@ -20,7 +20,8 @@ Atualize este guia quando a arquitetura mudar; mantenha progresso e medições n
 
 ## O jogo e a intenção
 
-Simulador de presidência brasileira, janeiro de 2027 a dezembro de 2030: 48 turnos mensais.
+Simulador de presidência brasileira: mandato de 05/01/2027 a 05/01/2031 (achado 70), hoje jogado
+em 48 turnos mensais; a [especificação mestra](spec/especificacao-mestra.md) leva o avanço para a semana.
 Governar significa escolher prioridades sob restrições herdadas e pagar as consequências.
 O rito e o custo de uma decisão vêm do seu conteúdo. Liberdade com preço é a direção de
 design; não é uma afirmação de que toda liberdade planejada já exista no código.
@@ -44,7 +45,8 @@ jurídica nem descrição automática da implementação atual.
   desenvolvimento estão em `package.json`.
 - Domínio puro: sem DOM, relógio ou `Math.random`. RNG com semente e posição persistida.
   Motores não chamam outros motores: a aplicação define a composição e sua ordem.
-- A interface consulta a mesma conta usada pelo turno. Não criar uma segunda previsão.
+- A interface consulta a mesma conta usada pelo motor, sem segunda previsão, e mostra o que a
+  Presidência sabe, nunca o estado oculto (especificação §6.1, invariante 21).
 - Português na interface e na prosa; inglês em código, identificadores e caminhos.
 - Não alterar testes/guardas ou calibragem para fazer validação passar; não remover contratos
   JSDoc. Não mudar persistência/esquema sem escopo autorizado.
@@ -91,7 +93,8 @@ executa capacidade, orçamento, macroeconomia e opinião; calcula pressão e afa
 grava cartas, séries e o próximo estado. A ordem exata é mecânica: leia a função ao alterá-la.
 
 - Execução dentro da faixa é imediata; lei/PEC passa por gaveta, relatoria e plenário.
-  A gaveta tem prazo de seis meses; só um texto é votado por turno.
+  A gaveta de seis meses e o voto único por turno são regras de jogo legadas, sem fonte
+  institucional (achado 75): não são rito brasileiro.
 - O relator pode preservar uma parte de um pacote. Cartas têm prazo: silêncio aceita a
   emenda do relator, mas recusa a exigência de um grupo. Avançar não depende de responder.
 - Constituição vence lei; especificidade vem antes de recência. Ausência de norma significa
@@ -130,8 +133,8 @@ padrões e medições antes de repeti-los. Capturas existentes ficam em `capture
 ## Retrato do fim do estudo — conferir no handoff
 
 Ciclo 29 ainda aberto: simplificação/prosa e provas de interação. Modularização do app e
-menu feitas; 20 das 30 asserções novas de interação registradas. Ciclo 30 é proposta cuja
-seleção cabe ao usuário. Carta de arquivamento do impeachment ainda falta.
+menu feitas; as 30 asserções novas de interação registradas. O ciclo 30 teve veredito item a
+item no mapa de migração (24/09); a carta do arquivamento foi adiada para depois do corte vertical.
 
 Lacunas relevantes já registradas: pisos proporcionais com bases fiscais corretas, presença
 parlamentar, calendário político, tributação acionável, coalizão por ministérios, contrapoderes,
@@ -148,6 +151,8 @@ Foi executado `npm run simulate -- --quiet`: sonda `agenda`, semente 20270101, s
 ## Onde buscar e como validar
 
 - Estado/fila/achados/séries: [handoff.md](handoff.md).
+- Direção e plano: [especificação mestra](spec/especificacao-mestra.md) e
+  [mapa de migração](spec/mapa-migracao.md).
 - Intenção de cada sistema: [índice dos ciclos](cycles/README.md); ciclo 13 é plano mestre
   histórico, 29 é simplificação e 30 reúne candidatos de profundidade.
 - Doutrina sobre IA e ficção: `docs/adr/`. Pesquisa histórica: `docs/research/`.

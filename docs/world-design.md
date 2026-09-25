@@ -1,5 +1,10 @@
 # Reformulação do mundo e dos ministérios — proposta em discussão
 
+> **Superado como direção em 24/09/2026** pela [especificação mestra](spec/especificacao-mestra.md).
+> Fica como histórico e evidência: o estudo do código, a avaliação da revisão do Gemini e o caso
+> do IOF de 2025 continuam válidos como registro. O piloto de Energia não é o primeiro passo; o
+> primeiro passo está no [mapa de migração](spec/mapa-migracao.md).
+
 ## Direção do usuário e estado da proposta
 
 Em 23/09/2026, o usuário avaliou o jogo atual como malfeito e chato e pediu uma reformulação

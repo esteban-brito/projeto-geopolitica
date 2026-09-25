@@ -32,8 +32,10 @@ real — seria os dois defeitos ao mesmo tempo.
 Vale para todo personagem nomeado: parlamentar, ministro de Estado, ministro de
 tribunal, governador, jornalista, sindicalista, empresário, militar. Vale também
 para **organizações que agem como personagem** — veículo de imprensa, central
-sindical, federação empresarial —, que ganham nome próprio inventado em vez de
-carregarem a marca de uma organização real.
+sindical, federação empresarial, **empresa** —, que ganham nome próprio inventado em
+vez de carregarem a marca de uma organização real. Uma empresa identificável no jogo
+tem nome fictício; setor, porte e números de referência podem ser reais, com fonte e
+ano-base.
 
 **O que continua real:** rubricas do orçamento, regras fiscais, quórum, número de
 cadeiras, calendário eleitoral, indicadores macroeconômicos, e os arquétipos
@@ -75,3 +77,9 @@ Congresso de 2026 estaria errado em 2027, e a correção seria eterna.
 - se um dia o jogo quiser citar uma figura histórica encerrada — um presidente do
   século passado, num texto de contexto —, isso vira decisão explícita num ADR
   novo, e não uma exceção informal.
+
+## Emenda — 24/09/2026
+
+Por decisão do responsável, "empresa" passou a constar da lista de organizações que agem
+como personagem. A regra não mudou; ficou explícita para as empresas que a especificação
+mestra modela com agência própria.

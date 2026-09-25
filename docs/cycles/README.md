@@ -1,13 +1,14 @@
 # Ciclos
 
-O ciclo mais recente é o plano em vigor. Os anteriores são registro: o que cada um prometeu está
+Desde 24/09/2026 o plano em vigor é o [mapa de migração](../spec/mapa-migracao.md), sob a
+[especificação mestra](../spec/especificacao-mestra.md). Os ciclos são registro: o que cada um prometeu está
 no arquivo, o que aconteceu está no [`journal.md`](../journal.md). Estado se lê no
 [`handoff.md`](../handoff.md), nunca aqui. Situação só onde há registro datado; o resto diz
 "ver journal" em vez de chutar.
 
 | #   | arquivo                                                                  | o quê                                                     | situação                                           |
 | --- | ------------------------------------------------------------------------ | --------------------------------------------------------- | -------------------------------------------------- |
-| 30  | [profundidade e provas](30-profundidade-e-provas.md)                     | fechar bug com prova; candidatos de profundidade do motor | **proposto em 21/09** — ele marca a parte B        |
+| 30  | [profundidade e provas](30-profundidade-e-provas.md)                     | fechar bug com prova; candidatos de profundidade do motor | veredito item a item no §10 do mapa (24/09)        |
 | 29  | [simplificar](29-simplificar.md)                                         | prosa ≤ 20%, `app.mjs` dividido, menu objeto, provas      | **em vigor** — itens 2 e 3 feitos                  |
 | 28  | [o vidro](28-o-vidro.md)                                                 | Liquid Glass do jogo inteiro a partir do vidro da barra   | fechado em 19/09                                   |
 | 27  | [a carta na mesa e o dock](27-a-carta-na-mesa-e-o-dock.md)               | o envelope ergue a carta; o rail vira dock no Gabinete    | feito (passeio 1b cobre a carta)                   |

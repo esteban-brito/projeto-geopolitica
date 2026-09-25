@@ -10,9 +10,11 @@ puro servido como arquivo.
 3. [`docs/handoff.md`](docs/handoff.md) — estado verificável hoje, fila, decisões vivas, achados
    abertos, a série. Primeira leitura de toda sessão; última escrita de toda sessão que muda algo;
 4. [`docs/standards.md`](docs/standards.md) — as convenções, e qual guarda cobra cada uma;
-5. [`docs/cycles/`](docs/cycles/) — o ciclo mais recente é o plano em vigor; índice em
+5. [`docs/spec/`](docs/spec/) — a especificação mestra é a autoridade de design; o mapa de
+   migração é o plano em vigor;
+6. [`docs/cycles/`](docs/cycles/) — histórico de planejamento; índice em
    [`docs/cycles/README.md`](docs/cycles/README.md);
-6. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
+7. [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido.
 
 A narrativa mora em [`docs/journal.md`](docs/journal.md) e se lê pelo fim (últimas ~150 linhas),
 nunca inteira. Nunca faça varredura integral de pastas para se ambientar. Número de estado se lê no handoff, nunca aqui.
@@ -24,8 +26,13 @@ nunca inteira. Nunca faça varredura integral de pastas para se ambientar. Núme
   adjetivo. Vale para o texto do jogo, os docs e a resposta no terminal. Não entra: reviravolta
   final, inversão poética, paralelismo de efeito, metáfora sem necessidade;
 - **A tela não refaz conta do motor — ela pergunta.** Toda leitura mostrada enquanto o jogador
-  decide sai da mesma função que o turno vai executar. Dentro do motor vale o mesmo: uma
+  decide sai da mesma função que o motor usa. Dentro do motor vale o mesmo: uma
   previsão pergunta à posição com que o mês seguinte abre, nunca a uma cópia parcial da de hoje;
+- **A tela pergunta o que a Presidência sabe.** A interface lê a visão presidencial, nunca o
+  estado oculto, salvo o fato que a Presidência de fato conhece. A estimativa mostrada é a do
+  governo, feita pela mesma função que os atores do governo usam. Onde o motor ainda não separa o
+  oculto do conhecido, a leitura atual vale até a migração; a lista está em
+  [`docs/spec/mapa-migracao.md`](docs/spec/mapa-migracao.md);
 - **Motor nenhum chama outro motor.** Quem compõe é `src/application/`;
 - **O domínio é puro:** sem DOM, sem relógio, sem `Math.random`. Aleatoriedade entra por fluxo
   injetado, todo saque grava a posição que gastou, e o mandato inteiro se refaz da semente;
