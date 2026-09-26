@@ -9289,3 +9289,12 @@ inteiro, as outras escurecem, e o foco é um atributo que o CSS lê. Pior quadro
 Clarear só os deputados da bancada em foco voltou a 50 ms e saiu; escurecer as outras para 15% dá
 o mesmo destaque. Trocar de ministério e passar nos nomes ficam em até 50 ms nessa CPU, porque ainda
 redesenham a tela.
+
+### 83 · Sair da Câmara sem travada — 26/09
+
+Sair rápido da Câmara seis vezes, com CPU 4 vezes mais lenta, descartava 32 quadros: 252 ms de
+pintura e 176 ms de raster, porque cada bancada virava camada ao animar e voltava no fim, repintando
+os 513 deputados. Com as bancadas fixas como camada, pintura caiu para 16 ms. A etiqueta e os painéis
+ainda tinham um desfoque de fundo invisível (fundo 97% opaco) recalculado a cada quadro; sem ele, 1
+quadro descartado e pior quadro de 17 ms. O destaque também esperava 90 ms para sumir ao sair; agora
+só espera quando o mouse passa de uma bancada para outra.
