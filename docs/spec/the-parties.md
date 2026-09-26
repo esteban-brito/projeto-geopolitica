@@ -9,10 +9,10 @@ e LIGA).
 
 | sigla  | nome                                         | deputados | Nolan       | economia / costumes | perfil                                                                                                                              | origem     |
 | ------ | -------------------------------------------- | --------: | ----------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| PCT    | Partido Comunista dos Trabalhadores          |         1 | Autoritário | 3 / 8               | Planejamento central, expropriação de bancos e controle da mídia. Subordina direitos civis à disciplina coletiva.                   | Gemini     |
+| PML    | Partido Marxista-Leninista                   |         1 | Autoritário | 3 / 8               | Planejamento central, expropriação de bancos e controle da mídia. Subordina direitos civis à disciplina coletiva.                   | Gemini     |
 | PSU    | Partido Socialista Urbano                    |        11 | Esquerda    | 18 / 78             | Moradia popular, tributação de fortunas e direitos trans. Defende desapropriar imóveis ociosos e ampliar serviços públicos.         | Gemini     |
 | ECOS   | Ecossolidariedade                            |         8 | Esquerda    | 32 / 76             | Desmatamento zero, energia limpa e direitos territoriais. Condiciona obras à proteção de povos locais.                              | Gemini     |
-| CS     | Coalizão Social                              |        89 | Esquerda    | 28 / 62             | Emprego, renda e proteção trabalhista. Reúne correntes de esquerda que negociam com governos.                                       | Claude     |
+| PCS    | Partido da Coalizão Social                   |        89 | Esquerda    | 28 / 62             | Emprego, renda e proteção trabalhista. Reúne correntes de esquerda que negociam com governos.                                       | Claude     |
 | PTP    | Partido do Trabalho e da Pátria              |        17 | Esquerda    | 22 / 54             | Estatais estratégicas, indústria naval e direitos trabalhistas. Põe soberania energética e emprego à frente das pautas de costumes. | Gemini     |
 | PATRIA | Patriota Popular                             |         5 | Autoritário | 10 / 10             | Monopólio estatal de minérios e petróleo, tarifas de importação e disciplina militar. Defende controle da mídia e das fronteiras.   | Gemini     |
 | MDN    | Movimento Democrático Nacional               |        42 | Centro      | 54 / 48             | Herança da redemocratização, autonomia regional e acesso a verbas. Reúne líderes locais com posições diversas.                      | Claude     |
@@ -20,7 +20,7 @@ e LIGA).
 | PDST   | Partido Democrático Social dos Trabalhadores |        42 | Centro      | 40 / 58             | Transferência de renda, crédito de bancos públicos e campeões nacionais. Loteia estatais e ministérios em troca de governabilidade. | ideia dele |
 | FBR    | Força Brasileira                             |        59 | Centro      | 62 / 42             | Fusão de dois partidos de centro e de direita, com muitas alas. Ocupa ministérios e vota dividido.                                  | Claude     |
 | UNIDOS | Unidos pela República                        |        18 | Direita     | 68 / 45             | Equilíbrio fiscal, concessões e estabilidade institucional. Evita disputas de costumes, mas resiste à sua liberalização.            | Gemini     |
-| MCF    | Movimento Campo Forte                        |        47 | Direita     | 60 / 32             | Crédito rural, infraestrutura e menos restrições à produção. Negocia apoio conforme os ganhos do setor.                             | Claude     |
+| PAB    | Partido Agrário Brasileiro                   |        47 | Direita     | 60 / 32             | Crédito rural, infraestrutura e menos restrições à produção. Negocia apoio conforme os ganhos do setor.                             | Claude     |
 | ACF    | Aliança Cristã pela Família                  |        46 | Direita     | 60 / 24             | Família tradicional e restrições ao aborto e às drogas. Mobiliza igrejas e concentra votos em pautas de costumes.                   | Claude     |
 | DNB    | Direita Nacional Brasileira                  |        99 | Direita     | 62 / 30             | Menos regulação, segurança pública e valores conservadores. Defende proteção a setores nacionais e mobiliza pelas redes.            | Claude     |
 | FP     | Frente Republicana                           |         2 | Libertário  | 88 / 75             | Abertura comercial, privatizações e ajuste fiscal. Defende diversidade nas empresas e metas ambientais.                             | Gemini     |
@@ -32,3 +32,6 @@ Gemini está em `tmp/posse/ideias-de-partidos.md`.
 
 Em 26/09 a LIGA saiu, a pedido dele, e entrou o PDST (Partido Democrático Social dos Trabalhadores),
 social-democracia pragmática e partido da máquina, com os 42 deputados da vaga.
+
+Na mesma rodada: CS virou PCS (Partido da Coalizão Social), MCF virou PAB (Partido Agrário Brasileiro) e PCT
+virou PML (Partido Marxista-Leninista); PCC foi descartado por ser a sigla de uma facção criminosa.
