@@ -145,6 +145,10 @@
 
 ## Decisões vivas
 
+- **26/09, a posse e a base** — ordens dele: a base do começo segue o protótipo (o Presidente
+  começa com o próprio partido e monta a base com ministérios e negociação), aprimorado e fiel à
+  realidade, com pesquisa antes do motor; a posse é a primeira tela e o padrão das outras; o começo
+  do jogo cria o Presidente (nome, partido, sexo, data de nascimento e mais);
 - **26/09, a interface nova** — ordem dele: o motor fica e a interface recomeça do zero sobre a
   fundação; estilo fixado em Apple + Football Manager + Civilization + Valorant; reaproveitar o que
   prestar do Liquid Glass e dos menus ([ciclo 32](cycles/32-the-new-interface.md));

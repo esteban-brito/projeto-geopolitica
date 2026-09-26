@@ -104,10 +104,23 @@ Cada fase fecha com `validate` verde, capturas revisadas por mim e o sim dele.
 - passeio só com teclado;
 - macaco na nova, com semente.
 
-## 6. Decisões que são dele
+## 6. Decididas por ele em 26/09
 
-1. a base inicial: todo partido meio leal (o jogo hoje) ou só quem recebe pasta (o protótipo);
+- **a posse vem primeiro e é a base de tudo:** o sistema de design nasce da tela da posse, e as
+  outras telas seguem o padrão dela, para nada destoar. O Gabinete fica em aberto até lá;
+- **a base do começo segue o protótipo, aprimorado e fiel à realidade:** o Presidente começa com o
+  próprio partido, e a base se monta com ministérios e negociação. O desenho do modelo pede
+  pesquisa com fonte (como a coalizão se forma no Brasil e quanto cada grupo vota com o governo)
+  antes de mexer no motor, que hoje dá 440 deputados na largada;
+- **o começo do jogo cria o Presidente:** nome, partido, se é homem ou mulher, data de
+  nascimento e mais dados pessoais, com as regras reais da candidatura (idade mínima de 35 anos,
+  brasileiro nato, filiação partidária; Constituição, arts. 12 e 14). Hoje o formulário só tem
+  nome, tratamento e partido.
+
+## 7. Decisões que seguem abertas
+
 2. a fonte condensada, escolhida na página de catálogo entre duas ou três;
 3. o canto: squircle nas superfícies e corte em ângulo só nos acentos, ou outra mistura;
 4. o papel do vidro: só barra, menu e diálogo, ou mais;
-5. o que da mesa de papéis ele quer guardar no Gabinete novo.
+5. o que da mesa de papéis ele quer guardar no Gabinete novo, decidido depois da posse;
+6. que dados pessoais além de nome, partido, sexo e nascimento entram na criação do Presidente.

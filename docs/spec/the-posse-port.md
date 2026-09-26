@@ -92,11 +92,16 @@ Cada risco com a defesa. Os quatro primeiros já custaram caro no protótipo.
   nenhum quadro acima de 20 ms com CPU 4 vezes mais lenta;
 - o fuzz do protótipo (400 sessões de 120 passos) vira prova com semente.
 
-## 5. Decisões que são dele
+## 5. Decisões
 
-1. Como a base se forma no começo do mandato: todo partido meio leal (o jogo hoje) ou só quem
-   recebe pasta (o protótipo). É a decisão que destrava o resto;
-2. a ordem: a tela primeiro com as 38 cadeiras fixas, ou junto com juntar, extinguir e notáveis;
-3. o visual: o do protótipo ou o do resto do jogo;
-4. só na posse, ou também na reforma ministerial do meio do mandato;
-5. a sigla: PLV ou LIVRE.
+Decidido por ele em 26/09: a base do começo segue o protótipo, aprimorado e fiel à realidade; a
+posse vem primeiro e é o padrão das outras telas; o começo do jogo cria o Presidente (nome,
+partido, sexo, data de nascimento e mais). Ver o [ciclo 32](../cycles/32-the-new-interface.md), §6.
+
+Seguem abertas:
+
+1. a ordem: a tela primeiro com as 38 cadeiras fixas, ou junto com juntar, extinguir e notáveis;
+2. só na posse, ou também na reforma ministerial do meio do mandato;
+3. a sigla: PLV ou LIVRE.
+
+O visual está decidido: o estilo fixado no ciclo 32, partindo do protótipo.
