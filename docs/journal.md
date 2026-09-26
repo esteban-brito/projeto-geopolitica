@@ -9268,3 +9268,14 @@ centrada na própria medida, com o mesmo tamanho visual e o traço fixo em pixel
 as duas regras que a faziam descer, e um teste com o cursor nos pontos mais altos de uma bancada,
 a 100% e a 75% de zoom, confirmou que ela fica acima e centrada. A etiqueta e a ficha passaram a
 sumir com um fade, e filtros, linhas e o indicador de passo ganharam transição.
+
+### 81 · Um sistema só e a etiqueta sem pulo — 26/09
+
+A etiqueta da Câmara pulava para o canto ao sair porque perdia a posição quando o partido saía do
+estado. O protótipo foi refeito sobre um sistema de classes: 6 tamanhos de letra, 3 tempos de
+animação, cores e sombras em variáveis. A etiqueta agora fica montada, segue o cursor no próprio
+evento e só some por opacidade; a ficha da pessoa abre só sobre o nome. O teste quadro a quadro com
+o runtime real do canvas achou 31 defeitos na versão 21 (etiqueta nascendo a 205 px do cursor,
+abaixo dele, deslizando 4 px ao sumir) e 0 na 22, a 100% e 75% de zoom. Achou também o hemiciclo
+subindo 15 px quando a fala da chefe de gabinete mudava de tamanho; a posição ficou fixa. Fuzz de
+48 mil ações: 0 problemas.
