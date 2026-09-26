@@ -9379,7 +9379,14 @@ para FBR e CONV mantêm a menor diferença da paleta em ΔE 27,3. Testes sem reg
 
 ### 92 · Os últimos nomes — 26/09
 
-LIBER virou PLI, libertário radical; FP virou VANGUARDA, neoliberalismo clássico; PSU virou PSO; CONV virou PBR,
+LIBER virou PLI, libertário radical; FP virou VANGUARDA, neoliberalismo; PSU virou PSO; CONV virou PBR,
 Progressistas do Brasil (nome do PP real, mantido por ordem dele). Na revisão, o PCN foi a 66/22 e o PATRIA a
 25/12. Os rótulos da grade de partidos passaram a sigla e bancada em cima, família do Nolan e nome embaixo,
 porque "VANGUARDA · Libertário · 5" não cabia. Testes sem regressão.
+
+### 93 · Polimento final dos partidos — 26/09
+
+A ideologia da VANGUARDA passou a "Neoliberalismo". No cartão de partido da criação, o nome vem antes da família
+do Nolan. Uma brecha fechada: o convite pendente sobrevivia quando a pasta era extinta, juntada ou desfeita, e
+voltava ao recriá-la. Varredura com os 16 partidos como partido do Presidente: 0 problemas, do PLI (1 voto firme)
+ao PCN (204). A montagem inteira agora roda com `tmp/posse/build-all.sh`.

@@ -91,7 +91,7 @@ individual (0, controle total; 100, liberdade total). Posições, perfis e cores
 - A sigla LIBER lembra um partido em formação no Brasil (Libertários), fora do registro do TSE; ficou por ser
   escolha dele.
 - Pedidos dele no fim do dia: LIBER virou PLI (Partido Libertário, anarcocapitalista); FP virou VANGUARDA
-  (neoliberalismo clássico, 85/48); PSU virou PSO (Partido Socialista Operário); CONV virou PBR (Progressistas do
+  (neoliberalismo, 85/48); PSU virou PSO (Partido Socialista Operário); CONV virou PBR (Progressistas do
   Brasil). "Progressistas" é o nome oficial do PP real e "Libertários" é um partido real em formação: ficaram
   por ordem dele. Revisão contra a Câmara real: PCN a 66/22 (o PL é o mais à direita para os especialistas) e
   PATRIA a 25/12.
