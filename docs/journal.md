@@ -9399,3 +9399,12 @@ Presidente de esquerda, e na vida real União, PP e Republicanos aceitaram minis
 ganharam o traço de pragmático. Com o PCS no governo, a oposição passou a ser PML, PATRIA, PCN, VANGUARDA e PLI,
 como em 2023; nenhum Presidente começa com 257 firmes (o maior é o PCN, 205). A VANGUARDA foi a 85/52, no
 quadrante libertário. Testes sem regressão.
+
+### 95 · Terceira auditoria do Codex — 26/09
+
+O Codex usou os 16 partidos como partido do Presidente e fez 256 nomeações; a coluna de votos bateu em todas.
+Achou 8 itens, todos corrigidos: o PML aceitava ministério de um Presidente próximo, apesar da ficha dizer que
+recusa (PML e PLI agora recusam sempre); "1 deputados" no plural; a dica da junção citava Justiça e Segurança
+para qualquer par; o perfil do PBR não explicava a posição nos costumes; o convite cancelado por mudança de
+estrutura sumia sem aviso; e três defeitos de retrato (pele escura contra o fundo, boca na barba e um corte de
+cabelo com pontas soltas). Testes sem regressão.
