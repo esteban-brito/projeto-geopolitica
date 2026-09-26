@@ -9359,3 +9359,12 @@ O Codex montou uma folha de contato com 105 retratos em 32, 56 e 148 px e reviso
 defeitos, todos corrigidos: a AGU sem a emenda para juntar; o rodapé da AGU falando em medida provisória;
 pele escura e cabelo castanho com contraste de 1,08:1 (para pele escura, o cabelo passou a ser preto ou
 grisalho); e a barba cobrindo a boca (a barba ganhou um recorte em volta dos lábios). Testes sem regressão.
+
+### 90 · Partidos revisados e a FDN — 26/09
+
+O Codex revisou coordenadas e textos dos 16 partidos: sete coordenadas mudaram, cada uma com uma frase de
+motivo (a DNB, por exemplo, foi de 72/18 para 62/30, porque o nacionalismo admite proteção setorial e o
+perfil não propõe controle quase total da vida privada), e os quatro textos de cada partido ganharam um
+padrão único. Tirei ponto e vírgula e ajustei a ideologia do PCT. A pedido dele, a AL saiu e entrou a
+FDN, inspirada no União Brasil, com os 59 deputados desse bloco; o UNIDOS foi para 18. Na criação, a
+ficha de partido passou a seguir o mouse, à direita do cursor. Testes sem regressão.
