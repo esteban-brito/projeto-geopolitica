@@ -9191,3 +9191,12 @@ Agora há uma escala só: fonte de 12, 13, 15, 17, 22 e 32 px, cantos de 12 e 20
 e cores em variáveis. O canto de cima ficou com duas linhas em vez de três, e a sigla do partido
 saiu, porque destoava. Na proposta da Casa Civil, Assinar ocupa a largura toda e os outros dois
 botões ficam lado a lado.
+
+### 73 · Ícones e movimento — 26/09
+
+As siglas do hemiciclo (CULT, RAÇA, INDÍ) viraram ícones de traço fino, desenhados na mesma grade:
+cruz na Saúde, balança na Justiça, escudo na Defesa, folha no Meio Ambiente. A imagem ampliada
+mostrou dois ícones confusos no tamanho pequeno, o trigo e o capacete, e eles foram refeitos. O
+movimento entrou onde explica alguma coisa: os deputados acendem em onda quando um partido entra na
+base, a barra desliza, o painel sobe ao trocar de passo. Quem pede movimento reduzido no sistema não
+vê animação.
