@@ -9231,3 +9231,12 @@ deputados acesos batem com a base. Ele achou uma quebra: Exonerar podia ser acio
 cargo. Corrigido, o teste passou limpo. A revisão da interação achou o resto: a etiqueta e a ficha
 piscavam ao passar de um item para o vizinho (agora a saída espera 90 ms), faltava teclado, os nomes
 eram cortados e a ficha cobria a bancada em foco. A lista e o hemiciclo passaram a conversar.
+
+### 77 · O tranco do hover — 26/09
+
+Ele achou um tranco ao tirar o mouse de um ministério. O círculo subia com o mouse, e a área que
+recebe o mouse subia junto; na volta, a curva com mola fazia o círculo passar do lugar. Um teste no
+navegador mediu as duas versões com o cursor na borda de baixo: na antiga o botão se movia e a volta
+passava do lugar (450,9 contra 450,5); na nova o botão fica parado, a face sobe e volta direto para
+450,5. A mesma revisão tirou o atraso da onda dos deputados na volta do hover e fez a etiqueta e a
+ficha deslizarem em vez de pular.
