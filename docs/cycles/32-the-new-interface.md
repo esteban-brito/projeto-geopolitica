@@ -93,7 +93,7 @@ primeiro e é o padrão das outras telas (ordem dele, §6).
    sombra, tempo), os componentes e uma página de catálogo com todos os estados; a fonte condensada
    é escolhida aqui;
 2. **O motor da posse.** A base passa a se formar com ministérios e negociação, calibrada pela
-   pesquisa; a prévia da base vira consulta da aplicação, com prova; os dados pessoais do Presidente
+   pesquisa, pelo [modelo da base](../spec/the-base-model.md); a prévia da base vira consulta da aplicação, com prova; os dados pessoais do Presidente
    entram no estado, com versão nova do save. Segue o laço do motor: prova antes, `npm test`,
    `npm run simulate` e a série reescrita no handoff;
 3. **A casca.** A pintura por diferença com provas, a barra de cima, o menu, a entrada separada e
