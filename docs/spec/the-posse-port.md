@@ -100,4 +100,8 @@ Decidido por ele em 26/09: a base do começo segue o protótipo, aprimorado e fi
 posse vem primeiro e é o padrão das outras telas; o começo do jogo cria o Presidente (nome,
 partido, sexo, data de nascimento e mais). Ver o [ciclo 32](../cycles/32-the-new-interface.md), §6.
 
+**Partidos (26/09):** o protótipo passou a 16 partidos com as bancadas da posse de 2023 agrupadas pelas
+fusões de 2023; o catálogo do jogo (`src/data/parties.mjs`, hoje 9) segue na fase 2 do ciclo 32, com a
+fonte da Câmara.
+
 As decisões que seguem abertas estão todas no [ciclo 32](../cycles/32-the-new-interface.md), §7.

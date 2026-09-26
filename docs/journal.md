@@ -9319,3 +9319,17 @@ largada de um Presidente de centro, 5 a 14 a mais por pasta. O sorteio por deput
 dava valores vizinhos a deputados vizinhos, e a bancada virava em bloco (+32 ou 0); trocado por um hash
 de mistura. Desempenho igual ao da v25: 0 quadros lentos varrendo as bancadas e 0 descartados ao sair,
 com CPU 4 vezes mais lenta; fuzz de 48 mil ações com 0 problemas.
+
+### 86 · Dezesseis partidos e os bugs do Codex — 26/09
+
+Ele pediu 15 ou 16 partidos, mais distintos. As bancadas vêm da posse de 2023 (Câmara, "Bancada na
+posse", 19 blocos, soma 513), agrupadas pelas fusões de 2023 (PROS no Solidariedade, PSC no Podemos,
+PTB e Patriota no PRD): 16 blocos de 99 a 3 deputados. Nomes, siglas e perfis são inventados (ADR
+0003), cada um com uma linha de identidade; as cores seguem a família do Nolan com menor ΔE de 23,3.
+O Codex caçou bugs numa cópia congelada e achou 8, todos com passo a passo: Tab e Enter alcançando a
+posse atrás das cortinas, ministro que voltava ao recriar uma pasta, a coluna de votos sem o saldo da
+troca, a AGU sem a opção de emenda, nome longo vazando do cartão, convite a famoso ocupando a cadeira
+antes da resposta, e duas falas erradas sobre a base. Todos corrigidos e conferidos; a etiqueta
+ganhou saída no mesmo evento (ficava um quadro parada ao sair para um ministério) e nenhum sobrenome se
+repete na lista de um ministério. Testes: etiqueta, ficha e fuzz com 0 problemas; 0 quadros lentos e 0
+descartados com CPU 4 vezes mais lenta.
