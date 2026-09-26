@@ -76,23 +76,33 @@ vezes mais lenta, como no protótipo.
 
 ## 4. As fases
 
-Cada fase fecha com `validate` verde, capturas revisadas por mim e o sim dele.
+Cada fase fecha com `validate` verde, capturas revisadas por mim e o sim dele. A posse vem
+primeiro e é o padrão das outras telas (ordem dele, §6).
 
-0. **Backup, inventário e decisões.** O backup já existe (26/09): a marca `antes-da-interface-nova`
+0. **Backup, inventário e pesquisa.** O backup já existe (26/09): a marca `antes-da-interface-nova`
    no git e duas cópias fora do projeto, `Desktop/cld-backup-2026-09-26.bundle` (todo o histórico,
    conferido com `git bundle verify`) e `Desktop/cld-posse-2026-09-26.tgz` (o protótipo e as
-   ferramentas de `tmp/posse/`, que o git não guarda). Antes da fase 2 mexer em qualquer coisa, um
-   backup novo com a mesma receita. Lista de tudo o que a interface de hoje faz, tela por tela, para
-   nada se perder; a decisão da base inicial (achado 86); a fonte condensada;
-1. **O sistema de design.** Tokens (cor, tipo, espaço, canto, sombra, tempo), componentes (botão,
-   painel, etiqueta, lista, tabela, ficha, medidor, retrato, hemiciclo) e uma página de catálogo com
-   todos eles e todos os estados. Nasce como protótipo no canvas para ele aprovar;
-2. **A casca.** A pintura por diferença com provas, a barra de cima, o menu, a entrada separada e
+   ferramentas de `tmp/posse/`, que o git não guarda). Antes da fase 3 mexer em qualquer coisa, um
+   backup novo com a mesma receita. Nesta fase: a lista de tudo o que a interface de hoje faz, tela
+   por tela, para nada se perder; e a pesquisa com fonte de como a base do governo se forma no
+   Brasil (em curso no Codex desde 26/09), que calibra a fase 2;
+1. **A posse no estilo novo, no canvas.** O protótipo aprovado (versão 25) fixou a estrutura, mas
+   é anterior ao estilo. Ele é refeito em Apple + Football Manager + Civilization + Valorant, com a
+   criação do Presidente na frente. Da versão aprovada saem os tokens (cor, tipo, espaço, canto,
+   sombra, tempo), os componentes e uma página de catálogo com todos os estados; a fonte condensada
+   é escolhida aqui;
+2. **O motor da posse.** A base passa a se formar com ministérios e negociação, calibrada pela
+   pesquisa; a prévia da base vira consulta da aplicação, com prova; os dados pessoais do Presidente
+   entram no estado, com versão nova do save. Segue o laço do motor: prova antes, `npm test`,
+   `npm run simulate` e a série reescrita no handoff;
+3. **A casca.** A pintura por diferença com provas, a barra de cima, o menu, a entrada separada e
    os testes de navegador da nova (passeio, desempenho, teclado, quatro tamanhos de tela);
-3. **A posse** (lote E1.0e), portada do protótipo para o sistema, depois da decisão da base;
-4. **As outras telas**, na ordem do mapa das telas: Governo, Congresso, Gabinete, País,
-   Correspondência. Cada uma: protótipos no canvas, escolha dele, construção, passeio novo;
-5. **A troca.** Quando a nova cobre o inventário inteiro, a antiga e os testes dela saem, com o sim
+4. **A posse no jogo** (lote E1.0e e a criação do Presidente), construída a partir do protótipo da
+   fase 1;
+5. **As outras telas**, no padrão da posse e na ordem do mapa das telas: Governo, Congresso,
+   Gabinete, País, Correspondência. Cada uma: protótipos no canvas, escolha dele, construção,
+   passeio novo;
+6. **A troca.** Quando a nova cobre o inventário inteiro, a antiga e os testes dela saem, com o sim
    dele.
 
 ## 5. Os testes que a nova carrega desde o primeiro dia
@@ -119,8 +129,14 @@ Cada fase fecha com `validate` verde, capturas revisadas por mim e o sim dele.
 
 ## 7. Decisões que seguem abertas
 
-2. a fonte condensada, escolhida na página de catálogo entre duas ou três;
-3. o canto: squircle nas superfícies e corte em ângulo só nos acentos, ou outra mistura;
-4. o papel do vidro: só barra, menu e diálogo, ou mais;
-5. o que da mesa de papéis ele quer guardar no Gabinete novo, decidido depois da posse;
-6. que dados pessoais além de nome, partido, sexo e nascimento entram na criação do Presidente.
+Todas num lugar só; o estudo da posse aponta para cá.
+
+1. a ordem da posse no jogo: as 38 cadeiras fixas primeiro, ou junto com juntar, extinguir e
+   dividir (E1.0d) e os notáveis (E1.0f);
+2. a posse só no começo, ou também na reforma ministerial do meio do mandato;
+3. a sigla do partido de 18 cadeiras: PLV (o jogo) ou LIVRE (o protótipo);
+4. a fonte condensada, escolhida na fase 1 entre duas ou três;
+5. o canto: squircle nas superfícies e corte em ângulo só nos acentos, ou outra mistura;
+6. o papel do vidro: só barra, menu e diálogo, ou mais;
+7. que dados pessoais além de nome, partido, sexo e nascimento entram na criação do Presidente;
+8. o que da mesa de papéis ele quer guardar no Gabinete novo, decidido depois da posse.

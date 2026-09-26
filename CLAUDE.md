@@ -128,8 +128,10 @@ Antes de escrever qualquer proibição: isto é medição, ordem dele ou general
 dúvida, pergunte a ele — nunca invoque o documento. Documento mais recente vale e vence ADR; ordem
 dele substitui regra escrita, e o documento antigo se emenda.
 
-A base visual é o Liquid Glass. Base é ponto de partida, não teto: arranjo, escala, matéria, luz
-e gesto estão abertos, e ao propor desenho ofereça o exótico.
+O estilo da interface nova é Apple + Football Manager + Civilization + Valorant (ordem dele de
+26/09, [ciclo 32](docs/cycles/32-the-new-interface.md)). O Liquid Glass fica só em superfície
+pequena sobre fundo parado. Estilo é ponto de partida, não teto: arranjo, escala, matéria, luz e
+gesto estão abertos, e ao propor desenho ofereça o exótico.
 
 ## Como responder
 

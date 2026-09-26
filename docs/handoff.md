@@ -152,10 +152,9 @@
 - **26/09, a interface nova** — ordem dele: o motor fica e a interface recomeça do zero sobre a
   fundação; estilo fixado em Apple + Football Manager + Civilization + Valorant; reaproveitar o que
   prestar do Liquid Glass e dos menus ([ciclo 32](cycles/32-the-new-interface.md));
-- **26/09, o visual da posse** — ele aprovou a versão 25 do protótipo como está. Pediu para registrar,
-  para talvez aplicar em breve, o nível de design Apple + Football Manager + Civilization + Valorant
-  (proposta em [mapa de interface](spec/interface-map.md), "Direção futura"). É gosto dele com data,
-  não regra: nada se aplica sem ordem;
+- **26/09, o visual da posse** — ele aprovou a estrutura da versão 25 do protótipo. No mesmo dia
+  fixou o estilo Apple + Football Manager + Civilization + Valorant para a interface nova; a posse é
+  refeita nesse estilo na fase 1 do [ciclo 32](cycles/32-the-new-interface.md);
 - **26/09, o ministério** ([proposta v0](spec/the-cabinet.md)) — ordens dele: aumentar e diminuir
   os ministérios tem de estar no jogo, com realismo; dá para chamar gente de fora da política, com
   33 notáveis de nome inventado (esporte, TV, internet, música, cinema, academia, negócios); a

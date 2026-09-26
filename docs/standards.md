@@ -97,6 +97,10 @@ mês seguinte sacava os mesmos números.
 > famílias se confundirem, a pergunta vai para ele, e não para o documento. Ver as três famílias
 > em `CLAUDE.md`.
 >
+> ⭐ **Emenda de 26/09/2026:** a interface nova segue o estilo Apple + Football Manager +
+> Civilization + Valorant ([ciclo 32](cycles/32-the-new-interface.md)); o vidro fica só em
+> superfície pequena sobre fundo parado. As medições abaixo seguem valendo.
+>
 > ⭐ **A base é o liquid glass de hoje** — ordem dele de 05/09/2026. ⚠ **Base é o ponto de
 > partida, e não o teto:** _"se eu quiser construir uma literal MESA, linda, no gabinete, eu
 > posso, sem qualquer resquício de liquid glass nela"_. **Nem o material é trava.**

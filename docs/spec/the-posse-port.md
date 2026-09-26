@@ -50,7 +50,9 @@ da primeira linha.
 | fonte e tokens             | Hanken Grotesk e tokens próprios                                | Inter e tokens do jogo                                                            | médio     |
 | cores dos partidos         | 9 tons do Nolan, em HSL no código                               | não existem; a guarda `tokens` barra cor solta                                    | médio     |
 
-O conflito da base é o mais sério. No jogo de hoje, quem não recebe pasta vota com o governo em 85%
+O conflito da base é o mais sério. **Decidido por ele em 26/09: vale o modelo do protótipo,
+aprimorado e fiel à realidade;** a pesquisa que o calibra está em curso e o motor muda na fase 2 do
+[ciclo 32](../cycles/32-the-new-interface.md). No jogo de hoje, quem não recebe pasta vota com o governo em 85%
 das vezes; no protótipo, só vota quem recebe. Os dois não convivem. Resolver isso é mexer na
 calibragem do motor da Câmara, e o achado 86 já aponta para o mesmo lugar. A tela da posse não
 pode sair antes dessa decisão, porque todo número dela sairia errado ou inventado.
@@ -98,10 +100,4 @@ Decidido por ele em 26/09: a base do começo segue o protótipo, aprimorado e fi
 posse vem primeiro e é o padrão das outras telas; o começo do jogo cria o Presidente (nome,
 partido, sexo, data de nascimento e mais). Ver o [ciclo 32](../cycles/32-the-new-interface.md), §6.
 
-Seguem abertas:
-
-1. a ordem: a tela primeiro com as 38 cadeiras fixas, ou junto com juntar, extinguir e notáveis;
-2. só na posse, ou também na reforma ministerial do meio do mandato;
-3. a sigla: PLV ou LIVRE.
-
-O visual está decidido: o estilo fixado no ciclo 32, partindo do protótipo.
+As decisões que seguem abertas estão todas no [ciclo 32](../cycles/32-the-new-interface.md), §7.

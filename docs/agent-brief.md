@@ -129,7 +129,8 @@ O dock do Gabinete vira coluna fora dele. `app.mjs` apenas conecta os módulos d
 Identidade de carta é seu ID, não posição numa lista. Foco, repintura e troca rápida de telas
 são contratos de interação, não apenas aparência.
 
-Liquid Glass é a base visual, não uma restrição contra matéria física. `glaze` em
+A interface de hoje usa o Liquid Glass; a nova segue o estilo fixado em 26/09 (Apple + Football
+Manager + Civilization + Valorant, ciclo 32), com o vidro só em superfície parada. `glaze` em
 `ui/shared/glass.mjs` aplica a receita comum; `spring.mjs` mantém posição e velocidade nas
 interrupções. Custos de filtro, luz animada e recortes têm histórico medido. Consulte os
 padrões e medições antes de repeti-los. Capturas existentes ficam em `captures/walk/`.

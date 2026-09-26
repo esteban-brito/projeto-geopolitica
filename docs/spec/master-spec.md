@@ -361,7 +361,8 @@ Assumir pessoalmente uma pauta pode elevar prioridade, mas também criar expecta
 Requisitos:
 
 - alta responsividade;
-- Liquid Glass refinado;
+- o estilo fixado em 26/09 (Apple + Football Manager + Civilization + Valorant, ciclo 32), com o
+  vidro só em superfície parada;
 - hierarquia visual forte;
 - profundidade sob demanda;
 - baixa poluição;
