@@ -1,0 +1,29 @@
+# Os partidos
+
+Os 16 partidos da Câmara no protótipo da posse (26/09). Nomes, siglas e perfis são inventados (ADR 0003).
+As bancadas somam 513 e seguem a posse de 2023 (Câmara, "Bancada na posse") agrupada pelas fusões daquele
+ano. Nove partidos vieram das ideias do Gemini, pedidas por ele; os outros sete fecham os blocos grandes do
+centrão, que a Câmara real tem. A sigla PP do Gemini virou PATRIA: PP existe no TSE (Progressistas).
+
+| sigla  | nome                                | deputados | Nolan       | economia / costumes | perfil                                                                                                                                                                  | origem                 |
+| ------ | ----------------------------------- | --------: | ----------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| PCT    | Partido Comunista dos Trabalhadores |         1 | Autoritário | 3 / 8               | Marxista-leninista: planejamento central e expropriação dos bancos. Recusa ministérios e usa o plenário para denúncia.                                                  | Gemini                 |
+| PSU    | Partido Socialista Urbano           |        11 | Esquerda    | 12 / 78             | Socialismo democrático das grandes cidades: moradia, imposto sobre fortunas e direitos trans. Vota contra toda reforma de mercado.                                      | Gemini                 |
+| ECOS   | Ecossolidariedade                   |         8 | Esquerda    | 32 / 76             | Socioambientalismo: desmatamento zero, transição energética e direitos dos povos tradicionais. Trava a bancada ruralista.                                               | Gemini                 |
+| FTB    | Frente Trabalhista Brasileira       |        89 | Esquerda    | 28 / 62             | Federação de centro-esquerda, com sindicatos e movimentos sociais. A maior da esquerda e a que mais negocia.                                                            | Claude                 |
+| PTP    | Partido do Trabalho e da Pátria     |        17 | Autoritário | 12 / 45             | Trabalhismo nacionalista: estatais fortes, CLT, indústria naval e soberania energética. O foco é o trabalhador comum.                                                   | Gemini                 |
+| PATRIA | Patriota Popular                    |         5 | Autoritário | 10 / 10             | Nacional-desenvolvimentismo militar: monopólio estatal de minérios e petróleo, protecionismo e disciplina cívico-militar.                                               | Gemini (sigla trocada) |
+| MDN    | Movimento Democrático Nacional      |        42 | Centro      | 54 / 48             | O partido da redemocratização: uma federação de líderes regionais que negocia tudo.                                                                                     | Claude                 |
+| ACE    | Aliança de Centro                   |        26 | Centro      | 55 / 40             | Centrão pragmático, soma de legendas médias. Vota com quem oferece pasta e emenda.                                                                                      | Claude                 |
+| PSM    | Partido Social Municipalista        |        42 | Centro      | 58 / 44             | O partido dos prefeitos. Pragmático, costuma ir com quem governa.                                                                                                       | Claude                 |
+| UNIDOS | Unidos pela República               |        59 | Direita     | 75 / 45             | Centro-direita histórica: equilíbrio fiscal, concessões e estabilidade. Conservador nos costumes, sem guerra cultural; mestre em relatoria de orçamento.                | Gemini                 |
+| MCF    | Movimento Campo Forte               |        47 | Direita     | 70 / 32             | Bancada do agronegócio e do interior. Defende o produtor rural e troca voto por pasta e por emenda.                                                                     | Claude                 |
+| ACF    | Aliança Cristã pela Família         |        46 | Direita     | 60 / 14             | Conservador religioso, ligado a igrejas evangélicas. Disciplina alta nas pautas de costumes.                                                                            | Claude                 |
+| DNB    | Direita Nacional Brasileira         |        99 | Direita     | 72 / 18             | Direita conservadora e nacional-populista, herdeira do último governo de direita. A maior bancada e a mais forte nas redes.                                             | Claude                 |
+| FP     | Frente Republicana                  |        18 | Libertário  | 95 / 75             | Mercado aberto e ajuste fiscal com pauta progressista e ambiental. O partido do setor financeiro e dos bairros nobres.                                                  | Gemini                 |
+| LIBER  | Partido Liberdade                   |         2 | Libertário  | 78 / 95             | Liberalismo clássico e laico: mercado livre, fim da guerra às drogas e garantias contra o arbítrio. Vota com a direita na economia e com a esquerda nos direitos civis. | Gemini                 |
+| AL     | Aliança Libertária                  |         1 | Libertário  | 97 / 97             | Anarcocapitalismo: privatização total, quase nenhum imposto, porte livre de armas e drogas descriminalizadas. Recusa fundo partidário e emendas.                        | Gemini                 |
+
+As posições no Nolan, os perfis curtos e as cores são desenho. A ficha de cada partido na criação do
+Presidente mostra também a base eleitoral e o comportamento no Congresso. O texto original do Gemini está
+em `tmp/posse/ideias-de-partidos.md`.

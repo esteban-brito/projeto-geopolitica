@@ -9343,3 +9343,12 @@ porque passar o mouse no nome mudava o estado e redesenhava a tela. A ficha pass
 na página, como a etiqueta da Câmara: 33 ms e 1 quadro lento, melhor que a versão 25 (50 ms). Os retratos
 da criação e da foto só existem com a cortina aberta. Testes: etiqueta, ficha, fuzz e os 8 bugs do Codex
 sem regressão.
+
+### 88 · Os partidos do Gemini — 26/09
+
+Ele achou fracos vários partidos inventados por mim (SOMA, VALORES, ORDEM, LEVANTE) e trouxe nove
+ideias do Gemini. Entraram os nove com nome e sigla, cada um na bancada real que combina com o perfil; a
+sigla PP virou PATRIA porque existe no TSE. Os blocos grandes do centrão, que os nove não cobrem, ficaram
+com sete partidos refeitos no mesmo formato. Paleta nova com menor ΔE de 27,1. Na criação, o texto embaixo
+da grade de partidos deu lugar a uma ficha no mesmo estilo da ficha das pessoas: Nolan, ideologia,
+perfil, base eleitoral e comportamento no Congresso. Testes sem regressão.
