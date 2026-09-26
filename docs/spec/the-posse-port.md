@@ -1,0 +1,102 @@
+# A posse no jogo — estudo antes de implementar
+
+Estudo de 26/09. Compara o protótipo aprovado (versão 25 do
+[canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM), fonte em `tmp/posse/`) com o código
+do jogo. Nada foi implementado. O objetivo é saber o que quebra, o que conflita e o que falta antes
+da primeira linha.
+
+## 1. Como o jogo funciona hoje
+
+- **A posse é um formulário.** Nome, tratamento e partido (`src/app/dialogs.mjs`, `openSwear`). Ao
+  enviar, `createState` cria a partida e a tela vai direto para o Gabinete
+  (`src/app/handlers.mjs`, o `submit` do `swearForm`). A tela da posse entra entre os dois;
+- **a tela se redesenha inteira.** `paint()` troca o `innerHTML` de `#main` a cada mudança de estado;
+  `refresh()` só troca os números marcados com `data-read`; `transition()` usa View Transitions
+  (`src/app/paint.mjs`). Depois de cada pintura, `glaze()` veste o vidro em JS;
+- **o gabinete já está no estado.** `state.cabinet` guarda quem senta em cada cadeira
+  (`{ id, name, party }`). As ações `appoint` e `dismiss` existem (`src/state/state.mjs`), mas
+  nenhuma tela as chama. O redutor só confere se a cadeira existe; não impede a mesma pessoa em
+  duas cadeiras;
+- **a pasta mexe na lealdade devagar.** Por mês, a lealdade do partido sobe
+  `0,1 × fração servida × (80 − lealdade)` (`src/domain/congress/index.mjs`, `CABINET_PULL` e
+  `CABINET_CEILING`), aplicada na resolução do mês (`src/application/turn.mjs`, `settle`). A base é
+  `baseCount` sobre a lealdade; `baseSplit` reparte por partido;
+- **quem o partido indica já existe.** `nomineeOf` (`src/application/world.mjs`) sorteia pela
+  semente um nome da bancada, com id `partido:cadeira`. É a mesma pessoa que aparece na carta em
+  que o partido pede pasta;
+- **partidos e cadeiras batem em número.** São os mesmos 9 partidos, com as mesmas bancadas e as
+  mesmas coordenadas de Nolan (`economic`, `liberty`). As 38 cadeiras do catálogo usam os ids da Lei
+  14.600;
+- **o visual é outro sistema.** Fonte Inter servida do próprio site; escala de tipo 10, 12, 13, 15,
+  17, 22, 26, 35 e 72 px; tempos de 90, 180, 280 e 520 ms; vidro por `glaze()`;
+- **as guardas vão cobrar a tela nova.** `tokens` (cor solta), `material` (filtro fora do arquivo de
+  material), `motion` (animação inline, rede de movimento reduzido), `cascade`, `orphans`,
+  `vocabulary` (frase só em `src/ui/strings.mjs`, sem repetir), `schema` (catálogo novo com
+  esquema), `identity`, `boundaries` e `prose`;
+- **o passeio roda a 1440×980 e 1440×900**, e o macaco anda 60 ações.
+
+## 2. Onde protótipo e jogo divergem
+
+| Tema                       | Protótipo                                                       | Jogo                                                                              | Peso      |
+| -------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- |
+| base no começo             | 42, só o partido do jogador                                     | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
+| efeito da pasta            | uns 14 deputados na hora                                        | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
+| pessoas                    | escritas à mão                                                  | indicado por semente; especialistas e notáveis não existem                        | grande    |
+| Fama, Preparo, Afinidade   | números de desenho                                              | não existem (lote E1.0f)                                                          | grande    |
+| juntar, extinguir, dividir | funcionam na tela                                               | a lista de cadeiras é fixa no catálogo e em várias contas (lote E1.0d)            | grande    |
+| ids das cadeiras           | 26 ids curtos diferentes (`justica`, `gsi`, `agu`) e 3 criáveis | ids da lei (`justica-e-seguranca-publica`)                                        | médio     |
+| sigla                      | LIVRE                                                           | PLV                                                                               | pequeno   |
+| tamanho da tela            | fixo em 1280×800                                                | janela livre                                                                      | médio     |
+| fonte e tokens             | Hanken Grotesk e tokens próprios                                | Inter e tokens do jogo                                                            | médio     |
+| cores dos partidos         | 9 tons do Nolan, em HSL no código                               | não existem; a guarda `tokens` barra cor solta                                    | médio     |
+
+O conflito da base é o mais sério. No jogo de hoje, quem não recebe pasta vota com o governo em 85%
+das vezes; no protótipo, só vota quem recebe. Os dois não convivem. Resolver isso é mexer na
+calibragem do motor da Câmara, e o achado 86 já aponta para o mesmo lugar. A tela da posse não
+pode sair antes dessa decisão, porque todo número dela sairia errado ou inventado.
+
+## 3. Onde podem nascer bugs ou feiura
+
+Cada risco com a defesa. Os quatro primeiros já custaram caro no protótipo.
+
+1. **Repintura inteira.** Trocar o `innerHTML` a cada clique reinicia animações, perde a rolagem da
+   lista de pessoas e o foco. Defesa: a tela da posse pinta por partes, com o hemiciclo montado uma
+   vez e só os blocos que mudam trocados; passar o mouse nunca muda estado (medido no protótipo:
+   233 ms de pior quadro com CPU 4 vezes mais lenta, contra 17 ms sem estado);
+2. **513 pontos animados.** Transição por ponto derruba quadros. Defesa: bancada como bloco,
+   camada fixa, onda só quando deputados mudam de lado;
+3. **vidro sob animação.** Desfoque de fundo sob o hemiciclo descartou 32 quadros em 6 saídas.
+   Defesa: nada de `glaze()` nem filtro na área que anima;
+4. **etiqueta e ficha.** Pulo para o canto, nascer longe do cursor, cair abaixo dele. Defesa:
+   etiqueta sempre montada, posição escrita no evento, só opacidade no fade; os testes quadro a
+   quadro de `tmp/posse/` viram passeio;
+5. **tamanho de janela.** O hemiciclo foi desenhado em pixels fixos. Defesa: desenho em escala
+   única, medido a 1280×800, 1440×900, 1920×1080 e zoom de 125% e 150%;
+6. **duas verdades.** Ids, nomes, partidos e siglas do protótipo não podem entrar no jogo. Defesa:
+   só o catálogo; tabela de-para das 38 cadeiras antes de portar;
+7. **estado inválido.** A mesma pessoa em duas cadeiras, exonerar vaga, recarregar a página no meio
+   da posse, voltar ao formulário. Defesa: provas no redutor antes da tela; a posse grava a cada
+   gesto, como o resto do jogo;
+8. **texto.** Toda frase vai para `src/ui/strings.mjs`, sem repetição, e todo número sai do motor;
+9. **teclado e leitor de tela.** O protótipo quase não foi testado assim. Defesa: passeio só com
+   teclado.
+
+## 4. Provas que nascem antes do código
+
+- no redutor: uma pessoa por cadeira; nomear quem já está em outra cadeira a tira de lá;
+  exonerar vaga não muda nada;
+- na aplicação: a prévia de votos da tela é igual à base que o mês seguinte abre com aquele
+  gabinete (a mesma função, nunca uma conta da tela);
+- no passeio: os pontos acesos de cada bancada batem com `baseSplit`; passar o mouse não redesenha
+  a tela; a etiqueta nasce no cursor e fica acima dele; o hemiciclo não se move quando o texto muda;
+  nenhum quadro acima de 20 ms com CPU 4 vezes mais lenta;
+- o fuzz do protótipo (400 sessões de 120 passos) vira prova com semente.
+
+## 5. Decisões que são dele
+
+1. Como a base se forma no começo do mandato: todo partido meio leal (o jogo hoje) ou só quem
+   recebe pasta (o protótipo). É a decisão que destrava o resto;
+2. a ordem: a tela primeiro com as 38 cadeiras fixas, ou junto com juntar, extinguir e notáveis;
+3. o visual: o do protótipo ou o do resto do jogo;
+4. só na posse, ou também na reforma ministerial do meio do mandato;
+5. a sigla: PLV ou LIVRE.
