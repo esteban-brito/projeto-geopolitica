@@ -9148,3 +9148,16 @@ comanda. O que foi decidido fica salvo, e dá para ir a outro ministério sem no
 Extinguir voltou como botão próprio: o nome some e o trabalho vai para o ministério que ele
 escolher, que é o que a lei permite. A etiqueta com o nome do ministério, que flutuava sobre o
 desenho e cobria os vizinhos, saiu.
+
+### 69 · A auditoria da posse — 26/09
+
+Ele notou que extinguir e juntar tinham virado a mesma coisa, e tinham: as duas mandavam tudo para
+um ministério só. A lei mostra a diferença. Em 2019 o Trabalho foi repartido entre Justiça,
+Cidadania e Economia (MP 870, art. 83); juntar põe tudo num lugar só. Agora extinguir mostra as
+áreas do ministério, tiradas da Lei 14.600, e cada uma vai para onde o jogador mandar. A auditoria
+achou também: a data da posse no protótipo estava errada (5 de janeiro, e não 1º); o prazo da
+medida provisória só corre depois do recesso; a AGU está na Constituição e não se extingue por
+medida; o Ministério da Defesa dirige as Forças Armadas, mas o comando supremo é do Presidente; os
+votos por pasta chegam com o tempo, e não na hora; um partido muito distante recusa entrar no
+governo; dividir não tirava a área do ministério de origem. Um roteiro testou cada pasta e cada
+ação, com 20 e 41 pastas, e passou sem quebra.
