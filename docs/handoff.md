@@ -128,13 +128,17 @@
    (versão 25, 26/09) e entra no jogo no E1.0e; a direção Apple + Football Manager + Civilization +
    Valorant está registrada no mapa e só se aplica com ordem dele; a tela das próximas
    atualizações entra na mesma reformulação;
-4. **achado 81**, antes de fechar o E0; não bloqueia o E1;
-5. **achado 69** — investigar a oscilação da prova de voo interrompido;
-6. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
-7. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%);
-8. **3º ultra: `src/ui` inteira**, depois de fechar o ciclo 29;
-9. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](cycles/30-depth-and-proofs.md): ele marca os
-   candidatos que entram.
+4. **pesquisa Xi Jinping** (26/09): o ChatGPT faz a cronologia 2012–2026 e o catálogo temático, com
+   fonte em cada fato; quando chegar, eu confiro as fontes e faço a parte 3, se e como cada medida
+   cabe no Brasil real e no jogo, com preço e sem muro. A pesquisa 17 do Gemini foi apagada: sem
+   fontes e com erros de fato;
+5. **achado 81**, antes de fechar o E0; não bloqueia o E1;
+6. **achado 69** — investigar a oscilação da prova de voo interrompido;
+7. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
+8. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%);
+9. **3º ultra: `src/ui` inteira**, depois de fechar o ciclo 29;
+10. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](cycles/30-depth-and-proofs.md): ele marca os
+    candidatos que entram.
 
 ## Decisões vivas
 
