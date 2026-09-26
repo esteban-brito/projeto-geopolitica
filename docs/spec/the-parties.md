@@ -35,3 +35,15 @@ social-democracia pragmática e partido da máquina, com os 42 deputados da vaga
 
 Na mesma rodada: CS virou PCS (Partido da Coalizão Social), MCF virou PAB (Partido Agrário Brasileiro) e PCT
 virou PML (Partido Marxista-Leninista); PCC foi descartado por ser a sigla de uma facção criminosa.
+
+## Ajustes aprovados em 26/09, a fazer
+
+Comparação com a Câmara real na [pesquisa 18](../research/18-the-chamber-today.md). Ele aprovou fazer, depois de
+fundir com a avaliação do Gemini que vai mandar:
+
+- a esquerda do jogo bate com a real (126 contra 125 deputados);
+- o "centro" do jogo (187 deputados) não existe para os especialistas: empurrar FBR e PACTO para a direita e
+  MDN e UNIDOS para a centro-direita, conforme as notas de 2022;
+- atualizar as bancadas para as de 26/09/2026 (a janela partidária de 2026 mexeu em PSD, PDT e Podemos);
+- o PDST ocupa a vaga do PSD, que é de direita: decidir entre levá-lo à vaga do PSB (17, centro-esquerda),
+  com um partido de direita pragmática na vaga do PSD (48), ou mantê-lo com 42.
