@@ -9258,3 +9258,13 @@ posição é escrita direto no elemento, uma vez por quadro, e a conta corrige o
 teste no navegador moveu o cursor por uma bancada com zoom de 100% e de 75%: a etiqueta ficou
 centrada sobre o cursor e nunca o cobriu. Os protótipos A, B e C foram apagados do canvas, a pedido
 dele; fica só a posse.
+
+### 80 · Ícones pela medida — 26/09
+
+Ele pediu os ícones centralizados e padronizados, a etiqueta sempre acima do cursor e mais
+polimento nas transições. A caixa de cada ícone foi medida no navegador: o mais deslocado estava
+1,25 px fora do centro, e os tamanhos variavam de 13,6 a 21. Cada ícone ganhou uma área quadrada
+centrada na própria medida, com o mesmo tamanho visual e o traço fixo em pixels. A etiqueta perdeu
+as duas regras que a faziam descer, e um teste com o cursor nos pontos mais altos de uma bancada,
+a 100% e a 75% de zoom, confirmou que ela fica acima e centrada. A etiqueta e a ficha passaram a
+sumir com um fade, e filtros, linhas e o indicador de passo ganharam transição.
