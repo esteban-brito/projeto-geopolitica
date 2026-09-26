@@ -21,6 +21,31 @@
 6. Cada ação guarda o estágio: anúncio, projeto, aprovação, execução, resultado. A tela separa o que
    foi anunciado, o que foi medido e o que se atribui à ação (pesquisa 19).
 
+## Os três degraus
+
+O Brasil não é a China. Xi herdou um partido que já mandava no Exército, nos tribunais, na imprensa e
+no parlamento, e concentrou poder dentro dessa estrutura. O Presidente brasileiro começa do lado
+oposto. Por isso a partida Xi tem três degraus, cada um mais caro que o anterior:
+
+1. **Dentro da Constituição.** Anticorrupção, plano, estatais, aliados nas vagas que abrem, coalizão
+   grande. Sai um Presidente forte, que ainda pode perder a eleição, sofrer CPI e ter de obedecer ao
+   STF.
+2. **Erosão pela lei.** Mudar as regras com 308 deputados e 49 senadores, em dois turnos: terceiro
+   mandato, STF maior, PGR e PF alinhados, lei de mídia. A forma é legal, mas o STF pode derrubar
+   emenda; fez isso pela primeira vez na ADI 939, de 1993. Foi o caminho da Hungria (maioria de 2/3
+   em 2010, Constituição nova em 2011), da Venezuela (tribunal supremo de 20 para 32 juízes em 2004)
+   e de El Salvador (juízes constitucionais removidos em 2021).
+3. **Ruptura.** O núcleo do modelo chinês está no art. 60 §4º: partido acima do Estado, fim da
+   eleição competitiva, fim da separação de Poderes. Nem PEC muda isso. Só se chega lá saindo da
+   Constituição: fechar o Congresso, afastar ministros do STF, convocar outra constituinte. O Brasil
+   já fez isso em 1937 e depois de 1964. O AI-2 levou o STF de 11 para 16 ministros, e em 1969 três
+   ministros foram aposentados à força. Tudo depende de as Forças obedecerem. A última tentativa, de
+   2022 e 2023, terminou com condenação no STF em 2025.
+
+O jogo mostra em que degrau o governo está pelo regime praticado (peça 7 abaixo). O degrau 3 não
+encerra a partida por decreto. É a cadeia do master-spec §17.5, e o desfecho sai de quem obedece e de
+quem recusa.
+
 ## Partida Xi: oito fios
 
 Os artigos são da Constituição, salvo quando indicado. Os números `#` são itens do
