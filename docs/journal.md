@@ -9139,3 +9139,12 @@ O jogo ficou com três gestos (juntar, dividir, criar), e juntar pergunta qual n
 reprovou os textos com cara de IA do protótipo, e com razão: a legenda do hemiciclo virou legenda
 visual, e cada frase passou a dizer o que acontece, com número. Os votos por pasta passaram a
 seguir a conta do motor, e não mais "uma pasta, a bancada inteira".
+
+### 68 · Um painel, dois passos — 26/09
+
+Ele pediu para tirar a legenda e as duas abas. Agora cada ministério tem dois passos no mesmo
+painel: primeiro o que fazer com ele (manter, juntar, extinguir, dividir, desfazer), depois quem
+comanda. O que foi decidido fica salvo, e dá para ir a outro ministério sem nomear ninguém.
+Extinguir voltou como botão próprio: o nome some e o trabalho vai para o ministério que ele
+escolher, que é o que a lei permite. A etiqueta com o nome do ministério, que flutuava sobre o
+desenho e cobria os vizinhos, saiu.

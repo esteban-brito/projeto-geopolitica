@@ -42,7 +42,7 @@ O visual de vidro (Liquid Glass) segue como base, pela decisão dele de 05/09, e
 ## Os protótipos da posse, 25/09
 
 **Escolha dele em 26/09: a fusão de B e C.** A primeira versão punha os dois em abas separadas, e
-ele recusou. A segunda é um hemiciclo só, com duas abas (Ministros e Ministérios), desenhado como D no
+ele recusou. A segunda é um hemiciclo só, sem abas, com dois passos por ministério no mesmo painel, desenhado como D no
 mesmo canvas e descrito em
 [o ministério](the-cabinet.md), §4.
 

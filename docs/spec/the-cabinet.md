@@ -27,9 +27,11 @@
 Um ministério é um pacote de funções: as áreas, os programas e os órgãos. As funções nunca somem.
 O que muda é quem cuida delas. Por isso, na lei, extinguir e fundir são o mesmo ato: a medida
 provisória diz em que ministério cada função passa a ficar. O jornal chama de "extinto" o
-ministério cujo nome sumiu. São três gestos, na posse ou em qualquer semana, com uma reunião na
+ministério cujo nome sumiu. São quatro gestos, na posse ou em qualquer semana, com uma reunião na
 Casa Civil e uma medida provisória:
 
+- **extinguir:** o nome some, e o trabalho passa para outro ministério que o jogador escolhe. É
+  juntar sem deixar o nome;
 - **juntar:** dois ministérios viram um, com um ministro só. O jogador escolhe o nome: os dois
   (como Justiça e Segurança Pública, em 2019) ou só um. Quando um nome some (como a Cultura dentro
   da Cidadania, em 2019), o grupo que depende daquela área reage como se o ministério tivesse
@@ -165,19 +167,22 @@ Aparecem com o tempo, no que a pessoa faz.
 
 ## 4. A tela da posse: o hemiciclo
 
-Uma tela e duas abas, Ministros e Ministérios. É a fusão dos protótipos B e C, o D do canvas:
+Uma tela, sem abas. É a fusão dos protótipos B e C, o D do canvas:
 
-- **O hemiciclo:** você no centro; em volta, as pastas em três anéis, com o núcleo no de dentro;
-  por fora, os 513 deputados. Dar uma pasta a um partido acende a bancada dele.
-- **Ministros:** tocar numa pasta abre, à direita, quem pode ocupá-la: o indicado de cada partido,
-  técnicos e gente de fora. Cada linha mostra rosto, fama, preparo, afinidade e quantos deputados
-  entram na base. A lista ordena por coluna.
-- **Ministérios:** o mesmo hemiciclo. Tocar numa pasta abre juntar ou dividir, e o anel se refaz
-  com menos ou mais pastas.
+- **O hemiciclo:** você no centro; em volta, os ministérios em três anéis, com o núcleo no de
+  dentro; por fora, os 513 deputados. Dar um ministério a um partido acende a parte da bancada que
+  passa a votar com o governo.
+- **Dois passos por ministério, no mesmo painel.** Passo 1: manter como está, juntar com outro,
+  extinguir (o trabalho vai para outro ministério), dividir ou desfazer uma mudança. Passo 2: quem
+  comanda, entre o indicado de cada partido, técnicos e gente de fora, com rosto, fama, preparo,
+  afinidade e votos. A lista ordena por coluna.
+- **O que foi decidido fica salvo.** Dá para ir a outro ministério sem nomear ninguém; ao voltar,
+  ele abre no passo 2, com um botão para voltar ao passo 1.
+- **Criar ministério é dividir um que existe,** porque todo trabalho do governo já tem dono.
 - **Os votos seguem a conta do motor:** um partido vota inteiro com o governo quando tem pastas na
   proporção da bancada (`coalitionOf`). Cada pasta vale cerca de 13 deputados (513 ÷ 38).
-- **Nenhuma janela por cima:** a chefe de gabinete fala numa linha embaixo do hemiciclo, e a base
-  fica sempre no alto.
+- **Nenhuma janela nem legenda por cima:** a chefe de gabinete fala numa linha embaixo do
+  hemiciclo, e a base fica sempre no alto.
 
 ## 5. Os lotes
 
