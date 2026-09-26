@@ -9368,3 +9368,11 @@ perfil não propõe controle quase total da vida privada), e os quatro textos de
 padrão único. Tirei ponto e vírgula e ajustei a ideologia do PCT. A pedido dele, a AL saiu e entrou a
 FDN, inspirada no União Brasil, com os 59 deputados desse bloco; o UNIDOS foi para 18. Na criação, a
 ficha de partido passou a seguir o mouse, à direita do cursor. Testes sem regressão.
+
+### 91 · Partidos fundidos com a Câmara real — 26/09
+
+A avaliação do Gemini olhou nomes; a comparação com a Câmara real (pesquisa 18) olhou posição e tamanho. Da
+primeira, PACTO virou CONV (Convergência), DNB virou PCN (Partido Conservador Nacional) e FP virou VANG
+(Vanguarda). Da segunda, as bancadas passaram às de 26/09/2026, com a esquerda em 125 como na real; FBR e CONV
+foram para a direita; o PDST ficou com a vaga do PSD no centro pragmático; o PCS absorveu o PSB. Novas cores
+para FBR e CONV mantêm a menor diferença da paleta em ΔE 27,3. Testes sem regressão.

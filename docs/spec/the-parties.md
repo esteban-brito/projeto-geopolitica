@@ -1,49 +1,39 @@
 # Os partidos
 
-Os 16 partidos da Câmara no protótipo da posse (26/09). Nomes, siglas e perfis são inventados (ADR 0003).
-As bancadas somam 513 e seguem a posse de 2023 (Câmara, "Bancada na posse") agrupada pelas fusões daquele
-ano. Oito partidos vieram das ideias do Gemini (a sigla PP virou PATRIA, porque existe no TSE); a FBR,
-inspirada no União Brasil, entrou no lugar da AL a pedido dele. Coordenadas e textos revisados pelo Codex e
-conferidos pelo Claude em 26/09; no mesmo dia, quatro nomes parecidos demais foram trocados (FBR, CS, PACTO
-e LIGA).
+Os 16 partidos da Câmara no protótipo da posse, versão de 26/09. Nomes, siglas e perfis são inventados
+(ADR 0003). As bancadas seguem a Câmara em 26/09/2026 ([pesquisa 18](../research/18-the-chamber-today.md)),
+bloco a bloco, e a esquerda soma 125 deputados como na real. Nove nascem das ideias do Gemini (PP virou
+PATRIA porque existe no TSE; FP virou VANG); os nomes passaram pela avaliação dele e pela minha, e as
+posições seguem a classificação dos especialistas de 2022 onde ela e o perfil concordam.
 
-| sigla  | nome                                         | deputados | Nolan       | economia / costumes | perfil                                                                                                                              | origem     |
-| ------ | -------------------------------------------- | --------: | ----------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| PML    | Partido Marxista-Leninista                   |         1 | Autoritário | 3 / 8               | Planejamento central, expropriação de bancos e controle da mídia. Subordina direitos civis à disciplina coletiva.                   | Gemini     |
-| PSU    | Partido Socialista Urbano                    |        11 | Esquerda    | 18 / 78             | Moradia popular, tributação de fortunas e direitos trans. Defende desapropriar imóveis ociosos e ampliar serviços públicos.         | Gemini     |
-| ECOS   | Ecossolidariedade                            |         8 | Esquerda    | 32 / 76             | Desmatamento zero, energia limpa e direitos territoriais. Condiciona obras à proteção de povos locais.                              | Gemini     |
-| PCS    | Partido da Coalizão Social                   |        89 | Esquerda    | 28 / 62             | Emprego, renda e proteção trabalhista. Reúne correntes de esquerda que negociam com governos.                                       | Claude     |
-| PTP    | Partido do Trabalho e da Pátria              |        17 | Esquerda    | 22 / 54             | Estatais estratégicas, indústria naval e direitos trabalhistas. Põe soberania energética e emprego à frente das pautas de costumes. | Gemini     |
-| PATRIA | Patriota Popular                             |         5 | Autoritário | 10 / 10             | Monopólio estatal de minérios e petróleo, tarifas de importação e disciplina militar. Defende controle da mídia e das fronteiras.   | Gemini     |
-| MDN    | Movimento Democrático Nacional               |        42 | Centro      | 54 / 48             | Herança da redemocratização, autonomia regional e acesso a verbas. Reúne líderes locais com posições diversas.                      | Claude     |
-| PACTO  | Pacto Parlamentar                            |        26 | Centro      | 55 / 40             | Alianças, verbas locais e cargos no governo. Decide o apoio conforme as concessões.                                                 | Claude     |
-| PDST   | Partido Democrático Social dos Trabalhadores |        42 | Centro      | 40 / 58             | Transferência de renda, crédito de bancos públicos e campeões nacionais. Loteia estatais e ministérios em troca de governabilidade. | ideia dele |
-| FBR    | Força Brasileira                             |        59 | Centro      | 62 / 42             | Fusão de dois partidos de centro e de direita, com muitas alas. Ocupa ministérios e vota dividido.                                  | Claude     |
-| UNIDOS | Unidos pela República                        |        18 | Centro      | 64 / 44             | Equilíbrio fiscal, concessões e estabilidade institucional. Evita disputas de costumes, mas resiste à sua liberalização.            | Gemini     |
-| PAB    | Partido Agrário Brasileiro                   |        47 | Direita     | 60 / 32             | Crédito rural, infraestrutura e menos restrições à produção. Negocia apoio conforme os ganhos do setor.                             | Claude     |
-| ACF    | Aliança Cristã pela Família                  |        46 | Direita     | 60 / 24             | Família tradicional e restrições ao aborto e às drogas. Mobiliza igrejas e concentra votos em pautas de costumes.                   | Claude     |
-| DNB    | Direita Nacional Brasileira                  |        99 | Direita     | 62 / 30             | Menos regulação, segurança pública e valores conservadores. Defende proteção a setores nacionais e mobiliza pelas redes.            | Claude     |
-| FP     | Frente Republicana                           |         2 | Libertário  | 88 / 75             | Abertura comercial, privatizações e ajuste fiscal. Defende diversidade nas empresas e metas ambientais.                             | Gemini     |
-| LIBER  | Partido Liberdade                            |         1 | Libertário  | 78 / 95             | Mercado aberto, descriminalização das drogas e garantias individuais. Recusa abuso policial e judicial.                             | Gemini     |
+| sigla  | nome                                         | deputados | Nolan       | economia / costumes | bloco real                       | perfil                                                                                                                              |
+| ------ | -------------------------------------------- | --------: | ----------- | ------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| PML    | Partido Marxista-Leninista                   |         1 | Autoritário | 3 / 8               | —                                | Planejamento central, expropriação de bancos e controle da mídia. Subordina direitos civis à disciplina coletiva.                   |
+| PSU    | Partido Socialista Urbano                    |        11 | Esquerda    | 18 / 78             | PSOL/Rede                        | Moradia popular, tributação de fortunas e direitos trans. Defende desapropriar imóveis ociosos e ampliar serviços públicos.         |
+| ECOS   | Ecossolidariedade                            |         4 | Esquerda    | 32 / 76             | PSOL/Rede                        | Desmatamento zero, energia limpa e direitos territoriais. Condiciona obras à proteção de povos locais.                              |
+| PCS    | Partido da Coalizão Social                   |        99 | Esquerda    | 28 / 62             | PT/PCdoB/PV + PSB                | Emprego, renda e proteção trabalhista. Reúne correntes de esquerda que negociam com governos.                                       |
+| PTP    | Partido do Trabalho e da Pátria              |        10 | Esquerda    | 22 / 54             | PDT                              | Estatais estratégicas, indústria naval e direitos trabalhistas. Põe soberania energética e emprego à frente das pautas de costumes. |
+| PATRIA | Patriota Popular                             |         3 | Autoritário | 10 / 10             | PRD                              | Monopólio estatal de minérios e petróleo, tarifas de importação e disciplina militar. Defende controle da mídia e das fronteiras.   |
+| MDN    | Movimento Democrático Nacional               |        38 | Centro      | 58 / 44             | MDB                              | Herança da redemocratização, autonomia regional e acesso a verbas. Reúne líderes locais com posições diversas.                      |
+| CONV   | Convergência                                 |        36 | Direita     | 62 / 34             | Podemos + Avante + Solidariedade | Alianças, verbas locais e cargos no governo. Decide o apoio conforme as concessões.                                                 |
+| PDST   | Partido Democrático Social dos Trabalhadores |        48 | Centro      | 50 / 50             | PSD                              | Transferência de renda, crédito de bancos públicos e campeões nacionais. Loteia estatais e ministérios em troca de governabilidade. |
+| FBR    | Força Brasileira                             |        52 | Direita     | 68 / 32             | União Brasil                     | Fusão de dois partidos de direita, com muitas alas. Ocupa ministérios e vota dividido.                                              |
+| UNIDOS | Unidos pela República                        |        19 | Centro      | 64 / 44             | PSDB/Cidadania                   | Equilíbrio fiscal, concessões e estabilidade institucional. Evita disputas de costumes, mas resiste à sua liberalização.            |
+| PAB    | Partido Agrário Brasileiro                   |        46 | Direita     | 60 / 32             | PP                               | Crédito rural, infraestrutura e menos restrições à produção. Negocia apoio conforme os ganhos do setor.                             |
+| ACF    | Aliança Cristã pela Família                  |        42 | Direita     | 60 / 24             | Republicanos                     | Família tradicional e restrições ao aborto e às drogas. Mobiliza igrejas e concentra votos em pautas de costumes.                   |
+| PCN    | Partido Conservador Nacional                 |        98 | Direita     | 62 / 30             | PL                               | Menos regulação, segurança pública e valores conservadores. Defende proteção a setores nacionais e mobiliza pelas redes.            |
+| VANG   | Vanguarda                                    |         5 | Libertário  | 88 / 75             | Novo                             | Abertura comercial, privatizações e ajuste fiscal. Defende diversidade nas empresas e metas ambientais.                             |
+| LIBER  | Partido Liberdade                            |         1 | Libertário  | 78 / 95             | Missão                           | Mercado aberto, descriminalização das drogas e garantias individuais. Recusa abuso policial e judicial.                             |
 
 Economia é liberdade econômica (0, Estado controla tudo; 100, mercado livre) e costumes é liberdade
-individual (0, controle total; 100, liberdade total). Posições, perfis e cores são desenho. O texto original do
-Gemini está em `tmp/posse/ideias-de-partidos.md`.
+individual (0, controle total; 100, liberdade total). Posições, perfis e cores são desenho.
 
-Em 26/09 a LIGA saiu, a pedido dele, e entrou o PDST (Partido Democrático Social dos Trabalhadores),
-social-democracia pragmática e partido da máquina, com os 42 deputados da vaga.
+## Decisões de 26/09
 
-Na mesma rodada: CS virou PCS (Partido da Coalizão Social), MCF virou PAB (Partido Agrário Brasileiro) e PCT
-virou PML (Partido Marxista-Leninista); PCC foi descartado por ser a sigla de uma facção criminosa.
-
-## Ajustes aprovados em 26/09, a fazer
-
-Comparação com a Câmara real na [pesquisa 18](../research/18-the-chamber-today.md). Ele aprovou fazer, depois de
-fundir com a avaliação do Gemini que vai mandar:
-
-- a esquerda do jogo bate com a real (126 contra 125 deputados);
-- o "centro" do jogo (187 deputados) não existe para os especialistas: empurrar FBR e PACTO para a direita e
-  MDN e UNIDOS para a centro-direita, conforme as notas de 2022;
-- atualizar as bancadas para as de 26/09/2026 (a janela partidária de 2026 mexeu em PSD, PDT e Podemos);
-- o PDST ocupa a vaga do PSD, que é de direita: decidir entre levá-lo à vaga do PSB (17, centro-esquerda),
-  com um partido de direita pragmática na vaga do PSD (48), ou mantê-lo com 42.
+- **O PDST ficou com a vaga do PSD (48) e foi para o centro (50/50).** O perfil dele, partido da máquina que
+  entra em qualquer governo, é o comportamento do PSD real; assim ficam 16 partidos sem apagar nenhum bloco.
+- **FBR e CONV foram para a direita**, como União Brasil e Podemos na nota dos especialistas; o MDN puxou para
+  a centro-direita.
+- **O PCS absorveu o bloco do PSB** e ficou com 99.
+- A sigla LIBER lembra um partido em formação no Brasil (Libertários), fora do registro do TSE; ficou por ser
+  escolha dele.
