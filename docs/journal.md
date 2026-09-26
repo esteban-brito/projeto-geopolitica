@@ -9376,3 +9376,10 @@ primeira, PACTO virou CONV (Convergência), DNB virou PCN (Partido Conservador N
 (Vanguarda). Da segunda, as bancadas passaram às de 26/09/2026, com a esquerda em 125 como na real; FBR e CONV
 foram para a direita; o PDST ficou com a vaga do PSD no centro pragmático; o PCS absorveu o PSB. Novas cores
 para FBR e CONV mantêm a menor diferença da paleta em ΔE 27,3. Testes sem regressão.
+
+### 92 · Os últimos nomes — 26/09
+
+LIBER virou PLI, libertário radical; FP virou VANGUARDA, neoliberalismo clássico; PSU virou PSO; CONV virou PBR,
+Progressistas do Brasil (nome do PP real, mantido por ordem dele). Na revisão, o PCN foi a 66/22 e o PATRIA a
+25/12. Os rótulos da grade de partidos passaram a sigla e bancada em cima, família do Nolan e nome embaixo,
+porque "VANGUARDA · Libertário · 5" não cabia. Testes sem regressão.
