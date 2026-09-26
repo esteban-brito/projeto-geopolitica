@@ -21,14 +21,19 @@
   lotes 1 e 2 estão no jogo: 14 pessoas decidem pela VONTADE, escrevem cartas com autor, saem da
   base pela ideologia e fazem oposição. O E1.0a (as 38
   cadeiras, nomear e demitir, a pasta que puxa a lealdade até 80) está feito; a abertura segue com
-  o E1.0b, a eleição da Mesa, e a tela da posse espera a escolha dele entre os protótipos;
+  o E1.0b, a eleição da Mesa. A tela da posse tem protótipo aprovado (versão 25 do
+  [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM), 26/09); fonte e testes em
+  `tmp/posse/`, e ela entra no jogo no E1.0e;
+- **commits de 26/09:** `8bb018c` a `a656aec`, 23 commits: o protótipo da posse até a versão 25
+  (sistema de classes, etiqueta sem pulo, Câmara leve, cabeçalho em grade) e a direção de design
+  futura;
 - **commits de 25/09:** `febd0b5` (E0), `2482ce7` (documentos), `916a80f` e `97483ec` (passos 1 e 2
   do E1.0a), `d2684ce` (checklist de 40), `f6d28a3` (mundo vivo, lote 1). Ele autorizou commit ao fim de cada etapa validada;
   push e merge seguem pedindo ordem;
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `validate` verde em 25/09, depois do lote 2 do mundo vivo (413 provas, passeio e
-  macaco); roda de novo antes de qualquer commit;
+- **portão:** `validate` verde em 26/09, depois de registrar o protótipo da posse (desde o lote 2
+  do mundo vivo só mudaram docs; passeio e macaco sem achados); roda de novo antes de qualquer commit;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
 
@@ -119,9 +124,10 @@
 1. **E1.0 — a abertura, montar o governo**, lotes E1.0a a E1.0e do [mapa](spec/migration-map.md)
    §6.4. O E1.0a está feito; o próximo é o E1.0b, a eleição da Mesa;
 2. **E1.1 a E1.8 — a estatal**, depois da abertura;
-3. **a interface nova**: o [mapa das telas](spec/interface-map.md) e três protótipos da posse no
-   [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM) esperam a escolha dele; a tela das
-   próximas atualizações entra na mesma reformulação;
+3. **a interface nova**: o [mapa das telas](spec/interface-map.md). A posse tem protótipo aprovado
+   (versão 25, 26/09) e entra no jogo no E1.0e; a direção Apple + Football Manager + Civilization +
+   Valorant está registrada no mapa e só se aplica com ordem dele; a tela das próximas
+   atualizações entra na mesma reformulação;
 4. **achado 81**, antes de fechar o E0; não bloqueia o E1;
 5. **achado 69** — investigar a oscilação da prova de voo interrompido;
 6. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);

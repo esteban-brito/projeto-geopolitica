@@ -173,6 +173,9 @@ Aparecem com o tempo, no que a pessoa faz.
 
 ## 4. A tela da posse: o hemiciclo
 
+Protótipo aprovado em 26/09: versão 25 do canvas, com fonte e testes em `tmp/posse/`. A direção
+visual para depois está no [mapa das telas](interface-map.md), "Direção futura".
+
 Uma tela, sem abas. É a fusão dos protótipos B e C; os protótipos A, B e C foram apagados do canvas em 26/09, a pedido dele:
 
 - **O hemiciclo:** você no centro; em volta, os ministérios em três anéis, com o núcleo no de
@@ -194,6 +197,7 @@ Uma tela, sem abas. É a fusão dos protótipos B e C; os protótipos A, B e C f
 - **Passar o mouse num ministério não muda o estado da tela.** A etiqueta é só CSS, dentro do botão: um redesenho no meio da animação cortava a subida e a volta. O círculo só sobe 3 px com sombra, sem crescer e sem filtro, que faziam o ícone encaixar 1 px no fim;
 - **A bancada em foco:** sobe 3 px como um bloco, com mola, e as outras caem para 15% de opacidade; sem brilho e sem vidro. O foco é um atributo no quadro e a etiqueta é escrita direto na página: passar o mouse na Câmara não redesenha a tela. A onda por deputado a cada hover disparava 513 transições e um redesenho inteiro, com pior quadro de 233 ms em CPU 4 vezes mais lenta; o bloco faz 17 ms. A onda fica só para quando deputados mudam de lado. As bancadas ficam fixas como camada de GPU e nada na tela usa desfoque de fundo: os dois juntos descartavam 32 quadros em seis saídas rápidas;
 - **As animações seguem três regras:** a área que recebe o mouse nunca se mexe (só o desenho se move, para não criar vai e vem na borda); a ida pode ter mola, a volta é suave e não passa do ponto; a onda dos deputados só anima quem mudou de lado. A etiqueta do partido fica sempre montada: segue o cursor no mesmo quadro do evento, some só com fade de opacidade e guarda lugar e conteúdo enquanto some. A ficha da pessoa abre só com o mouse sobre o nome; nasce já do lado certo e só desliza quando troca de lado aberta. O hemiciclo tem posição fixa: a fala da chefe de gabinete cresce para baixo; Os círculos não deslizam quando o anel se refaz, porque trocariam de ministério no caminho;
+- **O cabeçalho é uma grade:** título, ministérios e deputados seguem o mesmo padrão (rótulo, número grande, uma linha que explica a conta, como "Faltam 215 para aprovar lei"). A chefe de gabinete fala como mensagem, com o nome em cima;
 - **Um sistema só:** cores, tipos (12, 13, 15, 17, 22 e 32 px), cantos, sombras e tempos (0,15 s, 0,25 s e 0,45 s) definidos uma vez como variáveis; coisas iguais usam a mesma classe;
 - **O movimento é curto e tem função:** os deputados acendem em onda quando um partido entra na base, a barra da base desliza, o painel sobe de leve ao trocar de passo e os botões reagem ao toque. Com "movimento reduzido" ligado no sistema, nada se mexe;
 - **As cores dos partidos partem do diagrama de Nolan e nenhuma se repete.** O Nolan dá a família (vermelhos e rosas à esquerda, lilases no centro, azuis à direita, dourado no libertário, oliva no autoritário) e cada partido tem um tom próprio: a menor distância de cor entre dois partidos é 29 na escala ΔE. O hemiciclo ordena as bancadas da esquerda para a direita pela mesma posição. Os tons são [DESENHO]; as cores do catálogo do jogo passam a segui-los no lote E1.0e;

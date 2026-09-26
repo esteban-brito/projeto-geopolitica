@@ -134,6 +134,13 @@ Liquid Glass é a base visual, não uma restrição contra matéria física. `gl
 interrupções. Custos de filtro, luz animada e recortes têm histórico medido. Consulte os
 padrões e medições antes de repeti-los. Capturas existentes ficam em `captures/walk/`.
 
+A interface nova nasce em protótipo no canvas antes de entrar no jogo. A posse está aprovada
+(versão 25, 26/09); fonte, montagem e testes com o runtime real do canvas ficam em `tmp/posse/`
+(ver o README de lá). Medido lá: hover que muda estado redesenha a tela; 513 transições por hover
+davam pior quadro de 233 ms com CPU 4 vezes mais lenta; desfoque de fundo sob animação descartava
+quadros. A direção visual futura (Apple + Football Manager + Civilization + Valorant) está no mapa
+das telas e só se aplica com ordem dele.
+
 ## Retrato do fim do estudo — conferir no handoff
 
 Ciclo 29 ainda aberto: simplificação/prosa e provas de interação. Modularização do app e
