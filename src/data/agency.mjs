@@ -10,6 +10,7 @@
  * @property {number} served - receber pastas na proporção da bancada
  * @property {number} wear - não se desgastar com um governo impopular
  * @property {number} money - receber a verba das emendas que o governo promete
+ * @property {number} stage - aparecer como oposição a um governo fraco
  *
  * @typedef {object} Agency
  * @property {number} hurt - fração da dignidade que um pedido recusado ou ignorado leva
@@ -29,6 +30,8 @@
  * @property {number} answerQuality - o quanto uma resposta do Presidente ensina: uma recusa não é certeza
  * @property {number} repeat - o quanto uma ameaça repetida ainda salva a cara, a cada repetição
  * @property {number} moneyFloor - a fração da verba prometida que satisfaz o porta-voz
+ * @property {number} distance - o quanto a distância ideológica do governo aumenta o desgaste de ficar na base
+ * @property {number} chorus - o desgaste que cada crítica da oposição no mês anterior soma aos que ficaram
  * @property {number} hopeMin - o prior de ser atendido, faixa gerada pela semente
  * @property {number} hopeMax
  * @property {number} prideMin - o peso da dignidade, faixa gerada pela semente
@@ -58,6 +61,8 @@ export const AGENCY_SCHEMA = {
   answerQuality: { kind: "number", min: 0.01, max: 0.99 },
   repeat: { kind: "number", min: 0, max: 1 },
   moneyFloor: { kind: "number", min: 0, max: 1 },
+  distance: { kind: "number", min: 0, max: 5 },
+  chorus: { kind: "number", min: 0, max: 1 },
   hopeMin: { kind: "number", min: 0, max: 1 },
   hopeMax: { kind: "number", min: 0, max: 1 },
   prideMin: { kind: "number", min: 0, max: 3 },
@@ -87,6 +92,8 @@ export const AGENCY = {
   answerQuality: 0.6,
   repeat: 0.5,
   moneyFloor: 0.8,
+  distance: 1,
+  chorus: 0.05,
   hopeMin: 0.45,
   hopeMax: 0.9,
   prideMin: 0.2,
@@ -103,6 +110,7 @@ export const DRIVE_SCHEMA = {
   served: { kind: "number", min: 0, max: 3 },
   wear: { kind: "number", min: 0, max: 3 },
   money: { kind: "number", min: 0, max: 3 },
+  stage: { kind: "number", min: 0, max: 3 },
 };
 
 /* A ambição decide o que o porta-voz troca por quê: quem quer ministério aguenta governo
@@ -110,9 +118,9 @@ export const DRIVE_SCHEMA = {
    governo do estado precisa da verba para a base. */
 /** @type {ReadonlyArray<Drive>} */
 export const DRIVES = [
-  { id: "cabinet", served: 1.5, wear: 0.4, money: 0.6 },
-  { id: "state", served: 0.8, wear: 1, money: 1.2 },
-  { id: "succession", served: 0.4, wear: 1.6, money: 0.4 },
-  { id: "seat", served: 0.6, wear: 1.2, money: 1 },
-  { id: "court", served: 0.3, wear: 0.3, money: 0.3 },
+  { id: "cabinet", served: 1.5, wear: 0.4, money: 0.6, stage: 0.3 },
+  { id: "state", served: 0.8, wear: 1, money: 1.2, stage: 0.8 },
+  { id: "succession", served: 0.4, wear: 1.6, money: 0.4, stage: 1.5 },
+  { id: "seat", served: 0.6, wear: 1.2, money: 1, stage: 1 },
+  { id: "court", served: 0.3, wear: 0.3, money: 0.3, stage: 0.1 },
 ];

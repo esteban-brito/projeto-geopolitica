@@ -38,6 +38,8 @@ import { SEATS } from "../data/regime.mjs";
  * @property {number} hold
  * @property {number} riskAversion
  * @property {number} persistence
+ * @property {number} economic - a posição econômica, de 0 a 100
+ * @property {number} liberty - a posição nas liberdades, de 0 a 100
  *
  * @typedef {object} Facts o que o mês deixou, na régua de quem percebe
  * @property {Record<string, number>} funding - financiado contra pedido, por área
@@ -62,10 +64,19 @@ const MATERIAL = /** @type {const} */ ({
   servida: 0.1,
   desgaste: 0.1,
   emendas: 0.05,
+  palanque: 0.1,
 });
 
 /* O valor sem notícia de cada sujeito, com peso mínimo: a evidência do mês decide. */
-const NEUTRAL = { verba: 1, dignidade: 1, cargo: 1, servida: 0, desgaste: 0, emendas: 0 };
+const NEUTRAL = {
+  verba: 1,
+  dignidade: 1,
+  cargo: 1,
+  servida: 0,
+  desgaste: 0,
+  emendas: 0,
+  palanque: 0,
+};
 
 /** @type {SubjectOf} */
 const subjectOf = subject => {
@@ -123,6 +134,8 @@ export function rosterOf({ state, people, taken, catalog = CATALOG }) {
     hold: 1,
     riskAversion: draw(person.id, "risk", agency.riskMin, agency.riskMax),
     persistence: 1,
+    economic: person.economic,
+    liberty: person.liberty,
   }));
 
   const sitting = state.cabinet ?? {};
@@ -156,6 +169,8 @@ export function rosterOf({ state, people, taken, catalog = CATALOG }) {
       hold: draw(minister.person, "hold", agency.holdMin, agency.holdMax),
       riskAversion: minister.riskAversion,
       persistence: minister.persistence,
+      economic: 50,
+      liberty: 50,
     };
   });
 
@@ -184,18 +199,19 @@ function leverOf(state, area, catalog) {
 
 /**
  * A CADEIRA QUE O PARTIDO PEDE: a da pasta que o porta-voz cobiça, senão a primeira que o
- * partido não tem, começando pelas vagas.
+ * partido não tem, começando pelas vagas. Cadeira que outro partido já pediu não se pede.
  * @param {Agent} agent
  * @param {Record<string, Appointee>} cabinet
+ * @param {ReadonlySet<string>} claimed
  * @param {typeof CATALOG} catalog
  */
-function seatWanted(agent, cabinet, catalog) {
-  const mine = (/** @type {string} */ id) => cabinet[id]?.party === agent.party;
+function seatWanted(agent, cabinet, claimed, catalog) {
+  const free = (/** @type {string} */ id) => cabinet[id]?.party !== agent.party && !claimed.has(id);
   const coveted = catalog.cabinet.find(seat => seat.area === agent.portfolio);
-  if (coveted && !mine(coveted.id)) return coveted;
+  if (coveted && free(coveted.id)) return coveted;
   return (
-    catalog.cabinet.find(seat => !cabinet[seat.id]) ??
-    catalog.cabinet.find(seat => !mine(seat.id)) ??
+    catalog.cabinet.find(seat => !cabinet[seat.id] && free(seat.id)) ??
+    catalog.cabinet.find(seat => free(seat.id)) ??
     null
   );
 }
@@ -259,8 +275,17 @@ function goalsOf(agent, catalog) {
     served: 1,
     wear: 1,
     money: 1,
+    stage: 1,
   };
   return [
+    {
+      id: "palanque",
+      subject: "palanque",
+      op: "atLeast",
+      target: 0.3,
+      span: 0.3,
+      weight: weights.stage,
+    },
     {
       id: "emendas",
       subject: "emendas",
@@ -318,6 +343,13 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
   const ruling = state.party ?? null;
   const labelOf = (/** @type {string | null} */ id) =>
     catalog.parties.find(party => party.id === id)?.label ?? null;
+  /* O governo mora onde mora o partido do Presidente; sem partido, no centro. */
+  const home = catalog.parties.find(party => party.id === ruling) ?? { economic: 50, liberty: 50 };
+  /* A oposição fala e quem ficou ouve: cada crítica do mês anterior pesa sobre a base. */
+  const chorus = state.mail.filter(
+    letter => letter.month === month - 1 && (letter.voice ?? "").startsWith("leader.criticize"),
+  ).length;
+  const weakness = Math.max(0, (STANDING_NEUTRAL - facts.standing) / STANDING_NEUTRAL);
 
   /** @type {Record<string, AgentState>} */
   const agents = {};
@@ -327,6 +359,12 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
   const vacate = new Set();
   /** @type {string[]} */
   const left = [];
+
+  const claimed = new Set(
+    facts.open.flatMap(letter =>
+      letter.kind === "ask" && letter.nominee && letter.lever ? [letter.lever] : [],
+    ),
+  );
 
   for (const agent of roster) {
     const was = previous[agent.id] ?? { beliefs: {}, intention: null, dignity: 1, spoke: null };
@@ -338,6 +376,11 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
     const dignity = dignityAfter(was.dignity, answered, catalog);
     const asking = facts.open.some(letter => letter.kind === "ask" && letter.from === agent.id);
     const quiet = was.spoke === null || month - was.spoke >= agency.quiet;
+    /* Quem acabou de pedir espera antes de pedir de novo, atendido ou não. */
+    const patient = was.asked === undefined || month - was.asked >= agency.quiet;
+    /* Quem acabou de ganhar o que pediu não ameaça nem sai: agradece por um tempo. */
+    const granted = accepted ? month : was.granted;
+    const grateful = granted !== undefined && month - granted < agency.quiet;
     const lineage = `${agent.id}:${month}`;
 
     /** @type {Percept[]} */
@@ -364,12 +407,18 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
     const plans = [];
     const lever =
       agent.kind === "minister" && agent.area ? leverOf(state, agent.area, catalog) : null;
-    const target = agent.kind === "leader" ? seatWanted(agent, cabinet, catalog) : null;
+    const target = agent.kind === "leader" ? seatWanted(agent, cabinet, claimed, catalog) : null;
     const bench = catalog.parties.find(party => party.id === agent.party);
     const held = Object.values(cabinet).filter(item => item.party === agent.party).length;
     const fair = bench ? (bench.seats / SEATS) * catalog.cabinet.length : 0;
     const served = agent.party ? (facts.served[agent.party] ?? 0) : 0;
-    const wear = out ? 0 : Math.max(0, (STANDING_NEUTRAL - facts.standing) / STANDING_NEUTRAL);
+    /* A distância ideológica do governo, de 0 a 1: quanto mais longe, mais pesa ficar ao lado dele. */
+    const distance =
+      Math.hypot((agent.economic - home.economic) / 100, (agent.liberty - home.liberty) / 100) /
+      Math.SQRT2;
+    const wear = out
+      ? 0
+      : Math.min(1, weakness * (1 + agency.distance * distance) + chorus * agency.chorus);
     const funding = agent.area ? (facts.funding[agent.area] ?? 1) : 1;
     const money = agent.party ? (facts.paid[agent.party] ?? 0) : 0;
     const threats = accepted ? 0 : (was.threats ?? 0);
@@ -393,7 +442,7 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
           asOf: month,
         },
       );
-      if (lever && !asking && funding < agency.content)
+      if (lever && !asking && patient && funding < agency.content)
         plans.push({ id: "pedir", actions: [{ kind: "ask", target: lever.id }] });
       if (quiet && dignity < 0.9)
         plans.push({ id: "reclamar", actions: [{ kind: "complain", target: null }] });
@@ -418,6 +467,14 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
           asOf: month,
         },
         {
+          subject: "palanque",
+          value: 0,
+          quality: 1,
+          source: "self",
+          lineage: `palanque:${lineage}`,
+          asOf: month,
+        },
+        {
           subject: "emendas",
           value: money,
           quality: 1,
@@ -428,17 +485,22 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
       );
       /* Quem saiu espera ser chamado; só bate na porta de um governo popular. */
       const courting = !out || facts.standing >= STANDING_NEUTRAL + agency.bandwagon;
-      if (target && !asking && served < 1 && courting)
+      if (target && !asking && patient && served < 1 && courting)
         plans.push({ id: "pedir", actions: [{ kind: "ask", target: target.id }] });
-      if (!out && agent.party !== ruling && quiet && (dignity < 0.9 || served < 0.5)) {
+      if (!out && agent.party !== ruling && quiet && !grateful && (dignity < 0.9 || served < 0.5)) {
         plans.push({ id: "ameacar", actions: [{ kind: "threaten", target: null }] });
       }
       if (
         !out &&
+        !grateful &&
         agent.party !== ruling &&
         (wear > agency.wearFloor || dignity < agency.dignityFloor)
       ) {
         plans.push({ id: "desembarcar", actions: [{ kind: "leave", target: agent.party }] });
+      }
+      /* Quem saiu faz oposição quando o governo está fraco, no ritmo de quem fala em público. */
+      if (out && quiet && weakness > 0) {
+        plans.push({ id: "criticar", actions: [{ kind: "criticize", target: null }] });
       }
     }
 
@@ -475,6 +537,7 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
       if (plan.id === "pedir") {
         return { effects: { servida: marginal * accept, dignidade: snub }, risk: 0 };
       }
+      if (plan.id === "criticar") return { effects: { palanque: weakness }, risk: 0 };
       if (plan.id === "ameacar") {
         return {
           effects: {
@@ -549,6 +612,8 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
     let nowOut = out;
     let nowDignity = dignity;
     let nowThreats = threats;
+    let asked = was.asked;
+    if (action?.plan === "pedir") asked = month;
     if (action?.plan === "pedir" && agent.kind === "minister" && lever) {
       letters.push(
         letter("ask", "minister.ask", {
@@ -560,6 +625,7 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
         }),
       );
     } else if (action?.plan === "pedir" && target) {
+      claimed.add(target.id);
       letters.push(
         letter("ask", "leader.post", {
           subject: target.label,
@@ -588,6 +654,9 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
       nowThreats = threats + 1;
       nowDignity = dignity + (1 - dignity) * agency.face;
       letters.push(letter("said", "leader.threaten", { was: held, now: Math.round(fair) }));
+    } else if (action?.plan === "criticar") {
+      spoke = month;
+      letters.push(letter("said", "leader.criticize", {}));
     } else if (action?.plan === "desembarcar" && agent.party) {
       spoke = month;
       nowOut = true;
@@ -605,6 +674,8 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
       spoke,
       ...(nowOut ? { out: true } : {}),
       ...(nowThreats > 0 ? { threats: nowThreats } : {}),
+      ...(asked !== undefined ? { asked } : {}),
+      ...(granted !== undefined ? { granted } : {}),
     };
   }
 

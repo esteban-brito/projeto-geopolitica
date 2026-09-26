@@ -76,12 +76,36 @@ test("o partido atendido fica na base, e o seu indicado senta na cadeira pedida"
   const leftServed = served.letters.filter(l => l.voice?.startsWith("leader.leave")).length;
   assert.ok(leftServed < leftIgnored, `atendidos saíram ${leftServed}, ignorados ${leftIgnored}`);
 
-  const asked = served.letters.find(letter => letter.voice?.startsWith("leader.post"));
-  assert.ok(asked?.nominee && asked.lever, "nenhum partido pediu pasta");
-  const seated = Object.values(served.state.cabinet ?? {}).filter(
-    item => item.party === asked.nominee?.party,
-  );
-  assert.ok(seated.length > 0, "o partido atendido não tem ninguém no gabinete");
+  /* Cada indicado aceito senta no mês da resposta: dois partidos nunca levam a mesma cadeira. */
+  let state = createState(7);
+  let checked = 0;
+  for (let month = 0; month < 24; month++) {
+    const answers = acceptAll(state);
+    const posts = state.mail.filter(letter => answers[letter.id] && letter.nominee);
+    state = playMonth(state, { mail: answers }, {}).state;
+    for (const ask of posts) {
+      checked++;
+      assert.deepEqual(
+        state.cabinet?.[ask.lever ?? ""],
+        ask.nominee,
+        `${ask.nominee?.name} não sentou em ${ask.subject}`,
+      );
+    }
+  }
+  assert.ok(checked > 0, "nenhum partido pediu pasta");
+});
+
+test("quem acabou de ser atendido não ameaça no mês da resposta", () => {
+  const { letters } = run(createState(7), 24, acceptAll);
+  for (const ask of letters.filter(letter => letter.voice?.startsWith("leader.post"))) {
+    const threat = letters.find(
+      letter =>
+        letter.from === ask.from &&
+        letter.month === ask.month + 1 &&
+        letter.voice?.startsWith("leader.threaten"),
+    );
+    assert.equal(threat, undefined, `${ask.from} ganhou a pasta e ameaçou no mês seguinte`);
+  }
 });
 
 test("aceitar o pedido tira quem estava na cadeira e senta o indicado no mês da resposta", () => {
@@ -139,7 +163,8 @@ test("o ministro da área cortada pede o programa de volta, e atender devolve o 
 });
 
 test("a recusa ensina: depois de ignorado, o porta-voz espera menos do Presidente", () => {
-  const { state, letters } = run(createState(7), 4);
+  /* O prazo do pedido do mês 0 vence no mês 2; a medida é desse mês, antes de qualquer saída. */
+  const { state, letters } = run(createState(7), 3);
   const refused = letters.find(letter => letter.kind === "ask" && letter.answer === "silence");
   assert.ok(refused?.from);
   const belief = state.agents?.[refused.from]?.beliefs["aceita"];
@@ -156,4 +181,104 @@ test("as pessoas do mundo atravessam o save", () => {
   const legacy = JSON.parse(serialize(createState(7)));
   delete legacy.agents;
   assert.ok(deserialize(JSON.stringify(legacy)).ok, "save sem as pessoas foi recusado");
+});
+
+/* ── LOTE 2: IDEOLOGIA, OPOSIÇÃO E CORO ─────────────────────────────────────── */
+
+/**
+ * Um governo impopular e bem servido: todos os partidos com pastas pela bancada, os pedidos
+ * atendidos, e a aprovação presa baixo. O que muda entre os partidos é só a ideologia.
+ * @param {string} ruling
+ * @param {number} months
+ * @param {typeof CATALOG} [catalog]
+ */
+function unpopular(ruling, months, catalog = CATALOG) {
+  let state = createState(7, catalog, null, ruling);
+  const seats = catalog.cabinet;
+  const quota = catalog.parties.map(party => ({ id: party.id, n: (party.seats / 513) * 38 }));
+  let next = 0;
+  for (const { id, n } of quota) {
+    for (let k = 0; k < Math.round(n) && next < seats.length; k++, next++) {
+      const seat = seats[next];
+      if (!seat) continue;
+      state = reduce(state, {
+        type: "appoint",
+        seat: seat.id,
+        appointee: { id: `p${next}`, name: `P ${next}`, party: id },
+      });
+    }
+  }
+  const low = Object.fromEntries(Object.keys(state.mood).map(id => [id, 45]));
+  /** @type {Letter[]} */
+  const letters = [];
+  for (let month = 0; month < months; month++) {
+    state = { ...state, mood: low };
+    state = playMonth(state, { mail: acceptAll(state) }, { catalog }).state;
+    for (const letter of state.mail) {
+      if (letter.month === month && (letter.kind === "ask" || letter.kind === "said"))
+        letters.push(letter);
+    }
+  }
+  return { state, letters };
+}
+
+test("com o governo impopular, o partido mais distante dele sai antes do mais próximo", () => {
+  const ruling = "democratas-nacionais";
+  const home = CATALOG.parties.find(party => party.id === ruling);
+  assert.ok(home);
+  const { letters } = unpopular(ruling, 36);
+  const exits = new Map(
+    letters
+      .filter(letter => letter.voice?.startsWith("leader.leave"))
+      .map(letter => [
+        CATALOG.archetypes.find(item => item.id === letter.from)?.bloc ?? "",
+        letter.month,
+      ]),
+  );
+  const far = (/** @type {{ economic: number, liberty: number }} */ party) =>
+    Math.hypot(party.economic - home.economic, party.liberty - home.liberty);
+  const spoken = CATALOG.parties
+    .filter(party => party.id !== ruling && CATALOG.archetypes.some(item => item.bloc === party.id))
+    .sort((a, b) => far(a) - far(b));
+  const closest = spoken[0];
+  const farthest = spoken[spoken.length - 1];
+  assert.ok(closest && farthest);
+  const farExit = exits.get(farthest.id) ?? Infinity;
+  const closeExit = exits.get(closest.id) ?? Infinity;
+  assert.ok(farExit < Infinity, `${farthest.label} não saiu de um governo impopular e distante`);
+  assert.ok(
+    farExit <= closeExit,
+    `${farthest.label} saiu no mês ${farExit}, ${closest.label} no ${closeExit}`,
+  );
+});
+
+test("quem saiu faz oposição a um governo fraco", () => {
+  const { letters } = unpopular("democratas-nacionais", 36);
+  const left = new Set(letters.filter(l => l.voice?.startsWith("leader.leave")).map(l => l.from));
+  const critics = letters.filter(letter => letter.voice?.startsWith("leader.criticize"));
+  assert.ok(
+    critics.length > 0,
+    "a oposição ficou calada diante de um governo com 24% de aprovação",
+  );
+  for (const critic of critics)
+    assert.ok(left.has(critic.from), `${critic.from} criticou sem ter saído`);
+});
+
+test("o coro da oposição pesa sobre quem ficou na base", () => {
+  /* As duas partidas são iguais até a primeira crítica; no mês seguinte, só o coro as separa. */
+  const ruling = "democratas-nacionais";
+  const first = unpopular(ruling, 36).letters.find(letter =>
+    letter.voice?.startsWith("leader.criticize"),
+  );
+  assert.ok(first, "ninguém criticou o governo");
+  const mute = { ...CATALOG, agency: { ...CATALOG.agency, chorus: 0 } };
+  const loud = unpopular(ruling, first.month + 2).state.agents ?? {};
+  const quiet = unpopular(ruling, first.month + 2, mute).state.agents ?? {};
+  const base = Object.keys(loud).filter(id => loud[id]?.beliefs["desgaste"] && !loud[id]?.out);
+  assert.ok(base.length > 0, "ninguém ficou na base para ouvir");
+  for (const id of base) {
+    const heard = loud[id]?.beliefs["desgaste"]?.estimate ?? 0;
+    const deaf = quiet[id]?.beliefs["desgaste"]?.estimate ?? 0;
+    assert.ok(heard > deaf, `${id} ouviu a crítica e não sentiu: ${heard} contra ${deaf}`);
+  }
 });

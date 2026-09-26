@@ -170,6 +170,12 @@ export const UI = {
         firm: "Disse que a bancada passa a votar com independência se nada mudar. {tem}.",
         plain: "Ameaçou votar com independência.",
       },
+      "leader.criticize": {
+        subject: "Critica o governo da tribuna",
+        polite: 'Disse que o governo "perdeu o rumo" e que o partido vai fiscalizar cada passo.',
+        firm: 'Subiu à tribuna para dizer que o governo "acabou antes de terminar".',
+        plain: "Criticou o governo em discurso no plenário.",
+      },
       "leader.leave": {
         subject: "O partido deixou a base",
         polite: 'Anunciou que o partido deixa a base "com respeito, mas sem compromisso".',

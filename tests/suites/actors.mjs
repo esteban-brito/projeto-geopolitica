@@ -599,3 +599,37 @@ test("O PRIOR NAO CRIA CONHECIMENTO: sem evidencia valida, o objetivo continua d
     "familia sem prior e erro, nunca base inventada",
   );
 });
+
+/* ── A OPORTUNIDADE ACORDA ──────────────────────────────────────────────────────
+   Achado pelo mundo vivo: o porta-voz que saiu da base esperava sem planos, a crítica virava
+   possível três meses depois, e ele nunca a considerava, porque nada tinha mudado nas crenças.
+   A especificação lista a oportunidade detectável como causa de despertar (§9.14). */
+test("um caminho novo acorda quem esperava, e o mesmo caminho não acorda duas vezes", () => {
+  const waiting = run(minister(), news(0.5), 0, { plans: [] });
+  assert.equal(waiting.action, null);
+  assert.equal(waiting.actor.intention?.plan ?? null, null);
+
+  const opened = run(waiting.actor, news(0.5), 1);
+  assert.ok(
+    opened.trace.triggers.some(trigger => trigger.kind === "opportunity"),
+    "o caminho que apareceu não foi visto",
+  );
+  assert.ok(opened.action, "havia um caminho que valia a pena, e a ministra seguiu esperando");
+
+  const again = run(opened.actor, news(0.5), 2);
+  assert.ok(
+    !again.trace.triggers.some(trigger => trigger.kind === "opportunity"),
+    "o mesmo caminho acordou duas vezes",
+  );
+});
+
+test("o caminho que some e volta acorda de novo", () => {
+  const first = run(minister(), news(0.5), 0);
+  assert.ok(first.action);
+  const closed = run(first.actor, news(0.5), 1, { plans: [] });
+  const reopened = run(closed.actor, news(0.5), 2);
+  assert.ok(
+    reopened.trace.triggers.some(trigger => trigger.kind === "opportunity"),
+    "o caminho voltou e ninguém viu",
+  );
+});

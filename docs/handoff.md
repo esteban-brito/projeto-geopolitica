@@ -17,16 +17,17 @@
   [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
   [checklist do Presidente](spec/presidential-checklist.md); a interface nova, no
   [mapa das telas](spec/interface-map.md). Em conflito, vale o mais recente;
-- **próximo passo:** o lote 2 do [mundo vivo](spec/the-living-world.md), oposição e ideologia. O
-  lote 1 está no jogo: 14 pessoas decidem pela VONTADE e escrevem cartas com autor. O E1.0a (as 38
+- **próximo passo:** o lote 3 do [mundo vivo](spec/the-living-world.md), imprensa e Casa Civil. Os
+  lotes 1 e 2 estão no jogo: 14 pessoas decidem pela VONTADE, escrevem cartas com autor, saem da
+  base pela ideologia e fazem oposição. O E1.0a (as 38
   cadeiras, nomear e demitir, a pasta que puxa a lealdade até 80) está feito; a abertura segue com
   o E1.0b, a eleição da Mesa, e a tela da posse espera a escolha dele entre os protótipos;
 - **commits de 25/09:** `febd0b5` (E0), `2482ce7` (documentos), `916a80f` e `97483ec` (passos 1 e 2
-  do E1.0a), `d2684ce` (checklist de 40). Ele autorizou commit ao fim de cada etapa validada;
+  do E1.0a), `d2684ce` (checklist de 40), `f6d28a3` (mundo vivo, lote 1). Ele autorizou commit ao fim de cada etapa validada;
   push e merge seguem pedindo ordem;
 - **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `validate` verde em 25/09, depois do lote 1 do mundo vivo (407 provas, passeio e
+- **portão:** `validate` verde em 25/09, depois do lote 2 do mundo vivo (413 provas, passeio e
   macaco); roda de novo antes de qualquer commit;
 - **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
   capturas; ele pode apagar quando quiser.
@@ -131,6 +132,10 @@
 
 ## Decisões vivas
 
+- **25/09, o mundo vivo, lote 2 no jogo** — o desgaste de ficar na base cresce com a distância
+  ideológica do governo; quem sai critica um governo fraco a cada 3 meses; cada crítica pesa sobre
+  quem ficou. A VONTADE ganhou o gatilho da oportunidade (especificação §9.14). Quem pediu espera 3
+  meses; quem foi atendido não ameaça nem sai por 3 meses; dois partidos não pedem a mesma cadeira;
 - **25/09, o mundo vivo, lote 1 no jogo** (ordem dele: "crie uma IA viva", carta branca) — 14 pessoas
   (7 porta-vozes e 7 ministros) decidem pela VONTADE todo mês e escrevem cartas com autor: pedem
   pasta ou verba, ameaçam, reclamam, desembarcam, pedem demissão. Sem diretor de drama; a imprensa
@@ -263,10 +268,11 @@ proportional`, o padrão), porque a posse é obrigatória;
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
-- **83. O êxodo é sincronizado (25/09).** Com o governo montado, 5 dos 6 desembarques de
-  `agenda` caem no mesmo mês, 44: todos os porta-vozes leem a mesma aprovação publicada. Realista
-  no rumo (governo impopular às vésperas da eleição), irreal no compasso. Resolve-se com a
-  ideologia e a oposição, no lote 2 do mundo vivo;
+- **86. Nenhuma sonda segura a base (25/09).** Nas seis sondas, os 7 porta-vozes saem até o mês
+  41, e `agenda` cai de 32 de 42 para 22 de 43 aprovadas. No modelo, o desgaste com peso da
+  ideologia (`distance: 1`, [DESENHO]) vence a pasta e a verba. Hipótese a pesquisar: a base de
+  Temer em 2017 e 2018, com aprovação muito baixa, segurada por cargos e emendas (VERIFICAR, com
+  fonte oficial da Câmara). Calibragem a decidir com ele; nada mudou para a série ficar bonita;
 - **84. O PSU socialista tem um "líder do centro" (25/09).** O arquétipo `leader-centro-esquerda`
   (`src/data/cast.mjs`) mora no bloco `socialistas` com rótulo "líder do centro", e a carta assina
   assim. Dado a revisar com ele;
@@ -373,15 +379,15 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do lote 1 do mundo vivo, com o governo montado na posse: imóveis em
+`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do lote 2 do mundo vivo, com o governo montado na posse: imóveis em
 todas as colunas abaixo.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
 | ------------ | ---------- | ------------ | --------- | --------- |
 | `herdado`    | 89,9%      | 0 de 0       | 48 → 27   | 38 → 25   |
-| `agenda`     | 90,0%      | **32 de 42** | 48 → 20   | 38 → 20   |
-| `base`       | 90,7%      | **32 de 42** | 48 → 20   | 38 → 20   |
-| `piso`       | 91,0%      | 8 de 30      | 48 → 15   | 38 → 15   |
+| `agenda`     | 90,0%      | **22 de 43** | 48 → 20   | 38 → 20   |
+| `base`       | 90,7%      | **18 de 42** | 48 → 20   | 38 → 20   |
+| `piso`       | 90,9%      | 5 de 26      | 48 → 15   | 38 → 15   |
 | `explorador` | 91,8%      | 0 de 0       | 48 → 25   | 38 → 17   |
 | `promessa`   | 92,4%      | 0 de 3       | 48 → 19   | 38 → 17   |
 
@@ -390,7 +396,8 @@ mesmo commit, mesmo que ela não mude.
 
 **A série mudou em 25/09 por duas razões medidas:** as pessoas do mundo agem, e a sonda passou a
 começar com o governo montado. Sem gabinete (`--cabinet none`), `agenda` aprova 2 de 43 e todos os
-partidos saem até o mês 5. A linha "a vida" do simulador conta os gestos de cada sonda.
+partidos saem até o mês 5. A linha "a vida" do simulador conta os gestos de cada sonda. O lote 2 levou `agenda` de 32 para
+22 aprovadas: os partidos distantes do governo saem antes (achado 86).
 
 **O peso da pasta** (`--cabinet proportional`: as 38 pastas repartidas pelas 9 bancadas, na
 proporção das cadeiras; 25/09): `agenda` 26 de 43 → 34 de 41; `base` 34 de 41 → 35 de 41;

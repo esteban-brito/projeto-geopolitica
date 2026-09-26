@@ -36,6 +36,7 @@ import { revise, specified } from "./belief.mjs";
  * @property {Record<string, number | null>} basis - as crenças em que a escolha se apoiou
  * @property {string[]} front - os objetivos na frente quando a escolha foi feita
  * @property {number} risk - o risco do plano quando foi escolhido; zero ao esperar
+ * @property {string[]} [options] - os caminhos que existiam no tick anterior; ausente é nenhum
  * @typedef {object} Core traços que mudam pouco; ausente vale neutro
  * @property {number} [riskAversion] - multiplica o risco avaliado; 1 é o valor esperado
  * @property {number} [persistence] - multiplica a mudança necessária para reconsiderar
@@ -74,7 +75,7 @@ import { revise, specified } from "./belief.mjs";
  * @property {string} id
  * @property {number} priority
  * @property {boolean} known - falso quando o ator não tem crença sobre o sujeito do objetivo
- * @typedef {"unplanned" | "satisfied" | "failure" | "basis" | "conflict" | "risk"} TriggerKind
+ * @typedef {"unplanned" | "satisfied" | "failure" | "basis" | "conflict" | "risk" | "opportunity"} TriggerKind
  * @typedef {{ kind: TriggerKind, subject?: string }} Trigger
  * @typedef {object} Candidate
  * @property {string} plan
@@ -252,6 +253,7 @@ function viewOf(actor, beliefs, reads) {
           ...current,
           basis: Object.freeze({ ...current.basis }),
           front: /** @type {string[]} */ (Object.freeze([...current.front])),
+          options: /** @type {string[]} */ (Object.freeze([...(current.options ?? [])])),
         })
       : null,
   };
@@ -321,6 +323,7 @@ export function decide({ actor, percepts, plans, appraise, thresholds, subjectOf
         .sort(byId)
     : [];
   const planOf = new Map(plans.map(plan => [plan.id, plan]));
+  const options = plans.map(plan => plan.id).sort(byId);
   const active = current?.plan ? planOf.get(current.plan) : undefined;
 
   /* Conflito e risco presentes reprovados como gatilho: com o estado parado, dois objetivos
@@ -346,6 +349,10 @@ export function decide({ actor, percepts, plans, appraise, thresholds, subjectOf
       if (moved >= unit * persistence) triggers.push({ kind: "basis", subject });
     }
     if (sought && !sameIds(current.front, front)) triggers.push({ kind: "conflict" });
+    /* Um caminho que não existia quando a escolha foi feita é oportunidade (especificação §9.14);
+       o mesmo caminho não acorda duas vezes, porque a escolha seguinte o registra. */
+    const known = new Set(current.options ?? []);
+    if (sought && plans.some(plan => !known.has(plan.id))) triggers.push({ kind: "opportunity" });
     if (active && !current.done) {
       const risk = appraised(active).risk;
       if (risk >= thresholds.risk && current.risk < thresholds.risk) {
@@ -388,6 +395,7 @@ export function decide({ actor, percepts, plans, appraise, thresholds, subjectOf
         basis,
         front,
         risk: best.appraisal.risk,
+        options,
       };
       outcome = same ? "kept" : "adopted";
     } else {
@@ -400,10 +408,14 @@ export function decide({ actor, percepts, plans, appraise, thresholds, subjectOf
         basis,
         front,
         risk: 0,
+        options,
       };
       outcome = "waiting";
     }
   }
+
+  /* Os caminhos de agora ficam registrados a cada tick: o que some e volta é oportunidade de novo. */
+  if (intention) intention = { ...intention, options };
 
   /** @type {Action | null} */
   let action = null;

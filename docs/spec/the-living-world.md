@@ -1,7 +1,7 @@
 # O mundo vivo — a "IA" do jogo
 
-> Versão 1, 25/09/2026. A proposta v0 foi aceita pela ordem dele ("crie uma IA viva", carta
-> branca, realismo acima de tudo), e o lote 1 está no jogo.
+> Versão 2, 25/09/2026. A proposta v0 foi aceita pela ordem dele ("crie uma IA viva", carta
+> branca, realismo acima de tudo), e os lotes 1 e 2 estão no jogo.
 > Detalha a [especificação mestra](master-spec.md) §9 (atores), §10 (protocolo social), §11
 > (mídia) e §14.11 (agenda autônoma do Congresso). "IA" aqui é decisão determinística de pessoas
 > simuladas; IA por API não entra (ADR 0001 e 0002, e a decisão de 04/09).
@@ -115,11 +115,25 @@ No `simulate`, uma sonda passiva, em que o jogador não faz nada por 48 meses, d
   volta ao nível da posse; o desembarque tira os ministros do partido e leva a bancada à obstrução; a
   demissão deixa a cadeira vaga.
 
+## Lote 2, no jogo desde 25/09
+
+- **Ideologia:** o desgaste de ficar na base cresce com a distância do partido ao governo, medida
+  de 0 a 1 pela posição econômica e pela posição nas liberdades. Com peso 1 [DESENHO], o partido
+  mais distante sente o dobro.
+- **Oposição:** quem saiu critica um governo fraco em público, uma fala a cada 3 meses. A crítica
+  é carta com autor.
+- **Coro:** cada crítica do mês anterior soma 0,05 [DESENHO] ao desgaste de quem ficou.
+- **Oportunidade:** a VONTADE ganhou o gatilho da especificação §9.14. Quem dorme acorda quando
+  aparece um caminho que não existia no mês anterior.
+- **Paciência e gratidão:** quem pediu espera 3 meses para pedir de novo. Quem foi atendido não
+  ameaça nem sai por 3 meses.
+- **Uma cadeira, um pedido:** um partido não pede a pasta que outro já pediu e espera resposta.
+
 ## O que a medida mostrou
 
 Em 48 meses, com o simulador (`npm run simulate`, linha "a vida"):
 
-- **Com o governo montado na posse** (`agenda`): 8 pedidos de pasta, 13 ameaças, 49 pedidos de verba,
+- **No lote 1, com o governo montado na posse** (`agenda`): 8 pedidos de pasta, 13 ameaças, 49 pedidos de verba,
   9 queixas públicas e 6 desembarques. O Partido Livre sai no mês 21; os outros saem juntos no mês
   44, agosto de 2030, com o governo impopular às vésperas da eleição. Nenhuma regra manda isso.
 - **Sem ministério nenhum** (`--cabinet none`): os 7 partidos saem até o mês 5, e `agenda` aprova
@@ -127,13 +141,18 @@ Em 48 meses, com o simulador (`npm run simulate`, linha "a vida"):
 - **Defeitos achados pela medida e corrigidos:** ninguém aprendia (39 pedidos repetidos em 24
   meses); a ameaça repetida não perdia força; a verba não segurava ninguém; pedir não custava nada; o
   ministro não via o corte, porque a verba era medida contra o próprio pedido do governo.
+- **No lote 2** (`agenda`): os 7 partidos saem nos meses 10, 20, 33, 37, 40, 41 e 41, e não mais 5
+  de uma vez no mês 44 (achado 83, fechado). A oposição faz 34 críticas. `agenda` aprova 22 de 43
+  votações, contra 32 de 42 no lote 1.
+- **Defeitos do lote 2, achados pela medida e corrigidos:** quem saía ficava calado para sempre,
+  porque a VONTADE não tinha o gatilho da oportunidade; dois partidos levavam a mesma cadeira; o
+  partido ganhava a pasta e ameaçava ou saía no mês seguinte.
+- **Em aberto:** nenhuma sonda segura a base até o fim do mandato (achado 86 do handoff).
 
 ## Os próximos lotes
 
-1. **Oposição e ideologia:** quem saiu faz oposição (critica, obstrui); cada partido reage ao que o
-   governo aprova pela distância ideológica, e o êxodo deixa de ser sincronizado (achado 83).
-2. **Imprensa e Casa Civil:** veículos com linha editorial investigam e publicam; vazamentos têm
-   autor; o chefe da Casa Civil filtra o que chega à mesa.
-3. **Calendário:** saída de ministros para disputar eleição, eleições de 2028 e 2030.
-4. **Governadores, sindicatos e setores:** os grupos de pressão viram organizações que decidem.
-5. **Os 594 parlamentares,** com o lote D1 do mapa.
+- **Lote 3, imprensa e Casa Civil:** veículos com linha editorial investigam e publicam; vazamentos têm
+  autor; o chefe da Casa Civil filtra o que chega à mesa.
+- **Lote 4, calendário:** saída de ministros para disputar eleição, eleições de 2028 e 2030.
+- **Lote 5, governadores, sindicatos e setores:** os grupos de pressão viram organizações que decidem.
+- **Lote 6, os 594 parlamentares,** com o lote D1 do mapa.

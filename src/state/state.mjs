@@ -81,6 +81,8 @@ import { streamFrom } from "./random.mjs";
  * @property {number | null} spoke - o mês do último gesto público
  * @property {boolean} [out] - o partido dela deixou a base
  * @property {number} [threats] - ameaças feitas sem ser atendida; cada uma vale menos
+ * @property {number} [asked] - o mês do último pedido ao Presidente
+ * @property {number} [granted] - o mês do último pedido atendido
  */
 
 /** @typedef {{ index: Record<string, number>, history: Record<string, number[]> }} Capacity */

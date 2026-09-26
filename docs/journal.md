@@ -9097,3 +9097,14 @@ partidos abandonam a base em agosto de 2030, dois meses antes da eleição. O si
 começar com o governo montado, porque a posse é obrigatória; sem ministério nenhum, todos os
 partidos saem até o mês 5 e quase nada passa na Câmara. A tela desenha as cartas das pessoas com a
 fala em itálico e os dois botões com preço.
+
+### 64 · A oposição fala — 25/09
+
+O lote 2 pôs ideologia no desgaste: o partido longe do governo sente mais ficar ao lado dele. Os
+desembarques, que caíam 5 no mesmo mês, agora se espalham entre os meses 10 e 41 (achado 83, fechado). Quem sai critica
+um governo fraco, e cada crítica pesa sobre quem ficou. A medida achou três defeitos antes do
+commit. Quem saía nunca mais falava, porque a VONTADE só acordava por prazo, notícia ou pedido; ela
+ganhou o gatilho da oportunidade. Dois partidos levavam a mesma cadeira, e o último atendido
+apagava o primeiro. E o partido ganhava a pasta e ameaçava no mês seguinte. As duas últimas viraram
+provas antes do conserto. O preço medido: `agenda` caiu de 32 para 22 votações aprovadas, e
+nenhuma sonda segura a base até o fim. Fica como achado 86, para decidir com ele.

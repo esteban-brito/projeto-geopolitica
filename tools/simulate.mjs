@@ -531,6 +531,7 @@ const GESTURES = [
   ["minister.ask", "pedidos de verba"],
   ["minister.complain", "queixas públicas"],
   ["minister.resign", "demissões"],
+  ["leader.criticize", "críticas da oposição"],
 ];
 const deedList = [...deeds.values()];
 out.write(`  a vida\n`);
