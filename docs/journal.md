@@ -9182,3 +9182,12 @@ ministério, achou português errado ("Cuida de relação com"), listas ambígua
 no nome), falta de artigo ("assume Economia") e frases que dependiam do gênero da pessoa. O botão
 Extinguir sumiu de quem recebeu partes, o partido que recusa ficou apagado, e o Assinar ficou fixo
 no pé do painel, porque uma proposta longa o empurrava para fora da tela.
+
+### 72 · A escala visual — 26/09
+
+Ele perguntou se estava tudo padronizado, no nível da Apple. Não estava: o protótipo tinha oito
+tamanhos de fonte, cinco raios de canto, botões de cinco alturas e uns dez tons de transparência.
+Agora há uma escala só: fonte de 12, 13, 15, 17, 22 e 32 px, cantos de 12 e 20, controles de 44 px
+e cores em variáveis. O canto de cima ficou com duas linhas em vez de três, e a sigla do partido
+saiu, porque destoava. Na proposta da Casa Civil, Assinar ocupa a largura toda e os outros dois
+botões ficam lado a lado.
