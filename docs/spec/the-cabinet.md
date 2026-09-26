@@ -184,6 +184,7 @@ Uma tela, sem abas. É a fusão dos protótipos B e C, o D do canvas:
 - **Criar ministério é dividir um que existe,** porque todo trabalho do governo já tem dono.
 - **Os votos seguem a conta do motor:** um partido vota inteiro com o governo quando tem pastas na
   proporção da bancada (`coalitionOf`). Cada pasta vale cerca de 13 deputados (513 ÷ 38).
+- **O seu partido fica no alto,** embaixo de "Seu governo": a sigla na cor dele, o nome e a bancada.
 - **Nenhuma janela nem legenda por cima:** a chefe de gabinete fala numa linha embaixo do
   hemiciclo, e a base fica sempre no alto.
 
