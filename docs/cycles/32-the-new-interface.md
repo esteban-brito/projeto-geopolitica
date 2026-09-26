@@ -85,7 +85,8 @@ primeiro e é o padrão das outras telas (ordem dele, §6).
    ferramentas de `tmp/posse/`, que o git não guarda). Antes da fase 3 mexer em qualquer coisa, um
    backup novo com a mesma receita. Nesta fase: a lista de tudo o que a interface de hoje faz, tela
    por tela, para nada se perder; e a pesquisa com fonte de como a base do governo se forma no
-   Brasil (em curso no Codex desde 26/09), que calibra a fase 2;
+   Brasil, feita e conferida em 26/09 ([pesquisa 17](../research/17-how-the-base-forms.md)), que
+   calibra a fase 2;
 1. **A posse no estilo novo, no canvas.** O protótipo aprovado (versão 25) fixou a estrutura, mas
    é anterior ao estilo. Ele é refeito em Apple + Football Manager + Civilization + Valorant, com a
    criação do Presidente na frente. Da versão aprovada saem os tokens (cor, tipo, espaço, canto,

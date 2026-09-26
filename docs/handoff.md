@@ -130,7 +130,8 @@
 3. **a interface nova** — [ciclo 32](cycles/32-the-new-interface.md), planejado em 26/09: o motor fica, a
    interface recomeça do zero no estilo Apple + Football Manager + Civilization + Valorant,
    reaproveitando peça por peça (mola, squircle, glifos, vidro só em superfície parada). Começa pela
-   fase 0, o inventário e a decisão da base inicial (achado 86), que também bloqueia a posse;
+   fase 0: o inventário, e o modelo da base do começo a partir da
+   [pesquisa 17](research/17-how-the-base-forms.md) (achado 86), que também bloqueia a posse;
 4. **pesquisa Xi Jinping** (26/09): o ChatGPT faz a cronologia 2012–2026 e o catálogo temático, com
    fonte em cada fato; quando chegar, eu confiro as fontes e faço a parte 3, se e como cada medida
    cabe no Brasil real e no jogo, com preço e sem muro. A pesquisa 17 do Gemini foi apagada: sem
