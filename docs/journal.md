@@ -9333,3 +9333,13 @@ antes da resposta, e duas falas erradas sobre a base. Todos corrigidos e conferi
 ganhou saída no mesmo evento (ficava um quadro parada ao sair para um ministério) e nenhum sobrenome se
 repete na lista de um ministério. Testes: etiqueta, ficha e fuzz com 0 problemas; 0 quadros lentos e 0
 descartados com CPU 4 vezes mais lenta.
+
+### 87 · Retratos e a ficha sem estado — 26/09
+
+Os retratos viraram um sistema procedural: 3 formatos de rosto, 7 tons de pele, 5 cabelos por gênero em 7
+cores, grisalho, barba, bigode, óculos, terno ou blazer, gravata na cor do partido. O enquadramento
+fechou no rosto. O retrato mais rico levou a ficha a 67 ms de pior quadro com CPU 4 vezes mais lenta,
+porque passar o mouse no nome mudava o estado e redesenhava a tela. A ficha passou a ser escrita direto
+na página, como a etiqueta da Câmara: 33 ms e 1 quadro lento, melhor que a versão 25 (50 ms). Os retratos
+da criação e da foto só existem com a cortina aberta. Testes: etiqueta, ficha, fuzz e os 8 bugs do Codex
+sem regressão.
