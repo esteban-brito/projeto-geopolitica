@@ -87,7 +87,7 @@ primeiro e é o padrão das outras telas (ordem dele, §6).
    por tela, para nada se perder; e a pesquisa com fonte de como a base do governo se forma no
    Brasil, feita e conferida em 26/09 ([pesquisa 17](../research/17-how-the-base-forms.md)), que
    calibra a fase 2;
-1. **A posse no estilo novo, no canvas.** O protótipo aprovado (versão 25) fixou a estrutura, mas
+1. **A posse no estilo novo, no canvas.** Primeira versão publicada em 26/09 (versão 26 do canvas, prancheta "A posse · estilo novo"), esperando a aprovação dele. O protótipo aprovado (versão 25) fixou a estrutura, mas
    é anterior ao estilo. Ele é refeito em Apple + Football Manager + Civilization + Valorant, com a
    criação do Presidente na frente. Da versão aprovada saem os tokens (cor, tipo, espaço, canto,
    sombra, tempo), os componentes e uma página de catálogo com todos os estados; a fonte condensada

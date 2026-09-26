@@ -7,11 +7,11 @@ partido. Calibrado pela [pesquisa 17](../research/17-how-the-base-forms.md). Nad
 
 ## 1. Por que mudar
 
-| modelo           | largada de um Presidente com 42 deputados                                                  | o que erra                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
-| jogo de hoje     | 440 de 513: todo partido nasce com lealdade 70, e a lealdade 0 ainda vota em 50% das vezes | oposição votando com o governo; nenhum Presidente real começou assim                            |
-| protótipo        | 42: só o próprio partido, e cada pasta acende uns 14                                       | ninguém fora da base vota; na vida real, partido sem pasta vota com o governo até 93% das vezes |
-| **este desenho** | a soma das chances de cada deputado, em geral abaixo de 257 na largada                     | —                                                                                               |
+| modelo           | largada de um Presidente com 42 deputados                                                                       | o que erra                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| jogo de hoje     | 440 de 513: todo partido nasce com lealdade 70, e a lealdade 0 ainda vota em 50% das vezes                      | oposição votando com o governo; nenhum Presidente real começou assim                            |
+| protótipo        | 42: só o próprio partido, e cada pasta acende uns 14                                                            | ninguém fora da base vota; na vida real, partido sem pasta vota com o governo até 93% das vezes |
+| **este desenho** | votos firmes (chance de 80% ou mais) e prováveis (a soma das chances); no protótipo, 149 firmes e 374 prováveis | —                                                                                               |
 
 Os fatos que o desenho tem de reproduzir, todos da pesquisa 17:
 
@@ -45,12 +45,12 @@ Os fatos que o desenho tem de reproduzir, todos da pesquisa 17:
 Faixas de partida, todas [DESENHO] dentro dos limites medidos; os números finais saem de rodadas
 de `npm run simulate` comparadas com os fatos do §1:
 
-| situação                                    | faixa de chance | âncora                                          |
-| ------------------------------------------- | --------------- | ----------------------------------------------- |
-| o partido do Presidente                     | 85% a 95%       | PSL 85,4% (2019); federação do PT 95,5% (2023)  |
-| perto no Nolan, sem pasta, fora da oposição | 65% a 93%       | Podemos 92,9%, PSDB 81,8%, PP 67,4% (2019)      |
-| com pasta                                   | 67% a 95%       | União Brasil 67,1%, PSD 83,3%, PSB 91,2% (2023) |
-| oposição declarada                          | 12% a 32%       | PSOL 11,7%, PT 13,1% (2019); PL 31,9% (2023)    |
+| situação                                    | faixa de chance                                  | âncora                                          |
+| ------------------------------------------- | ------------------------------------------------ | ----------------------------------------------- |
+| o partido do Presidente                     | 85% a 95%                                        | PSL 85,4% (2019); federação do PT 95,5% (2023)  |
+| perto no Nolan, sem pasta, fora da oposição | 65% a 85% (miolo da faixa medida, que vai a 93%) | Podemos 92,9%, PSDB 81,8%, PP 67,4% (2019)      |
+| com pasta                                   | 67% a 95%                                        | União Brasil 67,1%, PSD 83,3%, PSB 91,2% (2023) |
+| oposição declarada                          | 12% a 32%                                        | PSOL 11,7%, PT 13,1% (2019); PL 31,9% (2023)    |
 
 Sem prazo medido para a reação a uma pasta (a pesquisa não achou estudo causal), o ritmo do puxão
 fica [DESENHO] e declarado assim na tela.
@@ -59,8 +59,10 @@ fica [DESENHO] e declarado assim na tela.
 
 - cada deputado num de três tons: **quase certo** (chance de 80% ou mais), **provável** (de 50% a
   80%) e **improvável** (abaixo de 50%). Os cortes são [DESENHO];
-- o placar é a soma das chances, arredondada: "uns 240 votos prováveis; faltam 17 para 257". É a
-  estimativa da Presidência, com a palavra estimativa;
+- o placar principal são os **votos firmes**, deputados com chance de 80% ou mais, comparados com
+  257 e 308; ao lado, os **prováveis**, a soma das chances numa votação comum. A média real de
+  apoio (64% a 81%, pesquisa 17) mede votações comuns, e com ela a largada já passaria de 257: é o
+  voto firme que decide emenda e reforma, e é ele que a pasta compra. Tudo com a palavra estimativa;
 - a prévia de uma nomeação pergunta ao motor a chance que o partido teria com aquela pasta, pela
   mesma função que o mês usa;
 - a etiqueta do partido mostra a chance em número e a posição declarada.
@@ -75,7 +77,9 @@ fica [DESENHO] e declarado assim na tela.
 
 ## 6. Provas que nascem antes
 
-- um Presidente de partido pequeno começa abaixo de 257 votos prováveis;
+- um Presidente de partido pequeno ou de centro começa abaixo de 257 votos firmes;
+- os prováveis na largada de um Presidente de centro ficam entre 60% e 82% da Câmara (âncora:
+  63,6% a 81,3%, Poliarco);
 - nenhum partido de oposição declarada passa de 35% de chance na largada;
 - um partido perto do governo, sem pasta, fica entre 65% e 93%;
 - dar pasta sobe a chance e nunca a leva a 100%;

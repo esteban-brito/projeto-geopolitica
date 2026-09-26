@@ -9305,3 +9305,17 @@ O cabeçalho tinha três blocos com padrões diferentes. Agora título, ministé
 grade: rótulo, número grande, linha de explicação. As legendas soltas da barra (257 e 308) viraram uma
 frase com a conta, como "Faltam 215 para aprovar lei e 266 para mudar a Constituição". A fala da chefe
 de gabinete virou mensagem, com o nome em cima, e o rodapé do painel caiu de 3 para 2 linhas.
+
+### 85 · A posse no estilo novo — 26/09
+
+O protótipo foi refeito no estilo fixado, na prancheta nova do canvas (versão 26), com a v25 ao lado.
+Entraram a criação do Presidente (nome, tratamento, nascimento com os 35 anos aferidos na posse pela Lei
+15.230/2025, estado, partido, trajetória e retrato), a cerimônia de entrada, a foto oficial do
+ministério, os atributos em número colorido, a ficha com forças, riscos e comparação, a fonte
+condensada, o corte em ângulo e o retrato que voa até o ministério ao nomear. O modelo de chance da
+pesquisa 17 mostrou um problema na tela: a média de apoio de votações comuns dá 405 deputados na
+largada e a posse perde a função. O placar passou a ser o voto firme (chance de 80% ou mais): 149 na
+largada de um Presidente de centro, 5 a 14 a mais por pasta. O sorteio por deputado usava um hash que
+dava valores vizinhos a deputados vizinhos, e a bancada virava em bloco (+32 ou 0); trocado por um hash
+de mistura. Desempenho igual ao da v25: 0 quadros lentos varrendo as bancadas e 0 descartados ao sair,
+com CPU 4 vezes mais lenta; fuzz de 48 mil ações com 0 problemas.
