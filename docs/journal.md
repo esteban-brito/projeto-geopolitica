@@ -9200,3 +9200,13 @@ mostrou dois ícones confusos no tamanho pequeno, o trigo e o capacete, e eles f
 movimento entrou onde explica alguma coisa: os deputados acendem em onda quando um partido entra na
 base, a barra desliza, o painel sobe ao trocar de passo. Quem pede movimento reduzido no sistema não
 vê animação.
+
+### 74 · A ideologia na cor — 26/09
+
+Ele pediu cores que mostrem a ideologia, pelo diagrama de Nolan, e uma animação de gota ao passar o
+mouse. O catálogo já tinha as duas posições do Nolan para cada partido, liberdade econômica e
+pessoal. A cor agora sai delas: vermelho na esquerda, azul na direita, laranja no libertário, lilás
+no centro, mais forte quanto mais longe do centro. A mesma conta ordena as bancadas no hemiciclo. O
+mouse num deputado estica a bolinha como gota, levanta a bancada inteira e mostra uma etiqueta com
+um diagrama de Nolan pequeno e o ponto do partido. A imagem mostrou a etiqueta passando por cima do
+painel na borda do desenho, e ela passou a ficar sempre dentro.
