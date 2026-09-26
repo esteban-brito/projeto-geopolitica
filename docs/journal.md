@@ -9298,3 +9298,10 @@ os 513 deputados. Com as bancadas fixas como camada, pintura caiu para 16 ms. A 
 ainda tinham um desfoque de fundo invisível (fundo 97% opaco) recalculado a cada quadro; sem ele, 1
 quadro descartado e pior quadro de 17 ms. O destaque também esperava 90 ms para sumir ao sair; agora
 só espera quando o mouse passa de uma bancada para outra.
+
+### 84 · Textos soltos no lugar — 26/09
+
+O cabeçalho tinha três blocos com padrões diferentes. Agora título, ministérios e base seguem a mesma
+grade: rótulo, número grande, linha de explicação. As legendas soltas da barra (257 e 308) viraram uma
+frase com a conta, como "Faltam 215 para aprovar lei e 266 para mudar a Constituição". A fala da chefe
+de gabinete virou mensagem, com o nome em cima, e o rodapé do painel caiu de 3 para 2 linhas.
