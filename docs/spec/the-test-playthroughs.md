@@ -3,8 +3,8 @@
 > Ordem dele, 26/09/2026: o jogo tem de permitir uma partida inspirada em Xi Jinping e outra, bem
 > diferente, em Lee Kuan Yew. Se as duas funcionam, o jogo dá liberdade de verdade. Uma terceira,
 > inspirada em Javier Milei, talvez venha depois; por ordem dele, não agora. É o critério de aceite
-> do ciclo 32, §6c. Fontes: [pesquisa 19](../research/19-the-xi-repertoire.md) (Xi) e pesquisa 20
-> (Lee, em curso no Codex).
+> do ciclo 32, §6c. Fontes: [pesquisa 19](../research/19-the-xi-repertoire.md) (Xi)
+> e [pesquisa 20](../research/20-the-lee-repertoire.md) (Lee).
 
 ## A regra das partidas
 
@@ -177,8 +177,8 @@ Daí saem sete peças de tela:
    master-spec §17.4 (eleição, oposição, imprensa, Judiciário, Poderes, direitos, força, federalismo,
    sucessão). Não é botão: mostra para onde o governo foi, mês a mês.
 
-A partida Lee acrescenta o que é dela quando a pesquisa 20 chegar: casa própria, poupança,
-investimento estrangeiro, salário de ministro e campanha cívica como ações.
+A partida Lee acrescenta duas peças: o **legado**, com o que amadurece depois de 2030 (casas, rios,
+fábricas), e a **previsão da eleição**, que o jogador Lee consulta todo mês.
 
 ## O que falta no jogo hoje
 
@@ -209,6 +209,98 @@ A partida Xi está pronta quando:
    desfecho vai para o handoff;
 6. o mesmo vale para a sonda `lee`, e o jogo não favorece uma das duas por construção.
 
-## Partida Lee Kuan Yew
+## Partida Lee Kuan Yew: oito fios
 
-Pendente. A pesquisa 20 está com o Codex desde 26/09. Os fios entram aqui depois de conferidos.
+Base: [pesquisa 20](../research/20-the-lee-repertoire.md). Lee nunca saiu da lei de Singapura: usou
+lei, tribunal e eleição mantida. No Brasil, a maior parte da partida mora no degrau 1. As partes
+duras (detenção sem julgamento, licença de jornal, castigo físico) caem no degrau 3. A partida Lee
+testa a profundidade econômica e administrativa do jogo; a partida Xi testa as instituições e a
+força.
+
+### 1. Integridade e salário alto
+
+- **Lee:** reforçou o órgão anticorrupção (CPIB, de 1952) e a lei de 1960; defendeu, em 1994,
+  salário de ministro atrelado ao mercado privado.
+- **Dentro da lei:** CGU e PF com orçamento e chefia técnica (como no fio 1 do Xi). O salário de
+  ministro é fixado pelo Congresso por decreto legislativo (art. 49 VIII) e para no teto, que é o
+  salário de ministro do STF (art. 37 XI). Salário de mercado pede PEC para mudar o teto.
+- **Fora da lei:** não precisa.
+- **O jogo precisa:** a ação de propor salário; a reação da imprensa e dos servidores; o efeito na
+  competência (MALHA).
+
+### 2. Serviço público por mérito
+
+- **Lee:** seleção, formação e pagamento para atrair gente qualificada.
+- **Dentro da lei:** concurso para cargo efetivo (art. 37 II); cargos de confiança e diretoria de
+  estatal com gente técnica (#3; Lei 13.303/2016, art. 17). O preço é político: cargo técnico não
+  traz voto de partido. A posse já mostra esse choque entre atributos e votos firmes.
+- **O jogo precisa:** a competência de quem é nomeado mexendo na execução (MALHA), e o custo em
+  votos (ECLUSA).
+
+### 3. Casa própria e poupança
+
+- **Lee:** HDB (1960) e CPF (1955), com a poupança usada para comprar casa a partir de 1968.
+- **Dentro da lei:** o Brasil já tem as duas peças. O FGTS é a poupança: 8% do salário, pago pelo
+  empregador (Lei 8.036/1990, art. 15), usado na casa própria e no financiamento da Caixa. O Minha
+  Casa, Minha Vida é o programa (Lei 14.620/2023). Subir o FGTS pede lei e custa ao empregador.
+  Terreno sai por desapropriação com indenização prévia em dinheiro (art. 5º XXIV) ou, no terreno
+  urbano ocioso, com títulos da dívida (art. 182 §4º III). O prefeito decide o zoneamento (art. 30
+  VIII).
+- **O jogo precisa:** um programa de moradia com obra que leva anos, fila, custo em LASTRO e
+  entrega que passa de 2030.
+
+### 4. Investimento estrangeiro e paz trabalhista
+
+- **Lee:** EDB (1961), área industrial de Jurong, conselho tripartite de salários (1972) e lei
+  trabalhista de 1968.
+- **Dentro da lei:** ApexBrasil para atrair investimento; zonas de exportação (Lei 11.508/2007);
+  incentivo fiscal com compensação (LRF, art. 14); conselho de governo, empresas e centrais por
+  decreto. Mudar a lei trabalhista pede lei; o precedente é a reforma de 2017 (Lei 13.467). Reagem
+  as centrais, a Justiça do Trabalho, governadores e prefeitos.
+- **O jogo precisa:** investimento que chega com atraso e depende da confiança (CORRENTE); centrais
+  sindicais como ator.
+
+### 5. O Estado acionista
+
+- **Lee:** Temasek (1974) para as empresas do Estado e GIC (1981) para as reservas.
+- **Dentro da lei:** a BNDESPar já é uma carteira de participações; as estatais seguem a Lei
+  13.303/2016. O Fundo Soberano do Brasil foi criado em 2008 (Lei 11.887); a situação dele hoje é
+  **VERIFICAR**. Reserva, carteira e orçamento são caixas diferentes, e o jogo não mistura.
+- **O jogo precisa:** o corte vertical da estatal de energia; a carteira como ativo e não como
+  receita.
+
+### 6. Maioria pela eleição
+
+- **Lee:** o PAP venceu todas as cadeiras em 1968, com 84,4% dos votos. Depois mudou as regras
+  (GRC em 1988, NCMP em 1984, NMP em 1990).
+- **Dentro da lei:** vencer a eleição municipal de 2028 e a geral de 2030. Mudar o sistema da Câmara
+  (voto distrital) pede PEC, porque o art. 45 fixa o sistema proporcional. A lei eleitoral só vale
+  para eleição que ocorra mais de um ano depois (art. 16). MP não pode tratar de eleição (art. 62
+  §1º I a).
+- **O jogo precisa:** eleições calculadas pelo motor, com opinião por região e partido. É o centro
+  da partida Lee.
+
+### 7. Oposição pela via judicial
+
+- **Lee:** processos por difamação contra opositores (Jeyaretnam em 1990; Chee Soon Juan em 2003) e
+  licença para jornais (1974).
+- **Dentro da lei:** o Presidente pode processar quem o ofende (Código Penal, arts. 138 a 141) ou
+  pedir indenização. Cada processo é decidido por um juiz, e o custo vem na imprensa e na opinião.
+- **Fora da lei:** exigir licença para jornal. O art. 220 §6º dispensa, e a censura política é
+  vedada (art. 220 §2º). Reagem o STF, a imprensa e o Congresso.
+- **O jogo precisa:** a ação judicial pessoal como ação; a imprensa como ator.
+
+### 8. Ordem dura
+
+- **Lee:** detenção sem julgamento pelo ISA (até 2 anos, renovável), pena de morte obrigatória no
+  tráfico (1975) e castigo corporal.
+- **Dentro da lei:** penas maiores por lei do Congresso; mais polícia federal; acordo com os
+  governadores, que comandam as PMs (art. 144 §6º).
+- **Fora da lei:** prisão sem ordem judicial (art. 5º LXI) contra habeas corpus; pena de morte e
+  castigo físico (art. 5º III e XLVII). Reagem juízes, STF, MP, Defensoria e rua.
+- **O jogo precisa:** segurança como área com governadores; a cadeia da tentativa.
+
+### Campanhas cívicas
+
+Limpeza (1968), língua (1979) e família (1972 e 1984) entram como ações baratas de comunicação, com
+efeito lento na opinião e sem obrigação a ninguém.
