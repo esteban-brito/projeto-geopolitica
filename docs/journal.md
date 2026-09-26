@@ -9210,3 +9210,14 @@ no centro, mais forte quanto mais longe do centro. A mesma conta ordena as banca
 mouse num deputado estica a bolinha como gota, levanta a bancada inteira e mostra uma etiqueta com
 um diagrama de Nolan pequeno e o ponto do partido. A imagem mostrou a etiqueta passando por cima do
 painel na borda do desenho, e ela passou a ficar sempre dentro.
+
+### 75 · Especialistas de verdade — 26/09
+
+Ele pediu o partido inteiro no hover, cores sem repetição, três abas e técnicos que não sejam
+genéricos. O protótipo foi reescrito do zero, em partes: dados, pessoas, geometria e lógica. Cada
+bancada ganhou uma área invisível do tamanho da sua fatia, e o mouse nela levanta o partido todo.
+As cores partem do Nolan, mas cada partido tem um tom próprio, medido: a menor diferença entre dois
+é 29 na escala ΔE, e antes MDN e PSM ficavam em 13. Cada ministério ganhou três especialistas, um
+de cada linha, com profissão e trajetória; o famoso da área ocupa a vaga da sua linha, e a Fazenda
+ficou com três economistas de visões diferentes. O nome de cada pessoa abre uma ficha com a
+trajetória, os números e a posição no Nolan.
