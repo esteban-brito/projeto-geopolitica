@@ -128,6 +128,19 @@ primeiro e é o padrão das outras telas (ordem dele, §6).
   brasileiro nato, filiação partidária; Constituição, arts. 12 e 14). Hoje o formulário só tem
   nome, tratamento e partido.
 
+## 6b. A trajetória do Presidente pesa no jogo (ordem dele, 26/09)
+
+A criação oferece seis trajetórias: político experiente, militar, jurista, empresário, ativista e celebridade.
+Ele quer que elas importem de verdade. Entram na fase 2, no motor, com prova; os números são [DESENHO] até
+calibrar, e cada efeito tem de ter preço, nunca muro:
+
+- **político experiente:** começa com mais lealdade dos líderes da Câmara (ECLUSA) e negociação mais barata;
+- **militar:** apoio e estabilidade nas Forças Armadas (VONTADE); menos rede no Congresso na largada;
+- **jurista:** imagem de rigor com parte do eleitorado (SONDA); menos rede política;
+- **empresário:** confiança do mercado na largada (CORRENTE); negociação com o centrão mais cara;
+- **ativista:** capacidade de mobilizar a rua (CALDEIRA); os partidos pragmáticos começam mais desconfiados;
+- **celebridade:** fama e aprovação inicial maiores (SONDA); pior desempenho de gestão no começo (MALHA).
+
 ## 7. Decisões que seguem abertas
 
 Todas num lugar só; o estudo da posse aponta para cá.

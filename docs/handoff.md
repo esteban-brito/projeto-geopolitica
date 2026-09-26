@@ -147,6 +147,9 @@
 
 ## Decisões vivas
 
+- **26/09, a trajetória do Presidente** — seis origens na criação (político experiente, militar, jurista,
+  empresário, ativista, celebridade); ordem dele: têm de pesar no jogo. Proposta no
+  [ciclo 32](cycles/32-the-new-interface.md), §6b, para a fase 2;
 - **26/09, a posse e a base** — ordens dele: a base do começo segue o protótipo (o Presidente
   começa com o próprio partido e monta a base com ministérios e negociação), aprimorado e fiel à
   realidade, com pesquisa antes do motor; a posse é a primeira tela e o padrão das outras; o começo
