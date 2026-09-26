@@ -10,26 +10,32 @@
 
 ### O que a lei diz
 
-| fato                                                                                           | fonte                                                                                                                     |
-| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| a lei cria e extingue ministérios; o decreto só reorganiza o que não gasta mais nem cria órgão | VERIFICADO: CF, arts. 48 XI, 84 VI "a" e 88                                                                               |
-| a medida provisória vale na hora; o Congresso tem 60 + 60 dias, e aos 45 ela tranca a pauta    | VERIFICADO: [CF, art. 62](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Aconstituicao%3A1988-10-05%3B1988%21art62) |
-| em 2019 eram 22 ministros de Estado: 16 ministérios e 6 cargos com status de ministro          | VERIFICADO: [MP 870/2019](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/mpv/mpv870.htm), lida em 26/09         |
-| em 2023 passaram a 38                                                                          | VERIFICADO: Lei 14.600/2023, art. 2º                                                                                      |
-| no meio do mandato, o Ministério das Comunicações voltou a existir em 10/06/2020               | VERIFICADO: [MP 980/2020](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/mpv/mpv980.htm), lida em 26/09         |
-| a Constituição cita alguns ministros pelo nome (Justiça, Defesa, Relações Exteriores)          | VERIFICAR: CF, arts. 89 e 91                                                                                              |
-| o custo de criar um ministério (cargos e estrutura)                                            | FALTA                                                                                                                     |
+| fato                                                                                                                                                                                                                              | fonte                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| a lei cria e extingue ministérios; o decreto só reorganiza o que não gasta mais nem cria órgão                                                                                                                                    | VERIFICADO: CF, arts. 48 XI, 84 VI "a" e 88                                                                               |
+| a medida provisória vale na hora; o Congresso tem 60 + 60 dias, e aos 45 ela tranca a pauta                                                                                                                                       | VERIFICADO: [CF, art. 62](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Aconstituicao%3A1988-10-05%3B1988%21art62) |
+| em 2019 eram 22 ministros de Estado: 16 ministérios e 6 cargos com status de ministro                                                                                                                                             | VERIFICADO: [MP 870/2019](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/mpv/mpv870.htm), lida em 26/09         |
+| em 2023 passaram a 38                                                                                                                                                                                                             | VERIFICADO: Lei 14.600/2023, art. 2º                                                                                      |
+| em 2019 a lei "transformou" 4 ministérios (Fazenda, Planejamento, Indústria e Trabalho) no da Economia, e Cultura, Esporte e Desenvolvimento Social no da Cidadania; Justiça e Segurança Pública viraram um só, com os dois nomes | VERIFICADO: MP 870/2019, art. 57                                                                                          |
+| na mesma medida, "extinguir" valeu só para secretarias, órgãos menores que um ministério                                                                                                                                          | VERIFICADO: MP 870/2019, art. 58                                                                                          |
+| no meio do mandato, o Ministério das Comunicações voltou a existir em 10/06/2020                                                                                                                                                  | VERIFICADO: [MP 980/2020](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/mpv/mpv980.htm), lida em 26/09         |
+| a Constituição cita alguns ministros pelo nome (Justiça, Defesa, Relações Exteriores)                                                                                                                                             | VERIFICAR: CF, arts. 89 e 91                                                                                              |
+| o custo de criar um ministério (cargos e estrutura)                                                                                                                                                                               | FALTA                                                                                                                     |
 
 ### O que o jogador faz
 
 Um ministério é um pacote de funções: as áreas, os programas e os órgãos. As funções nunca somem.
-O que muda é quem cuida delas. São quatro gestos, na posse ou em qualquer semana, com uma reunião
-na Casa Civil e uma medida provisória:
+O que muda é quem cuida delas. Por isso, na lei, extinguir e fundir são o mesmo ato: a medida
+provisória diz em que ministério cada função passa a ficar. O jornal chama de "extinto" o
+ministério cujo nome sumiu. São três gestos, na posse ou em qualquer semana, com uma reunião na
+Casa Civil e uma medida provisória:
 
-- **extinguir:** a pasta some, e o jogador diz quem herda cada função;
-- **fundir:** duas pastas viram uma, como Fazenda e Planejamento;
-- **desmembrar:** uma pasta vira duas, como a Segurança Pública saindo da Justiça;
-- **criar:** uma pasta nova, montada com funções que já existem.
+- **juntar:** dois ministérios viram um, com um ministro só. O jogador escolhe o nome: os dois
+  (como Justiça e Segurança Pública, em 2019) ou só um. Quando um nome some (como a Cultura dentro
+  da Cidadania, em 2019), o grupo que depende daquela área reage como se o ministério tivesse
+  acabado;
+- **dividir:** um ministério vira dois, como a Segurança Pública saindo da Justiça;
+- **criar:** um ministério novo, montado com funções que já existem.
 
 ### O preço
 
@@ -37,15 +43,15 @@ na Casa Civil e uma medida provisória:
   pastas significa menos cadeira para ele, e ele vota contra. Se a medida cai, a estrutura antiga
   volta, e quem sentou numa pasta nova perde a cadeira.
 - **A moeda da base tem duas partes.** Para um partido, uma pasta vale o símbolo (ter um
-  ministério) e o peso (a verba e os cargos das funções). Fundir guarda o peso e mata um símbolo.
+  ministério) e o peso (a verba e os cargos das funções). Juntar guarda o peso e tira um símbolo.
   Com 20 pastas, sobram 20 símbolos para dividir entre 9 partidos e o seu. [DESENHO]
-- **A opinião reage.** Extinguir uma pasta ligada a um grupo (Cultura, Mulheres, Igualdade Racial,
+- **A opinião reage.** Sumir com o nome de uma pasta ligada a um grupo (Cultura, Mulheres, Igualdade Racial,
   Povos Indígenas, Meio Ambiente) move esse grupo contra o governo. Crescer demais vira crítica de
   inchaço entre quem liga para o gasto. [DESENHO]
 - **A máquina para por um tempo.** Na transição, os programas mudam de dono e a pasta afetada
   executa menos por alguns meses. [DESENHO]
 - **O dinheiro fica ausente e declarado** até existir fonte para o custo de uma pasta.
-- **Nada tem muro.** Extinguir um ministério que a Constituição cita vira rota contestada, com
+- **Nada tem muro.** Sumir com um ministério que a Constituição cita vira rota contestada, com
   risco de ação no STF, e não um botão apagado.
 
 ## 2. A gente de fora da política
@@ -159,21 +165,23 @@ Aparecem com o tempo, no que a pessoa faz.
 
 ## 4. A tela da posse: o hemiciclo
 
-Uma tela e duas abas, Pessoas e Estrutura. É a fusão dos protótipos B e C, o D do canvas:
+Uma tela e duas abas, Ministros e Ministérios. É a fusão dos protótipos B e C, o D do canvas:
 
 - **O hemiciclo:** você no centro; em volta, as pastas em três anéis, com o núcleo no de dentro;
   por fora, os 513 deputados. Dar uma pasta a um partido acende a bancada dele.
-- **Pessoas:** tocar numa pasta abre, à direita, quem pode ocupá-la: o indicado de cada partido,
+- **Ministros:** tocar numa pasta abre, à direita, quem pode ocupá-la: o indicado de cada partido,
   técnicos e gente de fora. Cada linha mostra rosto, fama, preparo, afinidade e quantos deputados
   entram na base. A lista ordena por coluna.
-- **Estrutura:** o mesmo hemiciclo. Tocar numa pasta abre extinguir, fundir ou desmembrar, e o
-  anel se refaz com menos ou mais pastas. O contador mostra "38 → 37".
+- **Ministérios:** o mesmo hemiciclo. Tocar numa pasta abre juntar ou dividir, e o anel se refaz
+  com menos ou mais pastas.
+- **Os votos seguem a conta do motor:** um partido vota inteiro com o governo quando tem pastas na
+  proporção da bancada (`coalitionOf`). Cada pasta vale cerca de 13 deputados (513 ÷ 38).
 - **Nenhuma janela por cima:** a chefe de gabinete fala numa linha embaixo do hemiciclo, e a base
   fica sempre no alto.
 
 ## 5. Os lotes
 
-- **E1.0d:** os quatro gestos, a medida provisória no Congresso, a moeda de símbolo e peso;
+- **E1.0d:** juntar, dividir e criar, a medida provisória no Congresso, a moeda de símbolo e peso;
 - **E1.0e:** a tela da posse no hemiciclo;
 - **E1.0f:** os notáveis (o catálogo e o convite pela VONTADE) e fama, preparo e afinidade em toda
   pessoa do elenco;

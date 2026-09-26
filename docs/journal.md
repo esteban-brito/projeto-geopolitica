@@ -9128,3 +9128,14 @@ anéis em volta dele e os 513 deputados por fora. Dar uma pasta a um partido ace
 mesmo desenho. À direita, a lista de quem pode ocupar a pasta, com rosto e três números: fama,
 preparo e afinidade. Ele tirou a língua solta, porque ela cabe no preparo, e mandou mostrar os
 três números para todas as pessoas do jogo, políticos incluídos.
+
+### 67 · Extinguir e fundir são o mesmo ato — 26/09
+
+Ele perguntou a diferença entre extinguir e fundir. A MP 870 de 2019 responde: a lei
+"transformou" ministérios em outros e usou "extinguir" só para secretarias. Para ministério, os
+dois são o mesmo ato, porque as funções nunca somem, só mudam de dono. O que muda é o nome. Justiça
+e Segurança Pública juntaram-se com os dois nomes; a Cultura entrou na Cidadania e perdeu o nome.
+O jogo ficou com três gestos (juntar, dividir, criar), e juntar pergunta qual nome fica. Ele também
+reprovou os textos com cara de IA do protótipo, e com razão: a legenda do hemiciclo virou legenda
+visual, e cada frase passou a dizer o que acontece, com número. Os votos por pasta passaram a
+seguir a conta do motor, e não mais "uma pasta, a bancada inteira".
