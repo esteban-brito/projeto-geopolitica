@@ -34,8 +34,8 @@
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
 - **portão:** `validate` verde em 26/09, depois de registrar o protótipo da posse (desde o lote 2
   do mundo vivo só mudaram docs; passeio e macaco sem achados); roda de novo antes de qualquer commit;
-- **fora do repositório:** `Desktop/cld-quarentena-tmp/` guarda o que saiu do `tmp/` e das
-  capturas; ele pode apagar quando quiser.
+- **fora do repositório:** a quarentena `Desktop/cld-quarentena-tmp/` (750 MB, 662 entradas do
+  `tmp/` que nada citava) foi apagada em 26/09 com o sim dele.
 
 ## Estado — 25/09/2026: direção nova, abertura em construção, E0 pausado
 
