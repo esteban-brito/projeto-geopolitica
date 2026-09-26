@@ -34,6 +34,9 @@
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
 - **portão:** `validate` verde em 26/09, depois de registrar o protótipo da posse (desde o lote 2
   do mundo vivo só mudaram docs; passeio e macaco sem achados); roda de novo antes de qualquer commit;
+- **backup (26/09), pedido dele antes de recomeçar a interface:** marca `antes-da-interface-nova`
+  no git; `Desktop/cld-backup-2026-09-26.bundle` com todo o histórico (restaura com
+  `git clone cld-backup-2026-09-26.bundle`); `Desktop/cld-posse-2026-09-26.tgz` com `tmp/posse/`;
 - **fora do repositório:** a quarentena `Desktop/cld-quarentena-tmp/` (750 MB, 662 entradas do
   `tmp/` que nada citava) foi apagada em 26/09 com o sim dele.
 

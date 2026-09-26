@@ -78,7 +78,11 @@ vezes mais lenta, como no protótipo.
 
 Cada fase fecha com `validate` verde, capturas revisadas por mim e o sim dele.
 
-0. **Inventário e decisões.** Lista de tudo o que a interface de hoje faz, tela por tela, para
+0. **Backup, inventário e decisões.** O backup já existe (26/09): a marca `antes-da-interface-nova`
+   no git e duas cópias fora do projeto, `Desktop/cld-backup-2026-09-26.bundle` (todo o histórico,
+   conferido com `git bundle verify`) e `Desktop/cld-posse-2026-09-26.tgz` (o protótipo e as
+   ferramentas de `tmp/posse/`, que o git não guarda). Antes da fase 2 mexer em qualquer coisa, um
+   backup novo com a mesma receita. Lista de tudo o que a interface de hoje faz, tela por tela, para
    nada se perder; a decisão da base inicial (achado 86); a fonte condensada;
 1. **O sistema de design.** Tokens (cor, tipo, espaço, canto, sombra, tempo), componentes (botão,
    painel, etiqueta, lista, tabela, ficha, medidor, retrato, hemiciclo) e uma página de catálogo com
