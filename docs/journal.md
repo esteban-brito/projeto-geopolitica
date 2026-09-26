@@ -9408,3 +9408,13 @@ recusa (PML e PLI agora recusam sempre); "1 deputados" no plural; a dica da jun�
 para qualquer par; o perfil do PBR não explicava a posição nos costumes; o convite cancelado por mudança de
 estrutura sumia sem aviso; e três defeitos de retrato (pele escura contra o fundo, boca na barba e um corte de
 cabelo com pontas soltas). Testes sem regressão.
+
+### 96 · Partidas-teste: Xi e Lee Kuan Yew — 26/09
+
+A pesquisa do Xi feita no ChatGPT chegou com 246 linhas e só 3 links; as marcas de citação não abriam. As datas e
+cifras até junho de 2026 e a parte brasileira batem. O que é de julho a setembro de 2026 ficou marcado como não
+conferido e não entra no jogo. Ela virou a pesquisa 19. O mapa foi para as partidas-teste: 8 fios (disciplina,
+centro de comando, maioria de 308, instituições de controle, mandato, Estado na economia, informação, Forças), cada
+um com a versão dentro da lei, a de fora dela, quem reage e o que o jogo precisa. Também tem 7 peças de tela e o
+critério de aceite. Ordem dele no mesmo dia: uma segunda partida, em Lee Kuan Yew, com pesquisa do Codex, e as duas
+servem para planejar a interface inteira. Milei talvez depois, não agora.

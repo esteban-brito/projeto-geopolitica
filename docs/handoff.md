@@ -133,10 +133,11 @@
    fase 0: o inventário, e o modelo da base do começo a partir da
    [pesquisa 17](research/17-how-the-base-forms.md) (achado 86), desenhado em
    [o modelo da base](spec/the-base-model.md): cada deputado com uma chance de votar com o governo;
-4. **pesquisa Xi Jinping** (26/09): o ChatGPT faz a cronologia 2012–2026 e o catálogo temático, com
-   fonte em cada fato; quando chegar, eu confiro as fontes e faço a parte 3, se e como cada medida
-   cabe no Brasil real e no jogo, com preço e sem muro. A pesquisa 17 do Gemini foi apagada: sem
-   fontes e com erros de fato;
+4. **partidas-teste Xi e Lee Kuan Yew** (26/09): a pesquisa do Xi chegou, foi conferida e virou a
+   [pesquisa 19](research/19-the-xi-repertoire.md) e o mapa em
+   [as partidas-teste](spec/the-test-playthroughs.md) (8 fios, peças de tela, o que falta, critério de
+   aceite). A do Lee está com o Codex (tmp/research/lky.md); quando chegar, eu confiro e ela vira a
+   pesquisa 20 e os fios da partida Lee. Milei talvez depois; por ordem dele, não agora;
 5. **achado 81**, antes de fechar o E0; não bloqueia o E1;
 6. **achado 69** — investigar a oscilação da prova de voo interrompido;
 7. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);

@@ -149,7 +149,8 @@ Brasil, cada passo com preço, rito e reação, nunca com muro. A pesquisa do Xi
 coisas: o mapa de cada medida para o instrumento brasileiro mais próximo; a lista do que cada tela e cada motor
 precisam oferecer, que vira critério de aceite ("uma partida Xi é jogável do começo ao fim"); e o mesmo teste
 depois com outros projetos de governo, para o jogo não favorecer um caminho só. Isso orienta a interface nova
-desde a fase 1.
+desde a fase 1. O mapa, as peças de tela e o critério de aceite estão em
+[as partidas-teste](../spec/the-test-playthroughs.md): Xi (pesquisa 19) e Lee Kuan Yew (pesquisa 20, com o Codex).
 
 ## 7. Decisões que seguem abertas
 
