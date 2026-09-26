@@ -132,6 +132,11 @@
 
 ## Decisões vivas
 
+- **26/09, o ministério** ([proposta v0](spec/the-cabinet.md)) — ordens dele: aumentar e diminuir
+  os ministérios tem de estar no jogo, com realismo; dá para chamar gente de fora da política, com
+  33 notáveis de nome inventado (esporte, TV, internet, música, cinema, academia, negócios); a
+  posse é o híbrido dos protótipos B e C (o D do canvas). Os notáveis são elenco fixo, com
+  temperamento que varia pela semente. Viram os lotes E1.0d, E1.0e e E1.0f;
 - **25/09, o mundo vivo, lote 2 no jogo** — o desgaste de ficar na base cresce com a distância
   ideológica do governo; quem sai critica um governo fraco a cada 3 meses; cada crítica pesa sobre
   quem ficou. A VONTADE ganhou o gatilho da oportunidade (especificação §9.14). Quem pediu espera 3

@@ -41,6 +41,9 @@ O visual de vidro (Liquid Glass) segue como base, pela decisão dele de 05/09, e
 
 ## Os protótipos da posse, 25/09
 
+**Escolha dele em 26/09: o híbrido de B e C,** desenhado como D no mesmo canvas e descrito em
+[o ministério](the-cabinet.md), §4.
+
 Três estruturas com o mesmo visual, para comparar a estrutura e não a cor:
 
 - **A · Lista e ficha:** as cadeiras à esquerda, três candidatos no centro, os partidos à direita.

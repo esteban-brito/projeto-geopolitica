@@ -1,0 +1,172 @@
+# O ministério: o tamanho, a gente de fora e o temperamento
+
+> Proposta v0, 26/09/2026, pela ordem dele: poder aumentar e diminuir os ministérios, chamar gente
+> de fora da política e entender como funcionam as personalidades. A tela da posse será o híbrido
+> dos protótipos B e C, escolha dele em 26/09. Detalha os lotes E1.0d e E1.0e do
+> [mapa](migration-map.md) e abre o E1.0f. A base de lei está na
+> [pesquisa 15](../research/15-forming-the-government.md). Número de jogo leva [DESENHO].
+
+## 1. O tamanho do governo
+
+### O que a lei diz
+
+| fato                                                                                           | fonte                                                                                                                     |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| a lei cria e extingue ministérios; o decreto só reorganiza o que não gasta mais nem cria órgão | VERIFICADO: CF, arts. 48 XI, 84 VI "a" e 88                                                                               |
+| a medida provisória vale na hora; o Congresso tem 60 + 60 dias, e aos 45 ela tranca a pauta    | VERIFICADO: [CF, art. 62](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Aconstituicao%3A1988-10-05%3B1988%21art62) |
+| em 2019 eram 22 ministros de Estado: 16 ministérios e 6 cargos com status de ministro          | VERIFICADO: [MP 870/2019](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/mpv/mpv870.htm), lida em 26/09         |
+| em 2023 passaram a 38                                                                          | VERIFICADO: Lei 14.600/2023, art. 2º                                                                                      |
+| no meio do mandato, o Ministério das Comunicações voltou a existir em 10/06/2020               | VERIFICADO: [MP 980/2020](https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/mpv/mpv980.htm), lida em 26/09         |
+| a Constituição cita alguns ministros pelo nome (Justiça, Defesa, Relações Exteriores)          | VERIFICAR: CF, arts. 89 e 91                                                                                              |
+| o custo de criar um ministério (cargos e estrutura)                                            | FALTA                                                                                                                     |
+
+### O que o jogador faz
+
+Um ministério é um pacote de funções: as áreas, os programas e os órgãos. As funções nunca somem.
+O que muda é quem cuida delas. São quatro gestos, na posse ou em qualquer semana, com uma reunião
+na Casa Civil e uma medida provisória:
+
+- **extinguir:** a pasta some, e o jogador diz quem herda cada função;
+- **fundir:** duas pastas viram uma, como Fazenda e Planejamento;
+- **desmembrar:** uma pasta vira duas, como a Segurança Pública saindo da Justiça;
+- **criar:** uma pasta nova, montada com funções que já existem.
+
+### O preço
+
+- **O Congresso vota a medida em até 120 dias.** Cada partido vota pelo que ganha ou perde. Menos
+  pastas significa menos cadeira para ele, e ele vota contra. Se a medida cai, a estrutura antiga
+  volta, e quem sentou numa pasta nova perde a cadeira.
+- **A moeda da base tem duas partes.** Para um partido, uma pasta vale o símbolo (ter um
+  ministério) e o peso (a verba e os cargos das funções). Fundir guarda o peso e mata um símbolo.
+  Com 20 pastas, sobram 20 símbolos para dividir entre 9 partidos e o seu. [DESENHO]
+- **A opinião reage.** Extinguir uma pasta ligada a um grupo (Cultura, Mulheres, Igualdade Racial,
+  Povos Indígenas, Meio Ambiente) move esse grupo contra o governo. Crescer demais vira crítica de
+  inchaço entre quem liga para o gasto. [DESENHO]
+- **A máquina para por um tempo.** Na transição, os programas mudam de dono e a pasta afetada
+  executa menos por alguns meses. [DESENHO]
+- **O dinheiro fica ausente e declarado** até existir fonte para o custo de uma pasta.
+- **Nada tem muro.** Extinguir um ministério que a Constituição cita vira rota contestada, com
+  risco de ação no STF, e não um botão apagado.
+
+## 2. A gente de fora da política
+
+### O que a lei diz
+
+| fato                                                                            | fonte                                                                                                               |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| qualquer brasileiro maior de 21 anos, com direitos políticos, pode ser ministro | VERIFICADO: CF, art. 87                                                                                             |
+| o ministro não pode manter negócio com quem tem interesse nas decisões dele     | VERIFICADO: [Lei 12.813/2013](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12813.htm), art. 5º, II |
+| ao sair, fica 6 meses em quarentena                                             | VERIFICADO: Lei 12.813/2013, art. 6º, II                                                                            |
+| exemplos reais de ministros vindos do esporte, da música e dos negócios         | VERIFICAR, com fonte oficial                                                                                        |
+| o prazo para o ministro deixar o cargo e disputar eleição                       | VERIFICAR: LC 64/1990                                                                                               |
+
+### Como funciona no jogo
+
+1. **O convite.** Na posse ou em qualquer semana, o Presidente convida. O convidado decide pela
+   VONTADE, a mesma decisão das outras pessoas do jogo. Pesam a distância ideológica, a aprovação
+   do governo (ninguém quer entrar num governo que afunda), o que ele perde (carreira, empresa,
+   sossego) e o que ele quer (aparecer, uma causa, poder, uma eleição futura). Um telefonema do
+   Presidente, que gasta tempo da semana, aumenta a chance. Ele pode recusar, e a recusa pode
+   virar notícia.
+2. **O que ele traz.** A fama dá uma lua de mel com os grupos que gostam dele, por alguns meses.
+   O preparo decide quanto a pasta rende, onde o motor mede a execução; onde não mede, fica
+   ausente e declarado.
+3. **O que ele custa.**
+   - uma cadeira a menos para os partidos, e o partido que queria a pasta cobra;
+   - nenhum traquejo com o Congresso;
+   - língua solta: a frase errada vira crise, numa carta com autor;
+   - pouca paciência: gente de fora larga o cargo mais cedo quando é contrariada;
+   - agenda própria: quem sonha com eleição usa a pasta como palanque e sai para disputar;
+   - o empresário e o banqueiro têm de se afastar dos negócios para entrar.
+4. **Nomes inventados, tipos reconhecíveis** ([ADR 0003](../adr/0003-real-world-invented-people.md)).
+   O craque da seleção existe no jogo; o nome e a história são dele, e não de alguém real.
+5. **Elenco fixo, temperamento que varia.** Os notáveis são os mesmos em toda partida, por ordem
+   dele de 26/09, como os jogadores de um jogo de futebol. O temperamento varia pela semente dentro
+   da faixa de cada um: o craque é sempre vaidoso, mas a paciência dele muda de partida para
+   partida. Emenda a razão 2 da ADR 0003 só para eles; o elenco político segue gerado.
+
+### Os 33 notáveis
+
+Fama e preparo de 1 a 5, e ideologia de 0 a 100 na mesma escala dos partidos (econômica: 0 é
+Estado, 100 é mercado; liberdades: 0 é conservador, 100 é liberal nos costumes). Tudo [DESENHO].
+
+| nome                  | de onde vem                                              | pastas naturais                          | fama | preparo | econ. | liberd. | o que marca                                        |
+| --------------------- | -------------------------------------------------------- | ---------------------------------------- | ---- | ------- | ----- | ------- | -------------------------------------------------- |
+| Rafa Torquato         | craque da seleção, joga na Europa                        | Esporte                                  | 5    | 1       | 60    | 45      | vaidoso; não quer largar o clube                   |
+| Dora Maciel           | campeã olímpica de vôlei, hoje comentarista              | Esporte                                  | 3    | 3       | 50    | 60      | disciplinada; aguenta pressão                      |
+| Wellington Sá         | ex-campeão mundial de luta                               | Esporte, Segurança                       | 4    | 1       | 70    | 20      | língua solta; ídolo de quem pede ordem             |
+| Rudi Kaminski         | apresentador de aventura que mostra bicho na mata        | Meio Ambiente, Turismo                   | 4    | 2       | 55    | 60      | carismático; conhece a floresta, não Brasília      |
+| Célia Monteiro        | apresentadora de auditório aos domingos, 40 anos de TV   | Desenvolvimento Social, Cultura          | 5    | 1       | 45    | 40      | amada pelos mais velhos; humilde                   |
+| Jorge Aldano          | âncora do telejornal da noite                            | Comunicação Social                       | 4    | 3       | 55    | 55      | orgulhoso; pode vazar se contrariado               |
+| Priscila Andrade      | atriz de novela das nove, ativista                       | Cultura, Mulheres                        | 4    | 2       | 35    | 85      | engajada; briga em público                         |
+| Nando Paiva           | humorista de stand-up e de TV                            | Cultura, Turismo                         | 4    | 1       | 50    | 75      | piada vira crise                                   |
+| Lukinhas Serafim      | youtuber de games, 24 anos, 40 milhões de inscritos      | Ciência e Tecnologia, Comunicações       | 5    | 1       | 65    | 70      | impaciente; fala com os jovens                     |
+| Jade Albuquerque      | influenciadora de moda e estilo de vida                  | Turismo, Empreendedorismo                | 4    | 1       | 70    | 65      | vive de imagem; foge de crise                      |
+| Ícaro Viana           | físico e divulgador de ciência na internet               | Ciência e Tecnologia, Educação           | 3    | 4       | 45    | 80      | didático; perde a paciência com burocracia         |
+| Kléber Fontana        | comentarista político de podcast                         | Comunicação Social                       | 4    | 2       | 80    | 20      | polêmico; mobiliza a direita                       |
+| Toninho Lua           | cantor veterano da MPB                                   | Cultura                                  | 4    | 2       | 30    | 85      | ícone de uma geração; idealista                    |
+| Kely Rocha            | a cantora sertaneja mais ouvida do país                  | Cultura, Turismo                         | 5    | 1       | 65    | 35      | popular no interior e no agro                      |
+| MC Dandara            | funkeira da periferia, dona do próprio selo              | Igualdade Racial, Cultura, Mulheres      | 4    | 2       | 40    | 80      | voz da periferia; não abaixa a cabeça              |
+| Kadu Mendes           | rapper de protesto e escritor                            | Direitos Humanos, Igualdade Racial       | 3    | 2       | 25    | 80      | crítico do poder, inclusive do seu                 |
+| Heloísa Vasconcelos   | atriz e diretora premiada no exterior                    | Cultura                                  | 3    | 3       | 40    | 85      | respeitada; exigente                               |
+| Caíque Dornelas       | documentarista da Amazônia                               | Meio Ambiente, Povos Indígenas           | 2    | 3       | 35    | 75      | teimoso; sabe onde está o problema                 |
+| Lúcia Hartmann        | economista, professora da maior universidade do país     | Fazenda, Planejamento                    | 2    | 5       | 75    | 60      | ortodoxa; o mercado confia                         |
+| Anselmo Bezerra       | economista desenvolvimentista, ex-assessor de sindicatos | Fazenda, Desenvolvimento, Trabalho       | 2    | 4       | 25    | 60      | o mercado desconfia; os sindicatos aplaudem        |
+| Regina Sales          | médica sanitarista que liderou a resposta a uma epidemia | Saúde                                    | 3    | 5       | 40    | 65      | técnica; não aceita ordem sem evidência            |
+| Mateus Onofre         | filósofo, escritor mais vendido, colunista               | Educação, Cultura                        | 3    | 2       | 60    | 30      | orgulhoso; gosta de polêmica                       |
+| Yara Potiguara        | antropóloga e liderança indígena                         | Povos Indígenas, Meio Ambiente           | 2    | 4       | 30    | 70      | firme; o agro reage                                |
+| Augusto Bittencourt   | banqueiro, dono de um dos maiores bancos privados        | Fazenda                                  | 2    | 5       | 90    | 55      | tem de largar o banco; conflito de interesses      |
+| Vitória Salgado       | bilionária do varejo                                     | Indústria, Empreendedorismo              | 4    | 4       | 85    | 55      | acostumada a mandar; impaciente                    |
+| Ernesto Kruger        | o maior produtor de grãos do país                        | Agricultura                              | 2    | 4       | 85    | 30      | o agro aplaude; os ambientalistas reagem           |
+| Tomás Rangel          | fundador de banco digital, 38 anos                       | Gestão e Inovação, Ciência e Tecnologia  | 3    | 3       | 85    | 75      | rápido; não entende o ritmo de Brasília            |
+| Beatriz Almeida Prado | herdeira de grupo de mídia, preside fundação de ensino   | Educação                                 | 2    | 3       | 70    | 60      | elite paulistana; boa gestora                      |
+| Josué Carvalho        | bispo de igreja neopentecostal com rede de TV            | Direitos Humanos, Desenvolvimento Social | 4    | 1       | 65    | 10      | move os evangélicos; cobra pautas de costumes      |
+| Aurélio Maia          | general da reserva, comandou missão de paz               | Defesa, Segurança Institucional          | 2    | 4       | 60    | 25      | leal à hierarquia; avesso a risco                  |
+| Fábio Ramalho         | juiz federal famoso por uma operação anticorrupção       | Justiça e Segurança Pública              | 4    | 3       | 70    | 35      | sonha com a Presidência; usa a pasta como palanque |
+| Nina Okada            | chef de cozinha de programa de competição na TV          | Turismo, Desenvolvimento Agrário         | 3    | 2       | 55    | 70      | simpática; nunca geriu dinheiro público            |
+| Zé Firmino            | líder dos caminhoneiros que pararam o país               | Transportes                              | 3    | 2       | 60    | 30      | imprevisível; pode parar tudo de novo              |
+
+## 3. O temperamento
+
+Toda pessoa do jogo tem cinco coisas, e o jogo já usa todas no [mundo vivo](the-living-world.md):
+
+1. **Quatro traços,** sorteados pela semente dentro de uma faixa (`src/data/agency.mjs`):
+   - **esperança:** o quanto acredita que o Presidente vai atender. Quem tem pouca nem pede e já
+     ameaça;
+   - **orgulho:** o quanto um "não" fere. O orgulhoso fala firme e para de pedir antes;
+   - **apego ao cargo:** o medo de perder a cadeira. Quem tem muito aguenta desaforo;
+   - **aversão a risco:** quem tem muita evita ameaçar e apostar.
+2. **Ambição:** ser ministro, governar o estado, suceder o Presidente, se reeleger ou chegar a um
+   tribunal. Ela decide o peso de cada coisa: quem quer suceder se cansa rápido de um governo
+   impopular, e quem quer ser ministro aguenta quase tudo por uma pasta.
+3. **Ideologia:** a posição econômica e a posição nos costumes, de 0 a 100. Decide quem se cansa
+   de você primeiro.
+4. **Memória:** lembra de cada sim e de cada não. Uma recusa ensina, mas não é certeza.
+5. **Voz:** o tom da carta sai do temperamento: educado, firme ou seco.
+
+Os notáveis ganham mais três traços: **fama** (quantas pessoas ouvem o que ele diz), **preparo**
+(o quanto sabe fazer o trabalho) e **língua solta** (a chance de uma frase virar crise).
+
+**O jogador não vê os números.** A tela mostra o que a Presidência sabe: a ficha pública (de onde
+vem, o que já disse) e a leitura da assessoria ("vaidoso", "fala demais"). A leitura é estimativa
+e pode errar. O temperamento de verdade aparece com o tempo, no que a pessoa faz.
+
+## 4. A tela da posse: o híbrido de B e C
+
+Uma tela, três passos, com a base estimada sempre no alto:
+
+1. **O tamanho:** as pastas como fichas. Tocar numa abre extinguir, fundir ou desmembrar; um botão
+   cria uma nova. O contador mostra "38 → 31", e a chefe de gabinete diz o que a medida provisória
+   vai enfrentar no Congresso.
+2. **O núcleo, na conversa (C):** as pastas que mexem no jogo, uma por vez. Três pessoas de frente
+   (do seu partido, de um aliado, um técnico) e uma quarta porta: "chamar alguém de fora".
+3. **O resto, no plenário (B):** as pastas que sobraram vão aos partidos. O partido indica o nome,
+   e a bancada acende no semicírculo.
+
+## 5. Os lotes
+
+- **E1.0d:** os quatro gestos, a medida provisória no Congresso, a moeda de símbolo e peso;
+- **E1.0e:** a tela da posse híbrida;
+- **E1.0f:** os notáveis: o catálogo, o convite pela VONTADE, fama, preparo e língua solta;
+- **pesquisas:** os ministros reais vindos de fora da política, o prazo para sair e disputar
+  eleição, o custo de uma pasta, os arts. 89 e 91 da Constituição.

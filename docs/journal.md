@@ -9108,3 +9108,14 @@ ganhou o gatilho da oportunidade. Dois partidos levavam a mesma cadeira, e o úl
 apagava o primeiro. E o partido ganhava a pasta e ameaçava no mês seguinte. As duas últimas viraram
 provas antes do conserto. O preço medido: `agenda` caiu de 32 para 22 votações aprovadas, e
 nenhuma sonda segura a base até o fim. Fica como achado 86, para decidir com ele.
+
+### 65 · O tamanho do governo — 26/09
+
+Ele achou 38 cadeiras uma loucura, e pediu para poder aumentar e diminuir os ministérios. A lei
+confirma o caminho: a medida provisória no dia da posse, como em 2019 e em 2023. Em 2019 eram 22
+ministros de Estado; em 2023, 38. O desenho trata a pasta como um pacote de funções que nunca
+somem: extinguir, fundir, desmembrar e criar só mudam o dono. O preço é a base, porque cada pasta
+a menos é um símbolo a menos para dividir entre os partidos. Ele também quer chamar gente de fora
+da política, como um craque de futebol no Esporte. Nasceram 33 notáveis de nome inventado, que
+decidem se aceitam o convite pela mesma VONTADE das outras pessoas. Da posse, ele escolheu o
+híbrido do plenário com a conversa.
