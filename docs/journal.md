@@ -9161,3 +9161,14 @@ medida; o Ministério da Defesa dirige as Forças Armadas, mas o comando supremo
 votos por pasta chegam com o tempo, e não na hora; um partido muito distante recusa entrar no
 governo; dividir não tirava a área do ministério de origem. Um roteiro testou cada pasta e cada
 ação, com 20 e 41 pastas, e passou sem quebra.
+
+### 70 · Extinguir com um botão — 26/09
+
+Ele achou o extinguir complexo demais e pediu para o jogo fazer por ele, de forma fiel. Na vida
+real é assim: o Presidente decide extinguir, e a Casa Civil prepara a medida dizendo para onde vai
+cada área. Agora o jogo mostra essa proposta em poucas linhas, e ele só assina. A proposta segue o
+precedente das MPs 726 (2016) e 870 (2019) quando existe; sem precedente, vai para o ministério de
+assunto mais parecido, e a tela diz isso. O editor de destinos ficou atrás de "Mudar alguma
+coisa". Juntar perdeu a opção "só um nome", que fazia o mesmo que extinguir. Ele lembrou a meta: um
+simulador realista como um Assetto Corsa, mas um jogo. A regra fica no motor; a tela propõe, e quem
+quiser ajusta.

@@ -33,12 +33,15 @@ Um ministério é um pacote de áreas, e a Lei 14.600 lista as de cada um. Nenhu
 medida provisória diz quem passa a cuidar dela. A diferença entre os gestos é para onde as áreas
 vão:
 
-- **juntar:** tudo o que dois ministérios fazem vai para um só, com um ministro. O nome pode ser os
-  dois (Justiça e Segurança Pública, 2019), um só (a Cultura dentro da Cidadania, 2019) ou um nome
-  novo (Economia, 2019). O que perde o nome continua por dentro, como secretaria;
-- **extinguir:** o ministério acaba, e cada área vai para o ministério que o jogador escolher, que
-  podem ser vários (o Trabalho em 2019 foi para três). Em 2016 a Cultura foi extinta e recriada 11
-  dias depois, e é esse o risco: quem depende da área reage;
+- **juntar:** tudo o que dois ministérios fazem vai para um só, com um ministro. O nome mostra os
+  dois (Justiça e Segurança Pública, 2019) ou é um nome novo (Economia, 2019). A pasta maior vem
+  primeiro no nome;
+- **extinguir:** o ministério acaba. O jogador só aperta o botão: a Casa Civil propõe para onde vai
+  cada área, e ele assina. A proposta segue o precedente real quando existe (o Trabalho repartido
+  entre Justiça, Cidadania e Economia em 2019; Direitos Humanos, Mulheres e Igualdade Racial para a
+  Justiça em 2016; a pesca para a Agricultura em 2019) e, sem precedente, o ministério de assunto
+  mais parecido, [DESENHO]. Quem quiser muda o destino de cada área. Em 2016 a Cultura foi extinta
+  e recriada 11 dias depois, e é esse o risco: quem depende da área reage;
 - **dividir:** uma área sai e vira ministério próprio, como a Segurança Pública saindo da Justiça;
 - **desfazer:** qualquer mudança volta atrás antes da medida ser publicada.
 
