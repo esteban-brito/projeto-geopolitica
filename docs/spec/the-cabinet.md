@@ -188,6 +188,9 @@ Uma tela, sem abas. É a fusão dos protótipos B e C, o D do canvas:
 - **Os votos seguem a conta do motor:** um partido vota inteiro com o governo quando tem pastas na
   proporção da bancada (`coalitionOf`). Cada pasta vale cerca de 13 deputados (513 ÷ 38).
 - **O seu partido fica no alto,** embaixo de "Seu governo": a sigla na cor dele, o nome e a bancada.
+- **Os textos seguem um padrão só.** Botão: verbo curto (Manter, Juntar, Extinguir, Dividir, Assinar). Dica: uma frase com o efeito. Recado da chefe de gabinete: o ministério primeiro, depois o fato e o número ("Fazenda: o PLB indicou Glória Meireles."). Frase com o nome de uma pessoa não depende do gênero dela ("continua no cargo", "Você exonerou"). As áreas de um ministério aparecem separadas por "·";
+- **Botão que não pode agir não aparece.** Um ministério que recebeu partes de outro não mostra Extinguir; mostra Recriar. O partido que recusa entrar no governo aparece apagado, só na lista de partidos;
+- **O botão principal fica sempre à vista:** na proposta da Casa Civil e no editor, Assinar fica fixo no pé do painel;
 - **Nenhuma janela nem legenda por cima:** a chefe de gabinete fala numa linha embaixo do
   hemiciclo, e a base fica sempre no alto.
 

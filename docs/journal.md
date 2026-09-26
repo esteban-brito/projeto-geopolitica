@@ -9172,3 +9172,13 @@ assunto mais parecido, e a tela diz isso. O editor de destinos ficou atrás de "
 coisa". Juntar perdeu a opção "só um nome", que fazia o mesmo que extinguir. Ele lembrou a meta: um
 simulador realista como um Assetto Corsa, mas um jogo. A regra fica no motor; a tela propõe, e quem
 quiser ajusta.
+
+### 71 · O polimento dos textos — 26/09
+
+Ele pediu todos os textos refinados e padronizados, e achou botões que não deviam aparecer. Os
+textos viraram um dicionário só, com um padrão: botão com verbo curto, dica de uma frase, recado
+com o ministério na frente e o fato depois. A leitura de todos os textos, ministério por
+ministério, achou português errado ("Cuida de relação com"), listas ambíguas (áreas que já têm "e"
+no nome), falta de artigo ("assume Economia") e frases que dependiam do gênero da pessoa. O botão
+Extinguir sumiu de quem recebeu partes, o partido que recusa ficou apagado, e o Assinar ficou fixo
+no pé do painel, porque uma proposta longa o empurrava para fora da tela.
