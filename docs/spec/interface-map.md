@@ -39,6 +39,23 @@ Nomes e quantidade seguem abertos (especificação §6.4).
 
 O visual de vidro (Liquid Glass) segue como base, pela decisão dele de 05/09, e pode mudar.
 
+## Direção futura, pedida em 26/09
+
+Ele aprovou a posse como está na versão 25 e pediu para registrar o nível de design que quer para um
+futuro próximo: **Apple + Football Manager + Civilization + Valorant**. Não se aplica sem ordem.
+
+- **Valorant, na escolha do ministro:** tela de escolha de agente. Grade de retratos com partido e
+  linha política, retrato grande de quem está sob o mouse, botão NOMEAR que trava a escolha;
+  cantos cortados em ângulo e fonte condensada em caixa alta nos números e títulos;
+- **Football Manager, nos atributos:** Fama, Preparo e Afinidade em números coloridos por faixa; a
+  ficha vira relatório de olheiro, com forças, riscos e comparação com o ministro atual;
+- **Civilization, na cerimônia:** o hemiciclo como mapa e centro da tela; ministérios com moldura
+  de ficha e anel dourado quando têm ministro; uma entrada curta da posse (data, faixa, retrato);
+- **Apple, por cima de tudo:** uma cor de destaque, movimento com física, nada de enfeite sem
+  função.
+
+Começo sugerido: a escolha do ministro, onde o jogador passa mais tempo.
+
 ## Os protótipos da posse, 25/09
 
 **Escolha dele em 26/09: a fusão de B e C. Os protótipos A, B e C foram apagados do canvas no mesmo dia; fica só a fusão.** A primeira versão punha os dois em abas separadas, e
