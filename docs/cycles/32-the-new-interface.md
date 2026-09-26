@@ -141,6 +141,16 @@ calibrar, e cada efeito tem de ter preço, nunca muro:
 - **ativista:** capacidade de mobilizar a rua (CALDEIRA); os partidos pragmáticos começam mais desconfiados;
 - **celebridade:** fama e aprovação inicial maiores (SONDA); pior desempenho de gestão no começo (MALHA).
 
+## 6c. Partidas-teste: o jogo tem de aguentar qualquer projeto (ordem dele, 26/09)
+
+Uma partida no estilo de Xi Jinping tem de funcionar: concentrar poder, usar a anticorrupção como arma, dirigir
+estatais e crédito, nomear aliados para as instituições, mexer na Constituição. Tudo dentro das regras reais do
+Brasil, cada passo com preço, rito e reação, nunca com muro. A pesquisa do Xi (fila do handoff) vira três
+coisas: o mapa de cada medida para o instrumento brasileiro mais próximo; a lista do que cada tela e cada motor
+precisam oferecer, que vira critério de aceite ("uma partida Xi é jogável do começo ao fim"); e o mesmo teste
+depois com outros projetos de governo, para o jogo não favorecer um caminho só. Isso orienta a interface nova
+desde a fase 1.
+
 ## 7. Decisões que seguem abertas
 
 Todas num lugar só; o estudo da posse aponta para cá.
