@@ -9352,3 +9352,10 @@ sigla PP virou PATRIA porque existe no TSE. Os blocos grandes do centrão, que o
 com sete partidos refeitos no mesmo formato. Paleta nova com menor ΔE de 27,1. Na criação, o texto embaixo
 da grade de partidos deu lugar a uma ficha no mesmo estilo da ficha das pessoas: Nolan, ideologia,
 perfil, base eleitoral e comportamento no Congresso. Testes sem regressão.
+
+### 89 · Segunda auditoria do Codex — 26/09
+
+O Codex montou uma folha de contato com 105 retratos em 32, 56 e 148 px e revisou as duas telas. Achou 4
+defeitos, todos corrigidos: a AGU sem a emenda para juntar; o rodapé da AGU falando em medida provisória;
+pele escura e cabelo castanho com contraste de 1,08:1 (para pele escura, o cabelo passou a ser preto ou
+grisalho); e a barba cobrindo a boca (a barba ganhou um recorte em volta dos lábios). Testes sem regressão.
