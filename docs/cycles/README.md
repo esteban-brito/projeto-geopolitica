@@ -9,6 +9,7 @@ no arquivo, o que aconteceu está no [`journal.md`](../journal.md). Estado se l�
 
 | #   | arquivo                                                               | o quê                                                                             | situação                                           |
 | --- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------- |
+| 33  | [o jogo inteiro](33-the-whole-game.md)                                | etapas, ações, atores, telas e aceite pelas partidas Xi e Lee                     | proposto em 26/09, espera o sim dele               |
 | 32  | [a interface nova](32-the-new-interface.md)                           | a interface refeita sobre o motor, no estilo Apple + FM + Civilization + Valorant | planejado em 26/09                                 |
 | 31  | [o corte do bimestre](31-the-bimonthly-cut.md)                        | E0 v1: ministros no contingenciamento                                             | commitado; pausado em 25/09 depois do playtest     |
 | 30  | [profundidade e provas](30-depth-and-proofs.md)                       | fechar bug com prova; candidatos de profundidade do motor                         | veredito item a item no §10 do mapa (24/09)        |

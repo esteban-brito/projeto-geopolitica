@@ -9418,3 +9418,12 @@ centro de comando, maioria de 308, instituições de controle, mandato, Estado n
 um com a versão dentro da lei, a de fora dela, quem reage e o que o jogo precisa. Também tem 7 peças de tela e o
 critério de aceite. Ordem dele no mesmo dia: uma segunda partida, em Lee Kuan Yew, com pesquisa do Codex, e as duas
 servem para planejar a interface inteira. Milei talvez depois, não agora.
+
+### 97 · O plano do jogo inteiro — 26/09
+
+O ciclo 33 organiza o jogo inteiro em 13 etapas, da fundação ao aceite.
+O catálogo liga ações, rotas, atores e telas aos 16 fios das partidas Xi e Lee.
+O checklist presidencial passa de 40 para 54 itens; os itens 41 a 54 têm fonte e etapa.
+O plano distribui 5 sistemas propostos, 17 telas e os lotes A1–F, E1 e o ciclo 32.
+As tentativas fora da lei recebem destinatário, recusa, reação e desfecho possível.
+O plano espera o sim do Diretor antes de virar a ordem de construção.
