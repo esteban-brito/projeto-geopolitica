@@ -124,10 +124,10 @@
 1. **E1.0 — a abertura, montar o governo**, lotes E1.0a a E1.0e do [mapa](spec/migration-map.md)
    §6.4. O E1.0a está feito; o próximo é o E1.0b, a eleição da Mesa;
 2. **E1.1 a E1.8 — a estatal**, depois da abertura;
-3. **a interface nova**: o [mapa das telas](spec/interface-map.md). A posse tem protótipo aprovado
-   (versão 25, 26/09) e entra no jogo no E1.0e; a direção Apple + Football Manager + Civilization +
-   Valorant está registrada no mapa e só se aplica com ordem dele; a tela das próximas
-   atualizações entra na mesma reformulação;
+3. **a interface nova** — [ciclo 32](cycles/32-the-new-interface.md), planejado em 26/09: o motor fica, a
+   interface recomeça do zero no estilo Apple + Football Manager + Civilization + Valorant,
+   reaproveitando peça por peça (mola, squircle, glifos, vidro só em superfície parada). Começa pela
+   fase 0, o inventário e a decisão da base inicial (achado 86), que também bloqueia a posse;
 4. **pesquisa Xi Jinping** (26/09): o ChatGPT faz a cronologia 2012–2026 e o catálogo temático, com
    fonte em cada fato; quando chegar, eu confiro as fontes e faço a parte 3, se e como cada medida
    cabe no Brasil real e no jogo, com preço e sem muro. A pesquisa 17 do Gemini foi apagada: sem
@@ -142,6 +142,9 @@
 
 ## Decisões vivas
 
+- **26/09, a interface nova** — ordem dele: o motor fica e a interface recomeça do zero sobre a
+  fundação; estilo fixado em Apple + Football Manager + Civilization + Valorant; reaproveitar o que
+  prestar do Liquid Glass e dos menus ([ciclo 32](cycles/32-the-new-interface.md));
 - **26/09, o visual da posse** — ele aprovou a versão 25 do protótipo como está. Pediu para registrar,
   para talvez aplicar em breve, o nível de design Apple + Football Manager + Civilization + Valorant
   (proposta em [mapa de interface](spec/interface-map.md), "Direção futura"). É gosto dele com data,
