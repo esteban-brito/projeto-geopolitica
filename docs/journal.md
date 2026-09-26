@@ -9240,3 +9240,12 @@ navegador mediu as duas versões com o cursor na borda de baixo: na antiga o bot
 passava do lugar (450,9 contra 450,5); na nova o botão fica parado, a face sobe e volta direto para
 450,5. A mesma revisão tirou o atraso da onda dos deputados na volta do hover e fez a etiqueta e a
 ficha deslizarem em vez de pular.
+
+### 78 · O tranco, de novo, e a causa de verdade — 26/09
+
+O tranco continuou no canvas, porque meu teste rodava só o CSS. No canvas, passar o mouse no
+ministério mudava o estado da tela para mostrar a etiqueta, e a tela se redesenhava no meio da
+animação; o aumento de tamanho e o filtro de brilho ainda faziam o ícone encaixar 1 px no fim.
+Agora o hover do ministério não toca no estado: a etiqueta é CSS dentro do botão, e o círculo só
+sobe 3 px com sombra. Ele também pediu mais requinte na bancada: a onda passou a sair do meio para
+as pontas, com brilho na cor do partido e um vidro translúcido atrás da fatia.
