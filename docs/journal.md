@@ -9279,3 +9279,13 @@ o runtime real do canvas achou 31 defeitos na versão 21 (etiqueta nascendo a 20
 abaixo dele, deslizando 4 px ao sumir) e 0 na 22, a 100% e 75% de zoom. Achou também o hemiciclo
 subindo 15 px quando a fala da chefe de gabinete mudava de tamanho; a posição ficou fixa. Fuzz de
 48 mil ações: 0 problemas.
+
+### 82 · A Câmara leve — 26/09
+
+Medido com CPU 4 vezes mais lenta, varrer as bancadas com o mouse dava pior quadro de 233 ms: cada
+hover reescrevia 202 caracteres de estilo em 513 deputados, disparava 513 transições e redesenhava
+a tela. A lógica custava 0,46 ms; o peso era o navegador. Agora cada bancada é um bloco que sobe
+inteiro, as outras escurecem, e o foco é um atributo que o CSS lê. Pior quadro: 17 ms, nenhum lento.
+Clarear só os deputados da bancada em foco voltou a 50 ms e saiu; escurecer as outras para 15% dá
+o mesmo destaque. Trocar de ministério e passar nos nomes ficam em até 50 ms nessa CPU, porque ainda
+redesenham a tela.
