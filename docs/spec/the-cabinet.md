@@ -74,7 +74,7 @@ na Casa Civil e uma medida provisória:
 3. **O que ele custa.**
    - uma cadeira a menos para os partidos, e o partido que queria a pasta cobra;
    - nenhum traquejo com o Congresso;
-   - língua solta: a frase errada vira crise, numa carta com autor;
+   - preparo baixo: a frase errada vira crise, numa carta com autor;
    - pouca paciência: gente de fora larga o cargo mais cedo quando é contrariada;
    - agenda própria: quem sonha com eleição usa a pasta como palanque e sai para disputar;
    - o empresário e o banqueiro têm de se afastar dos negócios para entrar.
@@ -87,14 +87,14 @@ na Casa Civil e uma medida provisória:
 
 ### Os 33 notáveis
 
-Fama e preparo de 1 a 5, e ideologia de 0 a 100 na mesma escala dos partidos (econômica: 0 é
+Fama e preparo de 1 a 5; a afinidade sai da ideologia, de 0 a 100 na mesma escala dos partidos (econômica: 0 é
 Estado, 100 é mercado; liberdades: 0 é conservador, 100 é liberal nos costumes). Tudo [DESENHO].
 
 | nome                  | de onde vem                                              | pastas naturais                          | fama | preparo | econ. | liberd. | o que marca                                        |
 | --------------------- | -------------------------------------------------------- | ---------------------------------------- | ---- | ------- | ----- | ------- | -------------------------------------------------- |
 | Rafa Torquato         | craque da seleção, joga na Europa                        | Esporte                                  | 5    | 1       | 60    | 45      | vaidoso; não quer largar o clube                   |
 | Dora Maciel           | campeã olímpica de vôlei, hoje comentarista              | Esporte                                  | 3    | 3       | 50    | 60      | disciplinada; aguenta pressão                      |
-| Wellington Sá         | ex-campeão mundial de luta                               | Esporte, Segurança                       | 4    | 1       | 70    | 20      | língua solta; ídolo de quem pede ordem             |
+| Wellington Sá         | ex-campeão mundial de luta                               | Esporte, Segurança                       | 4    | 1       | 70    | 20      | fala sem pensar; ídolo de quem pede ordem          |
 | Rudi Kaminski         | apresentador de aventura que mostra bicho na mata        | Meio Ambiente, Turismo                   | 4    | 2       | 55    | 60      | carismático; conhece a floresta, não Brasília      |
 | Célia Monteiro        | apresentadora de auditório aos domingos, 40 anos de TV   | Desenvolvimento Social, Cultura          | 5    | 1       | 45    | 40      | amada pelos mais velhos; humilde                   |
 | Jorge Aldano          | âncora do telejornal da noite                            | Comunicação Social                       | 4    | 3       | 55    | 55      | orgulhoso; pode vazar se contrariado               |
@@ -144,29 +144,38 @@ Toda pessoa do jogo tem cinco coisas, e o jogo já usa todas no [mundo vivo](the
 4. **Memória:** lembra de cada sim e de cada não. Uma recusa ensina, mas não é certeza.
 5. **Voz:** o tom da carta sai do temperamento: educado, firme ou seco.
 
-Os notáveis ganham mais três traços: **fama** (quantas pessoas ouvem o que ele diz), **preparo**
-(o quanto sabe fazer o trabalho) e **língua solta** (a chance de uma frase virar crise).
+**Três números à vista, para todas as pessoas** (políticos, técnicos e notáveis), de 1 a 5:
 
-**O jogador não vê os números.** A tela mostra o que a Presidência sabe: a ficha pública (de onde
-vem, o que já disse) e a leitura da assessoria ("vaidoso", "fala demais"). A leitura é estimativa
-e pode errar. O temperamento de verdade aparece com o tempo, no que a pessoa faz.
+- **Fama:** quantas pessoas ouvem o que ela diz;
+- **Preparo:** o quanto sabe fazer o trabalho, inclusive falar em público sem criar crise;
+- **Afinidade:** o quanto pensa parecido com você. Sai da distância entre a ideologia dela e a do
+  seu partido.
 
-## 4. A tela da posse: o híbrido de B e C
+Fama e afinidade são públicas. O preparo é a leitura da assessoria pelo currículo, e pode errar.
+Os cortes de 1 a 5 são [DESENHO].
 
-Uma tela, três passos, com a base estimada sempre no alto:
+**O temperamento fica escondido.** Os quatro traços, a ambição e a memória não aparecem em número.
+Aparecem com o tempo, no que a pessoa faz.
 
-1. **O tamanho:** as pastas como fichas. Tocar numa abre extinguir, fundir ou desmembrar; um botão
-   cria uma nova. O contador mostra "38 → 31", e a chefe de gabinete diz o que a medida provisória
-   vai enfrentar no Congresso.
-2. **O núcleo, na conversa (C):** as pastas que mexem no jogo, uma por vez. Três pessoas de frente
-   (do seu partido, de um aliado, um técnico) e uma quarta porta: "chamar alguém de fora".
-3. **O resto, no plenário (B):** as pastas que sobraram vão aos partidos. O partido indica o nome,
-   e a bancada acende no semicírculo.
+## 4. A tela da posse: o hemiciclo
+
+Uma tela e duas abas, Pessoas e Estrutura. É a fusão dos protótipos B e C, o D do canvas:
+
+- **O hemiciclo:** você no centro; em volta, as pastas em três anéis, com o núcleo no de dentro;
+  por fora, os 513 deputados. Dar uma pasta a um partido acende a bancada dele.
+- **Pessoas:** tocar numa pasta abre, à direita, quem pode ocupá-la: o indicado de cada partido,
+  técnicos e gente de fora. Cada linha mostra rosto, fama, preparo, afinidade e quantos deputados
+  entram na base. A lista ordena por coluna.
+- **Estrutura:** o mesmo hemiciclo. Tocar numa pasta abre extinguir, fundir ou desmembrar, e o
+  anel se refaz com menos ou mais pastas. O contador mostra "38 → 37".
+- **Nenhuma janela por cima:** a chefe de gabinete fala numa linha embaixo do hemiciclo, e a base
+  fica sempre no alto.
 
 ## 5. Os lotes
 
 - **E1.0d:** os quatro gestos, a medida provisória no Congresso, a moeda de símbolo e peso;
-- **E1.0e:** a tela da posse híbrida;
-- **E1.0f:** os notáveis: o catálogo, o convite pela VONTADE, fama, preparo e língua solta;
+- **E1.0e:** a tela da posse no hemiciclo;
+- **E1.0f:** os notáveis (o catálogo e o convite pela VONTADE) e fama, preparo e afinidade em toda
+  pessoa do elenco;
 - **pesquisas:** os ministros reais vindos de fora da política, o prazo para sair e disputar
   eleição, o custo de uma pasta, os arts. 89 e 91 da Constituição.

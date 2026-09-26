@@ -136,7 +136,9 @@
   os ministérios tem de estar no jogo, com realismo; dá para chamar gente de fora da política, com
   33 notáveis de nome inventado (esporte, TV, internet, música, cinema, academia, negócios); a
   posse é o híbrido dos protótipos B e C (o D do canvas). Os notáveis são elenco fixo, com
-  temperamento que varia pela semente. Viram os lotes E1.0d, E1.0e e E1.0f;
+  temperamento que varia pela semente. Fama, preparo e afinidade, de 1 a 5, aparecem para todas as
+  pessoas; a língua solta saiu, porque cabe no preparo. A tela da posse é um hemiciclo com duas
+  abas. Viram os lotes E1.0d, E1.0e e E1.0f;
 - **25/09, o mundo vivo, lote 2 no jogo** — o desgaste de ficar na base cresce com a distância
   ideológica do governo; quem sai critica um governo fraco a cada 3 meses; cada crítica pesa sobre
   quem ficou. A VONTADE ganhou o gatilho da oportunidade (especificação §9.14). Quem pediu espera 3

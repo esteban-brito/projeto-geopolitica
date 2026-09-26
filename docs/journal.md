@@ -9119,3 +9119,12 @@ a menos é um símbolo a menos para dividir entre os partidos. Ele também quer 
 da política, como um craque de futebol no Esporte. Nasceram 33 notáveis de nome inventado, que
 decidem se aceitam o convite pela mesma VONTADE das outras pessoas. Da posse, ele escolheu o
 híbrido do plenário com a conversa.
+
+### 66 · O hemiciclo — 26/09
+
+A primeira fusão dos protótipos não era fusão: punha o plenário e a conversa em abas separadas, e
+ele recusou. A segunda junta tudo num desenho só. O Presidente fica no centro, as pastas em três
+anéis em volta dele e os 513 deputados por fora. Dar uma pasta a um partido acende a bancada no
+mesmo desenho. À direita, a lista de quem pode ocupar a pasta, com rosto e três números: fama,
+preparo e afinidade. Ele tirou a língua solta, porque ela cabe no preparo, e mandou mostrar os
+três números para todas as pessoas do jogo, políticos incluídos.
