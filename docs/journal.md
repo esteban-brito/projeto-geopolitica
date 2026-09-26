@@ -9221,3 +9221,13 @@ As cores partem do Nolan, mas cada partido tem um tom próprio, medido: a menor 
 de cada linha, com profissão e trajetória; o famoso da área ocupa a vaga da sua linha, e a Fazenda
 ficou com três economistas de visões diferentes. O nome de cada pessoa abre uma ficha com a
 trajetória, os números e a posição no Nolan.
+
+### 76 · O teste de estresse — 26/09
+
+Ele disse que ainda havia bugs e falta de robustez, sem apontar quais. Um teste novo joga 400
+sessões aleatórias de 120 cliques cada, perto de 48 mil ações, e confere a cada passo: nada quebra,
+os círculos batem com os ministérios, a base fica entre 42 e 513, ninguém ocupa duas pastas, os
+deputados acesos batem com a base. Ele achou uma quebra: Exonerar podia ser acionado sem ninguém no
+cargo. Corrigido, o teste passou limpo. A revisão da interação achou o resto: a etiqueta e a ficha
+piscavam ao passar de um item para o vizinho (agora a saída espera 90 ms), faltava teclado, os nomes
+eram cortados e a ficha cobria a bancada em foco. A lista e o hemiciclo passaram a conversar.
