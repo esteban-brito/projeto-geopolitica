@@ -9390,3 +9390,12 @@ A ideologia da VANGUARDA passou a "Neoliberalismo". No cartão de partido da cri
 do Nolan. Uma brecha fechada: o convite pendente sobrevivia quando a pasta era extinta, juntada ou desfeita, e
 voltava ao recriá-la. Varredura com os 16 partidos como partido do Presidente: 0 problemas, do PLI (1 voto firme)
 ao PCN (204). A montagem inteira agora roda com `tmp/posse/build-all.sh`.
+
+### 94 · Fisiologismo — 26/09
+
+A análise do Gemini apontou o centrão rotulado como direita. O rótulo segue os especialistas (União 8,5, PP 8,2,
+Republicanos 8,3), mas o defeito de fundo era real: pela distância no Nolan, a FBR recusaria pasta de um
+Presidente de esquerda, e na vida real União, PP e Republicanos aceitaram ministérios em 2023. Sete partidos
+ganharam o traço de pragmático. Com o PCS no governo, a oposição passou a ser PML, PATRIA, PCN, VANGUARDA e PLI,
+como em 2023; nenhum Presidente começa com 257 firmes (o maior é o PCN, 205). A VANGUARDA foi a 85/52, no
+quadrante libertário. Testes sem regressão.

@@ -95,3 +95,8 @@ individual (0, controle total; 100, liberdade total). Posições, perfis e cores
   Brasil). "Progressistas" é o nome oficial do PP real e "Libertários" é um partido real em formação: ficaram
   por ordem dele. Revisão contra a Câmara real: PCN a 66/22 (o PL é o mais à direita para os especialistas) e
   PATRIA a 25/12.
+- **Fisiologismo (26/09, a partir da análise do Gemini):** MDN, PDST, FBR, PBR, PAB, ACF e UNIDOS são pragmáticos.
+  Negociam com qualquer governo: aceitam pasta mesmo longe no Nolan, votam com o governo em pelo menos 55% das
+  vezes sem pasta [DESENHO] e só viram oposição acima de 70 de distância. Motivo: União, PP e Republicanos
+  aceitaram ministérios de Lula em 2023. O rótulo no Nolan segue os especialistas; o comportamento vem do
+  traço. O Gemini também disse que o MDN (38) e o PDST (48) estavam pequenos: são os números reais de hoje.
