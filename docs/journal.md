@@ -9249,3 +9249,12 @@ animação; o aumento de tamanho e o filtro de brilho ainda faziam o ícone enca
 Agora o hover do ministério não toca no estado: a etiqueta é CSS dentro do botão, e o círculo só
 sobe 3 px com sombra. Ele também pediu mais requinte na bancada: a onda passou a sair do meio para
 as pontas, com brilho na cor do partido e um vidro translúcido atrás da fatia.
+
+### 79 · Sem brilho, e a etiqueta que segue o mouse — 26/09
+
+Ele não gostou do brilho nas bolinhas nem do vidro atrás da bancada, e os dois saíram. A etiqueta
+do partido passou a seguir o mouse. Para não redesenhar os 513 deputados a cada movimento, a
+posição é escrita direto no elemento, uma vez por quadro, e a conta corrige o zoom do canvas. Um
+teste no navegador moveu o cursor por uma bancada com zoom de 100% e de 75%: a etiqueta ficou
+centrada sobre o cursor e nunca o cobriu. Os protótipos A, B e C foram apagados do canvas, a pedido
+dele; fica só a posse.
