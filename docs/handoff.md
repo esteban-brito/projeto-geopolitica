@@ -17,7 +17,8 @@
   [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
   [checklist do Presidente](spec/presidential-checklist.md); a interface nova, no
   [mapa das telas](spec/interface-map.md). Em conflito, vale o mais recente;
-- **próximo passo:** o lote 3 do [mundo vivo](spec/the-living-world.md), imprensa e Casa Civil. Os
+- **próximo passo:** a etapa 1 do [ciclo 33](cycles/33-the-whole-game.md), aprovado em 26/09,
+  começando pelo motor da base. O lote 3 do [mundo vivo](spec/the-living-world.md), imprensa e Casa Civil, entra na etapa 7. Os
   lotes 1 e 2 estão no jogo: 14 pessoas decidem pela VONTADE, escrevem cartas com autor, saem da
   base pela ideologia e fazem oposição. O E1.0a (as 38
   cadeiras, nomear e demitir, a pasta que puxa a lealdade até 80) está feito; a abertura segue com
@@ -124,8 +125,9 @@
 
 ## Fila, em ordem
 
-1. **E1.0 — a abertura, montar o governo**, lotes E1.0a a E1.0e do [mapa](spec/migration-map.md)
-   §6.4. O E1.0a está feito; o próximo é o E1.0b, a eleição da Mesa;
+1. **Etapa 1 do [ciclo 33](cycles/33-the-whole-game.md), Presidente e posse**, aprovado em 26/09.
+   Começa pelo motor da base ([o modelo da base](spec/the-base-model.md), ciclo 32 fase 2). O
+   E1.0a está feito; o E1.0b, a eleição da Mesa, passou para a etapa 4 (decisão 1);
 2. **E1.1 a E1.8 — a estatal**, depois da abertura;
 3. **a interface nova** — [ciclo 32](cycles/32-the-new-interface.md), planejado em 26/09: o motor fica, a
    interface recomeça do zero no estilo Apple + Football Manager + Civilization + Valorant,
@@ -138,8 +140,8 @@
    [as partidas-teste](spec/the-test-playthroughs.md) (8 fios, peças de tela, o que falta, critério de
    aceite). A do Lee está com o Codex (tmp/research/lky.md); quando chegar, eu confiro e ela vira a
    pesquisa 20 e os fios da partida Lee. Milei talvez depois; por ordem dele, não agora. Os 8 fios do Lee estão feitos (pesquisa 20).
-   **Plano do jogo inteiro:** o [ciclo 33](cycles/33-the-whole-game.md) foi conferido pelo Claude em
-   26/09 (3 erros de lei corrigidos) e espera o sim dele, com as decisões 1, 5, 9 e 10 do §11. Os
+   **Plano do jogo inteiro:** o [ciclo 33](cycles/33-the-whole-game.md) foi conferido pelo Claude e
+   aprovado por ele em 26/09 (3 erros de lei corrigidos); decisões 1, 5 e 9 tomadas, a 10 (retratos) aberta. Os
    retratos passam a ser imagens que ele gera no ChatGPT;
 5. **achado 81**, antes de fechar o E0; não bloqueia o E1;
 6. **achado 69** — investigar a oscilação da prova de voo interrompido;

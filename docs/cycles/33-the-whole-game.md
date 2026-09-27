@@ -1,7 +1,7 @@
 # Ciclo 33 — O jogo inteiro
 
-> Ordem do Diretor do Jogo em 26/09/2026. **Situação: proposta; espera o sim dele.**
-> Depois da aprovação, este ciclo vira o plano em vigor. Ele absorve, sem apagar, os lotes A1–F e
+> Ordem do Diretor do Jogo em 26/09/2026. **Situação: aprovado por ele em 26/09; é o plano em vigor.**
+> A decisão 10 (retratos) segue aberta. Ele absorve, sem apagar, os lotes A1–F e
 > E1.0a–E1.8 do [mapa de migração](../spec/migration-map.md) §6 e as fases do
 > [ciclo 32](32-the-new-interface.md). Cada peça tem etapa neste documento.
 > A régua são as [partidas-teste de Xi e Lee](../spec/the-test-playthroughs.md). Uma partida
@@ -469,7 +469,10 @@ playtest.
 Sondas `xi` e `lee` em `npm run simulate --policy` percorrem várias sementes. Cada sonda precisa
 atingir êxito e fracasso: maioria e PEC, recuo, decisão judicial ou impeachment para Xi;
 transformação administrativa, eleição e revés para Lee. A taxa de cada desfecho vai ao handoff.
-O Diretor joga as duas. A interface antiga só sai quando o inventário da fase 0 do ciclo 32
+O Diretor joga as duas. Ordem dele em 26/09: três destinos extremos têm de ser alcançáveis em
+alguma partida, mesmo que raros — um Brasil parecido com os Estados Unidos (pela lei), com a
+Coreia do Norte ou com o Afeganistão (só por ruptura). Uma sonda por destino mostra ao menos uma
+semente em que o REGIME praticado chega lá, e a taxa vai ao handoff. A interface antiga só sai quando o inventário da fase 0 do ciclo 32
 estiver coberto pela nova; isso absorve ciclo 32, fases 5 e 6.
 Portão: 16 fios com suas versões exigidas, reação e atraso; `validate` verde, auditoria cruzada,
 playtest dele e aprovação final. Milei depende de ordem dele; o exterior entra na atualização
@@ -622,7 +625,7 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
    imprensa? Este plano propõe essa ordem para dar primeiro consequência material e depois
    ampliar os ritos; a aprovação fixa a sequência. A fila do [handoff](../handoff.md) punha o
    E1.0b, a eleição da Mesa, logo depois do E1.0a e antes da estatal; este plano o leva à etapa 4.
-   Aprovar a ordem aprova essa troca.
+   Aprovar a ordem aprova essa troca. **Decidido em 26/09: fica a ordem do plano.**
 2. **Nomes dos sistemas [PROPOSTA]:** URNA, TOGA, PACTO, MANCHETE e QUARTEL são nomes de
    trabalho. A decisão fixa os nomes antes dos módulos.
 3. **Vagas do STF:** usar idades reais dos ministros, sem nomes, com calendário real; ou sortear
@@ -632,7 +635,8 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
    balanço de 4 de janeiro de 2031 (CF, art. 82)?
 5. **Rota fora da lei:** ela entra na etapa 10? O [jogo em uma página](../spec/game-in-one-page.md)
    deixou essa rota fora do primeiro corte em 25/09; as partidas-teste exigem a cadeia no jogo
-   inteiro. Os itens 47 a 54 do checklist dependem desta resposta.
+   inteiro. Os itens 47 a 54 do checklist dependem desta resposta. **Decidido em 26/09: entra,
+   "contanto que seja realista, pode tudo".**
 6. **Horizonte do legado:** mostrar efeito até 2035 ou 2040 **[DESENHO]**? A escolha fixa o
    tempo de obra, dívida e instituições depois do mandato.
 7. **Modos de jogo:** oferecer só o cenário real de 2027 ou também uma Câmara personalizada?
@@ -640,7 +644,7 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
 8. **Partida Milei:** quando, se houver ordem dele, entra a terceira régua? Até lá, Xi e Lee são
    o aceite; o exterior continua na atualização posterior.
 9. **Marco jogável:** o ano de 2027 jogado depois da etapa 4 entra como portão? Proposta deste
-   plano: sim, e o resultado dele pode reordenar as etapas 5 a 11.
+   plano: sim, e o resultado dele pode reordenar as etapas 5 a 11. **Decidido em 26/09: sim.**
 10. **Retratos:** um por pessoa com rosto (594 parlamentares, mais ministros, juízes e
     governadores) ou um banco menor que se repete com roupa e cor diferentes? O tamanho do arquivo
     e o custo de decodificar a imagem se medem no protótipo da posse antes da escolha.

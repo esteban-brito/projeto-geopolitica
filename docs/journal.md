@@ -9438,3 +9438,12 @@ O plano ganhou um marco jogável depois da etapa 4 e as decisões 9 e 10.
 A troca de ordem do E1.0b virou pergunta explícita na decisão 1.
 Os itens 41 a 54 do checklist ficam como proposta até o sim dele.
 Os retratos passam a ser imagens geradas por ele no ChatGPT, fora do jogo.
+
+### 99 · O plano aprovado — 26/09
+
+Ele aprovou o ciclo 33. A ordem das etapas fica como está: a eleição da Mesa vai para a etapa 4.
+A tentativa fora da lei entra: "contanto que seja realista, pode tudo".
+Depois da etapa 4, ele joga o ano de 2027 inteiro antes de seguir.
+O aceite final pede três destinos alcançáveis, mesmo que raros: um Brasil parecido com os Estados
+Unidos, com a Coreia do Norte ou com o Afeganistão.
+Os retratos seguem em aberto. A etapa 1 começa pelo motor da base.
