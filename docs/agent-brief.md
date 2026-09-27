@@ -26,7 +26,7 @@ Governar significa escolher prioridades sob restrições herdadas e pagar as con
 O rito e o custo de uma decisão vêm do seu conteúdo. Liberdade com preço é a direção de
 design; não é uma afirmação de que toda liberdade planejada já exista no código.
 
-O jogador distribui recursos entre 38 programas de oito áreas, negocia com nove partidos
+O jogador distribui recursos entre 38 programas de oito áreas, negocia com 16 partidos
 (513 cadeiras), altera pisos e tetos legais e dispõe de seis alavancas de propriedade/poder.
 Personagens fictícios, gerados pela semente, têm ambições, influência e memória. Serviços
 demoram a responder; prometer não equivale a pagar; aprovar não equivale a entregar.
@@ -36,8 +36,9 @@ não há uma pontuação única que defina bom governo. Sobreviver não prova qu
 produziu um país melhor. Testes verdes tampouco provam equilíbrio ou ausência de exploits.
 
 Desde 25/09 o jogo é um sandbox ideológico com regras reais: o jogador tenta qualquer projeto de
-país, e o Brasil resiste pelas instituições. O corte em construção é a estatal de energia (mapa
-§6.4), escrito com a [gramática das regras](spec/rules-grammar.md).
+país, e o Brasil resiste pelas instituições. O plano em vigor é o [ciclo 33](cycles/33-the-whole-game.md),
+aprovado em 26/09; a etapa 1 (Presidente, posse e base) está em construção, e as regras se escrevem
+com a [gramática das regras](spec/rules-grammar.md).
 
 O mundo se inspira no Brasil; pessoas são fictícias. Valores reais exigem fonte e data.
 As pesquisas contêm propostas, afirmações a conferir e decisões superadas: não são prova
@@ -165,9 +166,10 @@ Foi executado `npm run simulate -- --quiet`: sonda `agenda`, semente 20270101, s
 - Estado/fila/achados/séries: [handoff.md](handoff.md).
 - Direção e plano: [especificação mestra](spec/master-spec.md), detalhada por
   [jogo em uma página](spec/game-in-one-page.md), [gramática das regras](spec/rules-grammar.md) e
-  [corte vertical](spec/vertical-slice-energy.md); as 40 ações do cargo no
+  [corte vertical](spec/vertical-slice-energy.md); as 40 ações do cargo, e 14 propostas, no
   [checklist do Presidente](spec/presidential-checklist.md); as telas novas no
-  [mapa das telas](spec/interface-map.md); o plano é o [mapa de migração](spec/migration-map.md).
+  [mapa das telas](spec/interface-map.md); o plano é o [ciclo 33](cycles/33-the-whole-game.md), que absorve os lotes do
+  [mapa de migração](spec/migration-map.md).
 - Intenção de cada sistema: [índice dos ciclos](cycles/README.md); ciclo 13 é plano mestre
   histórico, 29 é simplificação e 30 reúne candidatos de profundidade.
 - Doutrina sobre IA e ficção: `docs/adr/`. Pesquisa histórica: `docs/research/`.

@@ -504,8 +504,8 @@ export function worldOf({ state, roster, facts, cabinet, taken, catalog = CATALO
       }
     }
 
-    /* Um ministro a mais pesa a fração de uma cadeira contra a bancada: 145 deputados querem
-       onze pastas, e a segunda vale menos que a primeira quando a conta passa de um. */
+    /* Um ministro a mais pesa a fração de uma cadeira contra a bancada: 94 deputados querem
+       sete pastas, e a segunda vale menos que a primeira quando a conta passa de um. */
     const marginal = fair > 0 ? Math.min(1, (held + 1) / fair) - Math.min(1, held / fair) : 0;
 
     /** @type {Appraise} */

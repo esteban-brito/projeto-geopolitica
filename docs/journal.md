@@ -9447,3 +9447,33 @@ Depois da etapa 4, ele joga o ano de 2027 inteiro antes de seguir.
 O aceite final pede três destinos alcançáveis, mesmo que raros: um Brasil parecido com os Estados
 Unidos, com a Coreia do Norte ou com o Afeganistão.
 Os retratos seguem em aberto. A etapa 1 começa pelo motor da base.
+
+### 100 · Os 16 partidos no motor e a limpeza do que ficou velho — 26/09
+
+Os 16 partidos da posse entraram no motor, com o save na versão 21. Quatro provas guardavam números
+do catálogo de 9 e foram remedidas: o corte por preço passou de 364 contra 149 cadeiras para 384
+contra 129. Três provas do mundo caem e seguem vermelhas: com todos servidos pela bancada, ninguém
+sai de um governo com 24% de aprovação, e a ordem das saídas segue a ambição sorteada. Com 9
+partidos elas passavam porque o liberal tinha 75% da cota. O conserto é o passo 2 da etapa 1.
+A limpeza pedida por ele corrigiu: o documento dos partidos, com três versões e uma soma de 503; o
+plano em vigor, que CLAUDE.md, AGENTS.md, o guia e o mapa ainda davam como o mapa de migração;
+cabeçalhos que diziam "nada implementado"; contagens de 9 partidos no handoff, no mapa e no passeio;
+a fila do handoff, que se contradizia sobre a pesquisa do Lee; uma constante morta (`TREATMENTS`)
+com comentário falso; e a skill de validação, que contava 20 suítes e omitia links e macaco. O
+passeio segue verde com os nomes novos, conferido na captura do Congresso.
+No `tmp/`, com o sim dele, saiu o que nada cita ou que já foi substituído: de 166 para 57 MB. O líder do
+PTP passou de "líder do centro" para "líder trabalhista", e o achado 84 fechou.
+
+### 101 · O modelo da base no motor — 26/09
+
+A lealdade virou a chance do partido, calculada como no protótipo da posse. Um Presidente de centro
+começa com prováveis entre 60% e 82% da Câmara, e nenhum Presidente começa com 257 votos firmes. As
+10 provas de `tests/suites/base.mjs` nasceram antes do código e caíram contra ele.
+A votação deixou de multiplicar a adesão pela lealdade, que agora desloca a resistência. Com o
+ponto neutro em 0,75, duas leis mansas passavam de graça numa Câmara inteira a 30% (266 e 260
+votos para 257); com 0,8, nenhuma passa, e a oposição ainda vota a própria pauta.
+Sete testes cobravam a mecânica antiga (degraus, teto de 80, queda de 1,5 por mês) e foram
+reescritos com a mesma intenção. O governo parado deixou de cair quando a queda mensal saiu: 9
+partidos não tinham líder para romper. Com um líder por bloco, ele cai no mês 43, como antes, mas
+porque os partidos saem. As provas do mundo passaram de 24% para 19% de aprovação, porque com
+todos servidos ninguém sai com 24%. A série mudou: `agenda` 20 de 42, antes 22 de 43.

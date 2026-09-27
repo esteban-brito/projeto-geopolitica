@@ -4,6 +4,7 @@ import { CATALOG } from "../data/catalog.mjs";
 import { waivedOf } from "../data/programs.mjs";
 import { MONTHS_PER_YEAR, REGIME } from "../data/regime.mjs";
 import { opening } from "../domain/capacity/index.mjs";
+import { openingLoyalty } from "../domain/congress/index.mjs";
 import { opening as economyOpening } from "../domain/economy/index.mjs";
 import { inherited } from "../domain/norms/index.mjs";
 import { opening as opinionOpening } from "../domain/opinion/index.mjs";
@@ -122,15 +123,7 @@ import { streamFrom } from "./random.mjs";
  */
 
 /* Recusa versao diferente para nao converter save sem inversa util. */
-export const SCHEMA_VERSION = 20;
-
-/* Sorteio 50% feminino e masculino; deduzir do nome errava metade das partidas. */
-export const TREATMENTS = /** @type {const} */ (["senhor", "senhora"]);
-
-export const INITIAL_LOYALTY = 70;
-
-/* Subir uma bancada de 70 para 95 entrega ate 17 cadeiras, contra 13 da emenda cheia. */
-export const RULING_LOYALTY = 90;
+export const SCHEMA_VERSION = 21;
 
 /* Posse em 1º de janeiro: valor 2 iniciava em marco com 46 dos 48 meses. */
 export const OPENING_MONTH = 0;
@@ -171,9 +164,7 @@ export function createState(
     agents: {},
     month: OPENING_MONTH,
     mood: opinionOpening(segments),
-    loyalty: Object.fromEntries(
-      parties.map(item => [item.id, item.id === party ? RULING_LOYALTY : INITIAL_LOYALTY]),
-    ),
+    loyalty: openingLoyalty({ parties, ruling: party }),
     macro: economyOpening(fiscal.initialGdp, macro),
     fiscal: {
       mandatory: fiscal.initialMandatory,

@@ -1,7 +1,9 @@
 # Mapa de migração — código atual contra a especificação mestra
 
 > **Estado:** revisão de 24/09/2026, depois da resposta dele e do ChatGPT à primeira versão.
-> Nada aqui foi implementado. Responde ao §25.2 da [especificação](master-spec.md):
+> Parte dos lotes já está no jogo, e o estado de cada um fica no [handoff](../handoff.md). Desde
+> 26/09 o plano em vigor é o [ciclo 33](../cycles/33-the-whole-game.md), que absorve estes lotes nas
+> etapas dele. Responde ao §25.2 da [especificação](master-spec.md):
 > mapa `especificação → código`, reuso, estado duplicado, conflitos e a menor migração segura.
 > Postura: o código existente converge para a especificação com a menor migração
 > conceitualmente correta; não se reescreve o jogo porque existe um documento novo.
@@ -23,12 +25,12 @@ execução, lei ou emenda constitucional; a ESTRATO resolve hierarquia, vigênci
 revogação; prometer e pagar já são coisas distintas; o `simulate` já é um laboratório. O que
 colide de verdade:
 
-| colisão                                                   | onde                                      | destino                                       |
-| --------------------------------------------------------- | ----------------------------------------- | --------------------------------------------- |
-| o voto é sorteado por bancada                             | `congress/index.mjs:300`, `turn.mjs:1294` | SUBSTITUIR quando o deputado decidir          |
-| o afastamento abre sozinho quando três limiares coincidem | `turn.mjs:1517`, `pressure/index.mjs:84`  | ADAPTAR: limiar vira percepção; alguém decide |
-| quem vota e a tela leem o estado verdadeiro               | `turn.mjs:520`, `:835`; lista no §5.6     | ADAPTAR: leem o que sabem                     |
-| o Congresso não tem gente: 9 bancadas e 8 pessoas-bancada | `cast/index.mjs` `benches()`              | ADAPTAR: deputados individuais                |
+| colisão                                                     | onde                                      | destino                                       |
+| ----------------------------------------------------------- | ----------------------------------------- | --------------------------------------------- |
+| o voto é sorteado por bancada                               | `congress/index.mjs:300`, `turn.mjs:1294` | SUBSTITUIR quando o deputado decidir          |
+| o afastamento abre sozinho quando três limiares coincidem   | `turn.mjs:1517`, `pressure/index.mjs:84`  | ADAPTAR: limiar vira percepção; alguém decide |
+| quem vota e a tela leem o estado verdadeiro                 | `turn.mjs:520`, `:835`; lista no §5.6     | ADAPTAR: leem o que sabem                     |
+| o Congresso não tem gente: 16 bancadas e 15 pessoas-bancada | `cast/index.mjs` `benches()`              | ADAPTAR: deputados individuais                |
 
 LASTRO, CORRENTE, MALHA e SONDA não são substituídos pelo ActorEngine e continuam na frequência
 própria de cada um. A semana é unidade de avanço do jogador, e entra como relógio por cima.
@@ -134,7 +136,7 @@ sabe esses traços, não porque um dado rolou no dia (§20.3 da especificação)
 
 ### 4.4 ELENCO — `domain/cast/index.mjs`, `data/cast.mjs`
 
-1. Gera 8 pessoas de 8 arquétipos com nome, gênero, posição, venalidade, ambição (5 tipos),
+1. Gera 15 pessoas de 15 arquétipos com nome, gênero, posição, venalidade, ambição (5 tipos),
    pasta e alcance. `remember` assenta a memória (-cap a +cap); `benches` faz de cada pessoa uma
    bancada de uma; `offered` muda o valor da verba pela ambição.
 2. Gente com nome e memória; Congresso diferente por partida.
@@ -143,7 +145,7 @@ sabe esses traços, não porque um dado rolou no dia (§20.3 da especificação)
 5. §9.13 (fábrica por papel), §9.2, §9.8 (relação direcional), §9.9 (memória de evento).
 6. **ADAPTAR.** Ficam o gerador por hash, o ADR 0003 e a separação núcleo/mutável. A
    memória-escalar vira relação mais memória de evento.
-7. O gerador produz `ACTOR.person` com os campos do §9.2; os 8 arquétipos seguem focais.
+7. O gerador produz `ACTOR.person` com os campos do §9.2; os 15 arquétipos seguem focais.
 8. As provas de `benches` e `offered`.
 9. As de geração (mesma semente, nomes sem repetição, arquétipo novo não muda os outros).
 10. "Trocar só a personalidade muda a decisão em cenário controlado" (§20.1).
@@ -415,7 +417,7 @@ responsabilização (etapa F).
 
 ### 4.19 Normas herdadas e catálogos — `src/data/`
 
-1. 38 programas em 8 áreas, 6 regras, 9 partidos (513 cadeiras), 4 grupos, 3 segmentos, 4
+1. 38 programas em 8 áreas, 6 regras, 16 partidos (513 cadeiras), 4 grupos, 3 segmentos, 4
    marcos; 44 normas herdadas.
 2. O mundo real com número e fonte.
 3. Os catálogos.

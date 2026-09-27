@@ -1708,7 +1708,7 @@ try {
   await page.fill("#swearName", "Teste da Silva");
   /* ⚠ SEM BANCADA O FORMULARIO NAO FECHA, e e de proposito: filiacao e condicao de
      elegibilidade, entao o `required` do seletor e a regra, e nao um capricho de validacao. */
-  await page.selectOption("#swearParty", "trabalhistas-unidos");
+  await page.selectOption("#swearParty", "pcs");
   await page.locator('input[name="treatment"][value="senhora"]').click();
   await page.click("#swearOk");
   await page.waitForTimeout(600);
@@ -1816,14 +1816,14 @@ try {
   await page.waitForTimeout(400);
 
   expect(
-    (await page.locator("#swearParty option:not([disabled])").count()) === 9,
-    "[posse] o seletor de partido nao ofereceu as nove bancadas do catalogo",
+    (await page.locator("#swearParty option:not([disabled])").count()) === CATALOG.parties.length,
+    "[posse] o seletor de partido nao ofereceu todas as bancadas do catalogo",
   );
   await checkEllipsized("posse");
   await page.screenshot({ path: join(OUT, "inauguration.png"), fullPage: true });
 
-  /* A MAIOR BANCADA, porque e a que mais muda o jogo: 145 das 513 cadeiras. */
-  await page.selectOption("#swearParty", "liberais-conservadores");
+  /* A MAIOR BANCADA, porque e a que mais muda o jogo: 94 das 513 cadeiras. */
+  await page.selectOption("#swearParty", "pcn");
   await page.click("#swearOk");
   await page.waitForTimeout(700);
   await page.click('.rail [data-section="congress"]');

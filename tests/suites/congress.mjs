@@ -4,7 +4,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
 /* O HUMOR DE ABERTURA VEM DO ESTADO. */
-import { INITIAL_LOYALTY } from "../../src/state/state.mjs";
+/* Uma bancada comum, sem pasta: 70% das votações com o governo. */
+const INITIAL_LOYALTY = 70;
 import {
   THRESHOLDS,
   baseCount,
@@ -149,7 +150,7 @@ test("O PRECO DEPENDE DO ASSUNTO: a mesma verba compra bancadas diferentes", () 
   };
 
   assert.ok(
-    gain("uniao-progressista") > gain("liberais"),
+    gain("fbr") > gain("vanguarda"),
     "a mesma verba tinha de mover mais o centrao numa pauta economica",
   );
 });
@@ -186,10 +187,9 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
 
   /* O bloco mais fisiologico tem de sofrer MAIS com a ameaca que o menos fisiologico — e a
      inversao da relacao habitual entre venalidade e resistencia. */
-  const centraoPenalty =
-    of(onThreat, "uniao-progressista").resistance - of(onHarmless, "uniao-progressista").resistance;
+  const centraoPenalty = of(onThreat, "fbr").resistance - of(onHarmless, "fbr").resistance;
   const liberalPenalty =
-    of(onThreat, "liberais").resistance - of(onHarmless, "liberais").resistance;
+    of(onThreat, "vanguarda").resistance - of(onHarmless, "vanguarda").resistance;
 
   assert.ok(
     centraoPenalty > liberalPenalty,
@@ -200,7 +200,7 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
   /* E verba cheia NAO compra esse termo. */
   const bought = of(
     whipCount({ bill: threatening, parties: PARTIES, funding: everyone(1), loyalty: LOYAL }),
-    "uniao-progressista",
+    "fbr",
   );
   assert.ok(bought.adherence < 0.5, `o centrao entregou ${(bought.adherence * 100).toFixed(0)}%`);
 });
@@ -363,8 +363,9 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
 });
 
 test("A BANDA NAO E O PIOR CASO: erros independentes somam em QUADRATURA", () => {
-  /* Quatro bancadas iguais, cada uma sacando do proprio fluxo. */
-  const one = PARTIES[0];
+  /* Quatro bancadas iguais, cada uma sacando do proprio fluxo; a maior, para a banda passar de
+     uma cadeira. */
+  const one = [...PARTIES].sort((a, b) => b.seats - a.seats)[0];
   assert.ok(one);
 
   const clones = [0, 1, 2, 3].map(index => ({ ...one, id: `bancada-${index}` }));
@@ -400,16 +401,20 @@ test("base insatisfeita e base IMPREVISIVEL: menos lealdade nunca estreita a ban
 /* Ela existe para a tela nao ter de inventar essa conta — e o valor dela depende inteiramente
    de nao divergir da votacao. */
 
-test("NENHUMA VOTACAO ENTREGA MAIS QUE A BASE, em pauta nenhuma", () => {
-  /* A propriedade que torna a base honesta. */
+test("MAIS LEALDADE NUNCA ENTREGA MENOS, em pauta nenhuma", () => {
+  /* A base e a votacao comum; a pauta que a bancada defende pode passar dela, e por isso a
+     propriedade antiga (voto nunca acima da base) saiu com o modelo da base. */
   fc.assert(
     fc.property(anyBill, anyFunding, anyLoyalty, (bill, funding, loyalty) => {
-      const base = baseCount({ parties: PARTIES, loyalty });
-      const forecast = whipCount({ bill, parties: PARTIES, funding, loyalty });
-      assert.ok(
-        forecast.votes <= base + 3,
-        `${bill.id}: a votacao entregou ${forecast.votes} e a base era ${base}`,
+      const before = whipCount({ bill, parties: PARTIES, funding, loyalty });
+      const warmer = Object.fromEntries(
+        Object.entries(loyalty).map(([id, level]) => [id, Math.min(100, level + 10)]),
       );
+      const after = whipCount({ bill, parties: PARTIES, funding, loyalty: warmer });
+      for (const [index, party] of before.parties.entries()) {
+        const next = after.parties[index];
+        assert.ok(next && next.adherence >= party.adherence, `${bill.id}: ${party.partyId} caiu`);
+      }
     }),
   );
 });
@@ -428,17 +433,16 @@ test("a base cabe no plenario, e levantar a lealdade nunca a diminui", () => {
   );
 });
 
-test("A RUPTURA E UM DEGRAU, e nao mais um passo da ladeira", () => {
-  const at = (/** @type {number} */ level) =>
-    baseCount({ parties: PARTIES, loyalty: everyone(level) });
-
-  const overRupture = at(RUPTURE_EDGE + 1) - at(RUPTURE_EDGE - 1);
-  const midSlope = at(71) - at(69);
-
-  assert.ok(
-    overRupture > midSlope * 3,
-    `cruzar a ruptura custou ${overRupture} cadeiras e um passo qualquer custa ${midSlope}`,
-  );
+test("A BASE E A SOMA DAS CHANCES, sem degrau escondido", () => {
+  /* Os degraus de 0,6 e 0,15 sairam: a lealdade ja e a chance (the-base-model.md §7). */
+  for (const level of [RUPTURE_EDGE - 1, RUPTURE_EDGE + 1, 45, 70, 95]) {
+    const base = baseCount({ parties: PARTIES, loyalty: everyone(level) });
+    assert.equal(
+      base,
+      Math.round((SEATS * level) / 100),
+      `com ${level} de chance, ${base} cadeiras`,
+    );
+  }
 });
 
 test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
@@ -499,13 +503,13 @@ test("A BASE PARTE EM DUAS E A SOMA E A PROPRIA BASE — conviccao mais aluguel"
   );
 });
 
-test("O CORTE E POR PRECO, e nao por humor — a base cheia parte 364 contra 149", () => {
+test("O CORTE E POR PRECO, e nao por humor — a base cheia parte 384 contra 129", () => {
   /* Com todo mundo leal a base e a Camara inteira, e ai a divisao e a do catalogo puro. */
   const loyal = Object.fromEntries(PARTIES.map(party => [party.id, 100]));
   const split = baseVenality({ parties: PARTIES, loyalty: loyal });
 
-  assert.equal(Math.round(split.bought), 364, "as cadeiras a venda nao batem com o catalogo");
-  assert.equal(Math.round(split.convinced), 149, "as cadeiras de conviccao nao batem");
+  assert.equal(Math.round(split.bought), 384, "as cadeiras a venda nao batem com o catalogo");
+  assert.equal(Math.round(split.convinced), 129, "as cadeiras de conviccao nao batem");
 });
 
 /* ── O PARTIDO DO PRESIDENTE ────────────────────────────────────────────────── ⚠ ELE NAO E

@@ -3,7 +3,7 @@
 > Ordem dele, 26/09/2026: o jogo tem de permitir uma partida inspirada em Xi Jinping e outra, bem
 > diferente, em Lee Kuan Yew. Se as duas funcionam, o jogo dá liberdade de verdade. Uma terceira,
 > inspirada em Javier Milei, talvez venha depois; por ordem dele, não agora. É o critério de aceite
-> do ciclo 32, §6c. Fontes: [pesquisa 19](../research/19-the-xi-repertoire.md) (Xi)
+> do ciclo 32, §6c, e da etapa 12 do [ciclo 33](../cycles/33-the-whole-game.md). Fontes: [pesquisa 19](../research/19-the-xi-repertoire.md) (Xi)
 > e [pesquisa 20](../research/20-the-lee-repertoire.md) (Lee).
 
 ## A regra das partidas

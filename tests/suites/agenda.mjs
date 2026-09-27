@@ -4,7 +4,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
 /* O HUMOR DE ABERTURA VEM DO ESTADO. */
-import { INITIAL_LOYALTY } from "../../src/state/state.mjs";
+/* Uma bancada comum, sem pasta: 70% das votações com o governo. */
+const INITIAL_LOYALTY = 70;
 import { compose, honour } from "../../src/application/agenda.mjs";
 import { FISCAL } from "../../src/data/fiscal.mjs";
 import { PARTIES } from "../../src/data/parties.mjs";

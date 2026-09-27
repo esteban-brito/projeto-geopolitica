@@ -52,7 +52,7 @@ vão:
   volta, e quem sentou numa pasta nova perde a cadeira.
 - **A moeda da base tem duas partes.** Para um partido, uma pasta vale o símbolo (ter um
   ministério) e o peso (a verba e os cargos das funções). Juntar guarda o peso e tira um símbolo.
-  Com 20 pastas, sobram 20 símbolos para dividir entre 9 partidos e o seu. [DESENHO]
+  Com 20 pastas, sobram 20 símbolos para dividir entre 15 partidos e o seu. [DESENHO]
 - **A opinião reage.** Sumir com o nome de uma pasta ligada a um grupo (Cultura, Mulheres, Igualdade Racial,
   Povos Indígenas, Meio Ambiente) move esse grupo contra o governo. Crescer demais vira crítica de
   inchaço entre quem liga para o gasto. [DESENHO]

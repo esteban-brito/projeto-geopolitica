@@ -2,8 +2,9 @@
 
 Desenho de 26/09, aprovado na direção por ele no mesmo dia: cada deputado tem uma chance de votar
 com o governo, e ela depende da distância ideológica, do ministério e da posição declarada do
-partido. Calibrado pela [pesquisa 17](../research/17-how-the-base-forms.md). Nada implementado:
-é a fase 2 do [ciclo 32](../cycles/32-the-new-interface.md) e espera ordem dele.
+partido. Calibrado pela [pesquisa 17](../research/17-how-the-base-forms.md). Em construção desde
+26/09, por ordem dele: é a etapa 1 do [ciclo 33](../cycles/33-the-whole-game.md) (a fase 2 do
+[ciclo 32](../cycles/32-the-new-interface.md)).
 
 ## 1. Por que mudar
 
@@ -85,3 +86,37 @@ fica [DESENHO] e declarado assim na tela.
 - dar pasta sobe a chance e nunca a leva a 100%;
 - a soma das chances por deputado bate com a soma por partido;
 - a série de `npm run simulate` reescrita no handoff, com a base do mês 1 dentro das faixas.
+
+## 7. Como entra no motor (26/09)
+
+A etapa 1 começa aqui. Onde este desenho e o código de hoje se tocam:
+
+- **a lealdade vira a chance.** `state.loyalty[partido]` continua de 0 a 100 e passa a ser a chance
+  do partido em pontos: 75 é 75% das votações com o governo. Sai o `moodFactor` com piso de 50% e
+  os dois degraus que multiplicavam por 0,6 e 0,15;
+- **a chance estrutural** sai de uma função só da ECLUSA, a mesma do protótipo: o partido do
+  Presidente fica em 92%; com pasta, a chance livre mais 25 pontos vezes a parte servida, entre 67%
+  e 95%; sem pasta, 85% perto do governo, caindo com a distância no Nolan; os pragmáticos não
+  descem de 55% até 70 de distância; a oposição fica entre 12% e 32%. PML e PLI nunca entram na
+  base. Sem partido do Presidente, o governo mora no centro (50/50);
+- **a largada** é essa chance, sem pasta. Os 70 para todos e os 90 do partido do Presidente saem;
+- **o mês puxa para a chance estrutural.** O `settle` troca a queda fixa de 1,5 por mês e o teto
+  de 80 da pasta por um puxão de metade da distância até a chance estrutural [DESENHO]. Emenda
+  paga e promessa quebrada continuam somando e tirando como hoje;
+- **a votação desloca, não multiplica.** Multiplicar a adesão pela chance faria a oposição, com 25%,
+  recusar a pauta que ela mesma defende. A chance entra como a rua já entra: um deslocamento na
+  resistência, em logit, contra uma chance neutra de 75% [DESENHO];
+- **votos firmes** são deputados com chance de 80% ou mais. A chance de cada um varia até 14
+  pontos em torno da do partido, tirada da semente pelo `hash`, nunca guardada e sem gastar fluxo;
+- **romper é declarar oposição.** Quem desembarca (o líder, pela VONTADE) passa na hora à chance de
+  oposição, como o PMDB, que teve 59 de 68 votos contra 19 dias depois do rompimento; volta com
+  pasta aceita;
+- **o aviso de crise olha a coalizão.** Ruptura e obstrução no veredito do mês contam só o partido
+  do Presidente e os que têm pasta; o PML em 12% não põe o governo em crise permanente;
+- **quem decide romper é um líder por bloco.** Com 7 líderes para 16 partidos, os 9 sem líder
+  nunca reagiam à impopularidade, e um governo parado sobrevivia 60 meses com 231 votos. Com um
+  líder por bloco (fora PML e PLI, que não têm posição a decidir), ele cai no mês 43. Com todos
+  servidos pela bancada, ninguém sai com 24% de aprovação e os distantes saem primeiro com 19%.
+  A calibragem precisa de âncoras com fonte: a aprovação de Bolsonaro quando o centrão ficou, em
+  2021, e a de Dilma quando o PMDB rompeu, em 29/3/2016. A pesquisa 17 não traz esses números:
+  VERIFICAR antes de calibrar (achado 86 do handoff).

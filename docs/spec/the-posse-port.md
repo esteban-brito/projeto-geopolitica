@@ -24,9 +24,10 @@ da primeira linha.
 - **quem o partido indica já existe.** `nomineeOf` (`src/application/world.mjs`) sorteia pela
   semente um nome da bancada, com id `partido:cadeira`. É a mesma pessoa que aparece na carta em
   que o partido pede pasta;
-- **partidos e cadeiras batem em número.** São os mesmos 9 partidos, com as mesmas bancadas e as
-  mesmas coordenadas de Nolan (`economic`, `liberty`). As 38 cadeiras do catálogo usam os ids da Lei
-  14.600;
+- **partidos e cadeiras batem em número.** Desde a noite de 26/09 o motor tem os mesmos 16 partidos
+  do protótipo ([os partidos](the-parties.md)), com as mesmas bancadas e coordenadas de Nolan
+  (`economic`, `liberty`); os ids do motor são as siglas em minúsculas (`pcn`, `pcs`). As 38 cadeiras
+  do catálogo usam os ids da Lei 14.600;
 - **o visual é outro sistema.** Fonte Inter servida do próprio site; escala de tipo 10, 12, 13, 15,
   17, 22, 26, 35 e 72 px; tempos de 90, 180, 280 e 520 ms; vidro por `glaze()`;
 - **as guardas vão cobrar a tela nova.** `tokens` (cor solta), `material` (filtro fora do arquivo de
@@ -37,18 +38,17 @@ da primeira linha.
 
 ## 2. Onde protótipo e jogo divergem
 
-| Tema                       | Protótipo                                                       | Jogo                                                                              | Peso      |
-| -------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- |
-| base no começo             | 42, só o partido do jogador                                     | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
-| efeito da pasta            | uns 14 deputados na hora                                        | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
-| pessoas                    | escritas à mão                                                  | indicado por semente; especialistas e notáveis não existem                        | grande    |
-| Fama, Preparo, Afinidade   | números de desenho                                              | não existem (lote E1.0f)                                                          | grande    |
-| juntar, extinguir, dividir | funcionam na tela                                               | a lista de cadeiras é fixa no catálogo e em várias contas (lote E1.0d)            | grande    |
-| ids das cadeiras           | 26 ids curtos diferentes (`justica`, `gsi`, `agu`) e 3 criáveis | ids da lei (`justica-e-seguranca-publica`)                                        | médio     |
-| sigla                      | LIVRE                                                           | PLV                                                                               | pequeno   |
-| tamanho da tela            | fixo em 1280×800                                                | janela livre                                                                      | médio     |
-| fonte e tokens             | Hanken Grotesk e tokens próprios                                | Inter e tokens do jogo                                                            | médio     |
-| cores dos partidos         | 9 tons do Nolan, em HSL no código                               | não existem; a guarda `tokens` barra cor solta                                    | médio     |
+| Tema                       | Protótipo                                                                    | Jogo                                                                              | Peso      |
+| -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- |
+| base no começo             | votos firmes e prováveis pelo [modelo da base](the-base-model.md): 149 e 374 | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
+| efeito da pasta            | a chance do partido sobe na hora, até 95%                                    | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
+| pessoas                    | escritas à mão                                                               | indicado por semente; especialistas e notáveis não existem                        | grande    |
+| Fama, Preparo, Afinidade   | números de desenho                                                           | não existem (lote E1.0f)                                                          | grande    |
+| juntar, extinguir, dividir | funcionam na tela                                                            | a lista de cadeiras é fixa no catálogo e em várias contas (lote E1.0d)            | grande    |
+| ids das cadeiras           | 26 ids curtos diferentes (`justica`, `gsi`, `agu`) e 3 criáveis              | ids da lei (`justica-e-seguranca-publica`)                                        | médio     |
+| tamanho da tela            | fixo em 1280×800                                                             | janela livre                                                                      | médio     |
+| fonte e tokens             | Hanken Grotesk e tokens próprios                                             | Inter e tokens do jogo                                                            | médio     |
+| cores dos partidos         | 9 tons do Nolan, em HSL no código                                            | não existem; a guarda `tokens` barra cor solta                                    | médio     |
 
 O conflito da base é o mais sério. **Decidido por ele em 26/09: vale o modelo do protótipo,
 aprimorado e fiel à realidade;** a pesquisa que o calibra está em curso e o motor muda na fase 2 do

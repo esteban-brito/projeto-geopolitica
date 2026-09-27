@@ -47,8 +47,8 @@ test("A VENALIDADE POR EIXO FAZ ALGUMA COISA: ao menos um bloco e assimetrico", 
 test("o preco depende do assunto, e em sentidos opostos", () => {
   /* O caso que motivou a mudanca: a bancada liberal nao entrega a pauta economica e negocia
      costumes; o centrao faz o contrario. */
-  const liberal = PARTIES.find(party => party.id === "liberais");
-  const centrao = PARTIES.find(party => party.id === "uniao-progressista");
+  const liberal = PARTIES.find(party => party.id === "vanguarda");
+  const centrao = PARTIES.find(party => party.id === "fbr");
   assert.ok(liberal && centrao);
   assert.ok(
     liberal.venalityLiberty > liberal.venalityEconomic,

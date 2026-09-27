@@ -2,7 +2,8 @@
 
 > Versão 3, 25/09/2026. É a primeira aplicação da [gramática das regras](rules-grammar.md), com os
 > nomes da [especificação mestra](master-spec.md). O critério de aceite é o da especificação,
-> §21.4. O plano de construção são os lotes E1 do [mapa de migração](migration-map.md), §6.4. Os
+> §21.4. O plano de construção são os lotes E1 do [mapa de migração](migration-map.md), §6.4, hoje nas
+> etapas 1, 3 e 4 do [ciclo 33](../cycles/33-the-whole-game.md). Os
 > fatos e os links estão na [pesquisa 14](../research/14-the-state-energy-company.md). Desenho,
 > sem código.
 

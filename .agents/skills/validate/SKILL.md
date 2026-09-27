@@ -8,11 +8,13 @@ description: Executa a validação completa do repositório (guardas, tipos, lin
 Executa o portão completo do República Simulator:
 
 - 13 guardas (`tests/run.mjs`)
+- Links dos documentos (`tools/check-links.mjs`)
 - Checagem de tipos TypeScript (`tsc -p jsconfig.json`)
 - ESLint (`eslint .`)
 - Prettier (`prettier --check .`)
-- 20 suítes de testes unitários (`tests/suites/*.mjs`)
+- As suítes de testes unitários (`tests/suites/*.mjs`)
 - Passeio visual com Playwright nas duas resoluções (`tests/browser/walk.mjs`)
+- Macaco: ações aleatórias com semente (`tests/browser/monkey.mjs`)
 
 ## Procedimento
 

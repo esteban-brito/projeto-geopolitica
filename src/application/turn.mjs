@@ -17,6 +17,7 @@ import {
   STANDING_NEUTRAL,
   THRESHOLDS,
   baseCount,
+  chanceTargets,
   dispersion,
   seating,
   settle,
@@ -377,8 +378,14 @@ export function situationOf(state, catalog = CATALOG) {
   const base = baseCount({ parties, loyalty: state.loyalty });
 
   const mood = (/** @type {Party} */ party) => state.loyalty[party.id] ?? 0;
-  const ruptured = parties.some(party => mood(party) < THRESHOLDS.rupture);
-  const obstructing = parties.some(party => mood(party) < THRESHOLDS.obstruction);
+  /* Ruptura e obstrucao contam a coalizao: o PML em 12% nao e crise do governo. */
+  const coalition = new Set([
+    state.party,
+    ...Object.values(state.cabinet ?? {}).map(item => item.party),
+  ]);
+  const allies = parties.filter(party => coalition.has(party.id));
+  const ruptured = allies.some(party => mood(party) < THRESHOLDS.rupture);
+  const obstructing = allies.some(party => mood(party) < THRESHOLDS.obstruction);
 
   /* Teto fechado vem primeiro: sem discricionario nao ha emenda para manter a base. */
   if (budget.blocked) return { level: "crisis", reason: "blocked", base };
@@ -1418,12 +1425,21 @@ export function playMonth(state, orders = {}, options = {}) {
 
   const tally = passage.tally;
 
+  const presidentParty = state.party ?? null;
+  const declared = catalog.archetypes
+    .filter(archetype => state.agents?.[archetype.id]?.out)
+    .map(archetype => archetype.bloc);
   const settled0 = settle({
     parties,
     loyalty: state.loyalty,
     promised,
     paid,
-    cabinet: coalitionOf(cabinetNow, catalog),
+    targets: chanceTargets({
+      parties,
+      ruling: presidentParty,
+      served: coalitionOf(cabinetNow, catalog),
+      declared,
+    }),
   });
   const memory = remember({
     people,
@@ -1463,11 +1479,12 @@ export function playMonth(state, orders = {}, options = {}) {
     catalog,
   });
 
-  /* O partido que desembarca vota contra a partir do mês seguinte: a lealdade cai para a
-     obstrução, e só verba ou pasta o trazem de volta. */
+  /* Quem desembarca cai na hora para a chance de oposição, como o PMDB, com 59 de 68 votos
+     contra 19 dias depois de romper; só pasta aceita o traz de volta. */
   const loyalty = { ...settled0 };
+  const broke = chanceTargets({ parties, ruling: presidentParty, declared: world.left });
   for (const bloc of world.left) {
-    loyalty[bloc] = Math.min(loyalty[bloc] ?? 0, THRESHOLDS.obstruction - 1);
+    loyalty[bloc] = Math.min(loyalty[bloc] ?? 0, broke[bloc] ?? 0);
   }
   const cabinetNext = Object.fromEntries(
     Object.entries(cabinetNow).filter(([seat]) => !world.vacate.includes(seat)),

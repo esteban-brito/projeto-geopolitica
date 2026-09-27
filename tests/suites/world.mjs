@@ -208,7 +208,9 @@ function unpopular(ruling, months, catalog = CATALOG) {
       });
     }
   }
-  const low = Object.fromEntries(Object.keys(state.mood).map(id => [id, 45]));
+  /* 19% de aprovação: com todos servidos pela bancada, 24% segura a base inteira; com 9 partidos
+     a saída só vinha porque o liberal tinha 75% da cota (tmp/base/leave-sweep.mjs). */
+  const low = Object.fromEntries(Object.keys(state.mood).map(id => [id, 40]));
   /** @type {Letter[]} */
   const letters = [];
   for (let month = 0; month < months; month++) {
@@ -223,7 +225,7 @@ function unpopular(ruling, months, catalog = CATALOG) {
 }
 
 test("com o governo impopular, o partido mais distante dele sai antes do mais próximo", () => {
-  const ruling = "democratas-nacionais";
+  const ruling = "mdn";
   const home = CATALOG.parties.find(party => party.id === ruling);
   assert.ok(home);
   const { letters } = unpopular(ruling, 36);
@@ -253,12 +255,12 @@ test("com o governo impopular, o partido mais distante dele sai antes do mais pr
 });
 
 test("quem saiu faz oposição a um governo fraco", () => {
-  const { letters } = unpopular("democratas-nacionais", 36);
+  const { letters } = unpopular("mdn", 36);
   const left = new Set(letters.filter(l => l.voice?.startsWith("leader.leave")).map(l => l.from));
   const critics = letters.filter(letter => letter.voice?.startsWith("leader.criticize"));
   assert.ok(
     critics.length > 0,
-    "a oposição ficou calada diante de um governo com 24% de aprovação",
+    "a oposição ficou calada diante de um governo com 19% de aprovação",
   );
   for (const critic of critics)
     assert.ok(left.has(critic.from), `${critic.from} criticou sem ter saído`);
@@ -266,7 +268,7 @@ test("quem saiu faz oposição a um governo fraco", () => {
 
 test("o coro da oposição pesa sobre quem ficou na base", () => {
   /* As duas partidas são iguais até a primeira crítica; no mês seguinte, só o coro as separa. */
-  const ruling = "democratas-nacionais";
+  const ruling = "mdn";
   const first = unpopular(ruling, 36).letters.find(letter =>
     letter.voice?.startsWith("leader.criticize"),
   );

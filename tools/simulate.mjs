@@ -268,8 +268,8 @@ if (!policy) {
   process.exit(1);
 }
 
-/* ⚠ SEM ELE O INSTRUMENTO NAO VE A JOGADA MAIS PESADA DO JOGO: medido, o PLB fecha 30 de 43
-   votacoes e a Camara sem partido fecha 26 — e a serie foi lida como "nao moveu" quando o
+/* ⚠ SEM ELE O INSTRUMENTO NAO VE A JOGADA MAIS PESADA DO JOGO: medido no catalogo de 9, o maior
+   partido fechava 30 de 43 votacoes e a Camara sem partido 26 — e a serie foi lida como "nao moveu" quando o
    simulador nunca escolhia bancada. */
 const party = values.party ?? null;
 

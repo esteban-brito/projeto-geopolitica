@@ -17,9 +17,16 @@
   [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
   [checklist do Presidente](spec/presidential-checklist.md); a interface nova, no
   [mapa das telas](spec/interface-map.md). Em conflito, vale o mais recente;
+- **o modelo da base está no motor (26/09):** 16 partidos, save na versão 21, a lealdade é a
+  chance do partido, um líder por bloco (15 arquétipos) e as provas de `tests/suites/base.mjs`.
+  Desenho em [o modelo da base](spec/the-base-model.md) §7; achados 86 e 87 abertos.
+- **`tmp/` podado em 26/09 com o sim dele:** de 166 para 57 MB. Saíram as auditorias antigas do Codex
+  (ficou `tmp/posse/codex/` com os retratos de hoje), os retratos por código e as capturas velhas da
+  posse, `tmp/history/archive/`, os candidatos de madeira não escolhidos e as pesquisas brutas de
+  `tmp/research/`, já conferidas em `docs/research/`. Ficou o que algum documento ou script cita;
 - **próximo passo:** a etapa 1 do [ciclo 33](cycles/33-the-whole-game.md), aprovado em 26/09,
   começando pelo motor da base. O lote 3 do [mundo vivo](spec/the-living-world.md), imprensa e Casa Civil, entra na etapa 7. Os
-  lotes 1 e 2 estão no jogo: 14 pessoas decidem pela VONTADE, escrevem cartas com autor, saem da
+  lotes 1 e 2 estão no jogo: 21 pessoas (14 porta-vozes de partido e 7 ministros) decidem pela VONTADE, escrevem cartas com autor, saem da
   base pela ideologia e fazem oposição. O E1.0a (as 38
   cadeiras, nomear e demitir, a pasta que puxa a lealdade até 80) está feito; a abertura segue com
   o E1.0b, a eleição da Mesa. A tela da posse tem protótipo aprovado (versão 25 do
@@ -87,7 +94,7 @@
   estilo, crédito ou prova; depois a evidência leve foi para `docs/evidence/` e o resto se
   organizou em `tmp/agents/`, `tmp/asset-sources/` e `tmp/history/`. As outras 662
   (693 MB) estão em quarentena fora do repositório, em `Desktop/cld-quarentena-tmp/`, com
-  `LEIA.md` listando cada uma; devolver é mover de volta. Nada foi apagado. A mesma quarentena
+  `LEIA.md` listando cada uma; ela foi apagada em 26/09 com o sim dele. A mesma quarentena
   recebeu as capturas fora da regra de `captures/` (25 MB) e o `.playwright-mcp/` (33 MB);
 - medido para o mapa: save no mês 48 com 35.387 bytes; `playMonth` 0,64 ms; `settlement`
   0,125 ms;
@@ -103,7 +110,7 @@
   chaves). Item 1: lotes 1 a 5 conferidos (`state.mjs` 19%, `turn.mjs` 14%, `inbox.mjs` 11%,
   `cabinet.mjs` 15%, `paint.mjs` 11%, `inputs.mjs` 13%, `strings.mjs` 8%, `styles/46-screen-cabinet-desk.css` 4%,
   lote 5: `session.mjs` 46% → 19%, `handlers.mjs` 38% → 11%, código idêntico). Item 5
-  inventariado e 18 backups efêmeros arquivados em `tmp/history/archive/`. Item 4: 30 asserções de
+  inventariado e 18 backups efêmeros arquivados em `tmp/history/archive/`, apagada em 26/09 com o sim dele. Item 4: 30 asserções de
   interação no passeio (seções 5, 9, 10 e 11) + macaco; as dez novas cobrem verba e aviso
   modal. Portão completo verde em 139,2s; oscilação anterior registrada no achado 69. Lote 6 conferido
   (`glass.mjs` 38% → 18%, `agenda.mjs` 34% → 16%, `area.mjs` 32% → 12%, código idêntico), e o
@@ -128,21 +135,13 @@
 1. **Etapa 1 do [ciclo 33](cycles/33-the-whole-game.md), Presidente e posse**, aprovado em 26/09.
    Começa pelo motor da base ([o modelo da base](spec/the-base-model.md), ciclo 32 fase 2). O
    E1.0a está feito; o E1.0b, a eleição da Mesa, passou para a etapa 4 (decisão 1);
-2. **E1.1 a E1.8 — a estatal**, depois da abertura;
-3. **a interface nova** — [ciclo 32](cycles/32-the-new-interface.md), planejado em 26/09: o motor fica, a
-   interface recomeça do zero no estilo Apple + Football Manager + Civilization + Valorant,
-   reaproveitando peça por peça (mola, squircle, glifos, vidro só em superfície parada). Começa pela
-   fase 0: o inventário, e o modelo da base do começo a partir da
-   [pesquisa 17](research/17-how-the-base-forms.md) (achado 86), desenhado em
-   [o modelo da base](spec/the-base-model.md): cada deputado com uma chance de votar com o governo;
-4. **partidas-teste Xi e Lee Kuan Yew** (26/09): a pesquisa do Xi chegou, foi conferida e virou a
-   [pesquisa 19](research/19-the-xi-repertoire.md) e o mapa em
-   [as partidas-teste](spec/the-test-playthroughs.md) (8 fios, peças de tela, o que falta, critério de
-   aceite). A do Lee está com o Codex (tmp/research/lky.md); quando chegar, eu confiro e ela vira a
-   pesquisa 20 e os fios da partida Lee. Milei talvez depois; por ordem dele, não agora. Os 8 fios do Lee estão feitos (pesquisa 20).
-   **Plano do jogo inteiro:** o [ciclo 33](cycles/33-the-whole-game.md) foi conferido pelo Claude e
-   aprovado por ele em 26/09 (3 erros de lei corrigidos); decisões 1, 5 e 9 tomadas, a 10 (retratos) aberta. Os
-   retratos passam a ser imagens que ele gera no ChatGPT;
+2. **Etapa 2, casca e Gabinete** (ciclo 32 fase 3, B1, B3 e B6);
+3. **Etapa 3, a estatal** (E1.1 a E1.8);
+4. **Etapa 4, o Congresso inteiro** (com o E1.0b, a eleição da Mesa); depois dela, o marco jogável:
+   ele joga 2027 inteiro antes da etapa 5. A régua do aceite são as
+   [partidas-teste](spec/the-test-playthroughs.md) Xi e Lee (pesquisas 19 e 20, conferidas), e o
+   [ciclo 33](cycles/33-the-whole-game.md) foi conferido pelo Claude e aprovado por ele em 26/09
+   (decisões 1, 5 e 9 tomadas; a 10, retratos, aberta: serão imagens que ele gera no ChatGPT);
 5. **achado 81**, antes de fechar o E0; não bloqueia o E1;
 6. **achado 69** — investigar a oscilação da prova de voo interrompido;
 7. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
@@ -309,14 +308,16 @@ proportional`, o padrão), porque a posse é obrigatória;
 
 Um achado que fecha sai daqui para o journal. Número com data: remeça antes de repetir.
 
-- **86. Nenhuma sonda segura a base (25/09).** Nas seis sondas, os 7 porta-vozes saem até o mês
-  41, e `agenda` cai de 32 de 42 para 22 de 43 aprovadas. No modelo, o desgaste com peso da
-  ideologia (`distance: 1`, [DESENHO]) vence a pasta e a verba. Hipótese a pesquisar: a base de
-  Temer em 2017 e 2018, com aprovação muito baixa, segurada por cargos e emendas (VERIFICAR, com
-  fonte oficial da Câmara). Calibragem a decidir com ele; nada mudou para a série ficar bonita;
-- **84. O PSU socialista tem um "líder do centro" (25/09).** O arquétipo `leader-centro-esquerda`
-  (`src/data/cast.mjs`) mora no bloco `socialistas` com rótulo "líder do centro", e a carta assina
-  assim. Dado a revisar com ele;
+- **86. Nenhuma sonda segura a base (25/09; remedido em 26/09 com os 16 partidos).** Nas seis
+  sondas há 13 desembarques; em `agenda`, até o mês 28, e só o PBR fica (20 de 42 aprovadas). Com
+  todos servidos pela bancada, ninguém sai com 24% de aprovação; com 19%, saem primeiro os
+  distantes; com 15% ou menos, quase todos saem no mesmo mês, sem o atraso de meses do PMDB em 2016. Âncoras a pesquisar com fonte (VERIFICAR): a aprovação quando o centrão ficou com
+  Bolsonaro em 2021, a de Dilma quando o PMDB rompeu, e a base de Temer em 2017 e 2018. O
+  cenário das provas do mundo passou de 24% para 19% de aprovação (`tests/suites/world.mjs`);
+- **87. A pauta de conteúdo é generosa (26/09).** Sem o multiplicador de lealdade, a emenda de corte
+  na saúde do passeio aparece com 437 votos previstos, contra 386 antes, e a base é 383. O
+  multiplicador escondia a logística da pauta (`PIVOT` 58, `SPREAD` 16), que ninguém calibrou
+  contra votação real. Calibrar na etapa 4, com o Congresso inteiro;
 - **85. As provas do lote 1 do mundo vivo nasceram depois do código (25/09).** Fora da ordem da
   regra. Compensação feita: duas sabotagens (a recusa que não fere; aceitar sem nomear) derrubaram
   as provas certas;
@@ -419,31 +420,27 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 ## A série que calibra
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
-medem à parte). 48 meses, semente padrão, sem partido (`--party` compara outro jogo; com PLB,
-`agenda` dá 30/43). As seis sondas foram remedidas em 25/09, depois do lote 2 do mundo vivo, com o governo montado na posse: imóveis em
-todas as colunas abaixo.
+medem à parte). 48 meses, semente padrão, sem partido, governo montado na posse (`--party` compara
+outro jogo: com PCN, `agenda` dá 20/42; com PCS, 16/41). Remedidas em 26/09, com os 16 partidos e o
+modelo da base.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
 | ------------ | ---------- | ------------ | --------- | --------- |
 | `herdado`    | 89,9%      | 0 de 0       | 48 → 27   | 38 → 25   |
-| `agenda`     | 90,0%      | **22 de 43** | 48 → 20   | 38 → 20   |
-| `base`       | 90,7%      | **18 de 42** | 48 → 20   | 38 → 20   |
-| `piso`       | 90,9%      | 5 de 26      | 48 → 15   | 38 → 15   |
-| `explorador` | 91,8%      | 0 de 0       | 48 → 25   | 38 → 17   |
-| `promessa`   | 92,4%      | 0 de 3       | 48 → 19   | 38 → 17   |
+| `agenda`     | 90,0%      | **20 de 42** | 48 → 20   | 38 → 20   |
+| `base`       | 90,7%      | **17 de 42** | 48 → 20   | 38 → 20   |
+| `piso`       | 90,9%      | 5 de 37      | 48 → 15   | 38 → 15   |
+| `explorador` | 91,8%      | 0 de 6       | 48 → 25   | 38 → 17   |
+| `promessa`   | 92,3%      | 2 de 4       | 48 → 19   | 38 → 17   |
 
 Mexeu em `src/data/`, `src/domain/`, `src/application/` ou `src/state/`? remeça esta tabela no
 mesmo commit, mesmo que ela não mude.
 
-**A série mudou em 25/09 por duas razões medidas:** as pessoas do mundo agem, e a sonda passou a
-começar com o governo montado. Sem gabinete (`--cabinet none`), `agenda` aprova 2 de 43 e todos os
-partidos saem até o mês 5. A linha "a vida" do simulador conta os gestos de cada sonda. O lote 2 levou `agenda` de 32 para
-22 aprovadas: os partidos distantes do governo saem antes (achado 86).
-
-**O peso da pasta** (`--cabinet proportional`: as 38 pastas repartidas pelas 9 bancadas, na
-proporção das cadeiras; 25/09): `agenda` 26 de 43 → 34 de 41; `base` 34 de 41 → 35 de 41;
-`piso` 5 de 17 → 15 de 15. A primeira versão, que somava 3 por mês sem teto, levou as 9 bancadas
-a 100 e aprovou 41 de 41. O teto de 80 e a atração de 10% são [DESENHO].
+**A série mudou em 26/09:** 16 partidos, 15 líderes (um por bloco, fora PML e PLI) e a base como
+chance. Antes: `agenda` 22 de 43, `base` 18 de 42, `piso` 5 de 26, `explorador` 0 de 0,
+`promessa` 0 de 3 e 92,4%. Todas as sondas têm 13 desembarques; em `agenda`, os 13 saem até
+o mês 28 e só o PBR fica; sem gabinete (`--cabinet none`), `agenda` aprova 2 de 43 e 14 desembarcam. A linha "a vida"
+do simulador conta os gestos de cada sonda.
 
 ## O que existe
 
@@ -453,19 +450,19 @@ fecho ocupa o Gabinete. Gabinete é a Mesa (cena 1916×821, que só encolhe): pa
 contingenciamento, envelopes que erguem a carta ao centro, telefone. Email é a Caixa em tela
 cheia. Vocabulário único em `src/ui/shared/annex.mjs` (guarda `annexes`).
 
-**Dados:** 9 blocos · 513 cadeiras · 8 áreas · 38 programas · 6 regras · 4 grupos de pressão ·
-3 faixas de renda · 8 arquétipos.
+**Dados:** 16 blocos · 513 cadeiras · 8 áreas · 38 programas · 6 regras · 4 grupos de pressão ·
+3 faixas de renda · 15 arquétipos.
 
 | coleção            | quantos |
 | ------------------ | ------- |
-| blocos partidários | 9       |
+| blocos partidários | 16      |
 | cadeiras           | 513     |
 | áreas              | 8       |
 | programas          | 38      |
 | regras             | 6       |
 | grupos de pressão  | 4       |
 | faixas de renda    | 3       |
-| arquétipos         | 8       |
+| arquétipos         | 15      |
 
 **Motores:** LASTRO (receita, teto, `blocked` × `atRisk`) · ECLUSA (`whipCount`/`vote`/`settle`)
 · MALHA (índices, `pushOf`/`liftOf`) · SONDA · ELENCO (semente, sem fluxo de RNG) · CORRENTE
@@ -477,7 +474,7 @@ e CASCATA saíram em 24/09 e voltam quando tiverem código.
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
 `simulate.mjs` (nove sondas).
 
-**Verificação:** 13 guardas · 68 sintéticas · 387 provas · passeio dentro do `validate`
+**Verificação:** 13 guardas · 68 sintéticas · 413 provas · passeio dentro do `validate`
 (geometria, recorte, contraste no pixel, 1440×980 e 1440×900).
 
 ## O que ainda não existe

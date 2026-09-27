@@ -95,8 +95,10 @@ No `simulate`, uma sonda passiva, em que o jogador não faz nada por 48 meses, d
 
 ## Lote 1, no jogo desde 25/09
 
-- **Quem age:** 14 pessoas. São os 7 porta-vozes de partido do elenco (o cacique da Mesa, o chefe
-  do Senado, o relator do orçamento e os líderes de PTU, PSU, PSM e Livre) e os 7 ministros das
+- **Quem age:** 21 pessoas desde 26/09, com um líder por bloco dos 16 fora PML e PLI; no lote 1
+  eram 14. São os porta-vozes de partido do elenco (o cacique da Mesa, o chefe
+  do Senado, o relator do orçamento e os líderes de PCS, PTP, PDST e VANGUARDA; até 26/09, PTU, PSU,
+  PSM e Livre) e os 7 ministros das
   pastas das áreas, nomeados ou interinos. O código está em `src/application/world.mjs`, e os
   parâmetros, todos [DESENHO], em `src/data/agency.mjs`.
 - **O que querem:** o ministro quer a verba da pasta contra o nível da posse, a dignidade e o cargo.
@@ -131,7 +133,8 @@ No `simulate`, uma sonda passiva, em que o jogador não faz nada por 48 meses, d
 
 ## O que a medida mostrou
 
-Em 48 meses, com o simulador (`npm run simulate`, linha "a vida"):
+Em 48 meses, com o simulador (`npm run simulate`, linha "a vida"), medido em 25/09 com o catálogo
+de 9 partidos (PTU, PSU, PSM e Livre saíram dele em 26/09):
 
 - **No lote 1, com o governo montado na posse** (`agenda`): 8 pedidos de pasta, 13 ameaças, 49 pedidos de verba,
   9 queixas públicas e 6 desembarques. O Partido Livre sai no mês 21; os outros saem juntos no mês

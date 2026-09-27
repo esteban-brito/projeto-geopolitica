@@ -3,7 +3,7 @@
    bancada, resultado, custo pago, ressentimento ── A SEPARACAO QUE FAZ A MECANICA Duas
    funcoes, e a divisao entre elas E o jogo: `whipCount` — a PREVISAO. */
 
-import { unit } from "../../state/random.mjs";
+import { hash, mix, unit } from "../../state/random.mjs";
 
 /**
  * @typedef {import("../../data/parties.mjs").Party} Party
@@ -42,11 +42,10 @@ export const STANDING_NEUTRAL = 35;
 /* Dissidencia maxima, em fracao da bancada, quando a lealdade esta cheia. */
 const DISSIDENCE = 0.07;
 
-/* OS DOIS ESTADOS DE DESCONTENTAMENTO, e eles sao degraus e nao uma rampa. */
+/* Os tons da tela, em pontos de chance: abaixo de 50 a bancada vota mais contra que a favor;
+   abaixo de 20, e oposicao. */
 const OBSTRUCTION = 50;
-const OBSTRUCTION_TOLL = 0.6;
 const RUPTURE = 20;
-const RUPTURE_TOLL = 0.15;
 
 /* OS LIMIARES SAO EXPORTADOS porque a tela precisa dizer em que estado a bancada esta, e ela
    nao pode redigitar os numeros: dois lugares com o mesmo limiar e um lugar que vai divergir
@@ -54,16 +53,28 @@ const RUPTURE_TOLL = 0.15;
    bancada que o motor ja trata como rompida. */
 export const THRESHOLDS = { obstruction: OBSTRUCTION, rupture: RUPTURE };
 
-/* ── O ASSENTAMENTO DA LEALDADE, mes a mes ────────────────────────────────── Tres forcas, e
-   a terceira e a que liga este motor ao orcamento. */
-const DECAY = 1.5;
+/* Voto firme: o deputado que acompanha o governo em emenda e reforma. */
+export const FIRM = 0.8;
+
+/* ── A CHANCE ESTRUTURAL (docs/spec/the-base-model.md) ──────────────────────── Os numeros sao
+   os do prototipo da posse, [DESENHO] dentro das faixas da pesquisa 17. */
+const OWN_CHANCE = 0.92;
+const NEAR = 45;
+const PRAGMATIC_REACH = 70;
+const DEPUTY_SPREAD = 0.14;
+const CENTER = { economic: 50, liberty: 50 };
+
+/* A chance com que a lealdade nem ajuda nem atrapalha uma votacao: a do voto firme. Com 0,75,
+   duas leis mansas passavam de graca numa Camara inteira a 30% (266 e 260 votos para 257). */
+const NEUTRAL_CHANCE = 0.8;
+
+/* ── O ASSENTAMENTO DA LEALDADE, mes a mes ──────────────────────────────────── A posicao puxa,
+   a emenda paga soma e a promessa quebrada tira. Cair 1,5 por mes sem motivo levava toda
+   bancada sem emenda a ruptura (achado 86). O puxao de metade da distancia e [DESENHO]: a
+   pesquisa 17 nao achou prazo medido. */
+const STANCE_PULL = 0.5;
 const PATRONAGE = 12;
 const BETRAYAL = 25;
-/* A pasta puxa a lealdade para perto de 80, abaixo dos 90 do partido do Presidente, e para ali.
-   Somar 3 por mês sem teto levou as 9 bancadas a 100 e aprovou 41 de 41 votações. [DESENHO], a
-   calibrar pela orientação do governo nos dados abertos da Câmara (pesquisa 15). */
-const CABINET_CEILING = 80;
-const CABINET_PULL = 0.1;
 
 /**
  * @typedef {object} PartyForecast
@@ -107,20 +118,112 @@ function venalityFor(party, dx, dy) {
 }
 
 /**
- * Ele existe extraido porque DUAS coisas precisam dele e elas nao podem divergir: a previsao
- * de uma votacao e a leitura da base.
+ * A chance em fracao; a lealdade guardada e a chance em pontos.
  *
  * @param {number} mood a lealdade da bancada, de 0 a 100
  * @returns {number}
  */
-function moodFactor(mood) {
-  let factor = 0.5 + 0.5 * clamp01(mood / 100);
+function chanceOf(mood) {
+  return clamp01(mood / 100);
+}
 
-  /* Os dois degraus, na ordem em que a base os desce. */
-  if (mood < OBSTRUCTION) factor *= OBSTRUCTION_TOLL;
-  if (mood < RUPTURE) factor *= RUPTURE_TOLL;
+/** @param {number} chance */
+function logit(chance) {
+  const bounded = Math.min(0.98, Math.max(0.02, chance));
+  return Math.log(bounded / (1 - bounded));
+}
 
-  return factor;
+/**
+ * A chance de a bancada votar com o governo, de 0 a 1, pela posicao dela.
+ *
+ * @param {object} input
+ * @param {Party} input.party
+ * @param {{ economic: number, liberty: number }} input.home - onde mora o governo
+ * @param {number} [input.share] - a parte da cota de pastas que o partido tem, de 0 a 1
+ * @param {"gov" | "opposition" | null} [input.stance] - o que o partido declarou
+ * @returns {number}
+ */
+export function partyChance({ party, home, share = 0, stance = null }) {
+  if (stance === "gov") return OWN_CHANCE;
+  const d = Math.hypot(party.economic - home.economic, party.liberty - home.liberty);
+  const opposition = 0.12 + 0.2 * clamp01(1 - Math.max(0, d - NEAR) / NEAR);
+  if (stance === "opposition" || party.neverBase) return opposition;
+  const free =
+    d <= NEAR ? 0.85 - (d / NEAR) * 0.2 : Math.max(0.4, 0.65 - ((d - NEAR) / NEAR) * 0.25);
+  if (share > 0) return Math.min(0.95, Math.max(0.67, free + 0.25 * clamp01(share)));
+  if (party.pragmatic) return d > PRAGMATIC_REACH ? 0.35 : Math.max(free, 0.55);
+  return d > NEAR ? opposition : free;
+}
+
+/**
+ * A chance estrutural de cada partido, em pontos: para onde o mes puxa a lealdade.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {string | null} input.ruling - o partido do Presidente
+ * @param {Record<string, number>} [input.served] - a parte da cota de pastas, de 0 a 1
+ * @param {ReadonlyArray<string>} [input.declared] - os partidos que romperam
+ * @returns {Record<string, number>}
+ */
+export function chanceTargets({ parties, ruling, served = {}, declared = [] }) {
+  const home = parties.find(party => party.id === ruling) ?? CENTER;
+  return Object.fromEntries(
+    parties.map(party => {
+      /** @type {"gov" | "opposition" | null} */
+      const stance =
+        party.id === ruling ? "gov" : declared.includes(party.id) ? "opposition" : null;
+      const share = served[party.id] ?? 0;
+      return [party.id, 100 * partyChance({ party, home, share, stance })];
+    }),
+  );
+}
+
+/**
+ * A lealdade da posse: a chance estrutural, sem pasta nenhuma.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {string | null} input.ruling
+ * @returns {Record<string, number>}
+ */
+export function openingLoyalty({ parties, ruling }) {
+  return chanceTargets({ parties, ruling });
+}
+
+/**
+ * A chance de cada deputado, em torno da do partido, tirada da semente e nunca guardada.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty
+ * @param {number} input.seed
+ * @returns {number[]}
+ */
+export function deputyChances({ parties, loyalty, seed }) {
+  /** @type {number[]} */
+  const chances = [];
+  for (const party of parties) {
+    const chance = chanceOf(loyalty[party.id] ?? 0);
+    const key = hash(`${seed}:${party.id}`);
+    for (let seat = 0; seat < party.seats; seat++) {
+      const jitter = (mix(key, seat) / 2 ** 32 - 0.5) * 2 * DEPUTY_SPREAD;
+      chances.push(Math.min(0.99, Math.max(0.02, chance + jitter)));
+    }
+  }
+  return chances;
+}
+
+/**
+ * OS VOTOS FIRMES, o placar principal da base.
+ *
+ * @param {object} input
+ * @param {ReadonlyArray<Party>} input.parties
+ * @param {Record<string, number>} input.loyalty
+ * @param {number} input.seed
+ * @returns {number}
+ */
+export function firmCount(input) {
+  return deputyChances(input).filter(chance => chance >= FIRM).length;
 }
 
 /**
@@ -134,7 +237,7 @@ function moodFactor(mood) {
 export function baseCount({ parties, loyalty }) {
   let seats = 0;
   for (const party of parties) {
-    seats += party.seats * clamp01(moodFactor(loyalty[party.id] ?? 0));
+    seats += party.seats * chanceOf(loyalty[party.id] ?? 0);
   }
   return Math.round(seats);
 }
@@ -154,10 +257,10 @@ export function baseSplit({ parties, loyalty }) {
 
   for (const party of parties) {
     const mood = loyalty[party.id] ?? 0;
-    const effective = party.seats * clamp01(moodFactor(mood));
+    const effective = party.seats * chanceOf(mood);
 
-    /* A ORDEM E A DA GRAVIDADE, e ela espelha a de `moodFactor`: quem rompeu passou pela
-       obstrucao antes, entao a pergunta mais grave vem primeiro. */
+    /* A ORDEM E A DA GRAVIDADE: quem rompeu passou pela obstrucao antes, entao a pergunta
+       mais grave vem primeiro. */
     if (mood < RUPTURE) split.ruptured += effective;
     else if (mood < OBSTRUCTION) split.obstructing += effective;
     else split.loyal += effective;
@@ -166,8 +269,8 @@ export function baseSplit({ parties, loyalty }) {
   return split;
 }
 
-/* MEDIDO NO CATALOGO: com o corte em 0,7 a Camara parte em 364 contra 149 cadeiras, e a media
-   ponderada pela venalidade da 67,9%. O corte nao e redondo por acaso — ele e o degrau em que
+/* MEDIDO NO CATALOGO: com o corte em 0,7 a Camara parte em 384 contra 129 cadeiras, e a media
+   ponderada pela venalidade da 70,0% (no catalogo de 9, 364 contra 149 e 67,9%). O corte nao e redondo por acaso — ele e o degrau em que
    `venalityFor` deixa de cobrar resistencia ideologica e passa a cobrar preco. */
 const VENAL = 0.7;
 
@@ -189,7 +292,7 @@ export function baseVenality({ parties, loyalty }) {
   const split = { bought: 0, convinced: 0 };
 
   for (const party of parties) {
-    const effective = party.seats * clamp01(moodFactor(loyalty[party.id] ?? 0));
+    const effective = party.seats * chanceOf(loyalty[party.id] ?? 0);
     if (party.venalityEconomic >= VENAL) split.bought += effective;
     else split.convinced += effective;
   }
@@ -216,7 +319,7 @@ export function seating({ parties, loyalty }) {
       label: party.label,
       economic: party.economic,
       seats: party.seats,
-      delivered: party.seats * clamp01(moodFactor(mood)),
+      delivered: party.seats * chanceOf(mood),
       mood: mood < RUPTURE ? "ruptured" : mood < OBSTRUCTION ? "obstructing" : "loyal",
     };
   });
@@ -258,11 +361,9 @@ export function whipCount({ bill, parties, funding, loyalty, standing, ruling = 
       bill.threat * venality * THREAT_WEIGHT -
       street * STANDING_WEIGHT;
 
-    /* A logistica devolve adesao alta para resistencia baixa e vice-versa. */
-    let adherence = 1 / (1 + Math.exp((resistance - PIVOT) / SPREAD));
-
-    /* LEALDADE nao muda a direcao, muda o comparecimento. */
-    adherence *= moodFactor(loyalty[party.id] ?? 0);
+    /* A lealdade desloca, como a rua: multiplicar fazia a oposicao recusar a propria pauta. */
+    const loyal = logit(chanceOf(loyalty[party.id] ?? 0)) - logit(NEUTRAL_CHANCE);
+    const adherence = 1 / (1 + Math.exp((resistance - PIVOT) / SPREAD - loyal));
 
     return {
       partyId: party.id,
@@ -353,13 +454,13 @@ export function dispersion({ parties, loyalty }) {
  *
  * @param {object} input
  * @param {ReadonlyArray<Party>} input.parties
- * @param {Record<string, number>} input.loyalty - o humor de entrada, de 0 a 100
+ * @param {Record<string, number>} input.loyalty - a chance de entrada, em pontos
  * @param {Record<string, number>} input.promised - verba prometida, de 0 a 1
  * @param {Record<string, number>} input.paid - verba que o caixa realmente honrou
- * @param {Record<string, number>} [input.cabinet] - o quanto as pastas servem cada partido, de 0 a 1
- * @returns {Record<string, number>} o humor de saida
+ * @param {Record<string, number>} input.targets - a chance estrutural, em pontos
+ * @returns {Record<string, number>} a chance de saida
  */
-export function settle({ parties, loyalty, promised, paid, cabinet = {} }) {
+export function settle({ parties, loyalty, promised, paid, targets }) {
   /** @type {Record<string, number>} */
   const next = {};
 
@@ -369,11 +470,9 @@ export function settle({ parties, loyalty, promised, paid, cabinet = {} }) {
     /* O buraco nunca e negativo: pagar MAIS do que se prometeu e generosidade, e generosidade
        ja esta paga pelo afago. */
     const broken = Math.max(0, clamp01(promised[party.id] ?? 0) - honoured);
-
-    const desk =
-      CABINET_PULL * clamp01(cabinet[party.id] ?? 0) * Math.max(0, CABINET_CEILING - before);
+    const target = targets[party.id] ?? before;
     next[party.id] = clamp(
-      before - DECAY + PATRONAGE * honoured - BETRAYAL * broken + desk,
+      before + STANCE_PULL * (target - before) + PATRONAGE * honoured - BETRAYAL * broken,
       0,
       100,
     );

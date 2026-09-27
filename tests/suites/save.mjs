@@ -204,7 +204,7 @@ test("O PARTIDO ATRAVESSA O SAVE, e o mandato inteiro se refaz com ele", () => {
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 0, max: 12 }), (seed, turns) => {
       const play = () => {
-        let state = createState(seed, undefined, null, "trabalhistas-unidos");
+        let state = createState(seed, undefined, null, "pcs");
         for (let i = 0; i < turns; i++) state = idle(state);
         return serialize(state);
       };
@@ -212,7 +212,7 @@ test("O PARTIDO ATRAVESSA O SAVE, e o mandato inteiro se refaz com ele", () => {
 
       const lido = deserialize(play());
       assert.ok(lido.ok);
-      if (lido.ok) assert.equal(lido.state.party, "trabalhistas-unidos");
+      if (lido.ok) assert.equal(lido.state.party, "pcs");
     }),
   );
 });

@@ -7,7 +7,7 @@ import { coalitionOf } from "../../src/application/cabinet.mjs";
 import { cabinetOf } from "../../src/application/contingency.mjs";
 import { playMonth } from "../../src/application/turn.mjs";
 import { SEATS } from "../../src/data/regime.mjs";
-import { settle } from "../../src/domain/congress/index.mjs";
+import { chanceTargets, settle } from "../../src/domain/congress/index.mjs";
 import { deserialize, serialize } from "../../src/state/save.mjs";
 import { createState, reduce } from "../../src/state/state.mjs";
 
@@ -38,7 +38,7 @@ test("os ministros do corte sentam em cadeiras que existem", () => {
 
 /* ── NOMEAR E DEMITIR (E1.0a, passo 2) ─────────────────────────────────────── */
 
-const minister = { id: "person-1", name: "Helena Prado", party: "democratas-nacionais" };
+const minister = { id: "person-1", name: "Helena Prado", party: "mdn" };
 
 test("nomear senta a pessoa na cadeira, e demitir deixa a cadeira vaga", () => {
   const start = createState();
@@ -94,8 +94,10 @@ const bigId = bigBloc?.id ?? "";
 test("a pasta vira lealdade todo mês, e só para o partido que a recebeu", () => {
   const parties = CATALOG.parties;
   const loyalty = Object.fromEntries(parties.map(party => [party.id, 60]));
-  const plain = settle({ parties, loyalty, promised: {}, paid: {} });
-  const held = settle({ parties, loyalty, promised: {}, paid: {}, cabinet: { [bigId]: 1 } });
+  const targets = chanceTargets({ parties, ruling: null });
+  const served = chanceTargets({ parties, ruling: null, served: { [bigId]: 1 } });
+  const plain = settle({ parties, loyalty, promised: {}, paid: {}, targets });
+  const held = settle({ parties, loyalty, promised: {}, paid: {}, targets: served });
   assert.ok((held[bigId] ?? 0) > (plain[bigId] ?? 0), "a pasta não mexeu na base");
   for (const party of parties)
     if (party.id !== bigId) assert.equal(held[party.id], plain[party.id]);
@@ -150,7 +152,10 @@ test("quem senta na cadeira é quem vai à reunião; cadeira vaga fica com o int
 
 test("a pasta sozinha não leva a bancada acima do teto: somar sem limite aprovou 41 de 41", () => {
   const parties = CATALOG.parties;
-  const loyalty = Object.fromEntries(parties.map(party => [party.id, 85]));
-  const held = settle({ parties, loyalty, promised: {}, paid: {}, cabinet: { [bigId]: 1 } });
-  assert.ok((held[bigId] ?? 0) <= 85, `a pasta levou a bancada a ${held[bigId]}`);
+  const targets = chanceTargets({ parties, ruling: null, served: { [bigId]: 1 } });
+  let loyalty = Object.fromEntries(parties.map(party => [party.id, 85]));
+  for (let month = 0; month < 48; month++) {
+    loyalty = settle({ parties, loyalty, promised: {}, paid: {}, targets });
+  }
+  assert.ok((loyalty[bigId] ?? 0) <= 95, `a pasta levou a bancada a ${loyalty[bigId]}`);
 });

@@ -198,7 +198,7 @@ test("O CONGRESSO RESPONDE AO PAGO, e nao ao prometido", () => {
 test("PROMESSA QUEBRADA CUSTA BASE, e custa mais que o simples decaimento", () => {
   const bare = createState(5, SQUEEZED);
 
-  /* Ninguem prometeu nada: a base so escorrega pelo decaimento. */
+  /* Ninguem prometeu nada: a bancada fica na chance estrutural, onde a posse a pos. */
   const quiet = playMonth(bare, { funding: everyone(0) }, { catalog: SQUEEZED });
   /* Prometeu tudo e nao pagou nada, porque o teto nao deixou. */
   const broken = playMonth(bare, { funding: everyone(1) }, { catalog: SQUEEZED });
@@ -208,7 +208,7 @@ test("PROMESSA QUEBRADA CUSTA BASE, e custa mais que o simples decaimento", () =
     const afterQuiet = quiet.state.loyalty[party.id] ?? 0;
     const afterBroken = broken.state.loyalty[party.id] ?? 0;
 
-    assert.ok(afterQuiet < before, `${party.id} nao decaiu num mes sem nada`);
+    assert.ok(Math.abs(afterQuiet - before) < 1e-9, `${party.id} se mexeu num mes sem nada`);
     assert.ok(
       afterBroken < afterQuiet,
       `${party.id} pagou o mesmo por prometer e falhar do que por nao prometer`,
@@ -345,7 +345,7 @@ test("pauta aprovada muda a despesa obrigatoria PARA SEMPRE, no sinal do catalog
 test("o preco da cadeira traduz verba em bilhoes, e o total fecha", () => {
   const full = costOf(everyone(1), PARTIES, CATALOG.fiscal.seatPrice);
   const seats = PARTIES.reduce((sum, party) => sum + party.seats, 0);
-  assert.equal(full, seats * CATALOG.fiscal.seatPrice);
+  assert.ok(Math.abs(full - seats * CATALOG.fiscal.seatPrice) < 1e-9);
 
   /* COMPRAR O PLENARIO INTEIRO NAO PODE CABER NUM MES. */
   assert.ok(
@@ -554,8 +554,9 @@ test("O TETO FECHADO E CRISE, e ele vem antes de qualquer outra leitura", () => 
 });
 
 test("bancada rompida e crise mesmo com o caixa livre", () => {
-  const state = createState(4);
-  const broken = { ...state, loyalty: { ...state.loyalty, [PARTIES[0]?.id ?? ""]: 5 } };
+  /* A ruptura conta a coalizao: o partido do Presidente em 5, o resto da Camara leal. */
+  const state = createState(4, CATALOG, null, "pcs");
+  const broken = { ...state, loyalty: { ...everyone(90), pcs: 5 } };
 
   const standing = situationOf(broken);
   assert.equal(standing.level, "crisis");
@@ -563,8 +564,8 @@ test("bancada rompida e crise mesmo com o caixa livre", () => {
 });
 
 test("OBSTRUCAO SEGURA EM ESTAVEL: o degrau do meio existe de verdade", () => {
-  const state = createState(5);
-  const sour = { ...state, loyalty: { ...state.loyalty, [PARTIES[0]?.id ?? ""]: 45 } };
+  const state = createState(5, CATALOG, null, "pcs");
+  const sour = { ...state, loyalty: { ...everyone(90), pcs: 45 } };
 
   const standing = situationOf(sour);
   assert.equal(standing.level, "stable");
@@ -691,12 +692,16 @@ test("O PACOTE PAGA PELO TAMANHO: juntar tudo num texto so ficou caro", () => {
 
   let carrying = state;
   let reached = false;
+  let passed = false;
   for (let month = 0; month < 8 && !reached; month++) {
     const played = playMonth(carrying, month === 0 ? bundleOrders : { funding });
     reached = played.report.tally !== null;
+    passed = played.report.tally?.passed ?? false;
     carrying = played.state;
   }
-  assert.ok(!reached, "o pacote de oitenta e cinco movimentos chegou ao plenario");
+  /* Com o modelo da base, o presidente da Camara pauta o pacote com a verba oferecida, e ele
+     cai no plenario; a gaveta segurava por 0,375 contra 0,38. */
+  assert.ok(!passed, "o pacote de oitenta e cinco movimentos passou");
 });
 
 /* ── A MESA E O TURNO PREVEEM COM A MESMA CAMARA ─────────────────────────────── ⚠ ESTA PROVA
