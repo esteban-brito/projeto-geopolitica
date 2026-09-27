@@ -30,7 +30,8 @@
   base pela ideologia e fazem oposição. O E1.0a (as 38
   cadeiras, nomear e demitir, a pasta que puxa a lealdade até 80) está feito; a abertura segue com
   o E1.0b, a eleição da Mesa. A tela da posse tem protótipo aprovado (versão 25 do
-  [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM), 26/09); fonte e testes em
+  [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM), 26/09; a versão 43 traz os retratos da
+  Presidência feitos no ChatGPT); fonte e testes em
   `tmp/posse/`, e ela entra no jogo no E1.0e;
 - **commits de 26/09:** `8bb018c` a `a656aec`, 23 commits: o protótipo da posse até a versão 25
   (sistema de classes, etiqueta sem pulo, Câmara leve, cabeçalho em grade) e a direção de design
