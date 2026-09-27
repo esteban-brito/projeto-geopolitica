@@ -319,6 +319,12 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   na saúde do passeio aparece com 437 votos previstos, contra 386 antes, e a base é 383. O
   multiplicador escondia a logística da pauta (`PIVOT` 58, `SPREAD` 16), que ninguém calibrou
   contra votação real. Calibrar na etapa 4, com o Congresso inteiro;
+- **88. Os retratos da Presidência (26/09), pendências dele.** Os 12 rostos das duas folhas
+  aparentam de 25 a 45 anos; para disputar é preciso ter 35, e os presidentes reais tomaram posse
+  entre 57 e 75. As próximas folhas pedem rostos de 45 a 70. Só a Presidência usa os rostos novos:
+  ministros, candidatos e a chefe de gabinete seguem desenhados por código até a decisão 10 do
+  [ciclo 33](cycles/33-the-whole-game.md). Fontes em `tmp/asset-sources/portraits/` (com `LEIA.md`);
+  recortes em `tmp/posse/avatar-standard.json`;
 - **85. As provas do lote 1 do mundo vivo nasceram depois do código (25/09).** Fora da ordem da
   regra. Compensação feita: duas sabotagens (a recusa que não fere; aceitar sem nomear) derrubaram
   as provas certas;
