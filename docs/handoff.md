@@ -138,8 +138,9 @@
    [as partidas-teste](spec/the-test-playthroughs.md) (8 fios, peças de tela, o que falta, critério de
    aceite). A do Lee está com o Codex (tmp/research/lky.md); quando chegar, eu confiro e ela vira a
    pesquisa 20 e os fios da partida Lee. Milei talvez depois; por ordem dele, não agora. Os 8 fios do Lee estão feitos (pesquisa 20).
-   **Plano do jogo inteiro:** o [ciclo 33](cycles/33-the-whole-game.md) está escrito e espera o sim
-   dele. O resultado ainda pede conferência do Claude contra fontes e código antes de aceitar;
+   **Plano do jogo inteiro:** o [ciclo 33](cycles/33-the-whole-game.md) foi conferido pelo Claude em
+   26/09 (3 erros de lei corrigidos) e espera o sim dele, com as decisões 1, 5, 9 e 10 do §11. Os
+   retratos passam a ser imagens que ele gera no ChatGPT;
 5. **achado 81**, antes de fechar o E0; não bloqueia o E1;
 6. **achado 69** — investigar a oscilação da prova de voo interrompido;
 7. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);

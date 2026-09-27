@@ -45,7 +45,7 @@ que este plano precisa entregar. Cada fio deve ter decisão, reação e resultad
   ([ciclo 32](32-the-new-interface.md) §6b; [partidos](../spec/the-parties.md)). Candidatura exige
   brasileiro nato, filiação partidária e 35 anos (CF, arts. 12 e 14).
 - A posse oferece a estrutura dos ministérios, nomes para as pastas e a formação da base. O
-  [protótipo da posse](../spec/interface-map.md) fixa o hemiciclo sem abas; o motor ainda precisa
+  [protótipo da posse](../spec/the-posse-port.md) fixa o hemiciclo sem abas; o motor ainda precisa
   da calibragem da base descrita no ciclo 32, fase 2.
 - A eleição das Mesas ocorre em **1º de fevereiro de 2027** (CF, art. 57 §4º). O apoio presidencial
   muda a disputa, mas os parlamentares votam. A lua de mel é uma janela política, não um bônus
@@ -53,18 +53,18 @@ que este plano precisa entregar. Cada fio deve ter decisão, reação e resultad
 
 ### Calendário que altera decisões
 
-| data ou janela                    | fato jogável                               | fundamento e consequência                                                                                         |
-| --------------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| 5 jan 2027                        | posse presidencial                         | CF, art. 82, EC 111/2021; começa a agenda e o mandato.                                                            |
-| 6 jan 2027                        | posse dos 27 governadores                  | EC 111/2021; começam relações e compromissos estaduais.                                                           |
-| 1º fev 2027                       | eleição das Mesas                          | CF, art. 57 §4º; presidências controlam pauta e recebimento de denúncia.                                          |
-| 2 fev–17 jul; 1º ago–22 dez       | sessões ordinárias anuais                  | CF, art. 57; B4 conta dias de sessão e recesso.                                                                   |
-| até 15 abr                        | envio anual da LDO                         | ADCT, art. 35 §2º; atraso cria disputa orçamentária.                                                              |
-| até 31 ago                        | envio anual da PLOA; PPA no primeiro ano   | ADCT, art. 35 §2º; a proposta passa pelo Congresso.                                                               |
-| até 60 dias da abertura da sessão | contas do exercício anterior ao Congresso  | CF, art. 84 XXIV; TCU examina e Congresso julga.                                                                  |
-| 1º fev 2029                       | nova eleição das Mesas                     | CF, art. 57 §4º; a pauta e os acordos podem mudar.                                                                |
-| 1º e 29 out 2028                  | eleição municipal e eventual segundo turno | CF, art. 29 II; 5.570 municípios: VERIFICAR total vigente antes de carregar catálogo.                             |
-| 6 e 27 out 2030                   | eleição geral e eventual segundo turno     | CF, art. 77; renovam-se 513 cadeiras da Câmara e um terço do Senado, 27 cadeiras: CF, arts. 45, 46 §§1º–2º, e 77. |
+| data ou janela                    | fato jogável                               | fundamento e consequência                                                                                                                               |
+| --------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 5 jan 2027                        | posse presidencial                         | CF, art. 82, EC 111/2021; começa a agenda e o mandato.                                                                                                  |
+| 6 jan 2027                        | posse dos 27 governadores                  | EC 111/2021; começam relações e compromissos estaduais.                                                                                                 |
+| 1º fev 2027                       | eleição das Mesas                          | CF, art. 57 §4º; presidências controlam pauta e recebimento de denúncia.                                                                                |
+| 2 fev–17 jul; 1º ago–22 dez       | sessões ordinárias anuais                  | CF, art. 57; B4 conta dias de sessão e recesso.                                                                                                         |
+| até 15 abr                        | envio anual da LDO                         | ADCT, art. 35 §2º; atraso cria disputa orçamentária.                                                                                                    |
+| até 31 ago                        | envio anual da PLOA; PPA no primeiro ano   | ADCT, art. 35 §2º; a proposta passa pelo Congresso.                                                                                                     |
+| até 60 dias da abertura da sessão | contas do exercício anterior ao Congresso  | CF, art. 84 XXIV; TCU examina e Congresso julga.                                                                                                        |
+| 1º fev 2029                       | nova eleição das Mesas                     | a CF, art. 57 §4º, fixa só a de 2027; a de 2029 segue os regimentos: VERIFICAR data. A pauta e os acordos podem mudar.                                  |
+| 1º e 29 out 2028                  | eleição municipal e eventual segundo turno | CF, art. 29 II; o IBGE conta 5.570, e o Distrito Federal e Fernando de Noronha não elegem prefeito: VERIFICAR total vigente antes de carregar catálogo. |
+| 6 e 27 out 2030                   | eleição geral e eventual segundo turno     | CF, art. 77; renovam-se 513 cadeiras da Câmara e um terço do Senado, 27 cadeiras: CF, arts. 45, 46 §§1º–2º, e 77.                                       |
 
 O calendário inclui também recessos, prazos de medida provisória, votações, relatórios bimestrais,
 vagas institucionais e obras. Cada prazo nasce de fonte jurídica ou recebe **VERIFICAR** antes de
@@ -72,8 +72,8 @@ virar regra. A pesquisa R2 do [mapa](../spec/migration-map.md) §6.2 confere div
 
 ### Pressão inicial, finais e balanço
 
-O partido inicial muda o custo da coalizão. O PLI começa com um voto firme; o PCN chega perto de
-205, conforme [modelo da base](../spec/the-base-model.md) e [partidos](../spec/the-parties.md).
+O partido inicial muda o custo da coalizão. No protótipo, o PLI começa com 1 voto firme e o PCN
+com 205 ([journal](../journal.md), entrada 93); a regra está no [modelo da base](../spec/the-base-model.md).
 A trajetória altera confiança e acesso conforme o [ciclo 32](32-the-new-interface.md) §6b. A
 semente altera elenco e eventos; cada sorteio registra a posição consumida. Nenhuma trajetória
 garante vitória ou bloqueia ação.
@@ -129,32 +129,32 @@ apontam para o [checklist presidencial](../spec/presidential-checklist.md). Etap
 
 ### A. Governo
 
-| ação                                                                         | rota                                                                                               | quem pode travar                                     | checklist | etapa |
-| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | --------- | ----- |
-| Nomear ou exonerar os 38 ministros                                           | nomeação; CF, arts. 84 I e 87; Lei 14.600/2023                                                     | indicado pode recusar; partido pode sair da base     | 1, 5      | 1     |
-| Criar, fundir, extinguir ou dividir ministério                               | MP ou lei; decreto só sem gasto ou órgão novo, CF, arts. 61 §1º II e, 84 VI a e 88                 | Congresso pode derrubar a MP; coalizão pode romper   | 2         | 1, 4  |
-| Nomear estatais, agências e cargos                                           | nomeação ou ato de gestão; Lei 13.303/2016, art. 17                                                | conselho, filtros legais, indicado e TCU             | 3         | 3, 5  |
-| Nomear diretor-geral da PF                                                   | nomeação entre delegados de classe especial; Lei 9.266/1996, art. 2º-C                             | indicado, carreira e controle judicial               | 3, 22     | 5     |
-| Regulamentar lei e organizar conselho ou secretaria sem órgão novo nem gasto | decreto dentro da competência; CF, art. 84 IV e VI a                                               | Congresso por decreto legislativo, Justiça, gestores | 4         | 4, 5  |
-| Reformar o gabinete no mandato                                               | nomeação, MP ou lei conforme a mudança; CF, arts. 84 I e 88                                        | partido, Congresso, ministros atingidos              | 1, 2      | 1, 4  |
-| Propor salário de ministro e carreira                                        | decreto legislativo para ministros; lei ou PEC conforme carreira e teto; CF, arts. 49 VIII e 37 XI | Congresso, teto do STF, servidores e imprensa        | 41        | 4, 9  |
-| Abrir concurso e formar carreira                                             | ato de gestão e lei orçamentária; CF, art. 37 II                                                   | orçamento, órgãos executores e Congresso             | 33        | 9     |
+| ação                                                                         | rota                                                                                                                                                                                                | quem pode travar                                     | checklist | etapa |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | --------- | ----- |
+| Nomear ou exonerar os 38 ministros                                           | nomeação; CF, arts. 84 I e 87; Lei 14.600/2023                                                                                                                                                      | indicado pode recusar; partido pode sair da base     | 1, 5      | 1     |
+| Criar, fundir, extinguir ou dividir ministério                               | MP ou lei, CF, arts. 61 §1º II e, e 88; decreto não cria nem extingue órgão, art. 84 VI a                                                                                                           | Congresso pode derrubar a MP; coalizão pode romper   | 2         | 1, 4  |
+| Nomear estatais, agências e cargos                                           | nomeação ou ato de gestão; Lei 13.303/2016, art. 17                                                                                                                                                 | conselho, filtros legais, indicado e TCU             | 3         | 3, 5  |
+| Nomear diretor-geral da PF                                                   | nomeação entre delegados de classe especial; Lei 9.266/1996, art. 2º-C                                                                                                                              | indicado, carreira e controle judicial               | 3, 22     | 5     |
+| Regulamentar lei e organizar conselho ou secretaria sem órgão novo nem gasto | decreto dentro da competência; CF, art. 84 IV e VI a                                                                                                                                                | Congresso por decreto legislativo, Justiça, gestores | 4         | 4, 5  |
+| Reformar o gabinete no mandato                                               | nomeação, MP ou lei conforme a mudança; CF, arts. 84 I e 88                                                                                                                                         | partido, Congresso, ministros atingidos              | 1, 2      | 1, 4  |
+| Pedir salário de ministro e propor o de carreira                             | ministro: decreto legislativo, competência exclusiva do Congresso, sem sanção, CF, art. 49 VIII; carreira: lei de iniciativa do Presidente, art. 61 §1º II a; acima do teto do STF, PEC, art. 37 XI | Congresso, teto do STF, servidores e imprensa        | 41        | 4, 9  |
+| Abrir concurso e formar carreira                                             | ato de gestão e lei orçamentária; CF, art. 37 II                                                                                                                                                    | orçamento, órgãos executores e Congresso             | 33        | 9     |
 
 ### B. Congresso
 
-| ação                              | rota                                                                                | quem pode travar                                       | checklist | etapa |
-| --------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------ | --------- | ----- |
-| Oferecer pastas, cargos e emendas | influência e atos de gestão; CF, art. 166                                           | líder, deputado, regras das emendas e caixa            | 5, 12     | 1, 4  |
-| Designar líder do governo         | nomeação política; RICD, art. 11                                                    | bancada e líder indicado                               | 6         | 1     |
-| Apoiar candidato à Mesa           | influência; CF, art. 57 §4º                                                         | deputados ou senadores em voto secreto                 | 7         | 4     |
-| Propor PL ou PLP                  | proposta; PLP pede 257 deputados e 41 senadores, CF, art. 69                        | relator, Mesa, Câmara, Senado e sanção                 | 8         | 4     |
-| Propor PEC                        | proposta; 308 deputados e 49 senadores em dois turnos em cada Casa, CF, art. 60 §2º | Mesas, plenários e STF em controle posterior           | 8         | 4, 5  |
-| Editar MP                         | MP; 60 + 60 dias; pauta sobrestada no 46º dia; CF, art. 62 §§3º, 6º e 7º            | Congresso, vedações do art. 62 §1º e STF               | 10        | 3, 4  |
-| Pedir urgência constitucional     | proposta; 45 dias por Casa, CF, art. 64                                             | Câmara, Senado e condições do projeto                  | 9         | 4     |
-| Sancionar ou vetar                | ato presidencial em 15 dias úteis, CF, art. 66 §1º                                  | veto cai com 257 deputados e 41 senadores, art. 66 §4º | 11        | 4     |
-| Negociar texto, relator e pauta   | influência e protocolo social                                                       | relator, Mesa, partidos e parlamentares                | 5, 8      | 4     |
-| Pedir lei delegada                | proposta ao Congresso; CF, art. 68                                                  | Congresso delimita ou recusa a delegação               | 36        | 4     |
-| Pedir plebiscito ou referendo     | influência; CF, art. 49 XV; Lei 9.709/1998                                          | Congresso decide convocação                            | 29        | 4     |
+| ação                              | rota                                                                                             | quem pode travar                                       | checklist | etapa |
+| --------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------ | --------- | ----- |
+| Oferecer pastas, cargos e emendas | influência e atos de gestão; CF, art. 166                                                        | líder, deputado, regras das emendas e caixa            | 5, 12     | 1, 4  |
+| Designar líder do governo         | nomeação política; RICD, art. 11                                                                 | bancada e líder indicado                               | 6         | 1     |
+| Apoiar candidato à Mesa           | influência; CF, art. 57 §4º                                                                      | deputados ou senadores em voto secreto                 | 7         | 4     |
+| Propor PL ou PLP                  | proposta; PLP pede 257 deputados e 41 senadores, CF, art. 69                                     | relator, Mesa, Câmara, Senado e sanção                 | 8         | 4     |
+| Propor PEC                        | proposta; 308 deputados e 49 senadores em dois turnos em cada Casa, CF, art. 60 §2º              | Mesas, plenários e STF em controle posterior           | 8         | 4, 5  |
+| Editar MP                         | MP; 60 + 60 dias, parados no recesso; pauta sobrestada no 46º dia; CF, art. 62 §§3º, 4º, 6º e 7º | Congresso, vedações do art. 62 §1º e STF               | 10        | 3, 4  |
+| Pedir urgência constitucional     | proposta; 45 dias por Casa, CF, art. 64                                                          | Câmara, Senado e condições do projeto                  | 9         | 4     |
+| Sancionar ou vetar                | ato presidencial em 15 dias úteis, CF, art. 66 §1º                                               | veto cai com 257 deputados e 41 senadores, art. 66 §4º | 11        | 4     |
+| Negociar texto, relator e pauta   | influência e protocolo social                                                                    | relator, Mesa, partidos e parlamentares                | 5, 8      | 4     |
+| Pedir lei delegada                | proposta ao Congresso; CF, art. 68                                                               | Congresso delimita ou recusa a delegação               | 36        | 4     |
+| Pedir plebiscito ou referendo     | influência; CF, art. 49 XV; Lei 9.709/1998                                                       | Congresso decide convocação                            | 29        | 4     |
 
 ### C. Dinheiro
 
@@ -170,17 +170,17 @@ apontam para o [checklist presidencial](../spec/presidential-checklist.md). Etap
 
 ### D. Economia e Estado empresário
 
-| ação                                           | rota                                                                                | quem pode travar                                       | checklist | etapa |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------ | --------- | ----- |
-| Orientar, vender ou comprar estatal            | gestão, lei ou MP conforme ativo e controle; Lei 13.303/2016                        | diretoria, Congresso, TCU, CADE, Justiça, minoritários | 19        | 3     |
-| Privatizar ou conceder serviço                 | lei, PND e atos de execução; Lei 9.491/1997                                         | Congresso, TCU, Justiça, comprador, trabalhadores      | 20        | 3     |
-| Usar BNDES, BNDESPar, Caixa e Banco do Brasil  | orientação e decisões de seus órgãos; limites legais e balanços separados           | diretoria, risco de crédito, TCU, caixa                | 32        | 3, 9  |
-| Criar moradia e alterar FGTS                   | lei; Lei 8.036/1990, art. 15, contribuição de 8% do empregador; Lei 14.620/2023     | Congresso, empregadores, Caixa, prefeitos              | 42        | 9     |
-| Desapropriar terreno                           | ato e indenização prévia; CF, art. 5º XXIV; terreno urbano ocioso, art. 182 §4º III | proprietário, juiz, município e orçamento              | 42        | 9     |
-| Atrair investimento e abrir zona de exportação | gestão da ApexBrasil e rito da Lei 11.508/2007                                      | empresas, governos locais e órgão licenciador          | 43        | 9     |
-| Dar incentivo fiscal                           | lei com compensação; LRF, art. 14                                                   | Congresso, LASTRO, TCU, concorrentes                   | 43        | 9     |
-| Reunir governo, empresas e centrais            | decreto de conselho sem órgão novo ou gasto, CF, art. 84 VI a                       | convidados podem recusar; Congresso fiscaliza          | 43        | 9     |
-| Mudar regra trabalhista                        | lei; precedente Lei 13.467/2017                                                     | Congresso, centrais, Justiça do Trabalho               | 43        | 9     |
+| ação                                           | rota                                                                                                                                     | quem pode travar                                                     | checklist | etapa |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------- | ----- |
+| Orientar, vender ou comprar estatal            | gestão, lei ou MP conforme ativo e controle; Lei 13.303/2016                                                                             | diretoria, Congresso, TCU, CADE, Justiça, minoritários               | 19        | 3     |
+| Privatizar ou conceder serviço                 | lei, PND e atos de execução; Lei 9.491/1997                                                                                              | Congresso, TCU, Justiça, comprador, trabalhadores                    | 20        | 3     |
+| Usar BNDES, BNDESPar, Caixa e Banco do Brasil  | orientação e decisões de seus órgãos; limites legais e balanços separados                                                                | diretoria, risco de crédito, TCU, caixa                              | 32        | 3, 9  |
+| Criar moradia e alterar FGTS                   | lei; Lei 8.036/1990, art. 15, contribuição de 8% do empregador; Lei 14.620/2023                                                          | Congresso, empregadores, Caixa, prefeitos                            | 42        | 9     |
+| Desapropriar terreno                           | decreto e indenização prévia em dinheiro, CF, art. 5º XXIV; pagar terreno urbano ocioso em títulos é poder do prefeito, art. 182 §4º III | proprietário, juiz e orçamento; o prefeito decide o caso do art. 182 | 42        | 9     |
+| Atrair investimento e abrir zona de exportação | gestão da ApexBrasil e rito da Lei 11.508/2007                                                                                           | empresas, governos locais e órgão licenciador                        | 43        | 9     |
+| Dar incentivo fiscal                           | lei com compensação; LRF, art. 14                                                                                                        | Congresso, LASTRO, TCU, concorrentes                                 | 43        | 9     |
+| Reunir governo, empresas e centrais            | decreto de conselho sem órgão novo ou gasto, CF, art. 84 VI a                                                                            | convidados podem recusar; Congresso fiscaliza                        | 43        | 9     |
+| Mudar regra trabalhista                        | lei; precedente Lei 13.467/2017                                                                                                          | Congresso, centrais, Justiça do Trabalho                             | 43        | 9     |
 
 ### E. Instituições
 
@@ -282,8 +282,7 @@ hipóteses militares previstas na CF, art. 5º LXI, seguem o rito legal e não e
 
 Nenhuma coluna acima garante frequência ou prazo. A VONTADE decide adesão ou recusa com a
 informação que recebeu. TOGA [PROPOSTA] e o rito de responsabilidade decidem efeitos jurídicos.
-QUARTEL [PROPOSTA]
-mede ordens, comando e capacidade de execução sem substituir decisões de pessoas.
+QUARTEL [PROPOSTA] mede ordens, comando e capacidade de execução sem substituir decisões de pessoas.
 
 ## 4. Atores do mundo
 
@@ -368,7 +367,8 @@ As [pesquisas 19 e 20](../spec/the-test-playthroughs.md) sustentam as duas parti
 Esta etapa absorve o inventário e os protótipos da fase 0 e da fase 1 do ciclo 32. Este ciclo
 reúne os fios, telas, calendário, conteúdo, motores e aceites. Um placar **[PROPOSTA]**
 no `npm run simulate --policy` deve contar quais dos 16 fios têm versão legal e, quando exigida,
-tentativa fora da lei, ambas com reação e tela. A contagem atual é **0 fios completos no jogo**;
+tentativa fora da lei, ambas com reação. O `simulate` não vê tela: a tela de cada fio se conta no
+passeio (`tests/browser/`). A contagem atual é **0 fios completos no jogo**;
 a posse e a base existem no protótipo (fonte: partidas-teste, “O que falta no jogo hoje”).
 Portão: links sem referência quebrada, `npm run check` verde e aprovação do plano pelo Diretor.
 
@@ -444,7 +444,7 @@ verde, auditoria e playtest.
 ### Etapa 9 — Longo prazo
 
 Entrega moradia, FGTS, mérito no serviço, investimento, Estado acionista, reforma trabalhista,
-campanhas cívicas e LEGADO derivado. Destrava Lee 2–5. Absorve a ampliação de empresa e
+campanhas cívicas e LEGADO derivado. Destrava Lee 2–5 e completa Xi 6. Absorve a ampliação de empresa e
 ministérios do lote F; preserva a diferença entre ativo, receita e reserva.
 Portão: obra madura depois do pagamento, investimento depende da confiança, `validate` verde,
 auditoria e playtest.
@@ -491,6 +491,12 @@ internacional prevista no [jogo em uma página](../spec/game-in-one-page.md).
 | 11    | balanço final                    | integração das etapas                        | consequência dos 16 fios        |
 | 12    | sondas, playtest, troca          | A5 final; ciclo 32 fase 5 concluída e fase 6 | aceite dos 16 fios              |
 
+### Marco jogável — depois da etapa 4 [PROPOSTA]
+
+O aceite do jogo inteiro só chega na etapa 12. Antes dele, um marco: o ano de 2027 jogado de
+ponta a ponta na casca nova, com criação, posse, Mesa, estatal e Congresso inteiro. O Diretor joga
+o ano antes de a etapa 5 começar. O que falhar ali pode reordenar as etapas 5 a 11 (decisão 9).
+
 A5 mede 20 → 100 → 513 → 594 agentes antes de ativar todos, como exige o mapa §6.1. A medida
 começa antes de povoar cada camada; a tabela final fica na etapa 12. Esta distribuição não
 dispensa pesquisas R1–R4 nem as provas de cada lote. Ela fixa onde cada peça entra no jogo.
@@ -501,13 +507,13 @@ O estilo fixado em 26/09 é **Apple + Football Manager + Civilization + Valorant
 ([ciclo 32](32-the-new-interface.md) §2). Apple define hierarquia e movimento; Football Manager
 organiza dados e fichas; Civilization dá escala ao hemiciclo e ao mapa; Valorant marca seleção e
 decisão. A posse define os tokens comuns. Liquid Glass ocupa só barra, menu e diálogo pequenos
-sobre fundo parado. A interface nova não usa `backdrop-filter`.
+sobre fundo parado. O desfoque de fundo (`backdrop-filter`) só existe nessas três superfícies e
+nunca sobre o que anima: no protótipo, ele descartou 32 quadros em 6 saídas (ciclo 32).
 
 Hover não altera estado. Movimento usa `transform` e `opacity`, respeita preferência por movimento
-reduzido e não anima centenas de retratos de uma vez. Retratos procedurais só são montados
-enquanto visíveis. O orçamento dos gestos comuns é de 20 ms por quadro com CPU 4× mais lenta
-(ciclo 32, §2). O pior quadro medido no hover do nome é 33 ms com CPU 4×: referência informada
-para reduzir no lote, não meta de desempenho. Cada lote registra trace, máquina e contagem de
+reduzido e não anima centenas de retratos de uma vez. Retratos só são montados enquanto visíveis. O orçamento dos gestos comuns é de 20 ms por quadro com CPU 4× mais lenta
+(ciclo 32, §2). O pior quadro medido no hover do nome é 33 ms com CPU 4× ([journal](../journal.md), entrada 87):
+referência para reduzir no lote, não meta de desempenho. Cada lote registra trace, máquina e contagem de
 quadros; uma regressão medida impede a troca da tela.
 
 | tela                  | o que o jogador faz                                       | componente central                          | leitura do motor                           | etapa |
@@ -558,20 +564,20 @@ presidencial; o componente não recompõe voto, saldo ou probabilidade.
 
 ## 8. Conteúdo, fonte e produção
 
-| conteúdo                                                | fonte e regra de entrada                                                                     | uso no jogo                                                  |
-| ------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| 38 ministérios                                          | Lei 14.600/2023; alterações posteriores: VERIFICAR antes do catálogo de 2027                 | cadeira, competência, custo, responsável e reforma.          |
-| 16 partidos                                             | [catálogo de partidos](../spec/the-parties.md) e [modelo da base](../spec/the-base-model.md) | bancada, coalizão, candidatura e eleição.                    |
-| 27 UFs                                                  | CF, arts. 18 e 32; população e PIB do IBGE: VERIFICAR ano, revisão e números antes de entrar | governos, serviços, renda e eleição regional.                |
-| orçamento e macro de 2027                               | pesquisas 01, 02 e 06 do repositório; revisão de premissas: VERIFICAR                        | caixa, preço, emprego, dívida e ponto de partida do balanço. |
-| estatais com nomes inventados                           | ADR 0003; [pesquisa 14](../research/14-the-state-energy-company.md) para Enerbras            | ativo, balanço, diretoria, participação e reação.            |
-| programas sociais reais                                 | lei de cada programa; MCMV, Lei 14.620/2023; FGTS, Lei 8.036/1990                            | público, fila, custo, execução e resultado.                  |
-| 33 notáveis                                             | [mapa](../spec/migration-map.md) §6.4, E1.0f; pessoas inventadas                             | convite, fama, preparo e afinidade com preço político.       |
-| seca, enchente e queimada                               | caso real com fonte e data: VERIFICAR antes de modelar frequência e custo                    | evento com local, dano, informação e pedido.                 |
-| greve de caminhoneiros, operação da PF, CPI e escândalo | caso real com fonte e data: VERIFICAR antes de modelar gatilho e consequência                | atores iniciam ou respondem conforme competência.            |
-| crise cambial                                           | série e caso real com fonte: VERIFICAR antes de calibrar choque                              | CORRENTE, LASTRO, informação e reação.                       |
-| vocabulário                                             | ADR 0002: gerado fora do turno, sem gerar efeito                                             | fala curta com estado e fonte já decididos pelo motor.       |
-| retratos                                                | geração procedural do [ciclo 32](32-the-new-interface.md), com semente e revisão visual      | identidade legível em ficha, hemiciclo e cena.               |
+| conteúdo                                                | fonte e regra de entrada                                                                                                                                | uso no jogo                                                  |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| 38 ministérios                                          | Lei 14.600/2023; alterações posteriores: VERIFICAR antes do catálogo de 2027                                                                            | cadeira, competência, custo, responsável e reforma.          |
+| 16 partidos                                             | [catálogo de partidos](../spec/the-parties.md) e [modelo da base](../spec/the-base-model.md)                                                            | bancada, coalizão, candidatura e eleição.                    |
+| 27 UFs                                                  | CF, arts. 18 e 32; população e PIB do IBGE: VERIFICAR ano, revisão e números antes de entrar                                                            | governos, serviços, renda e eleição regional.                |
+| orçamento e macro de 2027                               | pesquisas 01, 02 e 06 do repositório; revisão de premissas: VERIFICAR                                                                                   | caixa, preço, emprego, dívida e ponto de partida do balanço. |
+| estatais com nomes inventados                           | ADR 0003; [pesquisa 14](../research/14-the-state-energy-company.md) para Enerbras                                                                       | ativo, balanço, diretoria, participação e reação.            |
+| programas sociais reais                                 | lei de cada programa; MCMV, Lei 14.620/2023; FGTS, Lei 8.036/1990                                                                                       | público, fila, custo, execução e resultado.                  |
+| 33 notáveis                                             | [mapa](../spec/migration-map.md) §6.4, E1.0f; pessoas inventadas                                                                                        | convite, fama, preparo e afinidade com preço político.       |
+| seca, enchente e queimada                               | caso real com fonte e data: VERIFICAR antes de modelar frequência e custo                                                                               | evento com local, dano, informação e pedido.                 |
+| greve de caminhoneiros, operação da PF, CPI e escândalo | caso real com fonte e data: VERIFICAR antes de modelar gatilho e consequência                                                                           | atores iniciam ou respondem conforme competência.            |
+| crise cambial                                           | série e caso real com fonte: VERIFICAR antes de calibrar choque                                                                                         | CORRENTE, LASTRO, informação e reação.                       |
+| vocabulário                                             | ADR 0002: gerado fora do turno, sem gerar efeito                                                                                                        | fala curta com estado e fonte já decididos pelo motor.       |
+| retratos                                                | imagens que o Diretor gera no ChatGPT, fora do jogo (ADR 0002: conteúdo, nunca efeito); nenhuma lembra pessoa real (ADR 0003); quantidade na decisão 10 | identidade legível em ficha, hemiciclo e cena.               |
 
 Cada evento tem ficha com caso fonte, data, lugar, gatilho observável, agentes, conteúdo que
 cada um recebe, consequência e teste de plausibilidade. Um evento sem fonte pode existir como
@@ -601,20 +607,22 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
 
 ## 10. Riscos e contenção
 
-| risco                             | sinal verificável                                 | contenção                                                                              |
-| --------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Custo de 594+ atores              | A5 piora trace ou muda decisão com agendador      | medir nos quatro tamanhos do mapa §6.1; manter equivalência e povoar camadas por lote. |
-| Escopo sem fim                    | lote não fecha uma decisão jogável                | cortar por fio e prova; registrar o resto na tela de Próximas atualizações.            |
-| Fato jurídico ou econômico errado | número sem artigo, pesquisa ou data               | marcar VERIFICAR, pesquisar antes de regra; nenhum coeficiente nasce de palpite.       |
-| Tela refaz conta do motor         | prévia diverge da resolução                       | uma consulta em `src/application/` para tela e resolução; prova de identidade e visão. |
-| Desempenho regride                | trace, captura ou passeio piora após tela nova    | reter a antiga, medir material e retratos, corrigir antes da troca.                    |
-| Uma rota domina o jogo            | sonda vence por repetição sem reação proporcional | adversarial de 48 meses e playtest em direções opostas antes de calibrar.              |
+| risco                             | sinal verificável                                 | contenção                                                                                        |
+| --------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Custo de 594+ atores              | A5 piora trace ou muda decisão com agendador      | medir nos quatro tamanhos do mapa §6.1; manter equivalência e povoar camadas por lote.           |
+| Escopo sem fim                    | lote não fecha uma decisão jogável                | cortar por fio e prova; jogar o marco depois da etapa 4; o resto vai para Próximas atualizações. |
+| Fato jurídico ou econômico errado | número sem artigo, pesquisa ou data               | marcar VERIFICAR, pesquisar antes de regra; nenhum coeficiente nasce de palpite.                 |
+| Tela refaz conta do motor         | prévia diverge da resolução                       | uma consulta em `src/application/` para tela e resolução; prova de identidade e visão.           |
+| Desempenho regride                | trace, captura ou passeio piora após tela nova    | reter a antiga, medir material e retratos, corrigir antes da troca.                              |
+| Uma rota domina o jogo            | sonda vence por repetição sem reação proporcional | adversarial de 48 meses e playtest em direções opostas antes de calibrar.                        |
 
 ## 11. Decisões abertas para o Diretor do Jogo
 
 1. **Ordem das etapas:** a estatal vem antes do Congresso inteiro? Eleições vêm antes da
    imprensa? Este plano propõe essa ordem para dar primeiro consequência material e depois
-   ampliar os ritos; a aprovação fixa a sequência.
+   ampliar os ritos; a aprovação fixa a sequência. A fila do [handoff](../handoff.md) punha o
+   E1.0b, a eleição da Mesa, logo depois do E1.0a e antes da estatal; este plano o leva à etapa 4.
+   Aprovar a ordem aprova essa troca.
 2. **Nomes dos sistemas [PROPOSTA]:** URNA, TOGA, PACTO, MANCHETE e QUARTEL são nomes de
    trabalho. A decisão fixa os nomes antes dos módulos.
 3. **Vagas do STF:** usar idades reais dos ministros, sem nomes, com calendário real; ou sortear
@@ -624,10 +632,15 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
    balanço de 4 de janeiro de 2031 (CF, art. 82)?
 5. **Rota fora da lei:** ela entra na etapa 10? O [jogo em uma página](../spec/game-in-one-page.md)
    deixou essa rota fora do primeiro corte em 25/09; as partidas-teste exigem a cadeia no jogo
-   inteiro.
+   inteiro. Os itens 47 a 54 do checklist dependem desta resposta.
 6. **Horizonte do legado:** mostrar efeito até 2035 ou 2040 **[DESENHO]**? A escolha fixa o
    tempo de obra, dívida e instituições depois do mandato.
 7. **Modos de jogo:** oferecer só o cenário real de 2027 ou também uma Câmara personalizada?
    A Câmara personalizada muda a fonte dos votos iniciais e exige rótulo **[DESENHO]**.
 8. **Partida Milei:** quando, se houver ordem dele, entra a terceira régua? Até lá, Xi e Lee são
    o aceite; o exterior continua na atualização posterior.
+9. **Marco jogável:** o ano de 2027 jogado depois da etapa 4 entra como portão? Proposta deste
+   plano: sim, e o resultado dele pode reordenar as etapas 5 a 11.
+10. **Retratos:** um por pessoa com rosto (594 parlamentares, mais ministros, juízes e
+    governadores) ou um banco menor que se repete com roupa e cor diferentes? O tamanho do arquivo
+    e o custo de decodificar a imagem se medem no protótipo da posse antes da escolha.

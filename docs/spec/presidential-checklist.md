@@ -1,4 +1,4 @@
-# O checklist do Presidente — 54 coisas que ele pode fazer
+# O checklist do Presidente — 40 coisas que ele pode fazer, e 14 propostas
 
 > 25/09/2026, pedido dele: tudo o que um presidente do Brasil pode fazer, realista e fiel. A base é
 > a lista de poderes da Constituição (art. 84, conferido no Planalto em 25/09) e a
@@ -99,30 +99,31 @@ Ele perguntou se faltava algo, e faltava. Estes dez completam o cargo:
 Não entram como ação porque são reação a outros: CPI, escândalo e impeachment. O Presidente se
 defende deles com as ações acima.
 
-## Fora do checklist de 25/09: o que as partidas-teste pedem
+## Proposta do ciclo 33: o que as partidas-teste pedem
 
-As etapas abaixo são as do [plano do jogo inteiro](../cycles/33-the-whole-game.md) §6. Uma
+Estes 14 itens esperam o sim dele ao [plano do jogo inteiro](../cycles/33-the-whole-game.md); os itens 47
+a 54 dependem da decisão 5 do plano. As etapas são as do plano, §6. Uma
 tentativa fora da lei percorre destinatários, recusa ou adesão, reação e responsabilização; ela
 não recebe resultado automático (especificação mestra §17.5).
 
-| #   | o que ele faz                                             | como se faz de verdade                                                                                                              | fonte                                                            | etapa |
-| --- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----- |
-| 41  | fixar o salário de ministro e das carreiras               | subsídio de ministro por decreto legislativo do Congresso; carreiras por lei; teto é o subsídio do STF; salário de mercado pede PEC | CF, arts. 49 VIII e 37 XI                                        | 4, 9  |
-| 42  | criar programa de moradia e mexer no FGTS                 | lei; o empregador deposita 8% no FGTS; o MCMV dá a rota do programa                                                                 | Lei 8.036/1990, art. 15; Lei 14.620/2023                         | 9     |
-| 43  | atrair investimento                                       | ApexBrasil e zonas de exportação; incentivo fiscal exige compensação                                                                | Lei 11.508/2007; LRF, art. 14                                    | 9     |
-| 44  | mudar o sistema eleitoral                                 | sair do proporcional pede PEC; mudança só vale para eleição mais de um ano depois; MP é vedada                                      | CF, arts. 45, 16 e 62 §1º I a                                    | 6     |
-| 45  | processar um crítico                                      | queixa-crime ou indenização; o juiz decide                                                                                          | CP, arts. 138–141                                                | 7     |
-| 46  | fazer campanha cívica                                     | ato de gestão com publicidade institucional, sem promoção pessoal                                                                   | CF, art. 37 §1º                                                  | 7, 9  |
-| 47  | usar PF ou ABIN contra adversários (tentativa)            | não há rito presidencial para escolher alvo; agente pode recusar ou denunciar; há responsabilização                                 | Lei 13.869/2019; CF, art. 85                                     | 10    |
-| 48  | descumprir decisão judicial (tentativa)                   | executor pode recusar; Congresso e Justiça reagem                                                                                   | Lei 1.079/1950, art. 12                                          | 10    |
-| 49  | censurar imprensa ou exigir licença de jornal (tentativa) | veículo, Justiça e Congresso reagem; não existe licença obrigatória de jornal                                                       | CF, art. 220 §§2º e 6º                                           | 10    |
-| 50  | prender sem ordem judicial (tentativa)                    | policial pode recusar; pessoa presa pode pedir habeas corpus                                                                        | CF, art. 5º LXI e LXVIII                                         | 10    |
-| 51  | adiar eleição ou fechar o Congresso (tentativa)           | TSE, Mesas, Forças e estados podem recusar a ordem e buscar responsabilização                                                       | CP, arts. 359-L e 359-M; Lei 14.197/2021                         | 10    |
-| 52  | comprar votos no Congresso (tentativa)                    | parlamentar pode recusar ou denunciar; o MP pode investigar                                                                         | CP, art. 333; AP 470, STF, 2012                                  | 10    |
-| 53  | fazer banco público bancar o Tesouro (tentativa)          | diretoria pode recusar; operação de crédito é vedada e pode levar a responsabilização                                               | LRF, art. 36; Lei 1.079/1950, arts. 10 e 11; impeachment de 2016 | 10    |
-| 54  | convocar outra constituinte (tentativa)                   | a Constituição prevê emenda, não convocação presidencial; a tentativa abre a cadeia de ruptura                                      | CF, art. 60                                                      | 10    |
+| #   | o que ele faz                                             | como se faz de verdade                                                                                                                    | fonte                                                            | etapa |
+| --- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----- |
+| 41  | pedir o salário de ministro e propor o das carreiras      | o Congresso fixa o de ministro por decreto legislativo, sem sanção; carreira por lei de iniciativa dele; acima do teto do STF, só com PEC | CF, arts. 49 VIII, 61 §1º II a e 37 XI                           | 4, 9  |
+| 42  | criar programa de moradia e mexer no FGTS                 | lei; o empregador deposita 8% no FGTS; o MCMV dá a rota do programa                                                                       | Lei 8.036/1990, art. 15; Lei 14.620/2023                         | 9     |
+| 43  | atrair investimento                                       | ApexBrasil e zonas de exportação; incentivo fiscal exige compensação                                                                      | Lei 11.508/2007; LRF, art. 14                                    | 9     |
+| 44  | mudar o sistema eleitoral                                 | sair do proporcional pede PEC; mudança só vale para eleição mais de um ano depois; MP é vedada                                            | CF, arts. 45, 16 e 62 §1º I a                                    | 6     |
+| 45  | processar um crítico                                      | queixa-crime ou indenização; o juiz decide                                                                                                | CP, arts. 138–141                                                | 7     |
+| 46  | fazer campanha cívica                                     | ato de gestão com publicidade institucional, sem promoção pessoal                                                                         | CF, art. 37 §1º                                                  | 7, 9  |
+| 47  | usar PF ou ABIN contra adversários (tentativa)            | não há rito presidencial para escolher alvo; agente pode recusar ou denunciar; há responsabilização                                       | Lei 13.869/2019; CF, art. 85                                     | 10    |
+| 48  | descumprir decisão judicial (tentativa)                   | executor pode recusar; Congresso e Justiça reagem                                                                                         | Lei 1.079/1950, art. 12                                          | 10    |
+| 49  | censurar imprensa ou exigir licença de jornal (tentativa) | veículo, Justiça e Congresso reagem; não existe licença obrigatória de jornal                                                             | CF, art. 220 §§2º e 6º                                           | 10    |
+| 50  | prender sem ordem judicial (tentativa)                    | policial pode recusar; pessoa presa pode pedir habeas corpus                                                                              | CF, art. 5º LXI e LXVIII                                         | 10    |
+| 51  | adiar eleição ou fechar o Congresso (tentativa)           | TSE, Mesas, Forças e estados podem recusar a ordem e buscar responsabilização                                                             | CP, arts. 359-L e 359-M; Lei 14.197/2021                         | 10    |
+| 52  | comprar votos no Congresso (tentativa)                    | parlamentar pode recusar ou denunciar; o MP pode investigar                                                                               | CP, art. 333; AP 470, STF, 2012                                  | 10    |
+| 53  | fazer banco público bancar o Tesouro (tentativa)          | diretoria pode recusar; operação de crédito é vedada e pode levar a responsabilização                                                     | LRF, art. 36; Lei 1.079/1950, arts. 10 e 11; impeachment de 2016 | 10    |
+| 54  | convocar outra constituinte (tentativa)                   | a Constituição prevê emenda, não convocação presidencial; a tentativa abre a cadeia de ruptura                                            | CF, art. 60                                                      | 10    |
 
 ## O que o jogo cobre hoje
 
-5 de 54 itens: 8 em parte, 12, 13, 14 e 15. A abertura acrescenta 5 (1, 2, 5, 6 e 7), e a estatal
+5 de 40 itens: 8 em parte, 12, 13, 14 e 15. A abertura acrescenta 5 (1, 2, 5, 6 e 7), e a estatal
 mais 7 (3, 9, 10, 17, 19, 20 e 24). O resto entra em ondas, pela gramática, depois da estatal.

@@ -9427,3 +9427,14 @@ O checklist presidencial passa de 40 para 54 itens; os itens 41 a 54 têm fonte 
 O plano distribui 5 sistemas propostos, 17 telas e os lotes A1–F, E1 e o ciclo 32.
 As tentativas fora da lei recebem destinatário, recusa, reação e desfecho possível.
 O plano espera o sim do Diretor antes de virar a ordem de construção.
+
+### 98 · O plano do jogo inteiro, conferido — 26/09
+
+O Claude conferiu o ciclo 33 contra a Constituição, os documentos e o código.
+Três erros de lei foram corrigidos. Ministério não se cria por decreto (CF, art. 84 VI a).
+O salário de ministro é fixado pelo Congresso, sem sanção (art. 49 VIII).
+Pagar terreno ocioso em títulos é poder do prefeito (art. 182 §4º III).
+O plano ganhou um marco jogável depois da etapa 4 e as decisões 9 e 10.
+A troca de ordem do E1.0b virou pergunta explícita na decisão 1.
+Os itens 41 a 54 do checklist ficam como proposta até o sim dele.
+Os retratos passam a ser imagens geradas por ele no ChatGPT, fora do jogo.
