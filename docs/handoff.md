@@ -31,8 +31,7 @@
   depois do F5. Medido em 01/10: uma frase da criação aparece inteira aos 130 ms, antes da
   animação; o brilho de fundo termina numa borda em y = 800, porque a tela tem 1280×800 fixos;
   as fontes vêm do Google Fonts com troca tardia; com a CPU 4 vezes mais lenta, a montagem trava
-  158 ms e a animação, 55 ms; 49 erros de template no console. Proposta de refazer a posse
-  esperando a resposta dele.
+  158 ms e a animação, 55 ms; 49 erros de template no console. Ele escolheu refazer: [ciclo 34](cycles/34-the-posse-rebuilt.md).
 - **testar a posse:** `npm run serve` e <http://127.0.0.1:5173/tmp/build/posse.html>.
 - **direção (25/09):** sandbox ideológico com regras reais; realismo acima de tudo. Os documentos
   de design, do mais geral ao mais concreto: [especificação mestra](spec/master-spec.md) 1.1
@@ -83,8 +82,8 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 
 **Agora (01/10):** a limpeza fechou; funcionalidades novas seguem suspensas.
 
-1. **A posse nova**, refeita ou consertada conforme a resposta dele à proposta de 01/10 (bloco
-   acima). Os achados do teste dele, reproduzidos, entram antes de qualquer ampliação.
+1. **[Ciclo 34](cycles/34-the-posse-rebuilt.md), a posse refeita** (decisão dele em 01/10: "faça o que
+   achar melhor"). Seis fases; começa pela fundação. Os achados do teste dele entram antes de ampliar.
 2. **Merge de `caixa-de-entrada` no `main`**, depois do teste (aprovado em 01/10).
 3. **[Governo variável](spec/dynamic-government.md) §7**, nesta ordem: valor político da
    estrutura, currículos nas fichas, decomposição jurídica, rito da MP, integração.

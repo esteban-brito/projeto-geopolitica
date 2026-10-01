@@ -12,6 +12,7 @@ no arquivo, o que aconteceu está no [`journal.md`](../journal.md). Estado se l�
 
 | #   | arquivo                                                               | o quê                                                                             | situação                                           |
 | --- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------- |
+| 34  | [a posse refeita](34-the-posse-rebuilt.md)                            | a posse como primeira tela da interface nova, sobre o motor                       | planejado em 01/10                                 |
 | 33  | [o jogo inteiro](33-the-whole-game.md)                                | etapas, ações, atores, telas e aceite pelas partidas Xi e Lee                     | aprovado em 26/09; plano em vigor                  |
 | 32  | [a interface nova](32-the-new-interface.md)                           | a interface refeita sobre o motor, no estilo Apple + FM + Civilization + Valorant | planejado em 26/09                                 |
 | 31  | [o corte do bimestre](31-the-bimonthly-cut.md)                        | E0 v1: ministros no contingenciamento                                             | commitado; pausado em 25/09 depois do playtest     |
