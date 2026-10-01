@@ -17,3 +17,7 @@ assets-source/
 
 # Artefatos do navegador de medicao — mesma familia de `tmp/`: evidencia, nao fonte.
 .playwright-mcp/
+
+# Runtime do canvas do claude.ai: React (MIT) mais código sem licença declarada. Fica no disco,
+# fora do repositório público; sem ele o protótipo da posse não abre.
+vendor/posse/rt/

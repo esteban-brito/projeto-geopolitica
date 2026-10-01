@@ -15,11 +15,14 @@ npm run serve
 
 F5 recomeça a posse do zero.
 
+O runtime do canvas (`vendor/posse/rt/`) não vai para o Git: é código do claude.ai sem licença
+declarada, e o repositório é público. Uma cópia está em `tmp/history/posse/rt/`.
+
 ## De onde vem cada parte
 
 | caminho                          | o que é                                                                     |
 | -------------------------------- | --------------------------------------------------------------------------- |
-| `vendor/posse/`                  | a tela do Claude, o runtime do canvas e os retratos; bytes preservados      |
+| `vendor/posse/`                  | a tela do Claude e os retratos; o runtime do canvas fica fora do Git        |
 | `tools/prepare-posse.mjs`        | troca trechos da tela original pelas consultas ao motor e à estrutura       |
 | `prototypes/posse/browser.mjs`   | a sessão em memória que a tela consulta (`PosseEngine`)                     |
 | `prototypes/posse/bridge.mjs`    | traduz partidos e pastas do protótipo para os IDs do motor                  |
@@ -28,7 +31,7 @@ F5 recomeça a posse do zero.
 
 A fonte da tela é `vendor/posse/project/Posse.dc.html`. Ela foi montada por 15 patches sobre
 `Hibrido.dc.html`. A cadeia está em `tmp/history/posse/` e em
-`docs/evidence/posse-v2o-source.zip`, e em 01/10 remontou o arquivo idêntico byte a byte. Para
+`tmp/history/posse-v2o-source.zip`, e em 01/10 remontou o arquivo idêntico byte a byte. Para
 remontar, copie a cadeia de volta para `tmp/posse/`: o `patch-v2l.mjs` procura
 `tmp/asset-sources/portraits/` a partir dali.
 
