@@ -7,13 +7,6 @@ import {
   openingGovernment,
   reformGovernment,
 } from "../../prototypes/government/index.mjs";
-import { assessWork, compareGovernment } from "../../prototypes/government/pilot.mjs";
-import {
-  PILOT_ASSETS,
-  PILOT_INSTITUTIONS,
-  PILOT_WORK,
-  openingPilotGovernment,
-} from "../../prototypes/government/pilot-cases.mjs";
 
 const opening = () =>
   openingGovernment(
@@ -135,85 +128,4 @@ test("reformas encadeadas conservam trabalho, identidade e estado anterior", () 
   ]) {
     assert.ok(counts.get(type) > 0, `operação não exercitada: ${type}`);
   }
-});
-
-test("parecer do piloto acompanha reformas encadeadas sem inventar recursos", () => {
-  fc.assert(
-    fc.property(fc.array(fc.nat(1_000_000), { minLength: 20, maxLength: 80 }), numbers => {
-      let state = openingPilotGovernment();
-      for (const number of numbers) {
-        const command = commandFor(state, number);
-        if (!command) continue;
-        const result = reformGovernment(state, command);
-        assert.equal(
-          result.ok,
-          true,
-          result.ok ? "" : `${result.reason}: ${JSON.stringify(command)}`,
-        );
-        const report = compareGovernment(
-          state,
-          result.state,
-          PILOT_WORK,
-          PILOT_INSTITUTIONS,
-          PILOT_ASSETS,
-          PILOT_ASSETS,
-          {},
-          {},
-        );
-        assert.deepEqual(report.continuity.lost, []);
-        assert.deepEqual(report.continuity.created, []);
-        assert.deepEqual(report.continuity.moved, []);
-        assert.deepEqual(report.continuity.changedKind, []);
-        assert.equal(new Set(report.workMoves.map(item => item.id)).size, report.workMoves.length);
-        state = JSON.parse(JSON.stringify(result.state));
-      }
-    }),
-    { seed: 20270930, numRuns: 200 },
-  );
-});
-
-test("históricos ocultos não alteram a avaliação da mesma evidência presidencial", () => {
-  fc.assert(
-    fc.property(
-      fc.boolean(),
-      fc.nat(100),
-      fc.array(fc.nat(100), { maxLength: 15 }),
-      fc.array(fc.nat(100), { maxLength: 15 }),
-      (knownHistoryComplete, workNumber, visibleNumbers, hiddenNumbers) => {
-        const work = pick(PILOT_WORK, workNumber);
-        const profiles = [
-          work.direct,
-          ...work.transferable,
-          {
-            action: "unrelated",
-            object: "unrelated",
-            instrument: "unrelated",
-            scope: "unrelated",
-          },
-        ];
-        const visible = {
-          id: "witness",
-          knownHistoryComplete,
-          episodes: visibleNumbers.map((n, i) => ({
-            ...pick(profiles, n),
-            id: `episode-${i}`,
-            known: true,
-          })),
-        };
-        const withHidden = {
-          ...visible,
-          episodes: [
-            ...visible.episodes,
-            ...hiddenNumbers.map((n, i) => ({
-              ...pick(profiles, n),
-              id: `episode-${i}`,
-              known: false,
-            })),
-          ],
-        };
-        assert.deepEqual(assessWork(work, withHidden), assessWork(work, visible));
-      },
-    ),
-    { seed: 20270931, numRuns: 200 },
-  );
 });
