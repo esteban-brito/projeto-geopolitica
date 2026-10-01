@@ -80,13 +80,26 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 
 ## Fila, em ordem
 
-**Agora (01/10):** a limpeza fechou; funcionalidades novas seguem suspensas.
+**Agora (01/10): limpeza e organização**, ordem dele ("o principal problema é a desorganização,
+despadronização, desarmonia"). Fases, cada uma com commit:
 
-1. **[Ciclo 34](cycles/34-the-posse-rebuilt.md), a posse refeita** (decisão dele em 01/10: "faça o que
-   achar melhor"). Seis fases; começa pela fundação. Os achados do teste dele entram antes de ampliar.
-2. **Merge de `caixa-de-entrada` no `main`**, depois do teste (aprovado em 01/10).
-3. **[Governo variável](spec/dynamic-government.md) §7**, nesta ordem: valor político da
-   estrutura, currículos nas fichas, decomposição jurídica, rito da MP, integração.
+1. **Um contrato só para os agentes:** `AGENTS.md` absorve leis, fluxo, delegação e mapa do código;
+   `CLAUDE.md` e `GEMINI.md` importam o contrato; saem `docs/agent-brief.md`,
+   `.agents/rules/co-development.md` e `.codex/` (Codex fora do projeto em 01/10).
+2. **Uma autoridade por assunto:** cabeçalho de situação em cada especificação; quatro superadas
+   para o arquivo; ciclos 01–31 para `docs/archive/cycles/`; ciclos 32–34 atualizados; índice das
+   pesquisas; journal por mês; handoff curto.
+3. **Um padrão de escrita** nos documentos: cabeçalho por tipo, acentos, "o Diretor" para ele.
+4. **Acentos no código:** comentários e textos de prova, provado por `prose-only`, com guarda nova.
+5. **Raiz e disco.**
+6. **Elenco inspirado na vida real:** nomes inventados, papel, trajetória, temperamento público e
+   ideologia inspirados em figuras reais (por exemplo, quem faz no STF o papel de Alexandre de
+   Moraes); ADR 0003 revisto; pesquisa de quem entra.
+7. **As partidas Xi e Lee escritas** como se ele jogasse (estilo Geopolitical Simulator, Democracy
+   4, Football Manager), no jogo pronto, com desfecho realista mesmo que fracassem; servem de
+   régua, leitura e roteiro de teste.
+
+Depois disso: o [ciclo 34](cycles/34-the-posse-rebuilt.md), reescrito para a posse dentro do jogo.
 
 **Depois, o plano do jogo inteiro** (ciclo 33), que não é requisito para testar o protótipo:
 
