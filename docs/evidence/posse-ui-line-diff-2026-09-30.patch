@@ -1,0 +1,411 @@
+diff --git a/tmp/posse/live.html b/tmp/posse/engine.html
+index 510e9ed..8cfd117 100644
+--- a/tmp/posse/live.html
++++ b/tmp/posse/engine.html
+@@ -3,10 +3,10 @@
+ <head>
+ <meta charset="utf-8">
+ <title>A posse</title>
+-<script src="rt/artifact-type/dc-runtime.js"></script><style>body{margin:0;background:#070b14}</style>
++<script type="module" src="../../prototypes/posse/browser.mjs"></script><style>body{margin:0;background:#070b14}</style>
+ </head>
+ <body>
+-<x-dc>
++<x-dc hidden>
+ <helmet>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet">
+@@ -185,7 +185,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+ </div>
+ 
+ <div class="stack">
+-<span class="eyebrow">Votos firmes · estimativa</span>
++<span class="eyebrow">Base estrutural · estimativa</span>
+ <div style="display: flex; align-items: center; gap: 16px;">
+ <span class="figure num"><span class="big strong">{{firm}}</span><span class="caption">de 513</span></span>
+ <div class="meter" style="flex-grow: 1;"><i class="prov" style="width: {{basePct}};"></i><i style="width: {{firmPct}};"></i><b style="left: 50.1%;"></b><b style="left: 60.04%;"></b></div>
+@@ -279,6 +279,8 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+ <div class="enter" style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 0 20px 20px;">
+ <div class="scroll" style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line);">
+ <span class="label" style="flex-shrink: 0;">{{question}}</span>
++<sc-if value="{{hasOfficeName}}" hint-placeholder-val="{{ false }}"><label class="stack" style="gap: 6px;"><span class="caption">Nome do ministério</span><input class="field" data-f="office-name" type="text" maxlength="120" value="{{officeName}}" onChange="{{setOfficeName}}"></label></sc-if>
++<sc-if value="{{hasDestinationSearch}}" hint-placeholder-val="{{ false }}"><label class="stack" style="gap: 6px;"><span class="caption">Buscar nas atribuições</span><input class="field" data-f="destination-query" type="text" placeholder="Ex.: segurança e não alimentar" value="{{destinationQuery}}" onChange="{{setDestinationQuery}}"></label></sc-if>
+ <sc-if value="{{hasProposal}}" hint-placeholder-val="{{ false }}">
+ <div class="plist" style="flex-shrink: 0;">
+ <sc-for list="{{proposal}}" as="p" hint-placeholder-count="3">
+@@ -529,20 +531,10 @@ const SEATS = [
+ ];
+ const PRESIDENCY = ['casa-civil', 'secretaria-geral', 'relacoes-institucionais', 'comunicacao', 'gsi', 'agu'];
+ const CREATE = [
+-  { id: 'seguranca', label: 'Segurança Pública', code: 'SEG', from: 'justica', part: 'Polícia Federal e segurança pública', hint: 'Leva a Polícia Federal e a segurança pública. Existiu em 2018.' },
+-  { id: 'aviacao', label: 'Aviação Civil', code: 'AVI', from: 'portos', part: 'aviação civil e aeroportos', hint: 'Leva a aviação civil e os aeroportos. Existiu até 2016.' },
++  { id: 'seguranca', label: 'Segurança Pública', code: 'SEG', from: 'justica', part: 'Polícia Federal e segurança pública', hint: 'Leva a Polícia Federal e a segurança pública.' },
++  { id: 'aviacao', label: 'Aviação Civil', code: 'AVI', from: 'portos', part: 'aviação civil e aeroportos', hint: 'Leva a aviação civil e os aeroportos.' },
+   { id: 'juventude', label: 'Juventude', code: 'JUV', from: 'secretaria-geral', part: 'políticas para a juventude', hint: 'Leva as políticas para a juventude.' }
+ ];
+-const HIST = [
+-  { set: ['fazenda', 'planejamento', 'industria', 'trabalho'], name: 'Economia', note: 'Em 2019, Fazenda, Planejamento, Indústria e Trabalho viraram o Ministério da Economia.' },
+-  { set: ['cidades', 'integracao'], name: 'Desenvolvimento Regional', note: 'Em 2019, Cidades e Integração viraram o Ministério do Desenvolvimento Regional.' },
+-  { set: ['cultura', 'esporte', 'social'], name: 'Cidadania', note: 'Em 2019, Cultura, Esporte e Desenvolvimento Social viraram o Ministério da Cidadania.' },
+-  { set: ['transportes', 'portos'], name: 'Infraestrutura', note: 'Em 2019, transportes, portos e aviação civil viraram o Ministério da Infraestrutura.' },
+-  { set: ['direitos', 'mulheres'], name: 'Mulher, Família e Direitos Humanos', note: 'Em 2019, Direitos Humanos virou o Ministério da Mulher, da Família e dos Direitos Humanos.' }
+-];
+-const DEST = { 'casa-civil': 'secretaria-geral', fazenda: 'planejamento', planejamento: 'fazenda', 'relacoes-institucionais': 'casa-civil', justica: 'direitos', defesa: 'gsi', saude: 'social', educacao: 'ciencia', 'secretaria-geral': 'casa-civil', comunicacao: 'casa-civil', gsi: 'defesa', agricultura: 'agrario', industria: 'fazenda', previdencia: 'trabalho', cidades: 'integracao', cultura: 'social', ciencia: 'educacao', comunicacoes: 'ciencia', agrario: 'social', integracao: 'cidades', social: 'direitos', direitos: 'justica', empreendedorismo: 'industria', esporte: 'social', gestao: 'planejamento', igualdade: 'justica', 'meio-ambiente': 'agricultura', minas: 'industria', mulheres: 'justica', pesca: 'agricultura', portos: 'transportes', indigenas: 'justica', exteriores: 'casa-civil', trabalho: 'fazenda', transportes: 'portos', turismo: 'industria', cgu: 'casa-civil', seguranca: 'justica', aviacao: 'transportes', juventude: 'secretaria-geral' };
+-const SPLIT = { trabalho: { 'registro sindical': 'justica', 'economia solidária': 'social' }, justica: { 'Polícia Federal e segurança pública': 'gsi', 'defesa do consumidor': 'fazenda', 'migrações e refúgio': 'exteriores', 'combate à corrupção e à lavagem de dinheiro': 'cgu' }, saude: { 'pesquisa em saúde': 'ciencia' }, exteriores: { 'promoção comercial no exterior': 'industria' } };
+-const PRE = { fazenda: 'Em 2019, Fazenda e Planejamento ficaram num ministério só, o da Economia.', transportes: 'Em 2019, transportes, portos e aviação civil ficaram num ministério só, o da Infraestrutura.', planejamento: 'Em 2019, o Planejamento foi para o Ministério da Economia, junto com a Fazenda.', industria: 'Em 2019, a Indústria foi para o Ministério da Economia, junto com a Fazenda.', trabalho: 'Foi o que aconteceu em 2019: o Trabalho foi repartido entre Justiça, Cidadania e Economia.', cultura: 'Em 2019, a Cultura foi para o Ministério da Cidadania, que cuidava do desenvolvimento social.', esporte: 'Em 2019, o Esporte foi para o Ministério da Cidadania, que cuidava do desenvolvimento social.', cidades: 'Em 2019, Cidades e Integração viraram um ministério só.', integracao: 'Em 2019, Cidades e Integração viraram um ministério só.', comunicacoes: 'Em 2016, as Comunicações foram para o Ministério da Ciência e Tecnologia.', agrario: 'Em 2016, o Desenvolvimento Agrário foi para o Desenvolvimento Social.', direitos: 'Em 2016, Direitos Humanos, Mulheres e Igualdade Racial foram para o Ministério da Justiça.', mulheres: 'Em 2016, Direitos Humanos, Mulheres e Igualdade Racial foram para o Ministério da Justiça.', igualdade: 'Em 2016, Direitos Humanos, Mulheres e Igualdade Racial foram para o Ministério da Justiça.', comunicacao: 'Em 2016, a Secretaria de Comunicação foi para a Casa Civil.', pesca: 'Em 2019, a pesca passou para o Ministério da Agricultura.', portos: 'Em 2016, portos e aviação civil foram para o Ministério dos Transportes.', aviacao: 'Em 2016, portos e aviação civil foram para o Ministério dos Transportes.', gestao: 'Até 2019, Planejamento e Gestão eram um ministério só.', 'relacoes-institucionais': 'Em 2019, a articulação com o Congresso passou para a Casa Civil.', seguranca: 'Em 2019, a Segurança Pública voltou para a Justiça.' };
+ const LABEL = {}, CODE = {}, OFFICIAL = {}, PARTS = {};
+ SEATS.forEach(function (s) { LABEL[s[0]] = s[1]; CODE[s[0]] = s[2]; OFFICIAL[s[0]] = s[3]; PARTS[s[0]] = s[4]; });
+ CREATE.forEach(function (c) { LABEL[c.id] = c.label; CODE[c.id] = c.code; OFFICIAL[c.id] = c.label; PARTS[c.id] = [c.part]; });
+@@ -592,7 +584,6 @@ const ICON = {
+ const ICON_VB = {"casa-civil":"1.2 1.7 21.6 21.6","fazenda":"1.2 1.2 21.6 21.6","planejamento":"1.2 1.2 21.6 21.6","relacoes-institucionais":"3.84 3.84 16.32 16.32","justica":"-0.6 -0.6 25.2 25.2","defesa":"1.2 1.2 21.6 21.6","saude":"1.2 1.2 21.6 21.6","educacao":"0 -1.25 24 24","secretaria-geral":"0 0 24 24","comunicacao":"1.13 0.77 22.45 22.45","gsi":"1.8 2.3 20.4 20.4","agu":"1.7 1.2 21.6 21.6","agricultura":"2.4 3.4 19.2 19.2","industria":"1.2 1.7 21.6 21.6","previdencia":"1.2 1.2 21.6 21.6","cidades":"1.2 1.7 21.6 21.6","cultura":"0.7 1.2 21.6 21.6","ciencia":"1.2 1.2 21.6 21.6","comunicacoes":"0.72 1.72 22.56 22.56","agrario":"1.8 2.3 20.4 20.4","integracao":"1.2 1.2 21.6 21.6","social":"2.4 2.66 19.2 19.2","direitos":"1.2 1.2 21.61 21.61","empreendedorismo":"1.2 1.2 21.6 21.6","esporte":"1.8 2.3 20.4 20.4","gestao":"2.4 2.4 19.2 19.2","igualdade":"1.2 1.2 21.61 21.61","meio-ambiente":"3.5 3 18 18","minas":"-0.5 0 24 24","mulheres":"1.8 2.3 20.4 20.4","pesca":"1.2 1.2 21.6 21.6","portos":"1.2 1.2 21.6 21.6","indigenas":"1.2 1.2 21.6 21.6","exteriores":"1.2 1.2 21.61 21.61","trabalho":"0 0 24 24","transportes":"0.1 1.1 22.8 22.8","turismo":"0 0 24 24","cgu":"2.3 2.3 20.4 20.4","seguranca":"0.24 -0.56 23.52 23.52","aviacao":"0 0 24 24","juventude":"1.2 1.2 21.61 21.61"};
+ const CORE = ['casa-civil', 'fazenda', 'planejamento', 'relacoes-institucionais', 'justica', 'defesa', 'saude', 'educacao'];
+ const JOB = { 'casa-civil': 'Coordena os ministérios e analisa tudo o que chega para você assinar.', fazenda: 'Cuida de impostos, dívida pública, crédito e bancos.', planejamento: 'Monta o orçamento federal e avalia os programas do governo.', 'relacoes-institucionais': 'Coordena a relação do governo com o Congresso, os estados e os municípios.', justica: 'Cuida da Polícia Federal, da política judiciária e da defesa do consumidor.', defesa: 'Dirige as Forças Armadas. O comando supremo é seu, pela Constituição.', saude: 'Coordena o SUS e a vigilância sanitária.', educacao: 'Cuida da educação básica, das universidades federais e da avaliação do ensino.' };
+-const PARTNERS = { fazenda: ['planejamento', 'industria', 'trabalho'], planejamento: ['fazenda', 'gestao'], industria: ['empreendedorismo', 'fazenda', 'exteriores'], empreendedorismo: ['industria'], cidades: ['integracao'], integracao: ['cidades', 'agrario'], portos: ['transportes'], transportes: ['portos'], pesca: ['agricultura', 'meio-ambiente'], agrario: ['agricultura', 'social'], igualdade: ['direitos'], mulheres: ['direitos'], direitos: ['mulheres', 'igualdade', 'justica'], indigenas: ['direitos', 'meio-ambiente', 'justica'], esporte: ['cultura', 'social', 'educacao'], cultura: ['social', 'turismo', 'educacao'], turismo: ['cultura', 'industria'], social: ['cultura', 'esporte', 'direitos'], previdencia: ['trabalho', 'fazenda'], trabalho: ['previdencia', 'fazenda', 'justica'], comunicacoes: ['ciencia'], ciencia: ['comunicacoes', 'educacao'], gestao: ['planejamento'], cgu: ['justica', 'casa-civil'], 'secretaria-geral': ['casa-civil', 'relacoes-institucionais'], comunicacao: ['secretaria-geral', 'casa-civil'], 'relacoes-institucionais': ['secretaria-geral', 'casa-civil'], 'casa-civil': ['secretaria-geral', 'relacoes-institucionais'], gsi: ['defesa', 'casa-civil'], defesa: ['gsi'], minas: ['industria'], 'meio-ambiente': ['agricultura', 'indigenas'], agricultura: ['pesca', 'agrario'], justica: ['seguranca', 'direitos'], seguranca: ['justica'], saude: ['social'], educacao: ['ciencia', 'cultura'], exteriores: ['industria'], aviacao: ['portos', 'transportes'], juventude: ['secretaria-geral', 'esporte'] };
+ const NOTABLES = [
+   ['Rafa Torquato', 'Craque da seleção', ['esporte'], 5, 1, 60, 45, 'M', 'Vaidoso e muito popular. Não quer largar o clube na Europa.'],
+   ['Dora Maciel', 'Campeã olímpica de vôlei', ['esporte'], 3, 3, 50, 60, 'F', 'Disciplinada e respeitada. Aguenta pressão.'],
+@@ -924,8 +915,6 @@ const T = {
+   refused: function (p) { return (p.fem ? 'A ' : 'O ') + p.tag + ' não aceita entrar no governo. O partido pensa muito diferente do seu.'; },
+   full: 'Todos os ministérios já têm ministro.',
+   base: function (f, b) { return ' Agora são ' + f + ' votos firmes e uns ' + b + ' prováveis.'; },
+-  noPrecedent: 'Não há caso real parecido. A Casa Civil escolheu os ministérios de assunto mais próximo.',
+-  reaction: function (who) { return ' Quem depende deste ministério vai reagir' + (who ? ', e ' + who + ' perde o cargo.' : '.'); },
+   pecEnd: 'A proposta de emenda para extinguir a AGU vai ao Congresso depois da posse. Até lá, ela segue funcionando.',
+   pecMerge: 'A proposta de emenda para juntar a AGU a outro ministério vai ao Congresso depois da posse. Até lá, ela segue como está.',
+   pecOff: 'A proposta de emenda sobre a AGU foi retirada.',
+@@ -1036,6 +1025,7 @@ class Component extends DCLogic {
+   constructor(props) {
+     super(props);
+     this.state = { pec: {}, invites: {}, phase: 'create', pres: { name: '', fem: false, birth: '', uf: '', party: '', path: '', face: 0 }, sel: 'casa-civil', hover: null, hoverP: null, decided: {}, editing: false, pending: null, filter: 'all', sort: null, picks: {}, into: {}, names: {}, created: [], gone: {}, last: '' };
++    this.state = globalThis.PosseEngine.start(this.state);
+   }
+   local(e) {
+     const t = e && e.currentTarget;
+@@ -1158,7 +1148,7 @@ class Component extends DCLogic {
+     if (this._fp !== party) {
+       const p = partyOf(party), ch = Math.round(((this._chance || {})[party] || 0) * 100), st = STANCE[(this._stance || {})[party]] || '', c = el.querySelector('[data-td]');
+       el.querySelector('[data-tt]').textContent = p.tag + ' · ' + p.name;
+-      el.querySelector('[data-tl]').textContent = st + ' · ' + p.seats + ' deputados · vota com o governo ' + ch + '% das vezes';
++      el.querySelector('[data-tl]').textContent = globalThis.PosseEngine.current.status === 'unknown' ? p.seats + ' deputados · ' + globalThis.PosseEngine.current.reason : st + ' · ' + p.seats + ' deputados · vota com o governo ' + ch + '% das vezes';
+       c.setAttribute('cx', (24 + (p.econ - p.lib) / 100 * 22).toFixed(1));
+       c.setAttribute('cy', (46 - (p.econ + p.lib) / 100 * 22).toFixed(1));
+       this._tipSize = { w: el.firstElementChild.offsetWidth, h: el.firstElementChild.offsetHeight };
+@@ -1216,18 +1206,21 @@ class Component extends DCLogic {
+     const path = PATHS.find(function (x) { return x.id === P.path; });
+     const lacks = [!P.name.trim() && 'nome', !ageOk && 'data de nascimento válida', !P.uf && 'estado', !P.party && 'partido', !P.path && 'trajetória'].filter(Boolean);
+     const putPres = function (patch) { set({ pres: Object.assign({}, S.pres, patch) }); };
++    const government = globalThis.PosseEngine.structure(S, LABEL);
+     const created = S.created;
++    const baseLabel = function (id) { const birth = created.find(function (c) { return c.id === id; }); return LABEL[id] || (birth && birth.label) || id; };
++    const personSeat = function (id) { const birth = created.find(function (c) { return c.id === id; }); return birth ? birth.profile || birth.from : id; };
+     const made = function (id) { return created.some(function (c) { return c.id === id; }); };
+     const all = SEATS.map(function (s) { return s[0]; }).concat(created.map(function (c) { return c.id; }));
+     const root = function (id) { let r = id, g = 0; while (S.into[r] && g < 60) { r = S.into[r]; g++; } return r; };
+     const active = all.filter(function (id) { return !S.into[id] && !S.gone[id]; });
+     const live = function (id) { const r = root(id); return active.indexOf(r) >= 0 ? r : null; };
+     const members = function (id) { return all.filter(function (k) { return root(k) === id; }); };
+-    const label = function (id) { if (S.names[id]) return S.names[id]; const m = members(id); return m.length > 1 ? list(m.map(function (k) { return LABEL[k]; })) : LABEL[id]; };
+-    const partsOf = function (m) { return PARTS[m].filter(function (p) { return !created.some(function (c) { return c.from === m && c.part === p; }); }); };
+-    const ownParts = function (id) { return members(id).reduce(function (acc, m) { const ps = partsOf(m); return acc.concat(ps.map(function (p) { return { from: m, text: p, w: 1 / ps.length }; })); }, []); };
+-    const incoming = function (id) { const out = []; Object.keys(S.gone).forEach(function (x) { S.gone[x].forEach(function (g) { if (live(g.dest) === id) out.push({ from: x, text: g.text, w: g.w }); }); }); return out; };
+-    const weightOf = function (id) { return members(id).length + incoming(id).reduce(function (a, p) { return a + p.w; }, 0); };
++    const label = function (id) { if (!id) return 'Escolher destino'; if (S.names[id]) return S.names[id]; const m = members(id); return m.length > 1 ? list(m.map(function (k) { return baseLabel(k); })) : LABEL[id]; };
++    const partsOf = function (m) { if (government) return globalThis.PosseEngine.parts(government, m).map(function (pt) { return pt.text; }); return PARTS[m].filter(function (p) { return !created.some(function (c) { return c.from === m && c.part === p; }); }); };
++    const ownParts = function (id) { if (government) return globalThis.PosseEngine.parts(government, id); return members(id).reduce(function (acc, m) { const ps = partsOf(m); return acc.concat(ps.map(function (p) { return { from: m, text: p, w: 1 / ps.length }; })); }, []); };
++    const incoming = function (id) { if (government) return []; const out = []; Object.keys(S.gone).forEach(function (x) { S.gone[x].forEach(function (g) { if (live(g.dest) === id) out.push({ from: x, text: g.text, w: g.w }); }); }); return out; };
++    const weightOf = function (id) { if (government) return globalThis.PosseEngine.weight(government, id); return members(id).length + incoming(id).reduce(function (a, p) { return a + p.w; }, 0); };
+     const coreSet = [];
+     CORE.forEach(function (id) { const r = live(id); if (r && coreSet.indexOf(r) < 0) coreSet.push(r); });
+     const others = active.filter(function (id) { return coreSet.indexOf(id) < 0; });
+@@ -1235,27 +1228,24 @@ class Component extends DCLogic {
+     const n = active.length;
+     const only = function (pk) { const o = {}; Object.keys(pk).forEach(function (k) { if (active.indexOf(k) >= 0) o[k] = pk[k]; }); return o; };
+     const picks = only(S.picks);
++    const engine = globalThis.PosseEngine.bind(P, PEOPLE, { into: S.into, gone: S.gone, created: S.created });
++    const engineCurrent = engine.use(picks);
++    const engineParty = function (pk, id) { const s = engine.support(pk); return s && s.parties.find(function (p) { return p.id === globalThis.PosseEngine.partyIds[id]; }); };
+     const own = partyOf(OWN);
+     const distOf = function (p) { return Math.hypot(p.econ - own.econ, p.lib - own.lib); };
+-    const sharesOf = function (pk) { const w = {}; Object.keys(pk).forEach(function (k) { const p = PEOPLE[pk[k]]; if (p && p.party) w[p.party] = (w[p.party] || 0) + weightOf(k); }); const sh = {}; PARTIES.forEach(function (p) { sh[p.id] = Math.min(1, (w[p.id] || 0) / (p.seats / 513 * TOTAL)); }); return sh; };
+-    const chanceOf = function (p, share) {
+-      if (p.id === OWN) return 0.92;
+-      const d = distOf(p), free = d <= 45 ? 0.85 - d / 45 * 0.2 : Math.max(0.4, 0.65 - (d - 45) / 45 * 0.25);
+-      if (share > 0) return Math.min(0.95, Math.max(0.67, free + 0.25 * share));
+-      if (PRAG[p.id]) return d > 70 ? 0.35 : Math.max(free, 0.55);
+-      return d > 45 ? 0.12 + 0.2 * Math.max(0, 1 - (d - 45) / 45) : free;
+-    };
++    const sharesOf = function (pk) { const out = {}; PARTIES.forEach(function (p) { const q = engineParty(pk, p.id); out[p.id] = q ? q.share : 0; }); return out; };
++    const chanceOf = function (p, share) { const s = engine.support(picks); const q = s && s.parties.find(function (x) { return x.id === globalThis.PosseEngine.partyIds[p.id]; }); return q ? q.chance : 0; };
+     const stanceOf = function (p, share) { return p.id === OWN ? 'gov' : NEVER[p.id] ? 'opo' : share > 0 ? 'base' : distOf(p) > (PRAG[p.id] ? 70 : 45) ? 'opo' : 'ind'; };
+-    const depChance = function (d, c) { return Math.max(0.02, Math.min(0.99, c + JIT[d.k])); };
+     const byParty = {};
+     DOTS.forEach(function (d) { (byParty[d.party] = byParty[d.party] || []).push(d); });
+-    const votesOf = function (pk) { const sh = sharesOf(pk), v = {}; PARTIES.forEach(function (p) { const c = chanceOf(p, sh[p.id]); v[p.id] = byParty[p.id].reduce(function (a, d) { return a + depChance(d, c); }, 0); }); return v; };
+-    const sumOf = function (v) { return Math.round(PARTIES.reduce(function (a, p) { return a + v[p.id]; }, 0)); };
++    const depChance = function (d, c) { return globalThis.PosseEngine.deputy(d.party, byParty[d.party].indexOf(d), c); };
++    const votesOf = function (pk) { const s = engine.support(pk), out = { total: s ? s.probable : 0 }; PARTIES.forEach(function (p) { const q = engineParty(pk, p.id); out[p.id] = q ? q.expected : 0; }); return out; };
++    const sumOf = function (v) { return v.total; };
+     const shares = sharesOf(picks);
+     const chance = {}, stance = {};
+-    PARTIES.forEach(function (p) { chance[p.id] = chanceOf(p, shares[p.id]); stance[p.id] = stanceOf(p, shares[p.id]); });
+-    const firmOf = function (pk) { const sh = sharesOf(pk); return DOTS.reduce(function (a, d) { return a + (depChance(d, chanceOf(partyOf(d.party), sh[d.party])) >= 0.8 ? 1 : 0); }, 0); };
+-    const firmByParty = function (pk, pid) { const sh = sharesOf(pk), c = chanceOf(partyOf(pid), sh[pid]); return byParty[pid].reduce(function (a, d) { return a + (depChance(d, c) >= 0.8 ? 1 : 0); }, 0); };
++    PARTIES.forEach(function (p) { const q = engineParty(picks, p.id); chance[p.id] = q ? q.chance : 0; stance[p.id] = stanceOf(p, shares[p.id]); });
++    const firmOf = function (pk) { const s = engine.support(pk); return s ? s.firm : 0; };
++    const firmByParty = function (pk, pid) { const q = engineParty(pk, pid); return q ? q.firm : 0; };
+     const votes = votesOf(picks);
+     const base = sumOf(votes);
+     const firm = firmOf(picks);
+@@ -1285,7 +1275,7 @@ class Component extends DCLogic {
+         pos: 'left: ' + (p.x - p.size / 2).toFixed(1) + 'px; top: ' + (p.y - p.size / 2).toFixed(1) + 'px; width: ' + p.size + 'px; height: ' + p.size + 'px;',
+         title: label(id) + (hd ? ': ' + hd.name : ': sem ministro'),
+         tipTitle: label(id), tipLine: hd ? hd.name + (hd.party ? ' · ' + partyOf(hd.party).tag : '') : S.invites && S.invites[id] && PEOPLE[S.invites[id]] ? 'Convite enviado a ' + PEOPLE[S.invites[id]].name : 'Sem ministro',
+-        seat: id, d: ICON[id] || ICON['casa-civil'], vb: ICON_VB[id] || ICON_VB['casa-civil'], icon: p.size > 36 ? 20 : 16, ink: hd ? inkOf(hd) : 'var(--text-2)', count: k > 1 ? String(k) : '',
++        seat: id, d: ICON[id] || ICON[personSeat(id)] || ICON['casa-civil'], vb: ICON_VB[id] || ICON_VB[personSeat(id)] || ICON_VB['casa-civil'], icon: p.size > 36 ? 20 : 16, ink: hd ? inkOf(hd) : 'var(--text-2)', count: k > 1 ? String(k) : '',
+         pick: function () { set({ sel: id, editing: false, pending: null, hoverP: null }); }
+       };
+     });
+@@ -1318,39 +1308,33 @@ class Component extends DCLogic {
+     const inc = incoming(sel);
+     const incFrom = inc.map(function (p) { return p.from; }).filter(function (x, i, a) { return a.indexOf(x) === i; });
+     const seatGroup = sel === 'agu' ? 'Órgão com status de ministério' : PRESIDENCY.indexOf(sel) >= 0 ? 'Presidência da República' : coreSet.indexOf(sel) >= 0 ? 'Núcleo do governo' : made(sel) ? 'Ministério novo' : 'Ministério';
+-    const plain = OFFICIAL[sel].replace(/^Ministério (da|do|das|dos|de) /, '');
++    const plain = (OFFICIAL[sel] || label(sel)).replace(/^Ministério (da|do|das|dos|de) /, '');
+     const seatOfficial = mem.length === 1 && !S.names[sel] && plain !== label(sel) ? 'Nome oficial: ' + OFFICIAL[sel] : '';
+-    const whole = mem.length === 1 && partsOf(sel).length === PARTS[sel].length;
+-    let seatJob = mem.length > 1 ? 'Junta ' + list(mem.map(function (k) { return LABEL[k]; })) + '. Para o partido que o receber, vale por ' + mem.length + ' ministérios.' : (JOB[sel] && whole ? JOB[sel] : 'Áreas: ' + joinParts(partsOf(sel).slice(0, 3)) + (partsOf(sel).length > 3 ? ' · e mais ' + (partsOf(sel).length - 3) : ''));
++    const whole = mem.length === 1 && partsOf(sel).length === (PARTS[sel] || []).length;
++    let seatJob = mem.length > 1 ? 'Junta ' + list(mem.map(function (k) { return baseLabel(k); })) + '. Concentra as atribuições dessas pastas.' : (JOB[sel] && whole ? JOB[sel] : 'Áreas: ' + joinParts(partsOf(sel).slice(0, 3)) + (partsOf(sel).length > 3 ? ' · e mais ' + (partsOf(sel).length - 3) : ''));
++    if (government && !ownParts(sel).length) seatJob = 'Sem atribuições neste momento.';
+     if (inc.length) seatJob += (/[.]$/.test(seatJob) ? ' ' : '. ') + (inc.length > 2 ? 'Recebeu ' + inc.length + ' áreas de ' + list(incFrom.map(function (x) { return LABEL[x]; })) + '.' : 'Recebeu de ' + list(incFrom.map(function (x) { return LABEL[x]; })) + ': ' + joinParts(inc.map(function (p) { return p.text; })) + '.');
+ 
+     const act = function (text, hint, run, primary) { return { label: text, hint: hint || '', hasHint: !!hint, run: run, cls: primary ? 'btn primary' : 'btn' }; };
+     const small = function (text, run) { return { label: text, hint: '', hasHint: false, run: run, cls: 'btn compact' }; };
+     const wide = function (text, run) { const a = small(text, run); a.cls += ' wide'; return a; };
+     const suggested = [];
+-    mem.forEach(function (m) { (PARTNERS[m] || []).forEach(function (q) { const r = live(q); if (r && r !== sel && r !== 'agu' && suggested.indexOf(r) < 0) suggested.push(r); }); });
+     const rest = order.filter(function (id) { return id !== sel && id !== 'agu' && suggested.indexOf(id) < 0; }).sort(byName);
+-    const proposeFor = function (id) {
+-      let exact = true;
+-      const dest = ownParts(id).map(function (pt) {
+-        const want = (SPLIT[pt.from] && SPLIT[pt.from][pt.text]) || DEST[pt.from];
+-        let to = want ? live(want) : null;
+-        if (!to || to === id) { exact = false; const alt = DEST[want] ? live(DEST[want]) : null; to = alt && alt !== id ? alt : (suggested[0] || rest[0]); }
+-        return to;
+-      });
+-      return { dest: dest, pre: exact && mem.length === 1 && PRE[id] ? PRE[id] : '' };
+-    };
++    const proposeFor = function (id) { return { dest: ownParts(id).map(function () { return null; }) }; };
++    const applyStructure = function (change, patch) { if (!change) { set({ last: 'A proposta não pôde ser aplicada. Confira as atribuições e os destinos atuais.' }); return; } set(Object.assign({ government: change.government, into: change.into, names: change.names, gone: change.gone, pending: null, destinationQuery: '', editing: false }, patch || {})); };
+     let question = '', note = '', actions = [], proposal = [], pinned = [];
+     if (step === 1) {
+       const pend = S.pending;
+       const back = act('Voltar', '', function () { set({ pending: null }); });
+       const mergeInto = function (keeper, absorbed, name, text) {
+-        const into = Object.assign({}, S.into), names = Object.assign({}, S.names), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);
+-        into[absorbed] = keeper; names[keeper] = name; d[keeper] = true; delete d[absorbed];
++        const change = globalThis.PosseEngine.merge(S, LABEL, keeper, absorbed, name);
++        if (!change && government) { set({ last: 'Vínculo institucional pendente para esta reforma.' }); return; }
++        const into = change ? change.into : Object.assign({}, S.into), names = change ? change.names : Object.assign({}, S.names), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);
++        if (!change) { into[absorbed] = keeper; names[keeper] = name; } d[keeper] = true; delete d[absorbed];
+         const a = S.picks[keeper], b = S.picks[absorbed];
+         const stay = a || b, lose = a && b ? b : null;
+         delete pk[absorbed]; delete pk[keeper]; if (stay) pk[keeper] = stay; const inv = Object.assign({}, S.invites); delete inv[absorbed];
+-        set({ into: into, names: names, picks: pk, invites: inv, decided: d, sel: keeper, editing: false, pending: null, last: text + (stay ? T.stays(PEOPLE[stay].name) : '') + (lose ? T.loses(PEOPLE[lose].name) : '') + (S.invites && S.invites[absorbed] && PEOPLE[S.invites[absorbed]] ? T.inviteGone(PEOPLE[S.invites[absorbed]].name) : '') + T.size(n - 1) });
++        set({ government: change ? change.government : null, gone: change ? change.gone : S.gone, into: into, names: names, picks: pk, invites: inv, decided: d, sel: keeper, editing: false, pending: null, last: text + (stay ? T.stays(PEOPLE[stay].name) : '') + (lose ? T.loses(PEOPLE[lose].name) : '') + (S.invites && S.invites[absorbed] && PEOPLE[S.invites[absorbed]] ? T.inviteGone(PEOPLE[S.invites[absorbed]].name) : '') + T.size(n - 1) });
+       };
+       if (sel === 'agu') {
+         question = 'O que fazer com a AGU?';
+@@ -1360,6 +1344,40 @@ class Component extends DCLogic {
+         const setPec = function (kind, text) { return function () { const pec = Object.assign({}, S.pec); pec.agu = kind; set({ pec: pec, last: text }); }; };
+         if (pec0) actions.push(act('Retirar a proposta de emenda', 'A AGU segue como está.', setPec(null, T.pecOff)));
+         else { actions.push(act('Propor emenda para extinguir a AGU', 'A emenda vai ao Congresso depois da posse.', setPec('end', T.pecEnd))); actions.push(act('Propor emenda para juntar a AGU', 'A emenda, votada depois da posse, diz com qual ministério.', setPec('merge', T.pecMerge))); }
++      } else if (pend && (pend.kind === 'create' || pend.kind === 'rename')) {
++        const creating = pend.kind === 'create', selected = pend.ids || [], parts = ownParts(sel);
++        question = creating ? 'Quais atribuições vão para o novo ministério?' : 'Qual nome fica?';
++        if (creating) {
++          const found = globalThis.PosseEngine.works(parts.map(function (pt) { return { id: pt.id, label: pt.text }; }), S.destinationQuery || '');
++          note = found.reason || (selected.length ? selected.length + ' atribuições selecionadas.' : 'Sem seleção, a pasta começa sem atribuições.');
++          parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + pt.text, checked ? 'Selecionada' : 'Permanece onde está até a confirmação.', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });
++        } else note = 'O nome muda; atribuições e titular são conservados.';
++        const ready = typeof pend.name === 'string' && pend.name.trim().length > 0 && pend.name.trim().length <= 120;
++        const confirm = act(creating ? 'Criar ministério' : 'Confirmar nome', ready ? creating ? 'Move somente as atribuições selecionadas.' : 'Registra o nome escolhido.' : 'Preencha o nome.', function () {
++          if (!ready) return;
++          const change = creating ? globalThis.PosseEngine.create(S, LABEL, pend.name, selected, sel) : globalThis.PosseEngine.rename(S, LABEL, sel, pend.name);
++          applyStructure(change, creating && change ? { created: change.created, sel: change.id, last: change.names[change.id] + ' foi criado, sem ministro.' } : { editing: true, last: 'Nome atualizado para ' + pend.name.trim() + '.' });
++        }, true);
++        if (!ready) confirm.cls += ' off';
++        actions.push(confirm); actions.push(back);
++      } else if (pend && pend.kind === 'transfer' && pend.target) {
++        question = 'Transferir para ' + label(pend.target) + '?';
++        note = list(ownParts(sel).filter(function (pt) { return pend.ids.indexOf(pt.id) >= 0; }).map(function (pt) { return pt.text; }));
++        actions.push(act('Confirmar transferência', 'A responsabilidade muda; os trabalhos conservam sua identidade.', function () { applyStructure(globalThis.PosseEngine.transfer(S, LABEL, sel, pend.ids, pend.target), { editing: true, last: 'Atribuições transferidas para ' + label(pend.target) + '.' }); }, true));
++        actions.push(act('Voltar aos destinos', '', function () { set({ pending: Object.assign({}, pend, { target: null }) }); })); actions.push(back);
++      } else if (pend && pend.kind === 'transfer' && pend.destination) {
++        question = 'Para onde vão as atribuições selecionadas?';
++        const found = globalThis.PosseEngine.destinations(rest.map(function (q) { return { id: q, parts: ownParts(q) }; }), S.destinationQuery || '');
++        note = found.reason;
++        found.matches.forEach(function (match) { actions.push(act(label(match.id), (S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''), function () { set({ destinationQuery: '', pending: Object.assign({}, pend, { target: match.id }) }); })); });
++        actions.push(act('Voltar às atribuições', '', function () { set({ destinationQuery: '', pending: Object.assign({}, pend, { destination: false }) }); })); actions.push(back);
++      } else if (pend && pend.kind === 'transfer') {
++        question = 'Quais atribuições serão transferidas?';
++        const selected = pend.ids || [], parts = ownParts(sel), found = globalThis.PosseEngine.works(parts.map(function (pt) { return { id: pt.id, label: pt.text }; }), S.destinationQuery || '');
++        note = found.reason || selected.length + ' atribuições selecionadas.';
++        parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + pt.text, checked ? 'Selecionada' : '', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });
++        const next = act('Escolher destino', selected.length ? '' : 'Selecione uma atribuição.', function () { if (selected.length) set({ destinationQuery: '', pending: Object.assign({}, pend, { destination: true }) }); }, true);
++        if (!selected.length) next.cls += ' off'; actions.push(next); actions.push(back);
+       } else if (pend && pend.kind === 'merge' && !pend.with) {
+         question = 'Juntar ' + label(sel) + ' com qual ministério?';
+         (pend.all ? suggested.concat(rest) : suggested).forEach(function (q) { actions.push(act(label(q), '', function () { set({ pending: { kind: 'merge', with: q } }); })); });
+@@ -1369,32 +1387,37 @@ class Component extends DCLogic {
+         const q0 = pend.with;
+         const big = function (x) { return members(x).length * 100 + ownParts(x).length + (coreSet.indexOf(x) >= 0 ? 1000 : 0); };
+         const lead = big(q0) > big(sel) ? q0 : sel, q = lead === sel ? q0 : sel;
+-        const both = list(members(lead).concat(members(q)).map(function (k) { return LABEL[k]; }));
+-        const setAll = members(lead).concat(members(q));
++        const both = list([label(lead), label(q)]);
+         question = 'Qual nome fica?';
+-        HIST.forEach(function (h) { if (setAll.length >= 2 && setAll.every(function (k) { return h.set.indexOf(k) >= 0; })) actions.push(act(h.name, h.note, function () { mergeInto(lead, q, h.name, T.merged(both, h.name)); })); });
+         actions.push(act(both, 'Os dois nomes ficam juntos no nome do ministério.', function () { mergeInto(lead, q, both, T.merged(both, '')); }));
+         actions.push(back);
+       } else if (pend && pend.kind === 'end' && pend.pick !== null && pend.pick !== undefined) {
+         const parts = ownParts(sel);
+         const i = pend.pick;
+-        question = 'Para onde vai “' + parts[i].text + '”?';
+-        suggested.concat(rest).forEach(function (q) { actions.push(act(label(q), q === pend.dest[i] ? 'Destino atual' : '', function () { const dest = pend.dest.slice(); dest[i] = q; set({ pending: { kind: 'end', dest: dest, edit: true, pick: null } }); })); });
++        question = pend.bulk ? 'Para onde vai todo o trabalho?' : 'Para onde vai “' + parts[i].text + '”?';
++        const found = globalThis.PosseEngine.destinations(suggested.concat(rest).map(function (q) { return { id: q, parts: ownParts(q).concat(incoming(q)) }; }), S.destinationQuery || '');
++        note = found.reason;
++        found.matches.forEach(function (match) { const q = match.id; const why = S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''; actions.push(act(label(q), (q === pend.dest[i] ? 'Destino atual. ' : '') + why, function () { const dest = pend.bulk ? pend.dest.map(function () { return q; }) : pend.dest.slice(); if (!pend.bulk) dest[i] = q; set({ destinationQuery: '', pending: { kind: 'end', dest: dest, edit: true, pick: null } }); })); });
++        actions.push(act('Voltar', '', function () { set({ destinationQuery: '', pending: { kind: 'end', dest: pend.dest, edit: true, pick: null } }); }));
+       } else if (pend && pend.kind === 'end') {
+         const parts = ownParts(sel);
+-        const sign = act('Assinar', 'A medida provisória sai com esta divisão.', function () {
+-          const gone = Object.assign({}, S.gone), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);
+-          gone[sel] = parts.map(function (pt, k) { return { from: pt.from, text: pt.text, w: pt.w, dest: pend.dest[k] }; });
++        const complete = pend.dest.every(function (q) { return q && active.indexOf(q) >= 0 && q !== sel; });
++        const sign = act('Assinar', complete ? 'A medida provisória sai com esta divisão.' : 'Escolha o destino de todas as atribuições.', function () {
++          if (!complete) { set({ pending: { kind: 'end', dest: pend.dest, edit: true, pick: null } }); return; }
++          const change = globalThis.PosseEngine.abolish(S, LABEL, sel, Object.fromEntries(parts.map(function (pt, k) { return [pt.id, pend.dest[k]]; })));
++          if (!change && government) { set({ last: 'Vínculo institucional pendente para esta reforma.' }); return; }
++          const gone = change ? change.gone : Object.assign({}, S.gone), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);
++          if (!change) gone[sel] = parts.map(function (pt, k) { return { from: pt.from, text: pt.text, w: pt.w, dest: pend.dest[k] }; });
+           const lost = pk[sel]; delete pk[sel]; delete d[sel]; const inv = Object.assign({}, S.invites); delete inv[sel];
+           const targets = pend.dest.filter(function (x, k, a) { return a.indexOf(x) === k; });
+-          set({ gone: gone, picks: pk, invites: inv, decided: d, sel: targets[0], editing: false, pending: null, last: T.extinct(label(sel), targets.map(label)) + (lost ? T.loses(PEOPLE[lost].name) : '') + (S.invites && S.invites[sel] && PEOPLE[S.invites[sel]] ? T.inviteGone(PEOPLE[S.invites[sel]].name) : '') + T.size(n - 1) });
++          set({ government: change ? change.government : null, into: change ? change.into : S.into, names: change ? change.names : S.names, gone: gone, picks: pk, invites: inv, decided: d, sel: targets[0] || rest[0], editing: false, pending: null, last: T.extinct(label(sel), targets.map(label)) + (lost ? T.loses(PEOPLE[lost].name) : '') + (S.invites && S.invites[sel] && PEOPLE[S.invites[sel]] ? T.inviteGone(PEOPLE[S.invites[sel]].name) : '') + T.size(n - 1) });
+         }, true);
+-        sign.cls += ' wide';
++        sign.cls += complete ? ' wide' : ' wide off';
+         if (!pend.edit) {
+-          question = 'A Casa Civil propõe esta divisão:';
++          question = 'Distribuição das atribuições:';
+           const targets = pend.dest.filter(function (x, k, a) { return a.indexOf(x) === k; });
+           proposal = targets.map(function (t, k) { return { sep: k < targets.length - 1 ? '1px solid rgba(255,255,255,0.06)' : '0', to: label(t), what: joinParts(parts.filter(function (pt, j) { return pend.dest[j] === t; }).map(function (pt) { return pt.text; })) }; });
+-          note = (pend.pre || T.noPrecedent) + T.reaction(holderOf(sel) ? holderOf(sel).name : '');
++          note = complete ? '' : 'Escolha os destinos em Mudar a divisão.';
+           pinned.push(sign);
+           pinned.push(small('Mudar a divisão', function () { set({ pending: { kind: 'end', dest: pend.dest, edit: true, pick: null } }); }));
+           pinned.push(small('Voltar', function () { set({ pending: null }); }));
+@@ -1402,19 +1425,20 @@ class Component extends DCLogic {
+           question = 'Para onde vai cada parte?';
+           pinned.push(sign);
+           parts.forEach(function (pt, k) { actions.push(act(cap(pt.text), 'Vai para ' + label(pend.dest[k]) + '. Toque para trocar.', function () { set({ pending: { kind: 'end', dest: pend.dest, edit: true, pick: k } }); })); });
+-          suggested.forEach(function (q) { actions.push(act('Tudo para ' + label(q), '', function () { set({ pending: { kind: 'end', dest: parts.map(function () { return q; }), edit: true, pick: null } }); })); });
+-          pinned.push(wide('Voltar à proposta da Casa Civil', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null, pre: pr.pre } }); }));
++          actions.push(act('Tudo para um órgão', '', function () { set({ destinationQuery: '', pending: { kind: 'end', dest: pend.dest, edit: true, bulk: true, pick: 0 } }); }));
++          pinned.push(wide('Recomeçar a distribuição', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null } }); }));
+         }
+       } else {
+         question = 'O que fazer com este ministério?';
+         actions.push(act('Manter', 'Nada muda. Você segue para a escolha do ministro.', function () { const d = Object.assign({}, S.decided); d[sel] = true; set({ decided: d, editing: false, last: T.keep(label(sel)) }); }, true));
+         if (suggested.length || rest.length) actions.push(act('Juntar com outro ministério', 'Os dois viram um ministério só, com um ministro.', function () { set({ pending: { kind: 'merge' } }); }));
+-        if (!inc.length) actions.push(act('Extinguir', 'O ministério acaba. A Casa Civil propõe para onde vai o trabalho.', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null, pre: pr.pre } }); }));
+-        CREATE.filter(function (c) { return mem.indexOf(c.from) >= 0 && !made(c.id); }).forEach(function (c) { actions.push(act('Dividir: criar ' + c.label, c.hint + ' Um cargo de ministro a mais.', function () { const d = Object.assign({}, S.decided); d[c.id] = true; d[sel] = true; set({ created: created.concat([c]), decided: d, editing: false, pending: null, last: T.divided(c.label) + T.size(n + 1) }); })); });
++        if (!inc.length) actions.push(act('Extinguir', 'O ministério acaba. Você distribui as atribuições entre os órgãos ativos.', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null } }); }));
++        CREATE.filter(function (c) { return government ? ownParts(sel).some(function (pt) { return pt.text === c.part; }) : mem.indexOf(c.from) >= 0 && !made(c.id); }).forEach(function (c) { actions.push(act('Dividir: criar ' + c.label, c.hint + ' Um cargo de ministro a mais.', function () { const d = Object.assign({}, S.decided); if (government) { const selected = ownParts(sel).filter(function (pt) { return pt.text === c.part; }).map(function (pt) { return pt.id; }), change = globalThis.PosseEngine.create(S, LABEL, c.label, selected, sel, c.id); if (!change) { applyStructure(null); return; } d[change.id] = true; d[sel] = true; applyStructure(change, { created: change.created, decided: d, last: T.divided(c.label) + T.size(n + 1) }); } else { d[c.id] = true; d[sel] = true; set({ created: created.concat([c]), decided: d, editing: false, pending: null, last: T.divided(c.label) + T.size(n + 1) }); } })); });
++        if (government) { actions.push(act('Criar outro ministério', 'Escolha o nome e as atribuições.', function () { set({ destinationQuery: '', pending: { kind: 'create', name: '', ids: [] } }); })); actions.push(act('Transferir atribuições', 'Escolha o trabalho e o novo responsável.', function () { set({ destinationQuery: '', pending: { kind: 'transfer', ids: [] } }); })); actions.push(act('Renomear ministério', 'Conserva as atribuições e o titular.', function () { set({ pending: { kind: 'rename', name: label(sel) } }); })); }
+         const kids = all.filter(function (k) { return S.into[k] === sel; });
+-        if (kids.length) actions.push(act('Desfazer a junção', list([sel].concat(kids).map(function (k) { return LABEL[k]; })) + ' voltam a ser separados.', function () { const into = Object.assign({}, S.into), names = Object.assign({}, S.names), d = Object.assign({}, S.decided); kids.forEach(function (k) { delete into[k]; delete d[k]; }); delete names[sel]; set({ into: into, names: names, decided: d, pending: null, last: T.separated([sel].concat(kids).map(function (k) { return LABEL[k]; })) + T.size(n + kids.length) }); }));
+-        incFrom.forEach(function (x) { actions.push(act('Recriar ' + LABEL[x], 'Desfaz a extinção. ' + LABEL[x] + ' volta a existir, sem ministro.', function () { const gone = Object.assign({}, S.gone); delete gone[x]; set({ gone: gone, sel: x, editing: false, pending: null, last: T.recreated(LABEL[x]) + T.size(n + 1) }); })); });
+-        if (made(sel)) { const src = created.find(function (c) { return c.id === sel; }).from; actions.push(act('Desistir de criar ' + label(sel), 'O trabalho volta para onde estava.', function () { const into = Object.assign({}, S.into); Object.keys(into).forEach(function (k) { if (into[k] === sel || k === sel) delete into[k]; }); const d = Object.assign({}, S.decided); delete d[sel]; const pk = Object.assign({}, S.picks); delete pk[sel]; const inv = Object.assign({}, S.invites); delete inv[sel]; set({ picks: pk, invites: inv, created: created.filter(function (c) { return c.id !== sel; }), into: into, decided: d, sel: live(src) || src, editing: false, pending: null, last: T.uncreated(label(sel), label(live(src) || src)) + T.size(n - 1) }); })); }
++        if (kids.length) actions.push(act('Desfazer a junção', list([sel].concat(kids).map(function (k) { return baseLabel(k); })) + ' voltam a ser separados.', function () { const change = globalThis.PosseEngine.split(S, LABEL, sel), into = change ? change.into : Object.assign({}, S.into), names = change ? change.names : Object.assign({}, S.names), d = Object.assign({}, S.decided); kids.forEach(function (k) { if (!change) delete into[k]; delete d[k]; }); if (!change) delete names[sel]; set({ government: change ? change.government : null, gone: change ? change.gone : S.gone, into: into, names: names, decided: d, pending: null, last: T.separated([sel].concat(kids).map(function (k) { return baseLabel(k); })) + T.size(n + kids.length) }); }));
++        (government ? Object.keys(S.gone) : incFrom).forEach(function (x) { actions.push(act('Recriar ' + baseLabel(x), 'Desfaz a extinção. ' + baseLabel(x) + ' volta a existir, sem ministro.', function () { const change = globalThis.PosseEngine.restore(S, LABEL, x), gone = change ? change.gone : Object.assign({}, S.gone); if (!change) delete gone[x]; set({ government: change ? change.government : null, into: change ? change.into : S.into, names: change ? change.names : S.names, gone: gone, sel: x, editing: false, pending: null, last: T.recreated(baseLabel(x)) + T.size(n + 1) }); })); });
++        if (made(sel)) { const src = created.find(function (c) { return c.id === sel; }).from; actions.push(act('Desistir de criar ' + label(sel), 'O trabalho que continua aqui volta para onde estava.', function () { if (government) { const change = globalThis.PosseEngine.cancelCreation(S, LABEL, sel); if (!change) { set({ last: 'A distribuição mudou desde a criação. Use Extinguir para escolher os destinos atuais.' }); return; } const pk = Object.assign({}, S.picks), inv = Object.assign({}, S.invites), d = Object.assign({}, S.decided); delete pk[sel]; delete inv[sel]; delete d[sel]; applyStructure(change, { picks: pk, invites: inv, decided: d, sel: live(src) || order.find(function (id) { return id !== sel; }), last: T.uncreated(label(sel), label(live(src) || src)) + T.size(n - 1) }); return; } const into = Object.assign({}, S.into); Object.keys(into).forEach(function (k) { if (into[k] === sel || k === sel) delete into[k]; }); const d = Object.assign({}, S.decided); delete d[sel]; const pk = Object.assign({}, S.picks); delete pk[sel]; const inv = Object.assign({}, S.invites); delete inv[sel]; set({ picks: pk, invites: inv, created: created.filter(function (c) { return c.id !== sel; }), into: into, decided: d, sel: live(src) || src, editing: false, pending: null, last: T.uncreated(label(sel), label(live(src) || src)) + T.size(n - 1) }); })); }
+       }
+     }
+ 
+@@ -1422,7 +1446,7 @@ class Component extends DCLogic {
+     let holderName = '', holderNote = '', holderCls = 'swatch empty', holderStyle = '', canClear = false, clear = null, clearLabel = 'Exonerar', nextVacant = null, editShape = null;
+     if (step === 2) {
+       const holder = holderOf(sel);
+-      const lead = mem[0];
++      const lead = personSeat(mem[0]);
+       editShape = function () { set({ editing: true, pending: null, hoverP: null }); };
+       nextVacant = function () { const i = order.indexOf(sel); for (let k = 1; k <= order.length; k++) { const id = order[(i + k) % order.length]; if (!picks[id]) { set({ sel: id, editing: false, pending: null, hoverP: null }); return; } } set({ last: T.full }); };
+       const fits = function (x) { return x.seats.some(function (s) { return mem.indexOf(s) >= 0; }); };
+@@ -1479,7 +1503,7 @@ class Component extends DCLogic {
+           const b2 = sumOf(after);
+           self.lockIn(e, sel);
+           const inv2 = Object.assign({}, S.invites); delete inv2[sel];
+-          set({ picks: pk, invites: inv2, last: text + (firm2 !== firm ? T.base(firm2, b2) : '') });
++          set({ picks: pk, invites: inv2, last: engineCurrent.status === 'estimated' ? text + (firm2 !== firm ? T.base(firm2, b2) : '') : 'Nomeação registrada. ' + engineCurrent.reason });
+         };
+       };
+       const originOf = function (p) { return p.kind === 'party' ? partyOf(p.party).tag + (p.party === OWN ? '' : ' · ' + (refuses(p) ? 'não aceita entrar no governo' : dep(partyOf(p.party).seats))) : p.kind === 'tech' ? p.profession : p.origin; };
+@@ -1489,12 +1513,12 @@ class Component extends DCLogic {
+         g.items.forEach(function (p) {
+           const at = whereIs(p.key), f = face(p), v = votesFor(p), no = p.kind === 'party' && refuses(p);
+           const focusRow = S.hoverP === p.key;
+-          rows.push({ isHeader: false, isRow: true, name: p.name, origin: invOf(p.key) ? 'Convite enviado · ' + label(invOf(p.key)) : at && at !== sel ? 'Hoje em ' + label(at) : at === sel ? 'No cargo' : originOf(p), ring: colorOf(p), av: f, skin: f.skin, hair: f.hair, fama: String(p.fama), prep: String(prepOf(p)), afin: String(afinOf(p)), famaCls: attrCls(p.fama), prepCls: attrCls(prepOf(p)), afinCls: attrCls(afinOf(p)), hasTag: !!tagOf(p), tag: STANCE_TAG[tagOf(p)] || '', tagCls: 'tag ' + tagOf(p), gain: v > 0 ? '+' + v : v < 0 ? '−' + (-v) : '0', gainCls: 'gain num' + (v > 0 ? ' up' : v < 0 ? ' down' : ''), cls: 'row grid6' + (at === sel ? ' cur' : focusRow ? ' focus' : '') + (no ? ' off' : '') + (p.party ? ' pt' + PARTIES.findIndex(function (x) { return x.id === p.party; }) : ''), pick: appoint(p), enter: function (e) { self.showCard(p.key, e); }, leave: function () { self.hideCard(); } });
++          rows.push({ isHeader: false, isRow: true, name: p.name, origin: invOf(p.key) ? 'Convite enviado · ' + label(invOf(p.key)) : at && at !== sel ? 'Hoje em ' + label(at) : at === sel ? 'No cargo' : originOf(p), ring: colorOf(p), av: f, skin: f.skin, hair: f.hair, fama: String(p.fama), prep: String(prepOf(p)), afin: String(afinOf(p)), famaCls: attrCls(p.fama), prepCls: attrCls(prepOf(p)), afinCls: attrCls(afinOf(p)), hasTag: !!tagOf(p), tag: STANCE_TAG[tagOf(p)] || '', tagCls: 'tag ' + tagOf(p), gain: engineCurrent.status === 'unknown' ? '—' : v > 0 ? '+' + v : v < 0 ? '−' + (-v) : '0', gainCls: 'gain num' + (v > 0 ? ' up' : v < 0 ? ' down' : ''), cls: 'row grid6' + (at === sel ? ' cur' : focusRow ? ' focus' : '') + (no ? ' off' : '') + (p.party ? ' pt' + PARTIES.findIndex(function (x) { return x.id === p.party; }) : ''), pick: appoint(p), enter: function (e) { self.showCard(p.key, e); }, leave: function () { self.hideCard(); } });
+         });
+       });
+       const cardOf = function (hp) {
+         const f = face(hp), v = votesFor(hp), af = afinOf(hp), party = hp.party ? partyOf(hp.party) : null;
+-        const brings = hp.kind === 'party' ? (hp.party === OWN ? 'Seu partido já conta como base.' : refuses(hp) ? (party.fem ? 'A ' : 'O ') + party.tag + ' não aceita entrar no governo.' : v > 0 ? 'Cerca de ' + v + ' deputados ' + (party.fem ? 'da ' : 'do ') + party.tag + ', nos próximos meses.' : 'Nenhum voto a mais. O partido já tem ministérios na medida da bancada.') : 'Nenhum voto no Congresso.';
++        const brings = engineCurrent.status === 'unknown' ? engineCurrent.reason : hp.kind === 'party' ? (hp.party === OWN ? 'Seu partido já conta como base.' : refuses(hp) ? (party.fem ? 'A ' : 'O ') + party.tag + ' não aceita entrar no governo.' : v > 0 ? 'Cerca de ' + v + ' deputados ' + (party.fem ? 'da ' : 'do ') + party.tag + ', nos próximos meses.' : 'Nenhum voto a mais. O partido já tem ministérios na medida da bancada.') : 'Nenhum voto no Congresso.';
+         const costs = hp.kind === 'party' ? 'Uma cadeira a menos para oferecer a outros partidos.' : hp.kind === 'tech' ? 'Os partidos queriam a cadeira e vão cobrar.' : 'Os partidos queriam a cadeira e vão cobrar. A resposta ao convite chega em uma semana.';
+         const plus = (hp.strengths || []).slice(), minus = (hp.risks || []).slice();
+         const vs = holder && holder !== hp ? [['Fama', hp.fama - holder.fama], ['Preparo', prepOf(hp) - prepOf(holder)], ['Afinidade', af - afinOf(holder)]].map(function (x) { return { label: x[0], d: x[1] > 0 ? '+' + x[1] : x[1] < 0 ? '−' + Math.abs(x[1]) : '=', cls: x[1] > 0 ? 'up' : x[1] < 0 ? 'down' : 'eq' }; }) : [];
+@@ -1503,7 +1527,7 @@ class Component extends DCLogic {
+       self._cards = {};
+       groups.forEach(function (g) { g.items.forEach(function (p) { self._cards[p.key] = cardOf(p); }); });
+       filters = [['all', 'Sugeridos'], ['party', 'Partidos'], ['other', 'Outros']].map(function (x) { return { label: x[1], cls: S.filter === x[0] ? 'on' : '', go: function () { set({ filter: x[0], hoverP: null }); } }; });
+-      cols = [['fama', 'Fama', 'Quantas pessoas ouvem o que ele diz, de 1 a 5'], ['prep', 'Preparo', 'O quanto sabe fazer o trabalho, de 1 a 5'], ['afin', 'Afinidade', 'O quanto pensa parecido com você, de 1 a 5'], ['votes', 'Votos', 'Votos firmes a mais com esta nomeação']].map(function (x) { const on = S.sort === x[0]; return { label: x[1], hint: x[2] + '. Toque para ordenar.', cls: (on ? 'on' : '') + (x[0] === 'votes' ? ' right' : ''), go: function () { set({ sort: on ? null : x[0] }); } }; });
++      cols = [['fama', 'Fama', 'Quantas pessoas ouvem o que ele diz, de 1 a 5'], ['prep', 'Preparo', 'O quanto sabe fazer o trabalho, de 1 a 5'], ['afin', 'Afinidade', 'O quanto pensa parecido com você, de 1 a 5'], ['votes', 'Votos', 'Votos firmes a mais com esta nomeação']].map(function (x) { const on = S.sort === x[0]; return { label: x[1], hint: x[0] === 'votes' && engineCurrent.status === 'unknown' ? engineCurrent.reason : x[2] + '. Toque para ordenar.', cls: (on ? 'on' : '') + (x[0] === 'votes' ? ' right' : ''), go: function () { set({ sort: on ? null : x[0] }); } }; });
+       const invited = !holder && S.invites && S.invites[sel] ? PEOPLE[S.invites[sel]] : null;
+       holderName = holder ? holder.name : invited ? invited.name : 'Sem ministro';
+       holderNote = holder ? (holder.kind === 'star' ? 'De fora da política, a convite' : holder.kind === 'party' ? 'Indicação ' + (partyOf(holder.party).fem ? 'da ' : 'do ') + partyOf(holder.party).tag : holder.profession) : invited ? 'Convite enviado. A resposta chega em uma semana.' : 'O secretário-executivo responde interinamente.';
+@@ -1511,7 +1535,7 @@ class Component extends DCLogic {
+       holderStyle = holder ? 'background-color: ' + colorOf(holder) + ';' : '';
+       canClear = !!holder || !!invited;
+       clearLabel = holder ? 'Exonerar' : 'Cancelar convite';
+-      clear = holder && function () { if (!holderOf(sel)) return; const pk = Object.assign({}, S.picks); delete pk[sel]; const b2 = sumOf(votesOf(only(pk))), f2 = firmOf(only(pk)); set({ picks: pk, last: T.fired(holder.name, label(sel)) + (holder.party && holder.party !== OWN ? (sharesOf(only(pk))[holder.party] > 0 ? T.lessPasta(partyOf(holder.party)) : T.outOfBase(partyOf(holder.party))) : '') + (f2 !== firm ? T.base(f2, b2) : '') }); };
++      clear = holder && function () { if (!holderOf(sel)) return; const pk = Object.assign({}, S.picks); delete pk[sel]; const b2 = sumOf(votesOf(only(pk))), f2 = firmOf(only(pk)); set({ picks: pk, last: engineCurrent.status === 'unknown' ? 'Exoneração registrada. ' + engineCurrent.reason : T.fired(holder.name, label(sel)) + (holder.party && holder.party !== OWN ? (sharesOf(only(pk))[holder.party] > 0 ? T.lessPasta(partyOf(holder.party)) : T.outOfBase(partyOf(holder.party))) : '') + (f2 !== firm ? T.base(f2, b2) : '') }); };
+       if (!holder && invited) clear = function () { const inv = Object.assign({}, S.invites); delete inv[sel]; set({ invites: inv, last: T.uninvited(invited.name, label(sel)) }); };
+     }
+ 
+@@ -1558,17 +1582,19 @@ class Component extends DCLogic {
+       swearCls: 'btn primary' + (lacks.length ? ' off' : ''),
+       swear: function () { if (lacks.length) return; self._leftCreate = Date.now(); set({ phase: 'intro', last: '' }); clearTimeout(self._intro); self._intro = setTimeout(function () { if (self.state.phase === 'intro') self.setState({ phase: 'posse' }); }, 3600); },
+       skip: function () { clearTimeout(self._intro); set({ phase: 'posse' }); },
+-      finish: function () { set({ phase: 'photo', hoverP: null }); },
++      finish: function () { engine.capture(picks); set({ phase: 'photo', hoverP: null }); },
+       backToPosse: function () { self._leftPhoto = Date.now(); set({ phase: 'posse' }); },
+-      photo: photo, photoLine: Object.keys(picks).length + ' de ' + n + ' ministérios com ministro · ' + inGov + (inGov === 1 ? ' partido' : ' partidos') + ' no governo · ' + firm + ' votos firmes e uns ' + base + ' prováveis',
++      photo: photo, photoLine: Object.keys(picks).length + ' de ' + n + ' ministérios com ministro · ' + inGov + (inGov === 1 ? ' partido' : ' partidos') + ' no governo · ' + (engineCurrent.status === 'estimated' ? firm + ' votos firmes e uns ' + base + ' prováveis' : engineCurrent.reason),
+       ownLine: presTitle + ' ' + shownName + ' · ' + partyOf(OWN).tag + ' · ' + dep(partyOf(OWN).seats),
+       sizeCount: n, sizeNote: presN ? 'Inclui ' + presN + ' órgãos com status de ministério' : 'Nenhum órgão com status de ministério', filled: (Object.keys(picks).length ? Object.keys(picks).length : 'nenhum') + ' com ministro',
+-      baseNote: 'Uns ' + base + ' prováveis numa votação comum. ' + (firm < 257 ? 'Faltam ' + (257 - firm) + ' firmes para a maioria de 257.' : firm < 308 ? 'Maioria firme. Faltam ' + (308 - firm) + ' para os 308 de uma emenda.' : 'Firmes para os 308 de uma emenda.'), base: base, basePct: (base / 513 * 100).toFixed(1) + '%', firm: firm, firmPct: (firm / 513 * 100).toFixed(1) + '%', finishHint: Object.keys(picks).length + ' de ' + n + ' com ministro',
++      baseNote: engineCurrent.status === 'unknown' ? engineCurrent.reason : 'Apoio estrutural; a reação ocorre ao longo dos meses. Uns ' + base + ' prováveis numa votação comum. ' + (firm < 257 ? 'Faltam ' + (257 - firm) + ' firmes para a maioria de 257.' : firm < 308 ? 'Maioria firme. Faltam ' + (308 - firm) + ' para os 308 de uma emenda.' : 'Firmes para os 308 de uma emenda.'), base: engineCurrent.status === 'unknown' ? '—' : base, basePct: (base / 513 * 100).toFixed(1) + '%', firm: engineCurrent.status === 'unknown' ? '—' : firm, firmPct: (firm / 513 * 100).toFixed(1) + '%', finishHint: Object.keys(picks).length + ' de ' + n + ' com ministro',
+       benches: benches, sectors: sectors, nodes: nodes, leave: leave, advisor: S.last || T.start,
+       isStep1: step === 1, isStep2: step === 2,
+       step1Cls: 'sdot' + (step === 1 ? ' on' : ' done'), step2Cls: 'sdot' + (step === 2 ? ' on' : ''), step1Label: 'slabel' + (step === 1 ? ' on' : ''), step2Label: 'slabel' + (step === 2 ? ' on' : ''),
+       seatGroup: seatGroup, seatTitle: label(sel), seatOfficial: seatOfficial, hasOfficial: !!seatOfficial, seatJob: seatJob,
+       footNote: sel === 'agu' ? 'Emenda constitucional só vale depois de aprovada em dois turnos na Câmara e no Senado.' : 'Tudo sai por medida provisória. O Congresso tem 120 dias, a partir de 2 de fevereiro, para aprovar. Se não aprovar, volta como era.',
++      hasDestinationSearch: step === 1 && S.pending && (S.pending.kind === 'end' && S.pending.pick !== null && S.pending.pick !== undefined || S.pending.kind === 'create' || S.pending.kind === 'transfer' && !S.pending.target), destinationQuery: S.destinationQuery || '', setDestinationQuery: function (e) { set({ destinationQuery: e.target.value }); },
++      hasOfficeName: step === 1 && S.pending && (S.pending.kind === 'create' || S.pending.kind === 'rename'), officeName: S.pending && S.pending.name || '', setOfficeName: function (e) { set({ pending: Object.assign({}, S.pending, { name: e.target.value }) }); },
+       question: question, note: note, hasNote: !!note, actions: actions, proposal: proposal, hasProposal: proposal.length > 0, pinned: pinned, hasPinned: pinned.length > 0,
+       holderName: holderName, holderNote: holderNote, holderCls: holderCls, holderStyle: holderStyle, canClear: canClear, clear: clear, clearLabel: clearLabel, nextVacant: nextVacant, editShape: editShape,
+       filters: filters, cols: cols, rows: rows

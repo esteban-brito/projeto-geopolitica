@@ -7,6 +7,13 @@
 > A régua são as [partidas-teste de Xi e Lee](../spec/the-test-playthroughs.md). Uma partida
 > inspirada em Milei pode entrar depois, se ele ordenar. Ela não faz parte deste aceite.
 
+> **Atualização de escopo — 29/09:** a etapa 1 incorpora a direção de
+> [governo variável](../spec/dynamic-government.md) e do [piloto](../spec/government-pilot.md).
+> As 38 cadeiras descrevem a abertura; não limitam estruturas posteriores. Preparo depende de
+> experiências conhecidas e trabalho vigente, sem especialistas perfeitos garantidos por pasta.
+> A [auditoria dos planos](../plan-audit.md) registra contratos e dependências a fechar; suas
+> propostas não substituem a ordem de etapas aprovada pelo Diretor.
+
 ## 1. O jogo e seus pilares
 
 Você preside o Brasil real, tenta transformá-lo, paga os custos e vê o que de fato mudou.
@@ -373,6 +380,17 @@ a posse e a base existem no protótipo (fonte: partidas-teste, “O que falta no
 Portão: links sem referência quebrada, `npm run check` verde e aprovação do plano pelo Diretor.
 
 ### Etapa 1 — Presidente e posse
+
+**Prioridade corrigida pelo Diretor em 30/09: testar somente o novo protótipo.** Disponibilizar
+a experiência isolada e auditar, desenvolver e aprimorar durante o uso. O teste não depende
+do porte para a entrada principal nem do marco de 2027. A integração fica para depois;
+as entregas abaixo continuam como plano, sem ampliar o trabalho atual por inferência.
+
+A ponte experimental conecta nomeações e consulta estrutural da base à posse, com recarga
+do rascunho. Não declarar ministérios variáveis integrados enquanto ainda dependem de catálogo
+fixo, nem uma posse visual como prova de efeito no mês seguinte. Visão presidencial, fonte da
+regra acionada e revisão independente continuam condições de integração. O aceite humano
+da etapa permanece aberto; o teste do protótipo fornece achados para os próximos ajustes.
 
 Entrega criação, trajetória com preço, versão do save, base calibrada, 38 pastas, convites e
 reforma ministerial. Absorve ciclo 32, fases 2 e 4, §6b, e E1.0a, E1.0d, E1.0e, E1.0f.

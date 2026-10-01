@@ -2,10 +2,22 @@
 
 Estudo de 26/09. Compara o protótipo aprovado (versão 25 do
 [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM), fonte em `tmp/posse/`) com o código
-do jogo. Nada foi implementado. O objetivo é saber o que quebra, o que conflita e o que falta antes
-da primeira linha.
+do jogo. Na data do estudo, nada deste porte havia sido implementado. O objetivo é saber o que
+quebra, o que conflita e o que falta antes da primeira linha.
 
-## 1. Como o jogo funciona hoje
+**Atualização de 28/09:** a comparação das seções 1 e 2 é o retrato anterior ao modelo da base.
+O motor agora tem 16 partidos, `openingLoyalty`, `partyChance` e `chanceTargets` pela
+[especificação da base](the-base-model.md). A divergência da largada que bloqueava o porte foi
+resolvida no motor; a posse ainda precisa consultar esse motor, integrar pessoas e gestos e passar
+pelas provas da seção 4. O achado 86 permanece aberto para a duração da coalizão.
+
+**Escopo de teste em 30/09:** a ponte experimental em `tmp/posse/engine.html` já consulta a base
+estrutural do motor na abertura sem reforma. O Diretor quer transformar e testar esse protótipo,
+sem esperar o porte para o jogo completo. F5 reinicia a sessão do protótipo; a persistência prevista
+para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
+[plano de transformação](government-pilot.md#11-transformar-o-protótipo-da-posse--execução-em-3009).
+
+## 1. Como o jogo funcionava no estudo
 
 - **A posse é um formulário.** Nome, tratamento e partido (`src/app/dialogs.mjs`, `openSwear`). Ao
   enviar, `createState` cria a partida e a tela vai direto para o Gabinete
@@ -36,7 +48,7 @@ da primeira linha.
   esquema), `identity`, `boundaries` e `prose`;
 - **o passeio roda a 1440×980 e 1440×900**, e o macaco anda 60 ações.
 
-## 2. Onde protótipo e jogo divergem
+## 2. Onde protótipo e jogo divergiam no estudo
 
 | Tema                       | Protótipo                                                                    | Jogo                                                                              | Peso      |
 | -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- |
@@ -85,6 +97,13 @@ Cada risco com a defesa. Os quatro primeiros já custaram caro no protótipo.
 
 ## 4. Provas que nascem antes do código
 
+**Estado em 30/09:** `tests/suites/posse-flow.mjs` reproduziu a mesma pessoa mantida em duas
+pastas após remanejamento e a exoneração de vaga criando outro estado. O redutor agora tira a
+pessoa da cadeira anterior por ID, conserva homônimos distintos e devolve o estado original
+quando a pasta já está vaga. A prova de recarga e primeiro mês verifica que a pasta anterior
+não reaparece nem duplica a coalizão. Essas provas são do motor existente; o porte da tela e
+as reformas variáveis continuam pendentes.
+
 - no redutor: uma pessoa por cadeira; nomear quem já está em outra cadeira a tira de lá;
   exonerar vaga não muda nada;
 - na aplicação: a prévia de votos da tela é igual à base que o mês seguinte abre com aquele
@@ -100,8 +119,8 @@ Decidido por ele em 26/09: a base do começo segue o protótipo, aprimorado e fi
 posse vem primeiro e é o padrão das outras telas; o começo do jogo cria o Presidente (nome,
 partido, sexo, data de nascimento e mais). Ver o [ciclo 32](../cycles/32-the-new-interface.md), §6.
 
-**Partidos (26/09):** o protótipo passou a 16 partidos com as bancadas da posse de 2023 agrupadas pelas
-fusões de 2023; o catálogo do jogo (`src/data/parties.mjs`, hoje 9) segue na fase 2 do ciclo 32, com a
-fonte da Câmara.
+**Partidos (26/09):** o protótipo passou a 16 partidos com as bancadas da posse de 2023 agrupadas
+pelas fusões de 2023. O catálogo do jogo também passou a 16 partidos em 26/09; a referência a nove
+na comparação acima é histórica.
 
 As decisões que seguem abertas estão todas no [ciclo 32](../cycles/32-the-new-interface.md), §7.

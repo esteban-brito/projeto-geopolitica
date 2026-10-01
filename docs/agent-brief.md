@@ -137,11 +137,16 @@ interrupções. Custos de filtro, luz animada e recortes têm histórico medido.
 padrões e medições antes de repeti-los. Capturas existentes ficam em `captures/walk/`.
 
 A interface nova nasce em protótipo no canvas antes de entrar no jogo. A posse está aprovada
-(versão 25, 26/09); fonte, montagem e testes com o runtime real do canvas ficam em `tmp/posse/`
-(ver o README de lá). Medido lá: hover que muda estado redesenha a tela; 513 transições por hover
-davam pior quadro de 233 ms com CPU 4 vezes mais lenta; desfoque de fundo sob animação descartava
-quadros. A direção visual futura (Apple + Football Manager + Civilization + Valorant) está no mapa
-das telas e só se aplica com ordem dele.
+(versão 25, 26/09). A tela do Claude e o runtime do canvas estão em `vendor/posse/`; a versão
+ligada ao motor sai de `tools/prepare-posse.mjs` (ver `prototypes/posse/README.md`), e a cadeia
+de montagem antiga está arquivada em `tmp/history/posse/`. Medido no protótipo: hover que muda
+estado redesenha a tela; 513 transições por hover davam pior quadro de 233 ms com CPU 4 vezes
+mais lenta; desfoque de fundo sob animação descartava quadros.
+
+`prototypes/` guarda ensaios isolados, sem consumidor no jogo nem campo no save:
+`prototypes/government/` (estrutura variável de ministérios, 84 provas em `npm test`) e
+`prototypes/posse/` (a ponte da tela com o motor). Nada dali vira regra do jogo sem integração
+pela aplicação e revisão independente.
 
 ## Retrato do fim do estudo — conferir no handoff
 

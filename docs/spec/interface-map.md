@@ -71,7 +71,7 @@ Três estruturas com o mesmo visual, para comparar a estrutura e não a cor:
 
 O que eles simplificam, e o jogo não vai simplificar:
 
-- o placar soma as cadeiras de quem recebeu pasta; o motor puxa a lealdade até 80 e não garante
-  voto;
+- o placar do protótipo somava as cadeiras de quem recebeu pasta; desde 26/09, o motor calcula
+  chances por partido e votos firmes e prováveis pela [mesma regra da base](the-base-model.md);
 - os candidatos saem de uma regra fixa; no jogo sairão do elenco da semente;
 - as pessoas são silhuetas, e não retratos.

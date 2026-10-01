@@ -1,0 +1,2257 @@
+{
+  "recordedAt": "2026-09-30T23:39:54.998Z",
+  "status": "paused-by-user-for-shutdown",
+  "scope": "Organization unfinished; no further implementation authorized tonight.",
+  "plan": "docs/organization-plan.md",
+  "planManifest": "docs/evidence/workspace-organization-plan-2026-09-30.json",
+  "observed": [
+    {
+      "action": "archive",
+      "source": "tmp/posse/README.md",
+      "target": "tmp/history/posse/README.md",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/audit.cjs",
+      "target": "tmp/history/posse/audit.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "delete-duplicate",
+      "source": "tmp/posse/avatar-sheet-a.png",
+      "target": "vendor/posse/project/avatar-sheet-a.png",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "deletion-cancelled-required-relative-path"
+    },
+    {
+      "action": "delete-duplicate",
+      "source": "tmp/posse/avatar-sheet-b.png",
+      "target": "vendor/posse/project/avatar-sheet-b.png",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "a752444c52ad5838915a1c094d206164011e3fcaa42cb8aa3f74c4cf77c404b1",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "deletion-cancelled-required-relative-path"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/avatar-standard.json",
+      "target": "vendor/posse/avatar-standard.json",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "83350c57069fb9d5383360a2c6bb9253d3064f7239fb1e77cf90ce0a4d3c2e16",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/build-all.sh",
+      "target": "tmp/history/posse/build-all.sh",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/build2.mjs",
+      "target": "tmp/history/posse/build2.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/card-hover-test.cjs",
+      "target": "tmp/history/posse/card-hover-test.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-candidate-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-candidate-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-candidate-card-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-candidate-card-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-ceremony-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-ceremony-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-create-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-create-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-create-original.png",
+      "target": "tmp/history/posse/codex/avatar-approved-create-original.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-photo-president-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-photo-president-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-photo-two-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-photo-two-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-pilot.cjs",
+      "target": "tmp/history/posse/codex/avatar-approved-pilot.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-reference.png",
+      "target": "tmp/history/posse/codex/avatar-approved-reference.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-sizes.html",
+      "target": "tmp/history/posse/codex/avatar-approved-sizes.html",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-sizes.png",
+      "target": "tmp/history/posse/codex/avatar-approved-sizes.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-candidate-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-candidate-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-candidate-card-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-candidate-card-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-ceremony-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-ceremony-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-create-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-create-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-create-original.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-create-original.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-photo-president-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-photo-president-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-photo-two-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-photo-two-ai.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot.cjs",
+      "target": "tmp/history/posse/codex/avatar-pilot.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a752444c52ad/contact.png",
+      "target": "tmp/history/posse/codex/avatar-reviews/a752444c52ad/contact.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a752444c52ad/report.json",
+      "target": "tmp/history/posse/codex/avatar-reviews/a752444c52ad/report.json",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a8a6250c9b0c/contact.png",
+      "target": "tmp/history/posse/codex/avatar-reviews/a8a6250c9b0c/contact.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a8a6250c9b0c/report.json",
+      "target": "tmp/history/posse/codex/avatar-reviews/a8a6250c9b0c/report.json",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-style-reference.png",
+      "target": "tmp/history/posse/codex/avatar-style-reference.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/verify-avatar-integration.cjs",
+      "target": "tmp/history/posse/codex/verify-avatar-integration.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/engine.html",
+      "target": "tmp/history/posse/engine-before-organization.html",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/exit.cjs",
+      "target": "tmp/history/posse/exit.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/export-people.cjs",
+      "target": "tmp/history/posse/export-people.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/flow2.cjs",
+      "target": "tmp/history/posse/flow2.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/fuzz.cjs",
+      "target": "tmp/history/posse/fuzz.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/holes.cjs",
+      "target": "tmp/history/posse/holes.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/live.cjs",
+      "target": "tmp/history/posse/live.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/live.html",
+      "target": "vendor/posse/live.html",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "6c73cd224ff16a97adf26f0cc80f2e214c93ed4d79f2fa70522ab58ee0b22285",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/live0.png",
+      "target": "tmp/history/posse/live0.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/parts/class-now.js",
+      "target": "tmp/history/posse/parts/class-now.js",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/parts/data-now.js",
+      "target": "tmp/history/posse/parts/data-now.js",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/parts/template2.html",
+      "target": "tmp/history/posse/parts/template2.html",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-hover.mjs",
+      "target": "tmp/history/posse/patch-hover.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2.mjs",
+      "target": "tmp/history/posse/patch-v2.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2b.mjs",
+      "target": "tmp/history/posse/patch-v2b.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2c.mjs",
+      "target": "tmp/history/posse/patch-v2c.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2d.mjs",
+      "target": "tmp/history/posse/patch-v2d.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2e.mjs",
+      "target": "tmp/history/posse/patch-v2e.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2f.mjs",
+      "target": "tmp/history/posse/patch-v2f.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2g.mjs",
+      "target": "tmp/history/posse/patch-v2g.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2h.mjs",
+      "target": "tmp/history/posse/patch-v2h.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2i.mjs",
+      "target": "tmp/history/posse/patch-v2i.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2j.mjs",
+      "target": "tmp/history/posse/patch-v2j.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2k.mjs",
+      "target": "tmp/history/posse/patch-v2k.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2l.mjs",
+      "target": "tmp/history/posse/patch-v2l.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2m.mjs",
+      "target": "tmp/history/posse/patch-v2m.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2n.mjs",
+      "target": "tmp/history/posse/patch-v2n.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2o.mjs",
+      "target": "tmp/history/posse/patch-v2o.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/people-audit.cjs",
+      "target": "tmp/history/posse/people-audit.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/people-catalog.mjs",
+      "target": "tmp/history/posse/people-catalog.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/people-logic.js",
+      "target": "tmp/history/posse/people-logic.js",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/perf.cjs",
+      "target": "tmp/history/posse/perf.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/Hibrido.dc.html",
+      "target": "vendor/posse/project/Hibrido.dc.html",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "adcd6be6c6775bda64de425ad0f69b009583cd2fe531d24ebdf2868cb8b47772",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/Posse.dc.html",
+      "target": "vendor/posse/project/Posse.dc.html",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "5973410cc3ef6984d1df1d6635282b131862924695cd2c8521cb8fba486a00c7",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/avatar-sheet-a.png",
+      "target": "vendor/posse/project/avatar-sheet-a.png",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/avatar-sheet-b.png",
+      "target": "vendor/posse/project/avatar-sheet-b.png",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "a752444c52ad5838915a1c094d206164011e3fcaa42cb8aa3f74c4cf77c404b1",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/canvas.json",
+      "target": "vendor/posse/project/canvas.json",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "dd425abbf76f1471c442cbb28e440fa4f14004458e0d91ccfa27e1179bcb06b1",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/randomize-test.cjs",
+      "target": "tmp/history/posse/randomize-test.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/rt/artifact-type/dc-runtime.js",
+      "target": "vendor/posse/rt/artifact-type/dc-runtime.js",
+      "sourcePresent": true,
+      "targetPresent": true,
+      "targetSha256": "82ab863dabf94f79db1b4ced13046a03425dcd255e97a5e42c60b6e8035fea34",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "copied-verified-original-retained"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/sweep.cjs",
+      "target": "tmp/history/posse/sweep.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/techs-v2m.txt",
+      "target": "tmp/history/posse/techs-v2m.txt",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/tiptest.cjs",
+      "target": "tmp/history/posse/tiptest.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/ui-card.png",
+      "target": "tmp/history/posse/ui-card.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/uitest.cjs",
+      "target": "tmp/history/posse/uitest.cjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-0-criacao-vazia.png",
+      "target": "tmp/history/posse/v2-0-criacao-vazia.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-1-idade.png",
+      "target": "tmp/history/posse/v2-1-idade.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-2-criacao-cheia.png",
+      "target": "tmp/history/posse/v2-2-criacao-cheia.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-3-cerimonia.png",
+      "target": "tmp/history/posse/v2-3-cerimonia.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-4-posse.png",
+      "target": "tmp/history/posse/v2-4-posse.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-5-ficha.png",
+      "target": "tmp/history/posse/v2-5-ficha.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-6-travando.png",
+      "target": "tmp/history/posse/v2-6-travando.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-7-nomeado.png",
+      "target": "tmp/history/posse/v2-7-nomeado.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-8-foto.png",
+      "target": "tmp/history/posse/v2-8-foto.png",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/government.test.mjs",
+      "target": "tests/suites/government-structure.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "5e1e49061263539d2ecdf2442a64cf5bdeac3df0606c33d922df7cecd4a71ce4",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/government.test.mjs",
+        "bytes": 8661,
+        "sha256": "ab5e2d7d9f283263d5d1036e326f5ff34eab3ca309c1c344de58c60ebce80203"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/pilot.test.mjs",
+      "target": "tests/suites/government-pilot.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "9bb94a8ff61e8caf0e9792f997807b6651dc219eee418ebf7188469698f59f8c",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/pilot.test.mjs",
+        "bytes": 16917,
+        "sha256": "4500e7f9a49905b6229ff55ab845049fb342fcc99abbffe4ddb4a0e89b976132"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/operations.test.mjs",
+      "target": "tests/suites/government-operations.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "6f10d9494ab8fed7be75721ccc3d96eadcab72a4120f68da721f384003e25f82",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/operations.test.mjs",
+        "bytes": 15231,
+        "sha256": "c9692f9404e2901d3814d4db62a60baab6f186e3431d66441d6b7d7fce25a51a"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/demand.test.mjs",
+      "target": "tests/suites/government-demand.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "2cb4d96e004e1c95c635687bdee4ee4fdd85b5f2cec4e3f7f9d6841d83016c58",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/demand.test.mjs",
+        "bytes": 5570,
+        "sha256": "04be3637d11ad33f4481e825b93f9bca4da186eb3d6713ade9cf35c73bba9312"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/management.test.mjs",
+      "target": "tests/suites/government-management.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "ffe991f61635a110d1f9006b1b8b816a5c2babb5c4897105dc3537bbc75f0caf",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/management.test.mjs",
+        "bytes": 9940,
+        "sha256": "44b6ebcbfa6dd7d38726f3e90214442eb93da0ec00e420c650ab09027453766c"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/seed-competencies.mjs",
+      "target": "tools/import-posse-work.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "a87715031d71a4131753fee4fda123e6ea7fd3fbc25e1bba7943eb3b5cb9b475",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/seed-competencies.mjs",
+        "bytes": 2663,
+        "sha256": "93b47c6cd41d1d1fb2c75cbb0a87f1b67402343424481193361e25ff1403ff14"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/operations-demo.mjs",
+      "target": "tools/demo-government-operations.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "fbf4d3ce64fa5fd94a51d0b4b2773404a452bde1fe84abf83be59288cab15e35",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/operations-demo.mjs",
+        "bytes": 3271,
+        "sha256": "ac063ab77c11ba1d0da6dc078b19950bd37efaaf1d6a0de75b5c35df76922d27"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/demand-demo.mjs",
+      "target": "tools/demo-government-demand.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "b58557a970ddd35e1a48b9e48f9c37b156a63fad56383e0f3cfb56836ef35ec6",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/demand-demo.mjs",
+        "bytes": 1703,
+        "sha256": "094e47ae8f5e1355337b48dbdbe72069e9b2ef9b9017a9604a5f9466ee6695d6"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/management-demo.mjs",
+      "target": "tools/demo-government-management.mjs",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "e3f9aa64e8d87df461182c08f72a06800cc5af69dce1211531c5a9f74d3eda68",
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/management-demo.mjs",
+        "bytes": 3441,
+        "sha256": "1c261b7cf59f6dc4d64dd5c8f4d8108c3181279fefabe89748e2056cf32b39e1"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "delete-import-proxy",
+      "source": "tests/suites/government.mjs",
+      "target": null,
+      "sourcePresent": false,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": {
+        "path": "tmp/history/government-before-organization/government.mjs",
+        "bytes": 281,
+        "sha256": "087c3e04348f8024d75baaf7a30bc98a1fb910c5c110661c7d8585ed8d3948f5"
+      },
+      "status": "canonical-copy-rebased-original-archived"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-chained-900.png",
+      "target": "captures/probes/posse/comparison/engine-chained-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "dc89d1dc18f578ca01086f8c75228d3a2b4377a17d8060931b6cacf467a8d303",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-chained-980.png",
+      "target": "captures/probes/posse/comparison/engine-chained-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "584d4841e43c4642ea007561a9ac1deebab8df53058c566c1ad1a39a92a43524",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-create-900.png",
+      "target": "captures/probes/posse/comparison/engine-create-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "de17a1084541e771085d865b9e2352ac61345b1daf6b76ad3ac052c9982469a0",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-create-980.png",
+      "target": "captures/probes/posse/comparison/engine-create-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "86a9070056e7f497503606de150f5a2c10d7f3ca59c91d36e3567cd1a08003c7",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-destinations-900.png",
+      "target": "captures/probes/posse/comparison/engine-destinations-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "5fccfd38bf0cdf22a4c5d2a3e38bf507308f0539a657680fd6dd9cf234fa9cf7",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-destinations-980.png",
+      "target": "captures/probes/posse/comparison/engine-destinations-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "cd696d27ce82a41c7c09701fb5a71a740226b922ed156fe14d1ad80de61d7b15",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-joined-900.png",
+      "target": "captures/probes/posse/comparison/engine-joined-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "a9c49786d25369f97d896f93049e7dab5d3eb5af22a03ea9ad84aa3479e385a3",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-joined-980.png",
+      "target": "captures/probes/posse/comparison/engine-joined-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "5cc95a3fe8571244528a216e33c0f0d155652d097171ad98efeded18e9779676",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-photo-900.png",
+      "target": "captures/probes/posse/comparison/engine-photo-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "50c341dcc74ee9306f0f37b63418d50d1766ca2851d2d99f821b651612a307e9",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-photo-980.png",
+      "target": "captures/probes/posse/comparison/engine-photo-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "45d26f60cd6948248d4b8bea2ebb353edb8e82ef65886390bfb6a9df97423305",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-create-900.png",
+      "target": "captures/probes/posse/comparison/live-create-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "ba39773813296a0b6b3847a22d882723421cffdcc74d76f9deca5cefc114226c",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-create-980.png",
+      "target": "captures/probes/posse/comparison/live-create-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "f5cd1cae3cc24010281f9f44aeea60da6f84ea4e6024984e7d7baedc03ad95e6",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-joined-900.png",
+      "target": "captures/probes/posse/comparison/live-joined-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "14ea0276c53121558efbe73103690d52a54c1a6cc8e6a78f8d5150dc68168713",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-joined-980.png",
+      "target": "captures/probes/posse/comparison/live-joined-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "ea574782ac2ada7270d1b3c8835719a4f190df43c3b6df140b09e1c34123bbd2",
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-photo-900.png",
+      "target": "captures/probes/posse/comparison/live-photo-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "ec9501180bb0e38006ae095a419c9a4c145f7631673ad4f503396247fa6400c8",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-photo-980.png",
+      "target": "captures/probes/posse/comparison/live-photo-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "3ece93376ca9e793aef3bbe8c2faca6e2bea55d60bd6d4588f9cc903ffeb9fd7",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/engine-keyboard-900.png",
+      "target": "captures/probes/posse/controls/engine-keyboard-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "b68aa68e0a700397d142a9bfdefb5a23367abd9b64efd6a82156c7fb03edba31",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/engine-keyboard-980.png",
+      "target": "captures/probes/posse/controls/engine-keyboard-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "5e79420bddd61a073932755f1bf6c4af99714d434961aacb1d6cf2392140bce4",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/live-keyboard-900.png",
+      "target": "captures/probes/posse/controls/live-keyboard-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "f077e5d3b23ed033281351803d479e123fc5f08f41539277675449576e1d6480",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/live-keyboard-980.png",
+      "target": "captures/probes/posse/controls/live-keyboard-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "290af19f062486679a7e0d3d82d5b4139bca4ea36efa11c47f0c6360a75bc7c4",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-900.png",
+      "target": "captures/probes/posse/engine-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "2f8dc5315db36ef395818061f8c4fffa2ec5792aaf7d4e09453e1216df758e21",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-980.png",
+      "target": "captures/probes/posse/engine-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "68418f53095d587c80f8651c82431f37ee13adb8c8d5d7720a8984a6f30332d1",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-preserved-900.png",
+      "target": "captures/probes/posse/engine-preserved-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "91f370a441e7d7ff3ae8a26f1b59e20543d35365fea251a86ba6f89979088a71",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-preserved-980.png",
+      "target": "captures/probes/posse/engine-preserved-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "2e4cd6d64ec6d60494a2e313b822500d5c798afb82c64d248fe2a6fd70c6ccb8",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/live-preserved-900.png",
+      "target": "captures/probes/posse/live-preserved-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "d490b628b233bb6d242923f6cb946e643c3c53433905583a0b66409e62a1a9c2",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/live-preserved-980.png",
+      "target": "captures/probes/posse/live-preserved-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "bba6d554aa864a697274c49eb15044add41147c372e770ed3228978998b70865",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-900-normal-reload.png",
+      "target": "captures/probes/posse/motion/engine-900-normal-reload.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "6421c8b49d949977a1073f66eae85079074c486a7aca645d2c91a10f28b66443",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-980-normal-reload.png",
+      "target": "captures/probes/posse/motion/engine-980-normal-reload.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "b4cef5b6a00741f484bf47d9a02ac7086751eb41ba182f5824f9f315ea6f78c7",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-card-900.png",
+      "target": "captures/probes/posse/motion/engine-card-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "8556e1b1c0e2d30d064c92166be5bf03544b631f95035734fa38edf6b6fcd6be",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-card-980.png",
+      "target": "captures/probes/posse/motion/engine-card-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "892e5b1e72e630cd198b8bccce273d5be661a5361273a6f1aeb99ccd556c7ad6",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-900-normal-reload.png",
+      "target": "captures/probes/posse/motion/live-900-normal-reload.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "6421c8b49d949977a1073f66eae85079074c486a7aca645d2c91a10f28b66443",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-980-normal-reload.png",
+      "target": "captures/probes/posse/motion/live-980-normal-reload.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "b4cef5b6a00741f484bf47d9a02ac7086751eb41ba182f5824f9f315ea6f78c7",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-card-900.png",
+      "target": "captures/probes/posse/motion/live-card-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "ab389669f9b67825b37af7b8974a85360f8d73ed25dde8bcfff88c32363da182",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-card-980.png",
+      "target": "captures/probes/posse/motion/live-card-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "bc23d4061d8e9b0532fb5d59ea0b3f6bcea337263e4f3cfa316549a851120e67",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/reforms/engine-empty-900.png",
+      "target": "captures/probes/posse/reforms/engine-empty-900.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "f0fde4ded095098d3fe3f79a9c7403d41677fdf852ce7b8d58ea84ebb8a19536",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/reforms/engine-empty-980.png",
+      "target": "captures/probes/posse/reforms/engine-empty-980.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "b0cdedb222bf39e83b4e10f58ae6ab8c692860a5285711ce885ec67676dd3d91",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/world-ask-post.png",
+      "target": "captures/probes/world/world-ask-post.png",
+      "sourcePresent": false,
+      "targetPresent": true,
+      "targetSha256": "2e654f2d1e415e098643f446dffe2b4f9223a93b1b32871db6fe47f053d9bdd5",
+      "targetMatchesPlannedBytes": true,
+      "archive": null,
+      "status": "moved-output-may-have-been-refreshed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-demand-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/government-demand-validate.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-management-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/government-management-validate.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-operations-tests.log",
+      "target": "tmp/history/recovery-2026-09-30/government-operations-tests.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-operations-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/government-operations-validate.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/operations-independent-review.json",
+      "target": "tmp/history/recovery-2026-09-30/operations-independent-review.json",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/operations-review-input.txt",
+      "target": "tmp/history/recovery-2026-09-30/operations-review-input.txt",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/operations-review-instructions.txt",
+      "target": "tmp/history/recovery-2026-09-30/operations-review-instructions.txt",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/plan-audit-probe.mjs",
+      "target": "tmp/history/recovery-2026-09-30/plan-audit-probe.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-comparison-final.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-comparison-final.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-controls.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-controls.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-agenda.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-agenda.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-base.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-base.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-explorador.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-explorador.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-herdado.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-herdado.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-piso.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-piso.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-promessa.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-promessa.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-validate.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-motion-after.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-motion-after.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-motion-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-motion-before.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-preserve-ui.mjs",
+      "target": "tmp/history/recovery-2026-09-30/posse-preserve-ui.mjs",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-check.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-check.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-lint.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-lint.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-types.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-types.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-validate.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-after.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-after.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-before.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-browser.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-browser.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-icon-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-icon-before.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-institution-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-institution-before.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reset-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reset-validate.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-ui-audit.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-ui-audit.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/serve-recovery-20260930.err.log",
+      "target": "tmp/history/recovery-2026-09-30/serve-recovery-20260930.err.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/serve-recovery-20260930.log",
+      "target": "tmp/history/recovery-2026-09-30/serve-recovery-20260930.log",
+      "sourcePresent": true,
+      "targetPresent": false,
+      "targetSha256": null,
+      "targetMatchesPlannedBytes": false,
+      "archive": null,
+      "status": "not-executed"
+    }
+  ],
+  "portraits": [
+    {
+      "source": "tmp/posse/avatar-sheet-a.png",
+      "target": "vendor/posse/avatar-sheet-a.png",
+      "identical": true
+    },
+    {
+      "source": "tmp/posse/avatar-sheet-b.png",
+      "target": "vendor/posse/avatar-sheet-b.png",
+      "identical": true
+    }
+  ],
+  "suiteBodies": [
+    {
+      "path": "tests/suites/government-structure.mjs",
+      "preserved": true
+    },
+    {
+      "path": "tests/suites/government-pilot.mjs",
+      "preserved": true
+    },
+    {
+      "path": "tests/suites/government-operations.mjs",
+      "preserved": true
+    },
+    {
+      "path": "tests/suites/government-demand.mjs",
+      "preserved": true
+    },
+    {
+      "path": "tests/suites/government-management.mjs",
+      "preserved": true
+    }
+  ],
+  "frozenEvidence": [
+    {
+      "path": "docs/evidence/assets/bake-coat-of-arms.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/bake-envelopes-screen.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/bake-folder.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/bake-pen-whole.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/bake-pen.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/bake-phone-screen.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/bake-phone.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/bake-wood.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/keys-angle.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/assets/trim-edge.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/gate/validate-final-2026-09-23.log",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/gate/validate-flight-failure-2026-09-23.log",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/glass/deviation.png",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/glass/edge-divergence.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/glass/glass-audit.png",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/glass/lens-area.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/glass/lens-texture.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/glass/stages.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/government-demand-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/government-management-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/government-operations-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/government-review-attempt-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/plan-audit-2026-09-29.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-bridge-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-comparison-recovery-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-controls-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-motion-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-motion-before-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-recovery-validation-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-reforms-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-reset-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-ui-line-audit-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-ui-line-audit-2026-09-30.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-ui-line-diff-2026-09-30.patch",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-ui-preservation-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/posse-v2o-source.zip",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/review/ultra-finding-1.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/review/ultra-finding-1b.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/review/ultra-finding-3.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/review/ultra-findings.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/apple-transition.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/banding.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/gesture-curves.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/gesture.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/screencast-variants.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/transition-cost.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/veil-transition.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/styles/worst-contrast.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/workspace-cleanup-2026-09-30.json",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/workspace-cleanup-2026-09-30.md",
+      "unchanged": true
+    }
+  ],
+  "protectedBackupFiles": [
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-backup-2026-09-26.bundle",
+      "unchanged": true
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-gov-prework-2026-09-28.bundle",
+      "unchanged": true
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-gov-prework-2026-09-28.tar.gz",
+      "unchanged": true
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-posse-2026-09-26.tgz",
+      "unchanged": true
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-session-2026-09-29-pre-shutdown.tar.gz",
+      "unchanged": true
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/README.md",
+      "unchanged": true
+    }
+  ],
+  "endpoints": [
+    {
+      "path": "tmp/posse/live.html",
+      "status": 200
+    },
+    {
+      "path": "tmp/posse/engine.html",
+      "status": 200
+    },
+    {
+      "path": "vendor/posse/live.html",
+      "status": 200
+    },
+    {
+      "path": "prototypes/posse/index.html",
+      "status": 200
+    },
+    {
+      "path": "vendor/posse/avatar-sheet-a.png",
+      "status": 200
+    },
+    {
+      "path": "vendor/posse/avatar-sheet-b.png",
+      "status": 200
+    },
+    {
+      "path": "vendor/posse/rt/artifact-type/dc-runtime.js",
+      "status": 200
+    }
+  ],
+  "checks": {
+    "unit": {
+      "tests": 531,
+      "passed": 531,
+      "failed": 0,
+      "log": "tmp/reports/posse/unit.log"
+    },
+    "import": {
+      "seats": 38,
+      "workEntries": 152,
+      "deepEqual": true,
+      "generated": "tmp/reports/posse/import-check.mjs"
+    },
+    "staticUi": {
+      "styles": {
+        "blocks": 2,
+        "lines": 159,
+        "identical": true
+      },
+      "diffBlocks": 47,
+      "report": "tmp/reports/posse/ui-audit.json"
+    },
+    "comparison": {
+      "reports": [
+        {
+          "version": "live",
+          "height": 980,
+          "steps": 10,
+          "errors": [],
+          "requests": []
+        },
+        {
+          "version": "engine",
+          "height": 980,
+          "steps": 11,
+          "errors": [],
+          "requests": []
+        },
+        {
+          "version": "live",
+          "height": 900,
+          "steps": 10,
+          "errors": [],
+          "requests": []
+        },
+        {
+          "version": "engine",
+          "height": 900,
+          "steps": 11,
+          "errors": [],
+          "requests": []
+        }
+      ],
+      "log": "tmp/reports/posse/comparison.log",
+      "report": "tmp/reports/posse/comparison.json"
+    },
+    "fullValidation": "Not rerun after organization; prior full pass is historical.",
+    "remainingBrowsers": [
+      "reset",
+      "motion",
+      "controls",
+      "reforms"
+    ]
+  },
+  "corrections": [
+    "Portrait duplicates required at both relative paths; deletion cancelled.",
+    "Old suites, commands and import proxy archived after automatic review rejected removal commands.",
+    "Audit output briefly overwrote historical Markdown; restored byte-for-byte and original hash verified. All 50 frozen evidence files unchanged.",
+    "No active world-ask-post.png generator found; image preserved in probes/world."
+  ],
+  "server": {
+    "pid": 3244,
+    "port": 5173,
+    "restarted": false,
+    "oldUrls": "Old physical files still served; new aliases take effect after next start.",
+    "logs": [
+      "tmp/serve-recovery-20260930.log",
+      "tmp/serve-recovery-20260930.err.log"
+    ]
+  },
+  "remaining": [
+    "Format, types, lint and links for relocated files.",
+    "Remaining browser checks and old aliases after new server start.",
+    "Archive tmp/posse and closed flat logs only after path proof.",
+    "Update active guides and label historical/current documents.",
+    "Complete validate and independent review remain pending."
+  ],
+  "gitStatus": " M .prettierignore\n M README.md\n M docs/adr/0001-ai-stays-out-of-the-turn.md\n M docs/cycles/33-the-whole-game.md\n M docs/cycles/README.md\n M docs/handoff.md\n M docs/journal.md\n M docs/spec/game-in-one-page.md\n M docs/spec/interface-map.md\n M docs/spec/migration-map.md\n M docs/spec/presidential-checklist.md\n M docs/spec/rules-grammar.md\n M docs/spec/the-base-model.md\n M docs/spec/the-cabinet.md\n M docs/spec/the-posse-port.md\n M src/public/index.mjs\n M src/state/state.mjs\n M tools/serve-static.mjs\n?? .codex/\n?? docs/archive/\n?? docs/evidence/government-demand-2026-09-30.json\n?? docs/evidence/government-management-2026-09-30.json\n?? docs/evidence/government-operations-2026-09-30.json\n?? docs/evidence/government-review-attempt-2026-09-30.json\n?? docs/evidence/plan-audit-2026-09-29.json\n?? docs/evidence/posse-bridge-2026-09-30.json\n?? docs/evidence/posse-comparison-recovery-2026-09-30.json\n?? docs/evidence/posse-controls-2026-09-30.json\n?? docs/evidence/posse-motion-2026-09-30.json\n?? docs/evidence/posse-motion-before-2026-09-30.json\n?? docs/evidence/posse-recovery-validation-2026-09-30.json\n?? docs/evidence/posse-reforms-2026-09-30.json\n?? docs/evidence/posse-reset-2026-09-30.json\n?? docs/evidence/posse-ui-line-audit-2026-09-30.json\n?? docs/evidence/posse-ui-line-audit-2026-09-30.md\n?? docs/evidence/posse-ui-line-diff-2026-09-30.patch\n?? docs/evidence/posse-ui-preservation-2026-09-30.json\n?? docs/evidence/posse-v2o-source.zip\n?? docs/evidence/workspace-cleanup-2026-09-30.json\n?? docs/evidence/workspace-cleanup-2026-09-30.md\n?? docs/evidence/workspace-organization-plan-2026-09-30.json\n?? docs/organization-plan.md\n?? docs/plan-audit.md\n?? docs/spec/dynamic-government.md\n?? docs/spec/government-pilot.md\n?? prototypes/\n?? src/application/posse.mjs\n?? tests/browser/posse-comparison.mjs\n?? tests/browser/posse-controls.mjs\n?? tests/browser/posse-motion.mjs\n?? tests/browser/posse-reforms.mjs\n?? tests/browser/posse.mjs\n?? tests/suites/government-demand.mjs\n?? tests/suites/government-fuzz.mjs\n?? tests/suites/government-management.mjs\n?? tests/suites/government-operations-fuzz.mjs\n?? tests/suites/government-operations.mjs\n?? tests/suites/government-pilot.mjs\n?? tests/suites/government-search.mjs\n?? tests/suites/government-structure.mjs\n?? tests/suites/posse-bridge.mjs\n?? tests/suites/posse-flow.mjs\n?? tests/suites/posse-reforms.mjs\n?? tests/suites/posse-structure.mjs\n?? tools/audit-posse-ui.mjs\n?? tools/demo-government-demand.mjs\n?? tools/demo-government-management.mjs\n?? tools/demo-government-operations.mjs\n?? tools/import-posse-work.mjs\n?? tools/prepare-posse.mjs\n?? vendor/posse/\n",
+  "commit": false,
+  "push": false
+}

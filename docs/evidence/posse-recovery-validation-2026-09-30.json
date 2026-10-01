@@ -1,0 +1,113 @@
+{
+  "date": "2026-09-30",
+  "scope": "Recupera??o e transforma??o isolada da posse; preserva??o da UI e compara??o linha por linha. Sem aprova??o independente dos sistemas ou integra??o com a partida.",
+  "validation": {
+    "command": "npm.cmd run validate",
+    "exitCode": 0,
+    "guards": 13,
+    "syntheticTests": 68,
+    "unitTests": 531,
+    "unitFailures": 0,
+    "links": true,
+    "types": true,
+    "lint": true,
+    "format": true,
+    "walk": {
+      "width": 1440,
+      "heights": [
+        980,
+        900
+      ],
+      "passed": true
+    },
+    "monkey": {
+      "actions": 60,
+      "seed": 7,
+      "findings": 0
+    },
+    "log": "tmp/posse-recovery-validate.log",
+    "subsequentChecks": "Ap?s adicionar auditoria est?tica e prova de teclado: check, types, lint, format, links e git diff --check passaram."
+  },
+  "browser": {
+    "comparisonCases": 4,
+    "comparisonGestures": 42,
+    "reformsCases": 2,
+    "motionCases": 16,
+    "interactionCases": 4,
+    "controlCases": 8,
+    "allCommandExitCodes": 0
+  },
+  "ui": {
+    "css": {
+      "blocks": 2,
+      "lines": 159,
+      "identical": true
+    },
+    "methods": 18,
+    "identicalMethods": 16,
+    "reviewedChanges": 47,
+    "f5FinalCaptures": [
+      {
+        "height": 980,
+        "identicalBytes": true,
+        "sha256": "b4cef5b6a00741f484bf47d9a02ac7086751eb41ba182f5824f9f315ea6f78c7"
+      },
+      {
+        "height": 900,
+        "identicalBytes": true,
+        "sha256": "6421c8b49d949977a1073f66eae85079074c486a7aca645d2c91a10f28b66443"
+      }
+    ]
+  },
+  "cleanup": {
+    "deleted_files": 182,
+    "deleted_bytes": 45771001,
+    "desktop_entries": [
+      "cld",
+      "cld-backups",
+      "desktop.ini"
+    ],
+    "retained_desktop_backups": 5,
+    "retained_desktop_backup_bytes": 356579535,
+    "original_source": [
+      {
+        "path": "tmp/posse/live.html",
+        "sha256": "6c73cd224ff16a97adf26f0cc80f2e214c93ed4d79f2fa70522ab58ee0b22285",
+        "unchanged": true
+      },
+      {
+        "path": "tmp/posse/project/Posse.dc.html",
+        "sha256": "5973410cc3ef6984d1df1d6635282b131862924695cd2c8521cb8fba486a00c7",
+        "unchanged": true
+      },
+      {
+        "path": "tmp/posse/rt/artifact-type/dc-runtime.js",
+        "sha256": "82ab863dabf94f79db1b4ced13046a03425dcd255e97a5e42c60b6e8035fea34",
+        "unchanged": true
+      }
+    ],
+    "fixture_consent_preserved": true
+  },
+  "livePages": [
+    {
+      "url": "http://127.0.0.1:5173/tmp/posse/live.html",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5173/tmp/posse/engine.html",
+      "status": 200
+    }
+  ],
+  "remoteControl": {
+    "mode": "daemon",
+    "status": "connected",
+    "serverName": "DESKTOP6",
+    "phonePairingConfirmed": false
+  },
+  "remaining": [
+    "Curr?culos conhecidos nas fichas e gera??o/materializa??o por semente.",
+    "Valor pol?tico da estrutura vari?vel, consequ?ncias, custos e vig?ncia.",
+    "Propostas e v?nculos institucionais; opera??es pendentes conservam o estado.",
+    "Revis?o independente: tentativa anterior do Claude bloqueada por limite semanal, sem nova tentativa."
+  ]
+}

@@ -9477,3 +9477,501 @@ reescritos com a mesma intenção. O governo parado deixou de cair quando a qued
 partidos não tinham líder para romper. Com um líder por bloco, ele cai no mês 43, como antes, mas
 porque os partidos saem. As provas do mundo passaram de 24% para 19% de aprovação, porque com
 todos servidos ninguém sai com 24%. A série mudou: `agenda` 20 de 42, antes 22 de 43.
+
+### 102 · Revisão das fichas no protótipo — 27/09
+
+Por pedido do Diretor, revisadas as 812 fichas da posse: formação, profissão,
+trajetória, posições públicas, forças, limites e notas. O catálogo v2o substitui
+os textos genéricos dos técnicos e notáveis; o gerador político passa a relacionar
+formação e experiência com a pasta. A revisão mantém três técnicos de preparo 6
+visíveis por pasta e contextualiza o preparo dos notáveis. A auditoria das 812 fichas,
+o teste de hover e seleção e a página servida passaram; `npm run validate` também fechou
+verde, com 423 testes, passeio visual e macaco. A fonte e a sequência de remontagem ficam
+registradas no handoff; resta apenas uma revisão externa de design, sem bloqueio local.
+
+### 103 · Retomada alinhada com a base e a posse — 28/09
+
+O Diretor pediu para atualizar o que estivesse defasado e manter o Codex estudado. Conferi o
+plano do ciclo 33, a ECLUSA, a composição do gabinete, as provas da base, o estudo de porte e o
+gerador local da posse. O motor já usa 16 partidos e chance de apoio por partido; a posse v2o
+continua protótipo. Atualizei o handoff, o modelo da base, o mapa de migração, o estudo de porte,
+o mapa da interface, o README local e a memória do Codex. A eleição da Mesa fica na etapa 4.
+Corrigi a chance neutra documentada de 75% para os 80% do código e preservei as comparações
+históricas como retratos datados. Não alterei motor, tela, provas nem calibragem.
+`npm run validate` passou: 13 guardas, zero links quebrados, tipos, lint, formato, 423 testes,
+passeio e macaco (60 ações, semente 7, zero achados).
+
+### 104 · Correções no experimento de governo variável — 29/09
+
+Após a revisão e o pedido para prosseguir, acrescentei seis provas ao experimento separado.
+Cinco falharam antes da correção: transferências que saem e voltam eram desfeitas pelas inversas,
+o verificador não detectava trabalho removido e um ID inicial podia bloquear novas pastas.
+Atribuições agora têm identidade própria, preservada nas inversas aninhadas; inventário e
+contador de órgãos cobrem as duas outras falhas. As dez provas passaram, assim como a checagem
+explícita de tipos do experimento. O importador ganhou caminhos explícitos; uma extração nova
+do ZIP reproduziu as 152 descrições. Ajustei as instruções de recuperação e a formatação do
+rascunho de design. Jogo principal, UI e saves permanecem sem integração; a revisão independente
+do novo sistema ainda é necessária.
+
+Validação desta rodada: `npm run validate` passou com 13 guardas, zero referências quebradas,
+tipos, lint, formato, 423 testes, passeio e macaco (60 ações, semente 7, zero achados).
+As dez provas do experimento foram executadas separadamente do portão principal.
+
+### 105 · Detalhamento do desenho de competências e preparo — 29/09
+
+Após o pedido para prosseguir, detalhei no contrato de governo variável o mapa entre descrições
+e competências, episódios de carreira, limites dos 30 tipos, geração por fluxo dedicado,
+agregação explicável de preparo, busca, sugestão de destinos e critérios de integração.
+Conferi o inventário das 152 descrições e os mecanismos existentes de geração e aleatoriedade.
+A contagem do rascunho confirmou 80 composições, 240 relações e cobertura mínima dos 30 tipos;
+isso ainda não prova preparo calculado nem uma partição de 80 ministérios simultâneos.
+Os cortes numéricos, a decomposição completa e a conferência jurídica continuam pendentes.
+Nenhum código do jogo ou do experimento foi alterado nesta etapa de desenho.
+
+### 106 · Piloto institucional e correção das premissas — 29/09
+
+Pesquisei fontes oficiais para Direitos Humanos, Saúde e Defesa e registrei o piloto com
+responsabilidades distintas, capacidades, continuidade e escolhas jogáveis. O Diretor reforçou
+inteligência no planejamento e esclareceu que os números eram exemplos. Corrigi o contrato:
+retiradas cotas de tipos, ministérios, encaixes e preparo máximo garantido. O repertório anterior
+é exploratório; o caso sintético 80 → 5 continua sendo apenas uma prova existente. A arquitetura
+deverá justificar suas dimensões por evidência. Nenhuma mudança no jogo ou na UI nesta rodada.
+
+### 107 · Encerramento local para desligamento — 29/09
+
+A pedido do Diretor, conferidos os arquivos, backups anteriores e fonte local da posse.
+Atualizado o handoff com a direção vigente, pendências e comando para reabrir o protótipo após
+reiniciar. Cópia local da sessão em `Desktop/cld-session-2026-09-29-pre-shutdown.tar.gz`, com
+Git e arquivos de trabalho, exceto `node_modules`. Sem commit, publicação ou encerramento do servidor.
+
+### 108 · Primeiro ensaio de instituições e preparo — 29/09
+
+O recorte isolado agora distingue quem conduz uma política de quem executa, regula ou participa.
+Em seis trabalhos de Direitos Humanos, Saúde e Defesa, reformas alteram a condução ministerial
+sem deslocar automaticamente a Ouvidoria, a Anvisa ou as Forças Armadas. Quando uma fusão desativa
+a pasta legal da instituição, o ensaio acusa a relação pendente. Dois currículos fixos
+permitem comparar manter a estrutura com fundir pastas: a avaliação aponta o episódio que cobre
+cada trabalho, uma transferência de experiência explicitada e lacunas de informação, sem nota
+numérica. As 16 provas do experimento passaram. O teste não mede serviço, equipe, verba, rito,
+efeito ou diversão; esses pontos e a revisão independente continuam pendentes. As fontes legais
+do piloto foram consultadas nos artigos pertinentes. Nenhum arquivo do jogo principal mudou.
+
+### 109 · Continuidade no ensaio de reforma — 29/09
+
+O piloto ganhou um inventário sintético de casos, equipes e recursos ligado a instituições,
+não ao nome do ministério. A comparação detecta IDs perdidos, criados ou transferidos e marca
+os itens cuja instituição ficou sem pasta legal ativa. Fundir Direitos Humanos em Saúde conserva
+os IDs da Ouvidoria, mas acusa a continuidade pendente de seus casos e equipe. As 18 provas do
+experimento e a checagem estrita de tipos passaram. Ainda não há simulação de atendimento,
+verba, efeito ou rito jurídico; revisão independente precede a integração.
+
+### 110 · As quatro escolhas comparadas — 29/09
+
+O recorte ganhou informação em saúde, Educação como destino estrutural e dois currículos
+adicionais. `compareGovernment` confronta os mesmos estados iniciais nas quatro escolhas do
+piloto: manter Direitos Humanos e trocar titular, fundir, extinguir com destino por trabalho e
+criar Saúde Digital. Expõe trabalho movido, preparo por episódio e vínculos pendentes; não
+atribui custo, apoio ou efeito. As 22 provas do experimento passaram. O caso novo ainda precisa
+de revisão institucional antes de virar catálogo do jogo.
+
+### 111 · Auditoria adversarial do piloto — 29/09
+
+Cinco hipóteses viraram provas que falharam antes da correção: mudar o tipo de caso mantendo o
+ID sumia no comparador; catálogo duplicado ou incompleto produzia parecer parcial; dois fatos
+podiam compartilhar o ID do episódio; a mesma pessoa ocupava duas pastas sem alerta; e uma
+exoneração sem reforma deixava vaga invisível. O parecer agora acusa todos os casos. Duas
+sondas com `fast-check`, sementes 20270929 e 20270930, passaram por 200 sequências cada, de
+20 a 80 reformas, cobrindo os sete gestos, estado anterior, save/recarga e continuidade. O
+experimento tem 30 provas verdes; domínio principal, saves e UI não foram alterados. A revisão
+independente e a modelagem de custo, rito e efeitos continuam pendentes.
+
+### 112 · Releitura crítica do parecer — 29/09
+
+A revisão adicional encontrou dois defeitos que as provas anteriores não cobriam. Com um episódio
+de carreira oculto e outro conhecido sem relação, o parecer concluía “não demonstrado”, embora a
+informação oculta ainda pudesse explicar o preparo. Uma nomeação mantida numa pasta extinta fazia
+o parecer falhar em vez de acusar a pendência. Ambos foram reproduzidos em provas antes da correção.
+Agora o primeiro caso retorna “desconhecido” e o segundo lista a nomeação sem pasta ativa. As
+duas sondas de reformas passaram a integrar a suíte `tests/suites/`, porque `fast-check` só pode
+ser importado em `tests/`. O experimento soma 33 provas; a suíte principal, 425. A auditoria do
+motor estrutural encontrou ainda um inventário duplicado que a validação aceitava; a prova falhou
+antes da correção. Guardas,
+tipagem, lint, formato e links passaram em terminal. Passeio de navegador e simulação de design
+permanecem pendentes; nenhuma conclusão de equilíbrio resulta deste ensaio.
+
+### 113 · Fronteira de informação e inversas de nomes — 29/09
+
+Com a liberação do Diretor para executar navegador, o plano priorizou informação presidencial,
+histórico das reformas e cobertura do portão. Quatro provas falharam antes das correções: um
+episódio oculto alterava o parecer com a mesma informação visível; um ID oculto repetido fazia
+a avaliação falhar; a completude conhecida do registro não distinguia lacuna de incerteza;
+e dividir uma fusão apagava uma renomeação posterior que retornara ao mesmo texto.
+
+A avaliação agora usa e valida somente evidências conhecidas. `knownHistoryComplete` declara
+a completude conhecida; sua ausência mantém a incerteza. Os quatro currículos sintéticos têm
+completude explícita para o recorte. Uma prova por propriedades compara 200 históricos ocultos
+com a mesma informação presidencial, semente 20270931. Nomes recebem revisão própria no estado
+experimental, preservada na recarga e em inversas aninhadas. Contratos dos dados fixos foram
+precisados, com expectativas das provas preservadas; a tipagem passou com `noUncheckedIndexedAccess`.
+
+As 36 provas locais passaram a integrar `npm test` por `tests/suites/government.mjs`. Somadas às
+três provas por propriedades, são 39 provas do experimento. O `validate` completo fechou verde:
+13 guardas, zero links quebrados, tipos, lint, formato, 462 testes, passeio em 1440×980 e 1440×900
+e macaco de 60 ações, semente 7, zero achados. Inspecionadas as capturas de Gabinete, posse e
+Congresso. As seis sondas de 48 meses, semente 20270101, reproduziram a série de 26/09. São
+medidas do jogo existente; o protótipo segue sem custos, efeitos materiais ou integração.
+Revisão independente e modelagem jurídica e institucional precedem a integração.
+
+### 114 · Auditoria dos planos e contratos ainda abertos — 29/09
+
+A pedido do Diretor, a revisão rastreou 16 documentos de especificação, 33 ciclos, três ADRs
+e 20 pesquisas. Contratos ativos receberam confronto detalhado; ciclos antigos tiveram triagem
+de situação e reaproveitamento, sem alegar releitura integral do histórico. O relatório está em
+[plan-audit.md](plan-audit.md), com 12 achados, fontes, evidência, provas propostas e sequência.
+
+Corrigidas referências de autoridade, vigência da antiga autorização de API, codinome decidido,
+cobertura datada do checklist e precedência do governo variável. A expansão das 152 descrições
+agora exige primeiro o portão material do piloto. A gramática passou a registrar o alcance
+restrito do sobrestamento por MP e a distinguir o rebaixamento por poder como legado.
+
+Uma sonda local chamou funções de produção: a mesma faixa constitucional recebe `amendment`,
+`law` e `budget` para poder 0, 60 e 85. A proxy de folha do petróleo na abertura é 8,4568
+bilhões anuais; as participações da ficha somam 98,26%; as somas de chances por partido e
+deputado divergem em 1,7644 na semente 20270101. Essas contas não são campanha nem calibração.
+Resultados em [evidence/plan-audit-2026-09-29.json](evidence/plan-audit-2026-09-29.json).
+
+Permanecem calendário final, ciclo e efeitos de MP, contabilidade da estatal, agência dos
+portões, dependências mínimas de informação e aceite estatístico. O próximo passo recomendado
+é um recorte com consequências, revisão independente e uso pelo Diretor antes de ampliar o
+catálogo. Nenhum motor, dado calibrado, prova ou save foi modificado nesta auditoria.
+
+O portão documental passou: 13 guardas e 68 provas sintéticas, zero referências quebradas,
+Prettier dos documentos alterados e `git diff --check`. O `validate` completo não foi repetido.
+
+### 115 · Consequências materiais no piloto isolado — 30/09
+
+O Diretor autorizou prosseguir após a auditoria. O recorte operacional foi especificado e suas
+provas nasceram antes da implementação. `operations.mjs` conserva equipes, trabalhos, fundos e
+registros; separa coordenação de execução. Prioridades disputam uma capacidade por equipe.
+Repasse custa esforço antes de mover ou compartilhar coordenação e dados explícitos. Executores
+não mudam pelo nome ou destino ministerial; casos já coordenados continuam na instituição.
+Caixa paga somente execução e continua reconciliado; transição utiliza equipes já financiadas.
+
+As quatro escolhas receberam pacotes sintéticos com a mesma abertura e prioridades. Fusão
+antecipa educação e atrasa denúncias; criação digital antecipa informação e deixa outros trabalhos
+sem coordenação. Um quinto contrafactual entrega informação antes apenas mudando prioridade.
+Isso impede atribuir à criação de pasta uma vantagem que a gestão já produz. Recuperação
+compartilha a equipe existente, consome esforço e termina a fila, preservando gastos e entregas.
+
+Passaram 18 provas novas, incluindo 200 cenários com recursos, preços e prioridades variados,
+seis períodos cada, semente 20270930. O ensaio compara recarga e execução idênticas, acesso de
+ministro versus executor, trabalho parcial, escassez, repasses conflitantes e previsão com o
+mesmo kernel. Sem retrato conhecido completo, previsão declara incerteza. Evidência em
+[government-operations-2026-09-30.json](evidence/government-operations-2026-09-30.json).
+
+Custos e períodos são unidades sintéticas; instituições administrativas adicionais são exemplos.
+Não há reação política, folha recorrente, novas chegadas ou produtividade derivada do currículo.
+Falta provar construção da visão presidencial, autorização dos dados, vigência, hipóteses reais
+de capacidade e custos, teste de uso e revisão independente. Pacote de revisão no README do
+experimento. O jogo principal e seu save não foram alterados.
+
+A guarda de fronteiras rejeitou a dependência `fast-check` no arquivo do protótipo. A mesma
+prova foi movida para `tests/suites/government-operations-fuzz.mjs`, sem alterar verificações
+nem enfraquecer a guarda. O `validate` completo então passou: 13 guardas, 68 provas sintéticas,
+links, tipos, lint, formatação, 480 testes, passeio em 1440×980 e 1440×900 e macaco de 60 ações,
+semente 7, zero achados. São 57 provas do experimento. Tipagem explícita passou com
+`noUncheckedIndexedAccess` e `exactOptionalPropertyTypes`; `git diff --check` passou. Inspecionadas
+as capturas de Gabinete em 900 e Congresso. Passeio e macaco exercitam o jogo existente, não
+uma interface nova para o recorte. Não houve nova simulação mensal do motor, que não mudou.
+
+### 116 · Demanda, recebimentos e retomada — 30/09
+
+O Diretor autorizou prosseguir e pediu eficiência. A revisão independente foi tentada no Claude
+com apenas núcleo e casos, sem ferramentas ou edição; a primeira conexão foi recusada e a
+tentativa autorizada retornou limite semanal (429). Não houve análise, uso de tokens informado
+ou aprovação. Registro em [government-review-attempt-2026-09-30.json](evidence/government-review-attempt-2026-09-30.json).
+
+O piloto recebeu `receiveWork` e `receiveFunding`: entradas identificadas, chegada, histórico de
+créditos e reconciliação sem modificar abertura. `demand.mjs` compõe a mesma execução em cinco
+casos de 12 períodos. Caixa suficiente não resolve sobrecarga de equipe; financiamento recupera
+fila quando há capacidade disponível. Reduzir entradas futuras conserva os casos anteriores.
+São unidades sintéticas e origens declaradas, sem fonte orçamentária real ou novas equipes.
+
+Provas nasceram antes do código. Oito provas locais e 100 fluxos de oito períodos, semente
+20270932, passaram. A prova de retomada caiu por crédito repetido: o calendário reiniciava em
+um. Corrigido para continuar do próximo período e confrontar entradas passadas com o histórico.
+Recarga produz a mesma série completa; snapshots sem recebimentos continuam aceitos.
+[Evidência](evidence/government-demand-2026-09-30.json) conserva entradas, cenários e séries.
+
+Pendentes revisão independente incluindo a extensão, experiência ligada à gestão, fontes reais,
+folha recorrente, autorização de caixa e dados, vigência e uso. Nenhuma mudança no motor, nos
+dados calibrados ou no save principal.
+
+O portão completo passou: 13 guardas, 68 provas sintéticas, links, tipos, lint, formato,
+489 testes, incluindo 66 do experimento, passeio nas duas resoluções e macaco de 60 ações,
+semente 7, zero achados. Tipagem explícita estrita e `git diff --check` passaram. A guarda de
+nomes exigiu escrever o padrão acentuado do teste como string em `RegExp`; padrão e verificações
+foram preservados. Nenhuma guarda ou expectativa antiga foi enfraquecida. Não houve nova
+simulação mensal; os cenários novos exercitam somente o protótipo.
+
+### 117 · Experiência, agenda e consulta com custo — 30/09
+
+O Diretor pediu continuidade com eficiência. O contrato comportamental e sete provas nasceram
+antes do módulo; a primeira execução confirmou a ausência da implementação. `management.mjs`
+compõe avaliação conhecida e o kernel operacional, sem alterar motor, calibragem ou save.
+
+Agenda familiar é uma estratégia de ensaio explícita, comparada à ordem presidencial, não
+uma previsão universal sobre ministros. Consulta conserva assessor, evidência e pasta; reserva
+capacidade existente antes de repasses e tarefas, por hipótese revisável. O parecer só orienta
+o período seguinte, não vira experiência do ministro e não concede acesso. Oitava prova cobre
+duas consultas concorrentes com repasse e igualdade entre previsão e execução com reservas.
+
+Quatro casos em quatro períodos demonstram o contrafactual: educador prioriza educação pela
+familiaridade, mas ordem direta entrega atendimento no primeiro período. A consulta ao ouvidor
+entrega atendimento no segundo e conclui os três trabalhos no quarto, contra o terceiro sem
+consulta. Não há equipe extra ou caixa novo. [Entradas, planos e séries](evidence/government-management-2026-09-30.json).
+A prova controlada mantém executor e fundo iguais nas alternativas para isolar a experiência;
+suas expectativas foram preservadas. Os cenários institucionais mantêm fundos separados:
+prioridade diferente muda o fundo que paga. Não alterar o kernel fiscal para igualar esses gastos.
+
+Oito provas locais e tipagem explícita estrita de todos os módulos do experimento passaram.
+`validate` completo passou: 13 guardas, 68 sintéticas, links, tipos, lint, formato, 497 testes,
+incluindo 74 do experimento, passeio em 1440×980 e 1440×900 e macaco de 60 ações, semente 7,
+zero achados. `git diff --check` passou. Navegador exercita o jogo existente; não há interface
+nova do recorte. Nenhuma expectativa antiga ou guarda foi enfraquecida.
+Revisão independente continua pendente após limite semanal do Claude, incluindo as extensões
+de demanda e gestão. Fontes reais, visão presidencial, custos, vigência e uso seguem abertos.
+Não houve nova simulação mensal; os mecanismos novos continuam isolados.
+
+### 118 · Prioridade jogável e contratos de nomeação — 30/09
+
+O Diretor priorizou explicitamente o que aproxima uma partida testável e disse que não quer
+testar ainda. Fila e ciclo 33 passaram a dar precedência ao percurso Presidente → ministérios
+→ posse → Gabinete e à consequência na partida. Expansão de catálogo, polimento e novos
+ensaios isolados precisam destravar uma decisão desse percurso para vir antes. As etapas
+1–4 ainda levam ao marco de 2027; teste humano aguarda o Diretor, sem pedido nesta rodada.
+
+Como preparação do porte, três provas novas em `tests/suites/posse-flow.mjs` reproduziram
+remanejamento que deixava a mesma pessoa em duas pastas, inclusive após save e mês seguinte,
+e exoneração de vaga que criava outro estado. Corrigido o redutor: comparação por ID retira
+a pessoa da cadeira anterior e preserva homônimos; exoneração de vaga devolve o mesmo estado.
+Não há nova tela, esquema, migração de save ou mudança de calibragem. As 15 provas dirigidas
+de gabinete e fluxo passaram. As seis sondas de 48 meses, semente 20270101, reproduziram a
+série do handoff: votos, dívida e os índices de indústria e segurança não mudaram. Logs em
+`tmp/posse-flow-simulate-<política>.log`. `validate` completo passou: 500 testes, 13 guardas,
+68 sintéticas, links, tipos, lint, formato, passeio em 1440×980 e 1440×900 e macaco de 60 ações,
+semente 7, zero achados. `git diff --check` passou. Nenhuma guarda ou expectativa antiga mudou.
+
+Próximo lote: ligar nomeações e consulta da base à posse aprovada, com dados do motor e recarga.
+Reformas variáveis, criação completa, convites, visão presidencial e revisão independente
+continuam pendentes; não declarar o porte ou o marco jogável concluídos por estas provas.
+
+### 119 · Correção de escopo: testar o protótipo — 30/09
+
+O Diretor esclareceu que quer testar somente o novo protótipo e auditar, desenvolver e
+aprimorar durante o uso. A preparação havia ampliado o escopo para integrar a posse e
+aproximar uma partida de 2027. Essa integração saiu do trabalho atual; fila e ciclo 33
+registram a correção. O teste do protótipo não depende de concluir essas etapas.
+
+A ponte experimental ficou em `tmp/posse/engine.html`, preservando a versão original.
+O navegador comprovou nomeação e recarga em 1440×980 e 1440×900; o registro está em
+`docs/evidence/posse-bridge-2026-09-30.json`. O lote permanece incompleto, sem portão completo
+ou revisão independente. O servidor local foi iniciado sem janela visível; página, módulos,
+runtime e folhas de retratos responderam HTTP 200. Nenhum navegador do usuário foi aberto
+automaticamente. Próximos ajustes devem nascer do teste do protótipo.
+
+### 120 · F5 reinicia e plano de transformação da posse — 30/09
+
+O Diretor encontrou recarga retomando a sessão e determinou que F5 reinicie tudo. A causa era
+a persistência automática acrescentada à ponte experimental. A prova de navegador foi ajustada
+para o contrato explícito novo, conservando as provas de nomeação, consulta e captura. Falhou
+antes da correção: a criação do Presidente não reaparecia após recarregar.
+
+Retiradas gravação e retomada do protótipo. A inicialização descarta apenas a chave antiga da
+ponte; não limpa o armazenamento do jogo. A página experimental foi regenerada da fonte
+preservada. A prova passou em 1440×980 e 1440×900, com rascunho antigo, nome vazio após recarga,
+captura descartada, dois reinícios e quatro chaves do jogo intactas. Registro em
+`docs/evidence/posse-reset-2026-09-30.json`; a evidência anterior permanece histórica.
+
+O pedido de planejamento virou a seção 11 de `docs/spec/government-pilot.md`, sem criar ciclo
+ou plano concorrente. Inventaria o que está na tela e o que existe só em módulos; ordena
+estabilização, estrutura única ligada aos gestos, currículos nas fichas, consequências/base
+variável e expansão pelos testes do Diretor. Cada entrega tem efeito observável e provas.
+Granularidade, preparo, cadastro/aceitação, valor político, vigência, informação e geometria
+continuam decisões explícitas. O próximo lote liga juntar/desfazer na tela ao módulo estrutural,
+depois de estabilizar os gestos. Não considerar UI transformada ou sistema aprovado pelo plano.
+
+Após a ordem de preservar a UI do Claude, comparadas a referência `live.html` e a página
+experimental no mesmo fluxo de criação e nomeação: CSS idêntico, 38 círculos com a mesma
+geometria relativa, hemiciclo do mesmo tamanho, 513 pontos e painéis dentro das duas janelas.
+Capturas de 1440×900 inspecionadas; não cobre todos os gestos. Registro em
+`docs/evidence/posse-ui-preservation-2026-09-30.json`.
+
+`validate` completo passou: 506 testes, 13 guardas, 68 sintéticas, links, tipos, lint,
+formato, passeio nas duas resoluções e macaco de 60 ações, semente 7, zero achados. Tipagem
+explícita estrita de `prototypes/posse/browser.mjs` e `bridge.mjs` passou. A formatação também
+incluiu os arquivos novos da ponte anterior, que ainda estavam incompletos. Não houve mudança
+de calibragem, esquema ou save do jogo. A revisão independente segue pendente.
+
+### 121 · Recuperação, reformas na posse e preservação da UI — 30/09
+
+Após o desligamento do computador, o Diretor encontrou `engine.html` sem funcionamento,
+com `PosseEngine.start is not a function`; o original `live.html` funcionava. A página gerada
+estava fora de sincronia com a fachada. Recuperada a inicialização e regenerada somente a
+versão experimental a partir da fonte do Claude. As duas páginas ficaram disponíveis no
+servidor local 5173. `live.html`, `project/Posse.dc.html` e o runtime conservaram seus hashes.
+
+O Diretor restringiu o escopo à transformação do protótipo, pediu funcionamento mais profundo
+e flexível e retirou completamente o critério de precedente histórico e a reação genérica na
+extinção. Também exigiu reaproveitamento da UI do Claude, comparação linha por linha, organização
+do repositório e da Área de Trabalho, relatos ao vivo e Remote Control para o iPhone.
+
+Os testes da sessão interrompida misturavam IDs da interface e IDs canônicos. Com autorização
+expressa do Diretor, corrigidos somente esses dados inconsistentes, conservando as asserções.
+Diff e autorização ficaram no inventário de limpeza. Novas provas reproduziram reformas
+encadeadas e restauração fora de ordem. A tela consulta uma estrutura única por IDs: juntar,
+desfazer, extinguir, recriar, criar com nome livre, transferir atribuições, renomear e cancelar
+criação estão ligados. As 152 atribuições são conservadas; inversas respeitam transferências e
+renomeações posteriores. Uma pasta pode voltar vazia. Criar outra pasta não cria responsabilidade,
+capacidade ou apoio. Transferências incompletas não aplicam parte do pacote.
+
+A busca determinística de trabalhos entende palavras, frases, acentos, aliases declarados,
+AND/OR/NOT e parênteses. Termo desconhecido ou sintaxe inválida recebe explicação; não força
+resultado. Destinos são órgãos ativos que têm trabalhos compatíveis, sem tabelas de ministérios
+próximos. O jogador pode escolher diretamente cada destino ou um destino para o conjunto.
+Retiradas HIST, PRE, DEST, SPLIT, PARTNERS e as mensagens de precedente/reação na página nova.
+Palavras ajudam a encontrar trabalho; não atribuem experiência ou capacidade à pessoa.
+
+Uma prova de navegador reproduziu perda da estrutura ao tentar juntar uma pasta criada à
+Casa Civil: falha do caminho legado após recusa do núcleo institucional. Corrigida a atualização
+para conservar a proposta e o estado, declarando vínculo pendente. Isso ainda não implementa
+o rito, o custo ou a vigência dessa reforma. Estrutura variável deixa a estimativa de apoio
+declaradamente pendente, também em ganho de candidato, ficha, dica de bancada e foto; retornar
+a 38 pastas não retoma a estimativa se os trabalhos continuam redistribuídos.
+
+A medição do F5 reproduziu outro defeito: a entrada ESM deixava o template cru aparecer antes
+do runtime, enquanto o script original o ocultava antes de o navegador interpretar o corpo.
+A ocultação inicial corrigiu essa exposição sem alterar CSS ou animações. Nas 16 aberturas e
+recargas medidas, incluindo atraso de 300 ms, ambas as versões tiveram zero quadros crus e a
+mesma sequência, curvas e durações. As capturas finais de F5 das duas versões são idênticas
+em bytes nas duas resoluções.
+
+A [auditoria integral da UI](evidence/posse-ui-line-audit-2026-09-30.md) verificou 159 linhas
+de CSS idênticas, HTML completo com cinco adaptações enumeradas, catálogos visuais e auxiliares,
+geometria, formulário, botões e montagem de fichas. Dezesseis métodos de interação são cópias
+exatas; os dois restantes mudam uma inicialização e uma linha de texto. Todos os 47 blocos do
+diff ficaram anotados, com trechos completos antes e depois. Ícones das novas pastas reutilizam
+o perfil original. A prova específica passou em 42 percursos agrupados; quatro percursos de
+movimento conferiram hover, fichas, cerimônia, passo e foto. Oito percursos de teclado conferiram
+foco, tabulação, isolamento da tela ativa e os keyframes completos de voo e pulso. Ambos são
+idênticos ao Claude e respeitam movimento reduzido. Criação, transferência, renomeação, pasta
+vazia, remanejamento e cancelamento passaram nas duas alturas. Capturas finais foram inspecionadas.
+
+A Área de Trabalho foi inventariada, incluindo leitura dos membros dos arquivos comprimidos
+e verificação dos bundles. Cinco backups com conteúdo histórico único foram preservados em
+`C:/Users/esteb/Desktop/cld-backups`, com 356.579.535 bytes e hashes iguais após a movimentação.
+O rascunho anterior de arquitetura passou para `docs/archive/` sem mudança de conteúdo.
+Retirados 182 arquivos redundantes ou temporários, 45.771.001 bytes; nenhum arquivo rastreado
+ou fonte ativa foi removido. A retirada final usou caminhos literais, sem recursão, após recusa
+automática do comando em lote. [Inventário e ações verificadas](evidence/workspace-cleanup-2026-09-30.md).
+
+O Remote Control foi ativado e verificado no daemon como `connected`, servidor `DESKTOP6`.
+O pareamento no iPhone exige a conclusão do usuário; não foi confirmado nesta sessão.
+Códigos temporários não foram gravados no repositório. Nenhuma porta pública foi aberta.
+
+`validate` completo passou: 531 testes, 13 guardas, 68 sintéticas, links, tipos, lint, formato,
+passeio nas duas resoluções e macaco de 60 ações, semente 7, zero achados. Após acrescentar a
+auditoria estática e a prova de teclado, guardas, tipos, lint, formato, links e diff foram
+conferidos novamente. [Resultados finais](evidence/posse-recovery-validation-2026-09-30.json).
+Não houve nova simulação mensal: o protótipo permanece isolado. Calibragem, esquema e save do
+jogo não foram alterados nesta recuperação. Revisão independente permanece pendente; a tentativa
+anterior do Claude segue limitada pela cota semanal, sem nova tentativa.
+
+Próximo: formalizar as propostas e vínculos institucionais, depois levar episódios conhecidos
+às fichas e comparar preparo por trabalho. Valor político, custos, recursos, vigência e
+consequências continuam abertos. A interface legada ainda usa preparo previamente definido;
+não declarar a transformação completa ou uma composição ilimitada já modelada.
+
+### 122 · Organização parcial e pausa para desligamento — 30/09
+
+O Diretor mudou a prioridade para organizar, padronizar, renomear e distribuir arquivos,
+com planejamento cuidadoso antes de excluir. Suspensas novas funcionalidades. Registrados
+o plano em `docs/organization-plan.md` e um manifesto de 166 ações planejadas, com caminhos
+e hashes. Fonte ativa em `tmp/`, comandos e testes junto aos módulos, resultados datados
+sobrescritos por geradores e capturas fora das categorias foram os problemas concretos.
+
+Dez arquivos do Claude foram copiados para `vendor/posse/`, preservando bytes. Criado o
+catálogo de caminhos; a entrada nova passou para `prototypes/posse/index.html`. Preparação,
+navegador, servidor, cinco provas reais e auditoria passaram a consultar os caminhos atuais.
+O servidor ganhou compatibilidade para os links antigos, mas o processo principal não foi
+reiniciado. A fonte antiga permanece presente. O HTML gerado foi excluído da formatação
+automática para conservar a apresentação da fonte.
+
+Cinco suítes passaram a `tests/suites/`; importador e três demonstrações passaram a `tools/`.
+Somente caminhos relativos dos testes mudaram: corpos e asserções foram conferidos por hash.
+Após recusa automática dos comandos de retirada, os originais e o proxy de cinco imports
+foram arquivados em `tmp/history/government-before-organization/`. O importador passou a ler
+a fonte completa; todas as 152 atribuições foram comparadas e conservaram conteúdo e IDs.
+Capturas da posse passaram a `captures/probes/posse/`; a imagem solta do mundo foi preservada
+em `captures/probes/world/`. Relatórios regeneráveis passaram a `tmp/reports/posse/`.
+
+A comparação encontrou dois retratos ausentes: duplicação física não significava arquivo
+dispensável, pois o original usa dois caminhos relativos. Cancelada a exclusão e copiadas
+as folhas também para a raiz importada; a repetição passou. Uma saída da auditoria ainda
+atingiu o Markdown histórico durante a migração: restaurado integralmente, com hash anterior
+conferido, e corrigido o destino. As 50 evidências congeladas e os cinco backups históricos,
+incluindo seu README, conservaram hashes. Não foi encontrado gerador ativo da captura do mundo.
+
+`npm.cmd test` passou com 531 provas. O importador reproduziu 38 cargos e 152 atribuições.
+A auditoria conferiu 159 linhas de CSS idênticas e 47 blocos anotados; a adaptação de entrada
+agora inclui a base dos assets. A comparação nas entradas novas passou nos 42 percursos,
+em ambas as alturas. Quatro entradas e três assets conferidos responderam HTTP 200.
+
+O Diretor interrompeu explicitamente para desligar o PC e pediu somente fechar os registros.
+Nenhum novo teste ou implementação foi iniciado depois dessa ordem. A comparação já em curso
+terminou. Não havia tarefa de migração/teste em execução no fechamento; o servidor 5173
+permaneceu ligado. Arquivamento de `tmp/posse/`, logs, atualização integral dos guias,
+provas específicas restantes, formatação e portão completo ficaram pendentes. READMEs e
+memória receberam aviso; o handoff passou a priorizar a organização e foi escrito por último.
+
+[Checkpoint completo](evidence/workspace-organization-checkpoint-2026-09-30.md) e
+[observações por arquivo](evidence/workspace-organization-checkpoint-2026-09-30.json)
+registram execução, correções e retomada. O lote permanece incompleto. Nenhuma nova
+funcionalidade, calibragem, esquema, save, commit, push ou publicação neste lote.
+
+### 123 · O Claude volta, confere o Codex e fecha a organização — 01/10
+
+De 28 a 30/09 ele trabalhou só com o Codex, porque a cota do Claude tinha acabado. Ele acha o
+Codex muito inferior e me deu a decisão sobre o que se aproveita. Antes de mexer, li os
+contratos, o handoff, as especificações, o plano de organização, a auditoria dos planos, o
+rascunho arquivado de 28/09 e o código novo, e joguei o protótipo no navegador.
+
+O que o Codex deixou e se sustenta: a estrutura de ministérios por IDs (`prototypes/government/index.mjs`),
+com inversas que preservam transferências posteriores, e a busca booleana nas atribuições. O que
+roda só em prova: `pilot`, `operations`, `demand` e `management`, com unidades inventadas. A tela
+nova é o HTML do Claude com trechos trocados por texto dentro de `tools/prepare-posse.mjs`.
+
+Jogando a posse, achei cinco defeitos: "Vai para Escolher destino." com o nome do botão na frase;
+destinos na ordem do ID interno; a base vira "—" e o hemiciclo apaga depois de qualquer reforma;
+uma reação genérica da chefe de gabinete sem motor atrás; atribuições em minúscula só na criação.
+Os 49 erros de template no console já existiam no original. Não consertei: funcionalidade segue
+suspensa até ele testar.
+
+A organização fechou. A fase 0 mostrou `check` com 43 achados de `tokens`: o HTML gerado da posse
+estava em `prototypes/`, e a guarda lia o CSS do protótipo. A saída foi para `tmp/build/posse.html`,
+idêntica byte a byte, e o gerador passou a calcular o caminho relativo. A guarda não mudou. A
+cadeia de 15 patches remontou `Posse.dc.html` idêntico numa cópia, desde que ache
+`tmp/asset-sources/portraits/`; ela também está inteira no ZIP de `docs/evidence/`. Então
+`tmp/posse/` foi movida para `tmp/history/posse/`, e os 33 registros soltos para
+`tmp/history/recovery-2026-09-30/`: 119 arquivos, hash igual antes e depois, nada apagado. O
+verificador de retratos do Codex passou a ler `vendor/` e gravar em `tmp/reports/`. As cinco
+provas de navegador da posse e a auditoria da UI passaram; nenhuma evidência congelada mudou.
+
+Os backups de `Desktop/cld-backups/` foram abertos e comparados por hash com a pasta de hoje. Os
+bundles e os `.tar.gz` de 28 e 29/09 não têm nada sem cópia além de versões antigas. O `.tgz` de
+26/09 guarda 140 arquivos únicos: as três auditorias da posse pelo Codex e peças antigas da
+montagem. Tudo está no mesmo disco, e o remoto parou em 24/09.
+
+READMEs dos dois protótipos (de 250 para 50 linhas no do governo), guia do agente, mapas de
+capturas e evidências e o handoff foram reescritos; o handoff caiu de 804 para cerca de 600
+linhas, com a narrativa de 28 a 30/09 já guardada nas entradas 103 a 122.

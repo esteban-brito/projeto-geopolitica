@@ -5,6 +5,11 @@ créditos dos assets ou o handoff. É a medição que sustenta uma alternativa r
 que gerou um asset, ou o log de um achado. **Evidência é congelada:** ela não passa por guarda,
 lint nem formatação, e não se edita — se a medição mudar, entra um arquivo novo.
 
+A organização começou em 30/09 ([manifesto](workspace-organization-plan-2026-09-30.json),
+[checkpoint](workspace-organization-checkpoint-2026-09-30.md)) e fechou em 01/10
+([119 arquivos arquivados, com hash](workspace-organization-close-2026-10-01.json)). Os
+relatórios regeneráveis da posse vão para `tmp/reports/posse/`, nunca para esta pasta.
+
 | pasta     | o que guarda                                                   | quem cita                     |
 | --------- | -------------------------------------------------------------- | ----------------------------- |
 | `glass/`  | medições do vidro: área da lente, textura, aresta, palcos      | `src/ui/shared/glass.mjs`     |

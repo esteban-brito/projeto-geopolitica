@@ -59,6 +59,9 @@ substituída, não acumulada.
 - `discarded/` — tentativas descartadas de um ajuste visual;
 - `sweep/` — as oito cartas e o índice, fotografados de uma vez;
 - `old-walk/` — sobras de passos que o passeio não tem mais. **Não se refazem.**
+- `posse/` — as provas de navegador do protótipo da posse (`tests/browser/posse*.mjs`), que
+  reescrevem a pasta a cada rodada;
+- `world/` — uma captura do pedido de pasta na carta; o gerador não existe mais.
 
 ## Como nomear uma captura nova
 

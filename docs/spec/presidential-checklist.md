@@ -9,6 +9,11 @@
 > Etapas: **no jogo** (já existe) · **abertura** (lotes E1.0) · **estatal** (lotes E1) · **depois**
 > (onda seguinte, pela [gramática](rules-grammar.md)) · **internacional** (atualização futura).
 
+> **Consulta atual — 29/09:** a ordem de entregas é a do [ciclo 33](../cycles/33-the-whole-game.md).
+> As contagens de cobertura abaixo são o retrato de 25/09, não uma medição atual; nomeações e
+> modelo da base avançaram desde então. Os itens 41–54 foram incluídos no plano aprovado em
+> 26/09; sua aprovação não significa implementação. A Mesa entra na etapa 4.
+
 ## Montar e comandar o governo
 
 | #   | o que ele faz                                               | como se faz de verdade                                                                                       | fonte                                            | etapa    |

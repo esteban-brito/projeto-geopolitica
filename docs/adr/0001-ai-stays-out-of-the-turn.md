@@ -3,6 +3,12 @@
 **Data:** 13/08/2026 · **Estado:** aceita · **Decidido por:** delegação explícita do
 responsável ("você decide tudo sobre IA e todo esse tipo de coisa").
 
+> **Vigência atual — 29/09:** a emenda de 04/09 abaixo preserva uma autorização histórica de
+> integração por API. Esse caminho foi depois descartado pelo Diretor, registrado na abertura
+> do [ciclo 19](../cycles/19-the-voice.md) e em [CLAUDE.md](../../CLAUDE.md), nas leis.
+> Ela não autoriza API, cache de respostas de LLM ou narração remota no jogo atual.
+> Permanecem o domínio determinístico e o vocabulário estático revisado da ADR 0002.
+
 ## Contexto
 
 O norte do projeto é **criatividade sem limite artificial**: o jogador tenta a

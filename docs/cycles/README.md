@@ -1,8 +1,11 @@
 # Ciclos
 
-Desde 24/09/2026 o plano em vigor é o [mapa de migração](../spec/migration-map.md), sob a
-[especificação mestra](../spec/master-spec.md). Desde 25/09, o trabalho corrente são os lotes E1, a
-estatal de energia (mapa §6.4), sob a [gramática das regras](../spec/rules-grammar.md). Os ciclos são registro: o que cada um prometeu está
+Desde 26/09/2026 o plano em vigor é o [ciclo 33](33-the-whole-game.md), sob a
+[especificação mestra](../spec/master-spec.md). Ele absorve os lotes do
+[mapa de migração](../spec/migration-map.md) e as fases do ciclo 32. A etapa 1 está em construção;
+a direção de 29/09 para pessoas e estrutura está em [governo variável](../spec/dynamic-government.md)
+e no [piloto](../spec/government-pilot.md). A [auditoria dos planos](../plan-audit.md) registra
+conflitos e condições ainda pendentes. Os ciclos anteriores são registro: o que cada um prometeu está
 no arquivo, o que aconteceu está no [`journal.md`](../journal.md). Estado se lê no
 [`handoff.md`](../handoff.md), nunca aqui. Situação só onde há registro datado; o resto diz
 "ver journal" em vez de chutar.

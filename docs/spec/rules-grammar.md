@@ -67,6 +67,10 @@ uma, conferidas na Constituição em 25/09/2026.
 
 - **O veto** cai com maioria absoluta de deputados e senadores, em sessão conjunta (CF, art. 66
   §4º, [VERIFICADO]).
+- **O sobrestamento por MP não bloqueia toda matéria.** Na Câmara, alcança matérias passíveis
+  de MP; PEC, lei complementar e outras matérias excluídas têm tratamento próprio. Fonte primária
+  conferida em 29/09: [STF, MS 27.931](https://noticias.stf.jus.br/postsnoticias/stf-decide-que-trancamento-de-pauta-da-camara-por-mps-nao-alcanca-todos-os-projetos-e-propostas/),
+  julgamento de 29/06/2017. O consumidor precisa distinguir matéria, Casa e sessão.
 - **A medida provisória não pode tratar de** partido e eleição, direito penal, orçamento (salvo
   crédito extraordinário), retenção de bens ou de poupança, nem do que exige lei complementar
   (CF, art. 62 §1º, [VERIFICADO]). As subvenções de 2026 foram pagas por crédito extraordinário
@@ -75,8 +79,10 @@ uma, conferidas na Constituição em 25/09/2026.
   direitos individuais. A República não está na lista (CF, art. 60 §4º, [VERIFICADO]).
 - **O relógio do rito é o limite, e não o tempo real.** A Eletrobras levou 16 meses da medida
   provisória à oferta. O tempo real sai do Congresso simulado e dos portões.
-- **Concentrar poder encurta a escada.** `POWER_STEPS` já faz uma emenda valer como lei a 60 de
-  poder, e uma lei valer como decreto a 85. Os números 60 e 85 são [DESENHO].
+- **Legado a substituir, não regra institucional nova:** `POWER_STEPS` rebaixa o rito a 60 e
+  85 de poder no motor atual. A barra não demonstra mudança de competência ou Constituição.
+  A migração deve distinguir rota jurídica e cumprimento de uma tentativa fora da competência;
+  ver a [auditoria dos planos](../plan-audit.md), P07. Não alterar os coeficientes para ocultar isso.
 - **O motor hoje tem três rotas:** decreto, lei e emenda (`src/data/bills.mjs`). A guarda da
   ESTRATO tem `none`, `law` e `constitution`. Faltam o ato de gestão, a medida provisória e a lei
   complementar.

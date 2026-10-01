@@ -7,6 +7,54 @@
 
 ## Para retomar em um minuto
 
+- **01/10, organização fechada.** O lote de 30/09 terminou:
+  - `tmp/posse/` foi para `tmp/history/posse/`, e os 33 registros soltos para
+    `tmp/history/recovery-2026-09-30/`. São 119 arquivos, com hash igual antes e depois, e nada
+    foi apagado ([registro](evidence/workspace-organization-close-2026-10-01.json));
+  - a versão da posse ligada ao motor agora é gerada em `tmp/build/posse.html`. Em `prototypes/`,
+    a guarda `tokens` lia o CSS do protótipo e dava 43 achados;
+  - os links antigos `/tmp/posse/live.html` e `/tmp/posse/engine.html` respondem pelo servidor;
+  - as 5 provas de navegador da posse passaram nas duas alturas;
+  - READMEs dos protótipos, guia do agente e mapas de capturas e evidências foram reescritos.
+
+  `validate` verde em 01/10: 13 guardas, 68 sintéticas, zero links quebrados, tipos, lint,
+  formato, 531 testes, passeio e macaco (60 ações, semente 7, zero achados). Funcionalidades
+  novas seguem suspensas até ele testar o protótipo. Journal, entrada 123.
+
+- **28–30/09, trabalho só do Codex.** A cota do Claude tinha acabado, e a revisão independente
+  nunca aconteceu (a tentativa deu 429). Ordem dele em 01/10: o Claude decide o que se aproveita
+  e o que se refaz. O que existe:
+  - em `prototypes/government/`: estrutura variável de ministérios por IDs, 152 atribuições e
+    busca com `e`, `ou`, `não`; `pilot`, `operations`, `demand` e `management` só rodam em
+    provas, com unidades inventadas;
+  - em `prototypes/posse/` e `vendor/posse/`: a posse do Claude ligada ao motor;
+  - o plano em [piloto](spec/government-pilot.md) §11 e o contrato em
+    [governo variável](spec/dynamic-government.md);
+  - a [auditoria dos planos](plan-audit.md), com 12 achados;
+  - um conserto no redutor (`appoint` tira a pessoa da pasta anterior; exonerar vaga não muda o
+    estado), com prova em `tests/suites/posse-flow.mjs`.
+
+  A história está no journal, entradas 103 a 122. A lógica nova da tela vive como texto dentro
+  de `tools/prepare-posse.mjs`, trocada por substituição sobre o HTML do Claude.
+
+- **Defeitos vistos no protótipo em 01/10**, ainda sem conserto:
+  1. a frase "Vai para Escolher destino." leva o nome do botão;
+  2. a lista de destinos sai na ordem do ID interno;
+  3. depois de qualquer reforma, a base vira "—" e o hemiciclo apaga;
+  4. a chefe de gabinete diz "os partidos podem votar contra a medida" sem motor atrás;
+  5. as atribuições aparecem em minúscula na criação de pasta e com maiúscula no resto.
+
+  Os 49 erros do template cru no console e a tela fixa em 1280 px já estavam no original.
+
+- **Backups em `Desktop/cld-backups/`**, analisados em 01/10:
+  - os dois bundles estão íntegros e todos os commits deles já estão no repositório;
+  - os `.tar.gz` de 28 e 29/09 não guardam nada sem cópia além de versões antigas de documentos;
+  - só `cld-posse-2026-09-26.tgz` tem conteúdo único: 140 arquivos (38 MB), quase todos das três
+    auditorias da posse pelo Codex (relatórios, capturas, logs) e peças antigas da montagem.
+
+  Tudo está no mesmo disco. O `origin/caixa-de-entrada` parou em 24/09, então nenhum commit
+  desde então existe fora deste computador.
+
 - **direção (25/09):** sandbox ideológico com regras reais; realismo acima de tudo. Os documentos
   de design, do mais geral ao mais concreto: [especificação mestra](spec/master-spec.md) 1.1
   (autoridade) → [jogo em uma página](spec/game-in-one-page.md) (promessa e loop) →
@@ -20,36 +68,22 @@
 - **o modelo da base está no motor (26/09):** 16 partidos, save na versão 21, a lealdade é a
   chance do partido, um líder por bloco (15 arquétipos) e as provas de `tests/suites/base.mjs`.
   Desenho em [o modelo da base](spec/the-base-model.md) §7; achados 86 e 87 abertos.
-- **`tmp/` podado em 26/09 com o sim dele:** de 166 para 57 MB. Saíram as auditorias antigas do Codex
-  (ficou `tmp/posse/codex/` com os retratos de hoje), os retratos por código e as capturas velhas da
-  posse, `tmp/history/archive/`, os candidatos de madeira não escolhidos e as pesquisas brutas de
-  `tmp/research/`, já conferidas em `docs/research/`. Ficou o que algum documento ou script cita;
-- **próximo passo:** a etapa 1 do [ciclo 33](cycles/33-the-whole-game.md), aprovado em 26/09,
-  começando pelo motor da base. O lote 3 do [mundo vivo](spec/the-living-world.md), imprensa e Casa Civil, entra na etapa 7. Os
-  lotes 1 e 2 estão no jogo: 21 pessoas (14 porta-vozes de partido e 7 ministros) decidem pela VONTADE, escrevem cartas com autor, saem da
-  base pela ideologia e fazem oposição. O E1.0a (as 38
-  cadeiras, nomear e demitir, a pasta que puxa a lealdade até 80) está feito; a abertura segue com
-  o E1.0b, a eleição da Mesa. A tela da posse tem protótipo aprovado (versão 25 do
-  [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM), 26/09; a versão 43 traz os retratos da
-  Presidência feitos no ChatGPT); fonte e testes em
-  `tmp/posse/`, e ela entra no jogo no E1.0e;
-- **commits de 26/09:** `8bb018c` a `a656aec`, 23 commits: o protótipo da posse até a versão 25
-  (sistema de classes, etiqueta sem pulo, Câmara leve, cabeçalho em grade) e a direção de design
-  futura;
-- **commits de 25/09:** `febd0b5` (E0), `2482ce7` (documentos), `916a80f` e `97483ec` (passos 1 e 2
-  do E1.0a), `d2684ce` (checklist de 40), `f6d28a3` (mundo vivo, lote 1). Ele autorizou commit ao fim de cada etapa validada;
-  push e merge seguem pedindo ordem;
-- **git:** tudo na branch `caixa-de-entrada`, publicada em `origin/caixa-de-entrada` em 24/09.
+- **a posse do Claude:** estrutura aprovada na versão 25 do
+  [canvas](https://claude.ai/artifact/CHQmb6ksyKpYxdR8BBEnuM); a versão 43 acrescentou os retratos
+  da Presidência; a revisão local v2o das 812 fichas (27/09) não foi publicada. Na v2o, a ficha
+  fica 2,2 s ao sair do nome, as notas 1–2 são vermelhas, 3 verde amarelado, 4–5 verdes e 6
+  dourado, e o botão da criação sorteia todos os campos com idade mínima de 35 anos;
+- **commits:** o último é `a75ef10` (26/09, 22:58); o journal guarda a lista por etapa. Ele
+  autorizou commit ao fim de cada etapa validada; push e merge seguem pedindo ordem;
+- **git:** tudo na branch `caixa-de-entrada`; `origin/caixa-de-entrada` está em `ed9f2cc` (24/09).
   O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **portão:** `validate` verde em 26/09, depois de registrar o protótipo da posse (desde o lote 2
-  do mundo vivo só mudaram docs; passeio e macaco sem achados); roda de novo antes de qualquer commit;
-- **backup (26/09), pedido dele antes de recomeçar a interface:** marca `antes-da-interface-nova`
-  no git; `Desktop/cld-backup-2026-09-26.bundle` com todo o histórico (restaura com
-  `git clone cld-backup-2026-09-26.bundle`); `Desktop/cld-posse-2026-09-26.tgz` com `tmp/posse/`;
-- **fora do repositório:** a quarentena `Desktop/cld-quarentena-tmp/` (750 MB, 662 entradas do
-  `tmp/` que nada citava) foi apagada em 26/09 com o sim dele.
+- **backup de 26/09, antes da interface nova:** a marca `antes-da-interface-nova` no git, mais
+  `cld-backup-2026-09-26.bundle` e `cld-posse-2026-09-26.tgz`, hoje em `Desktop/cld-backups/`;
+- **fora do repositório:** a quarentena `Desktop/cld-quarentena-tmp/` (750 MB) foi apagada em
+  26/09 com o sim dele; em 30/09 saíram 182 arquivos redundantes da Área de Trabalho
+  ([inventário](evidence/workspace-cleanup-2026-09-30.md)).
 
-## Estado — 25/09/2026: direção nova, abertura em construção, E0 pausado
+## Estado — 27/09/2026: base no motor, posse em protótipo, E0 pausado
 
 - **a direção e os documentos de 25/09.** Depois do playtest do E0, ele definiu o jogo: um sandbox
   ideológico sob regras reais. A pesquisa da estatal foi feita pelo Claude nas fontes oficiais
@@ -126,16 +160,30 @@
   corrigidos, 2 nits na fila. As branches dos ultrareviews foram apagadas em 24/09 (só locais;
   recriáveis): `base-ultra` 679f043, `base-motor` bb7ce9d, `motor-review` fc78e27. Também
   `acoplamento-e-simulador` 137a94a (segue no remoto) e `backup-auditoria-26-08-2026` 4bf8c51;
-- **portão:** 13 guardas · 68 sintéticas · 387 provas · passeio verde em 1440×980 e 1440×900 ·
-  macaco (60 ações, semente 7) verde · `links` com zero quebradas. `validate` verde em 25/09
-  depois do A1.2. Série do `simulate` remedida em 25/09 nas seis sondas: imóvel;
+- **portão:** 13 guardas · 68 sintéticas · 423 provas · passeio verde em 1440×980 e 1440×900 ·
+  macaco (60 ações, semente 7) verde · `links` com zero quebradas. `validate` verde em 28/09;
+  série do `simulate` remedida em 26/09 nas seis sondas;
 - **rodar é barato:** pintura 3-5ms, abertura 600ms, morph do dock 205-232 fps.
 
 ## Fila, em ordem
 
+**Agora (01/10):** a organização fechou; funcionalidades novas seguem suspensas.
+
+1. **Ele testa o protótipo da posse** (`prototypes/posse/README.md`). Os achados do teste,
+   reproduzidos, entram antes de qualquer ampliação; os cinco defeitos de 01/10 (bloco acima)
+   são a primeira fila de consertos, com ordem dele.
+2. **Revisão do trabalho do Codex pelo Claude**, que decide o que fica e o que se refaz:
+   o conserto do redutor, `posse.mjs` na fachada, a estrutura e a busca, o gerador por
+   substituição de texto e os quatro ensaios só de prova.
+3. **O plano do protótipo**, depois do teste: o [piloto](spec/government-pilot.md#11-transformar-o-protótipo-da-posse--execução-em-3009),
+   §11 (currículos nas fichas, consequências, valor político da estrutura variável).
+
+**Depois, o plano do jogo inteiro** (ciclo 33), que não é requisito para testar o protótipo:
+
 1. **Etapa 1 do [ciclo 33](cycles/33-the-whole-game.md), Presidente e posse**, aprovado em 26/09.
-   Começa pelo motor da base ([o modelo da base](spec/the-base-model.md), ciclo 32 fase 2). O
-   E1.0a está feito; o E1.0b, a eleição da Mesa, passou para a etapa 4 (decisão 1);
+   O E1.0a e [o modelo da base](spec/the-base-model.md) já estão no motor. Faltam criação e
+   trajetória do Presidente, reforma ministerial, convites, notáveis e a posse no jogo (E1.0d–f).
+   O E1.0b, a eleição da Mesa, passou para a etapa 4 (decisão 1);
 2. **Etapa 2, casca e Gabinete** (ciclo 32 fase 3, B1, B3 e B6);
 3. **Etapa 3, a estatal** (E1.1 a E1.8);
 4. **Etapa 4, o Congresso inteiro** (com o E1.0b, a eleição da Mesa); depois dela, o marco jogável:
@@ -152,6 +200,37 @@
     candidatos que entram.
 
 ## Decisões vivas
+
+- **01/10, o trabalho do Codex:** ele usou o Codex de 28 a 30/09 porque a cota do Claude acabou,
+  e o considera muito inferior. O Claude decide o que se aproveita e o que se refaz. Ele achou
+  interessantes as ideias do plano do Codex para o protótipo. Pediu também plano antes de executar.
+- **30/09, organização antes de funcionalidade:** planejar organização, nomes, distribuição e
+  limpeza antes de executar. Fechada em 01/10.
+
+- **30/09, prioridade de entrega corrigida:** o Diretor quer testar somente o novo protótipo
+  por enquanto. Auditar, desenvolver e aprimorar durante o teste. Não prosseguir com o porte
+  do jogo completo por inferência; a sequência 1–4 permanece como plano posterior.
+  Ordem explícita para a sessão de teste: F5 reinicia tudo; não persistir escolhas do protótipo.
+
+- **30/09, UI do protótipo:** copiar e adaptar o original do Claude; conferir linha por linha
+  markup, CSS, botões, hover, fichas, foco, rolagem, funções de interação, animações e transições.
+  Não misturar essa auditoria de apresentação com aprovação de motores. Código visual permanece
+  na fonte preservada; `prepare-posse.mjs` gera somente a versão experimental. Novos controles
+  usam as peças existentes. F5 deve conservar a entrada suave do original.
+
+- **30/09, repertório estrutural:** retirar completamente precedente histórico, ministérios
+  próximos fixos e reação genérica na extinção. Palavras-chave e composição flexível pesquisam
+  trabalho por ID; não fabricam poder, recursos, competências ou experiência. Complexidade vem
+  de responsabilidade, pessoa, equipe, recurso, instituição e consequência com estado conservado.
+
+- **30/09, organização e comunicação:** inventariar antes de retirar redundâncias; conservar
+  fontes, história única e hashes verificáveis. Autorizada a organização da Área de Trabalho e
+  a retirada de lixo gerado. Relatar o que está sendo feito e a próxima etapa ao vivo. Autorizado
+  Remote Control para iPhone; não expor códigos temporários em arquivos.
+
+- **29/09, governo variável:** os números usados pelo Diretor eram ilustrativos. Não impor
+  quantidade de carreiras, ministérios ou encaixes. Planejar por responsabilidade, experiência,
+  capacidade e consequências; equilibrar fidelidade e diversão. Evitar burocracia repetitiva.
 
 - **26/09, a trajetória do Presidente** — seis origens na criação (político experiente, militar, jurista,
   empresário, ativista, celebridade); ordem dele: têm de pesar no jogo. Proposta no
@@ -170,8 +249,11 @@
   os ministérios tem de estar no jogo, com realismo; dá para chamar gente de fora da política, com
   33 notáveis de nome inventado (esporte, TV, internet, música, cinema, academia, negócios); a
   posse é o híbrido dos protótipos B e C (o D do canvas). Os notáveis são elenco fixo, com
-  temperamento que varia pela semente. Fama, preparo e afinidade, de 1 a 5, aparecem para todas as
-  pessoas; a língua solta saiu, porque cabe no preparo. A tela da posse é um hemiciclo com um painel
+  temperamento que varia pela semente. Fama e afinidade, de 1 a 5, aparecem para todas as pessoas;
+  preparo chegava a 6 nos três especialistas técnicos de cada pasta no protótipo de 27/09;
+  essa garantia foi retirada pela direção de 29/09. O preparo novo depende da experiência
+  conhecida e do trabalho vigente, sem máximo garantido.
+  A língua solta saiu, porque cabe no preparo. A tela da posse é um hemiciclo com um painel
   só: para cada ministério, primeiro o que fazer com ele, depois quem comanda. Viram os lotes E1.0d, E1.0e e E1.0f;
 - **25/09, o mundo vivo, lote 2 no jogo** — o desgaste de ficar na base cresce com a distância
   ideológica do governo; quem sai critica um governo fraco a cada 3 meses; cada crítica pesa sobre
@@ -324,7 +406,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   entre 57 e 75. As próximas folhas pedem rostos de 45 a 70. Só a Presidência usa os rostos novos:
   ministros, candidatos e a chefe de gabinete seguem desenhados por código até a decisão 10 do
   [ciclo 33](cycles/33-the-whole-game.md). Fontes em `tmp/asset-sources/portraits/` (com `LEIA.md`);
-  recortes em `tmp/posse/avatar-standard.json`;
+  recortes em `vendor/posse/avatar-standard.json`;
 - **85. As provas do lote 1 do mundo vivo nasceram depois do código (25/09).** Fora da ordem da
   regra. Compensação feita: duas sabotagens (a recusa que não fere; aceitar sem nomear) derrubaram
   as provas certas;
@@ -428,8 +510,8 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 
 Seis das nove sondas (`concentra`, `favoritos`, `legislador` escolhem em vez de espalhar e se
 medem à parte). 48 meses, semente padrão, sem partido, governo montado na posse (`--party` compara
-outro jogo: com PCN, `agenda` dá 20/42; com PCS, 16/41). Remedidas em 26/09, com os 16 partidos e o
-modelo da base.
+outro jogo: com PCN, `agenda` dá 20/42; com PCS, 16/41). Remedidas em 30/09, semente 20270101,
+após corrigir remanejamento no redutor; as seis linhas reproduziram os resultados de 26/09.
 
 | política     | dívida/PIB | votações     | indústria | segurança |
 | ------------ | ---------- | ------------ | --------- | --------- |
@@ -481,7 +563,7 @@ e CASCATA saíram em 24/09 e voltam quando tiverem código.
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
 `simulate.mjs` (nove sondas).
 
-**Verificação:** 13 guardas · 68 sintéticas · 413 provas · passeio dentro do `validate`
+**Verificação de 01/10:** 13 guardas · 68 sintéticas · 531 provas · passeio dentro do `validate`
 (geometria, recorte, contraste no pixel, 1440×980 e 1440×900).
 
 ## O que ainda não existe

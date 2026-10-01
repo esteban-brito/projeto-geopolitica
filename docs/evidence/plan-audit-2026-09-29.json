@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-29",
+  "branch": "caixa-de-entrada",
+  "head": "a75ef108ac54f96311ea16abb83a2eb41ac6c87e",
+  "uncommittedChangesPresent": true,
+  "probe": "tmp/plan-audit-probe.mjs",
+  "protectedChange": [
+    { "power": 0, "route": "amendment" },
+    { "power": 60, "route": "law" },
+    { "power": 85, "route": "budget" }
+  ],
+  "petroleumAnnualPayrollProxy": 8.4568,
+  "equityPercentTotalInPlan": 98.26,
+  "unallocatedEquityPercent": 1.74,
+  "coalitionChanceSums": {
+    "seed": 20270101,
+    "ruling": "pcs",
+    "byParty": 326.30007261344673,
+    "byDeputy": 328.06443559440345,
+    "difference": 1.7643629809567187
+  },
+  "limits": "Sonda de funções e aritmética; não é campanha, teste de equilíbrio ou regra jurídica implementada."
+}

@@ -6,6 +6,14 @@
 > [mapa](migration-map.md) e abre o E1.0f. A base de lei está na
 > [pesquisa 15](../research/15-forming-the-government.md). Número de jogo leva [DESENHO].
 
+> **Leitura atual — 29/09:** este documento preserva a proposta e as escolhas visuais de 26–27/09.
+> Para responsabilidades, pessoas e preparo, prevalecem [governo variável](dynamic-government.md)
+> e o [piloto](government-pilot.md). Garantir três especialistas com preparo 6, escolher destinos
+> por nomes semelhantes, limitar criação a uma divisão e aplicar reação automática pelo verbo
+> são premissas anteriores, não requisitos novos. A inversa estrutural não resolve a perda de
+> eficácia de MP. O tratamento do elenco fixo de notáveis permanece a reconciliar com o cadastro
+> comum de pessoas; a auditoria não revoga essa escolha visual ou de conteúdo.
+
 ## 1. O tamanho do governo
 
 ### O que a lei diz
@@ -158,15 +166,17 @@ Toda pessoa do jogo tem cinco coisas, e o jogo já usa todas no [mundo vivo](the
 4. **Memória:** lembra de cada sim e de cada não. Uma recusa ensina, mas não é certeza.
 5. **Voz:** o tom da carta sai do temperamento: educado, firme ou seco.
 
-**Três números à vista, para todas as pessoas** (políticos, técnicos e notáveis), de 1 a 5:
+**Três números à vista, para todas as pessoas** (políticos, técnicos e notáveis):
 
 - **Fama:** quantas pessoas ouvem o que ela diz;
 - **Preparo:** o quanto sabe fazer o trabalho, inclusive falar em público sem criar crise;
 - **Afinidade:** o quanto pensa parecido com você. Sai da distância entre a ideologia dela e a do
   seu partido.
 
-Fama e afinidade são públicas. O preparo é a leitura da assessoria pelo currículo, e pode errar.
-Os cortes de 1 a 5 são [DESENHO].
+Fama e afinidade vão de 1 a 5. Preparo vai de 1 a 6: os três especialistas técnicos de cada
+ministério têm 6, e políticos e notáveis ficam de 1 a 5. Fama e afinidade são públicas. O preparo
+é a leitura da assessoria pelo currículo, e pode errar. Os cortes são [DESENHO]. A posse local mantém
+os três técnicos visíveis em cada pasta; notáveis ocupam uma lista própria e não substituem técnicos.
 
 **O temperamento fica escondido.** Os quatro traços, a ambição e a memória não aparecem em número.
 Aparecem com o tempo, no que a pessoa faz.

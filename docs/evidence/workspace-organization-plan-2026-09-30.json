@@ -1,0 +1,1641 @@
+{
+  "plannedAt": "2026-09-30T23:28:29.416Z",
+  "status": "planned-not-executed",
+  "scope": "Organization only; no gameplay or engine changes.",
+  "root": "C:/Users/esteb/Desktop/cld",
+  "policy": "No overwrites; literal paths inside root; preserve source, historical evidence and unique backups.",
+  "entries": [
+    {
+      "action": "archive",
+      "source": "tmp/posse/README.md",
+      "target": "tmp/history/posse/README.md",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 3790,
+      "sha256": "23c0a9ff595032c34858882fde8d570e62a5601ffefa732dac0fe7609d4defb5"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/audit.cjs",
+      "target": "tmp/history/posse/audit.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 12594,
+      "sha256": "fd99c368e04fe3764527f8b23a09ac3679464eacebee68faa479cc625036218f"
+    },
+    {
+      "action": "delete-duplicate",
+      "source": "tmp/posse/avatar-sheet-a.png",
+      "target": "vendor/posse/project/avatar-sheet-a.png",
+      "reason": "Copia exata de asset importado retido; a pagina usa project/.",
+      "bytes": 1567516,
+      "sha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d"
+    },
+    {
+      "action": "delete-duplicate",
+      "source": "tmp/posse/avatar-sheet-b.png",
+      "target": "vendor/posse/project/avatar-sheet-b.png",
+      "reason": "Copia exata de asset importado retido; a pagina usa project/.",
+      "bytes": 1531749,
+      "sha256": "a752444c52ad5838915a1c094d206164011e3fcaa42cb8aa3f74c4cf77c404b1"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/avatar-standard.json",
+      "target": "vendor/posse/avatar-standard.json",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 1116,
+      "sha256": "83350c57069fb9d5383360a2c6bb9253d3064f7239fb1e77cf90ce0a4d3c2e16"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/build-all.sh",
+      "target": "tmp/history/posse/build-all.sh",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 277,
+      "sha256": "d9fdab131ff446b98bbb84561071130c46754cae385b1ae6bb9d88f290c3c81d"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/build2.mjs",
+      "target": "tmp/history/posse/build2.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 13327,
+      "sha256": "c05be0a8a3758096862b7cbb081eb7d9087b0871e7c98cdd91b3ea68fd181d1c"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/card-hover-test.cjs",
+      "target": "tmp/history/posse/card-hover-test.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2584,
+      "sha256": "bfc4d93ba124502e4322518a1b4f4e4de2f3a9efd98d93b3d136e50771afe91a"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-candidate-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-candidate-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 268001,
+      "sha256": "14e6015ce98dc007ffa18f995c1c5eadbbe555c0d26919985e515cf07d1addbd"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-candidate-card-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-candidate-card-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 297254,
+      "sha256": "65c9df8c50cac5590bb14c0d0592c18d8b56dd13a4340b6367bf644278ce7e24"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-ceremony-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-ceremony-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 145714,
+      "sha256": "0cacbe715abdc580ad465c1d8389b08995e2bfd66af52bccdbb87cc2cea1d5e3"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-create-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-create-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 247311,
+      "sha256": "f904f63fb73a4c66afc698c88cb44c708e7b3ba6c427a02c4dfee7d08922533c"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-create-original.png",
+      "target": "tmp/history/posse/codex/avatar-approved-create-original.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 236109,
+      "sha256": "44e4548009a5d5dfa264e9957eaef434519af9d2aa459a8112fe8dd9f5df9664"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-photo-president-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-photo-president-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 174317,
+      "sha256": "c5dedb1c8a4e6664283c7d724cae0a7aed2740909b517041d42ed1c59ec6e219"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-photo-two-ai.png",
+      "target": "tmp/history/posse/codex/avatar-approved-photo-two-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 174795,
+      "sha256": "586335e4461012ddc844e25587a18abebff9fdac716cb6ac39cd5513b1a39eb2"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-pilot.cjs",
+      "target": "tmp/history/posse/codex/avatar-approved-pilot.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 5049,
+      "sha256": "8f2a6ead518dc3db3113f48f1a2aa61503605971c17979b1a7c9cb28476da9cc"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-reference.png",
+      "target": "tmp/history/posse/codex/avatar-approved-reference.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 1567516,
+      "sha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-sizes.html",
+      "target": "tmp/history/posse/codex/avatar-approved-sizes.html",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2956,
+      "sha256": "1bc550dfff50ee109b9617ab193dfe083171a5c5c5212de3eaadb787d6d5d7a9"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-approved-sizes.png",
+      "target": "tmp/history/posse/codex/avatar-approved-sizes.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 215172,
+      "sha256": "afd2f99b808a43bc59f7603b3627c0e0fd894513189d67486254d0c1cfa0dfcd"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-candidate-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-candidate-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 268416,
+      "sha256": "b49a910d8b74efe767e67cb5bb09fd899275fd1af45f1fd44ae3d465606d26ed"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-candidate-card-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-candidate-card-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 298828,
+      "sha256": "2d80266000be317d3deaced02ac48d99ba26aaef9a1392d372abcc912535982b"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-ceremony-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-ceremony-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 166130,
+      "sha256": "d8537057b0f4f508c394f253a4ed5169abb5414bce492b9cb373ed9cebaeaaa6"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-create-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-create-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 264982,
+      "sha256": "660419ab004ca03c302caa682a2ebdf1e29bbaeab064476a08f8874c34fb2ad8"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-create-original.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-create-original.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 236087,
+      "sha256": "134609dac545ad6208b8b367cae2ca8bcba20c148646393220f02d802f9fb683"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-photo-president-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-photo-president-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 177300,
+      "sha256": "a4c5a0b7f36d020de47c1cba92443c3626e86dd998957a1e55a0a6c91c95ab03"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot-photo-two-ai.png",
+      "target": "tmp/history/posse/codex/avatar-pilot-photo-two-ai.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 179200,
+      "sha256": "dfc2c043fc298e64d66c1c6290c03fdc66960d945b92ec508d8378317dc3c580"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-pilot.cjs",
+      "target": "tmp/history/posse/codex/avatar-pilot.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 3505,
+      "sha256": "15620073b0e107b567cd5963cfa90ecd20a3d1a3abf0a9376b3757ee2c1db054"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a752444c52ad/contact.png",
+      "target": "tmp/history/posse/codex/avatar-reviews/a752444c52ad/contact.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 205509,
+      "sha256": "b72d2ca2dab8f3b490e22bc966e331cf8760b770f0d4314f717fabc6f292e31a"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a752444c52ad/report.json",
+      "target": "tmp/history/posse/codex/avatar-reviews/a752444c52ad/report.json",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2619,
+      "sha256": "bbbc73f533d2ab4b094202e040e79537d1064accb6b15c4306d755cc54fd1536"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a8a6250c9b0c/contact.png",
+      "target": "tmp/history/posse/codex/avatar-reviews/a8a6250c9b0c/contact.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 215124,
+      "sha256": "6f0bdc3ed0f9f0f6668550bbc17af2f9c3889ff0b34a6da4a42c4281b7572eee"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-reviews/a8a6250c9b0c/report.json",
+      "target": "tmp/history/posse/codex/avatar-reviews/a8a6250c9b0c/report.json",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2537,
+      "sha256": "1190ee408aa3e3ed7e5368fa7e56ab932aba8c0ccaad610866e964d5cdc1b20c"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/avatar-style-reference.png",
+      "target": "tmp/history/posse/codex/avatar-style-reference.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2728379,
+      "sha256": "e3cdb050ef4a389333faad585615cabb5bdc2d1e63e93f36996b1b0f08bd1ede"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/codex/verify-avatar-integration.cjs",
+      "target": "tmp/history/posse/codex/verify-avatar-integration.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 1714,
+      "sha256": "a9954e0b04c8bdd61c1916f8c4bfdee9af9f08c15b88b49feac7902df81c442d"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/engine.html",
+      "target": "tmp/history/posse/engine-before-organization.html",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 287919,
+      "sha256": "851f5fa17475d9639d2ed5baf09d0332b269dc49628e388d470c57aff38fbd42"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/exit.cjs",
+      "target": "tmp/history/posse/exit.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2310,
+      "sha256": "c09407de2b2e9c4cc1f532e65776eeb008976705b801e1ba6e18462ac726e5d5"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/export-people.cjs",
+      "target": "tmp/history/posse/export-people.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 12081,
+      "sha256": "3d5dc789c01fffd9ea4ac204e1a6453fcdc88b4d177e297fe679e0abe61b6f4e"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/flow2.cjs",
+      "target": "tmp/history/posse/flow2.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 1990,
+      "sha256": "a2a3faf23dc6c5129721f013ad08b846c2863cdc1793e373fdbe63829a71c940"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/fuzz.cjs",
+      "target": "tmp/history/posse/fuzz.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 4759,
+      "sha256": "13d3a8c7082049e93240da8cfa5c081cce3bc9bc2a3e36b988b827e1876eac45"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/holes.cjs",
+      "target": "tmp/history/posse/holes.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 1390,
+      "sha256": "bafb6ac7987a0c3d7ed0fd48f002c467c9d28ac20cfb4c2902a6bb53322685d3"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/live.cjs",
+      "target": "tmp/history/posse/live.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2269,
+      "sha256": "8a88de33643d31f0a15f6d13200d8129a298a2d451247b994a61e6c4d73fbf98"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/live.html",
+      "target": "vendor/posse/live.html",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 283251,
+      "sha256": "6c73cd224ff16a97adf26f0cc80f2e214c93ed4d79f2fa70522ab58ee0b22285"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/live0.png",
+      "target": "tmp/history/posse/live0.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 256492,
+      "sha256": "2fbdcaf7d0483aed0c9eccf3227c66c8c7c965e2ea142a0b2bfbc4512f8c2fec"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/parts/class-now.js",
+      "target": "tmp/history/posse/parts/class-now.js",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 34632,
+      "sha256": "fe721b5b9f8f20241d8313cc28a7f09551618fa5e85966ae271f9aeb3a2ae607"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/parts/data-now.js",
+      "target": "tmp/history/posse/parts/data-now.js",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 47783,
+      "sha256": "85a10741c0be9eb8978f5470a69df3104875786508f5705ca7b4acb2da9c7578"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/parts/template2.html",
+      "target": "tmp/history/posse/parts/template2.html",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 23856,
+      "sha256": "19d59e22ec3528fd2859cf6f44713c60dce75fb65909c51f1de61d9cd3aa9538"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-hover.mjs",
+      "target": "tmp/history/posse/patch-hover.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 7241,
+      "sha256": "51b249332b26fb8bbbfb14d04c723818200bc218580d1a9d44df3a289a01cd50"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2.mjs",
+      "target": "tmp/history/posse/patch-v2.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 42332,
+      "sha256": "46baa97bdc99ee8e6fd2839cc372f746c3c4e80d295a9fae84f692e21697c352"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2b.mjs",
+      "target": "tmp/history/posse/patch-v2b.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 7820,
+      "sha256": "8b91daa0db722fd0f1d00a655c7f76cb40bbada6c0090a942e34157e377fffb8"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2c.mjs",
+      "target": "tmp/history/posse/patch-v2c.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 7674,
+      "sha256": "46d713b2555b6f0335a312f59de990f10c60a7c69f61a86ca891ea1f4434b33c"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2d.mjs",
+      "target": "tmp/history/posse/patch-v2d.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 15368,
+      "sha256": "86903a5aba0f97a34ad417f0f7be61c4f39d7bea7b153035f66d8330f32a2a96"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2e.mjs",
+      "target": "tmp/history/posse/patch-v2e.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 12640,
+      "sha256": "ad9d080245d7a510abd9d18404a388b8a4f60188a09baf2da647b9e6ae421abb"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2f.mjs",
+      "target": "tmp/history/posse/patch-v2f.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 7713,
+      "sha256": "24207aca1661a2a554525ad4a5e13c91e672554d98221ca74f47d066ddab4f55"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2g.mjs",
+      "target": "tmp/history/posse/patch-v2g.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 9970,
+      "sha256": "a464dff7a59ca2d539aa9b010b0eeee2d58d3312422e35a7ebe73425b39a1cce"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2h.mjs",
+      "target": "tmp/history/posse/patch-v2h.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2327,
+      "sha256": "482f28ccb25fc3410188f404e3c0cff270c67d75d047cd769d14903f47f70697"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2i.mjs",
+      "target": "tmp/history/posse/patch-v2i.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 1366,
+      "sha256": "23457b00811ea57e2c1983cf96800fdc8b34bce0af18ebe2268837535740e3f8"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2j.mjs",
+      "target": "tmp/history/posse/patch-v2j.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 1955,
+      "sha256": "5e3167dcea421799917766c6bdcbeba0e9762a1be40fa73b4089dd9ecd0de747"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2k.mjs",
+      "target": "tmp/history/posse/patch-v2k.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2683,
+      "sha256": "0e2fe24d4ac8017e5736a67ee8d965fc69fbd3a20dcefd4b433cc9fbd0fae41c"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2l.mjs",
+      "target": "tmp/history/posse/patch-v2l.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 4764,
+      "sha256": "c6ddf7a5e93543c7fefa2d2deb614f919919cc6aebb67c8e84b93b58dd93fef7"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2m.mjs",
+      "target": "tmp/history/posse/patch-v2m.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 18007,
+      "sha256": "880f322cf27e8244dea35802e530ea2f9d4d764361a21cc74fc7dc5d206be7f0"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2n.mjs",
+      "target": "tmp/history/posse/patch-v2n.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2414,
+      "sha256": "07941f45cb074b1be6580e73ff80e2f9b0770063aa6e768aa9de3c2caf7594d7"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/patch-v2o.mjs",
+      "target": "tmp/history/posse/patch-v2o.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 3624,
+      "sha256": "f5616612b328ac49a3cc2523949b3d6b557254c72e2828aa03d717bbc8f66f55"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/people-audit.cjs",
+      "target": "tmp/history/posse/people-audit.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2852,
+      "sha256": "8fac21faeb558b6e998447438b14d17940024833c88091e9fda8a490ebfac6b8"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/people-catalog.mjs",
+      "target": "tmp/history/posse/people-catalog.mjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 61363,
+      "sha256": "6e9ff06f3a640d2d4b091a492b9104971f0110a1dc6026245bbd5b4b99c0649f"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/people-logic.js",
+      "target": "tmp/history/posse/people-logic.js",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 10213,
+      "sha256": "4315959e9afca9e49c9f3d4cc26a20fc194345038a31ba8c910ed5d1dd4cf952"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/perf.cjs",
+      "target": "tmp/history/posse/perf.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2593,
+      "sha256": "61925d0fb06b7f7da3a4841614302ef98e36fafdb31cdc62030ddc23239f7068"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/Hibrido.dc.html",
+      "target": "vendor/posse/project/Hibrido.dc.html",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 104528,
+      "sha256": "adcd6be6c6775bda64de425ad0f69b009583cd2fe531d24ebdf2868cb8b47772"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/Posse.dc.html",
+      "target": "vendor/posse/project/Posse.dc.html",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 283185,
+      "sha256": "5973410cc3ef6984d1df1d6635282b131862924695cd2c8521cb8fba486a00c7"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/avatar-sheet-a.png",
+      "target": "vendor/posse/project/avatar-sheet-a.png",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 1567516,
+      "sha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/avatar-sheet-b.png",
+      "target": "vendor/posse/project/avatar-sheet-b.png",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 1531749,
+      "sha256": "a752444c52ad5838915a1c094d206164011e3fcaa42cb8aa3f74c4cf77c404b1"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/project/canvas.json",
+      "target": "vendor/posse/project/canvas.json",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 781,
+      "sha256": "dd425abbf76f1471c442cbb28e440fa4f14004458e0d91ccfa27e1179bcb06b1"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/randomize-test.cjs",
+      "target": "tmp/history/posse/randomize-test.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2545,
+      "sha256": "0b10027c7c80a7477e4a42d101d990fa5da374d84679089773fba44184f93131"
+    },
+    {
+      "action": "relocate-source",
+      "source": "tmp/posse/rt/artifact-type/dc-runtime.js",
+      "target": "vendor/posse/rt/artifact-type/dc-runtime.js",
+      "reason": "Fonte importada duravel; copiar e provar antes de retirar origem.",
+      "bytes": 185864,
+      "sha256": "82ab863dabf94f79db1b4ced13046a03425dcd255e97a5e42c60b6e8035fea34"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/sweep.cjs",
+      "target": "tmp/history/posse/sweep.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 2559,
+      "sha256": "1e447e680f0c86af3c6b6c1ad17c94c07b9c13aa4832ed1202010b7f851efbdc"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/techs-v2m.txt",
+      "target": "tmp/history/posse/techs-v2m.txt",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 11790,
+      "sha256": "d1526d0d2bf9c392a761af2bb0e877357c27b44862d008a5f2748b3cc400a385"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/tiptest.cjs",
+      "target": "tmp/history/posse/tiptest.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 3980,
+      "sha256": "207b273515eb3eeac36d39341fe0c87eaa386a7fccea54b7e1ded5828093106d"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/ui-card.png",
+      "target": "tmp/history/posse/ui-card.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 304563,
+      "sha256": "8513fb0f37be16c567dac4b91adfa43913bc1e68f9f40425c744f38850169796"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/uitest.cjs",
+      "target": "tmp/history/posse/uitest.cjs",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 6586,
+      "sha256": "880c59370241c43cf3b1ab33e42c15ce832e3692e7850acfcd237833c95452cb"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-0-criacao-vazia.png",
+      "target": "tmp/history/posse/v2-0-criacao-vazia.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 233302,
+      "sha256": "4355872e9ae296f9f672283b19e55c27807cddcaf4112802db2f385a6f518985"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-1-idade.png",
+      "target": "tmp/history/posse/v2-1-idade.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 31956,
+      "sha256": "173517289c16339154c3d037859099c408cba2c19a3c45928f5a1b1b74bc6161"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-2-criacao-cheia.png",
+      "target": "tmp/history/posse/v2-2-criacao-cheia.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 236082,
+      "sha256": "4ab8213c333d0c99bb4c4a5a493373ea2cfeb3686f16a3e313db9842dd6cbfd4"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-3-cerimonia.png",
+      "target": "tmp/history/posse/v2-3-cerimonia.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 133037,
+      "sha256": "92e2c8c46fa9721e978c8625ae494920f5c0bbcb368e51274342b7cfb4f5f3e5"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-4-posse.png",
+      "target": "tmp/history/posse/v2-4-posse.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 254418,
+      "sha256": "a4a6bcd75ab2d9473e9956b926226d8a7258bbdfc97b803ed4b9a0eb40f8c5b5"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-5-ficha.png",
+      "target": "tmp/history/posse/v2-5-ficha.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 296111,
+      "sha256": "a518dc3508ca7584a546dcc83fa866aa497d0e53126679b6036c13c1810e7c65"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-6-travando.png",
+      "target": "tmp/history/posse/v2-6-travando.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 276186,
+      "sha256": "e441e5c39c131665c07a257378995c7fcd10dee078716594d11d584c50d894c9"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-7-nomeado.png",
+      "target": "tmp/history/posse/v2-7-nomeado.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 275153,
+      "sha256": "4fd9c2a2e8c7bd4004bc8614a23bcc5cf2a4c725552f6114a863dc52573d4945"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse/v2-8-foto.png",
+      "target": "tmp/history/posse/v2-8-foto.png",
+      "reason": "Registro de montagem, prova ou versao anterior; bytes preservados.",
+      "bytes": 173498,
+      "sha256": "61d7322dcc47fdb6b4adbb5f8eeee53f87c127362d985d5f39f54399608bef09"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/government.test.mjs",
+      "target": "tests/suites/government-structure.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 8661,
+      "sha256": "ab5e2d7d9f283263d5d1036e326f5ff34eab3ca309c1c344de58c60ebce80203",
+      "normalizedSha256": "5e1e49061263539d2ecdf2442a64cf5bdeac3df0606c33d922df7cecd4a71ce4"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/pilot.test.mjs",
+      "target": "tests/suites/government-pilot.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 16917,
+      "sha256": "4500e7f9a49905b6229ff55ab845049fb342fcc99abbffe4ddb4a0e89b976132",
+      "normalizedSha256": "9bb94a8ff61e8caf0e9792f997807b6651dc219eee418ebf7188469698f59f8c"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/operations.test.mjs",
+      "target": "tests/suites/government-operations.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 15231,
+      "sha256": "c9692f9404e2901d3814d4db62a60baab6f186e3431d66441d6b7d7fce25a51a",
+      "normalizedSha256": "6f10d9494ab8fed7be75721ccc3d96eadcab72a4120f68da721f384003e25f82"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/demand.test.mjs",
+      "target": "tests/suites/government-demand.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 5570,
+      "sha256": "04be3637d11ad33f4481e825b93f9bca4da186eb3d6713ade9cf35c73bba9312",
+      "normalizedSha256": "2cb4d96e004e1c95c635687bdee4ee4fdd85b5f2cec4e3f7f9d6841d83016c58"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/management.test.mjs",
+      "target": "tests/suites/government-management.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 9940,
+      "sha256": "44b6ebcbfa6dd7d38726f3e90214442eb93da0ec00e420c650ab09027453766c",
+      "normalizedSha256": "ffe991f61635a110d1f9006b1b8b816a5c2babb5c4897105dc3537bbc75f0caf"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/seed-competencies.mjs",
+      "target": "tools/import-posse-work.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 2663,
+      "sha256": "93b47c6cd41d1d1fb2c75cbb0a87f1b67402343424481193361e25ff1403ff14"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/operations-demo.mjs",
+      "target": "tools/demo-government-operations.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 3271,
+      "sha256": "ac063ab77c11ba1d0da6dc078b19950bd37efaaf1d6a0de75b5c35df76922d27"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/demand-demo.mjs",
+      "target": "tools/demo-government-demand.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 1703,
+      "sha256": "094e47ae8f5e1355337b48dbdbe72069e9b2ef9b9017a9604a5f9466ee6695d6"
+    },
+    {
+      "action": "relocate-code",
+      "source": "prototypes/government/management-demo.mjs",
+      "target": "tools/demo-government-management.mjs",
+      "reason": "Mover para papel canonico; somente imports/JSDoc relativos mudam.",
+      "bytes": 3441,
+      "sha256": "1c261b7cf59f6dc4d64dd5c8f4d8108c3181279fefabe89748e2056cf32b39e1"
+    },
+    {
+      "action": "delete-import-proxy",
+      "source": "tests/suites/government.mjs",
+      "target": null,
+      "reason": "Cinco imports sem assercoes; suites passam a descoberta direta.",
+      "bytes": 281,
+      "sha256": "087c3e04348f8024d75baaf7a30bc98a1fb910c5c110661c7d8585ed8d3948f5"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-chained-900.png",
+      "target": "captures/probes/posse/comparison/engine-chained-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 263880,
+      "sha256": "d44b597e77c9fd3fd39935e7480f79c11fd3b64682e9e068e7711c2df3eec9cd"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-chained-980.png",
+      "target": "captures/probes/posse/comparison/engine-chained-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 263874,
+      "sha256": "22be3906367e67aaa7debe480459ce4fd93392f6604de288b49990ff4aedc558"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-create-900.png",
+      "target": "captures/probes/posse/comparison/engine-create-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 265721,
+      "sha256": "ba39773813296a0b6b3847a22d882723421cffdcc74d76f9deca5cefc114226c"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-create-980.png",
+      "target": "captures/probes/posse/comparison/engine-create-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 267051,
+      "sha256": "1ce216b00cd0b73877b823ca831ac4bcc81badeaf7f4ffdac4476941e12e1bb6"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-destinations-900.png",
+      "target": "captures/probes/posse/comparison/engine-destinations-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 278957,
+      "sha256": "1ab9b8a5108a2b5f971a9323f9ae34a76cac922eb22a03ad57129f59191ab6f0"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-destinations-980.png",
+      "target": "captures/probes/posse/comparison/engine-destinations-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 278271,
+      "sha256": "683f9172c80f8401f4501681bdc740a37a1aaf6947b29e1f6cbaa7345cb08b7a"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-joined-900.png",
+      "target": "captures/probes/posse/comparison/engine-joined-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 276364,
+      "sha256": "3d341381f6db248869819acaf6ff9cd50cc4e121dda0474728ccb99ae875c654"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-joined-980.png",
+      "target": "captures/probes/posse/comparison/engine-joined-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 277484,
+      "sha256": "c319296cd9dbd5ea63c744449a0c6511ad2710f8c74e5f92e533939b800dd726"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-photo-900.png",
+      "target": "captures/probes/posse/comparison/engine-photo-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 180346,
+      "sha256": "50c341dcc74ee9306f0f37b63418d50d1766ca2851d2d99f821b651612a307e9"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/engine-photo-980.png",
+      "target": "captures/probes/posse/comparison/engine-photo-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 181604,
+      "sha256": "45d26f60cd6948248d4b8bea2ebb353edb8e82ef65886390bfb6a9df97423305"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-create-900.png",
+      "target": "captures/probes/posse/comparison/live-create-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 265865,
+      "sha256": "83f114d429aa469406967f8942f16d56a105506d4aa884d4a6c4eb897179efe9"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-create-980.png",
+      "target": "captures/probes/posse/comparison/live-create-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 266795,
+      "sha256": "5b27efa677c969d4642a95c22dd1a9054e7bbb12401296cad83dd6e9717d0d53"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-joined-900.png",
+      "target": "captures/probes/posse/comparison/live-joined-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 293897,
+      "sha256": "14ea0276c53121558efbe73103690d52a54c1a6cc8e6a78f8d5150dc68168713"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-joined-980.png",
+      "target": "captures/probes/posse/comparison/live-joined-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 295130,
+      "sha256": "c891bf4fba8dbed2a38f54499f1ffa1862e332cb6ef619d2ec751b81be4158e6"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-photo-900.png",
+      "target": "captures/probes/posse/comparison/live-photo-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 180126,
+      "sha256": "ec9501180bb0e38006ae095a419c9a4c145f7631673ad4f503396247fa6400c8"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/comparison/live-photo-980.png",
+      "target": "captures/probes/posse/comparison/live-photo-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 181380,
+      "sha256": "3ece93376ca9e793aef3bbe8c2faca6e2bea55d60bd6d4588f9cc903ffeb9fd7"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/engine-keyboard-900.png",
+      "target": "captures/probes/posse/controls/engine-keyboard-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 310001,
+      "sha256": "b68aa68e0a700397d142a9bfdefb5a23367abd9b64efd6a82156c7fb03edba31"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/engine-keyboard-980.png",
+      "target": "captures/probes/posse/controls/engine-keyboard-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 310531,
+      "sha256": "5e79420bddd61a073932755f1bf6c4af99714d434961aacb1d6cf2392140bce4"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/live-keyboard-900.png",
+      "target": "captures/probes/posse/controls/live-keyboard-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 306891,
+      "sha256": "f077e5d3b23ed033281351803d479e123fc5f08f41539277675449576e1d6480"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/controls/live-keyboard-980.png",
+      "target": "captures/probes/posse/controls/live-keyboard-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 307401,
+      "sha256": "290af19f062486679a7e0d3d82d5b4139bca4ea36efa11c47f0c6360a75bc7c4"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-900.png",
+      "target": "captures/probes/posse/engine-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 284855,
+      "sha256": "2f8dc5315db36ef395818061f8c4fffa2ec5792aaf7d4e09453e1216df758e21"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-980.png",
+      "target": "captures/probes/posse/engine-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 285941,
+      "sha256": "68418f53095d587c80f8651c82431f37ee13adb8c8d5d7720a8984a6f30332d1"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-preserved-900.png",
+      "target": "captures/probes/posse/engine-preserved-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 284192,
+      "sha256": "91f370a441e7d7ff3ae8a26f1b59e20543d35365fea251a86ba6f89979088a71"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/engine-preserved-980.png",
+      "target": "captures/probes/posse/engine-preserved-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 285222,
+      "sha256": "2e4cd6d64ec6d60494a2e313b822500d5c798afb82c64d248fe2a6fd70c6ccb8"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/live-preserved-900.png",
+      "target": "captures/probes/posse/live-preserved-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 280177,
+      "sha256": "d490b628b233bb6d242923f6cb946e643c3c53433905583a0b66409e62a1a9c2"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/live-preserved-980.png",
+      "target": "captures/probes/posse/live-preserved-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 281152,
+      "sha256": "bba6d554aa864a697274c49eb15044add41147c372e770ed3228978998b70865"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-900-normal-reload.png",
+      "target": "captures/probes/posse/motion/engine-900-normal-reload.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 260972,
+      "sha256": "6421c8b49d949977a1073f66eae85079074c486a7aca645d2c91a10f28b66443"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-980-normal-reload.png",
+      "target": "captures/probes/posse/motion/engine-980-normal-reload.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 261851,
+      "sha256": "b4cef5b6a00741f484bf47d9a02ac7086751eb41ba182f5824f9f315ea6f78c7"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-card-900.png",
+      "target": "captures/probes/posse/motion/engine-card-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 326172,
+      "sha256": "8556e1b1c0e2d30d064c92166be5bf03544b631f95035734fa38edf6b6fcd6be"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/engine-card-980.png",
+      "target": "captures/probes/posse/motion/engine-card-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 327116,
+      "sha256": "892e5b1e72e630cd198b8bccce273d5be661a5361273a6f1aeb99ccd556c7ad6"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-900-normal-reload.png",
+      "target": "captures/probes/posse/motion/live-900-normal-reload.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 260972,
+      "sha256": "6421c8b49d949977a1073f66eae85079074c486a7aca645d2c91a10f28b66443"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-980-normal-reload.png",
+      "target": "captures/probes/posse/motion/live-980-normal-reload.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 261851,
+      "sha256": "b4cef5b6a00741f484bf47d9a02ac7086751eb41ba182f5824f9f315ea6f78c7"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-card-900.png",
+      "target": "captures/probes/posse/motion/live-card-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 323675,
+      "sha256": "ab389669f9b67825b37af7b8974a85360f8d73ed25dde8bcfff88c32363da182"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/motion/live-card-980.png",
+      "target": "captures/probes/posse/motion/live-card-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 324469,
+      "sha256": "bc23d4061d8e9b0532fb5d59ea0b3f6bcea337263e4f3cfa316549a851120e67"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/reforms/engine-empty-900.png",
+      "target": "captures/probes/posse/reforms/engine-empty-900.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 256472,
+      "sha256": "f0fde4ded095098d3fe3f79a9c7403d41677fdf852ce7b8d58ea84ebb8a19536"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/posse/reforms/engine-empty-980.png",
+      "target": "captures/probes/posse/reforms/engine-empty-980.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 256999,
+      "sha256": "b0cdedb222bf39e83b4e10f58ae6ab8c692860a5285711ce885ec67676dd3d91"
+    },
+    {
+      "action": "relocate-capture",
+      "source": "captures/world-ask-post.png",
+      "target": "captures/probes/world/world-ask-post.png",
+      "reason": "Categoria canonica de sondas.",
+      "bytes": 661834,
+      "sha256": "2e654f2d1e415e098643f446dffe2b4f9223a93b1b32871db6fe47f053d9bdd5"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-demand-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/government-demand-validate.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 78492,
+      "sha256": "c31a1a41e8be3d2a33df3e3e750f196cca88435c3f2b726b0de39892822ab266"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-management-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/government-management-validate.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 79970,
+      "sha256": "592c148cc806e085adb4e7f170c09a4480f6585c19a6911fe3edc95863c5bf05"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-operations-tests.log",
+      "target": "tmp/history/recovery-2026-09-30/government-operations-tests.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 73446,
+      "sha256": "91e650715c25b6388b4423a52ad33ae7006e64c9f36ef3a1924e5ac00d464944"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/government-operations-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/government-operations-validate.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 76990,
+      "sha256": "c0cf91761deed4797c4274c2341327ed0a9dbe6cf2017571cf01abad1e0f3cff"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/operations-independent-review.json",
+      "target": "tmp/history/recovery-2026-09-30/operations-independent-review.json",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 2420,
+      "sha256": "6ca01003db1f581281876c43f9e9b5a114dbb397359e5ca6085e48e4ddb4408f"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/operations-review-input.txt",
+      "target": "tmp/history/recovery-2026-09-30/operations-review-input.txt",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 20431,
+      "sha256": "ea62575f6f489be7338ec9847d42d4f6f7ee0722911cdfd65de8e376bc245f03"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/operations-review-instructions.txt",
+      "target": "tmp/history/recovery-2026-09-30/operations-review-instructions.txt",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 1677,
+      "sha256": "85b4220c783aaecbce7c462d88dc5cc5631abb4c07fe1ad25c60ebbb0cd08d55"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/plan-audit-probe.mjs",
+      "target": "tmp/history/recovery-2026-09-30/plan-audit-probe.mjs",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 1187,
+      "sha256": "c63102790eba5c76ae080246dfb4eb0e33ab8ca9a6821a7ad6e80eb01dfd83d0"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-comparison-final.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-comparison-final.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 322,
+      "sha256": "917c53a37a1b870929bfc82b1043c99d2a7ae24c4cc31e1bd8a28d0ec3ee6334"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-controls.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-controls.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 1186,
+      "sha256": "3df047350f58f1bc011da16933ab9e3293af328e2d6abf2c6ce25820b7614492"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-agenda.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-agenda.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 5018,
+      "sha256": "fa6ab9a6f6c54dbfaa7b5f4e22fa0eae962e43e7b1fc42c3be9a5ba3357b30a6"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-base.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-base.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 5024,
+      "sha256": "98fe18f2db09870375de6cec9909a042b1ff323c590568a98c668154badf16a2"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-explorador.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-explorador.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 4998,
+      "sha256": "4c742715c31c92a12a40621e2c24927b741a7d3f34b78a3e7e6fa96da9daa69d"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-herdado.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-herdado.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 5014,
+      "sha256": "4bf0bf33d6e57611783b4060715c4e763f0680ec6d022fe2c70e81920238d515"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-piso.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-piso.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 4950,
+      "sha256": "03a0e38ed50b7d3717fa6b0098081929a135090bb1e85060aa977eba03e7a189"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-simulate-promessa.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-promessa.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 5010,
+      "sha256": "a7af9789d55c86a53cfede6f7747e25ec245085fa0c8f8d3d6b67f5e4a6abb53"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-flow-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-flow-validate.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 80636,
+      "sha256": "bc47bb7672115a124add127436335e93df0cb3a7cd92a9037f702e45cffd887c"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-motion-after.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-motion-after.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 2474,
+      "sha256": "cac5c763fbc74ef341f76ab1faaeb419935be30417b5d669173bbc3449e60c51"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-motion-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-motion-before.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 3804,
+      "sha256": "d7f9062ce6ca1f2b5b724c492ea2d2b841316dc14f3cbfff2e4d07dc1c253b0b"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-preserve-ui.mjs",
+      "target": "tmp/history/recovery-2026-09-30/posse-preserve-ui.mjs",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 4565,
+      "sha256": "9f2367651aa3acd7b49d317d0f76bf1b145378b5b3d33a39fb157395909b4d39"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-check.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-check.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 1634,
+      "sha256": "4c1ff6194f46a2c3c5454b17fddb1dcb5ad543483fc5c3f16681fc1978aed22f"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-lint.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-lint.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 102,
+      "sha256": "4c2aa935502d949ceedb869d9bf0ccce96ab9dd8ab58f44b7b513d591b046b8c"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-types.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-types.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 128,
+      "sha256": "536fce0efb6a624cf6d4f04ba14ae4b757c6a70be5584b4e1c27459c13041bdf"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-recovery-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-recovery-validate.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 85926,
+      "sha256": "e99c131deacc434b4d3b7b858959c24cc2fdc5fbe9f7ab00f9c1a1c23a0f5fa8"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-after.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-after.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 2764,
+      "sha256": "bf7006dff01012de3dd5729fba83e3d60102d9d949dd566d0ceb88f762aeca8b"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-before.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 2166,
+      "sha256": "607a164ca554f8f2998aa19ce0c68863e7b8987c054b38913c3ea453b4c4093f"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-browser.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-browser.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 350,
+      "sha256": "4e87e3b0109addbaed9ce42a96cee1223230b6c684e2b29a1d5f8e3c77500c42"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-icon-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-icon-before.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 1900,
+      "sha256": "d25efa83a7e198100cd708eca643b19fda1ecdbe0161d122ce0fce8c8a90562d"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reforms-institution-before.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reforms-institution-before.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 1520,
+      "sha256": "52a4a390ba6da4fcf0168acdd3b2e4e0a58b8194b0088f97507581a13b62f5a6"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-reset-validate.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-reset-validate.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 81522,
+      "sha256": "f417e92d5ff2cb791b7388cd28f97c504497205ab9e3d5aabf86862deecc493a"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/posse-ui-audit.log",
+      "target": "tmp/history/recovery-2026-09-30/posse-ui-audit.log",
+      "reason": "Log encerrado ou material da revisao anterior; conservar bytes.",
+      "bytes": 27428,
+      "sha256": "babb1e0a73e5429df7093354ad1bcfac2776aa86b402ab549e06615214172f06"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/serve-recovery-20260930.err.log",
+      "target": "tmp/history/recovery-2026-09-30/serve-recovery-20260930.err.log",
+      "reason": "Log ativo: mover apenas depois de encerrar o servidor dono.",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "action": "archive",
+      "source": "tmp/serve-recovery-20260930.log",
+      "target": "tmp/history/recovery-2026-09-30/serve-recovery-20260930.log",
+      "reason": "Log ativo: mover apenas depois de encerrar o servidor dono.",
+      "bytes": 46,
+      "sha256": "974fe75f8a5f50a1ac7d46ecf84f679d702f84fb61ed0269bdb7de1e3035c31c"
+    }
+  ],
+  "frozenEvidence": [
+    {
+      "path": "docs/evidence/assets/bake-coat-of-arms.mjs",
+      "bytes": 2604,
+      "sha256": "3897600e8b9dad8fa2ea4326c9b756b4bd6e4e4e0e498df5779914903d0b6da0"
+    },
+    {
+      "path": "docs/evidence/assets/bake-envelopes-screen.mjs",
+      "bytes": 2764,
+      "sha256": "c076ac589339b4c815c7f7172c1c6ecde307512c89e1ed2eb77f49cc46a49d5f"
+    },
+    {
+      "path": "docs/evidence/assets/bake-folder.mjs",
+      "bytes": 4376,
+      "sha256": "effe2febb40f43fe01d48dfc7a0a4dfc2d84843987b3e0c08407ba9d924abd00"
+    },
+    {
+      "path": "docs/evidence/assets/bake-pen-whole.mjs",
+      "bytes": 2001,
+      "sha256": "1b98512f92c400d5b231bce473582e61822d4fbdcb19085f2f07ea248b153f27"
+    },
+    {
+      "path": "docs/evidence/assets/bake-pen.mjs",
+      "bytes": 2549,
+      "sha256": "0764a3d72d00210493f3ed2efb184a23fffecbf80e0bdf7f678a132adf82db2d"
+    },
+    {
+      "path": "docs/evidence/assets/bake-phone-screen.mjs",
+      "bytes": 5095,
+      "sha256": "a0391323741b96bce164b795387671286298348386d6c5bd54bc13f0712fdea0"
+    },
+    {
+      "path": "docs/evidence/assets/bake-phone.mjs",
+      "bytes": 2519,
+      "sha256": "8ea52226c3f5d3228c56fd468ca9eb9d613324772a91def3b98593c1e3618c61"
+    },
+    {
+      "path": "docs/evidence/assets/bake-wood.mjs",
+      "bytes": 6347,
+      "sha256": "e2703895fbce3f18b6f0d445585173cce1a8f76ef119733e331e3458cb244859"
+    },
+    {
+      "path": "docs/evidence/assets/keys-angle.mjs",
+      "bytes": 3201,
+      "sha256": "ea8ff22175c915679ec9e3f3b903ea0cfd933e1646a65a1adfcc1ce9e4a267ae"
+    },
+    {
+      "path": "docs/evidence/assets/trim-edge.mjs",
+      "bytes": 7807,
+      "sha256": "2259e1846495ad3bfdc22d7a2f8dc0c39961bbcef7ea74f48ed3d9f51fff5a40"
+    },
+    {
+      "path": "docs/evidence/gate/validate-final-2026-09-23.log",
+      "bytes": 52540,
+      "sha256": "7e0cb73fcd1b45028dc5f3a9c11c2b03ab04c9f0f9b22130ade8736c6e835b11"
+    },
+    {
+      "path": "docs/evidence/gate/validate-flight-failure-2026-09-23.log",
+      "bytes": 52414,
+      "sha256": "085cfcf1767a2c7b982ca534c78a2de6668a9ef2d0c4f4587c86759dd236c6c9"
+    },
+    {
+      "path": "docs/evidence/glass/deviation.png",
+      "bytes": 350950,
+      "sha256": "970e3d8062cf9f900cf0088505013c426b8d739b68583faf8f6400ce56b5087b"
+    },
+    {
+      "path": "docs/evidence/glass/edge-divergence.md",
+      "bytes": 2078,
+      "sha256": "f9a3e4133a88252ad00b4f8e3cf0ac5ca6ce889ab1bf7e89acf28a182a37ec64"
+    },
+    {
+      "path": "docs/evidence/glass/glass-audit.png",
+      "bytes": 1695093,
+      "sha256": "7fd7ecbb0d97ed3295755bd29ac4ca0ea1405ab30930b9fcbd2e440e0a668660"
+    },
+    {
+      "path": "docs/evidence/glass/lens-area.mjs",
+      "bytes": 2656,
+      "sha256": "2541837501837ef6e6d16bcb521e029544b313bb160980a9e0651f06aabc74b5"
+    },
+    {
+      "path": "docs/evidence/glass/lens-texture.md",
+      "bytes": 5106,
+      "sha256": "aeb3e545c9d58595e03d9b48d1a70f4072313f371c7ae954c7813103bbf28d02"
+    },
+    {
+      "path": "docs/evidence/glass/stages.md",
+      "bytes": 6043,
+      "sha256": "f58145006caa134a99d9271f3fbd70705c3d181681b5b5f875a2c6df09121f43"
+    },
+    {
+      "path": "docs/evidence/government-demand-2026-09-30.json",
+      "bytes": 207117,
+      "sha256": "ca4e7bba99e5f582c1ca7d8f899133e789b00f856c6f49cd75300a1f5ac46ef0"
+    },
+    {
+      "path": "docs/evidence/government-management-2026-09-30.json",
+      "bytes": 456943,
+      "sha256": "446e570b8f2e33eec03219f7d5b89989cf0b3a6cc608c942d5dc988133f5f72b"
+    },
+    {
+      "path": "docs/evidence/government-operations-2026-09-30.json",
+      "bytes": 77804,
+      "sha256": "eb43bee936427b8d99f8a086bb4c7f08b41d77938d689662c841f6bc8df68796"
+    },
+    {
+      "path": "docs/evidence/government-review-attempt-2026-09-30.json",
+      "bytes": 557,
+      "sha256": "037ff219c5655e487f4240b98e5ed515a233f63edc621558d2c0a40eab42dd67"
+    },
+    {
+      "path": "docs/evidence/plan-audit-2026-09-29.json",
+      "bytes": 753,
+      "sha256": "1a8899a98e680133e363d049a3bcc115f7d46d61178bce045bc68b86f70ff730"
+    },
+    {
+      "path": "docs/evidence/posse-bridge-2026-09-30.json",
+      "bytes": 84268,
+      "sha256": "6d50bb4a1113549c607a9ebb17a7063a6a5b9afd1a0a350cdb0d7a9e9f6de240"
+    },
+    {
+      "path": "docs/evidence/posse-comparison-recovery-2026-09-30.json",
+      "bytes": 423934,
+      "sha256": "ac2937c7badc6da8f4af7943cfc72832226050db9a7e4a2f17e3e7001878a1fd"
+    },
+    {
+      "path": "docs/evidence/posse-controls-2026-09-30.json",
+      "bytes": 9720,
+      "sha256": "8bf2cca7f845e43e035b1881a9b777fa290d642462f812f6992b25edd2d946a6"
+    },
+    {
+      "path": "docs/evidence/posse-motion-2026-09-30.json",
+      "bytes": 2355239,
+      "sha256": "23f1177e02a4bccf7563396bdffe6c866731cbf9e8191d9cce258bac00c1bba5"
+    },
+    {
+      "path": "docs/evidence/posse-motion-before-2026-09-30.json",
+      "bytes": 2321036,
+      "sha256": "c0d4cb15ea152164cf8ff09b79095a1b271123234da968fac732d2c151c9b641"
+    },
+    {
+      "path": "docs/evidence/posse-recovery-validation-2026-09-30.json",
+      "bytes": 3120,
+      "sha256": "3c6978f38b2c7a7eb4223e4902236e74897a4a0086c68d712fff8a5eb236e657"
+    },
+    {
+      "path": "docs/evidence/posse-reforms-2026-09-30.json",
+      "bytes": 336842,
+      "sha256": "8e0642b039b65fd5c0aeac3bd7a47a68e30442dd5a4e25cc640f064e85764b54"
+    },
+    {
+      "path": "docs/evidence/posse-reset-2026-09-30.json",
+      "bytes": 85166,
+      "sha256": "90f5ea5c48cf86ad62b24c228dff7a4c50de2ee66a1d045f605332857aca7f3b"
+    },
+    {
+      "path": "docs/evidence/posse-ui-line-audit-2026-09-30.json",
+      "bytes": 63907,
+      "sha256": "2fa540271257f66f3f5f0e910a1d20afb4fb40d824c6d3ab5fd379297a57aeec"
+    },
+    {
+      "path": "docs/evidence/posse-ui-line-audit-2026-09-30.md",
+      "bytes": 11718,
+      "sha256": "61593c53f7eb884bcff423d9a48eb4bce6553cb136e80eec2f954833d5f862fb"
+    },
+    {
+      "path": "docs/evidence/posse-ui-line-diff-2026-09-30.patch",
+      "bytes": 62818,
+      "sha256": "4ac2164cbfc063a481de042eabfbcb52140f832ae23378036259901a304092c8"
+    },
+    {
+      "path": "docs/evidence/posse-ui-preservation-2026-09-30.json",
+      "bytes": 32533,
+      "sha256": "8481236b0fa8102220f43ffc73f16ac619bed606c7f4acb45381f7c59e956a54"
+    },
+    {
+      "path": "docs/evidence/posse-v2o-source.zip",
+      "bytes": 9540129,
+      "sha256": "afc1c50bf7c048e75759100a51aec8d47746255a2d210b58d5bbd88aa5b8f42f"
+    },
+    {
+      "path": "docs/evidence/review/ultra-finding-1.mjs",
+      "bytes": 2457,
+      "sha256": "53e28875635c2feea8821cd0ff090eafff1deba45b03b0d5e2e3982dfa5bf89b"
+    },
+    {
+      "path": "docs/evidence/review/ultra-finding-1b.mjs",
+      "bytes": 1729,
+      "sha256": "8a7e331ec5a6f32a3a44e8cc877108eda45c3e4f7d18741fa4b37b4916726e71"
+    },
+    {
+      "path": "docs/evidence/review/ultra-finding-3.mjs",
+      "bytes": 2193,
+      "sha256": "d535f0ca0b27f1690db1381235f9b43e19e42d7d58d2c3194f2589e59cbd98ae"
+    },
+    {
+      "path": "docs/evidence/review/ultra-findings.mjs",
+      "bytes": 3859,
+      "sha256": "2927421670982efe0cfd71e364a6f5a24111ea73636cdc19e4b0de64581fb1d6"
+    },
+    {
+      "path": "docs/evidence/styles/apple-transition.md",
+      "bytes": 2534,
+      "sha256": "98874eef2ce32edd57498a6495d0e3af0a771911dcf31289222eeda8be6873e9"
+    },
+    {
+      "path": "docs/evidence/styles/banding.mjs",
+      "bytes": 1862,
+      "sha256": "3893aae3c3d121dae13a68e32b5f274f93e300a717c5e3901bfda7403a4a9325"
+    },
+    {
+      "path": "docs/evidence/styles/gesture-curves.mjs",
+      "bytes": 422,
+      "sha256": "529402bce5b0645508c3823160aaa3b331189a6e50891365ed84e37e559904ca"
+    },
+    {
+      "path": "docs/evidence/styles/gesture.mjs",
+      "bytes": 1687,
+      "sha256": "cec133fda0c81f03b503d2dbbe6298c3ca93eb32d8ded5e2d352974af79fe6e7"
+    },
+    {
+      "path": "docs/evidence/styles/screencast-variants.mjs",
+      "bytes": 2656,
+      "sha256": "c85c7c272212e0af56e14acf798863bc80b26aaf813a8fb5c9b914d348f1d807"
+    },
+    {
+      "path": "docs/evidence/styles/transition-cost.md",
+      "bytes": 1379,
+      "sha256": "f4635018a1e6e143f756a4f5a097e438e1a42db672beebbacbea579dab1bd7be"
+    },
+    {
+      "path": "docs/evidence/styles/veil-transition.mjs",
+      "bytes": 2255,
+      "sha256": "d8b7ec8250992d75a1adb9f4e25287cc635b213a47a94dbf6b3557223a0028b0"
+    },
+    {
+      "path": "docs/evidence/styles/worst-contrast.mjs",
+      "bytes": 3603,
+      "sha256": "0fa58ef1d67cac49ab422d0486ed5cfeb102b940a8c8af317b05c5d0b8d38418"
+    },
+    {
+      "path": "docs/evidence/workspace-cleanup-2026-09-30.json",
+      "bytes": 680744,
+      "sha256": "294115bc58d8e388a4ffe24bc95d1e1827ea90cb80b19df7f2bc4d6a591ca5f3"
+    },
+    {
+      "path": "docs/evidence/workspace-cleanup-2026-09-30.md",
+      "bytes": 2751,
+      "sha256": "58b1d9576c279e3d2dacc6b53a60bf994810f9d341ec7cc283e70397838bb35e"
+    }
+  ],
+  "backups": [
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-backup-2026-09-26.bundle",
+      "bytes": 18294811,
+      "sha256": "ada1038731e375de4517aa7f0b8a9cf9378d37d2dd9557b2fa8b3c137b316953"
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-gov-prework-2026-09-28.bundle",
+      "bytes": 18212094,
+      "sha256": "b14c62ac5f5d0edd88d78e53b6e05bcdc5a061d5fde7e9cbcda8dc704b3bfa57"
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-gov-prework-2026-09-28.tar.gz",
+      "bytes": 82041612,
+      "sha256": "cbea2d2743b94b41c169e0f7153ca1edf3507caadfc3c9e9a18079879118474b"
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-posse-2026-09-26.tgz",
+      "bytes": 33800969,
+      "sha256": "55b7f789fd7d2599cf65685ac747abb2c3bb86663ece572873c33ce7c1f205dc"
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/cld-session-2026-09-29-pre-shutdown.tar.gz",
+      "bytes": 204230049,
+      "sha256": "a4c17bd84706fc9d9367719510d4867ea6e3f8808da48d05d821961d94e62051"
+    },
+    {
+      "path": "C:/Users/esteb/Desktop/cld-backups/README.md",
+      "bytes": 1064,
+      "sha256": "60933554c979d34a9c9b8f09baadb4857e378fb94056f86d252a9b18a9fbd4dd"
+    }
+  ],
+  "generatedEntry": "prototypes/posse/index.html",
+  "pathCatalog": "prototypes/posse/paths.mjs",
+  "preserved": [
+    "src/",
+    "styles/",
+    "assets/",
+    "tmp/asset-sources/",
+    "tmp/agents/",
+    "tmp/base/",
+    ".playwright-mcp/"
+  ],
+  "compatibilityUrls": [
+    "/tmp/posse/live.html",
+    "/tmp/posse/engine.html"
+  ]
+}

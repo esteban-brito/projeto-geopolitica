@@ -1,0 +1,1226 @@
+{
+  "scope": "Comparação com a interface aprovada em live.html: CSS idêntico, geometria relativa dos 38 ministérios e hemiciclo preservada, 513 pontos, painéis dentro da janela. Fluxo de criação e nomeação; não cobre todos os gestos.",
+  "cssHash": "448517ee5f977050c97bea96886b8aedaad359eee63a646dd8973ec0132d8a1d",
+  "cases": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 980
+      },
+      "measurements": [
+        {
+          "version": "live",
+          "view": {
+            "chamber": {
+              "left": 32,
+              "top": 192,
+              "width": 752,
+              "height": 396,
+              "right": 784,
+              "bottom": 588
+            },
+            "deputies": 513,
+            "nodes": [
+              {
+                "id": "casa-civil",
+                "x": 240.796875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "fazenda",
+                "x": 256.1875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "planejamento",
+                "x": 288.390625,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "relacoes-institucionais",
+                "x": 332.09375,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "justica",
+                "x": 379.890625,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "defesa",
+                "x": 423.59375,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "saude",
+                "x": 455.796875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "educacao",
+                "x": 471.1875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "secretaria-geral",
+                "x": 194.09375,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacao",
+                "x": 204.890625,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gsi",
+                "x": 224.296875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agu",
+                "x": 251.09375,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agricultura",
+                "x": 283.890625,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "industria",
+                "x": 320.890625,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "previdencia",
+                "x": 360,
+                "y": 188,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cidades",
+                "x": 399.09375,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cultura",
+                "x": 436.09375,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "ciencia",
+                "x": 468.890625,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacoes",
+                "x": 495.6875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agrario",
+                "x": 515.09375,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "integracao",
+                "x": 525.890625,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "social",
+                "x": 144.796875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "direitos",
+                "x": 154.1875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "empreendedorismo",
+                "x": 170,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "esporte",
+                "x": 191.6875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gestao",
+                "x": 218.6875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "igualdade",
+                "x": 250,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "meio-ambiente",
+                "x": 284.6875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "minas",
+                "x": 321.796875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "mulheres",
+                "x": 360,
+                "y": 138,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "pesca",
+                "x": 398.1875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "portos",
+                "x": 435.296875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "indigenas",
+                "x": 470,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "exteriores",
+                "x": 501.296875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "trabalho",
+                "x": 528.296875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "transportes",
+                "x": 550,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "turismo",
+                "x": 565.796875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cgu",
+                "x": 575.1875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "panels": [
+              {
+                "left": 32,
+                "top": 604,
+                "width": 564,
+                "height": 65.1875,
+                "right": 596,
+                "bottom": 669.1875
+              },
+              {
+                "left": 808,
+                "top": 112,
+                "width": 440,
+                "height": 664,
+                "right": 1248,
+                "bottom": 776
+              }
+            ]
+          },
+          "errors": []
+        },
+        {
+          "version": "engine",
+          "view": {
+            "chamber": {
+              "left": 32,
+              "top": 192,
+              "width": 752,
+              "height": 396,
+              "right": 784,
+              "bottom": 588
+            },
+            "deputies": 513,
+            "nodes": [
+              {
+                "id": "casa-civil",
+                "x": 240.796875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "fazenda",
+                "x": 256.1875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "planejamento",
+                "x": 288.390625,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "relacoes-institucionais",
+                "x": 332.09375,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "justica",
+                "x": 379.890625,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "defesa",
+                "x": 423.59375,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "saude",
+                "x": 455.796875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "educacao",
+                "x": 471.1875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "secretaria-geral",
+                "x": 194.09375,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacao",
+                "x": 204.890625,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gsi",
+                "x": 224.296875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agu",
+                "x": 251.09375,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agricultura",
+                "x": 283.890625,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "industria",
+                "x": 320.890625,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "previdencia",
+                "x": 360,
+                "y": 188,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cidades",
+                "x": 399.09375,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cultura",
+                "x": 436.09375,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "ciencia",
+                "x": 468.890625,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacoes",
+                "x": 495.6875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agrario",
+                "x": 515.09375,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "integracao",
+                "x": 525.890625,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "social",
+                "x": 144.796875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "direitos",
+                "x": 154.1875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "empreendedorismo",
+                "x": 170,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "esporte",
+                "x": 191.6875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gestao",
+                "x": 218.6875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "igualdade",
+                "x": 250,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "meio-ambiente",
+                "x": 284.6875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "minas",
+                "x": 321.796875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "mulheres",
+                "x": 360,
+                "y": 138,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "pesca",
+                "x": 398.1875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "portos",
+                "x": 435.296875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "indigenas",
+                "x": 470,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "exteriores",
+                "x": 501.296875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "trabalho",
+                "x": 528.296875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "transportes",
+                "x": 550,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "turismo",
+                "x": 565.796875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cgu",
+                "x": 575.1875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "panels": [
+              {
+                "left": 32,
+                "top": 604,
+                "width": 564,
+                "height": 65.1875,
+                "right": 596,
+                "bottom": 669.1875
+              },
+              {
+                "left": 808,
+                "top": 112,
+                "width": 440,
+                "height": 664,
+                "right": 1248,
+                "bottom": 776
+              }
+            ]
+          },
+          "errors": []
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "measurements": [
+        {
+          "version": "live",
+          "view": {
+            "chamber": {
+              "left": 32,
+              "top": 192,
+              "width": 752,
+              "height": 396,
+              "right": 784,
+              "bottom": 588
+            },
+            "deputies": 513,
+            "nodes": [
+              {
+                "id": "casa-civil",
+                "x": 240.796875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "fazenda",
+                "x": 256.1875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "planejamento",
+                "x": 288.390625,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "relacoes-institucionais",
+                "x": 332.09375,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "justica",
+                "x": 379.890625,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "defesa",
+                "x": 423.59375,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "saude",
+                "x": 455.796875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "educacao",
+                "x": 471.1875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "secretaria-geral",
+                "x": 194.09375,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacao",
+                "x": 204.890625,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gsi",
+                "x": 224.296875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agu",
+                "x": 251.09375,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agricultura",
+                "x": 283.890625,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "industria",
+                "x": 320.890625,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "previdencia",
+                "x": 360,
+                "y": 188,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cidades",
+                "x": 399.09375,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cultura",
+                "x": 436.09375,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "ciencia",
+                "x": 468.890625,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacoes",
+                "x": 495.6875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agrario",
+                "x": 515.09375,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "integracao",
+                "x": 525.890625,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "social",
+                "x": 144.796875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "direitos",
+                "x": 154.1875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "empreendedorismo",
+                "x": 170,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "esporte",
+                "x": 191.6875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gestao",
+                "x": 218.6875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "igualdade",
+                "x": 250,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "meio-ambiente",
+                "x": 284.6875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "minas",
+                "x": 321.796875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "mulheres",
+                "x": 360,
+                "y": 138,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "pesca",
+                "x": 398.1875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "portos",
+                "x": 435.296875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "indigenas",
+                "x": 470,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "exteriores",
+                "x": 501.296875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "trabalho",
+                "x": 528.296875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "transportes",
+                "x": 550,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "turismo",
+                "x": 565.796875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cgu",
+                "x": 575.1875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "panels": [
+              {
+                "left": 32,
+                "top": 604,
+                "width": 564,
+                "height": 65.1875,
+                "right": 596,
+                "bottom": 669.1875
+              },
+              {
+                "left": 808,
+                "top": 112,
+                "width": 440,
+                "height": 664,
+                "right": 1248,
+                "bottom": 776
+              }
+            ]
+          },
+          "errors": []
+        },
+        {
+          "version": "engine",
+          "view": {
+            "chamber": {
+              "left": 32,
+              "top": 192,
+              "width": 752,
+              "height": 396,
+              "right": 784,
+              "bottom": 588
+            },
+            "deputies": 513,
+            "nodes": [
+              {
+                "id": "casa-civil",
+                "x": 240.796875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "fazenda",
+                "x": 256.1875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "planejamento",
+                "x": 288.390625,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "relacoes-institucionais",
+                "x": 332.09375,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "justica",
+                "x": 379.890625,
+                "y": 238.5,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "defesa",
+                "x": 423.59375,
+                "y": 257.6875,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "saude",
+                "x": 455.796875,
+                "y": 292.890625,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "educacao",
+                "x": 471.1875,
+                "y": 338.09375,
+                "width": 40,
+                "height": 40
+              },
+              {
+                "id": "secretaria-geral",
+                "x": 194.09375,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacao",
+                "x": 204.890625,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gsi",
+                "x": 224.296875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agu",
+                "x": 251.09375,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agricultura",
+                "x": 283.890625,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "industria",
+                "x": 320.890625,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "previdencia",
+                "x": 360,
+                "y": 188,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cidades",
+                "x": 399.09375,
+                "y": 192.59375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cultura",
+                "x": 436.09375,
+                "y": 206.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "ciencia",
+                "x": 468.890625,
+                "y": 228.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "comunicacoes",
+                "x": 495.6875,
+                "y": 257,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "agrario",
+                "x": 515.09375,
+                "y": 291.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "integracao",
+                "x": 525.890625,
+                "y": 329.1875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "social",
+                "x": 144.796875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "direitos",
+                "x": 154.1875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "empreendedorismo",
+                "x": 170,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "esporte",
+                "x": 191.6875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "gestao",
+                "x": 218.6875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "igualdade",
+                "x": 250,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "meio-ambiente",
+                "x": 284.6875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "minas",
+                "x": 321.796875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "mulheres",
+                "x": 360,
+                "y": 138,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "pesca",
+                "x": 398.1875,
+                "y": 141.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "portos",
+                "x": 435.296875,
+                "y": 151.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "indigenas",
+                "x": 470,
+                "y": 167.796875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "exteriores",
+                "x": 501.296875,
+                "y": 190,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "trabalho",
+                "x": 528.296875,
+                "y": 217.390625,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "transportes",
+                "x": 550,
+                "y": 249.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "turismo",
+                "x": 565.796875,
+                "y": 284.09375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "id": "cgu",
+                "x": 575.1875,
+                "y": 321.296875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "panels": [
+              {
+                "left": 32,
+                "top": 604,
+                "width": 564,
+                "height": 65.1875,
+                "right": 596,
+                "bottom": 669.1875
+              },
+              {
+                "left": 808,
+                "top": 112,
+                "width": 440,
+                "height": 664,
+                "right": 1248,
+                "bottom": 776
+              }
+            ]
+          },
+          "errors": []
+        }
+      ]
+    }
+  ]
+}

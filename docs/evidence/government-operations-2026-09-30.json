@@ -1,0 +1,2808 @@
+{
+  "date": "2026-09-30",
+  "scope": "Ensaio isolado; não é campanha do jogo, balanço real ou aprovação jurídica.",
+  "assumptions": [
+    "Períodos, esforço e caixa são unidades sintéticas; não equivalem a semanas, pessoas ou reais.",
+    "Sete trabalhos administrativos conhecidos, sem novas chegadas, uma preparação e uma execução por trabalho.",
+    "O trabalho representa um lote administrativo; cada denúncia não exige decisão de ministro.",
+    "Capacidade por equipe igual a um; caixa inicial total igual a 14; cada execução custa uma unidade.",
+    "Repasse da fusão requer duas unidades de esforço; os demais, uma. São hipóteses dos pacotes, não taxas por verbo.",
+    "Equipes existentes já financiadas; a transição disputa seu esforço, sem cobrança adicional de folha.",
+    "Compartilhar acesso não revoga acesso antigo; nenhuma autorização jurídica ou proteção de dados é implementada.",
+    "Executores administrativos e rede educativa adicionais são exemplos sintéticos, não novos órgãos reais.",
+    "Currículos não viram multiplicadores de entrega; nomeação e experiência continuam no parecer qualitativo.",
+    "Prioridades e abertura iguais nas quatro comparações; a gestão e os repasses dos pacotes são explícitos.",
+    "O quinto cenário mantém a estrutura e muda somente prioridade, para testar a alternativa de gestão."
+  ],
+  "priority": [
+    "job-rights-intake",
+    "job-rights-followup",
+    "job-rights-education",
+    "job-health-federation",
+    "job-sanitary-policy",
+    "job-health-information",
+    "job-defense-policy"
+  ],
+  "scenarios": {
+    "keep": {
+      "opening": {
+        "period": 0,
+        "institutions": [
+          "rights-administration",
+          "rights-ombudsman",
+          "rights-education-network",
+          "health-administration",
+          "defense-administration",
+          "education-administration"
+        ],
+        "teams": [
+          {
+            "id": "rights-coordination",
+            "institution": "rights-administration",
+            "kind": "coordination",
+            "offices": [
+              "human-rights"
+            ],
+            "works": [
+              "rights-intake",
+              "rights-followup",
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-coordination",
+            "institution": "education-administration",
+            "kind": "coordination",
+            "offices": [
+              "education"
+            ],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-coordination",
+            "institution": "health-administration",
+            "kind": "coordination",
+            "offices": [
+              "health"
+            ],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-coordination",
+            "institution": "defense-administration",
+            "kind": "coordination",
+            "offices": [
+              "defense"
+            ],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "rights-execution",
+            "institution": "rights-ombudsman",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-intake",
+              "rights-followup"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-execution",
+            "institution": "rights-education-network",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-execution",
+            "institution": "health-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-execution",
+            "institution": "defense-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          }
+        ],
+        "funds": [
+          {
+            "id": "rights-fund",
+            "institution": "rights-ombudsman",
+            "initial": 4,
+            "balance": 4,
+            "spent": 0
+          },
+          {
+            "id": "education-fund",
+            "institution": "rights-education-network",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          },
+          {
+            "id": "health-fund",
+            "institution": "health-administration",
+            "initial": 6,
+            "balance": 6,
+            "spent": 0
+          },
+          {
+            "id": "defense-fund",
+            "institution": "defense-administration",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          }
+        ],
+        "records": [
+          {
+            "id": "rights-cases-record",
+            "holders": [
+              "office:human-rights",
+              "institution:rights-ombudsman"
+            ]
+          },
+          {
+            "id": "rights-education-record",
+            "holders": [
+              "office:human-rights",
+              "office:education",
+              "institution:rights-education-network"
+            ]
+          },
+          {
+            "id": "health-record",
+            "holders": [
+              "office:health",
+              "institution:health-administration"
+            ]
+          },
+          {
+            "id": "defense-record",
+            "holders": [
+              "office:defense",
+              "institution:defense-administration"
+            ]
+          }
+        ],
+        "jobs": [
+          {
+            "id": "job-rights-intake",
+            "work": "rights-intake",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-followup",
+            "work": "rights-followup",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-education",
+            "work": "rights-education",
+            "executor": "rights-education-network",
+            "fund": "education-fund",
+            "record": "rights-education-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-federation",
+            "work": "health-federation",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-sanitary-policy",
+            "work": "sanitary-policy",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-information",
+            "work": "health-information",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-defense-policy",
+            "work": "defense-policy",
+            "executor": "defense-administration",
+            "fund": "defense-fund",
+            "record": "defense-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          }
+        ],
+        "handovers": []
+      },
+      "priority": [
+        "job-rights-intake",
+        "job-rights-followup",
+        "job-rights-education",
+        "job-health-federation",
+        "job-sanitary-policy",
+        "job-health-information",
+        "job-defense-policy"
+      ],
+      "owners": {
+        "rights-intake": "human-rights",
+        "rights-followup": "human-rights",
+        "rights-education": "human-rights",
+        "health-federation": "health",
+        "sanitary-policy": "health",
+        "health-information": "health",
+        "defense-policy": "defense"
+      },
+      "legalUnresolved": [],
+      "periods": [
+        {
+          "period": 1,
+          "delivered": [
+            "rights-intake",
+            "health-federation",
+            "defense-policy"
+          ],
+          "spent": 3,
+          "pending": [
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-rights-education",
+              "work": "rights-education",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-information",
+              "work": "health-information",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-rights-intake",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-intake",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 2,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "health-federation",
+            "sanitary-policy",
+            "defense-policy"
+          ],
+          "spent": 5,
+          "pending": [
+            {
+              "id": "job-rights-education",
+              "work": "rights-education",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-information",
+              "work": "health-information",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-rights-followup",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-followup",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 3,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": [
+            {
+              "job": "job-rights-education",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-education",
+              "team": "education-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 4,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": []
+        },
+        {
+          "period": 5,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": []
+        }
+      ],
+      "finalFunds": [
+        {
+          "id": "rights-fund",
+          "institution": "rights-ombudsman",
+          "initial": 4,
+          "balance": 2,
+          "spent": 2
+        },
+        {
+          "id": "education-fund",
+          "institution": "rights-education-network",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        },
+        {
+          "id": "health-fund",
+          "institution": "health-administration",
+          "initial": 6,
+          "balance": 3,
+          "spent": 3
+        },
+        {
+          "id": "defense-fund",
+          "institution": "defense-administration",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        }
+      ]
+    },
+    "merge": {
+      "opening": {
+        "period": 0,
+        "institutions": [
+          "rights-administration",
+          "rights-ombudsman",
+          "rights-education-network",
+          "health-administration",
+          "defense-administration",
+          "education-administration"
+        ],
+        "teams": [
+          {
+            "id": "rights-coordination",
+            "institution": "rights-administration",
+            "kind": "coordination",
+            "offices": [
+              "human-rights"
+            ],
+            "works": [
+              "rights-intake",
+              "rights-followup",
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-coordination",
+            "institution": "education-administration",
+            "kind": "coordination",
+            "offices": [
+              "education"
+            ],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-coordination",
+            "institution": "health-administration",
+            "kind": "coordination",
+            "offices": [
+              "health"
+            ],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-coordination",
+            "institution": "defense-administration",
+            "kind": "coordination",
+            "offices": [
+              "defense"
+            ],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "rights-execution",
+            "institution": "rights-ombudsman",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-intake",
+              "rights-followup"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-execution",
+            "institution": "rights-education-network",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-execution",
+            "institution": "health-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-execution",
+            "institution": "defense-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          }
+        ],
+        "funds": [
+          {
+            "id": "rights-fund",
+            "institution": "rights-ombudsman",
+            "initial": 4,
+            "balance": 4,
+            "spent": 0
+          },
+          {
+            "id": "education-fund",
+            "institution": "rights-education-network",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          },
+          {
+            "id": "health-fund",
+            "institution": "health-administration",
+            "initial": 6,
+            "balance": 6,
+            "spent": 0
+          },
+          {
+            "id": "defense-fund",
+            "institution": "defense-administration",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          }
+        ],
+        "records": [
+          {
+            "id": "rights-cases-record",
+            "holders": [
+              "office:human-rights",
+              "institution:rights-ombudsman"
+            ]
+          },
+          {
+            "id": "rights-education-record",
+            "holders": [
+              "office:human-rights",
+              "office:education",
+              "institution:rights-education-network"
+            ]
+          },
+          {
+            "id": "health-record",
+            "holders": [
+              "office:health",
+              "institution:health-administration"
+            ]
+          },
+          {
+            "id": "defense-record",
+            "holders": [
+              "office:defense",
+              "institution:defense-administration"
+            ]
+          }
+        ],
+        "jobs": [
+          {
+            "id": "job-rights-intake",
+            "work": "rights-intake",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-followup",
+            "work": "rights-followup",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-education",
+            "work": "rights-education",
+            "executor": "rights-education-network",
+            "fund": "education-fund",
+            "record": "rights-education-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-federation",
+            "work": "health-federation",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-sanitary-policy",
+            "work": "sanitary-policy",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-information",
+            "work": "health-information",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-defense-policy",
+            "work": "defense-policy",
+            "executor": "defense-administration",
+            "fund": "defense-fund",
+            "record": "defense-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          }
+        ],
+        "handovers": [
+          {
+            "id": "merge-handover",
+            "team": "rights-coordination",
+            "from": "human-rights",
+            "to": "education",
+            "mode": "move",
+            "effort": 2,
+            "records": [
+              "rights-cases-record",
+              "rights-education-record"
+            ],
+            "left": 2
+          }
+        ]
+      },
+      "priority": [
+        "job-rights-intake",
+        "job-rights-followup",
+        "job-rights-education",
+        "job-health-federation",
+        "job-sanitary-policy",
+        "job-health-information",
+        "job-defense-policy"
+      ],
+      "owners": {
+        "rights-intake": "education",
+        "rights-followup": "education",
+        "rights-education": "education",
+        "health-federation": "health",
+        "sanitary-policy": "health",
+        "health-information": "health",
+        "defense-policy": "defense"
+      },
+      "legalUnresolved": [
+        {
+          "work": "rights-followup",
+          "institution": "rights-ombudsman"
+        },
+        {
+          "work": "rights-intake",
+          "institution": "rights-ombudsman"
+        }
+      ],
+      "periods": [
+        {
+          "period": 1,
+          "delivered": [
+            "rights-education",
+            "health-federation",
+            "defense-policy"
+          ],
+          "spent": 3,
+          "pending": [
+            {
+              "id": "job-rights-intake",
+              "work": "rights-intake",
+              "stage": "preparation",
+              "reasons": [
+                "information",
+                "team"
+              ]
+            },
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "information",
+                "team"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-information",
+              "work": "health-information",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "merge-handover",
+              "team": "rights-coordination",
+              "stage": "handover",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-education",
+              "team": "education-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-education",
+              "team": "education-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 2,
+          "delivered": [
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "defense-policy"
+          ],
+          "spent": 4,
+          "pending": [
+            {
+              "id": "job-rights-intake",
+              "work": "rights-intake",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-information",
+              "work": "health-information",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "merge-handover",
+              "team": "rights-coordination",
+              "stage": "handover",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 3,
+          "delivered": [
+            "rights-intake",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 6,
+          "pending": [
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-rights-intake",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-intake",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 4,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": [
+            {
+              "job": "job-rights-followup",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-followup",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 5,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": []
+        }
+      ],
+      "finalFunds": [
+        {
+          "id": "rights-fund",
+          "institution": "rights-ombudsman",
+          "initial": 4,
+          "balance": 2,
+          "spent": 2
+        },
+        {
+          "id": "education-fund",
+          "institution": "rights-education-network",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        },
+        {
+          "id": "health-fund",
+          "institution": "health-administration",
+          "initial": 6,
+          "balance": 3,
+          "spent": 3
+        },
+        {
+          "id": "defense-fund",
+          "institution": "defense-administration",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        }
+      ]
+    },
+    "abolish": {
+      "opening": {
+        "period": 0,
+        "institutions": [
+          "rights-administration",
+          "rights-ombudsman",
+          "rights-education-network",
+          "health-administration",
+          "defense-administration",
+          "education-administration"
+        ],
+        "teams": [
+          {
+            "id": "rights-coordination",
+            "institution": "rights-administration",
+            "kind": "coordination",
+            "offices": [
+              "human-rights"
+            ],
+            "works": [
+              "rights-intake",
+              "rights-followup",
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-coordination",
+            "institution": "education-administration",
+            "kind": "coordination",
+            "offices": [
+              "education"
+            ],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-coordination",
+            "institution": "health-administration",
+            "kind": "coordination",
+            "offices": [
+              "health"
+            ],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-coordination",
+            "institution": "defense-administration",
+            "kind": "coordination",
+            "offices": [
+              "defense"
+            ],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "rights-execution",
+            "institution": "rights-ombudsman",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-intake",
+              "rights-followup"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-execution",
+            "institution": "rights-education-network",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-execution",
+            "institution": "health-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-execution",
+            "institution": "defense-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          }
+        ],
+        "funds": [
+          {
+            "id": "rights-fund",
+            "institution": "rights-ombudsman",
+            "initial": 4,
+            "balance": 4,
+            "spent": 0
+          },
+          {
+            "id": "education-fund",
+            "institution": "rights-education-network",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          },
+          {
+            "id": "health-fund",
+            "institution": "health-administration",
+            "initial": 6,
+            "balance": 6,
+            "spent": 0
+          },
+          {
+            "id": "defense-fund",
+            "institution": "defense-administration",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          }
+        ],
+        "records": [
+          {
+            "id": "rights-cases-record",
+            "holders": [
+              "office:human-rights",
+              "institution:rights-ombudsman"
+            ]
+          },
+          {
+            "id": "rights-education-record",
+            "holders": [
+              "office:human-rights",
+              "office:education",
+              "institution:rights-education-network"
+            ]
+          },
+          {
+            "id": "health-record",
+            "holders": [
+              "office:health",
+              "institution:health-administration"
+            ]
+          },
+          {
+            "id": "defense-record",
+            "holders": [
+              "office:defense",
+              "institution:defense-administration"
+            ]
+          }
+        ],
+        "jobs": [
+          {
+            "id": "job-rights-intake",
+            "work": "rights-intake",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-followup",
+            "work": "rights-followup",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-education",
+            "work": "rights-education",
+            "executor": "rights-education-network",
+            "fund": "education-fund",
+            "record": "rights-education-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-federation",
+            "work": "health-federation",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-sanitary-policy",
+            "work": "sanitary-policy",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-information",
+            "work": "health-information",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-defense-policy",
+            "work": "defense-policy",
+            "executor": "defense-administration",
+            "fund": "defense-fund",
+            "record": "defense-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          }
+        ],
+        "handovers": [
+          {
+            "id": "abolish-handover",
+            "team": "rights-coordination",
+            "from": "human-rights",
+            "to": "health",
+            "mode": "move",
+            "effort": 1,
+            "records": [
+              "rights-cases-record"
+            ],
+            "left": 1
+          }
+        ]
+      },
+      "priority": [
+        "job-rights-intake",
+        "job-rights-followup",
+        "job-rights-education",
+        "job-health-federation",
+        "job-sanitary-policy",
+        "job-health-information",
+        "job-defense-policy"
+      ],
+      "owners": {
+        "rights-intake": "health",
+        "rights-followup": "health",
+        "rights-education": "education",
+        "health-federation": "health",
+        "sanitary-policy": "health",
+        "health-information": "health",
+        "defense-policy": "defense"
+      },
+      "legalUnresolved": [
+        {
+          "work": "rights-followup",
+          "institution": "rights-ombudsman"
+        },
+        {
+          "work": "rights-intake",
+          "institution": "rights-ombudsman"
+        }
+      ],
+      "periods": [
+        {
+          "period": 1,
+          "delivered": [
+            "rights-education",
+            "health-federation",
+            "defense-policy"
+          ],
+          "spent": 3,
+          "pending": [
+            {
+              "id": "job-rights-intake",
+              "work": "rights-intake",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-information",
+              "work": "health-information",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "abolish-handover",
+              "team": "rights-coordination",
+              "stage": "handover",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-education",
+              "team": "education-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-education",
+              "team": "education-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 2,
+          "delivered": [
+            "rights-intake",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "defense-policy"
+          ],
+          "spent": 5,
+          "pending": [
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-information",
+              "work": "health-information",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-rights-intake",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-intake",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 3,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": [
+            {
+              "job": "job-rights-followup",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-followup",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 4,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": []
+        },
+        {
+          "period": 5,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": []
+        }
+      ],
+      "finalFunds": [
+        {
+          "id": "rights-fund",
+          "institution": "rights-ombudsman",
+          "initial": 4,
+          "balance": 2,
+          "spent": 2
+        },
+        {
+          "id": "education-fund",
+          "institution": "rights-education-network",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        },
+        {
+          "id": "health-fund",
+          "institution": "health-administration",
+          "initial": 6,
+          "balance": 3,
+          "spent": 3
+        },
+        {
+          "id": "defense-fund",
+          "institution": "defense-administration",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        }
+      ]
+    },
+    "digital": {
+      "opening": {
+        "period": 0,
+        "institutions": [
+          "rights-administration",
+          "rights-ombudsman",
+          "rights-education-network",
+          "health-administration",
+          "defense-administration",
+          "education-administration"
+        ],
+        "teams": [
+          {
+            "id": "rights-coordination",
+            "institution": "rights-administration",
+            "kind": "coordination",
+            "offices": [
+              "human-rights"
+            ],
+            "works": [
+              "rights-intake",
+              "rights-followup",
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-coordination",
+            "institution": "education-administration",
+            "kind": "coordination",
+            "offices": [
+              "education"
+            ],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-coordination",
+            "institution": "health-administration",
+            "kind": "coordination",
+            "offices": [
+              "health"
+            ],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-coordination",
+            "institution": "defense-administration",
+            "kind": "coordination",
+            "offices": [
+              "defense"
+            ],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "rights-execution",
+            "institution": "rights-ombudsman",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-intake",
+              "rights-followup"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-execution",
+            "institution": "rights-education-network",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-execution",
+            "institution": "health-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-execution",
+            "institution": "defense-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          }
+        ],
+        "funds": [
+          {
+            "id": "rights-fund",
+            "institution": "rights-ombudsman",
+            "initial": 4,
+            "balance": 4,
+            "spent": 0
+          },
+          {
+            "id": "education-fund",
+            "institution": "rights-education-network",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          },
+          {
+            "id": "health-fund",
+            "institution": "health-administration",
+            "initial": 6,
+            "balance": 6,
+            "spent": 0
+          },
+          {
+            "id": "defense-fund",
+            "institution": "defense-administration",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          }
+        ],
+        "records": [
+          {
+            "id": "rights-cases-record",
+            "holders": [
+              "office:human-rights",
+              "institution:rights-ombudsman"
+            ]
+          },
+          {
+            "id": "rights-education-record",
+            "holders": [
+              "office:human-rights",
+              "office:education",
+              "institution:rights-education-network"
+            ]
+          },
+          {
+            "id": "health-record",
+            "holders": [
+              "office:health",
+              "institution:health-administration"
+            ]
+          },
+          {
+            "id": "defense-record",
+            "holders": [
+              "office:defense",
+              "institution:defense-administration"
+            ]
+          }
+        ],
+        "jobs": [
+          {
+            "id": "job-rights-intake",
+            "work": "rights-intake",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-followup",
+            "work": "rights-followup",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-education",
+            "work": "rights-education",
+            "executor": "rights-education-network",
+            "fund": "education-fund",
+            "record": "rights-education-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-federation",
+            "work": "health-federation",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-sanitary-policy",
+            "work": "sanitary-policy",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-information",
+            "work": "health-information",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-defense-policy",
+            "work": "defense-policy",
+            "executor": "defense-administration",
+            "fund": "defense-fund",
+            "record": "defense-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          }
+        ],
+        "handovers": [
+          {
+            "id": "digital-handover",
+            "team": "health-coordination",
+            "from": "health",
+            "to": "ministry-1",
+            "mode": "move",
+            "effort": 1,
+            "records": [
+              "health-record"
+            ],
+            "left": 1
+          }
+        ]
+      },
+      "priority": [
+        "job-rights-intake",
+        "job-rights-followup",
+        "job-rights-education",
+        "job-health-federation",
+        "job-sanitary-policy",
+        "job-health-information",
+        "job-defense-policy"
+      ],
+      "owners": {
+        "rights-intake": "human-rights",
+        "rights-followup": "human-rights",
+        "rights-education": "human-rights",
+        "health-federation": "health",
+        "sanitary-policy": "health",
+        "health-information": "ministry-1",
+        "defense-policy": "defense"
+      },
+      "legalUnresolved": [],
+      "periods": [
+        {
+          "period": 1,
+          "delivered": [
+            "rights-intake",
+            "defense-policy"
+          ],
+          "spent": 2,
+          "pending": [
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-rights-education",
+              "work": "rights-education",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-federation",
+              "work": "health-federation",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            },
+            {
+              "id": "job-health-information",
+              "work": "health-information",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "digital-handover",
+              "team": "health-coordination",
+              "stage": "handover",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-intake",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-intake",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 2,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 4,
+          "pending": [
+            {
+              "id": "job-rights-education",
+              "work": "rights-education",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-federation",
+              "work": "health-federation",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-rights-followup",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-followup",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 3,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 5,
+          "pending": [
+            {
+              "id": "job-health-federation",
+              "work": "health-federation",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-rights-education",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-education",
+              "team": "education-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 4,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 5,
+          "pending": [
+            {
+              "id": "job-health-federation",
+              "work": "health-federation",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            }
+          ],
+          "trace": []
+        },
+        {
+          "period": 5,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 5,
+          "pending": [
+            {
+              "id": "job-health-federation",
+              "work": "health-federation",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "team"
+              ]
+            }
+          ],
+          "trace": []
+        }
+      ],
+      "finalFunds": [
+        {
+          "id": "rights-fund",
+          "institution": "rights-ombudsman",
+          "initial": 4,
+          "balance": 2,
+          "spent": 2
+        },
+        {
+          "id": "education-fund",
+          "institution": "rights-education-network",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        },
+        {
+          "id": "health-fund",
+          "institution": "health-administration",
+          "initial": 6,
+          "balance": 5,
+          "spent": 1
+        },
+        {
+          "id": "defense-fund",
+          "institution": "defense-administration",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        }
+      ]
+    },
+    "keepPrioritized": {
+      "opening": {
+        "period": 0,
+        "institutions": [
+          "rights-administration",
+          "rights-ombudsman",
+          "rights-education-network",
+          "health-administration",
+          "defense-administration",
+          "education-administration"
+        ],
+        "teams": [
+          {
+            "id": "rights-coordination",
+            "institution": "rights-administration",
+            "kind": "coordination",
+            "offices": [
+              "human-rights"
+            ],
+            "works": [
+              "rights-intake",
+              "rights-followup",
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-coordination",
+            "institution": "education-administration",
+            "kind": "coordination",
+            "offices": [
+              "education"
+            ],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-coordination",
+            "institution": "health-administration",
+            "kind": "coordination",
+            "offices": [
+              "health"
+            ],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-coordination",
+            "institution": "defense-administration",
+            "kind": "coordination",
+            "offices": [
+              "defense"
+            ],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "rights-execution",
+            "institution": "rights-ombudsman",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-intake",
+              "rights-followup"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "education-execution",
+            "institution": "rights-education-network",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "rights-education"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "health-execution",
+            "institution": "health-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "health-federation",
+              "sanitary-policy",
+              "health-information"
+            ],
+            "capacity": 1
+          },
+          {
+            "id": "defense-execution",
+            "institution": "defense-administration",
+            "kind": "execution",
+            "offices": [],
+            "works": [
+              "defense-policy"
+            ],
+            "capacity": 1
+          }
+        ],
+        "funds": [
+          {
+            "id": "rights-fund",
+            "institution": "rights-ombudsman",
+            "initial": 4,
+            "balance": 4,
+            "spent": 0
+          },
+          {
+            "id": "education-fund",
+            "institution": "rights-education-network",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          },
+          {
+            "id": "health-fund",
+            "institution": "health-administration",
+            "initial": 6,
+            "balance": 6,
+            "spent": 0
+          },
+          {
+            "id": "defense-fund",
+            "institution": "defense-administration",
+            "initial": 2,
+            "balance": 2,
+            "spent": 0
+          }
+        ],
+        "records": [
+          {
+            "id": "rights-cases-record",
+            "holders": [
+              "office:human-rights",
+              "institution:rights-ombudsman"
+            ]
+          },
+          {
+            "id": "rights-education-record",
+            "holders": [
+              "office:human-rights",
+              "office:education",
+              "institution:rights-education-network"
+            ]
+          },
+          {
+            "id": "health-record",
+            "holders": [
+              "office:health",
+              "institution:health-administration"
+            ]
+          },
+          {
+            "id": "defense-record",
+            "holders": [
+              "office:defense",
+              "institution:defense-administration"
+            ]
+          }
+        ],
+        "jobs": [
+          {
+            "id": "job-rights-intake",
+            "work": "rights-intake",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-followup",
+            "work": "rights-followup",
+            "executor": "rights-ombudsman",
+            "fund": "rights-fund",
+            "record": "rights-cases-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-rights-education",
+            "work": "rights-education",
+            "executor": "rights-education-network",
+            "fund": "education-fund",
+            "record": "rights-education-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-federation",
+            "work": "health-federation",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-sanitary-policy",
+            "work": "sanitary-policy",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-health-information",
+            "work": "health-information",
+            "executor": "health-administration",
+            "fund": "health-fund",
+            "record": "health-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          },
+          {
+            "id": "job-defense-policy",
+            "work": "defense-policy",
+            "executor": "defense-administration",
+            "fund": "defense-fund",
+            "record": "defense-record",
+            "preparationTotal": 1,
+            "preparationLeft": 1,
+            "executionTotal": 1,
+            "executionLeft": 1,
+            "unitCost": 1
+          }
+        ],
+        "handovers": []
+      },
+      "priority": [
+        "job-health-information",
+        "job-rights-intake",
+        "job-rights-followup",
+        "job-rights-education",
+        "job-health-federation",
+        "job-sanitary-policy",
+        "job-defense-policy"
+      ],
+      "owners": {
+        "rights-intake": "human-rights",
+        "rights-followup": "human-rights",
+        "rights-education": "human-rights",
+        "health-federation": "health",
+        "sanitary-policy": "health",
+        "health-information": "health",
+        "defense-policy": "defense"
+      },
+      "legalUnresolved": [],
+      "periods": [
+        {
+          "period": 1,
+          "delivered": [
+            "rights-intake",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 3,
+          "pending": [
+            {
+              "id": "job-rights-followup",
+              "work": "rights-followup",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-rights-education",
+              "work": "rights-education",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-health-federation",
+              "work": "health-federation",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-health-information",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-intake",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-information",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-rights-intake",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-defense-policy",
+              "team": "defense-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 2,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "health-federation",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 5,
+          "pending": [
+            {
+              "id": "job-rights-education",
+              "work": "rights-education",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            },
+            {
+              "id": "job-sanitary-policy",
+              "work": "sanitary-policy",
+              "stage": "preparation",
+              "reasons": [
+                "capacity"
+              ]
+            }
+          ],
+          "trace": [
+            {
+              "job": "job-rights-followup",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-followup",
+              "team": "rights-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-health-federation",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 3,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": [
+            {
+              "job": "job-rights-education",
+              "team": "rights-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-coordination",
+              "stage": "preparation",
+              "units": 1,
+              "cost": 0
+            },
+            {
+              "job": "job-rights-education",
+              "team": "education-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            },
+            {
+              "job": "job-sanitary-policy",
+              "team": "health-execution",
+              "stage": "execution",
+              "units": 1,
+              "cost": 1
+            }
+          ]
+        },
+        {
+          "period": 4,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": []
+        },
+        {
+          "period": 5,
+          "delivered": [
+            "rights-intake",
+            "rights-followup",
+            "rights-education",
+            "health-federation",
+            "sanitary-policy",
+            "health-information",
+            "defense-policy"
+          ],
+          "spent": 7,
+          "pending": [],
+          "trace": []
+        }
+      ],
+      "finalFunds": [
+        {
+          "id": "rights-fund",
+          "institution": "rights-ombudsman",
+          "initial": 4,
+          "balance": 2,
+          "spent": 2
+        },
+        {
+          "id": "education-fund",
+          "institution": "rights-education-network",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        },
+        {
+          "id": "health-fund",
+          "institution": "health-administration",
+          "initial": 6,
+          "balance": 3,
+          "spent": 3
+        },
+        {
+          "id": "defense-fund",
+          "institution": "defense-administration",
+          "initial": 2,
+          "balance": 1,
+          "spent": 1
+        }
+      ]
+    }
+  }
+}

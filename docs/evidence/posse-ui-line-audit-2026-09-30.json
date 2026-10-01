@@ -1,0 +1,864 @@
+{
+  "date": "2026-09-30",
+  "scope": "Comparação integral das duas páginas, com verificações exatas da apresentação e dos métodos de interação. Alterações de cálculo e estrutura são apenas localizadas no diff; não aprovadas por esta auditoria de UI.",
+  "paths": [
+    "tmp/posse/live.html",
+    "tmp/posse/engine.html"
+  ],
+  "hashes": {
+    "original": "6c73cd224ff16a97adf26f0cc80f2e214c93ed4d79f2fa70522ab58ee0b22285",
+    "current": "851f5fa17475d9639d2ed5baf09d0332b269dc49628e388d470c57aff38fbd42"
+  },
+  "styles": {
+    "blocks": 2,
+    "lines": 159,
+    "identical": true
+  },
+  "template": {
+    "originalLines": 461,
+    "currentLines": 463,
+    "checkedEntirely": true,
+    "adaptations": [
+      "entrada ESM",
+      "ocultar template antes do runtime",
+      "legenda da estimativa",
+      "campo de nome",
+      "campo de busca"
+    ]
+  },
+  "prelude": {
+    "checkedEntirely": true,
+    "removed": [
+      "HIST",
+      "DEST",
+      "SPLIT",
+      "PRE",
+      "PARTNERS",
+      "T.noPrecedent",
+      "T.reaction",
+      "duas referências históricas nos atalhos de divisão"
+    ]
+  },
+  "runtime": {
+    "path": "tmp/posse/rt/artifact-type/dc-runtime.js",
+    "unchangedFromRecoveryInventory": true,
+    "sha256": "82ab863dabf94f79db1b4ced13046a03425dcd255e97a5e42c60b6e8035fea34"
+  },
+  "methods": [
+    {
+      "name": "constructor",
+      "originalLines": 4,
+      "currentLines": 5,
+      "identical": false,
+      "originalHash": "dc09383a797aa52850b2f35ee34b3b9a4ee5842fc989a3369dd7b5af535d9a82",
+      "currentHash": "88e6f36c7289415403cd0c6e643c0a0df2159e5007b561ce220471e2cf66b085",
+      "adaptation": "Inicializa a ponte antes da primeira renderização; estado inicial do Claude conservado."
+    },
+    {
+      "name": "local",
+      "originalLines": 9,
+      "currentLines": 9,
+      "identical": true,
+      "originalHash": "e7860ceef8d557f618e5ef0bdee243fe0986b3a6d6a52643e70ddd4d98080ca2",
+      "currentHash": "e7860ceef8d557f618e5ef0bdee243fe0986b3a6d6a52643e70ddd4d98080ca2",
+      "adaptation": null
+    },
+    {
+      "name": "tipAt",
+      "originalLines": 4,
+      "currentLines": 4,
+      "identical": true,
+      "originalHash": "713264a423a5418efed3dd4042fd2b7bc57e619ee06e2325ba9c0ed026fdd58f",
+      "currentHash": "713264a423a5418efed3dd4042fd2b7bc57e619ee06e2325ba9c0ed026fdd58f",
+      "adaptation": null
+    },
+    {
+      "name": "moveTip",
+      "originalLines": 8,
+      "currentLines": 8,
+      "identical": true,
+      "originalHash": "0645d1945cfeb528b5f05c13f711e016a568f6fc7995b8b855bc8ab4ae771ee8",
+      "currentHash": "0645d1945cfeb528b5f05c13f711e016a568f6fc7995b8b855bc8ab4ae771ee8",
+      "adaptation": null
+    },
+    {
+      "name": "placeTip",
+      "originalLines": 10,
+      "currentLines": 10,
+      "identical": true,
+      "originalHash": "2d08f619af8129ec721fe15d6356ac482804cbfbc91cfc49f181abf87e9f19a7",
+      "currentHash": "2d08f619af8129ec721fe15d6356ac482804cbfbc91cfc49f181abf87e9f19a7",
+      "adaptation": null
+    },
+    {
+      "name": "componentDidUpdate",
+      "originalLines": 4,
+      "currentLines": 4,
+      "identical": true,
+      "originalHash": "7f2798a51dc4f1b7063200bab959bce0f1150f4dd8c836ba3c5aa8cdb9f1b326",
+      "currentHash": "7f2798a51dc4f1b7063200bab959bce0f1150f4dd8c836ba3c5aa8cdb9f1b326",
+      "adaptation": null
+    },
+    {
+      "name": "componentDidMount",
+      "originalLines": 1,
+      "currentLines": 1,
+      "identical": true,
+      "originalHash": "9c68f7a303ddae1c5a01781afe2aa5260cd030e23378a0decfbbf95e4415eaad",
+      "currentHash": "9c68f7a303ddae1c5a01781afe2aa5260cd030e23378a0decfbbf95e4415eaad",
+      "adaptation": null
+    },
+    {
+      "name": "showCard",
+      "originalLines": 20,
+      "currentLines": 20,
+      "identical": true,
+      "originalHash": "cab5079d5c8b786df9a18cc8a8f843d694543479cd6771b7d0bcba20bbee3bb5",
+      "currentHash": "cab5079d5c8b786df9a18cc8a8f843d694543479cd6771b7d0bcba20bbee3bb5",
+      "adaptation": null
+    },
+    {
+      "name": "showParty",
+      "originalLines": 10,
+      "currentLines": 10,
+      "identical": true,
+      "originalHash": "6831771d2b87551110aa5abcad81e904e30c4731ec36496da65c129318528ebf",
+      "currentHash": "6831771d2b87551110aa5abcad81e904e30c4731ec36496da65c129318528ebf",
+      "adaptation": null
+    },
+    {
+      "name": "placeParty",
+      "originalLines": 10,
+      "currentLines": 10,
+      "identical": true,
+      "originalHash": "3d9ab4f394c3a5b5381cd34ca9640790cc1ecebf04700b8ea22f9a9670bfa97a",
+      "currentHash": "3d9ab4f394c3a5b5381cd34ca9640790cc1ecebf04700b8ea22f9a9670bfa97a",
+      "adaptation": null
+    },
+    {
+      "name": "moveParty",
+      "originalLines": 1,
+      "currentLines": 1,
+      "identical": true,
+      "originalHash": "06a7784dd784649b3d5a4c311f1324bbed25a6f994d4c08009f6127ad4dd756e",
+      "currentHash": "06a7784dd784649b3d5a4c311f1324bbed25a6f994d4c08009f6127ad4dd756e",
+      "adaptation": null
+    },
+    {
+      "name": "hideParty",
+      "originalLines": 5,
+      "currentLines": 5,
+      "identical": true,
+      "originalHash": "c0568ef276ab95b758b5b315742fcb3bbe16d5b866a5800a9b83acfee8c0bb86",
+      "currentHash": "c0568ef276ab95b758b5b315742fcb3bbe16d5b866a5800a9b83acfee8c0bb86",
+      "adaptation": null
+    },
+    {
+      "name": "hideCard",
+      "originalLines": 12,
+      "currentLines": 12,
+      "identical": true,
+      "originalHash": "e074ea098ad6d15fb944335489678a53f2f1738260bd164a31182a8721358cfd",
+      "currentHash": "e074ea098ad6d15fb944335489678a53f2f1738260bd164a31182a8721358cfd",
+      "adaptation": null
+    },
+    {
+      "name": "syncInert",
+      "originalLines": 9,
+      "currentLines": 9,
+      "identical": true,
+      "originalHash": "748c58eb6a4b8429a34fe9a4e8c8877548d04357309bb59e684e79b46a8aaa36",
+      "currentHash": "748c58eb6a4b8429a34fe9a4e8c8877548d04357309bb59e684e79b46a8aaa36",
+      "adaptation": null
+    },
+    {
+      "name": "syncFocus",
+      "originalLines": 9,
+      "currentLines": 9,
+      "identical": true,
+      "originalHash": "1683c5dcad9df09f045472ebe7786056b676010ce9d857a4ad6f1024e1183f08",
+      "currentHash": "1683c5dcad9df09f045472ebe7786056b676010ce9d857a4ad6f1024e1183f08",
+      "adaptation": null
+    },
+    {
+      "name": "focusOn",
+      "originalLines": 19,
+      "currentLines": 19,
+      "identical": false,
+      "originalHash": "4128893cba8e57137e18b639ffdb2e12d8d8e24e54627eb5ca2b614d5aee28d1",
+      "currentHash": "f9b68ccef92c71ae8ef041474f58311cf570f1607e007e2b492e23723ab7d783",
+      "adaptation": "Troca somente o texto quando a estimativa não está disponível; posicionamento e eventos conservados."
+    },
+    {
+      "name": "focusOff",
+      "originalLines": 12,
+      "currentLines": 12,
+      "identical": true,
+      "originalHash": "29a46e1cd381aec92105d1d4d93046101407db4b20dbfe1f61b5ffaeda611048",
+      "currentHash": "29a46e1cd381aec92105d1d4d93046101407db4b20dbfe1f61b5ffaeda611048",
+      "adaptation": null
+    },
+    {
+      "name": "lockIn",
+      "originalLines": 21,
+      "currentLines": 21,
+      "identical": true,
+      "originalHash": "7cbd4c6020d97e8f9a0ff620973399088ab2e4052d2ea6ba3ce8fe0ac8962b6c",
+      "currentHash": "7cbd4c6020d97e8f9a0ff620973399088ab2e4052d2ea6ba3ce8fe0ac8962b6c",
+      "adaptation": null
+    }
+  ],
+  "changes": [
+    {
+      "originalStart": 6,
+      "currentStart": 6,
+      "removed": [
+        "<script src=\"rt/artifact-type/dc-runtime.js\"></script><style>body{margin:0;background:#070b14}</style>"
+      ],
+      "added": [
+        "<script type=\"module\" src=\"../../prototypes/posse/browser.mjs\"></script><style>body{margin:0;background:#070b14}</style>"
+      ],
+      "category": "Inicialização",
+      "review": "Carrega a ponte ESM; o mesmo runtime do Claude permanece responsável pela UI."
+    },
+    {
+      "originalStart": 9,
+      "currentStart": 9,
+      "removed": [
+        "<x-dc>"
+      ],
+      "added": [
+        "<x-dc hidden>"
+      ],
+      "category": "F5",
+      "review": "Oculta o template até o runtime estar pronto; elimina a exposição do HTML sem processamento. Não altera keyframes."
+    },
+    {
+      "originalStart": 188,
+      "currentStart": 188,
+      "removed": [
+        "<span class=\"eyebrow\">Votos firmes · estimativa</span>"
+      ],
+      "added": [
+        "<span class=\"eyebrow\">Base estrutural · estimativa</span>"
+      ],
+      "category": "Texto",
+      "review": "Identifica o número como estimativa estrutural; mantém classe, tamanho e posição."
+    },
+    {
+      "originalStart": 282,
+      "currentStart": 282,
+      "removed": [],
+      "added": [
+        "<sc-if value=\"{{hasOfficeName}}\" hint-placeholder-val=\"{{ false }}\"><label class=\"stack\" style=\"gap: 6px;\"><span class=\"caption\">Nome do ministério</span><input class=\"field\" data-f=\"office-name\" type=\"text\" maxlength=\"120\" value=\"{{officeName}}\" onChange=\"{{setOfficeName}}\"></label></sc-if>",
+        "<sc-if value=\"{{hasDestinationSearch}}\" hint-placeholder-val=\"{{ false }}\"><label class=\"stack\" style=\"gap: 6px;\"><span class=\"caption\">Buscar nas atribuições</span><input class=\"field\" data-f=\"destination-query\" type=\"text\" placeholder=\"Ex.: segurança e não alimentar\" value=\"{{destinationQuery}}\" onChange=\"{{setDestinationQuery}}\"></label></sc-if>"
+      ],
+      "category": "Campos novos",
+      "review": "Nome e busca reutilizam stack, caption e field no painel original. Visíveis somente nas operações que os exigem."
+    },
+    {
+      "originalStart": 532,
+      "currentStart": 534,
+      "removed": [
+        "  { id: 'seguranca', label: 'Segurança Pública', code: 'SEG', from: 'justica', part: 'Polícia Federal e segurança pública', hint: 'Leva a Polícia Federal e a segurança pública. Existiu em 2018.' },",
+        "  { id: 'aviacao', label: 'Aviação Civil', code: 'AVI', from: 'portos', part: 'aviação civil e aeroportos', hint: 'Leva a aviação civil e os aeroportos. Existiu até 2016.' },"
+      ],
+      "added": [
+        "  { id: 'seguranca', label: 'Segurança Pública', code: 'SEG', from: 'justica', part: 'Polícia Federal e segurança pública', hint: 'Leva a Polícia Federal e a segurança pública.' },",
+        "  { id: 'aviacao', label: 'Aviação Civil', code: 'AVI', from: 'portos', part: 'aviação civil e aeroportos', hint: 'Leva a aviação civil e os aeroportos.' },"
+      ],
+      "category": "Texto removido",
+      "review": "Retira duas referências históricas dos atalhos de divisão, conforme solicitado."
+    },
+    {
+      "originalStart": 536,
+      "currentStart": 538,
+      "removed": [
+        "const HIST = [",
+        "  { set: ['fazenda', 'planejamento', 'industria', 'trabalho'], name: 'Economia', note: 'Em 2019, Fazenda, Planejamento, Indústria e Trabalho viraram o Ministério da Economia.' },",
+        "  { set: ['cidades', 'integracao'], name: 'Desenvolvimento Regional', note: 'Em 2019, Cidades e Integração viraram o Ministério do Desenvolvimento Regional.' },",
+        "  { set: ['cultura', 'esporte', 'social'], name: 'Cidadania', note: 'Em 2019, Cultura, Esporte e Desenvolvimento Social viraram o Ministério da Cidadania.' },",
+        "  { set: ['transportes', 'portos'], name: 'Infraestrutura', note: 'Em 2019, transportes, portos e aviação civil viraram o Ministério da Infraestrutura.' },",
+        "  { set: ['direitos', 'mulheres'], name: 'Mulher, Família e Direitos Humanos', note: 'Em 2019, Direitos Humanos virou o Ministério da Mulher, da Família e dos Direitos Humanos.' }",
+        "];",
+        "const DEST = { 'casa-civil': 'secretaria-geral', fazenda: 'planejamento', planejamento: 'fazenda', 'relacoes-institucionais': 'casa-civil', justica: 'direitos', defesa: 'gsi', saude: 'social', educacao: 'ciencia', 'secretaria-geral': 'casa-civil', comunicacao: 'casa-civil', gsi: 'defesa', agricultura: 'agrario', industria: 'fazenda', previdencia: 'trabalho', cidades: 'integracao', cultura: 'social', ciencia: 'educacao', comunicacoes: 'ciencia', agrario: 'social', integracao: 'cidades', social: 'direitos', direitos: 'justica', empreendedorismo: 'industria', esporte: 'social', gestao: 'planejamento', igualdade: 'justica', 'meio-ambiente': 'agricultura', minas: 'industria', mulheres: 'justica', pesca: 'agricultura', portos: 'transportes', indigenas: 'justica', exteriores: 'casa-civil', trabalho: 'fazenda', transportes: 'portos', turismo: 'industria', cgu: 'casa-civil', seguranca: 'justica', aviacao: 'transportes', juventude: 'secretaria-geral' };",
+        "const SPLIT = { trabalho: { 'registro sindical': 'justica', 'economia solidária': 'social' }, justica: { 'Polícia Federal e segurança pública': 'gsi', 'defesa do consumidor': 'fazenda', 'migrações e refúgio': 'exteriores', 'combate à corrupção e à lavagem de dinheiro': 'cgu' }, saude: { 'pesquisa em saúde': 'ciencia' }, exteriores: { 'promoção comercial no exterior': 'industria' } };",
+        "const PRE = { fazenda: 'Em 2019, Fazenda e Planejamento ficaram num ministério só, o da Economia.', transportes: 'Em 2019, transportes, portos e aviação civil ficaram num ministério só, o da Infraestrutura.', planejamento: 'Em 2019, o Planejamento foi para o Ministério da Economia, junto com a Fazenda.', industria: 'Em 2019, a Indústria foi para o Ministério da Economia, junto com a Fazenda.', trabalho: 'Foi o que aconteceu em 2019: o Trabalho foi repartido entre Justiça, Cidadania e Economia.', cultura: 'Em 2019, a Cultura foi para o Ministério da Cidadania, que cuidava do desenvolvimento social.', esporte: 'Em 2019, o Esporte foi para o Ministério da Cidadania, que cuidava do desenvolvimento social.', cidades: 'Em 2019, Cidades e Integração viraram um ministério só.', integracao: 'Em 2019, Cidades e Integração viraram um ministério só.', comunicacoes: 'Em 2016, as Comunicações foram para o Ministério da Ciência e Tecnologia.', agrario: 'Em 2016, o Desenvolvimento Agrário foi para o Desenvolvimento Social.', direitos: 'Em 2016, Direitos Humanos, Mulheres e Igualdade Racial foram para o Ministério da Justiça.', mulheres: 'Em 2016, Direitos Humanos, Mulheres e Igualdade Racial foram para o Ministério da Justiça.', igualdade: 'Em 2016, Direitos Humanos, Mulheres e Igualdade Racial foram para o Ministério da Justiça.', comunicacao: 'Em 2016, a Secretaria de Comunicação foi para a Casa Civil.', pesca: 'Em 2019, a pesca passou para o Ministério da Agricultura.', portos: 'Em 2016, portos e aviação civil foram para o Ministério dos Transportes.', aviacao: 'Em 2016, portos e aviação civil foram para o Ministério dos Transportes.', gestao: 'Até 2019, Planejamento e Gestão eram um ministério só.', 'relacoes-institucionais': 'Em 2019, a articulação com o Congresso passou para a Casa Civil.', seguranca: 'Em 2019, a Segurança Pública voltou para a Justiça.' };"
+      ],
+      "added": [],
+      "category": "Critério removido",
+      "review": "Elimina HIST, DEST, SPLIT e PRE. Não redesenha componentes."
+    },
+    {
+      "originalStart": 595,
+      "currentStart": 587,
+      "removed": [
+        "const PARTNERS = { fazenda: ['planejamento', 'industria', 'trabalho'], planejamento: ['fazenda', 'gestao'], industria: ['empreendedorismo', 'fazenda', 'exteriores'], empreendedorismo: ['industria'], cidades: ['integracao'], integracao: ['cidades', 'agrario'], portos: ['transportes'], transportes: ['portos'], pesca: ['agricultura', 'meio-ambiente'], agrario: ['agricultura', 'social'], igualdade: ['direitos'], mulheres: ['direitos'], direitos: ['mulheres', 'igualdade', 'justica'], indigenas: ['direitos', 'meio-ambiente', 'justica'], esporte: ['cultura', 'social', 'educacao'], cultura: ['social', 'turismo', 'educacao'], turismo: ['cultura', 'industria'], social: ['cultura', 'esporte', 'direitos'], previdencia: ['trabalho', 'fazenda'], trabalho: ['previdencia', 'fazenda', 'justica'], comunicacoes: ['ciencia'], ciencia: ['comunicacoes', 'educacao'], gestao: ['planejamento'], cgu: ['justica', 'casa-civil'], 'secretaria-geral': ['casa-civil', 'relacoes-institucionais'], comunicacao: ['secretaria-geral', 'casa-civil'], 'relacoes-institucionais': ['secretaria-geral', 'casa-civil'], 'casa-civil': ['secretaria-geral', 'relacoes-institucionais'], gsi: ['defesa', 'casa-civil'], defesa: ['gsi'], minas: ['industria'], 'meio-ambiente': ['agricultura', 'indigenas'], agricultura: ['pesca', 'agrario'], justica: ['seguranca', 'direitos'], seguranca: ['justica'], saude: ['social'], educacao: ['ciencia', 'cultura'], exteriores: ['industria'], aviacao: ['portos', 'transportes'], juventude: ['secretaria-geral', 'esporte'] };"
+      ],
+      "added": [],
+      "category": "Critério removido",
+      "review": "Elimina PARTNERS; lista de destinos passa a consultar os trabalhos atuais."
+    },
+    {
+      "originalStart": 927,
+      "currentStart": 918,
+      "removed": [
+        "  noPrecedent: 'Não há caso real parecido. A Casa Civil escolheu os ministérios de assunto mais próximo.',",
+        "  reaction: function (who) { return ' Quem depende deste ministério vai reagir' + (who ? ', e ' + who + ' perde o cargo.' : '.'); },"
+      ],
+      "added": [],
+      "category": "Texto removido",
+      "review": "Elimina T.noPrecedent e T.reaction integralmente."
+    },
+    {
+      "originalStart": 1039,
+      "currentStart": 1028,
+      "removed": [],
+      "added": [
+        "    this.state = globalThis.PosseEngine.start(this.state);"
+      ],
+      "category": "Inicialização",
+      "review": "Liga a inicialização sem mudar o estado inicial do Claude."
+    },
+    {
+      "originalStart": 1161,
+      "currentStart": 1151,
+      "removed": [
+        "      el.querySelector('[data-tl]').textContent = st + ' · ' + p.seats + ' deputados · vota com o governo ' + ch + '% das vezes';"
+      ],
+      "added": [
+        "      el.querySelector('[data-tl]').textContent = globalThis.PosseEngine.current.status === 'unknown' ? p.seats + ' deputados · ' + globalThis.PosseEngine.current.reason : st + ' · ' + p.seats + ' deputados · vota com o governo ' + ch + '% das vezes';"
+      ],
+      "category": "Informação disponível",
+      "review": "Na dica da bancada, altera somente o texto quando não há estimativa; gesto e posicionamento idênticos."
+    },
+    {
+      "originalStart": 1219,
+      "currentStart": 1209,
+      "removed": [],
+      "added": [
+        "    const government = globalThis.PosseEngine.structure(S, LABEL);"
+      ],
+      "category": "Dados",
+      "review": "Obtém a estrutura atual para a tela; nenhuma regra de apresentação é alterada nesta linha."
+    },
+    {
+      "originalStart": 1220,
+      "currentStart": 1211,
+      "removed": [],
+      "added": [
+        "    const baseLabel = function (id) { const birth = created.find(function (c) { return c.id === id; }); return LABEL[id] || (birth && birth.label) || id; };",
+        "    const personSeat = function (id) { const birth = created.find(function (c) { return c.id === id; }); return birth ? birth.profile || birth.from : id; };"
+      ],
+      "category": "Compatibilidade de IDs",
+      "review": "Resolve nomes e perfil visual de pastas criadas; reutiliza os catálogos do Claude."
+    },
+    {
+      "originalStart": 1226,
+      "currentStart": 1219,
+      "removed": [
+        "    const label = function (id) { if (S.names[id]) return S.names[id]; const m = members(id); return m.length > 1 ? list(m.map(function (k) { return LABEL[k]; })) : LABEL[id]; };",
+        "    const partsOf = function (m) { return PARTS[m].filter(function (p) { return !created.some(function (c) { return c.from === m && c.part === p; }); }); };",
+        "    const ownParts = function (id) { return members(id).reduce(function (acc, m) { const ps = partsOf(m); return acc.concat(ps.map(function (p) { return { from: m, text: p, w: 1 / ps.length }; })); }, []); };",
+        "    const incoming = function (id) { const out = []; Object.keys(S.gone).forEach(function (x) { S.gone[x].forEach(function (g) { if (live(g.dest) === id) out.push({ from: x, text: g.text, w: g.w }); }); }); return out; };",
+        "    const weightOf = function (id) { return members(id).length + incoming(id).reduce(function (a, p) { return a + p.w; }, 0); };"
+      ],
+      "added": [
+        "    const label = function (id) { if (!id) return 'Escolher destino'; if (S.names[id]) return S.names[id]; const m = members(id); return m.length > 1 ? list(m.map(function (k) { return baseLabel(k); })) : LABEL[id]; };",
+        "    const partsOf = function (m) { if (government) return globalThis.PosseEngine.parts(government, m).map(function (pt) { return pt.text; }); return PARTS[m].filter(function (p) { return !created.some(function (c) { return c.from === m && c.part === p; }); }); };",
+        "    const ownParts = function (id) { if (government) return globalThis.PosseEngine.parts(government, id); return members(id).reduce(function (acc, m) { const ps = partsOf(m); return acc.concat(ps.map(function (p) { return { from: m, text: p, w: 1 / ps.length }; })); }, []); };",
+        "    const incoming = function (id) { if (government) return []; const out = []; Object.keys(S.gone).forEach(function (x) { S.gone[x].forEach(function (g) { if (live(g.dest) === id) out.push({ from: x, text: g.text, w: g.w }); }); }); return out; };",
+        "    const weightOf = function (id) { if (government) return globalThis.PosseEngine.weight(government, id); return members(id).length + incoming(id).reduce(function (a, p) { return a + p.w; }, 0); };"
+      ],
+      "category": "Dados",
+      "review": "Adapta nomes, atribuições e pesos à estrutura atual. Regra estrutural fica fora desta aprovação de UI."
+    },
+    {
+      "originalStart": 1238,
+      "currentStart": 1231,
+      "removed": [],
+      "added": [
+        "    const engine = globalThis.PosseEngine.bind(P, PEOPLE, { into: S.into, gone: S.gone, created: S.created });",
+        "    const engineCurrent = engine.use(picks);",
+        "    const engineParty = function (pk, id) { const s = engine.support(pk); return s && s.parties.find(function (p) { return p.id === globalThis.PosseEngine.partyIds[id]; }); };"
+      ],
+      "category": "Dados",
+      "review": "Conecta a consulta da base. Não cria componente ou animação."
+    },
+    {
+      "originalStart": 1240,
+      "currentStart": 1236,
+      "removed": [
+        "    const sharesOf = function (pk) { const w = {}; Object.keys(pk).forEach(function (k) { const p = PEOPLE[pk[k]]; if (p && p.party) w[p.party] = (w[p.party] || 0) + weightOf(k); }); const sh = {}; PARTIES.forEach(function (p) { sh[p.id] = Math.min(1, (w[p.id] || 0) / (p.seats / 513 * TOTAL)); }); return sh; };",
+        "    const chanceOf = function (p, share) {",
+        "      if (p.id === OWN) return 0.92;",
+        "      const d = distOf(p), free = d <= 45 ? 0.85 - d / 45 * 0.2 : Math.max(0.4, 0.65 - (d - 45) / 45 * 0.25);",
+        "      if (share > 0) return Math.min(0.95, Math.max(0.67, free + 0.25 * share));",
+        "      if (PRAG[p.id]) return d > 70 ? 0.35 : Math.max(free, 0.55);",
+        "      return d > 45 ? 0.12 + 0.2 * Math.max(0, 1 - (d - 45) / 45) : free;",
+        "    };"
+      ],
+      "added": [
+        "    const sharesOf = function (pk) { const out = {}; PARTIES.forEach(function (p) { const q = engineParty(pk, p.id); out[p.id] = q ? q.share : 0; }); return out; };",
+        "    const chanceOf = function (p, share) { const s = engine.support(picks); const q = s && s.parties.find(function (x) { return x.id === globalThis.PosseEngine.partyIds[p.id]; }); return q ? q.chance : 0; };"
+      ],
+      "category": "Cálculo",
+      "review": "Substitui a conta de apoio por consulta da ponte; fora da avaliação de UI."
+    },
+    {
+      "originalStart": 1249,
+      "currentStart": 1239,
+      "removed": [
+        "    const depChance = function (d, c) { return Math.max(0.02, Math.min(0.99, c + JIT[d.k])); };"
+      ],
+      "added": [],
+      "category": "Cálculo",
+      "review": "Retira a antiga conta individual para usar a consulta da ponte no bloco seguinte."
+    },
+    {
+      "originalStart": 1252,
+      "currentStart": 1241,
+      "removed": [
+        "    const votesOf = function (pk) { const sh = sharesOf(pk), v = {}; PARTIES.forEach(function (p) { const c = chanceOf(p, sh[p.id]); v[p.id] = byParty[p.id].reduce(function (a, d) { return a + depChance(d, c); }, 0); }); return v; };",
+        "    const sumOf = function (v) { return Math.round(PARTIES.reduce(function (a, p) { return a + v[p.id]; }, 0)); };"
+      ],
+      "added": [
+        "    const depChance = function (d, c) { return globalThis.PosseEngine.deputy(d.party, byParty[d.party].indexOf(d), c); };",
+        "    const votesOf = function (pk) { const s = engine.support(pk), out = { total: s ? s.probable : 0 }; PARTIES.forEach(function (p) { const q = engineParty(pk, p.id); out[p.id] = q ? q.expected : 0; }); return out; };",
+        "    const sumOf = function (v) { return v.total; };"
+      ],
+      "category": "Cálculo",
+      "review": "Consulta apoio individual e total; mantém geometria dos pontos, conferida em bloco completo."
+    },
+    {
+      "originalStart": 1256,
+      "currentStart": 1246,
+      "removed": [
+        "    PARTIES.forEach(function (p) { chance[p.id] = chanceOf(p, shares[p.id]); stance[p.id] = stanceOf(p, shares[p.id]); });",
+        "    const firmOf = function (pk) { const sh = sharesOf(pk); return DOTS.reduce(function (a, d) { return a + (depChance(d, chanceOf(partyOf(d.party), sh[d.party])) >= 0.8 ? 1 : 0); }, 0); };",
+        "    const firmByParty = function (pk, pid) { const sh = sharesOf(pk), c = chanceOf(partyOf(pid), sh[pid]); return byParty[pid].reduce(function (a, d) { return a + (depChance(d, c) >= 0.8 ? 1 : 0); }, 0); };"
+      ],
+      "added": [
+        "    PARTIES.forEach(function (p) { const q = engineParty(picks, p.id); chance[p.id] = q ? q.chance : 0; stance[p.id] = stanceOf(p, shares[p.id]); });",
+        "    const firmOf = function (pk) { const s = engine.support(pk); return s ? s.firm : 0; };",
+        "    const firmByParty = function (pk, pid) { const q = engineParty(pk, pid); return q ? q.firm : 0; };"
+      ],
+      "category": "Cálculo",
+      "review": "Consulta estimativas por partido; não altera os estilos ou eventos dos pontos."
+    },
+    {
+      "originalStart": 1288,
+      "currentStart": 1278,
+      "removed": [
+        "        seat: id, d: ICON[id] || ICON['casa-civil'], vb: ICON_VB[id] || ICON_VB['casa-civil'], icon: p.size > 36 ? 20 : 16, ink: hd ? inkOf(hd) : 'var(--text-2)', count: k > 1 ? String(k) : '',"
+      ],
+      "added": [
+        "        seat: id, d: ICON[id] || ICON[personSeat(id)] || ICON['casa-civil'], vb: ICON_VB[id] || ICON_VB[personSeat(id)] || ICON_VB['casa-civil'], icon: p.size > 36 ? 20 : 16, ink: hd ? inkOf(hd) : 'var(--text-2)', count: k > 1 ? String(k) : '',"
+      ],
+      "category": "Ícones",
+      "review": "Pasta criada reutiliza o ícone e viewBox do perfil original; tamanhos, cores, posições e click preservados."
+    },
+    {
+      "originalStart": 1321,
+      "currentStart": 1311,
+      "removed": [
+        "    const plain = OFFICIAL[sel].replace(/^Ministério (da|do|das|dos|de) /, '');"
+      ],
+      "added": [
+        "    const plain = (OFFICIAL[sel] || label(sel)).replace(/^Ministério (da|do|das|dos|de) /, '');"
+      ],
+      "category": "Compatibilidade de IDs",
+      "review": "Permite título de pasta criada sem acesso a OFFICIAL inexistente; mesmo componente."
+    },
+    {
+      "originalStart": 1323,
+      "currentStart": 1313,
+      "removed": [
+        "    const whole = mem.length === 1 && partsOf(sel).length === PARTS[sel].length;",
+        "    let seatJob = mem.length > 1 ? 'Junta ' + list(mem.map(function (k) { return LABEL[k]; })) + '. Para o partido que o receber, vale por ' + mem.length + ' ministérios.' : (JOB[sel] && whole ? JOB[sel] : 'Áreas: ' + joinParts(partsOf(sel).slice(0, 3)) + (partsOf(sel).length > 3 ? ' · e mais ' + (partsOf(sel).length - 3) : ''));"
+      ],
+      "added": [
+        "    const whole = mem.length === 1 && partsOf(sel).length === (PARTS[sel] || []).length;",
+        "    let seatJob = mem.length > 1 ? 'Junta ' + list(mem.map(function (k) { return baseLabel(k); })) + '. Concentra as atribuições dessas pastas.' : (JOB[sel] && whole ? JOB[sel] : 'Áreas: ' + joinParts(partsOf(sel).slice(0, 3)) + (partsOf(sel).length > 3 ? ' · e mais ' + (partsOf(sel).length - 3) : ''));",
+        "    if (government && !ownParts(sel).length) seatJob = 'Sem atribuições neste momento.';"
+      ],
+      "category": "Texto e dados",
+      "review": "Descrição reflete atribuições atuais e pasta vazia; remove promessa de poder por número de pastas."
+    },
+    {
+      "originalStart": 1331,
+      "currentStart": 1322,
+      "removed": [
+        "    mem.forEach(function (m) { (PARTNERS[m] || []).forEach(function (q) { const r = live(q); if (r && r !== sel && r !== 'agu' && suggested.indexOf(r) < 0) suggested.push(r); }); });"
+      ],
+      "added": [],
+      "category": "Critério removido",
+      "review": "Retira sugestões fixas de parceiros; opções usam a lista atual."
+    },
+    {
+      "originalStart": 1333,
+      "currentStart": 1323,
+      "removed": [
+        "    const proposeFor = function (id) {",
+        "      let exact = true;",
+        "      const dest = ownParts(id).map(function (pt) {",
+        "        const want = (SPLIT[pt.from] && SPLIT[pt.from][pt.text]) || DEST[pt.from];",
+        "        let to = want ? live(want) : null;",
+        "        if (!to || to === id) { exact = false; const alt = DEST[want] ? live(DEST[want]) : null; to = alt && alt !== id ? alt : (suggested[0] || rest[0]); }",
+        "        return to;",
+        "      });",
+        "      return { dest: dest, pre: exact && mem.length === 1 && PRE[id] ? PRE[id] : '' };",
+        "    };"
+      ],
+      "added": [
+        "    const proposeFor = function (id) { return { dest: ownParts(id).map(function () { return null; }) }; };",
+        "    const applyStructure = function (change, patch) { if (!change) { set({ last: 'A proposta não pôde ser aplicada. Confira as atribuições e os destinos atuais.' }); return; } set(Object.assign({ government: change.government, into: change.into, names: change.names, gone: change.gone, pending: null, destinationQuery: '', editing: false }, patch || {})); };"
+      ],
+      "category": "Distribuição",
+      "review": "Começa com destinos a escolher e aplica a proposta aos controles existentes; sem destino histórico automático."
+    },
+    {
+      "originalStart": 1348,
+      "currentStart": 1330,
+      "removed": [
+        "        const into = Object.assign({}, S.into), names = Object.assign({}, S.names), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);",
+        "        into[absorbed] = keeper; names[keeper] = name; d[keeper] = true; delete d[absorbed];"
+      ],
+      "added": [
+        "        const change = globalThis.PosseEngine.merge(S, LABEL, keeper, absorbed, name);",
+        "        if (!change && government) { set({ last: 'Vínculo institucional pendente para esta reforma.' }); return; }",
+        "        const into = change ? change.into : Object.assign({}, S.into), names = change ? change.names : Object.assign({}, S.names), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);",
+        "        if (!change) { into[absorbed] = keeper; names[keeper] = name; } d[keeper] = true; delete d[absorbed];"
+      ],
+      "category": "Operação",
+      "review": "Juntar consulta a estrutura. Vínculo institucional pendente conserva a proposta; regra fica fora da auditoria de UI."
+    },
+    {
+      "originalStart": 1353,
+      "currentStart": 1337,
+      "removed": [
+        "        set({ into: into, names: names, picks: pk, invites: inv, decided: d, sel: keeper, editing: false, pending: null, last: text + (stay ? T.stays(PEOPLE[stay].name) : '') + (lose ? T.loses(PEOPLE[lose].name) : '') + (S.invites && S.invites[absorbed] && PEOPLE[S.invites[absorbed]] ? T.inviteGone(PEOPLE[S.invites[absorbed]].name) : '') + T.size(n - 1) });"
+      ],
+      "added": [
+        "        set({ government: change ? change.government : null, gone: change ? change.gone : S.gone, into: into, names: names, picks: pk, invites: inv, decided: d, sel: keeper, editing: false, pending: null, last: text + (stay ? T.stays(PEOPLE[stay].name) : '') + (lose ? T.loses(PEOPLE[lose].name) : '') + (S.invites && S.invites[absorbed] && PEOPLE[S.invites[absorbed]] ? T.inviteGone(PEOPLE[S.invites[absorbed]].name) : '') + T.size(n - 1) });"
+      ],
+      "category": "Operação",
+      "review": "Guarda a estrutura resultante da junção; conserva seleção, mensagem e titular pelos mesmos controles."
+    },
+    {
+      "originalStart": 1363,
+      "currentStart": 1347,
+      "removed": [],
+      "added": [
+        "      } else if (pend && (pend.kind === 'create' || pend.kind === 'rename')) {",
+        "        const creating = pend.kind === 'create', selected = pend.ids || [], parts = ownParts(sel);",
+        "        question = creating ? 'Quais atribuições vão para o novo ministério?' : 'Qual nome fica?';",
+        "        if (creating) {",
+        "          const found = globalThis.PosseEngine.works(parts.map(function (pt) { return { id: pt.id, label: pt.text }; }), S.destinationQuery || '');",
+        "          note = found.reason || (selected.length ? selected.length + ' atribuições selecionadas.' : 'Sem seleção, a pasta começa sem atribuições.');",
+        "          parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + pt.text, checked ? 'Selecionada' : 'Permanece onde está até a confirmação.', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });",
+        "        } else note = 'O nome muda; atribuições e titular são conservados.';",
+        "        const ready = typeof pend.name === 'string' && pend.name.trim().length > 0 && pend.name.trim().length <= 120;",
+        "        const confirm = act(creating ? 'Criar ministério' : 'Confirmar nome', ready ? creating ? 'Move somente as atribuições selecionadas.' : 'Registra o nome escolhido.' : 'Preencha o nome.', function () {",
+        "          if (!ready) return;",
+        "          const change = creating ? globalThis.PosseEngine.create(S, LABEL, pend.name, selected, sel) : globalThis.PosseEngine.rename(S, LABEL, sel, pend.name);",
+        "          applyStructure(change, creating && change ? { created: change.created, sel: change.id, last: change.names[change.id] + ' foi criado, sem ministro.' } : { editing: true, last: 'Nome atualizado para ' + pend.name.trim() + '.' });",
+        "        }, true);",
+        "        if (!ready) confirm.cls += ' off';",
+        "        actions.push(confirm); actions.push(back);",
+        "      } else if (pend && pend.kind === 'transfer' && pend.target) {",
+        "        question = 'Transferir para ' + label(pend.target) + '?';",
+        "        note = list(ownParts(sel).filter(function (pt) { return pend.ids.indexOf(pt.id) >= 0; }).map(function (pt) { return pt.text; }));",
+        "        actions.push(act('Confirmar transferência', 'A responsabilidade muda; os trabalhos conservam sua identidade.', function () { applyStructure(globalThis.PosseEngine.transfer(S, LABEL, sel, pend.ids, pend.target), { editing: true, last: 'Atribuições transferidas para ' + label(pend.target) + '.' }); }, true));",
+        "        actions.push(act('Voltar aos destinos', '', function () { set({ pending: Object.assign({}, pend, { target: null }) }); })); actions.push(back);",
+        "      } else if (pend && pend.kind === 'transfer' && pend.destination) {",
+        "        question = 'Para onde vão as atribuições selecionadas?';",
+        "        const found = globalThis.PosseEngine.destinations(rest.map(function (q) { return { id: q, parts: ownParts(q) }; }), S.destinationQuery || '');",
+        "        note = found.reason;",
+        "        found.matches.forEach(function (match) { actions.push(act(label(match.id), (S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''), function () { set({ destinationQuery: '', pending: Object.assign({}, pend, { target: match.id }) }); })); });",
+        "        actions.push(act('Voltar às atribuições', '', function () { set({ destinationQuery: '', pending: Object.assign({}, pend, { destination: false }) }); })); actions.push(back);",
+        "      } else if (pend && pend.kind === 'transfer') {",
+        "        question = 'Quais atribuições serão transferidas?';",
+        "        const selected = pend.ids || [], parts = ownParts(sel), found = globalThis.PosseEngine.works(parts.map(function (pt) { return { id: pt.id, label: pt.text }; }), S.destinationQuery || '');",
+        "        note = found.reason || selected.length + ' atribuições selecionadas.';",
+        "        parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + pt.text, checked ? 'Selecionada' : '', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });",
+        "        const next = act('Escolher destino', selected.length ? '' : 'Selecione uma atribuição.', function () { if (selected.length) set({ destinationQuery: '', pending: Object.assign({}, pend, { destination: true }) }); }, true);",
+        "        if (!selected.length) next.cls += ' off'; actions.push(next); actions.push(back);"
+      ],
+      "category": "Controles novos",
+      "review": "Criar, renomear e transferir usam act, classes e painel do Claude; confirmação, seleção e retorno explícitos."
+    },
+    {
+      "originalStart": 1372,
+      "currentStart": 1390,
+      "removed": [
+        "        const both = list(members(lead).concat(members(q)).map(function (k) { return LABEL[k]; }));",
+        "        const setAll = members(lead).concat(members(q));"
+      ],
+      "added": [
+        "        const both = list([label(lead), label(q)]);"
+      ],
+      "category": "Nome",
+      "review": "Junção conserva nomes atuais, inclusive renomeações; não altera a apresentação do botão."
+    },
+    {
+      "originalStart": 1375,
+      "currentStart": 1392,
+      "removed": [
+        "        HIST.forEach(function (h) { if (setAll.length >= 2 && setAll.every(function (k) { return h.set.indexOf(k) >= 0; })) actions.push(act(h.name, h.note, function () { mergeInto(lead, q, h.name, T.merged(both, h.name)); })); });"
+      ],
+      "added": [],
+      "category": "Critério removido",
+      "review": "Retira nomes sugeridos por HIST; permanece o botão com os dois nomes."
+    },
+    {
+      "originalStart": 1381,
+      "currentStart": 1397,
+      "removed": [
+        "        question = 'Para onde vai “' + parts[i].text + '”?';",
+        "        suggested.concat(rest).forEach(function (q) { actions.push(act(label(q), q === pend.dest[i] ? 'Destino atual' : '', function () { const dest = pend.dest.slice(); dest[i] = q; set({ pending: { kind: 'end', dest: dest, edit: true, pick: null } }); })); });"
+      ],
+      "added": [
+        "        question = pend.bulk ? 'Para onde vai todo o trabalho?' : 'Para onde vai “' + parts[i].text + '”?';",
+        "        const found = globalThis.PosseEngine.destinations(suggested.concat(rest).map(function (q) { return { id: q, parts: ownParts(q).concat(incoming(q)) }; }), S.destinationQuery || '');",
+        "        note = found.reason;",
+        "        found.matches.forEach(function (match) { const q = match.id; const why = S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''; actions.push(act(label(q), (q === pend.dest[i] ? 'Destino atual. ' : '') + why, function () { const dest = pend.bulk ? pend.dest.map(function () { return q; }) : pend.dest.slice(); if (!pend.bulk) dest[i] = q; set({ destinationQuery: '', pending: { kind: 'end', dest: dest, edit: true, pick: null } }); })); });",
+        "        actions.push(act('Voltar', '', function () { set({ destinationQuery: '', pending: { kind: 'end', dest: pend.dest, edit: true, pick: null } }); }));"
+      ],
+      "category": "Destinos",
+      "review": "Escolha individual ou em lote e busca por atribuições atuais. Botões originais, com retorno à divisão."
+    },
+    {
+      "originalStart": 1385,
+      "currentStart": 1404,
+      "removed": [
+        "        const sign = act('Assinar', 'A medida provisória sai com esta divisão.', function () {",
+        "          const gone = Object.assign({}, S.gone), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);",
+        "          gone[sel] = parts.map(function (pt, k) { return { from: pt.from, text: pt.text, w: pt.w, dest: pend.dest[k] }; });"
+      ],
+      "added": [
+        "        const complete = pend.dest.every(function (q) { return q && active.indexOf(q) >= 0 && q !== sel; });",
+        "        const sign = act('Assinar', complete ? 'A medida provisória sai com esta divisão.' : 'Escolha o destino de todas as atribuições.', function () {",
+        "          if (!complete) { set({ pending: { kind: 'end', dest: pend.dest, edit: true, pick: null } }); return; }",
+        "          const change = globalThis.PosseEngine.abolish(S, LABEL, sel, Object.fromEntries(parts.map(function (pt, k) { return [pt.id, pend.dest[k]]; })));",
+        "          if (!change && government) { set({ last: 'Vínculo institucional pendente para esta reforma.' }); return; }",
+        "          const gone = change ? change.gone : Object.assign({}, S.gone), pk = Object.assign({}, S.picks), d = Object.assign({}, S.decided);",
+        "          if (!change) gone[sel] = parts.map(function (pt, k) { return { from: pt.from, text: pt.text, w: pt.w, dest: pend.dest[k] }; });"
+      ],
+      "category": "Operação",
+      "review": "Assinar exige destinos completos e consulta a estrutura; regra fora da avaliação de UI."
+    },
+    {
+      "originalStart": 1390,
+      "currentStart": 1413,
+      "removed": [
+        "          set({ gone: gone, picks: pk, invites: inv, decided: d, sel: targets[0], editing: false, pending: null, last: T.extinct(label(sel), targets.map(label)) + (lost ? T.loses(PEOPLE[lost].name) : '') + (S.invites && S.invites[sel] && PEOPLE[S.invites[sel]] ? T.inviteGone(PEOPLE[S.invites[sel]].name) : '') + T.size(n - 1) });"
+      ],
+      "added": [
+        "          set({ government: change ? change.government : null, into: change ? change.into : S.into, names: change ? change.names : S.names, gone: gone, picks: pk, invites: inv, decided: d, sel: targets[0] || rest[0], editing: false, pending: null, last: T.extinct(label(sel), targets.map(label)) + (lost ? T.loses(PEOPLE[lost].name) : '') + (S.invites && S.invites[sel] && PEOPLE[S.invites[sel]] ? T.inviteGone(PEOPLE[S.invites[sel]].name) : '') + T.size(n - 1) });"
+      ],
+      "category": "Operação",
+      "review": "Atualiza seleção após extinção com destino válido; mesma tela e mensagem-base."
+    },
+    {
+      "originalStart": 1392,
+      "currentStart": 1415,
+      "removed": [
+        "        sign.cls += ' wide';"
+      ],
+      "added": [
+        "        sign.cls += complete ? ' wide' : ' wide off';"
+      ],
+      "category": "Estado do botão",
+      "review": "Assinar usa wide off enquanto faltam destinos; reutiliza o estado off original."
+    },
+    {
+      "originalStart": 1394,
+      "currentStart": 1417,
+      "removed": [
+        "          question = 'A Casa Civil propõe esta divisão:';"
+      ],
+      "added": [
+        "          question = 'Distribuição das atribuições:';"
+      ],
+      "category": "Texto",
+      "review": "Troca a proposta da Casa Civil por distribuição das atribuições."
+    },
+    {
+      "originalStart": 1397,
+      "currentStart": 1420,
+      "removed": [
+        "          note = (pend.pre || T.noPrecedent) + T.reaction(holderOf(sel) ? holderOf(sel).name : '');"
+      ],
+      "added": [
+        "          note = complete ? '' : 'Escolha os destinos em Mudar a divisão.';"
+      ],
+      "category": "Texto",
+      "review": "Retira precedente/reação genérica e explica a escolha de destinos pendente."
+    },
+    {
+      "originalStart": 1405,
+      "currentStart": 1428,
+      "removed": [
+        "          suggested.forEach(function (q) { actions.push(act('Tudo para ' + label(q), '', function () { set({ pending: { kind: 'end', dest: parts.map(function () { return q; }), edit: true, pick: null } }); })); });",
+        "          pinned.push(wide('Voltar à proposta da Casa Civil', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null, pre: pr.pre } }); }));"
+      ],
+      "added": [
+        "          actions.push(act('Tudo para um órgão', '', function () { set({ destinationQuery: '', pending: { kind: 'end', dest: pend.dest, edit: true, bulk: true, pick: 0 } }); }));",
+        "          pinned.push(wide('Recomeçar a distribuição', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null } }); }));"
+      ],
+      "category": "Distribuição",
+      "review": "Escolha em lote e recomeço reutilizam os botões; não retomam destinos históricos."
+    },
+    {
+      "originalStart": 1412,
+      "currentStart": 1435,
+      "removed": [
+        "        if (!inc.length) actions.push(act('Extinguir', 'O ministério acaba. A Casa Civil propõe para onde vai o trabalho.', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null, pre: pr.pre } }); }));",
+        "        CREATE.filter(function (c) { return mem.indexOf(c.from) >= 0 && !made(c.id); }).forEach(function (c) { actions.push(act('Dividir: criar ' + c.label, c.hint + ' Um cargo de ministro a mais.', function () { const d = Object.assign({}, S.decided); d[c.id] = true; d[sel] = true; set({ created: created.concat([c]), decided: d, editing: false, pending: null, last: T.divided(c.label) + T.size(n + 1) }); })); });"
+      ],
+      "added": [
+        "        if (!inc.length) actions.push(act('Extinguir', 'O ministério acaba. Você distribui as atribuições entre os órgãos ativos.', function () { const pr = proposeFor(sel); set({ pending: { kind: 'end', dest: pr.dest, edit: false, pick: null } }); }));",
+        "        CREATE.filter(function (c) { return government ? ownParts(sel).some(function (pt) { return pt.text === c.part; }) : mem.indexOf(c.from) >= 0 && !made(c.id); }).forEach(function (c) { actions.push(act('Dividir: criar ' + c.label, c.hint + ' Um cargo de ministro a mais.', function () { const d = Object.assign({}, S.decided); if (government) { const selected = ownParts(sel).filter(function (pt) { return pt.text === c.part; }).map(function (pt) { return pt.id; }), change = globalThis.PosseEngine.create(S, LABEL, c.label, selected, sel, c.id); if (!change) { applyStructure(null); return; } d[change.id] = true; d[sel] = true; applyStructure(change, { created: change.created, decided: d, last: T.divided(c.label) + T.size(n + 1) }); } else { d[c.id] = true; d[sel] = true; set({ created: created.concat([c]), decided: d, editing: false, pending: null, last: T.divided(c.label) + T.size(n + 1) }); } })); });",
+        "        if (government) { actions.push(act('Criar outro ministério', 'Escolha o nome e as atribuições.', function () { set({ destinationQuery: '', pending: { kind: 'create', name: '', ids: [] } }); })); actions.push(act('Transferir atribuições', 'Escolha o trabalho e o novo responsável.', function () { set({ destinationQuery: '', pending: { kind: 'transfer', ids: [] } }); })); actions.push(act('Renomear ministério', 'Conserva as atribuições e o titular.', function () { set({ pending: { kind: 'rename', name: label(sel) } }); })); }"
+      ],
+      "category": "Operações e controles",
+      "review": "Extinção explícita, atalhos de divisão e três novas ações no painel; estilos originais conservados."
+    },
+    {
+      "originalStart": 1415,
+      "currentStart": 1439,
+      "removed": [
+        "        if (kids.length) actions.push(act('Desfazer a junção', list([sel].concat(kids).map(function (k) { return LABEL[k]; })) + ' voltam a ser separados.', function () { const into = Object.assign({}, S.into), names = Object.assign({}, S.names), d = Object.assign({}, S.decided); kids.forEach(function (k) { delete into[k]; delete d[k]; }); delete names[sel]; set({ into: into, names: names, decided: d, pending: null, last: T.separated([sel].concat(kids).map(function (k) { return LABEL[k]; })) + T.size(n + kids.length) }); }));",
+        "        incFrom.forEach(function (x) { actions.push(act('Recriar ' + LABEL[x], 'Desfaz a extinção. ' + LABEL[x] + ' volta a existir, sem ministro.', function () { const gone = Object.assign({}, S.gone); delete gone[x]; set({ gone: gone, sel: x, editing: false, pending: null, last: T.recreated(LABEL[x]) + T.size(n + 1) }); })); });",
+        "        if (made(sel)) { const src = created.find(function (c) { return c.id === sel; }).from; actions.push(act('Desistir de criar ' + label(sel), 'O trabalho volta para onde estava.', function () { const into = Object.assign({}, S.into); Object.keys(into).forEach(function (k) { if (into[k] === sel || k === sel) delete into[k]; }); const d = Object.assign({}, S.decided); delete d[sel]; const pk = Object.assign({}, S.picks); delete pk[sel]; const inv = Object.assign({}, S.invites); delete inv[sel]; set({ picks: pk, invites: inv, created: created.filter(function (c) { return c.id !== sel; }), into: into, decided: d, sel: live(src) || src, editing: false, pending: null, last: T.uncreated(label(sel), label(live(src) || src)) + T.size(n - 1) }); })); }"
+      ],
+      "added": [
+        "        if (kids.length) actions.push(act('Desfazer a junção', list([sel].concat(kids).map(function (k) { return baseLabel(k); })) + ' voltam a ser separados.', function () { const change = globalThis.PosseEngine.split(S, LABEL, sel), into = change ? change.into : Object.assign({}, S.into), names = change ? change.names : Object.assign({}, S.names), d = Object.assign({}, S.decided); kids.forEach(function (k) { if (!change) delete into[k]; delete d[k]; }); if (!change) delete names[sel]; set({ government: change ? change.government : null, gone: change ? change.gone : S.gone, into: into, names: names, decided: d, pending: null, last: T.separated([sel].concat(kids).map(function (k) { return baseLabel(k); })) + T.size(n + kids.length) }); }));",
+        "        (government ? Object.keys(S.gone) : incFrom).forEach(function (x) { actions.push(act('Recriar ' + baseLabel(x), 'Desfaz a extinção. ' + baseLabel(x) + ' volta a existir, sem ministro.', function () { const change = globalThis.PosseEngine.restore(S, LABEL, x), gone = change ? change.gone : Object.assign({}, S.gone); if (!change) delete gone[x]; set({ government: change ? change.government : null, into: change ? change.into : S.into, names: change ? change.names : S.names, gone: gone, sel: x, editing: false, pending: null, last: T.recreated(baseLabel(x)) + T.size(n + 1) }); })); });",
+        "        if (made(sel)) { const src = created.find(function (c) { return c.id === sel; }).from; actions.push(act('Desistir de criar ' + label(sel), 'O trabalho que continua aqui volta para onde estava.', function () { if (government) { const change = globalThis.PosseEngine.cancelCreation(S, LABEL, sel); if (!change) { set({ last: 'A distribuição mudou desde a criação. Use Extinguir para escolher os destinos atuais.' }); return; } const pk = Object.assign({}, S.picks), inv = Object.assign({}, S.invites), d = Object.assign({}, S.decided); delete pk[sel]; delete inv[sel]; delete d[sel]; applyStructure(change, { picks: pk, invites: inv, decided: d, sel: live(src) || order.find(function (id) { return id !== sel; }), last: T.uncreated(label(sel), label(live(src) || src)) + T.size(n - 1) }); return; } const into = Object.assign({}, S.into); Object.keys(into).forEach(function (k) { if (into[k] === sel || k === sel) delete into[k]; }); const d = Object.assign({}, S.decided); delete d[sel]; const pk = Object.assign({}, S.picks); delete pk[sel]; const inv = Object.assign({}, S.invites); delete inv[sel]; set({ picks: pk, invites: inv, created: created.filter(function (c) { return c.id !== sel; }), into: into, decided: d, sel: live(src) || src, editing: false, pending: null, last: T.uncreated(label(sel), label(live(src) || src)) + T.size(n - 1) }); })); }"
+      ],
+      "category": "Operações inversas",
+      "review": "Desfazer, recriar e desistir consultam a estrutura atual; mesmas variantes de botão e painel."
+    },
+    {
+      "originalStart": 1425,
+      "currentStart": 1449,
+      "removed": [
+        "      const lead = mem[0];"
+      ],
+      "added": [
+        "      const lead = personSeat(mem[0]);"
+      ],
+      "category": "Compatibilidade de IDs",
+      "review": "Lista de pessoas de nova pasta usa o perfil original, mantendo os retratos e as fichas."
+    },
+    {
+      "originalStart": 1482,
+      "currentStart": 1506,
+      "removed": [
+        "          set({ picks: pk, invites: inv2, last: text + (firm2 !== firm ? T.base(firm2, b2) : '') });"
+      ],
+      "added": [
+        "          set({ picks: pk, invites: inv2, last: engineCurrent.status === 'estimated' ? text + (firm2 !== firm ? T.base(firm2, b2) : '') : 'Nomeação registrada. ' + engineCurrent.reason });"
+      ],
+      "category": "Informação disponível",
+      "review": "Mensagem de nomeação não inventa apoio após reforma; movimento do retrato continua em lockIn, idêntico."
+    },
+    {
+      "originalStart": 1492,
+      "currentStart": 1516,
+      "removed": [
+        "          rows.push({ isHeader: false, isRow: true, name: p.name, origin: invOf(p.key) ? 'Convite enviado · ' + label(invOf(p.key)) : at && at !== sel ? 'Hoje em ' + label(at) : at === sel ? 'No cargo' : originOf(p), ring: colorOf(p), av: f, skin: f.skin, hair: f.hair, fama: String(p.fama), prep: String(prepOf(p)), afin: String(afinOf(p)), famaCls: attrCls(p.fama), prepCls: attrCls(prepOf(p)), afinCls: attrCls(afinOf(p)), hasTag: !!tagOf(p), tag: STANCE_TAG[tagOf(p)] || '', tagCls: 'tag ' + tagOf(p), gain: v > 0 ? '+' + v : v < 0 ? '−' + (-v) : '0', gainCls: 'gain num' + (v > 0 ? ' up' : v < 0 ? ' down' : ''), cls: 'row grid6' + (at === sel ? ' cur' : focusRow ? ' focus' : '') + (no ? ' off' : '') + (p.party ? ' pt' + PARTIES.findIndex(function (x) { return x.id === p.party; }) : ''), pick: appoint(p), enter: function (e) { self.showCard(p.key, e); }, leave: function () { self.hideCard(); } });"
+      ],
+      "added": [
+        "          rows.push({ isHeader: false, isRow: true, name: p.name, origin: invOf(p.key) ? 'Convite enviado · ' + label(invOf(p.key)) : at && at !== sel ? 'Hoje em ' + label(at) : at === sel ? 'No cargo' : originOf(p), ring: colorOf(p), av: f, skin: f.skin, hair: f.hair, fama: String(p.fama), prep: String(prepOf(p)), afin: String(afinOf(p)), famaCls: attrCls(p.fama), prepCls: attrCls(prepOf(p)), afinCls: attrCls(afinOf(p)), hasTag: !!tagOf(p), tag: STANCE_TAG[tagOf(p)] || '', tagCls: 'tag ' + tagOf(p), gain: engineCurrent.status === 'unknown' ? '—' : v > 0 ? '+' + v : v < 0 ? '−' + (-v) : '0', gainCls: 'gain num' + (v > 0 ? ' up' : v < 0 ? ' down' : ''), cls: 'row grid6' + (at === sel ? ' cur' : focusRow ? ' focus' : '') + (no ? ' off' : '') + (p.party ? ' pt' + PARTIES.findIndex(function (x) { return x.id === p.party; }) : ''), pick: appoint(p), enter: function (e) { self.showCard(p.key, e); }, leave: function () { self.hideCard(); } });"
+      ],
+      "category": "Informação disponível",
+      "review": "Ganho vira travessão se desconhecido. Todas as demais propriedades, classes e eventos da linha são idênticos."
+    },
+    {
+      "originalStart": 1497,
+      "currentStart": 1521,
+      "removed": [
+        "        const brings = hp.kind === 'party' ? (hp.party === OWN ? 'Seu partido já conta como base.' : refuses(hp) ? (party.fem ? 'A ' : 'O ') + party.tag + ' não aceita entrar no governo.' : v > 0 ? 'Cerca de ' + v + ' deputados ' + (party.fem ? 'da ' : 'do ') + party.tag + ', nos próximos meses.' : 'Nenhum voto a mais. O partido já tem ministérios na medida da bancada.') : 'Nenhum voto no Congresso.';"
+      ],
+      "added": [
+        "        const brings = engineCurrent.status === 'unknown' ? engineCurrent.reason : hp.kind === 'party' ? (hp.party === OWN ? 'Seu partido já conta como base.' : refuses(hp) ? (party.fem ? 'A ' : 'O ') + party.tag + ' não aceita entrar no governo.' : v > 0 ? 'Cerca de ' + v + ' deputados ' + (party.fem ? 'da ' : 'do ') + party.tag + ', nos próximos meses.' : 'Nenhum voto a mais. O partido já tem ministérios na medida da bancada.') : 'Nenhum voto no Congresso.';"
+      ],
+      "category": "Informação disponível",
+      "review": "Ficha declara estimativa ausente; montagem, estatísticas e estilo são os originais."
+    },
+    {
+      "originalStart": 1506,
+      "currentStart": 1530,
+      "removed": [
+        "      cols = [['fama', 'Fama', 'Quantas pessoas ouvem o que ele diz, de 1 a 5'], ['prep', 'Preparo', 'O quanto sabe fazer o trabalho, de 1 a 5'], ['afin', 'Afinidade', 'O quanto pensa parecido com você, de 1 a 5'], ['votes', 'Votos', 'Votos firmes a mais com esta nomeação']].map(function (x) { const on = S.sort === x[0]; return { label: x[1], hint: x[2] + '. Toque para ordenar.', cls: (on ? 'on' : '') + (x[0] === 'votes' ? ' right' : ''), go: function () { set({ sort: on ? null : x[0] }); } }; });"
+      ],
+      "added": [
+        "      cols = [['fama', 'Fama', 'Quantas pessoas ouvem o que ele diz, de 1 a 5'], ['prep', 'Preparo', 'O quanto sabe fazer o trabalho, de 1 a 5'], ['afin', 'Afinidade', 'O quanto pensa parecido com você, de 1 a 5'], ['votes', 'Votos', 'Votos firmes a mais com esta nomeação']].map(function (x) { const on = S.sort === x[0]; return { label: x[1], hint: x[0] === 'votes' && engineCurrent.status === 'unknown' ? engineCurrent.reason : x[2] + '. Toque para ordenar.', cls: (on ? 'on' : '') + (x[0] === 'votes' ? ' right' : ''), go: function () { set({ sort: on ? null : x[0] }); } }; });"
+      ],
+      "category": "Informação disponível",
+      "review": "Hint de ordenação por votos declara a lacuna; os quatro botões e seu click conservados."
+    },
+    {
+      "originalStart": 1514,
+      "currentStart": 1538,
+      "removed": [
+        "      clear = holder && function () { if (!holderOf(sel)) return; const pk = Object.assign({}, S.picks); delete pk[sel]; const b2 = sumOf(votesOf(only(pk))), f2 = firmOf(only(pk)); set({ picks: pk, last: T.fired(holder.name, label(sel)) + (holder.party && holder.party !== OWN ? (sharesOf(only(pk))[holder.party] > 0 ? T.lessPasta(partyOf(holder.party)) : T.outOfBase(partyOf(holder.party))) : '') + (f2 !== firm ? T.base(f2, b2) : '') }); };"
+      ],
+      "added": [
+        "      clear = holder && function () { if (!holderOf(sel)) return; const pk = Object.assign({}, S.picks); delete pk[sel]; const b2 = sumOf(votesOf(only(pk))), f2 = firmOf(only(pk)); set({ picks: pk, last: engineCurrent.status === 'unknown' ? 'Exoneração registrada. ' + engineCurrent.reason : T.fired(holder.name, label(sel)) + (holder.party && holder.party !== OWN ? (sharesOf(only(pk))[holder.party] > 0 ? T.lessPasta(partyOf(holder.party)) : T.outOfBase(partyOf(holder.party))) : '') + (f2 !== firm ? T.base(f2, b2) : '') }); };"
+      ],
+      "category": "Informação disponível",
+      "review": "Mensagem de exoneração declara apoio desconhecido; botão e remoção do titular usam os gestos existentes."
+    },
+    {
+      "originalStart": 1561,
+      "currentStart": 1585,
+      "removed": [
+        "      finish: function () { set({ phase: 'photo', hoverP: null }); },"
+      ],
+      "added": [
+        "      finish: function () { engine.capture(picks); set({ phase: 'photo', hoverP: null }); },"
+      ],
+      "category": "Captura",
+      "review": "Registra a seleção antes da foto; transição para photo e hover permanecem iguais."
+    },
+    {
+      "originalStart": 1563,
+      "currentStart": 1587,
+      "removed": [
+        "      photo: photo, photoLine: Object.keys(picks).length + ' de ' + n + ' ministérios com ministro · ' + inGov + (inGov === 1 ? ' partido' : ' partidos') + ' no governo · ' + firm + ' votos firmes e uns ' + base + ' prováveis',"
+      ],
+      "added": [
+        "      photo: photo, photoLine: Object.keys(picks).length + ' de ' + n + ' ministérios com ministro · ' + inGov + (inGov === 1 ? ' partido' : ' partidos') + ' no governo · ' + (engineCurrent.status === 'estimated' ? firm + ' votos firmes e uns ' + base + ' prováveis' : engineCurrent.reason),"
+      ],
+      "category": "Informação disponível",
+      "review": "Resumo da foto declara lacuna da estimativa; molduras e animações continuam originais."
+    },
+    {
+      "originalStart": 1566,
+      "currentStart": 1590,
+      "removed": [
+        "      baseNote: 'Uns ' + base + ' prováveis numa votação comum. ' + (firm < 257 ? 'Faltam ' + (257 - firm) + ' firmes para a maioria de 257.' : firm < 308 ? 'Maioria firme. Faltam ' + (308 - firm) + ' para os 308 de uma emenda.' : 'Firmes para os 308 de uma emenda.'), base: base, basePct: (base / 513 * 100).toFixed(1) + '%', firm: firm, firmPct: (firm / 513 * 100).toFixed(1) + '%', finishHint: Object.keys(picks).length + ' de ' + n + ' com ministro',"
+      ],
+      "added": [
+        "      baseNote: engineCurrent.status === 'unknown' ? engineCurrent.reason : 'Apoio estrutural; a reação ocorre ao longo dos meses. Uns ' + base + ' prováveis numa votação comum. ' + (firm < 257 ? 'Faltam ' + (257 - firm) + ' firmes para a maioria de 257.' : firm < 308 ? 'Maioria firme. Faltam ' + (308 - firm) + ' para os 308 de uma emenda.' : 'Firmes para os 308 de uma emenda.'), base: engineCurrent.status === 'unknown' ? '—' : base, basePct: (base / 513 * 100).toFixed(1) + '%', firm: engineCurrent.status === 'unknown' ? '—' : firm, firmPct: (firm / 513 * 100).toFixed(1) + '%', finishHint: Object.keys(picks).length + ' de ' + n + ' com ministro',"
+      ],
+      "category": "Informação disponível",
+      "review": "Legenda e travessão na base desconhecida; mesmo medidor e classes."
+    },
+    {
+      "originalStart": 1572,
+      "currentStart": 1596,
+      "removed": [],
+      "added": [
+        "      hasDestinationSearch: step === 1 && S.pending && (S.pending.kind === 'end' && S.pending.pick !== null && S.pending.pick !== undefined || S.pending.kind === 'create' || S.pending.kind === 'transfer' && !S.pending.target), destinationQuery: S.destinationQuery || '', setDestinationQuery: function (e) { set({ destinationQuery: e.target.value }); },",
+        "      hasOfficeName: step === 1 && S.pending && (S.pending.kind === 'create' || S.pending.kind === 'rename'), officeName: S.pending && S.pending.name || '', setOfficeName: function (e) { set({ pending: Object.assign({}, S.pending, { name: e.target.value }) }); },"
+      ],
+      "category": "Campos novos",
+      "review": "Liga os dois campos condicionais ao estado; classes e eventos do restante do painel preservados."
+    }
+  ]
+}

@@ -1,0 +1,722 @@
+{
+ "recordedAt": "2026-10-01",
+ "action": "arquivamento de tmp/posse e dos registros soltos de 30/09",
+ "verified": "SHA-256 igual antes e depois em todos os arquivos; nenhum arquivo apagado",
+ "files": 119,
+ "moves": [
+  {
+   "source": "tmp/posse/audit.cjs",
+   "target": "tmp/history/posse/audit.cjs",
+   "sha256": "fd99c368e04fe3764527f8b23a09ac3679464eacebee68faa479cc625036218f",
+   "bytes": 12594
+  },
+  {
+   "source": "tmp/posse/avatar-sheet-a.png",
+   "target": "tmp/history/posse/avatar-sheet-a.png",
+   "sha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d",
+   "bytes": 1567516
+  },
+  {
+   "source": "tmp/posse/avatar-sheet-b.png",
+   "target": "tmp/history/posse/avatar-sheet-b.png",
+   "sha256": "a752444c52ad5838915a1c094d206164011e3fcaa42cb8aa3f74c4cf77c404b1",
+   "bytes": 1531749
+  },
+  {
+   "source": "tmp/posse/avatar-standard.json",
+   "target": "tmp/history/posse/avatar-standard.json",
+   "sha256": "83350c57069fb9d5383360a2c6bb9253d3064f7239fb1e77cf90ce0a4d3c2e16",
+   "bytes": 1116
+  },
+  {
+   "source": "tmp/posse/build-all.sh",
+   "target": "tmp/history/posse/build-all.sh",
+   "sha256": "d9fdab131ff446b98bbb84561071130c46754cae385b1ae6bb9d88f290c3c81d",
+   "bytes": 277
+  },
+  {
+   "source": "tmp/posse/build2.mjs",
+   "target": "tmp/history/posse/build2.mjs",
+   "sha256": "c05be0a8a3758096862b7cbb081eb7d9087b0871e7c98cdd91b3ea68fd181d1c",
+   "bytes": 13327
+  },
+  {
+   "source": "tmp/posse/card-hover-test.cjs",
+   "target": "tmp/history/posse/card-hover-test.cjs",
+   "sha256": "bfc4d93ba124502e4322518a1b4f4e4de2f3a9efd98d93b3d136e50771afe91a",
+   "bytes": 2584
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-candidate-ai.png",
+   "target": "tmp/history/posse/codex/avatar-approved-candidate-ai.png",
+   "sha256": "14e6015ce98dc007ffa18f995c1c5eadbbe555c0d26919985e515cf07d1addbd",
+   "bytes": 268001
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-candidate-card-ai.png",
+   "target": "tmp/history/posse/codex/avatar-approved-candidate-card-ai.png",
+   "sha256": "65c9df8c50cac5590bb14c0d0592c18d8b56dd13a4340b6367bf644278ce7e24",
+   "bytes": 297254
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-ceremony-ai.png",
+   "target": "tmp/history/posse/codex/avatar-approved-ceremony-ai.png",
+   "sha256": "0cacbe715abdc580ad465c1d8389b08995e2bfd66af52bccdbb87cc2cea1d5e3",
+   "bytes": 145714
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-create-ai.png",
+   "target": "tmp/history/posse/codex/avatar-approved-create-ai.png",
+   "sha256": "f904f63fb73a4c66afc698c88cb44c708e7b3ba6c427a02c4dfee7d08922533c",
+   "bytes": 247311
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-create-original.png",
+   "target": "tmp/history/posse/codex/avatar-approved-create-original.png",
+   "sha256": "44e4548009a5d5dfa264e9957eaef434519af9d2aa459a8112fe8dd9f5df9664",
+   "bytes": 236109
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-photo-president-ai.png",
+   "target": "tmp/history/posse/codex/avatar-approved-photo-president-ai.png",
+   "sha256": "c5dedb1c8a4e6664283c7d724cae0a7aed2740909b517041d42ed1c59ec6e219",
+   "bytes": 174317
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-photo-two-ai.png",
+   "target": "tmp/history/posse/codex/avatar-approved-photo-two-ai.png",
+   "sha256": "586335e4461012ddc844e25587a18abebff9fdac716cb6ac39cd5513b1a39eb2",
+   "bytes": 174795
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-pilot.cjs",
+   "target": "tmp/history/posse/codex/avatar-approved-pilot.cjs",
+   "sha256": "8f2a6ead518dc3db3113f48f1a2aa61503605971c17979b1a7c9cb28476da9cc",
+   "bytes": 5049
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-reference.png",
+   "target": "tmp/history/posse/codex/avatar-approved-reference.png",
+   "sha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d",
+   "bytes": 1567516
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-sizes.html",
+   "target": "tmp/history/posse/codex/avatar-approved-sizes.html",
+   "sha256": "1bc550dfff50ee109b9617ab193dfe083171a5c5c5212de3eaadb787d6d5d7a9",
+   "bytes": 2956
+  },
+  {
+   "source": "tmp/posse/codex/avatar-approved-sizes.png",
+   "target": "tmp/history/posse/codex/avatar-approved-sizes.png",
+   "sha256": "afd2f99b808a43bc59f7603b3627c0e0fd894513189d67486254d0c1cfa0dfcd",
+   "bytes": 215172
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot-candidate-ai.png",
+   "target": "tmp/history/posse/codex/avatar-pilot-candidate-ai.png",
+   "sha256": "b49a910d8b74efe767e67cb5bb09fd899275fd1af45f1fd44ae3d465606d26ed",
+   "bytes": 268416
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot-candidate-card-ai.png",
+   "target": "tmp/history/posse/codex/avatar-pilot-candidate-card-ai.png",
+   "sha256": "2d80266000be317d3deaced02ac48d99ba26aaef9a1392d372abcc912535982b",
+   "bytes": 298828
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot-ceremony-ai.png",
+   "target": "tmp/history/posse/codex/avatar-pilot-ceremony-ai.png",
+   "sha256": "d8537057b0f4f508c394f253a4ed5169abb5414bce492b9cb373ed9cebaeaaa6",
+   "bytes": 166130
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot-create-ai.png",
+   "target": "tmp/history/posse/codex/avatar-pilot-create-ai.png",
+   "sha256": "660419ab004ca03c302caa682a2ebdf1e29bbaeab064476a08f8874c34fb2ad8",
+   "bytes": 264982
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot-create-original.png",
+   "target": "tmp/history/posse/codex/avatar-pilot-create-original.png",
+   "sha256": "134609dac545ad6208b8b367cae2ca8bcba20c148646393220f02d802f9fb683",
+   "bytes": 236087
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot-photo-president-ai.png",
+   "target": "tmp/history/posse/codex/avatar-pilot-photo-president-ai.png",
+   "sha256": "a4c5a0b7f36d020de47c1cba92443c3626e86dd998957a1e55a0a6c91c95ab03",
+   "bytes": 177300
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot-photo-two-ai.png",
+   "target": "tmp/history/posse/codex/avatar-pilot-photo-two-ai.png",
+   "sha256": "dfc2c043fc298e64d66c1c6290c03fdc66960d945b92ec508d8378317dc3c580",
+   "bytes": 179200
+  },
+  {
+   "source": "tmp/posse/codex/avatar-pilot.cjs",
+   "target": "tmp/history/posse/codex/avatar-pilot.cjs",
+   "sha256": "15620073b0e107b567cd5963cfa90ecd20a3d1a3abf0a9376b3757ee2c1db054",
+   "bytes": 3505
+  },
+  {
+   "source": "tmp/posse/codex/avatar-reviews/a752444c52ad/contact.png",
+   "target": "tmp/history/posse/codex/avatar-reviews/a752444c52ad/contact.png",
+   "sha256": "b72d2ca2dab8f3b490e22bc966e331cf8760b770f0d4314f717fabc6f292e31a",
+   "bytes": 205509
+  },
+  {
+   "source": "tmp/posse/codex/avatar-reviews/a752444c52ad/report.json",
+   "target": "tmp/history/posse/codex/avatar-reviews/a752444c52ad/report.json",
+   "sha256": "bbbc73f533d2ab4b094202e040e79537d1064accb6b15c4306d755cc54fd1536",
+   "bytes": 2619
+  },
+  {
+   "source": "tmp/posse/codex/avatar-reviews/a8a6250c9b0c/contact.png",
+   "target": "tmp/history/posse/codex/avatar-reviews/a8a6250c9b0c/contact.png",
+   "sha256": "6f0bdc3ed0f9f0f6668550bbc17af2f9c3889ff0b34a6da4a42c4281b7572eee",
+   "bytes": 215124
+  },
+  {
+   "source": "tmp/posse/codex/avatar-reviews/a8a6250c9b0c/report.json",
+   "target": "tmp/history/posse/codex/avatar-reviews/a8a6250c9b0c/report.json",
+   "sha256": "1190ee408aa3e3ed7e5368fa7e56ab932aba8c0ccaad610866e964d5cdc1b20c",
+   "bytes": 2537
+  },
+  {
+   "source": "tmp/posse/codex/avatar-style-reference.png",
+   "target": "tmp/history/posse/codex/avatar-style-reference.png",
+   "sha256": "e3cdb050ef4a389333faad585615cabb5bdc2d1e63e93f36996b1b0f08bd1ede",
+   "bytes": 2728379
+  },
+  {
+   "source": "tmp/posse/codex/verify-avatar-integration.cjs",
+   "target": "tmp/history/posse/codex/verify-avatar-integration.cjs",
+   "sha256": "a9954e0b04c8bdd61c1916f8c4bfdee9af9f08c15b88b49feac7902df81c442d",
+   "bytes": 1714
+  },
+  {
+   "source": "tmp/posse/engine.html",
+   "target": "tmp/history/posse/engine.html",
+   "sha256": "851f5fa17475d9639d2ed5baf09d0332b269dc49628e388d470c57aff38fbd42",
+   "bytes": 287919
+  },
+  {
+   "source": "tmp/posse/exit.cjs",
+   "target": "tmp/history/posse/exit.cjs",
+   "sha256": "c09407de2b2e9c4cc1f532e65776eeb008976705b801e1ba6e18462ac726e5d5",
+   "bytes": 2310
+  },
+  {
+   "source": "tmp/posse/export-people.cjs",
+   "target": "tmp/history/posse/export-people.cjs",
+   "sha256": "3d5dc789c01fffd9ea4ac204e1a6453fcdc88b4d177e297fe679e0abe61b6f4e",
+   "bytes": 12081
+  },
+  {
+   "source": "tmp/posse/flow2.cjs",
+   "target": "tmp/history/posse/flow2.cjs",
+   "sha256": "a2a3faf23dc6c5129721f013ad08b846c2863cdc1793e373fdbe63829a71c940",
+   "bytes": 1990
+  },
+  {
+   "source": "tmp/posse/fuzz.cjs",
+   "target": "tmp/history/posse/fuzz.cjs",
+   "sha256": "13d3a8c7082049e93240da8cfa5c081cce3bc9bc2a3e36b988b827e1876eac45",
+   "bytes": 4759
+  },
+  {
+   "source": "tmp/posse/holes.cjs",
+   "target": "tmp/history/posse/holes.cjs",
+   "sha256": "bafb6ac7987a0c3d7ed0fd48f002c467c9d28ac20cfb4c2902a6bb53322685d3",
+   "bytes": 1390
+  },
+  {
+   "source": "tmp/posse/live.cjs",
+   "target": "tmp/history/posse/live.cjs",
+   "sha256": "8a88de33643d31f0a15f6d13200d8129a298a2d451247b994a61e6c4d73fbf98",
+   "bytes": 2269
+  },
+  {
+   "source": "tmp/posse/live.html",
+   "target": "tmp/history/posse/live.html",
+   "sha256": "6c73cd224ff16a97adf26f0cc80f2e214c93ed4d79f2fa70522ab58ee0b22285",
+   "bytes": 283251
+  },
+  {
+   "source": "tmp/posse/live0.png",
+   "target": "tmp/history/posse/live0.png",
+   "sha256": "2fbdcaf7d0483aed0c9eccf3227c66c8c7c965e2ea142a0b2bfbc4512f8c2fec",
+   "bytes": 256492
+  },
+  {
+   "source": "tmp/posse/parts/class-now.js",
+   "target": "tmp/history/posse/parts/class-now.js",
+   "sha256": "fe721b5b9f8f20241d8313cc28a7f09551618fa5e85966ae271f9aeb3a2ae607",
+   "bytes": 34632
+  },
+  {
+   "source": "tmp/posse/parts/data-now.js",
+   "target": "tmp/history/posse/parts/data-now.js",
+   "sha256": "85a10741c0be9eb8978f5470a69df3104875786508f5705ca7b4acb2da9c7578",
+   "bytes": 47783
+  },
+  {
+   "source": "tmp/posse/parts/template2.html",
+   "target": "tmp/history/posse/parts/template2.html",
+   "sha256": "19d59e22ec3528fd2859cf6f44713c60dce75fb65909c51f1de61d9cd3aa9538",
+   "bytes": 23856
+  },
+  {
+   "source": "tmp/posse/patch-hover.mjs",
+   "target": "tmp/history/posse/patch-hover.mjs",
+   "sha256": "51b249332b26fb8bbbfb14d04c723818200bc218580d1a9d44df3a289a01cd50",
+   "bytes": 7241
+  },
+  {
+   "source": "tmp/posse/patch-v2.mjs",
+   "target": "tmp/history/posse/patch-v2.mjs",
+   "sha256": "46baa97bdc99ee8e6fd2839cc372f746c3c4e80d295a9fae84f692e21697c352",
+   "bytes": 42332
+  },
+  {
+   "source": "tmp/posse/patch-v2b.mjs",
+   "target": "tmp/history/posse/patch-v2b.mjs",
+   "sha256": "8b91daa0db722fd0f1d00a655c7f76cb40bbada6c0090a942e34157e377fffb8",
+   "bytes": 7820
+  },
+  {
+   "source": "tmp/posse/patch-v2c.mjs",
+   "target": "tmp/history/posse/patch-v2c.mjs",
+   "sha256": "46d713b2555b6f0335a312f59de990f10c60a7c69f61a86ca891ea1f4434b33c",
+   "bytes": 7674
+  },
+  {
+   "source": "tmp/posse/patch-v2d.mjs",
+   "target": "tmp/history/posse/patch-v2d.mjs",
+   "sha256": "86903a5aba0f97a34ad417f0f7be61c4f39d7bea7b153035f66d8330f32a2a96",
+   "bytes": 15368
+  },
+  {
+   "source": "tmp/posse/patch-v2e.mjs",
+   "target": "tmp/history/posse/patch-v2e.mjs",
+   "sha256": "ad9d080245d7a510abd9d18404a388b8a4f60188a09baf2da647b9e6ae421abb",
+   "bytes": 12640
+  },
+  {
+   "source": "tmp/posse/patch-v2f.mjs",
+   "target": "tmp/history/posse/patch-v2f.mjs",
+   "sha256": "24207aca1661a2a554525ad4a5e13c91e672554d98221ca74f47d066ddab4f55",
+   "bytes": 7713
+  },
+  {
+   "source": "tmp/posse/patch-v2g.mjs",
+   "target": "tmp/history/posse/patch-v2g.mjs",
+   "sha256": "a464dff7a59ca2d539aa9b010b0eeee2d58d3312422e35a7ebe73425b39a1cce",
+   "bytes": 9970
+  },
+  {
+   "source": "tmp/posse/patch-v2h.mjs",
+   "target": "tmp/history/posse/patch-v2h.mjs",
+   "sha256": "482f28ccb25fc3410188f404e3c0cff270c67d75d047cd769d14903f47f70697",
+   "bytes": 2327
+  },
+  {
+   "source": "tmp/posse/patch-v2i.mjs",
+   "target": "tmp/history/posse/patch-v2i.mjs",
+   "sha256": "23457b00811ea57e2c1983cf96800fdc8b34bce0af18ebe2268837535740e3f8",
+   "bytes": 1366
+  },
+  {
+   "source": "tmp/posse/patch-v2j.mjs",
+   "target": "tmp/history/posse/patch-v2j.mjs",
+   "sha256": "5e3167dcea421799917766c6bdcbeba0e9762a1be40fa73b4089dd9ecd0de747",
+   "bytes": 1955
+  },
+  {
+   "source": "tmp/posse/patch-v2k.mjs",
+   "target": "tmp/history/posse/patch-v2k.mjs",
+   "sha256": "0e2fe24d4ac8017e5736a67ee8d965fc69fbd3a20dcefd4b433cc9fbd0fae41c",
+   "bytes": 2683
+  },
+  {
+   "source": "tmp/posse/patch-v2l.mjs",
+   "target": "tmp/history/posse/patch-v2l.mjs",
+   "sha256": "c6ddf7a5e93543c7fefa2d2deb614f919919cc6aebb67c8e84b93b58dd93fef7",
+   "bytes": 4764
+  },
+  {
+   "source": "tmp/posse/patch-v2m.mjs",
+   "target": "tmp/history/posse/patch-v2m.mjs",
+   "sha256": "880f322cf27e8244dea35802e530ea2f9d4d764361a21cc74fc7dc5d206be7f0",
+   "bytes": 18007
+  },
+  {
+   "source": "tmp/posse/patch-v2n.mjs",
+   "target": "tmp/history/posse/patch-v2n.mjs",
+   "sha256": "07941f45cb074b1be6580e73ff80e2f9b0770063aa6e768aa9de3c2caf7594d7",
+   "bytes": 2414
+  },
+  {
+   "source": "tmp/posse/patch-v2o.mjs",
+   "target": "tmp/history/posse/patch-v2o.mjs",
+   "sha256": "f5616612b328ac49a3cc2523949b3d6b557254c72e2828aa03d717bbc8f66f55",
+   "bytes": 3624
+  },
+  {
+   "source": "tmp/posse/people-audit.cjs",
+   "target": "tmp/history/posse/people-audit.cjs",
+   "sha256": "8fac21faeb558b6e998447438b14d17940024833c88091e9fda8a490ebfac6b8",
+   "bytes": 2852
+  },
+  {
+   "source": "tmp/posse/people-catalog.mjs",
+   "target": "tmp/history/posse/people-catalog.mjs",
+   "sha256": "6e9ff06f3a640d2d4b091a492b9104971f0110a1dc6026245bbd5b4b99c0649f",
+   "bytes": 61363
+  },
+  {
+   "source": "tmp/posse/people-logic.js",
+   "target": "tmp/history/posse/people-logic.js",
+   "sha256": "4315959e9afca9e49c9f3d4cc26a20fc194345038a31ba8c910ed5d1dd4cf952",
+   "bytes": 10213
+  },
+  {
+   "source": "tmp/posse/perf.cjs",
+   "target": "tmp/history/posse/perf.cjs",
+   "sha256": "61925d0fb06b7f7da3a4841614302ef98e36fafdb31cdc62030ddc23239f7068",
+   "bytes": 2593
+  },
+  {
+   "source": "tmp/posse/project/avatar-sheet-a.png",
+   "target": "tmp/history/posse/project/avatar-sheet-a.png",
+   "sha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d",
+   "bytes": 1567516
+  },
+  {
+   "source": "tmp/posse/project/avatar-sheet-b.png",
+   "target": "tmp/history/posse/project/avatar-sheet-b.png",
+   "sha256": "a752444c52ad5838915a1c094d206164011e3fcaa42cb8aa3f74c4cf77c404b1",
+   "bytes": 1531749
+  },
+  {
+   "source": "tmp/posse/project/canvas.json",
+   "target": "tmp/history/posse/project/canvas.json",
+   "sha256": "dd425abbf76f1471c442cbb28e440fa4f14004458e0d91ccfa27e1179bcb06b1",
+   "bytes": 781
+  },
+  {
+   "source": "tmp/posse/project/Hibrido.dc.html",
+   "target": "tmp/history/posse/project/Hibrido.dc.html",
+   "sha256": "adcd6be6c6775bda64de425ad0f69b009583cd2fe531d24ebdf2868cb8b47772",
+   "bytes": 104528
+  },
+  {
+   "source": "tmp/posse/project/Posse.dc.html",
+   "target": "tmp/history/posse/project/Posse.dc.html",
+   "sha256": "5973410cc3ef6984d1df1d6635282b131862924695cd2c8521cb8fba486a00c7",
+   "bytes": 283185
+  },
+  {
+   "source": "tmp/posse/randomize-test.cjs",
+   "target": "tmp/history/posse/randomize-test.cjs",
+   "sha256": "0b10027c7c80a7477e4a42d101d990fa5da374d84679089773fba44184f93131",
+   "bytes": 2545
+  },
+  {
+   "source": "tmp/posse/README.md",
+   "target": "tmp/history/posse/README.md",
+   "sha256": "23c0a9ff595032c34858882fde8d570e62a5601ffefa732dac0fe7609d4defb5",
+   "bytes": 3790
+  },
+  {
+   "source": "tmp/posse/rt/artifact-type/dc-runtime.js",
+   "target": "tmp/history/posse/rt/artifact-type/dc-runtime.js",
+   "sha256": "82ab863dabf94f79db1b4ced13046a03425dcd255e97a5e42c60b6e8035fea34",
+   "bytes": 185864
+  },
+  {
+   "source": "tmp/posse/sweep.cjs",
+   "target": "tmp/history/posse/sweep.cjs",
+   "sha256": "1e447e680f0c86af3c6b6c1ad17c94c07b9c13aa4832ed1202010b7f851efbdc",
+   "bytes": 2559
+  },
+  {
+   "source": "tmp/posse/techs-v2m.txt",
+   "target": "tmp/history/posse/techs-v2m.txt",
+   "sha256": "d1526d0d2bf9c392a761af2bb0e877357c27b44862d008a5f2748b3cc400a385",
+   "bytes": 11790
+  },
+  {
+   "source": "tmp/posse/tiptest.cjs",
+   "target": "tmp/history/posse/tiptest.cjs",
+   "sha256": "207b273515eb3eeac36d39341fe0c87eaa386a7fccea54b7e1ded5828093106d",
+   "bytes": 3980
+  },
+  {
+   "source": "tmp/posse/ui-card.png",
+   "target": "tmp/history/posse/ui-card.png",
+   "sha256": "8513fb0f37be16c567dac4b91adfa43913bc1e68f9f40425c744f38850169796",
+   "bytes": 304563
+  },
+  {
+   "source": "tmp/posse/uitest.cjs",
+   "target": "tmp/history/posse/uitest.cjs",
+   "sha256": "880c59370241c43cf3b1ab33e42c15ce832e3692e7850acfcd237833c95452cb",
+   "bytes": 6586
+  },
+  {
+   "source": "tmp/posse/v2-0-criacao-vazia.png",
+   "target": "tmp/history/posse/v2-0-criacao-vazia.png",
+   "sha256": "4355872e9ae296f9f672283b19e55c27807cddcaf4112802db2f385a6f518985",
+   "bytes": 233302
+  },
+  {
+   "source": "tmp/posse/v2-1-idade.png",
+   "target": "tmp/history/posse/v2-1-idade.png",
+   "sha256": "173517289c16339154c3d037859099c408cba2c19a3c45928f5a1b1b74bc6161",
+   "bytes": 31956
+  },
+  {
+   "source": "tmp/posse/v2-2-criacao-cheia.png",
+   "target": "tmp/history/posse/v2-2-criacao-cheia.png",
+   "sha256": "4ab8213c333d0c99bb4c4a5a493373ea2cfeb3686f16a3e313db9842dd6cbfd4",
+   "bytes": 236082
+  },
+  {
+   "source": "tmp/posse/v2-3-cerimonia.png",
+   "target": "tmp/history/posse/v2-3-cerimonia.png",
+   "sha256": "92e2c8c46fa9721e978c8625ae494920f5c0bbcb368e51274342b7cfb4f5f3e5",
+   "bytes": 133037
+  },
+  {
+   "source": "tmp/posse/v2-4-posse.png",
+   "target": "tmp/history/posse/v2-4-posse.png",
+   "sha256": "a4a6bcd75ab2d9473e9956b926226d8a7258bbdfc97b803ed4b9a0eb40f8c5b5",
+   "bytes": 254418
+  },
+  {
+   "source": "tmp/posse/v2-5-ficha.png",
+   "target": "tmp/history/posse/v2-5-ficha.png",
+   "sha256": "a518dc3508ca7584a546dcc83fa866aa497d0e53126679b6036c13c1810e7c65",
+   "bytes": 296111
+  },
+  {
+   "source": "tmp/posse/v2-6-travando.png",
+   "target": "tmp/history/posse/v2-6-travando.png",
+   "sha256": "e441e5c39c131665c07a257378995c7fcd10dee078716594d11d584c50d894c9",
+   "bytes": 276186
+  },
+  {
+   "source": "tmp/posse/v2-7-nomeado.png",
+   "target": "tmp/history/posse/v2-7-nomeado.png",
+   "sha256": "4fd9c2a2e8c7bd4004bc8614a23bcc5cf2a4c725552f6114a863dc52573d4945",
+   "bytes": 275153
+  },
+  {
+   "source": "tmp/posse/v2-8-foto.png",
+   "target": "tmp/history/posse/v2-8-foto.png",
+   "sha256": "61d7322dcc47fdb6b4adbb5f8eeee53f87c127362d985d5f39f54399608bef09",
+   "bytes": 173498
+  },
+  {
+   "source": "tmp/government-demand-validate.log",
+   "target": "tmp/history/recovery-2026-09-30/government-demand-validate.log",
+   "sha256": "c31a1a41e8be3d2a33df3e3e750f196cca88435c3f2b726b0de39892822ab266",
+   "bytes": 78492
+  },
+  {
+   "source": "tmp/government-management-validate.log",
+   "target": "tmp/history/recovery-2026-09-30/government-management-validate.log",
+   "sha256": "592c148cc806e085adb4e7f170c09a4480f6585c19a6911fe3edc95863c5bf05",
+   "bytes": 79970
+  },
+  {
+   "source": "tmp/government-operations-tests.log",
+   "target": "tmp/history/recovery-2026-09-30/government-operations-tests.log",
+   "sha256": "91e650715c25b6388b4423a52ad33ae7006e64c9f36ef3a1924e5ac00d464944",
+   "bytes": 73446
+  },
+  {
+   "source": "tmp/government-operations-validate.log",
+   "target": "tmp/history/recovery-2026-09-30/government-operations-validate.log",
+   "sha256": "c0cf91761deed4797c4274c2341327ed0a9dbe6cf2017571cf01abad1e0f3cff",
+   "bytes": 76990
+  },
+  {
+   "source": "tmp/operations-independent-review.json",
+   "target": "tmp/history/recovery-2026-09-30/operations-independent-review.json",
+   "sha256": "6ca01003db1f581281876c43f9e9b5a114dbb397359e5ca6085e48e4ddb4408f",
+   "bytes": 2420
+  },
+  {
+   "source": "tmp/operations-review-input.txt",
+   "target": "tmp/history/recovery-2026-09-30/operations-review-input.txt",
+   "sha256": "ea62575f6f489be7338ec9847d42d4f6f7ee0722911cdfd65de8e376bc245f03",
+   "bytes": 20431
+  },
+  {
+   "source": "tmp/operations-review-instructions.txt",
+   "target": "tmp/history/recovery-2026-09-30/operations-review-instructions.txt",
+   "sha256": "85b4220c783aaecbce7c462d88dc5cc5631abb4c07fe1ad25c60ebbb0cd08d55",
+   "bytes": 1677
+  },
+  {
+   "source": "tmp/plan-audit-probe.mjs",
+   "target": "tmp/history/recovery-2026-09-30/plan-audit-probe.mjs",
+   "sha256": "c63102790eba5c76ae080246dfb4eb0e33ab8ca9a6821a7ad6e80eb01dfd83d0",
+   "bytes": 1187
+  },
+  {
+   "source": "tmp/posse-comparison-final.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-comparison-final.log",
+   "sha256": "917c53a37a1b870929bfc82b1043c99d2a7ae24c4cc31e1bd8a28d0ec3ee6334",
+   "bytes": 322
+  },
+  {
+   "source": "tmp/posse-controls.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-controls.log",
+   "sha256": "3df047350f58f1bc011da16933ab9e3293af328e2d6abf2c6ce25820b7614492",
+   "bytes": 1186
+  },
+  {
+   "source": "tmp/posse-flow-simulate-agenda.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-agenda.log",
+   "sha256": "fa6ab9a6f6c54dbfaa7b5f4e22fa0eae962e43e7b1fc42c3be9a5ba3357b30a6",
+   "bytes": 5018
+  },
+  {
+   "source": "tmp/posse-flow-simulate-base.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-base.log",
+   "sha256": "98fe18f2db09870375de6cec9909a042b1ff323c590568a98c668154badf16a2",
+   "bytes": 5024
+  },
+  {
+   "source": "tmp/posse-flow-simulate-explorador.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-explorador.log",
+   "sha256": "4c742715c31c92a12a40621e2c24927b741a7d3f34b78a3e7e6fa96da9daa69d",
+   "bytes": 4998
+  },
+  {
+   "source": "tmp/posse-flow-simulate-herdado.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-herdado.log",
+   "sha256": "4bf0bf33d6e57611783b4060715c4e763f0680ec6d022fe2c70e81920238d515",
+   "bytes": 5014
+  },
+  {
+   "source": "tmp/posse-flow-simulate-piso.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-piso.log",
+   "sha256": "03a0e38ed50b7d3717fa6b0098081929a135090bb1e85060aa977eba03e7a189",
+   "bytes": 4950
+  },
+  {
+   "source": "tmp/posse-flow-simulate-promessa.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-flow-simulate-promessa.log",
+   "sha256": "a7af9789d55c86a53cfede6f7747e25ec245085fa0c8f8d3d6b67f5e4a6abb53",
+   "bytes": 5010
+  },
+  {
+   "source": "tmp/posse-flow-validate.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-flow-validate.log",
+   "sha256": "bc47bb7672115a124add127436335e93df0cb3a7cd92a9037f702e45cffd887c",
+   "bytes": 80636
+  },
+  {
+   "source": "tmp/posse-motion-after.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-motion-after.log",
+   "sha256": "cac5c763fbc74ef341f76ab1faaeb419935be30417b5d669173bbc3449e60c51",
+   "bytes": 2474
+  },
+  {
+   "source": "tmp/posse-motion-before.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-motion-before.log",
+   "sha256": "d7f9062ce6ca1f2b5b724c492ea2d2b841316dc14f3cbfff2e4d07dc1c253b0b",
+   "bytes": 3804
+  },
+  {
+   "source": "tmp/posse-preserve-ui.mjs",
+   "target": "tmp/history/recovery-2026-09-30/posse-preserve-ui.mjs",
+   "sha256": "9f2367651aa3acd7b49d317d0f76bf1b145378b5b3d33a39fb157395909b4d39",
+   "bytes": 4565
+  },
+  {
+   "source": "tmp/posse-recovery-check.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-recovery-check.log",
+   "sha256": "4c1ff6194f46a2c3c5454b17fddb1dcb5ad543483fc5c3f16681fc1978aed22f",
+   "bytes": 1634
+  },
+  {
+   "source": "tmp/posse-recovery-lint.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-recovery-lint.log",
+   "sha256": "4c2aa935502d949ceedb869d9bf0ccce96ab9dd8ab58f44b7b513d591b046b8c",
+   "bytes": 102
+  },
+  {
+   "source": "tmp/posse-recovery-types.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-recovery-types.log",
+   "sha256": "536fce0efb6a624cf6d4f04ba14ae4b757c6a70be5584b4e1c27459c13041bdf",
+   "bytes": 128
+  },
+  {
+   "source": "tmp/posse-recovery-validate.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-recovery-validate.log",
+   "sha256": "e99c131deacc434b4d3b7b858959c24cc2fdc5fbe9f7ab00f9c1a1c23a0f5fa8",
+   "bytes": 85926
+  },
+  {
+   "source": "tmp/posse-reforms-after.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-reforms-after.log",
+   "sha256": "bf7006dff01012de3dd5729fba83e3d60102d9d949dd566d0ceb88f762aeca8b",
+   "bytes": 2764
+  },
+  {
+   "source": "tmp/posse-reforms-before.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-reforms-before.log",
+   "sha256": "607a164ca554f8f2998aa19ce0c68863e7b8987c054b38913c3ea453b4c4093f",
+   "bytes": 2166
+  },
+  {
+   "source": "tmp/posse-reforms-browser.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-reforms-browser.log",
+   "sha256": "4e87e3b0109addbaed9ce42a96cee1223230b6c684e2b29a1d5f8e3c77500c42",
+   "bytes": 350
+  },
+  {
+   "source": "tmp/posse-reforms-icon-before.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-reforms-icon-before.log",
+   "sha256": "d25efa83a7e198100cd708eca643b19fda1ecdbe0161d122ce0fce8c8a90562d",
+   "bytes": 1900
+  },
+  {
+   "source": "tmp/posse-reforms-institution-before.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-reforms-institution-before.log",
+   "sha256": "52a4a390ba6da4fcf0168acdd3b2e4e0a58b8194b0088f97507581a13b62f5a6",
+   "bytes": 1520
+  },
+  {
+   "source": "tmp/posse-reset-validate.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-reset-validate.log",
+   "sha256": "f417e92d5ff2cb791b7388cd28f97c504497205ab9e3d5aabf86862deecc493a",
+   "bytes": 81522
+  },
+  {
+   "source": "tmp/posse-ui-audit.log",
+   "target": "tmp/history/recovery-2026-09-30/posse-ui-audit.log",
+   "sha256": "babb1e0a73e5429df7093354ad1bcfac2776aa86b402ab549e06615214172f06",
+   "bytes": 27428
+  },
+  {
+   "source": "tmp/serve-recovery-20260930.err.log",
+   "target": "tmp/history/recovery-2026-09-30/serve-recovery-20260930.err.log",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "bytes": 0
+  },
+  {
+   "source": "tmp/serve-recovery-20260930.log",
+   "target": "tmp/history/recovery-2026-09-30/serve-recovery-20260930.log",
+   "sha256": "974fe75f8a5f50a1ac7d46ecf84f679d702f84fb61ed0269bdb7de1e3035c31c",
+   "bytes": 46
+  }
+ ]
+}

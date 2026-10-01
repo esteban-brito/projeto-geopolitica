@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-30",
+  "reviewer": "Claude Code",
+  "scope": "Núcleo operacional e casos anteriores à extensão de demanda contínua",
+  "mode": "Somente análise, ferramentas desativadas, sem persistência de sessão",
+  "attempts": [
+    { "environment": "restrito", "result": "ECONNREFUSED" },
+    { "environment": "conexão autorizada", "result": "limite semanal", "apiStatus": 429 }
+  ],
+  "inputTokens": 0,
+  "outputTokens": 0,
+  "reportedCostUsd": 0,
+  "reviewCompleted": false,
+  "approval": "Nenhuma; revisão independente segue pendente"
+}

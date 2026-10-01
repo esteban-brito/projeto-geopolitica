@@ -2,15 +2,16 @@
 
 Desenho de 26/09, aprovado na direção por ele no mesmo dia: cada deputado tem uma chance de votar
 com o governo, e ela depende da distância ideológica, do ministério e da posição declarada do
-partido. Calibrado pela [pesquisa 17](../research/17-how-the-base-forms.md). Em construção desde
-26/09, por ordem dele: é a etapa 1 do [ciclo 33](../cycles/33-the-whole-game.md) (a fase 2 do
-[ciclo 32](../cycles/32-the-new-interface.md)).
+partido. Calibrado pela [pesquisa 17](../research/17-how-the-base-forms.md). O modelo entrou no
+motor em 26/09, por ordem dele, na etapa 1 do [ciclo 33](../cycles/33-the-whole-game.md) (fase 2
+do [ciclo 32](../cycles/32-the-new-interface.md)). A posse ainda não usa a consulta do motor.
+O quadro abaixo compara o desenho com o jogo anterior à mudança.
 
 ## 1. Por que mudar
 
 | modelo           | largada de um Presidente com 42 deputados                                                                       | o que erra                                                                                      |
 | ---------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| jogo de hoje     | 440 de 513: todo partido nasce com lealdade 70, e a lealdade 0 ainda vota em 50% das vezes                      | oposição votando com o governo; nenhum Presidente real começou assim                            |
+| jogo anterior    | 440 de 513: todo partido nasce com lealdade 70, e a lealdade 0 ainda vota em 50% das vezes                      | oposição votando com o governo; nenhum Presidente real começou assim                            |
 | protótipo        | 42: só o próprio partido, e cada pasta acende uns 14                                                            | ninguém fora da base vota; na vida real, partido sem pasta vota com o governo até 93% das vezes |
 | **este desenho** | votos firmes (chance de 80% ou mais) e prováveis (a soma das chances); no protótipo, 149 firmes e 374 prováveis | —                                                                                               |
 
@@ -37,9 +38,9 @@ Os fatos que o desenho tem de reproduzir, todos da pesquisa 17:
 - **a chance de cada deputado varia em torno da do partido,** sorteada da semente e nunca
   guardada. Um partido de 67% tem gente que vota sempre e gente que quase nunca vota. Os
   partidos heterogêneos, como o União Brasil de 2023, espalham mais;
-- **a lealdade continua sendo o estado.** O jogo já guarda a lealdade de 0 a 100 por partido. O
-  que muda é o mapa de lealdade para chance (hoje `moodFactor`, com piso de 50%), a largada (hoje
-  70 para todos) e o puxão da pasta (hoje 10% da distância até 80 por mês).
+- **a lealdade continua sendo o estado.** O jogo guarda a lealdade de 0 a 100 por partido. O
+  modelo substituiu o `moodFactor` com piso de 50%, a largada de 70 para todos e o puxão da pasta
+  até 80.
 
 ## 3. A calibragem
 
@@ -89,7 +90,7 @@ fica [DESENHO] e declarado assim na tela.
 
 ## 7. Como entra no motor (26/09)
 
-A etapa 1 começa aqui. Onde este desenho e o código de hoje se tocam:
+O passo do motor foi concluído em 26/09. A implementação usa estas regras:
 
 - **a lealdade vira a chance.** `state.loyalty[partido]` continua de 0 a 100 e passa a ser a chance
   do partido em pontos: 75 é 75% das votações com o governo. Sai o `moodFactor` com piso de 50% e
@@ -105,9 +106,12 @@ A etapa 1 começa aqui. Onde este desenho e o código de hoje se tocam:
   paga e promessa quebrada continuam somando e tirando como hoje;
 - **a votação desloca, não multiplica.** Multiplicar a adesão pela chance faria a oposição, com 25%,
   recusar a pauta que ela mesma defende. A chance entra como a rua já entra: um deslocamento na
-  resistência, em logit, contra uma chance neutra de 75% [DESENHO];
+  resistência, em logit, contra uma chance neutra de 80% [DESENHO]. Com 75%, duas leis mansas
+  passavam com uma Câmara inteira a 30% (266 e 260 votos para 257); a prova levou o ponto a 80%;
 - **votos firmes** são deputados com chance de 80% ou mais. A chance de cada um varia até 14
   pontos em torno da do partido, tirada da semente pelo `hash`, nunca guardada e sem gastar fluxo;
+- **o voto individual ainda não resolve a pauta.** `deputyChances` compõe o placar de firmes;
+  `vote` continua sorteando a variação por bancada. A Câmara individual entra na etapa 4;
 - **romper é declarar oposição.** Quem desembarca (o líder, pela VONTADE) passa na hora à chance de
   oposição, como o PMDB, que teve 59 de 68 votos contra 19 dias depois do rompimento; volta com
   pasta aceita;

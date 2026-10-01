@@ -30,6 +30,12 @@ npm run check      # só as guardas; `npm test` roda só as suítes
 Para agentes: [`AGENTS.md`](AGENTS.md) é o contrato comum; [`CLAUDE.md`](CLAUDE.md) e
 [`GEMINI.md`](GEMINI.md) apontam para ele.
 
+## Protótipo em transformação
+
+A posse com ministérios variáveis está em [`prototypes/posse/`](prototypes/posse/README.md):
+`node tools/prepare-posse.mjs`, `npm run serve` e abrir
+<http://127.0.0.1:5173/tmp/build/posse.html>. É um ensaio isolado; não entra na partida.
+
 ## Os motores
 
 Um turno é um mês. Cada motor é puro, e quem os compõe é
