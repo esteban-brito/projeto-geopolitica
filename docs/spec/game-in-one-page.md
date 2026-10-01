@@ -162,4 +162,4 @@ jogador quer: transformar o país.
 - **O plano em vigor é o [ciclo 33](../cycles/33-the-whole-game.md)**, aprovado em 26/09.
   Os lotes E1 do [mapa de migração](migration-map.md), §6.4, entram nas etapas dele; a eleição
   da Mesa está na etapa 4. A direção de 29/09 para a posse está em
-  [governo variável](dynamic-government.md) e no [piloto](government-pilot.md).
+  [governo variável](dynamic-government.md).

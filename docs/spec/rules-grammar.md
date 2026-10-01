@@ -82,7 +82,7 @@ uma, conferidas na Constituição em 25/09/2026.
 - **Legado a substituir, não regra institucional nova:** `POWER_STEPS` rebaixa o rito a 60 e
   85 de poder no motor atual. A barra não demonstra mudança de competência ou Constituição.
   A migração deve distinguir rota jurídica e cumprimento de uma tentativa fora da competência;
-  ver a [auditoria dos planos](../plan-audit.md), P07. Não alterar os coeficientes para ocultar isso.
+  ver a [auditoria dos planos](../archive/plan-audit-2026-09-29.md), P07. Não alterar os coeficientes para ocultar isso.
 - **O motor hoje tem três rotas:** decreto, lei e emenda (`src/data/bills.mjs`). A guarda da
   ESTRATO tem `none`, `law` e `constitution`. Faltam o ato de gestão, a medida provisória e a lei
   complementar.

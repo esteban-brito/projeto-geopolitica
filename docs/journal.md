@@ -8756,7 +8756,7 @@ A revisão atribuiu ao plano 37 telas ministeriais que ele não prescrevia, trat
 como obrigatória e sugeriu atrasos sem fonte e um `yield` individual de programa inexistente.
 Também confundiu concluir a carta de arquivamento com concluir as pendências do ciclo 29.
 
-A proposta revisada está em `docs/world-design.md`. Ela distingue decisão do usuário de sugestão
+A proposta revisada está em `docs/archive/world-design-2026-09-23.md`. Ela distingue decisão do usuário de sugestão
 do Codex, remove a exigência de conflito todo mês e detalha primeiro um piloto, sem exigir todo
 o catálogo. Nomeação política e competência variam separadamente; iniciativa inclui poder esperar.
 Energia segue como piloto sugerido, não aprovado. O handoff registra a nova prioridade e mantém
@@ -8772,7 +8772,7 @@ obrigatórios: quer poder tentar transformações radicais, citando comunismo, f
 Singapura. A proposta registra tentativa, resistência, execução e consequências distintas de
 sucesso garantido, mantendo explícito que o horizonte de 48 meses ainda não foi alterado.
 
-Essas decisões foram incorporadas a `docs/world-design.md` e ao handoff. A consulta inicial
+Essas decisões foram incorporadas a `docs/archive/world-design-2026-09-23.md` e ao handoff. A consulta inicial
 documentou o caso do IOF de 2025; não confirmou a agenda presidencial de 23/09/2026.
 O usuário pediu registrar tudo e encarregar Gemini de análise e pesquisa profunda atualizada.
 O briefing `tmp/history/gemini-real-brazil-brief.md` foi entregue pelo canal Antigravity, sem fila.
@@ -9627,7 +9627,7 @@ Revisão independente e modelagem jurídica e institucional precedem a integraç
 A pedido do Diretor, a revisão rastreou 16 documentos de especificação, 33 ciclos, três ADRs
 e 20 pesquisas. Contratos ativos receberam confronto detalhado; ciclos antigos tiveram triagem
 de situação e reaproveitamento, sem alegar releitura integral do histórico. O relatório está em
-[plan-audit.md](plan-audit.md), com 12 achados, fontes, evidência, provas propostas e sequência.
+[plan-audit.md](archive/plan-audit-2026-09-29.md), com 12 achados, fontes, evidência, provas propostas e sequência.
 
 Corrigidas referências de autoridade, vigência da antiga autorização de API, codinome decidido,
 cobertura datada do checklist e precedência do governo variável. A expansão das 152 descrições
@@ -9793,7 +9793,7 @@ preservada. A prova passou em 1440×980 e 1440×900, com rascunho antigo, nome v
 captura descartada, dois reinícios e quatro chaves do jogo intactas. Registro em
 `docs/evidence/posse-reset-2026-09-30.json`; a evidência anterior permanece histórica.
 
-O pedido de planejamento virou a seção 11 de `docs/spec/government-pilot.md`, sem criar ciclo
+O pedido de planejamento virou a seção 11 de `docs/archive/government-pilot-2026-09-30.md`, sem criar ciclo
 ou plano concorrente. Inventaria o que está na tela e o que existe só em módulos; ordena
 estabilização, estrutura única ligada aos gestos, currículos nas fichas, consequências/base
 variável e expansão pelos testes do Diretor. Cada entrega tem efeito observável e provas.
@@ -9896,7 +9896,7 @@ não declarar a transformação completa ou uma composição ilimitada já model
 
 O Diretor mudou a prioridade para organizar, padronizar, renomear e distribuir arquivos,
 com planejamento cuidadoso antes de excluir. Suspensas novas funcionalidades. Registrados
-o plano em `docs/organization-plan.md` e um manifesto de 166 ações planejadas, com caminhos
+o plano em `docs/archive/organization-plan-2026-09-30.md` e um manifesto de 166 ações planejadas, com caminhos
 e hashes. Fonte ativa em `tmp/`, comandos e testes junto aos módulos, resultados datados
 sobrescritos por geradores e capturas fora das categorias foram os problemas concretos.
 

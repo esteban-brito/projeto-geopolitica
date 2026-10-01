@@ -2,10 +2,10 @@
 
 > Ordem do Diretor em 30/09/2026: organização é a prioridade atual. Novas funcionalidades
 > ficam suspensas enquanto este lote é executado. Este documento planeja a manutenção;
-> a fila e o estado verificado continuam somente no [handoff](handoff.md).
+> a fila e o estado verificado continuam somente no [handoff](../handoff.md).
 
-**Fechado em 01/10.** Parte foi feita em 30/09 ([checkpoint](evidence/workspace-organization-checkpoint-2026-09-30.md))
-e o resto em 01/10 ([registro com hash](evidence/workspace-organization-close-2026-10-01.json)).
+**Fechado em 01/10.** Parte foi feita em 30/09 ([checkpoint](../evidence/workspace-organization-checkpoint-2026-09-30.md))
+e o resto em 01/10 ([registro com hash](../evidence/workspace-organization-close-2026-10-01.json)).
 Duas mudanças em relação ao texto abaixo:
 
 - a versão gerada da posse saiu de `prototypes/posse/index.html` para `tmp/build/posse.html`.

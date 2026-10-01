@@ -8,10 +8,10 @@
 > inspirada em Milei pode entrar depois, se ele ordenar. Ela não faz parte deste aceite.
 
 > **Atualização de escopo — 29/09:** a etapa 1 incorpora a direção de
-> [governo variável](../spec/dynamic-government.md) e do [piloto](../spec/government-pilot.md).
+> [governo variável](../spec/dynamic-government.md) e do [piloto](../archive/government-pilot-2026-09-30.md).
 > As 38 cadeiras descrevem a abertura; não limitam estruturas posteriores. Preparo depende de
 > experiências conhecidas e trabalho vigente, sem especialistas perfeitos garantidos por pasta.
-> A [auditoria dos planos](../plan-audit.md) registra contratos e dependências a fechar; suas
+> A [auditoria dos planos](../archive/plan-audit-2026-09-29.md) registra contratos e dependências a fechar; suas
 > propostas não substituem a ordem de etapas aprovada pelo Diretor.
 
 ## 1. O jogo e seus pilares

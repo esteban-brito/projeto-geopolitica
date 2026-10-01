@@ -15,7 +15,7 @@ pelas provas da seção 4. O achado 86 permanece aberto para a duração da coal
 estrutural do motor na abertura sem reforma. O Diretor quer transformar e testar esse protótipo,
 sem esperar o porte para o jogo completo. F5 reinicia a sessão do protótipo; a persistência prevista
 para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
-[plano de transformação](government-pilot.md#11-transformar-o-protótipo-da-posse--execução-em-3009).
+[plano de transformação](dynamic-government.md).
 
 ## 1. Como o jogo funcionava no estudo
 

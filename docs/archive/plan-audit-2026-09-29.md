@@ -23,42 +23,42 @@ A auditoria distingue jogo existente, protótipo executável, proposta e decisã
 dependência planejada não é bug por ainda faltar. O achado existe quando documentos prescrevem
 comportamentos incompatíveis, um portão não prova sua promessa ou falta delimitar um pré-requisito.
 
-| Documento ativo                                   | Papel e resultado da revisão                                                                |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [Especificação mestra](spec/master-spec.md)       | Autoridade de arquitetura; calendário, informação, agência, fontes e aceites confrontados.  |
-| [Jogo em uma página](spec/game-in-one-page.md)    | Promessa e loop; referência ao plano corrente corrigida.                                    |
-| [Gramática](spec/rules-grammar.md)                | Rota, portão, efeito e ciclo; achados P05–P09.                                              |
-| [Mapa de migração](spec/migration-map.md)         | Reuso, transição, lotes e descartes; achados P01, P07 e P10.                                |
-| [Corte da estatal](spec/vertical-slice-energy.md) | Cadeia material e fiscal; achados P08–P10.                                                  |
-| [Checklist](spec/presidential-checklist.md)       | Conteúdo e cobertura datada; aprovação e implementação agora distinguidas na abertura.      |
-| [Mapa da interface](spec/interface-map.md)        | Direção visual e consultas; precisa da visão presidencial de P10.                           |
-| [Ministério](spec/the-cabinet.md)                 | Proposta anterior; premissas substituídas agora sinalizadas.                                |
-| [Modelo da base](spec/the-base-model.md)          | Modelo transitório confrontado com ECLUSA e suas provas; P11.                               |
-| [Partidos](spec/the-parties.md)                   | Catálogo e restrições deliberadas; não revogadas por esta auditoria.                        |
-| [Mundo vivo](spec/the-living-world.md)            | Agência mensal existente e lote futuro de imprensa; não equivale ao mundo semanal completo. |
-| [Porte da posse](spec/the-posse-port.md)          | Distinção entre fonte visual, conta do protótipo e consulta do jogo.                        |
-| [Semana](spec/the-week.md)                        | Agenda, disponibilidade e escalada; P04.                                                    |
-| [Partidas-teste](spec/the-test-playthroughs.md)   | Dezesseis fios e versões; necessidade de aceites operacionais em P12.                       |
-| [Governo variável](spec/dynamic-government.md)    | Experiências, preparo e integração; P02–P03.                                                |
-| [Piloto](spec/government-pilot.md)                | Recorte, contrafactual e limites; base do próximo portão.                                   |
+| Documento ativo                                      | Papel e resultado da revisão                                                                |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| [Especificação mestra](../spec/master-spec.md)       | Autoridade de arquitetura; calendário, informação, agência, fontes e aceites confrontados.  |
+| [Jogo em uma página](../spec/game-in-one-page.md)    | Promessa e loop; referência ao plano corrente corrigida.                                    |
+| [Gramática](../spec/rules-grammar.md)                | Rota, portão, efeito e ciclo; achados P05–P09.                                              |
+| [Mapa de migração](../spec/migration-map.md)         | Reuso, transição, lotes e descartes; achados P01, P07 e P10.                                |
+| [Corte da estatal](../spec/vertical-slice-energy.md) | Cadeia material e fiscal; achados P08–P10.                                                  |
+| [Checklist](../spec/presidential-checklist.md)       | Conteúdo e cobertura datada; aprovação e implementação agora distinguidas na abertura.      |
+| [Mapa da interface](../spec/interface-map.md)        | Direção visual e consultas; precisa da visão presidencial de P10.                           |
+| [Ministério](../spec/the-cabinet.md)                 | Proposta anterior; premissas substituídas agora sinalizadas.                                |
+| [Modelo da base](../spec/the-base-model.md)          | Modelo transitório confrontado com ECLUSA e suas provas; P11.                               |
+| [Partidos](../spec/the-parties.md)                   | Catálogo e restrições deliberadas; não revogadas por esta auditoria.                        |
+| [Mundo vivo](../spec/the-living-world.md)            | Agência mensal existente e lote futuro de imprensa; não equivale ao mundo semanal completo. |
+| [Porte da posse](../spec/the-posse-port.md)          | Distinção entre fonte visual, conta do protótipo e consulta do jogo.                        |
+| [Semana](../spec/the-week.md)                        | Agenda, disponibilidade e escalada; P04.                                                    |
+| [Partidas-teste](../spec/the-test-playthroughs.md)   | Dezesseis fios e versões; necessidade de aceites operacionais em P12.                       |
+| [Governo variável](dynamic-government-2026-09-30.md) | Experiências, preparo e integração; P02–P03.                                                |
+| [Piloto](government-pilot-2026-09-30.md)             | Recorte, contrafactual e limites; base do próximo portão.                                   |
 
-| Ciclos rastreados | Disposição nesta auditoria                                                                                                                        |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 01–06             | Histórico de fundação; não reabre implementação só por existir promessa antiga.                                                                   |
-| 07–12             | Partes feitas e propostas não iniciadas separadas pelo [índice](cycles/README.md); Congresso, rastro e projeção confrontados com a direção atual. |
-| 13                | Antigo plano mestre, hoje referência; coalizão, eleição, autonomia e causalidade confrontadas com ciclo 33 e mapa.                                |
-| 14–16             | Correspondência e formas anteriores do Gabinete; histórico de provas e decisões visuais.                                                          |
-| 17–18             | Ambição do Brasil inteiro e poderes; conteúdo reaproveitado pelo checklist e ciclo 33.                                                            |
-| 19                | API descartada; permanece a direção de avaliação determinística.                                                                                  |
-| 20                | Empresas absorvidas pelo corte da estatal.                                                                                                        |
-| 21–28             | Mesa, normas, corpo político, Presidente e polimento; versões anteriores não competem com o plano atual.                                          |
-| 29                | Trabalho residual de simplificação permanece aberto; não bloqueia automaticamente o ciclo 33.                                                     |
-| 30                | Itens classificados pelo mapa §10; receitas por base e provas continuam exigindo destino explícito.                                               |
-| 31                | E0 implementado e pausado por resultado de playtest; não declarado novamente aprovado.                                                            |
-| 32                | Direção de interface e portões absorvidos pelo ciclo 33.                                                                                          |
-| 33                | Plano aprovado em vigor; ordem preservada, dependências e aceites auditados.                                                                      |
+| Ciclos rastreados | Disposição nesta auditoria                                                                                                                           |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01–06             | Histórico de fundação; não reabre implementação só por existir promessa antiga.                                                                      |
+| 07–12             | Partes feitas e propostas não iniciadas separadas pelo [índice](../cycles/README.md); Congresso, rastro e projeção confrontados com a direção atual. |
+| 13                | Antigo plano mestre, hoje referência; coalizão, eleição, autonomia e causalidade confrontadas com ciclo 33 e mapa.                                   |
+| 14–16             | Correspondência e formas anteriores do Gabinete; histórico de provas e decisões visuais.                                                             |
+| 17–18             | Ambição do Brasil inteiro e poderes; conteúdo reaproveitado pelo checklist e ciclo 33.                                                               |
+| 19                | API descartada; permanece a direção de avaliação determinística.                                                                                     |
+| 20                | Empresas absorvidas pelo corte da estatal.                                                                                                           |
+| 21–28             | Mesa, normas, corpo político, Presidente e polimento; versões anteriores não competem com o plano atual.                                             |
+| 29                | Trabalho residual de simplificação permanece aberto; não bloqueia automaticamente o ciclo 33.                                                        |
+| 30                | Itens classificados pelo mapa §10; receitas por base e provas continuam exigindo destino explícito.                                                  |
+| 31                | E0 implementado e pausado por resultado de playtest; não declarado novamente aprovado.                                                               |
+| 32                | Direção de interface e portões absorvidos pelo ciclo 33.                                                                                             |
+| 33                | Plano aprovado em vigor; ordem preservada, dependências e aceites auditados.                                                                         |
 
-As três [ADRs](adr/) foram confrontadas: domínio determinístico, vocabulário sem efeitos de LLM
+As três [ADRs](../adr/) foram confrontadas: domínio determinístico, vocabulário sem efeitos de LLM
 e pessoas fictícias permanecem. A antiga emenda de API da ADR 0001 ganhou aviso de perda de
 vigência. A escolha dos notáveis fixos exige explicitar sua exceção de geração, sem abandonar
 identidade fictícia ou usar uma tabela de preparo por pasta.
@@ -103,9 +103,9 @@ ativa nem prova de que a implementação ainda está no estado daquela data.
 
 ### P02. A nova arquitetura não pode herdar as garantias do catálogo antigo
 
-[O ministério](spec/the-cabinet.md), §§1, 3 e 4, prescrevia três especialistas com preparo 6 por
+[O ministério](../spec/the-cabinet.md), §§1, 3 e 4, prescrevia três especialistas com preparo 6 por
 pasta, criação apenas por divisão, destinos por assunto parecido e reação ao desaparecimento
-do nome. [Governo variável](spec/dynamic-government.md) e o [piloto](spec/government-pilot.md)
+do nome. [Governo variável](dynamic-government-2026-09-30.md) e o [piloto](government-pilot-2026-09-30.md)
 retiram essas inferências: experiências são persistentes, nomes não atribuem capacidade e
 responsabilidade formal não é execução.
 
@@ -188,7 +188,7 @@ com uma mesma faixa protegida por `constitution`, produziu:
 
 Reprodução local: copiar `tmp/history/recovery-2026-09-30/plan-audit-probe.mjs` para `tmp/` (os imports partem de lá) e rodar `node tmp/plan-audit-probe.mjs`; entrada `floor: 50`, `ceiling: 100`,
 `guard: "constitution"`, nível pedido 0. A função é de produção; a faixa é sintética.
-Resultado preservado na [evidência](evidence/plan-audit-2026-09-29.json).
+Resultado preservado na [evidência](../evidence/plan-audit-2026-09-29.json).
 
 Isso é comportamento legado intencional, não regressão atribuída ao protótipo. O plano novo
 exige separar competência jurídica e obediência extralegal. A gramática foi marcada; falta
@@ -318,7 +318,7 @@ portões completos da interface nova e playtests. A ordem das etapas 1–12 cont
 
 ## 4. Provas e limites da conclusão
 
-A sonda local executou sem erro e seus valores estão na [evidência](evidence/plan-audit-2026-09-29.json).
+A sonda local executou sem erro e seus valores estão na [evidência](../evidence/plan-audit-2026-09-29.json).
 O script de reprodução foi arquivado em `tmp/history/recovery-2026-09-30/`, pasta ignorada pelo Git.
 P07 chama `riteFor` com a entrada descrita; P08 usa a regra de petróleo do catálogo; P11 chama
 `openingLoyalty` e `deputyChances` para os 16 partidos. A evidência está versionável, mesmo que
@@ -344,8 +344,8 @@ Com autorização do Diretor, o piloto recebeu um recorte operacional isolado: c
 execução, filas, fundos, registros e repasses que disputam capacidade existente. As quatro
 escolhas agora têm consequências sintéticas; um quinto cenário verifica mudar prioridade sem
 reforma. São 18 provas novas, incluindo 200 cenários de seis períodos com recursos e prioridades
-variados. [Estado e limites](spec/government-pilot.md) e
-[evidência](evidence/government-operations-2026-09-30.json).
+variados. [Estado e limites](government-pilot-2026-09-30.md) e
+[evidência](../evidence/government-operations-2026-09-30.json).
 
 É avanço parcial de P03: demonstra a abstração de alguns efeitos antes de expandir vocabulário.
 Não fecha P02–P12, não integra o protótipo e não substitui revisão independente, calibração

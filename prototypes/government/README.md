@@ -2,8 +2,7 @@
 
 Ministérios como estrutura variável: o trabalho do Estado tem identidade própria, e a pasta é só
 quem responde por ele. Ensaio isolado, sem consumidor no jogo e sem campo no save. O desenho
-está em [governo variável](../../docs/spec/dynamic-government.md) e no
-[piloto](../../docs/spec/government-pilot.md); a história, no journal (entradas 103 a 122).
+está em [governo variável](../../docs/spec/dynamic-government.md); a história, no journal (entradas 103 a 122).
 
 ## Os módulos
 

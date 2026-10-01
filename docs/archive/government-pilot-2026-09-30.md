@@ -1,7 +1,7 @@
 # Governo variável — piloto de realismo e jogabilidade
 
 **29/09/2026 · Pesquisa e desenho, sem integração.** Complementa o
-[contrato de governo variável](dynamic-government.md). O Diretor pediu alta fidelidade ao Brasil
+[contrato de governo variável](dynamic-government-2026-09-30.md). O Diretor pediu alta fidelidade ao Brasil
 com equilíbrio de diversão. Fatos institucionais e propostas de jogo estão separados abaixo.
 
 **Correção do Diretor:** quantidades citadas eram exemplos. Não há número obrigatório de tipos,
@@ -499,7 +499,7 @@ Revisão independente, fontes reais, retrato presidencial, custos, vigência e u
 **Escopo definido pelo Diretor:** transformar o funcionamento do protótipo que ele está
 testando. Auditar e aprimorar durante o uso. Integrar o jogo completo, o Gabinete, a estatal
 ou o mandato de 2027 não é requisito desta entrega. O contrato de governo variável continua
-em [dynamic-government.md](dynamic-government.md); esta seção organiza sua aplicação na tela.
+em [dynamic-government.md](dynamic-government-2026-09-30.md); esta seção organiza sua aplicação na tela.
 
 ### Estado concreto e material aproveitável
 

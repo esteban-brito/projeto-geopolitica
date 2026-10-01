@@ -8,7 +8,7 @@
 
 > **Leitura atual — 29/09:** este documento preserva a proposta e as escolhas visuais de 26–27/09.
 > Para responsabilidades, pessoas e preparo, prevalecem [governo variável](dynamic-government.md)
-> e o [piloto](government-pilot.md). Garantir três especialistas com preparo 6, escolher destinos
+> consolidado em 01/10. Garantir três especialistas com preparo 6, escolher destinos
 > por nomes semelhantes, limitar criação a uma divisão e aplicar reação automática pelo verbo
 > são premissas anteriores, não requisitos novos. A inversa estrutural não resolve a perda de
 > eficácia de MP. O tratamento do elenco fixo de notáveis permanece a reconciliar com o cadastro
