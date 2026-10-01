@@ -7,53 +7,33 @@
 
 ## Para retomar em um minuto
 
-- **01/10, organização fechada.** O lote de 30/09 terminou:
-  - `tmp/posse/` foi para `tmp/history/posse/`, e os 33 registros soltos para
-    `tmp/history/recovery-2026-09-30/`. São 119 arquivos, com hash igual antes e depois, e nada
-    foi apagado ([registro](evidence/workspace-organization-close-2026-10-01.json));
-  - a versão da posse ligada ao motor agora é gerada em `tmp/build/posse.html`. Em `prototypes/`,
-    a guarda `tokens` lia o CSS do protótipo e dava 43 achados;
-  - as 5 provas de navegador da posse passaram nas duas alturas;
-  - READMEs dos protótipos, guia do agente e mapas de capturas e evidências foram reescritos.
+- **01/10, limpeza aprovada por ele e feita** (journal, entradas 123 e 124):
+  - a organização de 30/09 fechou; `tmp/posse/` e os logs soltos estão em `tmp/history/`;
+  - o repositório público não leva o runtime do canvas (código do claude.ai sem licença
+    declarada): ele fica em `vendor/posse/rt/`, ignorado; o ZIP de procedência está em
+    `tmp/history/`;
+  - saíram os ensaios sintéticos do Codex (3.118 linhas); ficam a estrutura por IDs, a busca e a ponte;
+  - quatro defeitos da posse consertados, cada um com prova que caiu antes
+    (`tests/browser/posse-defects.mjs`);
+  - o portão cobre `prototypes/` em tipos e links; `npm run posse` roda as seis provas da posse
+    e a auditoria (116 s), fora do `validate`; `npm run serve` gera a posse antes de subir;
+  - um contrato do [governo variável](spec/dynamic-government.md) no lugar de dois; quatro
+    documentos e as seções longas do handoff em `docs/archive/`;
+  - push de `caixa-de-entrada` (do `ed9f2cc` de 24/09 até hoje); a branch remota
+    `acoplamento-e-simulador`, igual ao `main`, foi apagada; `Desktop/cld-backups/` foi apagada
+    depois do push, e os relatórios em texto das auditorias de 26/09 ficaram em `tmp/history/`.
 
   `validate` verde em 01/10: 13 guardas, 68 sintéticas, zero links quebrados, tipos, lint,
-  formato, 531 testes, passeio e macaco (60 ações, semente 7, zero achados). Funcionalidades
-  novas seguem suspensas até ele testar o protótipo. Journal, entrada 123.
+  formato, 471 testes, passeio e macaco (60 ações, semente 7, zero achados).
 
-- **28–30/09, trabalho só do Codex.** A cota do Claude tinha acabado, e a revisão independente
-  nunca aconteceu (a tentativa deu 429). Ordem dele em 01/10: o Claude decide o que se aproveita
-  e o que se refaz. O que existe:
-  - em `prototypes/government/`: estrutura variável de ministérios por IDs, 152 atribuições e
-    busca com `e`, `ou`, `não`; `pilot`, `operations`, `demand` e `management` só rodam em
-    provas, com unidades inventadas;
-  - em `prototypes/posse/` e `vendor/posse/`: a posse do Claude ligada ao motor;
-  - o plano em [piloto](spec/dynamic-government.md) §11 e o contrato em
-    [governo variável](spec/dynamic-government.md);
-  - a [auditoria dos planos](archive/plan-audit-2026-09-29.md), com 12 achados;
-  - um conserto no redutor (`appoint` tira a pessoa da pasta anterior; exonerar vaga não muda o
-    estado), com prova em `tests/suites/posse-flow.mjs`.
-
-  A história está no journal, entradas 103 a 122. A lógica nova da tela vive como texto dentro
-  de `tools/prepare-posse.mjs`, trocada por substituição sobre o HTML do Claude.
-
-- **Defeitos vistos no protótipo em 01/10**, ainda sem conserto:
-  1. a frase "Vai para Escolher destino." leva o nome do botão;
-  2. a lista de destinos sai na ordem do ID interno;
-  3. depois de qualquer reforma, a base vira "—" e o hemiciclo apaga;
-  4. a chefe de gabinete diz "os partidos podem votar contra a medida" sem motor atrás;
-  5. as atribuições aparecem em minúscula na criação de pasta e com maiúscula no resto.
-
-  Os 49 erros do template cru no console e a tela fixa em 1280 px já estavam no original.
-
-- **Backups em `Desktop/cld-backups/`**, analisados em 01/10:
-  - os dois bundles estão íntegros e todos os commits deles já estão no repositório;
-  - os `.tar.gz` de 28 e 29/09 não guardam nada sem cópia além de versões antigas de documentos;
-  - só `cld-posse-2026-09-26.tgz` tem conteúdo único: 140 arquivos (38 MB), quase todos das três
-    auditorias da posse pelo Codex (relatórios, capturas, logs) e peças antigas da montagem.
-
-  Tudo está no mesmo disco. O `origin/caixa-de-entrada` parou em 24/09, então nenhum commit
-  desde então existe fora deste computador.
-
+- **Ordem dele em 01/10, a posse:** o foco é só a versão nova, e ela pode ser refeita do zero.
+  Cai a regra de 30/09 de preservar a tela do Claude linha por linha. Ele vê falta de polimento
+  depois do F5. Medido em 01/10: uma frase da criação aparece inteira aos 130 ms, antes da
+  animação; o brilho de fundo termina numa borda em y = 800, porque a tela tem 1280×800 fixos;
+  as fontes vêm do Google Fonts com troca tardia; com a CPU 4 vezes mais lenta, a montagem trava
+  158 ms e a animação, 55 ms; 49 erros de template no console. Proposta de refazer a posse
+  esperando a resposta dele.
+- **testar a posse:** `npm run serve` e <http://127.0.0.1:5173/tmp/build/posse.html>.
 - **direção (25/09):** sandbox ideológico com regras reais; realismo acima de tudo. Os documentos
   de design, do mais geral ao mais concreto: [especificação mestra](spec/master-spec.md) 1.1
   (autoridade) → [jogo em uma página](spec/game-in-one-page.md) (promessa e loop) →
@@ -72,15 +52,12 @@
   da Presidência; a revisão local v2o das 812 fichas (27/09) não foi publicada. Na v2o, a ficha
   fica 2,2 s ao sair do nome, as notas 1–2 são vermelhas, 3 verde amarelado, 4–5 verdes e 6
   dourado, e o botão da criação sorteia todos os campos com idade mínima de 35 anos;
-- **commits:** o último é `a75ef10` (26/09, 22:58); o journal guarda a lista por etapa. Ele
-  autorizou commit ao fim de cada etapa validada; push e merge seguem pedindo ordem;
-- **git:** tudo na branch `caixa-de-entrada`; `origin/caixa-de-entrada` está em `ed9f2cc` (24/09).
-  O `main` local e o remoto estão parados em 27/08; o merge é decisão dele;
-- **backup de 26/09, antes da interface nova:** a marca `antes-da-interface-nova` no git, mais
-  `cld-backup-2026-09-26.bundle` e `cld-posse-2026-09-26.tgz`, hoje em `Desktop/cld-backups/`;
-- **fora do repositório:** a quarentena `Desktop/cld-quarentena-tmp/` (750 MB) foi apagada em
-  26/09 com o sim dele; em 30/09 saíram 182 arquivos redundantes da Área de Trabalho
-  ([inventário](evidence/workspace-cleanup-2026-09-30.md)).
+- **git:** a branch `caixa-de-entrada` está publicada. O `main` local e o remoto estão parados em
+  27/08; o merge entra depois do teste dele (aprovado em 01/10). Commit ao fim de cada etapa
+  validada; push liberado em 01/10 junto com o plano aprovado;
+- **o que só existe neste disco:** `tmp/asset-sources/` (49 MB, fontes dos retratos e da madeira),
+  `tmp/history/` e o runtime do canvas. Uma cópia fora do computador depende dele;
+- **marca no Git:** `antes-da-interface-nova` (26/09), o estado antes de recomeçar a interface.
 
 ## Estado do motor e do processo
 
@@ -104,16 +81,13 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 
 ## Fila, em ordem
 
-**Agora (01/10):** a organização fechou; funcionalidades novas seguem suspensas.
+**Agora (01/10):** a limpeza fechou; funcionalidades novas seguem suspensas.
 
-1. **Ele testa o protótipo da posse** (`prototypes/posse/README.md`). Os achados do teste,
-   reproduzidos, entram antes de qualquer ampliação; os cinco defeitos de 01/10 (bloco acima)
-   são a primeira fila de consertos, com ordem dele.
-2. **Revisão do trabalho do Codex pelo Claude**, que decide o que fica e o que se refaz:
-   o conserto do redutor, `posse.mjs` na fachada, a estrutura e a busca, o gerador por
-   substituição de texto e os quatro ensaios só de prova.
-3. **O plano do protótipo**, depois do teste: [governo variável](spec/dynamic-government.md) §7,
-   §11 (currículos nas fichas, consequências, valor político da estrutura variável).
+1. **A posse nova**, refeita ou consertada conforme a resposta dele à proposta de 01/10 (bloco
+   acima). Os achados do teste dele, reproduzidos, entram antes de qualquer ampliação.
+2. **Merge de `caixa-de-entrada` no `main`**, depois do teste (aprovado em 01/10).
+3. **[Governo variável](spec/dynamic-government.md) §7**, nesta ordem: valor político da
+   estrutura, currículos nas fichas, decomposição jurídica, rito da MP, integração.
 
 **Depois, o plano do jogo inteiro** (ciclo 33), que não é requisito para testar o protótipo:
 

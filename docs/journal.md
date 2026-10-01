@@ -9975,3 +9975,33 @@ montagem. Tudo está no mesmo disco, e o remoto parou em 24/09.
 READMEs dos dois protótipos (de 250 para 50 linhas no do governo), guia do agente, mapas de
 capturas e evidências e o handoff foram reescritos; o handoff caiu de 804 para cerca de 600
 linhas, com a narrativa de 28 a 30/09 já guardada nas entradas 103 a 122.
+
+### 124 · Limpeza aprovada: repositório público, ensaios do Codex e a posse — 01/10
+
+Ele aprovou o plano inteiro. O repositório no GitHub é público e não recebia push desde 24/09.
+Antes de publicar, os três commits locais do dia foram refeitos sem o runtime do canvas (React
+com licença MIT mais código do claude.ai sem licença declarada) e sem o ZIP de 9,5 MB; os dois
+ficaram no disco, e o runtime passou a ser ignorado. Saíram também 3,1 MB sem uso de
+`vendor/posse/project/`. O push levou `caixa-de-entrada` de `ed9f2cc` até hoje, e a branch
+remota `acoplamento-e-simulador`, igual ao `main`, foi apagada. Com o histórico publicado, a
+pasta `Desktop/cld-backups/` (350 MB) foi apagada; os relatórios em texto das três auditorias
+da posse de 26/09 ficaram em `tmp/history/posse-audits-2026-09-26/`.
+
+Saíram os ensaios `pilot`, `operations`, `demand` e `management` (3.118 linhas com provas e
+demos): um motor de capacidade paralelo à MALHA, que a especificação proíbe no laboratório. As
+ideias que valiam foram para o contrato consolidado do governo variável (127 linhas no lugar de
+1.084). O piloto, a auditoria dos planos, o plano de organização, `world-design.md` e as seções
+longas do handoff foram para `docs/archive/`; os achados P04 a P12 da auditoria entraram no
+handoff, que caiu de 804 para 381 linhas.
+
+Quatro defeitos da posse foram consertados no gerador, cada um com prova de navegador que caiu
+antes (`tests/browser/posse-defects.mjs`). A comparação e a auditoria de UI declaram a única
+mudança de texto. Brechas fechadas: `prototypes/` entrou nos tipos e no verificador de links,
+que achou 22 referências a arquivos apagados ou movidos; `npm run posse` roda as seis provas e
+a auditoria; `npm run serve` gera a posse antes de subir. `validate` verde com 471 testes.
+
+Depois do push, ele disse que o F5 da posse não está polido e que o foco é só a versão nova,
+podendo refazê-la do zero. Gravado quadro a quadro: a frase da idade mínima aparece inteira aos
+130 ms, fora da animação; o brilho de fundo para numa borda em y = 800; as fontes vêm do Google
+Fonts; com a CPU 4 vezes mais lenta, a montagem trava 158 ms e a animação, 55 ms. A frase cita
+a Lei 15.230/2025, conferida no Planalto: a idade do candidato ao Executivo conta na data da posse.

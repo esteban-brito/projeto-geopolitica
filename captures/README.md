@@ -55,7 +55,7 @@ substituída, não acumulada.
 ### `probes/` — o rascunho de uma sessão
 
 - `posse/` — as provas de navegador do protótipo da posse (`tests/browser/posse*.mjs`), que
-  reescrevem a pasta a cada rodada;
+  reescrevem a pasta a cada rodada.
 
 ## Como nomear uma captura nova
 
