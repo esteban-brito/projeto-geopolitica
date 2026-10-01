@@ -38,9 +38,8 @@ Ele está **fora** do portão.
 Uma subpasta por decisão. Cada uma tem as variantes com nome que diz o que ela é, e uma
 `comparison.png` com todas juntas — que é a imagem que ele abre.
 
-- `month-in-index/` — ciclo 14, passo 3.4: onde entra o mês do texto para duas perguntas gêmeas
-  pararem de ler igual. **Aberta**, esperando decisão;
-- `type-scale/` — cinco escalas e a escolhida (`final-chosen.png`). Fechada.
+Nenhuma decisão aberta hoje. As duas antigas, da interface que vai ser substituída
+(`month-in-index` e `type-scale`), foram para `tmp/history/captures-decisions/` em 01/10.
 
 ### `defects/` — o "antes"
 
@@ -55,13 +54,8 @@ substituída, não acumulada.
 
 ### `probes/` — o rascunho de uma sessão
 
-- `measurements/` — geometria de uma peça num mês específico;
-- `discarded/` — tentativas descartadas de um ajuste visual;
-- `sweep/` — as oito cartas e o índice, fotografados de uma vez;
-- `old-walk/` — sobras de passos que o passeio não tem mais. **Não se refazem.**
 - `posse/` — as provas de navegador do protótipo da posse (`tests/browser/posse*.mjs`), que
   reescrevem a pasta a cada rodada;
-- `world/` — uma captura do pedido de pasta na carta; o gerador não existe mais.
 
 ## Como nomear uma captura nova
 
@@ -69,6 +63,3 @@ substituída, não acumulada.
 2. **O nome diz a peça, não a sessão** — `letter-question.png`, nunca `final2.png`;
 3. **Variante de decisão leva letra e descrição:** `a-end-of-subject.png`;
 4. **Inglês, sem acento, kebab-case**, como todo caminho do projeto.
-
-⚠ `probes/discarded/cabinet-24.png` tem 6 KB para 1440×980 — é captura em branco, e ficou para
-não apagar evidência de sessão anterior sem ele pedir.
