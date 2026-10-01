@@ -154,7 +154,7 @@ replace(
   `        question = pend.bulk ? 'Para onde vai todo o trabalho?' : 'Para onde vai “' + parts[i].text + '”?';
         const found = globalThis.PosseEngine.destinations(suggested.concat(rest).map(function (q) { return { id: q, parts: ownParts(q).concat(incoming(q)) }; }), S.destinationQuery || '');
         note = found.reason;
-        found.matches.forEach(function (match) { const q = match.id; const why = S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''; actions.push(act(label(q), (q === pend.dest[i] ? 'Destino atual. ' : '') + why, function () { const dest = pend.bulk ? pend.dest.map(function () { return q; }) : pend.dest.slice(); if (!pend.bulk) dest[i] = q; set({ destinationQuery: '', pending: { kind: 'end', dest: dest, edit: true, pick: null } }); })); });
+        found.matches.slice().sort(function (a, b) { return label(a.id).localeCompare(label(b.id), 'pt-BR'); }).forEach(function (match) { const q = match.id; const why = S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''; actions.push(act(label(q), (q === pend.dest[i] ? 'Destino atual. ' : '') + why, function () { const dest = pend.bulk ? pend.dest.map(function () { return q; }) : pend.dest.slice(); if (!pend.bulk) dest[i] = q; set({ destinationQuery: '', pending: { kind: 'end', dest: dest, edit: true, pick: null } }); })); });
         actions.push(act('Voltar', '', function () { set({ destinationQuery: '', pending: { kind: 'end', dest: pend.dest, edit: true, pick: null } }); }));`,
 );
 replace(
@@ -274,7 +274,7 @@ const newReforms = `      } else if (pend && (pend.kind === 'create' || pend.kin
         if (creating) {
           const found = globalThis.PosseEngine.works(parts.map(function (pt) { return { id: pt.id, label: pt.text }; }), S.destinationQuery || '');
           note = found.reason || (selected.length ? selected.length + ' atribuições selecionadas.' : 'Sem seleção, a pasta começa sem atribuições.');
-          parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + pt.text, checked ? 'Selecionada' : 'Permanece onde está até a confirmação.', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });
+          parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + cap(pt.text), checked ? 'Selecionada' : 'Permanece onde está até a confirmação.', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });
         } else note = 'O nome muda; atribuições e titular são conservados.';
         const ready = typeof pend.name === 'string' && pend.name.trim().length > 0 && pend.name.trim().length <= 120;
         const confirm = act(creating ? 'Criar ministério' : 'Confirmar nome', ready ? creating ? 'Move somente as atribuições selecionadas.' : 'Registra o nome escolhido.' : 'Preencha o nome.', function () {
@@ -293,13 +293,13 @@ const newReforms = `      } else if (pend && (pend.kind === 'create' || pend.kin
         question = 'Para onde vão as atribuições selecionadas?';
         const found = globalThis.PosseEngine.destinations(rest.map(function (q) { return { id: q, parts: ownParts(q) }; }), S.destinationQuery || '');
         note = found.reason;
-        found.matches.forEach(function (match) { actions.push(act(label(match.id), (S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''), function () { set({ destinationQuery: '', pending: Object.assign({}, pend, { target: match.id }) }); })); });
+        found.matches.slice().sort(function (a, b) { return label(a.id).localeCompare(label(b.id), 'pt-BR'); }).forEach(function (match) { actions.push(act(label(match.id), (S.destinationQuery ? match.parts.map(function (pt) { return pt.text; }).join(' · ') : ''), function () { set({ destinationQuery: '', pending: Object.assign({}, pend, { target: match.id }) }); })); });
         actions.push(act('Voltar às atribuições', '', function () { set({ destinationQuery: '', pending: Object.assign({}, pend, { destination: false }) }); })); actions.push(back);
       } else if (pend && pend.kind === 'transfer') {
         question = 'Quais atribuições serão transferidas?';
         const selected = pend.ids || [], parts = ownParts(sel), found = globalThis.PosseEngine.works(parts.map(function (pt) { return { id: pt.id, label: pt.text }; }), S.destinationQuery || '');
         note = found.reason || selected.length + ' atribuições selecionadas.';
-        parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + pt.text, checked ? 'Selecionada' : '', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });
+        parts.filter(function (pt) { return found.ids.indexOf(pt.id) >= 0; }).forEach(function (pt) { const checked = selected.indexOf(pt.id) >= 0; actions.push(act((checked ? '✓ ' : '') + cap(pt.text), checked ? 'Selecionada' : '', function () { set({ pending: Object.assign({}, pend, { ids: checked ? selected.filter(function (id) { return id !== pt.id; }) : selected.concat([pt.id]) }) }); }, checked)); });
         const next = act('Escolher destino', selected.length ? '' : 'Selecione uma atribuição.', function () { if (selected.length) set({ destinationQuery: '', pending: Object.assign({}, pend, { destination: true }) }); }, true);
         if (!selected.length) next.cls += ' off'; actions.push(next); actions.push(back);
       } else if (pend && pend.kind === 'merge' && !pend.with) {`;
@@ -327,6 +327,14 @@ replace(
 replace("T.recreated(LABEL[x])", "T.recreated(baseLabel(x))");
 replace("act('Recriar ' + LABEL[x],", "act('Recriar ' + baseLabel(x),");
 replace("'Desfaz a extinção. ' + LABEL[x] +", "'Desfaz a extinção. ' + baseLabel(x) +");
+replace(
+  "act(cap(pt.text), 'Vai para ' + label(pend.dest[k]) + '. Toque para trocar.',",
+  "act(cap(pt.text), pend.dest[k] ? 'Vai para ' + label(pend.dest[k]) + '. Toque para trocar.' : 'Sem destino. Toque para escolher.',",
+);
+replace(
+  "size: function (m) { return ' Agora são ' + m + ' ministérios.' + (m < 38 ? ' Com menos cargos, os partidos podem votar contra a medida.' : m > 38 ? ' Mais cargos agradam os partidos, e os jornais vão criticar.' : ''); },",
+  "size: function (m) { return ' Agora são ' + m + ' ministérios.'; },",
+);
 await mkdir(dirname(target), { recursive: true });
 await writeFile(target, html, "utf8");
 process.stdout.write(

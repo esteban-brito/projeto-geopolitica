@@ -132,7 +132,11 @@ try {
     .replace(/^  noPrecedent:[^\n]*\n/m, "")
     .replace(/^  reaction:[^\n]*\n/m, "")
     .replace(" Existiu em 2018.", "")
-    .replace(" Existiu até 2016.", "");
+    .replace(" Existiu até 2016.", "")
+    .replace(
+      " + (m < 38 ? ' Com menos cargos, os partidos podem votar contra a medida.' : m > 38 ? ' Mais cargos agradam os partidos, e os jornais vão criticar.' : '')",
+      "",
+    );
   assert.equal(
     prelude(engine),
     expected,

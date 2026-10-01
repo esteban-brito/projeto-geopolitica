@@ -8,7 +8,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "serve": "node tools/serve-static.mjs",
+    "serve": "node tools/prepare-posse.mjs && node tools/serve-static.mjs",
     "simulate": "node tools/simulate.mjs",
     "check": "node tests/run.mjs",
     "types": "tsc -p jsconfig.json",
@@ -19,6 +19,7 @@
     "screen": "node tests/browser/screen-cost.mjs",
     "walk": "node tests/browser/walk.mjs",
     "monkey": "node tests/browser/monkey.mjs",
+    "posse": "node tools/prepare-posse.mjs && node tests/browser/posse.mjs && node tests/browser/posse-reforms.mjs && node tests/browser/posse-defects.mjs && node tests/browser/posse-controls.mjs && node tests/browser/posse-motion.mjs && node tests/browser/posse-comparison.mjs && node tools/audit-posse-ui.mjs",
     "links": "node tools/check-links.mjs",
     "validate": "npm run check && npm run links && npm run types && npm run lint && npm run format && npm test && npm run walk && npm run monkey"
   },

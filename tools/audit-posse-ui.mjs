@@ -62,7 +62,11 @@ expectedPrelude = expectedPrelude
   .replace(/^  noPrecedent:[^\n]*\n/m, "")
   .replace(/^  reaction:[^\n]*\n/m, "")
   .replace(" Existiu em 2018.", "")
-  .replace(" Existiu até 2016.", "");
+  .replace(" Existiu até 2016.", "")
+  .replace(
+    " + (m < 38 ? ' Com menos cargos, os partidos podem votar contra a medida.' : m > 38 ? ' Mais cargos agradam os partidos, e os jornais vão criticar.' : '')",
+    "",
+  );
 assert.equal(
   prelude(current),
   expectedPrelude,
@@ -235,6 +239,10 @@ const annotations = [
     "Critério removido",
     "Elimina PARTNERS; lista de destinos passa a consultar os trabalhos atuais.",
   ],
+  [
+    "Conserto",
+    "Extinguir não anuncia reação dos partidos sem motor atrás; sobra a contagem de ministérios (defeito de 01/10).",
+  ],
   ["Texto removido", "Elimina T.noPrecedent e T.reaction integralmente."],
   ["Inicialização", "Liga a inicialização sem mudar o estado inicial do Claude."],
   [
@@ -312,7 +320,7 @@ const annotations = [
   ["Texto", "Retira precedente/reação genérica e explica a escolha de destinos pendente."],
   [
     "Distribuição",
-    "Escolha em lote e recomeço reutilizam os botões; não retomam destinos históricos.",
+    'Escolha em lote e recomeço reutilizam os botões; não retomam destinos históricos. Parte sem destino diz "Sem destino" em vez do rótulo do botão (defeito de 01/10).',
   ],
   [
     "Operações e controles",
