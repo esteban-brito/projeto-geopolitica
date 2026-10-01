@@ -1,0 +1,37 @@
+{
+  "reference": {
+    "file": "avatar-approved-reference.png",
+    "archive": "tmp/asset-sources/portraits/posse-approved-sheet.png",
+    "sha256": "a8a6250c9b0ccb1df10dda0b102063f9c17573832dd2411d041c1aca53221e6d"
+  },
+  "sheet": {
+    "width": 1536,
+    "height": 1024,
+    "columns": 3,
+    "rows": 2
+  },
+  "crop": {
+    "zoom": 1.1,
+    "positions": [
+      { "xPercent": 5, "yPercent": 4 },
+      { "xPercent": 50, "yPercent": 4 },
+      { "xPercent": 95, "yPercent": 4 },
+      { "xPercent": 4, "yPercent": 92 },
+      { "xPercent": 50, "yPercent": 92 },
+      { "xPercent": 97, "yPercent": 92 }
+    ]
+  },
+  "secondSheet": {
+    "archive": "tmp/asset-sources/portraits/posse-approved-sheet-b.png",
+    "sha256": "a752444c52ad5838915a1c094d206164011e3fcaa42cb8aa3f74c4cf77c404b1",
+    "positions": [
+      { "xPercent": 4.6, "yPercent": 4 },
+      { "xPercent": 50, "yPercent": 4 },
+      { "xPercent": 95.6, "yPercent": 4 },
+      { "xPercent": 4.2, "yPercent": 92 },
+      { "xPercent": 49.9, "yPercent": 92 },
+      { "xPercent": 97, "yPercent": 92 }
+    ]
+  },
+  "reviewSizesPx": [148, 64, 56, 52, 32]
+}

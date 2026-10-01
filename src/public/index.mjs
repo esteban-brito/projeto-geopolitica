@@ -11,6 +11,7 @@
  */
 
 export { CATALOG } from "../data/catalog.mjs";
+export { posseOf, posseDeputyOf } from "../application/posse.mjs";
 export { CAPACITY_TARGET, NEUTRAL } from "../data/areas.mjs";
 export { quorumOf } from "../data/bills.mjs";
 export { MONTHS_PER_TERM, MONTHS_PER_YEAR, SEATS, SIMPLE_MAJORITY } from "../data/regime.mjs";

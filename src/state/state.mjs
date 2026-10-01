@@ -282,8 +282,13 @@ export function reduce(state, action) {
     case "appoint":
     case "dismiss": {
       if (!CATALOG.cabinet.some(seat => seat.id === action.seat)) return state;
+      if (action.type === "dismiss" && !state.cabinet?.[action.seat]) return state;
       const kept = Object.fromEntries(
-        Object.entries(state.cabinet ?? {}).filter(([seat]) => seat !== action.seat),
+        Object.entries(state.cabinet ?? {}).filter(
+          ([seat, appointee]) =>
+            seat !== action.seat &&
+            (action.type === "dismiss" || appointee.id !== action.appointee.id),
+        ),
       );
       const cabinet =
         action.type === "appoint" ? { ...kept, [action.seat]: action.appointee } : kept;
