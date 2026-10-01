@@ -13,8 +13,7 @@ npm run serve
 - versão em transformação: <http://127.0.0.1:5173/tmp/build/posse.html>;
 - original do Claude, para comparar: <http://127.0.0.1:5173/vendor/posse/live.html>.
 
-Os endereços antigos `/tmp/posse/live.html` e `/tmp/posse/engine.html` continuam respondendo:
-o servidor os desvia para os dois acima. F5 recomeça a posse do zero.
+F5 recomeça a posse do zero.
 
 ## De onde vem cada parte
 

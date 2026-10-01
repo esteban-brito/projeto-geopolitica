@@ -11,7 +11,7 @@ O motor agora tem 16 partidos, `openingLoyalty`, `partyChance` e `chanceTargets`
 resolvida no motor; a posse ainda precisa consultar esse motor, integrar pessoas e gestos e passar
 pelas provas da seção 4. O achado 86 permanece aberto para a duração da coalizão.
 
-**Escopo de teste em 30/09:** a ponte experimental em `tmp/posse/engine.html` já consulta a base
+**Escopo de teste em 30/09:** a ponte experimental (hoje gerada em `tmp/build/posse.html`) já consulta a base
 estrutural do motor na abertura sem reforma. O Diretor quer transformar e testar esse protótipo,
 sem esperar o porte para o jogo completo. F5 reinicia a sessão do protótipo; a persistência prevista
 para a partida abaixo não se aplica a esse ensaio. A sequência atual está no

@@ -13,7 +13,6 @@
     foi apagado ([registro](evidence/workspace-organization-close-2026-10-01.json));
   - a versão da posse ligada ao motor agora é gerada em `tmp/build/posse.html`. Em `prototypes/`,
     a guarda `tokens` lia o CSS do protótipo e dava 43 achados;
-  - os links antigos `/tmp/posse/live.html` e `/tmp/posse/engine.html` respondem pelo servidor;
   - as 5 provas de navegador da posse passaram nas duas alturas;
   - READMEs dos protótipos, guia do agente e mapas de capturas e evidências foram reescritos.
 

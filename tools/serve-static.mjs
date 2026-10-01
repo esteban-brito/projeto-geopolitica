@@ -6,7 +6,6 @@ import { networkInterfaces } from "node:os";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize, resolve } from "node:path";
-import { POSSE_FILES } from "../prototypes/posse/paths.mjs";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const PORT = Number(process.env["PORT"] ?? 5173);
@@ -25,15 +24,7 @@ const TYPES = /** @type {Record<string, string>} */ ({
 
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");
-  const requested = normalize(decodeURIComponent(url.pathname))
-    .replace(/^([/\\])+/, "")
-    .replaceAll("\\", "/");
-  const relative =
-    requested === "tmp/posse/engine.html"
-      ? POSSE_FILES.preview
-      : requested.startsWith("tmp/posse/")
-        ? POSSE_FILES.vendor + "/" + requested.slice("tmp/posse/".length)
-        : requested;
+  const relative = normalize(decodeURIComponent(url.pathname)).replace(/^([/\\])+/, "");
   const path = join(ROOT, relative === "" ? "index.html" : relative);
 
   /* Nenhuma requisicao sai da raiz do projeto, mesmo com `..` no caminho. */
