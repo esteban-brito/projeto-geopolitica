@@ -114,6 +114,13 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 Ordens dele, da mais nova para a mais antiga. O texto inteiro de cada uma, até 01/10, está no
 [handoff arquivado](archive/handoff-2026-10-01.md).
 
+- **01/10, a interface evolui a partir da atual:** revisa a ordem de 26/09 ("recomeça do zero").
+  A posse se constrói dentro do jogo, no sistema de desenho que existe (tokens, fontes, Liquid Glass,
+  mola, ícones, textos), e substitui o formulário de nova partida. O estilo do ciclo 32 entra como
+  evolução do jogo inteiro, nunca como segunda aparência. Autorizada a versão 22 do save para
+  gravar a estrutura de ministérios da posse.
+- **01/10, antes de construir, objetivos:** ele pediu auditoria dos planos e objetivos claros, porque
+  "nem eu sei o que eu almejo desse jogo". O ciclo 34 espera essa definição.
 - **01/10, o trabalho do Codex:** de 28 a 30/09 ele usou o Codex porque a cota do Claude acabou, e
   o considera muito inferior. O Claude decide o que se aproveita. Limpeza e profissionalismo
   sempre; plano antes de executar, e ele autoriza.
