@@ -111,7 +111,8 @@ braços (com e sem filtro) na mesma rodada.
   `check`, `types` e `test` verdes; a devolução diz o que rodou, o que passou, o que quebrou e a
   prosa antes e depois por arquivo; e para.
 - **Canal:** `node tmp/agents/gemini.mjs enviar|ler|fila|limpar`. Mensagem enviada com o Gemini
-  trabalhando fica na fila: cheque `fila` antes. Commit sempre com `git add` por nome.
+  trabalhando fica na fila: cheque `fila` antes. Com ele trabalhando, nenhuma mudança do Claude
+  fica sem commit na árvore: o lote manda desfazer o que não passa na conferência, e ele desfaz. Commit sempre com `git add` por nome.
 - **Duas tabelas que provas leem:** a de contagens do handoff (`tests/suites/catalog.mjs`) e a de
   codinomes de `docs/standards.md` §3 (`tests/guards/codenames.mjs`). Formato e rótulos não mudam.
 

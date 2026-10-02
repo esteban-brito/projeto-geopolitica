@@ -7,7 +7,7 @@
 
 ## Para retomar em um minuto
 
-- **01/10, limpeza e organização**, aprovadas por ele (journal 123 a 128): um contrato só para os
+- **01/10, limpeza e organização**, aprovadas por ele (journal 123 a 129): um contrato só para os
   agentes ([`AGENTS.md`](../AGENTS.md)); índice com situação em cada pasta de `docs/`; o que foi
   superado em `docs/archive/`; 7.336 palavras acentuadas, cobradas pela guarda `accents`; o achado
   69 fechado; `tmp/` e `docs/evidence/` limpos. O repositório foi refeito como um mapa: a árvore está no [README](../README.md#o-mapa).
@@ -55,8 +55,12 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 
 **Agora**, nesta ordem:
 
-1. **Acentos de contexto** (`e`/`é`, `esta`/`está`, `a`/`à`, `tem`/`têm`): o lote do Gemini está
-   em `tmp/agents/to-gemini.md` e se confere por `node tools/accent-only.mjs`; os sub-lotes A a D (código) foram enviados em 02/10, a devolução chega em `tmp/agents/to-claude.md`, e o E (documentos) sai depois que eles fecharem;
+1. **Acentos de contexto** (`e`/`é`, `esta`/`está`, `a`/`à`, `tem`/`têm`), lote do Gemini em
+   `tmp/agents/to-gemini.md`: a parte A está feita (`212a8ac`, 20 arquivos, 1.345 palavras); faltam
+   B (`src/shell/`, `src/ui/`, `src/main.mjs`, `styles/`), C (`src/data/`), D (`tests/`, `tools/`,
+   `prototypes/`) e, por último, E (`docs/`). Cada parte se confere por
+   `node tools/accent-only.mjs --ignore-case <arquivos>` e pela revisão do sentido dos pares
+   ambíguos com `node tmp/review-accents.mjs <arquivos>` antes do commit;
 2. **Elenco inspirado na vida real**, no escopo das decisões vivas: feitos a emenda do ADR 0003 e a
    [pesquisa 21](research/21-inspired-cast.md); falta TCU, comandantes, imprensa, mercado e um
    perfil com fonte para cada ministro. Os eleitos entram depois de 25/10/2026;

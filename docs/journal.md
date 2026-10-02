@@ -158,3 +158,17 @@ Na auditoria dos 46 documentos ativos: 10 pesquisas ganharam o título "Pesquisa
 para onde a regra mora foram para o `AGENTS.md`; "o responsável" virou "o Diretor"; o revisor de
 cada etapa do ciclo 33 deixou de ser o Codex; a especificação mestra aponta para a visão e para o
 índice, em vez do jogo em uma página arquivado. Citação histórica correta ficou como estava.
+
+### 129 · A evidência limpa e a parte A dos acentos — 02/10/2026
+
+- **A evidência:** ficaram os 23 arquivos que o código, as folhas e os créditos citam. Saíram 19
+  registros de 29/09 a 01/10 (cerca de 5,7 MB), que só o journal e o arquivo citavam, para
+  `docs/archive/evidence/`; o registro que a auditoria da posse lê foi para junto do canvas. Dois
+  links desses registros já estavam quebrados, porque a pasta não passava pela verificação.
+- **Os acentos de contexto, parte A:** o Gemini acentuou 1.345 palavras em 20 arquivos do domínio,
+  da aplicação, do estado e da fachada (`212a8ac`). Cada arquivo passou por `tools/accent-only.mjs`
+  enquanto ele trabalhava, e o Claude revisou o sentido dos 185 pares ambíguos: todos certos.
+- **Um erro do Claude no caminho:** a mudança dele na ferramenta de conferência estava sem commit;
+  o Gemini, seguindo o lote, a desfez, e o vigia passou a rodar cego. A ferramenta ganhou
+  `--ignore-case` com commit, o vigia passou a acusar qualquer falha, e o `AGENTS.md` ganhou a regra:
+  com o Gemini trabalhando, nenhuma mudança do Claude fica sem commit.
