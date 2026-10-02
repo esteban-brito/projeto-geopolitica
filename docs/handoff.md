@@ -64,7 +64,8 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 2. **Elenco inspirado na vida real**, no escopo das decisões vivas: feitos a emenda do ADR 0003 e a
    [pesquisa 21](research/21-inspired-cast.md); falta TCU, comandantes, imprensa, mercado e um
    perfil com fonte para cada ministro. Os eleitos entram depois de 25/10/2026;
-3. **As partidas Xi e Lee escritas** como se ele jogasse, no jogo pronto, com desfecho realista
+3. **As partidas Xi e Lee escritas** como se ele jogasse Geopolitical Simulator, Democracy 4 ou
+   Football Manager; servem de régua, leitura e roteiro de teste; no jogo pronto, com desfecho realista
    mesmo que fracassem; depois de 25/10;
 4. **O [ciclo 34](cycles/34-posse-rebuilt.md)**, a posse dentro do jogo: espera a ordem dele.
 
