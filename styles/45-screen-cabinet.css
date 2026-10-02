@@ -535,7 +535,7 @@
     font-weight: 700;
     color: var(--sheet-ink);
   } /* ⚠ UM DEGRAU A MENOS NA CAIXA INTEIRA: `--text-note` (12,5px) vivia aqui e em NENHUM outro
-     lugar da bandeja, e um tamanho que aparece uma vez só não é degrau de escala — é exececao.
+     lugar da bandeja, e um tamanho que aparece uma vez só não é degrau de escala — é exceção.
      A caixa passou de cinco tamanhos para quatro. */
   .annex__read small {
     font-size: var(--text-body);
