@@ -172,3 +172,23 @@ cada etapa do ciclo 33 deixou de ser o Codex; a especificação mestra aponta pa
   o Gemini, seguindo o lote, a desfez, e o vigia passou a rodar cego. A ferramenta ganhou
   `--ignore-case` com commit, o vigia passou a acusar qualquer falha, e o `AGENTS.md` ganhou a regra:
   com o Gemini trabalhando, nenhuma mudança do Claude fica sem commit.
+
+### 130 · Os acentos de contexto completos — 02/10/2026
+
+O Gemini acentuou o que só a leitura decide em todo comentário de código e documento ativo, em cinco
+partes: A (`212a8ac`), B (`8781a4b`), C (`0c43548`), D (`cc4ab69`) e E (`98b8c84`), com 165
+arquivos no total. Um vigia rodava `tools/accent-only.mjs --ignore-case` a cada 20 s; o Claude
+revisou o sentido de cada par ambíguo antes de cada commit.
+
+Os erros e como se resolveram:
+
+- o Gemini apagou uma linha de comentário, juntou outra e acrescentou um "de"; a conferência dele
+  mesmo pegou os três, e ele desfez antes da devolução;
+- uma crase errada passou pela máquina, porque só o sentido a pega ("ficaram verdes às duas
+  vezes"); o Claude a corrigiu;
+- dois defeitos antigos apareceram na revisão: caracteres chineses no lugar de "cooperação" na
+  pesquisa 09, desde 09/09, e "exececao" num comentário de folha. Os dois foram corrigidos.
+
+A medida que o Claude fez da parte E superestimava o trabalho: das 976 linhas sem acento com
+palavra ambígua, quase todas tinham "e" conjunção, que está certo. Só a pesquisa 09 estava
+inteira sem acento.
