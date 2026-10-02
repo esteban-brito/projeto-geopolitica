@@ -1,13 +1,13 @@
-/* O ELENCO — o vocabulário com que a republica ganha gente. */
+/* O ELENCO — o vocabulário com que a república ganha gente. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
-/* ⚠ ELAS TINHAM UM ANDAR SOCIAL SÓ, E ISSO ERA UM DEFEITO DE MATERIA-PRIMA. */
+/* ⚠ ELAS TINHAM UM ANDAR SOCIAL SÓ, E ISSO ERA UM DEFEITO DE MATÉRIA-PRIMA. */
 
 /* ⚠ O GÊNERO MORA NA MESMA LINHA DO NOME, e não numa segunda lista: o sinete precisa dele
    para escolher a silhueta, e duas listas paralelas seriam duas fontes da mesma verdade —
    divergiriam no dia em que alguém acrescentasse um nome só numa delas.
-   A ORDEM E A MESMA DE ANTES, e isso importa: o gerador sorteia por índice a partir da
+   A ORDEM É A MESMA DE ANTES, e isso importa: o gerador sorteia por índice a partir da
    semente, então reordenar trocaria o elenco inteiro de toda partida já salva. */
 
 /** @typedef {{ name: string, gender: "f" | "m" }} Given */
@@ -69,7 +69,7 @@ export const GENDER_OF = new Map(GIVEN_NAMES.map(given => [given.name, given.gen
 
 /** @type {ReadonlyArray<string>} */
 export const SURNAMES = [
-  /* SIMPLES — e agora eles são a MAIORIA, que e a proporção do país. */
+  /* SIMPLES — e agora eles são a MAIORIA, que é a proporção do país. */
   "Alencastro",
   "Bonfim",
   "Camargo",
@@ -108,7 +108,7 @@ export const SURNAMES = [
 const OFFICES = ["speaker", "senate", "rapporteur", "leader", "chief"];
 
 /* ── AS AMBIÇÕES ───────────────────────────────────────────────────────────── O que a pessoa
-   QUER, e e isso que a distingue de uma bancada. */
+   QUER, e é isso que a distingue de uma bancada. */
 
 /** @type {ReadonlyArray<string>} */
 export const AMBITIONS = [
@@ -120,7 +120,7 @@ export const AMBITIONS = [
   "state",
   /* Quer uma vaga no tribunal. */
   "court",
-  /* Quer continuar onde esta. */
+  /* Quer continuar onde está. */
   "seat",
 ];
 
@@ -129,7 +129,7 @@ export const ARCHETYPE_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
   bloc: { kind: "id" },
-  /* ⚠ E ESTE E O DEFEITO QUE `standards.md` JÁ NOMEIA — "lista declarada e não cobrada" —,
+  /* ⚠ E ESTE É O DEFEITO QUE `standards.md` JÁ NOMEIA — "lista declarada e não cobrada" —,
      com `CHANNELS` e `FAMILIES` citadas por nome. */
   office: { kind: "text", values: OFFICES },
   economicShift: { kind: "number", min: -40, max: 40 },
@@ -145,21 +145,21 @@ export const ARCHETYPE_SCHEMA = {
  * @property {string} label - como o jogador reconhece o sujeito em uma linha
  * @property {string} bloc - o bloco de onde ele sai
  * @property {string} office - o cargo que ele ocupa; um de `OFFICES`
- * @property {number} economicShift - o quanto ele se afasta do bloco, no eixo economico
+ * @property {number} economicShift - o quanto ele se afasta do bloco, no eixo econômico
  * @property {number} libertyShift - idem, no eixo de liberdades
- * @property {number} venalityShift - o quanto ele e mais (ou menos) venal que o bloco
- * @property {number} reachMin - fracao MINIMA da bancada que ele de fato arrasta
- * @property {number} reachMax - fracao maxima
+ * @property {number} venalityShift - o quanto ele é mais (ou menos) venal que o bloco
+ * @property {number} reachMin - fração MÍNIMA da bancada que ele de fato arrasta
+ * @property {number} reachMax - fração máxima
  */
 
 /* ── OS ARQUÉTIPOS ───────────────────────────────────────────────────────────
    Um por cargo da onda 1, mais um líder por bloco. O `reach` impede a pessoa de virar a
    bancada inteira: o líder arrasta uma parte, e a que ele NÃO arrasta continua votando
-   pela ideologia do bloco — e e isso que faz compra-lo ser barato e insuficiente ao mesmo
+   pela ideologia do bloco — e é isso que faz comprá-lo ser barato e insuficiente ao mesmo
    tempo.
 
-   ⚠ AS FAIXAS SÃO PRIMEIRO CHUTE, declarado como o de ECLUSA e o da MALHA. O que NÃO e
-   chute e a RAZÃO entre elas: o presidente da Camara arrasta mais que qualquer líder,
+   ⚠ AS FAIXAS SÃO PRIMEIRO CHUTE, declarado como o de ECLUSA e o da MALHA. O que NÃO é
+   chute é a RAZÃO entre elas: o presidente da Câmara arrasta mais que qualquer líder,
    porque o poder dele vem da mesa e não da bancada. */
 
 /** @type {ReadonlyArray<Archetype>} */
@@ -169,11 +169,11 @@ export const ARCHETYPES = [
     label: "cacique da Mesa",
     bloc: "pcn",
     office: "speaker",
-    /* Ele não e o centro do próprio bloco: quem chega a presidencia da Camara chega
-       negociando com todos, e isso o puxa para o meio do plenario. */
+    /* Ele não é o centro do próprio bloco: quem chega à presidência da Câmara chega
+       negociando com todos, e isso o puxa para o meio do plenário. */
     economicShift: -8,
     libertyShift: 4,
-    /* MAIS VENAL QUE O PRÓPRIO CENTRAO, e não e cinismo do catálogo: o cargo se conquista
+    /* MAIS VENAL QUE O PRÓPRIO CENTRÃO, e não é cinismo do catálogo: o cargo se conquista
        distribuindo, e quem o conquistou deve favores a todos. */
     venalityShift: 0.03,
     reachMin: 0.5,
@@ -195,8 +195,8 @@ export const ARCHETYPES = [
     label: "relator de orçamento",
     bloc: "fbr",
     office: "rapporteur",
-    /* O relator e o cargo mais técnico e o mais caro: ele não entrega votos, ele entrega
-       TEXTO — e por isso o alcance dele e baixo e o preço não. */
+    /* O relator é o cargo mais técnico e o mais caro: ele não entrega votos, ele entrega
+       TEXTO — e por isso o alcance dele é baixo e o preço não. */
     economicShift: 2,
     libertyShift: -2,
     venalityShift: 0.02,
@@ -358,22 +358,22 @@ export const CAST_SCHEMA = {
 
 /**
  * @typedef {object} CastParameters
- * @property {number} memoryDecay - quanto do saldo de favores sobra a cada mes
- * @property {number} favourWeight - o quanto verba PAGA credita na memoria
+ * @property {number} memoryDecay - quanto do saldo de favores sobra a cada mês
+ * @property {number} favourWeight - o quanto verba PAGA credita na memória
  * @property {number} betrayalWeight - o quanto promessa quebrada debita
  * @property {number} memoryCap - o teto do saldo, para os dois lados
  * @property {number} successionDrag - o quanto quem quer 2030 resiste a mais
  * @property {number} courtDrag - o quanto quem quer o tribunal desconta da verba
  * @property {number} stateLift - o quanto a emenda vale a mais para quem quer o governo do
  * próprio estado
- * @property {number} seatStreet - o quanto a rua desloca o que o candidato a reeleicao
+ * @property {number} seatStreet - o quanto a rua desloca o que o candidato a reeleição
  * reconhece, por ponto cheio de aprovação
- * @property {number} cabinetLift - o quanto a pasta atendida vale para quem quer ministerio
+ * @property {number} cabinetLift - o quanto a pasta atendida vale para quem quer ministério
  */
 
 /* E A TRAIÇÃO PESA MAIS QUE O FAVOR, pela mesma razão que a satisfação de SONDA
-   cai três vezes mais rapido do que sobe: e o achado mais consistente que existe
-   sobre reciprocidade, e sem ele o jogo ensinaria que da para queimar alguém e
+   cai três vezes mais rápido do que sobe: é o achado mais consistente que existe
+   sobre reciprocidade, e sem ele o jogo ensinaria que dá para queimar alguém e
    comprar de volta pelo mesmo preço. */
 
 /** @type {CastParameters} */
@@ -385,17 +385,17 @@ export const CAST = {
   /* Quem quer o Planalto em 2030 ganha com o governo fraco, e por isso resiste a mais mesmo
      pago. */
   successionDrag: 0.35,
-  /* ⚠ AS QUATRO SÃO PRIMEIRO CHUTE, como as faixas dos arquétipos — o que não e chute e a
-     RAZÃO entre elas, e ela e a mesma em todas: nenhuma chega ao peso da emenda cheia, então
+  /* ⚠ AS QUATRO SÃO PRIMEIRO CHUTE, como as faixas dos arquétipos — o que não é chute é a
+     RAZÃO entre elas, e ela é a mesma em todas: nenhuma chega ao peso da emenda cheia, então
      nenhuma ambição decide uma votação sozinha. */
   /* Dinheiro move pouco quem quer uma toga: metade do que move os outros. Falta o outro lado
      — a indicação —, e ele não existe no jogo ainda. */
   courtDrag: 0.5,
-  /* Quem vai disputar o próprio estado precisa levar obra para casa, e emenda e o único
+  /* Quem vai disputar o próprio estado precisa levar obra para casa, e emenda é o único
      dinheiro do jogo que ele carimba. */
   stateLift: 0.3,
   /* Governo popular compra mais barato o baixo clero, e governo impopular o perde: com 60% de
-     otimo/bom ele reconhece 0,125 de emenda a mais, e com 10% o mesmo tanto a menos. */
+     ótimo/bom ele reconhece 0,125 de emenda a mais, e com 10% o mesmo tanto a menos. */
   seatStreet: 0.5,
   /* Uma pasta 25% acima do gasto de abertura vale 0,1 de emenda para quem a quer. */
   cabinetLift: 0.4,

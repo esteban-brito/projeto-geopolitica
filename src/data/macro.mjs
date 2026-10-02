@@ -33,27 +33,27 @@ export const MACRO_SCHEMA = {
  * @typedef {object} MacroParameters
  * @property {number} potentialGrowth - crescimento potencial anual de base
  * @property {number} capacityLift - quanto a capacidade do Estado soma ao potencial
- * @property {number} taxDrag - quanto 1 ponto de carga tributaria tira do PIB
+ * @property {number} taxDrag - quanto 1 ponto de carga tributária tira do PIB
  * @property {number} rateDrag - quanto 1 ponto de juro real tira do PIB
  * @property {number} fiscalMultiplier - quanto o impulso fiscal soma ao PIB
  * @property {number} inflationTarget - a meta
  * @property {number} inflationTolerance - a banda da meta, para cada lado
  * @property {number} anchoring - o quanto a expectativa gruda na meta, de 0 a 1
- * @property {number} phillips - quanto o hiato pressiona preco
+ * @property {number} phillips - quanto o hiato pressiona preço
  * @property {number} neutralRate - o juro real que nem estimula nem freia
- * @property {number} taylorInflation - reacao do BC ao desvio da meta
- * @property {number} taylorGap - reacao do BC ao hiato
- * @property {number} rateSmoothing - o quanto o BC alisa o proprio movimento
+ * @property {number} taylorInflation - reação do BC ao desvio da meta
+ * @property {number} taylorGap - reação do BC ao hiato
+ * @property {number} rateSmoothing - o quanto o BC alisa o próprio movimento
  * @property {number} naturalUnemployment - a taxa que sobra com hiato zero
  * @property {number} okun - quanto o hiato move o desemprego
- * @property {number} floatingDebt - fracao da divida atrelada a taxa basica
- * @property {number} legacyRate - o custo medio do estoque que NAO acompanha a taxa
- * @property {number} riskPremium - a inclinacao do premio de risco, por ponto ao
+ * @property {number} floatingDebt - fração da dívida atrelada à taxa básica
+ * @property {number} legacyRate - o custo médio do estoque que NAO acompanha a taxa
+ * @property {number} riskPremium - a inclinação do prêmio de risco, por ponto ao
  * quadrado de dívida acima da herdada
  * @property {number} initialInflation
  * @property {number} initialRate
  * @property {number} initialUnemployment
- * @property {number} initialPopulation - em milhoes
+ * @property {number} initialPopulation - em milhões
  * @property {number} populationGrowth - ao ano
  */
 
@@ -61,7 +61,7 @@ export const MACRO_SCHEMA = {
 export const MACRO = {
   /* Fonte: consenso de estimativas de PIB potencial, na faixa de 1,5% a 2,5%. */
   potentialGrowth: 0.02,
-  /* A 0,03, um país com todos os índices no teto cresce ~5% em vez de 2% — que e a distancia
+  /* A 0,03, um país com todos os índices no teto cresce ~5% em vez de 2% — que é a distância
      entre o Brasil e um país que resolveu seus gargalos. */
   capacityLift: 0.03,
   /* A 0,35, subir a carga em 1 ponto do PIB tira 0,35 ponto de crescimento — na faixa das
@@ -70,18 +70,18 @@ export const MACRO = {
   taxDrag: 0.35,
   /* Juro real freia. */
   rateDrag: 0.25,
-  /* Gasto público estimula, e MENOS do que ele custa: multiplicador abaixo de 1 e o consenso
+  /* Gasto público estimula, e MENOS do que ele custa: multiplicador abaixo de 1 é o consenso
      para gasto corrente em economia com juro alto. */
   fiscalMultiplier: 0.6,
 
-  /* Meta de inflação continua, 3%. Fonte: CMN. */
+  /* Meta de inflação contínua, 3%. Fonte: CMN. */
   inflationTarget: 0.03,
   /* A banda de tolerância do regime, 1,5 ponto para cada lado. Fonte: CMN.
      ⚠ ELA MORA AQUI E NÃO NA TELA: duas telas liam a mesma pergunta com réguas
      diferentes — Finanças acusava a partir de 4,5% e a barra só a partir de 7,5%. */
   inflationTolerance: 0.015,
-  /* A 0,6, a expectativa e 60% meta e 40% inflação passada — um país com credibilidade
-     imperfeita, que e o caso. */
+  /* A 0,6, a expectativa é 60% meta e 40% inflação passada — um país com credibilidade
+     imperfeita, que é o caso. */
   anchoring: 0.6,
   phillips: 0.35,
 
@@ -92,20 +92,20 @@ export const MACRO = {
   taylorGap: 0.5,
   rateSmoothing: 0.7,
 
-  /* Fonte: PNAD Continua, faixa estrutural de 7% a 9%. */
+  /* Fonte: PNAD Contínua, faixa estrutural de 7% a 9%. */
   naturalUnemployment: 0.08,
   okun: 0.4,
 
-  /* ⚠ A FRAÇÃO DA DÍVIDA QUE ACOMPANHA A SELIC, e ela e a peça que faz juro alto virar
-     crise fiscal. A ancora e publica: cada 1 p.p. de Selic custa cerca de R$ 40 bi ao ano,
-     e com dívida bruta perto de R$ 9,4 tri isso da 45% do estoque atrelado a taxa básica. */
+  /* ⚠ A FRAÇÃO DA DÍVIDA QUE ACOMPANHA A SELIC, e ela é a peça que faz juro alto virar
+     crise fiscal. A âncora é pública: cada 1 p.p. de Selic custa cerca de R$ 40 bi ao ano,
+     e com dívida bruta perto de R$ 9,4 tri isso dá 45% do estoque atrelado à taxa básica. */
   floatingDebt: 0.45,
   /* ⚠ O RESTO DO ESTOQUE TAMBÉM PAGA JURO, e esquecer isso foi o defeito que a simulação
      pegou. */
   legacyRate: 0.09,
 
-  /* A INCLINAÇÃO DO PRÊMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT de
-     ECLUSA e o TABLE da Mesa. O que NÃO e chute e a forma: convexa, porque o mercado
+  /* A INCLINAÇÃO DO PRÊMIO DE RISCO, e ela é PRIMEIRO CHUTE DECLARADO — como o PIVOT de
+     ECLUSA e o TABLE da Mesa. O que NÃO é chute é a forma: convexa, porque o mercado
      tolera e depois foge. Em cima da dívida herdada de 78%, +10 p.p. custam 0,5 ponto de
      juro a mais e incomodam; +20 p.p. custam 2,0 e doem; +50 p.p. custam 12,5 e são crise.
      Um prêmio LINEAR ensinaria que "mais um pouco" custa igual no começo e na beira do
@@ -115,8 +115,8 @@ export const MACRO = {
   initialInflation: 0.042,
   initialRate: 0.105,
   initialUnemployment: 0.068,
-  /* Populacao em milhoes, e o crescimento que o IBGE projeta — desacelerando, e e por isso
-     que o bônus demografico acabou e a previdência aperta. */
+  /* População em milhões, e o crescimento que o IBGE projeta — desacelerando, e é por isso
+     que o bônus demográfico acabou e a previdência aperta. */
   initialPopulation: 213,
   populationGrowth: 0.004,
 };

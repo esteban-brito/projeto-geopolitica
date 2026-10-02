@@ -1,4 +1,4 @@
-/* OS BLOCOS PARTIDARIOS — o espaço ideológico do Congresso. */
+/* OS BLOCOS PARTIDÁRIOS — o espaço ideológico do Congresso. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -7,7 +7,7 @@ export const PARTY_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
   sigla: { kind: "text" },
-  /* ⚠ O ARTIGO E VOCABULÁRIO, e por isso ele mora no catálogo e não no template. */
+  /* ⚠ O ARTIGO É VOCABULÁRIO, e por isso ele mora no catálogo e não no template. */
   article: { kind: "text" },
   economic: { kind: "number", min: 0, max: 100 },
   liberty: { kind: "number", min: 0, max: 100 },
@@ -19,20 +19,20 @@ export const PARTY_SCHEMA = {
 };
 
 /**
- * ⚠ TODA SIGLA E INVENTADA e nenhuma existe no registro do TSE.
+ * ⚠ TODA SIGLA É INVENTADA e nenhuma existe no registro do TSE.
  *
  * @typedef {object} Party
  * @property {string} id
- * @property {string} label - o nome que a interface mostra; ATRIBUTO, nao identidade
- * @property {string} sigla - a sigla, e ela e o nome CURTO da bancada na tela estreita.
- * @property {string} [article] - a contracao com que a prosa se refere a ele: `do`, `da`.
+ * @property {string} label - o nome que a interface mostra; ATRIBUTO, não identidade
+ * @property {string} sigla - a sigla, e ela é o nome CURTO da bancada na tela estreita.
+ * @property {string} [article] - a contração com que a prosa se refere a ele: `do`, `da`.
  * monta bancadas a partir de PESSOAS, e uma pessoa se refere pelo nome — não há
- * contração a fazer com "Onofre Bastos Quirino". O campo e do vocabulário dos
+ * contração a fazer com "Onofre Bastos Quirino". O campo é do vocabulário dos
  * blocos deste catálogo, e `catalogViolations` cobra todos eles.
  * @property {number} economic
  * @property {number} liberty
- * @property {number} venalityEconomic - o preco de ceder em pauta economica
- * @property {number} venalityLiberty - o preco de ceder em liberdades individuais
+ * @property {number} venalityEconomic - o preço de ceder em pauta econômica
+ * @property {number} venalityLiberty - o preço de ceder em liberdades individuais
  * @property {number} seats
  * @property {true} [pragmatic] - negocia com qualquer governo: aceita pasta longe no Nolan
  * @property {true} [neverBase] - recusa ministério de qualquer Presidente
@@ -230,4 +230,4 @@ export const PARTIES = [
   },
 ];
 
-/* O TAMANHO DA CAMARA E AS MAIORIAS MUDARAM DE ENDEREÇO. */
+/* O TAMANHO DA CÂMARA E AS MAIORIAS MUDARAM DE ENDEREÇO. */

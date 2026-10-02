@@ -1,13 +1,13 @@
-/* ÂNCORAS DE 2024/2025, e todo valor deste arquivo se pendura nelas: orcamento primário da
-   Uniao   ~R$ 2.300 bi  (STN) RGPS — previdência social     R$ 982,5 bi  (PLOA 2025) pessoal
-   e encargos        R$ 398,1 bi  (Tesouro Transparente) piso da saude — 15% da RCL    R$
+/* ÂNCORAS DE 2024/2025, e todo valor deste arquivo se pendura nelas: orçamento primário da
+   União   ~R$ 2.300 bi  (STN) RGPS — previdência social     R$ 982,5 bi  (PLOA 2025) pessoal
+   e encargos        R$ 398,1 bi  (Tesouro Transparente) piso da saúde — 15% da RCL    R$
    231,0 bi  (CF art.
    2025. Modelar a flutuação exige o LASTRO separar RCL e RLI da receita, e fica
    declarada como ausente em vez de aproximada em silêncio. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
-/* O QUE PROTEGE O PISO, e portanto quanto custa fura-lo. */
+/* O QUE PROTEGE O PISO, e portanto quanto custa furá-lo. */
 export const GUARDS = /** @type {const} */ (["none", "law", "constitution"]);
 
 /** @type {Schema} */
@@ -24,11 +24,11 @@ export const PROGRAM_SCHEMA = {
   floor: { kind: "number", min: 0, max: 100 },
   ceiling: { kind: "number", min: 0, max: 100 },
   guard: { kind: "text" },
-  /* ⚠ A VINCULAÇÃO, e ela e OPCIONAL de propósito: a esmagadora maioria dos programas obriga
+  /* ⚠ A VINCULAÇÃO, e ela é OPCIONAL de propósito: a esmagadora maioria dos programas obriga
      por PONTOS, e só três obrigam por FRAÇÃO DA RECEITA. */
   bound: { kind: "number", min: 0, max: 1, optional: true },
-  /* ⚠ A RENÚNCIA DE RECEITA, e ela e o oposto de uma rubrica: ninguém empenha, a Fazenda
-     deixa de arrecadar. Ausente quer dizer "isto e gasto", que e o caso de 37 dos 38. */
+  /* ⚠ A RENÚNCIA DE RECEITA, e ela é o oposto de uma rubrica: ninguém empenha, a Fazenda
+     deixa de arrecadar. Ausente quer dizer "isto é gasto", que é o caso de 37 dos 38. */
   waiver: { kind: "flag", optional: true },
   weight: { kind: "number", min: 0, max: 5 },
   lag: { kind: "number", min: 0, max: 48 },
@@ -37,29 +37,29 @@ export const PROGRAM_SCHEMA = {
 /**
  * @typedef {object} Program
  * @property {string} id
- * @property {string} area - a area de governo a que ele pertence
+ * @property {string} area - a área de governo a que ele pertence
  * @property {string} label - o nome que a interface mostra
  * @property {string} unit - o que a intensidade significa no mundo
- * @property {number} economic - onde ESTE gasto fica no eixo economico
+ * @property {number} economic - onde ESTE gasto fica no eixo econômico
  * @property {number} liberty - onde ele fica no eixo de liberdades
- * @property {number} threat - o quanto mexer nele ataca a maquina
- * @property {number} cost - bilhoes/ano com o programa em intensidade 100
+ * @property {number} threat - o quanto mexer nele ataca a máquina
+ * @property {number} cost - bilhões/ano com o programa em intensidade 100
  * @property {number} initial - a intensidade herdada na posse, de 0 a 100
- * @property {number} floor - ate onde a caneta alcanca sem mudar a lei
+ * @property {number} floor - até onde a caneta alcança sem mudar a lei
  * @property {number} ceiling - o teto que a lei vigente permite
  * @property {string} guard - o que protege o piso; um de `GUARDS`
- * @property {number} [bound] - a VINCULACAO, em fracao da receita. Ausente na maioria,
+ * @property {number} [bound] - a VINCULAÇÃO, em fração da receita. Ausente na maioria,
  * e a ausência significa "obriga por pontos, e não por fração"
- * @property {true} [waiver] - RENUNCIA DE RECEITA, e nao gasto: ausente na esmagadora
- * maioria, e a ausência significa "isto e uma rubrica que alguém empenha"
- * @property {number} weight - o peso dele no indice da area
- * @property {number} lag - meses ate o efeito chegar
+ * @property {true} [waiver] - RENÚNCIA DE RECEITA, e não gasto: ausente na esmagadora
+ * maioria, e a ausência significa "isto é uma rubrica que alguém empenha"
+ * @property {number} weight - o peso dele no índice da área
+ * @property {number} lag - meses até o efeito chegar
  */
 
 /** @type {ReadonlyArray<Program>} */
 export const PROGRAMS = [
-  /* ── PREVIDÊNCIA — R$ 1.585 bi, ou 69% do orcamento primário ──────────────── A área onde a
-     liberdade do presidente e menor, e o catálogo diz isso com o número em vez de com
+  /* ── PREVIDÊNCIA — R$ 1.585 bi, ou 69% do orçamento primário ──────────────── A área onde a
+     liberdade do presidente é menor, e o catálogo diz isso com o número em vez de com
      adjetivo: em quatro dos seis programas o piso COINCIDE com o gasto de hoje. */
   {
     id: "aposentadoria-urbana",
@@ -83,7 +83,7 @@ export const PROGRAMS = [
     area: "welfare",
     label: "Aposentadoria rural",
     unit: "benefícios sem contribuição prévia",
-    /* MAIS A ESQUERDA QUE A URBANA de propósito: o rural e benefício sem contribuição previa,
+    /* MAIS À ESQUERDA QUE A URBANA de propósito: o rural é benefício sem contribuição prévia,
        ou seja, transferência pura. */
     economic: 18,
     liberty: 52,
@@ -104,7 +104,7 @@ export const PROGRAMS = [
     economic: 15,
     liberty: 62,
     threat: 0,
-    /* BPC/RMV — R$ 112,0 bi no PLOA 2025, indexado ao salario minimo. */
+    /* BPC/RMV — R$ 112,0 bi no PLOA 2025, indexado ao salário mínimo. */
     cost: 156,
     initial: 72,
     floor: 72,
@@ -129,8 +129,8 @@ export const PROGRAMS = [
     weight: 0.5,
     lag: 0,
   },
-  /* TRANSFERÊNCIA DE RENDA e a linha mais móvel desta área, e por isso a mais politica: o
-     piso e o valor do benefício em lei, e acima dele o programa se amplia ou encolhe na
+  /* TRANSFERÊNCIA DE RENDA é a linha mais móvel desta área, e por isso a mais política: o
+     piso é o valor do benefício em lei, e acima dele o programa se amplia ou encolhe na
      caneta. */
   {
     id: "transferencia-de-renda",
@@ -156,7 +156,7 @@ export const PROGRAMS = [
     economic: 42,
     liberty: 50,
     threat: 0.2,
-    /* Parcela CIVIL de inativos dentro dos R$ 398,1 bi de pessoal e encargos; o resto esta em
+    /* Parcela CIVIL de inativos dentro dos R$ 398,1 bi de pessoal e encargos; o resto está em
        `pessoal-do-executivo` e — — em `folha-e-inativos-militares`, que saiu daqui para a
        área de Defesa. */
     cost: 209,
@@ -168,9 +168,9 @@ export const PROGRAMS = [
     lag: 0,
   },
 
-  /* ── SAUDE — R$ 240 bi, com piso constitucional de R$ 231 ─────────────────── A repartição
-     interna e MEDIDA: 52% em media e alta complexidade, 28% em atenção primária, 12% em
-     assistência farmaceutica, 8% em vigilância e imunizacao (SIOP, 2024/2025). */
+  /* ── SAÚDE — R$ 240 bi, com piso constitucional de R$ 231 ─────────────────── A repartição
+     interna é MEDIDA: 52% em média e alta complexidade, 28% em atenção primária, 12% em
+     assistência farmacêutica, 8% em vigilância e imunização (SIOP, 2024/2025). */
   {
     id: "media-e-alta-complexidade",
     area: "health",
@@ -184,9 +184,9 @@ export const PROGRAMS = [
     floor: 63,
     ceiling: 100,
     guard: "constitution",
-    /* Somada a atenção básica, a saude fecha em 8,0% da receita bruta.
-       O número constitucional e 15% da RECEITA CORRENTE LÍQUIDA, que e menor que a bruta; o
-       modelo ainda não separa as duas, e a omissão esta declarada no achado 26. */
+    /* Somada a atenção básica, a saúde fecha em 8,0% da receita bruta.
+       O número constitucional é 15% da RECEITA CORRENTE LÍQUIDA, que é menor que a bruta; o
+       modelo ainda não separa as duas, e a omissão está declarada no achado 26. */
     bound: 0.052224,
     weight: 1.2,
     lag: 1,
@@ -204,7 +204,7 @@ export const PROGRAMS = [
     floor: 59,
     ceiling: 100,
     guard: "constitution",
-    /* VINCULADA — art. 198, a outra metade da saude. Ver a nota da media e alta. */
+    /* VINCULADA — art. 198, a outra metade da saúde. Ver a nota da média e alta. */
     bound: 0.027947,
     weight: 1,
     lag: 6,
@@ -231,7 +231,7 @@ export const PROGRAMS = [
     label: "Vigilância e imunização",
     unit: "cobertura vacinal e resposta a surtos",
     economic: 18,
-    /* O PROGRAMA MENOS LIBERAL DA SAUDE, e não por engano: vigilância e o poder de fechar,
+    /* O PROGRAMA MENOS LIBERAL DA SAÚDE, e não por engano: vigilância é o poder de fechar,
        interditar e obrigar. */
     liberty: 36,
     threat: 0,
@@ -244,8 +244,8 @@ export const PROGRAMS = [
     lag: 6,
   },
 
-  /* ── EDUCACAO — R$ 130 bi, com piso constitucional de R$ 115 ──────────────── Repartição
-     medida: 48% em ensino superior, 35% na complementação ao Fundeb, 11% em educacao
+  /* ── EDUCAÇÃO — R$ 130 bi, com piso constitucional de R$ 115 ──────────────── Repartição
+     medida: 48% em ensino superior, 35% na complementação ao Fundeb, 11% em educação
      profissional, 6% em bolsas de pesquisa (MEC/INEP, LOA 2024). */
   {
     id: "universidades-federais",
@@ -316,7 +316,7 @@ export const PROGRAMS = [
 
   /* ── SEGURANÇA — R$ 30 bi, e quase tudo discricionário ────────────────────── Repartição
      medida: 42% Polícia Federal, 25% policiamento de fronteira e rodovias, 23% fundo
-     nacional, 10% sistema penitenciario (MJSP, 2024/2025). */
+     nacional, 10% sistema penitenciário (MJSP, 2024/2025). */
   {
     id: "policia-federal",
     area: "security",
@@ -324,8 +324,8 @@ export const PROGRAMS = [
     unit: "efetivo e operações",
     economic: 46,
     liberty: 38,
-    /* A PF INVESTIGA O CONGRESSO, e por isso ela e o programa de gasto com maior ameaça do
-       catálogo: fortalece-la e mexer na máquina de quem vota. */
+    /* A PF INVESTIGA O CONGRESSO, e por isso ela é o programa de gasto com maior ameaça do
+       catálogo: fortalecê-la é mexer na máquina de quem vota. */
     threat: 0.45,
     cost: 29,
     initial: 44,
@@ -396,7 +396,7 @@ export const PROGRAMS = [
     threat: 0,
     cost: 24,
     initial: 60,
-    /* O PISO E ALTO E NÃO E LEI DE ORCAMENTO: a equalizacao e obrigação de contrato já
+    /* O PISO É ALTO E NÃO É LEI DE ORÇAMENTO: a equalização é obrigação de contrato já
        assinado, e contrato de safra dura anos. */
     floor: 32,
     ceiling: 100,
@@ -433,7 +433,7 @@ export const PROGRAMS = [
     threat: 0,
     cost: 5,
     initial: 42,
-    /* PISO ZERO, E ELE E VERDADE DOLOROSA: a subvenção ao prêmio e das primeiras coisas a
+    /* PISO ZERO, E ELE É VERDADE DOLOROSA: a subvenção ao prêmio é das primeiras coisas a
        cair quando o caixa aperta, porque não há lei nenhuma segurando — e o produtor só
        descobre no ano da seca. */
     floor: 0,
@@ -447,8 +447,8 @@ export const PROGRAMS = [
     area: "agriculture",
     label: "Defesa agropecuária",
     unit: "fiscalização sanitária e vegetal",
-    /* ELA E O QUE SUSTENTA A EXPORTAÇÃO, e por isso o piso e alto: um foco de febre aftosa
-       fecha mercado la fora em uma semana, e reabrir leva anos. */
+    /* ELA É O QUE SUSTENTA A EXPORTAÇÃO, e por isso o piso é alto: um foco de febre aftosa
+       fecha mercado lá fora em uma semana, e reabrir leva anos. */
     economic: 44,
     liberty: 46,
     threat: 0,
@@ -474,7 +474,7 @@ export const PROGRAMS = [
     ceiling: 100,
     guard: "none",
     weight: 0.8,
-    /* VINTE E QUATRO MESES, como a educacao e pela mesma razão: cultivar nova leva safras
+    /* VINTE E QUATRO MESES, como a educação e pela mesma razão: cultivar nova leva safras
        para chegar ao campo. */
     lag: 24,
   },
@@ -498,8 +498,8 @@ export const PROGRAMS = [
   },
 
   /* ── INDÚSTRIA E INFRAESTRUTURA — R$ 169 bi ────────────────────────────────── O aparelho
-     produtivo e o gargalo dele, na mesma área de propósito: rodovia ruim e energia cara são o
-     custo Brasil, e separa-los em duas telas faria parecer que da para consertar um sem o
+     produtivo é o gargalo dele, na mesma área de propósito: rodovia ruim e energia cara são o
+     custo Brasil, e separá-los em duas telas faria parecer que dá para consertar um sem o
      outro. */
   {
     id: "transportes-e-logistica",
@@ -511,8 +511,8 @@ export const PROGRAMS = [
     threat: 0,
     cost: 58,
     initial: 52,
-    /* O PISO MAIS BAIXO DO CATÁLOGO INTEIRO, e ele e verdade dolorosa: obra e a primeira
-       coisa que um governo apertado contingencia, porque e a única grande o bastante para
+    /* O PISO MAIS BAIXO DO CATÁLOGO INTEIRO, e ele é verdade dolorosa: obra é a primeira
+       coisa que um governo apertado contingencia, porque é a única grande o bastante para
        fazer diferença e desprotegida o bastante para ceder. */
     floor: 12,
     ceiling: 100,
@@ -525,7 +525,7 @@ export const PROGRAMS = [
     area: "industry",
     label: "Energia e transição",
     unit: "encargos, universalização e novas fontes",
-    /* ⚠ O ENCARGO E MAIOR QUE A LINHA ORÇAMENTÁRIA, e o catálogo mostra a linha. */
+    /* ⚠ O ENCARGO É MAIOR QUE A LINHA ORÇAMENTÁRIA, e o catálogo mostra a linha. */
     economic: 34,
     liberty: 56,
     threat: 0,
@@ -553,10 +553,10 @@ export const PROGRAMS = [
     weight: 0.9,
     lag: 12,
   },
-  /* ⚠ DESONERAÇÃO NÃO E GASTO, e trata-la como gasto cobrava um caixa que o jogador nunca
-     teve: ninguém empenha uma renúncia — a Fazenda deixa de arrecadar. O buraco e o mesmo
+  /* ⚠ DESONERAÇÃO NÃO É GASTO, e tratá-la como gasto cobrava um caixa que o jogador nunca
+     teve: ninguém empenha uma renúncia — a Fazenda deixa de arrecadar. O buraco é o mesmo
      tamanho e entra pelo outro lado da conta, e o primário de abertura não se move um real
-     (medido: −51,2 antes e depois). O que muda e a JOGADA: ampliar deixou de apertar a bolsa
+     (medido: −51,2 antes e depois). O que muda é a JOGADA: ampliar deixou de apertar a bolsa
      do mês e passou a custar receita para sempre. */
   {
     id: "desoneracao-setorial",
@@ -598,7 +598,7 @@ export const PROGRAMS = [
     unit: "conteúdo local e subvenção à inovação",
     economic: 20,
     liberty: 48,
-    /* AMEAÇA BAIXA E NÃO ZERO: conteúdo local e escolha de vencedor, e escolher vencedor mexe
+    /* AMEAÇA BAIXA E NÃO ZERO: conteúdo local é escolha de vencedor, e escolher vencedor mexe
        com quem já ganhou. */
     threat: 0.05,
     cost: 9,
@@ -610,8 +610,8 @@ export const PROGRAMS = [
     lag: 12,
   },
 
-  /* ── FAZENDA — R$ 198 bi, e 85% disso e folha ─────────────────────────────── ⚠ A
-     REPARTIÇÃO DA MÁQUINA DE COBRAR E ESTIMATIVA. */
+  /* ── FAZENDA — R$ 198 bi, e 85% disso é folha ─────────────────────────────── ⚠ A
+     REPARTIÇÃO DA MÁQUINA DE COBRAR É ESTIMATIVA. */
   {
     id: "pessoal-do-executivo",
     area: "treasury",
@@ -620,8 +620,8 @@ export const PROGRAMS = [
     economic: 40,
     liberty: 50,
     threat: 0.25,
-    /* A folha militar saiu daqui e virou programa próprio na área de Defesa — ela e 78% de um
-       orcamento de R$ 130 bi, e enterrada aqui dentro ela era invisível para quem fosse jogar
+    /* A folha militar saiu daqui e virou programa próprio na área de Defesa — ela é 78% de um
+       orçamento de R$ 130 bi, e enterrada aqui dentro ela era invisível para quem fosse jogar
        com ela. */
     cost: 171,
     initial: 76,
@@ -632,17 +632,17 @@ export const PROGRAMS = [
     lag: 0,
   },
 
-  /* ── DEFESA — R$ 130 bi, e 78% disso e folha ──────────────────────────────── Repartição
+  /* ── DEFESA — R$ 130 bi, e 78% disso é folha ──────────────────────────────── Repartição
      medida: 78% folha, inativos e pensionistas; 16% projetos estratégicos; 6% operações de
-     pronto emprego (Ministério da Defesa, relatorios de gestao 2024/2025). */
+     pronto emprego (Ministério da Defesa, relatórios de gestão 2024/2025). */
   {
     id: "folha-e-inativos-militares",
     area: "defense",
     label: "Folha e inativos militares",
     unit: "efetivo, reserva e pensionistas",
     economic: 52,
-    /* MAIS AUTORITÁRIA QUE A MEDIA por construção, e não por juízo moral: gastar com forca
-       armada e ampliar o aparato coercitivo do Estado, e o eixo mede isso. */
+    /* MAIS AUTORITÁRIA QUE A MÉDIA por construção, e não por juízo moral: gastar com força
+       armada é ampliar o aparato coercitivo do Estado, e o eixo mede isso. */
     liberty: 32,
     threat: 0.15,
     cost: 129,
@@ -663,7 +663,7 @@ export const PROGRAMS = [
     threat: 0.1,
     cost: 46,
     initial: 46,
-    /* PISO BAIXO E DE LEI, que e a combinação mais perigosa do catálogo: da para cortar quase
+    /* PISO BAIXO E DE LEI, que é a combinação mais perigosa do catálogo: dá para cortar quase
        tudo com uma canetada e uma justificativa fiscal, e o preço chega anos depois, em
        contrato rompido e em quem se lembra. */
     floor: 20,
@@ -679,7 +679,7 @@ export const PROGRAMS = [
     unit: "garantia da lei e da ordem, fronteiras",
     economic: 54,
     /* O SEGUNDO PROGRAMA MENOS LIBERAL DO CATÁLOGO, atrás só da inteligência: operação de GLO
-       e tropa na rua, e tropa na rua e o Estado aparecendo fardado onde a polícia deveria
+       e tropa na rua, e tropa na rua é o Estado aparecendo fardado onde a polícia deveria
        bastar. */
     liberty: 22,
     threat: 0.2,
@@ -746,8 +746,8 @@ export const PROGRAMS = [
     unit: "capacidade de auditar o próprio Estado",
     economic: 38,
     liberty: 46,
-    /* CONTROLE INTERNO E AMEAÇA ALTA pela mesma razão da PF: quem audita o gasto audita a
-       emenda, e a emenda e a moeda da barganha. */
+    /* CONTROLE INTERNO É AMEAÇA ALTA pela mesma razão da PF: quem audita o gasto audita a
+       emenda, e a emenda é a moeda da barganha. */
     threat: 0.5,
     cost: 9,
     initial: 54,
@@ -760,17 +760,17 @@ export const PROGRAMS = [
 ];
 
 /**
- * QUANTO A FAZENDA DEIXA DE ARRECADAR, em bilhoes por ANO.
+ * QUANTO A FAZENDA DEIXA DE ARRECADAR, em bilhões por ANO.
  *
  * ⚠ ELA LÊ O NÍVEL CHEIO, e não o que passa do piso — e a diferença decide a
  * abertura: a carga tributária do catálogo foi calibrada contra um país em que a
  * desoneração JÁ existe, então contar só o delta faria o primário de posse saltar
  * de −51,2 para −31,4 sem ninguém ter escolhido isso. Lida cheia nos dois lados, a
- * reclassificacao não move um real: os mesmos 19,84 trocam de lado da conta.
+ * reclassificação não move um real: os mesmos 19,84 trocam de lado da conta.
  *
  * @param {ReadonlyArray<Program>} programs
  * @param {Record<string, number>} levels
- * @returns {number} bilhoes/ano de receita renunciada
+ * @returns {number} bilhões/ano de receita renunciada
  */
 export function waivedOf(programs, levels) {
   let total = 0;

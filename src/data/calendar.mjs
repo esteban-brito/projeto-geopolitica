@@ -1,7 +1,7 @@
-/* O CALENDÁRIO — a forma do ano fiscal brasileiro, e ela e a mesma todo ano.
-   ⚠ ELE E A PRIMEIRA DATA DO JOGO, e por isso não há relógio aqui: cada marco diz em QUE MÊS
-   DO ANO ele cai, de 1 a 12, e quem cruza isso com o mês da partida e uma função pura. Ler o
-   relógio da máquina faria a mesma partida ter calendarios diferentes em dias diferentes. */
+/* O CALENDÁRIO — a forma do ano fiscal brasileiro, e ela é a mesma todo ano.
+   ⚠ ELE É A PRIMEIRA DATA DO JOGO, e por isso não há relógio aqui: cada marco diz em QUE MÊS
+   DO ANO ele cai, de 1 a 12, e quem cruza isso com o mês da partida é uma função pura. Ler o
+   relógio da máquina faria a mesma partida ter calendários diferentes em dias diferentes. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -9,7 +9,7 @@
  * @typedef {object} Landmark um compromisso do ano fiscal
  * @property {string} id
  * @property {string} label - como o jogador o chama
- * @property {number} month - o mes do ano em que ele vence, de 1 a 12
+ * @property {number} month - o mês do ano em que ele vence, de 1 a 12
  * @property {string} what - o que acontece nele, numa frase
  * @property {string} source - a norma que o cria
  */
@@ -23,8 +23,8 @@ export const LANDMARK_SCHEMA = {
   source: { kind: "text" },
 };
 
-/* ⚠ AS QUATRO SÃO REAIS E TEM FONTE, como manda a regra do catálogo. O que e ficção neste jogo
-   são as PESSOAS; o calendário do orcamento e o do país. */
+/* ⚠ AS QUATRO SÃO REAIS E TÊM FONTE, como manda a regra do catálogo. O que é ficção neste jogo
+   são as PESSOAS; o calendário do orçamento é o do país. */
 
 /** @type {ReadonlyArray<Landmark>} */
 export const CALENDAR = [
@@ -49,10 +49,10 @@ export const CALENDAR = [
     what: "a proposta de orçamento do ano que vem vai ao Congresso",
     source: "CF art. 35, §2º, III do ADCT",
   },
-  /* ⚠ ELE E BIMESTRAL, e por isso não cabe no campo `month` sozinho: quem diz o passo e
+  /* ⚠ ELE É BIMESTRAL, e por isso não cabe no campo `month` sozinho: quem diz o passo é
      `REPEATS`, embaixo, e a ausência ali significa "uma vez por ano". A repetição ficou FORA
      do esquema de propósito — como campo, ela obrigaria os outros três a escrever
-     `everyMonths: 12`, que e a mesma ausência com mais bytes. */
+     `everyMonths: 12`, que é a mesma ausência com mais bytes. */
   {
     id: "bimestral",
     label: "Relatório bimestral",
@@ -62,5 +62,5 @@ export const CALENDAR = [
   },
 ];
 
-/* Quantos meses separam duas ocorrências de um marco que não e anual. */
+/* Quantos meses separam duas ocorrências de um marco que não é anual. */
 export const REPEATS = /** @type {Record<string, number>} */ ({ bimestral: 2 });

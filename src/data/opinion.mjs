@@ -1,6 +1,6 @@
 /* OS SEGMENTOS E OS PARÂMETROS DA OPINIÃO — o que SONDA consome.
-   ⚠ AS FATIAS DE POPULACAO SÃO REAIS E DATADAS, como o resto do catálogo ; os PESOS de cada
-   segmento são julgamento declarado, porque nenhuma fonte publica mede "quanto a classe C
+   ⚠ AS FATIAS DE POPULAÇÃO SÃO REAIS E DATADAS, como o resto do catálogo ; os PESOS de cada
+   segmento são julgamento declarado, porque nenhuma fonte pública mede "quanto a classe C
    liga para segurança". */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
@@ -22,18 +22,18 @@ export const SEGMENT_SCHEMA = {
  * @typedef {object} Segment
  * @property {string} id
  * @property {string} label - o nome que a interface mostra
- * @property {number} share - fracao da populacao
- * @property {number} initial - a satisfacao herdada na posse, de 0 a 100
- * @property {number} prices - peso da carestia na satisfacao dele
+ * @property {number} share - fração da população
+ * @property {number} initial - a satisfação herdada na posse, de 0 a 100
+ * @property {number} prices - peso da carestia na satisfação dele
  * @property {number} jobs - peso do desemprego
- * @property {number} services - peso do servico publico (saude, educacao)
- * @property {number} safety - peso da seguranca
+ * @property {number} services - peso do serviço público (saúde, educação)
+ * @property {number} safety - peso da segurança
  * @property {number} economy - peso da economia em geral (PIB e juro)
  */
 
-/* AS FATIAS SÃO AS FAIXAS DE RENDA DOMICILIAR do IBGE, arredondadas: a base da piramide
-   brasileira e larga, e e por isso que agradar a classe D/E é a jogada de maior retorno
-   eleitoral — e a mais cara, porque ela depende de servico público e de comida barata ao
+/* AS FATIAS SÃO AS FAIXAS DE RENDA DOMICILIAR do IBGE, arredondadas: a base da pirâmide
+   brasileira é larga, e é por isso que agradar a classe D/E é a jogada de maior retorno
+   eleitoral — e a mais cara, porque ela depende de serviço público e de comida barata ao
    mesmo tempo. */
 /** @type {ReadonlyArray<Segment>} */
 export const SEGMENTS = [
@@ -41,8 +41,8 @@ export const SEGMENTS = [
     id: "baixa",
     label: "Baixa renda",
     share: 0.42,
-    /* ⚠ A LUA DE MEL E REAL, e a primeira calibragem a esqueceu: com 38 de satisfação a
-       partida abria com 14% de otimo/bom, que e número de governo em fim de mandato ruim — e
+    /* ⚠ A LUA DE MEL É REAL, e a primeira calibragem a esqueceu: com 38 de satisfação a
+       partida abria com 14% de ótimo/bom, que é número de governo em fim de mandato ruim — e
        não de governo que acabou de ganhar a eleição. */
     initial: 70,
     /* Quem gasta 30% da renda com comida sente a inflação antes de qualquer estatística sair. */
@@ -50,8 +50,8 @@ export const SEGMENTS = [
     jobs: 0.25,
     services: 0.25,
     safety: 0.1,
-    /* PIB NÃO SIGNIFICA NADA para quem não tem aplicação nem emprego formal, e zero aqui e
-       afirmação: crescimento que não vira emprego não e sentido. */
+    /* PIB NÃO SIGNIFICA NADA para quem não tem aplicação nem emprego formal, e zero aqui é
+       afirmação: crescimento que não vira emprego não é sentido. */
     economy: 0,
   },
   {
@@ -71,12 +71,12 @@ export const SEGMENTS = [
     label: "Alta renda",
     share: 0.2,
     /* A MENOS SATISFEITA NA ABERTURA, e não por gosto: ela paga a maior parte do imposto e
-       usa a menor parte do servico público, então a conta que ela faz do governo começa mais
+       usa a menor parte do serviço público, então a conta que ela faz do governo começa mais
        fria — inclusive na lua de mel. */
     initial: 52,
     prices: 0.15,
     jobs: 0.1,
-    /* SERVICO PÚBLICO QUASE NÃO CONTA: quem tem plano de saude e escola privada não sente a
+    /* SERVIÇO PÚBLICO QUASE NÃO CONTA: quem tem plano de saúde e escola privada não sente a
        fila. */
     services: 0.05,
     safety: 0.3,
@@ -105,29 +105,29 @@ export const OPINION_SCHEMA = {
 /**
  * @typedef {object} OpinionParameters
  * @property {number} release - meses de defasagem do indicador divulgado
- * @property {number} inertia - quanto da opiniao de ontem sobrevive ao mes
- * @property {number} fallSpeed - quantas vezes mais rapido a satisfacao CAI
- * @property {number} priceAnchor - a inflacao anual em que a carestia e neutra
- * @property {number} priceSpan - quanto de inflacao a mais leva a nota ao chao
- * @property {number} jobAnchor - o desemprego em que o emprego e neutro
+ * @property {number} inertia - quanto da opinião de ontem sobrevive ao mês
+ * @property {number} fallSpeed - quantas vezes mais rápido a satisfação CAI
+ * @property {number} priceAnchor - a inflação anual em que a carestia é neutra
+ * @property {number} priceSpan - quanto de inflação a mais leva a nota ao chão
+ * @property {number} jobAnchor - o desemprego em que o emprego é neutro
  * @property {number} jobSpan
  * @property {number} growthAnchor - o crescimento real anual neutro
  * @property {number} growthSpan
- * @property {number} broken - quanto uma promessa quebrada tira da satisfacao
- * @property {number} wearRate - pontos de satisfacao que o desgaste do cargo tira por mes
- * @property {number} goodSlope - como a satisfacao vira "otimo/bom"
- * @property {number} poorSlope - como a insatisfacao vira "ruim/pessimo"
+ * @property {number} broken - quanto uma promessa quebrada tira da satisfação
+ * @property {number} wearRate - pontos de satisfação que o desgaste do cargo tira por mês
+ * @property {number} goodSlope - como a satisfação vira "ótimo/bom"
+ * @property {number} poorSlope - como a insatisfação vira "ruim/péssimo"
  */
 
 /** @type {OpinionParameters} */
 export const OPINION = {
-  /* ⚠ O PRESIDENTE NÃO SABE O MÊS EM QUE ESTA. */
+  /* ⚠ O PRESIDENTE NÃO SABE O MÊS EM QUE ESTÁ. */
   release: 2,
 
   /* OPINIÃO NÃO PULA. */
   inertia: 0.88,
-  /* ⚠ E ELA CAI TRÊS VEZES MAIS RAPIDO DO QUE SOBE, que e o achado empírico mais consistente
-     da literatura de opinião publica e a razão de governos gastarem tanto para evitar uma
+  /* ⚠ E ELA CAI TRÊS VEZES MAIS RÁPIDO DO QUE SOBE, que é o achado empírico mais consistente
+     da literatura de opinião pública e a razão de governos gastarem tanto para evitar uma
      crise pequena. */
   fallSpeed: 3,
 
@@ -140,7 +140,7 @@ export const OPINION = {
   growthAnchor: 0.025,
   growthSpan: 0.04,
 
-  /* PROMESSA QUEBRADA TAMBÉM CHEGA A RUA, e não só ao Congresso. */
+  /* PROMESSA QUEBRADA TAMBÉM CHEGA À RUA, e não só ao Congresso. */
   broken: 12,
 
   /* Sem ele a aprovação subia de 35 para 54 em 48 meses com o jogador não fazendo NADA —

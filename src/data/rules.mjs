@@ -1,5 +1,5 @@
-/* AS ALAVANCAS DE REGRA — politica que não se mede em reais.
-   Ninguém escreveu "armadilha da privatizacao". E aritmética do LASTRO. */
+/* AS ALAVANCAS DE REGRA — política que não se mede em reais.
+   Ninguém escreveu "armadilha da privatização". É aritmética do LASTRO. */
 
 /* AS DUAS FAMÍLIAS DE REGRA, e o esquema as COBRA — ver `values` em `schema.mjs`. */
 const FAMILIES = /** @type {const} */ (["property", "power"]);
@@ -36,14 +36,14 @@ export const RULE_SCHEMA = {
  * @property {number} economic
  * @property {number} liberty
  * @property {number} threat
- * @property {number} reach - quanto do pais isto toca, em bilhoes
+ * @property {number} reach - quanto do país isto toca, em bilhões
  * @property {number} initial
  * @property {number} floor
  * @property {number} ceiling
  * @property {string} guard - o que protege o piso
- * @property {number} dividend - fracao de `reach` que volta ao Tesouro por ano, a 100
- * @property {number} payroll - fracao de `reach` que vira folha obrigatoria, a 100
- * @property {number} sale - fracao de `reach` arrecadada ao vender os 100 pontos
+ * @property {number} dividend - fração de `reach` que volta ao Tesouro por ano, a 100
+ * @property {number} payroll - fração de `reach` que vira folha obrigatória, a 100
+ * @property {number} sale - fração de `reach` arrecadada ao vender os 100 pontos
  */
 
 /** @type {ReadonlyArray<Rule>} */
@@ -57,14 +57,14 @@ export const RULES = [
     unit: "participação da União no setor",
     economic: 26,
     liberty: 48,
-    /* AMEAÇA ALTA: a maior estatal do país e o maior loteamento de diretoria que existe. */
+    /* AMEAÇA ALTA: a maior estatal do país é o maior loteamento de diretoria que existe. */
     threat: 0.4,
     reach: 620,
     initial: 62,
     floor: 0,
     ceiling: 100,
     guard: "law",
-    /* Dividendo alto e folha baixa: a estatal do petroleo PAGA ao Tesouro. */
+    /* Dividendo alto e folha baixa: a estatal do petróleo PAGA ao Tesouro. */
     dividend: 0.055,
     payroll: 0.022,
     sale: 0.85,
@@ -95,7 +95,7 @@ export const RULES = [
     liberty: 50,
     threat: 0.25,
     reach: 340,
-    /* JÁ MAJORITARIAMENTE PRIVADO na abertura, e isso e afirmação sobre o mundo: o setor foi
+    /* JÁ MAJORITARIAMENTE PRIVADO na abertura, e isso é afirmação sobre o mundo: o setor foi
        desestatizado antes desta partida começar. */
     initial: 28,
     floor: 0,
@@ -118,7 +118,7 @@ export const RULES = [
     floor: 0,
     ceiling: 100,
     guard: "law",
-    /* O CASO INVERSO DO PETROLEO: folha maior que dividendo. */
+    /* O CASO INVERSO DO PETRÓLEO: folha maior que dividendo. */
     dividend: 0.008,
     payroll: 0.055,
     sale: 0.45,
@@ -142,13 +142,13 @@ export const RULES = [
   },
 
   /* ── PODER ───────────────────────────────────────────────────────────────── Uma alavanca
-     só, e ela e a mais perigosa do jogo. */
+     só, e ela é a mais perigosa do jogo. */
   {
     id: "poder-do-executivo",
     family: "power",
     label: "Poder do Executivo",
     unit: "o quanto se decide sem passar pelo Congresso",
-    /* NEUTRA EM ECONOMIA e no chao em liberdades. */
+    /* NEUTRA EM ECONOMIA e no chão em liberdades. */
     economic: 50,
     liberty: 3,
     /* A MAIOR AMEAÇA DO CATÁLOGO INTEIRO, e por definição: esta pauta tira poder exatamente
@@ -156,7 +156,7 @@ export const RULES = [
     threat: 0.95,
     reach: 900,
     initial: 30,
-    /* ⚠ A FAIXA E UM PONTO, e não um intervalo — e essa e a diferença entre esta alavanca e
+    /* ⚠ A FAIXA É UM PONTO, e não um intervalo — e essa é a diferença entre esta alavanca e
        todas as outras. */
     floor: 30,
     ceiling: 30,

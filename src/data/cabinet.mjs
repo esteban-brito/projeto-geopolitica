@@ -1,5 +1,5 @@
 /* O GABINETE — as 38 cadeiras de Ministro de Estado da Lei 14.600/2023 (art. 17, os 32
-   ministérios; art. 2º e a lista dos Ministros de Estado, as 5 da Presidência e a AGU),
+   ministérios; art. 2º é a lista dos Ministros de Estado, as 5 da Presidência e a AGU),
    conferidas no Planalto (pesquisa 15). `area` liga a cadeira que defende a verba
    de uma área do jogo; as pastas que dividem uma área com ela (Transportes, Minas e Energia,
    Desenvolvimento Social) ficam sem ligação até a área se dividir. */

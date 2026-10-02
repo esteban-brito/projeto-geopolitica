@@ -1,8 +1,8 @@
 /* A PLATAFORMA DE POSSE — o que o presidente prometeu antes de ter o cargo.
-   ⚠ O JOGO GERAVA UM PRESIDENTE SEM UMA PROMESSA, e na vida real e o inverso: quem chega ao
-   cargo chega devendo o que disse na campanha, e e contra isso que ele e medido por quatro
-   anos. Cada compromisso aqui e uma pergunta que o MOTOR sabe responder sozinho — nenhum
-   deles precisa de número novo, e e por isso que são estes três eixos e não outros. */
+   ⚠ O JOGO GERAVA UM PRESIDENTE SEM UMA PROMESSA, e na vida real é o inverso: quem chega ao
+   cargo chega devendo o que disse na campanha, e é contra isso que ele é medido por quatro
+   anos. Cada compromisso aqui é uma pergunta que o MOTOR sabe responder sozinho — nenhum
+   deles precisa de número novo, e é por isso que são estes três eixos e não outros. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -10,11 +10,11 @@
  * @typedef {object} Pledge um compromisso que o jogador pode assumir
  * @property {string} id
  * @property {string} axis - o eixo a que ele pertence
- * @property {string} label - a promessa inteira, na boca do candidato. E ela e do FECHO: e la
+ * @property {string} label - a promessa inteira, na boca do candidato. E ela é do FECHO: é lá
  * que "entregar ordem acima do que recebi — não cumprida" precisa estar por extenso
- * @property {string} short - o nome do compromisso na carta, em duas palavras. ⚠ A CARTA NAO
+ * @property {string} short - o nome do compromisso na carta, em duas palavras. ⚠ A CARTA NÃO
  * REPETE A FRASE: o eixo já diz "A PRIORIDADE", e o botão só precisa dizer QUAL
- * @property {string} judged - como ela e julgada, dito para quem vai ser julgado
+ * @property {string} judged - como ela é julgada, dito para quem vai ser julgado
  */
 
 const AXES = /** @type {const} */ (["priority", "fiscal", "reform"]);
@@ -33,12 +33,12 @@ export const PLEDGE_SCHEMA = {
    verdade sobre quais são as áreas fracas, e ela mentiria no dia em que uma abertura mudasse. */
 export const PRIORITY_COUNT = 3;
 
-/* ⚠ AS DUAS METAS FISCAIS SÃO AS QUE O ESTADO JÁ GUARDA: a razão divida/PIB, contra a que foi
+/* ⚠ AS DUAS METAS FISCAIS SÃO AS QUE O ESTADO JÁ GUARDA: a razão dívida/PIB, contra a que foi
    herdada, e a série do primário. Uma terceira meta — "não contingenciar" — foi medida e
-   RECUSADA: o contingenciamento e do relatório do mês e não vai para o estado, e prometer o
+   RECUSADA: o contingenciamento é do relatório do mês e não vai para o estado, e prometer o
    que o save não guarda seria uma promessa que não se pode julgar depois de um F5. */
 
-/* ⚠ E NENHUMA DELAS TEM NÚMERO ESCOLHIDO. O alvo de cada uma e o que o presidente RECEBEU:
+/* ⚠ E NENHUMA DELAS TEM NÚMERO ESCOLHIDO. O alvo de cada uma é o que o presidente RECEBEU:
    a dívida da posse, e o zero do primário. Um "abaixo de 90%" seria número inventado. */
 
 /** @type {ReadonlyArray<Pledge>} */
@@ -57,10 +57,10 @@ export const PLEDGES = [
     short: "Ano no azul",
     judged: "a soma do resultado primário dos últimos doze meses",
   },
-  /* ── O EIXO DA REFORMA ────────────────────────────────────────────────────── ⚠ ELE E SOBRE
-     O INSTRUMENTO, e não sobre qual lei: prometer mexer numa alavanca especifica seria escolher
-     a jogada antes de conhecer o Congresso, e o jogo inteiro e sobre descobrir o preço dela.
-     ⚠ E O TERCEIRO QUEBRA POR AÇÃO, e não por omissão — e o único assim. */
+  /* ── O EIXO DA REFORMA ────────────────────────────────────────────────────── ⚠ ELE É SOBRE
+     O INSTRUMENTO, e não sobre qual lei: prometer mexer numa alavanca específica seria escolher
+     a jogada antes de conhecer o Congresso, e o jogo inteiro é sobre descobrir o preço dela.
+     ⚠ E O TERCEIRO QUEBRA POR AÇÃO, e não por omissão — é o único assim. */
   {
     id: "law",
     axis: "reform",

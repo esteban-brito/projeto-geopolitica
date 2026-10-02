@@ -55,11 +55,11 @@ export const CATALOG = {
 };
 
 /**
- * Ele NÃO roda sozinho na carga do módulo, e isso e decisão: validação que dispara no
+ * Ele NÃO roda sozinho na carga do módulo, e isso é decisão: validação que dispara no
  * `import` quebra a tela no navegador por causa de um número errado no catálogo, e o lugar de
- * descobrir isso e a suite, antes de publicar.
+ * descobrir isso é a suíte, antes de publicar.
  *
- * @returns {string[]} lista vazia quando o catalogo esta integro
+ * @returns {string[]} lista vazia quando o catálogo está íntegro
  */
 export function catalogViolations() {
   return [
@@ -85,25 +85,25 @@ export function catalogViolations() {
     ...violations(AGENCY_SCHEMA, AGENCY, "agency"),
     ...collectionViolations(DRIVE_SCHEMA, DRIVES, "drives"),
     ...violations(PRESSURE_SCHEMA, PRESSURE, "pressure"),
-    /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. */
+    /* REFERÊNCIA CRUZADA, que nenhum esquema sozinho consegue ver. */
     ...danglingAreas(),
     /* PROGRAMA APONTANDO PARA ÁREA QUE NÃO EXISTE tem sintoma pior que o da lei: a lei some
-       da tela, o programa some do ORCAMENTO — e o país passa a gastar menos do que gasta sem
+       da tela, o programa some do ORÇAMENTO — e o país passa a gastar menos do que gasta sem
        ninguém ter decidido nada. */
     ...danglingPrograms(),
-    /* GUARDA DESCONHECIDA e o defeito silencioso deste catálogo: quem compõe a pauta cai no
+    /* GUARDA DESCONHECIDA é o defeito silencioso deste catálogo: quem compõe a pauta cai no
        padrão "lei" para uma guarda que ninguém reconhece, e um piso constitucional digitado
        errado passaria a custar 257 votos em vez de 308. */
     ...unknownGuards(),
     /* As bancadas somam cadeiras e o regime declara quantas existem; se os dois divergirem,
-       toda maioria do jogo passa a ser medida contra um plenario que não existe — e nenhuma
-       tela denuncia, porque cada lado esta certo sozinho. */
+       toda maioria do jogo passa a ser medida contra um plenário que não existe — e nenhuma
+       tela denuncia, porque cada lado está certo sozinho. */
     ...chamberMismatch(),
-    /* A POPULACAO TEM DE FECHAR. */
+    /* A POPULAÇÃO TEM DE FECHAR. */
     ...populationMismatch(),
     /* ARQUÉTIPO APONTANDO PARA BLOCO QUE NÃO EXISTE some do elenco em silêncio: a pessoa
-       simplesmente não nasce, e o sintoma e um Congresso com um líder a menos — que e um
-       estado de jogo valido e portanto indistinguível de um defeito. */
+       simplesmente não nasce, e o sintoma é um Congresso com um líder a menos — que é um
+       estado de jogo válido e portanto indistinguível de um defeito. */
     ...danglingArchetypes(),
     /* NOME REPETIDO NO VOCABULÁRIO não quebra nada e estreita o elenco em silêncio: duas
        entradas iguais viram uma, e o gerador passa a ter menos combinações do que o catálogo
