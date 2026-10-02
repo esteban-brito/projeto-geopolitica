@@ -756,7 +756,7 @@ try {
   const salto = await page.evaluate(async () => {
     const pasta = document.querySelector(".folder");
     const room = document.querySelector(".room");
-    if (pasta === null) return { parado: 0, meio: 0, logoApos: 0, fim: 0 };
+    if (pasta === null) return { parado: 0, meio: 0, corte: 0, fim: 0 };
     const alto = () => pasta.getBoundingClientRect().height;
     /** @returns {Promise<void>} */
     const quadro = () => new Promise(r => requestAnimationFrame(() => r()));
@@ -782,6 +782,13 @@ try {
     document
       .elementFromPoint(caixa.left + caixa.width / 2, caixa.top + caixa.height / 2)
       ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    /* ⛔ E O QUADRO SEGUINTE DEMORA 150ms, como numa máquina ocupada: a animação só começa a
+       contar no quadro, e um relógio tomado no clique fica 150ms à frente da pasta pintada. Com
+       a CPU ocupada, o passeio caiu aqui 2 vezes em 2. */
+    const ocupado = performance.now() + 150;
+    while (performance.now() < ocupado) {
+      /* um quadro longo */
+    }
 
     /* No meio do voo, que e onde a velocidade e maior e um salto apareceria inteiro. */
     for (let i = 0; i < 240; i++) {
@@ -791,16 +798,17 @@ try {
     }
     const meio = alto();
     room?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    await quadro();
-    await quadro();
-    const logoApos = alto();
+    /* ⚠ O SALTO SE MEDE NO CORTE, antes do quadro seguinte: o voo novo nasce no clique, então a
+       diferença é só o salto. Dois quadros depois, com quadro de 100ms, a curva contínua andava
+       155px e parecia salto. */
+    const corte = alto();
     /* E devolve a pasta a mesa: o gesto atravessa a pintura, e uma prova que sai com ela no ar
        deixa as 24 medidas seguintes olhando uma pasta que ocupa a tela. */
     await assentar();
     return {
       parado: Math.round(parado),
       meio: Math.round(meio),
-      logoApos: Math.round(logoApos),
+      corte: Math.round(corte),
       fim: Math.round(alto()),
     };
   });
@@ -810,9 +818,8 @@ try {
       `contra ${salto.parado}px na mesa`,
   );
   expect(
-    Math.abs(salto.logoApos - salto.meio) < salto.meio * 0.2,
-    `[gabinete] o voo interrompido SALTOU: ${salto.meio}px no corte, ${salto.logoApos}px dois ` +
-      `quadros depois`,
+    Math.abs(salto.corte - salto.meio) <= 2,
+    `[gabinete] o voo interrompido SALTOU: ${salto.meio}px na tela, ${salto.corte}px no voo novo`,
   );
   expect(
     Math.abs(salto.fim - salto.parado) <= 20,
@@ -946,16 +953,10 @@ try {
      o estado, e não o compasso. */
   await page.waitForFunction(() => document.querySelectorAll(".room").length === 0);
   /* ⛔ E A ANIMAÇÃO NASCE DEPOIS DE O DOM TROCAR: `startViewTransition` aplica a pintura e só
-     então começa o cross-fade — a espera de cima passava no VÃO entre os dois, com o snapshot
-     da mesa ainda na tela. Um quadro de folga para ela existir, e ai espera-se ela acabar. */
-  await page.waitForTimeout(120);
-  await page.waitForFunction(() =>
-    document.getAnimations().every(one => {
-      /* `pseudoElement` mora em `KeyframeEffect`, e o tipo do efeito e o pai dele. */
-      const alvo = /** @type {{ pseudoElement?: string | null }} */ (one.effect ?? {});
-      return !String(alvo.pseudoElement ?? "").startsWith("::view-transition");
-    }),
-  );
+     então começa o cross-fade, e a espera de cima passava no VÃO entre os dois. Um quadro fixo
+     de 120ms de folga não basta com a CPU ocupada; `:active-view-transition` vale do pedido até
+     o fim da troca. */
+  await page.waitForFunction(() => !document.documentElement.matches(":active-view-transition"));
   await checkOverflow("email");
   await checkClipped("email");
   await checkSwallowed("email");
@@ -1099,9 +1100,12 @@ try {
     `[area] a corrente da Previdencia diz que a verba poe ${verba} — ela le o discricionario, e nao o gasto cheio`,
   );
   await viaRail(page, "health");
-  /* A viagem da pílula entre dois itens da coluna assenta em ~450ms (cauda 0,46s). */
-  await page.waitForTimeout(700);
-  const viajou = await pilula();
+  /* ⚠ A ESPERA É PELA CHEGADA, e não por relógio: a mola limita o passo por quadro, e com a CPU
+     ocupada a viagem de ~450ms passava dos 700ms fixos, a 4,5px e 13,6px do item. */
+  let viajou = await pilula();
+  for (let i = 0; i < 20 && !(viajou?.on === "true" && viajou.off <= 1.5); i++) {
+    viajou = await pilula();
+  }
   expect(
     viajou !== null && viajou.on === "true" && viajou.off <= 1.5,
     `[coluna] a pilula nao chegou ao item depois da viagem: ${JSON.stringify(viajou)}`,
@@ -1637,14 +1641,11 @@ try {
   await page.click('.rail [data-section="cabinet"]');
   /* ⛔ E A ESPERA E PELA TROCA DE TELA ACABAR: enquanto a view transition roda, o navegador
      pinta um SNAPSHOT por cima da página, e `elementFromPoint` devolve o pseudo-elemento —
-     o clique caia fora da pasta e a prova acusava a mesa por causa do próprio compasso. */
+     o clique caia fora da pasta e a prova acusava a mesa por causa do próprio compasso. Contar as
+     animações do pseudo-elemento deixava passar o vão antes de elas nascerem: com a CPU ocupada,
+     2 quedas em 2. `:active-view-transition` vale do pedido até o fim da troca. */
   await page.waitForFunction(() => document.querySelectorAll(".room").length === 1);
-  await page.waitForFunction(() =>
-    document.getAnimations().every(one => {
-      const alvo = /** @type {{ pseudoElement?: string | null }} */ (one.effect ?? {});
-      return !String(alvo.pseudoElement ?? "").startsWith("::view-transition");
-    }),
-  );
+  await page.waitForFunction(() => !document.documentElement.matches(":active-view-transition"));
   expect(await tocar(".folder__cover"), "[recomecar] o centro da pasta nao pertence a pasta");
   await pousou();
   /* ⛔ E O TOQUE VAI NA EPÍGRAFE, e não no centro da folha: as oito pastas do Art. 2 moram no

@@ -213,19 +213,20 @@ let at = 0;
 let sealed = "";
 
 /** @type {null | {
-    curve: ReturnType<typeof curveOf>, from: number, to: number, start: number,
+    curve: ReturnType<typeof curveOf>, from: number, to: number, clock: Animation | null,
     how: { duration: number, bounce: number } }} */
 let flying = null;
 
+/* O relógio é o da animação da pasta: com `performance.now()` tomado no clique, um quadro de
+   150ms deixava a conta 25px à frente da pasta pintada, e o voo interrompido saltava. */
 /**
  * Posição e velocidade analíticas do voo em curso.
  *
- * @param {number} now
  * @returns {{ at: number, rate: number }}
  */
-function whereIs(now) {
+function whereIs() {
   if (flying === null) return { at, rate: 0 };
-  const t = Math.max(0, (now - flying.start) / 1000);
+  const t = Math.max(0, Number(flying.clock?.currentTime ?? 0) / 1000);
   const span = flying.to - flying.from;
   if (t >= flying.curve.duration) return { at: flying.to, rate: 0 };
   return {
@@ -310,10 +311,9 @@ function armFlight(root) {
   /**
    * @param {number} goal 0 na mesa, 1 na mao
    * @param {{ duration: number, bounce: number }} how
+   * @param {{ at: number, rate: number }} here
    */
-  const move = (goal, how) => {
-    const now = performance.now();
-    const here = whereIs(now);
+  const move = (goal, how, here = whereIs()) => {
     const span = goal - here.at;
 
     for (const part of parts()) {
@@ -329,21 +329,24 @@ function armFlight(root) {
 
     /* Velocidade normalizada pelo curso novo: impulso de 2 cursos/s preservado sem dobrar. */
     const curve = curveOf({ ...how, velocity: here.rate / span });
-    flying = { curve, from: here.at, to: goal, start: now, how };
+    /** @type {NonNullable<typeof flying>} */
+    const next = { curve, from: here.at, to: goal, clock: null, how };
+    flying = next;
     at = goal;
 
     for (const part of parts()) {
       if (!(part.node instanceof HTMLElement)) continue;
-      part.node.animate([{ [part.key]: part.of(here.at) }, { [part.key]: part.of(goal) }], {
-        duration: curve.duration * 1000,
-        easing: curve.css,
-        fill: "forwards",
-      });
+      const one = part.node.animate(
+        [{ [part.key]: part.of(here.at) }, { [part.key]: part.of(goal) }],
+        { duration: curve.duration * 1000, easing: curve.css, fill: "forwards" },
+      );
+      if (part.node === folder) next.clock = one;
     }
   };
 
   /* Calibragem do tamanho de leitura por pintura, com peça parada no alto. */
   tune = seen => {
+    const back = whereIs();
     for (const part of parts()) {
       if (part.node instanceof HTMLElement) part.node.getAnimations().forEach(one => one.cancel());
     }
@@ -363,13 +366,12 @@ function armFlight(root) {
       aim.dx += janela.innerWidth / 2 - (peca.left + peca.width / 2);
       aim.dy += janela.innerHeight / 2 - (peca.top + peca.height / 2);
     }
-    const back = whereIs(performance.now());
     draw(back.at);
-    if (flying !== null) move(flying.to, flying.how);
+    if (flying !== null) move(flying.to, flying.how, back);
   };
 
   /* Pintura reassume voo em curso; evita congelar a pasta (medido a 3px da mesa). */
-  const here = whereIs(performance.now());
+  const here = whereIs();
   draw(here.at);
   const goal = lifted ? 1 : 0;
   if (Math.abs(here.at - goal) > 0.001) move(goal, lifted ? LIFT : DROP);
@@ -415,7 +417,7 @@ function armFlight(root) {
     if (target.closest("[data-protect], [data-refuse], [data-close-cut]") !== null) return;
 
     /* Rubrica leva 1,1s e só corre com pasta assentada na mão (at > 0,94). */
-    if (target.closest(".stack .sheet") !== null && whereIs(performance.now()).at > 0.94) {
+    if (target.closest(".stack .sheet") !== null && whereIs().at > 0.94) {
       sealed = sealed === act ? "" : act;
       sheet.dataset["signed"] = String(sealed === act);
     }
