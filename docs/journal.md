@@ -122,3 +122,26 @@ passeio. Com os 12 núcleos ocupados, o HEAD caiu 2 de 2 nas mesmas três. Eram 
   `:active-view-transition`, que vale do pedido ao fim da troca.
 
 Depois do conserto: verde sem carga e 2 de 2 verdes com os 12 núcleos ocupados.
+
+### 127 · O repositório como um mapa — 01/10/2026
+
+Ordem dele: criar, apagar, mover e renomear até tudo ficar arquitetado como um mapa. Quatro
+etapas, cada uma com portão verde e commit.
+
+- **Documentos:** 18 nomes sem o prefixo "the-"; o handoff caiu de 388 para 254 linhas, com o
+  texto inteiro das decisões e dos achados em `docs/archive/`; saíram `tmp/base`, `tmp/reports` e
+  o canal do Codex; 11 evidências sem citação foram para o arquivo. O achado 85 fechou: a
+  compensação de 25/09 (duas sabotagens) já cobria as provas nascidas depois do código.
+- **Assets e protótipo:** as fontes foram para `assets/fonts/` e ganharam o texto da licença OFL,
+  que faltava num repositório público; o canvas, as ferramentas e as provas da posse ficaram junto
+  do protótipo, e `vendor/` sumiu. A página da posse montava o caminho da ponte a partir de
+  `tmp/build/` sob uma `<base>` de outra pasta, e só funcionava porque as duas tinham a mesma
+  profundidade.
+- **Código:** `app.mjs` virou `src/main.mjs`; `src/app/`, que se confundia com
+  `src/application/`, virou `src/shell/`; `src/ui/shared/` se dividiu em `core/` e `components/`.
+  As guardas seguiram as pastas sem perder prova.
+- **O mapa escrito:** a árvore inteira está no `README.md`; as regras de camada, no `AGENTS.md` §9.
+
+Dois defeitos achados no caminho: a guarda `accents` tomava `the-base-model.md` por inglês e pulava
+o comentário inteiro; e a ferramenta de mudança não via arquivos fora do Git, como o runtime do
+canvas. Os dois foram corrigidos antes do commit.

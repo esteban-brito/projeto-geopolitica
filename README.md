@@ -12,6 +12,34 @@ npm run check      # só as guardas; `npm test` roda só as suítes
 npm run posse      # as provas de navegador da posse, fora do validate
 ```
 
+## O mapa
+
+```
+index.html            a página do jogo: carrega styles/ e src/main.mjs
+src/
+  main.mjs            a entrada: só compõe shell/, ui/, public/ e state/
+  shell/              a casca do navegador: sessão, entradas, pintura, eventos e diálogos
+  ui/screens/         uma view pura por tela
+  ui/components/      as peças do jogo: pasta, telefone, rail, barra, parecer, decreto…
+  ui/core/            as primitivas: vidro, mola, squircle, textura, html, formato, ícones
+  ui/strings.mjs      todo texto da interface
+  public/             a fachada: a única porta da tela para o jogo
+  application/        a composição dos motores: o mês, a pauta, a tramitação, as cartas, a posse
+  domain/             os motores puros, um por pasta (codinomes em docs/standards.md §3)
+  state/              estado imutável, redutor, save e fluxos aleatórios
+  data/               catálogos, parâmetros e esquemas, com fonte
+styles/               as folhas, na ordem do número do nome
+assets/               o que o jogo carrega: imagens e fontes, com créditos e licenças
+tests/guards/         as 14 guardas estruturais (npm run check)
+tests/suites/         as provas do motor e da interface (npm test)
+tests/browser/        passeio, macaco, custo de tela e, em posse/, as provas do protótipo
+tests/lib/            apoio das guardas
+tools/                servidor, simulador e verificadores de links, prosa e acento
+prototypes/           ensaios fora do jogo: a posse e a estrutura do governo
+docs/                 visão, handoff, padrões, especificações, ciclos, pesquisas, decisões e arquivo
+captures/ · tmp/      capturas do passeio e área de trabalho local, fora do Git
+```
+
 ## Onde ler
 
 | documento                                   | o quê                                                                                       |

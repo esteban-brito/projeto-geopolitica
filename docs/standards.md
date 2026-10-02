@@ -31,24 +31,8 @@ Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 
 ## 2. Estrutura
 
-```
-index.html · app.mjs        entrypoint: 28 linhas de wiring, e nada mais
-src/app/                    o que o navegador compõe: sessão, entradas por tela, pintura,
-                            diálogos e gestos — alcança state/, public/ e ui/, nunca o motor
-styles/                     onze folhas, na ordem que o numero do nome declara
-vendor/fonts/               Inter e Source Serif 4, sob SIL OFL — 226KB, sem rede
-src/data/                   catálogo; `catalog.mjs` indexa todo dado do projeto
-src/domain/                 os motores, funções puras
-src/state/                  estado imutável, o reducer e o save
-src/application/            turno, correspondência, tramitação, efeitos
-src/public/                 a composição que todo consumidor usa
-src/ui/                     views puras: recebem dado, devolvem string
-tests/                      run.mjs · lib/ · guards/ · suites/ · browser/
-tools/                      geradores, servidor, simulador de mandato
-docs/                       handoff.md (a retomada, curta) · journal.md (o histórico)
-                            adr/ · cycles/ · research/
-CLAUDE.md                   as regras que o agente lê antes de tudo
-```
+O mapa do repositório, pasta por pasta, está no [README](../README.md#o-mapa); as camadas e o
+que cada uma alcança, no [`AGENTS.md`](../AGENTS.md) §9, cobrados pela guarda `boundaries`.
 
 ## 3. Os motores
 

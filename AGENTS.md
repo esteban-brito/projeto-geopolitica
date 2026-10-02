@@ -143,18 +143,16 @@ ponto de partida, não teto; ao propor desenho, ofereça também o exótico.
 
 ## 9. O código
 
-| onde                         | o quê                                                                                               |
-| ---------------------------- | --------------------------------------------------------------------------------------------------- |
-| `src/data/`                  | catálogos, parâmetros e esquemas                                                                    |
-| `src/domain/`                | os motores puros; codinomes em `docs/standards.md` §3                                               |
-| `src/application/`           | a composição: `turn.mjs` (`settlement` → `playMonth`), pauta, tramitação, cartas, mundo vivo, posse |
-| `src/state/`                 | estado imutável, redutor, save e fluxos aleatórios                                                  |
-| `src/public/`                | a fachada: a única porta da tela para o jogo                                                        |
-| `src/shell/`, `src/main.mjs` | sessão, entradas, pintura, eventos e diálogos                                                       |
-| `src/ui/`, `styles/`         | views puras e folhas                                                                                |
-| `prototypes/`                | ensaios isolados, sem consumidor no jogo nem campo no save                                          |
-| `tests/`                     | `guards/`, `suites/`, `browser/` e `lib/`                                                           |
-| `tools/`                     | servidor, simulador, verificadores e geradores                                                      |
+O mapa do repositório, pasta por pasta, está no [README](README.md#o-mapa). As camadas e o que
+cada uma alcança, cobrados pela guarda `boundaries`:
+
+- `src/main.mjs`, a entrada, só compõe: alcança `shell/`, `ui/`, `public/` e `state/`;
+- `src/shell/`, a casca do navegador, alcança `ui/`, `public/`, `state/` e os irmãos;
+- `src/ui/` são views puras: recebem dado e devolvem string;
+- `src/public/` é a única porta da tela para o jogo;
+- `src/application/` compõe os motores, e motor nenhum chama outro;
+- `src/domain/` é puro: sem DOM, relógio nem `Math.random`;
+- `prototypes/` não tem consumidor no jogo nem campo no save.
 
 O mês: `settlement(state, orders)` resolve normas, separa execução de lei, calcula espaço e
 pagamentos e monta o Congresso; `playMonth` resolve respostas e tramitação, aplica decisões, roda

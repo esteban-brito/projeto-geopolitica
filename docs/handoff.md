@@ -10,8 +10,7 @@
 - **01/10, limpeza e organização**, aprovadas por ele (journal 123 a 127): um contrato só para os
   agentes ([`AGENTS.md`](../AGENTS.md)); índice com situação em cada pasta de `docs/`; o que foi
   superado em `docs/archive/`; 7.336 palavras acentuadas, cobradas pela guarda `accents`; o achado
-  69 fechado; `tmp/` e `docs/evidence/` limpos. Em curso: o mapa do repositório, com pastas e
-  nomes refeitos, por ordem dele; o progresso está em `tmp/map-progress.md`.
+  69 fechado; `tmp/` e `docs/evidence/` limpos. O repositório foi refeito como um mapa: a árvore está no [README](../README.md#o-mapa).
 - **`validate` verde em 01/10:** 14 guardas, 74 sintéticas, zero links quebrados, tipos, lint,
   formato, 471 testes, passeio e macaco; o passeio passa com os 12 núcleos ocupados.
 - **a posse:** ele escolheu refazê-la dentro do jogo, com o save 22
@@ -54,7 +53,7 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 
 ## Fila, em ordem
 
-**Agora:** o mapa do repositório, com pastas e nomes refeitos (ordem dele de 01/10). Depois:
+**Agora**, nesta ordem:
 
 1. **Acentos de contexto** (`e`/`é`, `esta`/`está`, `a`/`à`, `tem`/`têm`): o lote do Gemini está
    em `tmp/agents/to-gemini.md` e se confere por `node tools/accent-only.mjs`; pede a janela do
