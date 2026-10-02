@@ -512,7 +512,7 @@ precisa distinguir, não são.
 ## 9. Retratos gerados fora do jogo
 
 As folhas de retrato vêm de imagens que o Diretor gera (ADR 0002: conteúdo, nunca efeito). O padrão
-aprovado está em `vendor/posse/avatar-standard.json`: folha de 1536 × 1024, grade de 3 × 2,
+aprovado está em `prototypes/posse/vendor/avatar-standard.json`: folha de 1536 × 1024, grade de 3 × 2,
 células de 512, zoom de 1,1 e uma posição aprovada por rosto. Para uma folha nova:
 
 1. pedir a mesma grade, resolução, proporção de busto e estilo;

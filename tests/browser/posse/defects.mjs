@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
-import { POSSE_FILES } from "../../prototypes/posse/paths.mjs";
+import { POSSE_FILES } from "../../../prototypes/posse/paths.mjs";
 
 const port = "5209";
 const server = spawn(process.execPath, ["tools/serve-static.mjs"], {

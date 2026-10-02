@@ -1,4 +1,4 @@
-# Créditos das imagens
+# Créditos das imagens e das fontes
 
 ## `phone.webp` — o telefone da mesa
 
@@ -94,3 +94,19 @@ lossless (7,2 MB), pixel a pixel igual à PNG dele — Sobel 68,5 e croma 72,1 n
 1,2 MB por −1,5% de aresta e −1,2% de croma, e ele não quis. É servida a 1916 CSS px (`DESIGN`
 em `cabinet.mjs`): 1:1 a dpr 2, reduzida 2:1 pelo navegador a dpr 1. ⛔ Nitidez em cima dela ele recusou em 18/09
 ("a mesa ficou horrível"); a receita e as medidas ficam em `docs/evidence/assets/bake-wood.mjs`.
+
+## `fonts/` — Inter e Source Serif 4
+
+As duas famílias estão sob a **SIL Open Font License 1.1**, que permite redistribuir os arquivos
+junto do projeto desde que a licença vá junto: `fonts/OFL-inter.txt` e
+`fonts/OFL-source-serif.txt`, cada uma com o aviso de copyright do autor. Elas entraram no lugar
+das equivalentes da Microsoft (Segoe UI Variable e Constantia), que ficaram melhores na comparação
+mas não podem ser redistribuídas.
+
+| arquivo                | família        | autor                     |
+| ---------------------- | -------------- | ------------------------- |
+| `inter-*.woff2`        | Inter          | Rasmus Andersson          |
+| `source-serif-*.woff2` | Source Serif 4 | Frank Grießhammer / Adobe |
+
+São fontes variáveis: um arquivo cobre toda a faixa de peso, então os dois pesos do projeto (400 e 700) não custam dois downloads. Cada família vem em dois recortes, `latin` e `latin-ext`, e o
+`unicode-range` do `@font-face` faz o navegador baixar o segundo só se a página precisar dele.

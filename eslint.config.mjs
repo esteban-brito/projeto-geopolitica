@@ -53,7 +53,7 @@ export default [
        `.gitignore` já declarou como artefato de medição. Aconteceu com um script
        de captura em `tmp/`, e a correção e igualar as duas listas, não silenciar
        o arquivo. */
-    ignores: [".claude/**", "vendor/**", "tmp/**", "captures/**", "**/evidence/**"],
+    ignores: [".claude/**", "**/vendor/**", "tmp/**", "captures/**", "**/evidence/**"],
   },
   {
     files: ["**/*.mjs"],
@@ -75,7 +75,7 @@ export default [
   },
   {
     /* O runner e o servidor escrevem no terminal por ofício. */
-    files: ["tests/run.mjs", "tools/*.mjs"],
+    files: ["tests/run.mjs", "tools/*.mjs", "prototypes/*/tools/*.mjs"],
     rules: { "no-console": "off" },
   },
 ];

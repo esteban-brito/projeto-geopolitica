@@ -25,7 +25,7 @@ node tools/import-posse-work.mjs --output tmp/reports/competencies.mjs
 
 As medições de 30/09 dos ensaios apagados ficam congeladas em
 `docs/evidence/government-*-2026-09-30.json`. O importador lê
-`vendor/posse/project/Posse.dc.html`; sem `--output`, reescreve `competencies.mjs`.
+`prototypes/posse/vendor/project/Posse.dc.html`; sem `--output`, reescreve `competencies.mjs`.
 
 ## O que falta antes de integrar
 

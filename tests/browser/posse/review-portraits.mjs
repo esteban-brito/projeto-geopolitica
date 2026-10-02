@@ -1,6 +1,6 @@
 /* CONFERE UMA FOLHA DE RETRATOS contra o padrão aprovado (vendor/posse/avatar-standard.json):
    recorta os seis rostos nos tamanhos reais e aponta detecção, centro e altura fora do padrão.
-   uso: node tests/browser/review-portraits.mjs <folha.png> [mais.png]; saída em tmp/reports/avatar-reviews/. */
+   uso: node tests/browser/posse/review-portraits.mjs <folha.png> [mais.png]; saída em tmp/reports/avatar-reviews/. */
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -15,12 +15,17 @@ import { chromium } from "playwright";
 
 /** @type {Standard} */
 const standard = JSON.parse(
-  fs.readFileSync(new URL("../../vendor/posse/avatar-standard.json", import.meta.url), "utf8"),
+  fs.readFileSync(
+    new URL("../../../prototypes/posse/vendor/avatar-standard.json", import.meta.url),
+    "utf8",
+  ),
 );
 
 const inputs = process.argv.slice(2);
 if (!inputs.length) {
-  process.stderr.write("uso: node tests/browser/review-portraits.mjs <folha.png> [mais.png]\n");
+  process.stderr.write(
+    "uso: node tests/browser/posse/review-portraits.mjs <folha.png> [mais.png]\n",
+  );
   process.exit(2);
 }
 
@@ -168,6 +173,7 @@ function contactHtml(dataUrl, portraits, title) {
         const portraits = buildPortraits(metrics, reference);
         const directory = path.join(
           import.meta.dirname,
+          "..",
           "..",
           "..",
           "tmp",

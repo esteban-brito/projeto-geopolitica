@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { posix } from "node:path";
-import { POSSE_FILES } from "../prototypes/posse/paths.mjs";
+import { POSSE_FILES } from "../paths.mjs";
 
 const paths = [POSSE_FILES.reference, POSSE_FILES.preview];
 const up = posix.relative(posix.dirname(POSSE_FILES.preview), "") + "/";
@@ -35,7 +35,7 @@ function replace(before, after) {
 }
 replace(
   '<script src="rt/artifact-type/dc-runtime.js"></script>',
-  `<base href="${up}${POSSE_FILES.vendor}/"><script type="module" src="${up}prototypes/posse/browser.mjs"></script>`,
+  `<base href="${up}${POSSE_FILES.vendor}/"><script type="module" src="${posix.relative(POSSE_FILES.vendor, "prototypes/posse/browser.mjs")}"></script>`,
 );
 replace("<x-dc>", "<x-dc hidden>");
 replace("Votos firmes · estimativa", "Base estrutural · estimativa");
@@ -455,7 +455,7 @@ const markdown = [
   "",
   "A igualdade do código de apresentação não prova todas as combinações possíveis de conteúdo, zoom ou crescimento ilimitado da estrutura. Revisão independente dos sistemas continua pendente. Novos achados de UI devem ser reproduzidos e corrigidos pela referência do Claude.",
   "",
-  "Reproduzir a comparação estática: `node tools/audit-posse-ui.mjs`. As provas dinâmicas estão em `tests/browser/posse-comparison.mjs`, `posse-motion.mjs`, `posse-reforms.mjs` e `posse-controls.mjs`.",
+  "Reproduzir a comparação estática: `node prototypes/posse/tools/audit-posse-ui.mjs`. As provas dinâmicas estão em `tests/browser/posse/comparison.mjs`, `posse-motion.mjs`, `posse-reforms.mjs` e `posse-controls.mjs`.",
   "",
 ].join("\n");
 await writeFile(`${POSSE_FILES.reports}/ui-audit.md`, markdown);

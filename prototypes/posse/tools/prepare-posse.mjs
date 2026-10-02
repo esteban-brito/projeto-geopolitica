@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, posix, resolve } from "node:path";
-import { POSSE_FILES } from "../prototypes/posse/paths.mjs";
+import { POSSE_FILES } from "../paths.mjs";
 
-const root = resolve(import.meta.dirname, "..");
+const root = resolve(import.meta.dirname, "..", "..", "..");
 const source = resolve(root, POSSE_FILES.source);
 const target = resolve(root, POSSE_FILES.preview);
 const up = posix.relative(posix.dirname(POSSE_FILES.preview), "") + "/";
@@ -17,7 +17,7 @@ function replace(before, after) {
 
 replace(
   '<script src="./support.js"></script>',
-  `<base href="${up}${POSSE_FILES.vendor}/"><script type="module" src="${up}prototypes/posse/browser.mjs"></script><style>body{margin:0;background:#070b14}</style>`,
+  `<base href="${up}${POSSE_FILES.vendor}/"><script type="module" src="${posix.relative(POSSE_FILES.vendor, "prototypes/posse/browser.mjs")}"></script><style>body{margin:0;background:#070b14}</style>`,
 );
 replace("<x-dc>", "<x-dc hidden>");
 replace(

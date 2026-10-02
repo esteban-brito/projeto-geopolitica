@@ -15,7 +15,7 @@ rascunho arquivado de 28/09 e o código novo, e joguei o protótipo no navegador
 O que o Codex deixou e se sustenta: a estrutura de ministérios por IDs (`prototypes/government/index.mjs`),
 com inversas que preservam transferências posteriores, e a busca booleana nas atribuições. O que
 roda só em prova: `pilot`, `operations`, `demand` e `management`, com unidades inventadas. A tela
-nova é o HTML do Claude com trechos trocados por texto dentro de `tools/prepare-posse.mjs`.
+nova é o HTML do Claude com trechos trocados por texto dentro de `prototypes/posse/tools/prepare-posse.mjs`.
 
 Jogando a posse, achei cinco defeitos: "Vai para Escolher destino." com o nome do botão na frase;
 destinos na ordem do ID interno; a base vira "—" e o hemiciclo apaga depois de qualquer reforma;
@@ -48,7 +48,7 @@ Ele aprovou o plano inteiro. O repositório no GitHub é público e não recebia
 Antes de publicar, os três commits locais do dia foram refeitos sem o runtime do canvas (React
 com licença MIT mais código do claude.ai sem licença declarada) e sem o ZIP de 9,5 MB; os dois
 ficaram no disco, e o runtime passou a ser ignorado. Saíram também 3,1 MB sem uso de
-`vendor/posse/project/`. O push levou `caixa-de-entrada` de `ed9f2cc` até hoje, e a branch
+`prototypes/posse/vendor/project/`. O push levou `caixa-de-entrada` de `ed9f2cc` até hoje, e a branch
 remota `acoplamento-e-simulador`, igual ao `main`, foi apagada. Com o histórico publicado, a
 pasta `Desktop/cld-backups/` (350 MB) foi apagada; os relatórios em texto das três auditorias
 da posse de 26/09 ficaram em `tmp/history/posse-audits-2026-09-26/`.
@@ -61,7 +61,7 @@ longas do handoff foram para `docs/archive/`; os achados P04 a P12 da auditoria 
 handoff, que caiu de 804 para 381 linhas.
 
 Quatro defeitos da posse foram consertados no gerador, cada um com prova de navegador que caiu
-antes (`tests/browser/posse-defects.mjs`). A comparação e a auditoria de UI declaram a única
+antes (`tests/browser/posse/defects.mjs`). A comparação e a auditoria de UI declaram a única
 mudança de texto. Brechas fechadas: `prototypes/` entrou nos tipos e no verificador de links,
 que achou 22 referências a arquivos apagados ou movidos; `npm run posse` roda as seis provas e
 a auditoria; `npm run serve` gera a posse antes de subir. `validate` verde com 471 testes.
@@ -76,7 +76,7 @@ a Lei 15.230/2025, conferida no Planalto: a idade do candidato ao Executivo cont
 
 **Um contrato.** `AGENTS.md` junta leis, fluxo, agentes e mapa do código; `CLAUDE.md` e
 `GEMINI.md` só o importam. O Codex saiu. O verificador de retratos dele virou
-`tests/browser/review-portraits.mjs` e dá o mesmo relatório na folha aprovada B
+`tests/browser/posse/review-portraits.mjs` e dá o mesmo relatório na folha aprovada B
 (`3:unusual-vertical-position`).
 
 **Uma autoridade por assunto.** Foram 34 documentos para `docs/archive/` (ciclos 01–31, o jogo em

@@ -27,7 +27,7 @@ Ordens dele, da mais nova para a mais antiga. O texto inteiro de cada uma, até 
 - **29/09, governo variável:** os números dele eram exemplos; nada de cota de carreiras,
   ministérios ou encaixes. Planejar por responsabilidade, experiência, capacidade e consequência.
 - **26/09, a interface nova:** o motor fica e a interface recomeça sobre a fundação, no estilo
-  Apple + Football Manager + Civilization + Valorant ([ciclo 32](../cycles/32-the-new-interface.md)).
+  Apple + Football Manager + Civilization + Valorant ([ciclo 32](../cycles/32-new-interface.md)).
   A posse é a primeira tela e o padrão das outras; a estrutura da versão 25 está aprovada.
 - **26/09, a posse e a base:** a base do começo segue o protótipo, fiel à realidade e pesquisada
   antes do motor; o começo do jogo cria o Presidente (nome, partido, sexo, nascimento e mais).
@@ -43,9 +43,9 @@ Ordens dele, da mais nova para a mais antiga. O texto inteiro de cada uma, até 
 - **25/09, lições do playtest do E0:** encontro vira cena com rostos e fala curta; nada de pop-up;
   toda decisão mostra quanto custa, quem reage e quanto tempo leva.
 - **25/09, a semana:** o botão avança uma semana, com manhã, tarde e noite; o Vice pode ir no
-  lugar do Presidente; telefonar sem limite fixo ([a semana](../spec/the-week.md)).
+  lugar do Presidente; telefonar sem limite fixo ([a semana](../spec/week.md)).
 - **25/09, o mundo vivo:** pessoas decidem pela VONTADE, sem diretor de drama; o ritmo vem do
-  calendário real ([o mundo vivo](../spec/the-living-world.md)).
+  calendário real ([o mundo vivo](../spec/living-world.md)).
 - **25/09, o E0:** os ministros lembram entre bimestres; o decreto de proteção vale até o
   relatório bimestral seguinte (feito, `state.decree`).
 - **25/09, laboratório sem pressa:** tela nova nasce em dois ou três protótipos para ele comparar.
@@ -87,7 +87,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
   aparentam de 25 a 45 anos; para disputar é preciso ter 35, e os presidentes reais tomaram posse
   entre 57 e 75. As próximas folhas pedem rostos de 45 a 70. Só a Presidência usa os rostos novos:
   ministros, candidatos e a chefe de gabinete seguem desenhados por código até a decisão 10 do
-  [ciclo 33](../cycles/33-the-whole-game.md). Fontes em `tmp/asset-sources/portraits/` (com `LEIA.md`);
+  [ciclo 33](../cycles/33-whole-game.md). Fontes em `tmp/asset-sources/portraits/` (com `LEIA.md`);
   recortes em `vendor/posse/avatar-standard.json`;
 - **85. As provas do lote 1 do mundo vivo nasceram depois do código (25/09).** Fora da ordem da
   regra. Compensação feita: duas sabotagens (a recusa que não fere; aceitar sem nomear) derrubaram

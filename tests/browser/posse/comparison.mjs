@@ -3,9 +3,9 @@ import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
-import { POSSE_FILES } from "../../prototypes/posse/paths.mjs";
-import { COMPETENCIES } from "../../prototypes/government/competencies.mjs";
-import { governmentViolations } from "../../prototypes/government/index.mjs";
+import { POSSE_FILES } from "../../../prototypes/posse/paths.mjs";
+import { COMPETENCIES } from "../../../prototypes/government/competencies.mjs";
+import { governmentViolations } from "../../../prototypes/government/index.mjs";
 
 /** @typedef {import("playwright").Page} Page */
 /** @typedef {{ version: string, height: number, steps: string[], errors: string[], consoles: string[], requests: string[], checkpoints: Record<string, unknown> }} Report */

@@ -2146,7 +2146,7 @@ try {
      tempo, então o defeito ficava invisível — e o portão piscava vermelho sem nada por trás.
      Com 300ms de atraso as duas linhas do bloco do mês vazavam 5px, toda vez. */
   const late = await context.newPage();
-  await late.route("**/vendor/fonts/**", async route => {
+  await late.route("**/assets/fonts/**", async route => {
     await new Promise(resolve => setTimeout(resolve, 300));
     await route.continue();
   });

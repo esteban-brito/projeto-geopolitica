@@ -4,8 +4,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
-import { POSSE_FILES } from "../prototypes/posse/paths.mjs";
-import { CABINET } from "../src/data/cabinet.mjs";
+import { POSSE_FILES } from "../../posse/paths.mjs";
+import { CABINET } from "../../../src/data/cabinet.mjs";
 
 const { values } = parseArgs({
   options: {
@@ -15,10 +15,10 @@ const { values } = parseArgs({
 });
 const sourcePath = values.source
   ? pathToFileURL(resolve(values.source))
-  : new URL("../" + POSSE_FILES.source, import.meta.url);
+  : new URL("../../../" + POSSE_FILES.source, import.meta.url);
 const outputPath = values.output
   ? pathToFileURL(resolve(values.output))
-  : new URL("../prototypes/government/competencies.mjs", import.meta.url);
+  : new URL("../competencies.mjs", import.meta.url);
 const source = readFileSync(sourcePath, "utf8");
 const start = source.indexOf("const SEATS = [");
 const end = source.indexOf("const PRESIDENCY", start);

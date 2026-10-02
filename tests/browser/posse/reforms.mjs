@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
-import { POSSE_FILES } from "../../prototypes/posse/paths.mjs";
-import { governmentViolations } from "../../prototypes/government/index.mjs";
+import { POSSE_FILES } from "../../../prototypes/posse/paths.mjs";
+import { governmentViolations } from "../../../prototypes/government/index.mjs";
 
 /** @typedef {import("playwright").Page} Page */
 const port = "5208";

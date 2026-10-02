@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
-import { POSSE_FILES } from "../../prototypes/posse/paths.mjs";
+import { POSSE_FILES } from "../../../prototypes/posse/paths.mjs";
 
 /** @typedef {import("playwright").Page} Page */
 /** @typedef {{target: string, opacity: string, transform: string, name: string, duration: string, delay: string, easing: string}} Rise */

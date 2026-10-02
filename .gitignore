@@ -20,4 +20,4 @@ assets-source/
 
 # Runtime do canvas do claude.ai: React (MIT) mais código sem licença declarada. Fica no disco,
 # fora do repositório público; sem ele o protótipo da posse não abre.
-vendor/posse/rt/
+prototypes/posse/vendor/rt/
