@@ -3,9 +3,9 @@
 **Pausado expressamente pelo Diretor.** A última ordem foi parar o trabalho e somente
 atualizar os registros para continuar amanhã. Não retomar implementação nesta noite.
 Organização é a prioridade; funcionalidades novas da posse permanecem suspensas.
-O estado operacional é mantido no [handoff](../handoff.md).
+O estado operacional é mantido no [handoff](../../handoff.md).
 
-O [plano](../organization-plan.md) descreve o destino desejado. O
+O [plano](../organization-plan-2026-09-30.md) descreve o destino desejado. O
 [manifesto inicial](workspace-organization-plan-2026-09-30.json) contém 166 ações planejadas,
 caminhos, hashes anteriores e arquivos protegidos. Ele não é uma lista de ações realizadas.
 O [registro observado](workspace-organization-checkpoint-2026-09-30.json) distingue cópia,

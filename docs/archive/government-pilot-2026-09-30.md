@@ -422,7 +422,7 @@ entrega informação ainda antes: a vantagem do recorte não exige criar uma pas
 compartilhamento recupera a fila consumindo esforço, sem criar equipe ou devolver dinheiro gasto.
 As quatro comparações têm abertura e prioridade iguais; o quinto contrafactual muda só prioridade.
 
-[Evidência reproduzível](../evidence/government-operations-2026-09-30.json) e
+[Evidência reproduzível](evidence/government-operations-2026-09-30.json) e
 [instruções de revisão](../../prototypes/government/README.md). Valores e períodos são sintéticos.
 Não foram implementadas chegadas contínuas, custos reais de direção, folha recorrente, reação
 política, conversão de experiência em gestão, vigência jurídica, autorização de dados ou UI.
@@ -452,12 +452,12 @@ Implementado em `prototypes/government/demand.mjs`, com oito provas locais e uma
 fluxos de oito períodos na suíte canônica, semente 20270932. Cinco cenários de 12 períodos
 separam escassez de caixa e de capacidade. Na sobrecarga, 24 entradas deixam 12 casos pendentes
 mesmo com saldo; na recuperação, oito unidades recebidas permitem concluir 12 casos usando
-capacidade disponível. [Evidência](../evidence/government-demand-2026-09-30.json).
+capacidade disponível. [Evidência](evidence/government-demand-2026-09-30.json).
 
 A prova de retomada revelou reinício do calendário e repetição de crédito. A correção parte
 do próximo período, verifica as entradas passadas e preserva o histórico. O orçamento inicial
 não muda. A revisão independente foi tentada no Claude, mas retornou limite semanal;
-[registro](../evidence/government-review-attempt-2026-09-30.json). Sem análise ou aprovação.
+[registro](evidence/government-review-attempt-2026-09-30.json). Sem análise ou aprovação.
 Nesse recorte ficaram pendentes experiência ligada à gestão, fontes reais, vigência, visão
 presidencial e uso. A extensão comportamental abaixo trata da primeira pendência.
 
@@ -487,7 +487,7 @@ esse contrafactual para não favorecer artificialmente pessoa ou estrutura.
 Implementado em `prototypes/government/management.mjs`, com oito provas na suíte canônica.
 A consulta reserva capacidade na mesma execução operacional; por hipótese explícita, ocorre
 antes de repasses e trabalhos, por ordem de solicitação. O parecer fica na pasta destinatária.
-[Quatro comparações reproduzíveis](../evidence/government-management-2026-09-30.json): o educador
+[Quatro comparações reproduzíveis](evidence/government-management-2026-09-30.json): o educador
 entrega educação primeiro na agenda familiar; com ordem presidencial, entrega atendimento no
 primeiro período. A consulta ao ouvidor entrega atendimento no segundo e conclui os três
 trabalhos no quarto, contra o terceiro sem consulta. Nenhum cenário cria equipe ou verba.
@@ -520,7 +520,7 @@ funcionam nos botões do protótipo. A evidência de cada entrega precisa inclui
 **Preservar a UI aprovada do Claude:** fonte v2o e `live.html` são a referência visual.
 Manter hemiciclo, ícones, painéis, fichas, hover, escala e controles existentes. Trocar a origem
 dos dados e a ação de um gesto exige comparação na tela; não redesenhar esses elementos por
-conveniência da implementação. A [auditoria linha por linha](../evidence/posse-ui-line-audit-2026-09-30.md)
+conveniência da implementação. A [auditoria linha por linha](evidence/posse-ui-line-audit-2026-09-30.md)
 compara integralmente CSS e HTML e registra os 47 blocos de diferença. Dezesseis métodos
 de interação são idênticos; os dois adaptados mudam somente inicialização e texto de estimativa.
 O navegador conferiu 42 percursos de comparação, 16 aberturas/recargas com movimento,
@@ -540,7 +540,7 @@ riscos ainda sem prova. Entregar a correção pequena imediatamente, com regress
 
 Estado de A: o teste de recarga falhou antes da correção e passou depois em 1440×980 e 1440×900,
 incluindo rascunho antigo, dois reinícios seguidos, nomeação e captura. Quatro chaves do jogo
-principal conservaram seus conteúdos. [Evidência](../evidence/posse-reset-2026-09-30.json).
+principal conservaram seus conteúdos. [Evidência](evidence/posse-reset-2026-09-30.json).
 Na recuperação após o desligamento, a página voltou a ser gerada com a fachada atual.
 Reproduzida e corrigida também a exposição do template cru durante a carga ESM: a ocultação
 inicial conserva a entrada original, com zero quadros expostos em 16 cenários. CSS, tempos
@@ -581,12 +581,12 @@ criada e Casa Civil e passou depois da correção. A AGU mantém sua proposta de
 alimentar e da informação; negação e termos desconhecidos são exercitados na tela. Foram
 retiradas as tabelas de precedentes, destinos fixos e parceiros fixos, as sugestões históricas
 de nome e a reação genérica. Fonte e `live.html` permanecem preservados para comparação.
-[Prova do navegador](../evidence/posse-comparison-recovery-2026-09-30.json): duas versões e duas
+[Prova do navegador](evidence/posse-comparison-recovery-2026-09-30.json): duas versões e duas
 resoluções, incluindo a cadeia, campos, filtros, hover, nomeações, foto e dois F5 por caso.
 O novo campo usa o CSS existente; catálogo visual e geometria inicial permanecem iguais.
-[Criação, nome livre e transferência](../evidence/posse-reforms-2026-09-30.json) têm percurso
+[Criação, nome livre e transferência](evidence/posse-reforms-2026-09-30.json) têm percurso
 próprio nas duas resoluções, incluindo remanejamento da mesma pessoa e cancelamento posterior.
-[Movimento](../evidence/posse-motion-2026-09-30.json) confronta 16 aberturas/recargas e as
+[Movimento](evidence/posse-motion-2026-09-30.json) confronta 16 aberturas/recargas e as
 transições dos ministérios. A preparação da versão nova exibia o template antes do runtime;
 ocultá-lo até a montagem eliminou esse intervalo, conservando `rise` e o CSS original.
 

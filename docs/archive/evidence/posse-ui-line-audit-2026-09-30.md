@@ -1,6 +1,6 @@
 # Comparação linha por linha da UI da posse — 30/09/2026
 
-Referência: [original do Claude](../../tmp/posse/live.html). Comparada: [versão transformada](../../tmp/posse/engine.html). O original foi preservado. Esta auditoria cobre apresentação e interação; apenas localiza as alterações de dados e cálculos, sem aprovar sistemas por aparência.
+Referência: [original do Claude](../../../tmp/posse/live.html). Comparada: [versão transformada](../../../tmp/posse/engine.html). O original foi preservado. Esta auditoria cobre apresentação e interação; apenas localiza as alterações de dados e cálculos, sem aprovar sistemas por aparência.
 
 ## O que foi comparado integralmente
 
@@ -37,7 +37,7 @@ Os 16 métodos sem adaptação são cópias exatas. Os outros dois preservam tod
 
 ## Todas as diferenças localizadas
 
-Números referem-se às linhas dos dois HTMLs no estado auditado. Inserções indicam o ponto de inserção no original. O [diff completo](posse-ui-line-diff-2026-09-30.patch) e os [trechos antes/depois em JSON](posse-ui-line-audit-2026-09-30.json) permitem verificar cada linha sem truncamento.
+Números referem-se às linhas dos dois HTMLs no estado auditado. Inserções indicam o ponto de inserção no original. O [diff completo](../../evidence/posse-ui-line-diff-2026-09-30.patch) e os [trechos antes/depois em JSON](../../evidence/posse-ui-line-audit-2026-09-30.json) permitem verificar cada linha sem truncamento.
 
 | Bloco | Original | Transformado | Classificação e revisão |
 | ---: | --- | --- | --- |
@@ -93,11 +93,11 @@ Números referem-se às linhas dos dois HTMLs no estado auditado. Inserções in
 
 A [comparação de gestos](posse-comparison-recovery-2026-09-30.json) passou em 42 percursos agrupados, nas duas versões e em 1440×980/900: criação, cerimônia, filtros, ordenação, hover, fichas, nomeação, troca, remanejamento, exoneração, junções e inversas, extinção, distribuição, divisão, foto, retorno e duas recargas. A versão nova também foi exercitada com extinções encadeadas e restauração fora de ordem.
 
-A [medição do movimento](posse-motion-2026-09-30.json) cobre 16 aberturas/recargas, incluindo atraso controlado de 300 ms. Antes, a versão nova expunha o template cru; [registro anterior](posse-motion-before-2026-09-30.json). Depois, ambas tiveram zero quadros de template exposto, quadros intermediários da entrada e as mesmas durações, curvas e atrasos. Quatro percursos adicionais mediram cerimônia, hover, ficha, passo e foto, comparando as propriedades computadas e preservação dos elementos entre renderizações.
+A [medição do movimento](posse-motion-2026-09-30.json) cobre 16 aberturas/recargas, incluindo atraso controlado de 300 ms. Antes, a versão nova expunha o template cru; [registro anterior](../../evidence/posse-motion-before-2026-09-30.json). Depois, ambas tiveram zero quadros de template exposto, quadros intermediários da entrada e as mesmas durações, curvas e atrasos. Quatro percursos adicionais mediram cerimônia, hover, ficha, passo e foto, comparando as propriedades computadas e preservação dos elementos entre renderizações.
 
 [Criação, renomeação e transferência](posse-reforms-2026-09-30.json) passaram nas duas alturas com ícone herdado da Saúde, campo de nome, filtro por atribuição, pessoa remanejada sem duplicação, pasta vazia, desistência e F5. A operação institucional ainda pendente conserva o estado e a proposta na tela.
 
-A [conferência de teclado e controles](posse-controls-2026-09-30.json) passou em oito percursos: duas versões, duas alturas, movimento normal e reduzido. Tabulação, foco visível, ficha partidária ao receber foco e isolamento da tela ativa são iguais. Os keyframes completos do voo e pulso são idênticos, inclusive posições e escalas; com movimento reduzido nenhum dos dois é emitido. Cerimônia, seleção, nomeação, foto e retorno foram acionados por teclado.
+A [conferência de teclado e controles](../../evidence/posse-controls-2026-09-30.json) passou em oito percursos: duas versões, duas alturas, movimento normal e reduzido. Tabulação, foco visível, ficha partidária ao receber foco e isolamento da tela ativa são iguais. Os keyframes completos do voo e pulso são idênticos, inclusive posições e escalas; com movimento reduzido nenhum dos dois é emitido. Cerimônia, seleção, nomeação, foto e retorno foram acionados por teclado.
 
 A igualdade do código de apresentação não prova todas as combinações possíveis de conteúdo, zoom ou crescimento ilimitado da estrutura. Revisão independente dos sistemas continua pendente. Novos achados de UI devem ser reproduzidos e corrigidos pela referência do Claude.
 

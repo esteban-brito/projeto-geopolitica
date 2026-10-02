@@ -21,12 +21,12 @@ Foram retirados **182 arquivos, 45.771.001 bytes**: cópias extraídas e ZIP red
 com conteúdo conservado no backup de 29/09; capturas duplicadas; resumos e scripts temporários
 da recuperação; diagnósticos superados pelas provas finais. As 12 capturas redundantes de
 movimento eram idênticas, por hash, às quatro capturas finais de F5 mantidas. O diff completo
-passou de `tmp/` para [evidência permanente da comparação](posse-ui-line-diff-2026-09-30.patch).
+passou de `tmp/` para [evidência permanente da comparação](../../evidence/posse-ui-line-diff-2026-09-30.patch).
 
 O rascunho de arquitetura de 28/09 foi preservado sem mudança de conteúdo em
-[arquivo histórico](../archive/dynamic-government-design-2026-09-28.md), e suas referências
-foram atualizadas. A autoridade atual continua em [governo variável](../spec/dynamic-government.md)
-e [aplicação no protótipo](../spec/government-pilot.md#11-transformar-o-protótipo-da-posse--execução-em-3009).
+[arquivo histórico](../dynamic-government-design-2026-09-28.md), e suas referências
+foram atualizadas. A autoridade atual continua em [governo variável](../../spec/dynamic-government.md)
+e [aplicação no protótipo](../government-pilot-2026-09-30.md#11-transformar-o-protótipo-da-posse--execução-em-3009).
 
 `tmp/posse/`, os retratos, as referências visuais, os cenários, os resultados históricos,
 o Git, as ferramentas e as evidências atuais foram conservados. `live.html`,
@@ -34,7 +34,7 @@ o Git, as ferramentas e as evidências atuais foram conservados. `live.html`,
 O original do Claude está intacto. A correção autorizada dos IDs dos dados de teste e seu diff
 permanecem registrados; as asserções foram conservadas.
 
-O [registro detalhado](workspace-cleanup-2026-09-30.json) contém o inventário anterior,
+O [registro detalhado](../../../prototypes/posse/vendor/workspace-cleanup-2026-09-30.json) contém o inventário anterior,
 hashes, grupos idênticos, membros dos arquivos comprimidos, movimentos, exclusões realizadas
 e o resumo posterior em `post_cleanup`. A lista completa dos alvos foi conferida antes da
 retirada; arquivos rastreados, atalhos e fontes ativas foram protegidos. A última retirada

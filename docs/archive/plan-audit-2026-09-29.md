@@ -188,7 +188,7 @@ com uma mesma faixa protegida por `constitution`, produziu:
 
 Reprodução local: copiar `tmp/history/recovery-2026-09-30/plan-audit-probe.mjs` para `tmp/` (os imports partem de lá) e rodar `node tmp/plan-audit-probe.mjs`; entrada `floor: 50`, `ceiling: 100`,
 `guard: "constitution"`, nível pedido 0. A função é de produção; a faixa é sintética.
-Resultado preservado na [evidência](../evidence/plan-audit-2026-09-29.json).
+Resultado preservado na [evidência](evidence/plan-audit-2026-09-29.json).
 
 Isso é comportamento legado intencional, não regressão atribuída ao protótipo. O plano novo
 exige separar competência jurídica e obediência extralegal. A gramática foi marcada; falta
@@ -318,7 +318,7 @@ portões completos da interface nova e playtests. A ordem das etapas 1–12 cont
 
 ## 4. Provas e limites da conclusão
 
-A sonda local executou sem erro e seus valores estão na [evidência](../evidence/plan-audit-2026-09-29.json).
+A sonda local executou sem erro e seus valores estão na [evidência](evidence/plan-audit-2026-09-29.json).
 O script de reprodução foi arquivado em `tmp/history/recovery-2026-09-30/`, pasta ignorada pelo Git.
 P07 chama `riteFor` com a entrada descrita; P08 usa a regra de petróleo do catálogo; P11 chama
 `openingLoyalty` e `deputyChances` para os 16 partidos. A evidência está versionável, mesmo que
@@ -345,7 +345,7 @@ execução, filas, fundos, registros e repasses que disputam capacidade existent
 escolhas agora têm consequências sintéticas; um quinto cenário verifica mudar prioridade sem
 reforma. São 18 provas novas, incluindo 200 cenários de seis períodos com recursos e prioridades
 variados. [Estado e limites](government-pilot-2026-09-30.md) e
-[evidência](../evidence/government-operations-2026-09-30.json).
+[evidência](evidence/government-operations-2026-09-30.json).
 
 É avanço parcial de P03: demonstra a abstração de alguns efeitos antes de expandir vocabulário.
 Não fecha P02–P12, não integra o protótipo e não substitui revisão independente, calibração

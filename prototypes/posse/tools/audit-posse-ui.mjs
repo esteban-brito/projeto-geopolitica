@@ -169,7 +169,7 @@ const runtime = POSSE_FILES.runtime;
 const runtimeBytes = await readFile(runtime);
 /** @type {{workspace_files: Record<string, {bytes: number, sha256: string}>}} */
 const inventory = JSON.parse(
-  await readFile("docs/evidence/workspace-cleanup-2026-09-30.json", "utf8"),
+  await readFile("prototypes/posse/vendor/workspace-cleanup-2026-09-30.json", "utf8"),
 );
 const baselineRuntime = inventory.workspace_files["tmp/posse/rt/artifact-type/dc-runtime.js"];
 assert.ok(baselineRuntime, "runtime catalogado antes desta correção");
