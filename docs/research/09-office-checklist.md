@@ -292,7 +292,7 @@ abertura é em **2 de fevereiro** (CF art. 57, 1), e a prestação de contas vem
 dias** após a abertura (art. 84, XXIV).
 
 **Realpolitik:** a mensagem de abertura é o único discurso que o Presidente faz ao Congresso
-reunido, e serve como termômetro da relação. Se o clima é de合作, é um jantar protocolar. Se é
+reunido, e serve como termômetro da relação. Se o clima é de cooperação, é um jantar protocolar. Se é
 de guerra, o Presidente manda o texto e vai embora — e o Congresso boicota a solenidade. A
 prestação de contas é mais relevante como documento do que como discurso: nela estão os números
 que o Congresso vai usar para cobrar, criticar e condicionar votação.
