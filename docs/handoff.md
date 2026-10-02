@@ -84,7 +84,9 @@ despadronização, desarmonia"). As fases 1 a 4 estão feitas (journal 125). Fal
    pesam no 1º ano; nome inventado, com papel, ideologia e temperamento inspirados no real, sem
    episódio real na história do personagem. Agora, quem não é eleito (STF, PGR, AGU, BC,
    comandantes, TCU, imprensa, mercado); Congresso, lideranças e governadores depois do 2º turno
-   (25/10/2026), com as bancadas reais de 2027. ADR 0003 revisto.
+   (25/10/2026), com as bancadas reais de 2027. Feito em 01/10: a emenda do ADR 0003 e a
+   [pesquisa 21](research/21-the-inspired-cast.md) (STF, PGR, BC e o calendário de vagas). Falta:
+   TCU, comandantes, imprensa, mercado e um perfil com fonte para cada ministro.
 4. **As partidas Xi e Lee escritas** como se ele jogasse (estilo Geopolitical Simulator, Democracy
    4, Football Manager), no jogo pronto, com desfecho realista mesmo que fracassem; servem de
    régua, leitura e roteiro de teste.
