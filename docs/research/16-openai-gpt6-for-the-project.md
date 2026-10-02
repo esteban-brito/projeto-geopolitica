@@ -1,4 +1,4 @@
-# PESQUISA 16 — o GPT-6 da OpenAI: onde o Astra vale o que custa
+# Pesquisa 16 — o GPT-6 da OpenAI: onde o Astra vale o que custa
 
 > Consulta em 25/09/2026, feita pelo Claude, a pedido dele: "quero usar o Astra com precisão no que
 > ele realmente é bom e útil, porque ele é bastante caro". Fontes oficiais da OpenAI lidas no

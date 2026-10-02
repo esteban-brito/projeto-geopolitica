@@ -1,4 +1,4 @@
-# Arquitetura Institucional e Governança do Brasil Real
+# Pesquisa 13 — a arquitetura institucional do Brasil real
 
 > **Rascunho de pesquisa do Gemini — não validado como referência factual**  
 > **Status:** Entregue; triagem rápida do Codex realizada; revisão de fontes pendente  

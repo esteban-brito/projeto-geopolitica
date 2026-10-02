@@ -573,7 +573,7 @@ sobre geografia fica aberta.
 
 ### 5.6 A visão presidencial — o que hoje lê verdade oculta
 
-A regra (especificação §6.1, invariante 21, CLAUDE.md) é epistemológica. Antes de qualquer
+A regra (especificação §6.1, invariante 21, AGENTS.md) é epistemológica. Antes de qualquer
 objeto, a lista das consultas que precisarão dela, com o que a Presidência realmente sabe:
 
 | consulta de hoje                                                    | onde a tela lê                                         | o que é                                         | o que a Presidência sabe                                     | lote   |
@@ -774,7 +774,7 @@ aproximação declarada, até o lote B1.
 | 3   | `OBSERVATION`                     | aberto; não gravar por padrão (especificação §8.1)                                          |
 | 4   | camadas de simulação              | trocado pela separação cognição × processamento (especificação §9.7, §9.14; aqui §5.3)      |
 | 5   | comunicação e fato material       | aceito; princípio 9 e §11.2                                                                 |
-| 6   | "a tela pergunta"                 | aceito; especificação §6.1 e invariante 21; CLAUDE.md                                       |
+| 6   | "a tela pergunta"                 | aceito; especificação §6.1 e invariante 21; AGENTS.md                                       |
 | 7   | vocabulário de 90 verbos          | mantido como recomendação: crescer por caso; a especificação já adia o congelamento         |
 | 8   | emendas e moeda                   | registrar, pesquisar (R1), não trocar por moeda simplificada; especificação §14.10          |
 | 9   | novo: agendador verificável       | "processar todos = processar os escolhidos" exige prazo como despertar agendado (§5.3)      |

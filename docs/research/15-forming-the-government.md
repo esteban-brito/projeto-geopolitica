@@ -1,4 +1,4 @@
-# PESQUISA 15 — montar o governo: ministérios, aliados e a eleição da Mesa
+# Pesquisa 15 — montar o governo: ministérios, aliados e a eleição da Mesa
 
 > Consulta em 25/09/2026, feita pelo Claude nas fontes oficiais: Planalto (Constituição, Lei
 > 14.600/2023, MPs 870/2019 e 1.154/2023), Regimento Interno da Câmara (texto atualizado no site da

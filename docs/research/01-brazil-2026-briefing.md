@@ -1,4 +1,4 @@
-# Briefing de pesquisa 01 — o Brasil de 2026
+# Pesquisa 01 — o Brasil de 2026: o briefing
 
 > Para pesquisa externa. O que volta daqui vira **catálogo de dados** do simulador
 > (`src/data/`), e cada número tem um endereço já definido no código. Escrito na

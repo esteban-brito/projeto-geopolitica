@@ -1,4 +1,4 @@
-# Respostas 01 — o que voltou, e o que fazer com isso
+# Pesquisa 02 — o Brasil de 2026: as respostas
 
 > Resposta parcial ao [briefing 01](01-brazil-2026-briefing.md), recebida na sexta sessão,
 > 13/08/2026. Cobre os blocos 1, 2 (parcial) e 5 (parcial). **Cada número aqui

@@ -1,4 +1,4 @@
-# PESQUISA 14 — a estatal de energia: regras, números e episódios reais
+# Pesquisa 14 — a estatal de energia: regras, números e episódios reais
 
 > Consulta em 25/09/2026, feita pelo Claude nas fontes oficiais: Planalto, STF, SEC (20-F da
 > Petrobras), Petrobras, ANP, IBGE, Fazenda e MME. Atende às seis pesquisas do

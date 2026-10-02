@@ -1,4 +1,4 @@
-# Mecânicas de referência — Paradox, Football Manager, Geo-Political Simulator
+# Pesquisa 03 — mecânicas de referência: Paradox, Football Manager, Geopolitical Simulator
 
 > ⚠ **NADA AQUI FOI IMPLEMENTADO, e nada aqui foi acordado.** É a leitura de um
 > dossiê externo de 16/08/2026 contra o código que existe — o que já roda, o que roda

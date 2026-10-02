@@ -1,4 +1,4 @@
-# A obrigatória, e quem de fato a decide
+# Pesquisa 06 — a despesa obrigatória e quem de fato a decide
 
 > **A tese:** o passo 6 do ciclo 13 mira certo — 61% do orçamento realmente sai de A1, A2 e
 > A3 — mas **os três itens dão ao presidente uma caneta que ele não tem**. Nenhum dos três é

@@ -145,3 +145,16 @@ etapas, cada uma com portão verde e commit.
 Dois defeitos achados no caminho: a guarda `accents` tomava `the-base-model.md` por inglês e pulava
 o comentário inteiro; e a ferramenta de mudança não via arquivos fora do Git, como o runtime do
 canvas. Os dois foram corrigidos antes do commit.
+
+### 128 · Os ADRs e a pasta docs no padrão — 02/10/2026
+
+Os três ADRs ganharam um formato só: título `ADR NNNN — frase`, a linha de situação dizendo o que
+vale hoje, data, decisor e emendas, e as seções Contexto, Decisão, Por quê, Consequências e Emendas.
+A ADR 0001 deixou de descrever como vigentes o veredito e a narração por IA e a emenda de 04/09,
+que a ordem de 29/09 (IA por API não entra) tinha derrubado; a ADR 0002 tirou o modelo em tempo de
+jogo da busca; a ADR 0003 juntou as emendas de 24/09 e 01/10. A pasta ganhou índice, como as outras.
+
+Na auditoria dos 46 documentos ativos: 10 pesquisas ganharam o título "Pesquisa NN — …"; os ponteiros
+para onde a regra mora foram para o `AGENTS.md`; "o responsável" virou "o Diretor"; o revisor de
+cada etapa do ciclo 33 deixou de ser o Codex; a especificação mestra aponta para a visão e para o
+índice, em vez do jogo em uma página arquivado. Citação histórica correta ficou como estava.

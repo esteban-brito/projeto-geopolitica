@@ -19,7 +19,7 @@
 Você preside o Brasil real, tenta transformá-lo, paga os custos e vê o que de fato mudou.
 
 - **Brasil real e fiel.** Constituição, calendário, caixa e competências têm fonte. Pessoas e empresas
-  jogáveis têm nomes inventados, conforme ADR 0003 citado em [CLAUDE.md](../../CLAUDE.md).
+  jogáveis têm nomes inventados, conforme ADR 0003 citado em [AGENTS.md](../../AGENTS.md).
 - **Tudo tem preço.** Mesmo uma tentativa fora da lei chega a destinatários que podem obedecer,
   recusar, denunciar ou reagir. Não existe resposta automática de “proibido”.
 - **A cadeia é visível.** QUERER ≠ PROPOR ≠ APROVAR ≠ PROMULGAR ≠ EXECUTAR ≠ CONSOLIDAR.
@@ -364,8 +364,8 @@ evento, semente e visão presidencial, e oferece a mesma consulta à resolução
 
 As etapas **0–12 [DESENHO]** organizam os lotes existentes. Dentro de cada etapa, um lote só
 começa com a ordem dele, como exige o [mapa](../spec/migration-map.md) §6.4. Etapas com código
-fecham com `npm run validate` verde, prova que falhava antes do conserto, auditoria cruzada do
-Codex e playtest dele. A auditoria reproduz achados antes de mudar código. A etapa 0 é só
+fecham com `npm run validate` verde, prova que falhava antes do conserto, auditoria por um revisor
+diferente do autor e playtest dele. A auditoria reproduz achados antes de mudar código. A etapa 0 é só
 documental e usa o portão deste pedido: Prettier, links e check.
 
 ### Etapa 0 — Fundação do plano
@@ -610,8 +610,8 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
 
 - Cada lote de código começa com prova que cai contra o estado anterior e termina com
   `npm run validate` verde. Testes não mudam para esconder defeito; calibração de `src/data/`
-  exige pesquisa e decisão própria ([CLAUDE.md](../../CLAUDE.md)).
-- O Codex audita cada etapa com diff delimitado, como nas três auditorias da posse registradas
+  exige pesquisa e decisão própria ([AGENTS.md](../../AGENTS.md)).
+- Um revisor diferente do autor (Gemini ou ultrareview) audita cada etapa com diff delimitado, como nas três auditorias da posse registradas
   no [journal](../archive/journal-2026-08-13-to-09-30.md). Achado só entra depois de reprodução.
 - O Diretor joga a entrega de cada etapa. O aceite informa o que ele fez, o que apareceu, o que
   custou e onde a regra falhou. Um teste verde não substitui o playtest.

@@ -50,7 +50,7 @@ captures/ · tmp/      capturas do passeio e área de trabalho local, fora do Gi
 | [`docs/spec/`](docs/spec/README.md)         | como o jogo funciona, sistema por sistema, com a situação de cada documento                 |
 | [`docs/cycles/`](docs/cycles/README.md)     | os planos de trabalho ativos; o [ciclo 33](docs/cycles/33-whole-game.md) é o plano em vigor |
 | [`docs/research/`](docs/research/README.md) | pesquisas e fontes, com a situação de cada uma                                              |
-| [`docs/adr/`](docs/adr/)                    | decisões que não se reabrem sem pedido                                                      |
+| [`docs/adr/`](docs/adr/README.md)           | decisões que não se reabrem sem pedido                                                      |
 | [`docs/journal.md`](docs/journal.md)        | o que cada sessão fez e por quê                                                             |
 | [`docs/archive/`](docs/archive/)            | o que foi superado, inclusive o journal até 30/09 e os ciclos 01 a 31                       |
 | [`docs/evidence/`](docs/evidence/README.md) | medições congeladas que o código e os documentos citam                                      |

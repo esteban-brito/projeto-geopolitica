@@ -52,7 +52,7 @@ próprio derivado da seed da partida; choques exógenos, quando existirem, terã
 | **DELTA**    | `src/domain/graph/`    | catálogo de ligações, estado, deltas                                                                                     | nós e arestas com peso e sinal                              |
 | **VONTADE**  | `src/domain/actors/`   | o ator e os priors dele, as percepções com fonte e linhagem, o repertório, a avaliação, o resolver de sujeitos, limiares | crenças, objetivos priorizados, intenção, ação e o trace    |
 
-O codinome é como o responsável cita o motor. Ele vive no cabeçalho do módulo e
+O codinome é como o Diretor cita o motor. Ele vive no cabeçalho do módulo e
 nesta tabela, e **não** aparece em código executável — no código existe um nome
 só, o funcional. `codenames` prova a correspondência 1:1 nas duas direções.
 
@@ -80,7 +80,7 @@ mês seguinte sacava os mesmos números.
 > gosto **expira**: _"não importa o que eu achava antes… eu posso mudar de ideia a qualquer
 > momento"_. **Nenhuma frase desta seção é motivo para recusar um pedido dele** — quando as duas
 > famílias se confundirem, a pergunta vai para ele, e não para o documento. Ver as três famílias
-> em `CLAUDE.md`.
+> em `AGENTS.md`.
 >
 > ⭐ **Emenda de 26/09/2026:** a interface nova segue o estilo Apple + Football Manager +
 > Civilization + Valorant ([ciclo 32](cycles/32-new-interface.md)); o vidro fica só em
@@ -396,7 +396,7 @@ Declarado para não ser confundido com cobertura:
 - **nome real de pessoa no catálogo** (ADR 0003). Toda pessoa do jogo é fictícia,
   e não existe casador honesto para isso: uma lista de nomes proibidos seria
   incompleta por definição e acusaria sobrenomes comuns. Fica como regra declarada
-  em `CLAUDE.md` e cobrada em revisão — o que **tem** guarda é a identidade
+  em `AGENTS.md` e cobrada em revisão — o que **tem** guarda é a identidade
   (`identity`), que impede personagem sem `id` e `id` repetido.
 
 ### ⚖ O NÍVEL DIZ A SUBSTÂNCIA, E A SUBSTÂNCIA DIZ O RAIO — 30/08/2026
@@ -511,13 +511,13 @@ células de 512, zoom de 1,1 e uma posição aprovada por rosto. Para uma folha 
 
 **Tipos e cabeçalho.** Cada documento ativo tem um tipo, e o tipo diz o cabeçalho:
 
-| tipo          | onde              | nome do arquivo        | cabeçalho                                                         |
-| ------------- | ----------------- | ---------------------- | ----------------------------------------------------------------- |
-| especificação | `docs/spec/`      | `kebab-case` em inglês | título e `> **Situação:** vigente` ou `referência`, com o assunto |
-| ciclo         | `docs/cycles/`    | `NN-kebab-case`        | título `Ciclo NN — nome` e `> **Situação:**` com data             |
-| pesquisa      | `docs/research/`  | `NN-kebab-case`        | título; a situação mora no índice da pasta                        |
-| decisão       | `docs/adr/`       | `NNNN-kebab-case`      | o formato de ADR da pasta                                         |
-| registro      | `docs/journal.md` | um arquivo             | `### N · título — dd/mm/aaaa`, da mais velha para a mais nova     |
+| tipo          | onde              | nome do arquivo        | cabeçalho                                                                                                                                     |
+| ------------- | ----------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| especificação | `docs/spec/`      | `kebab-case` em inglês | título e `> **Situação:** vigente` ou `referência`, com o assunto                                                                             |
+| ciclo         | `docs/cycles/`    | `NN-kebab-case`        | título `Ciclo NN — nome` e `> **Situação:**` com data                                                                                         |
+| pesquisa      | `docs/research/`  | `NN-kebab-case`        | título; a situação mora no índice da pasta                                                                                                    |
+| decisão       | `docs/adr/`       | `NNNN-kebab-case`      | título `ADR NNNN — frase`; `> **Situação:**` e a linha de data, decisor e emendas; seções Contexto, Decisão, Por quê, Consequências e Emendas |
+| registro      | `docs/journal.md` | um arquivo             | `### N · título — dd/mm/aaaa`, da mais velha para a mais nova                                                                                 |
 
 Cada pasta tem um `README.md` com o índice e a situação de cada documento. Documento superado
 vai para `docs/archive/` com a data no nome e não se edita mais, salvo link que quebrar.

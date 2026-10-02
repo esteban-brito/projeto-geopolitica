@@ -92,8 +92,8 @@ no mesmo commit.
 4. **A tela.** Criação, cerimônia, hemiciclo, painel, reformas, listas, fichas e foto, dentro do
    jogo. O passeio cobre a posse; a prova dos defeitos de 01/10 é reescrita para ela.
 5. **Polimento e troca.** A régua do §4 inteira; inventário do §2 conferido gesto a gesto;
-   capturas inspecionadas. Saem `prototypes/posse/vendor/`, `prototypes/posse/`, `prototypes/posse/tools/prepare-posse.mjs`,
-   `prototypes/posse/tools/audit-posse-ui.mjs` e as provas de comparação com o original.
+   capturas inspecionadas. Saem `prototypes/posse/` inteira (canvas, ponte e ferramentas), as provas de
+   `tests/browser/posse/` e as suítes `posse-*`.
 6. **O teste dele.** O que ele achar vira prova e conserto antes de qualquer ampliação.
 
 ## 6. Fora deste ciclo

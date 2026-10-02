@@ -1,4 +1,4 @@
-# PESQUISA 07 — a lei que o jogador escreve, e o mundo que tem opinião sobre ela
+# Pesquisa 07 — a lei que o jogador escreve e o mundo que tem opinião sobre ela
 
 > **Escrita em 04/09/2026**, a pedido dele, e ela nasce de duas frases:
 >

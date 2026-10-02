@@ -54,5 +54,5 @@ venalidade do motor é [DESENHO], herdada do bloco equivalente do catálogo de 9
 - **Bancadas por ordem dele (26/09):** PCN 94, PCS 90, MDN 52, PDST 50, FBR 48, PBR 42, PAB 38, ACF 36, UNIDOS 24,
   PSO 12, PTP 10, VANGUARDA 8, ECOS 4, PATRIA 3, PLI 1 e PML 1. A lista dele somava 507; os 6 que faltavam foram
   para o MDN, por escolha dele.
-- **Recusa declarada (terceira auditoria do Codex, `tmp/posse/patch-v2k.mjs`):** PML e PLI recusam ministério
+- **Recusa declarada (terceira auditoria do Codex, `tmp/history/posse/patch-v2k.mjs`):** PML e PLI recusam ministério
   de qualquer Presidente, como dizem os perfis deles, e ficam na oposição.

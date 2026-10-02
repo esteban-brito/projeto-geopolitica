@@ -5,11 +5,6 @@
 > não valem a entrada separada nem o recomeço do zero (§1, §3 e §4). A posse é a primeira tela
 > feita assim, no [ciclo 34](34-posse-rebuilt.md).
 
-> **Situação em 26/09/2026:** planejado, nada implementado. Ordem dele: o motor fica, a interface
-> recomeça do zero sobre a fundação, e o estilo fica fixado em **Apple + Football Manager +
-> Civilization + Valorant**. Ele quer reaproveitar o que prestar, talvez do Liquid Glass e dos
-> menus. Base: [a posse no jogo](../archive/the-posse-port-2026-09-26.md) e o [mapa das telas](../archive/interface-map-2026-09-25.md).
-
 ## 1. O que fica, o que se reaproveita, o que sai
 
 **Fica, sem reescrever (a fundação):** `src/domain`, `src/application`, `src/state`, `src/data` e
@@ -105,7 +100,7 @@ primeiro e é o padrão das outras telas (ordem dele, §6).
    os testes de navegador da nova (passeio, desempenho, teclado, quatro tamanhos de tela);
 4. **A posse no jogo** (lote E1.0e e a criação do Presidente), construída a partir do protótipo da
    fase 1;
-5. **As outras telas**, no padrão da posse e na ordem do mapa das telas: Governo, Congresso,
+5. **As outras telas**, no padrão da posse e na ordem do ciclo 33: Governo, Congresso,
    Gabinete, País, Correspondência. Cada uma: protótipos no canvas, escolha dele, construção,
    passeio novo;
 6. **A troca.** Quando a nova cobre o inventário inteiro, a antiga e os testes dela saem, com o sim
@@ -155,7 +150,7 @@ coisas: o mapa de cada medida para o instrumento brasileiro mais próximo; a lis
 precisam oferecer, que vira critério de aceite ("uma partida Xi é jogável do começo ao fim"); e o mesmo teste
 depois com outros projetos de governo, para o jogo não favorecer um caminho só. Isso orienta a interface nova
 desde a fase 1. O mapa, as peças de tela e o critério de aceite estão em
-[as partidas-teste](../spec/test-playthroughs.md): Xi (pesquisa 19) e Lee Kuan Yew (pesquisa 20, com o Codex).
+[as partidas-teste](../spec/test-playthroughs.md): Xi (pesquisa 19) e Lee Kuan Yew (pesquisa 20).
 
 ## 7. Decisões que seguem abertas
 

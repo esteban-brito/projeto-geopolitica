@@ -1,4 +1,4 @@
-# PESQUISA 08 — A MESA DO PRESIDENTE
+# Pesquisa 08 — a mesa do Presidente
 
 > **Escrita em 05/09/2026, a pedido dele:** _"eu quero que esse Gabinete seja totalmente
 > reformulado, pq hoje ele está terrível… eu falei que quero que ele pareça a mesa de um

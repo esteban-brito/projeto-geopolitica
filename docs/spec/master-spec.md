@@ -12,7 +12,8 @@
 >
 > Este arquivo não é diário, changelog nem transcrição de discussão. Registra somente decisões vigentes, hipóteses relevantes, questões abertas e critérios verificáveis.
 >
-> **Detalhada por** (em conflito, vale o documento mais recente): [o jogo em uma página](../archive/game-in-one-page-2026-09-25.md), a promessa e o loop; [a gramática das regras](rules-grammar.md), como toda regra real vira peça de jogo; [o corte vertical da estatal](vertical-slice-energy.md), a primeira aplicação; [o mapa de migração](migration-map.md), o plano.
+> **Detalhada por:** as especificações do [índice](README.md). Acima de todas está a
+> [visão](../vision.md); o plano de construção é o [ciclo 33](../cycles/33-whole-game.md).
 
 ## Convenções de maturidade
 
