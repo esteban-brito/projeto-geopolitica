@@ -110,6 +110,10 @@ braços (com e sem filtro) na mesma rodada.
 - **Lote de prosa:** o código sem comentário sai idêntico (`node tools/prose-only.mjs <arquivo>`);
   `check`, `types` e `test` verdes; a devolução diz o que rodou, o que passou, o que quebrou e a
   prosa antes e depois por arquivo; e para.
+- **Lote mecânico (acento, nome, formato):** mude só o que o lote pede, letra por letra; nunca
+  apague, junte ou acrescente linha ou palavra; rode a conferência antes de passar ao próximo
+  arquivo; na dúvida (crase, sobretudo), não mexa e liste o caso na devolução; texto estranho,
+  erro de digitação ou coisa fora do lote se lista na devolução, nunca se corrige por conta própria.
 - **Canal:** `node tmp/agents/gemini.mjs enviar|ler|fila|limpar`. Mensagem enviada com o Gemini
   trabalhando fica na fila: cheque `fila` antes. Com ele trabalhando, nenhuma mudança do Claude
   fica sem commit na árvore: o lote manda desfazer o que não passa na conferência, e ele desfaz. Commit sempre com `git add` por nome.
