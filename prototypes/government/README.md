@@ -20,7 +20,7 @@ estão no contrato; o código, no histórico do Git.
 
 ```bash
 node --test tests/suites/government-*.mjs       # 24 provas, incluídas no npm test
-node tools/import-posse-work.mjs --output tmp/reports/competencies.mjs
+node prototypes/government/tools/import-posse-work.mjs --output tmp/reports/competencies.mjs
 ```
 
 As medições de 30/09 dos ensaios apagados ficam congeladas em

@@ -192,3 +192,16 @@ Os erros e como se resolveram:
 A medida que o Claude fez da parte E superestimava o trabalho: das 976 linhas sem acento com
 palavra ambígua, quase todas tinham "e" conjunção, que está certo. Só a pesquisa 09 estava
 inteira sem acento.
+
+### 131 · O Jev, o corretivo do Gemini e a revisão antes de desligar — 02/10/2026
+
+- **O Jev, da TypeSafe AI:** pesquisado nas fontes da empresa, ele devolve decisões tipadas com
+  probabilidade, por API. Serviria só fora do jogo (jogador sintético nos testes, equilíbrio com
+  estilos, classificar dado) e só com a ADR 0001 reaberta; a avaliação está na
+  [pesquisa 22](research/22-typesafe-jev.md) e a ideia, em espera na fila do handoff.
+- **O corretivo do Gemini:** os cinco erros dele no lote de acentos viraram regras do lote mecânico
+  no `AGENTS.md` §6: só o que o lote pede, conferência antes do próximo arquivo, dúvida e texto
+  estranho listados na devolução e nunca corrigidos por conta própria.
+- **A revisão antes de desligar:** uma varredura dos arquivos vivos achou dois comandos de exemplo
+  com caminho anterior à mudança de pastas, em `docs/standards.md` §9 e no README do protótipo de
+  governo; os dois foram corrigidos.

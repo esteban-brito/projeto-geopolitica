@@ -500,7 +500,7 @@ aprovado está em `prototypes/posse/vendor/avatar-standard.json`: folha de 1536 
 células de 512, zoom de 1,1 e uma posição aprovada por rosto. Para uma folha nova:
 
 1. pedir a mesma grade, resolução, proporção de busto e estilo;
-2. rodar `node tests/browser/review-portraits.mjs <folha.png>`; o contato e o relatório saem em
+2. rodar `node tests/browser/posse/review-portraits.mjs <folha.png>`; o contato e o relatório saem em
    `tmp/reports/avatar-reviews/<hash>/`;
 3. olhar o contato inteiro: a checagem mede centro e altura, mas não vê mão deformada, estilo
    divergente ou dois rostos parecidos;

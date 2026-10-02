@@ -7,7 +7,7 @@
 
 ## Para retomar em um minuto
 
-- **01/10, limpeza e organização**, aprovadas por ele (journal 123 a 130): um contrato só para os
+- **01/10, limpeza e organização**, aprovadas por ele (journal 123 a 131): um contrato só para os
   agentes ([`AGENTS.md`](../AGENTS.md)); índice com situação em cada pasta de `docs/`; o que foi
   superado em `docs/archive/`; 7.336 palavras acentuadas, cobradas pela guarda `accents`; o achado
   69 fechado; `tmp/` e `docs/evidence/` limpos. O repositório foi refeito como um mapa: a árvore está no [README](../README.md#o-mapa).
