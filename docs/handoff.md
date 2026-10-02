@@ -56,8 +56,7 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 **Agora**, nesta ordem:
 
 1. **Acentos de contexto** (`e`/`é`, `esta`/`está`, `a`/`à`, `tem`/`têm`): o lote do Gemini está
-   em `tmp/agents/to-gemini.md` e se confere por `node tools/accent-only.mjs`; pede a janela do
-   Gemini aberta (porta CDP);
+   em `tmp/agents/to-gemini.md` e se confere por `node tools/accent-only.mjs`; os sub-lotes A a D (código) foram enviados em 02/10, a devolução chega em `tmp/agents/to-claude.md`, e o E (documentos) sai depois que eles fecharem;
 2. **Elenco inspirado na vida real**, no escopo das decisões vivas: feitos a emenda do ADR 0003 e a
    [pesquisa 21](research/21-inspired-cast.md); falta TCU, comandantes, imprensa, mercado e um
    perfil com fonte para cada ministro. Os eleitos entram depois de 25/10/2026;
