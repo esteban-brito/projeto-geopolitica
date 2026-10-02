@@ -1,7 +1,7 @@
 # Retomada
 
 > Ponto de retomada único. **Aqui só entra o que é verificável hoje:** estado, fila, decisões
-> vivas, achados abertos e a série. Narrativa vai para [`journal.md`](journal.md). Número com data
+> vivas, achados abertos e a série. Narrativa vai para [`journal.md`](archive/journal-2026-08-13-to-09-30.md). Número com data
 > envelhece: remeça antes de repetir. A tabela de contagens é cobrada por
 > `tests/suites/catalog.mjs`; a série, por quem mexe no motor.
 
@@ -35,14 +35,14 @@
 - **testar a posse:** `npm run serve` e <http://127.0.0.1:5173/tmp/build/posse.html>.
 - **direção (25/09):** sandbox ideológico com regras reais; realismo acima de tudo. Os documentos
   de design, do mais geral ao mais concreto: [especificação mestra](spec/master-spec.md) 1.1
-  (autoridade) → [jogo em uma página](spec/game-in-one-page.md) (promessa e loop) →
+  (autoridade) → [jogo em uma página](archive/game-in-one-page-2026-09-25.md) (promessa e loop) →
   [gramática das regras](spec/rules-grammar.md) (como toda regra real vira peça) →
   [corte vertical](spec/vertical-slice-energy.md) (a abertura e a estatal) →
   [mapa de migração](spec/migration-map.md) (o plano). Os fatos estão na
   [pesquisa 14](research/14-the-state-energy-company.md) e na
   [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
   [checklist do Presidente](spec/presidential-checklist.md); a interface nova, no
-  [mapa das telas](spec/interface-map.md). Em conflito, vale o mais recente;
+  [mapa das telas](archive/interface-map-2026-09-25.md). Em conflito, vale o mais recente;
 - **o modelo da base está no motor (26/09):** 16 partidos, save na versão 21, a lealdade é a
   chance do partido, um líder por bloco (15 arquétipos) e as provas de `tests/suites/base.mjs`.
   Desenho em [o modelo da base](spec/the-base-model.md) §7; achados 86 e 87 abertos.
@@ -62,7 +62,7 @@
 
 As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](archive/handoff-2026-10-01.md).
 
-- **E0** (o corte do bimestre, [ciclo 31](cycles/31-the-bimonthly-cut.md)): implementado em
+- **E0** (o corte do bimestre, [ciclo 31](archive/cycles/31-the-bimonthly-cut.md)): implementado em
   `febd0b5` e pausado em 25/09. A reunião foi reprovada no playtest porque a decisão do corte não
   pesa no modelo (achado 77).
 - **VONTADE:** lotes A1, A1.1, A1.2 e A2a commitados (`98c1abc`, `a690248`, `5ba154c`); o mundo
@@ -119,7 +119,7 @@ Depois disso: o [ciclo 34](cycles/34-the-posse-rebuilt.md), reescrito para a pos
 7. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
 8. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%);
 9. **3º ultra: `src/ui` inteira**, depois de fechar o ciclo 29;
-10. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](cycles/30-depth-and-proofs.md): ele marca os
+10. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](archive/cycles/30-depth-and-proofs.md): ele marca os
     candidatos que entram.
 
 ## Decisões vivas
@@ -155,7 +155,7 @@ Ordens dele, da mais nova para a mais antiga. O texto inteiro de cada uma, até 
 - **26/09, o ciclo 33:** aprovado (decisões 1, 5 e 9). A rota fora da lei entra na etapa 10,
   "contanto que seja realista, pode tudo"; três destinos extremos têm de ser alcançáveis.
 - **25/09, o que é o jogo:** sandbox ideológico com regras reais; realismo acima de tudo
-  ([jogo em uma página](spec/game-in-one-page.md)). Foco nacional: o internacional entra numa
+  ([jogo em uma página](archive/game-in-one-page-2026-09-25.md)). Foco nacional: o internacional entra numa
   atualização futura, listada no jogo. O jogador escolhe qualquer partido.
 - **25/09, lições do playtest do E0:** encontro vira cena com rostos e fala curta; nada de pop-up;
   toda decisão mostra quanto custa, quem reage e quanto tempo leva.

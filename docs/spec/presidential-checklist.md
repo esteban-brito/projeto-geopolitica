@@ -1,5 +1,7 @@
 # O checklist do Presidente — 40 coisas que ele pode fazer, e 14 propostas
 
+> **Situação:** vigente — as 54 ações do cargo, com fonte; a cobertura é de 25/09.
+
 > 25/09/2026, pedido dele: tudo o que um presidente do Brasil pode fazer, realista e fiel. A base é
 > a lista de poderes da Constituição (art. 84, conferido no Planalto em 25/09) e a
 > [pesquisa 09](../research/09-the-office-checklist.md), mais a prática política que não está

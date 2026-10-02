@@ -109,7 +109,7 @@ E ela quebra a regra central: o jogador que pesquisa "jornada 4x3", recebe uma
 carta pronta e lê "−18 bi/ano" não tem como saber de onde saiu o 18. Hoje, quando
 ele arrasta a atenção básica, o custo **cai da conta**: `nível × custo do
 programa ÷ 12`. Essa é a diferença entre um modelo e uma tabela, e ela é o
-projeto inteiro. Ver [`../adr/0002-ai-generates-vocabulary-not-effect.md`](../adr/0002-ai-generates-vocabulary-not-effect.md).
+projeto inteiro. Ver [`../adr/0002-ai-generates-vocabulary-not-effect.md`](../../adr/0002-ai-generates-vocabulary-not-effect.md).
 
 **O que se aproveita dela:** a ideia de usar IA em tempo de desenvolvimento está
 certa — para gerar **vocabulário** (as alavancas que faltam, com faixa, guarda e
@@ -362,7 +362,7 @@ Cada seta é uma decisão do jogador ou uma reação do mundo:
 > Entregue na oitava sessão. `src/domain/norms/` (ESTRATO), `state.norms` no lugar
 > de `state.bands`, `schemaVersion` 12, 21 provas novas e a política `explorador`.
 > A migração está provada inerte: as cinco políticas do simulador devolvem série
-> **idêntica**. Ver a seção _A gramática_ em [`../handoff.md`](../handoff.md).
+> **idêntica**. Ver a seção _A gramática_ em [`../handoff.md`](../../handoff.md).
 >
 > **Três coisas que a implementação decidiu e o plano não previa:**
 >

@@ -9,32 +9,32 @@ npm run serve      # http://127.0.0.1:5173/
 npm run simulate   # um mandato inteiro no terminal; --policy <sonda>, --party <bancada>, --seed <n>
 npm run validate   # o portão: guardas, tipos, lint, formato, provas, passeio e macaco
 npm run check      # só as guardas; `npm test` roda só as suítes
+npm run posse      # as provas de navegador da posse, fora do validate
 ```
 
 ## Onde ler
 
-- [`docs/handoff.md`](docs/handoff.md) — **comece aqui**: estado verificável hoje, fila,
-  decisões vivas e achados abertos. Todo número de estado mora nele;
-- [`docs/spec/master-spec.md`](docs/spec/master-spec.md) — a especificação mestra, autoridade
-  de design;
-- [`docs/spec/migration-map.md`](docs/spec/migration-map.md) — o código atual confrontado com a
-  especificação, e o plano em vigor, em lotes;
-- [`docs/standards.md`](docs/standards.md) — as convenções, a tabela de motores e qual guarda
-  cobra cada regra;
-- [`docs/adr/`](docs/adr/) — decisões que não se reabrem sem pedido;
-- [`docs/journal.md`](docs/journal.md) — o histórico, sessão a sessão. Leia pelo fim, e para
-  saber por que algo foi decidido, nunca para saber o estado;
-- [`docs/cycles/`](docs/cycles/) e [`docs/research/`](docs/research/) — os planos antigos e as
-  pesquisas. São registro.
+| documento                                   | o quê                                                                                           |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [`docs/vision.md`](docs/vision.md)          | o que o jogo é e para que; a autoridade mais alta                                               |
+| [`docs/handoff.md`](docs/handoff.md)        | **comece aqui**: estado verificável, fila, decisões vivas, achados                              |
+| [`docs/standards.md`](docs/standards.md)    | as convenções, os motores e a guarda que cobra cada regra                                       |
+| [`docs/spec/`](docs/spec/README.md)         | como o jogo funciona, sistema por sistema, com a situação de cada documento                     |
+| [`docs/cycles/`](docs/cycles/README.md)     | os planos de trabalho ativos; o [ciclo 33](docs/cycles/33-the-whole-game.md) é o plano em vigor |
+| [`docs/research/`](docs/research/README.md) | pesquisas e fontes, com a situação de cada uma                                                  |
+| [`docs/adr/`](docs/adr/)                    | decisões que não se reabrem sem pedido                                                          |
+| [`docs/journal.md`](docs/journal.md)        | o que cada sessão fez e por quê                                                                 |
+| [`docs/archive/`](docs/archive/)            | o que foi superado, inclusive o journal até 30/09 e os ciclos 01 a 31                           |
+| [`docs/evidence/`](docs/evidence/README.md) | medições congeladas que o código e os documentos citam                                          |
 
-Para agentes: [`AGENTS.md`](AGENTS.md) é o contrato comum; [`CLAUDE.md`](CLAUDE.md) e
-[`GEMINI.md`](GEMINI.md) apontam para ele.
+Para agentes: [`AGENTS.md`](AGENTS.md) é o contrato único; [`CLAUDE.md`](CLAUDE.md) e
+[`GEMINI.md`](GEMINI.md) o importam.
 
-## Protótipo em transformação
+## Protótipo da posse
 
 A posse com ministérios variáveis está em [`prototypes/posse/`](prototypes/posse/README.md):
-`node tools/prepare-posse.mjs`, `npm run serve` e abrir
-<http://127.0.0.1:5173/tmp/build/posse.html>. É um ensaio isolado; não entra na partida.
+`npm run serve` e abrir <http://127.0.0.1:5173/tmp/build/posse.html>. É um ensaio isolado, que o
+[ciclo 34](docs/cycles/34-the-posse-rebuilt.md) vai refazer dentro do jogo.
 
 ## Os motores
 
@@ -52,7 +52,7 @@ ESTRATO   ── a pilha de normas lida como faixa vigente
 ELENCO    ── as pessoas do mandato, e a memória de cada uma
 CALDEIRA  ── a pressão de cada grupo, e as três rupturas
 DELTA     ── a rede causal legível do que aconteceu
-VONTADE   ── o que um ator faz com o que lhe chega (ainda sem consumidor no jogo)
+VONTADE   ── o que um ator faz com o que lhe chega (o mundo vivo decide por ela todo mês)
 ```
 
 Os codinomes são provisórios. A tabela completa está em

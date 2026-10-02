@@ -5,7 +5,7 @@ responsável ("você decide tudo sobre IA e todo esse tipo de coisa").
 
 > **Vigência atual — 29/09:** a emenda de 04/09 abaixo preserva uma autorização histórica de
 > integração por API. Esse caminho foi depois descartado pelo Diretor, registrado na abertura
-> do [ciclo 19](../cycles/19-the-voice.md) e em [CLAUDE.md](../../CLAUDE.md), nas leis.
+> do [ciclo 19](../archive/cycles/19-the-voice.md) e em [CLAUDE.md](../../CLAUDE.md), nas leis.
 > Ela não autoriza API, cache de respostas de LLM ou narração remota no jogo atual.
 > Permanecem o domínio determinístico e o vocabulário estático revisado da ADR 0002.
 
@@ -106,7 +106,7 @@ quero que você leve os limites e travas em conta, pq tem coisa que eu propus, e
 mando"_.
 
 A regra de cima dizia _"a IA nunca entra dentro de `playMonth`"_, e o
-[ciclo 19](../cycles/19-the-voice.md) §4 propõe exatamente isso: `demandsOf` — que roda em
+[ciclo 19](../archive/cycles/19-the-voice.md) §4 propõe exatamente isso: `demandsOf` — que roda em
 `turn.mjs` — passa a perguntar à IA **qual** chantagem o lobby faz no mês. **O ciclo é de
 03/09/2026 e este ADR é de 13/08; o mais novo vale.**
 

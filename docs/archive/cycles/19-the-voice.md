@@ -8,7 +8,7 @@
 > personalidades para as pessoas, mídia, e tudo mais, assim as coisas vão acontecendo
 > naturalmente."_
 >
-> ⭐ **E a [pesquisa 07](../research/07-the-law-the-player-writes.md) §4 achou a resposta: a IA
+> ⭐ **E a [pesquisa 07](../../research/07-the-law-the-player-writes.md) §4 achou a resposta: a IA
 > que faz um mundo parecer vivo é o AVALIADOR, e não o gerador.** Este ciclo constrói o
 > avaliador. Ele é o alicerce do [ciclo 22](22-the-law-you-write.md) — **sem ele, uma lei que
 > o jogador inventa não tem preço**, porque `threat` é escrito à mão, texto por texto.
@@ -85,7 +85,7 @@ entra por cima. Trocar um pelo outro faria a série se refazer inteira sem ningu
 > o peso medido é de 1 cadeira em 380 — e com os cinco parâmetros no TETO, 4 em 513.** A causa
 > não é o parâmetro: a emenda inteira, de 0 a 100%, compra **13 cadeiras de 513** por R$ 25,7
 > bi/mês, numa pauta que já passava. **A ambição modula uma moeda que não pesa.** Ver o achado
-> 59 do [handoff](../handoff.md), e a decisão que ele abre.
+> 59 do [handoff](../../handoff.md), e a decisão que ele abre.
 
 📐 **Medido:** `offered`, em `src/domain/cast/index.mjs`, traduz dinheiro em adesão pessoal. A
 única linha que olha ambição é esta:
@@ -155,7 +155,7 @@ o quê, com que ângulo, contra quem.
 noticiam o mesmo fato com sinais opostos, porque a utilidade deles tem sinais opostos. **Isso é
 uma subtração, não um prompt.**
 
-⚠ **E os veículos seguem o [ADR 0003](../adr/0003-real-world-invented-people.md):**
+⚠ **E os veículos seguem o [ADR 0003](../../adr/0003-real-world-invented-people.md):**
 imprensa inspirada na real, com **nome alterado** — a mesma regra dos partidos.
 
 ---
@@ -181,7 +181,7 @@ custa. ⚠ **No voto ele não entrega**, e o número está no achado 59.
 | ------------------------------------------ | ---------------------------------------------------------------------------- |
 | **chamar modelo de linguagem**             | decisão dele, 04/09/2026: **zero centavo**. E o avaliador não precisa        |
 | **texto de manchete escrito por IA**       | molde + combinação. A variedade vem de quem fala, não de quem escreve        |
-| **a IA decidir se uma política funcionou** | [ADR 0001](../adr/0001-ai-stays-out-of-the-turn.md), e ele continua certo    |
+| **a IA decidir se uma política funcionou** | [ADR 0001](../../adr/0001-ai-stays-out-of-the-turn.md), e ele continua certo    |
 | **nomes reais de veículo**                 | ADR 0003 — nome alterado, como os partidos                                   |
 | **conversa livre com um personagem**       | ⚠ não é recusa, é ordem: depois do item 2. Sem a voz definida, vira genérico |
 
@@ -205,6 +205,6 @@ veredito, gerador de catálogo), um cache pela ficha do mês para salvar o deter
 seção 6 sobre onde morar a chave.
 
 **Morreu a arquitetura, não o destino.** O texto inteiro está no `git log`, e a decisão que o
-matou está no [`journal.md`](../journal.md) de 04/09/2026. ⭐ **O ADR 0001 chegou a ser emendado
+matou está no [`journal.md`](../journal-2026-08-13-to-09-30.md) de 04/09/2026. ⭐ **O ADR 0001 chegou a ser emendado
 para permitir a IA dentro do turno** — a emenda fica de pé e não custa nada, mas hoje ela não
 tem uso.

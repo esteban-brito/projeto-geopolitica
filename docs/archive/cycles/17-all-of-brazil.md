@@ -36,7 +36,7 @@ Brasileira`, `Partido Liberal Brasileiro` — nove bancadas que **qualquer brasi
 em um segundo** e nenhuma que exista com aquele nome. O peso em cadeiras, o eixo econômico e a
 venalidade de cada uma são modelagem sobre o real; a etiqueta é alterada.
 
-**A regra passa a valer para empresa, e o [ADR 0003](../adr/0003-real-world-invented-people.md)
+**A regra passa a valer para empresa, e o [ADR 0003](../../adr/0003-real-world-invented-people.md)
 continua de pé sem uma vírgula de mudança:**
 
 | o quê                                      | como entra                                              |
@@ -136,7 +136,7 @@ privatizar **melhora** a conta. **É este o modelo que o ciclo 17 herda e amplia
 
 Cada estatal deixa de ser um **setor agregado** e passa a ser uma **empresa com nome alterado**,
 com receita, folha, lucro, dividendo pago à União, empregados e valor de mercado — todos de
-fonte pública. O briefing [`research/01`](../research/01-brazil-2026-briefing.md), bloco 7,
+fonte pública. O briefing [`research/01`](../../research/01-brazil-2026-briefing.md), bloco 7,
 **já pergunta exatamente isso** (perguntas 35 a 40), e a resposta ainda não voltou.
 
 ⚠ **E a pergunta jurídica é a que decide a mecânica:** _o que é preciso, juridicamente, para

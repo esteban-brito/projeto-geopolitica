@@ -1,5 +1,7 @@
 # Corte vertical — o começo do jogo e a estatal de energia
 
+> **Situação:** vigente — a estatal de energia, etapa 3 do ciclo 33.
+
 > Versão 3, 25/09/2026. É a primeira aplicação da [gramática das regras](rules-grammar.md), com os
 > nomes da [especificação mestra](master-spec.md). O critério de aceite é o da especificação,
 > §21.4. O plano de construção são os lotes E1 do [mapa de migração](migration-map.md), §6.4, hoje nas

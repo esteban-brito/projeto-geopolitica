@@ -191,7 +191,7 @@ projeto faz.
 
 Scouting político, tramitação contaminada e promessa condicional já estão lidas contra
 o código em
-[`../research/03-reference-mechanics.md`](../research/03-reference-mechanics.md).
+[`../research/03-reference-mechanics.md`](../../research/03-reference-mechanics.md).
 Nada novo, e as conclusões de lá seguem valendo.
 
 ## A fila, e por que este ciclo NÃO fura a dela

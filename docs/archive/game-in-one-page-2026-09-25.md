@@ -1,9 +1,9 @@
 # O jogo em uma página
 
 > Versão 3, 25/09/2026. Decisão dele depois do playtest do E0. Detalha a
-> [especificação mestra](master-spec.md) (§1, §12, §13.7, §17, §24) com o que o jogador persegue,
-> faz e vê. A [gramática das regras](rules-grammar.md) diz como cada regra real vira peça de jogo, e
-> o [corte vertical](vertical-slice-energy.md) é a primeira aplicação. **Realismo acima de tudo:**
+> [especificação mestra](../spec/master-spec.md) (§1, §12, §13.7, §17, §24) com o que o jogador persegue,
+> faz e vê. A [gramática das regras](../spec/rules-grammar.md) diz como cada regra real vira peça de jogo, e
+> o [corte vertical](../spec/vertical-slice-energy.md) é a primeira aplicação. **Realismo acima de tudo:**
 > toda regra executável tem fonte; o que não tem fica declarado.
 
 ## A promessa
@@ -33,8 +33,8 @@ ESCOLHO UMA TRANSFORMAÇÃO
 você fez antes. O que falta é a sua atenção: a agenda da semana só cabe algumas coisas, e cada uma
 cobra o seu preço. Não existe ponto de ação. Você escolhe entre empurrar o seu projeto e apagar o
 incêndio de hoje. As regras da semana (três turnos por dia, o Congresso de terça a quinta, o que
-acontece com o que você não cuidou) estão em [a semana de governo](the-week.md). Hoje o jogo avança
-por mês; a semana chega com a trilha B do [mapa de migração](migration-map.md).
+acontece com o que você não cuidou) estão em [a semana de governo](../spec/the-week.md). Hoje o jogo avança
+por mês; a semana chega com a trilha B do [mapa de migração](../spec/migration-map.md).
 
 **O mandato tem janelas reais:** a lua de mel do primeiro ano; as eleições municipais de outubro
 de 2028 e as gerais de 2030, que mudam o comportamento do Congresso; as crises, que tornam possível
@@ -85,7 +85,7 @@ relação com cada ator, com a reação que vier. Essa rota fica fora do primeir
 25/09).
 
 Os votos, o relógio e quem desfaz cada rota estão conferidos na Constituição, na
-[gramática](rules-grammar.md), §2.
+[gramática](../spec/rules-grammar.md), §2.
 
 ## A cadeia (lei do jogo)
 
@@ -160,6 +160,6 @@ jogador quer: transformar o país.
   Seguem abertos: como medir cada fato concreto do país e o ponto de partida em 2027, e o
   calendário eleitoral (pesquisa R2 do mapa).
 - **O plano em vigor é o [ciclo 33](../cycles/33-the-whole-game.md)**, aprovado em 26/09.
-  Os lotes E1 do [mapa de migração](migration-map.md), §6.4, entram nas etapas dele; a eleição
+  Os lotes E1 do [mapa de migração](../spec/migration-map.md), §6.4, entram nas etapas dele; a eleição
   da Mesa está na etapa 4. A direção de 29/09 para a posse está em
-  [governo variável](dynamic-government.md).
+  [governo variável](../spec/dynamic-government.md).

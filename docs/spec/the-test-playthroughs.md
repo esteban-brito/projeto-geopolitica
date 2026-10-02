@@ -1,5 +1,7 @@
 # As partidas-teste — Xi Jinping e Lee Kuan Yew
 
+> **Situação:** vigente — a régua do aceite: partidas Xi e Lee.
+
 > Ordem dele, 26/09/2026: o jogo tem de permitir uma partida inspirada em Xi Jinping e outra, bem
 > diferente, em Lee Kuan Yew. Se as duas funcionam, o jogo dá liberdade de verdade. Uma terceira,
 > inspirada em Javier Milei, talvez venha depois; por ordem dele, não agora. É o critério de aceite

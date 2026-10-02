@@ -3,7 +3,7 @@
 > **Estudo, e não plano.** Escrito em 31/08/2026 a pedido dele: _"estude principalmente sobre
 > realismo presidente do Brasil, quero criar esse realismo no meu jogo"_.
 >
-> Ele complementa o [ciclo 17](../cycles/17-all-of-brazil.md), que **inventaria os poderes**.
+> Ele complementa o [ciclo 17](../archive/cycles/17-all-of-brazil.md), que **inventaria os poderes**.
 > Este arquivo pergunta outra coisa: **o que faz a presidência brasileira ser ELA**, e não uma
 > presidência genérica — e o que disso o motor de hoje já diz, diz errado, ou não diz.
 
@@ -231,7 +231,7 @@ Nenhuma destas está nos blocos 0 a 8, e as três primeiras travam mecânica des
 ## 6 · ⛔ O QUE ESTE ARQUIVO NÃO É
 
 - **não é plano** — nenhuma linha foi orçada, medida ou posta em ordem de execução;
-- **não abre trabalho** — o plano em vigor é o [ciclo 13](../cycles/13-the-glorious.md), em 25 de 49;
+- **não abre trabalho** — o plano em vigor é o [ciclo 13](../archive/cycles/13-the-glorious.md), em 25 de 49;
 - **não traz número** — traz forma de mecanismo e endereço de norma. Número vem do briefing, com
   fonte e ano-base, ou não vem;
 - **não reabre o [ADR 0003](../adr/0003-real-world-invented-people.md)** — o mundo é

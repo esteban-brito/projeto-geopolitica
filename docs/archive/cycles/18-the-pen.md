@@ -8,7 +8,7 @@
 > - _"quero realismo, quero que o meu jogo seja um verdadeiro simulador de presidente do
 >   brasil"_.
 >
-> Ele executa a [pesquisa 04](../research/04-the-office-of-president.md), que diagnosticou sem
+> Ele executa a [pesquisa 04](../../research/04-the-office-of-president.md), que diagnosticou sem
 > orçar. O ciclo [13](13-the-glorious.md) continua aberto em **26 de 49** e **não** é substituído:
 > os itens da Parte A dele reaparecem aqui com o preço refeito.
 

@@ -1,5 +1,7 @@
 # República Simulator — Especificação de Arquitetura, Simulação e Design
 
+> **Situação:** vigente — arquitetura: como o jogo funciona por dentro; autoridade abaixo da visão.
+
 > **Versão do documento:** 1.1
 > **Status:** especificação canônica de design e arquitetura
 > **Data:** 24/09/2026; revisão 1.1 em 25/09/2026
@@ -10,7 +12,7 @@
 >
 > Este arquivo não é diário, changelog nem transcrição de discussão. Registra somente decisões vigentes, hipóteses relevantes, questões abertas e critérios verificáveis.
 >
-> **Detalhada por** (em conflito, vale o documento mais recente): [o jogo em uma página](game-in-one-page.md), a promessa e o loop; [a gramática das regras](rules-grammar.md), como toda regra real vira peça de jogo; [o corte vertical da estatal](vertical-slice-energy.md), a primeira aplicação; [o mapa de migração](migration-map.md), o plano.
+> **Detalhada por** (em conflito, vale o documento mais recente): [o jogo em uma página](../archive/game-in-one-page-2026-09-25.md), a promessa e o loop; [a gramática das regras](rules-grammar.md), como toda regra real vira peça de jogo; [o corte vertical da estatal](vertical-slice-energy.md), a primeira aplicação; [o mapa de migração](migration-map.md), o plano.
 
 ## Convenções de maturidade
 

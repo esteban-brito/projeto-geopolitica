@@ -67,7 +67,7 @@ por um modelo caríssimo, mesmo que 5.000 vezes — é desfazer isso.
 
 ## O que fica valendo, e é bastante
 
-A gramática do [ciclo 4](../cycles/04-the-republic-responds.md) precisa de um
+A gramática do [ciclo 4](../archive/cycles/04-the-republic-responds.md) precisa de um
 vocabulário grande — trabalho, penal, drogas, armas, costumes, imprensa,
 eleitoral, regulação setorial. São centenas de alavancas com faixa, guarda e
 posição, e escrevê-las a mão é o gargalo real.
@@ -85,7 +85,7 @@ entra"_. Ela sugere o texto; o motor cobra o preço.
 
 ## Consequência
 
-- `docs/cycles/04-the-republic-responds.md` recusa a biblioteca na análise das
+- `docs/archive/cycles/04-the-republic-responds.md` recusa a biblioteca na análise das
   propostas externas e aponta para cá;
 - qualquer arquivo de dado gerado por modelo é **commitado, revisado e datado**, e
   a prosa do arquivo diz que ele nasceu assim — como `programs.mjs` diz de onde

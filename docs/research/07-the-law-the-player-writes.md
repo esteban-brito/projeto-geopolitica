@@ -285,7 +285,7 @@ subtração, não um prompt.
 - ⚠ **a ordem dos seis verbos.** A tabela da seção 3 recomenda; ela não decide;
 - ⚠ **se o mapa federativo entra.** É o que trava `condition` e `status` — nove das 33 —, e é o
   item mais caro do projeto;
-- ⚠ **e o que acontece com o [ciclo 19](../cycles/19-the-voice.md)**, que foi escrito inteiro em
+- ⚠ **e o que acontece com o [ciclo 19](../archive/cycles/19-the-voice.md)**, que foi escrito inteiro em
   cima de chave de API. Ele não sobrevive como está.
 
 ---

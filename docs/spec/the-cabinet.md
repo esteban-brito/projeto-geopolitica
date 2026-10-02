@@ -1,5 +1,7 @@
 # O ministério: o tamanho, a gente de fora e o temperamento
 
+> **Situação:** referência — proposta de 26/09; os 33 notáveis seguem; pessoas e preparo seguem o governo variável.
+
 > Proposta v0, 26/09/2026, pela ordem dele: poder aumentar e diminuir os ministérios, chamar gente
 > de fora da política e entender como funcionam as personalidades. A tela da posse será o híbrido
 > dos protótipos B e C, escolha dele em 26/09. Detalha os lotes E1.0d e E1.0e do
@@ -184,7 +186,7 @@ Aparecem com o tempo, no que a pessoa faz.
 ## 4. A tela da posse: o hemiciclo
 
 Protótipo aprovado em 26/09: versão 25 do canvas, com fonte e testes em `tmp/posse/`. A direção
-visual para depois está no [mapa das telas](interface-map.md), "Direção futura".
+visual para depois está no [mapa das telas](../archive/interface-map-2026-09-25.md), "Direção futura".
 
 Uma tela, sem abas. É a fusão dos protótipos B e C; os protótipos A, B e C foram apagados do canvas em 26/09, a pedido dele:
 

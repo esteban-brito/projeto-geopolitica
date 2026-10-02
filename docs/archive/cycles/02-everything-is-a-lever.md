@@ -3,7 +3,7 @@
 > Combinado na sexta sessão, em 13/08/2026, depois que o responsável usou a tela
 > e recusou o desenho da ação: _"pauta pronta é uma bosta, onde tem criatividade
 > nisso e liberdade?"_. O estado verificado está em
-> [`../handoff.md`](../handoff.md); este arquivo é o que ficou **acordado fazer**,
+> [`../handoff.md`](../../handoff.md); este arquivo é o que ficou **acordado fazer**,
 > e por quê.
 >
 > **Este ciclo é grande.** Ele não cabe numa sessão e não finge caber: são oito

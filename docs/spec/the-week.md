@@ -1,7 +1,9 @@
 # A semana de governo
 
+> **Situação:** vigente — desenho aprovado em 25/09; ainda não implementado.
+
 > Versão 1, 25/09/2026. Decisões dele numa conversa sobre jogabilidade; detalha o loop "semana a
-> semana" do [jogo em uma página](game-in-one-page.md) e a especificação mestra §4 e §5. Marcas da
+> semana" do [jogo em uma página](../archive/game-in-one-page-2026-09-25.md) e a especificação mestra §4 e §5. Marcas da
 > [gramática](rules-grammar.md): [VERIFICADO], [DESENHO], FALTA.
 
 ## O relógio

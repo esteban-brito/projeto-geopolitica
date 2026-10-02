@@ -23,7 +23,7 @@ Você preside o Brasil real, tenta transformá-lo, paga os custos e vê o que de
 - **Tudo tem preço.** Mesmo uma tentativa fora da lei chega a destinatários que podem obedecer,
   recusar, denunciar ou reagir. Não existe resposta automática de “proibido”.
 - **A cadeia é visível.** QUERER ≠ PROPOR ≠ APROVAR ≠ PROMULGAR ≠ EXECUTAR ≠ CONSOLIDAR.
-  Uma mudança consolidada ainda pode ser revertida ([jogo em uma página](../spec/game-in-one-page.md)).
+  Uma mudança consolidada ainda pode ser revertida ([jogo em uma página](../archive/game-in-one-page-2026-09-25.md)).
 - **A resistência tem autor.** Quem perde usa os recursos, a informação e a competência que possui.
   A VONTADE decide por pessoa; um índice agregado não vota, processa nem comanda tropas.
 - **Pessoas têm rosto.** Deputados, ministros, juízes, jornalistas e governadores falam e decidem
@@ -52,11 +52,11 @@ que este plano precisa entregar. Cada fio deve ter decisão, reação e resultad
   ([ciclo 32](32-the-new-interface.md) §6b; [partidos](../spec/the-parties.md)). Candidatura exige
   brasileiro nato, filiação partidária e 35 anos (CF, arts. 12 e 14).
 - A posse oferece a estrutura dos ministérios, nomes para as pastas e a formação da base. O
-  [protótipo da posse](../spec/the-posse-port.md) fixa o hemiciclo sem abas; o motor ainda precisa
+  [protótipo da posse](../archive/the-posse-port-2026-09-26.md) fixa o hemiciclo sem abas; o motor ainda precisa
   da calibragem da base descrita no ciclo 32, fase 2.
 - A eleição das Mesas ocorre em **1º de fevereiro de 2027** (CF, art. 57 §4º). O apoio presidencial
   muda a disputa, mas os parlamentares votam. A lua de mel é uma janela política, não um bônus
-  fixo: a base, a opinião e os primeiros custos determinam sua duração ([jogo em uma página](../spec/game-in-one-page.md)).
+  fixo: a base, a opinião e os primeiros custos determinam sua duração ([jogo em uma página](../archive/game-in-one-page-2026-09-25.md)).
 
 ### Calendário que altera decisões
 
@@ -80,7 +80,7 @@ virar regra. A pesquisa R2 do [mapa](../spec/migration-map.md) §6.2 confere div
 ### Pressão inicial, finais e balanço
 
 O partido inicial muda o custo da coalizão. No protótipo, o PLI começa com 1 voto firme e o PCN
-com 205 ([journal](../journal.md), entrada 93); a regra está no [modelo da base](../spec/the-base-model.md).
+com 205 ([journal](../archive/journal-2026-08-13-to-09-30.md), entrada 93); a regra está no [modelo da base](../spec/the-base-model.md).
 A trajetória altera confiança e acesso conforme o [ciclo 32](32-the-new-interface.md) §6b. A
 semente altera elenco e eventos; cada sorteio registra a posição consumida. Nenhuma trajetória
 garante vitória ou bloqueia ação.
@@ -494,7 +494,7 @@ semente em que o REGIME praticado chega lá, e a taxa vai ao handoff. A interfac
 estiver coberto pela nova; isso absorve ciclo 32, fases 5 e 6.
 Portão: 16 fios com suas versões exigidas, reação e atraso; `validate` verde, auditoria cruzada,
 playtest dele e aprovação final. Milei depende de ordem dele; o exterior entra na atualização
-internacional prevista no [jogo em uma página](../spec/game-in-one-page.md).
+internacional prevista no [jogo em uma página](../archive/game-in-one-page-2026-09-25.md).
 
 | etapa | entrega                          | lotes e fases absorvidos                     | fios destravados                |
 | ----- | -------------------------------- | -------------------------------------------- | ------------------------------- |
@@ -533,7 +533,7 @@ nunca sobre o que anima: no protótipo, ele descartou 32 quadros em 6 saídas (c
 
 Hover não altera estado. Movimento usa `transform` e `opacity`, respeita preferência por movimento
 reduzido e não anima centenas de retratos de uma vez. Retratos só são montados enquanto visíveis. O orçamento dos gestos comuns é de 20 ms por quadro com CPU 4× mais lenta
-(ciclo 32, §2). O pior quadro medido no hover do nome é 33 ms com CPU 4× ([journal](../journal.md), entrada 87):
+(ciclo 32, §2). O pior quadro medido no hover do nome é 33 ms com CPU 4× ([journal](../archive/journal-2026-08-13-to-09-30.md), entrada 87):
 referência para reduzir no lote, não meta de desempenho. Cada lote registra trace, máquina e contagem de
 quadros; uma regressão medida impede a troca da tela.
 
@@ -604,7 +604,7 @@ Cada evento tem ficha com caso fonte, data, lugar, gatilho observável, agentes,
 cada um recebe, consequência e teste de plausibilidade. Um evento sem fonte pode existir como
 **[DESENHO]**, mas não recebe frequência apresentada como fato. A atualização internacional
 fica na tela de Próximas atualizações, conforme decisão de 25/09 no
-[jogo em uma página](../spec/game-in-one-page.md).
+[jogo em uma página](../archive/game-in-one-page-2026-09-25.md).
 
 ## 9. Qualidade e portões
 
@@ -612,7 +612,7 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
   `npm run validate` verde. Testes não mudam para esconder defeito; calibração de `src/data/`
   exige pesquisa e decisão própria ([CLAUDE.md](../../CLAUDE.md)).
 - O Codex audita cada etapa com diff delimitado, como nas três auditorias da posse registradas
-  no [journal](../journal.md). Achado só entra depois de reprodução.
+  no [journal](../archive/journal-2026-08-13-to-09-30.md). Achado só entra depois de reprodução.
 - O Diretor joga a entrega de cada etapa. O aceite informa o que ele fez, o que apareceu, o que
   custou e onde a regra falhou. Um teste verde não substitui o playtest.
 - A5 mede a VONTADE em 20 → 100 → 513 → 594 atores, como prescreve o mapa §6.1. A prova compara
@@ -651,7 +651,7 @@ fica na tela de Próximas atualizações, conforme decisão de 25/09 no
    distribuição [DESENHO] explícita.
 4. **Segundo mandato:** se o Presidente vencer em 2030, a partida continua ou termina no
    balanço de 4 de janeiro de 2031 (CF, art. 82)?
-5. **Rota fora da lei:** ela entra na etapa 10? O [jogo em uma página](../spec/game-in-one-page.md)
+5. **Rota fora da lei:** ela entra na etapa 10? O [jogo em uma página](../archive/game-in-one-page-2026-09-25.md)
    deixou essa rota fora do primeiro corte em 25/09; as partidas-teste exigem a cadeia no jogo
    inteiro. Os itens 47 a 54 do checklist dependem desta resposta. **Decidido em 26/09: entra,
    "contanto que seja realista, pode tudo".**

@@ -1,5 +1,7 @@
 # O modelo da base — desenho
 
+> **Situação:** vigente — no motor desde 26/09.
+
 Desenho de 26/09, aprovado na direção por ele no mesmo dia: cada deputado tem uma chance de votar
 com o governo, e ela depende da distância ideológica, do ministério e da posição declarada do
 partido. Calibrado pela [pesquisa 17](../research/17-how-the-base-forms.md). O modelo entrou no

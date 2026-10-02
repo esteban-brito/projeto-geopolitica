@@ -26,17 +26,17 @@ comportamentos incompatíveis, um portão não prova sua promessa ou falta delim
 | Documento ativo                                      | Papel e resultado da revisão                                                                |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | [Especificação mestra](../spec/master-spec.md)       | Autoridade de arquitetura; calendário, informação, agência, fontes e aceites confrontados.  |
-| [Jogo em uma página](../spec/game-in-one-page.md)    | Promessa e loop; referência ao plano corrente corrigida.                                    |
+| [Jogo em uma página](game-in-one-page-2026-09-25.md)    | Promessa e loop; referência ao plano corrente corrigida.                                    |
 | [Gramática](../spec/rules-grammar.md)                | Rota, portão, efeito e ciclo; achados P05–P09.                                              |
 | [Mapa de migração](../spec/migration-map.md)         | Reuso, transição, lotes e descartes; achados P01, P07 e P10.                                |
 | [Corte da estatal](../spec/vertical-slice-energy.md) | Cadeia material e fiscal; achados P08–P10.                                                  |
 | [Checklist](../spec/presidential-checklist.md)       | Conteúdo e cobertura datada; aprovação e implementação agora distinguidas na abertura.      |
-| [Mapa da interface](../spec/interface-map.md)        | Direção visual e consultas; precisa da visão presidencial de P10.                           |
+| [Mapa da interface](interface-map-2026-09-25.md)        | Direção visual e consultas; precisa da visão presidencial de P10.                           |
 | [Ministério](../spec/the-cabinet.md)                 | Proposta anterior; premissas substituídas agora sinalizadas.                                |
 | [Modelo da base](../spec/the-base-model.md)          | Modelo transitório confrontado com ECLUSA e suas provas; P11.                               |
 | [Partidos](../spec/the-parties.md)                   | Catálogo e restrições deliberadas; não revogadas por esta auditoria.                        |
 | [Mundo vivo](../spec/the-living-world.md)            | Agência mensal existente e lote futuro de imprensa; não equivale ao mundo semanal completo. |
-| [Porte da posse](../spec/the-posse-port.md)          | Distinção entre fonte visual, conta do protótipo e consulta do jogo.                        |
+| [Porte da posse](the-posse-port-2026-09-26.md)          | Distinção entre fonte visual, conta do protótipo e consulta do jogo.                        |
 | [Semana](../spec/the-week.md)                        | Agenda, disponibilidade e escalada; P04.                                                    |
 | [Partidas-teste](../spec/the-test-playthroughs.md)   | Dezesseis fios e versões; necessidade de aceites operacionais em P12.                       |
 | [Governo variável](dynamic-government-2026-09-30.md) | Experiências, preparo e integração; P02–P03.                                                |

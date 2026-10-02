@@ -1,9 +1,14 @@
 # Ciclo 32 — A interface nova
 
+> **Situação:** revisado em 01/10/2026. Ordem dele: a interface **evolui a partir da atual**, sem
+> segunda interface. Valem daqui o estilo (§2), os testes (§5) e as decisões de 26/09 (§6, §6b, §6c);
+> não valem a entrada separada nem o recomeço do zero (§1, §3 e §4). A posse é a primeira tela
+> feita assim, no [ciclo 34](34-the-posse-rebuilt.md).
+
 > **Situação em 26/09/2026:** planejado, nada implementado. Ordem dele: o motor fica, a interface
 > recomeça do zero sobre a fundação, e o estilo fica fixado em **Apple + Football Manager +
 > Civilization + Valorant**. Ele quer reaproveitar o que prestar, talvez do Liquid Glass e dos
-> menus. Base: [a posse no jogo](../spec/the-posse-port.md) e o [mapa das telas](../spec/interface-map.md).
+> menus. Base: [a posse no jogo](../archive/the-posse-port-2026-09-26.md) e o [mapa das telas](../archive/interface-map-2026-09-25.md).
 
 ## 1. O que fica, o que se reaproveita, o que sai
 

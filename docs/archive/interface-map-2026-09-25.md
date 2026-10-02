@@ -1,7 +1,7 @@
 # O mapa das telas
 
-> Versão 0, 25/09/2026, em laboratório. Detalha a [especificação mestra](master-spec.md) §6 com as
-> lições do playtest de 25/09 e a [gramática das regras](rules-grammar.md). A interface será quase
+> Versão 0, 25/09/2026, em laboratório. Detalha a [especificação mestra](../spec/master-spec.md) §6 com as
+> lições do playtest de 25/09 e a [gramática das regras](../spec/rules-grammar.md). A interface será quase
 > toda reformulada; o motor, a regra de que a tela só mostra o que a Presidência sabe e as provas
 > ficam. Nenhuma tela nova entra no jogo sem ele escolher entre protótipos.
 
@@ -60,7 +60,7 @@ Começo sugerido: a escolha do ministro, onde o jogador passa mais tempo.
 **Escolha dele em 26/09: a fusão de B e C. Os protótipos A, B e C foram apagados do canvas no mesmo dia; fica só a fusão.** A primeira versão punha os dois em abas separadas, e
 ele recusou. A segunda é um hemiciclo só, sem abas, com dois passos por ministério no mesmo painel, desenhado como D no
 mesmo canvas e descrito em
-[o ministério](the-cabinet.md), §4.
+[o ministério](../spec/the-cabinet.md), §4.
 
 Três estruturas com o mesmo visual, para comparar a estrutura e não a cor:
 
@@ -72,6 +72,6 @@ Três estruturas com o mesmo visual, para comparar a estrutura e não a cor:
 O que eles simplificam, e o jogo não vai simplificar:
 
 - o placar do protótipo somava as cadeiras de quem recebeu pasta; desde 26/09, o motor calcula
-  chances por partido e votos firmes e prováveis pela [mesma regra da base](the-base-model.md);
+  chances por partido e votos firmes e prováveis pela [mesma regra da base](../spec/the-base-model.md);
 - os candidatos saem de uma regra fixa; no jogo sairão do elenco da semente;
 - as pessoas são silhuetas, e não retratos.

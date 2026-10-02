@@ -1,5 +1,7 @@
 # A gramática das regras
 
+> **Situação:** vigente — como cada regra real vira peça de jogo.
+
 > Versão 2, 25/09/2026. Pedido dele: juntar realismo, diversão e padronização num país com leis
 > demais. Detalha a [especificação mestra](master-spec.md) §1.2, §12, §13, §16 e §22, com os nomes
 > dela. Fatos da [pesquisa 14](../research/14-the-state-energy-company.md). Marcas da
@@ -148,7 +150,7 @@ ouro, e os três horizontes da especificação (§5.4) dizem quando cada um cheg
 
 ## 7. O ciclo: querer não é conseguir
 
-O ciclo de vida da iniciativa (§13.7) é a cadeia do [jogo em uma página](game-in-one-page.md):
+O ciclo de vida da iniciativa (§13.7) é a cadeia do [jogo em uma página](../archive/game-in-one-page-2026-09-25.md):
 `DRAFT` → `PROPOSED` → `IN_PROCESS` → `APPROVED` → `FORMALIZED` → `IN_FORCE` → `EXECUTING` →
 `IMPLEMENTED` → `CONSOLIDATED`. Cada rota pula as fases que não tem. A medida provisória chega a
 `IN_FORCE` antes de `APPROVED`. Consolidado não é irreversível: a Eletrobras privatizada voltou a

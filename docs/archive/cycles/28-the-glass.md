@@ -5,7 +5,7 @@
 > Antes, no mesmo dia: _"quero basicamente refazer todo o liquid glass do meu jogo, para ser
 > praticamente idêntico ao liquid glass da Apple, o último mais atualizado."_
 >
-> O estudo: a [pesquisa 12](../research/12-advanced-apple-liquid-glass.md) do Gemini (a ótica
+> O estudo: a [pesquisa 12](../../research/12-advanced-apple-liquid-glass.md) do Gemini (a ótica
 > do visionOS e o que a Web faz), o inventário dele (`tmp/history/glass-inventory.md`), e o que o
 > projeto já mediu sobre vidro (abaixo, §2). Este ciclo é escrito por Claude e Gemini.
 

@@ -1,7 +1,7 @@
 # ADR 0003 — o mundo é real, as pessoas são inventadas
 
 **Data:** 14/08/2026 · **Estado:** aceita · **Decidido por:** o responsável, ao
-escolher os atores do [ciclo 4](../cycles/04-the-republic-responds.md): _"porém
+escolher os atores do [ciclo 4](../archive/cycles/04-the-republic-responds.md): _"porém
 nomes fictícios sempre, inspirados em pessoas reais"_.
 
 ## Contexto

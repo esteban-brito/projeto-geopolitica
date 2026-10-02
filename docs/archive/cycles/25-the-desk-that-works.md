@@ -10,7 +10,7 @@
 > madeira. **Isso é o Gabinete de hoje com textura embaixo.** É exatamente a coisa que ele
 > recusou, e eu a desenhei sem perceber.
 >
-> Ele executa a [pesquisa 08](../research/08-the-presidents-desk.md) e substitui o arranjo do
+> Ele executa a [pesquisa 08](../../research/08-the-presidents-desk.md) e substitui o arranjo do
 > [ciclo 21](21-the-desk.md), que foi construído inteiro em 04/09 e reprovado por ele em 05/09.
 
 ---
@@ -259,7 +259,7 @@ E os quatro mecânicos:
 
 ## Fontes
 
-📗 [Pesquisa 08 — a mesa do presidente](../research/08-the-presidents-desk.md): o Gabinete real,
+📗 [Pesquisa 08 — a mesa do presidente](../../research/08-the-presidents-desk.md): o Gabinete real,
 o jacarandá-da-bahia, Athos Bulcão, o Manual de Redação da Presidência e o relevo seco do
 Decreto nº 80.739/1977, todos apurados e datados em 05/09/2026.
 

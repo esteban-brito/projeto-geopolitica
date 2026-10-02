@@ -2,9 +2,9 @@
 
 > **Situação em 25/09/2026:** implementado, commitado (`febd0b5`) e **pausado** depois do playtest: a
 > reunião em papel foi reprovada, e a decisão do corte não pesa no modelo (achado 77). Ver o
-> [jogo em uma página](../spec/game-in-one-page.md). Este arquivo registra a autorização inteira, com as correções do Claude marcadas como
-> _Correção_. Era o lote E0 do [mapa de migração](../spec/migration-map.md#61-os-lotes); o plano em vigor agora é o E1, a estatal (mapa §6.4).
-> Medições que o sustentam: achados 76, 77 e 80 do [handoff](../handoff.md) e o journal, entradas
+> [jogo em uma página](../game-in-one-page-2026-09-25.md). Este arquivo registra a autorização inteira, com as correções do Claude marcadas como
+> _Correção_. Era o lote E0 do [mapa de migração](../../spec/migration-map.md#61-os-lotes); o plano em vigor agora é o E1, a estatal (mapa §6.4).
+> Medições que o sustentam: achados 76, 77 e 80 do [handoff](../../handoff.md) e o journal, entradas
 > 44 a 47.
 
 ## 1. Cenário-base do playtest

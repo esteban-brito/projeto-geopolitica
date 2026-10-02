@@ -1,5 +1,7 @@
 # O mundo vivo — a "IA" do jogo
 
+> **Situação:** vigente — lotes 1 e 2 no jogo; lotes 3 a 6 planejados.
+
 > Versão 2, 25/09/2026. A proposta v0 foi aceita pela ordem dele ("crie uma IA viva", carta
 > branca, realismo acima de tudo), e os lotes 1 e 2 estão no jogo.
 > Detalha a [especificação mestra](master-spec.md) §9 (atores), §10 (protocolo social), §11

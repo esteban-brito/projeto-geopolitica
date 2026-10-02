@@ -1,7 +1,7 @@
 # Ciclo 1 — o mês fecha, e a partida vira decisão
 
 > Combinado na quinta sessão, em 13/08/2026, depois que a Mesa e as seis áreas
-> entraram. O estado verificado do projeto está em [`../handoff.md`](../handoff.md);
+> entraram. O estado verificado do projeto está em [`../handoff.md`](../../handoff.md);
 > este arquivo é o que ficou **acordado fazer**, e por quê.
 
 A divisão em duas partes não é por tamanho — é por **natureza da decisão**. A
@@ -89,7 +89,7 @@ reeleição é opinião pública.
    partido deixa de ser constante e passa a derivar da distância acumulada até o
    governo, com inércia; racha é variância interna passando de um limiar;
 
-4. **A IA está decidida** em [`../adr/0001-ai-stays-out-of-the-turn.md`](../adr/0001-ai-stays-out-of-the-turn.md):
+4. **A IA está decidida** em [`../adr/0001-ai-stays-out-of-the-turn.md`](../../adr/0001-ai-stays-out-of-the-turn.md):
    fora do turno, e dentro de três lugares — geração de catálogo offline, veredito
    de fim de mandato e narração;
 

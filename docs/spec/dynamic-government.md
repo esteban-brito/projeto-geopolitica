@@ -1,5 +1,7 @@
 # Governo variável — o contrato
 
+> **Situação:** vigente — o contrato do governo variável.
+
 > Versão consolidada de 01/10/2026. Junta o [contrato de 28 a 30/09](../archive/dynamic-government-2026-09-30.md)
 > e o [piloto](../archive/government-pilot-2026-09-30.md), escritos pelo Codex sem revisão
 > independente; os dois seguem no arquivo, com fontes, casos e contraexemplos completos.

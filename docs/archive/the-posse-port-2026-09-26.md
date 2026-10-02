@@ -7,7 +7,7 @@ quebra, o que conflita e o que falta antes da primeira linha.
 
 **Atualização de 28/09:** a comparação das seções 1 e 2 é o retrato anterior ao modelo da base.
 O motor agora tem 16 partidos, `openingLoyalty`, `partyChance` e `chanceTargets` pela
-[especificação da base](the-base-model.md). A divergência da largada que bloqueava o porte foi
+[especificação da base](../spec/the-base-model.md). A divergência da largada que bloqueava o porte foi
 resolvida no motor; a posse ainda precisa consultar esse motor, integrar pessoas e gestos e passar
 pelas provas da seção 4. O achado 86 permanece aberto para a duração da coalizão.
 
@@ -15,7 +15,7 @@ pelas provas da seção 4. O achado 86 permanece aberto para a duração da coal
 estrutural do motor na abertura sem reforma. O Diretor quer transformar e testar esse protótipo,
 sem esperar o porte para o jogo completo. F5 reinicia a sessão do protótipo; a persistência prevista
 para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
-[plano de transformação](dynamic-government.md).
+[plano de transformação](../spec/dynamic-government.md).
 
 ## 1. Como o jogo funcionava no estudo
 
@@ -37,7 +37,7 @@ para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
   semente um nome da bancada, com id `partido:cadeira`. É a mesma pessoa que aparece na carta em
   que o partido pede pasta;
 - **partidos e cadeiras batem em número.** Desde a noite de 26/09 o motor tem os mesmos 16 partidos
-  do protótipo ([os partidos](the-parties.md)), com as mesmas bancadas e coordenadas de Nolan
+  do protótipo ([os partidos](../spec/the-parties.md)), com as mesmas bancadas e coordenadas de Nolan
   (`economic`, `liberty`); os ids do motor são as siglas em minúsculas (`pcn`, `pcs`). As 38 cadeiras
   do catálogo usam os ids da Lei 14.600;
 - **o visual é outro sistema.** Fonte Inter servida do próprio site; escala de tipo 10, 12, 13, 15,
@@ -52,7 +52,7 @@ para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
 
 | Tema                       | Protótipo                                                                    | Jogo                                                                              | Peso      |
 | -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- |
-| base no começo             | votos firmes e prováveis pelo [modelo da base](the-base-model.md): 149 e 374 | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
+| base no começo             | votos firmes e prováveis pelo [modelo da base](../spec/the-base-model.md): 149 e 374 | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
 | efeito da pasta            | a chance do partido sobe na hora, até 95%                                    | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
 | pessoas                    | escritas à mão                                                               | indicado por semente; especialistas e notáveis não existem                        | grande    |
 | Fama, Preparo, Afinidade   | números de desenho                                                           | não existem (lote E1.0f)                                                          | grande    |

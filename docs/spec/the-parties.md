@@ -1,5 +1,7 @@
 # Os partidos
 
+> **Situação:** vigente — os 16 partidos, iguais no motor.
+
 Os 16 partidos da Câmara, iguais no protótipo da posse (versão de 26/09) e no motor
 (`src/data/parties.mjs`). Nomes, siglas e perfis são inventados (ADR 0003). As bancadas partem da
 Câmara em 26/09/2026 ([pesquisa 18](../research/18-the-chamber-today.md)) e fecham na distribuição

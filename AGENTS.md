@@ -14,7 +14,8 @@ dono do jogo) vence qualquer texto, e o texto antigo se emenda.
 4. o assunto da tarefa: a especificação em [`docs/spec/`](docs/spec/), o ciclo ativo em
    [`docs/cycles/`](docs/cycles/), as decisões em [`docs/adr/`](docs/adr/).
 
-O journal se lê pelo mês corrente, nunca inteiro. Sem varredura de pastas para se ambientar:
+O journal (`docs/journal.md`) começa em 01/10/2026; o registro anterior está congelado em
+`docs/archive/` e se consulta por busca, nunca inteiro. Sem varredura de pastas para se ambientar:
 leia o necessário para a tarefa, e não rode portão nem simulação só para se ambientar. Número de
 estado se lê no handoff.
 
@@ -29,7 +30,8 @@ estado se lê no handoff.
   sai da mesma função que o motor usa. Uma previsão pergunta à posição com que o mês seguinte abre,
   nunca a uma cópia parcial da de hoje.
 - **A tela mostra o que a Presidência sabe**, nunca o estado oculto, salvo o fato que a Presidência
-  conhece (especificação §6.1, invariante 21).
+  conhece (especificação §6.1, invariante 21). As consultas que ainda leem o oculto estão no
+  [mapa de migração](docs/spec/migration-map.md) §5.6, cada uma com o lote que a corrige.
 - **Motor nenhum chama outro motor.** Quem compõe é `src/application/`.
 - **O domínio é puro:** sem DOM, sem relógio, sem `Math.random`. Aleatoriedade entra por fluxo
   injetado, todo saque grava a posição que gastou, e o mandato inteiro se refaz da semente.
