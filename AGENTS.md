@@ -1,82 +1,164 @@
-# República Simulator — Contrato Universal dos Agentes
+# República Simulator — o contrato dos agentes
 
-Contrato canônico entre os modelos de IA (Claude, GPT e Gemini) e o repositório.
-Evita desvio de contexto (_context drift_) e fixa a autoridade das regras.
+Simulador da Presidência do Brasil. Site estático: zero build, zero dependência de runtime, ESM
+puro servido como arquivo. Este é o único contrato entre os agentes (Claude e Gemini) e o
+repositório; `CLAUDE.md` e `GEMINI.md` só o importam. Em conflito, a ordem atual do Diretor (o
+dono do jogo) vence qualquer texto, e o texto antigo se emenda.
 
-## 1. Identidade e Runtime
+## 1. Ler antes de mexer
 
-- **Simulador de presidência do Brasil.** Mandato de quatro anos; hoje em 48 turnos mensais, e a [especificação mestra](docs/spec/master-spec.md) leva o avanço para a semana;
-- **Site estático puro:** zero build, zero dependência de runtime, ESM puro de navegador servido como arquivo;
-- **Domínio puro (`src/domain/`):** sem DOM, sem relógio, sem `Math.random`. Aleatoriedade entra apenas por fluxo injetado com semente; todo saque grava a posição gasta;
-- **A tela pergunta ao motor, nunca refaz conta — e pergunta o que a Presidência sabe:** toda informação exibida sai da mesma função que o motor usa, e mostra a visão presidencial, nunca o estado oculto (especificação §6.1, invariante 21);
-- **Sem paredes artificiais:** nada de `if (proibido) return`. A pergunta é sempre quanto custa;
-- **Português na interface e na prosa; inglês em código, caminhos e identificadores.**
+1. [`docs/vision.md`](docs/vision.md): o que o jogo é e para que;
+2. [`docs/handoff.md`](docs/handoff.md): estado verificável, fila, decisões vivas, achados. Primeira
+   leitura de toda sessão; última escrita de toda sessão que muda algo;
+3. [`docs/standards.md`](docs/standards.md): as convenções e a guarda que cobra cada uma;
+4. o assunto da tarefa: a especificação em [`docs/spec/`](docs/spec/), o ciclo ativo em
+   [`docs/cycles/`](docs/cycles/), as decisões em [`docs/adr/`](docs/adr/).
 
-## 2. As Duas Verdades
+O journal se lê pelo mês corrente, nunca inteiro. Sem varredura de pastas para se ambientar:
+leia o necessário para a tarefa, e não rode portão nem simulação só para se ambientar. Número de
+estado se lê no handoff.
 
-Neste projeto existem duas camadas distintas de validação:
+## 2. As leis
 
-| Camada                    | Pergunta Central                                                                                                    | Como se Prova                                                                                        | Ferramentas                                                                            |
-| :------------------------ | :------------------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------- |
-| **Verdade de Engenharia** | "O código cumpre rigorosamente a especificação técnica sem quebrar contratos?"                                      | Guardas de arquitetura, testes unitários, checagens de tipos, linter e testes de navegador.          | `npm run check`<br>`npm run types`<br>`npm test`<br>`npm run walk`<br>`npm run monkey` |
-| **Verdade de Design**     | "A regra produz um jogo equilibrado, politicamente verossímil e sem estratégias dominantes que destruam o desafio?" | Simulação de 48 meses com sondas, distribuições estatísticas, caça a exploits e análise adversarial. | `npm run simulate`<br>`tools/simulate.mjs`<br>Ultrareviews externos                    |
+- **Português na prosa e na interface; inglês em código e caminhos.** Sem acento em identificador;
+  com acento correto em comentário, texto e documento.
+- **Escreva como gente.** Frase curta, sujeito e verbo na ordem normal, número no lugar do adjetivo.
+  Vale para o jogo, os documentos e a resposta ao Diretor. Sem reviravolta final, inversão poética,
+  paralelismo de efeito nem metáfora sem necessidade.
+- **A tela não refaz conta do motor: ela pergunta.** Toda leitura mostrada enquanto o jogador decide
+  sai da mesma função que o motor usa. Uma previsão pergunta à posição com que o mês seguinte abre,
+  nunca a uma cópia parcial da de hoje.
+- **A tela mostra o que a Presidência sabe**, nunca o estado oculto, salvo o fato que a Presidência
+  conhece (especificação §6.1, invariante 21).
+- **Motor nenhum chama outro motor.** Quem compõe é `src/application/`.
+- **O domínio é puro:** sem DOM, sem relógio, sem `Math.random`. Aleatoriedade entra por fluxo
+  injetado, todo saque grava a posição que gastou, e o mandato inteiro se refaz da semente.
+- **Tudo tem preço, nada tem muro.** Nunca `if (proibido) return`; a pergunta é quanto custa.
+- **Nada de número inventado.** Todo valor mostrado tem motor atrás ou catálogo com fonte; sem isso,
+  a informação fica ausente e declarada.
+- **Estado que sobrevive a uma repintura guarda id, nunca índice.** Ouvinte em `document` ou
+  `window` arma uma vez.
+- **O mundo é real; os nomes das pessoas são inventados** ([ADR 0003](docs/adr/0003-real-world-invented-people.md)).
+- **A IA não entra no turno** ([ADR 0001](docs/adr/0001-ai-stays-out-of-the-turn.md)) e **gera
+  vocabulário, nunca efeito** ([ADR 0002](docs/adr/0002-ai-generates-vocabulary-not-effect.md)).
+  IA por API não entra, nem em partida nem fora dela.
+- **Sem dependência de runtime.** Ferramenta de desenvolvimento entra em `devDependencies`.
 
-Passar nas provas unitárias prova a verdade de engenharia; não garante que a regra seja bom game design. Um exploit econômico dominante destrói o jogo mesmo com portão 100% verde.
+## 3. Comentário
 
-## 3. Papéis da Tríade de Desenvolvimento
+Um comentário registra o que o código não consegue dizer: a alternativa testada e reprovada, com
+o número que a reprovou. Nada mais.
 
-Os papéis são permanentes na arquitetura do projeto; os modelos e ambientes são os executores padrão atuais:
+- teto de 10 linhas por bloco, um bloco por decisão; cabeçalho de arquivo, 14. A guarda `prose`
+  mede e reprova;
+- não entra: data, nome, histórico de quem pediu, narrativa de reversão, o que o código já diz;
+- meta: prosa em até 20% das linhas do jogo, nenhum arquivo acima de 25%;
+- linha de tipo (`@typedef`, `@param`, `@property`, `@returns`, `@type`) é contrato: não conta no
+  teto e nunca sai;
+- bom: `/* Sem filtro: glass-support custou 17,9 fps aqui. */`
 
-| Papel                               | Responsabilidade Central                                                                                                                             | Foco de Atuação                      | Executor Padrão Atual         |
-| :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- | :---------------------------- |
-| **Arquiteto de Domínio**            | Modela motores (`src/domain/`), escreve testes de especificação antes do código, conduz novos ciclos e refatorações conceituais.                     | Integridade de domínio e contratos   | Claude (Claude Code / CLI)    |
-| **Auditor Adversarial / Red Team**  | Caça a exploits sistêmicos, análise de incentivos, desequilíbrios em simulações de 48 meses e Ultrareviews de diffs (`/code-review ultra`).          | Game design e resistência a exploits | GPT (ChatGPT / Codex / Astra) |
-| **Centro Operacional & Engenharia** | Execução de lotes com prova sintática (`tools/prose-only.mjs`), validação pesada (`validate`), automação local, inventários e tarefas em background. | Execução determinística e portão     | Gemini (Antigravity)          |
-
-## 4. Regra de Independência entre Autor e Revisor
-
-- **Quem implementa uma mudança importante nunca é o único modelo que a aprova.**
-- Revisões externas cruzadas (especialmente via Ultrareview em modelo desacoplado) são obrigatórias antes de fechar grandes sistemas.
-- **O Diretor do Jogo (Usuário) é a autoridade máxima.** Nenhuma IA e nenhum teste substitui a decisão humana sobre o que torna o jogo interessante.
-
-## 5. Proibições Rígidas
-
-1. **Nunca** adicionar bibliotecas externas ou dependências de runtime via npm;
-2. **Nunca** usar `Math.random` ou relógio do sistema no domínio;
-3. **Nunca** alterar testes ou guardas para fazer prova passar (o defeito está no código sob teste);
-4. **Nunca** alterar calibragem em `src/data/` para destravar validação (número divergente é achado e vai para o handoff);
-5. **Nunca** remover linhas de contrato JSDoc (`@typedef`, `@param`, `@property`, `@returns`, `@type`).
-
-## 6. Fluxo de Validação Canônico
+## 4. Fluxo
 
 ```bash
-npm run check      # guardas de arquitetura
-npm run types      # tsc -p jsconfig.json (tipagem JSDoc estrita)
-npm test           # provas unitárias puras
-npm run walk       # passeio Playwright em 1440x980 e 1440x900
-npm run monkey     # macaco de estabilidade com semente
-npm run validate   # validação completa de ponta a ponta (~130s)
-npm run simulate   # 48 meses de mandato com as sondas fiscais e políticas
-npm run serve      # servidor de desenvolvimento em http://127.0.0.1:5173/
+npm run validate   # guardas, links, tipos, lint, formato, provas, passeio e macaco (~150 s); tem de ficar verde
+npm run check      # só as guardas (2 s)
+npm test           # só as suítes (12 s)
+npm run simulate   # 48 meses no terminal; --policy, --party, --seed, --cabinet none
+npm run posse      # as provas de navegador da posse (~2 min), fora do validate
+npm run serve      # http://127.0.0.1:5173/
+npm run screen     # mede o material contra a taxa do monitor; fora do portão, abre janela
 ```
 
-## 7. Leitura Obrigatória e Documentação Canônica
+Três laços, cada um com ordem fixa:
 
-### Retomada econômica de contexto
+- **folha** (`src/ui/`, `styles/`): `npm run check`, depois abrir a captura em `captures/walk/`. O
+  portão vê geometria, recorte e contraste, mas não sabe olhar: três defeitos já passaram por tipo,
+  guarda e prova e só apareceram na imagem;
+- **motor** (`src/domain/`, `src/application/`, `src/data/`, `src/state/`): `npm test`,
+  `npm run simulate` e a série reescrita no handoff no mesmo commit, mesmo que não mude;
+- **fechar item:** `npm run validate`, journal e handoff.
 
-Por pedido do usuário em 23/09/2026, **não repetir o estudo integral do repositório a cada sessão**.
-Comece por [`docs/agent-brief.md`](docs/agent-brief.md), confira `git status --short` e leia
-as seções **Estado**, **Fila** e **Decisões vivas** do handoff. Depois consulte apenas os
-contratos, achados, arquivos e trechos pertinentes à tarefa. A lista abaixo é o mapa das
-fontes canônicas; não exige reler todos os ciclos e pesquisas na abertura.
+`validate` verde é obrigatório antes de dizer que algo está pronto. No `screen`, meça os dois
+braços (com e sem filtro) na mesma rodada.
 
-O guia resume o estudo, não substitui as fontes. Código e handoff atuais prevalecem sobre
-seu retrato datado. Para uma retomada sem tarefa nova, essa leitura curta basta; não rode
-validações nem simulações só para recuperar contexto. Amplie a leitura quando a tarefa exigir.
+## 5. Bug, prova e revisão
 
-1. [`docs/handoff.md`](docs/handoff.md) — Estado verificável hoje, fila, decisões vivas e série histórica;
-2. [`CLAUDE.md`](CLAUDE.md) — As 12 leis do projeto, comentário medido e delegação;
-3. [`.agents/rules/co-development.md`](.agents/rules/co-development.md) — Regras operacionais de co-desenvolvimento;
-4. [`docs/standards.md`](docs/standards.md) — Padrões técnicos e mapeamento de guardas;
-5. [`docs/spec/`](docs/spec/) — Especificação mestra (autoridade de design), detalhada pelo jogo em uma página, pela gramática das regras e pelo corte vertical; mapa de migração (lotes absorvidos pelo [ciclo 33](docs/cycles/33-the-whole-game.md), o plano em vigor);
-6. [`docs/cycles/`](docs/cycles/) — Histórico de planejamento; o ciclo 29 segue aberto.
+- **Todo achado se reproduz antes de mexer**, com script em `tmp/` ou prova nova. O que não
+  reproduz não se corrige: vai para o handoff com o que foi tentado.
+- **A prova nasce antes do conserto e cai contra o código de hoje.** Bug de tela vira prova de
+  navegador (`tests/browser/`); bug de motor, prova na suíte.
+- **Teste verde prova engenharia, não design.** Equilíbrio e diversão se medem nas sondas de
+  `simulate` e no teste do Diretor.
+- **Mudança importante tem revisor diferente do autor:** `/code-review ultra <base>` (lê o diff da
+  branch contra a base, teto de 8.000 linhas; para ler uma pasta inteira, a base é uma branch sem a
+  pasta) ou o Gemini num lote de revisão. Achado de revisão é hipótese até reproduzir.
+
+## 6. Os agentes
+
+- **Claude** é o autor principal: motor, aplicação, estado, dados, tela, folhas, provas, guardas,
+  documentos e pesquisa com fonte. Pesquisa jurídica se confere no Planalto (`curl`, porque o
+  WebFetch leva ECONNRESET lá).
+- **Gemini** recebe lotes fechados: fronteira de arquivos, portão explícito (`check`, `types`,
+  `test`) e nada fora dela. Não altera prova, guarda, calibragem, esquema ou save.
+- **Toda entrega se confere contra o código** antes de aceitar (`tools/prose-only.mjs` para lote de
+  prosa, `tsc`, `grep`). Errada, volta com a regra concreta. Bug relatado só entra com reprodução:
+  tela, passo e o que apareceu.
+- **Lote de prosa:** o código sem comentário sai idêntico (`node tools/prose-only.mjs <arquivo>`);
+  `check`, `types` e `test` verdes; a devolução diz o que rodou, o que passou, o que quebrou e a
+  prosa antes e depois por arquivo; e para.
+- **Canal:** `node tmp/agents/gemini.mjs enviar|ler|fila|limpar`. Mensagem enviada com o Gemini
+  trabalhando fica na fila: cheque `fila` antes. Commit sempre com `git add` por nome.
+- **Duas tabelas que provas leem:** a de contagens do handoff (`tests/suites/catalog.mjs`) e a de
+  codinomes de `docs/standards.md` §3 (`tests/guards/codenames.mjs`). Formato e rótulos não mudam.
+
+## 7. Não faça sem pedido
+
+- começar um motor novo ou parte de ciclo não acordada;
+- mudar calibragem (`src/data/`) para fazer prova passar: número errado é achado, vai ao handoff;
+- mudar prova ou guarda para destravar: elas existem por defeito medido;
+- mudar esquema ou save sem ordem;
+- apagar arquivo do Diretor (`tmp/`, `docs/`): a lista vai ao handoff e ele diz sim;
+- merge. Commit ao fim de cada etapa validada; push quando o plano aprovado incluir.
+
+## 8. Recusa e decisão
+
+Toda recusa registrada aqui é de uma de três famílias, e só uma trava:
+
+| família                 | exemplo                             | trava?                                  |
+| ----------------------- | ----------------------------------- | --------------------------------------- |
+| medição                 | `glass-support` custou 17,9 fps     | sim, até alguém remedir e mostrar outro |
+| gosto dele, com data    | recusou um tom de marrom em 22/08   | não; expira, e se cita com a data       |
+| generalização de agente | "madeira, couro e papel não entram" | não vale nada; apague ao encontrar      |
+
+Antes de escrever uma proibição: é medição, ordem dele ou generalização? Na dúvida, pergunte a ele.
+
+**A interface** evolui a partir da atual (ordem de 01/10): mesmos tokens, fontes, Liquid Glass,
+mola, ícones e textos, com o estilo Apple + Football Manager + Civilization + Valorant entrando
+como evolução do jogo inteiro. O vidro fica só em superfície pequena sobre fundo parado. Estilo é
+ponto de partida, não teto; ao propor desenho, ofereça também o exótico.
+
+## 9. O código
+
+| onde                  | o quê                                                                                               |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| `src/data/`           | catálogos, parâmetros e esquemas                                                                    |
+| `src/domain/`         | os motores puros; codinomes em `docs/standards.md` §3                                               |
+| `src/application/`    | a composição: `turn.mjs` (`settlement` → `playMonth`), pauta, tramitação, cartas, mundo vivo, posse |
+| `src/state/`          | estado imutável, redutor, save e fluxos aleatórios                                                  |
+| `src/public/`         | a fachada: a única porta da tela para o jogo                                                        |
+| `src/app/`, `app.mjs` | sessão, entradas, pintura, eventos e diálogos                                                       |
+| `src/ui/`, `styles/`  | views puras e folhas                                                                                |
+| `prototypes/`         | ensaios isolados, sem consumidor no jogo nem campo no save                                          |
+| `tests/`              | `guards/`, `suites/`, `browser/` e `lib/`                                                           |
+| `tools/`              | servidor, simulador, verificadores e geradores                                                      |
+
+O mês: `settlement(state, orders)` resolve normas, separa execução de lei, calcula espaço e
+pagamentos e monta o Congresso; `playMonth` resolve respostas e tramitação, aplica decisões, roda
+capacidade, orçamento, economia e opinião, pressão e afastamento, e grava cartas, séries e o
+estado seguinte. A ordem é a mecânica: leia a função antes de mexer. O save guarda o estado e a
+posição do RNG; save de esquema diferente é recusado, sem migração automática.
+
+## 10. Como responder
+
+Curto, direto e em português: o resultado e o número que o sustenta. Relate o que foi feito, o que
+falhou e o que ficou para depois, sem enfeite.

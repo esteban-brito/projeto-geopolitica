@@ -83,11 +83,11 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 **Agora (01/10): limpeza e organização**, ordem dele ("o principal problema é a desorganização,
 despadronização, desarmonia"). Fases, cada uma com commit:
 
-1. **Um contrato só para os agentes:** `AGENTS.md` absorve leis, fluxo, delegação e mapa do código;
-   `CLAUDE.md` e `GEMINI.md` importam o contrato; saem `docs/agent-brief.md`,
-   `.agents/rules/co-development.md` e `.codex/` (Codex fora do projeto em 01/10).
+1. **Um contrato só para os agentes** — feito em 01/10: `AGENTS.md` com leis, fluxo, agentes e
+   mapa do código; `CLAUDE.md` e `GEMINI.md` só o importam; saíram o guia do agente, as regras de
+   co-desenvolvimento e a pasta do Codex; o verificador de retratos virou `tests/browser/review-portraits.mjs`.
 2. **Uma autoridade por assunto:** cabeçalho de situação em cada especificação; quatro superadas
-   para o arquivo; ciclos 01–31 para `docs/archive/cycles/`; ciclos 32–34 atualizados; índice das
+   para o arquivo; ciclos 01–31 para o arquivo dos ciclos; ciclos 32–34 atualizados; índice das
    pesquisas; journal por mês; handoff curto.
 3. **Um padrão de escrita** nos documentos: cabeçalho por tipo, acentos, "o Diretor" para ele.
 4. **Acentos no código:** comentários e textos de prova, provado por `prose-only`, com guarda nova.

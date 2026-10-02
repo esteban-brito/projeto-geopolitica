@@ -506,3 +506,17 @@ devolveu o número que a correção tem de bater.
 vocabulário largo produziu "Cláudio Espindola" ao lado de "Cláudio Itaparica". Numa
 Câmara de 513 dois Cláudios são verossímeis; entre as oito pessoas que o jogador
 precisa distinguir, não são.
+
+## 9. Retratos gerados fora do jogo
+
+As folhas de retrato vêm de imagens que o Diretor gera (ADR 0002: conteúdo, nunca efeito). O padrão
+aprovado está em `vendor/posse/avatar-standard.json`: folha de 1536 × 1024, grade de 3 × 2,
+células de 512, zoom de 1,1 e uma posição aprovada por rosto. Para uma folha nova:
+
+1. pedir a mesma grade, resolução, proporção de busto e estilo;
+2. rodar `node tests/browser/review-portraits.mjs <folha.png>`; o contato e o relatório saem em
+   `tmp/reports/avatar-reviews/<hash>/`;
+3. olhar o contato inteiro: a checagem mede centro e altura, mas não vê mão deformada, estilo
+   divergente ou dois rostos parecidos;
+4. aceita a folha, guardar o PNG original em `tmp/asset-sources/portraits/`, com hash e posições
+   no JSON, antes de usar no jogo.

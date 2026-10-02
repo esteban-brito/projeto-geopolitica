@@ -1,18 +1,35 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const crypto = require("node:crypto");
-const { chromium } = require("../node_modules/playwright");
-const standard = require("../vendor/posse/avatar-standard.json");
+/* CONFERE UMA FOLHA DE RETRATOS contra o padrão aprovado (vendor/posse/avatar-standard.json):
+   recorta os seis rostos nos tamanhos reais e aponta detecção, centro e altura fora do padrão.
+   uso: node tests/browser/review-portraits.mjs <folha.png> [mais.png]; saída em tmp/reports/avatar-reviews/. */
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import { chromium } from "playwright";
+
+/**
+ * @typedef {{ xPercent: number, yPercent: number }} Position
+ * @typedef {{ sheet: { width: number, height: number, columns: number, rows: number }, crop: { zoom: number, positions: Position[] }, reviewSizesPx: number[], reference: { sha256: string } }} Standard
+ * @typedef {{ centerX: number, centerY: number, sampledPixels: number }} Face
+ * @typedef {{ width: number, height: number, faces: (Face | null)[] }} Metrics
+ */
+
+/** @type {Standard} */
+const standard = JSON.parse(
+  fs.readFileSync(new URL("../../vendor/posse/avatar-standard.json", import.meta.url), "utf8"),
+);
 
 const inputs = process.argv.slice(2);
 if (!inputs.length) {
-  console.error("Usage: node avatar-batch-review.cjs <sheet.png> [more-sheets.png...]");
+  process.stderr.write("uso: node tests/browser/review-portraits.mjs <folha.png> [mais.png]\n");
   process.exit(2);
 }
 
+/** @param {number} value */
 const round = value => Math.round(value * 10) / 10;
+/** @param {number} value @param {number} min @param {number} max */
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
+/** @param {import("playwright").Page} page @param {string} dataUrl @returns {Promise<Metrics>} */
 async function measure(page, dataUrl) {
   return page.evaluate(async source => {
     const image = new Image();
@@ -22,6 +39,7 @@ async function measure(page, dataUrl) {
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
     const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) throw new Error("canvas sem contexto 2d");
     context.drawImage(image, 0, 0);
     const { data } = context.getImageData(0, 0, canvas.width, canvas.height);
     const faces = [];
@@ -36,10 +54,10 @@ async function measure(page, dataUrl) {
       for (let y = cellY + 115; y < cellY + 355; y++) {
         for (let x = cellX + 70; x < cellX + 442; x++) {
           const offset = (y * canvas.width + x) * 4;
-          const red = data[offset],
-            green = data[offset + 1],
-            blue = data[offset + 2];
-          if (data[offset + 3] > 220 && red > 75 && red > green + 14 && green > blue + 4) {
+          const red = data[offset] ?? 0,
+            green = data[offset + 1] ?? 0,
+            blue = data[offset + 2] ?? 0;
+          if ((data[offset + 3] ?? 0) > 220 && red > 75 && red > green + 14 && green > blue + 4) {
             count++;
             sumX += x;
             sumY += y;
@@ -54,6 +72,7 @@ async function measure(page, dataUrl) {
   }, dataUrl);
 }
 
+/** @param {Metrics} metrics @param {boolean} reference */
 function buildPortraits(metrics, reference) {
   const { sheet, crop } = standard;
   const backgroundWidth = sheet.columns * crop.zoom;
@@ -66,14 +85,13 @@ function buildPortraits(metrics, reference) {
       ? (((face.centerX * backgroundWidth) / sheet.width - 0.5) / (backgroundWidth - 1)) * 100
       : NaN;
     const row = Math.floor(index / sheet.columns);
-    const baseY = crop.positions[index].yPercent;
+    const base = crop.positions[index];
+    if (!base) throw new Error(`posição ${index + 1} ausente no padrão`);
+    const baseY = base.yPercent;
     const position =
-      reference || !faceReliable
-        ? crop.positions[index]
-        : { xPercent: round(clamp(x, 0, 100)), yPercent: baseY };
+      reference || !faceReliable ? base : { xPercent: round(clamp(x, 0, 100)), yPercent: baseY };
     if (face && (x < 0 || x > 100)) flags.push("face-outside-crop-range");
-    if (face && Math.abs(x - crop.positions[index].xPercent) > 9)
-      flags.push("unusual-horizontal-shift");
+    if (face && Math.abs(x - base.xPercent) > 9) flags.push("unusual-horizontal-shift");
     const renderedY = face
       ? (face.centerY * backgroundHeight) / sheet.height -
         ((backgroundHeight - 1) * position.yPercent) / 100
@@ -82,8 +100,9 @@ function buildPortraits(metrics, reference) {
       ? (face.centerX * backgroundWidth) / sheet.width -
         ((backgroundWidth - 1) * position.xPercent) / 100
       : null;
-    if (face && Math.abs(renderedX - 0.5) > 0.04) flags.push("face-off-center");
-    if (face && (renderedY < 0.43 || renderedY > 0.53)) flags.push("unusual-vertical-position");
+    if (renderedX !== null && Math.abs(renderedX - 0.5) > 0.04) flags.push("face-off-center");
+    if (renderedY !== null && (renderedY < 0.43 || renderedY > 0.53))
+      flags.push("unusual-vertical-position");
     return {
       index: index + 1,
       row: row + 1,
@@ -98,6 +117,7 @@ function buildPortraits(metrics, reference) {
   });
 }
 
+/** @param {string} dataUrl @param {ReturnType<typeof buildPortraits>} portraits @param {string} title */
 function contactHtml(dataUrl, portraits, title) {
   const { sheet, crop, reviewSizesPx } = standard;
   const size = `${Math.round(sheet.columns * crop.zoom * 100)}% ${Math.round(sheet.rows * crop.zoom * 100)}%`;
@@ -147,7 +167,8 @@ function contactHtml(dataUrl, portraits, title) {
         }
         const portraits = buildPortraits(metrics, reference);
         const directory = path.join(
-          __dirname,
+          import.meta.dirname,
+          "..",
           "..",
           "tmp",
           "reports",
@@ -176,19 +197,22 @@ function contactHtml(dataUrl, portraits, title) {
         );
         await page.setContent(contactHtml(dataUrl, portraits, path.basename(file)));
         await page.screenshot({ path: path.join(directory, "contact.png"), fullPage: true });
-        console.log(
+        process.stdout.write(
           JSON.stringify({
             file,
             reference,
             flags: report.flags,
             contact: path.join(directory, "contact.png"),
             report: path.join(directory, "report.json"),
-          }),
+          }) + "\n",
         );
       } catch (error) {
         rejected++;
-        console.error(
-          JSON.stringify({ file: path.resolve(input), error: String(error.message || error) }),
+        process.stderr.write(
+          JSON.stringify({
+            file: path.resolve(input),
+            error: String(error instanceof Error ? error.message : error),
+          }) + "\n",
         );
       }
     }
@@ -197,6 +221,6 @@ function contactHtml(dataUrl, portraits, title) {
     await browser.close();
   }
 })().catch(error => {
-  console.error(error);
+  process.stderr.write(String(error) + "\n");
   process.exitCode = 1;
 });
