@@ -12,7 +12,7 @@ import { dressActions, el } from "./paint.mjs";
  * `showModal()` entrega foco, inércia do fundo, Escape e camada superior; a versão
  * manual disso custou, no projeto anterior, uma sessão inteira de correção de
  * acessibilidade e três regras permanentes de documentação. O relatório saiu daqui de
- * propósito: informacao que se consulta não trava o fundo, e um aviso trava porque
+ * propósito: informação que se consulta não trava o fundo, e um aviso trava porque
  * algo deu errado.
  *
  * @param {string} title
@@ -29,10 +29,10 @@ export function openNotice(title, body) {
 export function openSwear() {
   el.swearName.value = session.state.president?.name ?? "";
   /* AS OPÇÕES SÃO MONTADAS AQUI, e não no HTML: a lista de bancadas mora no catálogo, e
-     escrever nove `<option>` a mão seria uma segunda verdade sobre quantas o jogo tem. */
-  /* ⚠ NENHUMA VEM MARCADA, e a vaga na frente e o item: com a lista crua, quem só clica em
-     "tomar posse" leva a PRIMEIRA do catálogo — a menor bancada da Camara, escolhida por
-     ordem de arquivo e não por ele. A escolha e obrigatória na lei e passa a ser na tela. */
+     escrever nove `<option>` à mão seria uma segunda verdade sobre quantas o jogo tem. */
+  /* ⚠ NENHUMA VEM MARCADA, e a vaga na frente é o item: com a lista crua, quem só clica em
+     "tomar posse" leva a PRIMEIRA do catálogo — a menor bancada da Câmara, escolhida por
+     ordem de arquivo e não por ele. A escolha é obrigatória na lei e passa a ser na tela. */
   const vazia = document.createElement("option");
   vazia.value = "";
   vazia.textContent = UI.actions.swearPartyEmpty;

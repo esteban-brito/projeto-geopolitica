@@ -11,7 +11,7 @@ import { curveOf } from "../core/spring.mjs";
 import { felt, fibre } from "../core/texture.mjs";
 import { UI } from "../strings.mjs";
 
-/* Materias da mesa nascem uma vez; caminho absoluto para resolver contra folha consumidora. */
+/* Matérias da mesa nascem uma vez; caminho absoluto para resolver contra folha consumidora. */
 const TIMBER = 'url("/assets/jacaranda.webp")';
 const FIBRE = fibre({ freq: 0.9, octaves: 4, force: 0.13 });
 const FELT = felt();
@@ -71,7 +71,7 @@ export function emailHtml(input) {
  * @returns {string}
  */
 export function cabinetHtml(input) {
-  /* Folhas de baixo sem texto: contingenciamento e a única caneta. */
+  /* Folhas de baixo sem texto: contingenciamento é a única caneta. */
   const under = Array.from(
     { length: input.sheets },
     (_, i) => `<div class="stack__under" style="--i:${input.sheets - i}"></div>`,
@@ -187,7 +187,7 @@ function scale(area) {
     Math.max(area.clientWidth / DESIGN.width, area.clientHeight / (band.bottom - band.top)),
   );
   room.style.setProperty("--fit", fit.toFixed(4));
-  /* Corte na madeira: telefone a 40px, pasta a 120px; a 1920x800 telefone saia 27px. */
+  /* Corte na madeira: telefone a 40px, pasta a 120px; a 1920x800 telefone saía 27px. */
   const spare = Math.max(0, (DESIGN.height * fit - area.clientHeight) / 2);
   const shift = ((DESIGN.height - band.top - band.bottom) / 2) * fit;
   room.style.setProperty("--room-dy", `${Math.max(-spare, Math.min(spare, shift)).toFixed(1)}px`);
@@ -262,7 +262,7 @@ function armFlight(root) {
     const value = parseFloat(of.getPropertyValue(name));
     return Number.isFinite(value) ? value : fallback;
   };
-  /* Sem perspectiva: aproximacao de 7,6% integrada na escala de leitura. */
+  /* Sem perspectiva: aproximação de 7,6% integrada na escala de leitura. */
   const aim = {
     dx: num("--lift-dx", 36),
     dy: num("--lift-dy", -57),
@@ -286,7 +286,7 @@ function armFlight(root) {
   /** @param {number} t */
   const fold = t => `rotateY(${180 * (1 - t)}deg)`;
 
-  /* Em opacity: 0 a GPU pagava 75ms para alocar 132px de desfoque (2 quadros). A 0,001 mantem textura ativa. */
+  /* Em opacity: 0 a GPU pagava 75ms para alocar 132px de desfoque (2 quadros). A 0,001 mantém textura ativa. */
   const FLOOR = 0.001;
 
   /** @param {number} t */
@@ -309,7 +309,7 @@ function armFlight(root) {
   ];
 
   /**
-   * @param {number} goal 0 na mesa, 1 na mao
+   * @param {number} goal 0 na mesa, 1 na mão
    * @param {{ duration: number, bounce: number }} how
    * @param {{ at: number, rate: number }} here
    */
@@ -358,7 +358,7 @@ function armFlight(root) {
       folder.style.setProperty("--lift-rise", fixed.toFixed(4));
     }
 
-    /* Centraliza na tela inteira; centrar na área deixava a peça 132px a direita do meio. */
+    /* Centraliza na tela inteira; centrar na área deixava a peça 132px à direita do meio. */
     draw(1);
     const peca = folder.getBoundingClientRect();
     const janela = folder.ownerDocument.defaultView;
@@ -426,7 +426,7 @@ function armFlight(root) {
 
 /* Carta sobe ao centro na mola LIFT até escala READING sobre os 1018px da folha.
    ⛔ A MÃO GUARDA O ID, NÃO O ÍNDICE: a lista da mesa muda a cada pintura (o mês fecha, a
-   carta e respondida) e o índice 0 de janeiro reabria a carta de fevereiro sozinho. */
+   carta é respondida) e o índice 0 de janeiro reabria a carta de fevereiro sozinho. */
 /** @type {string | null} */
 let held = null;
 /* ⛔ O ESC DO DOCUMENTO ARMA UMA VEZ: cada pintura do Gabinete pendurava outro `keydown`, e o
@@ -473,7 +473,7 @@ function armPost(root) {
     return { from, to };
   };
 
-  /* O índice e desta pintura; o que sobrevive a ela e `held`. */
+  /* O índice é desta pintura; o que sobrevive a ela é `held`. */
   let reading = -1;
 
   /** @param {number} i @param {boolean} animate */

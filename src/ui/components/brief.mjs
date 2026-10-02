@@ -1,16 +1,16 @@
-/* O PARECER — a face esquerda da pasta, e ele e o que a Casa Civil junta a minuta.
+/* O PARECER — a face esquerda da pasta, e ele é o que a Casa Civil junta à minuta.
 
    📗 NÃO EXISTE "BOLETIM DA CASA CIVIL", e o ciclo 25 §3.2 pediu uma peça sem lastro. O que vai
-   a mesa do presidente e a PASTA DE DESPACHO, e dentro dela a exposição de motivos com o
-   parecer de mérito — hoje da Secretaria Especial de Analise Governamental.
+   à mesa do presidente é a PASTA DE DESPACHO, e dentro dela a exposição de motivos com o
+   parecer de mérito — hoje da Secretaria Especial de Análise Governamental.
 
-   ⛔ E NADA AQUI E INSTRUMENTO DE TELA. Ordem dele: "nenhum elemento além do que
+   ⛔ E NADA AQUI É INSTRUMENTO DE TELA. Ordem dele: "nenhum elemento além do que
    um ser humano escreveria, tipo essas barras, linhas". A primeira versão trouxe as réguas do
    vocabulário da Caixa para dentro do papel — e datilógrafo não desenha barra. O número mora na
    FRASE, e o limiar também: "38 de pressão, e ele sai em 40" diz o que a marca dizia.
 
-   ⛔ O VOCATIVO E `Senhor Presidente da Republica`: o Decreto 9.758/2019 vedou "Vossa
-   Excelência" e "Excelentíssimo", e o Manual de Redacao e de 2018 — norma nova vence manual. */
+   ⛔ O VOCATIVO É `Senhor Presidente da Republica`: o Decreto 9.758/2019 vedou "Vossa
+   Excelência" e "Excelentíssimo", e o Manual de Redação é de 2018 — norma nova vence manual. */
 
 import { escapeHtml } from "../core/html.mjs";
 import { money, percent } from "../core/format.mjs";
@@ -18,8 +18,8 @@ import { MONTHS, UI } from "../strings.mjs";
 import { monthParts } from "../../state/state.mjs";
 import { protocolOf } from "./protocol.mjs";
 
-/* A rubrica da ministra: a EM chega ASSINADA, e o traço já esta inteiro — sem `--stroke-len`
-   o `dasharray` do decreto e inválido e o caminho pinta cheio. Outra mão, outro traço. */
+/* A rubrica da ministra: a EM chega ASSINADA, e o traço já está inteiro — sem `--stroke-len`
+   o `dasharray` do decreto é inválido e o caminho pinta cheio. Outra mão, outro traço. */
 const CHIEF_SIGN =
   `<svg viewBox="0 0 420 46" preserveAspectRatio="none" aria-hidden="true">` +
   `<path d="M22 36 C 18 8, 44 2, 50 16 C 56 30, 34 42, 24 34 C 40 30, 70 10, 92 22` +
@@ -27,25 +27,25 @@ const CHIEF_SIGN =
   ` C 326 32, 344 10, 366 16 S 398 28, 408 14"/></svg>`;
 
 /**
- * ⚠ AS SEIS LEITURAS SÃO AS DO FILTRO DO CICLO 21 — cada uma muda uma decisão que ele esta
+ * ⚠ AS SEIS LEITURAS SÃO AS DO FILTRO DO CICLO 21 — cada uma muda uma decisão que ele está
  * prestes a tomar —, e aqui elas são PARÁGRAFOS. 📗 O Manual manda numerar a partir do segundo:
  * o primeiro não leva número.
  *
  * @param {object} input
- * @param {number} input.month o mes do mandato
+ * @param {number} input.month o mês do mandato
  * @param {string} input.chief quem assina o parecer
- * @param {number} input.room o discricionario que cabe no mes
+ * @param {number} input.room o discricionário que cabe no mês
  * @param {number} input.mandatory a despesa presa por lei
- * @param {number} input.revenue a receita do mes
+ * @param {number} input.revenue a receita do mês
  * @param {number} input.base as cadeiras que apoiam
  * @param {number} input.majority quantas cadeiras decidem
  * @param {{ label: string, pressure: number, boil: number } | null} input.worst o grupo mais
- * perto do PRÓPRIO limiar, escolhido na composicao — não e o de maior pressão
- * @param {number} input.standing a aprovacao, em pontos de 0 a 100 — a escala de `pollFrom`
- * @param {number | null} input.was a aprovacao do mes passado, na mesma escala, para o
- * parágrafo dizer quanto ela andou — e não uma seta, que e desenho de tela
- * @param {boolean} input.she se quem assina o parecer e mulher, para o cargo concordar
- * @param {number | null} input.impeachment o mes em que o processo abriu
+ * perto do PRÓPRIO limiar, escolhido na composição — não é o de maior pressão
+ * @param {number} input.standing a aprovação, em pontos de 0 a 100 — a escala de `pollFrom`
+ * @param {number | null} input.was a aprovação do mês passado, na mesma escala, para o
+ * parágrafo dizer quanto ela andou — e não uma seta, que é desenho de tela
+ * @param {boolean} input.she se quem assina o parecer é mulher, para o cargo concordar
+ * @param {number | null} input.impeachment o mês em que o processo abriu
  * @returns {string}
  */
 export function briefHtml(input) {
@@ -53,21 +53,21 @@ export function briefHtml(input) {
   const { year } = monthParts(input.month);
   const date = `${UI.brief.city}, 5 de ${MONTHS[input.month % MONTHS.length]} de ${year}.`;
 
-  /* 📗 A EM E NUMERADA POR ANO, e o processo dela no SEI leva o mesmo número. */
+  /* 📗 A EM É NUMERADA POR ANO, e o processo dela no SEI leva o mesmo número. */
   const { number, nup: protocol } = protocolOf(input.month);
 
   /* ⛔ A APROVAÇÃO JÁ VEM EM PONTOS, e não de 0 a 1: `pollFrom` arredonda para 0..100, e
      multiplicar de novo escreveu "4400%" na folha — a captura pegou. A fração que `percent`
-     espera sai da divisão por cem, e ela e feita UMA vez, aqui.
-     ⚠ E A FRASE SÓ FALA DE MOVIMENTO QUANDO ELE EXISTE: "andou zero" e uma linha gasta. */
+     espera sai da divisão por cem, e ela é feita UMA vez, aqui.
+     ⚠ E A FRASE SÓ FALA DE MOVIMENTO QUANDO ELE EXISTE: "andou zero" é uma linha gasta. */
   const moved = input.was === null ? 0 : Math.round(input.standing - input.was);
 
   const paragraphs = [
     UI.brief.lead,
     UI.brief.treasury(money(input.room), money(input.mandatory), money(input.revenue)),
     UI.brief.chamber(input.base, input.majority),
-    /* ⚠ PRESSÃO ZERO NÃO E "O MAIS PERTO DE ROMPER": no mês 1 ninguém esta perto, e a frase
-       precisa dizer isso em vez de eleger um grupo que não esta em lugar nenhum. */
+    /* ⚠ PRESSÃO ZERO NÃO É "O MAIS PERTO DE ROMPER": no mês 1 ninguém está perto, e a frase
+       precisa dizer isso em vez de eleger um grupo que não está em lugar nenhum. */
     input.worst === null || input.worst.pressure < 1
       ? UI.brief.calm
       : UI.brief.pressure(
@@ -93,7 +93,7 @@ export function briefHtml(input) {
     `<p class="brief__date">${escapeHtml(date)}</p>` +
     `<p class="brief__vocative">${escapeHtml(UI.brief.vocative)}</p>` +
     `<div class="act__body brief__body">` +
-    /* 📗 O NÚMERO DO PARÁGRAFO E TEXTO, e não marcador de lista: numa EM ele e digitado, na
+    /* 📗 O NÚMERO DO PARÁGRAFO É TEXTO, e não marcador de lista: numa EM ele é digitado, na
        margem, e o texto começa no recuo de parágrafo — como nos ofícios reais, a partir do 1. */
     paragraphs
       .map((line, i) => `<p><span class="brief__mark">${i + 1}.</span>${escapeHtml(line)}</p>`)

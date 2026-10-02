@@ -2,7 +2,7 @@
    Posições em % e peças em px (a 1648x842 as cartas caíam 67px atrás da pasta). */
 
 @layer screens {
-  /* Sem árvore 3D: em projeção a foto e reamostrada e a parte de cima encolhia 8%. */
+  /* Sem árvore 3D: em projeção a foto é reamostrada e a parte de cima encolhia 8%. */
   .board[data-screen="cabinet"] > .area.cabinet {
     display: grid;
     place-items: center;
@@ -31,7 +31,7 @@
   .folder__leaf {
     position: relative;
     display: flex;
-    /* A camada z-index 4 mantem a capa fechada sobre a pilha da mesa. */
+    /* A camada z-index 4 mantém a capa fechada sobre a pilha da mesa. */
     z-index: 4;
     transform-origin: calc(100% + 59px) center;
     transform-style: preserve-3d;

@@ -1,8 +1,8 @@
 /* MATERIAL — o sistema de vidro, e o ÚNICO lugar do projeto onde `backdrop-filter` pode
    aparecer.
-   ⭐ DEPOIS DO CICLO 28 ELE E SÓ A DECLARAÇÃO: o corpo, a aresta e a forma saem de `glaze()`,
-   que veste toda peça e escreve a receita em `--glaze`. O que fica aqui e o filtro (uma
-   declaração para o jogo inteiro), a queda de cada nível e o raio. Medido la: 6/255 de refração. */
+   ⭐ DEPOIS DO CICLO 28 ELE É SÓ A DECLARAÇÃO: o corpo, a aresta e a forma saem de `glaze()`,
+   que veste toda peça e escreve a receita em `--glaze`. O que fica aqui é o filtro (uma
+   declaração para o jogo inteiro), a queda de cada nível e o raio. Medido lá: 6/255 de refração. */
 
 @layer material {
   /* A PEÇA VESTIDA traz a receita em `--glaze`; quem não foi vestida cai no desfoque do token.
@@ -25,7 +25,7 @@
     box-shadow: var(--glass-cast);
   }
 
-  /* ⛔ O `::after` E SÓ O CARREGADOR DO FILTRO: ele e `inset: 0` sobre o palco, e o especular que
+  /* ⛔ O `::after` É SÓ O CARREGADOR DO FILTRO: ele é `inset: 0` sobre o palco, e o especular que
      morava aqui virou a aresta de Fresnel da pele — três camadas de luz no mesmo topo eram a
      borda a 14%, o bisel a 16% e este a 42%. */
   .glass-stage::after {
@@ -48,7 +48,7 @@
     box-shadow: var(--glass-cast);
   }
 
-  /* ── NÍVEL 3 · SUPPORT — informacao que não se toca ─────────────────────── */
+  /* ── NÍVEL 3 · SUPPORT — informação que não se toca ─────────────────────── */
   .glass-support {
     border: 1px solid transparent;
     border-radius: var(--radius-pill);
@@ -56,11 +56,11 @@
   }
 
   /* ⛔ O RAIL FICA SEM DESFOQUE ENQUANTO A TELA TROCA: entre a coluna e o dock a superfície do
-     `backdrop-filter` ficava com a CAIXA VELHA por alguns quadros depois da transicao — uma
+     `backdrop-filter` ficava com a CAIXA VELHA por alguns quadros depois da transição — uma
      coluna de madeira desfocada e saturada onde o menu esteve, sem grão (aresta 0,1 contra
      4,5 do vizinho), em 6 quadros a partir de 460ms, medido no Chrome dele com GPU
      (docs/evidence/styles/screencast-variants.mjs). `will-change`, `contain: paint` e `isolation` não
-     mudam nada; sem o desfoque durante a troca, zero quadros. Não e um segundo material: e o
+     mudam nada; sem o desfoque durante a troca, zero quadros. Não é um segundo material: é o
      mesmo token, apagado nesse elemento só enquanto a troca dura. */
   html:active-view-transition .rail {
     --glass-blur: none;
@@ -68,10 +68,10 @@
     --glaze: none;
   }
 
-  /* ⛔ O PASSEIO DA LUZ SAIU, e o número e este: `--light-angle` animado no `:root` (150° a
+  /* ⛔ O PASSEIO DA LUZ SAIU, e o número é este: `--light-angle` animado no `:root` (150° a
      205° em 9s) herdava para a árvore inteira, e cada quadro recalculava o estilo de 627
      elementos (7,9ms) e repintava todo vidro — no voo da pasta, 356ms de thread principal
      em 700ms e a GPU a 82%. Sem ele: 13ms, 4 pinturas, GPU a 12%, pior quadro 20,1 → 4,2ms.
      Já tinha custado 9,7 fps no ofício e 28,3 no `.tray__month`. O ângulo parou no valor
-     inicial do `@property`, e a luz do vidro e a mesma, parada. */
+     inicial do `@property`, e a luz do vidro é a mesma, parada. */
 }

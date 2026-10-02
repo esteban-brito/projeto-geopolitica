@@ -74,10 +74,10 @@
     min-height: 100%;
     padding: var(--space-6) var(--space-4);
     text-align: center;
-  } /* ⚠ A CHAMADA EQUILIBRA AS LINHAS e a nota EVITA A VIUVA, e as duas são a mesma
+  } /* ⚠ A CHAMADA EQUILIBRA AS LINHAS e a nota EVITA A VIÚVA, e as duas são a mesma
      correção vista de dois lados: a captura do Congresso mostrava "ou avance o mês assim /
-     mesmo", com uma palavra sozinha na segunda linha. `balance` e para título — ele iguala
-     as linhas; `pretty` e para prosa — ele só recusa a última linha órfã. */
+     mesmo", com uma palavra sozinha na segunda linha. `balance` é para título — ele iguala
+     as linhas; `pretty` é para prosa — ele só recusa a última linha órfã. */
   .empty__lead {
     text-wrap: balance;
     font-family: var(--font-display);
@@ -94,7 +94,7 @@
   } /* ── O SEGUNDO PESO, e ele existe porque o jogo tem DOIS tipos de ausência ──
        ⚠ HAVIA QUATRO FORMAS para a mesma coisa: `.empty` com chamada e prosa no Congresso,
        uma no relatório, uma no fecho, e uma frase solta no cartão da CALDEIRA. Quatro
-       maneiras de dizer "não há nada aqui" e o que faz uma tela parecer montada por quatro
+       maneiras de dizer "não há nada aqui" é o que faz uma tela parecer montada por quatro
        pessoas. */
   .empty--quiet {
     align-content: start;
@@ -129,8 +129,8 @@
     min-height: var(--target-m);
   } /* ── A PRESSÃO ────────────────────────────────────────────────────────────── ⚠ ELA FALTAVA
      DESDE SEMPRE, e a ausência estava escrita na própria regra acima: a peça declarava
-     `transform` na transicao e NADA nunca lhe dava um `transform` fora do hover.
-     Eles se somam: com o ponteiro em cima a peça esta a −2px, e apertar a traz de volta para
+     `transform` na transição e NADA nunca lhe dava um `transform` fora do hover.
+     Eles se somam: com o ponteiro em cima a peça está a −2px, e apertar a traz de volta para
      perto de zero — o gesto inteiro lê como "levantou, encostou". */
   .action:active {
     transform: translateY(0) scale(0.985);
@@ -142,7 +142,7 @@
     letter-spacing: 0.1em;
     text-transform: none;
     color: var(--ink);
-  } /* A MARCA E A LÂMINA, e não uma demão sobre a lâmina neutra. */
+  } /* A MARCA É A LÂMINA, e não uma demão sobre a lâmina neutra. */
 
   .action[disabled] {
     cursor: not-allowed;
@@ -189,10 +189,10 @@
         var(--glass-action-bg);
     }
   } /* ── O RAIL ───────────────────────────────────────────────────────────────── Navegação
-     primária na estrutura do FM2020: lateral fixa, ícone a esquerda, rótulo ao lado, item
+     primária na estrutura do FM2020: lateral fixa, ícone à esquerda, rótulo ao lado, item
      corrente destacado, bloco ancorado no rodapé. */
   .rail {
-    /* A pílula e absoluta contra ESTA caixa. */
+    /* A pílula é absoluta contra ESTA caixa. */
     position: sticky;
     top: var(--space-4);
     align-self: start;
@@ -200,23 +200,23 @@
     height: calc(100dvh - 2 * var(--space-4));
     margin: var(
       --space-4
-    ); /* ⚠ O RESPIRO LATERAL E `--space-2` E NÃO `--space-3`, e os 8px vieram de uma medição:
+    ); /* ⚠ O RESPIRO LATERAL É `--space-2` E NÃO `--space-3`, e os 8px vieram de uma medição:
        "Congresso & Leis" pede 114px num rótulo de 109 e cortava com reticência. Alargar o
        `--rail` custaria largura do tabuleiro em toda tela; o item já tem 12px próprios. */
     padding: var(--space-4) var(--space-2);
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    /* A coluna e peça ALTA, e peça alta e painel: o mesmo raio do palco ao lado dela. O dock,
-       que e a mesma peça deitada, usa o raio de cápsula (`40-shell.css`). */
+    /* A coluna é peça ALTA, e peça alta é painel: o mesmo raio do palco ao lado dela. O dock,
+       que é a mesma peça deitada, usa o raio de cápsula (`40-shell.css`). */
     border-radius: var(--radius-stage);
-    /* A pele e desenhada no tamanho da caixa; quando a caixa anda (o morph da gaveta), a pele
+    /* A pele é desenhada no tamanho da caixa; quando a caixa anda (o morph da gaveta), a pele
        estica com ela em vez de repetir. */
     background-size: 100% 100%;
   }
 
   /* ⛔ O TÍTULO DO GRUPO ALINHA COM O TEXTO DOS ITENS, e não com a caixa deles: ele começava
-     40px a esquerda — 12 de recuo do item, 16 do glifo e 12 do vão — e a coluna lia como duas
+     40px à esquerda — 12 de recuo do item, 16 do glifo e 12 do vão — e a coluna lia como duas
      listas encostadas em vez de uma. */
   .rail__legend {
     padding-left: calc(var(--space-3) + var(--glyph) + var(--space-3));
@@ -237,8 +237,8 @@
     letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-dim);
-  } /* O NOME EM SERIFA, como todo nome de gente neste jogo: serifa e texto de REGISTRO, e uma
-     pessoa e um registro. */
+  } /* O NOME EM SERIFA, como todo nome de gente neste jogo: serifa é texto de REGISTRO, e uma
+     pessoa é um registro. */
   .rail__president {
     font-family: var(--font-record);
     font-size: var(--text-name);
@@ -261,7 +261,7 @@
 
   .rail__list {
     /* ⛔ POSICIONADA, para pintar POR CIMA da pílula: sem isto o vidro da pílula cobria o rótulo
-       do item corrente na coluna — "Email" saia cinza sob o realce. No dock o item já e
+       do item corrente na coluna — "Email" saía cinza sob o realce. No dock o item já é
        `relative` e o glifo ficava em cima; a coluna não era, e o defeito só aparecia nela. */
     position: relative;
     display: flex;
@@ -293,20 +293,20 @@
       background var(--dur-touch) linear,
       color var(--dur-touch) linear,
       opacity var(--dur-touch) linear,
-      /* Em repouso a transicao e a de SOLTAR: e ela que corre quando o dedo sai. Pousar e
+      /* Em repouso a transição é a de SOLTAR: é ela que corre quando o dedo sai. Pousar e
          premir trocam a duração e a curva nas regras abaixo. */
         transform var(--dur-release) var(--ease-release);
   }
 
   /* QUEM SAI DA CÁPSULA APAGA ANTES de a gaveta trocar de estado (opacidade inline, de
-     `rail.mjs`): depois da troca já não esta no layout para apagar. A régua e o rodapé saem
+     `rail.mjs`): depois da troca já não está no layout para apagar. A régua e o rodapé saem
      junto com os itens. */
   .rail__rule,
   .rail__foot {
     transition: opacity var(--dur-touch) linear;
   }
 
-  /* ⚠ A PEÇA RESPONDE AO PONTEIRO ANTES DO CLIQUE: pousar levanta 2%, que e o que faz o vidro
+  /* ⚠ A PEÇA RESPONDE AO PONTEIRO ANTES DO CLIQUE: pousar levanta 2%, que é o que faz o vidro
      parecer matéria e não desenho. Só onde há ponteiro fino — no toque, pousar não existe. */
   @media (hover: hover) and (pointer: fine) {
     .rail__item:hover {
@@ -314,27 +314,27 @@
     }
   }
 
-  /* ⛔ Premir NÃO quica: afundar e informacao, e a mola dele e rigida (0,16s, quique 0,05). */
+  /* ⛔ Premir NÃO quica: afundar é informação, e a mola dele é rígida (0,16s, quique 0,05). */
   .rail__item:active {
     transform: scale(var(--sink-press));
     transition-duration: var(--dur-press);
     transition-timing-function: var(--ease-press);
-  } /* O item corrente e o ÚNICO lugar do rail que recebe âmbar, e ele o recebe como tinta rasa
-     — a marca e a cor do que se PRESSIONA, e gasta-la cheia num rótulo de navegação
+  } /* O item corrente é o ÚNICO lugar do rail que recebe âmbar, e ele o recebe como tinta rasa
+     — a marca é a cor do que se PRESSIONA, e gastá-la cheia num rótulo de navegação
      enfraqueceria o botão de turno logo abaixo. */
-  /* ⛔ O ITEM CORRENTE NÃO PINTA MAIS FUNDO: quem marca a seleção e a pílula, que CORRE até ele.
-     Fundo no próprio item apaga num lugar e acende no outro, e seleção que pisca não e material. */
+  /* ⛔ O ITEM CORRENTE NÃO PINTA MAIS FUNDO: quem marca a seleção é a pílula, que CORRE até ele.
+     Fundo no próprio item apaga num lugar e acende no outro, e seleção que pisca não é material. */
   .rail__item--active {
     color: var(--ink);
   }
 
   /* A PÍLULA — o vidro do item corrente, solto da lista para poder deslizar. O corpo e a
-     aresta são a pele de `skin()`, no tamanho de repouso; a gota e transformação, e a pele
+     aresta são a pele de `skin()`, no tamanho de repouso; a gota é transformação, e a pele
      estica com ela.
      ⛔ `pointer-events: none`: o dock já perdeu navegação uma vez porque o clique caiu em quem
      não era o botão. ⛔ E sem filtro próprio: um segundo `backdrop-filter` aqui ressuscita o
-     pisca da troca de tela. ⛔ E sem `transition` de transformação: quem a move e a mola de
-     `rail.mjs`, quadro a quadro — a transicao CSS recomeça do zero quando interrompida. */
+     pisca da troca de tela. ⛔ E sem `transition` de transformação: quem a move é a mola de
+     `rail.mjs`, quadro a quadro — a transição CSS recomeça do zero quando interrompida. */
   .rail__pill {
     position: absolute;
     top: 0;
@@ -354,7 +354,7 @@
     width: var(--glyph);
     height: var(--glyph);
     /* ⛔ O clique no glifo chegava como `SVGElement`, e o escutador da página só aceita
-       `HTMLElement`: no dock, onde o glifo e o centro do botão, a seção não trocava. */
+       `HTMLElement`: no dock, onde o glifo é o centro do botão, a seção não trocava. */
     pointer-events: none;
   }
 
@@ -368,8 +368,8 @@
     text-overflow: ellipsis;
   }
 
-  /* UMA COR, DOIS PESOS. O âmbar e do que se PRESSIONA e o verde-vermelho e da TENDÊNCIA do
-     mês; a queda desde a posse e uma terceira pergunta, e ela reusa a cor de crise em duas
+  /* UMA COR, DOIS PESOS. O âmbar é do que se PRESSIONA e o verde-vermelho é da TENDÊNCIA do
+     mês; a queda desde a posse é uma terceira pergunta, e ela reusa a cor de crise em duas
      intensidades em vez de pedir um quarto tom. */
   .rail__alert {
     flex: 0 0 auto;
@@ -395,8 +395,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-  } /* A ação herda a peça inteira e cede só a largura: dentro do rail ela e governada pela
-     coluna, e não pelo próprio minimo. */
+  } /* A ação herda a peça inteira e cede só a largura: dentro do rail ela é governada pela
+     coluna, e não pelo próprio mínimo. */
   .rail__foot .action {
     min-width: 0;
     width: 100%;
@@ -409,8 +409,8 @@
     padding: 1px var(--space-2);
     border: 1px solid var(--hairline);
     border-radius: var(--radius-stamp);
-    background: transparent; /* ⚠ MONOESPAÇADA, e ela e a terceira família do projeto: o rito não e nome nem medição —
-       e o despacho que a máquina do Estado carimba sobre o papel. */
+    background: transparent; /* ⚠ MONOESPAÇADA, e ela é a terceira família do projeto: o rito não é nome nem medição —
+       é o despacho que a máquina do Estado carimba sobre o papel. */
     font-family: var(--font-machine);
     font-size: var(--text-label);
     font-weight: 800;
@@ -438,7 +438,7 @@
     background: rgba(var(--stable-rgb), 0.18);
     color: var(--ink);
   } /* ── O CONTROLE DESLIZANTE ────────────────────────────────────────────────── Duas telas o
-     usam — verba por bancada na Mesa, bilhoes por área nas áreas —, e por isso ele mora aqui. */
+     usam — verba por bancada na Mesa, bilhões por área nas áreas —, e por isso ele mora aqui. */
   input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
@@ -514,11 +514,11 @@
   .dial[data-guard="constitution"],
   .law[data-guard="constitution"] {
     --rail-floor: var(--rail-locked);
-  } /* ── AS TRÊS ZONAS DO TRILHO ──────────────────────────────────────────────── ⚠ ESTA E A
+  } /* ── AS TRÊS ZONAS DO TRILHO ──────────────────────────────────────────────── ⚠ ESTA É A
      REGRA QUE CONSOME O DADO QUE A VISTA SEMPRE ESCREVEU E NINGUÉM LIA.
-     ⚠ O SELETOR REPETE `input[type="range"]` DE PROPÓSITO, e a razão e um defeito medido:
+     ⚠ O SELETOR REPETE `input[type="range"]` DE PROPÓSITO, e a razão é um defeito medido:
      `.dial__slider` sozinho tem especificidade (0,1,0) e PERDE para a regra genérica acima,
-     que e (0,1,1) — atributo mais tipo. */
+     que é (0,1,1) — atributo mais tipo. */
   input[type="range"].dial__slider::-webkit-slider-runnable-track,
   input[type="range"].law__slider::-webkit-slider-runnable-track {
     background: linear-gradient(
@@ -546,8 +546,8 @@
      um traço que muda de cor. */ /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
      atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
      rolar.
-     O breakpoint efetivo e 720px (território de telefone). 640px e o limiar conceptual
-     onde o layout completamente colapsa, mas não há regra CSS separada para la. */
+     O breakpoint efetivo é 720px (território de telefone). 640px é o limiar conceptual
+     onde o layout completamente colapsa, mas não há regra CSS separada para lá. */
 
   .letter,
   .passage__row,
@@ -561,9 +561,9 @@
      A primeira versão normalizava "quanto do caminho até a ruptura já andou": com a rua em 44
      e o piso em 20, a conta dava 70% e a barra aparecia quase cheia e VERMELHA num governo
      confortável.
-     as quatro barras da CALDEIRA mostravam pressão de 0 a 100 e NÃO diziam onde e o
+     as quatro barras da CALDEIRA mostravam pressão de 0 a 100 e NÃO diziam onde é o
      ponto de fervura. Um grupo em 55 e um em 20 apareciam como "duas barras curtas",
-     quando o primeiro esta a cinco pontos de abandonar o governo. Mesma pergunta, e
+     quando o primeiro está a cinco pontos de abandonar o governo. Mesma pergunta, e
      uma das duas réguas sem a marca — era a divergência começando. */
   .gauge {
     position: relative;
@@ -575,16 +575,16 @@
       rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
     );
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-  } /* A MARCA DO LIMIAR — dois pixels de latão, e ela e a única coisa que a barra precisa dizer
-     além do valor: onde e a linha.
+  } /* A MARCA DO LIMIAR — dois pixels de latão, e ela é a única coisa que a barra precisa dizer
+     além do valor: onde é a linha.
      ⚠ ELA PASSOU A SER DECLARADA, e não mais automática: a obrigatória do cofre
-     e uma régua SEM limiar — não existe percentual em que ela "rompe" —, e sem o atributo o
+     é uma régua SEM limiar — não existe percentual em que ela "rompe" —, e sem o atributo o
      `calc(1% * var(--mark))` cairia num valor inválido e desenharia latão no zero. */
   /* A ZONA DE PERIGO — o trecho da pista do lado ERRADO da marca, em tinta de crise a 12%.
-     Ela responde "quanto falta" no olho, e não na leitura, e não custa instrumento novo: e o
+     Ela responde "quanto falta" no olho, e não na leitura, e não custa instrumento novo: é o
      mesmo gradiente da pista com uma parada a mais.
-     ⚠ ELA FICA ATRÁS DO PREENCHIMENTO, e não por cima — o vazio e que e a zona; pintar por
-     cima do preenchido diria que a leitura já esta la. */
+     ⚠ ELA FICA ATRÁS DO PREENCHIMENTO, e não por cima — o vazio é que é a zona; pintar por
+     cima do preenchido diria que a leitura já está lá. */
   .gauge[data-danger="above"] {
     background:
       linear-gradient(
@@ -616,7 +616,7 @@
   }
 
   /* ⚠ O PREENCHIMENTO EM DUAS TINTAS — a base que se convence e a que se aluga. A segunda
-     metade e a MESMA cor a 45%, e não uma cor nova: ela não e outro estado, e a mesma base com
+     metade é a MESMA cor a 45%, e não uma cor nova: ela não é outro estado, é a mesma base com
      um preço atrás. */
   .gauge[data-split="true"] {
     background: linear-gradient(
@@ -652,11 +652,11 @@
     background: var(--brand);
   } /* ── A SEGUNDA MARCA — a régua que tem DUAS linhas ────────────────────────── Um grupo da
      caldeira tem dois limiares: em `--mark` ele abandona o governo, e em `--fall` a ruptura
-     politica abre. Os dois números viviam em BLOCOS diferentes com o mesmo verbo e o mesmo
+     política abre. Os dois números viviam em BLOCOS diferentes com o mesmo verbo e o mesmo
      nome, a um palmo um do outro numa tela que não rola — e nada ligava um ao outro.
-     ⚠ A COR E O BORDÔ, e não o latão: bordô já e o canal do processo nesta paleta (a aresta
+     ⚠ A COR É O BORDÔ, e não o latão: bordô já é o canal do processo nesta paleta (a aresta
      do cerco), e latão nos dois faria duas linhas de naturezas diferentes lerem como a
-     mesma. Ela não passa pelo medidor de contraste, que só alcanca texto. */
+     mesma. Ela não passa pelo medidor de contraste, que só alcança texto. */
   .gauge[data-fall="true"]::before {
     content: "";
     position: absolute;
@@ -673,7 +673,7 @@
       rgba(255, 255, 255, 0.07) calc(1% * var(--index)) 100%
     );
   } /* ── CARTÃO DE DIÁLOGO ────────────────────────────────────────────────────── O <dialog>
-     nativo não recebe estilo de caixa: ele e só a camada superior. */ /* O relatório virou painel da Mesa, e o que sobrou aqui e o AVISO: prosa corrida, e prosa
+     nativo não recebe estilo de caixa: ele é só a camada superior. */ /* O relatório virou painel da Mesa, e o que sobrou aqui é o AVISO: prosa corrida, e prosa
      quer medida de linha curta.
      Herdar `--column` agora daria um cartão de 1180px com três frases dentro. */
   .dialog-card {
@@ -685,7 +685,7 @@
     text-align: center;
   } /* ── A POSSE ────────────────────────────────────────────────────────────────
      O único formulário do jogo, e ele existe uma vez por partida: o jogador escreve o
-     próprio nome. Alinhado a ESQUERDA, ao contrário do aviso — prosa curta se centra, campo
+     próprio nome. Alinhado à ESQUERDA, ao contrário do aviso — prosa curta se centra, campo
      de formulário não: rótulo centrado sobre campo largo não diz a qual campo pertence. */
   .swear {
     justify-items: stretch;
@@ -699,8 +699,8 @@
     margin: 0;
     padding: 0;
     border: 0;
-  } /* ⚠ A CLASSE NÃO VENCE O SELETOR DE ATRIBUTO: `.swear__input` e (0,1,0) e
-     `input[type="text"]` e (0,1,1). Ver `docs/standards.md` §4. */
+  } /* ⚠ A CLASSE NÃO VENCE O SELETOR DE ATRIBUTO: `.swear__input` é (0,1,0) e
+     `input[type="text"]` é (0,1,1). Ver `docs/standards.md` §4. */
   input[type="text"].swear__input {
     width: 100%;
     padding: var(--space-2) var(--space-3);
@@ -717,8 +717,8 @@
   select.swear__input:focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
-  } /* O SELETOR REPETE A FORMA DO CAMPO DE TEXTO, e a especificidade e o mesmo caso do vizinho
-     acima: `select` e (0,0,1) e a classe sozinha perderia para a regra do agente. */
+  } /* O SELETOR REPETE A FORMA DO CAMPO DE TEXTO, e a especificidade é o mesmo caso do vizinho
+     acima: `select` é (0,0,1) e a classe sozinha perderia para a regra do agente. */
   select.swear__input {
     width: 100%;
     padding: var(--space-2) var(--space-3);
@@ -735,7 +735,7 @@
     margin: calc(var(--space-2) * -1) 0 0;
     color: var(--ink-dim);
     font-size: var(--text-note);
-  } /* AS DUAS FORMAS DE TRATAMENTO, lado a lado: são duas e a escolha e binária, então uma
+  } /* AS DUAS FORMAS DE TRATAMENTO, lado a lado: são duas e a escolha é binária, então uma
      linha basta e uma lista vertical seria altura gasta com duas palavras. */
   .swear__how {
     grid-auto-flow: column;
@@ -772,7 +772,7 @@
     font-weight: 800;
     font-size: var(--text-title);
     line-height: 1.15;
-  } /* ── O RELATÓRIO DO MÊS ───────────────────────────────────────────────────── Ele e um
+  } /* ── O RELATÓRIO DO MÊS ───────────────────────────────────────────────────── Ele é um
      BLOCO, e não uma tela: hoje mora como painel da Mesa, e a mesma forma serve o cartão de
      aviso. */
   .report {
@@ -780,7 +780,7 @@
     gap: var(--space-2);
     width: 100%;
     text-align: left;
-  } /* O MÊS E TRATADO COMO O RAIL O TRATA. */ /* ⚠ 700 E O PESO DE RÓTULO A 10px, e 41 peças o usam; este era o único a 800. */
+  } /* O MÊS É TRATADO COMO O RAIL O TRATA. */ /* ⚠ 700 É O PESO DE RÓTULO A 10px, e 41 peças o usam; este era o único a 800. */
   .report__month {
     font-family: var(--font-display);
     font-weight: 700;
@@ -841,12 +841,12 @@
   .report__line b {
     font-weight: 700;
     color: var(--ink);
-  } /* O ALERTA E DA LINHA INTEIRA. */
+  } /* O ALERTA É DA LINHA INTEIRA. */
   .report__line[data-alert="true"],
   .report__line[data-alert="true"] b {
     color: var(--signal-down);
-  } /* ⚠ E ESSE E O DEFEITO QUE A GUARDA `orphans` DOCUMENTA, do outro lado: seletor amarrado a
-     um nome que não descreve mais o que a peça e. */
+  } /* ⚠ E ESSE É O DEFEITO QUE A GUARDA `orphans` DOCUMENTA, do outro lado: seletor amarrado a
+     um nome que não descreve mais o que a peça é. */
   .block__legend,
   .report__legend,
   .report__table caption {
@@ -862,12 +862,12 @@
   .report__legend,
   .report__table caption {
     margin-top: var(--space-3);
-  } /* ── A LEGENDA QUE E PORTA ────────────────────────────────────────────────── ⚠ NADA NA
-     COLUNA DA DIREITA ERA CLICAVEL, e em Victoria 3 e no Football Manager tudo na tela leva ao
-     detalhe. Duas das quatro tem destino que existe; as outras duas seguem sendo leitura, e
-     e por isso que a seta só aparece onde há para onde ir.
-     ELA NÃO GANHA A COR DA MARCA: latão e a cor do que se PRESSIONA para decidir, e navegar
-     não e decidir — a mesma hierarquia que o rail já usa. */
+  } /* ── A LEGENDA QUE É PORTA ────────────────────────────────────────────────── ⚠ NADA NA
+     COLUNA DA DIREITA ERA CLICÁVEL, e em Victoria 3 e no Football Manager tudo na tela leva ao
+     detalhe. Duas das quatro têm destino que existe; as outras duas seguem sendo leitura, e
+     é por isso que a seta só aparece onde há para onde ir.
+     ELA NÃO GANHA A COR DA MARCA: latão é a cor do que se PRESSIONA para decidir, e navegar
+     não é decidir — a mesma hierarquia que o rail já usa. */
   .block__door {
     display: flex;
     align-items: center;
@@ -916,8 +916,8 @@
     text-transform: uppercase;
     color: var(--ink-dim);
   } /* O título da primeira coluna acompanha o conteúdo dela: os nomes das bancadas são texto e
-     ficam a esquerda, e um rótulo alinhado a direita sobre uma coluna alinhada a esquerda lê
-     como pertencente a coluna anterior. */
+     ficam à esquerda, e um rótulo alinhado à direita sobre uma coluna alinhada à esquerda lê
+     como pertencente à coluna anterior. */
   .report__table thead th:first-child {
     text-align: left;
   }
@@ -943,7 +943,7 @@
 
   .report__mood[data-direction="down"] {
     color: var(--signal-down);
-  } /* A VARIAÇÃO E NÚMERO, e número cabe no degrau de rótulo. Era 0,82em. */
+  } /* A VARIAÇÃO É NÚMERO, e número cabe no degrau de rótulo. Era 0,82em. */
   .report__mood small {
     font-size: var(--text-label);
     color: inherit;
@@ -975,8 +975,8 @@
     font-weight: 700;
     color: var(--ink);
   } /* ⚠ ELA NÃO TINHA TAMANHO NENHUM até 24/08: era o `<small>` PADRÃO DO NAVEGADOR,
-     0,83em, que a 13,6px da 11,33px — um degrau que ninguém escolheu e que a escala não
-     tem. Ausência de declaração não e neutralidade: e o navegador decidindo. */
+     0,83em, que a 13,6px dá 11,33px — um degrau que ninguém escolheu e que a escala não
+     tem. Ausência de declaração não é neutralidade: é o navegador decidindo. */
   .report__country small {
     font-size: var(--text-label);
     min-width: 3rem;
@@ -991,8 +991,8 @@
   .report__country li[data-direction="down"] small {
     color: var(--signal-down);
   } /* No celular a tabela perde o respiro lateral antes de perder coluna: nenhuma das cinco é
-     dispensável, e esconder dado para caber é mentir por omissão. */ /* ── VARIAÇÃO ─────────────────────────────────────────────────────────────── O sinal e
-     carregado por DUAS coisas — a seta e a cor — porque cor sozinha não e canal suficiente. */
+     dispensável, e esconder dado para caber é mentir por omissão. */ /* ── VARIAÇÃO ─────────────────────────────────────────────────────────────── O sinal é
+     carregado por DUAS coisas — a seta e a cor — porque cor sozinha não é canal suficiente. */
   .trend {
     display: inline-flex;
     align-items: baseline;

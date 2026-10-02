@@ -1,6 +1,6 @@
 /* TELA · FINANÇAS — o placar, e a única tela do jogo sem um controle.
-   ELA E A ÚNICA DENSA, E ISSO E DELIBERADO.
-   Em tela que decide, densidade e ruído: cada número a mais disputa atenção com a decisão, e
+   ELA É A ÚNICA DENSA, E ISSO É DELIBERADO.
+   Em tela que decide, densidade é ruído: cada número a mais disputa atenção com a decisão, e
    o projeto já gastou uma sessão tirando número de cima da Mesa por isso. */
 
 @layer screens {
@@ -37,12 +37,12 @@
   }
 
   /* ── A ESCADA PRECISA DE AR ENTRE OS DEGRAUS ──────────────────────────────── Os blocos são
-     retângulos solidos e se LADRILHAM: encostados, seis deles viram um tarjao único, e uma
+     retângulos sólidos e se LADRILHAM: encostados, seis deles viram um tarjão único, e uma
      série estável passa a parecer uma barra de carregamento — foi assim que ela apareceu na
      primeira captura desta tela. */
   /* ⚠ O ÚNICO TAMANHO FORA DA ESCALA EM TODO O PROJETO, e a exceção é declarada: a escada não
      é TEXTO, é um desenho feito de caracteres. */
-  /* A LARGURA VEM DA COLUNA: a trilha da faísca mede 4rem na grade da linha, e e o mesmo
+  /* A LARGURA VEM DA COLUNA: a trilha da faísca mede 4rem na grade da linha, e é o mesmo
      valor que `.spark` traz por padrão — declarar `width: 100%` aqui seria um segundo dono
      para uma medida só. */
   .ledger__spark {

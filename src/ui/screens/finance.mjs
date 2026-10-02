@@ -1,6 +1,6 @@
 /* FINANÇAS — o placar do país.
    View PURA, e a única tela sem um controle.
-   ── A AUSÊNCIA DE CONTROLE E A INFORMACAO PRINCIPAL Toda outra tela deste jogo pede uma
+   ── A AUSÊNCIA DE CONTROLE É A INFORMAÇÃO PRINCIPAL Toda outra tela deste jogo pede uma
    decisão. */
 
 import { escapeHtml } from "../core/html.mjs";
@@ -21,7 +21,7 @@ import { UI } from "../strings.mjs";
  * @param {string} input.label
  * @param {string} input.value
  * @param {ReadonlyArray<number>} [input.past]
- * @param {readonly [number, number]} [input.range] a regua da escada
+ * @param {readonly [number, number]} [input.range] a régua da escada
  * @param {string} [input.note]
  * @param {"up" | "down" | "flat"} [input.tone]
  * @returns {string}
@@ -64,12 +64,12 @@ function blockHtml({ title, rows }) {
  * @param {import("../../domain/economy/index.mjs").MacroState} input.macro
  * @param {import("../../domain/budget/index.mjs").BudgetOutput} input.budget
  * @param {Series} input.series
- * @param {number} input.interest o servico da divida NO MES
- * @param {number} input.debt o estoque com que o mes fecha, juro incluido
+ * @param {number} input.interest o serviço da dívida NO MÊS
+ * @param {number} input.debt o estoque com que o mês fecha, juro incluído
  * @param {number} input.debtRatio o mesmo estoque sobre o PIB
- * @param {number} input.premium o spread que o mercado cobra acima da basica, ao ano
- * @param {number} input.target a meta de inflacao, do catalogo
- * @param {number} input.ceiling o teto da banda da meta, somado na composicao
+ * @param {number} input.premium o spread que o mercado cobra acima da básica, ao ano
+ * @param {number} input.target a meta de inflação, do catálogo
+ * @param {number} input.ceiling o teto da banda da meta, somado na composição
  * @param {ReadonlyArray<Area>} input.areas
  * @param {Record<string, number>} input.index
  * @param {Record<string, number[]>} input.history
@@ -100,13 +100,13 @@ export function financeHtml({
         label: UI.finance.gdp,
         value: money(macro.gdp),
         past: series.gdp,
-        /* O PIB NOMINAL NÃO TEM TETO NATURAL, então a régua dele e a própria largada. */
+        /* O PIB NOMINAL NÃO TEM TETO NATURAL, então a régua dele é a própria largada. */
         range: gdpRange(series.gdp, macro.gdp),
         note: UI.finance.perYear,
       }) +
       lineHtml({
         label: UI.finance.perCapita,
-        /* Em mil reais: bilhoes divididos por milhoes dão mil por pessoa. */
+        /* Em mil reais: bilhões divididos por milhões dão mil por pessoa. */
         value: `R$ ${num(perCapita)} mil`,
       }) +
       lineHtml({
@@ -115,7 +115,7 @@ export function financeHtml({
         past: series.inflation,
         range: SCALE.inflation,
         note: `${UI.finance.target} ${percent(target, 0)}`,
-        /* O alvo e o CENTRO da banda e não um teto, e por isso quem julga e o teto dela. */
+        /* O alvo é o CENTRO da banda e não um teto, e por isso quem julga é o teto dela. */
         tone: macro.inflation > ceiling ? "down" : "flat",
       }) +
       lineHtml({
@@ -124,8 +124,8 @@ export function financeHtml({
         past: series.rate,
         range: SCALE.rate,
         note: UI.finance.central,
-        /* Selic de 12% com inflação de 10% e dinheiro barato; a mesma Selic com inflação de
-           3% e um freio. */
+        /* Selic de 12% com inflação de 10% é dinheiro barato; a mesma Selic com inflação de
+           3% é um freio. */
         tone: macro.rate - macro.inflation > 0.07 ? "down" : "flat",
       }) +
       lineHtml({
@@ -163,10 +163,10 @@ export function financeHtml({
         value: money(budget.allowance),
         note: UI.finance.perYear,
       }) +
-      /* O PRIMÁRIO NÃO GANHA ESCADA, e a ausência e escolha.
-         ⛔ E O SINAL NÃO E O TOM, e essa era a mentira: um primário de +0,1% do PIB com meta
-         de +0,5% e uma meta PERDIDA, e a linha o pintava de verde por ser positivo. Quem
-         julga e o LASTRO, que compara com a banda da LDO — a tela não refaz a conta. */
+      /* O PRIMÁRIO NÃO GANHA ESCADA, e a ausência é escolha.
+         ⛔ E O SINAL NÃO É O TOM, e essa era a mentira: um primário de +0,1% do PIB com meta
+         de +0,5% é uma meta PERDIDA, e a linha o pintava de verde por ser positivo. Quem
+         julga é o LASTRO, que compara com a banda da LDO — a tela não refaz a conta. */
       lineHtml({
         label: UI.finance.primary,
         value: money(budget.balance),
@@ -176,7 +176,7 @@ export function financeHtml({
           (budget.atRisk ? ` · ${UI.finance.missing}` : ""),
         tone: budget.atRisk ? "down" : "up",
       }) +
-      /* O SERVICO DA DÍVIDA FICA NESTE BLOCO E FORA DO PRIMÁRIO, exatamente como o arcabouço
+      /* O SERVIÇO DA DÍVIDA FICA NESTE BLOCO E FORA DO PRIMÁRIO, exatamente como o arcabouço
          o trata. */
       lineHtml({
         label: UI.finance.interest,
@@ -227,8 +227,8 @@ export function financeHtml({
         const value = index[area.id] ?? area.initial;
         const past = history[area.id] ?? [];
 
-        /* O resultado era uma coluna que punha 24 meses de Educacao, 12 de Defesa, 6 de
-           Indústria e 3 de Saude uma embaixo da outra, todas sem rótulo, lidas como
+        /* O resultado era uma coluna que punha 24 meses de Educação, 12 de Defesa, 6 de
+           Indústria e 3 de Saúde uma embaixo da outra, todas sem rótulo, lidas como
            comparáveis. */
         const moved = trendOf(value, past);
 

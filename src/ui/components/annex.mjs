@@ -1,11 +1,11 @@
-/* A PEÇA DE DADO — nome, pista, valor e nota, e ela e UMA nas duas telas.
+/* A PEÇA DE DADO — nome, pista, valor e nota, e ela é UMA nas duas telas.
    ⚠ TRÊS PEÇAS PARA QUINZE ESPÉCIES DE CARTA, e antes eram CINCO formatos de anexo: medido
    num mandato de 14 meses, 19 de 23 cartas abertas traziam tabela, com 306 células em tela
-   por mês. A guarda `annexes` e o que impede a sexta.
+   por mês. A guarda `annexes` é o que impede a sexta.
    ⚠ E O GABINETE ENTROU NELA NO CICLO 15. A coluna direita tinha 18 classes em quatro blocos
    e TRÊS instrumentos para a mesma pergunta — `gauge`, `meter` e `poles` —, cada bloco
-   desenhado sozinho. Agora a régua e uma: quem desenha e esta peça, e a tela pede.
-   ⚠ A SUBSTÂNCIA E DO CONTEXTO, e não da peça: dentro da carta ela e papel, na coluna ela e
+   desenhado sozinho. Agora a régua é uma: quem desenha é esta peça, e a tela pede.
+   ⚠ A SUBSTÂNCIA É DO CONTEXTO, e não da peça: dentro da carta ela é papel, na coluna ela é
    vidro. A folha resolve isso por contexto; escrever duas peças resolveria por duplicação. */
 
 import { iconHtml } from "../core/icons.mjs";
@@ -17,7 +17,7 @@ import { UI, labelOf } from "../strings.mjs";
  * UM CARD DE ANEXO — legenda em cima, leitura embaixo.
  *
  * @param {string} legend
- * @param {string} body ja em HTML
+ * @param {string} body já em HTML
  * @returns {string}
  */
 export function cardHtml(legend, body) {
@@ -33,25 +33,25 @@ export function cardHtml(legend, body) {
  * ── A LINHA — A ÚNICA PEÇA DE DADO DAS DUAS TELAS ────────────────────────────
  * ⚠ ELA SUBSTITUIU AS QUATRO TABELAS DA CAIXA e os TRÊS INSTRUMENTOS DO GABINETE: a 1280x800
  * a tabela cortava a coluna da soma, e três instrumentos cobravam três desenhos por pergunta.
- * ⚠ A BARRA E OPCIONAL, E A AUSÊNCIA E A MODELAGEM: ela só entra onde as linhas dividem a
+ * ⚠ A BARRA É OPCIONAL, E A AUSÊNCIA É A MODELAGEM: ela só entra onde as linhas dividem a
  * MESMA escala — `%`, cadeiras e reais não dividem nenhuma.
  * ⚠ E A MARCA SALVA A FUSÃO: sem o risco no ponto do limiar, "83" não diz que rompe em 86.
  *
  * @param {object} input
  * @param {string} input.who o nome da linha
- * @param {string} input.value o numero, ja formatado
+ * @param {string} input.value o número, já formatado
  * @param {number} [input.share] de 0 a 100 — sem ele a linha sai sem barra
  * @param {number} [input.mark] o limiar, na mesma escala da barra
- * @param {number} [input.fall] o segundo limiar, quando a mesma regua tem dois
- * @param {boolean} [input.past] a leitura ja passou do limiar
+ * @param {number} [input.fall] o segundo limiar, quando a mesma régua tem dois
+ * @param {boolean} [input.past] a leitura já passou do limiar
  * @param {"above" | "below"} [input.danger] de que LADO da marca fica o perigo
  * @param {number} [input.split] onde o preenchimento troca de tinta, na mesma escala
- * @param {string} [input.note] o qualificador ao lado do numero
- * @param {string} [input.aside] o qualificador ao lado do NOME — ele nao e uma segunda
- * leitura: e a mesma leitura dizendo o próprio peso
+ * @param {string} [input.note] o qualificador ao lado do número
+ * @param {string} [input.aside] o qualificador ao lado do NOME — ele não é uma segunda
+ * leitura: é a mesma leitura dizendo o próprio peso
  * @param {string} [input.tone] `crisis` tinge a linha inteira
- * @param {"up" | "down" | "flat" | null} [input.trend] para que lado andou desde o mes passado
- * @param {string} [input.label] a descricao da barra para quem le por som
+ * @param {"up" | "down" | "flat" | null} [input.trend] para que lado andou desde o mês passado
+ * @param {string} [input.label] a descrição da barra para quem lê por som
  * @returns {string}
  */
 export function lineHtml({
@@ -88,9 +88,9 @@ export function lineHtml({
         /* ⚠ O PREENCHIMENTO TROCA DE TINTA NO MEIO, e não ganha uma linha nova: a divisão fica
            em cima do número que ela explica, e custa ZERO de altura numa tela que não rola. */
         (split === undefined ? "" : ` data-split="true"`) +
-        /* ⚠ O LADO E DECLARADO PELO CHAMADOR, e não deduzido daqui. As duas réguas com marca
-           apontam para lados OPOSTOS: no cerco, passar de `boil` e perder o grupo; na Camara,
-           passar da maioria e poder aprovar. Pintar "além da marca" como perigo em ambas
+        /* ⚠ O LADO É DECLARADO PELO CHAMADOR, e não deduzido daqui. As duas réguas com marca
+           apontam para lados OPOSTOS: no cerco, passar de `boil` é perder o grupo; na Câmara,
+           passar da maioria é poder aprovar. Pintar "além da marca" como perigo em ambas
            pintaria de vermelho a zona em que o jogador ganhou. */
         (danger === undefined ? "" : ` data-danger="${danger}"`) +
         (fall === undefined ? "" : ` data-fall="true"`) +
@@ -110,12 +110,12 @@ export function lineHtml({
 /**
  * UM BLOCO DE LINHAS — a moldura de TODA leitura das duas telas.
  *
- * ⚠ A LEGENDA E A PORTA, e não o bloco inteiro: um `<div>` com clique não chega pelo teclado,
+ * ⚠ A LEGENDA É A PORTA, e não o bloco inteiro: um `<div>` com clique não chega pelo teclado,
  * e este bloco tem leitor de tela em toda barra. Ela só aparece onde há para onde ir — seta
- * cinza de tela que não existe e a promessa que o rail já recusou.
+ * cinza de tela que não existe é a promessa que o rail já recusou.
  *
  * @param {string} legend
- * @param {string} lines ja em HTML
+ * @param {string} lines já em HTML
  * @param {object} [extra]
  * @param {string} [extra.door] a tela que este bloco abre, quando ela existe
  * @param {string} [extra.foot] o que atravessa a largura toda — carimbo, ruptura aberta
@@ -123,7 +123,7 @@ export function lineHtml({
  * @returns {string}
  */
 export function linesHtml(legend, lines, { door, foot, icon } = {}) {
-  /* O GLIFO E O MESMO CONJUNTO DO RAIL, e não um segundo: a coluna e o menu falam do mesmo
+  /* O GLIFO É O MESMO CONJUNTO DO RAIL, e não um segundo: a coluna e o menu falam do mesmo
      país, e dois desenhos para "Congresso" seriam duas palavras para a mesma coisa. */
   const glyph = icon ? iconHtml(icon, "annex__icon") : "";
   const head = door
@@ -137,9 +137,9 @@ export function linesHtml(legend, lines, { door, foot, icon } = {}) {
 /**
  * UM BLOCO DE NOTA — legenda em cima, e uma frase embaixo.
  *
- * ⚠ ELA E A TERCEIRA E ÚLTIMA PEÇA, e nasceu de um defeito visto na captura: a regra do
- * impeachment ia num card de LEITURA, onde o corpo e o tipo de um valor. Doze palavras em
- * `--text-name` ocupavam meia coluna e liam como número. Regra e prosa, e prosa tem tipo de
+ * ⚠ ELA É A TERCEIRA E ÚLTIMA PEÇA, e nasceu de um defeito visto na captura: a regra do
+ * impeachment ia num card de LEITURA, onde o corpo é o tipo de um valor. Doze palavras em
+ * `--text-name` ocupavam meia coluna e liam como número. Regra é prosa, e prosa tem tipo de
  * prosa.
  *
  * @param {string} legend
@@ -159,7 +159,7 @@ export function noteHtml(legend, text) {
  * QUANTO FALTA PARA CADA RUPTURA ABRIR — as mesmas linhas na carta e na coluna.
  *
  * ⚠ A BARRA MEDE O CAMINHO ANDADO ATÉ O LIMIAR, e o lado vem do motor: a social rompe quando
- * CAI e as outras duas quando sobem. Por isso ela não leva marca — o limiar E o fim da pista.
+ * CAI e as outras duas quando sobem. Por isso ela não leva marca — o limiar É o fim da pista.
  * ⚠ E O NÚMERO DO LIMIAR CONTINUA ESCRITO, por decisão dele: a marca sozinha diz ONDE, e não
  * QUANTO. Era a única coisa que a chave solta no pé do bloco fazia.
  *
@@ -190,12 +190,12 @@ export function rupturesRows(ruptures) {
 }
 
 /**
- * A CAMARA EM TRÊS LINHAS — apoiam, o quórum, e o que falta.
+ * A CÂMARA EM TRÊS LINHAS — apoiam, o quórum, e o que falta.
  *
  * @param {number} base
  * @param {number} majority
  * @param {number} seatsTotal
- * @param {{ bought: number, convinced: number }} [venality] a base repartida por PRECO
+ * @param {{ bought: number, convinced: number }} [venality] a base repartida por PREÇO
  * @returns {string}
  */
 export function chamberRows(base, majority, seatsTotal, venality) {
@@ -208,10 +208,10 @@ export function chamberRows(base, majority, seatsTotal, venality) {
       value: seats(base),
       share: (base / total) * 100,
       mark: (majority / total) * 100,
-      /* Abaixo do quórum nada passa, e e a metade da régua que custa. */
+      /* Abaixo do quórum nada passa, e é a metade da régua que custa. */
       danger: "below",
       /* ⚠ A CONVICÇÃO VEM PRIMEIRO, e o aluguel depois: a leitura corre da esquerda, e o que o
-         jogador precisa achar de relance e onde a base dele PARA de ser dele.
+         jogador precisa achar de relance é onde a base dele PARA de ser dele.
          ⚠ E ELA NÃO GANHA LINHA PRÓPRIA: o passeio cobrou 557 contra 518 quando ela ganhou, e
          a coluna não rola. A barra já estava ali, em cima do número que a divisão explica. */
       ...(venality === undefined ? {} : { split: (venality.convinced / total) * 100 }),
@@ -222,11 +222,11 @@ export function chamberRows(base, majority, seatsTotal, venality) {
       label: `${UI.cabinet.baseLine}: ${seats(base)} ${UI.inbox.of} ${seats(seatsTotal)}`,
     }) +
     /* ⚠ `Maioria simples 257` SAIU, e ela era a TERCEIRA forma de dizer a mesma coisa: a marca
-       de latão já aponta o quórum na pista, e `Faltam` já da a distancia até ele. O número não
-       se perdeu — virou o qualificador de `Faltam`, que e a linha que fala dele. A linha
+       de latão já aponta o quórum na pista, e `Faltam` já dá a distância até ele. O número não
+       se perdeu — virou o qualificador de `Faltam`, que é a linha que fala dele. A linha
        custava 26px numa coluna que estourava em 12. */
-    /* ⚠ ZERO NÃO E LEITURA AQUI: "faltam 0" ocupa uma linha para dizer que a maioria esta
-       feita, e quem já diz isso e a barra, com a marca do quórum atrás do preenchimento. */
+    /* ⚠ ZERO NÃO É LEITURA AQUI: "faltam 0" ocupa uma linha para dizer que a maioria está
+       feita, e quem já diz isso é a barra, com a marca do quórum atrás do preenchimento. */
     (falta > 0
       ? lineHtml({
           who: UI.inbox.blockMissing,

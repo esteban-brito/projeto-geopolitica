@@ -14,7 +14,7 @@
       scroll-behavior: auto;
     }
 
-    /* Os pseudo-elementos de View Transition vivem no `:root` e NÃO são alcancados por `*`,
+    /* Os pseudo-elementos de View Transition vivem no `:root` e NÃO são alcançados por `*`,
        `*::before` ou `*::after` — eles precisam ser nomeados. */
     ::view-transition-group(*),
     ::view-transition-old(*),

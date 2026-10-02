@@ -29,7 +29,7 @@ import { INFLATION_CEILING, lawNow, session, opening } from "./session.mjs";
 /* ── O QUE A TELA PRECISA SABER, derivado e nunca guardado ────────────────── */
 
 /**
- * Previsão delegada a forecast (camara manual invertia 275 de 1.012 votações, 27,2%, até 35 votos).
+ * Previsão delegada a forecast (câmara manual invertia 275 de 1.012 votações, 27,2%, até 35 votos).
  */
 export function mesaInput() {
   const seen = forecast(session.state, session.orders, CATALOG);
@@ -80,7 +80,7 @@ export function financeInput() {
 }
 
 /**
- * Correspondencias formatadas com dados de governo e contexto fiscal.
+ * Correspondências formatadas com dados de governo e contexto fiscal.
  * @param {ReadonlyArray<import("../state/state.mjs").Letter>} mail
  */
 export function dispatchesOf(mail) {
@@ -115,7 +115,7 @@ export function emailInput() {
       open: session.openDispatch,
       seen: [...session.readMail],
       dispatches: [
-        /* Relatorios de meses fechados preservados no histórico e ordenados na bandeja. */
+        /* Relatórios de meses fechados preservados no histórico e ordenados na bandeja. */
         ...session.state.months.map(
           (/** @type {import("../state/state.mjs").MonthCard} */ fechado) =>
             describeMonth({ report: fechado, adviser: gov.adviser }),
@@ -183,7 +183,7 @@ export function cabinetInput() {
   const street = pollFrom(session.state.mood, CATALOG.segments, CATALOG.opinion);
   const gov = governmentOf(session.state, CATALOG);
 
-  /* Identifica correspondencias vencidas via silences. */
+  /* Identifica correspondências vencidas via silences. */
   const quiet = silences({
     mail: session.state.mail,
     orders: session.orders.mail,
@@ -213,14 +213,14 @@ export function cabinetInput() {
       majority: SIMPLE_MAJORITY,
       worst: closestToBreak(boiler.lobbies),
       standing: street.good,
-      /* Referencia anterior preservada em framed para comparação. */
+      /* Referência anterior preservada em framed para comparação. */
       was:
         session.framed === null
           ? null
           : pollFrom(session.framed.mood, CATALOG.segments, CATALOG.opinion).good,
       impeachment: boiler.impeachment,
     },
-    /* Mesa exibe correspondencias recentes e urgentes (até 25 cartas no mandato, 36 dos 48 meses). */
+    /* Mesa exibe correspondências recentes e urgentes (até 25 cartas no mandato, 36 dos 48 meses). */
     letters: onDesk(closed, dying),
     /* Quantidade de despachos pendentes de resposta. */
     sheets: session.state.mail.filter(letter => letter.due !== null && letter.answer === null)
@@ -252,7 +252,7 @@ export function areaInput(area) {
     committed: share.demand - spent,
     projected: ahead.index[area.id] ?? value,
     idle: ahead.idle[area.id] ?? value,
-    /* Horizonte evita leitura inerte a 1 mês (área anda 0,40 por mês; leitura saia 61 → 61). */
+    /* Horizonte evita leitura inerte a 1 mês (área anda 0,40 por mês; leitura saía 61 → 61). */
     horizon: HORIZON,
     ahead: curve.index[area.id]?.at(-1) ?? value,
     aheadIdle: curve.idle[area.id]?.at(-1) ?? value,

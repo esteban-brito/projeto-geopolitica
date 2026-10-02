@@ -1,16 +1,16 @@
 /* O TELEFONE — o único objeto da mesa que INTERROMPE.
 
-   ⭐ ELE TOCA QUANDO UM GRUPO FERVE, e só então: e a mesma informacao que o parecer escreve na
+   ⭐ ELE TOCA QUANDO UM GRUPO FERVE, e só então: é a mesma informação que o parecer escreve na
    linha 4 e que a carta da fervura conta na Caixa — vista em vez de lida. Quem decide se ele
-   toca e `boilerOf`, pelo mesmo limiar que a ruptura lê; a tela não tem limiar próprio.
+   toca é `boilerOf`, pelo mesmo limiar que a ruptura lê; a tela não tem limiar próprio.
 
-   ⚠ E ELE APONTA, NÃO REPETE: o clique abre o Email, onde a carta do grupo já esta.
+   ⚠ E ELE APONTA, NÃO REPETE: o clique abre o Email, onde a carta do grupo já está.
 
-   📗 E IMAGEM, como a madeira: `assets/phone.webp` e um telefone de teclas vermelho visto de
+   📗 É IMAGEM, como a madeira: `assets/phone.webp` é um telefone de teclas vermelho visto de
    cima, gerado a pedido dele, com os algarismos e o número assados nela (`assets/CREDITS.md`).
-   ⛔ O VETOR SAIU (a 78 graus e sem cor literal ele destoava das materias de foto), e a FOTO
+   ⛔ O VETOR SAIU (a 78 graus e sem cor literal ele destoava das matérias de foto), e a FOTO
    DO COMMONS TAMBÉM: um Dialog de disco a 65 graus, que mesmo recortado lia como imagem colada.
-   A imagem vem em duas cópias: a de cima leva as sombras da sala, a de baixo e o halo do toque
+   A imagem vem em duas cópias: a de cima leva as sombras da sala, a de baixo é o halo do toque
    (mesma silhueta em âmbar), que só aparece em opacidade — trabalho de compositor. */
 
 import { escapeHtml } from "../core/html.mjs";
@@ -25,7 +25,7 @@ const SIZE = 'width="720" height="639"';
 
 /**
  * @param {object} input
- * @param {string | null} input.boiling o grupo que ferveu, ou nulo quando nenhum — quando ha
+ * @param {string | null} input.boiling o grupo que ferveu, ou nulo quando nenhum — quando há
  * mais de um, o primeiro: o telefone toca uma vez só, e a Caixa lista todos
  * @returns {string}
  */

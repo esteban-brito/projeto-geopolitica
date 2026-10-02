@@ -145,7 +145,7 @@ function lawHtml({ program, band, asked }) {
 
 /**
  * @param {import("../../application/chain.mjs").Strand} strand
- * @param {"into" | "out"} side de que metade da corrente ela e
+ * @param {"into" | "out"} side de que metade da corrente ela é
  * @param {(id: string) => string} nameOf
  * @returns {string}
  */
@@ -178,7 +178,7 @@ function strandHtml(strand, side, nameOf) {
  * @param {object} input
  * @param {{ into: ReadonlyArray<import("../../application/chain.mjs").Strand>,
  * out: ReadonlyArray<import("../../application/chain.mjs").Strand> }} input.chain
- * @param {ReadonlyArray<Area>} input.areas o catalogo, so para o nome de quem esta na ponta
+ * @param {ReadonlyArray<Area>} input.areas o catálogo, só para o nome de quem está na ponta
  * @returns {string}
  */
 export function chainHtml({ chain, areas }) {
@@ -245,21 +245,21 @@ function lawsHtml({ programs, bands, requestedBands }) {
 /**
  * @param {object} input
  * @param {Area} input.area
- * @param {number} input.value o indice corrente
+ * @param {number} input.value o índice corrente
  * @param {ReadonlyArray<number>} input.history
- * @param {ReadonlyArray<Program>} input.programs os programas DESTA area
+ * @param {ReadonlyArray<Program>} input.programs os programas DESTA área
  * @param {Record<string, number>} input.levels a intensidade pedida de cada um
- * @param {number} input.spent bilhoes que ESTA area consome no mes
- * @param {number} input.room o discricionario do mes
- * @param {number} input.committed o que ja foi prometido fora desta area
- * @param {number} input.projected o indice ao fim do mes com esta alocacao
- * @param {number} input.idle o indice ao fim do mes sem alocacao nenhuma
- * @param {boolean} [input.protectedNow] se o decreto do mes ja poupa esta area do corte
- * @param {number} [input.ratio] a fracao do pedido que o caixa honra
+ * @param {number} input.spent bilhões que ESTA área consome no mês
+ * @param {number} input.room o discricionário do mês
+ * @param {number} input.committed o que já foi prometido fora desta área
+ * @param {number} input.projected o índice ao fim do mês com esta alocação
+ * @param {number} input.idle o índice ao fim do mês sem alocação nenhuma
+ * @param {boolean} [input.protectedNow] se o decreto do mês já poupa esta área do corte
+ * @param {number} [input.ratio] a fração do pedido que o caixa honra
  * @param {Record<string, import("../../state/state.mjs").Band>} [input.bands] as leis VIGENTES
  * @param {Record<string, import("../../state/state.mjs").Band>} [input.requestedBands] as PEDIDAS
  * @param {{ into: ReadonlyArray<import("../../application/chain.mjs").Strand>, out: ReadonlyArray<import("../../application/chain.mjs").Strand> }} [input.chain] a corrente
- * @param {ReadonlyArray<Area>} [input.areas] o catalogo, so para nomear a outra ponta
+ * @param {ReadonlyArray<Area>} [input.areas] o catálogo, só para nomear a outra ponta
  * @returns {string}
  */
 export function areaHtml(input) {
@@ -351,9 +351,9 @@ export function poolHtml({ room, committed, spent }) {
 /**
  * @param {object} input
  * @param {number} input.value
- * @param {number} input.projected o indice no fim do MES que vem
- * @param {number} input.idle o mes que vem sem tocar em nada
- * @param {number} [input.ahead] o indice no fim do HORIZONTE
+ * @param {number} input.projected o índice no fim do MÊS que vem
+ * @param {number} input.idle o mês que vem sem tocar em nada
+ * @param {number} [input.ahead] o índice no fim do HORIZONTE
  * @param {number} [input.aheadIdle] o horizonte sem tocar em nada
  * @param {number} [input.horizon] quantos meses a curva olha
  * @returns {string}
@@ -371,7 +371,7 @@ export function outlookHtml({ value, projected, idle, ahead, aheadIdle, horizon 
     `${seats(value)} → ${seats(ahead)}` +
     `<small>${escapeHtml(UI.area.inMonths(horizon))} · ` +
     `${escapeHtml(UI.area.holding)}: ${seats(aheadIdle ?? value)}</small>` +
-    /* Projetar com votação inventaria voto não ocorrido; a projeção congela o plenario. */
+    /* Projetar com votação inventaria voto não ocorrido; a projeção congela o plenário. */
     `<small>${escapeHtml(UI.area.frozen)}</small>`
   );
 }

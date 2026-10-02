@@ -17,7 +17,7 @@ const REFUSED_KEY = "republica-simulator:partida-recusada";
 /* Interface tem chave própria: incluir leitura no GameState exigiria bump de esquema. */
 const UI_KEY = "republica-simulator:interface";
 
-/* Rascunho preserva decisões do mês apos recarregamento sem alterar esquema do save. */
+/* Rascunho preserva decisões do mês após recarregamento sem alterar esquema do save. */
 const DRAFT_KEY = "republica-simulator:rascunho";
 
 /** @returns {{ seen: string[], open: string | null }} */
@@ -178,7 +178,7 @@ export function blankOrders() {
     /* Respostas vazias representam silêncio formal; prazo encerra aceitando. */
     /** @type {Record<string, string>} */
     mail: {},
-    /* Plataforma e imutável apos a posse; avançar calado governa sem plataforma. */
+    /* Plataforma é imutável após a posse; avançar calado governa sem plataforma. */
     /** @type {Record<string, string>} */
     platform: {},
     /* O decreto em vigor abre o rascunho; o turno o zera no relatório bimestral, que o renova.
@@ -195,7 +195,7 @@ export function blankOrders() {
   };
 }
 
-/* Consulta dinâmica ao motor evita ler copia desatualizada no mês de ativação de gatilho. */
+/* Consulta dinâmica ao motor evita ler cópia desatualizada no mês de ativação de gatilho. */
 export function lawNow() {
   return bandsOf(session.state, CATALOG);
 }

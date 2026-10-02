@@ -34,7 +34,7 @@ function moodOf(loyalty, thresholds) {
  * @param {ReadonlyArray<Area>} input.areas
  * @param {Record<string, number>} input.index
  * @param {Record<string, number[]>} input.history
- * @param {Record<string, "watch" | "alert">} [input.alerts] a queda desde a posse, por area
+ * @param {Record<string, "watch" | "alert">} [input.alerts] a queda desde a posse, por área
  * @returns {string}
  */
 export function capacityStripHtml({ areas, index, history, alerts = {} }) {
@@ -42,22 +42,22 @@ export function capacityStripHtml({ areas, index, history, alerts = {} }) {
     .map(area => {
       const value = index[area.id] ?? area.initial;
       const past = history[area.id] ?? [];
-      /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `components/trend.mjs`. */
+      /* A JANELA É A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `components/trend.mjs`. */
       const trend = sparkline(past.length > 0 ? past : [value], WINDOW);
-      /* ⚠ A DIREÇÃO E A MESMA CONTA DAS OUTRAS DUAS TELAS, e ela vem de `trendOf`: refeita
+      /* ⚠ A DIREÇÃO É A MESMA CONTA DAS OUTRAS DUAS TELAS, e ela vem de `trendOf`: refeita
          aqui, a faísca discordaria da seta do Gabinete no primeiro mês de empate. */
       const moved = trendOf(value, past);
       const direction = moved === null ? null : directionOf(value, value - moved.delta, 1);
-      /* ⚠ A COR E DO MANDATO, E NÃO DO NÍVEL: Segurança abre em 38, e pintar por nível
-         acusaria o jogador de um país que ele herdou. `alertsOf` mede a distancia de
-         `initial`, e e o MESMO motor que o rail lê. */
+      /* ⚠ A COR É DO MANDATO, E NÃO DO NÍVEL: Segurança abre em 38, e pintar por nível
+         acusaria o jogador de um país que ele herdou. `alertsOf` mede a distância de
+         `initial`, e é o MESMO motor que o rail lê. */
       const alert = alerts[area.id];
 
       return (
         `<button class="capacity" type="button" data-section="${escapeHtml(area.id)}"` +
         (alert ? ` data-alert="${alert}"` : "") +
         `>` +
-        /* O NOME CURTO, pela mesma razão do rail: a faixa da 117px por área. */
+        /* O NOME CURTO, pela mesma razão do rail: a faixa dá 117px por área. */
         `<span class="capacity__label">` +
         iconHtml(area.id, "capacity__icon") +
         `<span class="capacity__name">${escapeHtml(area.short ?? area.label)}</span>` +
@@ -77,8 +77,8 @@ export function capacityStripHtml({ areas, index, history, alerts = {} }) {
     })
     .join("");
 
-  /* Ela era `glass-support` porque morava solta no tabuleiro, ao lado da mesa; agora ela e um
-     BLOCO dentro da lâmina do Congresso, e vidro dentro de vidro e o defeito que o sistema
+  /* Ela era `glass-support` porque morava solta no tabuleiro, ao lado da mesa; agora ela é um
+     BLOCO dentro da lâmina do Congresso, e vidro dentro de vidro é o defeito que o sistema
      visual inteiro existe para impedir. */
   return `<div class="capacities">${gauges}</div>`;
 }
@@ -87,7 +87,7 @@ export function capacityStripHtml({ areas, index, history, alerts = {} }) {
 const MEMORY_FLOOR = 0.08;
 
 /**
- * UMA PESSOA DA BANCADA — e ela e a peça que faltava na tela inteira.
+ * UMA PESSOA DA BANCADA — e ela é a peça que faltava na tela inteira.
  *
  * @param {object} input
  * @param {{ id: string, name: string, office: string, role: string, ambition: string,
@@ -107,7 +107,7 @@ function personHtml({ person, voting }) {
         ? { tone: "poor", text: UI.congress.memoryBad }
         : null;
 
-  /* A PASTA VEM NOMEADA DO MOTOR, e o genérico e o que sobra quando ela não veio: a tela não
+  /* A PASTA VEM NOMEADA DO MOTOR, e o genérico é o que sobra quando ela não veio: a tela não
      escolhe ministério, ela imprime o que o sorteio deu. */
   const ambition = person.portfolio
     ? `${UI.congress.cabinetOf} ${person.portfolio}`
@@ -171,15 +171,15 @@ function benchHtml({
 }) {
   const mood = moodOf(loyalty, thresholds);
 
-  /* O CONTROLE FICA FORA DA PARTE QUE SE REPINTA, e isso e requisito de gesto e não de
+  /* O CONTROLE FICA FORA DA PARTE QUE SE REPINTA, e isso é requisito de gesto e não de
      organização: trocar o HTML de um `<input type=range>` no meio de um arrasto ARRANCA o
-     elemento que o ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
+     elemento que o ponteiro está segurando, e o arrasto morre no primeiro pixel. */
   return (
     `<div class="bench" data-mood="${mood}" data-party="${escapeHtml(party.id)}"` +
     (own ? ` data-own="true"` : "") +
     `>` +
     /* "Partido Social Municipalista" numa coluna de 96px quebra em três linhas e empurra a
-       linha inteira; a sigla cabe sempre e e como um Congresso de verdade se cita. */
+       linha inteira; a sigla cabe sempre e é como um Congresso de verdade se cita. */
     `<span class="bench__name"><b>${escapeHtml(party.sigla)}</b>` +
     /* ⚠ A MARCA SUBSTITUI O NOME LONGO, e não se soma a ele: a coluna tem 96px, e "Partido
        Social Municipalista · o seu partido" não cabe em duas linhas. */
@@ -192,8 +192,8 @@ function benchHtml({
     `<span class="bench__read" data-read="${escapeHtml(party.id)}">` +
     benchReadHtml({ party, funding, votes, seatPrice, voting }) +
     `</span>` +
-    /* ── A GENTE MORA DENTRO DO BLOCO, e a aninhagem e a mecânica ────────────── Voce paga o
-       BLOCO; o bloco e feito de gente; a gente entrega diferente. */
+    /* ── A GENTE MORA DENTRO DO BLOCO, e a aninhagem é a mecânica ────────────── Você paga o
+       BLOCO; o bloco é feito de gente; a gente entrega diferente. */
     (people.length > 0
       ? `<div class="bench__people">` +
         people.map(person => personHtml({ person, voting })).join("") +
@@ -204,7 +204,7 @@ function benchHtml({
 }
 
 /**
- * A LEITURA de uma bancada: o que muda enquanto o controle e arrastado.
+ * A LEITURA de uma bancada: o que muda enquanto o controle é arrastado.
  *
  * @param {object} input
  * @param {Party} input.party
@@ -232,19 +232,19 @@ export function benchReadHtml({ party, funding, votes, seatPrice, voting }) {
  * @param {object} input
  * @param {Bill | null} input.bill
  * @param {string} input.areaLabel
- * @param {number} input.quorum zero quando a acao nao vai a plenario
+ * @param {number} input.quorum zero quando a ação não vai a plenário
  * @param {ReadonlyArray<Party>} input.parties
  * @param {Record<string, number>} input.loyalty
  * @param {Record<string, number>} input.funding
  * @param {Forecast | null} input.forecast
- * @param {Record<string, number>} input.byBloc votos que cada BLOCO entrega, ja somados
+ * @param {Record<string, number>} input.byBloc votos que cada BLOCO entrega, já somados
  * @param {ReadonlyArray<{ id: string,
  * people: ReadonlyArray<Parameters<typeof personHtml>[0]["person"]> }>} input.blocs
  * os blocos com a GENTE dentro, montados pela camada de aplicação
  * @param {number} input.band
  * @param {number} input.seatPrice
- * @param {number} input.room o discricionario que cabe no mes
- * @param {number} input.demand tudo o que foi prometido no mes — emenda e areas
+ * @param {number} input.room o discricionário que cabe no mês
+ * @param {number} input.demand tudo o que foi prometido no mês — emenda e áreas
  * @param {{ obstruction: number, rupture: number }} input.thresholds
  * @param {string | null} [input.ruling] - a bancada que elegeu o presidente
  * @returns {string}
@@ -271,16 +271,16 @@ export function mesaHtml(input) {
       `</p>`
     : /* O VAZIO USA A PEÇA DE VAZIO, e não um parágrafo com outro nome. Ele era
          `mesa__eyebrow` + `mesa__meta` — as mesmas classes do TÍTULO de uma pauta
-         real —, então "Nada em pauta" saia com o peso de um assunto em discussão. O
+         real —, então "Nada em pauta" saía com o peso de um assunto em discussão. O
          Gabinete já tinha a forma certa para isto: chamada centrada respondendo
-         "isto esta quebrado?", e a prosa embaixo respondendo "por que?". Uma forma
+         "isto está quebrado?", e a prosa embaixo respondendo "por que?". Uma forma
          só para os dois estados vazios do jogo. */
       `<div class="empty">` +
       `<p class="empty__lead">${escapeHtml(UI.mesa.empty)}</p>` +
       `<p class="empty__note">${escapeHtml(UI.mesa.emptyHint)}</p>` +
       `</div>`;
 
-  /* ⚠ OS VOTOS DA LINHA VEM SOMADOS DO MOTOR. */
+  /* ⚠ OS VOTOS DA LINHA VÊM SOMADOS DO MOTOR. */
   const peopleOf = new Map(input.blocs.map(bloc => [bloc.id, bloc.people]));
 
   const benches = input.parties
@@ -299,7 +299,7 @@ export function mesaHtml(input) {
     )
     .join("");
 
-  /* O RESUMO E UMA REGIÃO VIVA, e por uma razão de teclado: quem move o controle com as setas
+  /* O RESUMO É UMA REGIÃO VIVA, e por uma razão de teclado: quem move o controle com as setas
      não vê o placar mudar de canto de olho — ele precisa ouvir. */
   return (
     `<section class="mesa">` +
@@ -311,7 +311,7 @@ export function mesaHtml(input) {
 }
 
 /**
- * A GAVETA — o que esta andando, e há quanto tempo.
+ * A GAVETA — o que está andando, e há quanto tempo.
  *
  * @param {ReadonlyArray<{ id: string, label: string, stage: string, waiting: number,
  * expires: number | null, instrument: string, quorum: number, saved: string | null }>} bills
@@ -337,7 +337,7 @@ export function passageHtml(bills, stages = []) {
           : "";
 
       /* ⚠ O ESTÁGIO ERA UMA PALAVRA, e uma palavra não diz que há um CAMINHO: o jogador lia
-         "na gaveta" sem saber que faltam dois passos nem quanto já andou. Os degraus vem do
+         "na gaveta" sem saber que faltam dois passos nem quanto já andou. Os degraus vêm do
          motor em ordem, então um quarto estágio aparece aqui sozinho. */
       const at = stages.indexOf(bill.stage);
       const path = stages
@@ -426,13 +426,13 @@ export function tallyHtml({ bill, quorum, forecast, band, room, demand }) {
       `<p class="tally__when">${escapeHtml(UI.congress.willFile)} · ` +
       `${escapeHtml(UI.congress.forecastLater)}</p>`
     : /* ⚠ SEM PAUTA, O PLACAR NÃO REPETE O ESTADO VAZIO. Esta linha imprimia
-         `UI.mesa.emptyHint` — "escolha uma ação numa das áreas" —, que e
+         `UI.mesa.emptyHint` — "escolha uma ação numa das áreas" —, que é
          EXATAMENTE a frase que o vazio do bloco acima já diz, e a captura do
-         celular pegou as duas na mesma tela, com pesos diferentes. E o segundo
-         defeito desta família no mesmo dia: quem nomeia uma ausência e o lugar
+         celular pegou as duas na mesma tela, com pesos diferentes. É o segundo
+         defeito desta família no mesmo dia: quem nomeia uma ausência é o lugar
          onde ela acontece, e uma vez só.
          O DECRETO CONTINUA SENDO DITO, porque ali há pauta e não há votação — e
-         "vale sem passar pelo plenario" e informacao que nenhum outro lugar da. */
+         "vale sem passar pelo plenário" é informação que nenhum outro lugar dá. */
       bill
       ? `<p class="tally__verdict">${escapeHtml(UI.mesa.decree)}</p>`
       : "";

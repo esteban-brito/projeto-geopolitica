@@ -1,6 +1,6 @@
 /* Escape central.
    Toda string que vira HTML passa por aqui — inclusive as que "obviamente" são seguras hoje,
-   porque o catálogo vai ser EDITÁVEL pelo jogador e nesse dia nenhuma string e obviamente
+   porque o catálogo vai ser EDITÁVEL pelo jogador e nesse dia nenhuma string é obviamente
    segura. */
 
 /** @param {unknown} value */

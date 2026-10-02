@@ -38,7 +38,7 @@ function lensMap({ w, h, r, bevel, force }) {
         const gx = sdf(x + 1.5, y + 0.5) - sdf(x - 0.5, y + 0.5);
         const gy = sdf(x + 0.5, y + 1.5) - sdf(x + 0.5, y - 0.5);
         const n = Math.hypot(gx, gy) || 1;
-        /* Linear lê como chanfro: a cubica tem derivada zero na junção (docs/evidence/glass/lens-texture.md). */
+        /* Linear lê como chanfro: a cúbica tem derivada zero na junção (docs/evidence/glass/lens-texture.md). */
         const t = 1 - -d / bevel;
         const amp = t * t * (3 - 2 * t) * force;
         dx = (-gx / n) * amp;
@@ -56,7 +56,7 @@ function lensMap({ w, h, r, bevel, force }) {
 }
 
 /**
- * Blur 10 anulava o friso mesmo em 0,5; com blur 3 e escala 0,10 da 0,7px (+0,738 ms/q).
+ * Blur 10 anulava o friso mesmo em 0,5; com blur 3 e escala 0,10 dá 0,7px (+0,738 ms/q).
  * @param {number} scale
  * @param {number} dispersion
  * @returns {string}
@@ -85,7 +85,7 @@ function bend(scale, dispersion) {
 /* Tamanho real no palco pediria 1 milhão de px; esticar acima de 600px não cria vinco. */
 const MAP_MAX = 600;
 
-/* Teto em 60 mil px cobrava +0,536 ms/q contra +0,017 a 40 mil (docs/evidence/glass/stages.md); 2 milhoes caia a 24 fps (docs/evidence/glass/lens-area.mjs). */
+/* Teto em 60 mil px cobrava +0,536 ms/q contra +0,017 a 40 mil (docs/evidence/glass/stages.md); 2 milhões caía a 24 fps (docs/evidence/glass/lens-area.mjs). */
 const LENS_AREA_MAX = 40000;
 
 /**
@@ -149,7 +149,7 @@ const stops = (id, ramp, rgb = "255,255,255") =>
  * @param {Ramp} input.body
  * @param {Ramp} input.edge
  * @param {number} [input.gleam] o realce especular do topo; 0 desliga
- * @param {string} [input.tint] a cor do corpo, em `r,g,b`; a aresta e sempre a luz
+ * @param {string} [input.tint] a cor do corpo, em `r,g,b`; a aresta é sempre a luz
  * @returns {string}
  */
 export function skin({ w, h, r, s, body, edge, gleam = 0, tint }) {
@@ -225,7 +225,7 @@ export function fresnelFor(h) {
   );
 }
 
-/* Aresta de referencia de uma cápsula de 57px para desenho sem peça física. */
+/* Aresta de referência de uma cápsula de 57px para desenho sem peça física. */
 /** @type {Ramp} */
 export const FRESNEL = fresnelFor(57);
 

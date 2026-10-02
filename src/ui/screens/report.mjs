@@ -31,14 +31,14 @@ export function noticeHtml({ title, body }) {
 /**
  * O RELATÓRIO COMO PAINEL DA MESA, e não mais como cartão que interrompe.
  *
- * @param {Parameters<typeof reportHtml>[0] | null} input o ultimo mes, ou nada
+ * @param {Parameters<typeof reportHtml>[0] | null} input o último mês, ou nada
  * @returns {string}
  */
 export function reportPanelHtml(input) {
   /* PARTIDA NOVA — E TAMBÉM PARTIDA RETOMADA. */
   if (!input) {
     return (
-      /* Aqui o peso e o DISCRETO: nenhum mês resolvido não e um problema a resolver, e uma
+      /* Aqui o peso é o DISCRETO: nenhum mês resolvido não é um problema a resolver, e uma
          chamada centrada daria a um fato o peso de um defeito. */
       `<div class="report empty empty--quiet">` +
       `<p class="empty__note">${escapeHtml(UI.report.waiting)}</p>` +
@@ -54,18 +54,18 @@ export function reportPanelHtml(input) {
  *
  * @param {object} input
  * @param {Report} input.report
- * @param {number} input.quorum zero quando nao houve votacao
+ * @param {number} input.quorum zero quando não houve votação
  * @param {ReadonlyArray<Party>} input.parties
  * @param {ReadonlyArray<Area>} input.areas
- * @param {Record<string, number>} input.loyaltyBefore o humor ANTES do mes
- * @param {Record<string, number>} input.indexBefore os indices ANTES do mes
+ * @param {Record<string, number>} input.loyaltyBefore o humor ANTES do mês
+ * @param {Record<string, number>} input.indexBefore os índices ANTES do mês
  * @returns {string}
  */
 function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore }) {
   const { tally } = report;
   const bill = report.agenda.proposal;
 
-  /* O TÍTULO E O MÊS, e ele não carrega mais `id` de diálogo: o relatório deixou de ser um
+  /* O TÍTULO É O MÊS, e ele não carrega mais `id` de diálogo: o relatório deixou de ser um
      cartão que interrompe e virou painel da Mesa. */
   const head =
     `<h2 class="report__month">` +
@@ -98,7 +98,7 @@ function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore
 function verdictBlock({ report, quorum, tally }) {
   if (!report.agenda.proposal) return "";
 
-  /* A CANETA NÃO TEM PLACAR, e não e um placar de zero: ela não foi a plenario. */
+  /* A CANETA NÃO TEM PLACAR, e não é um placar de zero: ela não foi a plenário. */
   if (!tally) {
     return (
       `<p class="report__verdict" data-passed="true">${escapeHtml(UI.report.decreed)}</p>` +
@@ -141,8 +141,8 @@ function benchBlock({ report, tally, parties, loyaltyBefore }) {
         `<th scope="row">${escapeHtml(party.label)}</th>` +
         `<td data-numeric>${percent(report.paid[party.id] ?? 0)}</td>` +
         `<td data-numeric>${line ? seats(line.votes) : "—"}</td>` +
-        /* A DERIVA E O DIA, e ela merece coluna própria: uma bancada que entregou menos do
-           que prometia não e a mesma coisa que uma que entregou pouco. */
+        /* A DERIVA É O DIA, e ela merece coluna própria: uma bancada que entregou menos do
+           que prometia não é a mesma coisa que uma que entregou pouco. */
         `<td data-numeric>${line ? signed(line.drift) : "—"}</td>` +
         `<td class="report__mood" data-direction="${moved > 0 ? "up" : moved < 0 ? "down" : "flat"}"` +
         ` data-numeric>${seats(after)} <small>${signed(moved, 1)}</small></td>` +

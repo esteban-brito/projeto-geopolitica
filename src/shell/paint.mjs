@@ -118,7 +118,7 @@ export function focusMark() {
 }
 
 export function paint() {
-  /* Fixa framed antes de cabinetInput ler a referencia anterior. */
+  /* Fixa framed antes de cabinetInput ler a referência anterior. */
   if (session.painted !== null && session.painted.month !== session.state.month)
     session.framed = session.painted;
 
@@ -135,7 +135,7 @@ export function paint() {
     alertsOf(CATALOG.areas, session.state.capacity.index),
   );
 
-  /* Atualiza postura politica derivada do orcamento. */
+  /* Atualiza postura política derivada do orçamento. */
   const gov = governmentOf(session.state, CATALOG);
   el.railGov.innerHTML = railGovHtml({
     president: gov.president,
@@ -196,12 +196,12 @@ function paintBoard(term) {
   } else if (session.screen === "email") {
     el.main.innerHTML = emailHtml(emailInput());
     el.main.dataset["screen"] = "email";
-    /* Marca leitura e poda cartas mortas apos a renderização (evita acúmulo em 48 meses). */
+    /* Marca leitura e poda cartas mortas após a renderização (evita acúmulo em 48 meses). */
     rememberRead();
   } else {
     el.main.innerHTML = cabinetHtml(cabinetInput());
     el.main.dataset["screen"] = "cabinet";
-    /* Veste a mesa com rubrica e texturas apos a montagem. */
+    /* Veste a mesa com rubrica e texturas após a montagem. */
     dressDesk(el.main);
   }
 }
@@ -211,7 +211,7 @@ function paintBoard(term) {
  * @param {ReturnType<typeof situationOf>} current
  */
 function paintTopbar(term, current) {
-  /* Render por identidade de referencia na barra superior. */
+  /* Render por identidade de referência na barra superior. */
   const previous = session.painted;
   const before = session.standing;
 
@@ -278,7 +278,7 @@ function dressAll() {
   bindAdvance(el.advance);
 }
 
-/** Atualiza leituras e poda correspondencias mortas no DOM. */
+/** Atualiza leituras e poda correspondências mortas no DOM. */
 export function rememberRead() {
   const rows = /** @type {HTMLElement[]} */ ([...el.main.querySelectorAll(".tray__row")]);
   if (rows.length === 0) return;
@@ -296,8 +296,8 @@ export function rememberRead() {
   if (id) session.readMail.add(id);
 
   /* Rola se a linha estiver fora da visão (medido: 68px abaixo da área visível). Abaixo de
-     940px quem rola e a página: list.scrollTop fica em 0 e o ramo nunca dispara — a carta
-     clicada fica a vista pelo foco. */
+     940px quem rola é a página: list.scrollTop fica em 0 e o ramo nunca dispara — a carta
+     clicada fica à vista pelo foco. */
   const list = el.main.querySelector(".tray__list");
   if (current && list instanceof HTMLElement) {
     const acima = current.offsetTop < list.scrollTop;
@@ -319,7 +319,7 @@ export function refresh() {
     for (const party of CATALOG.parties) {
       const slot = el.main.querySelector(`[data-read="${party.id}"]`);
       if (!slot) continue;
-      /* Votos do bloco vem consolidados do motor. */
+      /* Votos do bloco vêm consolidados do motor. */
       slot.innerHTML = benchReadHtml({
         party,
         funding: session.orders.funding[party.id] ?? 0,
@@ -405,7 +405,7 @@ export function refresh() {
 /* ── OS GESTOS ────────────────────────────────────────────────────────────── */
 
 /**
- * Troca de tela com View Transition e fallback direto; callback roda apos término.
+ * Troca de tela com View Transition e fallback direto; callback roda após término.
  *
  * @param {() => void} [depois]
  */
@@ -419,10 +419,10 @@ export function transition(depois) {
 
   const view = start(paint);
 
-  /* Trata rejeicao em navegação rápida (48 trocas produziram 46 rejeicoes). */
+  /* Trata rejeição em navegação rápida (48 trocas produziram 46 rejeições). */
   view.ready?.catch(() => {});
 
-  /* Garante execução do callback mesmo em caso de erro na transicao. */
+  /* Garante execução do callback mesmo em caso de erro na transição. */
   view.finished
     .catch(() => {})
     .then(() => {
@@ -431,7 +431,7 @@ export function transition(depois) {
     });
 }
 
-/* Veste diálogo apos abertura; fechado mede zero e glaze recusa peça menor que 9px. */
+/* Veste diálogo após abertura; fechado mede zero e glaze recusa peça menor que 9px. */
 export function dressActions() {
   for (const card of document.querySelectorAll("dialog .glass-stage")) {
     if (card instanceof HTMLElement) glaze(card, LEVELS.regular);

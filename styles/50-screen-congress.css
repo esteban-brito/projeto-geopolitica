@@ -74,7 +74,7 @@
     text-overflow: ellipsis;
   }
 
-  /* ⚠ O QUE A ÁREA MEDE, e ele não e o nome do ministério: "Fazenda 72" não diz 72 DE QUE.
+  /* ⚠ O QUE A ÁREA MEDE, e ele não é o nome do ministério: "Fazenda 72" não diz 72 DE QUE.
      Vem do catálogo (`index`), em caixa baixa para não competir com o rótulo acima. */
   .capacity__index {
     min-width: 0;
@@ -82,7 +82,7 @@
     font-size: var(--text-label);
     line-height: 1;
     /* ⚠ ERA `--ink-dim`, E O PASSEIO O REPROVOU: 3,63 a 4,46 contra o piso AA de 4,5, em oito
-       blocos. Quem separa esta linha do rótulo acima não e a tinta — são a caixa e o
+       blocos. Quem separa esta linha do rótulo acima não é a tinta — são a caixa e o
        traqueamento, e eles bastam. */
     color: var(--ink-soft);
     white-space: nowrap;
@@ -105,9 +105,9 @@
     color: var(--ink);
   }
 
-  /* A escada de blocos e texto, e por isso ela desce pela linha de base junto com o número. */
-  /* A faixa e estreita e tem seis campos lado a lado, então a linha aqui e mais curta que a
-     do painel de Finanças: 2,5rem cabe ao lado do número sem empurra-lo. */
+  /* A escada de blocos é texto, e por isso ela desce pela linha de base junto com o número. */
+  /* A faixa é estreita e tem seis campos lado a lado, então a linha aqui é mais curta que a
+     do painel de Finanças: 2,5rem cabe ao lado do número sem empurrá-lo. */
   .capacity__trend {
     color: var(--ink-dim);
   }
@@ -117,7 +117,7 @@
     height: 0.75rem;
   }
 
-  /* A BARRA E A LINHA D'ÁGUA. */
+  /* A BARRA É A LINHA D'ÁGUA. */
   .capacity__track {
     position: relative;
     height: 4px;
@@ -135,7 +135,7 @@
     background: var(--ink-soft);
   }
 
-  /* ⚠ A COR E DO MANDATO, E NÃO DO NÍVEL. Ela reusa a crise em dois pesos, como o ponto do
+  /* ⚠ A COR É DO MANDATO, E NÃO DO NÍVEL. Ela reusa a crise em dois pesos, como o ponto do
      rail: uma cor, um significado, e a mesma conta atrás dos dois. */
   .capacity[data-alert="watch"] .capacity__track::before {
     background: rgba(var(--crisis-rgb), 0.55);
@@ -159,7 +159,7 @@
     color: var(--signal-down);
   }
 
-  /* A linha d'água e um VÃO escuro sobre o preenchimento, e não um traço claro: traço claro
+  /* A linha d'água é um VÃO escuro sobre o preenchimento, e não um traço claro: traço claro
      sobre barra clara desaparece justamente no caso que importa — o da área que passou do
      ponto neutro. */
   .capacity__track::after {
@@ -173,7 +173,7 @@
   }
 
   /* ── A MESA ─────────────────────────────────────────────────────────────── */
-  /* A mesa era uma lâmina própria e pagava o próprio respiro; agora ela e o miolo de um bloco
+  /* A mesa era uma lâmina própria e pagava o próprio respiro; agora ela é o miolo de um bloco
      dentro da lâmina do Congresso, que já tem recheio — mantidos os dois, a mesa recuaria
      28px a mais que os outros dois blocos da mesma tela e a coluna deixaria de alinhar. */
   .mesa {
@@ -194,7 +194,7 @@
     color: var(--ink);
   }
 
-  /* A LINHA DE FICHA TECNICA: instrumento, área, rito, quórum e impacto fiscal. */
+  /* A LINHA DE FICHA TÉCNICA: instrumento, área, rito, quórum e impacto fiscal. */
   .mesa__meta {
     display: flex;
     flex-wrap: wrap;
@@ -205,7 +205,7 @@
     color: var(--ink-dim);
   }
 
-  /* TROCAR e a única coisa pressionavel desta linha, e por isso e a única âmbar. */
+  /* TROCAR é a única coisa pressionável desta linha, e por isso é a única âmbar. */
   .mesa__swap {
     font-family: var(--font-display);
     font-size: var(--text-label);
@@ -222,7 +222,7 @@
   }
 
   /* ── AS BANCADAS ──────────────────────────────────────────────────────────── Quatro
-     linhas, quatro colunas: quem e, como esta, quanto recebe, o que entrega. */
+     linhas, quatro colunas: quem é, como está, quanto recebe, o que entrega. */
   .mesa__benches {
     display: grid;
     gap: var(--space-2);
@@ -261,7 +261,7 @@
     letter-spacing: 0.04em;
   }
 
-  /* O NOME INTEIRO EMBAIXO DA SIGLA, e ele pode quebrar: e a única prosa da linha, e cortá-la
+  /* O NOME INTEIRO EMBAIXO DA SIGLA, e ele pode quebrar: é a única prosa da linha, e cortá-la
      com reticências esconderia justamente o que ensina a sigla. */
   .bench__name small {
     font-size: var(--text-label);
@@ -269,8 +269,8 @@
     color: var(--ink-dim);
   }
 
-  /* ── A GENTE DENTRO DO BLOCO ──────────────────────────────────────────────── ⚠ ELA E
-     ANINHADA, E A ANINHAGEM E A MECÂNICA. */
+  /* ── A GENTE DENTRO DO BLOCO ──────────────────────────────────────────────── ⚠ ELA É
+     ANINHADA, E A ANINHAGEM É A MECÂNICA. */
   .bench__people {
     grid-column: 1 / -1;
     display: grid;
@@ -294,9 +294,9 @@
     min-width: 0;
   }
 
-  /* O NOME EM SERIFA — e esta e a primeira aplicação da regra tipográfica do ciclo 5: serifa
-     e texto de REGISTRO, sans e valor MEDIDO.
-     ⚠ ELE QUEBRA, E NÃO TRUNCA, e a diferença aqui e de propósito e não de estilo. */
+  /* O NOME EM SERIFA — e esta é a primeira aplicação da regra tipográfica do ciclo 5: serifa
+     é texto de REGISTRO, sans é valor MEDIDO.
+     ⚠ ELE QUEBRA, E NÃO TRUNCA, e a diferença aqui é de propósito e não de estilo. */
   .person__name {
     font-family: var(--font-record);
     font-weight: 600;
@@ -323,8 +323,8 @@
     color: var(--ink-soft);
   }
 
-  /* A MEMÓRIA TEM TOM, e ela e a única coisa desta linha que muda de mês para mês: e o que o
-     governo fez com aquele sujeito, e e ela que muda o preço dele. */
+  /* A MEMÓRIA TEM TOM, e ela é a única coisa desta linha que muda de mês para mês: é o que o
+     governo fez com aquele sujeito, e é ela que muda o preço dele. */
   .person__memory[data-tone="good"] {
     color: var(--growth);
   }
@@ -341,7 +341,7 @@
   }
 
   /* ⚠ O PESO 500 EXISTIA UMA VEZ NO PROJETO INTEIRO, e era aqui — a escala tem 400 e 700,
-     e um peso com um consumidor só não e degrau, e exceção. O tamanho também faltava: sem
+     e um peso com um consumidor só não é degrau, é exceção. O tamanho também faltava: sem
      declaração, o `<small>` do navegador dava 11,33px. */
   .person__votes small {
     font-size: var(--text-label);
@@ -372,7 +372,7 @@
 
   /* A SUA BANCADA NÃO DISPUTA A TARJA COM O HUMOR: a borda esquerda já diz se ela obstrui ou
      rompeu, e um segundo sinal no mesmo lugar apagaria o primeiro no mês em que os dois
-     valessem. O que muda e a linha de baixo do nome. */
+     valessem. O que muda é a linha de baixo do nome. */
   .bench[data-own="true"] .bench__name small {
     color: var(--brand);
     letter-spacing: var(--track-label);
@@ -420,7 +420,7 @@
     color: var(--ink);
   }
 
-  /* O par de `.person__votes small`, e o mesmo degrau: era 0,78em. */
+  /* O par de `.person__votes small`, é o mesmo degrau: era 0,78em. */
   .bench__votes small {
     font-size: var(--text-label);
     font-weight: 400;
@@ -428,7 +428,7 @@
   }
 
   /* ── O RESUMO ─────────────────────────────────────────────────────────────── O placar
-     previsto recebe o maior degrau da escala porque e o dado dramático desta tela: e o número
+     previsto recebe o maior degrau da escala porque é o dado dramático desta tela: é o número
      que decide se o mês vale a pena. */
   .tally {
     display: grid;
@@ -445,7 +445,7 @@
     color: var(--ink);
   }
 
-  /* A BANDA E MENOR QUE O PLACAR E MAIOR QUE O RESTO — ela e a segunda coisa mais importante
+  /* A BANDA É MENOR QUE O PLACAR E MAIOR QUE O RESTO — ela é a segunda coisa mais importante
      da tela, e não um adendo entre parênteses. */
   .tally__band {
     font-size: 0.36em;
@@ -480,13 +480,13 @@
     color: var(--signal-down);
   }
 
-  /* ⚠ QUANDO O PLACAR ACONTECE, e não só qual ele sera. */
+  /* ⚠ QUANDO O PLACAR ACONTECE, e não só qual ele será. */
   .tally__when {
     font-size: var(--text-note);
     color: var(--ink-dim);
   }
 
-  /* O DINHEIRO VEM SEM RESSALVA porque o rateio e uma conta, e não um sorteio. */
+  /* O DINHEIRO VEM SEM RESSALVA porque o rateio é uma conta, e não um sorteio. */
   .tally__cash {
     color: var(--ink-soft);
   }
@@ -502,9 +502,9 @@
   }
 
   /* O resultado ficou na tela desde então: o painel do mês passado sem recheio nenhum, colado
-     nas próprias bordas, que e como ele aparece em toda captura desde a sétima sessão.
+     nas próprias bordas, que é como ele aparece em toda captura desde a sétima sessão.
      E a lição vale além daqui: seletor amarrado ao NOME de uma tela quebra no dia em que a
-     tela e renomeada, e quebra em silêncio — nada falha, o estilo só deixa de existir. */
+     tela é renomeada, e quebra em silêncio — nada falha, o estilo só deixa de existir. */
   .report {
     display: grid;
     gap: var(--space-2);
@@ -516,12 +516,12 @@
   /* ── QUANDO A LINHA NÃO CABE ──────────────────────────────────────────────── A faixa passa
      de seis colunas para três, e o fio muda de lugar junto: com duas fileiras, o separador
      tem de sumir no início de cada uma, senão ele pende no vazio da quina esquerda. */
-  /* A CONSULTA SUBIU DE 900 PARA 1180 quando a sétima área entrou, e a conta e direta: o
+  /* A CONSULTA SUBIU DE 900 PARA 1180 quando a sétima área entrou, e a conta é direta: o
      tabuleiro vive entre dois rails de 216px, então a faixa tem cerca de `janela − 496` de
      largura útil.
      Abaixo daqui a faixa quebra em três. */
 
-  /* ── A GAVETA ─────────────────────────────────────────────────────────────── ⚠ ELA E A
+  /* ── A GAVETA ─────────────────────────────────────────────────────────────── ⚠ ELA É A
      METADE VISÍVEL DA TRAMITAÇÃO, e sem ela a outra metade seria uma mentira. */
   .passage {
     display: grid;
@@ -537,8 +537,8 @@
     /* O MATERIAL VEM DE `.letter, .passage__row, .law` em `30-components.css`. */
   }
 
-  /* O ESTÁGIO E A PRIMEIRA COLUNA porque e a pergunta que o jogador faz primeiro: onde este
-     texto esta. */
+  /* O ESTÁGIO É A PRIMEIRA COLUNA porque é a pergunta que o jogador faz primeiro: onde este
+     texto está. */
   .passage__stage {
     display: grid;
     gap: var(--space-1);
@@ -551,7 +551,7 @@
   }
 
   /* ⚠ O CAMINHO EM TRÊS DEGRAUS, e ele não custa linha: mora ACIMA da palavra que já estava
-     aqui, na mesma coluna. Uma palavra diz onde o texto esta; ela não diz que há um caminho
+     aqui, na mesma coluna. Uma palavra diz onde o texto está; ela não diz que há um caminho
      nem quanto falta dele. */
   .passage__path {
     display: flex;
@@ -565,8 +565,8 @@
     background: var(--veil);
   }
 
-  /* O ANDADO E TINTA CHEIA, o DE AGORA e latão, e o que falta fica no véu. O latão aqui e
-     legítimo: e o degrau em que o mês seguinte decide alguma coisa. */
+  /* O ANDADO É TINTA CHEIA, o DE AGORA é latão, e o que falta fica no véu. O latão aqui é
+     legítimo: é o degrau em que o mês seguinte decide alguma coisa. */
   .passage__step[data-step="past"] {
     background: rgba(var(--sheet-ink-rgb), 0.45);
   }
@@ -575,7 +575,7 @@
     background: var(--brand);
   }
 
-  /* QUEM ESTA NO PLENARIO ACENDE, e só ele: e o único dos três estágios em que o mês seguinte
+  /* QUEM ESTÁ NO PLENÁRIO ACENDE, e só ele: é o único dos três estágios em que o mês seguinte
      decide alguma coisa. */
   .passage__row[data-stage="floor"] .passage__stage {
     color: var(--brand);
@@ -594,14 +594,14 @@
     color: var(--sheet-ink);
   }
 
-  /* O JABUTI E DITO POR EXTENSO. */
+  /* O JABUTI É DITO POR EXTENSO. */
   .passage__saved {
     font-size: var(--text-note);
     color: var(--brand);
   }
 
   /* ⚠ A DEMÃO SUBIU DE 0,6 PARA 0,72: medida sobre o pergaminho, ela dava 4,48 contra o piso
-     4,5 de AA. E a menor demão que fecha, e a hierarquia com o texto cheio continua legível. */
+     4,5 de AA. É a menor demão que fecha, e a hierarquia com o texto cheio continua legível. */
   .passage__wait {
     font-family: var(--font-display);
     font-size: var(--text-note);
@@ -621,12 +621,12 @@
   /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
      atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
      rolar.
-     O breakpoint efetivo e 720px (território de telefone). 640px e o limiar conceptual
-     onde o layout completamente colapsa, mas não há regra CSS separada para la. */
+     O breakpoint efetivo é 720px (território de telefone). 640px é o limiar conceptual
+     onde o layout completamente colapsa, mas não há regra CSS separada para lá. */
 
   @media (max-width: 1180px) {
     /* ⚠ E AQUI A FILEIRA VOLTA A SER GRADE.
-       `grid-auto-flow` e herdado do bloco acima, e sem desliga-lo as três colunas desta
+       `grid-auto-flow` é herdado do bloco acima, e sem desligá-lo as três colunas desta
        consulta virariam três colunas com oito áreas espremidas dentro — medido em 390px: o
        medidor fechava em 24px com o conteúdo estourando 42. */
     .capacities {
@@ -658,5 +658,5 @@
 
   /* No celular a bancada vira DUAS linhas: nome e humor em cima, controle e leitura embaixo.
      Quatro colunas num aparelho de 390px poriam o controle deslizante em 60px de largura, e
-     ai o passo de 5% deixa de ser alcançável com o polegar. */
+     aí o passo de 5% deixa de ser alcançável com o polegar. */
 }

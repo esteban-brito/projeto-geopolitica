@@ -1,4 +1,4 @@
-/* TELA · O FECHO DO MANDATO — a prestação de contas, e ela e um DOCUMENTO. */
+/* TELA · O FECHO DO MANDATO — a prestação de contas, e ela é um DOCUMENTO. */
 
 @layer screens {
   .closing__stamp {
@@ -7,7 +7,7 @@
     font-size: var(--text-body);
   }
 
-  /* O CARIMBO — mono, e pela mesma razão dos outros dois do jogo: e a máquina do Estado
+  /* O CARIMBO — mono, e pela mesma razão dos outros dois do jogo: é a máquina do Estado
      carimbando, e não uma medição nem um nome. */
   .closing__stamp .stamp {
     display: inline-block;
@@ -70,7 +70,7 @@
     opacity: 0.7;
   }
 
-  /* ⚠ DE ONDE PARTIU E APAGADO, E ONDE CHEGOU E CHEIO. */
+  /* ⚠ DE ONDE PARTIU É APAGADO, E ONDE CHEGOU É CHEIO. */
   .closing__from {
     color: var(--ink-soft);
     opacity: 0.65;
@@ -106,7 +106,7 @@
 
   /* ── O QUE FOI PROMETIDO ──────────────────────────────────────────────────── A mesma
      anatomia da linha do fecho, com uma coluna a menos: a promessa não tem delta — ela tem
-     veredito, e ele e uma palavra. */
+     veredito, e ele é uma palavra. */
   .closing__pledges {
     display: grid;
   }
@@ -142,8 +142,8 @@
     text-align: right;
   }
 
-  /* ⚠ A COR E A MESMA DAS DUAS DIREÇÕES DO FECHO, e não uma terceira paleta: cumprida lê como
-     alta e quebrada como queda, que e o que a linha de cima já ensina. */
+  /* ⚠ A COR É A MESMA DAS DUAS DIREÇÕES DO FECHO, e não uma terceira paleta: cumprida lê como
+     alta e quebrada como queda, que é o que a linha de cima já ensina. */
   .pledge__verdict {
     text-align: right;
     font-family: var(--font-display);
@@ -165,10 +165,10 @@
     counter-reset: law;
   }
 
-  /* ⚠ O NÚMERO E UM CONTADOR E NÃO O MARCADOR NATIVO, e a razão e mecânica: um `<li>` com
+  /* ⚠ O NÚMERO É UM CONTADOR E NÃO O MARCADOR NATIVO, e a razão é mecânica: um `<li>` com
      `display: flex` perde o `::marker` — o navegador não desenha marcador em item que deixou
      de ser `list-item`.
-     De quebra o contador e MONO, como a data do outro lado da linha: os dois são carimbo de
+     De quebra o contador é MONO, como a data do outro lado da linha: os dois são carimbo de
      protocolo, e não medição. */
   .closing__laws li {
     display: flex;
@@ -223,6 +223,6 @@
   /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
      atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
      rolar.
-     O breakpoint efetivo e 720px (território de telefone). 640px e o limiar conceptual
-     onde o layout completamente colapsa, mas não há regra CSS separada para la. */
+     O breakpoint efetivo é 720px (território de telefone). 640px é o limiar conceptual
+     onde o layout completamente colapsa, mas não há regra CSS separada para lá. */
 }

@@ -1,12 +1,12 @@
 /* TEXTO DA INTERFACE — todo ele, num lugar só. Centralizado para evitar divergência de nomes. */
 
 const TERMOS = {
-  /* Os nomes das telas. O menu e o título tem de dizer a mesma coisa. */
+  /* Os nomes das telas. O menu e o título têm de dizer a mesma coisa. */
   cabinet: "Gabinete",
   finance: "Finanças",
   estado: "O Estado",
 
-  /* Recusar e o mesmo ato nas duas chantagens. */
+  /* Recusar é o mesmo ato nas duas chantagens. */
   refuse: "Recusar",
   refuseCost: "o grupo esquenta, e a caldeira não esfria depressa",
 
@@ -25,7 +25,7 @@ const TERMOS = {
   economic: "Setor privado",
   political: "Parlamentares",
 
-  /* O carimbo do fim, e ele e o mesmo no cartão da CALDEIRA e no fecho. */
+  /* O carimbo do fim, e ele é o mesmo no cartão da CALDEIRA e no fecho. */
   removed: "MANDATO INTERROMPIDO",
   removedNote: "a Câmara autorizou o afastamento",
 
@@ -38,7 +38,7 @@ const TERMOS = {
   moodWord: "humor",
   perMonthWord: "no mês",
   roomLine: "Sobra para o mês",
-  /* Peso zero exige frase explicita no cartão e na carta. */
+  /* Peso zero exige frase explícita no cartão e na carta. */
   noWeight: "não pesa",
   revenueWord: "Receita",
 
@@ -73,7 +73,7 @@ export function labelOf(table, key) {
   return table[key] ?? key;
 }
 
-/* Tratamento dinamico com marcador {v} no lugar de duplicar listas de frases. */
+/* Tratamento dinâmico com marcador {v} no lugar de duplicar listas de frases. */
 export const DEFAULT_TREATMENT = /** @type {"senhor"} */ ("senhor");
 
 const TRATAMENTO = /** @type {const} */ ({
@@ -108,7 +108,7 @@ export const UI = {
       economic: TERMOS.economic,
       political: TERMOS.political,
     },
-    /* Direção de ruptura do motor: social abaixo; econômica e politica acima. */
+    /* Direção de ruptura do motor: social abaixo; econômica e política acima. */
     trinityBelow: "abaixo de",
     trinityAbove: "acima de",
   },
@@ -118,7 +118,7 @@ export const UI = {
     months: TERMOS.months,
   },
   gov: {
-    /* Proximidade politica calculada por distancia euclidiana do modelo. */
+    /* Proximidade política calculada por distância euclidiana do modelo. */
     nearest: "governa mais perto",
     untouched: "ainda governa o orçamento que herdou",
   },
@@ -215,7 +215,7 @@ export const UI = {
       political:
         "O fisiologismo concluiu que sustentar {v} custa mais do que derrubá-lo — e ele é o último a virar, porque ganha dinheiro sustentando.",
     },
-    /* A frase comum e o que faz a carta valer: processo exige as 3 rupturas conjuntas. */
+    /* A frase comum é o que faz a carta valer: processo exige as 3 rupturas conjuntas. */
     ruptureNote: "São três, e o processo só abre com as três abertas ao mesmo tempo.",
     siegeSubject: "O processo foi aberto",
     siegeBody:
@@ -224,7 +224,7 @@ export const UI = {
     siegeOf: TERMOS.of,
     siegePrice: "Até lá cada cadeira custa",
     siegeAction: "Ir ao Congresso",
-    /* Protocolado não e derrota: distingue texto recem-escrito de votado. */
+    /* Protocolado não é derrota: distingue texto recém-escrito de votado. */
     filed: "protocolado",
     passed: "aprovada",
     rejected: "derrubada",
@@ -232,7 +232,7 @@ export const UI = {
     seeMonth: "ver o mês",
     firstLead: "O primeiro mês ainda não foi resolvido",
     quietLead: "Nada espera resposta",
-    /* Alerta preventivo enquanto o teto ainda esta aberto. */
+    /* Alerta preventivo enquanto o teto ainda está aberto. */
     ceilingSubject: "O teto do arcabouço fecha no mês que vem",
     ceilingBody:
       "O gasto do ano vai encostar no limite da regra. Com ele fechado não há discricionário para emenda — e sem emenda a base não se compra de volta.",
@@ -342,7 +342,7 @@ export const UI = {
     },
     demandBody: "quer o programa de volta em",
     demandCutBody: "quer o programa cortado de volta para",
-    /* Silêncio na chantagem equivale a recusa. */
+    /* Silêncio na chantagem equivale à recusa. */
     spiteWarns: "Se você não responder, ele lê como recusa.",
     conceded: "Você cedeu, e a verba volta neste mês.",
     refused: "Você recusou, e ele não esquece depressa.",

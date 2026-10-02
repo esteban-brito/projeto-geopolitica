@@ -1,4 +1,4 @@
-/* O RAIL — a navegação primária, a esquerda e sempre presente. */
+/* O RAIL — a navegação primária, à esquerda e sempre presente. */
 
 import { LEVELS, RECIPE, fresnelFor, glaze, scaleRamp, skin } from "../core/glass.mjs";
 import { spring } from "../core/spring.mjs";
@@ -10,13 +10,13 @@ import { DEFAULT_TREATMENT, UI, titleOf } from "../strings.mjs";
 
 /**
  * ⚠ `ready` SAIU JUNTO COM AS DUAS ENTRADAS CINZAS, e ele era a metade de código do defeito:
- * um parâmetro que só recebe `true` e uma porta aberta esperando alguém passar por ela.
+ * um parâmetro que só recebe `true` é uma porta aberta esperando alguém passar por ela.
  * Quando A Rua e Bastidor existirem, elas entram como as outras — com uma linha.
  *
  * @param {object} section
  * @param {string} section.key
  * @param {string} section.label
- * @param {"watch" | "alert"} [section.alert] o quanto a area caiu desde a abertura
+ * @param {"watch" | "alert"} [section.alert] o quanto a área caiu desde a abertura
  * @param {string} current
  */
 function itemHtml({ key, label, alert }, current) {
@@ -36,7 +36,7 @@ function itemHtml({ key, label, alert }, current) {
     `<li><button ${attributes}>` +
     iconHtml(key, "rail__icon") +
     `<span class="rail__label">${escapeHtml(label)}</span>` +
-    /* ⚠ O PONTO NÃO E A LEITURA, e por isso ele leva rótulo próprio: a cor sozinha diz
+    /* ⚠ O PONTO NÃO É A LEITURA, e por isso ele leva rótulo próprio: a cor sozinha diz
        "algo errado aqui" a quem a enxerga, e nada a quem não enxerga. */
     (alert ? `<span class="rail__alert" title="${escapeHtml(UI.nav[alert])}"></span>` : "") +
     `</button></li>`
@@ -44,7 +44,7 @@ function itemHtml({ key, label, alert }, current) {
 }
 
 /**
- * DE QUEM E ESTE GOVERNO — o nome, e no que ele se tornou.
+ * DE QUEM É ESTE GOVERNO — o nome, e no que ele se tornou.
  *
  * @param {object} input
  * @param {{ name: string }} input.president
@@ -55,7 +55,7 @@ function itemHtml({ key, label, alert }, current) {
 export function railGovHtml({ president, stance, treatment = DEFAULT_TREATMENT }) {
   return (
     /* ⚠ O CARGO SEGUE O TRATAMENTO: "PRESIDENTE" sobre um nome escolhido com "a senhora"
-       e a mesma frase errada que a carta acabou de parar de dizer. */
+       é a mesma frase errada que a carta acabou de parar de dizer. */
     `<p class="rail__who">${escapeHtml(titleOf(treatment))}</p>` +
     `<p class="rail__president">${escapeHtml(president.name)}</p>` +
     `<p class="rail__stance">` +
@@ -67,12 +67,12 @@ export function railGovHtml({ president, stance, treatment = DEFAULT_TREATMENT }
 }
 
 /**
- * ⚠ `alerts` CHEGA DE FORA, e a tela não o calcula: a escala de queda e regra da MALHA, e
+ * ⚠ `alerts` CHEGA DE FORA, e a tela não o calcula: a escala de queda é regra da MALHA, e
  * refeita aqui ela divergiria da faixa de áreas no dia em que um limiar mudasse.
  *
- * @param {string} current chave da secao aberta
+ * @param {string} current chave da seção aberta
  * @param {ReadonlyArray<Area>} areas
- * @param {Record<string, "watch" | "alert">} [alerts] so as areas que caíram
+ * @param {Record<string, "watch" | "alert">} [alerts] só as áreas que caíram
  * @returns {string}
  */
 export function railNavHtml(current, areas, alerts = {}) {
@@ -86,8 +86,8 @@ export function railNavHtml(current, areas, alerts = {}) {
   /* ⚠ A FAZENDA CONTINUA SENDO UMA ÁREA, e não um item de primeiro nível como o plano de tela
      sugeria. */
   /* No dock (Gabinete, `40-shell.css`) a legenda vira BOTÃO e os oito moram numa gaveta: 13
-     ícones sem rótulo e demais. No rail vertical o botão não aparece e a legenda fica. A gaveta
-     e o próprio dock em outro estado — os seis saem e os oito entram —, e não um painel
+     ícones sem rótulo é demais. No rail vertical o botão não aparece e a legenda fica. A gaveta
+     é o próprio dock em outro estado — os seis saem e os oito entram —, e não um painel
      flutuante: um segundo vidro e um segundo material, que a guarda `material` recusa. */
   const inside = areas.some(area => area.id === current);
   const ministries =
@@ -100,7 +100,7 @@ export function railNavHtml(current, areas, alerts = {}) {
     `<p class="rail__legend">${escapeHtml(UI.nav.ministries)}</p>` +
     `<ul class="rail__sub">` +
     areas
-      /* ⚠ O NOME CURTO MANDA AQUI, e a coluna e a razão: o rail tem 109px de rótulo, e o único
+      /* ⚠ O NOME CURTO MANDA AQUI, e a coluna é a razão: o rail tem 109px de rótulo, e o único
          nome que não cabe cortava com reticência. Ausente, `short` cai no `label`. */
       .map(area =>
         itemHtml(
@@ -115,10 +115,10 @@ export function railNavHtml(current, areas, alerts = {}) {
   const estado = itemHtml({ key: "estado", label: UI.nav.estado }, current);
 
   /* ⚠ A RUA E BASTIDOR SAÍRAM DO MENU, por decisão dele. Elas viviam aqui desligadas, cinzas,
-     com um `title` prometendo que viriam — e uma promessa cinza e pior que a ausência: ela
+     com um `title` prometendo que viriam — e uma promessa cinza é pior que a ausência: ela
      ocupa duas das treze entradas do menu para dizer que o jogo tem menos do que parece.
-     ELAS VOLTAM COM DONO: A Rua e a opinião publica com rosto, e depende da imprensa e das
-     pessoas agindo sozinhas; Bastidor e a coalizao, e depende de nomear ministro. */
+     ELAS VOLTAM COM DONO: A Rua é a opinião pública com rosto, e depende da imprensa e das
+     pessoas agindo sozinhas; Bastidor é a coalizão, e depende de nomear ministro. */
   const rule = '<li class="rail__rule" aria-hidden="true"></li>';
 
   return cabinet + email + congress + finance + rule + ministries + rule + estado;
@@ -129,12 +129,12 @@ export function railNavHtml(current, areas, alerts = {}) {
 const DEITADO = "(min-width: 1181px)";
 
 /* A GOTA: a cabeça da pílula corre na mola rápida e a cauda na lenta; o vão entre as duas vira
-   corpo. `STRETCH` e quanto do vão vira corpo; `STRETCH_MAX` e o teto, em fração da peça. */
+   corpo. `STRETCH` é quanto do vão vira corpo; `STRETCH_MAX` é o teto, em fração da peça. */
 const HEAD = { duration: 0.34, bounce: 0.2 };
 const TAIL = { duration: 0.46, bounce: 0.1 };
 const STRETCH = 0.5;
 const STRETCH_MAX = 0.3;
-/* O corpo da pílula e a cor do que se pressiona, rasa; a tinta sai do token. */
+/* O corpo da pílula é a cor do que se pressiona, rasa; a tinta sai do token. */
 /** @type {import("../core/glass.mjs").Ramp} */
 const PILL_BODY = [
   [0, 0.22],
@@ -180,8 +180,8 @@ const LANDED = 0.05;
 let menu = null;
 
 /**
- * ARMA O MENU — uma vez, no `<ul>` que sobrevive as pinturas. O estado da gaveta mora no
- * `<ul>` (`data-drawer`) porque o CSS lê dali; quem a fecha e a escolha de uma seção, o Esc, ou
+ * ARMA O MENU — uma vez, no `<ul>` que sobrevive às pinturas. O estado da gaveta mora no
+ * `<ul>` (`data-drawer`) porque o CSS lê dali; quem a fecha é a escolha de uma seção, o Esc, ou
  * um clique fora.
  *
  * @param {HTMLElement} nav o `ul#railNav`
@@ -259,7 +259,7 @@ export function dressRail() {
 
 /**
  * A CAIXA DE LAYOUT do item, contra a caixa de padding do rail (a que a pílula usa).
- * ⛔ NÃO E `getBoundingClientRect`: com o ponteiro sobre o item o `:hover` o escala em 1,02 e a
+ * ⛔ NÃO É `getBoundingClientRect`: com o ponteiro sobre o item o `:hover` o escala em 1,02 e a
  * caixa vinha 173x36 em vez de 169x35 — a pílula lia "outra peça" e saltava.
  *
  * @param {HTMLElement} item @param {HTMLElement} rail
@@ -332,7 +332,7 @@ function pillSprings(m, main0, cross0) {
   };
 }
 
-/** A pele da pilula, no tamanho de repouso; so se refaz quando a caixa muda. @param {Menu} m */
+/** A pele da pílula, no tamanho de repouso; só se refaz quando a caixa muda. @param {Menu} m */
 function dressPill(m) {
   if (!m.pill) return;
   const r = parseFloat(getComputedStyle(m.pill).borderTopLeftRadius) || 0;
@@ -356,8 +356,8 @@ function dressPill(m) {
 
 /**
  * A PÍLULA CORRE ATÉ O ITEM CORRENTE: desliza em vez de apagar aqui e acender ali.
- * ⛔ NO DOCK NÃO HÁ PÍLULA — ordem dele: o dock só existe no Gabinete, o corrente e sempre o
- * mesmo, e quem marca ali e o ponto. ⛔ O ativo VISÍVEL: numa área o botão da gaveta também e
+ * ⛔ NO DOCK NÃO HÁ PÍLULA — ordem dele: o dock só existe no Gabinete, o corrente é sempre o
+ * mesmo, e quem marca ali é o ponto. ⛔ O ativo VISÍVEL: numa área o botão da gaveta também é
  * ativo e vem antes; escondido, media zero e a pílula apagava nas oito áreas.
  */
 export function movePill() {
@@ -376,7 +376,7 @@ export function movePill() {
   const cross1 = eixo === "x" ? to.y + to.h / 2 : to.x + to.w / 2;
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   /* Nasceu agora, mudou de eixo ou de forma: a mola recomeça onde a pílula deve estar. Entre
-     dock e coluna não há viagem, e outra peça. */
+     dock e coluna não há viagem, é outra peça. */
   const snap = m.pill.style.opacity !== "1" || eixo !== m.axis || to.w !== m.w || to.h !== m.h;
   if (snap || still || !m.molas) {
     m.axis = eixo;
@@ -437,10 +437,10 @@ function land() {
 }
 
 /**
- * A troca de layout e o morph a partir dela. ⛔ A LENTE E DO TAMANHO DA CAIXA: instalada no
+ * A troca de layout e o morph a partir dela. ⛔ A LENTE É DO TAMANHO DA CAIXA: instalada no
  * tamanho MAIOR antes de a largura andar (a máscara cobre a caixa o tempo todo) e refeita no
- * final; por quadro não e opção — o navegador não re-resolve `url(#id)` a tempo.
- * ⚠ A largura de partida se mede ANTES da troca: depois ela já e a de chegada.
+ * final; por quadro não é opção — o navegador não re-resolve `url(#id)` a tempo.
+ * ⚠ A largura de partida se mede ANTES da troca: depois ela já é a de chegada.
  *
  * @param {boolean} open
  */

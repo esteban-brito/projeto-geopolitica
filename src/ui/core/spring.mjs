@@ -1,13 +1,13 @@
 /* A MOLA — o modelo da Apple, integrada por quadro.
 
    ⭐ ELA NÃO SE PARAMETRIZA POR RIGIDEZ. A Apple abandonou rigidez/amortecimento de
-   propósito: o SwiftUI expõe `Spring(duration:bounce:)`, e a tradução e
+   propósito: o SwiftUI expõe `Spring(duration:bounce:)`, e a tradução é
    `w = 2pi/duracao`, `k = w^2`, `c = 2(1-quique)w`. O padrão de quase toda a interface
-   do iOS tem quique ZERO — ultrapassar e reservado a gesto FÍSICO, e num botão lê como
+   do iOS tem quique ZERO — ultrapassar é reservado a gesto FÍSICO, e num botão lê como
    brinquedo.
 
-   ⛔ E TRANSICAO CSS NÃO PRESERVA VELOCIDADE: interrompida, ela recomeça do zero. Nenhum
-   `cubic-bezier` conserta isso, e e a diferença que o olho chama de enlatado. */
+   ⛔ E TRANSIÇÃO CSS NÃO PRESERVA VELOCIDADE: interrompida, ela recomeça do zero. Nenhum
+   `cubic-bezier` conserta isso, e é a diferença que o olho chama de enlatado. */
 
 /** O maior deslocamento que uma unidade da mola produz, em pixel — o que traduz o
     limiar de parada de abstrato para visível. */
@@ -19,13 +19,13 @@ const VISUAL_SCALE = 7.5;
 const SKIP = 1 / 6;
 
 /**
- * ⛔ O TEMPO DECORRIDO E DIVIDIDO EM SUBPASSOS DE `dt`, e nao integrado de uma vez: com passo
+ * ⛔ O TEMPO DECORRIDO É DIVIDIDO EM SUBPASSOS DE `dt`, e não integrado de uma vez: com passo
  * fixo por quadro a mola anda por QUADRO, e a 12 fps o gesto leva cinco vezes mais — medido na
- * mesa, largar a pasta levou 3s em vez de 0,26. ⛔ E o passo grande TAMBEM nao serve: a 1/20 a
+ * mesa, largar a pasta levou 3s em vez de 0,26. ⛔ E o passo grande TAMBÉM não serve: a 1/20 a
  * descida de 0,26s tem `c·dt = 2,4`, e acima de 2 o amortecimento inverte de sinal e amplifica
- * — a pasta explodiu para 12.878px de altura na primeira medicao.
- * ⚠ O TETO DE TEMPO fica por outra razao: uma aba que volta do segundo plano entrega um quadro
- * de segundos, e a mola nao deve correr o gesto inteiro nele.
+ * — a pasta explodiu para 12.878px de altura na primeira medição.
+ * ⚠ O TETO DE TEMPO fica por outra razão: uma aba que volta do segundo plano entrega um quadro
+ * de segundos, e a mola não deve correr o gesto inteiro nele.
  *
  * @param {(value: number) => void} onStep
  * @param {{ duration?: number, bounce?: number, from?: number, dt?: number }} [options]
@@ -48,21 +48,21 @@ export function spring(onStep, { duration = 0.4, bounce = 0, from = 0, dt = 1 / 
   };
   tune(duration, bounce);
 
-  /** @param {number} now o relogio do quadro, que `requestAnimationFrame` entrega */
+  /** @param {number} now o relógio do quadro, que `requestAnimationFrame` entrega */
   function step(now) {
     const elapsed = Math.min(SKIP, last === 0 ? dt : (now - last) / 1000);
     last = now;
-    /* Semi-implicito: estável em `dt` pequeno, ao contrário do Euler explícito. */
+    /* Semi-implícito: estável em `dt` pequeno, ao contrário do Euler explícito. */
     for (let corrido = 0; corrido < elapsed; corrido += dt) {
       const passo = Math.min(dt, elapsed - corrido);
       const a = -k * (x - target) - c * v;
       v += a * passo;
       x += v * passo;
     }
-    /* ⚠ O LIMIAR DE PARADA E VISUAL, e não abstrato. Com 0,0004 em `x` a mola continuava
+    /* ⚠ O LIMIAR DE PARADA É VISUAL, e não abstrato. Com 0,0004 em `x` a mola continuava
        rodando ~0,3s DEPOIS de o movimento ficar invisível: o maior deslocamento do gesto
-       mede 7,5px, então 0,0004 valem 0,003px — trezentos milissegundos de composicao para
-       nada, e um salto no fim deles. Agora ela para quando o que RESTA de movimento e
+       mede 7,5px, então 0,0004 valem 0,003px — trezentos milissegundos de composição para
+       nada, e um salto no fim deles. Agora ela para quando o que RESTA de movimento é
        menor que um cinquenta avos de pixel. */
     const leftInPx = Math.abs(x - target) * VISUAL_SCALE;
     const settled = leftInPx < 0.02 && Math.abs(v) * VISUAL_SCALE < 0.6;
@@ -82,7 +82,7 @@ export function spring(onStep, { duration = 0.4, bounce = 0, from = 0, dt = 1 / 
     if (!running) {
       running = true;
       /* ⚠ O RELÓGIO RECOMEÇA A CADA GESTO: o intervalo entre a ÚLTIMA parada e este clique não
-         e um quadro, e usa-lo como passo faria a mola começar com um salto. */
+         é um quadro, e usá-lo como passo faria a mola começar com um salto. */
       last = 0;
       requestAnimationFrame(step);
     }
@@ -97,12 +97,12 @@ export const between = (from, to, t) => from + (to - from) * t;
    principal; esta resolve a EDO uma vez e entrega a curva pronta, que o compositor executa
    sozinho. O jogo pode engasgar que o voo continua no compasso.
 
-   ⭐ E E ELA QUE PERMITE INTERROMPER SEM RECOMEÇAR: quem conhece `x(t)` conhece `x'(t)`, então
+   ⭐ E É ELA QUE PERMITE INTERROMPER SEM RECOMEÇAR: quem conhece `x(t)` conhece `x'(t)`, então
    no instante do novo clique a posição e a velocidade saem da CONTA, e não de uma medição entre
-   dois quadros. E o que a transicao CSS não faz, e e a diferença que o olho chama de enlatado. */
+   dois quadros. É o que a transição CSS não faz, e é a diferença que o olho chama de enlatado. */
 
 /** ⛔ O RESÍDUO EM QUE O MOVIMENTO ACABOU PARA O OLHO, e não para a matemática: a mola
-    analítica leva tempo infinito para fechar em 1. Meio pixel num curso de 700px e 0,0007 —
+    analítica leva tempo infinito para fechar em 1. Meio pixel num curso de 700px é 0,0007 —
     0,002 fica com folga abaixo do que uma tela mostra. */
 const REST = 0.002;
 
@@ -113,13 +113,13 @@ const POINTS = 32;
 /**
  * A SOLUÇÃO EXATA, e os três regimes são três fórmulas — não uma aproximada.
  *
- * ⚠ `bounce` E A PARAMETRIZAÇÃO DA APPLE, a mesma da mola de cima: `zeta = 1 - bounce`,
- * `w = 2pi/duracao`. Quique zero e amortecimento crítico, que e o padrão de ato de Estado.
+ * ⚠ `bounce` É A PARAMETRIZAÇÃO DA APPLE, a mesma da mola de cima: `zeta = 1 - bounce`,
+ * `w = 2pi/duracao`. Quique zero é amortecimento crítico, que é o padrão de ato de Estado.
  *
  * @param {number} zeta
  * @param {number} w
  * @param {number} v0 a velocidade de partida, em cursos por segundo
- * @returns {(t: number) => { at: number, rate: number }} posicao e velocidade no instante
+ * @returns {(t: number) => { at: number, rate: number }} posição e velocidade no instante
  */
 function solve(zeta, w, v0) {
   if (Math.abs(zeta - 1) < 0.005) {
@@ -158,11 +158,11 @@ function solve(zeta, w, v0) {
 }
 
 /**
- * QUANDO O MOVIMENTO ACABA PARA O OLHO — e ela e PROCURADA, e não uma constante.
+ * QUANDO O MOVIMENTO ACABA PARA O OLHO — e ela é PROCURADA, e não uma constante.
  *
  * ⛔ A CONSTANTE ERRA NOS TRÊS REGIMES DE UMA VEZ. Com `1,22 x duracao` o resíduo do crítico
  * fica em 0,41%, o dobro do limiar — e como a curva crava o último ponto em 1, sobra um salto
- * de 2,8px num curso de 700px. A conta correta para o crítico da 1,347; para um quique de 0,3
+ * de 2,8px num curso de 700px. A conta correta para o crítico dá 1,347; para um quique de 0,3
  * ela passa de 2,0. Procurar custa 200 avaliações uma vez por gesto.
  *
  * @param {(t: number) => { at: number, rate: number }} at
@@ -183,13 +183,13 @@ function settleOf(at, duration) {
 /**
  * UM VOO — a curva para o CSS, e a conta para quem interromper.
  *
- * ⚠ A AMOSTRAGEM E DENSA NO ARRANQUE: `(i/n)^1.2` põe mais pontos onde a curvatura esta, que
- * e o primeiro quinto do tempo. Com passos iguais sobram 7 pontos para 70% da variação, e a
+ * ⚠ A AMOSTRAGEM É DENSA NO ARRANQUE: `(i/n)^1.2` põe mais pontos onde a curvatura está, que
+ * é o primeiro quinto do tempo. Com passos iguais sobram 7 pontos para 70% da variação, e a
  * 120 fps a poligonal aparece.
  *
  * @param {object} input
  * @param {number} input.duration em segundos
- * @param {number} [input.bounce] 0 e amortecimento critico, que e o padrao
+ * @param {number} [input.bounce] 0 é amortecimento crítico, que é o padrão
  * @param {number} [input.velocity] a velocidade de partida, em cursos por segundo
  * @returns {{ css: string, duration: number, at: (t: number) => number,
  *   rate: (t: number) => number }}
@@ -202,16 +202,16 @@ export function curveOf({ duration, bounce = 0, velocity = 0 }) {
   const settle = settleOf(at, d);
 
   /* ⛔ O `linear()` ESPAÇA OS PONTOS SOZINHO, e por isso cada um leva a POSIÇÃO escrita: sem
-     ela o CSS assume passos iguais no tempo, e uma amostragem densa no arranque — que e o que
-     põe pontos onde a curvatura esta — sai DEFORMADA. Medido: a pasta chegava a 489px aos
+     ela o CSS assume passos iguais no tempo, e uma amostragem densa no arranque — que é o que
+     põe pontos onde a curvatura está — sai DEFORMADA. Medido: a pasta chegava a 489px aos
      120ms onde a conta pede 635, porque os 29ms iniciais estavam esticados sobre 120. */
   const points = [];
   for (let i = 0; i <= POINTS; i++) {
     const share = Math.pow(i / POINTS, 1.2);
     points.push(`${Number(at(share * settle).at.toFixed(4))} ${(share * 100).toFixed(2)}%`);
   }
-  /* ⚠ O ÚLTIMO PONTO E 1 EXATO: o CSS interpola ATÉ ele, e 0,9998 deixaria a peça parada fora
-     do lugar para sempre. Ele só pode ser cravado porque `settleOf` garantiu que o salto já e
+  /* ⚠ O ÚLTIMO PONTO É 1 EXATO: o CSS interpola ATÉ ele, e 0,9998 deixaria a peça parada fora
+     do lugar para sempre. Ele só pode ser cravado porque `settleOf` garantiu que o salto já é
      menor que o limiar visual. */
   points[points.length - 1] = "1 100%";
 

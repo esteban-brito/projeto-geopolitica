@@ -18,7 +18,7 @@ export const SCALE = /** @type {const} */ ({
 });
 
 /* ⚠ `approval: [0, 60]` E `base: [0, 513]` FORAM ESCRITAS E RETIRADAS EM, junto com a escada
-   dos vitais que as consumia — a captura reprovou a peça por largura, e régua sem desenho e
+   dos vitais que as consumia — a captura reprovou a peça por largura, e régua sem desenho é
    um número esperando envelhecer. */
 
 /* ⚠ ERA 1,5 — meia vez a mais que a largada — e o número era um chute que nunca tinha sido
@@ -26,10 +26,10 @@ export const SCALE = /** @type {const} */ ({
 const GDP_SPAN = 1.2;
 
 /**
- * A RÉGUA DO PIB, e ela não e fixa: ancora na PRÓPRIA largada da partida.
+ * A RÉGUA DO PIB, e ela não é fixa: ancora na PRÓPRIA largada da partida.
  *
- * @param {ReadonlyArray<number>} gdp a serie, o mais antigo na frente
- * @param {number} fallback o PIB de hoje, para a partida que ainda nao guardou mes nenhum
+ * @param {ReadonlyArray<number>} gdp a série, o mais antigo na frente
+ * @param {number} fallback o PIB de hoje, para a partida que ainda não guardou mês nenhum
  * @returns {readonly [number, number]}
  */
 export function gdpRange(gdp, fallback) {
@@ -39,13 +39,13 @@ export function gdpRange(gdp, fallback) {
 
 /**
  * @typedef {object} Trend
- * @property {number} delta - quanto o indice andou na janela, com sinal
- * @property {number} months - a janela que o historico de fato suportou
+ * @property {number} delta - quanto o índice andou na janela, com sinal
+ * @property {number} months - a janela que o histórico de fato suportou
  */
 
 /**
- * O singular mora aqui e não no template porque ele e a mesma frase: espalhar a escolha por
- * duas telas e como as duas variações divergiram em primeiro lugar.
+ * O singular mora aqui e não no template porque ele é a mesma frase: espalhar a escolha por
+ * duas telas é como as duas variações divergiram em primeiro lugar.
  *
  * @param {number} months
  * @returns {string}
@@ -57,13 +57,13 @@ export function windowLabel(months) {
 /**
  * QUANTO ANDOU, E EM QUANTOS MESES — ou `null` quando não há passado guardado.
  *
- * @param {number} value o indice de hoje
+ * @param {number} value o índice de hoje
  * @param {ReadonlyArray<number>} history o passado guardado, o mais antigo na frente
  * @returns {Trend | null}
  */
 export function trendOf(value, history) {
-  /* O ÚLTIMO VALOR DO HISTÓRICO E O DE HOJE — a MALHA o empurra ao fechar o mês —, então a
-     janela disponível e o comprimento MENOS UM. */
+  /* O ÚLTIMO VALOR DO HISTÓRICO É O DE HOJE — a MALHA o empurra ao fechar o mês —, então a
+     janela disponível é o comprimento MENOS UM. */
   const months = Math.min(WINDOW, history.length - 1);
   if (months < 1) return null;
 
@@ -76,14 +76,14 @@ export function trendOf(value, history) {
 /**
  * PARA QUE LADO A LEITURA ANDOU — ou `null` quando não há com que comparar.
  *
- * ⚠ AUSÊNCIA NÃO E RESULTADO: numa recarga não existe mês anterior, e desenhar "não moveu"
+ * ⚠ AUSÊNCIA NÃO É RESULTADO: numa recarga não existe mês anterior, e desenhar "não moveu"
  * ali afirmaria que nada andou num mandato em que tudo andou.
- * ⚠ E O LIMIAR E O DA LEITURA ARREDONDADA: as duas colunas imprimem inteiro, e uma seta ao
+ * ⚠ E O LIMIAR É O DA LEITURA ARREDONDADA: as duas colunas imprimem inteiro, e uma seta ao
  * lado de um número que não mudou na tela faz a cor negar o número.
  *
  * @param {number} now
  * @param {number | undefined} before
- * @param {1 | -1} good 1 quando subir e bom; -1 quando subir e ruim
+ * @param {1 | -1} good 1 quando subir é bom; -1 quando subir é ruim
  * @returns {"up" | "down" | "flat" | null}
  */
 export function directionOf(now, before, good) {

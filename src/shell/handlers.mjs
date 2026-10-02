@@ -13,7 +13,7 @@ export function armHandlers() {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
 
-    /* Resposta a carta e ordem no rascunho, e vem antes da navegação do botão. */
+    /* Resposta à carta é ordem no rascunho, e vem antes da navegação do botão. */
     /* Discurso de posse grava escolhas no rascunho do mês sem mutar o estado. */
     const pledge = target.closest("[data-pledge]");
     if (pledge instanceof HTMLElement && pledge.dataset["pledge"] && pledge.dataset["choice"]) {
@@ -109,7 +109,7 @@ export function armHandlers() {
       return;
     }
 
-    /* Bandas não travam piso no teto: faixas invertidas são derrotadas no plenario. */
+    /* Bandas não travam piso no teto: faixas invertidas são derrotadas no plenário. */
     const band = target.dataset["band"];
     const side = target.dataset["side"];
     if (band && (side === "floor" || side === "ceiling")) {
@@ -164,7 +164,7 @@ export function armHandlers() {
 
   el.noticeClose.addEventListener("click", () => el.dialog.close());
 
-  /* Botão de reinício em dois passos com confirmação que expira apos 5000ms. */
+  /* Botão de reinício em dois passos com confirmação que expira após 5000ms. */
   let arming = 0;
 
   function disarm() {
@@ -184,7 +184,7 @@ export function armHandlers() {
     window.clearTimeout(arming);
     arming = 0;
     disarm();
-    /* Partida e criada no fechamento do formulário de posse. */
+    /* Partida é criada no fechamento do formulário de posse. */
     openSwear();
   });
 

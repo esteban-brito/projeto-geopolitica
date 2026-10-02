@@ -17,8 +17,8 @@
     }
 
     /* ⚠ Rail transbordava 44px (948px declarados numa janela de 980px onde a casca tem 904px).
-       ⛔ E ISTO E DA COLUNA: enquanto falava da TELA e não da orientação, a margem de 48px do piso
-       caia também sobre a barra deitada e empurrava o dock 48px para cima — de `top: 822` para
+       ⛔ E ISTO É DA COLUNA: enquanto falava da TELA e não da orientação, a margem de 48px do piso
+       caía também sobre a barra deitada e empurrava o dock 48px para cima — de `top: 822` para
        774, o que move a peça inteira sem ninguém pedir. */
     .shell:has(> .board:is([data-screen="cabinet"], [data-screen="email"]))
       .rail[data-flow="column"] {
@@ -29,7 +29,7 @@
       margin-right: var(--space-2);
     }
   }
-  /* ⛔ A ROLAGEM INTERNA E DA COLUNA: na barra deitada a lista não rola, ela cabe. Enquanto esta
+  /* ⛔ A ROLAGEM INTERNA É DA COLUNA: na barra deitada a lista não rola, ela cabe. Enquanto esta
      regra falava da TELA e não da orientação, ela vencia a do dock por especificidade e punha
      `overflow-y: auto` numa barra de 44px de altura — conteúdo de 322 numa caixa de 310. */
   .rail[data-flow="column"] .rail__list {
@@ -38,11 +38,11 @@
   }
 
   /* ══ O DOCK — no Gabinete o rail desce e vira uma barra de ícones no pé da tela ═══════════
-     E o MESMO `nav`, no mesmo vidro (`glass-support`): um segundo vidro seria um segundo
+     É o MESMO `nav`, no mesmo vidro (`glass-support`): um segundo vidro seria um segundo
      material. Ele flutua SOBRE a mesa, fora da grade: a área não encolhe, `fitDesk` não vê
-     nada e a pasta erguida fica onde esta — ela centra na janela e lê 0,9 da área, o que deixa
+     nada e a pasta erguida fica onde está — ela centra na janela e lê 0,9 da área, o que deixa
      116px livres no pé a 1440x900 e 118 a 1920x937; o dock ocupa 60 + 16 deles.
-     A gaveta dos ministérios e o próprio dock em outro estado (`data-drawer` no `ul`): os seis
+     A gaveta dos ministérios é o próprio dock em outro estado (`data-drawer` no `ul`): os seis
      saem e os oito entram, dentro da mesma cápsula. */
   @media (min-width: 1181px) {
     .shell:has(> .board[data-screen="cabinet"]) {
@@ -50,10 +50,10 @@
     }
 
     .rail[data-flow="row"] {
-      /* O nome muda com o lugar: e assim que a troca de tela sabe que ele SAI e a coluna ENTRA. */
+      /* O nome muda com o lugar: é assim que a troca de tela sabe que ele SAI e a coluna ENTRA. */
       view-transition-name: dock;
       position: fixed;
-      /* `top: auto`: o rail vertical e `sticky` com `top`, e fixo com os dois ele esticava a 905px. */
+      /* `top: auto`: o rail vertical é `sticky` com `top`, e fixo com os dois ele esticava a 905px. */
       top: auto;
       left: 50%;
       bottom: var(--space-4);
@@ -68,7 +68,7 @@
       border-radius: var(--radius-piece);
       transform: translateX(-50%);
       /* ⛔ A PEÇA VESTIDA JÁ TEM ARESTA: a borda de 1px desenharia um segundo contorno por cima
-         da rampa de Fresnel. Ela fica, transparente, porque a pele e desenhada com ela na caixa. */
+         da rampa de Fresnel. Ela fica, transparente, porque a pele é desenhada com ela na caixa. */
       border-color: transparent;
     }
 
@@ -106,14 +106,14 @@
       padding: 0;
       justify-content: center;
       border-radius: var(--radius-item);
-      /* Apple: o ativo não tinge — quem marca a seleção e a pílula, que corre até ele.
-         ⛔ E sem `transition` própria aqui: ela substituia a da base e matava o gesto, porque
-         `transition` e atalho — declarar uma propriedade apaga as outras. */
+      /* Apple: o ativo não tinge — quem marca a seleção é a pílula, que corre até ele.
+         ⛔ E sem `transition` própria aqui: ela substituía a da base e matava o gesto, porque
+         `transition` é atalho — declarar uma propriedade apaga as outras. */
       background: transparent;
     }
 
     /* ⛔ O DOCK NÃO RESPONDIA AO PONTEIRO: a coluna tinha véu no hover e ele não tinha nada, e a
-       mesma ação dava resposta diferente em cada tela. O ativo segue sem tingir — e o ponto. */
+       mesma ação dava resposta diferente em cada tela. O ativo segue sem tingir — é o ponto. */
     .rail[data-flow="row"] .rail__item:not(.rail__item--active):hover {
       background: var(--veil-thin);
     }
@@ -136,7 +136,7 @@
     }
 
     /* O rótulo vira dica: BROTA do ícone ao pousar ou ao focar pelo teclado — nasce a 0,9 com a
-       origem no pé, e sobe pela mola de soltar; a opacidade e curta para não arrastar a saída. */
+       origem no pé, e sobe pela mola de soltar; a opacidade é curta para não arrastar a saída. */
     .rail[data-flow="row"] .rail__label {
       position: absolute;
       left: 50%;
@@ -207,10 +207,10 @@
       transform: rotate(45deg);
     }
 
-    /* ── O MORPH: enquanto a cápsula anda, o que esta dentro não vaza nem transiciona ─────────
+    /* ── O MORPH: enquanto a cápsula anda, o que está dentro não vaza nem transiciona ─────────
        `overflow: hidden` só aqui, porque a dica mora ACIMA da cápsula e ficaria cortada; ela
-       apaga durante o morph, como na Apple. E o item não leva a transicao própria: quem escreve
-       a escala dele por quadro e a mola, e uma transicao por cima atrasaria cada quadro. */
+       apaga durante o morph, como na Apple. E o item não leva a transição própria: quem escreve
+       a escala dele por quadro é a mola, e uma transição por cima atrasaria cada quadro. */
     .rail[data-flow="row"][data-morph] {
       overflow: hidden;
     }
@@ -239,7 +239,7 @@
       background: var(--hairline);
     }
 
-    /* Recomeçar e um ícone como os outros; o rótulo e a confirmação viram a dica, e a
+    /* Recomeçar é um ícone como os outros; o rótulo e a confirmação viram a dica, e a
        confirmação acende o glifo na cor de crise enquanto o segundo clique não vem. */
     .rail[data-flow="row"] .rail__foot .action {
       position: relative;
@@ -254,8 +254,8 @@
       display: block;
     }
 
-    /* No dock, recomeçar e um ícone entre ícones: o mesmo pousar, premir e soltar do item. A
-       ação discreta apaga o próprio hover na base; aqui ele volta, porque a peça e outra. */
+    /* No dock, recomeçar é um ícone entre ícones: o mesmo pousar, premir e soltar do item. A
+       ação discreta apaga o próprio hover na base; aqui ele volta, porque a peça é outra. */
     .rail[data-flow="row"] .rail__foot .action {
       transition:
         background var(--dur-touch) linear,
@@ -426,7 +426,7 @@
     border-radius: var(--piece-radius);
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    /* A queda e a do vidro, e não uma pilha própria: eram três camadas aqui e duas no resto. */
+    /* A queda é a do vidro, e não uma pilha própria: eram três camadas aqui e duas no resto. */
     box-shadow: var(--glass-cast);
     font-family: var(--font-display);
     line-height: 1;
@@ -705,7 +705,7 @@
   }
 
   .go-shade {
-    /* A queda e a do vidro, e não uma pilha própria: eram três camadas aqui e duas no resto. */
+    /* A queda é a do vidro, e não uma pilha própria: eram três camadas aqui e duas no resto. */
     box-shadow: var(--glass-cast);
   }
 
@@ -790,10 +790,10 @@
 
   /* Substrato do Gabinete: o tampo COBRE a janela, ordem dele. A foto tem 3832x1642 e a 1920
      de largura ela ainda entra reduzida (fator 0,57), então cobrir não amplia nada.
-     Iluminação zenital em soft-light e multiply preserva o croma em 73,2% (normal caia para 47,9%).
+     Iluminação zenital em soft-light e multiply preserva o croma em 73,2% (normal caía para 47,9%).
      ⛔ Os dois degradês de borda saíram: eram a faixa preta que comia 366px do centro para cada
-     lado. ⛔ E a vinheta saiu inteira depois deles, ordem dele: o tampo e o tampo até a beira,
-     sem moldura. O que escurece a cena agora e só a luz da sala, que vem do radial de cima. */
+     lado. ⛔ E a vinheta saiu inteira depois deles, ordem dele: o tampo é o tampo até a beira,
+     sem moldura. O que escurece a cena agora é só a luz da sala, que vem do radial de cima. */
   body:has(.board[data-screen="cabinet"]) .backdrop {
     background:
       linear-gradient(180deg, rgba(var(--bg-deep-rgb), 0.56), transparent 26%),
@@ -828,7 +828,7 @@
   .backdrop::after {
     content: "";
     position: absolute;
-    /* ⛔ Sem o recuo a barra mudava de 4,10,16 para 2,5,8 com o mês; mascaras esfumam salto de 20px na borda. */
+    /* ⛔ Sem o recuo a barra mudava de 4,10,16 para 2,5,8 com o mês; máscaras esfumam salto de 20px na borda. */
     inset: calc(var(--space-4) + var(--topbar-h)) 0 0 calc(var(--rail) + var(--space-6));
     pointer-events: none;
     mix-blend-mode: overlay;
@@ -859,11 +859,11 @@
     mask-composite: intersect;
   }
 
-  /* ⛔ A VINHETA E O VÉU MORAM NO `.backdrop`, e não numa camada por cima: o substrato e o único
-     que tem `view-transition-name`, então e ele que a troca de aba dissolve. Como pseudo do
+  /* ⛔ A VINHETA E O VÉU MORAM NO `.backdrop`, e não numa camada por cima: o substrato é o único
+     que tem `view-transition-name`, então é ele que a troca de aba dissolve. Como pseudo do
      `.shell` o fundo SALTAVA no meio da troca — 14,9 de luminância entre dois quadros vizinhos
      (docs/evidence/styles/veil-transition.mjs) — e por `transition: opacity` piorava para 30,2, porque durante a
-     transicao a árvore viva vira retrato e transicao de elemento não aparece. */
+     transição a árvore viva vira retrato e transição de elemento não aparece. */
 
   /* ── ABAIXO DE 1180px: o rail lateral passa a faixa horizontal superior. ── */
   @media (max-width: 1180px) {

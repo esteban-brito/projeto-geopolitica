@@ -212,9 +212,9 @@ export function describeMail({
   /* ⚠ COMO O JOGADOR QUER SER TRATADO, e ele escolhe junto com o nome. Sem isto a carta
      dizia "o senhor" em metade das partidas para uma presidenta. Ver `addressed`. */
   treatment = DEFAULT_TREATMENT,
-  /* ⚠ AS OPÇÕES DA POSSE VEM PRONTAS DA FACHADA, e a lista de prioridade e DERIVADA la: as
-     três áreas que o país entrega piores. Monta-la aqui daria uma segunda verdade sobre onde
-     o país esta pior, e ela mentiria no dia em que uma abertura mudasse. */
+  /* ⚠ AS OPÇÕES DA POSSE VÊM PRONTAS DA FACHADA, e a lista de prioridade é DERIVADA lá: as
+     três áreas que o país entrega piores. Montá-la aqui daria uma segunda verdade sobre onde
+     o país está pior, e ela mentiria no dia em que uma abertura mudasse. */
   pledges = { priority: [], fiscal: [], reform: [] },
   platform = { priority: null, fiscal: null, reform: null },
 }) {
@@ -424,7 +424,7 @@ export function describeMail({
             from: by("chief"),
             subject: UI.inbox.siegeSubject,
             body: `<div class="letter__lines"><span>${escapeHtml(UI.inbox.siegeBody)}</span></div>`,
-            /* Valores de afastamento, cadeiras e preço vem do motor. */
+            /* Valores de afastamento, cadeiras e preço vêm do motor. */
             ...(siege
               ? {
                   annex: linesHtml(
@@ -557,10 +557,10 @@ function outcomeOf(letter) {
 }
 
 /**
- * AS DUAS SAÍDAS, e nenhuma e de graça.
+ * AS DUAS SAÍDAS, e nenhuma é de graça.
  *
  * @param {string} id
- * @param {string} chosen o que ja esta marcado, se algo estiver
+ * @param {string} chosen o que já está marcado, se algo estiver
  * @returns {string}
  */
 function choicesHtml(id, chosen, texts = UI.inbox.amendmentChoices) {
@@ -703,7 +703,7 @@ function reportBody(
     );
   }
 
-  /* Manchete isolada: analise detalhada desce para os cards anexos. */
+  /* Manchete isolada: análise detalhada desce para os cards anexos. */
   return (
     `<div class="letter__lines">` +
     line(
@@ -948,7 +948,7 @@ function seatsAnnex(data, parties) {
       lineHtml({
         who: row.label,
         value: signed(row.move),
-        /* Movimento relativo a própria bancada: 2 de 14 e ruptura; 2 de 80 e ruído. */
+        /* Movimento relativo à própria bancada: 2 de 14 é ruptura; 2 de 80 é ruído. */
         share: row.seats > 0 ? (Math.abs(row.move) / row.seats / deepest) * 100 : 0,
         note: `${UI.inbox.of} ${seats(row.seats)}`,
       }),

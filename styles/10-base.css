@@ -41,9 +41,9 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* TODO NÚMERO DE INDICADOR E TABULAR.
-     ⚠ E TODO NÚMERO E SANS, e esta linha e o que torna a regra tipográfica do ciclo 5
-     EXECUTÁVEL em vez de combinada: serifa e texto de registro, sans e valor medido. */
+  /* TODO NÚMERO DE INDICADOR É TABULAR.
+     ⚠ E TODO NÚMERO É SANS, e esta linha é o que torna a regra tipográfica do ciclo 5
+     EXECUTÁVEL em vez de combinada: serifa é texto de registro, sans é valor medido. */
   [data-numeric] {
     font-family: var(--font-display);
     font-variant-numeric: tabular-nums;
@@ -76,9 +76,9 @@
     background: rgba(var(--bg-deep-rgb), 0.72);
   }
 
-  /* ⛔ SÓ O TABULEIRO ATRAVESSA A TRANSICAO. A raiz cruzava as duas fotos do documento
+  /* ⛔ SÓ O TABULEIRO ATRAVESSA A TRANSIÇÃO. A raiz cruzava as duas fotos do documento
      inteiro — fundo, rail e barra —, e avançar o mês fazia a tela toda piscar. O que troca de
-     conteúdo e o tabuleiro; o resto e moldura, e moldura não se refaz. */
+     conteúdo é o tabuleiro; o resto é moldura, e moldura não se refaz. */
   ::view-transition-group(root),
   ::view-transition-old(root),
   ::view-transition-new(root) {
@@ -107,7 +107,7 @@
      laranja onde a coluna esteve — ele viu: a foto velha da raiz tem um buraco no lugar do rail
      (peça nomeada sai da foto), e pelo buraco a madeira nova aparecia inteira enquanto o resto
      ainda estava sob a foto velha. Então NADA visível fica na raiz: substrato e barra também
-     tem nome, cada um se dissolve no seu grupo, e a raiz — só o fundo do corpo — não anima. */
+     têm nome, cada um se dissolve no seu grupo, e a raiz — só o fundo do corpo — não anima. */
   .backdrop {
     view-transition-name: backdrop;
   }
@@ -133,10 +133,10 @@
     animation-timing-function: var(--ease-screen);
   }
 
-  /* ⭐ A TROCA DE TELA E A DA APPLE: dissolve com um fio de escala (0,98 → 1), sem desfoque.
-     ⛔ O cross-fade cru do navegador ele recusou ("não esta nível Apple"); o desfoque animado em
+  /* ⭐ A TROCA DE TELA É A DA APPLE: dissolve com um fio de escala (0,98 → 1), sem desfoque.
+     ⛔ O cross-fade cru do navegador ele recusou ("não está nível Apple"); o desfoque animado em
      tela inteira saiu depois: custava 40ms de GPU por troca (docs/evidence/styles/transition-cost.md) e a Apple
-     não desfoca a tela na troca — desfoque e profundidade parada, nunca animador. */
+     não desfoca a tela na troca — desfoque é profundidade parada, nunca animador. */
   ::view-transition-group(board),
   ::view-transition-group(desk) {
     animation-duration: var(--dur-screen);
@@ -169,7 +169,7 @@
 
   /* ⭐ O MENU NÃO VOA, ordem dele ("gostei da ideia do macOS: ultra refinado e clean"): no
      Gabinete o rail se chama `dock` (`40-shell.css`) e fora dele `rail`, então entrar ou sair do
-     Gabinete e uma SAÍDA e uma ENTRADA — o que sai encolhe no próprio lugar e o que entra nasce no
+     Gabinete é uma SAÍDA e uma ENTRADA — o que sai encolhe no próprio lugar e o que entra nasce no
      dele, e nada atravessa a tela. ⛔ A cápsula de vidro voando em reta ele viu e trocou por isto.
      O menu só entra depois de o tabuleiro assentar, 100ms antes do fim dele; entre duas telas que
      não são o Gabinete os dois se chamam `rail` e só o item aceso troca. */
@@ -193,7 +193,7 @@
 
   /* A coluna SAI quando só existe a foto velha e ENTRA quando só existe a nova (`:only-child`
      no par de fotos); com as duas — troca entre telas que não são o Gabinete — ela só troca o
-     item aceso. Sem tipos de transicao: `:only-child` e CSS de sempre, e vale em todo navegador
+     item aceso. Sem tipos de transição: `:only-child` é CSS de sempre, e vale em todo navegador
      com view transition. */
   ::view-transition-old(rail):only-child {
     animation: column-out var(--dur-screen) var(--ease-screen) both;

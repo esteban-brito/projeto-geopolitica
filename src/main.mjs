@@ -1,17 +1,17 @@
-/* ENTRYPOINT — composicao e wiring, e nada mais.
+/* ENTRYPOINT — composição e wiring, e nada mais.
 
-   Ele não calcula e não formata: liga o estado as views e as views ao documento, e
-   `boundaries` prova que ele só alcanca `src/state/`, `src/public/` e `src/ui/`. No
+   Ele não calcula e não formata: liga o estado às views e as views ao documento, e
+   `boundaries` prova que ele só alcança `src/state/`, `src/public/` e `src/ui/`. No
    projeto anterior o entrypoint nasceu wiring, acumulou regra e virou 1.715 linhas que
    uma refatoração inteira não desmontou.
 
-   ELE GUARDA TRÊS COISAS: `state`, o jogo; `screen`, onde o jogador esta; `orders`, o
-   que ele montou para ESTE mês. Só `orders` e mutável, e de propósito — rascunho de
+   ELE GUARDA TRÊS COISAS: `state`, o jogo; `screen`, onde o jogador está; `orders`, o
+   que ele montou para ESTE mês. Só `orders` é mutável, e de propósito — rascunho de
    interface vira estado no instante em que o mês executa, e não antes.
 
    E HÁ DUAS PINTURAS: `paint` redesenha, `refresh` só troca número derivado. Trocar o
    HTML de um `<input type=range>` no meio de um arrasto arranca o elemento que o
-   ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
+   ponteiro está segurando, e o arrasto morre no primeiro pixel. */
 
 import { NEUTRAL } from "./public/index.mjs";
 import { armRail } from "./ui/components/rail.mjs";
@@ -22,14 +22,14 @@ import { el, endLabel, label, paint } from "./shell/paint.mjs";
 import { openNotice } from "./shell/dialogs.mjs";
 import { armHandlers } from "./shell/handlers.mjs";
 
-/* A gaveta do dock arma uma vez: o `<ul>` sobrevive as pinturas, e o estado mora nele. */
+/* A gaveta do dock arma uma vez: o `<ul>` sobrevive às pinturas, e o estado mora nele. */
 armRail(el.railNav);
 
 /* O BOTÃO DE RECOMEÇAR TEM GLIFO E RÓTULO PRÓPRIOS, como o de avançar: no dock só o glifo
-   aparece e o rótulo vira a dica; no rail vertical e o contrário. `label` escreve no rótulo. */
+   aparece e o rótulo vira a dica; no rail vertical é o contrário. `label` escreve no rótulo. */
 el.restart.innerHTML = iconHtml("restart", "rail__icon") + '<span class="action__label"></span>';
 
-/* O ponto neutro e do catálogo e não da tela; ele chega aqui só para a faixa de
+/* O ponto neutro é do catálogo e não da tela; ele chega aqui só para a faixa de
    índices saber onde fica a linha d'água. */
 document.documentElement.style.setProperty("--neutral", String(NEUTRAL));
 

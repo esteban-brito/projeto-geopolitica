@@ -1,10 +1,10 @@
 /* O DECRETO — o ato do mês, na pasta de despachos.
 
-   ⭐ A FORMA E DO GOVERNO E A ESCRITA E DO JOGO, e a decisão foi dele. O que NÃO se
-   simplifica e o que todo brasileiro reconhece: "entra em vigor na data de sua publicação" e
+   ⭐ A FORMA É DO GOVERNO E A ESCRITA É DO JOGO, e a decisão foi dele. O que NÃO se
+   simplifica é o que todo brasileiro reconhece: "entra em vigor na data de sua publicação" é
    reconhecimento, e não juridiquês.
 
-   ⛔ ELE NÃO CALCULA NADA. A bolsa e o rateio chegam prontos de `settlement`, que e a mesma
+   ⛔ ELE NÃO CALCULA NADA. A bolsa e o rateio chegam prontos de `settlement`, que é a mesma
    função que o turno executa — a tela pergunta ao motor e não refaz a conta.
 
    ⭐ E AS OITO PASTAS SÃO MARCADAS NO PRÓPRIO PAPEL: o Art. 2 diz "as pastas marcadas ficam
@@ -18,11 +18,11 @@ import { monthParts } from "../../state/state.mjs";
 import { protocolOf } from "./protocol.mjs";
 
 /* 📗 A conta do fecho, conferida contra o Decreto no 664/1992, que saiu como
-   "171o da Independência e 104o da Republica". */
+   "171o da Independência e 104o da República". */
 const INDEPENDENCE = 1822;
 const REPUBLIC = 1889;
-/* 📗 O DECRETO E NUMERADO, e a série e a real: o Planalto passou de 12.000 em 2024. O primeiro do
-   mandato leva o número seguinte; e um rótulo do documento, e não um valor do jogo. */
+/* 📗 O DECRETO É NUMERADO, e a série é a real: o Planalto passou de 12.000 em 2024. O primeiro do
+   mandato leva o número seguinte; é um rótulo do documento, e não um valor do jogo. */
 const FIRST_DECREE = 12_600;
 
 /* A rubrica: um traço só, desenhado para ser percorrido pelo `stroke-dashoffset`. */
@@ -35,13 +35,13 @@ const SIGN_PATH =
  * O ATO DO MÊS.
  *
  * @param {object} input
- * @param {number} input.room o discricionario que cabe no mes
- * @param {number} input.ratio a fracao do pedido que o rateio honra, de 0 a 1
+ * @param {number} input.room o discricionário que cabe no mês
+ * @param {number} input.ratio a fração do pedido que o rateio honra, de 0 a 1
  * @param {string} input.president quem assina
  * @param {string} input.chief quem referenda — o mesmo nome que assina a EM
- * @param {number} input.month o mes do mandato, de onde saem a data e o ano
+ * @param {number} input.month o mês do mandato, de onde saem a data e o ano
  * @param {ReadonlyArray<{ id: string, label: string, short?: string }>} input.areas as oito
- * @param {ReadonlyArray<string>} input.protect quais o decreto deste mes poupa
+ * @param {ReadonlyArray<string>} input.protect quais o decreto deste mês poupa
  * @param {import("./moment.mjs").MomentView | null} [input.moment] na reunião do corte, o corte de cada pasta
  * @returns {string}
  */
@@ -55,7 +55,7 @@ export function decreeHtml({
   protect,
   moment = null,
 }) {
-  /* 📗 §5.1.3: mês em MINÚSCULA, sem a sigla da UF e sem zero a esquerda no dia. O dia 5 e o
+  /* 📗 §5.1.3: mês em MINÚSCULA, sem a sigla da UF e sem zero à esquerda no dia. O dia 5 é o
      do fecho do mês anterior, e não uma escolha. */
   /* ⛔ E O ANO SAI DO MOTOR: ele estava teclado aqui, no parecer e em `monthParts`, e o
      catálogo já o guardava em `REGIME.firstYear`. A tela pergunta. */
@@ -101,7 +101,7 @@ export function decreeHtml({
     `<p>${escapeHtml(UI.decree.third)}</p>` +
     `</div>` +
     `<p class="act__close">${escapeHtml(UI.decree.close(date, year - INDEPENDENCE + 1, year - REPUBLIC + 1))}</p>` +
-    /* 📗 QUEM REFERENDA VEM SOB O PRESIDENTE, em caixa normal: e assim no DOU. */
+    /* 📗 QUEM REFERENDA VEM SOB O PRESIDENTE, em caixa normal: é assim no DOU. */
     `<div class="signature">${SIGN_PATH}<b>${escapeHtml(president)}</b>` +
     `<span class="act__referendum">${escapeHtml(chief)}</span></div>` +
     `<p class="sheet__foot">${escapeHtml(UI.decree.gazette(gazetteDay))}</p>` +
@@ -112,8 +112,8 @@ export function decreeHtml({
 /**
  * ARMA A RUBRICA — o traço só corre se o comprimento dele for medido no DOM.
  *
- * ⚠ `getTotalLength` só existe depois de o `<path>` estar na página, e por isso ela e uma
- * chamada a parte em vez de sair pronta do HTML.
+ * ⚠ `getTotalLength` só existe depois de o `<path>` estar na página, e por isso ela é uma
+ * chamada à parte em vez de sair pronta do HTML.
  *
  * @param {Element | null} sheet
  */
