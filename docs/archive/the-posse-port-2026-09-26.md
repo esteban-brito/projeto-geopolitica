@@ -50,17 +50,17 @@ para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
 
 ## 2. Onde protótipo e jogo divergiam no estudo
 
-| Tema                       | Protótipo                                                                    | Jogo                                                                              | Peso      |
-| -------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- |
+| Tema                       | Protótipo                                                                            | Jogo                                                                              | Peso      |
+| -------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | --------- |
 | base no começo             | votos firmes e prováveis pelo [modelo da base](../spec/the-base-model.md): 149 e 374 | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
-| efeito da pasta            | a chance do partido sobe na hora, até 95%                                    | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
-| pessoas                    | escritas à mão                                                               | indicado por semente; especialistas e notáveis não existem                        | grande    |
-| Fama, Preparo, Afinidade   | números de desenho                                                           | não existem (lote E1.0f)                                                          | grande    |
-| juntar, extinguir, dividir | funcionam na tela                                                            | a lista de cadeiras é fixa no catálogo e em várias contas (lote E1.0d)            | grande    |
-| ids das cadeiras           | 26 ids curtos diferentes (`justica`, `gsi`, `agu`) e 3 criáveis              | ids da lei (`justica-e-seguranca-publica`)                                        | médio     |
-| tamanho da tela            | fixo em 1280×800                                                             | janela livre                                                                      | médio     |
-| fonte e tokens             | Hanken Grotesk e tokens próprios                                             | Inter e tokens do jogo                                                            | médio     |
-| cores dos partidos         | 9 tons do Nolan, em HSL no código                                            | não existem; a guarda `tokens` barra cor solta                                    | médio     |
+| efeito da pasta            | a chance do partido sobe na hora, até 95%                                            | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
+| pessoas                    | escritas à mão                                                                       | indicado por semente; especialistas e notáveis não existem                        | grande    |
+| Fama, Preparo, Afinidade   | números de desenho                                                                   | não existem (lote E1.0f)                                                          | grande    |
+| juntar, extinguir, dividir | funcionam na tela                                                                    | a lista de cadeiras é fixa no catálogo e em várias contas (lote E1.0d)            | grande    |
+| ids das cadeiras           | 26 ids curtos diferentes (`justica`, `gsi`, `agu`) e 3 criáveis                      | ids da lei (`justica-e-seguranca-publica`)                                        | médio     |
+| tamanho da tela            | fixo em 1280×800                                                                     | janela livre                                                                      | médio     |
+| fonte e tokens             | Hanken Grotesk e tokens próprios                                                     | Inter e tokens do jogo                                                            | médio     |
+| cores dos partidos         | 9 tons do Nolan, em HSL no código                                                    | não existem; a guarda `tokens` barra cor solta                                    | médio     |
 
 O conflito da base é o mais sério. **Decidido por ele em 26/09: vale o modelo do protótipo,
 aprimorado e fiel à realidade;** a pesquisa que o calibra está em curso e o motor muda na fase 2 do

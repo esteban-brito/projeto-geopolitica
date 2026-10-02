@@ -181,7 +181,7 @@ custa. ⚠ **No voto ele não entrega**, e o número está no achado 59.
 | ------------------------------------------ | ---------------------------------------------------------------------------- |
 | **chamar modelo de linguagem**             | decisão dele, 04/09/2026: **zero centavo**. E o avaliador não precisa        |
 | **texto de manchete escrito por IA**       | molde + combinação. A variedade vem de quem fala, não de quem escreve        |
-| **a IA decidir se uma política funcionou** | [ADR 0001](../../adr/0001-ai-stays-out-of-the-turn.md), e ele continua certo    |
+| **a IA decidir se uma política funcionou** | [ADR 0001](../../adr/0001-ai-stays-out-of-the-turn.md), e ele continua certo |
 | **nomes reais de veículo**                 | ADR 0003 — nome alterado, como os partidos                                   |
 | **conversa livre com um personagem**       | ⚠ não é recusa, é ordem: depois do item 2. Sem a voz definida, vira genérico |
 
