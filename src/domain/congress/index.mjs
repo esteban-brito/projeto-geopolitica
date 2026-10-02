@@ -1,7 +1,7 @@
 /* ECLUSA — congresso.
    recebe  bancadas, proposta, moeda oferecida, histórico de barganha devolve votos por
    bancada, resultado, custo pago, ressentimento ── A SEPARAÇÃO QUE FAZ A MECÂNICA Duas
-   funções, e a divisão entre elas E o jogo: `whipCount` — a PREVISÃO. */
+   funções, e a divisão entre elas É o jogo: `whipCount` — a PREVISÃO. */
 
 import { hash, mix, unit } from "../../state/random.mjs";
 
@@ -13,42 +13,42 @@ import { hash, mix, unit } from "../../state/random.mjs";
 /**
  * O QUE ESTE MOTOR PRECISA SABER DE UMA PROPOSTA, e nada além disso.
  *
- * realmente lê e o que fez a pauta derivada nascer sem o ECLUSA mudar uma linha.
+ * realmente lê é o que fez a pauta derivada nascer sem o ECLUSA mudar uma linha.
  * @typedef {object} Motion
- * @property {number} economic - a posicao no eixo economico
- * @property {number} liberty - a posicao no eixo de liberdades
- * @property {number} threat - o quanto ela ataca a maquina
+ * @property {number} economic - a posição no eixo econômico
+ * @property {number} liberty - a posição no eixo de liberdades
+ * @property {number} threat - o quanto ela ataca a máquina
  * @property {number} [spread] - o RAIO da nuvem de movimentos em torno do centroide;
- * zero, ou ausente, e um texto coeso. Ver a prosa dentro de `whipCount`.
+ * zero, ou ausente, é um texto coeso. Ver a prosa dentro de `whipCount`.
  */
 
 /* Quanto a ameaça pesa, em unidades de resistência. */
 const THREAT_WEIGHT = 85;
 
-/* A curva que traduz resistência em adesao. */
+/* A curva que traduz resistência em adesão. */
 const PIVOT = 58;
 const SPREAD = 16;
 
-/* A 25, um governo com 60% de otimo/bom derruba a resistência em 5 pontos, e um com 10% a
+/* A 25, um governo com 60% de ótimo/bom derruba a resistência em 5 pontos, e um com 10% a
    levanta em 10. */
 const STANDING_WEIGHT = 25;
 
-/* Ele NÃO e 50 de propósito — 35% de otimo/bom e um governo mediano no Brasil, e não um
+/* Ele NÃO é 50 de propósito — 35% de ótimo/bom é um governo mediano no Brasil, e não um
    governo em crise. */
-/* ⚠ EXPORTADO PELA MESMA RAZÃO DE `THRESHOLDS`: o elenco também pergunta o que e um governo
-   mediano, e redigitar o número la seria um segundo lugar para ele divergir. */
+/* ⚠ EXPORTADO PELA MESMA RAZÃO DE `THRESHOLDS`: o elenco também pergunta o que é um governo
+   mediano, e redigitar o número lá seria um segundo lugar para ele divergir. */
 export const STANDING_NEUTRAL = 35;
 
-/* Dissidência máxima, em fração da bancada, quando a lealdade esta cheia. */
+/* Dissidência máxima, em fração da bancada, quando a lealdade está cheia. */
 const DISSIDENCE = 0.07;
 
 /* Os tons da tela, em pontos de chance: abaixo de 50 a bancada vota mais contra que a favor;
-   abaixo de 20, e oposição. */
+   abaixo de 20, é oposição. */
 const OBSTRUCTION = 50;
 const RUPTURE = 20;
 
-/* OS LIMIARES SÃO EXPORTADOS porque a tela precisa dizer em que estado a bancada esta, e ela
-   não pode redigitar os números: dois lugares com o mesmo limiar e um lugar que vai divergir
+/* OS LIMIARES SÃO EXPORTADOS porque a tela precisa dizer em que estado a bancada está, e ela
+   não pode redigitar os números: dois lugares com o mesmo limiar é um lugar que vai divergir
    na primeira recalibragem, e o sintoma seria a interface chamando de "obstruindo" uma
    bancada que o motor já trata como rompida. */
 export const THRESHOLDS = { obstruction: OBSTRUCTION, rupture: RUPTURE };
@@ -65,12 +65,12 @@ const DEPUTY_SPREAD = 0.14;
 const CENTER = { economic: 50, liberty: 50 };
 
 /* A chance com que a lealdade nem ajuda nem atrapalha uma votação: a do voto firme. Com 0,75,
-   duas leis mansas passavam de graça numa Camara inteira a 30% (266 e 260 votos para 257). */
+   duas leis mansas passavam de graça numa Câmara inteira a 30% (266 e 260 votos para 257). */
 const NEUTRAL_CHANCE = 0.8;
 
 /* ── O ASSENTAMENTO DA LEALDADE, mês a mês ──────────────────────────────────── A posição puxa,
    a emenda paga soma e a promessa quebrada tira. Cair 1,5 por mês sem motivo levava toda
-   bancada sem emenda a ruptura (achado 86). O puxão de metade da distancia e [DESENHO]: a
+   bancada sem emenda à ruptura (achado 86). O puxão de metade da distância é [DESENHO]: a
    pesquisa 17 não achou prazo medido. */
 const STANCE_PULL = 0.5;
 const PATRONAGE = 12;
@@ -79,18 +79,18 @@ const BETRAYAL = 25;
 /**
  * @typedef {object} PartyForecast
  * @property {string} partyId
- * @property {number} distance - a distancia ideologica crua
- * @property {number} venality - a venalidade do eixo que domina a distancia
- * @property {number} resistance - ja com verba e ameaca
- * @property {number} adherence - fracao da bancada que tende a votar sim
- * @property {number} votes - a previsao em cadeiras
+ * @property {number} distance - a distância ideológica crua
+ * @property {number} venality - a venalidade do eixo que domina a distância
+ * @property {number} resistance - já com verba e ameaça
+ * @property {number} adherence - fração da bancada que tende a votar sim
+ * @property {number} votes - a previsão em cadeiras
  * @typedef {object} Forecast
  * @property {PartyForecast[]} parties
  * @property {number} votes - a soma prevista
  * @typedef {object} PartyTally
  * @property {string} partyId
  * @property {number} votes
- * @property {number} drift - quantas cadeiras fugiram da previsao
+ * @property {number} drift - quantas cadeiras fugiram da previsão
  * @typedef {object} Tally
  * @property {PartyTally[]} parties
  * @property {number} votes
@@ -105,7 +105,7 @@ function clamp01(value) {
 }
 
 /**
- * A venalidade que vale para ESTA pauta: a do eixo que domina a distancia.
+ * A venalidade que vale para ESTA pauta: a do eixo que domina a distância.
  *
  * @param {Party} party
  * @param {number} dx
@@ -118,7 +118,7 @@ function venalityFor(party, dx, dy) {
 }
 
 /**
- * A chance em fração; a lealdade guardada e a chance em pontos.
+ * A chance em fração; a lealdade guardada é a chance em pontos.
  *
  * @param {number} mood a lealdade da bancada, de 0 a 100
  * @returns {number}
@@ -259,7 +259,7 @@ export function baseSplit({ parties, loyalty }) {
     const mood = loyalty[party.id] ?? 0;
     const effective = party.seats * chanceOf(mood);
 
-    /* A ORDEM E A DA GRAVIDADE: quem rompeu passou pela obstrução antes, então a pergunta
+    /* A ORDEM É A DA GRAVIDADE: quem rompeu passou pela obstrução antes, então a pergunta
        mais grave vem primeiro. */
     if (mood < RUPTURE) split.ruptured += effective;
     else if (mood < OBSTRUCTION) split.obstructing += effective;
@@ -269,24 +269,24 @@ export function baseSplit({ parties, loyalty }) {
   return split;
 }
 
-/* MEDIDO NO CATÁLOGO: com o corte em 0,7 a Camara parte em 384 contra 129 cadeiras, e a media
-   ponderada pela venalidade da 70,0% (no catálogo de 9, 364 contra 149 e 67,9%). O corte não e redondo por acaso — ele e o degrau em que
+/* MEDIDO NO CATÁLOGO: com o corte em 0,7 a Câmara parte em 384 contra 129 cadeiras, e a média
+   ponderada pela venalidade dá 70,0% (no catálogo de 9, 364 contra 149 e 67,9%). O corte não é redondo por acaso — ele é o degrau em que
    `venalityFor` deixa de cobrar resistência ideológica e passa a cobrar preço. */
 const VENAL = 0.7;
 
 /**
  * A BASE TEM DUAS METADES: a que se compra e a que se convence.
  *
- * ⚠ ELA RESPONDE A PERGUNTA QUE A TELA NUNCA RESPONDEU — _quantos destes me abandonam no dia em
+ * ⚠ ELA RESPONDE À PERGUNTA QUE A TELA NUNCA RESPONDEU — _quantos destes me abandonam no dia em
  * que eu parar de pagar?_ A leitura de hoje diz "436 apoiam" sem separar convicção de aluguel.
  *
- * ⚠ E ELA NÃO E `baseSplit`: aquela reparte por HUMOR — quem esta leal, obstruindo ou rompido
- * hoje. Esta reparte por PREÇO, que e outra pergunta e não muda com o mês.
+ * ⚠ E ELA NÃO É `baseSplit`: aquela reparte por HUMOR — quem está leal, obstruindo ou rompido
+ * hoje. Esta reparte por PREÇO, que é outra pergunta e não muda com o mês.
  *
  * @param {object} input
  * @param {ReadonlyArray<Party>} input.parties
  * @param {Record<string, number>} input.loyalty
- * @returns {{ bought: number, convinced: number }} cadeiras efetivas, e a soma e a base
+ * @returns {{ bought: number, convinced: number }} cadeiras efetivas, e a soma é a base
  */
 export function baseVenality({ parties, loyalty }) {
   const split = { bought: 0, convinced: 0 };
@@ -301,8 +301,8 @@ export function baseVenality({ parties, loyalty }) {
 }
 
 /**
- * A soma de `delivered` aqui e exatamente o `loyal + obstructing + ruptured` de la — e há uma
- * prova cobrando isso, porque a hora em que as duas divergirem e a hora em que o desenho
+ * A soma de `delivered` aqui é exatamente o `loyal + obstructing + ruptured` de lá — e há uma
+ * prova cobrando isso, porque a hora em que as duas divergirem é a hora em que o desenho
  * passa a mentir sobre o tamanho da base.
  *
  * @param {object} input
@@ -331,15 +331,15 @@ export function seating({ parties, loyalty }) {
  * @param {ReadonlyArray<Party>} input.parties
  * @param {Record<string, number>} input.funding - verba por bancada, de 0 a 1
  * @param {Record<string, number>} input.loyalty - lealdade por bancada, de 0 a 100
- * @param {number} [input.standing] - a aprovacao do governo, em "otimo/bom"
- * @param {ReadonlySet<string> | null} [input.ruling] - as bancadas do presidente. E um
- * CONJUNTO, e não um id: o bloco dele chega ao plenario repartido entre a bancada restante e
+ * @param {number} [input.standing] - a aprovação do governo, em "ótimo/bom"
+ * @param {ReadonlySet<string> | null} [input.ruling] - as bancadas do presidente. É um
+ * CONJUNTO, e não um id: o bloco dele chega ao plenário repartido entre a bancada restante e
  * as pessoas que arrastam pedaços dela, e todas são a mesma casa
  * @returns {Forecast}
  */
 export function whipCount({ bill, parties, funding, loyalty, standing, ruling = null }) {
-  /* A RUA ENTRA COMO DESLOCAMENTO DA RESISTÊNCIA, e não como multiplicador da adesao:
-     multiplicar mexeria no comparecimento, que e o que a lealdade já faz. */
+  /* A RUA ENTRA COMO DESLOCAMENTO DA RESISTÊNCIA, e não como multiplicador da adesão:
+     multiplicar mexeria no comparecimento, que é o que a lealdade já faz. */
   const street = ((standing ?? STANDING_NEUTRAL) - STANDING_NEUTRAL) / 100;
   const forecasts = parties.map(party => {
     const dx = party.economic - bill.economic;
@@ -351,7 +351,7 @@ export function whipCount({ bill, parties, funding, loyalty, standing, ruling = 
     const venality = venalityFor(party, dx, dy);
 
     /* ── O SEU PARTIDO NÃO SE COMPRA ─────────────────────────────────────────── Ele quer
-       participacao, e não emenda. O que ele da em troca já veio na lealdade de abertura, que
+       participação, e não emenda. O que ele dá em troca já veio na lealdade de abertura, que
        nasce 20 pontos acima da dos outros — e comparecimento vale mais que desconto. */
     const own = ruling !== null && ruling.has(party.id);
     const paid = own ? 0 : clamp01(funding[party.id] ?? 0);
@@ -382,7 +382,7 @@ export function whipCount({ bill, parties, funding, loyalty, standing, ruling = 
 }
 
 /**
- * Um saque único para todas faria as quatro traírem juntas, o que parece evento e e defeito
+ * Um saque único para todas faria as quatro traírem juntas, o que parece evento e é defeito
  * de modelagem.
  *
  * @param {object} input
@@ -391,8 +391,8 @@ export function whipCount({ bill, parties, funding, loyalty, standing, ruling = 
  * @param {Record<string, number>} input.funding
  * @param {Record<string, number>} input.loyalty
  * @param {Stream} input.stream
- * @param {number} input.majority - votos necessarios
- * @param {number} [input.standing] - a aprovacao do governo, em "otimo/bom"
+ * @param {number} input.majority - votos necessários
+ * @param {number} [input.standing] - a aprovação do governo, em "ótimo/bom"
  * @param {ReadonlySet<string> | null} [input.ruling] - as bancadas do presidente
  * @returns {Tally}
  */
@@ -458,7 +458,7 @@ export function dispersion({ parties, loyalty }) {
  * @param {Record<string, number>} input.promised - verba prometida, de 0 a 1
  * @param {Record<string, number>} input.paid - verba que o caixa realmente honrou
  * @param {Record<string, number>} input.targets - a chance estrutural, em pontos
- * @returns {Record<string, number>} a chance de saida
+ * @returns {Record<string, number>} a chance de saída
  */
 export function settle({ parties, loyalty, promised, paid, targets }) {
   /** @type {Record<string, number>} */
@@ -467,8 +467,8 @@ export function settle({ parties, loyalty, promised, paid, targets }) {
   for (const party of parties) {
     const before = loyalty[party.id] ?? 0;
     const honoured = clamp01(paid[party.id] ?? 0);
-    /* O buraco nunca e negativo: pagar MAIS do que se prometeu e generosidade, e generosidade
-       já esta paga pelo afago. */
+    /* O buraco nunca é negativo: pagar MAIS do que se prometeu é generosidade, e generosidade
+       já está paga pelo afago. */
     const broken = Math.max(0, clamp01(promised[party.id] ?? 0) - honoured);
     const target = targets[party.id] ?? before;
     next[party.id] = clamp(

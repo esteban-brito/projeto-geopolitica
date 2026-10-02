@@ -1,4 +1,4 @@
-/* O TURNO — onde o orcamento e o Congresso se encontram. */
+/* O TURNO — onde o orçamento e o Congresso se encontram. */
 
 import { coalitionOf } from "./cabinet.mjs";
 import { rosterOf, worldOf } from "./world.mjs";
@@ -60,39 +60,39 @@ import { OPENING_MONTH, reduce } from "../state/state.mjs";
  */
 
 /**
- * @typedef {object} Orders as ordens do mes
+ * @typedef {object} Orders as ordens do mês
  * @property {Record<string, number>} [funding] verba PROMETIDA por bancada, de 0 a 1
  * @property {Record<string, number>} [levels] a intensidade PEDIDA de cada programa
  * @property {Record<string, import("../state/state.mjs").Band>} [bands] as leis PEDIDAS
  * @property {Record<string, string>} [mail] o que o jogador respondeu a cada carta
- * @property {ReadonlyArray<string>} [protect] as areas poupadas pelo contingenciamento
- * @property {Partial<Record<string, string | null>>} [platform] os tres compromissos da posse
+ * @property {ReadonlyArray<string>} [protect] as áreas poupadas pelo contingenciamento
+ * @property {Partial<Record<string, string | null>>} [platform] os três compromissos da posse
  * @typedef {object} Options
  * @property {typeof CATALOG} [catalog]
- * @property {number} [shock] choque de oferta do mes, em pontos de inflacao anual
- * @typedef {object} Report o que o mes deixou, para a tela ou para o terminal
- * @property {number} month o mes que acabou de ser resolvido
- * @property {import("./agenda.mjs").Agenda} agenda a pauta composta do orcamento
- * @property {Record<string, number>} levels os niveis com que o mes fechou
- * @property {Record<string, import("../state/state.mjs").Band>} bands as leis com que o mes fechou
+ * @property {number} [shock] choque de oferta do mês, em pontos de inflação anual
+ * @typedef {object} Report o que o mês deixou, para a tela ou para o terminal
+ * @property {number} month o mês que acabou de ser resolvido
+ * @property {import("./agenda.mjs").Agenda} agenda a pauta composta do orçamento
+ * @property {Record<string, number>} levels os níveis com que o mês fechou
+ * @property {Record<string, import("../state/state.mjs").Band>} bands as leis com que o mês fechou
  * @property {boolean} enacted se a pauta virou realidade
  * @property {BudgetOutput} budget
  * @property {import("../domain/capacity/index.mjs").Outcome} capacity
- * @property {import("../domain/economy/index.mjs").EconomyOutput} economy o mes macro
+ * @property {import("../domain/economy/index.mjs").EconomyOutput} economy o mês macro
  * @property {import("../domain/opinion/index.mjs").OpinionOutput} opinion a rua
- * @property {number} interest o custo de carregar a divida no mes
- * @property {number} room o discricionario que cabia NO MES, em bilhoes
+ * @property {number} interest o custo de carregar a dívida no mês
+ * @property {number} room o discricionário que cabia NO MÊS, em bilhões
  * @property {number} promisedCost quanto a promessa de emenda custaria
  * @property {number} paidCost quanto o caixa honrou de emenda
- * @property {number} allocatedTotal quanto o caixa honrou de alocacao
- * @property {number} ratio a fracao do pedido que o caixa honrou; 1 e mes sem corte
+ * @property {number} allocatedTotal quanto o caixa honrou de alocação
+ * @property {number} ratio a fração do pedido que o caixa honrou; 1 é mês sem corte
  * @property {Record<string, number>} promised
  * @property {Record<string, number>} paid
- * @property {Record<string, number>} asked bilhoes pedidos por area
- * @property {Record<string, number>} allocated bilhoes que chegaram, por area
- * @property {Tally | null} tally nulo quando nao houve votacao — decreto ou mes parado
- * @property {Record<string, number>} loyalty o humor depois do mes
- * @property {Balance} balance as tres leituras do mes, com o antes e o depois de cada uma
+ * @property {Record<string, number>} asked bilhões pedidos por área
+ * @property {Record<string, number>} allocated bilhões que chegaram, por área
+ * @property {Tally | null} tally nulo quando não houve votação — decreto ou mês parado
+ * @property {Record<string, number>} loyalty o humor depois do mês
+ * @property {Balance} balance as três leituras do mês, com o antes e o depois de cada uma
  * @property {ReadonlyArray<import("../domain/cast/index.mjs").Person>} people o elenco do mandato
  * @property {Record<string, number>} memory o que cada pessoa passou a lembrar
  * @property {ReadonlyArray<{ kind: string, label: string, detail: string | null }>} events
@@ -114,7 +114,7 @@ function clamp(value, min, max) {
  */
 function leversOf(catalog) {
   return [
-    /* Custo e o divisor que converte percentual de receita em pontos de alavanca. */
+    /* Custo é o divisor que converte percentual de receita em pontos de alavanca. */
     ...catalog.programs.map(program => ({
       id: program.id,
       group: program.area,
@@ -184,9 +184,9 @@ export function bandsOf(state, catalog = CATALOG) {
 /**
  * @param {object} input
  * @param {number} input.debtRatio
- * @param {number} input.delivered - a verba que de fato CHEGOU as bancadas, 0 a 1
- * @param {Record<string, number>} input.index - o indice de cada area
- * @param {ReadonlyArray<string>} [input.spurned] - os lobbies cuja exigencia foi
+ * @param {number} input.delivered - a verba que de fato CHEGOU às bancadas, 0 a 1
+ * @param {Record<string, number>} input.index - o índice de cada área
+ * @param {ReadonlyArray<string>} [input.spurned] - os lobbies cuja exigência foi
  * recusada ou deixada vencer NESTE mês
  * @param {typeof CATALOG} input.catalog
  * @returns {Record<string, number>} de 0 (satisfeito) a 1 (fervendo)
@@ -234,7 +234,7 @@ function grievanceOf({ debtRatio, delivered, index, spurned = [], catalog }) {
 function premiumNow(state, catalog) {
   return premiumOf({
     debtRatio: state.macro.gdp > 0 ? state.fiscal.debt / state.macro.gdp : 0,
-    /* Tolerância e a dívida herdada inicial. */
+    /* Tolerância é a dívida herdada inicial. */
     tolerance: catalog.fiscal.initialDebtRatio,
     slope: catalog.macro.riskPremium,
   });
@@ -273,7 +273,7 @@ export function lockedBy(state, catalog = CATALOG, top = 3) {
         id: program.id,
         label: program.label,
         area: program.area,
-        /* Em bilhoes por mês. */
+        /* Em bilhões por mês. */
         spend: (Math.max(0, floor) / 100) * program.cost * (1 / MONTHS_PER_YEAR),
         guard: program.guard,
         norm: governs[program.id] ?? "",
@@ -332,7 +332,7 @@ function positionOf(state, catalog) {
  * @param {ReadonlyArray<import("../data/rules.mjs").Rule>} rules
  * @param {Record<string, number>} before
  * @param {Record<string, number>} after
- * @returns {number} bilhoes, no mes
+ * @returns {number} bilhões, no mês
  */
 function saleOf(rules, before, after) {
   let total = 0;
@@ -378,7 +378,7 @@ export function situationOf(state, catalog = CATALOG) {
   const base = baseCount({ parties, loyalty: state.loyalty });
 
   const mood = (/** @type {Party} */ party) => state.loyalty[party.id] ?? 0;
-  /* Ruptura e obstrução contam a coalizao: o PML em 12% não e crise do governo. */
+  /* Ruptura e obstrução contam a coalizão: o PML em 12% não é crise do governo. */
   const coalition = new Set([
     state.party,
     ...Object.values(state.cabinet ?? {}).map(item => item.party),
@@ -500,7 +500,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   /* Capacidade consome o gasto total da área; ler só discricionário fazia desregulamentar sem custo. */
   const funded = honoured.fullByArea;
 
-  /* Elenco determinístico gerado por hash da semente para tela e turno usarem a mesma camara. */
+  /* Elenco determinístico gerado por hash da semente para tela e turno usarem a mesma câmara. */
   const people = cast({
     seed: state.seed,
     parties,
@@ -593,7 +593,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
 
 /**
  * @param {GameState} state
- * @param {Record<string, number>} pressure - a pressao DEPOIS do mes
+ * @param {Record<string, number>} pressure - a pressão DEPOIS do mês
  * @param {typeof CATALOG} catalog
  * @returns {import("../state/state.mjs").Letter[]}
  */
@@ -626,7 +626,7 @@ function demandsOf(state, pressure, catalog) {
  * @returns {import("../data/programs.mjs").Program | null}
  */
 function leverOf(state, lobby, catalog) {
-  /* Mercado olha o orcamento inteiro em vez de área isolada. */
+  /* Mercado olha o orçamento inteiro em vez de área isolada. */
   const areas = new Set((lobby.areas ?? "").split(" ").filter(Boolean));
   const wantsCut = lobby.reads === "debt";
 
@@ -677,7 +677,7 @@ export function outlook(state, orders = {}, catalog = CATALOG) {
 export const HORIZON = 24;
 
 /**
- * Projeção mantendo a alocação atual com plenario congelado (evita votos estocasticos).
+ * Projeção mantendo a alocação atual com plenário congelado (evita votos estocásticos).
  * @param {GameState} state
  * @param {Orders} [orders]
  * @param {typeof CATALOG} [catalog]
@@ -769,7 +769,7 @@ export function governmentOf(state, catalog = CATALOG) {
 
   return {
     people,
-    /* Nome digitado sobrepoe o sorteado; null usa o sorteado. */
+    /* Nome digitado sobrepõe o sorteado; null usa o sorteado. */
     president: state.president
       ? {
           ...president({
@@ -810,7 +810,7 @@ function stanceOf(state, catalog = CATALOG) {
     levels: inherited,
     requested: state.levels,
     power: state.levels["poder-do-executivo"] ?? 0,
-    /* A FAIXA NÃO IMPORTA AQUI, e passar a vigente seria pior que não passar: o que se mede e
+    /* A FAIXA NÃO IMPORTA AQUI, e passar a vigente seria pior que não passar: o que se mede é
        para onde o gasto andou, e não que rito isso exigiria. */
     bands: {},
     requestedBands: {},
@@ -818,7 +818,7 @@ function stanceOf(state, catalog = CATALOG) {
 
   if (!walked.proposal) return null;
 
-  /* Menor distancia euclidiana no plano econômico e de costumes. */
+  /* Menor distância euclidiana no plano econômico e de costumes. */
   let near = "";
   let article = "";
   let best = Infinity;
@@ -843,7 +843,7 @@ function stanceOf(state, catalog = CATALOG) {
 }
 
 /**
- * Previsão de votação usando a mesma camara, empenho e rua do turno.
+ * Previsão de votação usando a mesma câmara, empenho e rua do turno.
  * @param {GameState} state
  * @param {Orders} [orders]
  * @param {typeof CATALOG} [catalog]
@@ -924,7 +924,7 @@ function blocsOf(state, share, whip, byBloc, catalog) {
 
         portfolio: person.ambition === "cabinet" ? (areaLabel.get(person.portfolio) ?? "") : "",
         seats: seatsOf.get(person.id) ?? 0,
-        /* Alcances normalizados para não estourar a Camara (evita defeito de 730 cadeiras). */
+        /* Alcances normalizados para não estourar a Câmara (evita defeito de 730 cadeiras). */
         reach: party.seats > 0 ? (seatsOf.get(person.id) ?? 0) / party.seats : 0,
         votes: votesOf.get(person.id) ?? 0,
 
@@ -973,7 +973,7 @@ export function ledger(state, orders = {}, catalog = CATALOG) {
  * @param {number} month
  * @param {Record<string, import("../state/state.mjs").Band>} bands as leis vigentes
  * @param {Record<string, import("../state/state.mjs").Band>} asked as pedidas
- * @param {Record<string, number>} requested os niveis pedidos
+ * @param {Record<string, number>} requested os níveis pedidos
  * @returns {import("./passage.mjs").Bill | null}
  */
 function draft(agenda, month, bands, asked, requested) {
@@ -1010,16 +1010,16 @@ function draft(agenda, month, bands, asked, requested) {
 const NOTICED = new Set(["tabled", "forgotten", "passed", "rejected"]);
 
 /**
- * @param {GameState} state o mes ANTES do passo
+ * @param {GameState} state o mês ANTES do passo
  * @param {ReturnType<typeof rupture>} now as rupturas depois dele
- * @param {number | null} impeachment o mes em que o processo abriu, ja decidido
+ * @param {number | null} impeachment o mês em que o processo abriu, já decidido
  * @param {typeof CATALOG} catalog
- * @param {object} after o que o mes acabou de produzir
+ * @param {object} after o que o mês acabou de produzir
  * @param {Record<string, number>} after.pressure
  * @param {Record<string, number>} after.loyalty
- * @param {boolean} after.blocked se o teto do arcabouco esta fechado NESTE mes
- * @param {boolean} after.blockedNext se ele estara fechado no mes que vem
- * @param {number} after.ratio a fracao do pedido que o rateio honrou, de 0 a 1
+ * @param {boolean} after.blocked se o teto do arcabouço está fechado NESTE mês
+ * @param {boolean} after.blockedNext se ele estará fechado no mês que vem
+ * @param {number} after.ratio a fração do pedido que o rateio honrou, de 0 a 1
  * @returns {import("../state/state.mjs").Letter[]}
  */
 function alarmsOf(state, now, impeachment, catalog, after) {
@@ -1039,12 +1039,12 @@ function alarmsOf(state, now, impeachment, catalog, after) {
     written.push(alarm({ kind: "rupture", id, subject: id, month: state.month }));
   }
 
-  /* Cerco lê impeachment aberto e só termina no plenario. */
+  /* Cerco lê impeachment aberto e só termina no plenário. */
   if (state.impeachment === null && impeachment !== null) {
     written.push(alarm({ kind: "siege", id: "siege", subject: "siege", month: state.month }));
   }
 
-  /* Aviso antecipado de teto fechado no próximo mês (fechava em 12 dos 48 meses da politica piso). */
+  /* Aviso antecipado de teto fechado no próximo mês (fechava em 12 dos 48 meses da política piso). */
   if (!after.blocked && after.blockedNext) {
     written.push(alarm({ kind: "ceiling", id: "ceiling", subject: "ceiling", month: state.month }));
   }
@@ -1063,7 +1063,7 @@ function alarmsOf(state, now, impeachment, catalog, after) {
     );
   }
 
-  /* Alarme dispara apenas na transicao da base para minoria. */
+  /* Alarme dispara apenas na transição da base para minoria. */
   const seatsBefore = baseCount({ parties: catalog.parties, loyalty: state.loyalty });
   const seatsNow = baseCount({ parties: catalog.parties, loyalty: after.loyalty });
   if (seatsBefore >= SIMPLE_MAJORITY && seatsNow < SIMPLE_MAJORITY) {
@@ -1105,7 +1105,7 @@ function alarmsOf(state, now, impeachment, catalog, after) {
 const MOVED = { street: 3, seats: 8, vault: 2 };
 
 /**
- * @typedef {object} Balance as tres leituras do mes, com o valor de ANTES e o de DEPOIS
+ * @typedef {object} Balance as três leituras do mês, com o valor de ANTES e o de DEPOIS
  * @property {number} streetWas
  * @property {number} streetNow
  * @property {number} seatsWas
@@ -1115,7 +1115,7 @@ const MOVED = { street: 3, seats: 8, vault: 2 };
  */
 
 /**
- * @param {GameState} state o mes ANTES do passo
+ * @param {GameState} state o mês ANTES do passo
  * @param {{ approval: number, seats: number, room: number }} after
  * @param {typeof CATALOG} catalog
  * @returns {Balance}
@@ -1132,14 +1132,14 @@ function balanceOf(state, after, catalog) {
 }
 
 /**
- * @param {GameState} state o mes ANTES do passo
- * @param {object} after o que o mes acabou de produzir
+ * @param {GameState} state o mês ANTES do passo
+ * @param {object} after o que o mês acabou de produzir
  * @param {number} after.approval
  * @param {number} after.seats
  * @param {number} after.room
  * @param {Record<string, Record<string, number>>} [after.attach] os ANEXOS, um por
- * dominio e com a chave sendo a própria espécie da carta.
- * @param {Balance} balance o antes e o depois das tres leituras, ja medido uma vez.
+ * domínio e com a chave sendo a própria espécie da carta.
+ * @param {Balance} balance o antes e o depois das três leituras, já medido uma vez.
  * @returns {import("../state/state.mjs").Letter[]}
  */
 function reportsOf(state, after, balance) {
@@ -1201,7 +1201,7 @@ function notices(events, month) {
  * @param {typeof CATALOG} world.catalog
  * @param {ReadonlyArray<import("../state/state.mjs").Letter>} world.resolved as
  * perguntas que FECHARAM neste mês, respondidas ou vencidas
- * @param {ReadonlyArray<import("../state/state.mjs").Letter>} world.mail a caixa JA
+ * @param {ReadonlyArray<import("../state/state.mjs").Letter>} world.mail a caixa JÁ
  * fechada — ver a nota sobre `pending`, abaixo
  */
 function advanceBills(state, { share, standing, catalog, resolved, mail }) {
@@ -1384,13 +1384,13 @@ export function playMonth(state, orders = {}, options = {}) {
     requestedBands,
   } = settlement(state, orders, catalog);
 
-  /* Rua da votação e a apurada no mês anterior. */
+  /* Rua da votação é a apurada no mês anterior. */
   const standing = pollFrom(state.mood, catalog.segments, catalog.opinion).good;
 
-  /* Textos antigos avancam antes do protocolo do mês; cartas fecham antes dos textos. */
+  /* Textos antigos avançam antes do protocolo do mês; cartas fecham antes dos textos. */
   const post = settleMail({ mail: state.mail, orders: orders.mail ?? {}, month: state.month });
 
-  /* Concedido move a alavanca no orcamento; recusado sobe a queixa do lobby. */
+  /* Concedido move a alavanca no orçamento; recusado sobe a queixa do lobby. */
   /** @type {Record<string, number>} */
   const conceded = {};
   /** @type {string[]} */
@@ -1496,7 +1496,7 @@ export function playMonth(state, orders = {}, options = {}) {
   /* Concedido entra por cima do texto aprovado se tocarem a mesma alavanca. */
   const intended = { ...(approved ? { ...held, ...approved.levels } : held), ...conceded };
 
-  /* Estado guarda o pedido: gravar rateio travava 92 em 89,70 apos 6 meses; merge evita 44 chaves virarem 38 (poder-executivo 30->0). */
+  /* Estado guarda o pedido: gravar rateio travava 92 em 89,70 após 6 meses; merge evita 44 chaves virarem 38 (poder-executivo 30->0). */
   const settled = { ...state.levels, ...intended };
 
   const written = approved
@@ -1544,7 +1544,7 @@ export function playMonth(state, orders = {}, options = {}) {
     shock: options.shock ?? 0,
   });
 
-  /* Juros sobre o estoque da dívida ao preço do dia anterior a decisão da Selic. */
+  /* Juros sobre o estoque da dívida ao preço do dia anterior à decisão da Selic. */
   const interest = carry({
     debt: state.fiscal.debt,
     rate: state.macro.rate,
@@ -1569,7 +1569,7 @@ export function playMonth(state, orders = {}, options = {}) {
     released,
     services: mean([capacity.index["health"], capacity.index["education"]]),
     safety: capacity.index["security"] ?? 50,
-    /* Traição e o maior entre emenda não paga e quebra da posse (evita dupla punição na rua). */
+    /* Traição é o maior entre emenda não paga e quebra da posse (evita dupla punição na rua). */
     betrayal: Math.max(
       promisedCost > 0 ? 1 - paidCost / promisedCost : 0,
       breachOf(state, catalog),
@@ -1607,7 +1607,7 @@ export function playMonth(state, orders = {}, options = {}) {
 
   const seat = stanceOf(state, catalog);
   const survivors =
-    /* Plenario de afastamento vota no mês seguinte a abertura do processo. */
+    /* Plenário de afastamento vota no mês seguinte à abertura do processo. */
     impeachment !== null && impeachment < state.month && state.fallen === null
       ? vote({
           bill: { economic: seat?.economic ?? 50, liberty: seat?.liberty ?? 50, threat: 0 },
@@ -1617,13 +1617,13 @@ export function playMonth(state, orders = {}, options = {}) {
           stream: passage.stream,
           majority: SEATS - REMOVAL_MAJORITY + 1,
           standing,
-          /* No afastamento não há emenda; lealdade partidaria nasce 20 pontos acima. */
+          /* No afastamento não há emenda; lealdade partidária nasce 20 pontos acima. */
           ruling,
         })
       : null;
 
   const fallen = state.fallen ?? (survivors && !survivors.passed ? state.month : null);
-  /* SOBREVIVEU: o processo se arquiva, e a cadeira volta ao preço. Sem isto o plenario votava
+  /* SOBREVIVEU: o processo se arquiva, e a cadeira volta ao preço. Sem isto o plenário votava
      todo mês até o fim do mandato. Se as três rupturas coincidirem de novo, outro abre. */
   const siege = survivors?.passed ? null : impeachment;
 
@@ -1675,10 +1675,10 @@ export function playMonth(state, orders = {}, options = {}) {
       ),
       capacity: { index: capacity.index, history: capacity.history },
       levels: settled,
-      /* Plataforma imutável apos a posse. */
+      /* Plataforma imutável após a posse. */
       platform: spoken(state.platform) ? state.platform : chosenOf(orders.platform, catalog),
       norms: appliedNorms,
-      /* Texto entra apos avanço: protocolo antes reduziria tramitação de 3 meses para 2. */
+      /* Texto entra após avanço: protocolo antes reduziria tramitação de 3 meses para 2. */
       bills: protocolled ? [...passage.bills, protocolled] : passage.bills,
 
       mail: [
@@ -1694,7 +1694,7 @@ export function playMonth(state, orders = {}, options = {}) {
         ...passage.asked,
         ...demandsOf(state, pressure, catalog),
         ...notices(passage.events, state.month),
-        /* ⚠ O RELATÓRIO VEM POR ÚLTIMO NA ORDEM, e a razão e a mesma da bandeja inteira: o
+        /* ⚠ O RELATÓRIO VEM POR ÚLTIMO NA ORDEM, e a razão é a mesma da bandeja inteira: o
            que exige leitura antes da próxima decisão fica no alto. */
         ...reportsOf(
           state,
@@ -1737,7 +1737,7 @@ export function playMonth(state, orders = {}, options = {}) {
       fallen,
       memory,
 
-      /* O plenario do afastamento também saca do fluxo: gravar só `passage.stream` fazia a
+      /* O plenário do afastamento também saca do fluxo: gravar só `passage.stream` fazia a
          votação de projeto do mês seguinte sacar os mesmos números que ele. */
       stream: survivors?.stream ?? passage.stream,
       /* Mês fechado guarda os 7 valores da carta (evita 24 campos x 24 meses no save). */
@@ -1810,7 +1810,7 @@ const SIEGE_PRICE = 3;
 /**
  * @param {import("../state/state.mjs").Series} series
  * @param {Record<string, number>} point
- * @param {Record<string, number>} areas o indice de cada area no fim deste mes
+ * @param {Record<string, number>} areas o índice de cada área no fim deste mês
  * @returns {import("../state/state.mjs").Series}
  */
 function extend(series, point, areas) {
@@ -1834,15 +1834,15 @@ function extend(series, point, areas) {
 /**
  * @param {GameState} state
  * @param {BudgetOutput} budget
- * @param {Record<string, number>} applied os niveis com que o mes fechou
+ * @param {Record<string, number>} applied os níveis com que o mês fechou
  * @param {typeof CATALOG} catalog
- * @param {number} interest o custo de carregar a divida NESTE mes
- * @param {Record<string, import("../state/state.mjs").Band>} bands as leis com que o mes ABRIU
+ * @param {number} interest o custo de carregar a dívida NESTE mês
+ * @param {Record<string, import("../state/state.mjs").Band>} bands as leis com que o mês ABRIU
  * @param {Record<string, import("../state/state.mjs").Band>} appliedBands as leis com que ele fechou
  * @returns {import("../state/state.mjs").Fiscal}
  */
 function nextPosition(state, budget, applied, catalog, interest, bands, appliedBands) {
-  /* Efeito fiscal de normas e permanente nos 48 meses. */
+  /* Efeito fiscal de normas é permanente nos 48 meses. */
   const floorOf = (
     /** @type {Record<string, number>} */ levels,
     /** @type {Record<string, import("../state/state.mjs").Band>} */ bands,
@@ -1927,11 +1927,11 @@ export function boilerOf(state, catalog = CATALOG) {
 
       boiling: (state.pressure[lobby.id] ?? 0) >= catalog.pressure.boil,
       boil: catalog.pressure.boil,
-      /* Fiador: boil abandona o governo e brokerBoil abre ruptura politica. */
+      /* Fiador: boil abandona o governo e brokerBoil abre ruptura política. */
       fall: lobby.id === BROKER ? catalog.pressure.brokerBoil : null,
     })),
     rupture: broke,
-    /* Rupturas: social lê rua, econômica lê ponderada dos lobbies e politica lê fiador. */
+    /* Rupturas: social lê rua, econômica lê ponderada dos lobbies e política lê fiador. */
     ruptures: [
       {
         id: "social",
@@ -1985,28 +1985,28 @@ function weightedAbandon(state, catalog) {
 /* Fecho unificado do mandato: queda antecipada (ex: mês 47) ou 48 meses completos. */
 
 /**
- * @typedef {object} TermArea uma area, do dia da posse ao ultimo mes
+ * @typedef {object} TermArea uma área, do dia da posse ao último mês
  * @property {string} id
  * @property {string} label
  * @property {string} index - o nome do que ela mede
- * @property {number} from - o indice herdado, do catalogo
- * @property {number} to - o indice do ultimo mes
+ * @property {number} from - o índice herdado, do catálogo
+ * @property {number} to - o índice do último mês
  * @typedef {object} TermLaw uma lei que o jogador escreveu
  * @property {string} id
  * @property {string} label - a alavanca que ela move
  * @property {string} guard - a natureza dela: `none`, `law` ou `constitution`
- * @property {number} month - o mes em que ela passou
+ * @property {number} month - o mês em que ela passou
  * @typedef {object} Term o mandato visto de fora, no dia em que ele acaba
  * @property {boolean} over - se acabou
  * @property {"removed" | "served" | null} ending - como acabou; nulo enquanto corre
  * @property {number} months - meses decorridos de mandato quando ele acabou
  * @property {number} of - quantos ele tinha
- * @property {{ from: number, to: number }} approval - "otimo/bom", da posse ao fim
- * @property {{ from: number, to: number }} debt - a divida sobre o PIB
+ * @property {{ from: number, to: number }} approval - "ótimo/bom", da posse ao fim
+ * @property {{ from: number, to: number }} debt - a dívida sobre o PIB
  * @property {TermArea[]} areas - as oito, da posse ao fim
  * @property {TermLaw[]} laws - o que ficou escrito
  * @property {Array<import("./platform.mjs").Verdict>} pledges - a plataforma da posse, julgada
- * @property {string[]} abandoned - os grupos que fervearam e nao voltaram
+ * @property {string[]} abandoned - os grupos que fervearam e não voltaram
  */
 
 /**

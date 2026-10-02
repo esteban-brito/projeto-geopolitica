@@ -1,15 +1,15 @@
-/* O FLUXO DE ALEATORIEDADE — semeado, contado e serializavel.
+/* O FLUXO DE ALEATORIEDADE — semeado, contado e serializável.
    Cada motor que sorteia saca de um fluxo próprio, derivado do nome. Com um
    fluxo único compartilhado, um evento a mais num turno deslocaria o índice e mudaria o
    resultado de uma votação que não tem relação nenhuma com ele. */
 
-/* A CONSTANTE DE WEYL, a parte fracionaria da razão aurea em 32 bits. */
+/* A CONSTANTE DE WEYL, a parte fracionária da razão áurea em 32 bits. */
 const GOLDEN = 0x9e3779b9;
 
 /**
  * @typedef {object} Stream
  * @property {number} seed - inteiro sem sinal de 32 bits
- * @property {number} draws - quantos saques ja sairam deste fluxo
+ * @property {number} draws - quantos saques já saíram deste fluxo
  */
 
 /**
@@ -62,7 +62,7 @@ export function unit(stream) {
   return {
     /* 2^32 e não 2^32 - 1: dividir pelo máximo INCLUIRIA o 1,0, e um sorteio que pode
        devolver exatamente 1 estoura toda faixa escrita como `[min, max)` — o defeito aparece
-       uma vez em quatro bilhoes e nunca se reproduz. */
+       uma vez em quatro bilhões e nunca se reproduz. */
     value: raw / 4294967296,
     stream: { seed: stream.seed, draws: stream.draws + 1 },
   };
@@ -84,8 +84,8 @@ export function integer(stream, min, max) {
 }
 
 /**
- * Saca `count` números de uma vez. Existe porque o caso comum de ECLUSA e um
- * saque POR BANCADA, e encadear a mão o fluxo devolvido a cada passo e onde se
+ * Saca `count` números de uma vez. Existe porque o caso comum de ECLUSA é um
+ * saque POR BANCADA, e encadear à mão o fluxo devolvido a cada passo é onde se
  * esquece de usar o fluxo novo — defeito que não quebra nada e simplesmente faz
  * todas as bancadas sortearem o mesmo número.
  * @param {Stream} stream

@@ -1,13 +1,13 @@
 /* A TRAMITAÇÃO — o texto deixa de ser instantâneo.
-   recebe  os textos protocolados, a camara, o mês e o catálogo devolve os textos um estágio
-   adiante, e o que deles chegou ao plenario Este arquivo não e um motor e não tem codinome —
+   recebe  os textos protocolados, a câmara, o mês e o catálogo devolve os textos um estágio
+   adiante, e o que deles chegou ao plenário Este arquivo não é um motor e não tem codinome —
    ele COMPÕE, como `agenda.mjs` e `turn.mjs`. */
 
 import { whipCount } from "../domain/congress/index.mjs";
 import { compose } from "./agenda.mjs";
 
-/* ⚠ O CAMINHO E UMA LISTA ORDENADA, e não três literais soltos: a tela precisa saber QUANTOS
-   passos existem e em que ordem para desenhar onde o texto esta. Escrever a ordem la seria um
+/* ⚠ O CAMINHO É UMA LISTA ORDENADA, e não três literais soltos: a tela precisa saber QUANTOS
+   passos existem e em que ordem para desenhar onde o texto está. Escrever a ordem lá seria um
    segundo lugar para ela — e o dia em que um quarto estágio entrasse, a tela não saberia. */
 export const STAGES = /** @type {const} */ (["drawer", "rapporteur", "floor"]);
 
@@ -16,21 +16,21 @@ export const STAGES = /** @type {const} */ (["drawer", "rapporteur", "floor"]);
  * @typedef {import("../data/parties.mjs").Party} Party
  * @typedef {import("../domain/cast/index.mjs").Person} Person
  * @typedef {(typeof STAGES)[number]} Stage
- * @typedef {object} Bill um texto protocolado, e ele e o TEXTO e nao o efeito
+ * @typedef {object} Bill um texto protocolado, e ele é o TEXTO e não o efeito
  * @property {string} id
- * @property {number} writtenAt - o mes em que o presidente assinou
+ * @property {number} writtenAt - o mês em que o presidente assinou
  * @property {Stage} stage
- * @property {number} since - o mes em que entrou neste estagio
+ * @property {number} since - o mês em que entrou neste estágio
  * @property {string} label - o assunto, como a tela o chama
  * @property {Record<string, Band>} bands - as faixas que ele pede
- * @property {Record<string, number>} levels - os niveis que ele pede, e so os que
- * dependem de voto: o que e execução orçamentária nunca entra num texto
- * @property {string[]} except - o que o relator salvou; vazio ate a relatoria
- * @property {string} [saved] - o rotulo do que foi salvo, para a tela dizer
+ * @property {Record<string, number>} levels - os níveis que ele pede, e só os que
+ * dependem de voto: o que é execução orçamentária nunca entra num texto
+ * @property {string[]} except - o que o relator salvou; vazio até a relatoria
+ * @property {string} [saved] - o rótulo do que foi salvo, para a tela dizer
  */
 
-/* ⚠ QUANTO DA BANCADA DO PRESIDENTE DA CAMARA BASTA PARA ELE PAUTAR.
-   e primeiro chute declarado, como o PIVOT de ECLUSA — o que NÃO e chute e a
+/* ⚠ QUANTO DA BANCADA DO PRESIDENTE DA CÂMARA BASTA PARA ELE PAUTAR.
+   é primeiro chute declarado, como o PIVOT de ECLUSA — o que NÃO é chute é a
    desigualdade: este limiar tem de ser menor que o de aprovar, senão a Mesa vira um
    segundo veto pelo mesmo preço. */
 const TABLE = 0.38;
@@ -43,7 +43,7 @@ const DRAWER_LIFE = 6;
  *
  * @param {Bill} bill
  * @param {object} world
- * @param {Record<string, number>} world.levels - os niveis vigentes
+ * @param {Record<string, number>} world.levels - os níveis vigentes
  * @param {Record<string, Band>} world.bands - a lei vigente
  * @param {number} world.power
  * @param {import("../data/catalog.mjs").CATALOG} world.catalog
@@ -92,7 +92,7 @@ export function proposalOf(bill, { levels, bands, power, catalog }) {
 export function tables({ proposal, speaker, benches, funding, loyalty, standing, ruling }) {
   const seat = speaker ? benches.find(bench => bench.id === speaker.id) : undefined;
 
-  /* ⚠ SEM PRESIDENTE DA CAMARA, A GAVETA NÃO EXISTE — e o texto passa direto. */
+  /* ⚠ SEM PRESIDENTE DA CÂMARA, A GAVETA NÃO EXISTE — e o texto passa direto. */
   if (!seat) return { tabled: true, share: 1 };
 
   const forecast = whipCount({
@@ -109,9 +109,9 @@ export function tables({ proposal, speaker, benches, funding, loyalty, standing,
 }
 
 /**
- * O RELATOR ESCREVE O JABUTI — e ele protege quem esta mais perto dele.
+ * O RELATOR ESCREVE O JABUTI — e ele protege quem está mais perto dele.
  *
- * favor do próprio lado. A distancia e a mesma que ECLUSA usa para decidir voto —
+ * favor do próprio lado. A distância é a mesma que ECLUSA usa para decidir voto —
  * nenhuma fórmula nova, outro interesse.
  * @param {object} input
  * @param {Person | null} input.rapporteur
@@ -146,8 +146,8 @@ export function reports({ rapporteur, agenda, catalog }) {
     }
   }
 
-  /* ⚠ O RELATOR NÃO PODE ESVAZIAR O TEXTO, e esta linha e a correção de um defeito medido no
-     dia em que a tramitação nasceu: um texto que movia UMA alavanca só chegava ao plenario
+  /* ⚠ O RELATOR NÃO PODE ESVAZIAR O TEXTO, e esta linha é a correção de um defeito medido no
+     dia em que a tramitação nasceu: um texto que movia UMA alavanca só chegava ao plenário
      vazio, porque o relator tinha salvado exatamente aquela — e um texto vazio não vai a
      voto, ele morre. */
   if (!closest || hurt < 2) return { except: [], saved: undefined };

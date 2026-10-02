@@ -1,6 +1,6 @@
 /* A CORRESPONDÊNCIA — o único lugar do jogo que espera uma resposta.
    recebe  as cartas guardadas, o que o mês produziu, as ordens e o mês devolve as cartas do
-   mês seguinte, e o que venceu no caminho Este arquivo NÃO E UM MOTOR e não tem codinome,
+   mês seguinte, e o que venceu no caminho Este arquivo NÃO É UM MOTOR e não tem codinome,
    pela mesma razão de `passage.mjs`: nada aqui inventa preço. */
 
 /**
@@ -15,7 +15,7 @@ export const ANSWER_TIME = 2;
 export const KEEP = 24;
 
 /* Com um mês de retenção, o freio era o relógio; com vinte e quatro, a bandeja acumula de
-   verdade — e um mandato de 48 meses com três relatorios por mês chegaria a 144 papéis no
+   verdade — e um mandato de 48 meses com três relatórios por mês chegaria a 144 papéis no
    save se ninguém contasse. */
 export const CARRY = 24;
 
@@ -26,7 +26,7 @@ export const CARRY = 24;
  * @param {Bill} input.bill
  * @param {number} input.month
  * @param {string[]} input.except - as alavancas que a emenda retira
- * @param {string} input.saved - o rotulo do que o relator salvou
+ * @param {string} input.saved - o rótulo do que o relator salvou
  * @returns {Letter}
  */
 export function amendment({ bill, month, except, saved }) {
@@ -58,7 +58,7 @@ export function amendment({ bill, month, except, saved }) {
  * @param {object} input
  * @param {{ id: string }} input.lobby
  * @param {{ id: string, label: string }} input.program
- * @param {number} input.level - o nivel da posse
+ * @param {number} input.level - o nível da posse
  * @param {number} input.month
  * @returns {Letter}
  */
@@ -117,7 +117,7 @@ export function notice({ kind, id, subject, month }) {
 }
 
 /**
- * ⚠ ELE NASCEU DE UMA MEDICAO, e ela e o achado mais desconfortavel desta sessao: num governo
+ * ⚠ ELE NASCEU DE UMA MEDIÇÃO, e ela é o achado mais desconfortável desta sessão: num governo
  * passivo chegam ZERO cartas em 44 meses.
  *
  * @param {object} input
@@ -125,9 +125,9 @@ export function notice({ kind, id, subject, month }) {
  * @param {string} input.id - qual ruptura, qual grupo, ou o cerco
  * @param {string} input.subject
  * @param {number} input.month
- * @param {string | null} [input.from] o id de quem assina, quando ha alguem
- * @param {number | null} [input.was] o limiar que ele cruzou, quando ha um
- * @param {number | null} [input.now] o numero que o disparou, no mes em que disparou
+ * @param {string | null} [input.from] o id de quem assina, quando há alguém
+ * @param {number | null} [input.was] o limiar que ele cruzou, quando há um
+ * @param {number | null} [input.now] o número que o disparou, no mês em que disparou
  * @returns {Letter}
  */
 export function alarm({ kind, id, subject, month, from = null, was = null, now = null }) {
@@ -145,7 +145,7 @@ export function alarm({ kind, id, subject, month, from = null, was = null, now =
     level: null,
     /* ⚠ O NÚMERO VIAJA COM A CARTA, e antes a tela o lia do estado DE HOJE: medido, um alarme
        de fervura do mês 6 mostrava 70 e no mês 7 mostrava 75, e o de minoria ia de 229 para
-       227. Carta que muda depois de chegar não e carta. */
+       227. Carta que muda depois de chegar não é carta. */
     was,
     now,
     answer: null,
@@ -155,20 +155,20 @@ export function alarm({ kind, id, subject, month, from = null, was = null, now =
 }
 
 /**
- * O RELATÓRIO DE UM DOMINIO — o mundo dizendo, todo mês, o que se mexeu nele.
+ * O RELATÓRIO DE UM DOMÍNIO — o mundo dizendo, todo mês, o que se mexeu nele.
  *
  * @param {object} input
- * @param {"street" | "seats" | "vault"} input.kind qual dominio escreve
+ * @param {"street" | "seats" | "vault"} input.kind qual domínio escreve
  * @param {number} input.month
- * @param {number} input.was o valor com que o mes comecou
+ * @param {number} input.was o valor com que o mês começou
  * @param {number} input.now o valor com que ele fechou
- * @param {Record<string, number>} [input.attach] o anexo — dado ja pesado pelo motor
+ * @param {Record<string, number>} [input.attach] o anexo — dado já pesado pelo motor
  * @returns {Letter}
  */
 export function report({ kind, month, was, now, attach }) {
   return {
-    /* O ID CARREGA O MÊS, ao contrário do alarme: o relatório de marco e o de abril são duas
-       noticias, e não a mesma ferida reaberta. */
+    /* O ID CARREGA O MÊS, ao contrário do alarme: o relatório de março e o de abril são duas
+       notícias, e não a mesma ferida reaberta. */
     id: `${kind}:${month}`,
     kind,
     month,
@@ -202,13 +202,13 @@ export function pending(mail, bill) {
 
 /**
  * O jogador que responde no último mês respondeu — e o contrário faria o relógio ganhar de
- * uma decisão tomada a tempo, que e o defeito que faz um jogador desconfiar da interface para
+ * uma decisão tomada a tempo, que é o defeito que faz um jogador desconfiar da interface para
  * sempre.
  *
  * @param {object} input
- * @param {ReadonlyArray<Letter>} input.mail - a caixa como ela esta
+ * @param {ReadonlyArray<Letter>} input.mail - a caixa como ela está
  * @param {Record<string, string>} input.orders - o que o jogador respondeu
- * @param {number} input.month - o mes que esta fechando
+ * @param {number} input.month - o mês que está fechando
  * @returns {{ mail: Letter[], resolved: Letter[] }}
  */
 export function settle({ mail, orders, month }) {
@@ -219,7 +219,7 @@ export function settle({ mail, orders, month }) {
 
   for (const letter of mail) {
     if (letter.due === null || letter.answer !== null) {
-      /* ⚠ O QUE JÁ ESTA FECHADO ENVELHECE E SAI — ver `KEEP`, e ele envelhece pelo FIM e não
+      /* ⚠ O QUE JÁ ESTÁ FECHADO ENVELHECE E SAI — ver `KEEP`, e ele envelhece pelo FIM e não
          pelo começo (ver `closedAt` em `state.mjs`). */
       if (month - (letter.closedAt ?? letter.month) <= KEEP) next.push(letter);
       continue;
@@ -249,7 +249,7 @@ export function settle({ mail, orders, month }) {
      quebrar. */
   const asking = next.filter(letter => letter.due !== null && letter.answer === null);
   const closed = next.filter(letter => !asking.includes(letter));
-  /* ⚠ CORTA PELO FIM, E NÃO PELO COMEÇO, e a direção e o defeito inteiro: o turno monta a
+  /* ⚠ CORTA PELO FIM, E NÃO PELO COMEÇO, e a direção é o defeito inteiro: o turno monta a
      caixa com as NOVAS na frente, então um `slice` negativo guardava o bloco congelado de
      vinte meses atrás e apagava o que tinha acabado de chegar. Medido em 48 meses: 101 cartas
      destruídas com 1 a 3 meses de idade, e a caixa do mês 30 com um buraco de doze meses.
@@ -265,7 +265,7 @@ export function settle({ mail, orders, month }) {
 }
 
 /**
- * Recalcular isso na view seria a conta do motor refeita por fora, que e o defeito recorrente
+ * Recalcular isso na view seria a conta do motor refeita por fora, que é o defeito recorrente
  * número um deste projeto.
  *
  * @param {Letter} letter
@@ -279,15 +279,15 @@ export function left(letter, month) {
 
 /**
  * ── POR QUE ELA NÃO CONTA NADA POR FORA ───────────────────────────────────── ⚠ A TENTAÇÃO
- * ERA ESCREVER `left(letter) <= 0` NA TELA, e ela e exatamente a família de defeito mais cara
+ * ERA ESCREVER `left(letter) <= 0` NA TELA, e ela é exatamente a família de defeito mais cara
  * deste projeto, com sete ocorrências medidas: a view refaz a conta do motor, as duas
  * concordam hoje e divergem no dia da primeira mudança.
  *
  * @param {object} input
  * @param {ReadonlyArray<Letter>} input.mail
- * @param {Record<string, string>} input.orders o que o jogador marcou neste mes
+ * @param {Record<string, string>} input.orders o que o jogador marcou neste mês
  * @param {number} input.month
- * @returns {Letter[]} as cartas que este mes fecha sem resposta
+ * @returns {Letter[]} as cartas que este mês fecha sem resposta
  */
 export function silences({ mail, orders, month }) {
   return settle({ mail, orders, month }).resolved.filter(letter => letter.answer === "silence");

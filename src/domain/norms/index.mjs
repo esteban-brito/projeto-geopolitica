@@ -3,19 +3,19 @@
 
 /* O que o número solto não conseguia expressar, e que este motor expressa: · uma norma que
    vale ENQUANTO a dívida passar de 80% do PIB, e que liga e desliga sozinha sem ninguém votar
-   de novo; · uma norma que vale POR 24 MESES, e some; · uma norma que alcanca uma ÁREA
-   inteira, SALVO uma alavanca — o jabuti; · uma norma que REVOGA outra, que e o que faz
+   de novo; · uma norma que vale POR 24 MESES, e some; · uma norma que alcança uma ÁREA
+   inteira, SALVO uma alavanca — o jabuti; · uma norma que REVOGA outra, que é o que faz
    reformar significar desmontar; · e a consequência de todas: elas se ACUMULAM. */
 
 /**
- * VINCULACAO, e ela e o que separa um piso de um piso que anda ⚠ `share` E `floor` SAO A
- * MESMA CLAUSULA DITA EM DUAS UNIDADES, e nunca as duas ao mesmo tempo: uma norma que
+ * VINCULAÇÃO, e ela é o que separa um piso de um piso que anda ⚠ `share` E `floor` SÃO A
+ * MESMA CLÁUSULA DITA EM DUAS UNIDADES, e nunca as duas ao mesmo tempo: uma norma que
  * declarasse as duas teria dois pisos disputando entre si dentro de si mesma.
  *
  * @typedef {"lever" | "group" | "all"} Scope o alcance de um alvo
  * @typedef {object} Target
  * @property {Scope} scope
- * @property {string} [id] - a alavanca ou o grupo; ausente quando o alcance e `all`
+ * @property {string} [id] - a alavanca ou o grupo; ausente quando o alcance é `all`
  * @property {ReadonlyArray<string>} [except] - o SALVO: alavancas que escapam
  * @typedef {object} Trigger o `enquanto`
  * @property {string} indicator - o nome do indicador lido
@@ -23,39 +23,39 @@
  * @property {number} value
  * @typedef {object} Norm
  * @property {string} id
- * @property {"band"} kind - o unico tipo de clausula que existe hoje
+ * @property {"band"} kind - o único tipo de cláusula que existe hoje
  * @property {Target} target
- * @property {number} [floor] - o que ela OBRIGA, em pontos; ausente quando nao fala
+ * @property {number} [floor] - o que ela OBRIGA, em pontos; ausente quando não fala
  * de piso
- * @property {number} [share] - o que ela OBRIGA, em FRACAO DA RECEITA CORRENTE. E a
+ * @property {number} [share] - o que ela OBRIGA, em FRAÇÃO DA RECEITA CORRENTE. É a
  * @property {number} [ceiling] - o que ela AUTORIZA
  * @property {string} guard - a natureza dela: `none`, `law` ou `constitution`
- * @property {number} enactedAt - o mes em que passou; 0 e herdada da posse
- * @property {number} [from] - a VACATIO: so vale a partir deste mes
- * @property {number} [months] - a VIGENCIA: por quantos meses, a partir de `from`
+ * @property {number} enactedAt - o mês em que passou; 0 é herdada da posse
+ * @property {number} [from] - a VACATIO: só vale a partir deste mês
+ * @property {number} [months] - a VIGÊNCIA: por quantos meses, a partir de `from`
  * @property {Trigger} [trigger]
  * @property {ReadonlyArray<string>} [repeals] - o que ela derruba
  * @typedef {object} Lever a alavanca vista por este motor, e nada mais que isso
  * @property {string} id
- * @property {string} [group] - a area de um programa, a familia de uma regra
- * @property {number} [cost] - quanto custa ela inteira por ano, e ele so existe para
- * converter VINCULACAO em pontos. Uma alavanca sem custo nao pode ser vinculada:
- * nao ha como dizer que fracao da receita ela consome
+ * @property {string} [group] - a área de um programa, a família de uma regra
+ * @property {number} [cost] - quanto custa ela inteira por ano, e ele só existe para
+ * converter VINCULAÇÃO em pontos. Uma alavanca sem custo não pode ser vinculada:
+ * não há como dizer que fração da receita ela consome
  * @typedef {object} Band
  * @property {number} floor
  * @property {number} ceiling
  * @typedef {"repealed" | "future" | "expired" | "trigger" | "unknown" | "unreachable"} Sleep
- * @typedef {object} Dormant uma norma escrita que nao esta valendo, e por que
+ * @typedef {object} Dormant uma norma escrita que não está valendo, e por quê
  * @property {Norm} norm
  * @property {Sleep} reason
  * @typedef {object} NormsInput
  * @property {ReadonlyArray<Norm>} norms - na ordem em que foram escritas
  * @property {ReadonlyArray<Lever>} levers - todas as que existem
- * @property {number} month - o mes corrente
+ * @property {number} month - o mês corrente
  * @property {Record<string, number>} [indicators] - o que os gatilhos leem
- * @property {number} [revenue] - a receita corrente do ano, sobre a qual a VINCULACAO
+ * @property {number} [revenue] - a receita corrente do ano, sobre a qual a VINCULAÇÃO
  * incide. Ausente, toda norma de `share` fica DORMENTE por `unknown` — porque um
- * piso de "15% da receita" sem receita nao e zero, e indeterminado
+ * piso de "15% da receita" sem receita não é zero, é indeterminado
  * @typedef {object} NormsOutput
  * @property {Record<string, Band>} bands - a faixa vigente de CADA alavanca
  * @property {Record<string, string>} governs - qual norma decidiu o PISO de cada alavanca
@@ -69,8 +69,8 @@ const RANK = { none: 0, law: 1, constitution: 2 };
 /* A ESPECIFICIDADE, em número. */
 const REACH = { lever: 2, group: 1, all: 0 };
 
-/* ⚠ E A CORREÇÃO DE UM DEFEITO QUE O ESTADO ANTERIOR NÃO PODIA TER: enquanto a faixa vinha do
-   catálogo com o piso da posse como padrão, revogar a vinculação da saude devolveria o piso
+/* ⚠ É A CORREÇÃO DE UM DEFEITO QUE O ESTADO ANTERIOR NÃO PODIA TER: enquanto a faixa vinha do
+   catálogo com o piso da posse como padrão, revogar a vinculação da saúde devolveria o piso
    constitucional original no mês seguinte — a lei que o jogador acabou de derrubar voltaria
    sozinha, sem aviso e sem voto. */
 const FREE = { floor: 0, ceiling: 100 };
@@ -81,7 +81,7 @@ function clamp100(value) {
 }
 
 /**
- * POR QUE ELA ESTA DORMINDO — ou `null` quando esta de pé.
+ * POR QUE ELA ESTÁ DORMINDO — ou `null` quando está de pé.
  *
  * @param {Norm} norm
  * @param {number} month
@@ -103,13 +103,13 @@ function sleepOf(norm, month, indicators) {
      nunca sabe. */
   if (typeof reading !== "number" || !Number.isFinite(reading)) return "unknown";
 
-  /* A COMPARAÇÃO E ESTRITA nos dois lados. */
+  /* A COMPARAÇÃO É ESTRITA nos dois lados. */
   const on = trigger.op === "above" ? reading > trigger.value : reading < trigger.value;
   return on ? null : "trigger";
 }
 
 /**
- * AS ALAVANCAS QUE UM ALVO ALCANCA, já com o `salvo` descontado.
+ * AS ALAVANCAS QUE UM ALVO ALCANÇA, já com o `salvo` descontado.
  *
  * @param {Target} target
  * @param {ReadonlyArray<Lever>} levers
@@ -118,7 +118,7 @@ function sleepOf(norm, month, indicators) {
 function reachOf(target, levers) {
   const spared = new Set(target.except ?? []);
 
-  /* E o mesmo defeito que `danglingPrograms` pega no catálogo, do lado do estado. */
+  /* É o mesmo defeito que `danglingPrograms` pega no catálogo, do lado do estado. */
   if (target.scope === "lever") {
     const id = target.id ?? "";
     return levers.some(lever => lever.id === id) && !spared.has(id) ? [id] : [];
@@ -137,7 +137,7 @@ function reachOf(target, levers) {
  * @property {number} rank
  * @property {number} reach
  * @property {number} enactedAt
- * @property {number} written - o indice no array; o desempate que nunca empata
+ * @property {number} written - o índice no array; o desempate que nunca empata
  * @param {Claim} candidate
  * @param {Claim | undefined} holder
  * @returns {boolean}
@@ -187,7 +187,7 @@ export function resolve({ norms, levers, month, indicators = {}, revenue }) {
       continue;
     }
 
-    /* ⚠ QUEM NÃO ALCANCA NINGUÉM NÃO FAZ NADA — INCLUSIVE NÃO REVOGA. */
+    /* ⚠ QUEM NÃO ALCANÇA NINGUÉM NÃO FAZ NADA — INCLUSIVE NÃO REVOGA. */
     const reached = reachOf(norm.target, levers);
     if (reached.length === 0) {
       asleep.set(index, "unreachable");
@@ -213,7 +213,7 @@ export function resolve({ norms, levers, month, indicators = {}, revenue }) {
   }
 
   /* Refeita por fora, ela acertaria hoje e divergiria no primeiro mês em que um gatilho
-     ligasse: a tela mostraria uma lei e o orcamento obedeceria outra. */
+     ligasse: a tela mostraria uma lei e o orçamento obedeceria outra. */
   /** @type {Record<string, string>} */
   const governs = {};
 
@@ -248,7 +248,7 @@ export function resolve({ norms, levers, month, indicators = {}, revenue }) {
       const band = bands[id];
       if (!band) continue;
 
-      /* ⚠ A VINCULAÇÃO VIRA PONTOS AQUI, e não no catálogo nem na tela: ela e uma LEITURA do
+      /* ⚠ A VINCULAÇÃO VIRA PONTOS AQUI, e não no catálogo nem na tela: ela é uma LEITURA do
          mês, porque a receita anda. */
       let floor = norm.floor;
       if (norm.share !== undefined) {
@@ -311,11 +311,11 @@ export function inherited(lever) {
 }
 
 /**
- * A NORMA QUE UM MOVIMENTO DE FAIXA ESCREVE, quando o plenario a aprova.
+ * A NORMA QUE UM MOVIMENTO DE FAIXA ESCREVE, quando o plenário a aprova.
  *
  * @param {object} input
  * @param {{ id: string, guard: string }} input.lever
- * @param {number} input.month - o mes em que ela passou
+ * @param {number} input.month - o mês em que ela passou
  * @param {number} [input.floor]
  * @param {number} [input.ceiling]
  * @returns {Norm}

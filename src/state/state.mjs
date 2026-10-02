@@ -16,16 +16,16 @@ import { streamFrom } from "./random.mjs";
  * @typedef {import("../domain/opinion/index.mjs").Approval} Approval
  * @typedef {import("./random.mjs").Stream} Stream
  * @typedef {object} Streams
- * @property {Stream} congress - o fluxo de tramitacao
+ * @property {Stream} congress - o fluxo de tramitação
  */
 
 /**
  * @typedef {import("../domain/economy/index.mjs").MacroState} MacroState
  * @typedef {object} Fiscal
- * @property {number} mandatory - despesa obrigatoria anualizada
- * @property {number} anchorRevenue - receita do exercicio anterior
- * @property {number} anchorExpense - despesa total do exercicio anterior
- * @property {number} debt - divida bruta
+ * @property {number} mandatory - despesa obrigatória anualizada
+ * @property {number} anchorRevenue - receita do exercício anterior
+ * @property {number} anchorExpense - despesa total do exercício anterior
+ * @property {number} debt - dívida bruta
  */
 
 /**
@@ -35,8 +35,8 @@ import { streamFrom } from "./random.mjs";
  * @property {number[]} rate
  * @property {number[]} unemployment
  * @property {number[]} debtRatio
- * @property {number[]} primary - resultado primario do mes em bilhoes
- * @property {Record<string, number[]>} areas - indice de cada area
+ * @property {number[]} primary - resultado primário do mês em bilhões
+ * @property {Record<string, number[]>} areas - índice de cada área
  */
 
 /**
@@ -125,7 +125,7 @@ import { streamFrom } from "./random.mjs";
 /* Recusa versão diferente para não converter save sem inversa útil. */
 export const SCHEMA_VERSION = 21;
 
-/* Posse em 1º de janeiro: valor 2 iniciava em marco com 46 dos 48 meses. */
+/* Posse em 1º de janeiro: valor 2 iniciava em março com 46 dos 48 meses. */
 export const OPENING_MONTH = 0;
 
 export const DEFAULT_SEED = 20270101;

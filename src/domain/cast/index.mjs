@@ -1,15 +1,15 @@
-/* ELENCO — a republica ganha gente, e a gente lembra.
+/* ELENCO — a república ganha gente, e a gente lembra.
    recebe   os blocos, os arquétipos, o vocabulário de nomes e uma semente
    devolve  as pessoas do mandato, e o preço que a memória de cada uma cobra
 
    As pessoas são GERADAS da semente: um elenco fixo seria decorado em duas partidas, e o
    mandato continua reproduzível — a regra que sustenta save, simulador e calibragem.
 
-   ⚠ DETERMINÍSTICO NÃO E ALEATÓRIO, e a distinção responde ao risco R4 da auditoria: o
+   ⚠ DETERMINÍSTICO NÃO É ALEATÓRIO, e a distinção responde ao risco R4 da auditoria: o
    gerador distribui dentro de faixas que o catálogo declara. Um Congresso com 90% de
    extremistas não seria sorteio infeliz, seria esquema mal escrito — e disso há guarda.
 
-   ⚠ UMA PESSOA E UM BLOCO DE UM SÓ, e por isso ECLUSA não mudou uma linha para atende-la.
+   ⚠ UMA PESSOA É UM BLOCO DE UM SÓ, e por isso ECLUSA não mudou uma linha para atendê-la.
    O que ela tem A MAIS são MEMÓRIA e AMBIÇÃO. */
 
 /**
@@ -20,10 +20,10 @@
  * @typedef {object} Person
  * @property {string} id
  * @property {string} name - inventado, sempre; ver o ADR 0003
- * @property {"f" | "m"} gender - sai do vocabulario de nomes, e a tela so o usa para escolher
+ * @property {"f" | "m"} gender - sai do vocabulário de nomes, e a tela só o usa para escolher
  * a silhueta do sinete: não há rosto, e um rosto inventado seria a cara de alguém
  * @property {string} archetype
- * @property {string} label - o arquetipo em uma linha, para a tela
+ * @property {string} label - o arquétipo em uma linha, para a tela
  * @property {string} bloc - o bloco de onde ela sai
  * @property {string} office - o cargo; um de `OFFICES`
  * @property {number} economic
@@ -31,9 +31,9 @@
  * @property {number} venalityEconomic
  * @property {number} venalityLiberty
  * @property {string} ambition - o que ela quer; um de `AMBITIONS`
- * @property {string} portfolio - a pasta que ela quer, e so `cabinet` a cobra: a tela a
+ * @property {string} portfolio - a pasta que ela quer, e só `cabinet` a cobra: a tela a
  * nomeia, e quem não quer ministério nunca a usa
- * @property {number} reach - fracao da bancada que ela de fato arrasta
+ * @property {number} reach - fração da bancada que ela de fato arrasta
  * @typedef {object} Memory o saldo de cada pessoa com o governo, de -cap a +cap
  * @typedef {Record<string, number>} Ledger
  */
@@ -98,14 +98,14 @@ export function cast({
 
   for (const archetype of archetypes) {
     const bloc = parties.find(party => party.id === archetype.bloc);
-    /* ARQUÉTIPO ÓRFÃO NÃO VIRA PESSOA, e não vira em silêncio: quem valida o catálogo e
+    /* ARQUÉTIPO ÓRFÃO NÃO VIRA PESSOA, e não vira em silêncio: quem valida o catálogo é
        `catalogViolations`, e ele acusa o id que não existe. */
     if (!bloc) continue;
 
     const base = `${seed}:${archetype.id}`;
 
     /* Sem o desempate, dois arquétipos podiam receber o mesmo nome na mesma partida — e dois
-       sujeitos homônimos num Congresso de doze pessoas não e sabor local, e um defeito que o
+       sujeitos homônimos num Congresso de doze pessoas não é sabor local, é um defeito que o
        jogador lê como bug. */
     let name = "";
     for (let attempt = 0; attempt < firstNames.length * surnames.length; attempt++) {
@@ -130,7 +130,7 @@ export function cast({
     const portfolio = areas[Math.floor(hashed(`${base}:portfolio`) * areas.length)] ?? "";
 
     /* ── O DESVIO DO BLOCO ─────────────────────────────────────────────────── A pessoa nasce
-       ONDE O BLOCO ESTA e se desloca pelo arquétipo, e não num ponto qualquer do plano. */
+       ONDE O BLOCO ESTÁ e se desloca pelo arquétipo, e não num ponto qualquer do plano. */
     const jitter = (/** @type {string} */ axis) => (hashed(`${base}:${axis}`) - 0.5) * 8;
 
     people.push({
@@ -174,19 +174,19 @@ export function trait(seed, id, name, min, max) {
 }
 
 /**
- * Um presidente com o mesmo nome do líder do Centrao não e sabor local — e um defeito que o
+ * Um presidente com o mesmo nome do líder do Centrão não é sabor local — é um defeito que o
  * jogador lê como bug, e há uma prova cobrando isso para o elenco .
  *
  * @param {object} input
  * @param {number} input.seed
- * @param {ReadonlyArray<Person>} input.people o elenco ja gerado, para nao repetir
+ * @param {ReadonlyArray<Person>} input.people o elenco já gerado, para não repetir
  * @param {ReadonlyArray<string>} input.firstNames
  * @param {ReadonlyArray<string>} input.surnames
  * @returns {{ id: string, name: string, office: string }}
  */
 export function president({ seed, people, firstNames, surnames }) {
   /* ⚠ POR PEDAÇO, PELA MESMA RAZÃO DE `cast`: um presidente "Jorge Camargo" ao lado de um
-     relator "Jorge Queiroz Sampaio" lê como defeito de gerador, e o presidente e a pessoa que
+     relator "Jorge Queiroz Sampaio" lê como defeito de gerador, e o presidente é a pessoa que
      a tela cita com mais frequência. */
   /** @type {Set<string>} */
   const used = new Set();
@@ -281,15 +281,15 @@ export function ministers({ seed, roles, taken, firstNames, surnames, genderOf, 
 
 /**
  * Se fosse outro fato, existiriam duas versões do que aconteceu naquele mês — e elas
- * divergiriam exatamente no mês em que o teto fechou, que e o mês em que o jogador precisa
+ * divergiriam exatamente no mês em que o teto fechou, que é o mês em que o jogador precisa
  * entender por que todo mundo o abandonou.
  *
- * A TRAIÇÃO PESA MAIS QUE O FAVOR, e a assimetria e a mesma de SONDA. Sem ela o
- * jogo ensinaria que da para queimar alguém e comprar de volta pelo mesmo preço —
- * e ai a memória seria um número que anda, e não uma relação.
+ * A TRAIÇÃO PESA MAIS QUE O FAVOR, e a assimetria é a mesma de SONDA. Sem ela o
+ * jogo ensinaria que dá para queimar alguém e comprar de volta pelo mesmo preço —
+ * e aí a memória seria um número que anda, e não uma relação.
  * @param {object} input
  * @param {ReadonlyArray<Person>} input.people
- * @param {Ledger} input.memory - o saldo de cada pessoa, no inicio do mes
+ * @param {Ledger} input.memory - o saldo de cada pessoa, no início do mês
  * @param {Record<string, number>} input.promised - por BLOCO, de 0 a 1
  * @param {Record<string, number>} input.paid - por BLOCO, de 0 a 1
  * @param {CastParameters} input.parameters
@@ -309,9 +309,9 @@ export function remember({ people, memory, promised, paid, parameters, ruling = 
     /* O DECAIMENTO VEM PRIMEIRO, e o do mês entra por cima. */
     const decayed = was * parameters.memoryDecay;
 
-    /* ⚠ TRAIR O PRÓPRIO PARTIDO CUSTA O DOBRO, e o favor NÃO vale o dobro: a assimetria e a
-       mesma da memória comum, e aqui ela e mais forte — quem e da casa acha que a verba já
-       era dele, e cobra a promessa quebrada como deslealdade, não como negocio ruim. */
+    /* ⚠ TRAIR O PRÓPRIO PARTIDO CUSTA O DOBRO, e o favor NÃO vale o dobro: a assimetria é a
+       mesma da memória comum, e aqui ela é mais forte — quem é da casa acha que a verba já
+       era dele, e cobra a promessa quebrada como deslealdade, não como negócio ruim. */
     const betrayal =
       ruling !== null && person.bloc === ruling
         ? parameters.betrayalWeight * 2
@@ -327,11 +327,11 @@ export function remember({ people, memory, promised, paid, parameters, ruling = 
 }
 
 /**
- * A PESSOA COMO UMA BANCADA — e e assim que ela chega ao Congresso.
+ * A PESSOA COMO UMA BANCADA — e é assim que ela chega ao Congresso.
  *
  * exatamente o que crédito de confiança significa, e o que permite ECLUSA
  * continuar sem saber que o elenco existe.
- * termo de ECLUSA pela mesma razão: o que esta em disputa não e o preço, e a vaga.
+ * termo de ECLUSA pela mesma razão: o que está em disputa não é o preço, é a vaga.
  * @param {object} input
  * @param {ReadonlyArray<Person>} input.people
  * @param {ReadonlyArray<Party>} input.parties
@@ -349,7 +349,7 @@ export function benches({ people, parties, memory, parameters }) {
     const leaders = people.filter(person => person.bloc === party.id && person.reach > 0);
 
     /* O sintoma seria devastador e silencioso: toda maioria do jogo passaria a ser medida
-       contra uma Camara que não existe, e nenhuma tela denunciaria, porque cada bancada
+       contra uma Câmara que não existe, e nenhuma tela denunciaria, porque cada bancada
        estaria certa sozinha. */
     const claimed = leaders.reduce((sum, person) => sum + person.reach, 0);
     const scale = claimed > CROWD ? CROWD / claimed : 1;
@@ -362,18 +362,18 @@ export function benches({ people, parties, memory, parameters }) {
       handed += seats;
 
       const saved = memory[person.id] ?? 0;
-      /* O CRÉDITO E EM UNIDADES DE VERBA, de -1 a 1, porque e assim que ECLUSA lê dinheiro. */
+      /* O CRÉDITO É EM UNIDADES DE VERBA, de -1 a 1, porque é assim que ECLUSA lê dinheiro. */
       credit[person.id] = clamp(saved / parameters.memoryCap, -1, 1);
 
       benches.push({
         id: person.id,
         label: person.name,
-        /* ⚠ A SIGLA DE UMA PESSOA E A DA BANCADA DELA, e não uma legenda própria: o que este
-           bloco monta e uma bancada de UM — o sujeito que arrasta uma fatia do próprio
+        /* ⚠ A SIGLA DE UMA PESSOA É A DA BANCADA DELA, e não uma legenda própria: o que este
+           bloco monta é uma bancada de UM — o sujeito que arrasta uma fatia do próprio
            partido —, e inventar uma sigla para ele diria que ele fundou um partido. */
         sigla: party.sigla,
-        /* A SUCESSÃO ENTRA COMO DISTANCIA, e não como venalidade menor: quem quer a vaga não
-           fica mais caro, fica mais LONGE — e distancia e o que dinheiro compra pela metade. */
+        /* A SUCESSÃO ENTRA COMO DISTÂNCIA, e não como venalidade menor: quem quer a vaga não
+           fica mais caro, fica mais LONGE — e distância é o que dinheiro compra pela metade. */
         economic: person.economic,
         liberty: person.liberty,
         venalityEconomic: person.venalityEconomic,
@@ -394,8 +394,8 @@ export function benches({ people, parties, memory, parameters }) {
 /**
  * A VERBA QUE CADA BANCADA VÊ, com o crédito de memória somado.
  *
- * ⚠ CADA AMBIÇÃO OLHA COISA DIFERENTE. Um peso próprio para cada uma daria cinco precos da
- * MESMA oferta; o que muda e a PERGUNTA que o sujeito faz ao que voce põe na mesa. A bancada
+ * ⚠ CADA AMBIÇÃO OLHA COISA DIFERENTE. Um peso próprio para cada uma daria cinco preços da
+ * MESMA oferta; o que muda é a PERGUNTA que o sujeito faz ao que você põe na mesa. A bancada
  * continua sem ambição, e por isso a linha de base do jogo não se move.
  *
  * @param {object} input
@@ -405,8 +405,8 @@ export function benches({ people, parties, memory, parameters }) {
  * @param {Record<string, number>} input.credit - por PESSOA, de -1 a 1
  * @param {CastParameters} input.parameters
  * @param {number} [input.street] - a rua contra o ponto neutro, de -1 a 1; quem a normaliza
- * e quem compõe, porque o ponto neutro e de ECLUSA e há um só
- * @param {Record<string, number>} [input.byArea] - quanto cada pasta esta acima ou abaixo do
+ * é quem compõe, porque o ponto neutro é de ECLUSA e há um só
+ * @param {Record<string, number>} [input.byArea] - quanto cada pasta está acima ou abaixo do
  * gasto de abertura, de -1 a 1
  * @returns {Record<string, number>}
  */
@@ -432,7 +432,7 @@ export function offered({ people, parties, funding, credit, parameters, street =
     const lift = person.ambition === "state" ? parameters.stateLift : 0;
 
     /* A rua e a pasta não são dinheiro, e por isso SOMAM em vez de multiplicar: elas movem o
-       sujeito mesmo quando a emenda e zero. */
+       sujeito mesmo quando a emenda é zero. */
     const crowd = person.ambition === "seat" ? parameters.seatStreet * street : 0;
     const desk =
       person.ambition === "cabinet"

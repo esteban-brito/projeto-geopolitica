@@ -1,5 +1,5 @@
 /* SAVE — o estado inteiro vira texto, e volta idêntico.
-   O cabeçalho de `state.mjs` promete isto desde o primeiro dia: "SAVE e serializar o estado.
+   O cabeçalho de `state.mjs` promete isto desde o primeiro dia: "SAVE é serializar o estado.
    Não existe campo que ficou de fora". */
 
 import { SCHEMA_VERSION, deepFreeze } from "./state.mjs";
@@ -49,9 +49,9 @@ export function deserialize(text) {
   }
 
   /* Sem `levels` o jogo não sabe quanto o país gasta; sem `norms` ele não sabe o que a lei
-     manda gastar — e a segunda ausência e pior que a primeira, porque ausência de norma e
-     ausência de restrição: o save abriria com a Constituicao inteira revogada, que e um país
-     valido e portanto indistinguível de um save quebrado. */
+     manda gastar — e a segunda ausência é pior que a primeira, porque ausência de norma é
+     ausência de restrição: o save abriria com a Constituição inteira revogada, que é um país
+     válido e portanto indistinguível de um save quebrado. */
   const required = [
     "seed",
     "platform",
@@ -80,8 +80,8 @@ export function deserialize(text) {
     }
   }
 
-  /* ⚅ CHECAGEM DE FORMA — presença não e formato. Um save corrompido com `"fiscal": 42`
-     passaria acima e quebraria em runtime com mensagem incompreensivel. */
+  /* ⚅ CHECAGEM DE FORMA — presença não é formato. Um save corrompido com `"fiscal": 42`
+     passaria acima e quebraria em runtime com mensagem incompreensível. */
   const asObj = (/** @type {unknown} */ v) =>
     v !== null && typeof v === "object" && !Array.isArray(v);
   const asArr = (/** @type {unknown} */ v) => Array.isArray(v);

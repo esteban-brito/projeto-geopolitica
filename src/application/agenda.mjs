@@ -1,4 +1,4 @@
-/* Composicao da pauta legislativa a partir das variações de programas e regras. */
+/* Composição da pauta legislativa a partir das variações de programas e regras. */
 
 import { quorumOf } from "../data/bills.mjs";
 import { MONTHS_PER_YEAR } from "../data/regime.mjs";
@@ -18,26 +18,26 @@ const MONTHLY = 1 / MONTHS_PER_YEAR;
  * @typedef {object} Move
  * @property {Program} program
  * @property {number} delta - pontos de intensidade, com sinal
- * @property {number} weight - `|delta| × cost`; o peso na media ponderada
- * @property {number} spend - bilhoes/ano que este movimento acrescenta (ou poupa)
+ * @property {number} weight - `|delta| × cost`; o peso na média ponderada
+ * @property {number} spend - bilhões/ano que este movimento acrescenta (ou poupa)
  * @property {string} rite - o rito que ESTE movimento sozinho exigiria
- * @property {"level" | "floor" | "ceiling"} [kind] - o que se moveu; nivel por padrao
+ * @property {"level" | "floor" | "ceiling"} [kind] - o que se moveu; nível por padrão
  * @typedef {object} Proposal
  * @property {string} id
  * @property {string} label
- * @property {string} area - a area de maior peso; o ASSUNTO da proposta
+ * @property {string} area - a área de maior peso; o ASSUNTO da proposta
  * @property {string} instrument - `budget`, `law` ou `amendment`
  * @property {number} economic
  * @property {number} liberty
  * @property {number} threat
- * @property {number} spread - o RAIO ideologico do texto; zero e um texto coeso
+ * @property {number} spread - o RAIO ideológico do texto; zero é um texto coeso
  * @property {number} fiscalImpact - positivo POUPA, negativo custa
  * @typedef {object} Agenda
- * @property {Move[]} moves - so o que se moveu
+ * @property {Move[]} moves - só o que se moveu
  * @property {Breach[]} breaches
  * @property {Proposal | null} proposal - nulo quando nada se moveu
- * @property {number} quorum - votos necessarios; zero quando nao vai a plenario
- * @property {number} spend - bilhoes/ano que o conjunto acrescenta
+ * @property {number} quorum - votos necessários; zero quando não vai a plenário
+ * @property {number} spend - bilhões/ano que o conjunto acrescenta
  */
 
 const RITES = ["budget", "law", "amendment"];
@@ -113,8 +113,8 @@ export function riteFor(lever, level, power = 0, bands) {
  * @param {object} input
  * @param {ReadonlyArray<Program>} input.programs
  * @param {ReadonlyArray<Rule>} [input.rules] - as alavancas de regra
- * @param {Record<string, number>} input.levels - o nivel VIGENTE de cada alavanca
- * @param {Record<string, number>} input.requested - o nivel PEDIDO; ausente = sem mudanca
+ * @param {Record<string, number>} input.levels - o nível VIGENTE de cada alavanca
+ * @param {Record<string, number>} input.requested - o nível PEDIDO; ausente = sem mudança
  * @param {number} [input.power] - o poder do Executivo VIGENTE, de 0 a 100
  * @param {Record<string, Band>} [input.bands] - as faixas VIGENTES; a lei de hoje
  * @param {Record<string, Band>} [input.requestedBands] - as faixas PEDIDAS; a lei proposta
@@ -281,7 +281,7 @@ export function spendOf({ programs, levels, bands }) {
 
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
-    /* Cortar abaixo do piso não devolve caixa discricionário: despesa obrigatória e outra conta. */
+    /* Cortar abaixo do piso não devolve caixa discricionário: despesa obrigatória é outra conta. */
     const above = Math.max(0, level - bandOf(program, bands).floor);
     const monthly = (above / 100) * program.cost * MONTHLY;
 
@@ -292,7 +292,7 @@ export function spendOf({ programs, levels, bands }) {
       total += monthly;
     }
 
-    /* Sem gasto cheio por área a politica explorador explorava brecha no rateio. */
+    /* Sem gasto cheio por área a política explorador explorava brecha no rateio. */
     fullByArea[program.area] =
       (fullByArea[program.area] ?? 0) + (level / 100) * program.cost * MONTHLY;
   }
@@ -306,7 +306,7 @@ export function spendOf({ programs, levels, bands }) {
  * @param {Record<string, number>} input.levels - o pedido
  * @param {number} input.ratio - de 0 a 1
  * @param {Record<string, Band>} [input.bands] - as faixas VIGENTES
- * @param {ReadonlySet<string>} [input.protect] - as AREAS que o decreto poupa
+ * @param {ReadonlySet<string>} [input.protect] - as ÁREAS que o decreto poupa
  * @returns {Record<string, number>}
  */
 export function honour({ programs, levels, ratio, bands, protect }) {

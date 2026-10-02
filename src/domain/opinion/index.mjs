@@ -1,36 +1,36 @@
-/* SONDA — opinião publica por segmento a partir de macroeconomia e serviços. */
+/* SONDA — opinião pública por segmento a partir de macroeconomia e serviços. */
 
 /**
  * @typedef {import("../../data/opinion.mjs").Segment} Segment
  * @typedef {import("../../data/opinion.mjs").OpinionParameters} OpinionParameters
  * @typedef {object} Approval a escala de pesquisa, em pontos que somam 100
- * @property {number} good - "otimo/bom"
+ * @property {number} good - "ótimo/bom"
  * @property {number} fair - "regular"
- * @property {number} poor - "ruim/pessimo"
- * @typedef {object} Released o que a populacao JA SABE quando o mes comeca
- * @property {number} inflation - ao ano, em fracao
- * @property {number} unemployment - em fracao da forca de trabalho
- * @property {number} growth - crescimento real anualizado, em fracao
+ * @property {number} poor - "ruim/péssimo"
+ * @typedef {object} Released o que a população JÁ SABE quando o mês começa
+ * @property {number} inflation - ao ano, em fração
+ * @property {number} unemployment - em fração da força de trabalho
+ * @property {number} growth - crescimento real anualizado, em fração
  * @typedef {object} OpinionInput
- * @property {Record<string, number>} mood - a satisfacao de cada segmento, de 0 a 100
+ * @property {Record<string, number>} mood - a satisfação de cada segmento, de 0 a 100
  * @property {Released} released
- * @property {number} services - o servico publico percebido, de 0 a 100
+ * @property {number} services - o serviço público percebido, de 0 a 100
  * @property {number} safety - a ordem percebida, de 0 a 100
- * @property {number} [betrayal] - a fracao da promessa que o caixa NAO honrou
+ * @property {number} [betrayal] - a fração da promessa que o caixa NÃO honrou
  * @property {number} [tenure] - meses no cargo; o desgaste cresce com eles
  * @property {ReadonlyArray<Segment>} segments
  * @property {OpinionParameters} parameters
  * @typedef {object} OpinionOutput
- * @property {Record<string, number>} mood - a satisfacao do mes seguinte
+ * @property {Record<string, number>} mood - a satisfação do mês seguinte
  * @property {Approval} approval - a leitura nacional, na escala de pesquisa
  * @property {Record<string, Approval>} bySegment - a mesma escala, por segmento
  * @property {Record<string, number>} notes - as cinco notas nacionais, de 0 a 100
  * @property {number} betrayal - quanto a promessa quebrada tirou de todo mundo
  * @property {number} wear - quanto o desgaste do cargo tirou de todo mundo
- * @property {Record<string, Record<string, number>>} weighed - cada nota JA PESADA, por
- * segmento. ⚠ E ela e pesada AQUI e não na view: multiplicar nota por peso do lado de
- * la daria dois lugares fazendo a mesma conta, e o segundo divergiria do primeiro no
- * dia em que um peso mudasse — que e o dia em que o anexo precisa estar certo
+ * @property {Record<string, Record<string, number>>} weighed - cada nota JÁ PESADA, por
+ * segmento. ⚠ E ela é pesada AQUI e não na view: multiplicar nota por peso do lado de
+ * lá daria dois lugares fazendo a mesma conta, e o segundo divergiria do primeiro no
+ * dia em que um peso mudasse — que é o dia em que o anexo precisa estar certo
  */
 
 /** @param {number} value */
@@ -57,7 +57,7 @@ function higherIsBetter(value, anchor, span) {
 }
 
 /**
- * @param {number} breach a fracao da plataforma quebrada, de 0 a 1
+ * @param {number} breach a fração da plataforma quebrada, de 0 a 1
  * @param {OpinionParameters} parameters
  * @returns {number}
  */

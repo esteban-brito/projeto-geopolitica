@@ -1,32 +1,32 @@
-/* CORRENTE — hiato, Phillips, Taylor, Okun e populacao; e o `carry`, que faz gasto
+/* CORRENTE — hiato, Phillips, Taylor, Okun e população; e o `carry`, que faz gasto
    virar dívida e dívida virar juro. */
 
 /* ── O ESTOQUE DA DÍVIDA E O CANAL QUE FECHA O CIRCUITO ────────────────────── Juro alto não
-   só freia o PIB: ele cobra do orcamento, porque 45% da dívida brasileira acompanha a taxa
+   só freia o PIB: ele cobra do orçamento, porque 45% da dívida brasileira acompanha a taxa
    básica. */
 
 /**
  * @typedef {import("../../data/macro.mjs").MacroParameters} MacroParameters
  * @typedef {object} MacroState o que atravessa os meses
- * @property {number} gdp - PIB nominal anualizado, em bilhoes
+ * @property {number} gdp - PIB nominal anualizado, em bilhões
  * @property {number} potential - PIB potencial anualizado
- * @property {number} inflation - ao ano, em fracao
- * @property {number} rate - a taxa basica nominal, ao ano
- * @property {number} unemployment - em fracao da forca de trabalho
- * @property {number} population - em milhoes
+ * @property {number} inflation - ao ano, em fração
+ * @property {number} rate - a taxa básica nominal, ao ano
+ * @property {number} unemployment - em fração da força de trabalho
+ * @property {number} population - em milhões
  * @typedef {object} EconomyInput
  * @property {MacroState} macro
  * @property {MacroParameters} parameters
- * @property {number} taxLoad - carga tributaria corrente, em fracao do PIB
+ * @property {number} taxLoad - carga tributária corrente, em fração do PIB
  * @property {number} baseTaxLoad - a carga com que a partida abriu
- * @property {number} capacity - o quanto a capacidade do Estado esta acima do neutro, de -1 a 1
- * @property {number} impulse - o discricionario empenhado no mes sobre o PIB mensal
- * @property {number} [shock] - choque de oferta do mes, em pontos de inflacao anual
+ * @property {number} capacity - o quanto a capacidade do Estado está acima do neutro, de -1 a 1
+ * @property {number} impulse - o discricionário empenhado no mês sobre o PIB mensal
+ * @property {number} [shock] - choque de oferta do mês, em pontos de inflação anual
  * @typedef {object} EconomyOutput
- * @property {MacroState} macro - a posicao do mes seguinte
- * @property {number} gap - o hiato do produto, em fracao
+ * @property {MacroState} macro - a posição do mês seguinte
+ * @property {number} gap - o hiato do produto, em fração
  * @property {number} realRate - o juro real corrente
- * @property {number} growth - o crescimento REAL anualizado deste mes
+ * @property {number} growth - o crescimento REAL anualizado deste mês
  */
 
 const MONTHS_PER_YEAR = 12;
@@ -44,20 +44,20 @@ function monthly(annual) {
  * Um mês de economia.
  *
  * O choque exógeno entra por parâmetro (`shock`): um sorteio feito aqui dentro
- * tornaria o mandato irreproduzivel.
+ * tornaria o mandato irreproduzível.
  * @param {EconomyInput} input
  * @returns {EconomyOutput}
  */
 export function step(input) {
   const { macro, parameters: p } = input;
 
-  /* E o único lugar do jogo em que investir em educacao aparece como número — e aparece 24
+  /* É o único lugar do jogo em que investir em educação aparece como número — e aparece 24
      meses depois, porque o atraso mora na
      MALHA e chega aqui já defasado. */
   const potentialRate = p.potentialGrowth + p.capacityLift * input.capacity;
   const potentialReal = macro.potential * monthly(potentialRate);
 
-  /* ⚠ A CARGA E MEDIDA CONTRA A DE ABERTURA, e não contra zero. */
+  /* ⚠ A CARGA É MEDIDA CONTRA A DE ABERTURA, e não contra zero. */
   const realRate = macro.rate - macro.inflation;
   const taxDelta = input.taxLoad - input.baseTaxLoad;
 
@@ -89,15 +89,15 @@ export function step(input) {
   /* 5 — OKUN. */
   const unemployment = Math.min(0.4, Math.max(0.01, p.naturalUnemployment - p.okun * gap));
 
-  /* O PIB NOMINAL carrega a inflação junto, porque toda a contabilidade do jogo e nominal:
-     receita e fração do PIB, e dívida e razão sobre ele. */
+  /* O PIB NOMINAL carrega a inflação junto, porque toda a contabilidade do jogo é nominal:
+     receita é fração do PIB, e dívida é razão sobre ele. */
   const price = monthly(inflation);
   const gdp = gdpReal * price;
 
   return {
     macro: {
       gdp,
-      /* E isso que mantem o hiato honesto ao longo de 48 meses: os dois lados envelhecem
+      /* É isso que mantém o hiato honesto ao longo de 48 meses: os dois lados envelhecem
          juntos. */
       potential: potentialReal * price,
       inflation,
@@ -112,15 +112,15 @@ export function step(input) {
 }
 
 /**
- * E por isso a tolerância entra por parâmetro em vez de morar no catálogo macro: ela já
- * existe, em `fiscal.initialDebtRatio`, e dois lugares com o mesmo número e um lugar que vai
+ * É por isso a tolerância entra por parâmetro em vez de morar no catálogo macro: ela já
+ * existe, em `fiscal.initialDebtRatio`, e dois lugares com o mesmo número é um lugar que vai
  * divergir.
  *
  * @param {object} input
- * @param {number} input.debtRatio - a divida sobre o PIB, hoje
- * @param {number} input.tolerance - a razao que o mercado ja precificou
+ * @param {number} input.debtRatio - a dívida sobre o PIB, hoje
+ * @param {number} input.tolerance - a razão que o mercado já precificou
  * @param {number} input.slope - quanto ele cobra por ponto ao quadrado
- * @returns {number} pontos de juro ao ano, somados a basica
+ * @returns {number} pontos de juro ao ano, somados à básica
  */
 export function premiumOf({ debtRatio, tolerance, slope }) {
   const excess = debtRatio - tolerance;
@@ -129,19 +129,19 @@ export function premiumOf({ debtRatio, tolerance, slope }) {
 }
 
 /**
- * O QUE A DÍVIDA CUSTA NUM MÊS, em bilhoes.
+ * O QUE A DÍVIDA CUSTA NUM MÊS, em bilhões.
  *
  * Separado de `step` porque o estoque da dívida mora no LASTRO e não aqui, e
- * motor nenhum chama outro motor: quem tem os dois na mão e a camada de
+ * motor nenhum chama outro motor: quem tem os dois na mão é a camada de
  * aplicação, que passa o estoque e recebe a conta.
- * ⚠ A ANCORA E PUBLICA: cada 1 p.p. de taxa básica custa cerca de R$ 40 bi ao ano ao
- * Tesouro, e com dívida perto de R$ 9,4 tri isso da os 45% que `floatingDebt` declara.
+ * ⚠ A ÂNCORA É PÚBLICA: cada 1 p.p. de taxa básica custa cerca de R$ 40 bi ao ano ao
+ * Tesouro, e com dívida perto de R$ 9,4 tri isso dá os 45% que `floatingDebt` declara.
  * @param {object} input
  * @param {number} input.debt - o estoque bruto
- * @param {number} input.rate - a taxa basica nominal ao ano
+ * @param {number} input.rate - a taxa básica nominal ao ano
  * @param {number} [input.premium] - o spread que o mercado cobra, ao ano
  * @param {MacroParameters} input.parameters
- * @returns {number} bilhoes NO MES
+ * @returns {number} bilhões NO MÊS
  */
 export function carry({ debt, rate, premium = 0, parameters }) {
   const effective =

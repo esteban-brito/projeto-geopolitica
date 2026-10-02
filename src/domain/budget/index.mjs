@@ -7,34 +7,34 @@ const MONTHS_PER_YEAR = 12;
  * @typedef {import("../../data/fiscal.mjs").FiscalParameters} FiscalParameters
  * @typedef {object} BudgetInput
  * @property {number} gdp - PIB anualizado corrente
- * @property {number} mandatory - despesa obrigatoria ANUALIZADA corrente
- * @property {number} anchorRevenue - receita do exercicio anterior; a ancora da regra
- * @property {number} anchorExpense - despesa total do exercicio anterior
- * @property {number} debt - divida bruta
- * @property {number} spent - discricionario efetivamente empenhado NO MES
- * @property {number} [inflation] - ao ano; e ela que indexa a despesa obrigatoria
- * @property {number} [elapsed] - quanto do exercicio ja correu, de 0 a 1; a banda
- * do arcabouço e ANUAL e o turno e mensal, e sem isto o piso dela entrega o
+ * @property {number} mandatory - despesa obrigatória ANUALIZADA corrente
+ * @property {number} anchorRevenue - receita do exercício anterior; a âncora da regra
+ * @property {number} anchorExpense - despesa total do exercício anterior
+ * @property {number} debt - dívida bruta
+ * @property {number} spent - discricionário efetivamente empenhado NO MÊS
+ * @property {number} [inflation] - ao ano; é ela que indexa a despesa obrigatória
+ * @property {number} [elapsed] - quanto do exercício já correu, de 0 a 1; a banda
+ * do arcabouço é ANUAL e o turno é mensal, e sem isto o piso dela entrega o
  * crescimento de um ano inteiro no primeiro mês
  * @property {FiscalParameters} parameters
- * @property {number} [revenueFactor] - o quanto a maquina de arrecadar rende hoje
- * @property {number} [mandatoryFactor] - o quanto o servico publico encarece a obrigatoria
+ * @property {number} [revenueFactor] - o quanto a máquina de arrecadar rende hoje
+ * @property {number} [mandatoryFactor] - o quanto o serviço público encarece a obrigatória
  * @typedef {object} BudgetOutput
- * @property {number} revenue - receita anualizada, ja com o fator
- * @property {number} mandatory - obrigatoria anualizada, ja crescida e ja com o fator
+ * @property {number} revenue - receita anualizada, já com o fator
+ * @property {number} mandatory - obrigatória anualizada, já crescida e já com o fator
  * @property {number} revenueBase - receita SEM o fator
- * @property {number} mandatoryBase - obrigatoria crescida SEM o fator
- * @property {number} cash - receita menos obrigatoria: quanto EXISTE
- * @property {number} ceiling - o teto de despesa que o arcabouco permite
+ * @property {number} mandatoryBase - obrigatória crescida SEM o fator
+ * @property {number} cash - receita menos obrigatória: quanto EXISTE
+ * @property {number} ceiling - o teto de despesa que o arcabouço permite
  * @property {number} allowance - quanto se pode empenhar: o MENOR entre caixa e regra
- * @property {number} balance - saldo primario DO MES
+ * @property {number} balance - saldo primário DO MÊS
  * @property {number} debt
- * @property {number} debtRatio - divida sobre PIB
- * @property {boolean} blocked - a obrigatoria sozinha ja fura o teto do arcabouco
- * @property {number} primary - o resultado primario do mes, ANUALIZADO e em fracao do PIB
+ * @property {number} debtRatio - dívida sobre PIB
+ * @property {boolean} blocked - a obrigatória sozinha já fura o teto do arcabouço
+ * @property {number} primary - o resultado primário do mês, ANUALIZADO e em fração do PIB
  * @property {number} primaryTarget - a meta do ano, na mesma unidade
  * @property {number} primaryFloor - o piso da banda da meta, na mesma unidade
- * @property {boolean} atRisk - o primario caiu abaixo da banda: contingenciamento
+ * @property {boolean} atRisk - o primário caiu abaixo da banda: contingenciamento
  */
 
 /**
@@ -49,7 +49,7 @@ export function revenueOf(gdp, taxLoad) {
  * A inflação indexa a despesa obrigatória: sua ausência distorcia o modelo.
  * @param {number} mandatory
  * @param {number} annualRate crescimento REAL ao ano
- * @param {number} [inflation] ao ano, em fracao; zero reproduz o comportamento antigo
+ * @param {number} [inflation] ao ano, em fração; zero reproduz o comportamento antigo
  */
 export function growMandatory(mandatory, annualRate, inflation = 0) {
   const nominal = (1 + annualRate) * (1 + inflation) - 1;
@@ -57,15 +57,15 @@ export function growMandatory(mandatory, annualRate, inflation = 0) {
 }
 
 /**
- * Com PIB nominal a 6% ao ano da 4,2% de crescimento do teto (0,2% reais).
+ * Com PIB nominal a 6% ao ano dá 4,2% de crescimento do teto (0,2% reais).
  * @param {number} anchorExpense
  * @param {number} anchorRevenue
  * @param {number} revenue
  * @param {number} share
- * @param {number} [floor] crescimento REAL minimo ao ano; sem ele, a regra antiga
- * @param {number} [cap] crescimento REAL maximo ao ano
+ * @param {number} [floor] crescimento REAL mínimo ao ano; sem ele, a regra antiga
+ * @param {number} [cap] crescimento REAL máximo ao ano
  * @param {number} [inflation] ao ano — o deflator que torna a banda REAL
- * @param {number} [elapsed] quanto do exercicio ja correu, de 0 a 1
+ * @param {number} [elapsed] quanto do exercício já correu, de 0 a 1
  */
 export function ceilingOf(
   anchorExpense,
@@ -77,7 +77,7 @@ export function ceilingOf(
   inflation = 0,
   elapsed = 1,
 ) {
-  /* Ancora zerada geraria Infinity sem lançar erro, gerando teto absurdo na tela. */
+  /* Âncora zerada geraria Infinity sem lançar erro, gerando teto absurdo na tela. */
   if (anchorRevenue <= 0) return anchorExpense;
   const growth = (revenue - anchorRevenue) / anchorRevenue;
 
@@ -97,7 +97,7 @@ export function ceilingOf(
 export function step(input) {
   const { parameters } = input;
 
-  /* A base e devolvida separada: a simulação pegou dívida explodindo em 1066% do PIB. */
+  /* A base é devolvida separada: a simulação pegou dívida explodindo em 1066% do PIB. */
   const revenueBase = revenueOf(input.gdp, parameters.taxLoad);
   const mandatoryBase = growMandatory(
     input.mandatory,
@@ -130,7 +130,7 @@ export function step(input) {
   const balance = cash / MONTHS_PER_YEAR - input.spent;
   const debt = input.debt - balance;
 
-  /* O resultado primário do mês e anualizado para comparação direta com a meta da LDO. */
+  /* O resultado primário do mês é anualizado para comparação direta com a meta da LDO. */
   const primary = input.gdp > 0 ? (balance * MONTHS_PER_YEAR) / input.gdp : 0;
   const primaryFloor = parameters.primaryTarget - parameters.primaryBand;
 
