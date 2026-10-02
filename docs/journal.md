@@ -103,3 +103,22 @@ diff não muda código. Com os 12 núcleos ocupados, o HEAD caiu 2 de 2 nas mesm
 o achado 69 foi reaberto com a receita. E um erro de processo: um `| tail` engoliu o código de
 saída do `prettier`, e o commit `7e58739` subiu com 4 arquivos fora do formato, corrigidos no
 `dd27945`.
+
+### 126 · O achado 69 fecha: o voo da pasta tinha dois relógios — 01/10/2026
+
+O `validate` caiu 6 vezes em cerca de 13 rodadas no dia, cada vez numa asserção de tempo do
+passeio. Com os 12 núcleos ocupados, o HEAD caiu 2 de 2 nas mesmas três. Eram três causas:
+
+- **O voo da pasta (defeito do jogo).** `whereIs` calculava a posição pelo `performance.now()` do
+  clique, e a animação WAAPI só começa a contar no quadro seguinte. Com quadro longo, a conta ia à
+  frente da pasta pintada, e o voo interrompido partia de um ponto onde ela não estava. A prova
+  nova trava a página 150 ms depois de erguer a pasta e mede o salto no corte, antes do próximo
+  quadro: no código antigo, 713 px na tela contra 738 px no voo novo. O conserto pergunta à própria
+  animação (`currentTime`), e `tune` lê a posição antes de cancelar as animações.
+- **A pílula (defeito da prova).** A mola limita o passo por quadro de propósito, e a viagem de
+  ~450 ms passava dos 700 ms fixos com a CPU ocupada. A prova agora espera a chegada.
+- **A troca de tela (defeito da prova).** Contar as animações `::view-transition` deixa passar o
+  vão antes de elas nascerem; o e-mail tinha um remendo de 120 ms. As duas esperas agora perguntam
+  `:active-view-transition`, que vale do pedido ao fim da troca.
+
+Depois do conserto: verde sem carga e 2 de 2 verdes com os 12 núcleos ocupados.

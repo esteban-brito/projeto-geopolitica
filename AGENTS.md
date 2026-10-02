@@ -41,6 +41,8 @@ estado se lê no handoff.
 - **Estado que sobrevive a uma repintura guarda id, nunca índice.** Ouvinte em `document` ou
   `window` arma uma vez.
 - **O mundo é real; os nomes das pessoas são inventados** ([ADR 0003](docs/adr/0003-real-world-invented-people.md)).
+  Os papéis que pesam no 1º ano se inspiram em quem ocupa o cargo de verdade (papel, ideologia,
+  temperamento), nunca no nome nem na história; o nome real só aparece em `docs/research/`.
 - **A IA não entra no turno** ([ADR 0001](docs/adr/0001-ai-stays-out-of-the-turn.md)) e **gera
   vocabulário, nunca efeito** ([ADR 0002](docs/adr/0002-ai-generates-vocabulary-not-effect.md)).
   IA por API não entra, nem em partida nem fora dela.

@@ -83,3 +83,20 @@ Congresso de 2026 estaria errado em 2027, e a correção seria eterna.
 Por decisão do responsável, "empresa" passou a constar da lista de organizações que agem
 como personagem. A regra não mudou; ficou explícita para as empresas que a especificação
 mestra modela com agência própria.
+
+## Emenda — 01/10/2026
+
+Por ordem do Diretor, os cerca de 40 papéis que pesam no primeiro ano do mandato têm
+**inspiração fixa** na pessoa real que ocupa o cargo: os 11 do STF, PGR, BC, comandantes, TCU,
+imprensa e mercado; depois do 2º turno de 25/10/2026, presidentes das Casas, líderes e
+governadores, com as bancadas reais de 2027.
+
+- **O que vem da pessoa real:** o papel, a ideologia e o temperamento públicos, e os prazos do
+  cargo que o calendário real impõe (mandato, aposentadoria compulsória aos 75 anos);
+- **o que nunca vem:** o nome, episódio real na história do personagem, crime, vida privada e
+  frase atribuída. O nome continua saindo da semente, como o de todo personagem;
+- **onde o nome real aparece:** só na pesquisa que documenta a inspiração, com fonte e data, em
+  `docs/research/`. O catálogo de `src/data/` não leva nome real, como antes.
+
+A terceira razão acima continua valendo: a inspiração envelhece. Por isso cada uma leva a data em
+que foi conferida, e a lista se revisa quando o cargo troca de dono.

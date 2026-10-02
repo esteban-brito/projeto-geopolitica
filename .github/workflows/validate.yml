@@ -1,17 +1,17 @@
-# O portao. Ele roda exatamente `npm run validate` — as mesmas guardas, tipos,
-# lint, formato, suites e PASSEIO que rodam na maquina de quem escreve.
+# O portão. Ele roda exatamente `npm run validate` — as mesmas guardas, tipos,
+# lint, formato, suítes e PASSEIO que rodam na máquina de quem escreve.
 #
-# O passeio entrou no portao em 23/08/2026, e o numero que decidiu isso e a
-# assimetria de cobertura: motor e tela tem o mesmo tamanho — 8.007 contra 9.601
+# O passeio entrou no portão em 23/08/2026, e o número que decidiu isso é a
+# assimetria de cobertura: motor e tela têm o mesmo tamanho — 8.007 contra 9.601
 # linhas — e o motor tinha 207 provas contra 29 da tela, todas lendo string. As
 # 38 checagens que de fato veem geometria e contraste moram aqui, e estavam fora
-# do portao. Custo medido: 9s para 42s.
+# do portão. Custo medido: 9s para 42s.
 #
-# `npm run screen` NAO entra aqui, e nao e esquecimento: ele abre um Chromium
+# `npm run screen` NÃO entra aqui, e não é esquecimento: ele abre um Chromium
 # COM JANELA e mede fps contra a taxa do monitor. Num runner sem GPU os dois
-# bracos caem juntos e o numero mente — foi por medir assim que a primeira
-# versao da suite deu o material 8 fps mais rapido que o controle. Medicao de
-# tela continua sendo local, com GPU, e por decisao.
+# braços caem juntos e o número mente — foi por medir assim que a primeira
+# versão da suíte deu o material 8 fps mais rápido que o controle. Medição de
+# tela continua sendo local, com GPU, e por decisão.
 name: validate
 
 on:
@@ -32,18 +32,18 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          # A mesma versao do `.nvmrc`, para o CI nao provar coisa diferente do
-          # que a maquina de quem escreve prova.
+          # A mesma versão do `.nvmrc`, para o CI não provar coisa diferente do
+          # que a máquina de quem escreve prova.
           node-version-file: .nvmrc
           cache: npm
 
-      # `ci` e nao `install`: ele instala do lock e falha se o lock divergir do
-      # package.json, que e a unica forma de o CI garantir a mesma arvore.
+      # `ci` e não `install`: ele instala do lock e falha se o lock divergir do
+      # package.json, que é a única forma de o CI garantir a mesma arvore.
       - run: npm ci
 
-      # O NAVEGADOR E DEPENDENCIA DO PORTAO desde que o passeio entrou nele.
-      # So o chromium: o passeio abre um so, e baixar os tres triplicaria o
-      # tempo de instalacao para provar exatamente a mesma coisa.
+      # O NAVEGADOR É DEPENDÊNCIA DO PORTÃO desde que o passeio entrou nele.
+      # Só o chromium: o passeio abre um só, e baixar os três triplicaria o
+      # tempo de instalação para provar exatamente a mesma coisa.
       - run: npx playwright install --with-deps chromium
 
       - run: npm run validate

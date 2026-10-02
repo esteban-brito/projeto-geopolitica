@@ -20,7 +20,8 @@
     (`tests/browser/posse-defects.mjs`); `npm run posse` roda as provas da posse fora do `validate`.
 
   `validate` verde em 01/10: 14 guardas, 74 sintéticas, zero links quebrados, tipos, lint,
-  formato, 471 testes, passeio e macaco. O passeio cai com a CPU ocupada (achado 69).
+  formato, 471 testes, passeio e macaco. O passeio passa com os 12 núcleos ocupados desde o
+  conserto do achado 69 (journal 126).
 
 - **a posse:** ele escolheu refazê-la dentro do jogo, com o save 22
   ([ciclo 34](cycles/34-the-posse-rebuilt.md)). Medido em 01/10 no protótipo: uma frase da
@@ -39,7 +40,8 @@
   fica 2,2 s ao sair do nome, as notas 1–2 são vermelhas, 3 verde amarelado, 4–5 verdes e 6
   dourado, e o botão da criação sorteia todos os campos com idade mínima de 35 anos;
 - **git:** a branch `caixa-de-entrada` está publicada. O `main` local e o remoto estão parados em
-  27/08; o merge entra depois do teste dele (aprovado em 01/10). Commit ao fim de cada etapa
+  27/08; o merge entra depois do teste dele (aprovado em 01/10). A CI roda `validate` no
+  `main`, num runner mais lento que esta máquina; o passeio aguenta CPU ocupada desde 01/10. Commit ao fim de cada etapa
   validada; push liberado em 01/10 junto com o plano aprovado;
 - **o que só existe neste disco:** `tmp/asset-sources/` (49 MB, fontes dos retratos e da madeira),
   `tmp/history/` e o runtime do canvas. Uma cópia fora do computador depende dele;
@@ -73,11 +75,16 @@ despadronização, desarmonia"). As fases 1 a 4 estão feitas (journal 125). Fal
 
 1. **Acentos que dependem de contexto** (`e`/`é`, `esta`/`está`, `a`/`à`, `tem`/`têm`): lote do
    Gemini por pasta, conferido por `node tools/accent-only.mjs` (só diacrítico; código e string
-   idênticos) e por `check`, `types` e `test`;
-2. **Raiz e disco.**
-3. **Elenco inspirado na vida real:** nomes inventados, papel, trajetória, temperamento público e
-   ideologia inspirados em figuras reais (por exemplo, quem faz no STF o papel de Alexandre de
-   Moraes); ADR 0003 revisto; pesquisa de quem entra.
+   idênticos) e por `check`, `types` e `test`. O lote está escrito em `tmp/agents/to-gemini.md`;
+   o canal pede a janela do Gemini aberta (porta CDP);
+2. **Raiz e disco**, feito em 01/10: saiu o `debug.log` (log de GPU do Chromium, ignorado pelo
+   Git); os comentários do workflow da CI ganharam acento. Para ele decidir: apagar
+   `tmp/agents/to-codex.md`, o canal do Codex, que saiu do projeto.
+3. **Elenco inspirado na vida real**, no escopo que ele fixou em 01/10: cerca de 40 papéis que
+   pesam no 1º ano; nome inventado, com papel, ideologia e temperamento inspirados no real, sem
+   episódio real na história do personagem. Agora, quem não é eleito (STF, PGR, AGU, BC,
+   comandantes, TCU, imprensa, mercado); Congresso, lideranças e governadores depois do 2º turno
+   (25/10/2026), com as bancadas reais de 2027. ADR 0003 revisto.
 4. **As partidas Xi e Lee escritas** como se ele jogasse (estilo Geopolitical Simulator, Democracy
    4, Football Manager), no jogo pronto, com desfecho realista mesmo que fracassem; servem de
    régua, leitura e roteiro de teste.
@@ -98,18 +105,20 @@ Depois disso: o [ciclo 34](cycles/34-the-posse-rebuilt.md), reescrito para a pos
    [ciclo 33](cycles/33-the-whole-game.md) foi conferido pelo Claude e aprovado por ele em 26/09
    (decisões 1, 5 e 9 tomadas; a 10, retratos, aberta: serão imagens que ele gera no ChatGPT);
 5. **achado 81**, antes de fechar o E0; não bloqueia o E1;
-6. **achado 69** — três provas do passeio caem com a CPU ocupada: provar a causa e consertar;
-7. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
-8. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%);
-9. **3º ultra: `src/ui` inteira**, depois de fechar o ciclo 29;
-10. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](archive/cycles/30-depth-and-proofs.md): ele marca os
-    candidatos que entram.
+6. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
+7. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%);
+8. **3º ultra: `src/ui` inteira**, depois de fechar o ciclo 29;
+9. **ciclo 30** — [`cycles/30-depth-and-proofs.md`](archive/cycles/30-depth-and-proofs.md): ele marca os
+   candidatos que entram.
 
 ## Decisões vivas
 
 Ordens dele, da mais nova para a mais antiga. O texto inteiro de cada uma, até 01/10, está no
 [handoff arquivado](archive/handoff-2026-10-01.md).
 
+- **01/10, o elenco inspirado na vida real:** cerca de 40 papéis que pesam no 1º ano; nome
+  inventado; papel, ideologia e temperamento inspirados no real, sem episódio real na história do
+  personagem. Os eleitos esperam o 2º turno de 25/10/2026, para entrar com as bancadas reais de 2027.
 - **01/10, a interface evolui a partir da atual:** revisa a ordem de 26/09 ("recomeça do zero").
   A posse se constrói dentro do jogo, no sistema de desenho que existe (tokens, fontes, Liquid Glass,
   mola, ícones, textos), e substitui o formulário de nova partida. O estilo do ciclo 32 entra como
@@ -234,15 +243,7 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 - **74. O canal tributário está morto (24/09).** `turn.mjs:1451-1452` passa a mesma carga como
   `taxLoad` e `baseTaxLoad`; `taxDelta` é sempre zero. Liga com o item B4 do ciclo 30;
 
-- **69. Três provas do passeio caem com a CPU ocupada (23/09; reproduzido em 01/10).** Com 12
-  processos ocupando os 12 núcleos durante `npm run walk`, o HEAD `dd27945` caiu 2 de 2 vezes nas
-  mesmas três asserções: o voo interrompido do Gabinete (724px no corte, 569px e 570px dois quadros
-  depois), a pílula da coluna (4,5px e 13,6px fora do item) e o centro da pasta no recomeçar. Sem
-  carga, 3 de 3 verdes. As três medem posição alguns quadros depois de um gesto; hipótese a provar:
-  a prova conta quadros e a mola anda por tempo, então quadro longo vira "salto". Nenhum limite foi
-  afrouxado. Em 23/09, a pasta mediu 719px no corte e 569px dois quadros depois. Evidência: `docs/evidence/gate/validate-flight-failure-2026-09-23.log`; rodada final verde em
-  `docs/evidence/gate/validate-final-2026-09-23.log`;
-- **66. A carta do arquivamento não existe (21/09).** Ver fila 4;
+- **66. A carta do arquivamento não existe (21/09).** Está na fila, item 6;
 - **65. `--paper` é cor nos tokens e largura na folha (18/09).** `00-tokens.css` declara
   `--paper: #ffffff`; `.sheet` redeclara `--paper: 720px`. Hoje nada lê a cor dentro da folha; a
   primeira que ler recebe `720px`. Renomear a largura mexe em 15 `calc()` de `46-screen-cabinet-desk.css`;

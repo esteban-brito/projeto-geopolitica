@@ -854,7 +854,7 @@ O ciclo 29 segue aberto (prosa do domínio, poda do `tmp/`) e não bloqueia nada
 | avaliação agendada semanticamente equivalente à completa; condição temporal sempre agendada ou derivável         |
 | `ACTION` ≠ `EVENT`, ligados por referência, até o laboratório provar que a distinção não vale nada               |
 | `PROPOSITION` não é objeto canônico agora                                                                        |
-| CLAUDE.md, AGENTS.md, agent-brief e standards dizem a mesma coisa: a tela mostra o que a Presidência sabe        |
+| AGENTS.md e standards dizem a mesma coisa: a tela mostra o que a Presidência sabe                                |
 | direção final: 513 deputados e 81 senadores individuais; facções emergentes, não substitutas                     |
 | "empresa" no ADR 0003                                                                                            |
 | achados de fidelidade com VERIFICADO e VERIFICAR; nada em VERIFICAR vira regra antes da pesquisa                 |
