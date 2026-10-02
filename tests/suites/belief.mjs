@@ -128,7 +128,7 @@ test("QUALITY 1 E CERTEZA: uma, concordantes e contraditórias, sem infinito", (
 });
 
 test("CRENÇA ERRADA COM CONFIANÇA ALTA: o motor não sabe a verdade", () => {
-  /* No mundo do cenario a aprovação e 50; três fontes independentes dizem 20. */
+  /* No mundo do cenário a aprovação é 50; três fontes independentes dizem 20. */
   const wrong = once([
     said("a:0:0", "a", 20, 0.9),
     said("b:0:0", "b", 20, 0.9),

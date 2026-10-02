@@ -1,16 +1,16 @@
-/* GUARDA · PROSA — o comentário tem teto, e o teto e por BLOCO.
+/* GUARDA · PROSA — o comentário tem teto, e o teto é por BLOCO.
 
    Metade deste projeto já foi comentário: 15.961 linhas de prosa contra 15.737 de
-   código, com um arquivo a 85%. O custo não e disco — e auditoria: quem procura uma
+   código, com um arquivo a 85%. O custo não é disco — é auditoria: quem procura uma
    regra rola por parágrafos de diário para achar três linhas de CSS.
 
-   ⚠ O TETO E POR BLOCO, E NÃO POR ARQUIVO, e a primeira versão desta guarda media o
+   ⚠ O TETO É POR BLOCO, E NÃO POR ARQUIVO, e a primeira versão desta guarda media o
    percentual do arquivo. Ela punia o lugar errado: um utilitário pequeno e bem
    documentado — nove funções, uma linha de resumo cada — dava 38% sem uma linha de
    diário dentro dele, enquanto um arquivo grande escondia um ensaio de 24 linhas e
-   passava. O que atrapalha quem lê não e a soma: e o bloco em que ele tropeca.
+   passava. O que atrapalha quem lê não é a soma: é o bloco em que ele tropeça.
 
-   ⚠ LINHA DE TIPO NAO CONTA. `@typedef`, `@param` e `@property` sao contrato, e puni-las
+   ⚠ LINHA DE TIPO NÃO CONTA. `@typedef`, `@param` e `@property` são contrato, e puni-las
    empurraria o projeto para tipagem implícita — o oposto do que se quer.
 
    ── ELA TEM SEIS TRABALHOS ────────────────────────────────────────────────
@@ -21,16 +21,16 @@
       projeto não tem mais;
    5. o BLOCO DECAPITADO — o mesmo corte comeu o INÍCIO de treze parágrafos, e a 3 só
       olhava o fim deles;
-   6. o CORTE NO MIOLO — e ele e a metade que faltava das duas acima.
+   6. o CORTE NO MIOLO — e ele é a metade que faltava das duas acima.
 
-   ⚠ AS REGRAS 3 E 5 SÓ OLHAM AS DUAS PONTAS DE UM BLOCO, e e por isso que a sexta
+   ⚠ AS REGRAS 3 E 5 SÓ OLHAM AS DUAS PONTAS DE UM BLOCO, e é por isso que a sexta
    existe: `blocksFrom` cola as linhas vizinhas num texto só, então `CUT` mede a ÚLTIMA
    linha e `HEADLESS` a PRIMEIRA. Remover um parágrafo do MEIO de um bloco longo não
-   move nenhuma das duas — e e exatamente isso que o corte automático fez em
+   move nenhuma das duas — e é exatamente isso que o corte automático fez em
    `state.mjs`, onde um parágrafo parou em "porque tudo" com as duas pontas intactas.
 
    ⚠ O QUARTO PEGA A FAMÍLIA MAIS CARA DAQUI, e só metade dela — ver `standards.md` §7.
-   Prosa que continua valida e para de ser verdade: `trend.mjs` afirmou por sessões que
+   Prosa que continua válida e para de ser verdade: `trend.mjs` afirmou por sessões que
    "a série de índices por área não existe no estado" enquanto ela existia e era
    preenchida todo turno, e duas telas liam a fonte errada por causa disso. */
 
@@ -46,36 +46,36 @@ const HEAD_CAP = 14;
 
 const TYPE = /@(ts-|type|param|returns?|typedef|property|satisfies|template|see|throws)/;
 
-/* ⚠ O ENTRYPOINT ESTAVA DE FORA até 23/08/2026, e ele e o maior arquivo do projeto:
+/* ⚠ O ENTRYPOINT ESTAVA DE FORA até 23/08/2026, e ele é o maior arquivo do projeto:
    1.283 linhas, 45% de prosa, 12 blocos acima do teto e 18 datas. A guarda escopava
    por `src|styles|tools`, e `src/main.mjs` mora na raiz — a folha declarava cobertura que
-   não existia, que e o defeito que `standards.md` §7 nomeia. */
+   não existia, que é o defeito que `standards.md` §7 nomeia. */
 const SCOPE = /^(src|styles|tools)\/|^app\.mjs$/;
 
 /* A DATA DE DIÁRIO, e ela não colide com CITAÇÃO DE FONTE. O catálogo cita
    procedência o tempo todo — "Fonte: IBGE", "PLOA 2025", "LC 200/2023, art. 4o" —, e
-   nenhuma dessas formas usa dia/mes/ano. Verificado nas 56 ocorrências: todas eram
+   nenhuma dessas formas usa dia/mês/ano. Verificado nas 56 ocorrências: todas eram
    diário ("SAIU em 22/08/2026", "por decisão dele"), nenhuma era fonte. */
 const DIARY_DATE = /\b\d{2}\/\d{2}\/\d{4}\b/;
 
-/* O ENTRYPOINT E O SINAL DE QUE O PROJETO INTEIRO ESTA NO MAPA — mesma condição e
+/* O ENTRYPOINT É O SINAL DE QUE O PROJETO INTEIRO ESTÁ NO MAPA — mesma condição e
    mesma razão de `vocabulary`: a auditoria de identificador morto precisa do corpus
    completo, e sem a condição as provas sintéticas das outras duas (que entregam um
    arquivo só) passariam a ser acusadas de citar coisa que não existe. Uma prova que
    passa pela razão errada não prova nada. */
 const ENTRY = "src/main.mjs";
 
-/* ⚠ A ASSINATURA DE UM BLOCO CORTADO NO MEIO, e ela e estreita de propósito: a última
-   palavra e um CONECTIVO, que nenhuma frase inteira usa para terminar. Um corte automático
+/* ⚠ A ASSINATURA DE UM BLOCO CORTADO NO MEIO, e ela é estreita de propósito: a última
+   palavra é um CONECTIVO, que nenhuma frase inteira usa para terminar. Um corte automático
    de prosa já passou por aqui e deixou quatro blocos assim — "deslocaria o índice e",
    "o save só precisa da semente e da" —, e o registro da época os deu como falso positivo.
    Medido antes de escrever: com esta lista, ZERO falso positivo no projeto inteiro. Um
    casador mais largo (frase sem ponto final) acusava 25, dos quais 21 eram cabeçalho de
    seção e contrato de tipo — e alarme que dispara sem defeito ensina a desligar o alarme. */
-/* ⚠ A ASSINATURA DE UM BLOCO DECAPITADO, e ela e o espelho de `CUT`: a PRIMEIRA palavra
+/* ⚠ A ASSINATURA DE UM BLOCO DECAPITADO, e ela é o espelho de `CUT`: a PRIMEIRA palavra
    começa em minúscula, que nenhuma frase inteira faz. O mesmo corte automático deixou NOVE
    assim — "de Selic custa cerca de R$ 40 bi ao ano" era o que restava de um parágrafo com
-   ancora e conta. Medido antes de escrever: exigindo LETRA minúscula, zero falso positivo
+   âncora e conta. Medido antes de escrever: exigindo LETRA minúscula, zero falso positivo
    no projeto; com qualquer caractere, os `≈` do catálogo de partidos e o `⚅` do save
    acusavam onze. */
 const HEADLESS = /^[a-zà-ÿ]/;
@@ -102,7 +102,7 @@ export function blocksOf(source) {
     const text = raw.trim();
 
     if (open < 0 && text.startsWith("/*")) {
-      /* Bloco que abre e fecha na mesma linha nunca e um ensaio. */
+      /* Bloco que abre e fecha na mesma linha nunca é um ensaio. */
       if (text.includes("*/")) continue;
       open = index;
       prose = TYPE.test(text) ? 0 : 1;
@@ -112,8 +112,8 @@ export function blocksOf(source) {
 
     if (open < 0) continue;
 
-    /* ⚠ A CONTINUACAO DE UM TIPO TAMBÉM E TIPO. Uma uniao longa quebra em três linhas
-       e so a primeira traz o `@` — contadas como prosa, elas acusavam a assinatura de
+    /* ⚠ A CONTINUAÇÃO DE UM TIPO TAMBÉM É TIPO. Uma união longa quebra em três linhas
+       e só a primeira traz o `@` — contadas como prosa, elas acusavam a assinatura de
        `cabinetHtml` de ser um ensaio de 18 linhas. */
     const body = text.replace(/^\*\s?/, "");
     const continua = typing && (body === "" || /^[|}[(]/.test(body) || /^[a-z]/.test(body));
@@ -134,14 +134,14 @@ export function blocksOf(source) {
 }
 
 /**
- * SÓ O QUE E COMENTÁRIO, linha a linha — o código vira espaço.
+ * SÓ O QUE É COMENTÁRIO, linha a linha — o código vira espaço.
  *
  * ⚠ ELA EXISTE PARA A DATA NÃO SER LIDA DE DENTRO DE UMA STRING. `stripJsComments`
- * apaga o comentário preservando a quebra de linha, então onde ele deixou espaço e
- * onde havia prosa: o resto e código, e um literal com barra dentro não vira acusação.
+ * apaga o comentário preservando a quebra de linha, então onde ele deixou espaço é
+ * onde havia prosa: o resto é código, e um literal com barra dentro não vira acusação.
  *
  * @param {string} source
- * @param {string} stripped o mesmo arquivo com o comentario apagado
+ * @param {string} stripped o mesmo arquivo com o comentário apagado
  * @returns {{ line: number, text: string }[]}
  */
 function commentsOf(source, stripped) {
@@ -178,7 +178,7 @@ function livingCode(files) {
 }
 
 /**
- * OS BLOCOS, montados das linhas vizinhas — um bloco e o que o olho lê de uma vez.
+ * OS BLOCOS, montados das linhas vizinhas — um bloco é o que o olho lê de uma vez.
  *
  * @param {{ line: number, text: string }[]} comments
  * @returns {{ line: number, text: string }[]}
@@ -190,7 +190,7 @@ function blocksFrom(comments) {
   let atual = null;
 
   for (const comment of comments) {
-    /* A cerca do bloco e o `*` de continuacao do JSDoc, e ela não e prosa. */
+    /* A cerca do bloco é o `*` de continuação do JSDoc, e ela não é prosa. */
     const limpo = comment.text
       .replace(/^\s*\/\*+/, "")
       .replace(/\*+\/\s*$/, "")
@@ -211,7 +211,7 @@ function blocksFrom(comments) {
 }
 
 /**
- * ⚠ SÓ ENTRE CRASES, e o recorte e o que mantem a guarda quieta: este projeto cita
+ * ⚠ SÓ ENTRE CRASES, e o recorte é o que mantém a guarda quieta: este projeto cita
  * identificador em prosa com crase por convenção, e sem esse limite um `.` decimal ou
  * um `.map` de frase corrida viraria acusação. Medido: 3 achados no projeto inteiro.
  *
@@ -293,10 +293,10 @@ export function audit(files) {
     }
 
     /* ── 6 — O CORTE NO MIOLO, e ele tem duas metades ───────────────────────
-       A primeira e mecânica: um `/*` que abre DENTRO de outro bloco quer dizer que o de
+       A primeira é mecânica: um `/*` que abre DENTRO de outro bloco quer dizer que o de
        cima nunca fechou, e os dois viram um comentário só. Nada falha — o verificador de
-       tipos le os `@typedef` do bloco fundido —, e por isso ele atravessa o portao.
-       A segunda e a frase que para no meio: `CUT` já sabe reconhece-la, e só não a via
+       tipos lê os `@typedef` do bloco fundido —, e por isso ele atravessa o portão.
+       A segunda é a frase que para no meio: `CUT` já sabe reconhecê-la, e só não a via
        porque a regra 3 mede a ÚLTIMA linha do bloco colado. */
     let openedAt = 0;
     for (const comment of comments) {
@@ -315,7 +315,7 @@ export function audit(files) {
       if (text.includes("*/")) openedAt = 0;
     }
 
-    /* A CERCA DO JSDOC SAI PARA A FRASE APARECER: sem tirar o `*` de continuacao, toda
+    /* A CERCA DO JSDOC SAI PARA A FRASE APARECER: sem tirar o `*` de continuação, toda
        linha começaria pelo mesmo caractere e `CUT` mediria a cerca. */
     const bodies = comments.map(comment => ({
       line: comment.line,
@@ -330,8 +330,8 @@ export function audit(files) {
     for (const [index, item] of bodies.entries()) {
       const next = bodies[index + 1];
       if (!next || next.line !== item.line + 1) continue;
-      /* ⚠ SÓ ONDE A PROSA ENCOSTA NUM TIPO: e ali que o parágrafo removido deixa a frase
-         pendurada, e e o unico recorte em que `CUT` nao acusa quebra legitima de `@param`. */
+      /* ⚠ SÓ ONDE A PROSA ENCOSTA NUM TIPO: é ali que o parágrafo removido deixa a frase
+         pendurada, e é o único recorte em que `CUT` não acusa quebra legítima de `@param`. */
       if (item.body === "" || TYPE.test(item.body) || !TYPE.test(next.body)) continue;
       if (!CUT.test(item.body)) continue;
       add(
@@ -380,14 +380,14 @@ export const synthetic = [
     files: new Map([["src/x.mjs", `/*\n${ENSAIO}\n*/\n${CODE}`]]),
   },
   {
-    /* ⚠ ELA E MÍNIMA DE PROPÓSITO: um bloco de uma linha, sem src/main.mjs no mapa. Assim
-       só a auditoria da DATA pode acusa-la — o teto não cabe num bloco de uma linha e a
+    /* ⚠ ELA É MÍNIMA DE PROPÓSITO: um bloco de uma linha, sem src/main.mjs no mapa. Assim
+       só a auditoria da DATA pode acusá-la — o teto não cabe num bloco de uma linha e a
        do identificador morto nem roda. Prova que passa pela razão errada não prova nada. */
     label: "data de diario num comentario",
     files: new Map([["src/x.mjs", "/* o vocativo saiu em 22/08/2026 */\nconst a = 1;"]]),
   },
   {
-    /* ⚠ ELA REINTRODUZ UM DEFEITO CONSUMADO, e não inventado: e a frase exata que estava
+    /* ⚠ ELA REINTRODUZ UM DEFEITO CONSUMADO, e não inventado: é a frase exata que estava
        em `random.mjs` — o bloco parava em "deslocaria o índice e", e o registro da época
        contou os quatro cortes deste tipo como falso positivo. */
     label: "bloco que para no meio de uma frase",
@@ -396,7 +396,7 @@ export const synthetic = [
     ]),
   },
   {
-    /* ⚠ ELA REINTRODUZ UM DEFEITO CONSUMADO, e não inventado: e o que sobrou em
+    /* ⚠ ELA REINTRODUZ UM DEFEITO CONSUMADO, e não inventado: é o que sobrou em
        `macro.mjs` depois de o corte comer o início do parágrafo do juro. */
     label: "bloco que comeca no meio de uma frase",
     files: new Map([["src/x.mjs", "/* de Selic custa cerca de R$ 40 bi ao ano. */\nconst a = 1;"]]),
@@ -405,15 +405,15 @@ export const synthetic = [
     /* ⚠ ELA REINTRODUZ UM DEFEITO CONSUMADO: o bloco que declarava as séries em `state.mjs`
        nunca fechava, e o `/*` seguinte abria dentro dele. As duas pontas ficam intactas,
        então as regras 3 e 5 passam — e o verificador de tipos também, porque ele lê os
-       `@typedef` do bloco fundido. O texto e maiusculo de proposito: em minuscula a regra 5
+       `@typedef` do bloco fundido. O texto é maiúsculo de propósito: em minúscula a regra 5
        o acusaria, e prova que passa pela razão errada não prova nada. */
     label: "bloco que abre dentro de outro que nunca fechou",
     files: new Map([["src/x.mjs", "/**\n * O pais\n/**\n * O mes\n */\nconst a = 1;"]]),
   },
   {
-    /* ⚠ E ESTA E O CORTE NO MIOLO: a frase para num conectivo e a linha seguinte e CONTRATO,
-       que e onde o parágrafo removido deixa a ponta pendurada. A regra 3 mede a ÚLTIMA linha
-       do bloco colado — aqui um `@param` —, entao ela nao ve. */
+    /* ⚠ E ESTA É O CORTE NO MIOLO: a frase para num conectivo e a linha seguinte é CONTRATO,
+       que é onde o parágrafo removido deixa a ponta pendurada. A regra 3 mede a ÚLTIMA linha
+       do bloco colado — aqui um `@param` —, então ela não vê. */
     label: "frase que para no meio do bloco, encostada num tipo",
     files: new Map([
       ["src/x.mjs", "/**\n * A conta nasce de dois motores e\n * @param {number} x\n */\nlet a;"],
@@ -425,7 +425,7 @@ export const synthetic = [
   },
   {
     /* ⚠ E ESTA ENTREGA O ENTRYPOINT, sem o qual a quarta auditoria nem roda. O
-       `src/main.mjs` daqui e limpo de propósito: se ele também fosse acusado, a prova ficaria
+       `src/main.mjs` daqui é limpo de propósito: se ele também fosse acusado, a prova ficaria
        verde sem provar que a guarda separa a citação viva da morta. */
     label: "prosa citando um token que o projeto nao tem mais",
     files: new Map([

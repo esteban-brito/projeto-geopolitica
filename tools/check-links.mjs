@@ -1,6 +1,6 @@
 /* VERIFICADOR DE REFERÊNCIAS — todo caminho citado num arquivo versionado tem de existir.
    Lê links Markdown relativos e caminhos entre crases que comecem por uma pasta do projeto.
-   uso: node tools/check-links.mjs [--list]   sai 1 se houver referencia quebrada. */
+   uso: node tools/check-links.mjs [--list]   sai 1 se houver referência quebrada. */
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";

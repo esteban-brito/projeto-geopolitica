@@ -1,4 +1,4 @@
-/* SUITE · A PAUTA DERIVADA — o orcamento vira proposta, e o rito vira consequência. */
+/* SUITE · A PAUTA DERIVADA — o orçamento vira proposta, e o rito vira consequência. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -13,7 +13,7 @@ import { PROGRAMS } from "../../src/data/programs.mjs";
 import { RULES } from "../../src/data/rules.mjs";
 import { QUALIFIED_MAJORITY, SEATS, SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 
-/** O nível de abertura de cada programa, que e o estado do primeiro mês. */
+/** O nível de abertura de cada programa, que é o estado do primeiro mês. */
 const OPENING = Object.fromEntries(PROGRAMS.map(program => [program.id, program.initial]));
 
 /** @param {Record<string, number>} requested */
@@ -26,8 +26,8 @@ test("O PAÍS HERDADO CABE NO ORCAMENTO HERDADO", () => {
   /* Duas verdades divergem, e esta divergiria
      no primeiro mês — o jogador alocaria a partir de um total e o LASTRO cobraria
      a partir de outro. */
-  /* ⚠ A RENÚNCIA NÃO ENTRA NA SOMA, e a exclusão E a prova: ela não e despesa, e conta-la
-     aqui faria a ancora afirmar que o país gasta um dinheiro que ninguém empenha. */
+  /* ⚠ A RENÚNCIA NÃO ENTRA NA SOMA, e a exclusão É a prova: ela não é despesa, e contá-la
+     aqui faria a âncora afirmar que o país gasta um dinheiro que ninguém empenha. */
   const total = PROGRAMS.filter(program => program.waiver !== true).reduce(
     (sum, program) => sum + (program.cost * program.initial) / 100,
     0,
@@ -41,7 +41,7 @@ test("O PAÍS HERDADO CABE NO ORCAMENTO HERDADO", () => {
 });
 
 test("A OBRIGATÓRIA E A SOMA DOS PISOS", () => {
-  /* A outra metade da prova acima, e ela e o que faz a reforma significar alguma coisa. */
+  /* A outra metade da prova acima, e ela é o que faz a reforma significar alguma coisa. */
   const locked = PROGRAMS.filter(program => program.waiver !== true).reduce(
     (sum, program) => sum + (program.cost * program.floor) / 100,
     0,
@@ -62,8 +62,8 @@ test("COMPRAR UMA MAIORIA NÃO CABE NUM MÊS, e nenhuma bancada sozinha decide",
 
   assert.ok(chamber > room * 1.5, `o plenario custa ${chamber} e cabem ${room} no mes`);
 
-  /* A MAIORIA MAIS BARATA E A DAS MAIORES BANCADAS, porque o preço e por CADEIRA: a mesma
-     maioria custa o mesmo montada de qualquer jeito, e o que muda e quantas portas o
+  /* A MAIORIA MAIS BARATA É A DAS MAIORES BANCADAS, porque o preço é por CADEIRA: a mesma
+     maioria custa o mesmo montada de qualquer jeito, e o que muda é quantas portas o
      presidente precisa bater. */
   const ordenadas = [...PARTIES].sort((a, b) => b.seats - a.seats);
   let cadeiras = 0;
@@ -83,7 +83,7 @@ test("COMPRAR UMA MAIORIA NÃO CABE NUM MÊS, e nenhuma bancada sozinha decide",
     `a maioria mais barata custa ${custo.toFixed(1)} e cabe nos ${room.toFixed(1)} do mes`,
   );
 
-  /* ⚠ E NENHUMA BANCADA SOZINHA E MAIORIA. */
+  /* ⚠ E NENHUMA BANCADA SOZINHA É MAIORIA. */
   const maior = Math.max(...PARTIES.map(party => party.seats));
   assert.ok(
     maior < SIMPLE_MAJORITY,
@@ -92,7 +92,7 @@ test("COMPRAR UMA MAIORIA NÃO CABE NUM MÊS, e nenhuma bancada sozinha decide",
 });
 
 test("O PISO NUNCA PASSA DO NÍVEL HERDADO", () => {
-  /* Um piso acima do gasto de hoje significaria que o país já esta ilegal na posse — e o
+  /* Um piso acima do gasto de hoje significaria que o país já está ilegal na posse — e o
      jogador começaria devendo uma reforma que ninguém pediu. */
   for (const program of PROGRAMS) {
     assert.ok(
@@ -108,7 +108,7 @@ test("O PISO NUNCA PASSA DO NÍVEL HERDADO", () => {
 
 test("NENHUM MOVIMENTO NULO VIRA PROPOSTA", () => {
   /* Sem esta recusa, o peso zero produziria uma divisão por zero ou — pior — um vetor em (50,
-     50), que e uma proposta centrista fantasma que o Congresso votaria com prazer e que
+     50), que é uma proposta centrista fantasma que o Congresso votaria com prazer e que
      ninguém escreveu. */
   assert.equal(composeWith({}).proposal, null);
   assert.equal(composeWith(OPENING).proposal, null);
@@ -191,7 +191,7 @@ test("O QUÓRUM ACOMPANHA O RITO, e a execução orçamentária não vai a plena
 });
 
 test("O RITO MAIS EXIGENTE MANDA no pacote inteiro", () => {
-  /* A reforma e UM TEXTO SÓ: tudo que ela move vai junto ao plenario. */
+  /* A reforma é UM TEXTO SÓ: tudo que ela move vai junto ao plenário. */
   const constitutional = PROGRAMS.find(program => program.guard === "constitution");
   const loose = PROGRAMS.find(program => program.guard === "none" && program.floor > 0);
   assert.ok(constitutional && loose, "o catalogo precisa dos dois casos para esta prova valer");
@@ -204,7 +204,7 @@ test("O RITO MAIS EXIGENTE MANDA no pacote inteiro", () => {
 test("DENTRO DAS FAIXAS NÃO PRECISA DE NINGUÉM", () => {
   fc.assert(
     fc.property(anyProgram, fc.double({ min: 0, max: 1, noNaN: true }), (program, where) => {
-      /* Qualquer nível entre o piso e o teto e execução orçamentária: não há voto a pedir,
+      /* Qualquer nível entre o piso e o teto é execução orçamentária: não há voto a pedir,
          porque a lei já autorizou. */
       const level = program.floor + (program.ceiling - program.floor) * where;
       const agenda = composeWith({ [program.id]: level });
@@ -242,7 +242,7 @@ test("MOVER A LEI E UMA PROPOSTA, e ela custa no minimo uma lei", () => {
 });
 
 test("A LEI E O GASTO CABEM NO MESMO TEXTO, e o texto não cobra duas vezes", () => {
-  /* A jogada que o ciclo 3 descreveu e que não existia: derrubar o piso da saude E baixar o
+  /* A jogada que o ciclo 3 descreveu e que não existia: derrubar o piso da saúde E baixar o
      gasto para dentro do piso novo, na mesma lei. */
   const guarded = PROGRAMS.find(program => program.guard === "constitution" && program.floor > 20);
   assert.ok(guarded, "o catalogo perdeu o programa de piso constitucional");
@@ -291,8 +291,8 @@ test("SOLTAR A FAIXA E EXCLUIR A LEI, e não há botão para isso", () => {
 });
 
 test("A FAIXA ESPELHA COMO O NÍVEL: vincular e desvincular são opostos", () => {
-  /* O mesmo espelho que faz cortar a saude ser um ato de direita vale para a lei: ampliar o
-     que ela obriga e um ato do lado do programa, e soltar a obrigação e o ato contrário. */
+  /* O mesmo espelho que faz cortar a saúde ser um ato de direita vale para a lei: ampliar o
+     que ela obriga é um ato do lado do programa, e soltar a obrigação é o ato contrário. */
   const program = PROGRAMS.find(p => p.floor > 10 && p.floor < 80 && p.economic < 40);
   assert.ok(program, "o catalogo precisa de um programa de esquerda com piso movel");
 
@@ -320,8 +320,8 @@ test("A FAIXA ESPELHA COMO O NÍVEL: vincular e desvincular são opostos", () =>
 });
 
 test("O PESO E EM DINHEIRO: o programa caro domina a posição", () => {
-  /* Sem isto, mover a vacinacao dominaria uma proposta que no mundo e sobre previdência — os
-     dois movimentos tem tamanho parecido no controle e tamanhos incomparaveis no país. */
+  /* Sem isto, mover a vacinação dominaria uma proposta que no mundo é sobre previdência — os
+     dois movimentos têm tamanho parecido no controle e tamanhos incomparáveis no país. */
   const big = [...PROGRAMS].sort((a, b) => b.cost - a.cost)[0];
   const small = [...PROGRAMS].sort((a, b) => a.cost - b.cost)[0];
   assert.ok(big && small && big.cost > small.cost * 2);
@@ -339,7 +339,7 @@ test("O PESO E EM DINHEIRO: o programa caro domina a posição", () => {
   );
 });
 
-/* ── AS ALAVANCAS DE REGRA ────────────────────────────────────────────────── Politica que
+/* ── AS ALAVANCAS DE REGRA ────────────────────────────────────────────────── Política que
    não se mede em reais: privatizar, estatizar, concentrar poder. */
 
 const POWER = RULES.find(rule => rule.family === "power");
@@ -360,10 +360,10 @@ test("PRIVATIZAR E UMA PROPOSTA, e ela pesa pelo ALCANCE e não pelo custo", () 
   const agenda = withRules({ [PROPERTY.id]: 0 });
 
   assert.ok(agenda.proposal, "vender uma estatal inteira nao produziu pauta");
-  /* REGRA NÃO CONSOME DISCRICIONÁRIO: o efeito fiscal dela e dividendo, folha e venda, e
-     nenhum dos três e gasto do mês. */
+  /* REGRA NÃO CONSOME DISCRICIONÁRIO: o efeito fiscal dela é dividendo, folha e venda, e
+     nenhum dos três é gasto do mês. */
   assert.equal(agenda.spend, 0);
-  /* `-0 === 0` e verdade em JavaScript e `assert.equal` discorda — o zero negativo sai da
+  /* `-0 === 0` é verdade em JavaScript e `assert.equal` discorda — o zero negativo sai da
      negação do zero em `fiscalImpact: -spend`. */
   assert.equal(Math.abs(agenda.proposal.fiscalImpact), 0);
 });
@@ -398,7 +398,7 @@ test("A JANELA DE OVERTON: o poder do Executivo derruba o rito", () => {
 test("O PODER NÃO SE AUTOCONCEDE", () => {
   /* Se a proposta pudesse usar o poder que ela mesma cria, uma emenda que leva o Executivo ao
      teto se autorizaria a passar por caneta — e existiria uma jogada que se aprova sozinha,
-     que e o oposto de tudo o que este modelo faz. */
+     que é o oposto de tudo o que este modelo faz. */
   assert.ok(POWER);
   const agenda = withRules({ [POWER.id]: 100 }, POWER.initial);
 
@@ -407,7 +407,7 @@ test("O PODER NÃO SE AUTOCONCEDE", () => {
 });
 
 test("CONCENTRAR PODER E A PAUTA MAIS CARA QUE O CATÁLOGO PRODUZ", () => {
-  /* Ela não e proibida — e cara. */
+  /* Ela não é proibida — é cara. */
   assert.ok(POWER);
   const authoritarian = withRules({ [POWER.id]: 100 }).proposal;
   assert.ok(authoritarian);
@@ -421,14 +421,14 @@ test("CONCENTRAR PODER E A PAUTA MAIS CARA QUE O CATÁLOGO PRODUZ", () => {
     );
   }
 
-  /* E ela e o extremo do eixo de liberdades, e não do econômico: concentrar poder não e de
-     esquerda nem de direita, e vertical. */
+  /* E ela é o extremo do eixo de liberdades, e não do econômico: concentrar poder não é de
+     esquerda nem de direita, é vertical. */
   assert.ok(authoritarian.liberty < 10, `poder no maximo deu liberdade ${authoritarian.liberty}`);
 });
 
 test("VERBA E REGRA CABEM NO MESMO TEXTO", () => {
   /* O logrolling existindo por construção: privatizar uma estatal e cortar um programa vão
-     juntos ao plenario, e o Congresso vê UMA proposta — cuja posição e a media ponderada das
+     juntos ao plenário, e o Congresso vê UMA proposta — cuja posição é a média ponderada das
      duas. */
   assert.ok(PROPERTY);
   const program = PROGRAMS[0];

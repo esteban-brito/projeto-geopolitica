@@ -15,7 +15,7 @@ test("o catálogo do projeto esta íntegro", () => {
 });
 
 test("as cadeiras das bancadas somam a Camara inteira", () => {
-  /* Soma que não fecha não e erro de digitacao inofensivo: e uma votação cujo quórum nunca
+  /* Soma que não fecha não é erro de digitação inofensivo: é uma votação cujo quórum nunca
      bate, e o defeito apareceria como "a lei nunca passa". */
   const total = PARTIES.reduce((sum, party) => sum + party.seats, 0);
   assert.equal(total, SEATS, `as bancadas somam ${total} e a Camara tem ${SEATS}`);
@@ -46,7 +46,7 @@ test("A VENALIDADE POR EIXO FAZ ALGUMA COISA: ao menos um bloco e assimétrico",
 
 test("o preço depende do assunto, e em sentidos opostos", () => {
   /* O caso que motivou a mudança: a bancada liberal não entrega a pauta econômica e negocia
-     costumes; o centrao faz o contrário. */
+     costumes; o centrão faz o contrário. */
   const liberal = PARTIES.find(party => party.id === "vanguarda");
   const centrao = PARTIES.find(party => party.id === "fbr");
   assert.ok(liberal && centrao);
@@ -61,8 +61,8 @@ test("o preço depende do assunto, e em sentidos opostos", () => {
 });
 
 test("nenhum bloco esta inteiramente a venda", () => {
-  /* Venalidade 1 significa que dinheiro anula a ideologia por completo, e ai a bancada deixa
-     de ter posição — vira uma função do orcamento. */
+  /* Venalidade 1 significa que dinheiro anula a ideologia por completo, e aí a bancada deixa
+     de ter posição — vira uma função do orçamento. */
   for (const party of PARTIES) {
     assert.ok(party.venalityEconomic < 1, `${party.id} se vende por inteiro em economia`);
     assert.ok(party.venalityLiberty < 1, `${party.id} se vende por inteiro em costumes`);
@@ -108,8 +108,8 @@ test("PROVA SINTÉTICA: id repetido e acusado", () => {
 });
 
 test("todo número fora da faixa declarada e acusado", () => {
-  /* Propriedade e não exemplo: o que precisa ser provado não e que 1.5 de venalidade e
-     recusado, e que NENHUM valor fora da faixa passa. */
+  /* Propriedade e não exemplo: o que precisa ser provado não é que 1.5 de venalidade é
+     recusado, é que NENHUM valor fora da faixa passa. */
   fc.assert(
     fc.property(
       fc.double({ min: 1.0001, max: 1000, noNaN: true }),
@@ -157,7 +157,7 @@ const CONTAGENS = new Map([
 test("O HANDOFF CONTA O CATÁLOGO QUE EXISTE, e não o de uma sessão passada", () => {
   const handoff = readFileSync(join(import.meta.dirname, "..", "..", "docs", "handoff.md"), "utf8");
 
-  /* TODA LINHA DE DUAS COLUNAS, e não uma tabela ancorada por título: o rótulo e a chave, e
+  /* TODA LINHA DE DUAS COLUNAS, e não uma tabela ancorada por título: o rótulo é a chave, e
      assim a contagem pode morar em qualquer seção do arquivo sem a prova ter de saber onde. */
   const rows = [...handoff.matchAll(/^\|\s*([^|]+?)\s*\|\s*(\d+)\s*\|\s*$/gm)];
 
@@ -176,7 +176,7 @@ test("O HANDOFF CONTA O CATÁLOGO QUE EXISTE, e não o de uma sessão passada", 
   }
 
   /* ⚠ A PROVA TEM DE FALHAR QUANDO A TABELA SUMIR, senão apagar as linhas a deixa verde para
-     sempre — que e a forma mais silenciosa de uma prova morrer. */
+     sempre — que é a forma mais silenciosa de uma prova morrer. */
   assert.deepEqual(
     [...CONTAGENS.keys()].filter(label => !checked.includes(label)),
     [],

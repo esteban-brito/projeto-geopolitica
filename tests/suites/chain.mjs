@@ -39,7 +39,7 @@ function played(allocation, months = 30) {
 const NOTHING = Object.fromEntries(AREAS.map(area => [area.id, 0]));
 
 test("A CORRENTE E A PRESSÃO SÃO A MESMA CONTA — a soma das arestas fecha o multiplicador", () => {
-  /* ⚠ E ESTA E A PROVA QUE MORDE, e a família de defeito que ela fecha e a número 1 do
+  /* ⚠ E ESTA É A PROVA QUE MORDE, e a família de defeito que ela fecha é a número 1 do
      projeto: uma tela que refizesse `((valor - abertura) / 100) * force` por fora divergiria
      do turno no primeiro ajuste de calibragem, e explicaria um jogo que não roda. */
   fc.assert(
@@ -87,8 +87,8 @@ test("O QUE A EDUCACAO ENTREGA E O QUE A INDÚSTRIA RECEBE — e o atraso e o do
   assert.equal(vinda.lag, 24, "o atraso da educacao saiu diferente do catalogo");
   assert.equal(vinda.unit, "points");
 
-  /* ⚠ O NÚMERO E CONFERIDO CONTRA A MALHA RODANDO, e não contra a fórmula redigitada aqui: a
-     prova tem de reprovar se o motor mudar de conta, e não acompanha-lo. */
+  /* ⚠ O NÚMERO É CONFERIDO CONTRA A MALHA RODANDO, e não contra a fórmula redigitada aqui: a
+     prova tem de reprovar se o motor mudar de conta, e não acompanhá-lo. */
   const semAjuda = step({
     areas: AREAS.map(area => (area.feeds === "capacity" ? { ...area, force: 0 } : area)),
     index: state.capacity.index,
@@ -128,7 +128,7 @@ test("A VERBA MOSTRA O QUE ELA PÕE NO MÊS, e não o que poria por bilhão", ()
 });
 
 test("O SINAL DIZ O LADO — subir a Saude ALIVIA a despesa obrigatória", () => {
-  /* Saude alimenta `mandatory` com `force` negativo: quanto melhor o atendimento, menos a
+  /* Saúde alimenta `mandatory` com `force` negativo: quanto melhor o atendimento, menos a
      despesa obrigatória cobra. Um sinal trocado aqui pintaria de vermelho um acerto. */
   const alta = played({ ...NOTHING, health: 30 });
   const parada = played(NOTHING);
@@ -159,7 +159,7 @@ test("A MEIA-VIDA E A LEITURA DE `decay`, e ela fecha a identidade", () => {
 
 test("TODA ÁREA TEM UMA SAÍDA SÓ, e o catálogo e quem diz qual", () => {
   /* ⚠ O CATÁLOGO GARANTE "nenhuma área usa dois canais", e a corrente depende disso: com dois,
-     o efeito de uma alocação ficaria impossível de atribuir — que e o defeito que o motor de
+     o efeito de uma alocação ficaria impossível de atribuir — que é o defeito que o motor de
      propagação existe para não ter. */
   for (const area of AREAS) {
     const { out } = linksOf({ areas: AREAS, id: area.id, target: CAPACITY_TARGET });

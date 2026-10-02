@@ -1,7 +1,7 @@
 /* SUITE · O REDUCER — propriedades, e não exemplos.
-   POR QUE ESTA E A PRIMEIRA SUITE, com os motores ainda por nascer.
-   O reducer e a única peça já implementada que o resto vai depender: `src/state/state.mjs`
-   promete três coisas — imutabilidade, pureza e identidade de referencia — e as três são a
+   POR QUE ESTA É A PRIMEIRA SUÍTE, com os motores ainda por nascer.
+   O reducer é a única peça já implementada que o resto vai depender: `src/state/state.mjs`
+   promete três coisas — imutabilidade, pureza e identidade de referência — e as três são a
    base do render sem framework. */
 
 import assert from "node:assert/strict";
@@ -50,8 +50,8 @@ function resolutionOf(state) {
 }
 
 /* A SATISFAÇÃO DE CADA SEGMENTO em qualquer ponto da escala, incluindo os extremos: um
-   governo adorado pela base e odiado pelo topo e um estado valido, e e justamente o que a
-   media nacional esconde. */
+   governo adorado pela base e odiado pelo topo é um estado válido, e é justamente o que a
+   média nacional esconde. */
 const anyMood = fc
   .array(fc.double({ min: 0, max: 100, noNaN: true }), {
     minLength: SEGMENTS.length,
@@ -110,7 +110,7 @@ const anyMacro = fc.record({
   population: fc.double({ min: 100, max: 300, noNaN: true }),
 });
 
-/* A SÉRIE EM QUALQUER PONTO DO MANDATO, e a vazia entra junto: uma partida recem-aberta não
+/* A SÉRIE EM QUALQUER PONTO DO MANDATO, e a vazia entra junto: uma partida recém-aberta não
    tem mês guardado nenhum, e uma que atravessou o mandato tem 48. */
 const anySeriesLine = fc.array(fc.double({ min: -1e4, max: 3e4, noNaN: true }), { maxLength: 48 });
 
@@ -269,11 +269,11 @@ const anyUnknownAction = fc
   .map(type => /** @type {Action} */ (/** @type {unknown} */ ({ type })));
 
 /**
- * O INVARIANTE DA APROVAÇÃO, extraído para que a prova sintética la embaixo rode ESTA
- * verificação e não uma copia dela.
+ * O INVARIANTE DA APROVAÇÃO, extraído para que a prova sintética lá embaixo rode ESTA
+ * verificação e não uma cópia dela.
  *
- * e a saída de SONDA, e não um campo carregado. O invariante e o mesmo: as três
- * fatias somam 100 e nenhuma e negativa.
+ * é a saída de SONDA, e não um campo carregado. O invariante é o mesmo: as três
+ * fatias somam 100 e nenhuma é negativa.
  * @param {import("../../src/domain/opinion/index.mjs").Approval} approval
  */
 function assertApprovalInvariant(approval) {
@@ -341,7 +341,7 @@ test("a aprovação sempre soma 100 e nenhuma fatia fica negativa", () => {
 
 test("PROVA SINTÉTICA: o invariante acusa um reducer que larga o resto", () => {
   /* O defeito exato que a verificação acima existe para pegar: `fair` deixa de ser o resto e
-     vira campo carregado adiante — que e o formato do erro quando alguém troca a conta por um
+     vira campo carregado adiante — que é o formato do erro quando alguém troca a conta por um
      spread durante uma refatoração. */
   const broken = (/** @type {GameState} */ state) => {
     const poll = pollFrom(state.mood, SEGMENTS, OPINION);

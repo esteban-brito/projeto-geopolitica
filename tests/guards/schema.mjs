@@ -1,5 +1,5 @@
 /* GUARDA · ESQUEMA — todo dado editável passa por uma fronteira, e por UMA só.
-   O catálogo vai virar editável (a aba de nome e logo e decisão fechada), e dado editável sem
+   O catálogo vai virar editável (a aba de nome e logo é decisão fechada), e dado editável sem
    fronteira produz o pior tipo de defeito: ele não quebra onde foi digitado, quebra três
    motores adiante, num cálculo que parece errado sem motivo aparente. */
 
@@ -32,7 +32,7 @@ export function audit(files) {
     const source = stripJsComments(raw);
     const inData = path.startsWith(DATA_DIR);
 
-    /* 3 — a fronteira e um lugar só. */
+    /* 3 — a fronteira é um lugar só. */
     if (!inData) {
       for (const hit of source.matchAll(/export\s+const\s+([A-Z][A-Z0-9_]*_SCHEMA)\b/g)) {
         add(

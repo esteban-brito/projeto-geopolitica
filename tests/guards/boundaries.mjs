@@ -1,4 +1,4 @@
-/* GUARDA · FRONTEIRAS — cada camada só alcanca o que lhe cabe. */
+/* GUARDA · FRONTEIRAS — cada camada só alcança o que lhe cabe. */
 
 import { posix } from "node:path";
 import { collect } from "../lib/project.mjs";
@@ -7,7 +7,7 @@ export const name = "boundaries";
 
 const ALLOWED_FOR_ENTRYPOINT = [/^\.\/state\//, /^\.\/public\//, /^\.\/ui\//, /^\.\/shell\//];
 
-/* `src/shell/` e o entrypoint dividido em módulos: alcanca o mesmo que ele, e os irmãos. */
+/* `src/shell/` é o entrypoint dividido em módulos: alcança o mesmo que ele, e os irmãos. */
 const ALLOWED_FOR_APP = [/^\.\.\/state\//, /^\.\.\/public\//, /^\.\.\/ui\//, /^\.\/[\w-]+\.mjs$/];
 
 /**
@@ -33,7 +33,7 @@ export function audit(files) {
       }
     }
 
-    /* 1b — A COMPOSICAO DO NAVEGADOR TAMBÉM SÓ COMPÕE. */
+    /* 1b — A COMPOSIÇÃO DO NAVEGADOR TAMBÉM SÓ COMPÕE. */
     if (path.startsWith("src/shell/")) {
       for (const specifier of imports) {
         if (!ALLOWED_FOR_APP.some(allowed => allowed.test(specifier))) {
@@ -45,7 +45,7 @@ export function audit(files) {
       }
     }
 
-    /* 2 — O DOMINIO E PURO. */
+    /* 2 — O DOMÍNIO É PURO. */
     if (path.startsWith("src/domain/")) {
       const engine = path.split("/")[2] ?? "";
       for (const specifier of imports) {

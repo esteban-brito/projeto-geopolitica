@@ -1,6 +1,6 @@
-/* SUITE · O ELENCO — a republica ganha gente, e a gente lembra.
-   O que esta suite cobra não e "os nomes saem bonitos": e que gerar gente da semente não
-   quebre nenhuma das quatro coisas que o projeto inteiro se apoia — o plenario fechar, o
+/* SUITE · O ELENCO — a república ganha gente, e a gente lembra.
+   O que esta suíte cobra não é "os nomes saem bonitos": é que gerar gente da semente não
+   quebre nenhuma das quatro coisas que o projeto inteiro se apoia — o plenário fechar, o
    mandato se refazer, o motor não sortear por fora e o catálogo mandar no que se gera. */
 
 import assert from "node:assert/strict";
@@ -78,7 +78,7 @@ test("SOBRA BLOCO EM TODA SEMENTE: o Congresso não vira sete individuos", () =>
 test("EXISTE CENTRO PARA GOVERNAR, e ninguém tem maioria sozinho", () => {
   /* A propriedade que a auditoria externa pediu por outro caminho, e que responde ao risco R4
      sem precisar de distribuição normal nenhuma: para TODA semente, nenhuma bancada isolada
-     decide o plenario, e há centro suficiente para montar uma maioria. */
+     decide o plenário, e há centro suficiente para montar uma maioria. */
   fc.assert(
     fc.property(anySeed, seed => {
       const { benches: chamber } = benches({
@@ -97,7 +97,7 @@ test("EXISTE CENTRO PARA GOVERNAR, e ninguém tem maioria sozinho", () => {
       }
 
       /* O TETO DE 45 SAIU DE MEDIÇÃO, e não de gosto: em 400 sementes a janela mais estreita
-         ficou entre 15,6 e 31,8 pontos, contra 72 de distancia entre a esquerda e a direita
+         ficou entre 15,6 e 31,8 pontos, contra 72 de distância entre a esquerda e a direita
          liberal. */
       const sorted = [...chamber].sort((a, b) => a.economic - b.economic);
       let narrowest = Infinity;
@@ -142,7 +142,7 @@ test("A MESMA SEMENTE DA A MESMA GENTE, e sementes diferentes dão gente diferen
 });
 
 test("NINGUÉM E HOMÔNIMO na mesma partida, NEM DE PRIMEIRO NOME, NEM DE SOBRENOME", () => {
-  /* Dois sujeitos com o mesmo nome num elenco deste tamanho não e sabor local: e um
+  /* Dois sujeitos com o mesmo nome num elenco deste tamanho não é sabor local: é um
      defeito que o jogador lê como bug, e que a identidade por `id` esconderia do motor mas
      não dos olhos. */
   fc.assert(
@@ -188,8 +188,8 @@ test("A PESSOA NASCE ONDE O BLOCO ESTA, e não num ponto qualquer do plano", () 
 /* ═══ A MEMÓRIA ══════════════════════════════════════════════════════════════ */
 
 test("A TRAIÇÃO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
-  /* Sem ela o jogo ensinaria que da para queimar alguém e comprar de volta pelo mesmo preço —
-     e ai a memória seria um número que anda, e não uma relação. */
+  /* Sem ela o jogo ensinaria que dá para queimar alguém e comprar de volta pelo mesmo preço —
+     e aí a memória seria um número que anda, e não uma relação. */
   const people = castOf(DEFAULT_SEED);
   const blocs = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
   const nothing = Object.fromEntries(PARTIES.map(party => [party.id, 0]));
@@ -209,7 +209,7 @@ test("A TRAIÇÃO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () =>
     parameters: CATALOG.cast,
   });
 
-  /* ⚠ SÓ QUEM ARRASTA BANCADA ENTRA NA CONTA, e a exclusão e o modelo e não uma folga. */
+  /* ⚠ SÓ QUEM ARRASTA BANCADA ENTRA NA CONTA, e a exclusão é o modelo e não uma folga. */
   const bench = people.filter(person => person.reach > 0);
   assert.ok(bench.length > 0, "nenhuma pessoa arrasta bancada");
 
@@ -226,7 +226,7 @@ test("A TRAIÇÃO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () =>
 });
 
 test("A MEMÓRIA NÃO ESTOURA O TETO, em nenhum dos dois lados", () => {
-  /* Ela e um estoque com limite, e o limite existe para o crédito não virar uma segunda moeda
+  /* Ela é um estoque com limite, e o limite existe para o crédito não virar uma segunda moeda
      infinita: sem teto, dois anos de verba cheia comprariam qualquer votação para sempre, e a
      barganha do quinto ano deixaria de existir. */
   const people = castOf(DEFAULT_SEED);
@@ -324,8 +324,8 @@ test("A PASTA ATENDIDA BARATEIA QUEM A QUER, e só a pasta DELE conta", () => {
 });
 
 test("A MESMA EMENDA VALE COISAS DIFERENTES, e a bancada e o ponto zero", () => {
-  /* ⚠ A BANCADA E A REFERENCIA, e não um número escrito na prova: ela não tem ambição, então
-     o que ela reconhece e exatamente o que foi oferecido. */
+  /* ⚠ A BANCADA É A REFERÊNCIA, e não um número escrito na prova: ela não tem ambição, então
+     o que ela reconhece é exatamente o que foi oferecido. */
   const table = tableOf({});
   const bench = table[BLOC] ?? 0;
 
@@ -340,7 +340,7 @@ test("A MESMA EMENDA VALE COISAS DIFERENTES, e a bancada e o ponto zero", () => 
 });
 
 test("A PASTA SAI DE CHAVE PRÓPRIA — o elenco de uma partida salva não mudou", () => {
-  /* ⚠ ESTA E A PROVA QUE PROTEGE O SAVE. O elenco se refaz da semente a cada abertura: se a
+  /* ⚠ ESTA É A PROVA QUE PROTEGE O SAVE. O elenco se refaz da semente a cada abertura: se a
      pasta tivesse entrado no mesmo sorteio da ambição, toda partida em andamento acordaria
      com outras pessoas — e nenhuma tela denunciaria. */
   fc.assert(
@@ -418,8 +418,8 @@ test("A MEMÓRIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
 });
 
 test("O TURNO E A TELA VEEM A MESMA CAMARA", () => {
-  /* A regra central do projeto, aplicada ao elenco: a previsão da tela e o plenario do turno
-     tem de sair da MESMA montagem. */
+  /* A regra central do projeto, aplicada ao elenco: a previsão da tela e o plenário do turno
+     têm de sair da MESMA montagem. */
   const state = createState(7);
   const orders = { funding: Object.fromEntries(PARTIES.map(party => [party.id, 0.3])) };
 
@@ -435,7 +435,7 @@ test("O TURNO E A TELA VEEM A MESMA CAMARA", () => {
 });
 
 test("TRAIR O PRÓPRIO PARTIDO CUSTA O DOBRO, e honrar vale o mesmo", () => {
-  /* A assimetria e o item inteiro: quem e da casa acha que a verba já era dele. */
+  /* A assimetria é o item inteiro: quem é da casa acha que a verba já era dele. */
   const people = castOf(DEFAULT_SEED);
   const meu = people[0]?.bloc ?? "";
   const prometido = Object.fromEntries(PARTIES.map(party => [party.id, 1]));

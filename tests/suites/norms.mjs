@@ -12,13 +12,13 @@ import { createState } from "../../src/state/state.mjs";
 
 /** As alavancas como o motor as vê: id e grupo, e nada mais. */
 const LEVERS = [
-  /* ⚠ O CUSTO ENTRA AQUI porque a VINCULAÇÃO precisa dele: e o divisor que converte fração da
+  /* ⚠ O CUSTO ENTRA AQUI porque a VINCULAÇÃO precisa dele: é o divisor que converte fração da
      receita em pontos da alavanca. */
   ...PROGRAMS.map(program => ({ id: program.id, group: program.area, cost: program.cost })),
   ...RULES.map(rule => ({ id: rule.id, group: rule.family })),
 ];
 
-/* A RECEITA DE ABERTURA, e ela e a mesma conta do LASTRO: PIB x carga. */
+/* A RECEITA DE ABERTURA, e ela é a mesma conta do LASTRO: PIB x carga. */
 const OPENING_REVENUE = FISCAL.initialGdp * FISCAL.taxLoad;
 
 /** A pilha herdada — o país no dia da posse. */
@@ -47,7 +47,7 @@ test("A ABERTURA REPRODUZ O CATÁLOGO, alavanca por alavanca", () => {
 
     /* Três programas deixaram de obrigar por PONTOS e passaram a obrigar por FRAÇÃO DA
        RECEITA, e uma fração nunca converte em pontos redondos: 5,2224% da receita de abertura
-       da 63,0004 pontos de media e alta complexidade, e não 63. */
+       dá 63,0004 pontos de média e alta complexidade, e não 63. */
     assert.ok(
       Math.abs(band.floor - lever.floor) < 0.01,
       `a faixa de abertura de ${lever.id} nao bate com o catalogo: ${band.floor} contra ${lever.floor}`,
@@ -56,9 +56,9 @@ test("A ABERTURA REPRODUZ O CATÁLOGO, alavanca por alavanca", () => {
 });
 
 test("O ESTADO DE ABERTURA CONCORDA COM O MOTOR", () => {
-  /* Elas são duas porque o defeito e diferente: acima seria o motor lendo errado; aqui seria
+  /* Elas são duas porque o defeito é diferente: acima seria o motor lendo errado; aqui seria
      `createState` escrevendo a pilha errada, ou `bandsOf` montando as alavancas errado — e o
-     sintoma disso e um país que abre sem lei nenhuma, que e um país valido e portanto
+     sintoma disso é um país que abre sem lei nenhuma, que é um país válido e portanto
      indistinguível de um defeito. */
   const state = createState();
   const bands = bandsOf(state);
@@ -79,7 +79,7 @@ test("O ESTADO DE ABERTURA CONCORDA COM O MOTOR", () => {
 /* ═══ A VINCULAÇÃO ═══════════════════════════════════════════════════════════ */
 
 test("O PISO VINCULADO ANDA COM A RECEITA — e o piso em pontos NÃO", () => {
-  /* ⚠ ESTA E A PROVA QUE DEFINE A VINCULAÇÃO. */
+  /* ⚠ ESTA É A PROVA QUE DEFINE A VINCULAÇÃO. */
   const bound = PROGRAMS.filter(program => program.bound !== undefined);
   assert.ok(bound.length > 0, "o catalogo perdeu as vinculacoes");
 
@@ -105,7 +105,7 @@ test("O PISO VINCULADO ANDA COM A RECEITA — e o piso em pontos NÃO", () => {
     );
   }
 
-  /* E O CONTRÁRIO PARA QUEM NÃO E VINCULADO: o piso em pontos e surdo a receita, e tem de
+  /* E O CONTRÁRIO PARA QUEM NÃO É VINCULADO: o piso em pontos é surdo à receita, e tem de
      continuar sendo. */
   for (const program of PROGRAMS) {
     if (program.bound !== undefined) continue;
@@ -134,7 +134,7 @@ test("VINCULAÇÃO SEM RECEITA FICA DORMENTE, e NÃO vira piso zero", () => {
 /* ═══ A PRECEDÊNCIA ══════════════════════════════════════════════════════════ */
 
 test("EMENDA SÓ SE DERRUBA COM EMENDA: hierarquia vence recência", () => {
-  /* A prova mais importante da suite. */
+  /* A prova mais importante da suíte. */
   assert.ok(GUARDED, "o catalogo perdeu o programa de piso constitucional");
 
   const ordinary = {
@@ -186,7 +186,7 @@ test("LEI GERAL POSTERIOR NÃO REVOGA LEI ESPECIAL ANTERIOR", () => {
 });
 
 test("A NORMA DE ÁREA ALCANCA QUEM ELA PODE VENCER", () => {
-  /* O outro lado: alcance de área não e decorativo. */
+  /* O outro lado: alcance de área não é decorativo. */
   const area = PROGRAMS.find(program => program.guard !== "constitution")?.area;
   assert.ok(area, "o catalogo precisa de uma area com programa de guarda fraca");
 
@@ -204,7 +204,7 @@ test("A NORMA DE ÁREA ALCANCA QUEM ELA PODE VENCER", () => {
 
 test("PARA VALER SOBRE A ESPECIAL, A GERAL PRECISA REVOGAR", () => {
   /* E a consequência útil da prova acima: o caminho para uma regra geral alcançar o que a
-     especial protege existe, e ele e o que uma PEC faz de verdade — nomear o que cai. */
+     especial protege existe, e ele é o que uma PEC faz de verdade — nomear o que cai. */
   assert.ok(GUARDED);
 
   const { bands } = read(
@@ -409,7 +409,7 @@ test("QUEM NÃO ALCANCA NINGUÉM NÃO FAZ NADA — inclusive não revoga", () =>
 /* ═══ AS PROPRIEDADES ════════════════════════════════════════════════════════ */
 
 /* UMA PILHA ADVERSARIAL: normas em qualquer hierarquia, alcance, mês, gatilho, prazo e
-   revogação — inclusive revogando umas as outras em cadeia. */
+   revogação — inclusive revogando umas às outras em cadeia. */
 const anyNorm = fc.record({
   lever: fc.constantFrom(...LEVERS.map(lever => lever.id)),
   group: fc.constantFrom(...new Set(LEVERS.map(lever => lever.group))),
@@ -560,7 +560,7 @@ test("APROVAR UMA FAIXA ESCREVE UMA NORMA, e só o lado que se moveu", () => {
 
 test("O MÊS PARADO NÃO ESCREVE NADA", () => {
   /* Um mandato de 48 meses sem reforma tem de terminar com o mesmo arquivo com que começou —
-     senão o save engorda para sempre e a resolucao fica mais cara a cada turno, que e o risco
+     senão o save engorda para sempre e a resolução fica mais cara a cada turno, que é o risco
      8 do ciclo. */
   let state = createState();
   const before = state.norms.length;

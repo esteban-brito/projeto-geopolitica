@@ -1,5 +1,5 @@
-/* A CORRESPONDÊNCIA — o que esta suite cobra e que a carta SEJA uma decisão.
-   Não e "as cartas aparecem": e que o prazo, o silêncio e as duas saídas produzam
+/* A CORRESPONDÊNCIA — o que esta suíte cobra é que a carta SEJA uma decisão.
+   Não é "as cartas aparecem": é que o prazo, o silêncio e as duas saídas produzam
    consequência diferente uma da outra. */
 
 import assert from "node:assert/strict";
@@ -47,8 +47,8 @@ test("O SILÊNCIO ACEITA — e a carta vencida NÃO some", () => {
 });
 
 test("A RESPOSTA GANHA DO RELÓGIO no mês exato do vencimento", () => {
-  /* ⚠ ESTE E O ÚNICO MÊS EM QUE A ORDEM IMPORTA, e errar nele e o tipo de defeito que faz um
-     jogador desconfiar da interface para sempre: ele respondeu, viu a carta marcada, avancou
+  /* ⚠ ESTE É O ÚNICO MÊS EM QUE A ORDEM IMPORTA, e errar nele é o tipo de defeito que faz um
+     jogador desconfiar da interface para sempre: ele respondeu, viu a carta marcada, avançou
      o mês e o jogo tratou como se ele não tivesse respondido. */
   fc.assert(
     fc.property(anyMonth, fc.constantFrom("accept", "block"), (month, answer) => {
@@ -66,8 +66,8 @@ test("A RESPOSTA GANHA DO RELÓGIO no mês exato do vencimento", () => {
 });
 
 test("A PERGUNTA ABERTA NUNCA ENVELHECE; a fechada sai depois de KEEP meses", () => {
-  /* A assimetria e a mecânica: o que espera VOCE não pode sumir por decurso de prazo da
-     bandeja — só por decurso do prazo DELA, que e outra coisa. */
+  /* A assimetria é a mecânica: o que espera VOCÊ não pode sumir por decurso de prazo da
+     bandeja — só por decurso do prazo DELA, que é outra coisa. */
   fc.assert(
     fc.property(anyMonth, fc.integer({ min: 0, max: 40 }), (month, wait) => {
       const open = question(month);
@@ -105,7 +105,7 @@ test("A PERGUNTA RESPONDIDA DEIXA DE SEGURAR O TEXTO — e este era o defeito", 
 });
 
 test("O AVISO NÃO TEM PRAZO, e a pergunta tem — e a tarja lê isso", () => {
-  /* ⚠ E O QUE `left` DEVOLVE E A ÚNICA FONTE DA GRAVIDADE NA TELA. */
+  /* ⚠ E O QUE `left` DEVOLVE É A ÚNICA FONTE DA GRAVIDADE NA TELA. */
   fc.assert(
     fc.property(anyMonth, month => {
       const aviso = notice({ kind: "forgotten", id: "texto-1", subject: "Reforma", month });
@@ -115,7 +115,7 @@ test("O AVISO NÃO TEM PRAZO, e a pergunta tem — e a tarja lê isso", () => {
       const pergunta = question(month);
       assert.equal(left(pergunta, month), ANSWER_TIME, "a pergunta nasceu sem prazo legivel");
 
-      /* Respondida, ela para de contar: o relógio de uma decisão já tomada não e informacao,
+      /* Respondida, ela para de contar: o relógio de uma decisão já tomada não é informação,
          e uma tarja que continuasse acesa mandaria o jogador responder de novo. */
       const closed = settle({ mail: [pergunta], orders: { [pergunta.id]: "accept" }, month });
       assert.equal(left(/** @type {Letter} */ (closed.mail[0]), month), null);
@@ -125,7 +125,7 @@ test("O AVISO NÃO TEM PRAZO, e a pergunta tem — e a tarja lê isso", () => {
 });
 
 test("O PREÇO DE AVANÇAR E O QUE O MÊS DECIDE SOZINHO — e nunca o que já foi decidido", () => {
-  /* ⚠ ESTA PROVA EXISTE POR UMA RECUSA, e a recusa e doutrinária. */
+  /* ⚠ ESTA PROVA EXISTE POR UMA RECUSA, e a recusa é doutrinária. */
   fc.assert(
     fc.property(anyMonth, month => {
       const pergunta = question(month);
@@ -137,7 +137,7 @@ test("O PREÇO DE AVANÇAR E O QUE O MÊS DECIDE SOZINHO — e nunca o que já f
         "o botao cobrou preco de uma pergunta que ainda tem prazo",
       );
 
-      /* NO MÊS DO VENCIMENTO, SEM RESPOSTA: e ai que o clique decide por ele. */
+      /* NO MÊS DO VENCIMENTO, SEM RESPOSTA: é aí que o clique decide por ele. */
       const vencendo = month + ANSWER_TIME;
       const quiet = silences({ mail: [pergunta], orders: {}, month: vencendo });
       assert.equal(quiet.length, 1, "o mes ia fechar uma pergunta e o botao nao disse");

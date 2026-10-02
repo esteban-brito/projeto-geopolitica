@@ -1,5 +1,5 @@
-/* SUITE · A CALDEIRA — o que ela cobra e que a INACAO esquente.
-   ⚠ A PROVA MAIS IMPORTANTE E A PRIMEIRA, e ela existe por um risco de desenho, e não por um
+/* SUITE · A CALDEIRA — o que ela cobra é que a INAÇÃO esquente.
+   ⚠ A PROVA MAIS IMPORTANTE É A PRIMEIRA, e ela existe por um risco de desenho, e não por um
    defeito medido. */
 
 import assert from "node:assert/strict";
@@ -18,7 +18,7 @@ const cold = Object.fromEntries(LOBBIES.map(l => [l.id, 0]));
 const idle = Object.fromEntries(LOBBIES.map(l => [l.id, 0.6]));
 
 test("A INACAO ESQUENTA — e esta e a razão de este motor existir", () => {
-  /* Descontentamento constante e o que um governo parado produz: ninguém recebeu nada, e
+  /* Descontentamento constante é o que um governo parado produz: ninguém recebeu nada, e
      ninguém esquece. */
   let pressure = cold;
   for (let month = 0; month < 12; month++) {
@@ -144,8 +144,8 @@ test("A QUEDA ACONTECE, e ela NÃO acontece com um governo que entrega", () => {
     return null;
   };
 
-  /* ── O GOVERNO MEDIANO, e ele e a outra ponta do critério ─────────────────── Ele não e
-     bom: aperta o orcamento até caber no teto e paga só a manutencao da base — o minimo para
+  /* ── O GOVERNO MEDIANO, e ele é a outra ponta do critério ─────────────────── Ele não é
+     bom: aperta o orçamento até caber no teto e paga só a manutenção da base — o mínimo para
      continuar governando. */
   const UPKEEP = 1.5 / 12;
   const manutencao = () => {
@@ -221,7 +221,7 @@ test("A QUEDA ACONTECE, e ela NÃO acontece com um governo que entrega", () => {
 
 test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {
   /* Medido na primeira versão: aberto no mês 47, caído no mês 47 — o que abriu o processo foi
-     a base já destruída, então os votos para sustentar não existiam, e o leilao nunca
+     a base já destruída, então os votos para sustentar não existiam, e o leilão nunca
      acontecia. */
   let state = createState();
   let opened = null;
@@ -266,8 +266,8 @@ test("SOBREVIVER AO PLENARIO ARQUIVA O PROCESSO, e sem ruptura ele não reabre",
   assert.equal(seguinte.impeachment, null, "o processo reabriu sem ruptura");
 });
 
-/* O PLENARIO DO AFASTAMENTO SACA DO FLUXO, e a posição gasta tem de ficar gravada: gravar só
-   a posição dos projetos fazia a votação do mês seguinte sacar os MESMOS números do plenario. */
+/* O PLENÁRIO DO AFASTAMENTO SACA DO FLUXO, e a posição gasta tem de ficar gravada: gravar só
+   a posição dos projetos fazia a votação do mês seguinte sacar os MESMOS números do plenário. */
 test("O PLENARIO DO AFASTAMENTO GASTA FLUXO — o mês com plenario grava outra posição", () => {
   let state = createState(7);
   for (let month = 0; month < 3; month++) state = playMonth(state, {}, {}).state;
@@ -312,7 +312,7 @@ test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigência tem 
   const programa = PROGRAMS.find(p => p.id === carta.lever);
   assert.ok(programa, `o mercado exigiu a alavanca ${carta.lever}, que nao e um programa`);
 
-  /* ⚠ O NÍVEL EXIGIDO E O DA POSSE, e ele tem de ser MENOR que o de hoje: e isso que faz a
+  /* ⚠ O NÍVEL EXIGIDO É O DA POSSE, e ele tem de ser MENOR que o de hoje: é isso que faz a
      exigência ser um CORTE. */
   assert.equal(carta.level, programa.initial, "o mercado nao pediu o nivel da posse");
   assert.ok(

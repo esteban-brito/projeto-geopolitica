@@ -9,7 +9,7 @@ import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
 import { monthLabel } from "../../src/state/state.mjs";
 
 test("O CALENDÁRIO E FUNÇÃO PURA DE `month` — nenhum relógio entra nele", () => {
-  /* ⚠ ELA E A RESTRIÇÃO DECLARADA DO ITEM, e sem prova ela seria só uma frase: um `Date.now`
+  /* ⚠ ELA É A RESTRIÇÃO DECLARADA DO ITEM, e sem prova ela seria só uma frase: um `Date.now`
      escondido faria a mesma partida mostrar prazos diferentes conforme o dia. */
   fc.assert(
     fc.property(fc.integer({ min: 0, max: 600 }), month => {
@@ -20,7 +20,7 @@ test("O CALENDÁRIO E FUNÇÃO PURA DE `month` — nenhum relógio entra nele", 
 
 test("O MÊS DO CALENDÁRIO E O MESMO QUE A TELA IMPRIME — e há uma conta só", () => {
   /* Se o marco de abril cair no mês que a faixa chama de "mai", o jogo passa a ter dois
-     calendarios: o do relógio da tela e o dos prazos. */
+     calendários: o do relógio da tela e o dos prazos. */
   const nomes = [
     "jan",
     "fev",
@@ -39,7 +39,7 @@ test("O MÊS DO CALENDÁRIO E O MESMO QUE A TELA IMPRIME — e há uma conta só
   for (let month = 0; month < MONTHS_PER_TERM; month++) {
     const impresso = monthLabel(month).split(" · ")[0] ?? "";
     for (const marco of calendarOf(month).now) {
-      /* ⚠ O QUE SE CONFERE E A CONGRUENCIA, e não a igualdade: o bimestral repete de dois em
+      /* ⚠ O QUE SE CONFERE É A CONGRUÊNCIA, e não a igualdade: o bimestral repete de dois em
          dois meses, então ele cai em fev, abr, jun — e só o anual casa com o mês do catálogo.
          A primeira versão desta prova exigia igualdade e reprovou o código CERTO. */
       const periodo = REPEATS[marco.id] ?? 12;
@@ -86,7 +86,7 @@ test("O TRIMESTRE NÃO REPETE O QUE JÁ VENCE AGORA, e ele e ordenado por urgên
 });
 
 test("O MANDATO DEIXA DE TER 48 MESES IGUAIS — e há mês sem cobrança nenhuma", () => {
-  /* Se todo mês cobrar alguma coisa, o calendário não da pulso: ele vira ruído de fundo. */
+  /* Se todo mês cobrar alguma coisa, o calendário não dá pulso: ele vira ruído de fundo. */
   let comCobranca = 0;
   for (let month = 0; month < MONTHS_PER_TERM; month++) {
     if (calendarOf(month).now.length > 0) comCobranca += 1;

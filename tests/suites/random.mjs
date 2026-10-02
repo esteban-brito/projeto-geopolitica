@@ -5,8 +5,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-/* A SEMENTE PADRÃO VEM DO ESTADO, e não repetida a mão: ela e a mesma que abre uma partida
-   sem semente escolhida, e dois lugares com o mesmo número e um lugar que vai divergir na
+/* A SEMENTE PADRÃO VEM DO ESTADO, e não repetida à mão: ela é a mesma que abre uma partida
+   sem semente escolhida, e dois lugares com o mesmo número é um lugar que vai divergir na
    primeira vez que alguém trocar o padrão. */
 import { DEFAULT_SEED } from "../../src/state/state.mjs";
 import { hash, integer, mix, streamFrom, take, unit } from "../../src/state/random.mjs";
@@ -108,7 +108,7 @@ test("take equivale a encadear a mão, e existe para não errar o encadeamento",
 
 test("o valor fica em [0, 1) e NUNCA chega a 1", () => {
   /* O 1,0 estoura toda faixa escrita como `[min, max)`, e o defeito aparece uma vez em quatro
-     bilhoes — ou seja, nunca em teste e sempre em produção. */
+     bilhões — ou seja, nunca em teste e sempre em produção. */
   fc.assert(
     fc.property(anySeed, fc.nat({ max: 2000 }), (seed, steps) => {
       const values = take({ seed, draws: steps }, 40).values;
@@ -166,7 +166,7 @@ test("a distribuição e plana: a media de dez mil saques fica perto de 0,5", ()
 test("índices VIZINHOS não produzem números vizinhos", () => {
   /* Sem ela, o saque da bancada 1 e o da bancada 2 andariam juntos e a dissidência inteira
      ficaria correlacionada — todas as bancadas traindo no mesmo turno, o que parece evento e
-     e defeito. */
+     é defeito. */
   const seed = 987654321;
   let jumps = 0;
   const total = 2000;

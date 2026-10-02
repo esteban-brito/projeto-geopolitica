@@ -1,5 +1,5 @@
 /* Leitura do projeto, e o contrato que todas as guardas seguem.
-   TODA GUARDA E UMA FUNÇÃO PURA: recebe um mapa `caminho -> conteudo` e devolve uma lista de
+   TODA GUARDA É UMA FUNÇÃO PURA: recebe um mapa `caminho -> conteudo` e devolve uma lista de
    achados. */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -7,8 +7,8 @@ import { join, relative, resolve, sep } from "node:path";
 
 export const ROOT = resolve(import.meta.dirname, "..", "..");
 
-/* ⚠ `.claude` E CONFIGURAÇÃO DO AGENTE, e não fonte do jogo: o script que sobe o servidor no
-   início da sessão mora la, e sem esta linha ele entrava na contagem de arquivos do portão e
+/* ⚠ `.claude` É CONFIGURAÇÃO DO AGENTE, e não fonte do jogo: o script que sobe o servidor no
+   início da sessão mora lá, e sem esta linha ele entrava na contagem de arquivos do portão e
    era lintado com os globais do jogo. */
 const IGNORED = new Set([
   "node_modules",
@@ -29,7 +29,7 @@ const IGNORED = new Set([
 
 /**
  * As sete guardas repetiam as mesmas três linhas para montar a lista — e repetição entre
- * peças que fazem a mesma coisa e como um padrão começa a divergir, que e literalmente o que
+ * peças que fazem a mesma coisa é como um padrão começa a divergir, que é literalmente o que
  * este projeto guarda.
  *
  * @param {string} guard
@@ -71,14 +71,14 @@ export function readProject(filter = () => true) {
   return files;
 }
 
-/* ARQUIVOS DE GUARDA CONTEM DEFEITO COMO DADO. */
+/* ARQUIVOS DE GUARDA CONTÊM DEFEITO COMO DADO. */
 /** @param {string} path */
 export function isGuardSource(path) {
   return path.startsWith("tests/guards/");
 }
 
 /**
- * Prosa que descreve um defeito não e o defeito.
+ * Prosa que descreve um defeito não é o defeito.
  *
  * @param {string} source
  * @returns {string}
@@ -93,7 +93,7 @@ export function stripJsComments(source) {
 }
 
 /**
- * Isto não e detalhe: as folhas deste projeto explicam cada decisão em prosa, e um casador
+ * Isto não é detalhe: as folhas deste projeto explicam cada decisão em prosa, e um casador
  * que leia comentário acusa defeito onde há justificativa.
  *
  * @param {string} css

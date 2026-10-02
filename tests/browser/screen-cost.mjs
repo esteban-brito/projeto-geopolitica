@@ -12,7 +12,7 @@ const OUT = join(ROOT, "captures", "cost");
 
 const VIEWPORTS = [{ name: "desktop", width: 1440, height: 900 }];
 
-/* E o único jeito de o delta medido ser do FILTRO e não de outra coisa. */
+/* É o único jeito de o delta medido ser do FILTRO e não de outra coisa. */
 const CONTROL_ARM = `
   .glass-stage::after, .glass-action, .glass-support {
     backdrop-filter: none !important;

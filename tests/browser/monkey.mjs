@@ -1,7 +1,7 @@
 /* O MACACO — joga ao acaso, com semente, e mede em repouso.
    O passeio segue um roteiro; o macaco não. Ele acha o que acontece na ordem que ninguém
    escreveu: erro de página, morph que não pousa, pílula que fica longe do item, diálogo sem
-   saída, tabuleiro vazio. Medir só em repouso e o que tira o ruído: a versão solta acusava a
+   saída, tabuleiro vazio. Medir só em repouso é o que tira o ruído: a versão solta acusava a
    pílula 28 vezes em 250 ações medindo no meio da mola.
    uso: node tests/browser/monkey.mjs [ações] [semente] */
 
@@ -41,7 +41,7 @@ const rnd = () => {
   return seed / 4294967296;
 };
 
-/* Onde o macaco clica: cada seletor e um gesto que o jogador tem. */
+/* Onde o macaco clica: cada seletor é um gesto que o jogador tem. */
 const TARGETS = [
   ".rail [data-section]",
   ".rail__drawer",
@@ -67,13 +67,13 @@ async function rest(page) {
         if (doc.activeViewTransition) return false;
         const rail = document.querySelector(".rail");
         if (rail?.hasAttribute("data-morph")) return false;
-        /* Só o que esta correndo: a pasta guarda a animação terminada com `fill: forwards`. */
+        /* Só o que está correndo: a pasta guarda a animação terminada com `fill: forwards`. */
         const moving = [".post__sheet:not([hidden])", ".folder"]
           .flatMap(sel => [...document.querySelectorAll(sel)])
           .some(node => node.getAnimations().some(one => one.playState === "running"));
         if (moving) return false;
-        /* A pílula e mola JS por rAF, invisível a `getAnimations`: parou quando a caixa dela
-           e a mesma de um quadro para o outro. */
+        /* A pílula é mola JS por rAF, invisível a `getAnimations`: parou quando a caixa dela
+           é a mesma de um quadro para o outro. */
         const pill = document.querySelector(".rail__pill");
         const box = pill?.getBoundingClientRect();
         const key = box ? [box.left, box.top, box.width, box.height].join(",") : "";
@@ -180,7 +180,7 @@ try {
         } else if (selector === "#advance" && rnd() < 0.5) {
           did = "(pulou avancar)";
         } else {
-          /* Clique em peça coberta não e defeito: a pasta fechada cobre o ato, a carta cobre a
+          /* Clique em peça coberta não é defeito: a pasta fechada cobre o ato, a carta cobre a
              mesa. O macaco só anota e segue. */
           const clicked = await node
             .click({ timeout: 1000 })

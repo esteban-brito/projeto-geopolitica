@@ -1,8 +1,8 @@
 /* O SIMULADOR DE MANDATO — o jogo rodando sem tela nenhuma.
    Nenhuma delas quer ser um jogador competente: elas são SONDAS, cada uma
    exagerando um comportamento para isolar um efeito. `parado` mede a queda
-   natural; `promessa` mede a traição; a distancia entre `agenda` e `promessa` e o
-   preço da imprudencia fiscal, em meses de base. */
+   natural; `promessa` mede a traição; a distância entre `agenda` e `promessa` é o
+   preço da imprudência fiscal, em meses de base. */
 
 import { parseArgs } from "node:util";
 import { costOf, discretionaryRoom, forecast, playMonth } from "../src/application/turn.mjs";
@@ -21,7 +21,7 @@ import { DEFAULT_SEED, createState, monthLabel, reduce } from "../src/state/stat
 /* Quanto de verba, por mês, apenas EMPATA o decaimento da lealdade. */
 const UPKEEP = 1.5 / 12;
 
-/** Todo programa no piso: o minimo que a lei permite sem pedir voto a ninguém. */
+/** Todo programa no piso: o mínimo que a lei permite sem pedir voto a ninguém. */
 function atFloor() {
   return Object.fromEntries(CATALOG.programs.map(program => [program.id, program.floor]));
 }
@@ -30,7 +30,7 @@ function atFloor() {
  * A configuração vigente com a parte DISCRICIONÁRIA encolhida por um fator.
  *
  * @param {GameState} state
- * @param {number} share de 0 (tudo no piso) a 1 (mantem como esta)
+ * @param {number} share de 0 (tudo no piso) a 1 (mantém como está)
  */
 function squeeze(state, share) {
   return Object.fromEntries(
@@ -42,7 +42,7 @@ function squeeze(state, share) {
 }
 
 /**
- * O MAIOR `share` QUE CABE, deixando `reserve` bilhoes livres para o Congresso.
+ * O MAIOR `share` QUE CABE, deixando `reserve` bilhões livres para o Congresso.
  *
  * @param {GameState} state
  * @param {number} reserve
@@ -61,8 +61,8 @@ function affordableShare(state, reserve) {
 }
 
 /**
- * @typedef {object} Memory o que a politica lembra entre os meses
- * @property {Set<string>} passed pautas ja aprovadas
+ * @typedef {object} Memory o que a política lembra entre os meses
+ * @property {Set<string>} passed pautas já aprovadas
  */
 
 /**
@@ -92,13 +92,13 @@ function affordableLevel(state) {
 }
 
 /**
- * E exatamente a camara fantasma que foi arrancada da fachada em 15/08 por inverter 27,2% dos
+ * É exatamente a câmara fantasma que foi arrancada da fachada em 15/08 por inverter 27,2% dos
  * vereditos anunciados: o turno vota com as ONZE ⚠ E AQUI O PREÇO FOI MAIOR QUE NA TELA,
  * porque quem errava era o INSTRUMENTO DE CALIBRAGEM.
  *
  * bancadas do ELENCO, com a verba já creditada de memória e com `standing` dentro.
  * @param {GameState} state
- * @param {Record<string, number>} requested o orcamento que este texto pede
+ * @param {Record<string, number>} requested o orçamento que este texto pede
  * @returns {number | null} nulo quando nem verba cheia aprova
  */
 function priceOfPassage(state, requested) {
@@ -106,7 +106,7 @@ function priceOfPassage(state, requested) {
     const funding = everyone(Math.min(1, level));
     const seen = forecast(state, { levels: requested, funding }, CATALOG);
 
-    /* SEM PAUTA NÃO HÁ PREÇO, e zero e a resposta certa: um orcamento que não move nada não
+    /* SEM PAUTA NÃO HÁ PREÇO, e zero é a resposta certa: um orçamento que não move nada não
        precisa de voto nenhum. */
     if (!seen.agenda.proposal || seen.agenda.quorum <= 0) return 0;
     if (seen.whip && seen.whip.votes >= seen.agenda.quorum) return Math.min(1, level);
@@ -124,7 +124,7 @@ function nextReform(memory) {
 }
 
 /**
- * O corte que uma reforma propoe: o piso derrubado em `depth` pontos.
+ * O corte que uma reforma propõe: o piso derrubado em `depth` pontos.
  *
  * @param {import("../src/data/programs.mjs").Program} program
  * @param {number} [depth]
@@ -141,7 +141,7 @@ const POLICIES = {
   /* O CORTE TOTAL. */
   piso: () => ({ levels: atFloor(), funding: everyone(0) }),
 
-  /* SÓ A MANUTENCAO. */
+  /* SÓ A MANUTENÇÃO. */
   base: state => {
     const reserve = costOf(everyone(UPKEEP), CATALOG.parties, CATALOG.fiscal.seatPrice);
     return {
@@ -152,7 +152,7 @@ const POLICIES = {
 
   /* O GOVERNO PRUDENTE. */
   agenda: (state, memory) => {
-    /* A MANUTENCAO VEM PRIMEIRO, e o que sobra e que compra voto. */
+    /* A MANUTENÇÃO VEM PRIMEIRO, e o que sobra é que compra voto. */
     const reserve = costOf(everyone(UPKEEP), CATALOG.parties, CATALOG.fiscal.seatPrice);
     const share = affordableShare(state, reserve);
     const levels = squeeze(state, share);
@@ -188,7 +188,7 @@ const POLICIES = {
   }),
 
   /* ── AS DUAS SONDAS DA ESCOLHA ─────────────────────────────────────────────── ⚠ ELAS
-     NASCERAM DO ACHADO MAIS CONSTRANGEDOR DA CALIBRAGEM, e ele e sobre o INSTRUMENTO e não
+     NASCERAM DO ACHADO MAIS CONSTRANGEDOR DA CALIBRAGEM, e ele é sobre o INSTRUMENTO e não
      sobre o jogo: as seis políticas que existiam **espalham tudo por igual**, nos dois eixos
      — verba dividida entre as oito áreas e emenda oferecida a cada bloco do catálogo na
      mesma medida. */
@@ -215,8 +215,8 @@ const POLICIES = {
     };
   },
 
-  /* Medido a mão, fora do simulador: uma lei MODESTA — baixar um piso em cinco pontos —
-     atravessa a tramitação inteira em quatro meses, gaveta → Mesa → relator → plenario →
+  /* Medido à mão, fora do simulador: uma lei MODESTA — baixar um piso em cinco pontos —
+     atravessa a tramitação inteira em quatro meses, gaveta → Mesa → relator → plenário →
      norma. */
   legislador: (state, memory) => {
     const program = CATALOG.programs.find(
@@ -224,7 +224,7 @@ const POLICIES = {
     );
     if (!program) return { levels: { ...state.levels }, funding: everyone(UPKEEP) };
 
-    /* CINCO PONTOS DE PISO, e o número e pequeno de propósito: o que se mede aqui e se o
+    /* CINCO PONTOS DE PISO, e o número é pequeno de propósito: o que se mede aqui é se o
        CAMINHO existe, e não qual o maior texto que passa. */
     return {
       levels: { ...state.levels },
@@ -269,7 +269,7 @@ if (!policy) {
 }
 
 /* ⚠ SEM ELE O INSTRUMENTO NÃO VÊ A JOGADA MAIS PESADA DO JOGO: medido no catálogo de 9, o maior
-   partido fechava 30 de 43 votações e a Camara sem partido 26 — e a série foi lida como "não moveu" quando o
+   partido fechava 30 de 43 votações e a Câmara sem partido 26 — e a série foi lida como "não moveu" quando o
    simulador nunca escolhia bancada. */
 const party = values.party ?? null;
 
@@ -402,7 +402,7 @@ for (let i = 0; i < months; i++) {
   const orders = policy(state, memory);
   const played = playMonth(state, orders, { shock });
 
-  /* Não era — o instrumento e que estava cego, que e o defeito mais caro que uma ferramenta
+  /* Não era — o instrumento é que estava cego, que é o defeito mais caro que uma ferramenta
      de calibragem pode ter, porque ele parece resultado. */
   if (played.report.enacted) {
     for (const move of played.report.agenda.moves) memory.passed.add(move.program.id);
@@ -474,10 +474,10 @@ const paidTotal = history.reduce((sum, report) => sum + report.paidCost, 0);
 const last = history.at(-1);
 
 /* E o resultado não foi um número um pouco errado — foi o COMPLEMENTO EXATO da verdade:
-   politica  o filtro dizia  a verdade (`ratio < 1`) herdado      41         7 piso       44
+   política  o filtro dizia  a verdade (`ratio < 1`) herdado      41         7 piso       44
    0   (44 = os 48 meses menos os 4 contingenciados) agenda      48         0 base       48
    1 promessa     48        48   (esta acertou por coincidência) No `herdado`, nos sete meses
-   em que o corte de fato acontece, `pago + alocado` da EXATAMENTE `room` — então nenhuma das
+   em que o corte de fato acontece, `pago + alocado` dá EXATAMENTE `room` — então nenhuma das
    duas cláusulas dispara, e o filtro contava os 41 meses em que nada foi cortado. */
 const rationed = history.filter(report => report.ratio < 1 - 1e-9);
 

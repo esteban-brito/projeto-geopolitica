@@ -19,7 +19,7 @@ import { PARTIES } from "../../src/data/parties.mjs";
 import { QUALIFIED_MAJORITY, SEATS, SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 import { streamFrom } from "../../src/state/random.mjs";
 
-/* O QUE VAI A PLENARIO. */
+/* O QUE VAI A PLENÁRIO. */
 const VOTABLE = BILLS.filter(bill => bill.instrument !== "decree");
 
 /** @param {number} level */
@@ -104,7 +104,7 @@ test("mesma semente e mesma entrada dão o mesmo placar", () => {
 });
 
 test("a votação consome um saque POR BANCADA", () => {
-  /* Um saque único faria as quatro traírem juntas, o que parece evento e e defeito de
+  /* Um saque único faria as quatro traírem juntas, o que parece evento e é defeito de
      modelagem. */
   const start = streamFrom(1, "congress");
   const result = vote({
@@ -185,7 +185,7 @@ test("A MÁQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem 
     return found;
   };
 
-  /* O bloco mais fisiológico tem de sofrer MAIS com a ameaça que o menos fisiológico — e a
+  /* O bloco mais fisiológico tem de sofrer MAIS com a ameaça que o menos fisiológico — é a
      inversão da relação habitual entre venalidade e resistência. */
   const centraoPenalty = of(onThreat, "fbr").resistance - of(onHarmless, "fbr").resistance;
   const liberalPenalty =
@@ -239,8 +239,8 @@ test("mas o caminho facil NÃO existe: nenhuma ação passa de graça e sem base
 });
 
 test("A EMENDA E OUTRO JOGO: duas bancadas não ENTREGAM três quintos", () => {
-  /* A afirmação verdadeira e sobre ENTREGA, e não sobre assento: adesao nunca e 100%, então a
-     dupla que soma 313 no papel entrega bem menos no plenario. */
+  /* A afirmação verdadeira é sobre ENTREGA, e não sobre assento: adesão nunca é 100%, então a
+     dupla que soma 313 no papel entrega bem menos no plenário. */
   const generous = everyone(1);
   const devoted = everyone(100);
   const amendments = BILLS.filter(bill => bill.instrument === "amendment");
@@ -353,8 +353,8 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
       drifts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / drifts.length,
     );
 
-    /* 25% de folga cobre o arredondamento em cadeiras (a banda e inteira, o desvio não) e o
-       corte da adesao em 0 e 1. */
+    /* 25% de folga cobre o arredondamento em cadeiras (a banda é inteira, o desvio não) e o
+       corte da adesão em 0 e 1. */
     assert.ok(
       Math.abs(sigma - band) <= band * 0.25,
       `lealdade ${level}: a banda anuncia ${band} e o dia entrega ${sigma.toFixed(2)}`,
@@ -402,7 +402,7 @@ test("base insatisfeita e base IMPREVISIVEL: menos lealdade nunca estreita a ban
    de não divergir da votação. */
 
 test("MAIS LEALDADE NUNCA ENTREGA MENOS, em pauta nenhuma", () => {
-  /* A base e a votação comum; a pauta que a bancada defende pode passar dela, e por isso a
+  /* A base é a votação comum; a pauta que a bancada defende pode passar dela, e por isso a
      propriedade antiga (voto nunca acima da base) saiu com o modelo da base. */
   fc.assert(
     fc.property(anyBill, anyFunding, anyLoyalty, (bill, funding, loyalty) => {
@@ -434,7 +434,7 @@ test("a base cabe no plenario, e levantar a lealdade nunca a diminui", () => {
 });
 
 test("A BASE E A SOMA DAS CHANCES, sem degrau escondido", () => {
-  /* Os degraus de 0,6 e 0,15 saíram: a lealdade já e a chance (base-model.md §7). */
+  /* Os degraus de 0,6 e 0,15 saíram: a lealdade já é a chance (base-model.md §7). */
   for (const level of [RUPTURE_EDGE - 1, RUPTURE_EDGE + 1, 45, 70, 95]) {
     const base = baseCount({ parties: PARTIES, loyalty: everyone(level) });
     assert.equal(
@@ -446,7 +446,7 @@ test("A BASE E A SOMA DAS CHANCES, sem degrau escondido", () => {
 });
 
 test("A RUA PESA NA VOTAÇÃO: governo popular compra voto mais barato", () => {
-  /* ⚠ E ESTA E A RAZÃO DE SONDA EXISTIR PARA O MODELO, e não só para a tela. */
+  /* ⚠ E ESTA É A RAZÃO DE SONDA EXISTIR PARA O MODELO, e não só para a tela. */
   const bill = BILLS.find(item => item.instrument === "law" && item.threat < 0.3);
   assert.ok(bill, "o catalogo perdeu a lei mansa que esta prova usa");
 
@@ -463,7 +463,7 @@ test("A RUA PESA NA VOTAÇÃO: governo popular compra voto mais barato", () => {
   assert.ok(hated < neutral, `governo odiado nao perdeu nada: ${neutral} → ${hated}`);
 
   /* O TAMANHO: a diferença entre o extremo amado e o extremo odiado não pode ser maior que o
-     plenario inteiro nem tão pequena que nunca mude uma votação. */
+     plenário inteiro nem tão pequena que nunca mude uma votação. */
   const swing = loved - hated;
   assert.ok(swing > 20, `a rua mudou so ${swing} votos entre os extremos — ela nao importa`);
   assert.ok(swing < 250, `a rua mudou ${swing} votos — ela virou o botao de aprovar tudo`);
@@ -504,7 +504,7 @@ test("A BASE PARTE EM DUAS E A SOMA E A PRÓPRIA BASE — convicção mais alugu
 });
 
 test("O CORTE E POR PREÇO, e não por humor — a base cheia parte 384 contra 129", () => {
-  /* Com todo mundo leal a base e a Camara inteira, e ai a divisão e a do catálogo puro. */
+  /* Com todo mundo leal a base é a Câmara inteira, e aí a divisão é a do catálogo puro. */
   const loyal = Object.fromEntries(PARTIES.map(party => [party.id, 100]));
   const split = baseVenality({ parties: PARTIES, loyalty: loyal });
 
@@ -566,7 +566,7 @@ test("E ELA SÓ VALE PARA A SUA — as outras oito continuam a venda", () => {
 });
 
 test("SEM PARTIDO, O PLENARIO E O DE ANTES — em qualquer pauta", () => {
-  /* ⚠ ESTA E A PROVA QUE PROTEGE A SÉRIE. O simulador roda sem partido, e as seis políticas
+  /* ⚠ ESTA É A PROVA QUE PROTEGE A SÉRIE. O simulador roda sem partido, e as seis políticas
      da tabela de calibragem são a linha de base do projeto inteiro: se `ruling` ausente
      mudasse um voto, toda ela estaria vencida sem ninguém ter escolhido isso. */
   fc.assert(

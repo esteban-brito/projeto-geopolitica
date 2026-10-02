@@ -6,17 +6,17 @@
      · EXTENSÃO `.mjs` em todo módulo. O projeto anterior convive com 48 módulos
        ES e 63 arquivos CommonJS, e unificar virou escopo recusado por ser grande
        demais. Nascer com um formato só custa esta linha;
-     · `kebab-case` sem acento e sem maiuscula. Nome que difere só por caixa
+     · `kebab-case` sem acento e sem maiúscula. Nome que difere só por caixa
        funciona no Windows e some no CI Linux — a classe inteira de defeito
        desaparece com minúsculas em toda parte;
      · nada de CommonJS.
 
-   O QUE ELA NÃO COBRE, e isto esta escrito de propósito: o IDIOMA dos
-   identificadores. A convenção e inglês para mecanismo e português para dado,
+   O QUE ELA NÃO COBRE, e isto está escrito de propósito: o IDIOMA dos
+   identificadores. A convenção é inglês para mecanismo e português para dado,
    mas não existe casador honesto para isso — um que tentasse acusaria `selic` e
    `ipca`, que são nomes próprios e ficam no original por decisão. Fingir
    cobertura aqui seria pior que não ter: a próxima sessão confiaria nela.
-   O que da para provar objetivamente e ACENTO em identificador, e isso e
+   O que dá para provar objetivamente é ACENTO em identificador, e isso é
    cobrado. */
 
 import { tokenizer } from "acorn";
@@ -26,11 +26,11 @@ export const name = "naming";
 
 const CODE_DIRS = ["src/", "tests/", "tools/"];
 
-/* ARQUIVOS CUJO FORMATO E IMPOSTO POR UMA FERRAMENTA, e não escolhido por nos.
+/* ARQUIVOS CUJO FORMATO É IMPOSTO POR UMA FERRAMENTA, e não escolhido por nós.
    O flat config do ESLint EXIGE `export default` — a guarda acusou isto na
    primeira execução, e ela estava certa em acusar: a convenção vale, e a
    exceção precisa ser declarada em vez de silenciada com um comentário de
-   desativacao. Se um dia a lista crescer além de configuração de ferramenta, e
+   desativação. Se um dia a lista crescer além de configuração de ferramenta, é
    sinal de que a convenção virou ficção. */
 const TOOL_CONTRACT = new Set(["eslint.config.mjs"]);
 
@@ -57,10 +57,10 @@ export function audit(files) {
        guarda, que carregam estes defeitos como dado nas provas sintéticas. */
     if (!path.endsWith(".mjs") || isGuardSource(path)) continue;
 
-    /* Comentário fora ANTES de tudo: prosa que descreve um defeito não e o
+    /* Comentário fora ANTES de tudo: prosa que descreve um defeito não é o
        defeito, e este arquivo mesmo explica CommonJS em texto.
-       As strings também saem, porque texto de UI e português acentuado por
-       decisão — acusa-lo seria falso positivo. */
+       As strings também saem, porque texto de UI é português acentuado por
+       decisão — acusá-lo seria falso positivo. */
     const code = stripJsComments(source).replace(
       /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`(\\.|[^`\\])*`/g,
       '""',

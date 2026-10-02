@@ -1,4 +1,4 @@
-/* SUITE · O ORCAMENTO — propriedades do primeiro motor de verdade. */
+/* SUITE · O ORÇAMENTO — propriedades do primeiro motor de verdade. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -63,7 +63,7 @@ test("o que se pode empenhar nunca passa do TETO — e o caixa NÃO manda", () =
 });
 
 test("GASTAR ACIMA DO CAIXA E POSSÍVEL, e produz déficit — o muro caiu", () => {
-  /* A prova que o conserto exigia, e ela e o inverso exato da que existia aqui. */
+  /* A prova que o conserto exigia, e ela é o inverso exato da que existia aqui. */
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
@@ -93,7 +93,7 @@ test("contingenciamento zera o discricionário, sempre", () => {
 });
 
 test("A ARMADILHA EXISTE: há entradas válidas que disparam o contingenciamento", () => {
-  /* Um motor em que o aperto e impossível passaria em todas as provas acima e não serviria
+  /* Um motor em que o aperto é impossível passaria em todas as provas acima e não serviria
      para o jogo — foi exatamente esse o defeito da fórmula original, que definia a
      obrigatória como fração da receita. */
   let squeezed = 0;
@@ -107,7 +107,7 @@ test("A ARMADILHA EXISTE: há entradas válidas que disparam o contingenciamento
 });
 
 test("PROVA SINTÉTICA: o PISO segura o teto na recessão, e a OBRIGATÓRIA ainda o fura", () => {
-  /* O caso do dossiê, montado a mão: o PIB decepciona, a receita cai abaixo da ancora, o teto
+  /* O caso do dossiê, montado à mão: o PIB decepciona, a receita cai abaixo da âncora, o teto
      do arcabouço ENCOLHE, e a obrigatória — que cresceu no mesmo mês — passa por cima dele. */
   const base = {
     gdp: 12000,
@@ -137,8 +137,8 @@ test("PROVA SINTÉTICA: o PISO segura o teto na recessão, e a OBRIGATÓRIA aind
   );
   assert.equal(recessao.blocked, false, "com o piso valendo, esta recessao nao aperta");
 
-  /* 2 — E O GATILHO CONTINUA ALCANÇÁVEL, que e a outra metade e a mais importante: um
-     contingenciamento que nunca dispara e um instrumento morto, e este projeto já pagou por
+  /* 2 — E O GATILHO CONTINUA ALCANÇÁVEL, que é a outra metade e a mais importante: um
+     contingenciamento que nunca dispara é um instrumento morto, e este projeto já pagou por
      isso uma vez (achado 3). */
   const pesada = step({ ...base, gdp: base.gdp * 0.85, mandatory: 2320 });
   assert.equal(pesada.blocked, true, "a obrigatoria acima do teto tinha de apertar");
@@ -207,7 +207,7 @@ test("GDP zero não produz NaN ou infinito", () => {
 });
 
 /* ⛔ ELA REINTRODUZ A MENTIRA QUE A TELA CONTAVA: um primário POSITIVO abaixo da banda da meta
-   e uma meta PERDIDA, e a linha de Finanças o pintava de verde por ser maior que zero. Medido
+   é uma meta PERDIDA, e a linha de Finanças o pintava de verde por ser maior que zero. Medido
    na partida padrão: o mês 35 fecha em +0,17% do PIB contra um piso de banda de 0,25%. */
 test("O PRIMÁRIO E JULGADO PELA META, e não pelo sinal", () => {
   /* Um mês que fecha POSITIVO, e ainda assim abaixo da banda. */
@@ -223,8 +223,8 @@ test("O PRIMÁRIO E JULGADO PELA META, e não pelo sinal", () => {
   const alvo = FISCAL.primaryTarget - FISCAL.primaryBand;
   assert.ok(alvo > 0, "a banda da LDO tem piso positivo, e e isso que torna a prova possivel");
 
-  /* O EMPENHO E DERIVADO E NÃO CHUTADO: parte-se do mês sem gasto nenhum e desconta-se o
-     saldo que se quer. Um número escrito a mão aqui viraria falso negativo na primeira
+  /* O EMPENHO É DERIVADO E NÃO CHUTADO: parte-se do mês sem gasto nenhum e desconta-se o
+     saldo que se quer. Um número escrito à mão aqui viraria falso negativo na primeira
      recalibragem da carga tributária. */
   const seco = step({ ...base, spent: 0 });
   /** @param {number} share o primario desejado, em fracao do PIB */

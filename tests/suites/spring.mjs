@@ -36,8 +36,8 @@ test("A MOLA PARTE DO ZERO E CHEGA AO UM, nos três regimes", () => {
 });
 
 test("A VELOCIDADE ANALÍTICA E A DERIVADA DA POSIÇÃO — e e ela que o retargeting lê", () => {
-  /* ⛔ ESTA E A PROVA QUE PEGA O ERRO DE SINAL. Posição certa nas duas pontas e velocidade
-     errada no meio e exatamente o defeito que passa despercebido: a peça chega no lugar. */
+  /* ⛔ ESTA É A PROVA QUE PEGA O ERRO DE SINAL. Posição certa nas duas pontas e velocidade
+     errada no meio é exatamente o defeito que passa despercebido: a peça chega no lugar. */
   for (const regime of REGIMES) {
     for (const velocity of [0, 2.5, -1.5]) {
       const curve = curveOf({ duration: 0.3, bounce: regime.bounce, velocity });
@@ -77,8 +77,8 @@ test("O QUIQUE ZERO NÃO ULTRAPASSA, e o quique alto ultrapassa — a sobriedade
 });
 
 test("A CURVA CHEGA AO CSS FECHANDO EM 1, e o salto final e menor que o limiar visual", () => {
-  /* ⛔ `1,22 x duracao` deixava 0,41% de resíduo, que num curso de 700px e um salto de 2,8px
-     no último quadro. O assentamento e PROCURADO, e não uma constante. */
+  /* ⛔ `1,22 x duracao` deixava 0,41% de resíduo, que num curso de 700px é um salto de 2,8px
+     no último quadro. O assentamento é PROCURADO, e não uma constante. */
   for (const regime of REGIMES) {
     const curve = curveOf({ duration: 0.3, bounce: regime.bounce });
     assert.ok(curve.css.startsWith("linear(0 0.00%"), `${regime.nome} nao comeca em zero`);

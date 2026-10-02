@@ -45,7 +45,7 @@ const server = createServer(async (req, res) => {
   }
 });
 
-/* ⚠ SÓ A MÁQUINA ALCANCA, por padrão. `HOST=0.0.0.0` abre para a rede local — e o único jeito de
+/* ⚠ SÓ A MÁQUINA ALCANÇA, por padrão. `HOST=0.0.0.0` abre para a rede local — é o único jeito de
    o telefone dele abrir o jogo —, e nesse caso a saída imprime o endereço de cada placa. */
 const HOST = process.env["HOST"] ?? "127.0.0.1";
 

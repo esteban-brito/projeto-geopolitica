@@ -1,4 +1,4 @@
-/* O QUE ELA IMPEDE, e cada item e um defeito que só aparece tarde: 1. */
+/* O QUE ELA IMPEDE, e cada item é um defeito que só aparece tarde: 1. */
 
 import { collect, isGuardSource, stripJsComments } from "../lib/project.mjs";
 
@@ -6,7 +6,7 @@ export const name = "identity";
 
 const DATA_DIR = "src/data/";
 
-/* Onde a comparação por nome e proibida. */
+/* Onde a comparação por nome é proibida. */
 const ENGINE_DIRS = ["src/domain/", "src/state/", "src/application/"];
 
 /**

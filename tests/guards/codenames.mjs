@@ -1,19 +1,19 @@
 /* GUARDA · CODINOMES — um conceito, um nome.
    ══════════════════════════════════════════════════════════════════════════════
 
-   Os motores tem codinome porque e assim que o responsável os cita. O risco de
-   um segundo nome e óbvio — dois vocabularios para a mesma coisa e a definição
-   de despadronização —, e esta guarda e o que transforma o risco em contrato:
+   Os motores têm codinome porque é assim que o responsável os cita. O risco de
+   um segundo nome é óbvio — dois vocabulários para a mesma coisa é a definição
+   de despadronização —, e esta guarda é o que transforma o risco em contrato:
 
      1. correspondência 1:1 entre codinome e diretório de `src/domain/`. Motor
         novo sem codinome reprova; codinome sem motor também;
      2. o codinome aparece no CABEÇALHO do módulo que ele nomeia, para quem abre
-        o arquivo saber onde esta;
-     3. o codinome NÃO aparece em código executável. Ele e rótulo de conversa e
+        o arquivo saber onde está;
+     3. o codinome NÃO aparece em código executável. Ele é rótulo de conversa e
         de documentação — no código existe um nome só, o funcional.
 
-   A tabela vive em `docs/standards.md`, que e a fonte. Aqui nada e digitado de
-   novo: a lista abaixo e lida de la. */
+   A tabela vive em `docs/standards.md`, que é a fonte. Aqui nada é digitado de
+   novo: a lista abaixo é lida de lá. */
 
 import { collect } from "../lib/project.mjs";
 
@@ -34,7 +34,7 @@ export function audit(files) {
     return list;
   }
 
-  /* A tabela e lida da fonte: linhas `| CODINOME | src/domain/x/ | ... |`. */
+  /* A tabela é lida da fonte: linhas `| CODINOME | src/domain/x/ | ... |`. */
   const declared = new Map();
   for (const row of doc.matchAll(/^\|\s*\*\*([A-Z]+)\*\*\s*\|\s*`src\/domain\/([a-z-]+)\/`/gm)) {
     declared.set(row[1] ?? "", row[2] ?? "");
@@ -68,7 +68,7 @@ export function audit(files) {
   }
 
   /* O codinome não vaza para o código executável. Comentário e cabeçalho podem
-     — e devem — cita-lo; identificador, não. */
+     — e devem — citá-lo; identificador, não. */
   for (const [path, source] of files) {
     if (!path.endsWith(".mjs") || path.startsWith("tests/")) continue;
     const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");

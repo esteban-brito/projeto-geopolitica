@@ -1,6 +1,6 @@
 /* SUITE · A CORRENTE — e ela nasceu tarde demais.
    ⚠ ESTE MOTOR RODOU DUAS SESSÕES SEM PROVA PRÓPRIA.
-   Todos os outros tem suite; a economia tinha as quatro equações, o carrego da dívida e nada
+   Todos os outros têm suíte; a economia tinha as quatro equações, o carrego da dívida e nada
    cobrando nenhum dos dois. */
 
 import assert from "node:assert/strict";
@@ -18,8 +18,8 @@ const SLOPE = MACRO.riskPremium;
 const anyRatio = fc.double({ min: 0.2, max: 2, noNaN: true });
 
 test("O MERCADO NÃO COBRA PELA DÍVIDA HERDADA, e cobra por tudo acima dela", () => {
-  /* ⚠ A TOLERÂNCIA E A DÍVIDA DE ABERTURA, e não um número escolhido: o mercado JÁ precificou
-     o país que o presidente recebeu, e o que ele cobra e a DETERIORAÇÃO. */
+  /* ⚠ A TOLERÂNCIA É A DÍVIDA DE ABERTURA, e não um número escolhido: o mercado JÁ precificou
+     o país que o presidente recebeu, e o que ele cobra é a DETERIORAÇÃO. */
   assert.equal(premiumOf({ debtRatio: TOLERANCE, tolerance: TOLERANCE, slope: SLOPE }), 0);
 
   fc.assert(
@@ -36,7 +36,7 @@ test("O MERCADO NÃO COBRA PELA DÍVIDA HERDADA, e cobra por tudo acima dela", (
 });
 
 test("O PRÊMIO E CONVEXO: o vigesimo ponto de dívida custa mais que o primeiro", () => {
-  /* ⚠ A FORMA E A MECÂNICA, e não enfeite. */
+  /* ⚠ A FORMA É A MECÂNICA, e não enfeite. */
   const at = (/** @type {number} */ ratio) =>
     premiumOf({ debtRatio: ratio, tolerance: TOLERANCE, slope: SLOPE });
 
@@ -55,7 +55,7 @@ test("O PRÊMIO E CONVEXO: o vigesimo ponto de dívida custa mais que o primeiro
 });
 
 test("O PRÊMIO ENCARECE A DÍVIDA, e incide sobre o ESTOQUE INTEIRO", () => {
-  /* ⚠ E NÃO SÓ SOBRE A PARTE POS-FIXADA. */
+  /* ⚠ E NÃO SÓ SOBRE A PARTE PÓS-FIXADA. */
   fc.assert(
     fc.property(
       fc.double({ min: 1000, max: 30000, noNaN: true }),
@@ -81,7 +81,7 @@ test("O PRÊMIO ENCARECE A DÍVIDA, e incide sobre o ESTOQUE INTEIRO", () => {
 
 test("SEM PRÊMIO, O CARREGO E EXATAMENTE O QUE ERA — a migração e inerte", () => {
   /* A prova que permite mudar a assinatura de `carry` sem medo: o argumento novo tem padrão
-     ZERO, e com ele a conta e a de antes, dígito por dígito. */
+     ZERO, e com ele a conta é a de antes, dígito por dígito. */
   fc.assert(
     fc.property(
       fc.double({ min: 1000, max: 30000, noNaN: true }),

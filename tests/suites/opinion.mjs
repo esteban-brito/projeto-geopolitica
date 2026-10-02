@@ -94,7 +94,7 @@ test("A OPINIÃO NÃO PULA: um mês nunca leva a satisfação ao alvo", () => {
 });
 
 test("ELA CAI MAIS RAPIDO DO QUE SOBE, e a assimetria e do mesmo tamanho declarado", () => {
-  /* O achado empírico mais consistente da literatura de opinião publica, e a razão de
+  /* O achado empírico mais consistente da literatura de opinião pública, e a razão de
      governos gastarem tanto para evitar crise pequena. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
 
@@ -151,7 +151,7 @@ test("PROMESSA QUEBRADA CUSTA RUA, e não só base no Congresso", () => {
 
 test("A NACIONAL E A MEDIA PONDERADA, e não a media simples", () => {
   /* Um governo adorado pela classe A/B e odiado pela D/E não tem 50% — ele tem o que a
-     populacao pesa. */
+     população pesa. */
   const skewed = { baixa: 0, media: 0, alta: 100 };
   const poll = pollFrom(skewed, SEGMENTS, OPINION);
   assert.ok(poll.good < 30, `o topo sozinho nao pode dar ${poll.good}% de otimo/bom`);

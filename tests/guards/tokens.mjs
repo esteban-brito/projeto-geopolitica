@@ -16,18 +16,18 @@ const TOKENS_FILE = "styles/00-tokens.css";
 /* Um token daqui deixa de ser conferido: se ninguém o injetar, a declaração que o consome
    fica inválida em silêncio — exatamente o defeito que o item 4 desta guarda existe para
    pegar.
-   Entra aqui só o que e DADO, e não valor visual: --part-color a cor de um segmento do
+   Entra aqui só o que é DADO, e não valor visual: --part-color a cor de um segmento do
    medidor, declarada na regra do próprio segmento em `30-components.css`; --neutral   o ponto
-   neutro do índice de área, que vem do CATÁLOGO e não da paleta — 50 e regra de jogo, e
-   duplica-lo no arquivo de tokens criaria um segundo lugar para ele divergir; --index    o
-   índice corrente de uma área, escrito em estilo inline pela própria faixa de medidores: e um
+   neutro do índice de área, que vem do CATÁLOGO e não da paleta — 50 é regra de jogo, e
+   duplicá-lo no arquivo de tokens criaria um segundo lugar para ele divergir; --index    o
+   índice corrente de uma área, escrito em estilo inline pela própria faixa de medidores: é um
    número por elemento, e não um valor do sistema; --floor    onde a lei daquela alavanca
    começa, e --ceiling   onde ela acaba; --fall     o SEGUNDO limiar de uma régua, e só um
-   grupo da caldeira tem um: em --mark ele abandona o governo, e em --fall a ruptura politica
+   grupo da caldeira tem um: em --mark ele abandona o governo, e em --fall a ruptura política
    abre; --rail-floor a tinta da zona abaixo do piso, trocada pela guarda daquela alavanca
-   na regra do próprio controle — e a mesma forma de --part-color; --split    onde o
-   preenchimento de uma régua troca de tinta, e só a Camara tem: a base parte em quem se
-   convence e quem se compra, e a divisão e por elemento e não do sistema. */
+   na regra do próprio controle — é a mesma forma de --part-color; --split    onde o
+   preenchimento de uma régua troca de tinta, e só a Câmara tem: a base parte em quem se
+   convence e quem se compra, e a divisão é por elemento e não do sistema. */
 const RUNTIME = new Set([
   "--part-color",
   "--neutral",
@@ -41,11 +41,11 @@ const RUNTIME = new Set([
   /* ── A MESA, e as sete são a MESMA espécie: valor de uma peça, e não do sistema ──
      --stitch e --stitch-v  o gradiente do ponto de seleiro, montado UMA vez e pousado nas
      quatro bordas da pasta. Inline nas quatro, o mesmo desenho seria teclado quatro vezes, e
-     e assim que um padrão começa a divergir; --furrow e --furrow-v  o sulco que a agulha
+     é assim que um padrão começa a divergir; --furrow e --furrow-v  o sulco que a agulha
      deixa, pela mesma razão; --envelope-size e --envelope-apex  o tamanho da carta e a altura
      do bico da aba, dos quais TODA medida do envelope deriva — eles são a escala da peça, e
      não uma cor; --stroke-len  o comprimento do traço da rubrica, e ele só existe depois de o
-     `<path>` estar na página: quem o escreve e `getTotalLength`, no DOM. */
+     `<path>` estar na página: quem o escreve é `getTotalLength`, no DOM. */
   "--stitch",
   "--stitch-v",
   "--furrow",
@@ -61,15 +61,15 @@ const RUNTIME = new Set([
   /* ── E a que a bancada da mesa girava: --rest, que o JS lê no voo da pasta. */
   "--rest",
   /* ── O TAMANHO DA PÍLULA: `movePill()` mede o item corrente e escreve os dois na peça. Eles
-     não TEM valor no arquivo de tokens porque são a caixa de um elemento, medida na tela. */
+     não têm valor no arquivo de tokens porque são a caixa de um elemento, medida na tela. */
   "--pill-w",
   "--pill-h",
   /* ── A RECEITA DA PEÇA VESTIDA: `glaze()` mede a caixa, instala a lente e escreve --glaze na
-     própria peça. Ela não TEM valor no arquivo de tokens porque o id da lente nasce na tela;
+     própria peça. Ela não tem valor no arquivo de tokens porque o id da lente nasce na tela;
      quem não foi vestida cai no `var(--glass-blur)` do fallback. */
   "--glaze",
-  /* ── AS MATERIAS, e quem as escreve e o JS: as três texturas nascem de `feTurbulence` e
-     chegam como data URI, então elas não TEM valor até a tela rodar. --timber o jacarandá do
+  /* ── AS MATÉRIAS, e quem as escreve é o JS: as três texturas nascem de `feTurbulence` e
+     chegam como data URI, então elas não têm valor até a tela rodar. --timber o jacarandá do
      tampo; --fibre e --felt o grão do papel e o do envelope. */
   /* ── E O FATOR DE ESCALA DA MESA, que sai de `fitDesk`: a cena tem o tamanho da foto e o JS
      mede quanto dela cabe na janela. `--lift-rise` sai da mesma conta — o tamanho da
@@ -78,7 +78,7 @@ const RUNTIME = new Set([
   "--lift-rise",
   /* --room-dy  o deslocamento que centra a faixa das peças, e não a foto; sai da mesma conta. */
   "--room-dy",
-  /* ── E A MEDIDA DA CENA, que sai de `DESIGN` no `cabinet.mjs` e e a ÚNICA fonte dela: o
+  /* ── E A MEDIDA DA CENA, que sai de `DESIGN` no `cabinet.mjs` e é a ÚNICA fonte dela: o
      `.room` e o `.backdrop` a liam teclada, com um aviso de que as três cópias mudavam
      juntas — e o aviso falhou em quatro comentários. */
   "--room-w",
@@ -101,8 +101,8 @@ const RUNTIME = new Set([
   "--ey",
   "--er",
   /* ── E O QUE MUDA POR ESTADO, declarado na regra `.envelope[data-urgent="true"]`: a carta que
-     vence e vermelha inteira, e a cor e a tinta dela mudam com o papel. E a mesma forma de
-     --part-color, que e trocada na regra do próprio segmento. */
+     vence é vermelha inteira, e a cor e a tinta dela mudam com o papel. É a mesma forma de
+     --part-color, que é trocada na regra do próprio segmento. */
   "--envelope-tone",
   "--envelope-lip",
   "--envelope-sheen",
@@ -123,7 +123,7 @@ export function audit(files) {
   const tokensCss = stripCssComments(files.get(TOKENS_FILE) ?? "");
   const declared = declarations(tokensCss);
 
-  /* `@property` TAMBEM DECLARA. */
+  /* `@property` TAMBÉM DECLARA. */
   for (const registered of tokensCss.matchAll(/@property\s+(--[a-z0-9-]+)/g)) {
     const token = registered[1] ?? "";
     if (!declared.has(token)) declared.set(token, "");
@@ -182,7 +182,7 @@ export function audit(files) {
     }
   }
 
-  /* 4 e 5 — referencia sem alvo, e alvo sem referencia. */
+  /* 4 e 5 — referência sem alvo, e alvo sem referência. */
   const used = new Set();
   for (const [path, raw] of files) {
     if (!/\.(css|mjs|html)$/.test(path) || isGuardSource(path)) continue;
@@ -202,7 +202,7 @@ export function audit(files) {
   }
   for (const token of declared.keys()) {
     if (used.has(token)) continue;
-    /* A METADE HEX DE UM PAR CONSUMIDO NÃO E ÓRFÃ. */
+    /* A METADE HEX DE UM PAR CONSUMIDO NÃO É ÓRFÃ. */
     if (used.has(`${token}-rgb`)) continue;
     add(`${token} e declarado e nunca consumido — token orfao atravessa meses sem ninguem ver`);
   }

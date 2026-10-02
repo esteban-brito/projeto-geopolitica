@@ -1,8 +1,8 @@
 /* GUARDA · MATERIAL — um material de vidro na tela inteira.
    O QUE ELA IMPEDE: 1.
    um SEGUNDO material.
-   Três desfoques são três materiais, e "cada bloco parece um liquid glass diferente" e a
-   critica que criou este sistema. */
+   Três desfoques são três materiais, e "cada bloco parece um liquid glass diferente" é a
+   crítica que criou este sistema. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
 

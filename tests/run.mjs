@@ -1,8 +1,8 @@
-/* O RUNNER DAS GUARDAS, e ele faz DUAS coisas em cada uma — a segunda e a que importa:
+/* O RUNNER DAS GUARDAS, e ele faz DUAS coisas em cada uma — a segunda é a que importa:
    1. AUDITA o projeto real e imprime os achados;
-   2. roda as PROVAS SINTÉTICAS — versões fabricadas do projeto que contem o defeito de
+   2. roda as PROVAS SINTÉTICAS — versões fabricadas do projeto que contêm o defeito de
       propósito — e exige que a guarda acuse cada uma.
-   Sem (2), uma guarda verde não distingue "o projeto esta certo" de "o casador não casa". */
+   Sem (2), uma guarda verde não distingue "o projeto está certo" de "o casador não casa". */
 
 import { readdirSync } from "node:fs";
 import { join } from "node:path";

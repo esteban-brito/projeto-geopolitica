@@ -15,7 +15,7 @@ const idle = state => playMonth(state).state;
 const anySeed = fc.integer({ min: 0, max: 4294967295 });
 
 test("MESMA SEMENTE E MESMAS AÇÕES DÃO O MESMO ESTADO, byte a byte", () => {
-  /* Ela e escrita sobre o TEXTO do save e não sobre o objeto: igualdade profunda perdoaria
+  /* Ela é escrita sobre o TEXTO do save e não sobre o objeto: igualdade profunda perdoaria
      uma diferença de ordem de chave que quebraria a comparação de dois saves no disco. */
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 0, max: 60 }), (seed, turns) => {
@@ -118,7 +118,7 @@ test("qualquer texto e recusado sem lançar", () => {
   fc.assert(
     fc.property(fc.string(), text => {
       const loaded = deserialize(text);
-      /* Um texto aleatório nunca deveria virar partida valida. */
+      /* Um texto aleatório nunca deveria virar partida válida. */
       assert.equal(loaded.ok, false);
     }),
   );
@@ -127,7 +127,7 @@ test("qualquer texto e recusado sem lançar", () => {
 test("save com impeachment e round-trip idêntico", () => {
   let state = createState(42);
   for (let i = 0; i < 20; i++) state = idle(state);
-  /* Forca um impeachment — o campo e number | null. */
+  /* Força um impeachment — o campo é number | null. */
   state = /** @type {import("../../src/state/state.mjs").GameState} */ ({
     ...state,
     impeachment: state.month,
@@ -184,8 +184,8 @@ test("NENHUMA CARTA GRAVA UM PESO QUE NINGUÉM LÊ, e nenhum fluxo fica sem cons
 });
 
 test("O SAVE DA VERSÃO ANTERIOR ABRE SEM PARTIDO, e a versão não subiu", () => {
-  /* ⚠ ESTA E A PROVA QUE POUPOU A PARTIDA EM ANDAMENTO. O campo `party` entrou sem bump de
-     esquema porque ele não esta na lista de obrigatórios do validador — e um save gravado
+  /* ⚠ ESTA É A PROVA QUE POUPOU A PARTIDA EM ANDAMENTO. O campo `party` entrou sem bump de
+     esquema porque ele não está na lista de obrigatórios do validador — e um save gravado
      antes dele abre com o campo ausente, que todo consumidor lê como `null`. Se alguém o
      puser entre os obrigatórios, esta prova quebra e a decisão volta a ser tomada. */
   const antigo = JSON.parse(serialize(createState(7)));

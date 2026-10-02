@@ -1,4 +1,4 @@
-/* SUITE · A PLATAFORMA — o que foi prometido na posse, e como ela e cobrada. */
+/* SUITE · A PLATAFORMA — o que foi prometido na posse, e como ela é cobrada. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -31,7 +31,7 @@ function withPlatform(platform, extra = {}) {
 }
 
 test("AS PRIORIDADES SÃO AS ÁREAS QUE O PAÍS ENTREGA PIORES — e a lista e derivada", () => {
-  /* ⚠ TRÊS IDS DIGITADOS SERIAM UMA SEGUNDA VERDADE sobre onde o país esta pior, e ela
+  /* ⚠ TRÊS IDS DIGITADOS SERIAM UMA SEGUNDA VERDADE sobre onde o país está pior, e ela
      mentiria no dia em que uma abertura do catálogo mudasse. */
   const { priority } = pledgesOf();
   assert.equal(priority.length, PRIORITY_COUNT);
@@ -89,7 +89,7 @@ test("O PRIMÁRIO E O DO ÚLTIMO ANO, e sem mês fechado ele NÃO julga", () => 
   const vazio = withPlatform({ fiscal: "primary" });
   assert.equal(platformOf(vazio)[0]?.kept, null, "um governo de um dia nao quebrou nada ainda");
 
-  /* ⚠ SÓ OS ÚLTIMOS DOZE ENTRAM: um ano inteiro no vermelho seguido de doze meses no azul e uma
+  /* ⚠ SÓ OS ÚLTIMOS DOZE ENTRAM: um ano inteiro no vermelho seguido de doze meses no azul é uma
      promessa CUMPRIDA — e a soma da série inteira diria o contrário. */
   const serie = [...Array(MONTHS_PER_YEAR).fill(-30), ...Array(MONTHS_PER_YEAR).fill(10)];
   const azul = withPlatform({ fiscal: "primary" }, { series: { ...base.series, primary: serie } });
@@ -102,7 +102,7 @@ test("A REFORMA SÓ QUEBRA NO FIM, e a promessa de NÃO mexer quebra por AÇÃO"
   /* Enquanto nada passou, prometer aprovar uma lei fica em aberto — cobrar no mês 3 seria
      acusar o presidente de não ter feito o que ele tem 45 meses para fazer. */
   assert.equal(platformOf(withPlatform({ reform: "law" }))[0]?.kept, null);
-  /* E a promessa de não mexer na Constituicao nasce CUMPRIDA, e e a única assim. */
+  /* E a promessa de não mexer na Constituição nasce CUMPRIDA, e é a única assim. */
   assert.equal(platformOf(withPlatform({ reform: "keep" }))[0]?.kept, true);
 
   /** @type {import("../../src/domain/norms/index.mjs").Norm} */
@@ -120,7 +120,7 @@ test("A REFORMA SÓ QUEBRA NO FIM, e a promessa de NÃO mexer quebra por AÇÃO"
     true,
   );
 
-  /* ⚠ A HERDADA NÃO CONTA, e o critério não e desta suite: `enactedAt = 0` e a lei que o
+  /* ⚠ A HERDADA NÃO CONTA, e o critério não é desta suíte: `enactedAt = 0` é a lei que o
      presidente encontrou em vigor. Sem isso, toda promessa de reforma nasceria cumprida. */
   const herdadas = base.norms.filter(norm => norm.guard === "constitution");
   assert.ok(herdadas.length > 0, "o catalogo devia trazer normas constitucionais herdadas");
@@ -182,8 +182,8 @@ test("ID QUE NÃO EXISTE NÃO ENTRA NO ESTADO — nem pela tela, nem por um save
     fiscal: "debt",
     reform: null,
   });
-  /* ⚠ E A ÁREA TEM DE ESTAR NA LISTA DA POSSE: a Fazenda existe no catálogo e NÃO e oferecida,
-     porque a lista são as três mais fracas. Aceita-la poria no estado uma promessa que a carta
+  /* ⚠ E A ÁREA TEM DE ESTAR NA LISTA DA POSSE: a Fazenda existe no catálogo e NÃO é oferecida,
+     porque a lista são as três mais fracas. Aceitá-la poria no estado uma promessa que a carta
      nunca ofereceu. */
   assert.equal(chosenOf({ priority: "treasury" }).priority, null);
 });

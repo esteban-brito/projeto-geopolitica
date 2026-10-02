@@ -1,4 +1,4 @@
-/* GUARDA · CASCATA — a precedência e declarada, nunca emergente. */
+/* GUARDA · CASCATA — a precedência é declarada, nunca emergente. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
 
@@ -90,7 +90,7 @@ export function audit(files) {
 }
 
 /**
- * Devolve o primeiro trecho de CSS que nao esta dentro de `@layer` nem de
+ * Devolve o primeiro trecho de CSS que não está dentro de `@layer` nem de
  *
  * `@property`, ou `null` se tudo estiver coberto.
  * @param {string} css
@@ -105,7 +105,7 @@ function outsideLayers(css) {
       i += blank[0].length;
       continue;
     }
-    /* declaracao de ordem: `@layer a, b, c;` */
+    /* declaração de ordem: `@layer a, b, c;` */
     const order = rest.match(/^@layer\s+[^;{]+;/);
     if (order) {
       i += order[0].length;
@@ -123,13 +123,13 @@ function outsideLayers(css) {
   return null;
 }
 
-/* O defeito não esta em nenhuma das duas regras — esta no PAR, e só quem lê as duas juntas o
+/* O defeito não está em nenhuma das duas regras — está no PAR, e só quem lê as duas juntas o
    vê. */
 
 /**
  * OS BLOCOS DE REGRA, com contexto, seletor, propriedades e linha.
  *
- * @param {string} css ja sem comentarios
+ * @param {string} css já sem comentários
  * @returns {Array<{ key: string, props: string[], line: number }>}
  */
 function rules(css) {
@@ -153,8 +153,8 @@ function rules(css) {
         .replace(/\s+/g, " ");
 
       if (selector.startsWith("@")) {
-        /* ⚠ `@media` e `@layer` ENTRAM NA CHAVE, e nao sao ignorados: a mesma regra dentro e
-           fora de uma media query e o padrão normal de sobreposição, e acusar isso faria a
+        /* ⚠ `@media` e `@layer` ENTRAM NA CHAVE, e não são ignorados: a mesma regra dentro e
+           fora de uma media query é o padrão normal de sobreposição, e acusar isso faria a
            guarda brigar com a forma como todo CSS responsivo se escreve. */
         stack.push(selector);
         i++;
@@ -164,8 +164,8 @@ function rules(css) {
       const end = matchBrace(css, i);
       if (end === -1) break;
       const body = css.slice(i + 1, end);
-      /* so as declaracoes DESTE bloco: um `{` dentro seria regra aninhada, e o projeto nao
-         usa aninhamento — mas cortar no primeiro `{` mantem a leitura honesta. */
+      /* só as declarações DESTE bloco: um `{` dentro seria regra aninhada, e o projeto não
+         usa aninhamento — mas cortar no primeiro `{` mantém a leitura honesta. */
       const flat = body.split("{")[0] ?? "";
       const props = [...flat.matchAll(/(^|;)\s*(-{0,2}[a-zA-Z][\w-]*)\s*:/g)].map(m =>
         (m[2] ?? "").toLowerCase(),
@@ -186,7 +186,7 @@ function rules(css) {
 
 /**
  * @param {string} text
- * @param {number} open indice da `{` de abertura
+ * @param {number} open índice da `{` de abertura
  * @returns {number}
  */
 function matchBrace(text, open) {
@@ -200,7 +200,7 @@ function matchBrace(text, open) {
 
 export const synthetic = [
   {
-    /* ⚠ ESTA E A DE, e ela reintroduz o defeito EXATO que a criou: o corpo do ofício subia um
+    /* ⚠ ESTA É A DE, e ela reintroduz o defeito EXATO que a criou: o corpo do ofício subia um
        degrau e uma segunda declaração, dez linhas abaixo, o devolvia. */
     label: "a mesma propriedade declarada duas vezes no mesmo seletor",
     files: new Map([
@@ -216,7 +216,7 @@ export const synthetic = [
   },
   {
     /* ⚠ E ESTA COBRA O CONTRÁRIO, e sem ela o conserto óbvio da acusação falsa seria afrouxar
-       a guarda: o mesmo seletor escrito duas vezes com propriedades DIFERENTES e autoria
+       a guarda: o mesmo seletor escrito duas vezes com propriedades DIFERENTES é autoria
        legítima, e este projeto a usa de propósito — a regra do `position: relative` mora ao
        lado do ponto de não lido porque ela existe para ele. */
     label: "regra fora de qualquer camada",

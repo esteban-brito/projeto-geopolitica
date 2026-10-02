@@ -48,7 +48,7 @@ function settled(pick) {
 }
 
 test("SEM VERBA O PAÍS PIORA, na taxa que o catálogo declara", () => {
-  /* O decaimento e o que impede o jogo de ter um estado final em que tudo esta em 100 e não
+  /* O decaimento é o que impede o jogo de ter um estado final em que tudo está em 100 e não
      há mais o que decidir. */
   const first = step(run({}));
 
@@ -74,7 +74,7 @@ test("O ORCAMENTO HERDADO E O PONTO DE EQUILÍBRIO — a identidade do achado 31
   for (const area of AREAS) {
     const spend = inherited[area.id] ?? 0;
 
-    /* A IDENTIDADE, escrita como ela e: o empurrão do gasto herdado empata com o vazamento do
+    /* A IDENTIDADE, escrita como ela é: o empurrão do gasto herdado empata com o vazamento do
        índice herdado. */
     assert.ok(
       Math.abs(area.yield * spend - area.decay * area.initial) < 1e-3,
@@ -83,7 +83,7 @@ test("O ORCAMENTO HERDADO E O PONTO DE EQUILÍBRIO — a identidade do achado 31
     );
   }
 
-  /* E O EQUILÍBRIO E DE FATO ESTÁVEL: um mês com o gasto herdado devolve o índice herdado. */
+  /* E O EQUILÍBRIO É DE FATO ESTÁVEL: um mês com o gasto herdado devolve o índice herdado. */
   const held = step(run({ allocation: inherited }));
   for (const area of AREAS) {
     if (area.id === CAPACITY_TARGET) continue;
@@ -153,7 +153,7 @@ test("O ATRASO E ATRASO: o modelo consome o índice de `lag` meses atrás", () =
     seen.push(outcome.effective[slow.id] ?? 0);
   }
 
-  /* Nos primeiros `lag` meses o efetivo ainda e o de abertura — o salto não chegou. */
+  /* Nos primeiros `lag` meses o efetivo ainda é o de abertura — o salto não chegou. */
   assert.equal(seen[0], slow.initial, "o salto chegou ao modelo no mesmo mes");
   assert.ok((seen[slow.lag] ?? 0) > slow.initial, `o salto nao chegou depois de ${slow.lag} meses`);
 });
@@ -169,7 +169,7 @@ test("sem atraso, o efetivo E o corrente", () => {
 });
 
 test("A PRESSÃO TEM O SINAL DO CATÁLOGO, e o mesmo canal aceita os dois", () => {
-  /* Duas áreas em `mandatory` empurram para lados opostos de propósito: servico de saude bom
+  /* Duas áreas em `mandatory` empurram para lados opostos de propósito: serviço de saúde bom
      REDUZ a obrigatória, cobertura previdenciária boa a AUMENTA. */
   const health = AREAS.find(area => area.id === "health");
   const welfare = AREAS.find(area => area.id === "welfare");

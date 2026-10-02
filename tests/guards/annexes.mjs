@@ -1,6 +1,6 @@
-/* GUARDA · A PEÇA DE DADO — ela e UMA, na caixa e no Gabinete.
+/* GUARDA · A PEÇA DE DADO — ela é UMA, na caixa e no Gabinete.
 
-   ── POR QUE ELA NASCEU, E O NÚMERO E DELE ──────────────────────────────────
+   ── POR QUE ELA NASCEU, E O NÚMERO É DELE ──────────────────────────────────
    Palavras do responsável: "todas essas tabelas me incomodam muito, nem queria que fossem
    tabelas". Medido no mesmo dia, abrindo TODA carta de um mandato de 14 meses num navegador:
    **19 de 23 cartas abertas traziam tabela**, com **306 células em tela por mês**, e a caixa
@@ -8,8 +8,8 @@
    espécies.
 
    ── POR QUE UMA GUARDA, E NÃO UMA COMBINAÇÃO ───────────────────────────────
-   ⚠ O JOGO VAI GANHAR MUITA CARTA NOVA, e essa e a pergunta que ele fez antes de autorizar:
-   "da pra fazer mesmo assim?". Da — mas só se a regra for executável. Uma convenção escrita em
+   ⚠ O JOGO VAI GANHAR MUITA CARTA NOVA, e essa é a pergunta que ele fez antes de autorizar:
+   "Dá pra fazer mesmo assim?". Dá — mas só se a regra for executável. Uma convenção escrita em
    prosa sobrevive três sessões; foi assim que os cinco formatos nasceram, um de cada vez, cada
    um razoável sozinho. Esta guarda faz o portão recusar o sexto no dia em que alguém o
    escrever, inclusive eu, daqui a vinte sessões, sem lembrar desta conversa.
@@ -18,23 +18,23 @@
    Duas coisas, e a segunda entrou no ciclo 15.
 
    1. TABELA nas duas telas e na peça. ⚠ A TELA DO RELATÓRIO CONTINUA COM A DELA de propósito,
-      e a distinção e a doutrina inteira: planilha mora em TELA, e a caixa e correspondência. O
+      e a distinção é a doutrina inteira: planilha mora em TELA, e a caixa é correspondência. O
       Gabinete já recusava listar bancada por bancada com essas palavras — "quem lista bancada
-      por bancada, com nome e humor, e a tela do Congresso" — e era a CARTA que trazia as onze
+      por bancada, com nome e humor, é a tela do Congresso" — e era a CARTA que trazia as onze
       linhas;
 
    2. RÉGUA DESENHADA PELA TELA. Medido em 29/08/2026, mês 12, a 1440x980: a coluna direita do
       Gabinete tem **18 classes de estilo em quatro blocos** e **TRÊS instrumentos para a mesma
-      pergunta** — `gauge`, `meter` e `poles` respondem todos "onde este número esta na régua
+      pergunta** — `gauge`, `meter` e `poles` respondem todos "onde este número está na régua
       dele?". A caixa resolve quinze espécies de carta com TRÊS peças. Três desenhos para uma
-      pergunta só significam que cada bloco foi desenhado sozinho — que e exatamente como os
-      cinco formatos de anexo nasceram. Quem desenha régua e a PEÇA; a tela pede. */
+      pergunta só significam que cada bloco foi desenhado sozinho — que é exatamente como os
+      cinco formatos de anexo nasceram. Quem desenha régua é a PEÇA; a tela pede. */
 
 import { collect, stripJsComments } from "../lib/project.mjs";
 
 export const name = "annexes";
 
-/* AS DUAS TELAS QUE FALAM A MESMA LÍNGUA, e a peça de onde ela sai. ⚠ A LISTA E DECLARADA e
+/* AS DUAS TELAS QUE FALAM A MESMA LÍNGUA, e a peça de onde ela sai. ⚠ A LISTA É DECLARADA e
    não varrida: uma tela nova não herda o vocabulário por acidente — ela entra aqui no dia em
    que alguém decidir que ela fala a mesma língua. */
 const INBOX = "src/ui/screens/inbox.mjs";
@@ -48,8 +48,8 @@ const WATCHED = [...SCREENS, PIECE];
    nenhum. Foi assim que a tabela do balanço e a das bancadas dividiram markup. */
 const TABLE = /<(table|thead|tbody|tfoot|tr)\b|<t[dh]\b/g;
 
-/* OS INSTRUMENTOS, PELO NOME. ⚠ `\b` E O QUE SALVA A REGRA: `meter__part` e `poles__mark` são
-   PARTES do instrumento, e acusa-las faria a guarda cobrar duas vezes a mesma linha. */
+/* OS INSTRUMENTOS, PELO NOME. ⚠ `\b` É O QUE SALVA A REGRA: `meter__part` e `poles__mark` são
+   PARTES do instrumento, e acusá-las faria a guarda cobrar duas vezes a mesma linha. */
 const RULER = /class="(gauge|meter|poles)\b/g;
 
 /**
@@ -72,8 +72,8 @@ export function audit(files) {
   const code = new Map();
   for (const path of WATCHED) {
     const source = files.get(path);
-    /* A AUSÊNCIA NÃO E VERDE: um arquivo renomeado sem atualizar a guarda a deixaria passando
-       sem medir nada, que e o pior estado possível para uma guarda. */
+    /* A AUSÊNCIA NÃO É VERDE: um arquivo renomeado sem atualizar a guarda a deixaria passando
+       sem medir nada, que é o pior estado possível para uma guarda. */
     if (source === undefined) {
       add(`${path} nao existe — a guarda da peca perdeu o que ela mede, e verde aqui e mentira`);
       continue;
@@ -102,7 +102,7 @@ export function audit(files) {
     }
   }
 
-  /* ⚠ E A PEÇA TEM DE DESENHAR ALGUMA: sem régua nenhuma la dentro, a regra de cima proíbe
+  /* ⚠ E A PEÇA TEM DE DESENHAR ALGUMA: sem régua nenhuma lá dentro, a regra de cima proíbe
      sem oferecer, e o verde dela não significaria nada. */
   const piece = code.get(PIECE);
   if (piece !== undefined && piece.match(RULER) === null) {
@@ -128,7 +128,7 @@ export const synthetic = [
     files: sane({ [INBOX]: 'const html = `<table class="annex__table"><tbody></tbody></table>`;' }),
   },
   {
-    /* ⚠ A TABELA MONTADA POR PEDAÇOS E O CASO QUE IMPORTA: era assim que os cinco formatos
+    /* ⚠ A TABELA MONTADA POR PEDAÇOS É O CASO QUE IMPORTA: era assim que os cinco formatos
        conviviam, cada função escrevendo a própria parte, e nenhuma escrevendo a abertura. */
     label: "so a celula, sem a abertura",
     files: sane({ [INBOX]: 'const row = `<tr><th scope="row">${x}</th><td>${y}</td></tr>`;' }),

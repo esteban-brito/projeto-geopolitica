@@ -1,8 +1,8 @@
 /* GUARDA · ÓRFÃS — nenhuma regra de estilo sem HTML para pintar.
-   ⚠ ELA E O ACHADO 5 DA RETOMADA, e ele ficou aberto por seis sessões.
-   O custo dele esta medido, em duas varreduras feitas A MÃO: nona sessão  299 linhas —
+   ⚠ ELA É O ACHADO 5 DA RETOMADA, e ele ficou aberto por seis sessões.
+   O custo dele está medido, em duas varreduras feitas À MÃO: nona sessão  299 linhas —
    `70-screen-approval.css` inteiro, a família `.strip`/`.chip`, e duas regras de `.strip--
-   stacked`; decima sessao 201 linhas de CSS morto, mais uma regra `.cards` duplicada que era
+   stacked`; décima sessão 201 linhas de CSS morto, mais uma regra `.cards` duplicada que era
    sobrescrita inteira pela irmã vinte linhas abaixo. */
 
 import { collect, isGuardSource, stripCssComments, stripJsComments } from "../lib/project.mjs";
@@ -67,10 +67,10 @@ function declared(css, pick = /\.([a-zA-Z][\w-]*)/g) {
   return found;
 }
 
-/* O ESTADO PINTADO — `[data-x="y"]`, e ele e a segunda espécie de regra órfã.
+/* O ESTADO PINTADO — `[data-x="y"]`, e ele é a segunda espécie de regra órfã.
    ⛔ ELA JÁ CUSTOU DUAS NA MESMA MESA: o seletor era `data-assinado` e o HTML escrevia
    `data-signed`; o seletor era `data-vence` e o HTML escrevia `data-urgent`. A rubrica nunca
-   corria e a carta que vence nunca ficava vermelha — e seletor que não casa não e erro para
+   corria e a carta que vence nunca ficava vermelha — e seletor que não casa não é erro para
    ninguém: tipo, guarda e 323 provas ficaram verdes as duas vezes. */
 const STATE = /\[data-([a-z][\w-]*)/g;
 
@@ -93,7 +93,7 @@ export function audit(files) {
   const { list, add } = collect(name);
 
   /* O QUE O JOGO PRODUZ, num texto só. ⚠ O ESTADO SE PROCURA NO CÓDIGO INTEIRO, e não só nos
-     literais: quem escreve `data-x` e uma linha de HTML ou uma chamada a `dataset`. */
+     literais: quem escreve `data-x` é uma linha de HTML ou uma chamada a `dataset`. */
   let source = "";
   let code = "";
   for (const [path, raw] of files) {
@@ -163,7 +163,7 @@ export const synthetic = [
     ]),
   },
   {
-    /* O caso medido: `.desk` sobreviveu a tela inteira que foi refeita porque o `<link>` da
+    /* O caso medido: `.desk` sobreviveu à tela inteira que foi refeita porque o `<link>` da
        folha NOVA se chama `46-screen-cabinet-desk.css`, e o nome do arquivo casava com o nome da classe. */
     label: "o CAMINHO da folha mantem viva a classe que ela nao pinta",
     files: new Map([
@@ -173,7 +173,7 @@ export const synthetic = [
   },
   {
     /* E o irmão dele: uma variável local com o nome da classe. Classe só nasce dentro de
-       texto, e `const desk = 3` não e texto. */
+       texto, e `const desk = 3` não é texto. */
     label: "um identificador de JS com o nome da classe, e ele nao pinta nada",
     files: new Map([
       ["styles/45-screen-cabinet.css", "@layer screens { .desk { gap: 8px; } }"],
