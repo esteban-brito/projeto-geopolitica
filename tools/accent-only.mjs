@@ -9,13 +9,21 @@ import { tokenizer } from "acorn";
 const args = process.argv.slice(2);
 const at = args.indexOf("--base");
 const base = at >= 0 ? (args.splice(at, 2)[1] ?? "HEAD") : "HEAD";
+/* Maiúscula no começo de frase é correção de prosa; código e string seguem conferidos à parte. */
+const ignoreCase = args.includes("--ignore-case");
+if (ignoreCase) args.splice(args.indexOf("--ignore-case"), 1);
 if (!args.length) {
-  process.stderr.write("uso: node tools/accent-only.mjs [--base <commit>] <arquivo>...\n");
+  process.stderr.write(
+    "uso: node tools/accent-only.mjs [--base <commit>] [--ignore-case] <arquivo>...\n",
+  );
   process.exit(2);
 }
 
 /** @param {string} text */
-const strip = text => text.normalize("NFD").replace(/\p{M}/gu, "").normalize("NFC");
+const strip = text => {
+  const bare = text.normalize("NFD").replace(/\p{M}/gu, "").normalize("NFC");
+  return ignoreCase ? bare.toLowerCase() : bare;
+};
 
 /** @param {string} path @param {string} text @returns {string} */
 function code(path, text) {
