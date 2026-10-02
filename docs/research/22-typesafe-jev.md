@@ -23,7 +23,11 @@ que hoje proíbe IA por API dentro e fora da partida.
 1. **Jogador sintético nos testes** (o melhor uso): escolher, entre as ações válidas, as que um
    jogador faria, no lugar do sorteio cego do macaco. As partidas se gravam e o teste as repete,
    então o determinismo fica. Partidas parecidas com as de gente acham defeito que o sorteio não acha.
-2. **Classificar dado em massa:** por exemplo, as 152 atribuições de ministérios por área, ou as
+2. **Medir o equilíbrio com estilos de jogo:** as sondas de `npm run simulate` são roteiros
+   fixos. Jogadores sintéticos com estilos diferentes (um tentando ser Xi, outro tentando ser Lee)
+   mostrariam se alguma estratégia ganha fácil demais ou se algum caminho é impossível; as
+   partidas se gravam, e a medida se repete.
+3. **Classificar dado em massa:** por exemplo, as 152 atribuições de ministérios por área, ou as
    propostas reais da pesquisa 07 nos eixos economia × liberdades. O resultado vira dado estático
    revisado, como manda a [ADR 0002](../adr/0002-ai-generates-vocabulary-not-effect.md).
 
