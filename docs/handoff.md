@@ -73,7 +73,8 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 1 (Presidente e posse) contém o ciclo 34. Fora dele, nesta ordem: o achado 81, antes de fechar o
 E0; a carta do arquivamento (achado 66, lote F); a prosa de `src/domain` (41%, meta de 20%); o 3º
 ultrareview, de `src/ui`; e os candidatos do [ciclo 30](archive/cycles/30-depth-and-proofs.md), que
-ele marca.
+ele marca. Em espera, pela ordem dele: o jogador sintético dos testes com o Jev
+([pesquisa 22](research/22-typesafe-jev.md)), que pede reabrir a ADR 0001.
 
 ## Decisões vivas
 
