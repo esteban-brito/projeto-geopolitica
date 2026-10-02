@@ -46,7 +46,7 @@ própria de cada um. A semana é unidade de avanço do jogador, e entra como rel
   15, `budget` 15, `random` 14, `catalog` 14, `capacity` 14, `passage` 13, `state-reducer` 11,
   `platform` 11, `pressure` 10, `opinion` 9, `mail` 7, `chain` 7, `spring` 6, `calendar` 5,
   `economy` 4; mais 13 guardas;
-- `state.month`: 59 referências em 5 arquivos de `src/`; mês em `src/ui` e `src/app`: 76
+- `state.month`: 59 referências em 5 arquivos de `src/`; mês em `src/ui` e `src/shell/`: 76
   referências em 14 arquivos;
 - o único sorteio do jogo é o do voto: `unit(` e `take(` aparecem só em
   `congress/index.mjs:300`. O elenco usa hash.
@@ -402,7 +402,7 @@ responsabilização (etapa F).
    toda função de `turn.mjs`, permite rodar produção com 20 deputados sintéticos.
 8. Nada. 9. A série mensal. 10. O relatório "por que o ator X fez Y" (§19.6).
 
-### 4.18 Interface — `src/ui/`, `src/app/`
+### 4.18 Interface — `src/ui/`, `src/shell/`
 
 1. Treze endereços; dock no Gabinete, coluna fora dele; barra superior.
 2. Governar com a mão.

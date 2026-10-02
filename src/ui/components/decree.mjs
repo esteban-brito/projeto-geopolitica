@@ -11,8 +11,8 @@
    fora do corte", então elas moram na frase que fala delas. Um presidente rabisca a minuta;
    ele não opera um painel ao lado dela. */
 
-import { escapeHtml } from "./html.mjs";
-import { money, percent } from "./format.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, percent } from "../core/format.mjs";
 import { MONTHS, UI } from "../strings.mjs";
 import { monthParts } from "../../state/state.mjs";
 import { protocolOf } from "./protocol.mjs";

@@ -17,7 +17,7 @@
 A interface nova só fala com o motor pela fachada `src/public`. O motor ainda precisa de ajustes,
 como a base inicial (achado 86), mas isso é calibragem, não recomeço.
 
-**Recomeça:** `src/app`, `src/ui` e `styles`, cerca de 13,7 mil linhas. A antiga continua jogável
+**Recomeça:** `src/shell/`, `src/ui` e `styles`, cerca de 13,7 mil linhas. A antiga continua jogável
 até a nova cobrir tudo.
 
 **Reaproveitar, peça por peça:**

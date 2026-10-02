@@ -109,7 +109,7 @@ export const synthetic = [
           "animation-duration:.001ms;animation-iteration-count:1;transition-duration:.001ms}" +
           "::view-transition-group(*){animation-duration:.001ms}}}",
       ],
-      ["app.mjs", 'node.style.animation = "pulse 1s infinite";'],
+      ["src/main.mjs", 'node.style.animation = "pulse 1s infinite";'],
     ]),
   },
 ];

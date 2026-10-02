@@ -1,14 +1,14 @@
 /* GABINETE — a MESA: o tampo, a pasta de despachos e a correspondência do mês. */
 
-import { escapeHtml } from "../shared/html.mjs";
-import { armSignature, decreeHtml } from "../shared/decree.mjs";
-import { momentHtml } from "../shared/moment.mjs";
-import { briefHtml } from "../shared/brief.mjs";
-import { mailPileHtml } from "../shared/mail-pile.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { armSignature, decreeHtml } from "../components/decree.mjs";
+import { momentHtml } from "../components/moment.mjs";
+import { briefHtml } from "../components/brief.mjs";
+import { mailPileHtml } from "../components/mail-pile.mjs";
 import { letterHtml } from "./inbox.mjs";
-import { phoneHtml } from "../shared/phone.mjs";
-import { curveOf } from "../shared/spring.mjs";
-import { felt, fibre } from "../shared/texture.mjs";
+import { phoneHtml } from "../components/phone.mjs";
+import { curveOf } from "../core/spring.mjs";
+import { felt, fibre } from "../core/texture.mjs";
 import { UI } from "../strings.mjs";
 
 /* Materias da mesa nascem uma vez; caminho absoluto para resolver contra folha consumidora. */
@@ -63,7 +63,7 @@ export function emailHtml(input) {
  * @param {number} input.month
  * @param {ReadonlyArray<{ id: string, label: string, short?: string }>} input.areas
  * @param {ReadonlyArray<string>} input.protect
- * @param {import("../shared/moment.mjs").MomentView | null} [input.moment] a reunião do corte, no mês do relatório
+ * @param {import("../components/moment.mjs").MomentView | null} [input.moment] a reunião do corte, no mês do relatório
  * @param {ReadonlyArray<{ urgent: boolean, dispatch: import("./inbox.mjs").Dispatch | null }>} input.letters
  * @param {number} input.sheets
  * @param {Parameters<typeof briefHtml>[0]} input.brief

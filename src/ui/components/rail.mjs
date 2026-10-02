@@ -1,9 +1,9 @@
 /* O RAIL — a navegação primária, a esquerda e sempre presente. */
 
-import { LEVELS, RECIPE, fresnelFor, glaze, scaleRamp, skin } from "./glass.mjs";
-import { spring } from "./spring.mjs";
-import { escapeHtml } from "./html.mjs";
-import { iconHtml } from "./icons.mjs";
+import { LEVELS, RECIPE, fresnelFor, glaze, scaleRamp, skin } from "../core/glass.mjs";
+import { spring } from "../core/spring.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { iconHtml } from "../core/icons.mjs";
 import { DEFAULT_TREATMENT, UI, titleOf } from "../strings.mjs";
 
 /** @typedef {import("../../data/areas.mjs").Area} Area */
@@ -135,7 +135,7 @@ const TAIL = { duration: 0.46, bounce: 0.1 };
 const STRETCH = 0.5;
 const STRETCH_MAX = 0.3;
 /* O corpo da pílula e a cor do que se pressiona, rasa; a tinta sai do token. */
-/** @type {import("./glass.mjs").Ramp} */
+/** @type {import("../core/glass.mjs").Ramp} */
 const PILL_BODY = [
   [0, 0.22],
   [0.5, 0.17],

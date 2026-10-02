@@ -48,7 +48,7 @@ const TYPE = /@(ts-|type|param|returns?|typedef|property|satisfies|template|see|
 
 /* ⚠ O ENTRYPOINT ESTAVA DE FORA até 23/08/2026, e ele e o maior arquivo do projeto:
    1.283 linhas, 45% de prosa, 12 blocos acima do teto e 18 datas. A guarda escopava
-   por `src|styles|tools`, e `app.mjs` mora na raiz — a folha declarava cobertura que
+   por `src|styles|tools`, e `src/main.mjs` mora na raiz — a folha declarava cobertura que
    não existia, que e o defeito que `standards.md` §7 nomeia. */
 const SCOPE = /^(src|styles|tools)\/|^app\.mjs$/;
 
@@ -63,7 +63,7 @@ const DIARY_DATE = /\b\d{2}\/\d{2}\/\d{4}\b/;
    completo, e sem a condição as provas sintéticas das outras duas (que entregam um
    arquivo só) passariam a ser acusadas de citar coisa que não existe. Uma prova que
    passa pela razão errada não prova nada. */
-const ENTRY = "app.mjs";
+const ENTRY = "src/main.mjs";
 
 /* ⚠ A ASSINATURA DE UM BLOCO CORTADO NO MEIO, e ela e estreita de propósito: a última
    palavra e um CONECTIVO, que nenhuma frase inteira usa para terminar. Um corte automático
@@ -380,7 +380,7 @@ export const synthetic = [
     files: new Map([["src/x.mjs", `/*\n${ENSAIO}\n*/\n${CODE}`]]),
   },
   {
-    /* ⚠ ELA E MÍNIMA DE PROPÓSITO: um bloco de uma linha, sem app.mjs no mapa. Assim
+    /* ⚠ ELA E MÍNIMA DE PROPÓSITO: um bloco de uma linha, sem src/main.mjs no mapa. Assim
        só a auditoria da DATA pode acusa-la — o teto não cabe num bloco de uma linha e a
        do identificador morto nem roda. Prova que passa pela razão errada não prova nada. */
     label: "data de diario num comentario",
@@ -425,18 +425,18 @@ export const synthetic = [
   },
   {
     /* ⚠ E ESTA ENTREGA O ENTRYPOINT, sem o qual a quarta auditoria nem roda. O
-       `app.mjs` daqui e limpo de propósito: se ele também fosse acusado, a prova ficaria
+       `src/main.mjs` daqui e limpo de propósito: se ele também fosse acusado, a prova ficaria
        verde sem provar que a guarda separa a citação viva da morta. */
     label: "prosa citando um token que o projeto nao tem mais",
     files: new Map([
-      ["app.mjs", "const pintar = () => 1;"],
+      ["src/main.mjs", "const pintar = () => 1;"],
       ["styles/x.css", "@layer components {\n  /* o rubor vinha de `--fantasma` */\n}"],
     ]),
   },
   {
     label: "prosa citando uma folha que morreu",
     files: new Map([
-      ["app.mjs", "const pintar = () => 1;"],
+      ["src/main.mjs", "const pintar = () => 1;"],
       ["src/ui/x.mjs", "/* a fita vive em `ribbon.mjs` */\nexport const a = 1;"],
     ]),
   },

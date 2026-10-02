@@ -1,9 +1,9 @@
 /* A CAIXA DE ENTRADA — a primeira carta de verdade. */
 
-import { escapeHtml } from "../shared/html.mjs";
-import { iconHtml } from "../shared/icons.mjs";
-import { money, percent, seats, signed } from "../shared/format.mjs";
-import { sigilHtml } from "../shared/sigil.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { iconHtml } from "../core/icons.mjs";
+import { money, percent, seats, signed } from "../core/format.mjs";
+import { sigilHtml } from "../components/sigil.mjs";
 import {
   cardHtml,
   chamberRows,
@@ -11,7 +11,7 @@ import {
   linesHtml,
   noteHtml,
   rupturesRows,
-} from "../shared/annex.mjs";
+} from "../components/annex.mjs";
 import { monthLabel } from "../../state/state.mjs";
 import { DEFAULT_TREATMENT, UI, addressed, labelOf } from "../strings.mjs";
 

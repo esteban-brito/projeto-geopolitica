@@ -4,13 +4,13 @@
    três; o que muda entre elas e a tinta do corpo — vidro escuro nos dois blocos, branco no
    botão. Mexer numa parada muda as três, e e isso que as mantem uma família. */
 
-import { FRESNEL, LEVELS, RECIPE, glaze, scaleRamp, skin } from "./glass.mjs";
-import { between, spring } from "./spring.mjs";
+import { FRESNEL, LEVELS, RECIPE, glaze, scaleRamp, skin } from "../core/glass.mjs";
+import { between, spring } from "../core/spring.mjs";
 
 /* A lente, a quina, o desfoque, a tinta e a aresta são a ESCALA de `glass.mjs` (ciclo 28): a
    barra só escolhe o NÍVEL de densidade. */
 
-/** @typedef {import("./glass.mjs").Ramp} Ramp */
+/** @typedef {import("../core/glass.mjs").Ramp} Ramp */
 
 const EDGE = FRESNEL;
 

@@ -54,7 +54,7 @@ cartão do Presidente, no painel do ministério e na barra; nunca sobre o hemici
   marcados como transição até o gerador por episódios ([contrato](../spec/dynamic-government.md) §4);
 - **base:** `posseOf` para a abertura; depois de uma reforma, a estimativa segue pendente até o
   valor político da estrutura (contrato §3);
-- **retratos:** o desenho procedural vira peça de `src/ui/shared/`; os 12 retratos da Presidência
+- **retratos:** o desenho procedural vira peça de `src/ui/components/`; os 12 retratos da Presidência
   viram recortes WebP pequenos, no lugar de duas folhas PNG de 1,5 MB.
 
 **Pintura em partes.** O hemiciclo e a lista de pessoas se montam uma vez; hover e seleção mudam

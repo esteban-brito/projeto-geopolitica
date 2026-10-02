@@ -13,7 +13,7 @@
    A imagem vem em duas cópias: a de cima leva as sombras da sala, a de baixo e o halo do toque
    (mesma silhueta em âmbar), que só aparece em opacidade — trabalho de compositor. */
 
-import { escapeHtml } from "./html.mjs";
+import { escapeHtml } from "../core/html.mjs";
 import { UI } from "../strings.mjs";
 
 const PHOTO = "/assets/phone.webp";

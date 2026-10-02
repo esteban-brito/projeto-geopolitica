@@ -14,7 +14,7 @@ export const name = "orphans";
  * @param {string} path
  */
 function produces(path) {
-  return path === "index.html" || path === "app.mjs" || path.startsWith("src/");
+  return path === "index.html" || path.startsWith("src/");
 }
 
 /**
@@ -135,7 +135,7 @@ export const synthetic = [
     label: "uma folha inteira sem HTML para pintar",
     files: new Map([
       ["styles/70-screen-approval.css", "@layer screens { .approval__meter { height: 10px; } }"],
-      ["app.mjs", 'const html = `<div class="board"></div>`;'],
+      ["src/main.mjs", 'const html = `<div class="board"></div>`;'],
     ]),
   },
   {
@@ -159,7 +159,7 @@ export const synthetic = [
     label: "a classe so aparece em COMENTARIO, e comentario nao pinta",
     files: new Map([
       ["styles/30-components.css", "@layer components { .ghost { display: none; } }"],
-      ["app.mjs", "/* a peca .ghost desenha o vazio */ const html = `<div></div>`;"],
+      ["src/main.mjs", "/* a peca .ghost desenha o vazio */ const html = `<div></div>`;"],
     ]),
   },
   {
@@ -188,7 +188,10 @@ export const synthetic = [
         "styles/46-screen-cabinet-desk.css",
         '@layer screens { .envelope[data-vence="true"] { color: red; } }',
       ],
-      ["src/ui/shared/mail-pile.mjs", 'export const html = `<i class="envelope" data-urgent>`;'],
+      [
+        "src/ui/components/mail-pile.mjs",
+        'export const html = `<i class="envelope" data-urgent>`;',
+      ],
     ]),
   },
 ];

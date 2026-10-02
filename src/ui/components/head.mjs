@@ -1,6 +1,6 @@
 /* A CABEÇA DE UMA TELA — a mesma em todas elas. */
 
-import { escapeHtml } from "./html.mjs";
+import { escapeHtml } from "../core/html.mjs";
 
 /**
  * @param {object} input

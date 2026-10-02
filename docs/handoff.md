@@ -190,7 +190,7 @@ do simulador conta os gestos de cada sonda.
 Gabinete) + treze endereços: Gabinete, Email, Congresso & Leis, Finanças, oito áreas, Estado; o
 fecho ocupa o Gabinete. Gabinete é a Mesa (cena 1916×821, que só encolhe): pasta com o ato e o
 contingenciamento, envelopes que erguem a carta ao centro, telefone. Email é a Caixa em tela
-cheia. Vocabulário único em `src/ui/shared/annex.mjs` (guarda `annexes`).
+cheia. Vocabulário único em `src/ui/components/annex.mjs` (guarda `annexes`).
 
 **Dados:** 16 blocos · 513 cadeiras · 8 áreas · 38 programas · 6 regras · 4 grupos de pressão ·
 3 faixas de renda · 15 arquétipos.

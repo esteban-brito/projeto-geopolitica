@@ -1,8 +1,8 @@
 /* O FECHO DO MANDATO — a última tela, e ela é a mesma nas duas saídas. */
 
-import { escapeHtml } from "../shared/html.mjs";
-import { money, num, percent, signed } from "../shared/format.mjs";
-import { headHtml } from "../shared/head.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, num, percent, signed } from "../core/format.mjs";
+import { headHtml } from "../components/head.mjs";
 import { DEFAULT_TREATMENT, UI, addressed } from "../strings.mjs";
 import { monthLabel } from "../../state/state.mjs";
 

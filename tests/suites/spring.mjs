@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { curveOf } from "../../src/ui/shared/spring.mjs";
+import { curveOf } from "../../src/ui/core/spring.mjs";
 
 /**
  * A derivada por diferença central, para conferir a analítica contra a numérica.

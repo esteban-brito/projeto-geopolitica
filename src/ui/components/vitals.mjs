@@ -1,8 +1,8 @@
 /* A BARRA SUPERIOR — os sinais vitais, e eles nunca somem da tela. */
 
-import { escapeHtml } from "./html.mjs";
-import { money, percent, seats } from "./format.mjs";
-import { iconHtml } from "./icons.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, percent, seats } from "../core/format.mjs";
+import { iconHtml } from "../core/icons.mjs";
 import { UI } from "../strings.mjs";
 import { monthParts } from "../../state/state.mjs";
 

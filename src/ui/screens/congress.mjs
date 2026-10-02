@@ -1,11 +1,11 @@
 /* A MESA — onde o mês se resolve. */
 
-import { escapeHtml } from "../shared/html.mjs";
-import { money, percent, seats, signed, sparkline } from "../shared/format.mjs";
-import { WINDOW, directionOf, trendOf } from "../shared/trend.mjs";
-import { iconHtml } from "../shared/icons.mjs";
-import { headHtml } from "../shared/head.mjs";
-import { sigilHtml } from "../shared/sigil.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, percent, seats, signed, sparkline } from "../core/format.mjs";
+import { WINDOW, directionOf, trendOf } from "../components/trend.mjs";
+import { iconHtml } from "../core/icons.mjs";
+import { headHtml } from "../components/head.mjs";
+import { sigilHtml } from "../components/sigil.mjs";
 import { UI, labelOf } from "../strings.mjs";
 
 /**
@@ -42,7 +42,7 @@ export function capacityStripHtml({ areas, index, history, alerts = {} }) {
     .map(area => {
       const value = index[area.id] ?? area.initial;
       const past = history[area.id] ?? [];
-      /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `shared/trend.mjs`. */
+      /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `components/trend.mjs`. */
       const trend = sparkline(past.length > 0 ? past : [value], WINDOW);
       /* ⚠ A DIREÇÃO E A MESMA CONTA DAS OUTRAS DUAS TELAS, e ela vem de `trendOf`: refeita
          aqui, a faísca discordaria da seta do Gabinete no primeiro mês de empate. */

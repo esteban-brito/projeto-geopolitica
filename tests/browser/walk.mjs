@@ -2103,7 +2103,7 @@ try {
   /* 11 — O aviso usa a camada modal nativa e devolve o foco ao fechar. */
   await page.focus("#advance");
   await page.evaluate(async () => {
-    const path = "/src/app/dialogs.mjs";
+    const path = "/src/shell/dialogs.mjs";
     const { openNotice } = await import(path);
     openNotice("Aviso de teste", "Mensagem de verificacao do aviso.");
   });
@@ -2130,7 +2130,7 @@ try {
     "[aviso] fechar nao devolveu o foco",
   );
   await page.evaluate(async () => {
-    const path = "/src/app/dialogs.mjs";
+    const path = "/src/shell/dialogs.mjs";
     const { openNotice } = await import(path);
     openNotice("Segundo aviso", "Outro aviso.");
   });

@@ -5,14 +5,9 @@ import { collect } from "../lib/project.mjs";
 
 export const name = "boundaries";
 
-const ALLOWED_FOR_ENTRYPOINT = [
-  /^\.\/src\/state\//,
-  /^\.\/src\/public\//,
-  /^\.\/src\/ui\//,
-  /^\.\/src\/app\//,
-];
+const ALLOWED_FOR_ENTRYPOINT = [/^\.\/state\//, /^\.\/public\//, /^\.\/ui\//, /^\.\/shell\//];
 
-/* `src/app/` e o entrypoint dividido em módulos: alcanca o mesmo que ele, e os irmãos. */
+/* `src/shell/` e o entrypoint dividido em módulos: alcanca o mesmo que ele, e os irmãos. */
 const ALLOWED_FOR_APP = [/^\.\.\/state\//, /^\.\.\/public\//, /^\.\.\/ui\//, /^\.\/[\w-]+\.mjs$/];
 
 /**
@@ -27,11 +22,11 @@ export function audit(files) {
     const imports = [...source.matchAll(/from\s+["']([^"']+)["']/g)].map(m => m[1] ?? "");
 
     /* 1 — O ENTRYPOINT SÓ COMPÕE. */
-    if (path === "app.mjs") {
+    if (path === "src/main.mjs") {
       for (const specifier of imports) {
         if (!ALLOWED_FOR_ENTRYPOINT.some(allowed => allowed.test(specifier))) {
           add(
-            `app.mjs importa ${specifier} — o entrypoint compoe por state/, public/ e ui/, ` +
+            `src/main.mjs importa ${specifier} — o entrypoint compoe por state/, public/ e ui/, ` +
               `e nao alcanca dominio nem infraestrutura direto`,
           );
         }
@@ -39,11 +34,11 @@ export function audit(files) {
     }
 
     /* 1b — A COMPOSICAO DO NAVEGADOR TAMBÉM SÓ COMPÕE. */
-    if (path.startsWith("src/app/")) {
+    if (path.startsWith("src/shell/")) {
       for (const specifier of imports) {
         if (!ALLOWED_FOR_APP.some(allowed => allowed.test(specifier))) {
           add(
-            `${path} importa ${specifier} — src/app/ compoe por state/, public/, ui/ e os ` +
+            `${path} importa ${specifier} — src/shell/ compoe por state/, public/, ui/ e os ` +
               `irmaos, e nao alcanca dominio, aplicacao nem dado direto`,
           );
         }
@@ -90,16 +85,16 @@ export function audit(files) {
 export const synthetic = [
   {
     label: "entrypoint alcancando o dominio direto",
-    files: new Map([["app.mjs", 'import { x } from "./src/domain/economy/index.mjs";']]),
+    files: new Map([["src/main.mjs", 'import { x } from "./domain/economy/index.mjs";']]),
   },
   {
     label: "composicao do navegador alcancando a aplicacao direto",
-    files: new Map([["src/app/paint.mjs", 'import { x } from "../application/turn.mjs";']]),
+    files: new Map([["src/shell/paint.mjs", 'import { x } from "../application/turn.mjs";']]),
   },
   {
     label: "dominio importando UI",
     files: new Map([
-      ["src/domain/economy/index.mjs", 'import { h } from "../../ui/shared/html.mjs";'],
+      ["src/domain/economy/index.mjs", 'import { h } from "../../ui/core/html.mjs";'],
     ]),
   },
   {

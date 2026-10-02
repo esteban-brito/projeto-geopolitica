@@ -42,7 +42,7 @@ export function audit(files) {
   const { list, add } = collect(name);
 
   for (const [path, source] of files) {
-    const inCode = CODE_DIRS.some(dir => path.startsWith(dir)) || path === "app.mjs";
+    const inCode = CODE_DIRS.some(dir => path.startsWith(dir));
 
     if (inCode && /\.js$/.test(path)) {
       add(`${path} usa .js — todo modulo do projeto e .mjs`);

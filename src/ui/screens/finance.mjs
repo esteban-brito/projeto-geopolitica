@@ -3,10 +3,10 @@
    ── A AUSÊNCIA DE CONTROLE E A INFORMACAO PRINCIPAL Toda outra tela deste jogo pede uma
    decisão. */
 
-import { escapeHtml } from "../shared/html.mjs";
-import { money, num, percent, seats, signed, sparkline } from "../shared/format.mjs";
-import { headHtml } from "../shared/head.mjs";
-import { SCALE, WINDOW, gdpRange, trendOf, windowLabel } from "../shared/trend.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, num, percent, seats, signed, sparkline } from "../core/format.mjs";
+import { headHtml } from "../components/head.mjs";
+import { SCALE, WINDOW, gdpRange, trendOf, windowLabel } from "../components/trend.mjs";
 import { UI } from "../strings.mjs";
 
 /**

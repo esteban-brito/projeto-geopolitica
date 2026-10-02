@@ -39,7 +39,7 @@ export const name = "annexes";
    que alguém decidir que ela fala a mesma língua. */
 const INBOX = "src/ui/screens/inbox.mjs";
 const CABINET = "src/ui/screens/cabinet.mjs";
-const PIECE = "src/ui/shared/annex.mjs";
+const PIECE = "src/ui/components/annex.mjs";
 const SCREENS = [INBOX, CABINET];
 const WATCHED = [...SCREENS, PIECE];
 

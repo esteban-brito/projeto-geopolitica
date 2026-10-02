@@ -12,8 +12,8 @@
    ⛔ O VOCATIVO E `Senhor Presidente da Republica`: o Decreto 9.758/2019 vedou "Vossa
    Excelência" e "Excelentíssimo", e o Manual de Redacao e de 2018 — norma nova vence manual. */
 
-import { escapeHtml } from "./html.mjs";
-import { money, percent } from "./format.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, percent } from "../core/format.mjs";
 import { MONTHS, UI } from "../strings.mjs";
 import { monthParts } from "../../state/state.mjs";
 import { protocolOf } from "./protocol.mjs";

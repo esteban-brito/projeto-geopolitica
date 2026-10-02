@@ -1,7 +1,7 @@
 /* O RELATÓRIO DO MÊS — o que o turno FEZ. */
 
-import { escapeHtml } from "../shared/html.mjs";
-import { money, percent, seats, signed } from "../shared/format.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, percent, seats, signed } from "../core/format.mjs";
 import { UI, labelOf } from "../strings.mjs";
 import { monthLabel } from "../../state/state.mjs";
 

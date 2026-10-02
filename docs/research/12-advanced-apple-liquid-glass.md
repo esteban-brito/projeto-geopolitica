@@ -90,13 +90,13 @@ Em um arco de círculo, a curvatura $\kappa = 1/R$ é constante ao longo do arco
 
 A Apple utiliza a Superelipse de Gabriel Lamé com continuidade $G^2$:
 $$\left| \frac{x}{a} \right|^n + \left| \frac{y}{b} \right|^n = 1 \quad (n \approx 3.6)$$
-No projeto, já temos essa equação implementada com primor em `src/ui/shared/squircle.mjs`, onde $s = 0.6$ reproduz a transição contínua do iOS. **Aplicar o squircle na cápsula do dock elimina instantaneamente o aspecto de "caixa com cantos arredondados" e entrega a silhueta Apple.**
+No projeto, já temos essa equação implementada com primor em `src/ui/core/squircle.mjs`, onde $s = 0.6$ reproduz a transição contínua do iOS. **Aplicar o squircle na cápsula do dock elimina instantaneamente o aspecto de "caixa com cantos arredondados" e entrega a silhueta Apple.**
 
 ### 3.2 A Refração da Borda: Por que o Vidro da Apple Parece "Líquido"
 
 O que faz um objeto ser lido pelo cérebro como **vidro real** não é o desfoque, mas sim o modo como os objetos atrás dele entortam na extremidade.
 
-Em `src/ui/shared/glass.mjs`, temos o motor que calcula o campo de distância assinada (SDF):
+Em `src/ui/core/glass.mjs`, temos o motor que calcula o campo de distância assinada (SDF):
 
 ```javascript
 const sdf = (x, y) => {
@@ -160,7 +160,7 @@ A pesquisa revelou o motivo pelo qual **bibliotecas prontas de WebGL (como `@ybo
 
 Quando for o momento de executar essa evolução:
 
-1. **Generalizar `dress()` de `src/ui/shared/topbar.mjs`:**
+1. **Generalizar `dress()` de `src/ui/components/topbar.mjs`:**
    Mover a lógica de montagem de lente de `topbar.mjs` para uma função reutilizável em `glass.mjs` que possa vestir o Dock (`#railNav`), a Topbar e os Cards centrais.
 2. **Atualizar `00-tokens.css`:**
    Ajustar `--glass-blur` de `blur(18px) saturate(1.5)` para a fórmula visionOS: `blur(22px) saturate(1.85) brightness(1.04)`.

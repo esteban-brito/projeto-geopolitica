@@ -1,6 +1,6 @@
 /* O SINETE — a cara de uma pessoa, sem inventar um rosto. */
 
-import { escapeHtml } from "./html.mjs";
+import { escapeHtml } from "../core/html.mjs";
 
 /* ⚠ AS INICIAIS SAÍRAM, e o motivo e do responsável: "avatar do ministro pode
    ser um icon de pessoa, preto, e se for mulher com cabelo de mulher, padronizado os dois".

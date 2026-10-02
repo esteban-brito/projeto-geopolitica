@@ -119,7 +119,7 @@ Diferença crítica entre animações disparadas por evento e animações contí
 > Erguer e largar em sequência interrompe o voo, e uma `transition` CSS interrompida **recomeça do
 > zero** — é o defeito que a mola existia para evitar. O `linear()` só serve com retargeting: no
 > instante do novo clique, ler $x(t)$ e $\dot{x}(t)$ da própria conta e gerar a curva seguinte a
-> partir deles. É o que `curveOf` em `src/ui/shared/spring.mjs` faz (`at` e `rate`), com a
+> partir deles. É o que `curveOf` em `src/ui/core/spring.mjs` faz (`at` e `rate`), com a
 > animação disparada pela Web Animations API e não por `transition`.
 
 ---
@@ -237,7 +237,7 @@ as amostras na aproximação final assintótica.
 > [!CAUTION]
 > **Emenda de 11/09: o gerador abaixo é o RASCUNHO, e ele erra em dois pontos** — o corte constante
 > (`1.22`, §2.5) e a amostra sem posição (§2.6). O gerador que vale é `curveOf` em
-> `src/ui/shared/spring.mjs`, coberto por seis provas em `tests/suites/spring.mjs` (a analítica
+> `src/ui/core/spring.mjs`, coberto por seis provas em `tests/suites/spring.mjs` (a analítica
 > contra a derivada numérica nos três regimes, $v_0$ honrado, quique zero que não ultrapassa). Uma
 > delas pegou um erro de sinal no superamortecido — `(r2−r1)` por `(r1−r2)` — que dava posição certa
 > nas duas pontas e caminho errado no meio. O rascunho fica aqui só para a comparação.

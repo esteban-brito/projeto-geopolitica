@@ -2,8 +2,8 @@
    Ela não calcula nada: o parecer e as posições chegam prontos de `momentOf`. Mostra o que
    cada ministro diz e faz, nunca o que ele pesa por dentro. */
 
-import { escapeHtml } from "./html.mjs";
-import { money, percent } from "./format.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { money, percent } from "../core/format.mjs";
 import { UI } from "../strings.mjs";
 
 /**

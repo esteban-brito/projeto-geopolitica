@@ -321,7 +321,7 @@ número ao lado dela.
 | `orphans`    | regra de estilo que nenhum HTML pinta — folha órfã, e o bloco morto cujo elemento sobrou                                                                                                                  |
 | `prose`      | bloco acima do teto (10 no corpo, 14 no cabeçalho); **data** em comentário; bloco que **para no meio de uma frase**; e o `--token`, `.classe` ou `arquivo.mjs` citado em prosa que o projeto não tem mais |
 | `vocabulary` | a mesma frase da interface teclada duas vezes; e a frase declarada que **nenhum arquivo alcança** — 49 delas em 21/08/2026                                                                                |
-| `annexes`    | tabela na Caixa ou no Gabinete, e régua desenhada pela própria tela: as duas telas falam o vocabulário de `src/ui/shared/annex.mjs`, e só ele                                                             |
+| `annexes`    | tabela na Caixa ou no Gabinete, e régua desenhada pela própria tela: as duas telas falam o vocabulário de `src/ui/components/annex.mjs`, e só ele                                                         |
 
 Cada guarda carrega **provas sintéticas** que reintroduzem o defeito e exigem
 acusação. O runner as executa junto da auditoria real.
@@ -379,7 +379,7 @@ Declarado para não ser confundido com cobertura:
 - ⚠ **`orphans` PASSOU A EXISTIR em 16/08/2026**, e ela achou **quatro regras órfãs no
   primeiro minuto** — inclusive uma criada naquela mesma sessão. O achado 5 ficou aberto
   por seis sessões e custou **500 linhas** medidas, em duas varreduras feitas à mão.
-  ⚠ **Ela mede uma direção só**: classe na folha sem produtor em `src/`, `app.mjs` ou
+  ⚠ **Ela mede uma direção só**: classe na folha sem produtor em `src/`, `src/main.mjs` ou
   `index.html`. Classe no HTML sem regra **não** é acusada — ela é gancho legítimo para
   o passeio e para a suíte de telas. E `data-*` fica de fora porque é ESTADO: um
   `[data-boiling="true"]` pode passar meses sem acontecer e continuar correto;

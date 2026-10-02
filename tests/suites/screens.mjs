@@ -17,9 +17,9 @@ import {
 } from "../../src/domain/congress/index.mjs";
 import { alarm, left } from "../../src/application/mail.mjs";
 import { describeMail, describeMonth, letterHtml, trayHtml } from "../../src/ui/screens/inbox.mjs";
-import { vitalsHtml } from "../../src/ui/shared/vitals.mjs";
+import { vitalsHtml } from "../../src/ui/components/vitals.mjs";
 import { addressed } from "../../src/ui/strings.mjs";
-import { nupCheck, protocolOf } from "../../src/ui/shared/protocol.mjs";
+import { nupCheck, protocolOf } from "../../src/ui/components/protocol.mjs";
 import {
   boilerOf,
   governmentOf,
@@ -40,8 +40,8 @@ import { UI } from "../../src/ui/strings.mjs";
 import { PROGRAMS } from "../../src/data/programs.mjs";
 import { areaHtml } from "../../src/ui/screens/area.mjs";
 import { financeHtml } from "../../src/ui/screens/finance.mjs";
-import { money, num, percent, signed } from "../../src/ui/shared/format.mjs";
-import { trendOf, windowLabel } from "../../src/ui/shared/trend.mjs";
+import { money, num, percent, signed } from "../../src/ui/core/format.mjs";
+import { trendOf, windowLabel } from "../../src/ui/components/trend.mjs";
 import { capacityStripHtml, mesaHtml } from "../../src/ui/screens/congress.mjs";
 import { cabinetHtml, emailHtml } from "../../src/ui/screens/cabinet.mjs";
 

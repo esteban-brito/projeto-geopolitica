@@ -1,10 +1,10 @@
 /* Tela de área ministerial: indicadores, alavancas orçamentárias, leis e projeções. */
 
-import { escapeHtml } from "../shared/html.mjs";
-import { attr, money, num, seats, signed, sparkline } from "../shared/format.mjs";
-import { lineHtml } from "../shared/annex.mjs";
-import { headHtml } from "../shared/head.mjs";
-import { WINDOW, trendOf, windowLabel } from "../shared/trend.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { attr, money, num, seats, signed, sparkline } from "../core/format.mjs";
+import { lineHtml } from "../components/annex.mjs";
+import { headHtml } from "../components/head.mjs";
+import { WINDOW, trendOf, windowLabel } from "../components/trend.mjs";
 import { UI, labelOf } from "../strings.mjs";
 import { bandOf, riteFor, riteForBand } from "../../application/agenda.mjs";
 

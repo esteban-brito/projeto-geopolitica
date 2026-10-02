@@ -169,7 +169,7 @@ test("O PREÇO DE AVANÇAR E O QUE O MÊS DECIDE SOZINHO — e nunca o que já f
    UM DEFEITO MEDIDO: a poda cortava com `slice` NEGATIVO — que pega o FIM do array — e o turno
    monta a caixa com as novas na FRENTE. Medido em 48 meses: 101 cartas destruídas com 1 a 3
    meses de idade, e a caixa do mês 30 com um buraco de doze meses.
-   ⚠ E A DIREÇÃO E A PROVA INTEIRA: `app.mjs` e a bandeja já cortam pelo COMEÇO. A view guardava
+   ⚠ E A DIREÇÃO E A PROVA INTEIRA: `src/main.mjs` e a bandeja já cortam pelo COMEÇO. A view guardava
    as novas e o motor guardava as velhas, no mesmo array. */
 test("A PODA GUARDA AS CARTAS NOVAS, e não as velhas", () => {
   const month = 60;

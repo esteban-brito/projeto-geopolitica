@@ -143,18 +143,18 @@ ponto de partida, não teto; ao propor desenho, ofereça também o exótico.
 
 ## 9. O código
 
-| onde                  | o quê                                                                                               |
-| --------------------- | --------------------------------------------------------------------------------------------------- |
-| `src/data/`           | catálogos, parâmetros e esquemas                                                                    |
-| `src/domain/`         | os motores puros; codinomes em `docs/standards.md` §3                                               |
-| `src/application/`    | a composição: `turn.mjs` (`settlement` → `playMonth`), pauta, tramitação, cartas, mundo vivo, posse |
-| `src/state/`          | estado imutável, redutor, save e fluxos aleatórios                                                  |
-| `src/public/`         | a fachada: a única porta da tela para o jogo                                                        |
-| `src/app/`, `app.mjs` | sessão, entradas, pintura, eventos e diálogos                                                       |
-| `src/ui/`, `styles/`  | views puras e folhas                                                                                |
-| `prototypes/`         | ensaios isolados, sem consumidor no jogo nem campo no save                                          |
-| `tests/`              | `guards/`, `suites/`, `browser/` e `lib/`                                                           |
-| `tools/`              | servidor, simulador, verificadores e geradores                                                      |
+| onde                         | o quê                                                                                               |
+| ---------------------------- | --------------------------------------------------------------------------------------------------- |
+| `src/data/`                  | catálogos, parâmetros e esquemas                                                                    |
+| `src/domain/`                | os motores puros; codinomes em `docs/standards.md` §3                                               |
+| `src/application/`           | a composição: `turn.mjs` (`settlement` → `playMonth`), pauta, tramitação, cartas, mundo vivo, posse |
+| `src/state/`                 | estado imutável, redutor, save e fluxos aleatórios                                                  |
+| `src/public/`                | a fachada: a única porta da tela para o jogo                                                        |
+| `src/shell/`, `src/main.mjs` | sessão, entradas, pintura, eventos e diálogos                                                       |
+| `src/ui/`, `styles/`         | views puras e folhas                                                                                |
+| `prototypes/`                | ensaios isolados, sem consumidor no jogo nem campo no save                                          |
+| `tests/`                     | `guards/`, `suites/`, `browser/` e `lib/`                                                           |
+| `tools/`                     | servidor, simulador, verificadores e geradores                                                      |
 
 O mês: `settlement(state, orders)` resolve normas, separa execução de lei, calcula espaço e
 pagamentos e monta o Congresso; `playMonth` resolve respostas e tramitação, aplica decisões, roda

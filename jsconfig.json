@@ -24,6 +24,6 @@
     "skipLibCheck": true,
     "maxNodeModuleJsDepth": 0
   },
-  "include": ["app.mjs", "src/**/*.mjs", "tests/**/*.mjs", "tools/**/*.mjs", "prototypes/**/*.mjs"],
+  "include": ["src/**/*.mjs", "tests/**/*.mjs", "tools/**/*.mjs", "prototypes/**/*.mjs"],
   "exclude": ["node_modules", "vendor"]
 }

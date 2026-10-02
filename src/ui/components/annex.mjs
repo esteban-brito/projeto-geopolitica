@@ -8,9 +8,9 @@
    ⚠ A SUBSTÂNCIA E DO CONTEXTO, e não da peça: dentro da carta ela e papel, na coluna ela e
    vidro. A folha resolve isso por contexto; escrever duas peças resolveria por duplicação. */
 
-import { iconHtml } from "./icons.mjs";
-import { escapeHtml } from "./html.mjs";
-import { attr, seats } from "./format.mjs";
+import { iconHtml } from "../core/icons.mjs";
+import { escapeHtml } from "../core/html.mjs";
+import { attr, seats } from "../core/format.mjs";
 import { UI, labelOf } from "../strings.mjs";
 
 /**

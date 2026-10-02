@@ -115,7 +115,7 @@ function literals(code) {
 
 /* O ENTRYPOINT E O SINAL DE QUE O PROJETO INTEIRO ESTA NO MAPA. Ver a prosa do
    cabeçalho: a auditoria de orfandade só pode rodar com os consumidores presentes. */
-const ENTRY = "app.mjs";
+const ENTRY = "src/main.mjs";
 
 /**
  * AS FOLHAS DECLARADAS EM `export const UI`, com a linha de cada uma.
@@ -328,7 +328,7 @@ export const synthetic = [
   },
   /* ── AS PROVAS DA ÓRFÃ ────────────────────────────────────────────────────
      ⚠ AS DUAS ENTREGAM O ENTRYPOINT, e sem ele a segunda auditoria nem roda — ver a prosa
-     do cabeçalho. E o `app.mjs` de cada uma consome UMA das duas chaves, porque a prova
+     do cabeçalho. E o `src/main.mjs` de cada uma consome UMA das duas chaves, porque a prova
      precisa mostrar que a guarda separa a viva da morta, e não que ela acusa tudo.
 
      ⚠ E QUE A TABELA PASSADA INTEIRA NÃO E ÓRFÃ não ganha prova sintética própria, pela
@@ -343,7 +343,7 @@ export const synthetic = [
         STRINGS_FILE,
         'export const UI = { cabinet: { title: "Gabinete", archLoyal: "com o governo" } };',
       ],
-      ["app.mjs", "el.main.innerHTML = headHtml({ title: UI.cabinet.title });"],
+      ["src/main.mjs", "el.main.innerHTML = headHtml({ title: UI.cabinet.title });"],
     ]),
   },
   {
@@ -358,7 +358,7 @@ export const synthetic = [
         'export const UI = { cabinet: { title: "Gabinete" }, ' +
           'approvalParts: { good: "Ótimo/bom", poor: "Ruim/péssimo" } };',
       ],
-      ["app.mjs", "el.main.innerHTML = headHtml({ title: UI.cabinet.title });"],
+      ["src/main.mjs", "el.main.innerHTML = headHtml({ title: UI.cabinet.title });"],
     ]),
   },
 ];

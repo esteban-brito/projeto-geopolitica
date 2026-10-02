@@ -15,8 +15,8 @@ import {
   situationOf,
   termOf,
 } from "../public/index.mjs";
-import { LEVELS, glaze } from "../ui/shared/glass.mjs";
-import { dressRail, paintRail, railGovHtml, railNavHtml } from "../ui/shared/rail.mjs";
+import { LEVELS, glaze } from "../ui/core/glass.mjs";
+import { dressRail, paintRail, railGovHtml, railNavHtml } from "../ui/components/rail.mjs";
 import { closingHtml } from "../ui/screens/closing.mjs";
 import {
   areaHtml,
@@ -37,8 +37,8 @@ import {
   tallyHtml,
 } from "../ui/screens/congress.mjs";
 import { financeHtml } from "../ui/screens/finance.mjs";
-import { vitalsHtml, whenHtml } from "../ui/shared/vitals.mjs";
-import { bindAdvance, dressTopbar } from "../ui/shared/topbar.mjs";
+import { vitalsHtml, whenHtml } from "../ui/components/vitals.mjs";
+import { bindAdvance, dressTopbar } from "../ui/components/topbar.mjs";
 import { cabinetHtml, dressDesk, emailHtml } from "../ui/screens/cabinet.mjs";
 import { reportPanelHtml } from "../ui/screens/report.mjs";
 import { UI } from "../ui/strings.mjs";

@@ -13,14 +13,14 @@
    HTML de um `<input type=range>` no meio de um arrasto arranca o elemento que o
    ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
 
-import { NEUTRAL } from "./src/public/index.mjs";
-import { armRail } from "./src/ui/shared/rail.mjs";
-import { iconHtml } from "./src/ui/shared/icons.mjs";
-import { UI } from "./src/ui/strings.mjs";
-import { opening } from "./src/app/session.mjs";
-import { el, endLabel, label, paint } from "./src/app/paint.mjs";
-import { openNotice } from "./src/app/dialogs.mjs";
-import { armHandlers } from "./src/app/handlers.mjs";
+import { NEUTRAL } from "./public/index.mjs";
+import { armRail } from "./ui/components/rail.mjs";
+import { iconHtml } from "./ui/core/icons.mjs";
+import { UI } from "./ui/strings.mjs";
+import { opening } from "./shell/session.mjs";
+import { el, endLabel, label, paint } from "./shell/paint.mjs";
+import { openNotice } from "./shell/dialogs.mjs";
+import { armHandlers } from "./shell/handlers.mjs";
 
 /* A gaveta do dock arma uma vez: o `<ul>` sobrevive as pinturas, e o estado mora nele. */
 armRail(el.railNav);
