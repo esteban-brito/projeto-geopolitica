@@ -37,11 +37,11 @@ Nomes e quantidade seguem abertos (especificação §6.4).
 3. O lote do plano constrói a tela escolhida, com passeio novo no `validate`.
 4. A tela antiga sai quando a nova cobre tudo o que ela fazia. O jogo nunca fica quebrado no meio.
 
-Em 26/09 ele fixou o estilo Apple + Football Manager + Civilization + Valorant para a interface nova, que recomeça do zero sobre o motor ([ciclo 32](../cycles/32-the-new-interface.md)). O vidro (Liquid Glass, decisão de 05/09) fica só em superfície pequena sobre fundo parado: barra, menu, diálogo.
+Em 26/09 ele fixou o estilo Apple + Football Manager + Civilization + Valorant para a interface nova, que recomeça do zero sobre o motor ([ciclo 32](../cycles/32-new-interface.md)). O vidro (Liquid Glass, decisão de 05/09) fica só em superfície pequena sobre fundo parado: barra, menu, diálogo.
 
 ## O estilo fixado em 26/09
 
-Primeiro registrado como direção futura; no mesmo dia ele fixou o estilo para a interface nova. As regras estão no [ciclo 32](../cycles/32-the-new-interface.md), §2. A proposta original, por referência:
+Primeiro registrado como direção futura; no mesmo dia ele fixou o estilo para a interface nova. As regras estão no [ciclo 32](../cycles/32-new-interface.md), §2. A proposta original, por referência:
 
 - **Valorant, na escolha do ministro:** tela de escolha de agente. Grade de retratos com partido e
   linha política, retrato grande de quem está sob o mouse, botão NOMEAR que trava a escolha;
@@ -60,7 +60,7 @@ Começo sugerido: a escolha do ministro, onde o jogador passa mais tempo.
 **Escolha dele em 26/09: a fusão de B e C. Os protótipos A, B e C foram apagados do canvas no mesmo dia; fica só a fusão.** A primeira versão punha os dois em abas separadas, e
 ele recusou. A segunda é um hemiciclo só, sem abas, com dois passos por ministério no mesmo painel, desenhado como D no
 mesmo canvas e descrito em
-[o ministério](../spec/the-cabinet.md), §4.
+[o ministério](../spec/cabinet.md), §4.
 
 Três estruturas com o mesmo visual, para comparar a estrutura e não a cor:
 
@@ -72,6 +72,6 @@ Três estruturas com o mesmo visual, para comparar a estrutura e não a cor:
 O que eles simplificam, e o jogo não vai simplificar:
 
 - o placar do protótipo somava as cadeiras de quem recebeu pasta; desde 26/09, o motor calcula
-  chances por partido e votos firmes e prováveis pela [mesma regra da base](../spec/the-base-model.md);
+  chances por partido e votos firmes e prováveis pela [mesma regra da base](../spec/base-model.md);
 - os candidatos saem de uma regra fixa; no jogo sairão do elenco da semente;
 - as pessoas são silhuetas, e não retratos.

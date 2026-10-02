@@ -47,14 +47,14 @@ etapa termina com ele jogando, e o que ele sentir decide a seguinte.
 
 ## O que conta como sucesso
 
-| objetivo     | como se mede                                                                                                                                         |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| liberdade    | as partidas Xi e Lee têm os 16 fios jogáveis; três destinos extremos alcançáveis em alguma semente ([partidas-teste](spec/the-test-playthroughs.md)) |
-| fidelidade   | toda regra que o jogador toca tem fonte; nenhum número inventado na tela                                                                             |
-| pessoas      | todo acontecimento tem autor e motivo que se abre na tela                                                                                            |
-| país visível | o balanço final aponta o rastro de cada mudança                                                                                                      |
-| diversão     | em cada teste dele: quis continuar? onde cansou? nenhuma estratégia vence sempre nas sondas                                                          |
-| ritmo        | o mesmo mandato nos dois ritmos; a mesma ordem tem o mesmo efeito, e o que muda é quem decide o que o jogador não decidiu                            |
+| objetivo     | como se mede                                                                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| liberdade    | as partidas Xi e Lee têm os 16 fios jogáveis; três destinos extremos alcançáveis em alguma semente ([partidas-teste](spec/test-playthroughs.md)) |
+| fidelidade   | toda regra que o jogador toca tem fonte; nenhum número inventado na tela                                                                         |
+| pessoas      | todo acontecimento tem autor e motivo que se abre na tela                                                                                        |
+| país visível | o balanço final aponta o rastro de cada mudança                                                                                                  |
+| diversão     | em cada teste dele: quis continuar? onde cansou? nenhuma estratégia vence sempre nas sondas                                                      |
+| ritmo        | o mesmo mandato nos dois ritmos; a mesma ordem tem o mesmo efeito, e o que muda é quem decide o que o jogador não decidiu                        |
 
 ## O que o jogo não é
 
@@ -64,4 +64,4 @@ escolha falsa; jogo com IA gerando efeito; produto com prazo.
 ## Ainda em aberto, sem pressa
 
 Segundo mandato; o mundo lá fora (atualização futura); Câmara personalizada; horizonte do
-legado. Estão no [ciclo 33](cycles/33-the-whole-game.md) §11.
+legado. Estão no [ciclo 33](cycles/33-whole-game.md) §11.

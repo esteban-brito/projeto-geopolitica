@@ -1,7 +1,7 @@
 # CICLO 22 — A LEI QUE VOCÊ ESCREVE
 
 > **Escrito em 04/09/2026.** Ele executa a
-> [pesquisa 07](../../research/07-the-law-the-player-writes.md), que passou **33 propostas de um
+> [pesquisa 07](../../research/07-law-the-player-writes.md), que passou **33 propostas de um
 > plano de governo real** pela gramática do motor.
 >
 > Pedido dele, em duas frases:

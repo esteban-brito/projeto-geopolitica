@@ -4,7 +4,7 @@
 
 Os 16 partidos da Câmara, iguais no protótipo da posse (versão de 26/09) e no motor
 (`src/data/parties.mjs`). Nomes, siglas e perfis são inventados (ADR 0003). As bancadas partem da
-Câmara em 26/09/2026 ([pesquisa 18](../research/18-the-chamber-today.md)) e fecham na distribuição
+Câmara em 26/09/2026 ([pesquisa 18](../research/18-chamber-today.md)) e fecham na distribuição
 que ele definiu, com 513 deputados. Nove nascem das ideias do Gemini; os nomes passaram pela
 avaliação dele e pela minha, e as posições seguem a classificação dos especialistas de 2022 onde ela
 e o perfil concordam. Os pragmáticos e os que nunca entram na base estão nas decisões abaixo.

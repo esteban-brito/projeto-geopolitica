@@ -152,7 +152,7 @@ Estado, 100 é mercado; liberdades: 0 é conservador, 100 é liberal nos costume
 
 ## 3. O temperamento
 
-Toda pessoa do jogo tem cinco coisas, e o jogo já usa todas no [mundo vivo](the-living-world.md):
+Toda pessoa do jogo tem cinco coisas, e o jogo já usa todas no [mundo vivo](living-world.md):
 
 1. **Quatro traços,** sorteados pela semente dentro de uma faixa (`src/data/agency.mjs`):
    - **esperança:** o quanto acredita que o Presidente vai atender. Quem tem pouca nem pede e já

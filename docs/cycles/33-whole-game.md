@@ -3,8 +3,8 @@
 > Ordem do Diretor do Jogo em 26/09/2026. **Situação: aprovado por ele em 26/09; é o plano em vigor.**
 > A decisão 10 (retratos) segue aberta. Ele absorve, sem apagar, os lotes A1–F e
 > E1.0a–E1.8 do [mapa de migração](../spec/migration-map.md) §6 e as fases do
-> [ciclo 32](32-the-new-interface.md). Cada peça tem etapa neste documento.
-> A régua são as [partidas-teste de Xi e Lee](../spec/the-test-playthroughs.md). Uma partida
+> [ciclo 32](32-new-interface.md). Cada peça tem etapa neste documento.
+> A régua são as [partidas-teste de Xi e Lee](../spec/test-playthroughs.md). Uma partida
 > inspirada em Milei pode entrar depois, se ele ordenar. Ela não faz parte deste aceite.
 
 > **Atualização de escopo — 29/09:** a etapa 1 incorpora a direção de
@@ -31,7 +31,7 @@ Você preside o Brasil real, tenta transformá-lo, paga os custos e vê o que de
 - **A tela pergunta ao motor.** A previsão usa a mesma função da resolução, filtrada pela visão
   presidencial. O estado oculto não aparece como certeza.
 
-As [partidas-teste](../spec/the-test-playthroughs.md) têm três degraus: poder dentro da
+As [partidas-teste](../spec/test-playthroughs.md) têm três degraus: poder dentro da
 Constituição, erosão por leis e emendas, e ruptura por tentativa fora da lei. Lee testa a
 profundidade econômica e administrativa. Xi testa instituições e força. Juntas cobrem as rotas
 que este plano precisa entregar. Cada fio deve ter decisão, reação e resultado no jogo.
@@ -45,11 +45,11 @@ que este plano precisa entregar. Cada fio deve ter decisão, reação e resultad
 - O fechamento mensal atualiza orçamento, economia, execução e opinião. O registro preserva o que
   cada ator sabia antes de cada decisão. O mês não antecipa divulgação de dado público (lote C3).
 - A semana organiza a agenda, crises e prazos. São três turnos por dia, conforme
-  [a semana](../spec/the-week.md). B1, B3, B4 e B6 trazem esse relógio sem perder o fechamento mensal.
+  [a semana](../spec/week.md). B1, B3, B4 e B6 trazem esse relógio sem perder o fechamento mensal.
 - O momento é uma decisão em cena. A agenda mostra o que exige atenção; outros atores agem mesmo
   quando o Presidente escolhe outro assunto. Não há ponto abstrato de ação.
 - A criação pede nome, tratamento, nascimento, sexo, uma das seis trajetórias e um dos 16 partidos
-  ([ciclo 32](32-the-new-interface.md) §6b; [partidos](../spec/the-parties.md)). Candidatura exige
+  ([ciclo 32](32-new-interface.md) §6b; [partidos](../spec/parties.md)). Candidatura exige
   brasileiro nato, filiação partidária e 35 anos (CF, arts. 12 e 14).
 - A posse oferece a estrutura dos ministérios, nomes para as pastas e a formação da base. O
   [protótipo da posse](../archive/the-posse-port-2026-09-26.md) fixa o hemiciclo sem abas; o motor ainda precisa
@@ -80,8 +80,8 @@ virar regra. A pesquisa R2 do [mapa](../spec/migration-map.md) §6.2 confere div
 ### Pressão inicial, finais e balanço
 
 O partido inicial muda o custo da coalizão. No protótipo, o PLI começa com 1 voto firme e o PCN
-com 205 ([journal](../archive/journal-2026-08-13-to-09-30.md), entrada 93); a regra está no [modelo da base](../spec/the-base-model.md).
-A trajetória altera confiança e acesso conforme o [ciclo 32](32-the-new-interface.md) §6b. A
+com 205 ([journal](../archive/journal-2026-08-13-to-09-30.md), entrada 93); a regra está no [modelo da base](../spec/base-model.md).
+A trajetória altera confiança e acesso conforme o [ciclo 32](32-new-interface.md) §6b. A
 semente altera elenco e eventos; cada sorteio registra a posição consumida. Nenhuma trajetória
 garante vitória ou bloqueia ação.
 
@@ -256,7 +256,7 @@ apontam para o [checklist presidencial](../spec/presidential-checklist.md). Etap
 Estas ações usam `EXTRALEGAL_ATTEMPT` (master-spec §13.11 e §17.5). A tentativa entra no
 registro antes da resposta dos destinatários. A cor da rota indica risco jurídico; ela não
 promete sucesso. A etapa 10 completa a cadeia. A versão legal de cada objetivo permanece no
-catálogo acima ou nas [partidas-teste](../spec/the-test-playthroughs.md).
+catálogo acima ou nas [partidas-teste](../spec/test-playthroughs.md).
 
 | ação                                                         | rota                                                             | quem pode travar                           | checklist | etapa |
 | ------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------------------------ | --------- | ----- |
@@ -302,7 +302,7 @@ movimentos e lideranças transformam opinião em pedidos e ação. ELENCO cria i
 | ----------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | 513 deputados                                   | pauta, texto, votos, fiscalização, denúncia            | gabinete, partido, emendas, pesquisa publicada e contatos recebidos | Câmara legisla e autoriza processo presidencial; CF, arts. 44, 45 e 51 I.               |
 | 81 senadores                                    | texto, votos, indicações, responsabilização            | bancada, estado, informações recebidas e processo público           | Senado legisla e julga responsabilidade; CF, arts. 44, 46 e 52.                         |
-| 16 partidos e seus presidentes                  | disciplina, alianças, candidaturas, recursos políticos | preferência interna e pesquisas que receberam                       | agregam pessoas; número e perfis no [catálogo de partidos](../spec/the-parties.md).     |
+| 16 partidos e seus presidentes                  | disciplina, alianças, candidaturas, recursos políticos | preferência interna e pesquisas que receberam                       | agregam pessoas; número e perfis no [catálogo de partidos](../spec/parties.md).         |
 | líderes, relatores e Mesas                      | distribuição de trabalho, parecer, pauta e negociações | acordos que conhecem, texto e calendário                            | regimentos e CF, art. 57 §4º; não garantem voto alheio.                                 |
 | 38 ministros e dirigentes federais              | proposta, gestão, cumprimento ou recusa de ordem       | dados de sua pasta e informes que chegam                            | CF, arts. 84 e 87; 38 pastas na Lei 14.600/2023.                                        |
 | 11 ministros do STF                             | liminar, interpretação, julgamento                     | autos e prova processual                                            | CF, art. 101; não agem sem processo e competência.                                      |
@@ -370,7 +370,7 @@ documental e usa o portão deste pedido: Prettier, links e check.
 
 ### Etapa 0 — Fundação do plano
 
-As [pesquisas 19 e 20](../spec/the-test-playthroughs.md) sustentam as duas partidas-teste.
+As [pesquisas 19 e 20](../spec/test-playthroughs.md) sustentam as duas partidas-teste.
 Esta etapa absorve o inventário e os protótipos da fase 0 e da fase 1 do ciclo 32. Este ciclo
 reúne os fios, telas, calendário, conteúdo, motores e aceites. Um placar **[PROPOSTA]**
 no `npm run simulate --policy` deve contar quais dos 16 fios têm versão legal e, quando exigida,
@@ -525,7 +525,7 @@ dispensa pesquisas R1–R4 nem as provas de cada lote. Ela fixa onde cada peça 
 ## 7. Interface inteira: telas, componentes e design
 
 O estilo fixado em 26/09 é **Apple + Football Manager + Civilization + Valorant**
-([ciclo 32](32-the-new-interface.md) §2). Apple define hierarquia e movimento; Football Manager
+([ciclo 32](32-new-interface.md) §2). Apple define hierarquia e movimento; Football Manager
 organiza dados e fichas; Civilization dá escala ao hemiciclo e ao mapa; Valorant marca seleção e
 decisão. A posse define os tokens comuns. Liquid Glass ocupa só barra, menu e diálogo pequenos
 sobre fundo parado. O desfoque de fundo (`backdrop-filter`) só existe nessas três superfícies e
@@ -557,7 +557,7 @@ quadros; uma regressão medida impede a troca da tela.
 | Próximas atualizações | vê conteúdo ainda fora do jogo                            | lista com escopo e dependência              | catálogo de conteúdo com fonte             | 2, 12 |
 | Salvar e carregar     | grava ou retoma partida e semente                         | ficha do mandato                            | `src/state/`, versão do save               | 1, 2  |
 
-As [sete peças](../spec/the-test-playthroughs.md) aparecem de forma consistente:
+As [sete peças](../spec/test-playthroughs.md) aparecem de forma consistente:
 
 1. **Cartão de ação:** classe, instrumento, quórum contra votos firmes, prazo, caixa e pessoas
    que podem reagir. A estimativa vem da assessoria, com incerteza visível.
@@ -588,10 +588,10 @@ presidencial; o componente não recompõe voto, saldo ou probabilidade.
 | conteúdo                                                | fonte e regra de entrada                                                                                                                                | uso no jogo                                                  |
 | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
 | 38 ministérios                                          | Lei 14.600/2023; alterações posteriores: VERIFICAR antes do catálogo de 2027                                                                            | cadeira, competência, custo, responsável e reforma.          |
-| 16 partidos                                             | [catálogo de partidos](../spec/the-parties.md) e [modelo da base](../spec/the-base-model.md)                                                            | bancada, coalizão, candidatura e eleição.                    |
+| 16 partidos                                             | [catálogo de partidos](../spec/parties.md) e [modelo da base](../spec/base-model.md)                                                                    | bancada, coalizão, candidatura e eleição.                    |
 | 27 UFs                                                  | CF, arts. 18 e 32; população e PIB do IBGE: VERIFICAR ano, revisão e números antes de entrar                                                            | governos, serviços, renda e eleição regional.                |
 | orçamento e macro de 2027                               | pesquisas 01, 02 e 06 do repositório; revisão de premissas: VERIFICAR                                                                                   | caixa, preço, emprego, dívida e ponto de partida do balanço. |
-| estatais com nomes inventados                           | ADR 0003; [pesquisa 14](../research/14-the-state-energy-company.md) para Enerbras                                                                       | ativo, balanço, diretoria, participação e reação.            |
+| estatais com nomes inventados                           | ADR 0003; [pesquisa 14](../research/14-state-energy-company.md) para Enerbras                                                                           | ativo, balanço, diretoria, participação e reação.            |
 | programas sociais reais                                 | lei de cada programa; MCMV, Lei 14.620/2023; FGTS, Lei 8.036/1990                                                                                       | público, fila, custo, execução e resultado.                  |
 | 33 notáveis                                             | [mapa](../spec/migration-map.md) §6.4, E1.0f; pessoas inventadas                                                                                        | convite, fama, preparo e afinidade com preço político.       |
 | seca, enchente e queimada                               | caso real com fonte e data: VERIFICAR antes de modelar frequência e custo                                                                               | evento com local, dano, informação e pedido.                 |

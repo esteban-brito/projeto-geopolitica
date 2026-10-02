@@ -249,7 +249,7 @@ export const ARCHETYPES = [
     reachMin: 0.5,
     reachMax: 0.75,
   },
-  /* Um líder por bloco dos 16 (docs/spec/the-base-model.md §7): quem decide a posição do partido.
+  /* Um líder por bloco dos 16 (docs/spec/base-model.md §7): quem decide a posição do partido.
      PML e PLI recusam ministério e não têm posição a decidir. */
   {
     id: "leader-socialista",

@@ -1,7 +1,7 @@
 # Pesquisa 17 — Como a base do Presidente se forma na Câmara
 
 > **Origem e conferência (26/09/2026):** feita pelo Codex (`gpt-6-sol`, com busca na web) a pedido
-> dele, para calibrar a base do começo do mandato ([ciclo 32](../cycles/32-the-new-interface.md),
+> dele, para calibrar a base do começo do mandato ([ciclo 32](../cycles/32-new-interface.md),
 > fase 2). Conferida pelo Claude na fonte, por amostra: **batem** a tabela de ministérios por partido
 > do Ipea (NT 53, p. 10, baixada do repositório do Ipea), as taxas da Poliarco (3/9/2019), o voto do
 > PMDB em 17/4/2016 (InfoMoney: 59 a favor, 7 contra e 1 ausente, numa bancada que o título dá

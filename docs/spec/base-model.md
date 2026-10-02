@@ -5,8 +5,8 @@
 Desenho de 26/09, aprovado na direção por ele no mesmo dia: cada deputado tem uma chance de votar
 com o governo, e ela depende da distância ideológica, do ministério e da posição declarada do
 partido. Calibrado pela [pesquisa 17](../research/17-how-the-base-forms.md). O modelo entrou no
-motor em 26/09, por ordem dele, na etapa 1 do [ciclo 33](../cycles/33-the-whole-game.md) (fase 2
-do [ciclo 32](../cycles/32-the-new-interface.md)). A posse ainda não usa a consulta do motor.
+motor em 26/09, por ordem dele, na etapa 1 do [ciclo 33](../cycles/33-whole-game.md) (fase 2
+do [ciclo 32](../cycles/32-new-interface.md)). A posse ainda não usa a consulta do motor.
 O quadro abaixo compara o desenho com o jogo anterior à mudança.
 
 ## 1. Por que mudar

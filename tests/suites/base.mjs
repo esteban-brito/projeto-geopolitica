@@ -1,4 +1,4 @@
-/* O MODELO DA BASE (docs/spec/the-base-model.md §6): as provas nasceram antes do código. */
+/* O MODELO DA BASE (docs/spec/base-model.md §6): as provas nasceram antes do código. */
 
 import assert from "node:assert/strict";
 import test from "node:test";

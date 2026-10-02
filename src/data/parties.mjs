@@ -38,7 +38,7 @@ export const PARTY_SCHEMA = {
  * @property {true} [neverBase] - recusa ministério de qualquer Presidente
  */
 
-/* Os 16 da posse (docs/spec/the-parties.md): bancadas e posições decididas por ele em 26/09.
+/* Os 16 da posse (docs/spec/parties.md): bancadas e posições decididas por ele em 26/09.
    A venalidade é [DESENHO], herdada do bloco equivalente do catálogo de 9; os pragmáticos da
    posse ficam acima do corte de 0,7 de `baseVenality`. */
 /** @type {ReadonlyArray<Party>} */

@@ -4,7 +4,7 @@
 > com absolutamente TUDO o que um presidente do Brasil faz na vida real"_ — no mínimo 20 itens,
 > _"porque algumas coisas englobam outras"_.
 >
-> Ele complementa a [pesquisa 04](04-the-office-of-president.md), que pergunta **o que faz a
+> Ele complementa a [pesquisa 04](04-office-of-president.md), que pergunta **o que faz a
 > presidência brasileira ser ELA**. Este arquivo pergunta o mais simples: **o que ele FAZ**, sem
 > considerar o que existe ou não num jogo.
 >

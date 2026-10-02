@@ -434,7 +434,7 @@ test("a base cabe no plenario, e levantar a lealdade nunca a diminui", () => {
 });
 
 test("A BASE E A SOMA DAS CHANCES, sem degrau escondido", () => {
-  /* Os degraus de 0,6 e 0,15 sairam: a lealdade ja e a chance (the-base-model.md §7). */
+  /* Os degraus de 0,6 e 0,15 saíram: a lealdade já e a chance (base-model.md §7). */
   for (const level of [RUPTURE_EDGE - 1, RUPTURE_EDGE + 1, 45, 70, 95]) {
     const base = baseCount({ parties: PARTIES, loyalty: everyone(level) });
     assert.equal(

@@ -56,8 +56,8 @@ export const THRESHOLDS = { obstruction: OBSTRUCTION, rupture: RUPTURE };
 /* Voto firme: o deputado que acompanha o governo em emenda e reforma. */
 export const FIRM = 0.8;
 
-/* ── A CHANCE ESTRUTURAL (docs/spec/the-base-model.md) ──────────────────────── Os numeros sao
-   os do prototipo da posse, [DESENHO] dentro das faixas da pesquisa 17. */
+/* ── A CHANCE ESTRUTURAL (docs/spec/base-model.md) ──────────────────────── Os números são
+   os do protótipo da posse, [DESENHO] dentro das faixas da pesquisa 17. */
 const OWN_CHANCE = 0.92;
 const NEAR = 45;
 const PRAGMATIC_REACH = 70;

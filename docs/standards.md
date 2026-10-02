@@ -99,7 +99,7 @@ mês seguinte sacava os mesmos números.
 > em `CLAUDE.md`.
 >
 > ⭐ **Emenda de 26/09/2026:** a interface nova segue o estilo Apple + Football Manager +
-> Civilization + Valorant ([ciclo 32](cycles/32-the-new-interface.md)); o vidro fica só em
+> Civilization + Valorant ([ciclo 32](cycles/32-new-interface.md)); o vidro fica só em
 > superfície pequena sobre fundo parado. As medições abaixo seguem valendo.
 >
 > ⭐ **A base é o liquid glass de hoje** — ordem dele de 05/09/2026. ⚠ **Base é o ponto de

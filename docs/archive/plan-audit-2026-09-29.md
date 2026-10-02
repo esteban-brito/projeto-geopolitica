@@ -32,13 +32,13 @@ comportamentos incompatíveis, um portão não prova sua promessa ou falta delim
 | [Corte da estatal](../spec/vertical-slice-energy.md) | Cadeia material e fiscal; achados P08–P10.                                                  |
 | [Checklist](../spec/presidential-checklist.md)       | Conteúdo e cobertura datada; aprovação e implementação agora distinguidas na abertura.      |
 | [Mapa da interface](interface-map-2026-09-25.md)     | Direção visual e consultas; precisa da visão presidencial de P10.                           |
-| [Ministério](../spec/the-cabinet.md)                 | Proposta anterior; premissas substituídas agora sinalizadas.                                |
-| [Modelo da base](../spec/the-base-model.md)          | Modelo transitório confrontado com ECLUSA e suas provas; P11.                               |
-| [Partidos](../spec/the-parties.md)                   | Catálogo e restrições deliberadas; não revogadas por esta auditoria.                        |
-| [Mundo vivo](../spec/the-living-world.md)            | Agência mensal existente e lote futuro de imprensa; não equivale ao mundo semanal completo. |
+| [Ministério](../spec/cabinet.md)                     | Proposta anterior; premissas substituídas agora sinalizadas.                                |
+| [Modelo da base](../spec/base-model.md)              | Modelo transitório confrontado com ECLUSA e suas provas; P11.                               |
+| [Partidos](../spec/parties.md)                       | Catálogo e restrições deliberadas; não revogadas por esta auditoria.                        |
+| [Mundo vivo](../spec/living-world.md)                | Agência mensal existente e lote futuro de imprensa; não equivale ao mundo semanal completo. |
 | [Porte da posse](the-posse-port-2026-09-26.md)       | Distinção entre fonte visual, conta do protótipo e consulta do jogo.                        |
-| [Semana](../spec/the-week.md)                        | Agenda, disponibilidade e escalada; P04.                                                    |
-| [Partidas-teste](../spec/the-test-playthroughs.md)   | Dezesseis fios e versões; necessidade de aceites operacionais em P12.                       |
+| [Semana](../spec/week.md)                            | Agenda, disponibilidade e escalada; P04.                                                    |
+| [Partidas-teste](../spec/test-playthroughs.md)       | Dezesseis fios e versões; necessidade de aceites operacionais em P12.                       |
 | [Governo variável](dynamic-government-2026-09-30.md) | Experiências, preparo e integração; P02–P03.                                                |
 | [Piloto](government-pilot-2026-09-30.md)             | Recorte, contrafactual e limites; base do próximo portão.                                   |
 
@@ -103,7 +103,7 @@ ativa nem prova de que a implementação ainda está no estado daquela data.
 
 ### P02. A nova arquitetura não pode herdar as garantias do catálogo antigo
 
-[O ministério](../spec/the-cabinet.md), §§1, 3 e 4, prescrevia três especialistas com preparo 6 por
+[O ministério](../spec/cabinet.md), §§1, 3 e 4, prescrevia três especialistas com preparo 6 por
 pasta, criação apenas por divisão, destinos por assunto parecido e reação ao desaparecimento
 do nome. [Governo variável](dynamic-government-2026-09-30.md) e o [piloto](government-pilot-2026-09-30.md)
 retiram essas inferências: experiências são persistentes, nomes não atribuem capacidade e

@@ -4,7 +4,7 @@
 
 > Versão 2, 25/09/2026. Pedido dele: juntar realismo, diversão e padronização num país com leis
 > demais. Detalha a [especificação mestra](master-spec.md) §1.2, §12, §13, §16 e §22, com os nomes
-> dela. Fatos da [pesquisa 14](../research/14-the-state-energy-company.md). Marcas da
+> dela. Fatos da [pesquisa 14](../research/14-state-energy-company.md). Marcas da
 > especificação: **[VERIFICADO]**, **[VERIFICAR]**, **[HIPÓTESE]** e **[DESENHO]**. Nas
 > pesquisas, **PARCIAL** é fonte oficial conhecida e não lida, e **FALTA** é sem fonte achada.
 
@@ -35,7 +35,7 @@ corte da estatal:
 
 **Ação e mecanismo são dois níveis, e não dois nomes.** A ação é o que o jogador pede. O
 mecanismo é como o motor executa a norma: o `kind` da cláusula na ESTRATO, que a
-[pesquisa 07](../research/07-the-law-the-player-writes.md) mapeou em 33 propostas reais.
+[pesquisa 07](../research/07-law-the-player-writes.md) mapeou em 33 propostas reais.
 
 | mecanismo (`kind`) | ações que ele executa                                     | no motor hoje |
 | ------------------ | --------------------------------------------------------- | ------------- |

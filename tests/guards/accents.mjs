@@ -10,7 +10,9 @@ import { collect, isGuardSource } from "../lib/project.mjs";
 
 export const name = "accents";
 
-const ENGLISH = /\b(the|and|with|from|this|is|of|when|which)\b/;
+/* Palavra inglesa solta, nunca dentro de caminho: com `\b`, o "the-" de `the-base-model.md` fazia
+   o comentário inteiro passar por inglês, e três palavras sem acento escaparam. */
+const ENGLISH = /(?<![\w-])(the|and|with|from|this|is|of|when|which)(?![\w-])/;
 const MASK = /`[^`\n]*`|[a-z]+:\/\/\S+|\S*\/\S*|\]\([^)]*\)|<[^>\n]+>|\[\^?[\w-]+\]/g;
 const ENCLITIC = /^-(lo|la|los|las|se|lhe|lhes|me|te|nos)\b/;
 

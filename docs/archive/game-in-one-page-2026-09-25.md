@@ -33,7 +33,7 @@ ESCOLHO UMA TRANSFORMAÇÃO
 você fez antes. O que falta é a sua atenção: a agenda da semana só cabe algumas coisas, e cada uma
 cobra o seu preço. Não existe ponto de ação. Você escolhe entre empurrar o seu projeto e apagar o
 incêndio de hoje. As regras da semana (três turnos por dia, o Congresso de terça a quinta, o que
-acontece com o que você não cuidou) estão em [a semana de governo](../spec/the-week.md). Hoje o jogo avança
+acontece com o que você não cuidou) estão em [a semana de governo](../spec/week.md). Hoje o jogo avança
 por mês; a semana chega com a trilha B do [mapa de migração](../spec/migration-map.md).
 
 **O mandato tem janelas reais:** a lua de mel do primeiro ano; as eleições municipais de outubro
@@ -156,10 +156,10 @@ jogador quer: transformar o país.
 
 - **O E0 fica pausado.** O motor está salvo (`febd0b5`) e volta como rotina de governo.
 - **A consequência material vem antes de qualquer cena** (achado 77). É o lote E1.4.
-- **A pesquisa da estatal está feita** ([pesquisa 14](../research/14-the-state-energy-company.md)).
+- **A pesquisa da estatal está feita** ([pesquisa 14](../research/14-state-energy-company.md)).
   Seguem abertos: como medir cada fato concreto do país e o ponto de partida em 2027, e o
   calendário eleitoral (pesquisa R2 do mapa).
-- **O plano em vigor é o [ciclo 33](../cycles/33-the-whole-game.md)**, aprovado em 26/09.
+- **O plano em vigor é o [ciclo 33](../cycles/33-whole-game.md)**, aprovado em 26/09.
   Os lotes E1 do [mapa de migração](../spec/migration-map.md), §6.4, entram nas etapas dele; a eleição
   da Mesa está na etapa 4. A direção de 29/09 para a posse está em
   [governo variável](../spec/dynamic-government.md).

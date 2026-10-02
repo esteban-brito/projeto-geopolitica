@@ -38,8 +38,8 @@ inútil. O ciclo 29 cuida do texto e da estrutura. Este cuida de duas coisas que
 
 ## 4 · Parte B — profundidade: os candidatos
 
-Fonte: [pesquisa 04 §3](../../research/04-the-office-of-president.md) (sete buracos), [pesquisa
-09](../../research/09-the-office-checklist.md) (checklist do cargo) e a base acordada em 31/08.
+Fonte: [pesquisa 04 §3](../../research/04-office-of-president.md) (sete buracos), [pesquisa
+09](../../research/09-office-checklist.md) (checklist do cargo) e a base acordada em 31/08.
 Custo em sessões é estimativa; a série se remede em todos.
 
 | #   | candidato                                                                                                | o que muda no jogo                                                                                                                                                  | fonte                                      | custo             |

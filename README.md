@@ -14,18 +14,18 @@ npm run posse      # as provas de navegador da posse, fora do validate
 
 ## Onde ler
 
-| documento                                   | o quê                                                                                           |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| [`docs/vision.md`](docs/vision.md)          | o que o jogo é e para que; a autoridade mais alta                                               |
-| [`docs/handoff.md`](docs/handoff.md)        | **comece aqui**: estado verificável, fila, decisões vivas, achados                              |
-| [`docs/standards.md`](docs/standards.md)    | as convenções, os motores e a guarda que cobra cada regra                                       |
-| [`docs/spec/`](docs/spec/README.md)         | como o jogo funciona, sistema por sistema, com a situação de cada documento                     |
-| [`docs/cycles/`](docs/cycles/README.md)     | os planos de trabalho ativos; o [ciclo 33](docs/cycles/33-the-whole-game.md) é o plano em vigor |
-| [`docs/research/`](docs/research/README.md) | pesquisas e fontes, com a situação de cada uma                                                  |
-| [`docs/adr/`](docs/adr/)                    | decisões que não se reabrem sem pedido                                                          |
-| [`docs/journal.md`](docs/journal.md)        | o que cada sessão fez e por quê                                                                 |
-| [`docs/archive/`](docs/archive/)            | o que foi superado, inclusive o journal até 30/09 e os ciclos 01 a 31                           |
-| [`docs/evidence/`](docs/evidence/README.md) | medições congeladas que o código e os documentos citam                                          |
+| documento                                   | o quê                                                                                       |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| [`docs/vision.md`](docs/vision.md)          | o que o jogo é e para que; a autoridade mais alta                                           |
+| [`docs/handoff.md`](docs/handoff.md)        | **comece aqui**: estado verificável, fila, decisões vivas, achados                          |
+| [`docs/standards.md`](docs/standards.md)    | as convenções, os motores e a guarda que cobra cada regra                                   |
+| [`docs/spec/`](docs/spec/README.md)         | como o jogo funciona, sistema por sistema, com a situação de cada documento                 |
+| [`docs/cycles/`](docs/cycles/README.md)     | os planos de trabalho ativos; o [ciclo 33](docs/cycles/33-whole-game.md) é o plano em vigor |
+| [`docs/research/`](docs/research/README.md) | pesquisas e fontes, com a situação de cada uma                                              |
+| [`docs/adr/`](docs/adr/)                    | decisões que não se reabrem sem pedido                                                      |
+| [`docs/journal.md`](docs/journal.md)        | o que cada sessão fez e por quê                                                             |
+| [`docs/archive/`](docs/archive/)            | o que foi superado, inclusive o journal até 30/09 e os ciclos 01 a 31                       |
+| [`docs/evidence/`](docs/evidence/README.md) | medições congeladas que o código e os documentos citam                                      |
 
 Para agentes: [`AGENTS.md`](AGENTS.md) é o contrato único; [`CLAUDE.md`](CLAUDE.md) e
 [`GEMINI.md`](GEMINI.md) o importam.
@@ -34,7 +34,7 @@ Para agentes: [`AGENTS.md`](AGENTS.md) é o contrato único; [`CLAUDE.md`](CLAUD
 
 A posse com ministérios variáveis está em [`prototypes/posse/`](prototypes/posse/README.md):
 `npm run serve` e abrir <http://127.0.0.1:5173/tmp/build/posse.html>. É um ensaio isolado, que o
-[ciclo 34](docs/cycles/34-the-posse-rebuilt.md) vai refazer dentro do jogo.
+[ciclo 34](docs/cycles/34-posse-rebuilt.md) vai refazer dentro do jogo.
 
 ## Os motores
 

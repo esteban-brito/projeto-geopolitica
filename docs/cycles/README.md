@@ -2,16 +2,16 @@
 
 Um ciclo é um plano de trabalho com começo e fim. O que cada um prometeu está no arquivo; o que
 aconteceu está no [journal](../archive/journal-2026-08-13-to-09-30.md); o estado de hoje, no [handoff](../handoff.md).
-O plano em vigor é o [ciclo 33](33-the-whole-game.md), sob a [visão](../vision.md) e a
+O plano em vigor é o [ciclo 33](33-whole-game.md), sob a [visão](../vision.md) e a
 [especificação mestra](../spec/master-spec.md).
 
 ## Ativos
 
-| #   | arquivo                                     | o quê                                                                             | situação                                                |
-| --- | ------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| 34  | [a posse refeita](34-the-posse-rebuilt.md)  | a posse como primeira tela da interface nova, sobre o motor                       | a reescrever: a posse dentro do jogo (decisão de 01/10) |
-| 33  | [o jogo inteiro](33-the-whole-game.md)      | etapas, ações, atores, telas e aceite pelas partidas Xi e Lee                     | aprovado em 26/09; plano em vigor                       |
-| 32  | [a interface nova](32-the-new-interface.md) | a interface refeita sobre o motor, no estilo Apple + FM + Civilization + Valorant | revisado em 01/10: a interface evolui a partir da atual |
+| #   | arquivo                                 | o quê                                                                             | situação                                                |
+| --- | --------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| 34  | [a posse refeita](34-posse-rebuilt.md)  | a posse como primeira tela da interface nova, sobre o motor                       | a reescrever: a posse dentro do jogo (decisão de 01/10) |
+| 33  | [o jogo inteiro](33-whole-game.md)      | etapas, ações, atores, telas e aceite pelas partidas Xi e Lee                     | aprovado em 26/09; plano em vigor                       |
+| 32  | [a interface nova](32-new-interface.md) | a interface refeita sobre o motor, no estilo Apple + FM + Civilization + Valorant | revisado em 01/10: a interface evolui a partir da atual |
 
 ## Encerrados
 

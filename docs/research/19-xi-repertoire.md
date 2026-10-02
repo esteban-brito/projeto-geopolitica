@@ -1,7 +1,7 @@
 # Pesquisa 19 — o repertório de Xi Jinping para a partida-teste
 
 > Encomendada por ele ao ChatGPT e entregue em 26/09/2026. Base da partida-teste estilo Xi (ciclo 32,
-> §6c) e do mapa em [the-test-playthroughs.md](../spec/the-test-playthroughs.md).
+> §6c) e do mapa em [test-playthroughs.md](../spec/test-playthroughs.md).
 >
 > **O que o Claude conferiu em 26/09:**
 >

@@ -1392,7 +1392,7 @@ Regra:
 
 `ACQUIRE_STAKE`, `SELL_STAKE`, `ASSUME_CONTROL`, `RELINQUISH_CONTROL`, `NATIONALIZE`, `PRIVATIZE`, `CONCESS`, `PUBLIC_PROVIDE`, `OPEN_MARKET`, `RESERVE_MARKET`, `CAP_PRICE`, `SET_MINIMUM_PRICE`, `DIRECT_ENTERPRISE`.
 
-**[HIPÓTESE — 25/09]** `DIRECT_ENTERPRISE` é orientar a estatal que o Estado controla (preço, investimento). Não é `CAP_PRICE`: vale só para a empresa controlada, decide-se no conselho dela, e preço fora do mercado exige compensação prévia da União (Lei 6.404, art. 238; estatuto da Petrobras, art. 3º; **[VERIFICADO]** na [pesquisa 14](../research/14-the-state-energy-company.md)).
+**[HIPÓTESE — 25/09]** `DIRECT_ENTERPRISE` é orientar a estatal que o Estado controla (preço, investimento). Não é `CAP_PRICE`: vale só para a empresa controlada, decide-se no conselho dela, e preço fora do mercado exige compensação prévia da União (Lei 6.404, art. 238; estatuto da Petrobras, art. 3º; **[VERIFICADO]** na [pesquisa 14](../research/14-state-energy-company.md)).
 
 ### Penal e responsabilização
 
@@ -2112,7 +2112,7 @@ A entidade econômica `company` guarda estado econômico. Quando a empresa possu
 
 Não duplicar campos econômicos dentro do ator: o `ACTOR` decide; `company` contém propriedade, capacidade e saúde econômica.
 
-Estatal pode acrescentar (campos e números de partida da Petrobras, com fonte, na [pesquisa 14](../research/14-the-state-energy-company.md)):
+Estatal pode acrescentar (campos e números de partida da Petrobras, com fonte, na [pesquisa 14](../research/14-state-energy-company.md)):
 
 - missão pública;
 - supervisão;
@@ -2662,7 +2662,7 @@ Quando fidelidade factual conflitar com uma ideia de gameplay:
 - Portal oficial da Câmara dos Deputados: 513 cadeiras.
 - Portal oficial do Senado Federal: 81 cadeiras.
 
-**[ATUAL — verificado em 25/09/2026]** Leis 9.478, 9.491, 13.303 e 6.404; Constituição, arts. 5º XXIV, 37, 47, 49 V, 60, 62, 64, 66, 69, 84, 173 e 177; STF, ADI 5624, 7331 e 7385; 20-F da Petrobras de 2025; ANP e IBGE. Links e trechos na [pesquisa 14](../research/14-the-state-energy-company.md) e na [gramática](rules-grammar.md).
+**[ATUAL — verificado em 25/09/2026]** Leis 9.478, 9.491, 13.303 e 6.404; Constituição, arts. 5º XXIV, 37, 47, 49 V, 60, 62, 64, 66, 69, 84, 173 e 177; STF, ADI 5624, 7331 e 7385; 20-F da Petrobras de 2025; ANP e IBGE. Links e trechos na [pesquisa 14](../research/14-state-energy-company.md) e na [gramática](rules-grammar.md).
 
 Detalhes de rito continuam sujeitos a verificação específica antes da implementação.
 

@@ -4,14 +4,14 @@
 
 > 25/09/2026, pedido dele: tudo o que um presidente do Brasil pode fazer, realista e fiel. A base é
 > a lista de poderes da Constituição (art. 84, conferido no Planalto em 25/09) e a
-> [pesquisa 09](../research/09-the-office-checklist.md), mais a prática política que não está
+> [pesquisa 09](../research/09-office-checklist.md), mais a prática política que não está
 > escrita em lei. Cada item diz como se faz de verdade e em que etapa entra no jogo. É também a lista
 > de conteúdo do jogo, e a base da tela de próximas atualizações.
 >
 > Etapas: **no jogo** (já existe) · **abertura** (lotes E1.0) · **estatal** (lotes E1) · **depois**
 > (onda seguinte, pela [gramática](rules-grammar.md)) · **internacional** (atualização futura).
 
-> **Consulta atual — 29/09:** a ordem de entregas é a do [ciclo 33](../cycles/33-the-whole-game.md).
+> **Consulta atual — 29/09:** a ordem de entregas é a do [ciclo 33](../cycles/33-whole-game.md).
 > As contagens de cobertura abaixo são o retrato de 25/09, não uma medição atual; nomeações e
 > modelo da base avançaram desde então. Os itens 41–54 foram incluídos no plano aprovado em
 > 26/09; sua aprovação não significa implementação. A Mesa entra na etapa 4.
@@ -108,7 +108,7 @@ defende deles com as ações acima.
 
 ## Proposta do ciclo 33: o que as partidas-teste pedem
 
-Estes 14 itens esperam o sim dele ao [plano do jogo inteiro](../cycles/33-the-whole-game.md); os itens 47
+Estes 14 itens esperam o sim dele ao [plano do jogo inteiro](../cycles/33-whole-game.md); os itens 47
 a 54 dependem da decisão 5 do plano. As etapas são as do plano, §6. Uma
 tentativa fora da lei percorre destinatários, recusa ou adesão, reação e responsabilização; ela
 não recebe resultado automático (especificação mestra §17.5).

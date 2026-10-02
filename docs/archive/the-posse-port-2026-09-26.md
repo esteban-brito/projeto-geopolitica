@@ -7,7 +7,7 @@ quebra, o que conflita e o que falta antes da primeira linha.
 
 **Atualização de 28/09:** a comparação das seções 1 e 2 é o retrato anterior ao modelo da base.
 O motor agora tem 16 partidos, `openingLoyalty`, `partyChance` e `chanceTargets` pela
-[especificação da base](../spec/the-base-model.md). A divergência da largada que bloqueava o porte foi
+[especificação da base](../spec/base-model.md). A divergência da largada que bloqueava o porte foi
 resolvida no motor; a posse ainda precisa consultar esse motor, integrar pessoas e gestos e passar
 pelas provas da seção 4. O achado 86 permanece aberto para a duração da coalizão.
 
@@ -37,7 +37,7 @@ para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
   semente um nome da bancada, com id `partido:cadeira`. É a mesma pessoa que aparece na carta em
   que o partido pede pasta;
 - **partidos e cadeiras batem em número.** Desde a noite de 26/09 o motor tem os mesmos 16 partidos
-  do protótipo ([os partidos](../spec/the-parties.md)), com as mesmas bancadas e coordenadas de Nolan
+  do protótipo ([os partidos](../spec/parties.md)), com as mesmas bancadas e coordenadas de Nolan
   (`economic`, `liberty`); os ids do motor são as siglas em minúsculas (`pcn`, `pcs`). As 38 cadeiras
   do catálogo usam os ids da Lei 14.600;
 - **o visual é outro sistema.** Fonte Inter servida do próprio site; escala de tipo 10, 12, 13, 15,
@@ -50,21 +50,21 @@ para a partida abaixo não se aplica a esse ensaio. A sequência atual está no
 
 ## 2. Onde protótipo e jogo divergiam no estudo
 
-| Tema                       | Protótipo                                                                            | Jogo                                                                              | Peso      |
-| -------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | --------- |
-| base no começo             | votos firmes e prováveis pelo [modelo da base](../spec/the-base-model.md): 149 e 374 | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
-| efeito da pasta            | a chance do partido sobe na hora, até 95%                                            | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
-| pessoas                    | escritas à mão                                                                       | indicado por semente; especialistas e notáveis não existem                        | grande    |
-| Fama, Preparo, Afinidade   | números de desenho                                                                   | não existem (lote E1.0f)                                                          | grande    |
-| juntar, extinguir, dividir | funcionam na tela                                                                    | a lista de cadeiras é fixa no catálogo e em várias contas (lote E1.0d)            | grande    |
-| ids das cadeiras           | 26 ids curtos diferentes (`justica`, `gsi`, `agu`) e 3 criáveis                      | ids da lei (`justica-e-seguranca-publica`)                                        | médio     |
-| tamanho da tela            | fixo em 1280×800                                                                     | janela livre                                                                      | médio     |
-| fonte e tokens             | Hanken Grotesk e tokens próprios                                                     | Inter e tokens do jogo                                                            | médio     |
-| cores dos partidos         | 9 tons do Nolan, em HSL no código                                                    | não existem; a guarda `tokens` barra cor solta                                    | médio     |
+| Tema                       | Protótipo                                                                        | Jogo                                                                              | Peso      |
+| -------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------- |
+| base no começo             | votos firmes e prováveis pelo [modelo da base](../spec/base-model.md): 149 e 374 | 440 sem nenhuma pasta: todo partido nasce com lealdade 70, o do Presidente com 90 | **grave** |
+| efeito da pasta            | a chance do partido sobe na hora, até 95%                                        | menos de 1 deputado no primeiro mês; teto de 80 de lealdade                       | **grave** |
+| pessoas                    | escritas à mão                                                                   | indicado por semente; especialistas e notáveis não existem                        | grande    |
+| Fama, Preparo, Afinidade   | números de desenho                                                               | não existem (lote E1.0f)                                                          | grande    |
+| juntar, extinguir, dividir | funcionam na tela                                                                | a lista de cadeiras é fixa no catálogo e em várias contas (lote E1.0d)            | grande    |
+| ids das cadeiras           | 26 ids curtos diferentes (`justica`, `gsi`, `agu`) e 3 criáveis                  | ids da lei (`justica-e-seguranca-publica`)                                        | médio     |
+| tamanho da tela            | fixo em 1280×800                                                                 | janela livre                                                                      | médio     |
+| fonte e tokens             | Hanken Grotesk e tokens próprios                                                 | Inter e tokens do jogo                                                            | médio     |
+| cores dos partidos         | 9 tons do Nolan, em HSL no código                                                | não existem; a guarda `tokens` barra cor solta                                    | médio     |
 
 O conflito da base é o mais sério. **Decidido por ele em 26/09: vale o modelo do protótipo,
 aprimorado e fiel à realidade;** a pesquisa que o calibra está em curso e o motor muda na fase 2 do
-[ciclo 32](../cycles/32-the-new-interface.md). No jogo de hoje, quem não recebe pasta vota com o governo em 85%
+[ciclo 32](../cycles/32-new-interface.md). No jogo de hoje, quem não recebe pasta vota com o governo em 85%
 das vezes; no protótipo, só vota quem recebe. Os dois não convivem. Resolver isso é mexer na
 calibragem do motor da Câmara, e o achado 86 já aponta para o mesmo lugar. A tela da posse não
 pode sair antes dessa decisão, porque todo número dela sairia errado ou inventado.
@@ -117,10 +117,10 @@ as reformas variáveis continuam pendentes.
 
 Decidido por ele em 26/09: a base do começo segue o protótipo, aprimorado e fiel à realidade; a
 posse vem primeiro e é o padrão das outras telas; o começo do jogo cria o Presidente (nome,
-partido, sexo, data de nascimento e mais). Ver o [ciclo 32](../cycles/32-the-new-interface.md), §6.
+partido, sexo, data de nascimento e mais). Ver o [ciclo 32](../cycles/32-new-interface.md), §6.
 
 **Partidos (26/09):** o protótipo passou a 16 partidos com as bancadas da posse de 2023 agrupadas
 pelas fusões de 2023. O catálogo do jogo também passou a 16 partidos em 26/09; a referência a nove
 na comparação acima é histórica.
 
-As decisões que seguem abertas estão todas no [ciclo 32](../cycles/32-the-new-interface.md), §7.
+As decisões que seguem abertas estão todas no [ciclo 32](../cycles/32-new-interface.md), §7.

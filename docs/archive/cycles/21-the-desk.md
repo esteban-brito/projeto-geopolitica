@@ -34,7 +34,7 @@ meu jogo são as travas e limites que você colocou sem eu pedir"_.
 ⚠ **O QUE SOBRA DELE, e é só isto:** o que faz parecer uma mesa é hierarquia, lugar fixo e ter o
 que assinar. 📐 **E essa hipótese foi executada inteira e reprovada por ele em 05/09** — a mesa
 saiu com 59,3% de vazio e 29 átomos de texto. **Necessária, e não suficiente.** A
-[pesquisa 08](../../research/08-the-presidents-desk.md) mede isso e abre a matéria de novo.
+[pesquisa 08](../../research/08-presidents-desk.md) mede isso e abre a matéria de novo.
 
 📐 **O estado de hoje:** seis blocos do mesmo tamanho e da mesma tinta, numa grade que reflui,
 ocupando 55% do tabuleiro. **Os outros 45% estão pretos.** E a tela tem **zero** controles.

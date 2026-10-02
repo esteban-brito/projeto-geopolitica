@@ -1,8 +1,8 @@
 # Ciclo 34 — A posse refeita dentro do jogo
 
 > Ordem dele em 01/10/2026: o foco é a versão nova da posse, que pode ser refeita do zero; sem
-> pressa, com planejamento fundo e sem gastar à toa. É a etapa 1 do [ciclo 33](33-the-whole-game.md)
-> e o lote E1.0e: a posse no jogo, no estilo do [ciclo 32](32-the-new-interface.md) §2.
+> pressa, com planejamento fundo e sem gastar à toa. É a etapa 1 do [ciclo 33](33-whole-game.md)
+> e o lote E1.0e: a posse no jogo, no estilo do [ciclo 32](32-new-interface.md) §2.
 > **Situação:** reescrito em 01/10 para a posse dentro do jogo; nada implementado.
 
 ## 1. Por que refazer
@@ -32,7 +32,7 @@ partido no hover, foto final. As reformas do governo variável: juntar, desfazer
 extinguir com destino por atribuição, recriar, criar com nome livre, transferir, renomear,
 desistir de criar, busca com `e`, `ou`, `não`. O estilo é o do ciclo 32 §2. O inventário
 completo de gestos e estados vira a lista de conferência da fase 5, tirada de
-[o ministério](../spec/the-cabinet.md) §4 e do [contrato](../spec/dynamic-government.md).
+[o ministério](../spec/cabinet.md) §4 e do [contrato](../spec/dynamic-government.md).
 
 ## 3. A arquitetura
 

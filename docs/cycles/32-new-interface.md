@@ -3,7 +3,7 @@
 > **Situação:** revisado em 01/10/2026. Ordem dele: a interface **evolui a partir da atual**, sem
 > segunda interface. Valem daqui o estilo (§2), os testes (§5) e as decisões de 26/09 (§6, §6b, §6c);
 > não valem a entrada separada nem o recomeço do zero (§1, §3 e §4). A posse é a primeira tela
-> feita assim, no [ciclo 34](34-the-posse-rebuilt.md).
+> feita assim, no [ciclo 34](34-posse-rebuilt.md).
 
 > **Situação em 26/09/2026:** planejado, nada implementado. Ordem dele: o motor fica, a interface
 > recomeça do zero sobre a fundação, e o estilo fica fixado em **Apple + Football Manager +
@@ -98,7 +98,7 @@ primeiro e é o padrão das outras telas (ordem dele, §6).
    sombra, tempo), os componentes e uma página de catálogo com todos os estados; a fonte condensada
    é escolhida aqui;
 2. **O motor da posse.** A base passa a se formar com ministérios e negociação, calibrada pela
-   pesquisa, pelo [modelo da base](../spec/the-base-model.md); a prévia da base vira consulta da aplicação, com prova; os dados pessoais do Presidente
+   pesquisa, pelo [modelo da base](../spec/base-model.md); a prévia da base vira consulta da aplicação, com prova; os dados pessoais do Presidente
    entram no estado, com versão nova do save. Segue o laço do motor: prova antes, `npm test`,
    `npm run simulate` e a série reescrita no handoff;
 3. **A casca.** A pintura por diferença com provas, a barra de cima, o menu, a entrada separada e
@@ -155,7 +155,7 @@ coisas: o mapa de cada medida para o instrumento brasileiro mais próximo; a lis
 precisam oferecer, que vira critério de aceite ("uma partida Xi é jogável do começo ao fim"); e o mesmo teste
 depois com outros projetos de governo, para o jogo não favorecer um caminho só. Isso orienta a interface nova
 desde a fase 1. O mapa, as peças de tela e o critério de aceite estão em
-[as partidas-teste](../spec/the-test-playthroughs.md): Xi (pesquisa 19) e Lee Kuan Yew (pesquisa 20, com o Codex).
+[as partidas-teste](../spec/test-playthroughs.md): Xi (pesquisa 19) e Lee Kuan Yew (pesquisa 20, com o Codex).
 
 ## 7. Decisões que seguem abertas
 

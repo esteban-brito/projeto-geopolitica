@@ -1,7 +1,7 @@
 # Pesquisa 20 — o repertório de Lee Kuan Yew para a partida-teste
 
 > Feita pelo Codex (GPT-6 Sol, com busca na web) em 26/09/2026, por ordem dele. Base da partida-teste
-> estilo Lee e do mapa em [the-test-playthroughs.md](../spec/the-test-playthroughs.md).
+> estilo Lee e do mapa em [test-playthroughs.md](../spec/test-playthroughs.md).
 >
 > **O que o Claude conferiu em 26/09:**
 >
@@ -166,7 +166,7 @@ Indicadores criminais chegam depois e exigem método: número de presos, violên
 
 ## 7. Alavancas: partida Lee e partida Xi
 
-A coluna Xi resume o repertório já registrado na [pesquisa do repositório](19-the-xi-repertoire.md); é comparação de mecanismos, não equivalência de regimes.
+A coluna Xi resume o repertório já registrado na [pesquisa do repositório](19-xi-repertoire.md); é comparação de mecanismos, não equivalência de regimes.
 
 | Alavanca          | Tentativa inspirada em Lee                                                                                                                                                                                                                                                         | Diferença para a partida Xi                                                                                                                                                                                      |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

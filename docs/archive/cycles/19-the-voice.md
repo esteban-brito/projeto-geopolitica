@@ -8,7 +8,7 @@
 > personalidades para as pessoas, mídia, e tudo mais, assim as coisas vão acontecendo
 > naturalmente."_
 >
-> ⭐ **E a [pesquisa 07](../../research/07-the-law-the-player-writes.md) §4 achou a resposta: a IA
+> ⭐ **E a [pesquisa 07](../../research/07-law-the-player-writes.md) §4 achou a resposta: a IA
 > que faz um mundo parecer vivo é o AVALIADOR, e não o gerador.** Este ciclo constrói o
 > avaliador. Ele é o alicerce do [ciclo 22](22-the-law-you-write.md) — **sem ele, uma lei que
 > o jogador inventa não tem preço**, porque `threat` é escrito à mão, texto por texto.
