@@ -1,9 +1,9 @@
-/* GUARDA · ORFAS — nenhuma regra de estilo sem HTML para pintar.
-   ⚠ ELA E O ACHADO 5 DA RETOMADA, e ele ficou aberto por seis sessoes.
-   O custo dele esta medido, em duas varreduras feitas A MAO: nona sessao  299 linhas —
-   `70-screen-approval.css` inteiro, a familia `.strip`/`.chip`, e duas regras de `.strip--
+/* GUARDA · ÓRFÃS — nenhuma regra de estilo sem HTML para pintar.
+   ⚠ ELA E O ACHADO 5 DA RETOMADA, e ele ficou aberto por seis sessões.
+   O custo dele esta medido, em duas varreduras feitas A MÃO: nona sessão  299 linhas —
+   `70-screen-approval.css` inteiro, a família `.strip`/`.chip`, e duas regras de `.strip--
    stacked`; decima sessao 201 linhas de CSS morto, mais uma regra `.cards` duplicada que era
-   sobrescrita inteira pela irma vinte linhas abaixo. */
+   sobrescrita inteira pela irmã vinte linhas abaixo. */
 
 import { collect, isGuardSource, stripCssComments, stripJsComments } from "../lib/project.mjs";
 
@@ -18,14 +18,14 @@ function produces(path) {
 }
 
 /**
- * O QUE O JOGO ESCREVE NA PAGINA — e so isso conta como produzir.
+ * O QUE O JOGO ESCREVE NA PÁGINA — e só isso conta como produzir.
  *
- * ⛔ ANTES ELE ERA O ARQUIVO INTEIRO, e duas coisas que nao pintam nada mantinham classe
- * morta viva: o `href` de `46-screen-cabinet-desk.css` no `<link>` casava com `.desk`, e uma variavel local
+ * ⛔ ANTES ELE ERA O ARQUIVO INTEIRO, e duas coisas que não pintam nada mantinham classe
+ * morta viva: o `href` de `46-screen-cabinet-desk.css` no `<link>` casava com `.desk`, e uma variável local
  * chamada `desk` em `cast/index.mjs` casava sozinha. Sessenta linhas de `.desk` sobreviveram
  * a uma tela inteira que foi refeita, com a guarda verde.
  *
- * ⚠ CLASSE SO NASCE DENTRO DE TEXTO: no `.mjs` conta o conteudo dos literais, e no HTML o
+ * ⚠ CLASSE SÓ NASCE DENTRO DE TEXTO: no `.mjs` conta o conteúdo dos literais, e no HTML o
  * corpo sem os caminhos de `href` e `src`.
  *
  * @param {string} path
@@ -67,11 +67,11 @@ function declared(css, pick = /\.([a-zA-Z][\w-]*)/g) {
   return found;
 }
 
-/* O ESTADO PINTADO — `[data-x="y"]`, e ele e a segunda especie de regra orfa.
-   ⛔ ELA JA CUSTOU DUAS NA MESMA MESA: o seletor era `data-assinado` e o HTML escrevia
+/* O ESTADO PINTADO — `[data-x="y"]`, e ele e a segunda espécie de regra órfã.
+   ⛔ ELA JÁ CUSTOU DUAS NA MESMA MESA: o seletor era `data-assinado` e o HTML escrevia
    `data-signed`; o seletor era `data-vence` e o HTML escrevia `data-urgent`. A rubrica nunca
-   corria e a carta que vence nunca ficava vermelha — e seletor que nao casa nao e erro para
-   ninguem: tipo, guarda e 323 provas ficaram verdes as duas vezes. */
+   corria e a carta que vence nunca ficava vermelha — e seletor que não casa não e erro para
+   ninguém: tipo, guarda e 323 provas ficaram verdes as duas vezes. */
 const STATE = /\[data-([a-z][\w-]*)/g;
 
 /**
@@ -92,7 +92,7 @@ function written(attribute) {
 export function audit(files) {
   const { list, add } = collect(name);
 
-  /* O QUE O JOGO PRODUZ, num texto so. ⚠ O ESTADO SE PROCURA NO CODIGO INTEIRO, e nao so nos
+  /* O QUE O JOGO PRODUZ, num texto só. ⚠ O ESTADO SE PROCURA NO CÓDIGO INTEIRO, e não só nos
      literais: quem escreve `data-x` e uma linha de HTML ou uma chamada a `dataset`. */
   let source = "";
   let code = "";
@@ -128,8 +128,8 @@ export function audit(files) {
   return list;
 }
 
-/* ── AS PROVAS SINTETICAS ──────────────────────────────────────────────────── Cada uma
-   reintroduz um defeito real que o projeto ja pagou. */
+/* ── AS PROVAS SINTÉTICAS ──────────────────────────────────────────────────── Cada uma
+   reintroduz um defeito real que o projeto já pagou. */
 export const synthetic = [
   {
     label: "uma folha inteira sem HTML para pintar",
@@ -172,8 +172,8 @@ export const synthetic = [
     ]),
   },
   {
-    /* E o irmao dele: uma variavel local com o nome da classe. Classe so nasce dentro de
-       texto, e `const desk = 3` nao e texto. */
+    /* E o irmão dele: uma variável local com o nome da classe. Classe só nasce dentro de
+       texto, e `const desk = 3` não e texto. */
     label: "um identificador de JS com o nome da classe, e ele nao pinta nada",
     files: new Map([
       ["styles/45-screen-cabinet.css", "@layer screens { .desk { gap: 8px; } }"],
@@ -181,7 +181,7 @@ export const synthetic = [
     ]),
   },
   {
-    /* As DUAS da mesa: o seletor em portugues e o HTML em ingles. Nenhuma falhava. */
+    /* As DUAS da mesa: o seletor em português e o HTML em inglês. Nenhuma falhava. */
     label: "o seletor de estado ficou num nome que o HTML nao escreve",
     files: new Map([
       [

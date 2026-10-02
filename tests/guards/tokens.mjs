@@ -1,11 +1,11 @@
 /* GUARDA · TOKENS — nenhum valor visual vive fora do arquivo de tokens.
 
    Cada item veio de um defeito medido no projeto anterior: literal de cor solto (225 hex e
-   178 `rgba()` crus contra ~40 tokens, e o problema nao era ruido — eram cores
-   CONCORRENTES para a mesma funcao); `color-mix()` para translucidez, igual a `rgba()` na
+   178 `rgba()` crus contra ~40 tokens, e o problema não era ruído — eram cores
+   CONCORRENTES para a mesma função); `color-mix()` para translucidez, igual a `rgba()` na
    algebra e diferente na tela, com 21 de 21 capturas deslocadas em 1/255; par hex/rgb
-   divergente; `var(--x)` para token inexistente, que invalida a declaracao inteira em
-   silencio; e token orfao, que atravessa meses sem ninguem notar. */
+   divergente; `var(--x)` para token inexistente, que inválida a declaração inteira em
+   silêncio; e token órfão, que atravessa meses sem ninguém notar. */
 
 import { collect, isGuardSource, stripCssComments, stripJsComments } from "../lib/project.mjs";
 
@@ -13,21 +13,21 @@ export const name = "tokens";
 
 const TOKENS_FILE = "styles/00-tokens.css";
 
-/* Um token daqui deixa de ser conferido: se ninguem o injetar, a declaracao que o consome
-   fica invalida em silencio — exatamente o defeito que o item 4 desta guarda existe para
+/* Um token daqui deixa de ser conferido: se ninguém o injetar, a declaração que o consome
+   fica inválida em silêncio — exatamente o defeito que o item 4 desta guarda existe para
    pegar.
-   Entra aqui so o que e DADO, e nao valor visual: --part-color a cor de um segmento do
-   medidor, declarada na regra do proprio segmento em `30-components.css`; --neutral   o ponto
-   neutro do indice de area, que vem do CATALOGO e nao da paleta — 50 e regra de jogo, e
+   Entra aqui só o que e DADO, e não valor visual: --part-color a cor de um segmento do
+   medidor, declarada na regra do próprio segmento em `30-components.css`; --neutral   o ponto
+   neutro do índice de área, que vem do CATÁLOGO e não da paleta — 50 e regra de jogo, e
    duplica-lo no arquivo de tokens criaria um segundo lugar para ele divergir; --index    o
-   indice corrente de uma area, escrito em estilo inline pela propria faixa de medidores: e um
-   numero por elemento, e nao um valor do sistema; --floor    onde a lei daquela alavanca
-   comeca, e --ceiling   onde ela acaba; --fall     o SEGUNDO limiar de uma regua, e so um
+   índice corrente de uma área, escrito em estilo inline pela própria faixa de medidores: e um
+   número por elemento, e não um valor do sistema; --floor    onde a lei daquela alavanca
+   começa, e --ceiling   onde ela acaba; --fall     o SEGUNDO limiar de uma régua, e só um
    grupo da caldeira tem um: em --mark ele abandona o governo, e em --fall a ruptura politica
    abre; --rail-floor a tinta da zona abaixo do piso, trocada pela guarda daquela alavanca
-   na regra do proprio controle — e a mesma forma de --part-color; --split    onde o
-   preenchimento de uma regua troca de tinta, e so a Camara tem: a base parte em quem se
-   convence e quem se compra, e a divisao e por elemento e nao do sistema. */
+   na regra do próprio controle — e a mesma forma de --part-color; --split    onde o
+   preenchimento de uma régua troca de tinta, e só a Camara tem: a base parte em quem se
+   convence e quem se compra, e a divisão e por elemento e não do sistema. */
 const RUNTIME = new Set([
   "--part-color",
   "--neutral",
@@ -38,71 +38,71 @@ const RUNTIME = new Set([
   "--fall",
   "--split",
   "--rail-floor",
-  /* ── A MESA, e as sete sao a MESMA especie: valor de uma peca, e nao do sistema ──
+  /* ── A MESA, e as sete são a MESMA espécie: valor de uma peça, e não do sistema ──
      --stitch e --stitch-v  o gradiente do ponto de seleiro, montado UMA vez e pousado nas
      quatro bordas da pasta. Inline nas quatro, o mesmo desenho seria teclado quatro vezes, e
-     e assim que um padrao comeca a divergir; --furrow e --furrow-v  o sulco que a agulha
-     deixa, pela mesma razao; --envelope-size e --envelope-apex  o tamanho da carta e a altura
-     do bico da aba, dos quais TODA medida do envelope deriva — eles sao a escala da peca, e
-     nao uma cor; --stroke-len  o comprimento do traco da rubrica, e ele so existe depois de o
-     `<path>` estar na pagina: quem o escreve e `getTotalLength`, no DOM. */
+     e assim que um padrão começa a divergir; --furrow e --furrow-v  o sulco que a agulha
+     deixa, pela mesma razão; --envelope-size e --envelope-apex  o tamanho da carta e a altura
+     do bico da aba, dos quais TODA medida do envelope deriva — eles são a escala da peça, e
+     não uma cor; --stroke-len  o comprimento do traço da rubrica, e ele só existe depois de o
+     `<path>` estar na página: quem o escreve e `getTotalLength`, no DOM. */
   "--stitch",
   "--stitch-v",
   "--furrow",
   "--furrow-v",
   "--envelope-size",
   "--envelope-apex",
-  /* --sheet-gap-s, -m e -l  os tres vaos verticais da folha, fracoes de `--paper` como as
-     medidas do envelope sao de `--envelope-size`. */
+  /* --sheet-gap-s, -m e -l  os três vãos verticais da folha, frações de `--paper` como as
+     medidas do envelope são de `--envelope-size`. */
   "--sheet-gap-s",
   "--sheet-gap-m",
   "--sheet-gap-l",
   "--stroke-len",
-  /* ── E a que a bancada da mesa girava: --rest, que o JS le no voo da pasta. */
+  /* ── E a que a bancada da mesa girava: --rest, que o JS lê no voo da pasta. */
   "--rest",
-  /* ── O TAMANHO DA PILULA: `movePill()` mede o item corrente e escreve os dois na peca. Eles
-     nao TEM valor no arquivo de tokens porque sao a caixa de um elemento, medida na tela. */
+  /* ── O TAMANHO DA PÍLULA: `movePill()` mede o item corrente e escreve os dois na peça. Eles
+     não TEM valor no arquivo de tokens porque são a caixa de um elemento, medida na tela. */
   "--pill-w",
   "--pill-h",
-  /* ── A RECEITA DA PECA VESTIDA: `glaze()` mede a caixa, instala a lente e escreve --glaze na
-     propria peca. Ela nao TEM valor no arquivo de tokens porque o id da lente nasce na tela;
-     quem nao foi vestida cai no `var(--glass-blur)` do fallback. */
+  /* ── A RECEITA DA PEÇA VESTIDA: `glaze()` mede a caixa, instala a lente e escreve --glaze na
+     própria peça. Ela não TEM valor no arquivo de tokens porque o id da lente nasce na tela;
+     quem não foi vestida cai no `var(--glass-blur)` do fallback. */
   "--glaze",
-  /* ── AS MATERIAS, e quem as escreve e o JS: as tres texturas nascem de `feTurbulence` e
-     chegam como data URI, entao elas nao TEM valor ate a tela rodar. --timber o jacaranda do
-     tampo; --fibre e --felt o grao do papel e o do envelope. */
+  /* ── AS MATERIAS, e quem as escreve e o JS: as três texturas nascem de `feTurbulence` e
+     chegam como data URI, então elas não TEM valor até a tela rodar. --timber o jacarandá do
+     tampo; --fibre e --felt o grão do papel e o do envelope. */
   /* ── E O FATOR DE ESCALA DA MESA, que sai de `fitDesk`: a cena tem o tamanho da foto e o JS
      mede quanto dela cabe na janela. `--lift-rise` sai da mesma conta — o tamanho da
      pasta erguida depende da altura que sobrou depois do corte. */
   "--fit",
   "--lift-rise",
-  /* --room-dy  o deslocamento que centra a faixa das pecas, e nao a foto; sai da mesma conta. */
+  /* --room-dy  o deslocamento que centra a faixa das peças, e não a foto; sai da mesma conta. */
   "--room-dy",
-  /* ── E A MEDIDA DA CENA, que sai de `DESIGN` no `cabinet.mjs` e e a UNICA fonte dela: o
-     `.room` e o `.backdrop` a liam teclada, com um aviso de que as tres copias mudavam
-     juntas — e o aviso falhou em quatro comentarios. */
+  /* ── E A MEDIDA DA CENA, que sai de `DESIGN` no `cabinet.mjs` e e a ÚNICA fonte dela: o
+     `.room` e o `.backdrop` a liam teclada, com um aviso de que as três cópias mudavam
+     juntas — e o aviso falhou em quatro comentários. */
   "--room-w",
   "--room-h",
-  /* ── E ONDE O TELEFONE FICA: no meio do vao entre a pasta e a beira visivel da janela, que
+  /* ── E ONDE O TELEFONE FICA: no meio do vão entre a pasta e a beira visível da janela, que
      `fitDesk` mede a cada redimensionamento. */
   "--phone-x",
   "--timber",
   "--fibre",
   "--felt",
   "--leather",
-  /* ── O VOO DA PASTA: o giro de repouso, que o JS le antes de erguer. As oito medidas das duas
-     sombras sairam — elas viraram as classes `--cast-*` da sala, declaradas no arquivo de
+  /* ── O VOO DA PASTA: o giro de repouso, que o JS lê antes de erguer. As oito medidas das duas
+     sombras saíram — elas viraram as classes `--cast-*` da sala, declaradas no arquivo de
      tokens como qualquer outra. */
   "--folder-tilt",
-  /* ── ONDE CADA CARTA CAIU, em estilo inline: --ex e --ey o lugar, --er o giro, --i o indice
-     na pilha. Sao um valor POR ELEMENTO, e nao do sistema. */
+  /* ── ONDE CADA CARTA CAIU, em estilo inline: --ex e --ey o lugar, --er o giro, --i o índice
+     na pilha. São um valor POR ELEMENTO, e não do sistema. */
   "--i",
   "--ex",
   "--ey",
   "--er",
   /* ── E O QUE MUDA POR ESTADO, declarado na regra `.envelope[data-urgent="true"]`: a carta que
      vence e vermelha inteira, e a cor e a tinta dela mudam com o papel. E a mesma forma de
-     --part-color, que e trocada na regra do proprio segmento. */
+     --part-color, que e trocada na regra do próprio segmento. */
   "--envelope-tone",
   "--envelope-lip",
   "--envelope-sheen",
@@ -129,7 +129,7 @@ export function audit(files) {
     if (!declared.has(token)) declared.set(token, "");
   }
 
-  /* 6 — o arquivo de tokens nao estiliza nada. */
+  /* 6 — o arquivo de tokens não estiliza nada. */
   for (const selector of tokensCss.matchAll(/(^|\})\s*([^@{}]+)\{/g)) {
     const selectorText = (selector[2] ?? "").trim();
     if (selectorText && selectorText !== ":root") {
@@ -202,7 +202,7 @@ export function audit(files) {
   }
   for (const token of declared.keys()) {
     if (used.has(token)) continue;
-    /* A METADE HEX DE UM PAR CONSUMIDO NAO E ORFA. */
+    /* A METADE HEX DE UM PAR CONSUMIDO NÃO E ÓRFÃ. */
     if (used.has(`${token}-rgb`)) continue;
     add(`${token} e declarado e nunca consumido — token orfao atravessa meses sem ninguem ver`);
   }

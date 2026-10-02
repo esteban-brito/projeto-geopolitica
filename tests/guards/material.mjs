@@ -1,7 +1,7 @@
 /* GUARDA · MATERIAL — um material de vidro na tela inteira.
    O QUE ELA IMPEDE: 1.
    um SEGUNDO material.
-   Tres desfoques sao tres materiais, e "cada bloco parece um liquid glass diferente" e a
+   Três desfoques são três materiais, e "cada bloco parece um liquid glass diferente" e a
    critica que criou este sistema. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
@@ -58,7 +58,7 @@ export function audit(files) {
   }
 
   const tokens = files.get("styles/00-tokens.css") ?? "";
-  if (!/MECA O FPS/i.test(tokens)) {
+  if (!/ME[CÇ]A O FPS/i.test(tokens)) {
     add(
       "o aviso de medir fps sumiu do bloco de tokens — ele e a unica memoria de que " +
         "backdrop-filter ja derrubou uma tela para 31 fps",
@@ -68,7 +68,7 @@ export function audit(files) {
   return list;
 }
 
-/* PROVAS SINTETICAS — a guarda tem de conseguir FALHAR. */
+/* PROVAS SINTÉTICAS — a guarda tem de conseguir FALHAR. */
 export const synthetic = [
   {
     label: "um segundo material de vidro",

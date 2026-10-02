@@ -1,7 +1,7 @@
-/* TELA · FINANCAS — o placar, e a unica tela do jogo sem um controle.
-   ELA E A UNICA DENSA, E ISSO E DELIBERADO.
-   Em tela que decide, densidade e ruido: cada numero a mais disputa atencao com a decisao, e
-   o projeto ja gastou uma sessao tirando numero de cima da Mesa por isso. */
+/* TELA · FINANÇAS — o placar, e a única tela do jogo sem um controle.
+   ELA E A ÚNICA DENSA, E ISSO E DELIBERADO.
+   Em tela que decide, densidade e ruído: cada número a mais disputa atenção com a decisão, e
+   o projeto já gastou uma sessão tirando número de cima da Mesa por isso. */
 
 @layer screens {
   .ledger {
@@ -36,15 +36,15 @@
     white-space: nowrap;
   }
 
-  /* ── A ESCADA PRECISA DE AR ENTRE OS DEGRAUS ──────────────────────────────── Os blocos sao
-     retangulos solidos e se LADRILHAM: encostados, seis deles viram um tarjao unico, e uma
-     serie estavel passa a parecer uma barra de carregamento — foi assim que ela apareceu na
+  /* ── A ESCADA PRECISA DE AR ENTRE OS DEGRAUS ──────────────────────────────── Os blocos são
+     retângulos solidos e se LADRILHAM: encostados, seis deles viram um tarjao único, e uma
+     série estável passa a parecer uma barra de carregamento — foi assim que ela apareceu na
      primeira captura desta tela. */
   /* ⚠ O ÚNICO TAMANHO FORA DA ESCALA EM TODO O PROJETO, e a exceção é declarada: a escada não
      é TEXTO, é um desenho feito de caracteres. */
-  /* A LARGURA VEM DA COLUNA: a trilha da faisca mede 4rem na grade da linha, e e o mesmo
-     valor que `.spark` traz por padrao — declarar `width: 100%` aqui seria um segundo dono
-     para uma medida so. */
+  /* A LARGURA VEM DA COLUNA: a trilha da faísca mede 4rem na grade da linha, e e o mesmo
+     valor que `.spark` traz por padrão — declarar `width: 100%` aqui seria um segundo dono
+     para uma medida só. */
   .ledger__spark {
     color: var(--ink-dim);
   }

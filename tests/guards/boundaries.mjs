@@ -1,4 +1,4 @@
-/* GUARDA · FRONTEIRAS — cada camada so alcanca o que lhe cabe. */
+/* GUARDA · FRONTEIRAS — cada camada só alcanca o que lhe cabe. */
 
 import { posix } from "node:path";
 import { collect } from "../lib/project.mjs";
@@ -12,7 +12,7 @@ const ALLOWED_FOR_ENTRYPOINT = [
   /^\.\/src\/app\//,
 ];
 
-/* `src/app/` e o entrypoint dividido em modulos: alcanca o mesmo que ele, e os irmaos. */
+/* `src/app/` e o entrypoint dividido em módulos: alcanca o mesmo que ele, e os irmãos. */
 const ALLOWED_FOR_APP = [/^\.\.\/state\//, /^\.\.\/public\//, /^\.\.\/ui\//, /^\.\/[\w-]+\.mjs$/];
 
 /**
@@ -26,7 +26,7 @@ export function audit(files) {
     if (!path.endsWith(".mjs")) continue;
     const imports = [...source.matchAll(/from\s+["']([^"']+)["']/g)].map(m => m[1] ?? "");
 
-    /* 1 — O ENTRYPOINT SO COMPOE. */
+    /* 1 — O ENTRYPOINT SÓ COMPÕE. */
     if (path === "app.mjs") {
       for (const specifier of imports) {
         if (!ALLOWED_FOR_ENTRYPOINT.some(allowed => allowed.test(specifier))) {
@@ -38,7 +38,7 @@ export function audit(files) {
       }
     }
 
-    /* 1b — A COMPOSICAO DO NAVEGADOR TAMBEM SO COMPOE. */
+    /* 1b — A COMPOSICAO DO NAVEGADOR TAMBÉM SÓ COMPÕE. */
     if (path.startsWith("src/app/")) {
       for (const specifier of imports) {
         if (!ALLOWED_FOR_APP.some(allowed => allowed.test(specifier))) {
@@ -74,7 +74,7 @@ export function audit(files) {
       }
     }
 
-    /* 3 — DEPENDENCIA DE DESENVOLVIMENTO NAO VAZA. */
+    /* 3 — DEPENDÊNCIA DE DESENVOLVIMENTO NÃO VAZA. */
     if (!path.startsWith("tests/")) {
       for (const specifier of imports) {
         if (specifier === "fast-check" || specifier.startsWith("playwright")) {

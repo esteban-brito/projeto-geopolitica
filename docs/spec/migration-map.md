@@ -171,19 +171,19 @@ sabe esses traços, não porque um dado rolou no dia (§20.3 da especificação)
    comportamentos válidos abaixo. No jogo, `whipCount` sobrevive como leitura provisória até a
    estimativa do governo sobre as crenças dele existir (D2).
 8. As provas do sorteio: "o DIA muda com a semente", "a votação consome um saque POR BANCADA",
-   "A BANDA MEDE O SORTEIO", "A BANDA NAO E O PIOR CASO", "base insatisfeita e base
+   "A BANDA MEDE O SORTEIO", "A BANDA NÃO E O PIOR CASO", "base insatisfeita e base
    IMPREVISIVEL". A série muda em D1, por projeto.
 9. **Os comportamentos a preservar, cada um já provado hoje:**
 
    | comportamento                         | prova de hoje                                                  |
    | ------------------------------------- | -------------------------------------------------------------- |
-   | orientação partidária importa         | "O SEU PARTIDO NAO SE COMPRA", "E ELA SO VALE PARA A SUA"      |
+   | orientação partidária importa         | "O SEU PARTIDO NÃO SE COMPRA", "E ELA SÓ VALE PARA A SUA"      |
    | compromisso importa; romper custa     | "PROMESSA QUEBRADA CUSTA BASE", "O CONGRESSO RESPONDE AO PAGO" |
-   | base eleitoral importa                | "A RUA PESA NA VOTACAO"                                        |
-   | pauta importa                         | "O PRECO DEPENDE DO ASSUNTO", "O PACOTE PAGA PELO TAMANHO"     |
-   | ameaça e interesse importam           | "A MAQUINA SE DEFENDE"                                         |
+   | base eleitoral importa                | "A RUA PESA NA VOTAÇÃO"                                        |
+   | pauta importa                         | "O PREÇO DEPENDE DO ASSUNTO", "O PACOTE PAGA PELO TAMANHO"     |
+   | ameaça e interesse importam           | "A MÁQUINA SE DEFENDE"                                         |
    | presença importa                      | "lealdade no chao derruba a entrega", "A RUPTURA E UM DEGRAU"  |
-   | nada passa de graça, nada é invotável | "o caminho facil NAO existe", "NENHUMA PAUTA E INVOTAVEL"      |
+   | nada passa de graça, nada é invotável | "o caminho facil NÃO existe", "NENHUMA PAUTA E INVOTAVEL"      |
    | pagar nunca afasta                    | "verba NUNCA reduz a adesao"                                   |
 
    Viram provas de comportamento sobre deputados individuais; o texto de cada uma troca
@@ -306,11 +306,11 @@ data, e com ela um Momento Presidencial (candidato de corte, §6.3).
    - a carta de exigência → **ADAPTAR** em `REQUEST` com prazo. Silêncio não é resposta: o prazo
      expira, e o grupo interpreta a falta de resposta pelo contexto dele (especificação §10.2).
 7. O automatismo mora em duas linhas (`:1517`, `:1523`). Tirá-las preserva o resto.
-8. "O PROCESSO SO ABRE COM AS TRES RUPTURAS JUNTAS", "O PROCESSO DA UM TURNO DE LEILAO",
+8. "O PROCESSO SÓ ABRE COM AS TRÊS RUPTURAS JUNTAS", "O PROCESSO DA UM TURNO DE LEILAO",
    "SOBREVIVER AO PLENARIO ARQUIVA", "O PLENARIO DO AFASTAMENTO GASTA FLUXO".
-9. "A INACAO ESQUENTA", "ELA SOBE MAIS RAPIDO DO QUE DESCE", "A PRESSAO FICA ENTRE 0 E 100",
-   "QUEM NAO PESA NAO ABANDONA O CAPITAL", "O MERCADO PEDE CORTE", e a principal, com outra
-   forma: "A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega".
+9. "A INACAO ESQUENTA", "ELA SOBE MAIS RAPIDO DO QUE DESCE", "A PRESSÃO FICA ENTRE 0 E 100",
+   "QUEM NÃO PESA NÃO ABANDONA O CAPITAL", "O MERCADO PEDE CORTE", e a principal, com outra
+   forma: "A QUEDA ACONTECE, e ela NÃO acontece com um governo que entrega".
 10. A mesma condição com dois presidentes da Câmara diferentes dá dois resultados, e o trace diz
     por quê.
 

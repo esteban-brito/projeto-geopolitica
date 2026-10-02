@@ -38,7 +38,7 @@ function rowHtml({ label, note, from, to, delta, rising = true }) {
  * O QUE FOI PROMETIDO, E O QUE FOI ENTREGUE.
  *
  * ⚠ O VEREDITO VEM PRONTO DE `termOf`: quem decide que uma promessa em aberto virou quebrada
- * quando o mandato acabou e a camada de aplicacao. Uma tela que resolvesse `null` sozinha
+ * quando o mandato acabou e a camada de aplicação. Uma tela que resolvesse `null` sozinha
  * estaria julgando.
  *
  * @param {Term} term
@@ -56,10 +56,10 @@ function pledgesHtml(term, treatment) {
 
   const rows = term.pledges
     .map(pledge => {
-      /* O NUMERO SO APARECE ONDE ELE EXISTE: a promessa de reforma e um fato, e nao uma
-         medicao — "aprovar uma lei" nao tem de-onde-para-onde.
-         ⚠ E A GRANDEZA VEM COM ELE: a captura pegou `1 → 1` numa divida que foi de 78% a 90%,
-         porque a fracao estava sendo impressa como ponto de indice. */
+      /* O NÚMERO SÓ APARECE ONDE ELE EXISTE: a promessa de reforma e um fato, e não uma
+         medição — "aprovar uma lei" não tem de-onde-para-onde.
+         ⚠ E A GRANDEZA VEM COM ELE: a captura pegou `1 → 1` numa dívida que foi de 78% a 90%,
+         porque a fração estava sendo impressa como ponto de índice. */
       const write = (/** @type {number} */ value) =>
         pledge.unit === "ratio"
           ? percent(value)
@@ -172,7 +172,7 @@ export function closingHtml(
     debt +
     areas +
     `</div>` +
-    /* ⚠ A LEGENDA E A MESMA DE TODA TELA, e o fecho tinha a propria ate ela ser a DECIMA
+    /* ⚠ A LEGENDA E A MESMA DE TODA TELA, e o fecho tinha a própria até ela ser a DÉCIMA
        forma de legenda do jogo. */
     /* ⚠ A PROMESSA VEM ANTES DO QUE FICOU ESCRITO, e a ordem e a do julgamento: primeiro o
        que ele disse que ia fazer, depois o que ele fez. */

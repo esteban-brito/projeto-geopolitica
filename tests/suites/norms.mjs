@@ -12,7 +12,7 @@ import { createState } from "../../src/state/state.mjs";
 
 /** As alavancas como o motor as vê: id e grupo, e nada mais. */
 const LEVERS = [
-  /* ⚠ O CUSTO ENTRA AQUI porque a VINCULACAO precisa dele: e o divisor que converte fracao da
+  /* ⚠ O CUSTO ENTRA AQUI porque a VINCULAÇÃO precisa dele: e o divisor que converte fração da
      receita em pontos da alavanca. */
   ...PROGRAMS.map(program => ({ id: program.id, group: program.area, cost: program.cost })),
   ...RULES.map(rule => ({ id: rule.id, group: rule.family })),
@@ -21,7 +21,7 @@ const LEVERS = [
 /* A RECEITA DE ABERTURA, e ela e a mesma conta do LASTRO: PIB x carga. */
 const OPENING_REVENUE = FISCAL.initialGdp * FISCAL.taxLoad;
 
-/** A pilha herdada — o pais no dia da posse. */
+/** A pilha herdada — o país no dia da posse. */
 const OPENING = [...PROGRAMS, ...RULES].map(inherited);
 
 /**
@@ -32,12 +32,12 @@ const OPENING = [...PROGRAMS, ...RULES].map(inherited);
 const read = (norms, month = 6, indicators = {}) =>
   resolve({ norms, levers: LEVERS, month, indicators, revenue: OPENING_REVENUE });
 
-/** Um programa de piso constitucional — a lei mais cara do catalogo. */
+/** Um programa de piso constitucional — a lei mais cara do catálogo. */
 const GUARDED = PROGRAMS.find(program => program.guard === "constitution" && program.floor > 20);
 
-/* ═══ A MIGRACAO NAO PERDEU NADA ═════════════════════════════════════════════ */
+/* ═══ A MIGRAÇÃO NÃO PERDEU NADA ═════════════════════════════════════════════ */
 
-test("A ABERTURA REPRODUZ O CATALOGO, alavanca por alavanca", () => {
+test("A ABERTURA REPRODUZ O CATÁLOGO, alavanca por alavanca", () => {
   const { bands } = read(OPENING);
 
   for (const lever of [...PROGRAMS, ...RULES]) {
@@ -45,9 +45,9 @@ test("A ABERTURA REPRODUZ O CATALOGO, alavanca por alavanca", () => {
     assert.ok(band, `${lever.id} nao tem faixa nenhuma na abertura`);
     assert.equal(band.ceiling, lever.ceiling, `o teto de abertura de ${lever.id} mudou`);
 
-    /* Tres programas deixaram de obrigar por PONTOS e passaram a obrigar por FRACAO DA
-       RECEITA, e uma fracao nunca converte em pontos redondos: 5,2224% da receita de abertura
-       da 63,0004 pontos de media e alta complexidade, e nao 63. */
+    /* Três programas deixaram de obrigar por PONTOS e passaram a obrigar por FRAÇÃO DA
+       RECEITA, e uma fração nunca converte em pontos redondos: 5,2224% da receita de abertura
+       da 63,0004 pontos de media e alta complexidade, e não 63. */
     assert.ok(
       Math.abs(band.floor - lever.floor) < 0.01,
       `a faixa de abertura de ${lever.id} nao bate com o catalogo: ${band.floor} contra ${lever.floor}`,
@@ -56,10 +56,10 @@ test("A ABERTURA REPRODUZ O CATALOGO, alavanca por alavanca", () => {
 });
 
 test("O ESTADO DE ABERTURA CONCORDA COM O MOTOR", () => {
-  /* Elas sao duas porque o defeito e diferente: acima seria o motor lendo errado; aqui seria
+  /* Elas são duas porque o defeito e diferente: acima seria o motor lendo errado; aqui seria
      `createState` escrevendo a pilha errada, ou `bandsOf` montando as alavancas errado — e o
-     sintoma disso e um pais que abre sem lei nenhuma, que e um pais valido e portanto
-     indistinguivel de um defeito. */
+     sintoma disso e um país que abre sem lei nenhuma, que e um país valido e portanto
+     indistinguível de um defeito. */
   const state = createState();
   const bands = bandsOf(state);
 
@@ -67,7 +67,7 @@ test("O ESTADO DE ABERTURA CONCORDA COM O MOTOR", () => {
     const band = bands[program.id];
     assert.ok(band, `${program.id} abriu sem faixa nenhuma`);
     assert.equal(band.ceiling, program.ceiling, `o teto de abertura de ${program.id} mudou`);
-    /* Mesma tolerancia da prova acima, e pela mesma razao: fracao da receita nao converte em
+    /* Mesma tolerância da prova acima, e pela mesma razão: fração da receita não converte em
        pontos redondos. */
     assert.ok(
       Math.abs(band.floor - program.floor) < 0.01,
@@ -76,10 +76,10 @@ test("O ESTADO DE ABERTURA CONCORDA COM O MOTOR", () => {
   }
 });
 
-/* ═══ A VINCULACAO ═══════════════════════════════════════════════════════════ */
+/* ═══ A VINCULAÇÃO ═══════════════════════════════════════════════════════════ */
 
-test("O PISO VINCULADO ANDA COM A RECEITA — e o piso em pontos NAO", () => {
-  /* ⚠ ESTA E A PROVA QUE DEFINE A VINCULACAO. */
+test("O PISO VINCULADO ANDA COM A RECEITA — e o piso em pontos NÃO", () => {
+  /* ⚠ ESTA E A PROVA QUE DEFINE A VINCULAÇÃO. */
   const bound = PROGRAMS.filter(program => program.bound !== undefined);
   assert.ok(bound.length > 0, "o catalogo perdeu as vinculacoes");
 
@@ -105,7 +105,7 @@ test("O PISO VINCULADO ANDA COM A RECEITA — e o piso em pontos NAO", () => {
     );
   }
 
-  /* E O CONTRARIO PARA QUEM NAO E VINCULADO: o piso em pontos e surdo a receita, e tem de
+  /* E O CONTRÁRIO PARA QUEM NÃO E VINCULADO: o piso em pontos e surdo a receita, e tem de
      continuar sendo. */
   for (const program of PROGRAMS) {
     if (program.bound !== undefined) continue;
@@ -117,8 +117,8 @@ test("O PISO VINCULADO ANDA COM A RECEITA — e o piso em pontos NAO", () => {
   }
 });
 
-test("VINCULACAO SEM RECEITA FICA DORMENTE, e NAO vira piso zero", () => {
-  /* ⚠ A DISTINCAO FOI PAGA POR UM DEFEITO. */
+test("VINCULAÇÃO SEM RECEITA FICA DORMENTE, e NÃO vira piso zero", () => {
+  /* ⚠ A DISTINÇÃO FOI PAGA POR UM DEFEITO. */
   const bound = PROGRAMS.find(program => program.bound !== undefined);
   assert.ok(bound, "o catalogo perdeu as vinculacoes");
 
@@ -131,9 +131,9 @@ test("VINCULACAO SEM RECEITA FICA DORMENTE, e NAO vira piso zero", () => {
   );
 });
 
-/* ═══ A PRECEDENCIA ══════════════════════════════════════════════════════════ */
+/* ═══ A PRECEDÊNCIA ══════════════════════════════════════════════════════════ */
 
-test("EMENDA SO SE DERRUBA COM EMENDA: hierarquia vence recencia", () => {
+test("EMENDA SÓ SE DERRUBA COM EMENDA: hierarquia vence recência", () => {
   /* A prova mais importante da suite. */
   assert.ok(GUARDED, "o catalogo perdeu o programa de piso constitucional");
 
@@ -157,7 +157,7 @@ test("A MAIS NOVA VENCE dentro da mesma hierarquia", () => {
   assert.equal(bands[GUARDED.id]?.floor, 12);
 });
 
-/** Uma norma de area, do tamanho que a prova pedir. */
+/** Uma norma de área, do tamanho que a prova pedir. */
 const areaNorm = (
   /** @type {string} */ area,
   /** @type {string} */ guard,
@@ -173,7 +173,7 @@ const areaNorm = (
     ...(repeals.length > 0 ? { repeals } : {}),
   });
 
-test("LEI GERAL POSTERIOR NAO REVOGA LEI ESPECIAL ANTERIOR", () => {
+test("LEI GERAL POSTERIOR NÃO REVOGA LEI ESPECIAL ANTERIOR", () => {
   /* ⚠ ESTA PROVA NASCEU DE UMA EXPECTATIVA ERRADA, e o motor estava certo. */
   assert.ok(GUARDED);
 
@@ -185,8 +185,8 @@ test("LEI GERAL POSTERIOR NAO REVOGA LEI ESPECIAL ANTERIOR", () => {
   );
 });
 
-test("A NORMA DE AREA ALCANCA QUEM ELA PODE VENCER", () => {
-  /* O outro lado: alcance de area nao e decorativo. */
+test("A NORMA DE ÁREA ALCANCA QUEM ELA PODE VENCER", () => {
+  /* O outro lado: alcance de área não e decorativo. */
   const area = PROGRAMS.find(program => program.guard !== "constitution")?.area;
   assert.ok(area, "o catalogo precisa de uma area com programa de guarda fraca");
 
@@ -203,7 +203,7 @@ test("A NORMA DE AREA ALCANCA QUEM ELA PODE VENCER", () => {
 });
 
 test("PARA VALER SOBRE A ESPECIAL, A GERAL PRECISA REVOGAR", () => {
-  /* E a consequencia util da prova acima: o caminho para uma regra geral alcancar o que a
+  /* E a consequência útil da prova acima: o caminho para uma regra geral alcançar o que a
      especial protege existe, e ele e o que uma PEC faz de verdade — nomear o que cai. */
   assert.ok(GUARDED);
 
@@ -214,7 +214,7 @@ test("PARA VALER SOBRE A ESPECIAL, A GERAL PRECISA REVOGAR", () => {
   assert.equal(bands[GUARDED.id]?.floor, 5, "a geral nomeou a especial e mesmo assim perdeu");
 });
 
-test("O SALVO SALVA — e e o jabuti existindo como mecanica", () => {
+test("O SALVO SALVA — e e o jabuti existindo como mecânica", () => {
   assert.ok(GUARDED);
   const sibling = PROGRAMS.find(
     program => program.area === GUARDED.area && program.id !== GUARDED.id,
@@ -236,7 +236,7 @@ test("O SALVO SALVA — e e o jabuti existindo como mecanica", () => {
 });
 
 test("A ORDEM E TOTAL: normas empatadas em tudo desempatam pela escrita", () => {
-  /* Duas normas identicas em hierarquia, alcance e mes. */
+  /* Duas normas idênticas em hierarquia, alcance e mês. */
   assert.ok(GUARDED);
   const first = { ...enact({ lever: GUARDED, month: 10, floor: 40 }), id: "a" };
   const second = { ...enact({ lever: GUARDED, month: 10, floor: 41 }), id: "b" };
@@ -247,8 +247,8 @@ test("A ORDEM E TOTAL: normas empatadas em tudo desempatam pela escrita", () => 
 
 /* ═══ OS MODIFICADORES ═══════════════════════════════════════════════════════ */
 
-test("O GATILHO LIGA E DESLIGA SOZINHO, sem ninguem votar de novo", () => {
-  /* A clausula de calamidade sendo jogavel em vez de decorativa. */
+test("O GATILHO LIGA E DESLIGA SOZINHO, sem ninguém votar de novo", () => {
+  /* A clausula de calamidade sendo jogável em vez de decorativa. */
   assert.ok(GUARDED);
 
   /** @type {import("../../src/domain/norms/index.mjs").Norm} */
@@ -273,9 +273,9 @@ test("O GATILHO LIGA E DESLIGA SOZINHO, sem ninguem votar de novo", () => {
   assert.equal(off?.reason, "trigger", "a norma desligada precisa dizer POR QUE esta desligada");
 });
 
-test("INDICADOR QUE NINGUEM PASSOU NAO VIRA ZERO", () => {
-  /* Lido como zero, um gatilho de "enquanto a divida passar de 80%" ficaria desligado para
-     sempre e ninguem nunca saberia — a lei existiria no arquivo e nao existiria no pais. */
+test("INDICADOR QUE NINGUÉM PASSOU NÃO VIRA ZERO", () => {
+  /* Lido como zero, um gatilho de "enquanto a dívida passar de 80%" ficaria desligado para
+     sempre e ninguém nunca saberia — a lei existiria no arquivo e não existiria no país. */
   assert.ok(GUARDED);
 
   /** @type {import("../../src/domain/norms/index.mjs").Norm} */
@@ -293,7 +293,7 @@ test("INDICADOR QUE NINGUEM PASSOU NAO VIRA ZERO", () => {
   assert.equal(dormant.find(item => item.norm.id === "gatilho-orfao")?.reason, "unknown");
 });
 
-test("A VIGENCIA EXPIRA, e a VACATIO adia", () => {
+test("A VIGÊNCIA EXPIRA, e a VACATIO adia", () => {
   /* Os dois lados do mesmo campo. */
   assert.ok(GUARDED);
 
@@ -321,10 +321,10 @@ test("A VIGENCIA EXPIRA, e a VACATIO adia", () => {
   );
 });
 
-/* ═══ A REVOGACAO — e por que ela justifica o motor ══════════════════════════ */
+/* ═══ A REVOGAÇÃO — e por que ela justifica o motor ══════════════════════════ */
 
 test("REVOGAR A NOVA FAZ A VELHA VOLTAR", () => {
-  /* A frase que resume por que a lei deixou de ser um par de numeros. */
+  /* A frase que resume por que a lei deixou de ser um par de números. */
   assert.ok(GUARDED);
 
   const reform = { ...enact({ lever: GUARDED, month: 20, floor: 8 }), id: "reforma-de-2028" };
@@ -347,8 +347,8 @@ test("REVOGAR A NOVA FAZ A VELHA VOLTAR", () => {
   );
 });
 
-test("AUSENCIA DE NORMA E AUSENCIA DE RESTRICAO", () => {
-  /* Revogar a norma herdada nao devolve a faixa do catalogo — devolve a faixa inteira. */
+test("AUSÊNCIA DE NORMA E AUSÊNCIA DE RESTRIÇÃO", () => {
+  /* Revogar a norma herdada não devolve a faixa do catálogo — devolve a faixa inteira. */
   assert.ok(GUARDED);
 
   /** @type {import("../../src/domain/norms/index.mjs").Norm} */
@@ -365,7 +365,7 @@ test("AUSENCIA DE NORMA E AUSENCIA DE RESTRICAO", () => {
   assert.deepEqual(bands[GUARDED.id], { floor: 0, ceiling: 100 });
 });
 
-test("NAO SE REVOGA O QUE AINDA NAO FOI ESCRITO", () => {
+test("NÃO SE REVOGA O QUE AINDA NÃO FOI ESCRITO", () => {
   assert.ok(GUARDED);
 
   const reform = { ...enact({ lever: GUARDED, month: 30, floor: 8 }), id: "reforma-tardia" };
@@ -384,9 +384,9 @@ test("NAO SE REVOGA O QUE AINDA NAO FOI ESCRITO", () => {
   assert.equal(bands[GUARDED.id]?.floor, 8, "uma norma de 2027 revogou uma de 2029");
 });
 
-test("QUEM NAO ALCANCA NINGUEM NAO FAZ NADA — inclusive nao revoga", () => {
-  /* Uma norma cujo alvo sumiu do catalogo — save antigo, catalogo remendado — derrubando
-     outra que ainda existe deixaria o pais sem as duas, por causa de um id que envelheceu. */
+test("QUEM NÃO ALCANCA NINGUÉM NÃO FAZ NADA — inclusive não revoga", () => {
+  /* Uma norma cujo alvo sumiu do catálogo — save antigo, catálogo remendado — derrubando
+     outra que ainda existe deixaria o país sem as duas, por causa de um id que envelheceu. */
   assert.ok(GUARDED);
   const reform = { ...enact({ lever: GUARDED, month: 10, floor: 8 }), id: "reforma-viva" };
 
@@ -408,8 +408,8 @@ test("QUEM NAO ALCANCA NINGUEM NAO FAZ NADA — inclusive nao revoga", () => {
 
 /* ═══ AS PROPRIEDADES ════════════════════════════════════════════════════════ */
 
-/* UMA PILHA ADVERSARIAL: normas em qualquer hierarquia, alcance, mes, gatilho, prazo e
-   revogacao — inclusive revogando umas as outras em cadeia. */
+/* UMA PILHA ADVERSARIAL: normas em qualquer hierarquia, alcance, mês, gatilho, prazo e
+   revogação — inclusive revogando umas as outras em cadeia. */
 const anyNorm = fc.record({
   lever: fc.constantFrom(...LEVERS.map(lever => lever.id)),
   group: fc.constantFrom(...new Set(LEVERS.map(lever => lever.group))),
@@ -450,7 +450,7 @@ function pileOf(written) {
       guard: item.guard,
       enactedAt: item.enactedAt,
       /* CADA NORMA PODE REVOGAR A ANTERIOR, e a cadeia inteira e o pior caso: 60 normas em
-         fila, cada uma derrubando a de tras. */
+         fila, cada uma derrubando a de trás. */
       repeals: index > 0 ? [`sorteada-${index - 1}`] : [`heranca-${item.lever}`],
     };
     if (item.months !== undefined) norm.months = item.months;
@@ -465,7 +465,7 @@ function pileOf(written) {
 
 const anyPile = fc.array(anyNorm, { maxLength: 60 }).map(pileOf);
 
-test("A RESOLUCAO E PURA: mesma pilha, mesmo mes, mesma lei", () => {
+test("A RESOLUCAO E PURA: mesma pilha, mesmo mês, mesma lei", () => {
   fc.assert(
     fc.property(anyPile, fc.integer({ min: 0, max: 47 }), (norms, month) => {
       const first = read(norms, month, { debtRatio: 0.8 });
@@ -481,7 +481,7 @@ test("A RESOLUCAO E PURA: mesma pilha, mesmo mes, mesma lei", () => {
 });
 
 test("TODA ALAVANCA TEM FAIXA, e ela cabe na escala", () => {
-  /* Nao ha alavanca sem resposta, e nao ha resposta fora de 0 a 100. */
+  /* Não há alavanca sem resposta, e não há resposta fora de 0 a 100. */
   fc.assert(
     fc.property(anyPile, fc.integer({ min: 0, max: 47 }), (norms, month) => {
       const { bands } = read(norms, month, { debtRatio: 1.2 });
@@ -500,7 +500,7 @@ test("TODA ALAVANCA TEM FAIXA, e ela cabe na escala", () => {
   );
 });
 
-/* ═══ O RISCO 1 DO CICLO — o exploit da excecao empilhada ════════════════════ */
+/* ═══ O RISCO 1 DO CICLO — o exploit da exceção empilhada ════════════════════ */
 
 test("R1: NENHUMA PILHA DE NORMAS PRODUZ EMPENHO MAIOR QUE O CAIXA", () => {
   const opening = createState();
@@ -530,10 +530,10 @@ test("R1: NENHUMA PILHA DE NORMAS PRODUZ EMPENHO MAIOR QUE O CAIXA", () => {
   );
 });
 
-/* ═══ O ACOPLAMENTO — a norma nasce da votacao ═══════════════════════════════ */
+/* ═══ O ACOPLAMENTO — a norma nasce da votação ═══════════════════════════════ */
 
-test("APROVAR UMA FAIXA ESCREVE UMA NORMA, e so o lado que se moveu", () => {
-  /* A tela manda a faixa inteira todo mes, porque o rascunho nasce copiado do vigente. */
+test("APROVAR UMA FAIXA ESCREVE UMA NORMA, e só o lado que se moveu", () => {
+  /* A tela manda a faixa inteira todo mês, porque o rascunho nasce copiado do vigente. */
   assert.ok(GUARDED);
   const state = createState();
   const bands = bandsOf(state);
@@ -558,9 +558,9 @@ test("APROVAR UMA FAIXA ESCREVE UMA NORMA, e so o lado que se moveu", () => {
   assert.equal(written[0]?.guard, GUARDED.guard, "a norma nova mudou de hierarquia");
 });
 
-test("O MES PARADO NAO ESCREVE NADA", () => {
-  /* Um mandato de 48 meses sem reforma tem de terminar com o mesmo arquivo com que comecou —
-     senao o save engorda para sempre e a resolucao fica mais cara a cada turno, que e o risco
+test("O MÊS PARADO NÃO ESCREVE NADA", () => {
+  /* Um mandato de 48 meses sem reforma tem de terminar com o mesmo arquivo com que começou —
+     senão o save engorda para sempre e a resolucao fica mais cara a cada turno, que e o risco
      8 do ciclo. */
   let state = createState();
   const before = state.norms.length;

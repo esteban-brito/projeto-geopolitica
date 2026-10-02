@@ -1,35 +1,35 @@
-/* ESQUEMA — a fronteira de validacao do dado editavel.
+/* ESQUEMA — a fronteira de validação do dado editável.
    POR QUE UM DADO PRECISA DE FRONTEIRA.
-   O catalogo vai ser editavel pelo jogador mais adiante (a aba de edicao de nome e logo e
-   decisao fechada), e dado editavel que entra sem validacao vira defeito longe da origem: um
-   campo com texto onde deveria haver numero nao quebra na edicao, quebra tres motores depois,
-   num calculo que parece errado sem motivo. */
+   O catálogo vai ser editável pelo jogador mais adiante (a aba de edição de nome e logo e
+   decisão fechada), e dado editável que entra sem validação vira defeito longe da origem: um
+   campo com texto onde deveria haver número não quebra na edição, quebra três motores depois,
+   num cálculo que parece errado sem motivo. */
 
 /**
- * ⚠ ELE E RARO DE PROPOSITO.
+ * ⚠ ELE E RARO DE PROPÓSITO.
  *
  * @typedef {object} Field
  * @property {"id" | "text" | "number" | "flag"} kind
  * @property {boolean} [optional] - o campo pode faltar, e faltar SIGNIFICA alguma
- * coisa. Ele nasceu com a VINCULACAO: tres programas obrigam por fracao da receita
+ * coisa. Ele nasceu com a VINCULAÇÃO: três programas obrigam por fração da receita
  * e trinta e cinco obrigam por pontos, e exigir `bound: 0` nos trinta e cinco seria
- * afirmar que eles tem vinculacao de zero por cento — que e diferente de nao ter
- * vinculacao nenhuma. Ausencia declarada, e nao ausencia disfarcada, aplicada a
- * catalogo.
+ * afirmar que eles tem vinculação de zero por cento — que e diferente de não ter
+ * vinculação nenhuma. Ausência declarada, e não ausência disfarçada, aplicada a
+ * catálogo.
  * @property {ReadonlyArray<string>} [values] - o VOCABULARIO fechado de um `text`.
  * ⚠ `flag` E SEMPRE `optional`, e a assimetria e a modelagem: o que ele marca e a
- * EXCECAO — um programa entre trinta e oito e renuncia de receita —, e exigir
+ * EXCEÇÃO — um programa entre trinta e oito e renúncia de receita —, e exigir
  * `waiver: false` nos outros trinta e sete afirmaria trinta e sete vezes uma coisa
- * que o silencio ja diz. Presente, ele so pode ser `true`: um `false` escrito e a
- * mesma ausencia com mais bytes, e duas formas de dizer "nao" e como um catalogo
- * comeca a divergir de si mesmo.
+ * que o silêncio já diz. Presente, ele só pode ser `true`: um `false` escrito e a
+ * mesma ausência com mais bytes, e duas formas de dizer "não" e como um catálogo
+ * começa a divergir de si mesmo.
  * @property {number} [min] - so para `number`, e inclusivo
  * @property {number} [max] - so para `number`, e inclusivo
  * @typedef {Record<string, Field>} Schema
  */
 
-/* Nao e preciosismo: id que difere so por caixa funciona no Windows e some no CI Linux, e
-   essa classe inteira de defeito desaparece com minusculas. */
+/* Não e preciosismo: id que difere só por caixa funciona no Windows e some no CI Linux, e
+   essa classe inteira de defeito desaparece com minúsculas. */
 const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /**
@@ -89,7 +89,7 @@ export function violations(schema, record, where) {
     }
   }
 
-  /* CAMPO A MAIS TAMBEM E VIOLACAO. */
+  /* CAMPO A MAIS TAMBÉM E VIOLAÇÃO. */
   for (const field of Object.keys(record)) {
     if (!(field in schema)) found.push(`${where}: o campo "${field}" nao existe no esquema`);
   }
@@ -98,7 +98,7 @@ export function violations(schema, record, where) {
 }
 
 /**
- * Confere uma colecao inteira, incluindo a unicidade dos identificadores.
+ * Confere uma coleção inteira, incluindo a unicidade dos identificadores.
  *
  * @param {Schema} schema
  * @param {ReadonlyArray<Record<string, unknown>>} records
@@ -110,7 +110,7 @@ export function collectionViolations(schema, records, where) {
     violations(schema, record, `${where}[${index}]`),
   );
 
-  /* ID REPETIDO E O DEFEITO MAIS CARO desta lista, porque ele nao aparece como erro: o motor
+  /* ID REPETIDO E O DEFEITO MAIS CARO desta lista, porque ele não aparece como erro: o motor
      acha o primeiro, ignora o segundo, e uma bancada inteira simplesmente deixa de votar sem
      nada quebrar. */
   const seen = new Set();

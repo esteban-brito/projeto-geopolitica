@@ -1,16 +1,16 @@
 /* GUARDA · CODINOMES — um conceito, um nome.
    ══════════════════════════════════════════════════════════════════════════════
 
-   Os motores tem codinome porque e assim que o responsavel os cita. O risco de
-   um segundo nome e obvio — dois vocabularios para a mesma coisa e a definicao
-   de despadronizacao —, e esta guarda e o que transforma o risco em contrato:
+   Os motores tem codinome porque e assim que o responsável os cita. O risco de
+   um segundo nome e óbvio — dois vocabularios para a mesma coisa e a definição
+   de despadronização —, e esta guarda e o que transforma o risco em contrato:
 
-     1. correspondencia 1:1 entre codinome e diretorio de `src/domain/`. Motor
-        novo sem codinome reprova; codinome sem motor tambem;
-     2. o codinome aparece no CABECALHO do modulo que ele nomeia, para quem abre
+     1. correspondência 1:1 entre codinome e diretório de `src/domain/`. Motor
+        novo sem codinome reprova; codinome sem motor também;
+     2. o codinome aparece no CABEÇALHO do módulo que ele nomeia, para quem abre
         o arquivo saber onde esta;
-     3. o codinome NAO aparece em codigo executavel. Ele e rotulo de conversa e
-        de documentacao — no codigo existe um nome so, o funcional.
+     3. o codinome NÃO aparece em código executável. Ele e rótulo de conversa e
+        de documentação — no código existe um nome só, o funcional.
 
    A tabela vive em `docs/standards.md`, que e a fonte. Aqui nada e digitado de
    novo: a lista abaixo e lida de la. */
@@ -67,8 +67,8 @@ export function audit(files) {
     }
   }
 
-  /* O codinome nao vaza para o codigo executavel. Comentario e cabecalho podem
-     — e devem — cita-lo; identificador, nao. */
+  /* O codinome não vaza para o código executável. Comentário e cabeçalho podem
+     — e devem — cita-lo; identificador, não. */
   for (const [path, source] of files) {
     if (!path.endsWith(".mjs") || path.startsWith("tests/")) continue;
     const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");

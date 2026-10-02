@@ -1,4 +1,4 @@
-/* GABINETE — a MESA: o tampo, a pasta de despachos e a correspondencia do mes. */
+/* GABINETE — a MESA: o tampo, a pasta de despachos e a correspondência do mês. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { armSignature, decreeHtml } from "../shared/decree.mjs";
@@ -37,7 +37,7 @@ function cardHtml({ body, span }) {
  * @returns {string}
  */
 export function emailHtml(input) {
-  /* Vazio ocupa a coluna: em vao de 700px no teto pareceria travado. */
+  /* Vazio ocupa a coluna: em vão de 700px no teto pareceria travado. */
   const inbox = cardHtml({
     span: "lead",
     body:
@@ -71,7 +71,7 @@ export function emailHtml(input) {
  * @returns {string}
  */
 export function cabinetHtml(input) {
-  /* Folhas de baixo sem texto: contingenciamento e a unica caneta. */
+  /* Folhas de baixo sem texto: contingenciamento e a única caneta. */
   const under = Array.from(
     { length: input.sheets },
     (_, i) => `<div class="stack__under" style="--i:${input.sheets - i}"></div>`,
@@ -171,7 +171,7 @@ function fitDesk(root) {
   scale(area);
 }
 
-/* Altura visivel da pasta erguida: 0,90 (0,86 dava 10,5px no ato a 1440x980). */
+/* Altura visível da pasta erguida: 0,90 (0,86 dava 10,5px no ato a 1440x980). */
 const READING = 0.9;
 
 /** @type {((seen: number) => void) | null} */
@@ -181,7 +181,7 @@ let tune = null;
 function scale(area) {
   const room = area.querySelector(".room");
   if (!(room instanceof HTMLElement)) return;
-  /* Teto 1: foto nao amplia. Altura da foto encolhia 5,1% a 1920x937, corte come 21px, peca a 39px. */
+  /* Teto 1: foto não amplia. Altura da foto encolhia 5,1% a 1920x937, corte come 21px, peça a 39px. */
   const fit = Math.min(
     1,
     Math.max(area.clientWidth / DESIGN.width, area.clientHeight / (band.bottom - band.top)),
@@ -196,20 +196,20 @@ function scale(area) {
   const seenRight = (DESIGN.width + area.clientWidth / fit) / 2;
   room.style.setProperty("--phone-x", `${(seenRight - 220).toFixed(1)}px`);
 
-  /* Esquerda: leque de 217px com vao de 198,7px; beira visivel devolvia 2,9px em 6 de 24 meses. */
+  /* Esquerda: leque de 217px com vão de 198,7px; beira visível devolvia 2,9px em 6 de 24 meses. */
 
   /* Altura de leitura medida: contas teóricas pediam 86% e davam 65% ou 64%. */
   tune?.(area.clientHeight);
 }
 
-/* Mola com quique 0 e duracao 0,30s na subida e 0,26s na descida. */
+/* Mola com quique 0 e duração 0,30s na subida e 0,26s na descida. */
 const LIFT = { duration: 0.3, bounce: 0 };
 const DROP = { duration: 0.26, bounce: 0 };
 
 /* Voo persiste entre repinturas de tela. */
 let lifted = false;
 let at = 0;
-/* Rubrica sai quando o mes e ato viram. */
+/* Rubrica sai quando o mês e ato viram. */
 let sealed = "";
 
 /** @type {null | {
@@ -218,7 +218,7 @@ let sealed = "";
 let flying = null;
 
 /**
- * Posicao e velocidade analiticas do voo em curso.
+ * Posição e velocidade analíticas do voo em curso.
  *
  * @param {number} now
  * @returns {{ at: number, rate: number }}
@@ -281,7 +281,7 @@ function armFlight(root) {
     ` rotate(${aim.turn * (1 - t)}deg) scale(${aim.rest + (aim.rise - aim.rest) * t})` +
     ` translateX(${-25 * (1 - t)}%)`;
 
-  /* Dobra no mesmo t: gesto unico de erguer e abrir. */
+  /* Dobra no mesmo t: gesto único de erguer e abrir. */
   /** @param {number} t */
   const fold = t => `rotateY(${180 * (1 - t)}deg)`;
 
@@ -291,7 +291,7 @@ function armFlight(root) {
   /** @param {number} t */
   const draw = t => {
     folder.style.transform = shape(t);
-    /* Cruzar opacidade em vez de reescrever sombra: 156,8 fps contra 143,8 no mesmo laco. */
+    /* Cruzar opacidade em vez de reescrever sombra: 156,8 fps contra 143,8 no mesmo laço. */
     if (inHand instanceof HTMLElement) inHand.style.opacity = String(Math.max(FLOOR, t));
     if (leaf instanceof HTMLElement) leaf.style.transform = fold(t);
     if (spread instanceof HTMLElement) spread.style.opacity = String(Math.max(FLOOR, t));
@@ -342,7 +342,7 @@ function armFlight(root) {
     }
   };
 
-  /* Calibragem do tamanho de leitura por pintura, com peca parada no alto. */
+  /* Calibragem do tamanho de leitura por pintura, com peça parada no alto. */
   tune = seen => {
     for (const part of parts()) {
       if (part.node instanceof HTMLElement) part.node.getAnimations().forEach(one => one.cancel());
@@ -355,7 +355,7 @@ function armFlight(root) {
       folder.style.setProperty("--lift-rise", fixed.toFixed(4));
     }
 
-    /* Centraliza na tela inteira; centrar na area deixava a peca 132px a direita do meio. */
+    /* Centraliza na tela inteira; centrar na área deixava a peça 132px a direita do meio. */
     draw(1);
     const peca = folder.getBoundingClientRect();
     const janela = folder.ownerDocument.defaultView;
@@ -378,7 +378,7 @@ function armFlight(root) {
     flying = null;
   }
 
-  /* Teclado: Enter e Espaco erguem a pasta, Esc larga. */
+  /* Teclado: Enter e Espaço erguem a pasta, Esc larga. */
   folder.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -414,7 +414,7 @@ function armFlight(root) {
 
     if (target.closest("[data-protect], [data-refuse], [data-close-cut]") !== null) return;
 
-    /* Rubrica leva 1,1s e so corre com pasta assentada na mao (at > 0,94). */
+    /* Rubrica leva 1,1s e só corre com pasta assentada na mão (at > 0,94). */
     if (target.closest(".stack .sheet") !== null && whereIs(performance.now()).at > 0.94) {
       sealed = sealed === act ? "" : act;
       sheet.dataset["signed"] = String(sealed === act);
@@ -422,14 +422,14 @@ function armFlight(root) {
   });
 }
 
-/* Carta sobe ao centro na mola LIFT ate escala READING sobre os 1018px da folha.
-   ⛔ A MAO GUARDA O ID, NAO O INDICE: a lista da mesa muda a cada pintura (o mes fecha, a
-   carta e respondida) e o indice 0 de janeiro reabria a carta de fevereiro sozinho. */
+/* Carta sobe ao centro na mola LIFT até escala READING sobre os 1018px da folha.
+   ⛔ A MÃO GUARDA O ID, NÃO O ÍNDICE: a lista da mesa muda a cada pintura (o mês fecha, a
+   carta e respondida) e o índice 0 de janeiro reabria a carta de fevereiro sozinho. */
 /** @type {string | null} */
 let held = null;
 /* ⛔ O ESC DO DOCUMENTO ARMA UMA VEZ: cada pintura do Gabinete pendurava outro `keydown`, e o
    mais velho corria primeiro sobre a `.post` descartada — depois de uma repintura o Esc
-   nao largava mais a carta. `drop` aponta sempre para o `close` da pintura corrente. */
+   não largava mais a carta. `drop` aponta sempre para o `close` da pintura corrente. */
 /** @type {(animate: boolean) => void} */
 let drop = () => {};
 let escArmed = false;
@@ -471,7 +471,7 @@ function armPost(root) {
     return { from, to };
   };
 
-  /* O indice e desta pintura; o que sobrevive a ela e `held`. */
+  /* O índice e desta pintura; o que sobrevive a ela e `held`. */
   let reading = -1;
 
   /** @param {number} i @param {boolean} animate */
@@ -526,7 +526,7 @@ function armPost(root) {
       });
   };
 
-  /* Reabre sem voo a carta que estava na mao, procurando pelo id dela. */
+  /* Reabre sem voo a carta que estava na mão, procurando pelo id dela. */
   if (held !== null) {
     const kept = [...post.querySelectorAll(".post__sheet")].find(
       sheet => sheet instanceof HTMLElement && sheet.dataset["id"] === held,

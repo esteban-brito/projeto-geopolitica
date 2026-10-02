@@ -1,8 +1,8 @@
-/* AS ACOES — tudo o que o presidente pode pautar ou decretar.
-   ⚠ FICCAO com inspiracao na realidade, como todo o catalogo.
-   Os titulos evocam debates reconheciveis de proposito — reconhecimento e o que faz o jogador
-   ter intuicao sobre quem vai votar como antes de entender a matematica —, mas nenhum numero
-   aqui e afirmacao sobre proposta real nenhuma. */
+/* AS AÇÕES — tudo o que o presidente pode pautar ou decretar.
+   ⚠ FICÇÃO com inspiração na realidade, como todo o catálogo.
+   Os títulos evocam debates reconhecíveis de propósito — reconhecimento e o que faz o jogador
+   ter intuição sobre quem vai votar como antes de entender a matemática —, mas nenhum número
+   aqui e afirmação sobre proposta real nenhuma. */
 
 import { QUALIFIED_MAJORITY, SIMPLE_MAJORITY } from "./regime.mjs";
 
@@ -36,7 +36,7 @@ export const BILL_SCHEMA = {
  */
 
 /**
- * Quantos votos a acao exige.
+ * Quantos votos a ação exige.
  *
  * @param {{ instrument: string }} bill
  * @returns {number}
@@ -57,10 +57,10 @@ export const BILLS = [
     area: "treasury",
     instrument: "amendment",
     economic: 78,
-    /* O erro nao ficou no papel — a medicao mostrou a direita liberal, que deveria adorar
+    /* O erro não ficou no papel — a medição mostrou a direita liberal, que deveria adorar
        esta pauta, entregando 30% dela. */
     liberty: 48,
-    /* Ameaca MODERADA: mexe em cargo e estabilidade, que sao parte da maquina, mas nao tocam
+    /* Ameaça MODERADA: mexe em cargo e estabilidade, que são parte da máquina, mas não tocam
        em foro nem em emenda. */
     threat: 0.35,
     fiscalImpact: 48,
@@ -70,8 +70,8 @@ export const BILLS = [
     id: "reforma-tributaria-do-consumo",
     label: "Reforma tributária do consumo",
     area: "treasury",
-    /* CENTRISTA E DE AMEACA BAIXA de proposito, e e ela que demonstra o desenho das emendas:
-       uma pauta consensual alcanca os 308 com folga, uma pauta de trincheira nao alcanca
+    /* CENTRISTA E DE AMEAÇA BAIXA de propósito, e e ela que demonstra o desenho das emendas:
+       uma pauta consensual alcanca os 308 com folga, uma pauta de trincheira não alcanca
        nunca. */
     instrument: "amendment",
     economic: 58,
@@ -98,8 +98,8 @@ export const BILLS = [
     instrument: "law",
     economic: 56,
     liberty: 50,
-    /* AMEACA ALTA numa pauta que parece tecnica, e a razao e o que o termo modela:
-       desoneracao setorial e moeda de bancada, e tira-la ataca a maquina tanto quanto mexer
+    /* AMEAÇA ALTA numa pauta que parece tecnica, e a razão e o que o termo modela:
+       desoneração setorial e moeda de bancada, e tira-la ataca a máquina tanto quanto mexer
        em emenda. */
     threat: 0.42,
     fiscalImpact: 38,
@@ -128,8 +128,8 @@ export const BILLS = [
     impact: 6,
   },
 
-  /* ── INDUSTRIA E AGRO ─────────────────────────────────────────────────────── ⚠ ELAS ERAM
-     UMA AREA SO, e o argumento escrito aqui era que o licenciamento expresso e a fiscalizacao
+  /* ── INDÚSTRIA E AGRO ─────────────────────────────────────────────────────── ⚠ ELAS ERAM
+     UMA ÁREA SÓ, e o argumento escrito aqui era que o licenciamento expresso e a fiscalizacao
      ambiental disputavam a MESMA verba na MESMA tela. */
   {
     id: "abertura-comercial",
@@ -195,14 +195,14 @@ export const BILLS = [
     liberty: 56,
     threat: 0.22,
     fiscalImpact: -11,
-    /* IMPACTO NEGATIVO na capacidade, e isso NAO e um julgamento sobre meio ambiente: a area
+    /* IMPACTO NEGATIVO na capacidade, e isso NÃO e um julgamento sobre meio ambiente: a área
        mede parque produtivo instalado, e fiscalizar embarga obra e frente de lavra no curto
        prazo. */
     impact: -4,
   },
 
-  /* ── PREVIDENCIA ───────────────────────────────────────────────────────── A area cujo
-     indice E a despesa obrigatoria, e por isso `lag` zero. */
+  /* ── PREVIDÊNCIA ───────────────────────────────────────────────────────── A área cujo
+     índice E a despesa obrigatória, e por isso `lag` zero. */
   {
     id: "reforma-da-previdencia",
     label: "Reforma da previdência",
@@ -289,8 +289,8 @@ export const BILLS = [
     instrument: "law",
     economic: 30,
     liberty: 54,
-    /* Ameaca alta para uma pauta de saude, e com motivo: carreira de Estado tira do
-       parlamentar a indicacao de quem ocupa o posto no interior. */
+    /* Ameaça alta para uma pauta de saude, e com motivo: carreira de Estado tira do
+       parlamentar a indicação de quem ocupa o posto no interior. */
     threat: 0.4,
     fiscalImpact: -48,
     impact: 8,
@@ -340,7 +340,7 @@ export const BILLS = [
     impact: 8,
   },
 
-  /* ── EDUCACAO ──────────────────────────────────────────────────────────── A area de `lag`
+  /* ── EDUCACAO ──────────────────────────────────────────────────────────── A área de `lag`
      24. */
   {
     id: "reforma-do-ensino-medio",
@@ -409,7 +409,7 @@ export const BILLS = [
     impact: 5,
   },
 
-  /* ── SEGURANCA ───────────────────────────────────────────────────────────── */
+  /* ── SEGURANÇA ───────────────────────────────────────────────────────────── */
   {
     id: "pec-seguranca-publica",
     label: "PEC da segurança pública",
@@ -425,14 +425,14 @@ export const BILLS = [
     id: "fim-do-foro-privilegiado",
     label: "Fim do foro privilegiado",
     area: "security",
-    /* LEI, e nao emenda — a decisao esta justificada no cabecalho deste arquivo: com ameaca
-       0,95 ela alcanca 297 no melhor cenario possivel, o que passa em 257 e nao alcanca 308. */
+    /* LEI, e não emenda — a decisão esta justificada no cabeçalho deste arquivo: com ameaça
+       0,95 ela alcanca 297 no melhor cenario possível, o que passa em 257 e não alcanca 308. */
     instrument: "law",
     economic: 50,
     /* Acima do meio: submeter autoridade ao mesmo juiz que julga todo mundo E liberdade — o
-       privilegio e o que restringe. */
+       privilégio e o que restringe. */
     liberty: 58,
-    /* O caso extremo, e a razao de o termo de ameaca existir. */
+    /* O caso extremo, e a razão de o termo de ameaça existir. */
     threat: 0.95,
     fiscalImpact: 3,
     impact: 3,
@@ -465,7 +465,7 @@ export const BILLS = [
     area: "security",
     instrument: "decree",
     economic: 54,
-    /* O extremo do eixo de liberdade no catalogo. */
+    /* O extremo do eixo de liberdade no catálogo. */
     liberty: 8,
     threat: 0.1,
     fiscalImpact: -12,

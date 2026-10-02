@@ -1,4 +1,4 @@
-/* SUITE · A TRAMITACAO — a gaveta, o relator, e o tempo que apaga. */
+/* SUITE · A TRAMITAÇÃO — a gaveta, o relator, e o tempo que apaga. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -24,7 +24,7 @@ test("DRAWER_LIFE e 6", () => {
   assert.equal(DRAWER_LIFE, 6);
 });
 
-test("forgotten so dispara quando stage e drawer", () => {
+test("forgotten só dispara quando stage e drawer", () => {
   const bill = /** @type {import("../../src/application/passage.mjs").Bill} */ ({
     id: "x",
     writtenAt: 0,
@@ -38,7 +38,7 @@ test("forgotten so dispara quando stage e drawer", () => {
   assert.equal(forgotten(bill, 10), false);
 });
 
-test("forgotten dispara quando drawer ha 6+ meses", () => {
+test("forgotten dispara quando drawer há 6+ meses", () => {
   const bill = /** @type {import("../../src/application/passage.mjs").Bill} */ ({
     id: "x",
     writtenAt: 0,
@@ -54,7 +54,7 @@ test("forgotten dispara quando drawer ha 6+ meses", () => {
   assert.equal(forgotten(bill, 100), true);
 });
 
-test("forgotten conta a partir de writtenAt, nao since", () => {
+test("forgotten conta a partir de writtenAt, não since", () => {
   const bill = /** @type {import("../../src/application/passage.mjs").Bill} */ ({
     id: "x",
     writtenAt: 10,
@@ -145,7 +145,7 @@ test("reports sem movimentos retorna except vazio", () => {
   assert.equal(result.saved, undefined);
 });
 
-test("reports com uma alavanca machucada nao salva (hurt < 2)", () => {
+test("reports com uma alavanca machucada não salva (hurt < 2)", () => {
   const person = /** @type {import("../../src/domain/cast/index.mjs").Person} */ ({
     id: "r",
     name: "R",
@@ -172,7 +172,7 @@ test("reports com uma alavanca machucada nao salva (hurt < 2)", () => {
   assert.equal(result.saved, undefined);
 });
 
-test("reports com duas alavancas machucadas salva a mais proxima", () => {
+test("reports com duas alavancas machucadas salva a mais próxima", () => {
   const person = /** @type {import("../../src/domain/cast/index.mjs").Person} */ ({
     id: "r",
     name: "R",
@@ -205,7 +205,7 @@ test("reports com duas alavancas machucadas salva a mais proxima", () => {
   assert.ok(/** @type {string} */ (result.saved).length > 0);
 });
 
-test("reports so seleciona alavancas com delta negativo", () => {
+test("reports só seleciona alavancas com delta negativo", () => {
   const person = /** @type {import("../../src/domain/cast/index.mjs").Person} */ ({
     id: "r",
     name: "R",

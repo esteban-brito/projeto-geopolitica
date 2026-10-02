@@ -118,7 +118,7 @@ test("o inventário detecta trabalho apagado e trabalho inventado", () => {
   assert.ok(governmentViolations(extra).some(error => error.includes("unknown")));
 });
 
-test("o inventário duplicado invalida o estado recarregado", () => {
+test("o inventário duplicado inválida o estado recarregado", () => {
   const state = opening();
   state.inventory = [...state.inventory, "care"];
   assert.ok(governmentViolations(state).some(error => error.includes("care")));

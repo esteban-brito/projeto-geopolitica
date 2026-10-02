@@ -1,9 +1,9 @@
 /* O MACACO — joga ao acaso, com semente, e mede em repouso.
-   O passeio segue um roteiro; o macaco nao. Ele acha o que acontece na ordem que ninguem
-   escreveu: erro de pagina, morph que nao pousa, pilula que fica longe do item, dialogo sem
-   saida, tabuleiro vazio. Medir so em repouso e o que tira o ruido: a versao solta acusava a
-   pilula 28 vezes em 250 acoes medindo no meio da mola.
-   uso: node tests/browser/monkey.mjs [acoes] [semente] */
+   O passeio segue um roteiro; o macaco não. Ele acha o que acontece na ordem que ninguém
+   escreveu: erro de página, morph que não pousa, pílula que fica longe do item, diálogo sem
+   saída, tabuleiro vazio. Medir só em repouso e o que tira o ruído: a versão solta acusava a
+   pílula 28 vezes em 250 ações medindo no meio da mola.
+   uso: node tests/browser/monkey.mjs [ações] [semente] */
 
 import { spawn } from "node:child_process";
 import { join } from "node:path";
@@ -57,7 +57,7 @@ const TARGETS = [
   "[data-party]",
 ];
 
-/** Espera a tela parar: sem troca de tela, sem morph, sem mola na pilula ou na carta. */
+/** Espera a tela parar: sem troca de tela, sem morph, sem mola na pílula ou na carta. */
 /** @param {import("playwright").Page} page */
 async function rest(page) {
   try {
@@ -67,12 +67,12 @@ async function rest(page) {
         if (doc.activeViewTransition) return false;
         const rail = document.querySelector(".rail");
         if (rail?.hasAttribute("data-morph")) return false;
-        /* So o que esta correndo: a pasta guarda a animacao terminada com `fill: forwards`. */
+        /* Só o que esta correndo: a pasta guarda a animação terminada com `fill: forwards`. */
         const moving = [".post__sheet:not([hidden])", ".folder"]
           .flatMap(sel => [...document.querySelectorAll(sel)])
           .some(node => node.getAnimations().some(one => one.playState === "running"));
         if (moving) return false;
-        /* A pilula e mola JS por rAF, invisivel a `getAnimations`: parou quando a caixa dela
+        /* A pílula e mola JS por rAF, invisível a `getAnimations`: parou quando a caixa dela
            e a mesma de um quadro para o outro. */
         const pill = document.querySelector(".rail__pill");
         const box = pill?.getBoundingClientRect();
@@ -180,8 +180,8 @@ try {
         } else if (selector === "#advance" && rnd() < 0.5) {
           did = "(pulou avancar)";
         } else {
-          /* Clique em peca coberta nao e defeito: a pasta fechada cobre o ato, a carta cobre a
-             mesa. O macaco so anota e segue. */
+          /* Clique em peça coberta não e defeito: a pasta fechada cobre o ato, a carta cobre a
+             mesa. O macaco só anota e segue. */
           const clicked = await node
             .click({ timeout: 1000 })
             .then(() => true)
@@ -196,7 +196,7 @@ try {
     }
     trail.push(did);
 
-    /* O ponteiro sai do item antes de medir: o `:hover` escala o item em 1,02 e a pilula
+    /* O ponteiro sai do item antes de medir: o `:hover` escala o item em 1,02 e a pílula
        "erra" por 2px. Ele sai agora e o hover assenta enquanto o repouso espera. */
     await page.mouse.move(720, 500);
     if (!(await rest(page)))

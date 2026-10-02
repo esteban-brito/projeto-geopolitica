@@ -1,7 +1,7 @@
 /* O PASSEIO — a tela usada como se joga, num navegador de verdade.
    POR QUE ELE EXISTE, e a resposta e uma lista de defeitos que nada mais pegou.
-   `npm run screen` abre a pagina e mede o custo do material; ele nunca CLICA em nada, entao
-   so ve a tela de abertura. */
+   `npm run screen` abre a página e mede o custo do material; ele nunca CLICA em nada, então
+   só vê a tela de abertura. */
 
 import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -36,16 +36,16 @@ let failures = 0;
 /** @type {string[]} */
 const report = [];
 
-/* NO GABINETE OS MINISTERIOS MORAM NA GAVETA DO DOCK: para clicar num deles a gaveta abre antes.
-   Nas outras telas o botao da gaveta nao existe e o clique vai direto. */
+/* NO GABINETE OS MINISTÉRIOS MORAM NA GAVETA DO DOCK: para clicar num deles a gaveta abre antes.
+   Nas outras telas o botão da gaveta não existe e o clique vai direto. */
 /** @param {import("playwright").Page} page @param {string} key */
 async function viaRail(page, key) {
   const drawer = page.locator(".rail__drawer");
   const hidden = await page.locator(`[data-section="${key}"]`).first().isHidden();
   if (hidden && (await drawer.count()) > 0 && (await drawer.isVisible())) {
     await drawer.click();
-    /* A gaveta e um morph: espera-se ele POUSAR, e nao o relogio — durante a viagem o icone
-       ainda esta fora da capsula e o clique cairia na mesa. */
+    /* A gaveta e um morph: espera-se ele POUSAR, e não o relógio — durante a viagem o ícone
+       ainda esta fora da cápsula e o clique cairia na mesa. */
     await page.waitForFunction(
       () => document.querySelector(".rail__list")?.getAttribute("data-drawer") === "true",
     );
@@ -54,7 +54,7 @@ async function viaRail(page, key) {
   try {
     await page.click(`[data-section="${key}"]`, { timeout: 8000 });
   } catch (error) {
-    /* O que cobria o alvo, para o achado nao morrer como "timeout". */
+    /* O que cobria o alvo, para o achado não morrer como "timeout". */
     const cover = await page.evaluate(sel => {
       const b = document.querySelector(sel);
       if (!b) return "sem botao";
@@ -77,7 +77,7 @@ try {
   await waitForServer();
   mkdirSync(OUT, { recursive: true });
 
-  /* Sem cabeca aqui, e COM cabeca no `screen-cost`. */
+  /* Sem cabeça aqui, e COM cabeça no `screen-cost`. */
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1440, height: 980 } });
   const page = await context.newPage();
@@ -87,8 +87,8 @@ try {
   page.on("console", message => {
     if (message.type() === "error" || message.type() === "warning") noise.push(message.text());
   });
-  /* ⚠ `pageerror` NAO E `console`, e por isso uma familia inteira de defeito era invisivel
-     aqui: rejeicao de promessa nao tratada chega por este canal e nao pelo outro. Ele
+  /* ⚠ `pageerror` NÃO E `console`, e por isso uma família inteira de defeito era invisível
+     aqui: rejeicao de promessa não tratada chega por este canal e não pelo outro. Ele
      achou 46 delas na primeira vez que foi ligado, todas de View Transition pulada. */
   page.on("pageerror", error => noise.push(`erro nao tratado: ${error.message}`));
   page.on("pageerror", error => noise.push(String(error)));
@@ -103,8 +103,8 @@ try {
   }
 
   /**
-   * ⚠ CONTEUDO CORTADO DENTRO DO PROPRIO RECORTE, e o passeio era CEGO para isso: ele media a
-   * rolagem da PAGINA, e uma peca com `overflow-x: auto` engole o excesso sem que a pagina
+   * ⚠ CONTEÚDO CORTADO DENTRO DO PRÓPRIO RECORTE, e o passeio era CEGO para isso: ele media a
+   * rolagem da PÁGINA, e uma peça com `overflow-x: auto` engole o excesso sem que a página
    * cresca um pixel. Foi assim que a tabela do anexo saiu com a coluna da SOMA cortada duas
    * vezes — na segunda, com o passeio verde ao lado.
    * A rolagem lateral e o plano B declarado para janela estreita; a 1440px nada deve cortar.
@@ -128,14 +128,14 @@ try {
     );
   }
 
-  /* ⚠ O PASSEIO NAO VIA A PAGINA ROLAR, e essa foi a quinta ocorrencia da mesma cegueira: ele
+  /* ⚠ O PASSEIO NÃO VIA A PÁGINA ROLAR, e essa foi a quinta ocorrência da mesma cegueira: ele
      media recorte DENTRO dos elementos e transbordo lateral, e um Gabinete 31px mais alto que
-     a janela passava verde. A tela e a unica do jogo que declara nao rolar — acima de 940px de
+     a janela passava verde. A tela e a única do jogo que declara não rolar — acima de 940px de
      altura ela trava em `100dvh` e as listas rolam por dentro (`40-shell.css`).
      ⛔ E O LIMIAR DELA ERA DE ALTURA, 940px, o que a desligava EXATAMENTE onde o defeito
-     morava: a 1440x900 a pagina rolava 94px e esta funcao saia calada. O limiar continua sendo
+     morava: a 1440x900 a página rolava 94px e esta função saia calada. O limiar continua sendo
      o da folha, e a folha passou a medir LARGURA — abaixo de 1181 o rail vira faixa no topo, e
-     ali a pagina rolar e decisao declarada. */
+     ali a página rolar e decisão declarada. */
   /** @param {string} where */
   async function checkNoPageScroll(where) {
     const scroll = await page.evaluate(() => ({
@@ -152,10 +152,10 @@ try {
   }
 
   /**
-   * ⚠ O GEMEO VERTICAL DE `checkClipped`, E ELE NASCEU DE UM CARTAO INTEIRO SUMINDO: a coluna
-   * do Gabinete tem `overflow-y: auto` e engolia 175px numa janela de 760 — a pagina nao
-   * crescia um pixel, entao `checkOverflow` passava e este passeio ficava verde ao lado.
-   * `.tray__list` e a UNICA excecao declarada: o indice de cartas cresce todo mes e sempre
+   * ⚠ O GÊMEO VERTICAL DE `checkClipped`, E ELE NASCEU DE UM CARTÃO INTEIRO SUMINDO: a coluna
+   * do Gabinete tem `overflow-y: auto` e engolia 175px numa janela de 760 — a página não
+   * crescia um pixel, então `checkOverflow` passava e este passeio ficava verde ao lado.
+   * `.tray__list` e a ÚNICA exceção declarada: o índice de cartas cresce todo mês e sempre
    * foi desenhado para rolar.
    *
    * @param {string} where
@@ -179,12 +179,12 @@ try {
   }
 
   /**
-   * ⚠ O TERCEIRO IRMAO DE `checkClipped`, e ele ve o que os outros dois nao veem: `overflow:
-   * hidden` com `text-overflow: ellipsis` NAO rola, entao nem o eixo X nem o eixo Y acusam —
-   * a frase simplesmente perde o fim, com reticencia, e a tela fica plausivel. E a familia
-   * inteira ja custou quatro vezes aqui: toda checagem nasce sem alcance.
-   * A EXCECAO DECLARADA E UMA SO: `.bench__name small`, o nome longo do partido numa coluna
-   * de 96px — a sigla ao lado dela e o nome curto, e a reticencia ali e o desenho.
+   * ⚠ O TERCEIRO IRMÃO DE `checkClipped`, e ele vê o que os outros dois não veem: `overflow:
+   * hidden` com `text-overflow: ellipsis` NÃO rola, então nem o eixo X nem o eixo Y acusam —
+   * a frase simplesmente perde o fim, com reticência, e a tela fica plausível. E a família
+   * inteira já custou quatro vezes aqui: toda checagem nasce sem alcance.
+   * A EXCEÇÃO DECLARADA E UMA SÓ: `.bench__name small`, o nome longo do partido numa coluna
+   * de 96px — a sigla ao lado dela e o nome curto, e a reticência ali e o desenho.
    *
    * @param {string} where
    */
@@ -208,11 +208,11 @@ try {
   }
 
   /**
-   * ⚠ O QUINTO IRMAO, e ele ve o que os outros quatro nao veem: peca de largura FIXA nao
-   * rola, nao poe reticencia e nao move `scrollWidth` do pai — ela so pinta por cima do
-   * vizinho. Tres defeitos moravam ai: a marca atravessava a peca dos vitais abaixo de
-   * 1228px, a legenda invisivel do botao jogava a seta 193px alem da aresta, e um marco de
-   * catalogo mais longo empurrava 212px de texto para fora da peca do quando.
+   * ⚠ O QUINTO IRMÃO, e ele vê o que os outros quatro não veem: peça de largura FIXA não
+   * rola, não põe reticência e não move `scrollWidth` do pai — ela só pinta por cima do
+   * vizinho. Três defeitos moravam ai: a marca atravessava a peça dos vitais abaixo de
+   * 1228px, a legenda invisível do botão jogava a seta 193px além da aresta, e um marco de
+   * catálogo mais longo empurrava 212px de texto para fora da peça do quando.
    *
    * @param {string} where
    */
@@ -252,14 +252,14 @@ try {
   }
 
   /**
-   * ⚠ O QUARTO IRMAO, e ele ve o que os outros tres nao veem. `-webkit-line-clamp` nao rola,
-   * nao poe reticencia no eixo X e NAO MOVE `scrollHeight`: a caixa de `-webkit-box` so
-   * diagrama as linhas que sobraram, entao o sinal padrao de estouro simplesmente nao existe.
-   * A unica forma de medir e SOLTAR o recorte e comparar a altura — e e o que ela faz, dentro
-   * de um `evaluate` so, sem repintura entre a mudanca e a restauracao.
-   * ⚠ E A EXCECAO DECLARADA MORREU: `.tray__subject` era isenta porque o corte em duas linhas
-   * era desenho. Em quatro ele nao corta mais — 20 de 28 assuntos perdiam o fim —, entao o
-   * indice passa a ser guardado como o resto da tela.
+   * ⚠ O QUARTO IRMÃO, e ele vê o que os outros três não veem. `-webkit-line-clamp` não rola,
+   * não põe reticência no eixo X e NÃO MOVE `scrollHeight`: a caixa de `-webkit-box` só
+   * diagrama as linhas que sobraram, então o sinal padrão de estouro simplesmente não existe.
+   * A única forma de medir e SOLTAR o recorte e comparar a altura — e e o que ela faz, dentro
+   * de um `evaluate` só, sem repintura entre a mudança e a restauracao.
+   * ⚠ E A EXCEÇÃO DECLARADA MORREU: `.tray__subject` era isenta porque o corte em duas linhas
+   * era desenho. Em quatro ele não corta mais — 20 de 28 assuntos perdiam o fim —, então o
+   * índice passa a ser guardado como o resto da tela.
    *
    * @param {string} where
    */
@@ -292,7 +292,7 @@ try {
   }
 
   /**
-   * PECA DESENHADA POR CIMA DE PECA — e este e um defeito que so a geometria pega.
+   * PEÇA DESENHADA POR CIMA DE PEÇA — e este e um defeito que só a geometria pega.
    *
    * @param {string} where
    * @param {string} selector as pecas que nao podem se cruzar
@@ -334,23 +334,23 @@ try {
     );
   }
 
-  /* ── O CONTRASTE, MEDIDO NO PAR RENDERIZADO ─────────────────────────────── ⚠ ELE NAO PODE
-     SER GUARDA DE `npm run check`, e a razao decide o desenho: `--ink-dim` sobre `--bg` passa
-     folgado e sobre a lamina do palco reprovava — o par teorico e o par certo sao dois pares
-     diferentes, e so um navegador sabe qual e qual. Por isso ele mora aqui.
+  /* ── O CONTRASTE, MEDIDO NO PAR RENDERIZADO ─────────────────────────────── ⚠ ELE NÃO PODE
+     SER GUARDA DE `npm run check`, e a razão decide o desenho: `--ink-dim` sobre `--bg` passa
+     folgado e sobre a lâmina do palco reprovava — o par teórico e o par certo são dois pares
+     diferentes, e só um navegador sabe qual e qual. Por isso ele mora aqui.
      O FUNDO SAI DO PIXEL e a TINTA sai do valor computado: amostrar a tinta na captura leria
      serrilhado em vez de cor. A mediana da caixa e o fundo porque letra e minoria de pixel.
-     ⚠ SO FOLHA ENTRA — elemento sem filho elemento. Um `<p>` com `<b>` dentro fica de fora, e
+     ⚠ SÓ FOLHA ENTRA — elemento sem filho elemento. Um `<p>` com `<b>` dentro fica de fora, e
      o `<b>` e medido sozinho: medir o pai daria a cor dele contra a caixa dos dois. */
   const FLOOR = 4.5;
-  /* AA nao pede 4,5 de texto GRANDE, e o piso dele e 3,0 — 24px, ou 18,66px em negrito. */
+  /* AA não pede 4,5 de texto GRANDE, e o piso dele e 3,0 — 24px, ou 18,66px em negrito. */
   const LARGE = 24;
   const LARGE_BOLD = 18.66;
 
   /** @param {string} where */
   async function checkContrast(where) {
-    /* ⚠ A CAPTURA E DA PAGINA INTEIRA, e nao da janela: Financas rola 1300px, e medir so o
-       que cabe na tela deixaria metade das leituras sem medicao nenhuma. Ver o desvio de
+    /* ⚠ A CAPTURA E DA PÁGINA INTEIRA, e não da janela: Finanças rola 1300px, e medir só o
+       que cabe na tela deixaria metade das leituras sem medição nenhuma. Ver o desvio de
        `scrollY` abaixo — a caixa do elemento e da JANELA, e a captura e do documento. */
     const shot = (await page.screenshot({ fullPage: true })).toString("base64");
     const failures = await page.evaluate(
@@ -387,7 +387,7 @@ try {
           const style = getComputedStyle(node);
           if (style.visibility === "hidden" || style.opacity === "0") continue;
 
-          /* ⛔ NAO MEDE O QUE ESTA COBERTO: medir elemento tapado mede a peca de cima.
+          /* ⛔ NÃO MEDE O QUE ESTA COBERTO: medir elemento tapado mede a peça de cima.
              Se o centro da caixa no viewport responde para outro elemento, pula. */
           const cx = box.left + box.width / 2;
           const cy = box.top + box.height / 2;
@@ -419,9 +419,9 @@ try {
           if (sample.length === 0) continue;
           /* ⚠ O DECIL DO FUNDO DEPENDE DE QUE LADO A TINTA ESTA, e ignorar isso produziu os
              DOIS falsos positivos deste medidor. A mediana pega tinta em caixa apertada — num
-             valor de um digito `--ink` saiu 4,05 quando o par real passa de 14. E um decil fixo
-             na ponta escura subestima texto ESCURO sobre fundo claro: o botao de avancar, tinta
-             `--bg-deep` sobre latao, saiu 4,43 porque a amostra caiu na parte mais escura do
+             valor de um dígito `--ink` saiu 4,05 quando o par real passa de 14. E um decil fixo
+             na ponta escura subestima texto ESCURO sobre fundo claro: o botão de avançar, tinta
+             `--bg-deep` sobre latão, saiu 4,43 porque a amostra caiu na parte mais escura do
              gradiente. O fundo e o aglomerado do lado OPOSTO ao da tinta. */
           sample.sort((one, other) => one.l - other.l);
           const middle = sample[Math.floor(sample.length / 2)];
@@ -431,8 +431,8 @@ try {
           const back = sample[Math.floor(sample.length * (light ? 0.3 : 0.7))];
           if (!back) continue;
 
-          /* A TINTA COMPOSTA, e nao a declarada: metade das notas deste projeto e branco com
-             alfa, e o literal delas nao e a cor que chega ao olho. */
+          /* A TINTA COMPOSTA, e não a declarada: metade das notas deste projeto e branco com
+             alfa, e o literal delas não e a cor que chega ao olho. */
           const ink = lum(
             r * alpha + back.r * (1 - alpha),
             g * alpha + back.g * (1 - alpha),
@@ -444,8 +444,8 @@ try {
           const bold = Number.parseInt(style.fontWeight, 10) >= 700;
           const floor = size >= LARGE || (bold && size >= LARGE_BOLD) ? 3 : FLOOR;
           if (ratio + 0.005 < floor) {
-            /* O NOME DO PAI ENTRA JUNTO porque metade das acusacoes cai num `<b>` solto, e
-               `b` sozinho nao diz em que peca da tela ele mora. */
+            /* O NOME DO PAI ENTRA JUNTO porque metade das acusações cai num `<b>` solto, e
+               `b` sozinho não diz em que peça da tela ele mora. */
             const name =
               (typeof node.className === "string" ? node.className : node.getAttribute("class")) ||
               node.tagName.toLowerCase();
@@ -473,17 +473,17 @@ try {
   await page.goto(`${BASE}/index.html`, { waitUntil: "networkidle" });
 
   /* ⛔ A PASTA NASCE FECHADA, e as medidas do ATO precisam dela aberta: fechada, a pilha esta
-     em opacidade 0,001 atras da capa e o parecer esta virado para o outro lado. O contraste
-     saia em 1,1 a 3,5 e o enquadramento acusava vao de lombada de -308px — nenhum dos dois era
-     defeito de arranjo, os dois mediam uma pasta que ninguem abriu.
-     ⭐ ABRIR E O GESTO DO JOGADOR, entao a prova o faz: e a mesma peca, no estado em que ela
+     em opacidade 0,001 atrás da capa e o parecer esta virado para o outro lado. O contraste
+     saia em 1,1 a 3,5 e o enquadramento acusava vão de lombada de -308px — nenhum dos dois era
+     defeito de arranjo, os dois mediam uma pasta que ninguém abriu.
+     ⭐ ABRIR E O GESTO DO JOGADOR, então a prova o faz: e a mesma peça, no estado em que ela
      existe para ser lida. A etapa do voo, adiante, fecha de volta e mede o gesto. */
   /** Abre ou fecha a pasta, e espera o voo assentar.
-   * ⛔ E O CLIQUE NAO VAI NO CENTRO DA CAIXA: fechada, a metade esquerda dela esta VAZIA — a
+   * ⛔ E O CLIQUE NÃO VAI NO CENTRO DA CAIXA: fechada, a metade esquerda dela esta VAZIA — a
    * folha girou para cima da direita —, e o centro cai na mesa, que engole o clique. Quem
-   * responde e a peca pintada: a capa para abrir, e a sala longe dela para fechar.
-   * ⚠ O CLIQUE DE FECHAR TEM DE ACERTAR A SALA VISIVEL: a `.room` transborda a janela e o topo
-   * cai sob a barra de vitais. Quem fecha e um ponto visivel da sala, fora da pasta, conferido
+   * responde e a peça pintada: a capa para abrir, e a sala longe dela para fechar.
+   * ⚠ O CLIQUE DE FECHAR TEM DE ACERTAR A SALA VISÍVEL: a `.room` transborda a janela e o topo
+   * cai sob a barra de vitais. Quem fecha e um ponto visível da sala, fora da pasta, conferido
    * por `elementFromPoint`.
    * @param {boolean} abrir */
   async function setFolder(abrir) {
@@ -538,16 +538,16 @@ try {
   await checkContrast("gabinete");
   await checkNoPageScroll("gabinete");
 
-  /* 1 — O GABINETE E A MESA, e o que estava aqui media as QUATRO ZONAS DE VIDRO que sairam.
-     ⚠ AS QUATRO PECAS TEM LUGAR FIXO, e o numero e conferido porque peca que some nao falha em
-     lugar nenhum: a mesa abriu uma sessao inteira sem madeira e o portao ficou verde. */
+  /* 1 — O GABINETE E A MESA, e o que estava aqui media as QUATRO ZONAS DE VIDRO que saíram.
+     ⚠ AS QUATRO PEÇAS TEM LUGAR FIXO, e o número e conferido porque peça que some não falha em
+     lugar nenhum: a mesa abriu uma sessão inteira sem madeira e o portão ficou verde. */
   for (const piece of [".room", ".folder", ".mail", ".phone"]) {
     expect((await page.locator(piece).count()) === 1, `[gabinete] a peca ${piece} nao veio`);
   }
 
-  /* ⛔ E AS TRES MATERIAS SAO ESCRITAS PELO JS, entao elas nao existem ate a tela rodar: sem
-     `dressDesk` a mesa abre sem madeira e nada acusa. A madeira vai no CORPO, porque quem a le
-     e o substrato da janela, atras da barra e do rail. */
+  /* ⛔ E AS TRÊS MATERIAS SÃO ESCRITAS PELO JS, então elas não existem até a tela rodar: sem
+     `dressDesk` a mesa abre sem madeira e nada acusa. A madeira vai no CORPO, porque quem a lê
+     e o substrato da janela, atrás da barra e do rail. */
   for (const worn of [
     { piece: "body", material: "--timber" },
     { piece: ".folder", material: "--fibre" },
@@ -565,20 +565,20 @@ try {
     );
   }
 
-  /* ⚠ A CANETA CONSTRUIDA E UMA SO, e ela mora DENTRO do decreto: as oito pastas sao marcadas
-     na frase do Art. 2 que fala delas. Elas deixaram as oito telas de area, e duas portas para
-     o mesmo gesto e o defeito recorrente numero um deste projeto. */
+  /* ⚠ A CANETA CONSTRUÍDA E UMA SÓ, e ela mora DENTRO do decreto: as oito pastas são marcadas
+     na frase do Art. 2 que fala delas. Elas deixaram as oito telas de área, e duas portas para
+     o mesmo gesto e o defeito recorrente número um deste projeto. */
   expect(
     (await page.locator(".act__folders [data-protect]").count()) === 8,
     "[gabinete] o decreto nao trouxe as oito pastas",
   );
 
   /* 📐 O ENQUADRAMENTO DAS FOLHAS NA PASTA DE FOTO:
-     As quatro medidas sao fracao da peca, invariantes a escala (repouso 684px vs erguida 1003px):
-     1. Margem lateral: 15-22px a 684 vira 2,19%-3,22% (na mao, 24,5px sobre 1003px da 2,44%);
-     2. Vao da lombada: piso de 25px a 684 vira 3,65% (com gap 118px da 7,20%);
+     As quatro medidas são fração da peça, invariantes a escala (repouso 684px vs erguida 1003px):
+     1. Margem lateral: 15-22px a 684 vira 2,19%-3,22% (na mão, 24,5px sobre 1003px da 2,44%);
+     2. Vão da lombada: piso de 25px a 684 vira 3,65% (com gap 118px da 7,20%);
      3. Desvio das folhas do centro da pasta: teto de 3px a 684 vira 0,45%;
-     4. Desvio do timbre do centro da pagina: teto de 2px na folha de 720px (0,28%). */
+     4. Desvio do timbre do centro da página: teto de 2px na folha de 720px (0,28%). */
   const fitFolhas = await page.evaluate(() => {
     const f = document.querySelector(".folder");
     const br = document.querySelector(".brief");
@@ -624,14 +624,14 @@ try {
     `[gabinete] as folhas estao descentralizadas da lombada: desvio de ${fitFolhas?.desvioFolhasPct.toFixed(2)}% (teto 0,45%)`,
   );
   /* ⚠ E A PASTA VOLTA PARA A MESA ANTES DO GESTO: as medidas acima a abriram, e a etapa do voo
-     precisa dela FECHADA para medir o gesto do comeco. */
+     precisa dela FECHADA para medir o gesto do começo. */
   await setFolder(false);
 
-  /* ⭐ E A MESA TEM UM GESTO, que e o unico do Gabinete: a pasta na mesa se ERGUE, e so com ela
-     na mao a folha e legivel. Ordem dele, vendo o jogo rodar: "nao consigo clicar pra pasta com
+  /* ⭐ E A MESA TEM UM GESTO, que e o único do Gabinete: a pasta na mesa se ERGUE, e só com ela
+     na mão a folha e legível. Ordem dele, vendo o jogo rodar: "não consigo clicar pra pasta com
      a folha subir na tela e eu enxergar melhor".
      📐 O TAMANHO NO ALTO DO VOO E MEDIDO: a 1080 de janela a pasta erguida fecha em 837px de
-     altura numa area de 922, e a escala 1 dava 1047 — a peca saia dos dois lados da tela. */
+     altura numa área de 922, e a escala 1 dava 1047 — a peça saia dos dois lados da tela. */
   const flight = async () =>
     page.evaluate(() => {
       const folder = document.querySelector(".folder");
@@ -645,14 +645,14 @@ try {
       };
     });
 
-  /* ⛔ E O CLIQUE E DADO NO QUE ESTA NO CENTRO VISUAL DA PASTA, e nao no seletor dela: a peca
-     vive numa arvore 3D, e o ponto que o navegador de teste calcula para `.folder` caiu no
-     TAMPO — a prova acusava a mesa por um defeito do proprio clique. Quem responde a pergunta
-     "o que o jogador acerta aqui" e `elementFromPoint`, e ela vira a primeira assercao. */
-  /* ⛔ E A ESPERA E PELA ANIMACAO ACABAR, e nao por altura repetida: o voo e uma curva que
-     desacelera, entao dois quadros consecutivos batem no mesmo pixel arredondado ANTES do fim
-     — a prova quebrava o laco cedo e tentava assinar com a pasta a caminho, e falhava uma
-     rodada sim, outra nao. Quem sabe se o voo acabou e o navegador. */
+  /* ⛔ E O CLIQUE E DADO NO QUE ESTA NO CENTRO VISUAL DA PASTA, e não no seletor dela: a peça
+     vive numa árvore 3D, e o ponto que o navegador de teste calcula para `.folder` caiu no
+     TAMPO — a prova acusava a mesa por um defeito do próprio clique. Quem responde a pergunta
+     "o que o jogador acerta aqui" e `elementFromPoint`, e ela vira a primeira asserção. */
+  /* ⛔ E A ESPERA E PELA ANIMAÇÃO ACABAR, e não por altura repetida: o voo e uma curva que
+     desacelera, então dois quadros consecutivos batem no mesmo pixel arredondado ANTES do fim
+     — a prova quebrava o laço cedo e tentava assinar com a pasta a caminho, e falhava uma
+     rodada sim, outra não. Quem sabe se o voo acabou e o navegador. */
   const pousou = async () => {
     await page
       .waitForFunction(
@@ -672,7 +672,7 @@ try {
   };
 
   /* ⚠ E O TOQUE DIZ SE ACERTOU: `elementFromPoint` e a pergunta "o que o jogador acerta aqui",
-     e um clique que caiu fora da peca tem de reprovar em vez de virar silencio. */
+     e um clique que caiu fora da peça tem de reprovar em vez de virar silêncio. */
   /** @param {string} pick */
   const tocar = pick =>
     page.evaluate(seletor => {
@@ -693,7 +693,7 @@ try {
     }, pick);
 
   const onDesk = await flight();
-  /* ⛔ E O CLIQUE VAI NA PECA PINTADA, e nao no centro da CAIXA: a caixa da pasta deixou de
+  /* ⛔ E O CLIQUE VAI NA PEÇA PINTADA, e não no centro da CAIXA: a caixa da pasta deixou de
      receber ponteiro quando 321px de madeira vazia estavam abrindo a pasta. Fechada, quem
      responde e a capa; aberta, a foto da pasta. */
   const onTarget = await page.evaluate(() => {
@@ -719,40 +719,40 @@ try {
     `[gabinete] a pasta erguida saiu da area: ${inHand?.tall}px de altura`,
   );
   /* ⚠ E O CLIQUE DE LARGAR VAI NA QUINA DA SALA, por medida: `.mail` e um ponto de ancoragem
-     de 0x0 — as cartas sao filhas absolutas dele —, e o navegador nao clica no que nao tem
+     de 0x0 — as cartas são filhas absolutas dele —, e o navegador não clica no que não tem
      tamanho. O passeio parou 47 vezes tentando. */
-  /* ⭐ E A PASTA NA MAO VIRA CAPTURA, porque e o estado em que o jogador LE o ato: o portao ve
-     geometria, e so a imagem responde se o texto esta nitido. */
+  /* ⭐ E A PASTA NA MÃO VIRA CAPTURA, porque e o estado em que o jogador LÊ o ato: o portão vê
+     geometria, e só a imagem responde se o texto esta nítido. */
   await page.screenshot({ path: join(OUT, "cabinet-folder.png") });
 
   /* ⛔ E LARGAR DEIXOU DE TER CANTO: com a pasta centralizada na TELA ela ocupa ~1030x707 no
-     meio da janela, e o canto (40,40) da area caiu DENTRO dela — o clique virava marca em vez
+     meio da janela, e o canto (40,40) da área caiu DENTRO dela — o clique virava marca em vez
      de largar. Quem manda o evento e a sala, que e onde o ouvinte mora. */
   await page.evaluate(() =>
     document.querySelector(".room")?.dispatchEvent(new MouseEvent("click", { bubbles: true })),
   );
-  /* ⚠ E A ESPERA E POR ASSENTAMENTO, e nao por relogio: sem cabeca o quadro chega irregular, e
-     um numero fixo pegava a mola a caminho — 15px acima da mesa numa rodada, 31 na seguinte. A
-     prova esperava com relogio e acusava a mesa por causa do proprio compasso. */
+  /* ⚠ E A ESPERA E POR ASSENTAMENTO, e não por relógio: sem cabeça o quadro chega irregular, e
+     um número fixo pegava a mola a caminho — 15px acima da mesa numa rodada, 31 na seguinte. A
+     prova esperava com relógio e acusava a mesa por causa do próprio compasso. */
   await pousou();
   const backDown = await flight();
-  /* ⚠ A VOLTA SE COBRA COM FOLGA DE 20px, e ela e ABSOLUTA: sem cabeca o quadro chega mais
+  /* ⚠ A VOLTA SE COBRA COM FOLGA DE 20px, e ela e ABSOLUTA: sem cabeça o quadro chega mais
      devagar e a mola assenta uns pixels acima da mesa. Em porcentagem a folga encolhia junto
-     com a peca — a mesma sobra de 16px passou de 3% para 5% quando a pasta diminuiu. Uma pasta
-     que ficou na mao mede 500px a mais. */
+     com a peça — a mesma sobra de 16px passou de 3% para 5% quando a pasta diminuiu. Uma pasta
+     que ficou na mão mede 500px a mais. */
   expect(
     backDown !== null && onDesk !== null && Math.abs(backDown.tall - onDesk.tall) <= 20,
     `[gabinete] a pasta nao voltou para a mesa: ${backDown?.tall}px contra ${onDesk?.tall}px`,
   );
 
-  /* ⭐ 1b — O VOO INTERROMPIDO NAO SALTA, e esta e a prova da arquitetura inteira. Largar a
-     pasta no MEIO da subida tem de continuar do ponto em que ela esta: a curva e analitica,
-     entao a posicao e a velocidade do instante saem da conta e o voo novo parte dali.
-     ⛔ COM TRANSICAO CSS ISTO FALHA POR CONSTRUCAO — interrompida, ela recomeca do zero, e a
-     peca salta para o alvo antigo antes de voltar. O salto e o que esta prova mede. */
-  /* ⛔ E O CORTE E MEDIDO DENTRO DA PAGINA, num `evaluate` so: entre esperar do lado do teste e
-     medir do lado da pagina cabe o voo inteiro — a prova via 707px onde queria ver o meio,
-     porque a pagina estrangulada atrasa o `waitForFunction` e o voo acaba na espera. */
+  /* ⭐ 1b — O VOO INTERROMPIDO NÃO SALTA, e esta e a prova da arquitetura inteira. Largar a
+     pasta no MEIO da subida tem de continuar do ponto em que ela esta: a curva e analítica,
+     então a posição e a velocidade do instante saem da conta e o voo novo parte dali.
+     ⛔ COM TRANSICAO CSS ISTO FALHA POR CONSTRUÇÃO — interrompida, ela recomeça do zero, e a
+     peça salta para o alvo antigo antes de voltar. O salto e o que esta prova mede. */
+  /* ⛔ E O CORTE E MEDIDO DENTRO DA PÁGINA, num `evaluate` só: entre esperar do lado do teste e
+     medir do lado da página cabe o voo inteiro — a prova via 707px onde queria ver o meio,
+     porque a página estrangulada atrasa o `waitForFunction` e o voo acaba na espera. */
   const salto = await page.evaluate(async () => {
     const pasta = document.querySelector(".folder");
     const room = document.querySelector(".room");
@@ -760,8 +760,8 @@ try {
     const alto = () => pasta.getBoundingClientRect().height;
     /** @returns {Promise<void>} */
     const quadro = () => new Promise(r => requestAnimationFrame(() => r()));
-    /* ⚠ E ELA GARANTE O PROPRIO ESTADO INICIAL: o gesto atravessa a pintura, entao uma prova
-       que herda a pasta no ar mede o voo inteiro como se fosse o comeco dele. */
+    /* ⚠ E ELA GARANTE O PRÓPRIO ESTADO INICIAL: o gesto atravessa a pintura, então uma prova
+       que herda a pasta no ar mede o voo inteiro como se fosse o começo dele. */
     const assentar = async () => {
       for (let i = 0; i < 240; i++) {
         await quadro();
@@ -773,7 +773,7 @@ try {
       await assentar();
     }
     const parado = alto();
-    /* ⛔ E O TOQUE VAI NA PECA PINTADA: o centro da CAIXA e madeira vazia desde que a pasta
+    /* ⛔ E O TOQUE VAI NA PEÇA PINTADA: o centro da CAIXA e madeira vazia desde que a pasta
        deixou de receber ponteiro pela caixa. */
     const spread = document.querySelector(".folder__open");
     const cover = document.querySelector(".folder__cover");
@@ -823,9 +823,9 @@ try {
   await checkTopbar("barra");
   await page.screenshot({ path: join(OUT, "cabinet.png"), fullPage: true });
 
-  /* ⛔ A DICA DO DOCK NAO TINHA PROVA, e ela e o rotulo da secao — sem ela o dock e sete desenhos
+  /* ⛔ A DICA DO DOCK NÃO TINHA PROVA, e ela e o rótulo da seção — sem ela o dock e sete desenhos
      sem nome. E ela acende UMA de cada vez: com a gaveta aberta pelo teclado e o ponteiro parado
-     sobre outro icone, o foco acendia uma e o hover acendia a outra. */
+     sobre outro ícone, o foco acendia uma e o hover acendia a outra. */
   const dicas = async () =>
     page.$$eval(".rail__label", nodes =>
       nodes
@@ -843,7 +843,7 @@ try {
   await page.mouse.move(40, 400);
   await page.waitForTimeout(240);
 
-  /* ⛔ O CASO COMBINADO NAO TINHA PROVA, e a regra que o tratava estava MORTA: o seletor pedia um
+  /* ⛔ O CASO COMBINADO NÃO TINHA PROVA, e a regra que o tratava estava MORTA: o seletor pedia um
      `.rail` dentro de outro `.rail`, casava zero elementos, e o pouso sozinho passava verde.
      Medido: foco em Finanças pelo teclado + pouso em Congresso = 2 dicas acesas. */
   await page.focus('.rail__item[data-section="congress"]');
@@ -862,11 +862,11 @@ try {
   await page.mouse.move(40, 400);
   await page.waitForTimeout(240);
 
-  /* ⛔ A GAVETA NAO TINHA PROVA DE FECHAR: ela abre no passeio inteiro (`viaRail`), e se travasse
-     aberta o portao passava verde — os seis icones do dock sumiriam e ninguem veria. */
+  /* ⛔ A GAVETA NÃO TINHA PROVA DE FECHAR: ela abre no passeio inteiro (`viaRail`), e se travasse
+     aberta o portão passava verde — os seis ícones do dock sumiriam e ninguém veria. */
   const gaveta = page.locator(".rail__drawer");
   if ((await gaveta.count()) > 0 && (await gaveta.isVisible())) {
-    /* ⛔ A GAVETA E UM MORPH, e nao uma troca de quadro: a capsula anda na mola entre as duas
+    /* ⛔ A GAVETA E UM MORPH, e não uma troca de quadro: a cápsula anda na mola entre as duas
        larguras. A prova mede a largura no meio do caminho (200ms: 90 de apagar + 110 de mola)
        e o pouso — inline limpo, lente refeita no tamanho final. */
     const largura = () =>
@@ -903,7 +903,7 @@ try {
   }
 
   /* 1b — A CARTA ABRE NA MESA (ciclo 27): o envelope ergue a folha dele ao centro da janela, na
-     escala de leitura; Esc larga e devolve o foco ao envelope. So quando ha carta na mesa. */
+     escala de leitura; Esc larga e devolve o foco ao envelope. Só quando há carta na mesa. */
   if ((await page.locator(".envelope[data-letter]").count()) > 0) {
     await page.click(".envelope[data-letter] >> nth=0");
     await page.waitForTimeout(500);
@@ -935,18 +935,18 @@ try {
   }
 
   /* 1a — O EMAIL E A OUTRA METADE DA TELA QUE SE PARTIU, e a geometria se remede aqui porque
-     o vao mudou de TAMANHO e nao so de lugar: a caixa deixou a coluna de 432px e ficou com a
+     o vão mudou de TAMANHO e não só de lugar: a caixa deixou a coluna de 432px e ficou com a
      largura do tabuleiro. */
   await page.click('.rail [data-section="email"]');
-  /* ⛔ E A ESPERA E PELA MESA SAIR, E NAO PELO RELOGIO: a troca de tela e uma view transition
-     do navegador, e a cena anterior fica na pagina ate ela terminar — medido, 274 a 445ms. Com
+  /* ⛔ E A ESPERA E PELA MESA SAIR, E NÃO PELO RELÓGIO: a troca de tela e uma view transition
+     do navegador, e a cena anterior fica na página até ela terminar — medido, 274 a 445ms. Com
      400 fixos o passeio media o texto da Caixa CONTRA A MADEIRA, e reprovava 21 contrastes de
-     uma vez. ⛔ E TIRAR A MESA DO DOM NAO BASTA: o navegador continua pintando o SNAPSHOT dela
-     ate a animacao do pseudo-elemento acabar, e sobravam 7. E a mesma licao da mola: espera-se
-     o estado, e nao o compasso. */
+     uma vez. ⛔ E TIRAR A MESA DO DOM NÃO BASTA: o navegador continua pintando o SNAPSHOT dela
+     até a animação do pseudo-elemento acabar, e sobravam 7. E a mesma lição da mola: espera-se
+     o estado, e não o compasso. */
   await page.waitForFunction(() => document.querySelectorAll(".room").length === 0);
-  /* ⛔ E A ANIMACAO NASCE DEPOIS DE O DOM TROCAR: `startViewTransition` aplica a pintura e so
-     entao comeca o cross-fade — a espera de cima passava no VAO entre os dois, com o snapshot
+  /* ⛔ E A ANIMAÇÃO NASCE DEPOIS DE O DOM TROCAR: `startViewTransition` aplica a pintura e só
+     então começa o cross-fade — a espera de cima passava no VÃO entre os dois, com o snapshot
      da mesa ainda na tela. Um quadro de folga para ela existir, e ai espera-se ela acabar. */
   await page.waitForTimeout(120);
   await page.waitForFunction(() =>
@@ -965,19 +965,19 @@ try {
   await checkNoPageScroll("email");
   await page.screenshot({ path: join(OUT, "email.png"), fullPage: true });
 
-  /* ⛔ A PILULA NAO TINHA PROVA, e dois defeitos passaram por ela na mesma tarde: ao trocar de
+  /* ⛔ A PÍLULA NÃO TINHA PROVA, e dois defeitos passaram por ela na mesma tarde: ao trocar de
      eixo (dock → coluna) uma mola velha escrevia por cima e ela nascia 53px FORA do rail; e o
-     vidro dela pintava POR CIMA do rotulo do item corrente, que saia cinza. A primeira se mede
-     na caixa; a segunda no hit test, com o `pointer-events` dela ligado so para a pergunta. */
+     vidro dela pintava POR CIMA do rótulo do item corrente, que saia cinza. A primeira se mede
+     na caixa; a segunda no hit test, com o `pointer-events` dela ligado só para a pergunta. */
   const pilula = async () => {
     /* ⚠ O PONTEIRO SAI DO ITEM ANTES DE MEDIR: o `:hover` escala o item em 1,02, e a caixa
-       medida com ele em cima da 3 a 5px de "erro" que nao existe. */
+       medida com ele em cima da 3 a 5px de "erro" que não existe. */
     await page.mouse.move(720, 500);
     await page.waitForTimeout(240);
     return page.evaluate(() => {
       const rail = document.querySelector(".rail");
       const pill = rail?.querySelector(".rail__pill");
-      /* O ativo VISIVEL: numa area o botao da gaveta tambem e ativo, e escondido mede zero. */
+      /* O ativo VISÍVEL: numa área o botão da gaveta também e ativo, e escondido mede zero. */
       const item = [...(rail?.querySelectorAll(".rail__item--active") ?? [])].find(
         node => node instanceof HTMLElement && node.offsetWidth > 0,
       );
@@ -997,7 +997,7 @@ try {
           Math.abs(a.height - b.height),
         ),
         above: hit === pill,
-        /* Acesa = opacidade computada; a pilula nao carrega mais chave de estado. */
+        /* Acesa = opacidade computada; a pílula não carrega mais chave de estado. */
         on: Number(getComputedStyle(pill).opacity) > 0.5 ? "true" : "false",
       };
     });
@@ -1012,9 +1012,9 @@ try {
     "[coluna] a pilula pinta por cima do rotulo do item corrente",
   );
 
-  /* 1b — A POSSE PERGUNTA, e ela e a primeira decisao do mandato. ⚠ A ASSERCAO DO GABINETE
-     CONTINUA VALENDO e nao foi afrouxada: os tres eixos sao BOTOES, e nao `input` nem
-     `select` — a pergunta mora na carta, e a carta mudou de tela e nao de forma. */
+  /* 1b — A POSSE PERGUNTA, e ela e a primeira decisão do mandato. ⚠ A ASSERÇÃO DO GABINETE
+     CONTINUA VALENDO e não foi afrouxada: os três eixos são BOTÕES, e não `input` nem
+     `select` — a pergunta mora na carta, e a carta mudou de tela e não de forma. */
   expect(
     (await page.locator(".letter__pledge").count()) === 3,
     "[posse] a carta de posse nao trouxe os tres eixos do discurso",
@@ -1022,15 +1022,15 @@ try {
   const opcoes = await page.locator(".letter__pledge .letter__choice").count();
   expect(opcoes >= 7, `[posse] o discurso ofereceu ${opcoes} compromissos`);
 
-  /* ⚠ E MARCAR TEM DE MARCAR: o gesto escreve no rascunho do mes, e um botao que nao muda de
-     estado e uma decisao que o jogador acha que tomou. */
+  /* ⚠ E MARCAR TEM DE MARCAR: o gesto escreve no rascunho do mês, e um botão que não muda de
+     estado e uma decisão que o jogador acha que tomou. */
   await page.locator('[data-pledge="priority"]').first().click();
   await page.waitForTimeout(200);
   expect(
     (await page.locator('.letter__choice[aria-pressed="true"]').count()) === 1,
     "[posse] marcar um compromisso nao marcou nada",
   );
-  /* E clicar de novo desmarca — nao prometer e uma escolha, e ela tem caminho de volta. */
+  /* E clicar de novo desmarca — não prometer e uma escolha, e ela tem caminho de volta. */
   await page.locator('[data-pledge="priority"]').first().click();
   await page.waitForTimeout(200);
   expect(
@@ -1040,12 +1040,12 @@ try {
   await checkClipped("posse");
   await checkEllipsized("posse");
   /* ⚠ A CARTA DA POSSE E A MAIS ALTA DO JOGO — 875px com o discurso —, e foi ela que revelou
-     que a carta aberta nao tinha contencao nenhuma: ela crescia e furava a tela travada. */
+     que a carta aberta não tinha contenção nenhuma: ela crescia e furava a tela travada. */
   await checkNoPageScroll("posse");
 
-  /* 1b — E O RAIL LEVA AO LUGAR DE DECIDIR. ⚠ ERA O BOTAO DO CARTAO ate 22/08/2026, e ele
-     saiu com a reformulacao da coluna: duas fichas tinham porta e duas nao, e o rail ja leva
-     as duas telas que aqueles botoes abriam. */
+  /* 1b — E O RAIL LEVA AO LUGAR DE DECIDIR. ⚠ ERA O BOTÃO DO CARTÃO até 22/08/2026, e ele
+     saiu com a reformulação da coluna: duas fichas tinham porta e duas não, e o rail já leva
+     as duas telas que aqueles botões abriam. */
   await page.click('.rail [data-section="congress"]');
   await page.waitForTimeout(600);
   await checkOverflow("congresso");
@@ -1059,7 +1059,7 @@ try {
     "[congresso] a mesa sem pauta mostrou placar",
   );
 
-  /* 2 — UMA AREA, pelo rail. */
+  /* 2 — UMA ÁREA, pelo rail. */
   await viaRail(page, "health");
   await page.waitForTimeout(600);
   await checkOverflow("area");
@@ -1070,9 +1070,9 @@ try {
   await checkContrast("area");
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento veio sem programas");
 
-  /* ⚠ A CORRENTE TEM DUAS METADES E AS DUAS TEM DE TER LINHA: uma area sem saida seria uma
-     area que nao alimenta nada, e o catalogo garante o contrario — o bloco vazio de um lado
-     e a forma como este item morreria em silencio. */
+  /* ⚠ A CORRENTE TEM DUAS METADES E AS DUAS TEM DE TER LINHA: uma área sem saída seria uma
+     área que não alimenta nada, e o catálogo garante o contrário — o bloco vazio de um lado
+     e a forma como este item morreria em silêncio. */
   expect(
     (await page.locator(".chain__half").count()) === 2,
     "[area] a corrente nao veio com as duas metades",
@@ -1082,9 +1082,9 @@ try {
     "[area] a corrente veio sem elo nenhum",
   );
 
-  /* ⚠ E A LINHA DO ORCAMENTO COME O GASTO CHEIO, e nao a parte acima do piso — a Previdencia
-     e onde a diferenca grita: R$ 2,4 bi de discricionario contra R$ 126,7 de gasto cheio, e a
-     MALHA consome o segundo. Sem esta checagem a corrente anunciaria +0,02 onde o motor poe
+  /* ⚠ E A LINHA DO ORCAMENTO COME O GASTO CHEIO, e não a parte acima do piso — a Previdência
+     e onde a diferença grita: R$ 2,4 bi de discricionário contra R$ 126,7 de gasto cheio, e a
+     MALHA consome o segundo. Sem esta checagem a corrente anunciaria +0,02 onde o motor põe
      +1,22, e nada falharia. */
   await viaRail(page, "welfare");
   await page.waitForTimeout(400);
@@ -1099,7 +1099,7 @@ try {
     `[area] a corrente da Previdencia diz que a verba poe ${verba} — ela le o discricionario, e nao o gasto cheio`,
   );
   await viaRail(page, "health");
-  /* A viagem da pilula entre dois itens da coluna assenta em ~450ms (cauda 0,46s). */
+  /* A viagem da pílula entre dois itens da coluna assenta em ~450ms (cauda 0,46s). */
   await page.waitForTimeout(700);
   const viajou = await pilula();
   expect(
@@ -1182,9 +1182,9 @@ try {
   );
   await page.screenshot({ path: join(OUT, "congress-over-budget.png"), fullPage: true });
 
-  /* 7 — O MES ANDA, E ELE PRESTA CONTAS SEM INTERROMPER. */
+  /* 7 — O MÊS ANDA, E ELE PRESTA CONTAS SEM INTERROMPER. */
 
-  /* ANTES DO PRIMEIRO MES o painel diz que esta esperando, e nao fica em branco: bloco vazio
+  /* ANTES DO PRIMEIRO MÊS o painel diz que esta esperando, e não fica em branco: bloco vazio
      ao lado de controles que funcionam lê como defeito. */
   expect(
     (await page.locator(".report.empty--quiet").count()) === 1,
@@ -1203,7 +1203,7 @@ try {
     /aprovada|rejeitada|decretada/i.test(verdict),
     `[relatorio] o veredito veio como "${verdict}"`,
   );
-  /* ⚠ O NUMERO E COBRADO CONTRA O CATALOGO, e nao digitado. */
+  /* ⚠ O NÚMERO E COBRADO CONTRA O CATÁLOGO, e não digitado. */
   expect(
     (await page.locator(".report__table tbody tr").count()) === CATALOG.parties.length,
     `[relatorio] a tabela trouxe ${await page.locator(".report__table tbody tr").count()} bancadas e o catalogo tem ${CATALOG.parties.length}`,
@@ -1211,9 +1211,9 @@ try {
   await page.screenshot({ path: join(OUT, "report.png"), fullPage: true });
   await checkContrast("relatorio");
 
-  /* ⚠ 7a-bis — A CARTA ABERTA MORRE COM O MES. `openDispatch` so era escrito no clique e nunca
+  /* ⚠ 7a-bis — A CARTA ABERTA MORRE COM O MÊS. `openDispatch` só era escrito no clique e nunca
      limpo: um clique num aviso velho prendia o jogador nele por 20 meses medidos, com o painel
-     mostrando o aviso enquanto o botao cobrava o silencio de outra carta. */
+     mostrando o aviso enquanto o botão cobrava o silêncio de outra carta. */
   await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(400);
   const linhas = await page.locator(".tray__row").count();
@@ -1221,7 +1221,7 @@ try {
     await page.locator(".tray__row").last().click();
     await page.waitForTimeout(200);
     /* ⚠ `paint()` REESCREVE A TELA INTEIRA, e o foco ia junto: medido, ele caia em `BODY` nos
-       tres gestos da bandeja, e voltar ao botao recem-apertado custava OITO tabs. */
+       três gestos da bandeja, e voltar ao botão recem-apertado custava OITO tabs. */
     const comFoco = await page.evaluate(() => {
       const node = document.activeElement;
       return node instanceof HTMLElement ? (node.dataset["dispatch"] ?? node.tagName) : "nada";
@@ -1238,30 +1238,30 @@ try {
     const agora = await page
       .locator('.tray__row[aria-current="true"]')
       .getAttribute("data-dispatch");
-    /* ⚠ A CARTA CLICADA ATRAVESSA O MES, e esta guarda ja cobrou o CONTRARIO: ela exigia que a
-       bandeja voltasse para o topo. Palavras dele: "quando eu avanco um mes, nao pode mudar a
-       mensagem que esta clicada, tem que ficar naquela ate que eu mesmo mude". */
+    /* ⚠ A CARTA CLICADA ATRAVESSA O MÊS, e esta guarda já cobrou o CONTRÁRIO: ela exigia que a
+       bandeja voltasse para o topo. Palavras dele: "quando eu avanço um mês, não pode mudar a
+       mensagem que esta clicada, tem que ficar naquela até que eu mesmo mude". */
     expect(
       agora === presa,
       `[caixa] o mes virou e a carta aberta trocou de ${presa} para ${agora}`,
     );
   }
 
-  /* ⚠ 7a½ — A MESA CABE, E ELA MUDA COM O MES. Aqui media a coluna de seis blocos, que saiu;
-     o que ficou tem duas medidas, e as duas ja falharam de verdade nesta mesa.
+  /* ⚠ 7a½ — A MESA CABE, E ELA MUDA COM O MÊS. Aqui media a coluna de seis blocos, que saiu;
+     o que ficou tem duas medidas, e as duas já falharam de verdade nesta mesa.
      📐 O TEXTO DO ATO ESTOUROU A FOLHA em 40px: a rubrica saia cortada pela borda e caia por
-     cima da linha do Diario Oficial. O tamanho do ato anda com o mes, entao a folha se mede
-     mes a mes e nao so no primeiro.
-     ⛔ E CARTA ATRAS DA PASTA E A COISA QUE ELE PROIBIU: numa moldura menor elas cairam 67px
-     atras dela. As posicoes sao em % e as pecas em px, entao encolher a mesa aproxima as duas
+     cima da linha do Diário Oficial. O tamanho do ato anda com o mês, então a folha se mede
+     mês a mês e não só no primeiro.
+     ⛔ E CARTA ATRÁS DA PASTA E A COISA QUE ELE PROIBIU: numa moldura menor elas caíram 67px
+     atrás dela. As posições são em % e as peças em px, então encolher a mesa aproxima as duas
      sem encolher nenhuma. */
   /** @param {string} where */
   async function checkDeskFits(where) {
     /* ⛔ O QUE ESTA MEDIDA COBRA E O ARRANJO, e arranjo e o estado de REPOUSO: erguida, a pasta
-       ocupa a tela e cobre as cartas por desenho, que nao e o defeito. O gesto atravessa a
-       pintura de proposito, entao a prova poe a pasta na mesa antes de medir. */
-    /* So espera o pouso quando houve gesto: na mesa nada anima, e `pousou` esperava 2s por
-       uma animacao que nao vinha — 24 meses x 2s eram 48 dos 120s do passeio. */
+       ocupa a tela e cobre as cartas por desenho, que não e o defeito. O gesto atravessa a
+       pintura de propósito, então a prova põe a pasta na mesa antes de medir. */
+    /* Só espera o pouso quando houve gesto: na mesa nada anima, e `pousou` esperava 2s por
+       uma animação que não vinha — 24 meses x 2s eram 48 dos 120s do passeio. */
     const lowered = await page.evaluate(() => {
       const room = document.querySelector(".room");
       const pasta = document.querySelector(".folder");
@@ -1271,9 +1271,9 @@ try {
     });
     if (lowered) await pousou();
 
-    /* ⚠ AS DUAS FOLHAS SE MEDEM, e nao a primeira: o parecer cresce com o mes tanto quanto o
-       ato — nome de grupo longo, valor de seis digitos —, e medir so uma deixaria a outra
-       estourar em silencio. */
+    /* ⚠ AS DUAS FOLHAS SE MEDEM, e não a primeira: o parecer cresce com o mês tanto quanto o
+       ato — nome de grupo longo, valor de seis dígitos —, e medir só uma deixaria a outra
+       estourar em silêncio. */
     const over = await page.evaluate(() =>
       [...document.querySelectorAll(".sheet")].reduce(
         (worst, sheet) => Math.max(worst, sheet.scrollHeight - sheet.clientHeight),
@@ -1285,11 +1285,11 @@ try {
     const behind = await page.evaluate(() => {
       const folder = document.querySelector(".folder");
       if (!folder) return null;
-      /* ⛔ E A CAIXA DA PASTA DEIXOU DE SER A PECA QUE SE VE, quando ela aprendeu a fechar: a
-         face esquerda gira para cima da direita, entao a metade de layout que ela deixou fica
-         vazia e invisivel. Medir por ela acusou 20 meses com a carta mais a direita em 396 e a
-         capa comecando em 588 — 192px de folga chamados de sobreposicao.
-         ⭐ QUEM MANDA E A TINTA: fechada, a peca e a capa; aberta, e a pasta inteira. */
+      /* ⛔ E A CAIXA DA PASTA DEIXOU DE SER A PEÇA QUE SE VÊ, quando ela aprendeu a fechar: a
+         face esquerda gira para cima da direita, então a metade de layout que ela deixou fica
+         vazia e invisível. Medir por ela acusou 20 meses com a carta mais a direita em 396 e a
+         capa começando em 588 — 192px de folga chamados de sobreposição.
+         ⭐ QUEM MANDA E A TINTA: fechada, a peça e a capa; aberta, e a pasta inteira. */
       const cover = folder.querySelector(".folder__cover");
       const spread = folder.querySelector(".folder__open");
       const shut =
@@ -1301,8 +1301,8 @@ try {
         const down = Math.min(one.bottom, box.bottom) - Math.max(one.top, box.top);
         return across > 1 && down > 1;
       }).length;
-      /* ⚠ E A ACUSACAO DIZ O ESTADO DA PASTA: erguida ela ocupa a tela e cobre tudo por
-         desenho, o que nao e o defeito que esta medida existe para pegar — sem isto a prova
+      /* ⚠ E A ACUSAÇÃO DIZ O ESTADO DA PASTA: erguida ela ocupa a tela e cobre tudo por
+         desenho, o que não e o defeito que esta medida existe para pegar — sem isto a prova
          acusa o arranjo por causa de um gesto que ficou aberto. */
       return { cruzam, alta: Math.round(box.height), erguida: box.height > 600 };
     });
@@ -1313,20 +1313,20 @@ try {
     );
   }
 
-  /* ⚠ E ELA MEDE O GABINETE, entao o passeio VOLTA para la: a etapa acima acaba no email, e a
-     mesa nao existe nele — a medicao vinha `null` e a acusacao se repetia 24 vezes. */
+  /* ⚠ E ELA MEDE O GABINETE, então o passeio VOLTA para la: a etapa acima acaba no email, e a
+     mesa não existe nele — a medição vinha `null` e a acusação se repetia 24 vezes. */
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(400);
 
-  /* ⚠ VINTE E QUATRO MESES, e o numero e medido: os dois meses em que a coluna estourava eram
-     o 23 e o 35, e uma janela de doze nao alcancava nenhum dos dois. */
+  /* ⚠ VINTE E QUATRO MESES, e o número e medido: os dois meses em que a coluna estourava eram
+     o 23 e o 35, e uma janela de doze não alcançava nenhum dos dois. */
   for (let month = 0; month < 24; month++) {
     await page.click("#advance");
     await page.waitForTimeout(45);
     await checkDeskFits(`gabinete mes ${month + 2}`);
   }
 
-  /* 7b — O MES E REPETIVEL. */
+  /* 7b — O MÊS E REPETÍVEL. */
   const beforeRun = await page.locator("#turn").innerText();
   for (let month = 0; month < 3; month++) {
     await page.click("#advance");
@@ -1337,14 +1337,14 @@ try {
     beforeRun !== afterRun,
     `[turno] tres cliques em "avancar" e o mes nao andou: ${beforeRun} → ${afterRun}`,
   );
-  /* Ele visitava o Gabinete no mes 1, onde a caixa so tem a carta de posse, e a peca central
-     do ciclo 9 — o prazo, a tarja e as duas saidas — nao aparecia em captura nenhuma. */
+  /* Ele visitava o Gabinete no mês 1, onde a caixa só tem a carta de posse, e a peça central
+     do ciclo 9 — o prazo, a tarja e as duas saídas — não aparecia em captura nenhuma. */
   for (let month = 0; month < 8; month++) {
     if ((await page.locator(".letter__choices").count()) > 0) break;
 
     /* ⚠ SEM PAGAR A BANCADA A MESA NUNCA PAUTA, e por isso este trecho compra antes de
-       avancar. */
-    /* ⚠ E O TEXTO PRECISA SER LEI, e nao remanejamento. */
+       avançar. */
+    /* ⚠ E O TEXTO PRECISA SER LEI, e não remanejamento. */
     await viaRail(page, "health");
     await page.waitForTimeout(400);
     const dials = page.locator(".dial__slider");
@@ -1370,8 +1370,8 @@ try {
 
   const asking = await page.locator(".letter__choices").count();
   if (asking > 0) {
-    /* A TARJA SO EXISTE ONDE HA PRAZO, e a prova disso e geometrica: a carta que pergunta tem
-       `data-urgency`, e as outras nao tem nenhum. */
+    /* A TARJA SÓ EXISTE ONDE HÁ PRAZO, e a prova disso e geométrica: a carta que pergunta tem
+       `data-urgency`, e as outras não tem nenhum. */
     expect(
       (await page.locator(".letter[data-urgency]").count()) > 0,
       "[caixa] a carta que pergunta saiu sem tarja de gravidade",
@@ -1382,16 +1382,16 @@ try {
     );
     await checkOverflow("caixa com pergunta");
     await checkClipped("caixa com pergunta");
-    /* ⚠ ESTE ESTADO ERA O UNICO SEM O TERCEIRO IRMAO, e e justamente aqui que o indice mostra
+    /* ⚠ ESTE ESTADO ERA O ÚNICO SEM O TERCEIRO IRMÃO, e e justamente aqui que o índice mostra
        o nome do relator ao lado do prazo, na coluna de 179px. A checagem existia, via o
-       defeito, e nao era chamada onde ele mora. */
+       defeito, e não era chamada onde ele mora. */
     await checkEllipsized("caixa com pergunta");
     await checkContrast("caixa com pergunta");
 
-    /* ⚠ E AGORA TODA CARTA DO MES E ABERTA, e nao so a que pergunta: o passeio media UMA
-       carta por percurso, e a auditoria que abre TODAS achou 13 cortes que ele nao via —
+    /* ⚠ E AGORA TODA CARTA DO MÊS E ABERTA, e não só a que pergunta: o passeio media UMA
+       carta por percurso, e a auditoria que abre TODAS achou 13 cortes que ele não via —
        "Partido dos Trabalhadores Unidos" pedindo 218px numa coluna de 152, dentro do anexo da
-       carta. Uma carta por passeio e uma amostra de um, e o defeito mora na que nao foi
+       carta. Uma carta por passeio e uma amostra de um, e o defeito mora na que não foi
        sorteada. */
     const cartas = await page.locator(".tray__row").count();
     for (let index = 0; index < cartas; index++) {
@@ -1402,9 +1402,9 @@ try {
     }
     await checkNoOverlap("caixa com pergunta", ".letter");
 
-    /* ⚠ A TARJA DE GRAVIDADE E O CANAL QUE DIZ QUE A CARTA TEM PRAZO, e ela sumia: cabecalho e
-       rodape saem com margem negativa do recuo CHEIO, e o recuo da carta com tarja e menor.
-       Medido antes do conserto: os dois a -7px da folha, invadindo o indice, com os 4px da
+    /* ⚠ A TARJA DE GRAVIDADE E O CANAL QUE DIZ QUE A CARTA TEM PRAZO, e ela sumia: cabeçalho e
+       rodapé saem com margem negativa do recuo CHEIO, e o recuo da carta com tarja e menor.
+       Medido antes do conserto: os dois a -7px da folha, invadindo o índice, com os 4px da
        tarja cobertos. */
     const tarja = await page.evaluate(() => {
       const letter = document.querySelector(".tray__open .letter[data-urgency]");
@@ -1426,12 +1426,12 @@ try {
     await page.screenshot({ path: join(OUT, "letter-question.png"), fullPage: true });
   }
 
-  /* 7c — UM CLIQUE NA CAIXA NAO MEXE NA MESA, e esta checagem lia as SETE SETAS da coluna,
-     que sairam com ela. O que a mesa mostra do mes e o ATO, entao o ato virou a leitura: ele
-     recomeca do rateio, que e a mesma funcao que o turno executa.
-     ⚠ ELA ATRAVESSA AS DUAS TELAS de proposito — o defeito que pega e o de uma pintura mexer
-     na outra, e sao tres pinturas entre as duas leituras. */
-  /* ⛔ `.stack .act__body` E NAO `.act__body`: a pasta tem DUAS faces desde o parecer, e as
+  /* 7c — UM CLIQUE NA CAIXA NÃO MEXE NA MESA, e esta checagem lia as SETE SETAS da coluna,
+     que saíram com ela. O que a mesa mostra do mês e o ATO, então o ato virou a leitura: ele
+     recomeça do rateio, que e a mesma função que o turno executa.
+     ⚠ ELA ATRAVESSA AS DUAS TELAS de propósito — o defeito que pega e o de uma pintura mexer
+     na outra, e são três pinturas entre as duas leituras. */
+  /* ⛔ `.stack .act__body` E NÃO `.act__body`: a pasta tem DUAS faces desde o parecer, e as
      duas usam o corpo do documento — o seletor solto casava com duas e o passeio parava. */
   const oAto = () => page.locator(".stack .act__body").innerText();
   await page.click('.rail [data-section="cabinet"]');
@@ -1451,10 +1451,10 @@ try {
   await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(300);
 
-  /* 7d — O FOCO ATRAVESSA O CLIQUE NUMA CARTA NAO LIDA, e esta checagem nasceu VERMELHA. A
-     de 7a-bis ja cobrava foco, e passava: ela clica no mes 2, quando a unica carta ja esta
-     lida. Clicar numa NAO lida vira `data-unread` na mesma pintura, e a marca do foco era
-     montada com o dataset inteiro — o seletor gravado antes nao casava depois. */
+  /* 7d — O FOCO ATRAVESSA O CLIQUE NUMA CARTA NÃO LIDA, e esta checagem nasceu VERMELHA. A
+     de 7a-bis já cobrava foco, e passava: ela clica no mês 2, quando a única carta já esta
+     lida. Clicar numa NÃO lida vira `data-unread` na mesma pintura, e a marca do foco era
+     montada com o dataset inteiro — o seletor gravado antes não casava depois. */
   const naoLidas = page.locator('.tray__row[data-unread="true"]');
   expect(
     (await naoLidas.count()) > 0,
@@ -1478,14 +1478,14 @@ try {
   await checkClipped("area depois do mes");
   await checkContrast("area depois do mes");
 
-  /* O QUE FOI DECIDIDO ESTA NO PROPRIO CONTROLE, e nao numa lista de leis em vigor: a lista
-     morreu junto com o catalogo de pautas, e a pergunta que ela respondia — o que ja esta
+  /* O QUE FOI DECIDIDO ESTA NO PRÓPRIO CONTROLE, e não numa lista de leis em vigor: a lista
+     morreu junto com o catálogo de pautas, e a pergunta que ela respondia — o que já esta
      valendo? */
   expect((await page.locator(".dial").count()) > 0, "[area] o orcamento sumiu depois do mes");
   await page.screenshot({ path: join(OUT, "area-after.png"), fullPage: true });
 
-  /* 7c — O PLACAR, e ele so tem sentido AQUI, depois de quatro meses terem acontecido: numa
-     partida recem-aberta a serie esta vazia e o painel nao teria tendencia nenhuma para
+  /* 7c — O PLACAR, e ele só tem sentido AQUI, depois de quatro meses terem acontecido: numa
+     partida recem-aberta a série esta vazia e o painel não teria tendência nenhuma para
      desenhar — que e o estado em que uma escada quebrada passa despercebida. */
   await page.click('[data-section="finance"]');
   await page.waitForTimeout(600);
@@ -1501,8 +1501,8 @@ try {
     "[financas] o painel abriu sem as linhas do placar",
   );
 
-  /* A AUSENCIA DE CONTROLE E A INFORMACAO PRINCIPAL DA TELA, e ela e verificavel: nenhum
-     controle e nenhum botao dentro do palco. */
+  /* A AUSÊNCIA DE CONTROLE E A INFORMACAO PRINCIPAL DA TELA, e ela e verificável: nenhum
+     controle e nenhum botão dentro do palco. */
   expect(
     (await page.locator("#main input, #main button").count()) === 0,
     "[financas] o placar ofereceu algo para mexer",
@@ -1525,9 +1525,9 @@ try {
   await page.screenshot({ path: join(OUT, "finance.png"), fullPage: true });
 
   /* 8 — A PARTIDA ATRAVESSA O NAVEGADOR. */
-  /* ⚠ E O RASCUNHO DO MES TAMBEM, e antes ele morria inteiro: medido, a resposta marcada numa
+  /* ⚠ E O RASCUNHO DO MÊS TAMBÉM, e antes ele morria inteiro: medido, a resposta marcada numa
      carta sumia no recarregamento — `aria-pressed="accept"` antes, nenhuma depois —, e com ela
-     iam os niveis, as faixas e a verba montados no mes. */
+     iam os níveis, as faixas e a verba montados no mês. */
   await viaRail(page, "health");
   await page.waitForTimeout(400);
   const medidor = page.locator(".dial__slider").first();
@@ -1547,10 +1547,10 @@ try {
     `[save] o mes era ${monthBefore} e voltou ${monthAfter} depois de recarregar`,
   );
 
-  /* A TELA RETOMADA ABRE NO GABINETE, e nao na area em que se estava: `screen` e memoria de
-     sessao e nao entra no save. ⚠ E ELA SUBIU PARA CA na separacao: la embaixo media DEPOIS
-     de o passeio ja ter trocado de tela duas vezes, e provava o proprio clique. */
-  /* ⚠ `.stack .sheet` E NAO `.sheet`: a pasta tem duas faces, e as duas sao assinadas — o
+  /* A TELA RETOMADA ABRE NO GABINETE, e não na área em que se estava: `screen` e memória de
+     sessão e não entra no save. ⚠ E ELA SUBIU PARA CÁ na separação: la embaixo media DEPOIS
+     de o passeio já ter trocado de tela duas vezes, e provava o próprio clique. */
+  /* ⚠ `.stack .sheet` E NÃO `.sheet`: a pasta tem duas faces, e as duas são assinadas — o
      parecer pela Casa Civil e o ato pelo presidente. Quem prova que a mesa voltou e o ato. */
   expect(
     (await page.locator(".stack .sheet .signature").count()) === 1,
@@ -1566,10 +1566,10 @@ try {
   );
   await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(400);
-  /* ⚠ PARA BAIXO O INDICE ROLA DE PROPOSITO, e esta checagem ja cobrou o contrario: ela
-     defendia o teto de 7 linhas, e o teto caiu porque com blocos de mes ele mostrava "MAR" com
-     2 das 5 cartas do mes. Para o LADO continua proibido. */
-  /* Medida no comeco, com uma carta na mesa, esta prova ficaria verde para sempre sem
+  /* ⚠ PARA BAIXO O ÍNDICE ROLA DE PROPÓSITO, e esta checagem já cobrou o contrário: ela
+     defendia o teto de 7 linhas, e o teto caiu porque com blocos de mês ele mostrava "MAR" com
+     2 das 5 cartas do mês. Para o LADO continua proibido. */
+  /* Medida no começo, com uma carta na mesa, esta prova ficaria verde para sempre sem
      defender nada. */
   const tray = await page.evaluate(() => {
     const list = document.querySelector(".tray__list");
@@ -1577,10 +1577,10 @@ try {
     const save = JSON.parse(window.localStorage.getItem("republica-simulator:partida") ?? "{}");
 
     /* ⚠ DUAS LINHAS QUE LEEM IGUAL DENTRO DO MESMO BLOCO. Entre blocos e permitido: o
-       cabecalho do mes separa. Dentro dele nao ha nada separando, e ai o jogador escolhe no
+       cabeçalho do mês separa. Dentro dele não há nada separando, e ai o jogador escolhe no
        escuro — que e o achado 24, dado como fechado uma vez sem prova nenhuma.
-       ⚠ E O PRAZO NAO CONTA COMO DISTINCAO, medido: comparar a linha INTEIRA deixava passar
-       exatamente o caso relatado — "assunto identico, remetente identico, e so a linha de
+       ⚠ E O PRAZO NÃO CONTA COMO DISTINÇÃO, medido: comparar a linha INTEIRA deixava passar
+       exatamente o caso relatado — "assunto idêntico, remetente idêntico, e só a linha de
        prazo, que e a menor e mais apagada, separando as duas". */
     /** @type {{ month: string, lines: string[] }[]} */
     const blocks = [];
@@ -1602,8 +1602,8 @@ try {
     return {
       x: list.scrollWidth - list.clientWidth,
       rows: list.querySelectorAll(".tray__row").length,
-      /* ⚠ A CAIXA TEM DUAS FONTES desde a versao 19 do save: as cartas e o fechamento de cada
-         mes, que virou registro guardado em vez de cartao montado na hora. */
+      /* ⚠ A CAIXA TEM DUAS FONTES desde a versão 19 do save: as cartas e o fechamento de cada
+         mês, que virou registro guardado em vez de cartão montado na hora. */
       letters:
         (Array.isArray(save.mail) ? save.mail.length : -1) +
         (Array.isArray(save.months) ? save.months.length : 0),
@@ -1618,7 +1618,7 @@ try {
       tray.rows === tray.letters,
       `[gabinete] o indice mostrou ${tray.rows} das ${tray.letters} cartas do save`,
     );
-    /* ⚠ E O CALENDARIO SO ANDA PARA TRAS: um mes repetido e a bagunca que ele reportou. */
+    /* ⚠ E O CALENDÁRIO SÓ ANDA PARA TRÁS: um mês repetido e a bagunca que ele reportou. */
     expect(
       tray.months.length === new Set(tray.months).size,
       `[gabinete] um mes apareceu duas vezes no indice: ${tray.months.join(" → ")}`,
@@ -1630,14 +1630,14 @@ try {
     );
   }
 
-  /* ⛔ E ANTES DE RECOMECAR, A MESA E USADA: o voo e a rubrica vivem em variavel de modulo, e
-     sem limpa-las a partida NOVA abria com o ato de jan/2027 JA RUBRICADO e a pasta na mao —
-     710px contra 448 na mesa, medido. A epigrafe e funcao pura do mes, entao ela se repete
-     entre partidas e comparar por ela nao separa duas mesas. */
+  /* ⛔ E ANTES DE RECOMEÇAR, A MESA E USADA: o voo e a rubrica vivem em variável de módulo, e
+     sem limpa-las a partida NOVA abria com o ato de jan/2027 JÁ RUBRICADO e a pasta na mão —
+     710px contra 448 na mesa, medido. A epígrafe e função pura do mês, então ela se repete
+     entre partidas e comparar por ela não separa duas mesas. */
   await page.click('.rail [data-section="cabinet"]');
   /* ⛔ E A ESPERA E PELA TROCA DE TELA ACABAR: enquanto a view transition roda, o navegador
-     pinta um SNAPSHOT por cima da pagina, e `elementFromPoint` devolve o pseudo-elemento —
-     o clique caia fora da pasta e a prova acusava a mesa por causa do proprio compasso. */
+     pinta um SNAPSHOT por cima da página, e `elementFromPoint` devolve o pseudo-elemento —
+     o clique caia fora da pasta e a prova acusava a mesa por causa do próprio compasso. */
   await page.waitForFunction(() => document.querySelectorAll(".room").length === 1);
   await page.waitForFunction(() =>
     document.getAnimations().every(one => {
@@ -1647,9 +1647,9 @@ try {
   );
   expect(await tocar(".folder__cover"), "[recomecar] o centro da pasta nao pertence a pasta");
   await pousou();
-  /* ⛔ E O TOQUE VAI NA EPIGRAFE, e nao no centro da folha: as oito pastas do Art. 2 moram no
-     meio do ato, e um `[data-protect]` sob o ponto medio devolve o clique como MARCA — a
-     rubrica nunca corria e a prova acusava a mesa por causa da propria mira. */
+  /* ⛔ E O TOQUE VAI NA EPÍGRAFE, e não no centro da folha: as oito pastas do Art. 2 moram no
+     meio do ato, e um `[data-protect]` sob o ponto médio devolve o clique como MARCA — a
+     rubrica nunca corria e a prova acusava a mesa por causa da própria mira. */
   expect(await tocar(".stack .sheet .epigraph"), "[recomecar] a epigrafe nao recebeu o toque");
   await page.waitForTimeout(200);
   expect(
@@ -1658,9 +1658,9 @@ try {
   );
   const naMao = await page.locator(".folder").evaluate(node => node.getBoundingClientRect().height);
 
-  /* ⛔ E MARCAR UMA AREA COM A PASTA ERGUIDA REPINTA A SALA, e a sala nova nascia sem
-     `--phone-x`: ele so se mede com a pasta na mesa, e o telefone ia para -271px e ficava la
-     depois de largar. O passeio nunca marcava com a pasta no ar, e o portao ficou verde. */
+  /* ⛔ E MARCAR UMA ÁREA COM A PASTA ERGUIDA REPINTA A SALA, e a sala nova nascia sem
+     `--phone-x`: ele só se mede com a pasta na mesa, e o telefone ia para -271px e ficava la
+     depois de largar. O passeio nunca marcava com a pasta no ar, e o portão ficou verde. */
   const foneAntes = await page
     .locator(".phone")
     .evaluate(node => node.getBoundingClientRect().left);
@@ -1674,7 +1674,7 @@ try {
     `[recomecar] o telefone mudou de lugar na repintura: ${foneAntes}px antes, ${foneDepois} depois`,
   );
 
-  /* E RECOMECAR PEDE DOIS CLIQUES. */
+  /* E RECOMEÇAR PEDE DOIS CLIQUES. */
   await page.click("#restart");
   await page.waitForTimeout(150);
   expect(
@@ -1684,8 +1684,8 @@ try {
   await page.click("#restart");
   await page.waitForTimeout(300);
 
-  /* ⚠ E O SEGUNDO CLIQUE ABRE A POSSE, e nao recomeca: desde 22/08/2026 o jogador escreve o
-     proprio nome antes de o estado existir. A partida so troca quando o formulario fecha. */
+  /* ⚠ E O SEGUNDO CLIQUE ABRE A POSSE, e não recomeça: desde 22/08/2026 o jogador escreve o
+     próprio nome antes de o estado existir. A partida só troca quando o formulário fecha. */
   expect(
     await page
       .locator("#swearDialog")
@@ -1706,8 +1706,8 @@ try {
     "[posse] o seletor ja vinha com uma bancada marcada, e a escolha e do jogador",
   );
   await page.fill("#swearName", "Teste da Silva");
-  /* ⚠ SEM BANCADA O FORMULARIO NAO FECHA, e e de proposito: filiacao e condicao de
-     elegibilidade, entao o `required` do seletor e a regra, e nao um capricho de validacao. */
+  /* ⚠ SEM BANCADA O FORMULÁRIO NÃO FECHA, e e de propósito: filiacao e condição de
+     elegibilidade, então o `required` do seletor e a regra, e não um capricho de validação. */
   await page.selectOption("#swearParty", "pcs");
   await page.locator('input[name="treatment"][value="senhora"]').click();
   await page.click("#swearOk");
@@ -1716,8 +1716,8 @@ try {
     (await page.locator("#turn").innerText()) !== monthAfter,
     "[posse] tomar posse nao recomecou a partida",
   );
-  /* ⚠ NO GABINETE O RAIL E O DOCK, e o dock e so icones: o nome mora no bloco do governo, que
-     so aparece nas outras telas. Le-se o texto do bloco, e nao o que esta pintado. */
+  /* ⚠ NO GABINETE O RAIL E O DOCK, e o dock e só ícones: o nome mora no bloco do governo, que
+     só aparece nas outras telas. Lê-se o texto do bloco, e não o que esta pintado. */
   expect(
     ((await page.locator(".rail__gov").textContent()) ?? "").includes("Teste da Silva"),
     "[posse] o nome digitado nao chegou a tela",
@@ -1736,31 +1736,31 @@ try {
     `[posse] a partida nova abriu com a pasta na mao: ${Math.round(naMesa)}px contra ${Math.round(naMao)}px erguida`,
   );
 
-  /* ⚠ E A CARTA DA POSSE MORA NO EMAIL desde a separacao: recomecar devolve o jogador ao
+  /* ⚠ E A CARTA DA POSSE MORA NO EMAIL desde a separação: recomeçar devolve o jogador ao
      Gabinete, e a bandeja passou a estar a uma tela de distancia. */
   await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(400);
 
-  /* ⚠ E O TRATAMENTO ATRAVESSA A CARTA: sete frases da interface dependiam dele, e ate hoje
+  /* ⚠ E O TRATAMENTO ATRAVESSA A CARTA: sete frases da interface dependiam dele, e até hoje
      diziam "o senhor" para toda presidenta. */
   expect(
     (await page.locator(".tray__open .letter").innerText()).includes("a senhora"),
     "[posse] a carta continuou tratando a presidenta por 'o senhor'",
   );
 
-  /* ⚠ E O DEFEITO QUE ELA PEGOU CONTINUA REGISTRADO, porque a licao dele nao e sobre
-     telefone: os quatro cartoes do Gabinete se desenhavam uns por cima dos outros em todo
-     aparelho de 720px para baixo, e a razao de ninguem ter visto era que a perna do celular
-     estava organizada pelo que PARECIA arriscado — o placar denso, a mesa larga — e nao pelo
-     que o jogador de fato ve primeiro. */
+  /* ⚠ E O DEFEITO QUE ELA PEGOU CONTINUA REGISTRADO, porque a lição dele não e sobre
+     telefone: os quatro cartões do Gabinete se desenhavam uns por cima dos outros em todo
+     aparelho de 720px para baixo, e a razão de ninguém ter visto era que a perna do celular
+     estava organizada pelo que PARECIA arriscado — o placar denso, a mesa larga — e não pelo
+     que o jogador de fato vê primeiro. */
 
-  /* ── A LINHA DO ANEXO, E ELA SO EXISTE DEPOIS DE ALGUNS MESES ─────────────── ⚠ A CHECAGEM
-     DE CORTE NASCEU SEM ALCANCE: ela roda nos pontos de troca de tela, e no mes 1 a bandeja
-     nao tem carta com anexo — o passeio ficou verde com a coluna da SOMA cortada. Aqui ela
-     vai ATE a peca: avanca ate uma carta com anexo aparecer, abre, e so entao mede.
+  /* ── A LINHA DO ANEXO, E ELA SÓ EXISTE DEPOIS DE ALGUNS MESES ─────────────── ⚠ A CHECAGEM
+     DE CORTE NASCEU SEM ALCANCE: ela roda nos pontos de troca de tela, e no mês 1 a bandeja
+     não tem carta com anexo — o passeio ficou verde com a coluna da SOMA cortada. Aqui ela
+     vai ATÉ a peça: avança até uma carta com anexo aparecer, abre, e só então mede.
      ⚠ ELA MEDIA `.annex__line`, QUE SAIU: as quatro tabelas viraram `.annex__line`, e a
      guarda `annexes` recusa o retorno de qualquer uma. O que continua sendo medido aqui e o
-     que so o navegador ve — se a peca CORTA na largura da folha. */
+     que só o navegador vê — se a peça CORTA na largura da folha. */
   await page.click('.rail [data-section="email"]');
   await page.waitForTimeout(400);
   for (let month = 0; month < 10 && (await page.locator(".annex__line").count()) === 0; month++) {
@@ -1784,9 +1784,9 @@ try {
   await checkClipped("carta com anexo");
 
   /* ── A SEGUNDA JANELA ────────────────────────────────────────────────────────
-     ⚠ O PASSEIO RODAVA NUMA ALTURA SO, 980 — e era exatamente a UNICA em que o Gabinete
-     cabia: a 900 um cartao inteiro descia para baixo da dobra e nada acusava, porque a
-     pagina nao crescia. 900 e a altura util de laptop mais comum que existe. */
+     ⚠ O PASSEIO RODAVA NUMA ALTURA SÓ, 980 — e era exatamente a ÚNICA em que o Gabinete
+     cabia: a 900 um cartão inteiro descia para baixo da dobra e nada acusava, porque a
+     página não crescia. 900 e a altura útil de laptop mais comum que existe. */
   await page.setViewportSize({ width: 1440, height: 900 });
   for (const secao of ["cabinet", "email", "congress", "finance"]) {
     await page.click(`.rail [data-section="${secao}"]`);
@@ -1796,9 +1796,9 @@ try {
     await checkSwallowed(`900px/${secao}`);
     await checkEllipsized(`900px/${secao}`);
     await checkClamped(`900px/${secao}`);
-    /* ⛔ E A ROLAGEM SO ENTROU AQUI AGORA: a segunda janela nasceu com cinco checagens e sem
-       esta, entao os 94px que o Gabinete rolava a 1440x900 nunca tiveram quem os visse. As
-       outras duas telas rolam de proposito. */
+    /* ⛔ E A ROLAGEM SÓ ENTROU AQUI AGORA: a segunda janela nasceu com cinco checagens e sem
+       esta, então os 94px que o Gabinete rolava a 1440x900 nunca tiveram quem os visse. As
+       outras duas telas rolam de propósito. */
     if (secao === "cabinet" || secao === "email") await checkNoPageScroll(`900px/${secao}`);
   }
   await page.click('.rail [data-section="cabinet"]');
@@ -1806,8 +1806,8 @@ try {
   await page.screenshot({ path: join(OUT, "cabinet-900.png"), fullPage: true });
 
   /* ── A POSSE, E A BANCADA QUE ELA ESCOLHE ─────────────────────────────────── ⚠ ELA VEM NO
-     FIM DE PROPOSITO: escolher partido recomeca a partida, e o percurso inteiro acima mede o
-     jogo SEM partido, que e como o simulador roda e como um save da versao 20 abre. */
+     FIM DE PROPÓSITO: escolher partido recomeça a partida, e o percurso inteiro acima mede o
+     jogo SEM partido, que e como o simulador roda e como um save da versão 20 abre. */
   await page.click('.rail [data-section="cabinet"]');
   await page.waitForTimeout(300);
   await page.click("#restart");
@@ -1827,9 +1827,9 @@ try {
   await page.click("#swearOk");
   await page.waitForTimeout(700);
   await page.click('.rail [data-section="congress"]');
-  /* ⛔ ESPERA-SE A TRANSICAO ACABAR, e nao o relogio: a troca de tela leva 320ms de tabuleiro mais
-     460 de rail, e o botao de avancar so destrava no `depois` dela — a 500ms fixos o contraste
-     do rotulo media 1,08 contra o botao ainda escuro. */
+  /* ⛔ ESPERA-SE A TRANSICAO ACABAR, e não o relógio: a troca de tela leva 320ms de tabuleiro mais
+     460 de rail, e o botão de avançar só destrava no `depois` dela — a 500ms fixos o contraste
+     do rótulo media 1,08 contra o botão ainda escuro. */
   await page.waitForFunction(
     () =>
       /** @type {{ activeViewTransition?: unknown }} */ (document).activeViewTransition === null,
@@ -1846,9 +1846,9 @@ try {
   await checkContrast("congresso com partido");
   await page.screenshot({ path: join(OUT, "congress-party.png"), fullPage: true });
 
-  /* ── 9 — TRES DEFEITOS QUE O PORTAO NAO VIA (revisao externa de 21/09) ─────────────────────
-     Os tres passaram por tipo, guarda, 332 provas e este passeio. Cada prova aqui caiu contra o
-     codigo de antes da correcao (docs/evidence/review/ultra-finding*.mjs). */
+  /* ── 9 — TRÊS DEFEITOS QUE O PORTÃO NÃO VIA (revisão externa de 21/09) ─────────────────────
+     Os três passaram por tipo, guarda, 332 provas e este passeio. Cada prova aqui caiu contra o
+     código de antes da correção (docs/evidence/review/ultra-finding*.mjs). */
   const settled = async () => {
     await page.waitForFunction(
       () =>
@@ -1896,8 +1896,8 @@ try {
   });
   expect(lensBack, "[troca] a lente do dock nao voltou depois que a troca pousou");
 
-  /* 9b — A CARTA NA MAO SOBREVIVE A REPINTURA PELO ID, e o Esc a larga depois dela. A mao
-     guardava indice: avancar o mes com a carta de janeiro aberta punha a de fevereiro na mao; e
+  /* 9b — A CARTA NA MÃO SOBREVIVE A REPINTURA PELO ID, e o Esc a larga depois dela. A mão
+     guardava índice: avançar o mês com a carta de janeiro aberta punha a de fevereiro na mão; e
      cada pintura pendurava outro Esc no documento, o mais velho zerava o estado sobre a `.post`
      descartada e a carta viva ficava aberta. */
   const heldId = () =>
@@ -1915,7 +1915,7 @@ try {
       "[carta] o envelope nao ergueu a carta, ou ela nao tem id",
     );
 
-    /* Duas repinturas do Gabinete sem sair dele: marcar e desmarcar uma area protegida. */
+    /* Duas repinturas do Gabinete sem sair dele: marcar e desmarcar uma área protegida. */
     await page.click(".act__folders [data-protect] >> nth=0", { force: true });
     await page.waitForTimeout(300);
     await page.click(".act__folders [data-protect] >> nth=0", { force: true });
@@ -1929,7 +1929,7 @@ try {
     await page.waitForTimeout(450);
     expect((await heldId()) === null, "[carta] o Esc nao largou a carta depois de repintar");
 
-    /* O mes anda com a carta na mao: ou ela continua a mesma, ou a mao esvazia. */
+    /* O mês anda com a carta na mão: ou ela continua a mesma, ou a mão esvazia. */
     await page.click(".envelope[data-letter] >> nth=0");
     await page.waitForTimeout(500);
     const heldBefore = await heldId();
@@ -1947,7 +1947,7 @@ try {
     }
   }
 
-  /* ── 10 — A GAVETA, A PILULA, A RAJADA E A LISTA ──────────────────────────────────────── */
+  /* ── 10 — A GAVETA, A PÍLULA, A RAJADA E A LISTA ──────────────────────────────────────── */
   const activeKey = () =>
     page.evaluate(() => {
       const item = [...document.querySelectorAll(".rail__item--active[data-section]")].find(
@@ -1956,8 +1956,8 @@ try {
       return item instanceof HTMLElement ? item.dataset["section"] : null;
     });
 
-  /* 10a — OS OITO FICAM DENTRO DA CAPSULA depois do pouso, e um clique num deles navega. O
-     passeio ja oscilou por um icone fora da capsula no meio do morph. */
+  /* 10a — OS OITO FICAM DENTRO DA CÁPSULA depois do pouso, e um clique num deles navega. O
+     passeio já oscilou por um ícone fora da cápsula no meio do morph. */
   await viaRail(page, "cabinet");
   await settled();
   const drawer = page.locator(".rail__drawer");
@@ -2004,7 +2004,7 @@ try {
     );
   }
 
-  /* 10b — A PILULA SEGUE O ITEM ATIVO nos doze enderecos da coluna, em repouso. */
+  /* 10b — A PÍLULA SEGUE O ITEM ATIVO nos doze endereços da coluna, em repouso. */
   const bad = [];
   for (const key of [
     "email",
@@ -2024,7 +2024,7 @@ try {
     `[pilula] fora do item em ${bad.length} de 12 enderecos: ${bad.join(" | ")}`,
   );
 
-  /* 10c — A RAJADA: cinco trocas sem esperar terminam na ultima, com o rail em repouso. */
+  /* 10c — A RAJADA: cinco trocas sem esperar terminam na última, com o rail em repouso. */
   await page.evaluate(async () => {
     for (const key of ["congress", "finance", "email", "estado", "congress"]) {
       /** @type {HTMLElement | null} */ (
@@ -2050,9 +2050,9 @@ try {
   );
 
   /* 10d — A CARTA CLICADA NO FIM DA LISTA FICA A VISTA, nos dois regimes declarados: abaixo de
-     940px a pagina rola, e a medida e a janela; a 980 a lista rola por dentro, e a medida e a
+     940px a página rola, e a medida e a janela; a 980 a lista rola por dentro, e a medida e a
      caixa dela (`paint.mjs` rola a linha corrente). O clique e por evento, sem o Playwright
-     rolar por conta propria. */
+     rolar por conta própria. */
   await viaRail(page, "email");
   await settled();
   const pageOverflows = () =>
@@ -2140,10 +2140,10 @@ try {
   );
 
   /* ── A FONTE QUE CHEGA TARDE ────────────────────────────────────
-     ⚠ A BARRA MEDE TIPO PARA SE JUSTIFICAR, E MEDE UMA VEZ SO. Medida antes de a fonte chegar,
+     ⚠ A BARRA MEDE TIPO PARA SE JUSTIFICAR, E MEDE UMA VEZ SÓ. Medida antes de a fonte chegar,
      ela grava a largura da fonte de reserva e nada a revisa. A fonte e local e costuma chegar a
-     tempo, entao o defeito ficava invisivel — e o portao piscava vermelho sem nada por tras.
-     Com 300ms de atraso as duas linhas do bloco do mes vazavam 5px, toda vez. */
+     tempo, então o defeito ficava invisível — e o portão piscava vermelho sem nada por trás.
+     Com 300ms de atraso as duas linhas do bloco do mês vazavam 5px, toda vez. */
   const late = await context.newPage();
   await late.route("**/vendor/fonts/**", async route => {
     await new Promise(resolve => setTimeout(resolve, 300));

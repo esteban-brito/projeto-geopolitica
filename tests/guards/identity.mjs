@@ -1,4 +1,4 @@
-/* O QUE ELA IMPEDE, e cada item e um defeito que so aparece tarde: 1. */
+/* O QUE ELA IMPEDE, e cada item e um defeito que só aparece tarde: 1. */
 
 import { collect, isGuardSource, stripJsComments } from "../lib/project.mjs";
 
@@ -6,7 +6,7 @@ export const name = "identity";
 
 const DATA_DIR = "src/data/";
 
-/* Onde a comparacao por nome e proibida. */
+/* Onde a comparação por nome e proibida. */
 const ENGINE_DIRS = ["src/domain/", "src/state/", "src/application/"];
 
 /**
@@ -20,10 +20,10 @@ export function audit(files) {
     if (!path.endsWith(".mjs") || isGuardSource(path)) continue;
     const source = stripJsComments(raw);
 
-    /* 1 e 2 — o catalogo. */
+    /* 1 e 2 — o catálogo. */
     if (path.startsWith(DATA_DIR)) {
-      /* Um esquema que descreve rotulo descreve uma entidade exibida, e toda entidade exibida
-         precisa de identidade propria. */
+      /* Um esquema que descreve rótulo descreve uma entidade exibida, e toda entidade exibida
+         precisa de identidade própria. */
       for (const schema of source.matchAll(/([A-Z][A-Z0-9_]*_SCHEMA)\s*=\s*\{([\s\S]*?)\n\}/g)) {
         const body = schema[2] ?? "";
         if (/\blabel\s*:/.test(body) && !/\bid\s*:/.test(body)) {

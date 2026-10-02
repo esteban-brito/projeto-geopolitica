@@ -1,4 +1,4 @@
-/* OS BLOCOS PARTIDARIOS — o espaco ideologico do Congresso. */
+/* OS BLOCOS PARTIDARIOS — o espaço ideológico do Congresso. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -7,7 +7,7 @@ export const PARTY_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
   sigla: { kind: "text" },
-  /* ⚠ O ARTIGO E VOCABULARIO, e por isso ele mora no catalogo e nao no template. */
+  /* ⚠ O ARTIGO E VOCABULÁRIO, e por isso ele mora no catálogo e não no template. */
   article: { kind: "text" },
   economic: { kind: "number", min: 0, max: 100 },
   liberty: { kind: "number", min: 0, max: 100 },
@@ -26,9 +26,9 @@ export const PARTY_SCHEMA = {
  * @property {string} label - o nome que a interface mostra; ATRIBUTO, nao identidade
  * @property {string} sigla - a sigla, e ela e o nome CURTO da bancada na tela estreita.
  * @property {string} [article] - a contracao com que a prosa se refere a ele: `do`, `da`.
- * monta bancadas a partir de PESSOAS, e uma pessoa se refere pelo nome — nao ha
- * contracao a fazer com "Onofre Bastos Quirino". O campo e do vocabulario dos
- * blocos deste catalogo, e `catalogViolations` cobra todos eles.
+ * monta bancadas a partir de PESSOAS, e uma pessoa se refere pelo nome — não há
+ * contração a fazer com "Onofre Bastos Quirino". O campo e do vocabulário dos
+ * blocos deste catálogo, e `catalogViolations` cobra todos eles.
  * @property {number} economic
  * @property {number} liberty
  * @property {number} venalityEconomic - o preco de ceder em pauta economica
@@ -230,4 +230,4 @@ export const PARTIES = [
   },
 ];
 
-/* O TAMANHO DA CAMARA E AS MAIORIAS MUDARAM DE ENDERECO. */
+/* O TAMANHO DA CAMARA E AS MAIORIAS MUDARAM DE ENDEREÇO. */

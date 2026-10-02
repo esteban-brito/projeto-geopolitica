@@ -9,8 +9,8 @@ import { monthParts } from "../../state/state.mjs";
 /** @typedef {import("../../state/state.mjs").GameState} GameState */
 /** @typedef {import("../../data/calendar.mjs").Landmark} Landmark */
 
-/* ⚠ A REFERENCIA E DE PREVIA e nao do motor: a regua de verdade sai das constantes de escala
-   de Financas, e traze-las para ca seria uma segunda verdade sobre volatilidade. */
+/* ⚠ A REFERENCIA E DE PREVIA e não do motor: a régua de verdade sai das constantes de escala
+   de Finanças, e trazê-las para cá seria uma segunda verdade sobre volatilidade. */
 const REFERENCE = 0.25;
 const SPARK_W = 88;
 
@@ -37,10 +37,10 @@ function sparkHtml(series, good, horizon, from = 0) {
   const height = Math.min(1, relative / REFERENCE) * 9;
   const spread = max - min || 1;
   const base = 6 + height / 2;
-  /* ⛔ O EIXO E O MES E NAO O INDICE, e a diferenca so aparece na serie CURTA: a aprovacao
-     vem dos cartoes do mes, que o motor limita a 24. Desenhada do indice zero, ela punha
-     os dois ultimos anos no lugar dos dois primeiros — no mes 36 o ponto dela parava na
-     metade do trilho enquanto o do PIB estava a tres quartos, no mesmo mes. */
+  /* ⛔ O EIXO E O MÊS E NÃO O ÍNDICE, e a diferença só aparece na série CURTA: a aprovação
+     vem dos cartões do mês, que o motor limita a 24. Desenhada do índice zero, ela punha
+     os dois últimos anos no lugar dos dois primeiros — no mês 36 o ponto dela parava na
+     metade do trilho enquanto o do PIB estava a três quartos, no mesmo mês. */
   /** @param {number} i @returns {number} */
   const at = i => ((from + i) / Math.max(1, horizon - 1)) * SPARK_W;
 
@@ -69,9 +69,9 @@ function sparkHtml(series, good, horizon, from = 0) {
 }
 
 /**
- * O MEDIDOR — para a leitura que tem LIMIAR em vez de historia.
+ * O MEDIDOR — para a leitura que tem LIMIAR em vez de história.
  *
- * ⭐ A MARCA DA MAIORIA ERA UM RISCO SEM SIGNIFICADO, e o conserto nao e texto, e FORMA: o
+ * ⭐ A MARCA DA MAIORIA ERA UM RISCO SEM SIGNIFICADO, e o conserto não e texto, e FORMA: o
  * preenchimento troca de cor no limiar, e o risco passa a ser lido como "e aqui que a cor
  * muda" sem uma palavra a mais.
  *
@@ -88,7 +88,7 @@ function meterHtml(value, total, mark) {
 }
 
 /**
- * O QUANDO — o mes em cima, o prazo mais proximo embaixo.
+ * O QUANDO — o mês em cima, o prazo mais próximo embaixo.
  *
  * @param {object} input
  * @param {number} input.month
@@ -99,8 +99,8 @@ function meterHtml(value, total, mark) {
  */
 export function whenHtml({ month, deadline, left, over }) {
   const { name, year } = monthParts(month);
-  /* ⚠ SEM PRAZO A LINHA NAO FICA VAZIA: ela volta a dizer o que a barra sempre disse — o que
-     resta de mandato. Uma peca que muda de altura conforme o calendario empurra a barra
+  /* ⚠ SEM PRAZO A LINHA NÃO FICA VAZIA: ela volta a dizer o que a barra sempre disse — o que
+     resta de mandato. Uma peça que muda de altura conforme o calendário empurra a barra
      inteira, e a linha de baixo e o que da largura ao bloco. */
   const note = over
     ? `<b>${escapeHtml(UI.closing.ended)}</b>`
@@ -119,9 +119,9 @@ export function whenHtml({ month, deadline, left, over }) {
 /**
  * OS SINAIS VITAIS — quatro leituras, cada uma com o desenho que ela pode sustentar.
  *
- * ⚠ NENHUM DESENHO E INVENTADO. PIB e inflacao tem serie no motor; aprovacao e base tem a
- * delas nos cartoes do mes; a base ainda tem limiar, e por isso ela desenha medidor e nao
- * faisca. Sem historia a linha nao existe — o que existe e o ponto, e ele fica cinza.
+ * ⚠ NENHUM DESENHO E INVENTADO. PIB e inflação tem série no motor; aprovação e base tem a
+ * delas nos cartões do mês; a base ainda tem limiar, e por isso ela desenha medidor e não
+ * faísca. Sem história a linha não existe — o que existe e o ponto, e ele fica cinza.
  *
  * @param {object} input
  * @param {{ gdp: number, inflation: number }} input.macro
@@ -149,9 +149,9 @@ export function vitalsHtml({
   series,
 }) {
   /* ⛔ OS DOIS LIMIARES ERAM DAQUI, e os dois tinham envelhecido: a rua acendia em 20
-     enquanto o catalogo rompe em 16, e a inflacao acendia em 7,5% enquanto Financas acusa
-     desde 4,5%. Numero de catalogo copiado para dentro da tela e a segunda verdade, e ela
-     nao e recalibrada junto. */
+     enquanto o catálogo rompe em 16, e a inflação acendia em 7,5% enquanto Finanças acusa
+     desde 4,5%. Número de catálogo copiado para dentro da tela e a segunda verdade, e ela
+     não e recalibrada junto. */
   const items = [
     {
       icon: "gdp",
@@ -165,7 +165,7 @@ export function vitalsHtml({
       icon: "prices",
       label: UI.vitals.inflation,
       value: percent(macro.inflation, 1),
-      /* ⚠ INFLACAO SUBINDO E RUIM, e por isso o sinal se inverte. */
+      /* ⚠ INFLAÇÃO SUBINDO E RUIM, e por isso o sinal se inverte. */
       draw: sparkHtml(series.inflation, -1, horizon),
       low: macro.inflation > ceiling,
     },

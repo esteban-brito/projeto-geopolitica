@@ -1,54 +1,54 @@
-/* GUARDA · A PECA DE DADO — ela e UMA, na caixa e no Gabinete.
+/* GUARDA · A PEÇA DE DADO — ela e UMA, na caixa e no Gabinete.
 
-   ── POR QUE ELA NASCEU, E O NUMERO E DELE ──────────────────────────────────
-   Palavras do responsavel: "todas essas tabelas me incomodam muito, nem queria que fossem
+   ── POR QUE ELA NASCEU, E O NÚMERO E DELE ──────────────────────────────────
+   Palavras do responsável: "todas essas tabelas me incomodam muito, nem queria que fossem
    tabelas". Medido no mesmo dia, abrindo TODA carta de um mandato de 14 meses num navegador:
-   **19 de 23 cartas abertas traziam tabela**, com **306 celulas em tela por mes**, e a caixa
-   tinha **CINCO formatos de anexo para quinze especies** — um formato novo a cada tres
-   especies.
+   **19 de 23 cartas abertas traziam tabela**, com **306 células em tela por mês**, e a caixa
+   tinha **CINCO formatos de anexo para quinze espécies** — um formato novo a cada três
+   espécies.
 
-   ── POR QUE UMA GUARDA, E NAO UMA COMBINACAO ───────────────────────────────
+   ── POR QUE UMA GUARDA, E NÃO UMA COMBINAÇÃO ───────────────────────────────
    ⚠ O JOGO VAI GANHAR MUITA CARTA NOVA, e essa e a pergunta que ele fez antes de autorizar:
-   "da pra fazer mesmo assim?". Da — mas so se a regra for executavel. Uma convencao escrita em
-   prosa sobrevive tres sessoes; foi assim que os cinco formatos nasceram, um de cada vez, cada
-   um razoavel sozinho. Esta guarda faz o portao recusar o sexto no dia em que alguem o
-   escrever, inclusive eu, daqui a vinte sessoes, sem lembrar desta conversa.
+   "da pra fazer mesmo assim?". Da — mas só se a regra for executável. Uma convenção escrita em
+   prosa sobrevive três sessões; foi assim que os cinco formatos nasceram, um de cada vez, cada
+   um razoável sozinho. Esta guarda faz o portão recusar o sexto no dia em que alguém o
+   escrever, inclusive eu, daqui a vinte sessões, sem lembrar desta conversa.
 
    ── O QUE ELA MEDE ─────────────────────────────────────────────────────────
    Duas coisas, e a segunda entrou no ciclo 15.
 
-   1. TABELA nas duas telas e na peca. ⚠ A TELA DO RELATORIO CONTINUA COM A DELA de proposito,
-      e a distincao e a doutrina inteira: planilha mora em TELA, e a caixa e correspondencia. O
-      Gabinete ja recusava listar bancada por bancada com essas palavras — "quem lista bancada
+   1. TABELA nas duas telas e na peça. ⚠ A TELA DO RELATÓRIO CONTINUA COM A DELA de propósito,
+      e a distinção e a doutrina inteira: planilha mora em TELA, e a caixa e correspondência. O
+      Gabinete já recusava listar bancada por bancada com essas palavras — "quem lista bancada
       por bancada, com nome e humor, e a tela do Congresso" — e era a CARTA que trazia as onze
       linhas;
 
-   2. REGUA DESENHADA PELA TELA. Medido em 29/08/2026, mes 12, a 1440x980: a coluna direita do
-      Gabinete tem **18 classes de estilo em quatro blocos** e **TRES instrumentos para a mesma
-      pergunta** — `gauge`, `meter` e `poles` respondem todos "onde este numero esta na regua
-      dele?". A caixa resolve quinze especies de carta com TRES pecas. Tres desenhos para uma
-      pergunta so significam que cada bloco foi desenhado sozinho — que e exatamente como os
-      cinco formatos de anexo nasceram. Quem desenha regua e a PECA; a tela pede. */
+   2. RÉGUA DESENHADA PELA TELA. Medido em 29/08/2026, mês 12, a 1440x980: a coluna direita do
+      Gabinete tem **18 classes de estilo em quatro blocos** e **TRÊS instrumentos para a mesma
+      pergunta** — `gauge`, `meter` e `poles` respondem todos "onde este número esta na régua
+      dele?". A caixa resolve quinze espécies de carta com TRÊS peças. Três desenhos para uma
+      pergunta só significam que cada bloco foi desenhado sozinho — que e exatamente como os
+      cinco formatos de anexo nasceram. Quem desenha régua e a PEÇA; a tela pede. */
 
 import { collect, stripJsComments } from "../lib/project.mjs";
 
 export const name = "annexes";
 
-/* AS DUAS TELAS QUE FALAM A MESMA LINGUA, e a peca de onde ela sai. ⚠ A LISTA E DECLARADA e
-   nao varrida: uma tela nova nao herda o vocabulario por acidente — ela entra aqui no dia em
-   que alguem decidir que ela fala a mesma lingua. */
+/* AS DUAS TELAS QUE FALAM A MESMA LÍNGUA, e a peça de onde ela sai. ⚠ A LISTA E DECLARADA e
+   não varrida: uma tela nova não herda o vocabulário por acidente — ela entra aqui no dia em
+   que alguém decidir que ela fala a mesma língua. */
 const INBOX = "src/ui/screens/inbox.mjs";
 const CABINET = "src/ui/screens/cabinet.mjs";
 const PIECE = "src/ui/shared/annex.mjs";
 const SCREENS = [INBOX, CABINET];
 const WATCHED = [...SCREENS, PIECE];
 
-/* ⚠ `<table` PEGA A ABERTURA E A CLASSE JUNTO, e as celulas entram porque uma tabela montada
-   por pedacos — `thead` numa funcao, `tbody` noutra — nao escreveria a abertura em lugar
-   nenhum. Foi assim que a tabela do balanco e a das bancadas dividiram markup. */
+/* ⚠ `<table` PEGA A ABERTURA E A CLASSE JUNTO, e as células entram porque uma tabela montada
+   por pedaços — `thead` numa função, `tbody` noutra — não escreveria a abertura em lugar
+   nenhum. Foi assim que a tabela do balanço e a das bancadas dividiram markup. */
 const TABLE = /<(table|thead|tbody|tfoot|tr)\b|<t[dh]\b/g;
 
-/* OS INSTRUMENTOS, PELO NOME. ⚠ `\b` E O QUE SALVA A REGRA: `meter__part` e `poles__mark` sao
+/* OS INSTRUMENTOS, PELO NOME. ⚠ `\b` E O QUE SALVA A REGRA: `meter__part` e `poles__mark` são
    PARTES do instrumento, e acusa-las faria a guarda cobrar duas vezes a mesma linha. */
 const RULER = /class="(gauge|meter|poles)\b/g;
 
@@ -72,8 +72,8 @@ export function audit(files) {
   const code = new Map();
   for (const path of WATCHED) {
     const source = files.get(path);
-    /* A AUSENCIA NAO E VERDE: um arquivo renomeado sem atualizar a guarda a deixaria passando
-       sem medir nada, que e o pior estado possivel para uma guarda. */
+    /* A AUSÊNCIA NÃO E VERDE: um arquivo renomeado sem atualizar a guarda a deixaria passando
+       sem medir nada, que e o pior estado possível para uma guarda. */
     if (source === undefined) {
       add(`${path} nao existe — a guarda da peca perdeu o que ela mede, e verde aqui e mentira`);
       continue;
@@ -102,8 +102,8 @@ export function audit(files) {
     }
   }
 
-  /* ⚠ E A PECA TEM DE DESENHAR ALGUMA: sem regua nenhuma la dentro, a regra de cima proibe
-     sem oferecer, e o verde dela nao significaria nada. */
+  /* ⚠ E A PEÇA TEM DE DESENHAR ALGUMA: sem régua nenhuma la dentro, a regra de cima proíbe
+     sem oferecer, e o verde dela não significaria nada. */
   const piece = code.get(PIECE);
   if (piece !== undefined && piece.match(RULER) === null) {
     add(`${PIECE} nao desenha regua nenhuma — a peca virou vazia, e a regra passa a medir nada`);
@@ -128,8 +128,8 @@ export const synthetic = [
     files: sane({ [INBOX]: 'const html = `<table class="annex__table"><tbody></tbody></table>`;' }),
   },
   {
-    /* ⚠ A TABELA MONTADA POR PEDACOS E O CASO QUE IMPORTA: era assim que os cinco formatos
-       conviviam, cada funcao escrevendo a propria parte, e nenhuma escrevendo a abertura. */
+    /* ⚠ A TABELA MONTADA POR PEDAÇOS E O CASO QUE IMPORTA: era assim que os cinco formatos
+       conviviam, cada função escrevendo a própria parte, e nenhuma escrevendo a abertura. */
     label: "so a celula, sem a abertura",
     files: sane({ [INBOX]: 'const row = `<tr><th scope="row">${x}</th><td>${y}</td></tr>`;' }),
   },

@@ -71,3 +71,35 @@ podendo refazê-la do zero. Gravado quadro a quadro: a frase da idade mínima ap
 130 ms, fora da animação; o brilho de fundo para numa borda em y = 800; as fontes vêm do Google
 Fonts; com a CPU 4 vezes mais lenta, a montagem trava 158 ms e a animação, 55 ms. A frase cita
 a Lei 15.230/2025, conferida no Planalto: a idade do candidato ao Executivo conta na data da posse.
+
+### 125 · Limpeza, fases 1 a 4: um contrato, uma autoridade por assunto, acentos — 01/10/2026
+
+**Um contrato.** `AGENTS.md` junta leis, fluxo, agentes e mapa do código; `CLAUDE.md` e
+`GEMINI.md` só o importam. O Codex saiu. O verificador de retratos dele virou
+`tests/browser/review-portraits.mjs` e dá o mesmo relatório na folha aprovada B
+(`3:unusual-vertical-position`).
+
+**Uma autoridade por assunto.** Foram 34 documentos para `docs/archive/` (ciclos 01–31, o jogo em
+uma página, o mapa das telas, o estudo de porte da posse), mais o journal até 30/09, congelado.
+Especificações, ciclos e pesquisas ganharam índice com situação. Um script moveu os arquivos e
+corrigiu 179 referências; zero links quebrados. O ciclo 34 foi reescrito para a posse dentro do
+jogo: estrutura em `src/domain/structure/`, save 22, seis fases.
+
+**Acentos.** Foram 7.336 palavras de 691 formas inequívocas, em 132 arquivos, só em comentário,
+nome de teste e documento ativo. Cada arquivo foi conferido: sem diacríticos, igual ao HEAD. O
+`prose-only` deu código idêntico em 90 dos 115 arquivos de código; nas outras 25 suítes só mudou
+o nome dos testes. A forma ambígua (`e`/`é`, `esta`/`está`, `a`/`à`) fica para um lote do Gemini.
+
+Três guardas liam a prosa só em ASCII. A `material` procurava `MECA O FPS`. A `prose` tomava o
+"o" final de "aprovação" por artigo e não conhecia "até", "após" e "já": uma frase cortada em
+"até" passava, provado contra a guarda antiga. A `naming` tirava strings por regex e saía de fase
+numa regex literal com aspas. As três foram consertadas sem afrouxar; a `naming` agora lê pelo
+tokenizador `acorn`, declarado em `devDependencies`, e ganhou duas provas; a `prose`, uma. Entrou
+a 14ª guarda, `accents`, com 678 palavras em `tests/lib/accents.mjs`, e `tools/accent-only.mjs`
+para conferir lote de acento.
+
+**O passeio.** Durante o trabalho, 4 de 10 rodadas caíram, cada uma numa asserção de tempo. O
+diff não muda código. Com os 12 núcleos ocupados, o HEAD caiu 2 de 2 nas mesmas três asserções:
+o achado 69 foi reaberto com a receita. E um erro de processo: um `| tail` engoliu o código de
+saída do `prettier`, e o commit `7e58739` subiu com 4 arquivos fora do formato, corrigidos no
+`dd27945`.

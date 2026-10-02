@@ -1,15 +1,15 @@
-/* AS PROVAS DA MOLA ANALITICA — e elas cobram a FISICA, e nao o formato da string.
+/* AS PROVAS DA MOLA ANALÍTICA — e elas cobram a FÍSICA, e não o formato da string.
 
-   ⚠ CADA REGIME TEM UMA FORMULA, e um erro de sinal num deles produz curva plausivel: a peca
+   ⚠ CADA REGIME TEM UMA FÓRMULA, e um erro de sinal num deles produz curva plausível: a peça
    vai do lugar certo ao lugar certo e passa pelo caminho errado no meio. Foi o que aconteceu
-   no superamortecido — `(r2 - r1)` no lugar de `(r1 - r2)` — e so a condicao inicial pega. */
+   no superamortecido — `(r2 - r1)` no lugar de `(r1 - r2)` — e só a condição inicial pega. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
 import { curveOf } from "../../src/ui/shared/spring.mjs";
 
 /**
- * A derivada por diferenca central, para conferir a analitica contra a numerica.
+ * A derivada por diferença central, para conferir a analítica contra a numérica.
  *
  * @param {ReturnType<typeof curveOf>} curve
  * @param {number} t
@@ -24,7 +24,7 @@ const REGIMES = [
   { nome: "superamortecido", bounce: -0.6 },
 ];
 
-test("A MOLA PARTE DO ZERO E CHEGA AO UM, nos tres regimes", () => {
+test("A MOLA PARTE DO ZERO E CHEGA AO UM, nos três regimes", () => {
   for (const regime of REGIMES) {
     const curve = curveOf({ duration: 0.3, bounce: regime.bounce });
     assert.ok(Math.abs(curve.at(0)) < 1e-9, `${regime.nome} nao partiu de zero: ${curve.at(0)}`);
@@ -35,9 +35,9 @@ test("A MOLA PARTE DO ZERO E CHEGA AO UM, nos tres regimes", () => {
   }
 });
 
-test("A VELOCIDADE ANALITICA E A DERIVADA DA POSICAO — e e ela que o retargeting le", () => {
-  /* ⛔ ESTA E A PROVA QUE PEGA O ERRO DE SINAL. Posicao certa nas duas pontas e velocidade
-     errada no meio e exatamente o defeito que passa despercebido: a peca chega no lugar. */
+test("A VELOCIDADE ANALÍTICA E A DERIVADA DA POSIÇÃO — e e ela que o retargeting lê", () => {
+  /* ⛔ ESTA E A PROVA QUE PEGA O ERRO DE SINAL. Posição certa nas duas pontas e velocidade
+     errada no meio e exatamente o defeito que passa despercebido: a peça chega no lugar. */
   for (const regime of REGIMES) {
     for (const velocity of [0, 2.5, -1.5]) {
       const curve = curveOf({ duration: 0.3, bounce: regime.bounce, velocity });
@@ -64,7 +64,7 @@ test("A VELOCIDADE DE PARTIDA E HONRADA, e e ela que faz o gesto continuar", () 
   }
 });
 
-test("O QUIQUE ZERO NAO ULTRAPASSA, e o quique alto ultrapassa — a sobriedade e medida", () => {
+test("O QUIQUE ZERO NÃO ULTRAPASSA, e o quique alto ultrapassa — a sobriedade e medida", () => {
   const maior = (/** @type {number} */ bounce) => {
     const curve = curveOf({ duration: 0.3, bounce });
     let top = 0;
@@ -77,8 +77,8 @@ test("O QUIQUE ZERO NAO ULTRAPASSA, e o quique alto ultrapassa — a sobriedade 
 });
 
 test("A CURVA CHEGA AO CSS FECHANDO EM 1, e o salto final e menor que o limiar visual", () => {
-  /* ⛔ `1,22 x duracao` deixava 0,41% de residuo, que num curso de 700px e um salto de 2,8px
-     no ultimo quadro. O assentamento e PROCURADO, e nao uma constante. */
+  /* ⛔ `1,22 x duracao` deixava 0,41% de resíduo, que num curso de 700px e um salto de 2,8px
+     no último quadro. O assentamento e PROCURADO, e não uma constante. */
   for (const regime of REGIMES) {
     const curve = curveOf({ duration: 0.3, bounce: regime.bounce });
     assert.ok(curve.css.startsWith("linear(0 0.00%"), `${regime.nome} nao comeca em zero`);
@@ -86,7 +86,7 @@ test("A CURVA CHEGA AO CSS FECHANDO EM 1, e o salto final e menor que o limiar v
       curve.css.endsWith(",1 100%)"),
       `${regime.nome} nao fecha em 1: ${curve.css.slice(-20)}`,
     );
-    /* ⛔ E CADA PONTO LEVA A POSICAO: sem ela o CSS espaca sozinho e a amostragem densa no
+    /* ⛔ E CADA PONTO LEVA A POSIÇÃO: sem ela o CSS espaça sozinho e a amostragem densa no
        arranque sai deformada — medido, 489px onde a conta pede 635. */
     const pontos = curve.css.slice(7, -1).split(",");
     for (const ponto of pontos) {
@@ -97,7 +97,7 @@ test("A CURVA CHEGA AO CSS FECHANDO EM 1, e o salto final e menor que o limiar v
   }
 });
 
-test("O ASSENTAMENTO ACOMPANHA O QUIQUE, e nao e a mesma constante para todos", () => {
+test("O ASSENTAMENTO ACOMPANHA O QUIQUE, e não e a mesma constante para todos", () => {
   const critico = curveOf({ duration: 0.3, bounce: 0 }).duration;
   const quicando = curveOf({ duration: 0.3, bounce: 0.4 }).duration;
   assert.ok(critico > 0.3, `o critico assentou antes da duracao nominal: ${critico}`);

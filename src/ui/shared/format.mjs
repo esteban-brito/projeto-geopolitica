@@ -1,21 +1,21 @@
-/* FORMATACAO — numero vira texto aqui, e em nenhum outro lugar. */
+/* FORMATAÇÃO — número vira texto aqui, e em nenhum outro lugar. */
 
 /**
- * Numero com virgula decimal, do jeito que se escreve em portugues.
+ * Número com vírgula decimal, do jeito que se escreve em português.
  *
  * @param {number} value
  * @param {number} [digits]
  * @returns {string}
  */
 export function num(value, digits = 1) {
-  /* ⚠ NAO BASTA PEGAR O `-0` EXATO: -0,04 com uma casa imprime "-0,0", que e um sinal de
-     menos na frente de um zero. Quem decide e o valor JA ARREDONDADO. */
+  /* ⚠ NÃO BASTA PEGAR O `-0` EXATO: -0,04 com uma casa imprime "-0,0", que e um sinal de
+     menos na frente de um zero. Quem decide e o valor JÁ ARREDONDADO. */
   const safe = Number(value.toFixed(digits)) === 0 ? 0 : value;
   return safe.toFixed(digits).replace(".", ",");
 }
 
 /**
- * O MESMO, PARA ATRIBUTO — sem virgula, que o CSS e o SVG nao leem.
+ * O MESMO, PARA ATRIBUTO — sem vírgula, que o CSS e o SVG não leem.
  *
  * @param {number} value
  * @param {number} [digits]
@@ -25,28 +25,28 @@ export function attr(value, digits = 2) {
   return (Object.is(value, -0) ? 0 : value).toFixed(digits);
 }
 
-/* ONDE O BILHAO VIRA TRILHAO. */
+/* ONDE O BILHÃO VIRA TRILHÃO. */
 const TRILLION = 1000;
 
 /**
- * Reais, na maior unidade em que o numero ainda e legivel.
+ * Reais, na maior unidade em que o número ainda e legível.
  *
  * @param {number} value em BILHOES, que e a moeda de todo motor do jogo
  * @param {number} [digits]
  */
 export function money(value, digits = 1) {
-  /* UMA CASA A MAIS NO TRILHAO, para a troca de unidade nao custar precisao: com uma so,
+  /* UMA CASA A MAIS NO TRILHÃO, para a troca de unidade não custar precisão: com uma só,
      receita de 2653,5 bi e de 2749,9 bi imprimem as duas "R$ 2,7 tri", e o painel passa a
      mostrar dois meses diferentes como se fossem o mesmo. */
-  /* ⚠ OS ESPACOS SAO INQUEBRAVEIS, e a razao apareceu numa captura: numa coluna estreita a
-     linha quebrava entre o numero e a unidade e sobrava um "bi" sozinho no comeco da linha
+  /* ⚠ OS ESPAÇOS SÃO INQUEBRAVEIS, e a razão apareceu numa captura: numa coluna estreita a
+     linha quebrava entre o número e a unidade e sobrava um "bi" sozinho no começo da linha
      seguinte. */
   if (Math.abs(value) >= TRILLION) return `R$ ${num(value / TRILLION, digits + 1)} tri`;
   return `R$ ${num(value, digits)} bi`;
 }
 
 /**
- * Inteiro, para cadeira e voto — que nao existem pela metade.
+ * Inteiro, para cadeira e voto — que não existem pela metade.
  *
  * @param {number} value
  */
@@ -55,9 +55,9 @@ export function seats(value) {
 }
 
 /**
- * Porcentagem, e o padrao e SEM casa. Juro e inflacao pedem uma: 10,5% e 11,0% de Selic sao
- * dois paises diferentes para quem paga a divida, e arredondar os dois para 11% apagaria a
- * decisao do Banco Central.
+ * Porcentagem, e o padrão e SEM casa. Juro e inflação pedem uma: 10,5% e 11,0% de Selic são
+ * dois países diferentes para quem paga a dívida, e arredondar os dois para 11% apagaria a
+ * decisão do Banco Central.
  *
  * @param {number} fraction
  * @param {number} [digits]
@@ -68,7 +68,7 @@ export function percent(fraction, digits = 0) {
 }
 
 /**
- * Variacao com sinal explicito.
+ * Variação com sinal explícito.
  *
  * @param {number} value
  * @param {number} [digits]
@@ -76,17 +76,17 @@ export function percent(fraction, digits = 0) {
 export function signed(value, digits = 0) {
   const rounded = Number(value.toFixed(digits));
   if (rounded > 0) return `+${num(value, digits)}`;
-  /* O menos tipografico, e nao o hifen. */
+  /* O menos tipográfico, e não o hifen. */
   if (rounded < 0) return `−${num(Math.abs(value), digits)}`;
   return num(0, digits);
 }
 
-/* O QUADRO INTERNO, e ele e arbitrario de proposito: a caixa real vem do CSS, e estes numeros
-   so precisam de proporcao entre si. */
+/* O QUADRO INTERNO, e ele e arbitrário de propósito: a caixa real vem do CSS, e estes números
+   só precisam de proporção entre si. */
 const FRAME = { width: 100, height: 24, pad: 2 };
 
 /**
- * Uma serie desenhada como linha, contra uma faixa DECLARADA.
+ * Uma série desenhada como linha, contra uma faixa DECLARADA.
  *
  * @param {ReadonlyArray<number>} values
  * @param {number} [width] quantos meses mostrar, do fim da serie
@@ -94,13 +94,13 @@ const FRAME = { width: 100, height: 24, pad: 2 };
  * @returns {string}
  */
 export function sparkline(values, width = 6, range = [0, 100]) {
-  /* UM PONTO NAO E TENDENCIA. */
+  /* UM PONTO NÃO E TENDÊNCIA. */
   if (values.length < 2) return "";
 
   const [floor, ceiling] = range;
-  /* Faixa degenerada nao existe em chamada valida, e uma divisao por zero aqui produziria
+  /* Faixa degenerada não existe em chamada valida, e uma divisão por zero aqui produziria
      `NaN` atravessando o atributo `points` — o navegador descarta a polilinha inteira em
-     silencio, e o defeito sai como uma caixa vazia plausivel. */
+     silêncio, e o defeito sai como uma caixa vazia plausível. */
   const span = ceiling - floor || 1;
 
   const shown = values.slice(-width);
@@ -111,8 +111,8 @@ export function sparkline(values, width = 6, range = [0, 100]) {
     .map((value, index) => {
       const share = Math.min(1, Math.max(0, (value - floor) / span));
       const x = (index / last) * FRAME.width;
-      /* Esquecer esta inversao desenha a serie de cabeca para baixo, e o desenho continua
-         plausivel — e o pior tipo de defeito de grafico. */
+      /* Esquecer esta inversão desenha a série de cabeça para baixo, e o desenho continua
+         plausível — e o pior tipo de defeito de gráfico. */
       const y = FRAME.height - FRAME.pad - share * reach;
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     })

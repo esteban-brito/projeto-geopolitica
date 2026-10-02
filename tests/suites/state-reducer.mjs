@@ -1,7 +1,7 @@
-/* SUITE · O REDUCER — propriedades, e nao exemplos.
+/* SUITE · O REDUCER — propriedades, e não exemplos.
    POR QUE ESTA E A PRIMEIRA SUITE, com os motores ainda por nascer.
-   O reducer e a unica peca ja implementada que o resto vai depender: `src/state/state.mjs`
-   promete tres coisas — imutabilidade, pureza e identidade de referencia — e as tres sao a
+   O reducer e a única peça já implementada que o resto vai depender: `src/state/state.mjs`
+   promete três coisas — imutabilidade, pureza e identidade de referencia — e as três são a
    base do render sem framework. */
 
 import assert from "node:assert/strict";
@@ -19,7 +19,7 @@ import { SCHEMA_VERSION, createState, monthLabel, reduce } from "../../src/state
 /** @typedef {import("../../src/state/state.mjs").GameState} GameState */
 /** @typedef {import("../../src/state/state.mjs").Action} Action */
 
-/* A UNICA acao que o reducer conhece. */
+/* A ÚNICA ação que o reducer conhece. */
 
 /**
  * @param {GameState} state
@@ -49,7 +49,7 @@ function resolutionOf(state) {
   };
 }
 
-/* A SATISFACAO DE CADA SEGMENTO em qualquer ponto da escala, incluindo os extremos: um
+/* A SATISFAÇÃO DE CADA SEGMENTO em qualquer ponto da escala, incluindo os extremos: um
    governo adorado pela base e odiado pelo topo e um estado valido, e e justamente o que a
    media nacional esconde. */
 const anyMood = fc
@@ -59,14 +59,14 @@ const anyMood = fc
   })
   .map(values => Object.fromEntries(SEGMENTS.map((segment, i) => [segment.id, values[i] ?? 0])));
 
-/* Fluxos em QUALQUER ponto do percurso, e nao so zerados: um save carregado no turno 40 chega
-   com contadores altos, e o reducer tem de tratar isso como trata o comeco. */
+/* Fluxos em QUALQUER ponto do percurso, e não só zerados: um save carregado no turno 40 chega
+   com contadores altos, e o reducer tem de tratar isso como trata o começo. */
 const anyStream = fc.record({
   seed: fc.integer({ min: 0, max: 4294967295 }),
   draws: fc.nat({ max: 5000 }),
 });
 
-/* A BASE em qualquer humor, uma entrada por bancada do catalogo. */
+/* A BASE em qualquer humor, uma entrada por bancada do catálogo. */
 const anyLoyalty = fc
   .array(fc.double({ min: 0, max: 100, noNaN: true }), {
     minLength: PARTIES.length,
@@ -74,8 +74,8 @@ const anyLoyalty = fc
   })
   .map(values => Object.fromEntries(PARTIES.map((party, i) => [party.id, values[i] ?? 0])));
 
-/* Posicoes orcamentarias por todo o percurso, e nao so a de abertura: o estado que chega aqui
-   pode vir de um save do mes 40, com a divida ja em outro patamar. */
+/* Posições orçamentárias por todo o percurso, e não só a de abertura: o estado que chega aqui
+   pode vir de um save do mês 40, com a dívida já em outro patamar. */
 const anyFiscal = fc.record({
   mandatory: fc.double({ min: 0, max: 12000, noNaN: true }),
   anchorRevenue: fc.double({ min: 1, max: 12000, noNaN: true }),
@@ -83,8 +83,8 @@ const anyFiscal = fc.record({
   debt: fc.double({ min: 0, max: 60000, noNaN: true }),
 });
 
-/* A CAPACIDADE em qualquer ponto do percurso, incluindo o historico pela metade: uma area de
-   atraso longo passa dois anos com o buffer incompleto, e o reducer nao pode ter opiniao
+/* A CAPACIDADE em qualquer ponto do percurso, incluindo o histórico pela metade: uma área de
+   atraso longo passa dois anos com o buffer incompleto, e o reducer não pode ter opinião
    sobre isso. */
 const anyCapacity = fc.record({
   index: fc
@@ -110,8 +110,8 @@ const anyMacro = fc.record({
   population: fc.double({ min: 100, max: 300, noNaN: true }),
 });
 
-/* A SERIE EM QUALQUER PONTO DO MANDATO, e a vazia entra junto: uma partida recem-aberta nao
-   tem mes guardado nenhum, e uma que atravessou o mandato tem 48. */
+/* A SÉRIE EM QUALQUER PONTO DO MANDATO, e a vazia entra junto: uma partida recem-aberta não
+   tem mês guardado nenhum, e uma que atravessou o mandato tem 48. */
 const anySeriesLine = fc.array(fc.double({ min: -1e4, max: 3e4, noNaN: true }), { maxLength: 48 });
 
 const anySeries = fc.record({
@@ -121,17 +121,17 @@ const anySeries = fc.record({
   unemployment: anySeriesLine,
   debtRatio: anySeriesLine,
   primary: anySeriesLine,
-  /* ⚠ AS OITO AREAS COM COMPRIMENTOS DIFERENTES ENTRE SI, e nao a mesma linha oito vezes: a
-     serie de uma area comeca quando a area comeca a ser medida, e nada no modelo garante que
+  /* ⚠ AS OITO ÁREAS COM COMPRIMENTOS DIFERENTES ENTRE SI, e não a mesma linha oito vezes: a
+     série de uma área começa quando a área começa a ser medida, e nada no modelo garante que
      as oito tenham o mesmo tamanho. */
   areas: fc
     .array(anySeriesLine, { minLength: AREAS.length, maxLength: AREAS.length })
     .map(lines => Object.fromEntries(AREAS.map((area, index) => [area.id, lines[index] ?? []]))),
 });
 
-/* ⚠ ELAS VIRARAM UMA PILHA DE NORMAS na versao 12 do save, e o gerador acompanhou: um mandato
+/* ⚠ ELAS VIRARAM UMA PILHA DE NORMAS na versão 12 do save, e o gerador acompanhou: um mandato
    de 48 meses reformando chega ao fim com dezenas de textos por cima dos herdados, e o
-   reducer tem de carregar isso do mesmo jeito que carregava um par de numeros. */
+   reducer tem de carregar isso do mesmo jeito que carregava um par de números. */
 const anyNorms = fc
   .array(
     fc.record({
@@ -164,8 +164,8 @@ const anyNorms = fc
 const anyState = fc.record({
   schemaVersion: fc.constant(SCHEMA_VERSION),
   seed: fc.integer({ min: 0, max: 4294967295 }),
-  /* O presidente entrou na versao 18: nome digitado pelo jogador, ou `null` para o sorteado.
-     O reducer apenas o carrega, entao a prova cobre os dois lados. */
+  /* O presidente entrou na versão 18: nome digitado pelo jogador, ou `null` para o sorteado.
+     O reducer apenas o carrega, então a prova cobre os dois lados. */
   president: fc.option(
     fc.record({
       name: fc.string({ minLength: 1, maxLength: 40 }),
@@ -173,28 +173,28 @@ const anyState = fc.record({
     }),
     { nil: null },
   ),
-  /* ⚠ A PLATAFORMA ENTROU NA VERSAO 20: os tres compromissos da posse, e o reducer apenas os
-     carrega. Os quatro estados de cada eixo entram — inclusive o `null` de quem nao prometeu. */
+  /* ⚠ A PLATAFORMA ENTROU NA VERSÃO 20: os três compromissos da posse, e o reducer apenas os
+     carrega. Os quatro estados de cada eixo entram — inclusive o `null` de quem não prometeu. */
   platform: fc.record({
     priority: fc.option(fc.constantFrom("security", "education", "industry"), { nil: null }),
     fiscal: fc.option(fc.constantFrom("debt", "primary"), { nil: null }),
     reform: fc.option(fc.constantFrom("law", "amendment", "keep"), { nil: null }),
   }),
-  /* 48 turnos por mandato — a decisao fechada. */
+  /* 48 turnos por mandato — a decisão fechada. */
   month: fc.integer({ min: 0, max: 47 }),
   mood: anyMood,
   loyalty: anyLoyalty,
   fiscal: anyFiscal,
-  /* Ela entrou na versao 8 do save, e o reducer nao pode ter opiniao sobre valor de campo que
-     ele apenas carrega — inclusive um pais em recessao com juro de 40%. */
+  /* Ela entrou na versão 8 do save, e o reducer não pode ter opinião sobre valor de campo que
+     ele apenas carrega — inclusive um país em recessão com juro de 40%. */
   macro: anyMacro,
   series: anySeries,
-  /* ⚠ O FECHAMENTO DE CADA MES entrou na versao 19 do save: o reducer apenas o carrega. */
+  /* ⚠ O FECHAMENTO DE CADA MÊS entrou na versão 19 do save: o reducer apenas o carrega. */
   months: fc.constant(/** @type {import("../../src/state/state.mjs").MonthCard[]} */ ([])),
   capacity: anyCapacity,
   levels: fc.constant(Object.fromEntries(PROGRAMS.map(p => [p.id, p.initial]))),
   norms: anyNorms,
-  /* ⚠ A GAVETA EM QUALQUER PONTO DA TRAMITACAO, e os tres estagios entram. */
+  /* ⚠ A GAVETA EM QUALQUER PONTO DA TRAMITAÇÃO, e os três estágios entram. */
   bills: fc.array(
     fc.record({
       id: fc.string({ minLength: 1, maxLength: 12 }),
@@ -209,7 +209,7 @@ const anyState = fc.record({
     { maxLength: 4 },
   ),
   /* ⚠ A CAIXA DE ENTRADA COM AS DUAS NATUREZAS DENTRO, e as duas precisam estar aqui: o AVISO
-     (`due` nulo, ja fechado) e a PERGUNTA (com prazo, esperando ou ja respondida). */
+     (`due` nulo, já fechado) e a PERGUNTA (com prazo, esperando ou já respondida). */
   mail: fc.array(
     fc.record({
       id: fc.string({ minLength: 1, maxLength: 12 }),
@@ -228,8 +228,8 @@ const anyState = fc.record({
       bill: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
       except: fc.array(fc.string({ maxLength: 8 }), { maxLength: 2 }),
       saved: fc.option(fc.string({ maxLength: 24 }), { nil: null }),
-      /* OS TRES CAMPOS DA CHANTAGEM, e o gerador os sorteia soltos de proposito: o reducer
-         nao pode depender de eles virem coerentes entre si. */
+      /* OS TRÊS CAMPOS DA CHANTAGEM, e o gerador os sorteia soltos de propósito: o reducer
+         não pode depender de eles virem coerentes entre si. */
       from: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
       lever: fc.option(fc.string({ maxLength: 12 }), { nil: null }),
       level: fc.option(fc.integer({ min: 0, max: 100 }), { nil: null }),
@@ -241,11 +241,11 @@ const anyState = fc.record({
     }),
     { maxLength: 5 },
   ),
-  /* A MEMORIA EM QUALQUER PONTO DA ESCALA, incluindo os dois extremos: um sujeito que o
-     governo bancou o mandato inteiro e um que ele traiu no primeiro mes sao estados validos,
-     e o reducer nao pode ter opiniao sobre nenhum dos dois. */
+  /* A MEMÓRIA EM QUALQUER PONTO DA ESCALA, incluindo os dois extremos: um sujeito que o
+     governo bancou o mandato inteiro e um que ele traiu no primeiro mês são estados válidos,
+     e o reducer não pode ter opinião sobre nenhum dos dois. */
   /* A CALDEIRA EM QUALQUER TEMPERATURA, e as duas pontas entram: um governo que agrada todo
-     mundo e um em vespera de queda sao estados validos, e o reducer nao pode ter opiniao
+     mundo e um em véspera de queda são estados válidos, e o reducer não pode ter opinião
      sobre nenhum dos dois. */
   pressure: fc
     .array(fc.double({ min: 0, max: 100, noNaN: true }), {
@@ -253,7 +253,7 @@ const anyState = fc.record({
       maxLength: LOBBIES.length,
     })
     .map(values => Object.fromEntries(LOBBIES.map((l, i) => [l.id, values[i] ?? 0]))),
-  /* E O PROCESSO ABERTO OU NAO. */
+  /* E O PROCESSO ABERTO OU NÃO. */
   impeachment: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
   fallen: fc.option(fc.integer({ min: 0, max: 47 }), { nil: null }),
   memory: fc
@@ -262,17 +262,17 @@ const anyState = fc.record({
   streams: fc.record({ events: anyStream, congress: anyStream }),
 });
 
-/* Acao que o reducer NAO conhece. */
+/* Ação que o reducer NÃO conhece. */
 const anyUnknownAction = fc
   .string({ minLength: 1 })
   .filter(type => type !== "monthResolved")
   .map(type => /** @type {Action} */ (/** @type {unknown} */ ({ type })));
 
 /**
- * O INVARIANTE DA APROVACAO, extraido para que a prova sintetica la embaixo rode ESTA
- * verificacao e nao uma copia dela.
+ * O INVARIANTE DA APROVAÇÃO, extraído para que a prova sintética la embaixo rode ESTA
+ * verificação e não uma copia dela.
  *
- * e a saida de SONDA, e nao um campo carregado. O invariante e o mesmo: as tres
+ * e a saída de SONDA, e não um campo carregado. O invariante e o mesmo: as três
  * fatias somam 100 e nenhuma e negativa.
  * @param {import("../../src/domain/opinion/index.mjs").Approval} approval
  */
@@ -283,7 +283,7 @@ function assertApprovalInvariant(approval) {
   assert.ok(good >= 0 && poor >= 0, `fatia negativa: good=${good} poor=${poor}`);
 }
 
-test("o estado de abertura ja satisfaz o invariante e ja sai congelado", () => {
+test("o estado de abertura já satisfaz o invariante e já sai congelado", () => {
   const state = createState();
   assertApprovalInvariant(pollFrom(state.mood, SEGMENTS, OPINION));
   assert.ok(Object.isFrozen(state));
@@ -314,16 +314,16 @@ test("o estado que sai esta congelado em profundidade", () => {
   );
 });
 
-test("acao desconhecida devolve a MESMA referencia, e nao uma copia igual", () => {
+test("ação desconhecida devolve a MESMA referencia, e não uma copia igual", () => {
   fc.assert(
     fc.property(anyState, anyUnknownAction, (state, action) => {
-      /* IGUALDADE DE REFERENCIA, nao deepEqual. */
+      /* IGUALDADE DE REFERENCIA, não deepEqual. */
       assert.equal(reduce(state, action), state);
     }),
   );
 });
 
-test("o mes anda exatamente um por turno, e so para frente", () => {
+test("o mês anda exatamente um por turno, e só para frente", () => {
   fc.assert(
     fc.property(anyState, state => {
       assert.equal(reduce(state, resolutionOf(state)).month, state.month + 1);
@@ -331,7 +331,7 @@ test("o mes anda exatamente um por turno, e so para frente", () => {
   );
 });
 
-test("a aprovacao sempre soma 100 e nenhuma fatia fica negativa", () => {
+test("a aprovação sempre soma 100 e nenhuma fatia fica negativa", () => {
   fc.assert(
     fc.property(anyState, state =>
       assertApprovalInvariant(pollFrom(reduce(state, resolutionOf(state)).mood, SEGMENTS, OPINION)),
@@ -339,10 +339,10 @@ test("a aprovacao sempre soma 100 e nenhuma fatia fica negativa", () => {
   );
 });
 
-test("PROVA SINTETICA: o invariante acusa um reducer que larga o resto", () => {
-  /* O defeito exato que a verificacao acima existe para pegar: `fair` deixa de ser o resto e
-     vira campo carregado adiante — que e o formato do erro quando alguem troca a conta por um
-     spread durante uma refatoracao. */
+test("PROVA SINTÉTICA: o invariante acusa um reducer que larga o resto", () => {
+  /* O defeito exato que a verificação acima existe para pegar: `fair` deixa de ser o resto e
+     vira campo carregado adiante — que e o formato do erro quando alguém troca a conta por um
+     spread durante uma refatoração. */
   const broken = (/** @type {GameState} */ state) => {
     const poll = pollFrom(state.mood, SEGMENTS, OPINION);
     return { ...poll, good: poll.good + 2 };
@@ -354,11 +354,11 @@ test("PROVA SINTETICA: o invariante acusa um reducer que larga o resto", () => {
   );
 });
 
-/* ── A ACAO QUE VEM DA CAMADA DE APLICACAO ────────────────────────────────── `monthResolved`
-   chega com a conta ja feita; o que se prova aqui e o DOBRAR, e nao o calculo — o calculo tem
-   suite propria em `turn.mjs`. */
+/* ── A AÇÃO QUE VEM DA CAMADA DE APLICAÇÃO ────────────────────────────────── `monthResolved`
+   chega com a conta já feita; o que se prova aqui e o DOBRAR, e não o cálculo — o cálculo tem
+   suite própria em `turn.mjs`. */
 
-test("o mes resolvido tambem anda exatamente um, e sai congelado", () => {
+test("o mês resolvido também anda exatamente um, e sai congelado", () => {
   fc.assert(
     fc.property(anyState, state => {
       const next = reduce(state, resolutionOf(state));
@@ -369,12 +369,12 @@ test("o mes resolvido tambem anda exatamente um, e sai congelado", () => {
   );
 });
 
-test("o mes resolvido PRESERVA A REFERENCIA do que ele nao toca", () => {
+test("o mês resolvido PRESERVA A REFERENCIA do que ele não toca", () => {
   /* Um spread que recriasse um objeto sem motivo passaria em qualquer deepEqual e mandaria a
-     tela redesenhar o painel inteiro todo mes — defeito silencioso, e caro exatamente na peca
+     tela redesenhar o painel inteiro todo mês — defeito silencioso, e caro exatamente na peça
      que usa filtro.
-     ⚠ ELA MEDIA `streams.events`, QUE SAIU POR NAO TER CONSUMIDOR, e o que ela cobra continua
-     de pe no fluxo que restou: a acao devolve o MESMO fluxo, e recria-lo seria o spread
+     ⚠ ELA MEDIA `streams.events`, QUE SAIU POR NÃO TER CONSUMIDOR, e o que ela cobra continua
+     de pé no fluxo que restou: a ação devolve o MESMO fluxo, e recriá-lo seria o spread
      indiscriminado que esta prova existe para pegar. */
   fc.assert(
     fc.property(anyState, state => {
@@ -388,7 +388,7 @@ test("o mes resolvido PRESERVA A REFERENCIA do que ele nao toca", () => {
   );
 });
 
-test("reduce e deterministico: mesma entrada, mesma saida", () => {
+test("reduce e determinístico: mesma entrada, mesma saída", () => {
   fc.assert(
     fc.property(anyState, state => {
       const action = resolutionOf(state);
@@ -397,10 +397,10 @@ test("reduce e deterministico: mesma entrada, mesma saida", () => {
   );
 });
 
-test("monthLabel e total para qualquer mes, inclusive alem do mandato", () => {
+test("monthLabel e total para qualquer mês, inclusive além do mandato", () => {
   fc.assert(
     fc.property(fc.integer({ min: 0, max: 2000 }), month => {
-      /* O rotulo tem forma fixa: tres letras, ponto medio, quatro digitos. */
+      /* O rótulo tem forma fixa: três letras, ponto médio, quatro dígitos. */
       assert.match(monthLabel(month), /^[a-z]{3} · \d{4}$/u);
     }),
   );

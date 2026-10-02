@@ -1,4 +1,4 @@
-/* O REGIME — as regras da CASA, e nao as do governo. */
+/* O REGIME — as regras da CASA, e não as do governo. */
 
 /**
  * @typedef {object} Regime
@@ -26,7 +26,7 @@ export const REGIME_SCHEMA = {
 export const REGIME = {
   seats: 513,
   qualifiedShare: 3 / 5,
-  /* DOIS TERCOS DA CAMARA AUTORIZAM O PROCESSO contra o presidente — CF art. */
+  /* DOIS TERÇOS DA CAMARA AUTORIZAM O PROCESSO contra o presidente — CF art. */
   removalShare: 2 / 3,
   monthsPerTerm: 48,
   monthsPerYear: 12,
@@ -36,10 +36,10 @@ export const REGIME = {
 /** O total de cadeiras da Camara dos Deputados. */
 export const SEATS = REGIME.seats;
 
-/** Votos necessarios para maioria simples, com o plenario cheio. */
+/** Votos necessários para maioria simples, com o plenario cheio. */
 export const SIMPLE_MAJORITY = Math.floor(SEATS / 2) + 1;
 
-/* MAIORIA QUALIFICADA E OUTRO JOGO, e a diferenca nao e de grau. */
+/* MAIORIA QUALIFICADA E OUTRO JOGO, e a diferença não e de grau. */
 export const QUALIFIED_MAJORITY = Math.ceil(SEATS * REGIME.qualifiedShare);
 
 /* QUANTAS ASSINATURAS AFASTAM UM PRESIDENTE. 342 em 513. */
@@ -48,5 +48,5 @@ export const REMOVAL_MAJORITY = Math.ceil(SEATS * REGIME.removalShare);
 /** Quantos meses cabem num mandato. */
 export const MONTHS_PER_TERM = REGIME.monthsPerTerm;
 
-/** Quantos meses fecham um exercicio fiscal. */
+/** Quantos meses fecham um exercício fiscal. */
 export const MONTHS_PER_YEAR = REGIME.monthsPerYear;

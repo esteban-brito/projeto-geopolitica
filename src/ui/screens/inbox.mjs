@@ -85,7 +85,7 @@ export function letterHtml({
         `<span class="letter__role">${escapeHtml(from.label)}</span>` +
         `</span>`
       : "") +
-    /* Data no cabecalho do oficio ao lado da assinatura. */
+    /* Data no cabeçalho do ofício ao lado da assinatura. */
     `<span class="letter__meta">` +
     (month !== null ? `<span class="letter__date">${escapeHtml(monthLabel(month))}</span>` : "") +
     (urgency ? `<span class="letter__due" data-numeric>${escapeHtml(dueLabel(due))}</span>` : "") +
@@ -94,7 +94,7 @@ export function letterHtml({
     `<h4 class="letter__subject">${escapeHtml(subject)}</h4>` +
     /* Vocativo omitido: "Presidente," fixo custava 20px em toda carta. */
     `<div class="letter__body">${body}</div>` +
-    /* Secao 1fr da grade: sem ela o rodape cola no corpo sem anexo. */
+    /* Seção 1fr da grade: sem ela o rodapé cola no corpo sem anexo. */
     `<section class="letter__annexes">` +
     (annex ? `<div class="annexes">${annex}</div>` : "") +
     `</section>` +
@@ -162,7 +162,7 @@ export function describeMonth({ report, adviser }) {
 
   const balance = report.balance;
 
-  /* Mes sem decisao: evita folha em branco com 430px. */
+  /* Mês sem decisão: evita folha em branco com 430px. */
   if (lines.length === 0) lines.push(`<span>${escapeHtml(UI.inbox.quietMonth)}</span>`);
 
   return {
@@ -212,9 +212,9 @@ export function describeMail({
   /* ⚠ COMO O JOGADOR QUER SER TRATADO, e ele escolhe junto com o nome. Sem isto a carta
      dizia "o senhor" em metade das partidas para uma presidenta. Ver `addressed`. */
   treatment = DEFAULT_TREATMENT,
-  /* ⚠ AS OPCOES DA POSSE VEM PRONTAS DA FACHADA, e a lista de prioridade e DERIVADA la: as
-     tres areas que o pais entrega piores. Monta-la aqui daria uma segunda verdade sobre onde
-     o pais esta pior, e ela mentiria no dia em que uma abertura mudasse. */
+  /* ⚠ AS OPÇÕES DA POSSE VEM PRONTAS DA FACHADA, e a lista de prioridade e DERIVADA la: as
+     três áreas que o país entrega piores. Monta-la aqui daria uma segunda verdade sobre onde
+     o país esta pior, e ela mentiria no dia em que uma abertura mudasse. */
   pledges = { priority: [], fiscal: [], reform: [] },
   platform = { priority: null, fiscal: null, reform: null },
 }) {
@@ -326,7 +326,7 @@ export function describeMail({
             body: `<div class="letter__lines"><span>${escapeHtml(UI.inbox.forgottenBody)}</span></div>`,
           });
 
-        /* Folha em branco: corpo vazio gerava 430px sem conteudo. */
+        /* Folha em branco: corpo vazio gerava 430px sem conteúdo. */
         case "passed":
         case "rejected":
           return paper({
@@ -381,7 +381,7 @@ export function describeMail({
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.minorityBody)}</span>` +
               `</div>`,
-            /* Alarme de minoria usa numero da carta: do estado variava 229 para 227. */
+            /* Alarme de minoria usa número da carta: do estado variava 229 para 227. */
             annex: chamberBlock(
               letter.now ?? chamber.base,
               letter.was ?? chamber.majority,
@@ -400,7 +400,7 @@ export function describeMail({
               `<div class="letter__lines">` +
               `<span>${escapeHtml(UI.inbox.boilingBody)}</span>` +
               `</div>`,
-            /* Pressao do dia da fervura: lido de hoje variava 70 para 75 um mes depois. */
+            /* Pressão do dia da fervura: lido de hoje variava 70 para 75 um mês depois. */
             ...(group
               ? { annex: groupBlock(siege, subject, letter.now ?? null, letter.was ?? null) }
               : {}),
@@ -415,7 +415,7 @@ export function describeMail({
               `<div class="letter__lines">` +
               `<span>${escapeHtml(addressed(ruptureText(UI.inbox.ruptureBody, subject) ?? "", treatment))}</span>` +
               `</div>`,
-            /* Rupturas em bloco: processo pede as tres; isolada deixava 367px em branco. */
+            /* Rupturas em bloco: processo pede as três; isolada deixava 367px em branco. */
             annex: rupturesBlock(siege) + noteHtml(UI.inbox.ruptureLegend, UI.inbox.ruptureNote),
           });
 
@@ -424,7 +424,7 @@ export function describeMail({
             from: by("chief"),
             subject: UI.inbox.siegeSubject,
             body: `<div class="letter__lines"><span>${escapeHtml(UI.inbox.siegeBody)}</span></div>`,
-            /* Valores de afastamento, cadeiras e preco vem do motor. */
+            /* Valores de afastamento, cadeiras e preço vem do motor. */
             ...(siege
               ? {
                   annex: linesHtml(
@@ -541,7 +541,7 @@ function ruptureText(texts, id) {
 
 /** @param {import("../../state/state.mjs").Letter} letter @returns {string} */
 function outcomeOf(letter) {
-  /* Chantagem: silencio recusa, ao contrario da tramitacao onde aprova. */
+  /* Chantagem: silêncio recusa, ao contrário da tramitação onde aprova. */
   const spurns = letter.kind === "demand";
 
   switch (letter.answer) {
@@ -557,7 +557,7 @@ function outcomeOf(letter) {
 }
 
 /**
- * AS DUAS SAIDAS, e nenhuma e de graca.
+ * AS DUAS SAÍDAS, e nenhuma e de graça.
  *
  * @param {string} id
  * @param {string} chosen o que ja esta marcado, se algo estiver
@@ -599,7 +599,7 @@ function pledgeHtml(legend, axis, options, chosen) {
         `aria-label="${escapeHtml(option.label)}" ` +
         `aria-pressed="${chosen === option.id}" ` +
         `data-pledge="${escapeHtml(axis)}" data-choice="${escapeHtml(option.id)}">` +
-        /* Classe propria: icon sem tamanho esticava SVG a 96px sobre o texto. */
+        /* Classe própria: icon sem tamanho esticava SVG a 96px sobre o texto. */
         (axis === "priority" ? iconHtml(option.id, "pledge__icon") : "") +
         `<b>${escapeHtml(option.short)}</b>` +
         `</button>`,
@@ -635,7 +635,7 @@ function rowHtml(dispatch, open, read) {
     `<b class="tray__subject">${escapeHtml(dispatch.subject)}</b>` +
     `<span class="tray__line">` +
     (dispatch.from ? `<span class="tray__from">${escapeHtml(dispatch.from.name)}</span>` : "") +
-    /* Tag de especie nos tres kinds sem prefixo no assunto. */
+    /* Tag de espécie nos três kinds sem prefixo no assunto. */
     (dispatch.kind && DISPATCH_TAG.has(dispatch.kind)
       ? ` <span class="tray__kind">${escapeHtml(DISPATCH_TAG.get(dispatch.kind))}</span>`
       : "") +
@@ -724,7 +724,7 @@ function reportBody(
 function pollCards(data, segments) {
   const notes = ANNEX_NOTES;
 
-  /* Sustentacao ponderada pelo peso da classe. */
+  /* Sustentação ponderada pelo peso da classe. */
   let holds = null;
   for (const segment of segments) {
     for (const note of notes) {
@@ -742,7 +742,7 @@ function pollCards(data, segments) {
   return (
     (holds
       ? cardHtml(
-          /* Rotulo sem vocativo: evita quebra em duas linhas e desalinhamento. */
+          /* Rótulo sem vocativo: evita quebra em duas linhas e desalinhamento. */
           UI.inbox.pollHolds,
           `<b>${escapeHtml(labelOf(UI.inbox.annexNote, holds.note))}</b>` +
             `<small>${escapeHtml(holds.segment)}</small>`,
@@ -782,7 +782,7 @@ function groupBlock(siege, id, pressure = null, boil = null) {
   const group = (siege?.lobbies ?? []).find(item => item.id === id) ?? null;
   if (!group) return "";
 
-  /* Pressao da data gravada: evita salto de 70 para 75 no mes seguinte. */
+  /* Pressão da data gravada: evita salto de 70 para 75 no mês seguinte. */
   const now = pressure ?? group.pressure;
   const point = boil ?? group.boil;
 
@@ -878,7 +878,7 @@ function vaultAnnex(data) {
 
 /** @param {import("../../application/turn.mjs").Balance} balance @returns {string} */
 function balanceAnnex(balance) {
-  /* Variacao zero omitida: signed(0) gerava "21% 0" lido como numero unico. */
+  /* Variação zero omitida: signed(0) gerava "21% 0" lido como número único. */
   const moved = (/** @type {number} */ value, /** @type {number} */ digits = 0) =>
     Number(value.toFixed(digits)) === 0 ? "" : signed(value, digits);
 
@@ -914,7 +914,7 @@ function balanceAnnex(balance) {
   );
 }
 
-/* Maximo de bancadas exibidas na carta: detalhamento completo fica no Congresso. */
+/* Máximo de bancadas exibidas na carta: detalhamento completo fica no Congresso. */
 const SEATS_SHOWN = 4;
 
 /**
@@ -937,7 +937,7 @@ function seatsAnnex(data, parties) {
   const shown = moved.slice(0, SEATS_SHOWN);
   const rest = moved.slice(SEATS_SHOWN);
 
-  /* Normalizado pela maior variacao exibida: evita tracos de 2 a 10px na escala de 100. */
+  /* Normalizado pela maior variação exibida: evita traços de 2 a 10px na escala de 100. */
   const deepest = Math.max(
     ...shown.map(row => (row.seats > 0 ? Math.abs(row.move) / row.seats : 0)),
     Number.EPSILON,
@@ -948,7 +948,7 @@ function seatsAnnex(data, parties) {
       lineHtml({
         who: row.label,
         value: signed(row.move),
-        /* Movimento relativo a propria bancada: 2 de 14 e ruptura; 2 de 80 e ruido. */
+        /* Movimento relativo a própria bancada: 2 de 14 e ruptura; 2 de 80 e ruído. */
         share: row.seats > 0 ? (Math.abs(row.move) / row.seats / deepest) * 100 : 0,
         note: `${UI.inbox.of} ${seats(row.seats)}`,
       }),
@@ -999,7 +999,7 @@ function annexHtml(letter, segments, parties) {
     })
     .join("");
 
-  /* Descontos em bloco separado sem barra: 7 pontos em 100 liam como traco insignificante. */
+  /* Descontos em bloco separado sem barra: 7 pontos em 100 liam como traço insignificante. */
   const discounts = [
     { key: "betrayal", value: data.betrayal ?? 0 },
     { key: "wear", value: data.wear ?? 0 },
@@ -1048,7 +1048,7 @@ export function trayHtml({ dispatches, open, seen = [] }) {
     ordered
       .map((item, index) => {
         const before = ordered[index - 1];
-        /* Divisor mensal unico: evita quebra na cronologia do calendario. */
+        /* Divisor mensal único: evita quebra na cronologia do calendário. */
         const divider =
           !before || before.month !== item.month
             ? `<li class="tray__month">${escapeHtml(monthLabel(item.month))}</li>`

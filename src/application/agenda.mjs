@@ -1,10 +1,10 @@
-/* Composicao da pauta legislativa a partir das variacoes de programas e regras. */
+/* Composicao da pauta legislativa a partir das variações de programas e regras. */
 
 import { quorumOf } from "../data/bills.mjs";
 import { MONTHS_PER_YEAR } from "../data/regime.mjs";
 import { POWER_STEPS } from "../data/rules.mjs";
 
-/* Fracao mensal do custo orcamentario anual. */
+/* Fração mensal do custo orçamentário anual. */
 const MONTHLY = 1 / MONTHS_PER_YEAR;
 
 /**
@@ -228,7 +228,7 @@ export function compose({
   const centreEconomic = economic / weightTotal;
   const centreLiberty = liberty / weightTotal;
 
-  /* Sem raio ideologico o preco nao escalava: 1 mudanca pedia 358 votos e 85 pediam 334. */
+  /* Sem raio ideológico o preço não escalava: 1 mudança pedia 358 votos e 85 pediam 334. */
   let variance = 0;
   for (const move of moves) {
     const program = /** @type {Program & Partial<Rule>} */ (move.program);
@@ -281,18 +281,18 @@ export function spendOf({ programs, levels, bands }) {
 
   for (const program of programs) {
     const level = clamp100(levels[program.id] ?? program.initial);
-    /* Cortar abaixo do piso nao devolve caixa discricionario: despesa obrigatoria e outra conta. */
+    /* Cortar abaixo do piso não devolve caixa discricionário: despesa obrigatória e outra conta. */
     const above = Math.max(0, level - bandOf(program, bands).floor);
     const monthly = (above / 100) * program.cost * MONTHLY;
 
-    /* Cobrar renuncia na bolsa consumia caixa inexistente: desoneracao abate receita via waivedOf. */
+    /* Cobrar renúncia na bolsa consumia caixa inexistente: desoneração abate receita via waivedOf. */
     if (program.waiver !== true) {
       byProgram[program.id] = monthly;
       byArea[program.area] = (byArea[program.area] ?? 0) + monthly;
       total += monthly;
     }
 
-    /* Sem gasto cheio por area a politica explorador explorava brecha no rateio. */
+    /* Sem gasto cheio por área a politica explorador explorava brecha no rateio. */
     fullByArea[program.area] =
       (fullByArea[program.area] ?? 0) + (level / 100) * program.cost * MONTHLY;
   }
@@ -320,7 +320,7 @@ export function honour({ programs, levels, ratio, bands, protect }) {
       next[program.id] = level;
       continue;
     }
-    /* Contingenciamento sobre renuncia revogava por aperto mensal beneficio fiscal em lei. */
+    /* Contingenciamento sobre renúncia revogava por aperto mensal benefício fiscal em lei. */
     if (program.waiver === true) {
       next[program.id] = level;
       continue;

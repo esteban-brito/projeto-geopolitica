@@ -25,7 +25,7 @@
     overflow-x: hidden;
   }
 
-  /* FOCO VISIVEL, SEMPRE. */
+  /* FOCO VISÍVEL, SEMPRE. */
   :focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
@@ -41,9 +41,9 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* TODO NUMERO DE INDICADOR E TABULAR.
-     ⚠ E TODO NUMERO E SANS, e esta linha e o que torna a regra tipografica do ciclo 5
-     EXECUTAVEL em vez de combinada: serifa e texto de registro, sans e valor medido. */
+  /* TODO NÚMERO DE INDICADOR E TABULAR.
+     ⚠ E TODO NÚMERO E SANS, e esta linha e o que torna a regra tipográfica do ciclo 5
+     EXECUTÁVEL em vez de combinada: serifa e texto de registro, sans e valor medido. */
   [data-numeric] {
     font-family: var(--font-display);
     font-variant-numeric: tabular-nums;
@@ -64,21 +64,21 @@
     max-width: none;
     max-height: none;
     /* ELE PRECISA DE `margin: auto` DE VOLTA.
-       Passou despercebido enquanto o dialogo so demonstrava um padrao e ninguem o olhou numa
+       Passou despercebido enquanto o diálogo só demonstrava um padrão e ninguém o olhou numa
        captura. */
     margin: auto;
   }
 
-  /* O BACKDROP NAO LEVA `backdrop-filter`, e a guarda foi quem decidiu isto.
-     A primeira versao pedia `blur(2px)` aqui — um SEGUNDO material na tela, que
-     `tests/guards/material.mjs` recusa por definicao. */
+  /* O BACKDROP NÃO LEVA `backdrop-filter`, e a guarda foi quem decidiu isto.
+     A primeira versão pedia `blur(2px)` aqui — um SEGUNDO material na tela, que
+     `tests/guards/material.mjs` recusa por definição. */
   dialog::backdrop {
     background: rgba(var(--bg-deep-rgb), 0.72);
   }
 
-  /* ⛔ SO O TABULEIRO ATRAVESSA A TRANSICAO. A raiz cruzava as duas fotos do documento
-     inteiro — fundo, rail e barra —, e avancar o mes fazia a tela toda piscar. O que troca de
-     conteudo e o tabuleiro; o resto e moldura, e moldura nao se refaz. */
+  /* ⛔ SÓ O TABULEIRO ATRAVESSA A TRANSICAO. A raiz cruzava as duas fotos do documento
+     inteiro — fundo, rail e barra —, e avançar o mês fazia a tela toda piscar. O que troca de
+     conteúdo e o tabuleiro; o resto e moldura, e moldura não se refaz. */
   ::view-transition-group(root),
   ::view-transition-old(root),
   ::view-transition-new(root) {
@@ -90,9 +90,9 @@
     view-transition-name: board;
   }
 
-  /* ⛔ O TABULEIRO DO GABINETE TEM OUTRO NOME: ele ocupa a janela inteira e os outros comecam
-     depois da coluna do rail, e com um nome so a troca MORFAVA a caixa — a foto da Caixa era
-     esticada ate a largura da mesa e sobrava uma banda clara onde a coluna esteve (L 75 contra
+  /* ⛔ O TABULEIRO DO GABINETE TEM OUTRO NOME: ele ocupa a janela inteira e os outros começam
+     depois da coluna do rail, e com um nome só a troca MORFAVA a caixa — a foto da Caixa era
+     esticada até a largura da mesa e sobrava uma banda clara onde a coluna esteve (L 75 contra
      32 sem o grupo, medido em docs/evidence/styles/banding.mjs). Nomes diferentes: uma sai no lugar dela, a outra
      nasce no dela. */
   .board[data-screen="cabinet"] {
@@ -103,11 +103,11 @@
     view-transition-name: rail;
   }
 
-  /* ⛔ A MADEIRA SUMIA NUM CORTE na saida do Gabinete, e dissolver a RAIZ deixava um remendo
+  /* ⛔ A MADEIRA SUMIA NUM CORTE na saída do Gabinete, e dissolver a RAIZ deixava um remendo
      laranja onde a coluna esteve — ele viu: a foto velha da raiz tem um buraco no lugar do rail
-     (peca nomeada sai da foto), e pelo buraco a madeira nova aparecia inteira enquanto o resto
-     ainda estava sob a foto velha. Entao NADA visivel fica na raiz: substrato e barra tambem
-     tem nome, cada um se dissolve no seu grupo, e a raiz — so o fundo do corpo — nao anima. */
+     (peça nomeada sai da foto), e pelo buraco a madeira nova aparecia inteira enquanto o resto
+     ainda estava sob a foto velha. Então NADA visível fica na raiz: substrato e barra também
+     tem nome, cada um se dissolve no seu grupo, e a raiz — só o fundo do corpo — não anima. */
   .backdrop {
     view-transition-name: backdrop;
   }
@@ -121,9 +121,9 @@
     animation-duration: var(--dur-screen);
   }
 
-  /* ⛔ A DURACAO NO GRUPO NAO CHEGA NO RETRATO: o `old` e o `new` do substrato seguiam a curva
-     padrao do navegador e cruzavam em ~60ms, enquanto o tabuleiro levava 280 — o fundo trocava
-     num pulo no meio da troca de aba. Com a mesma duracao e a mesma curva dos dois lados, a
+  /* ⛔ A DURAÇÃO NO GRUPO NÃO CHEGA NO RETRATO: o `old` e o `new` do substrato seguiam a curva
+     padrão do navegador e cruzavam em ~60ms, enquanto o tabuleiro levava 280 — o fundo trocava
+     num pulo no meio da troca de aba. Com a mesma duração e a mesma curva dos dois lados, a
      madeira e a aurora se cruzam junto com a tela. */
   ::view-transition-old(backdrop),
   ::view-transition-new(backdrop),
@@ -134,9 +134,9 @@
   }
 
   /* ⭐ A TROCA DE TELA E A DA APPLE: dissolve com um fio de escala (0,98 → 1), sem desfoque.
-     ⛔ O cross-fade cru do navegador ele recusou ("nao esta nivel Apple"); o desfoque animado em
+     ⛔ O cross-fade cru do navegador ele recusou ("não esta nível Apple"); o desfoque animado em
      tela inteira saiu depois: custava 40ms de GPU por troca (docs/evidence/styles/transition-cost.md) e a Apple
-     nao desfoca a tela na troca — desfoque e profundidade parada, nunca animador. */
+     não desfoca a tela na troca — desfoque e profundidade parada, nunca animador. */
   ::view-transition-group(board),
   ::view-transition-group(desk) {
     animation-duration: var(--dur-screen);
@@ -167,20 +167,20 @@
     }
   }
 
-  /* ⭐ O MENU NAO VOA, ordem dele ("gostei da ideia do macOS: ultra refinado e clean"): no
-     Gabinete o rail se chama `dock` (`40-shell.css`) e fora dele `rail`, entao entrar ou sair do
-     Gabinete e uma SAIDA e uma ENTRADA — o que sai encolhe no proprio lugar e o que entra nasce no
-     dele, e nada atravessa a tela. ⛔ A capsula de vidro voando em reta ele viu e trocou por isto.
-     O menu so entra depois de o tabuleiro assentar, 100ms antes do fim dele; entre duas telas que
-     nao sao o Gabinete os dois se chamam `rail` e so o item aceso troca. */
+  /* ⭐ O MENU NÃO VOA, ordem dele ("gostei da ideia do macOS: ultra refinado e clean"): no
+     Gabinete o rail se chama `dock` (`40-shell.css`) e fora dele `rail`, então entrar ou sair do
+     Gabinete e uma SAÍDA e uma ENTRADA — o que sai encolhe no próprio lugar e o que entra nasce no
+     dele, e nada atravessa a tela. ⛔ A cápsula de vidro voando em reta ele viu e trocou por isto.
+     O menu só entra depois de o tabuleiro assentar, 100ms antes do fim dele; entre duas telas que
+     não são o Gabinete os dois se chamam `rail` e só o item aceso troca. */
   ::view-transition-group(dock),
   ::view-transition-group(rail) {
     animation-duration: var(--dur-menu);
   }
 
-  /* ⛔ A SAIDA ANDA NO COMPASSO DO TABULEIRO: a 120ms a coluna sumia antes da Caixa e deixava um
+  /* ⛔ A SAÍDA ANDA NO COMPASSO DO TABULEIRO: a 120ms a coluna sumia antes da Caixa e deixava um
      remendo de madeira nua onde ela esteve, enquanto o resto ainda se dissolvia — ele viu, "um
-     fundo laranja onde ele tava". Com escala lenta era um painel fantasma. Fica: so apagar, no
+     fundo laranja onde ele tava". Com escala lenta era um painel fantasma. Fica: só apagar, no
      mesmo tempo e na mesma curva da tela que sai. */
   ::view-transition-old(dock) {
     animation: dock-out var(--dur-screen) var(--ease-screen) both;
@@ -191,8 +191,8 @@
       both;
   }
 
-  /* A coluna SAI quando so existe a foto velha e ENTRA quando so existe a nova (`:only-child`
-     no par de fotos); com as duas — troca entre telas que nao sao o Gabinete — ela so troca o
+  /* A coluna SAI quando só existe a foto velha e ENTRA quando só existe a nova (`:only-child`
+     no par de fotos); com as duas — troca entre telas que não são o Gabinete — ela só troca o
      item aceso. Sem tipos de transicao: `:only-child` e CSS de sempre, e vale em todo navegador
      com view transition. */
   ::view-transition-old(rail):only-child {

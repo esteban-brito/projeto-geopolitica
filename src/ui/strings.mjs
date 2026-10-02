@@ -1,7 +1,7 @@
-/* TEXTO DA INTERFACE — todo ele, num lugar so. Centralizado para evitar divergencia de nomes. */
+/* TEXTO DA INTERFACE — todo ele, num lugar só. Centralizado para evitar divergência de nomes. */
 
 const TERMOS = {
-  /* Os nomes das telas. O menu e o titulo tem de dizer a mesma coisa. */
+  /* Os nomes das telas. O menu e o título tem de dizer a mesma coisa. */
   cabinet: "Gabinete",
   finance: "Finanças",
   estado: "O Estado",
@@ -25,7 +25,7 @@ const TERMOS = {
   economic: "Setor privado",
   political: "Parlamentares",
 
-  /* O carimbo do fim, e ele e o mesmo no cartao da CALDEIRA e no fecho. */
+  /* O carimbo do fim, e ele e o mesmo no cartão da CALDEIRA e no fecho. */
   removed: "MANDATO INTERROMPIDO",
   removedNote: "a Câmara autorizou o afastamento",
 
@@ -38,7 +38,7 @@ const TERMOS = {
   moodWord: "humor",
   perMonthWord: "no mês",
   roomLine: "Sobra para o mês",
-  /* Peso zero exige frase explicita no cartao e na carta. */
+  /* Peso zero exige frase explicita no cartão e na carta. */
   noWeight: "não pesa",
   revenueWord: "Receita",
 
@@ -63,7 +63,7 @@ const TERMOS = {
 };
 
 /**
- * O ROTULO DE UMA CHAVE, com o proprio id como reserva.
+ * O RÓTULO DE UMA CHAVE, com o próprio id como reserva.
  *
  * @param {Record<string, string>} table
  * @param {string} key
@@ -90,7 +90,7 @@ export const UI = {
     ministries: "Ministérios",
     ministriesClose: "Fechar ministérios",
     estado: TERMOS.estado,
-    /* Rotulo textual explicita queda em pontos desde a posse. */
+    /* Rótulo textual explicita queda em pontos desde a posse. */
     watch: "Caiu 10 pontos ou mais desde a posse",
     alert: "Caiu 20 pontos ou mais desde a posse",
   },
@@ -108,7 +108,7 @@ export const UI = {
       economic: TERMOS.economic,
       political: TERMOS.political,
     },
-    /* Direcao de ruptura do motor: social abaixo; economica e politica acima. */
+    /* Direção de ruptura do motor: social abaixo; econômica e politica acima. */
     trinityBelow: "abaixo de",
     trinityAbove: "acima de",
   },
@@ -200,7 +200,7 @@ export const UI = {
   },
   inbox: {
     title: "Caixa de entrada",
-    /* Rupturas do cerco (governo passivo recebia 0 cartas em 44 meses ate abrir no mes 43). */
+    /* Rupturas do cerco (governo passivo recebia 0 cartas em 44 meses até abrir no mês 43). */
     ruptureSubject: {
       social: "A rua rompeu",
       economic: "O capital rompeu",
@@ -224,7 +224,7 @@ export const UI = {
     siegeOf: TERMOS.of,
     siegePrice: "Até lá cada cadeira custa",
     siegeAction: "Ir ao Congresso",
-    /* Protocolado nao e derrota: distingue texto recem-escrito de votado. */
+    /* Protocolado não e derrota: distingue texto recem-escrito de votado. */
     filed: "protocolado",
     passed: "aprovada",
     rejected: "derrubada",
@@ -299,7 +299,7 @@ export const UI = {
       "street.fell": "Aprovação cai a",
       "seats.rose": "Base sobe a",
       "seats.fell": "Base cai a",
-      /* Caixa no lugar de discricionario evita quebra de linha em 208px. */
+      /* Caixa no lugar de discricionário evita quebra de linha em 208px. */
       "vault.rose": "Caixa sobe a",
       "vault.fell": "Caixa cai a",
     },
@@ -342,7 +342,7 @@ export const UI = {
     },
     demandBody: "quer o programa de volta em",
     demandCutBody: "quer o programa cortado de volta para",
-    /* Silencio na chantagem equivale a recusa. */
+    /* Silêncio na chantagem equivale a recusa. */
     spiteWarns: "Se você não responder, ele lê como recusa.",
     conceded: "Você cedeu, e a verba volta neste mês.",
     refused: "Você recusou, e ele não esquece depressa.",
@@ -358,7 +358,7 @@ export const UI = {
       block: TERMOS.refuse,
       blockCost: TERMOS.refuseCost,
     },
-    /* Preco do silencio avisado antes transforma ignorar em escolha. */
+    /* Preço do silêncio avisado antes transforma ignorar em escolha. */
     silenceWarns: "Se você não responder, a emenda vale.",
     dueIn: "vence em",
     dueNow: "vence neste mês",
@@ -403,7 +403,7 @@ export const UI = {
     decay: "O desgaste",
     half: (/** @type {number} */ months) => `metade em ${months} meses`,
     forever: "não se desgasta",
-    /* Atraso temporal explicita defasagem de efeito entre areas. */
+    /* Atraso temporal explicita defasagem de efeito entre áreas. */
     lagged: (/** @type {number} */ months) => `com ${months} meses de atraso`,
     prompt: "no mesmo mês",
     came: (/** @type {number} */ months) => `de ${months} meses atrás`,
@@ -512,7 +512,7 @@ export const UI = {
       seat: "quer continuar onde está",
     },
     cabinetOf: "quer o ministério da",
-    /* Preco da ambicao encurtado para evitar repeticao excessiva na tela. */
+    /* Preço da ambição encurtado para evitar repetição excessiva na tela. */
     ambitionPrice: {
       succession: "reconhece menos do que recebe",
       cabinet: "barateia se a pasta receber",

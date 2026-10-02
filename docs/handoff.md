@@ -7,42 +7,29 @@
 
 ## Para retomar em um minuto
 
-- **01/10, limpeza aprovada por ele e feita** (journal, entradas 123 e 124):
-  - a organização de 30/09 fechou; `tmp/posse/` e os logs soltos estão em `tmp/history/`;
-  - o repositório público não leva o runtime do canvas (código do claude.ai sem licença
-    declarada): ele fica em `vendor/posse/rt/`, ignorado; o ZIP de procedência está em
-    `tmp/history/`;
-  - saíram os ensaios sintéticos do Codex (3.118 linhas); ficam a estrutura por IDs, a busca e a ponte;
+- **01/10, limpeza aprovada por ele** (journal, entradas 123 a 125). Feito e publicado:
+  - um contrato só para os agentes, [`AGENTS.md`](../AGENTS.md); o Codex saiu do projeto;
+  - cada pasta de documentos com índice e situação ([especificações](spec/README.md),
+    [ciclos](cycles/README.md), [pesquisas](research/README.md)); ciclos 01–31, três
+    especificações superadas e o journal até 30/09 em `docs/archive/`;
+  - 7.336 palavras acentuadas em comentários e documentos, com o código provado idêntico; guarda
+    nova `accents` e `tools/accent-only.mjs` para conferir lote de acento;
+  - o repositório público sem o runtime do canvas (`vendor/posse/rt/`, ignorado) e sem o ZIP de
+    procedência (`tmp/history/`); saíram os ensaios sintéticos do Codex (3.118 linhas);
   - quatro defeitos da posse consertados, cada um com prova que caiu antes
-    (`tests/browser/posse-defects.mjs`);
-  - o portão cobre `prototypes/` em tipos e links; `npm run posse` roda as seis provas da posse
-    e a auditoria (116 s), fora do `validate`; `npm run serve` gera a posse antes de subir;
-  - um contrato do [governo variável](spec/dynamic-government.md) no lugar de dois; quatro
-    documentos e as seções longas do handoff em `docs/archive/`;
-  - push de `caixa-de-entrada` (do `ed9f2cc` de 24/09 até hoje); a branch remota
-    `acoplamento-e-simulador`, igual ao `main`, foi apagada; `Desktop/cld-backups/` foi apagada
-    depois do push, e os relatórios em texto das auditorias de 26/09 ficaram em `tmp/history/`.
+    (`tests/browser/posse-defects.mjs`); `npm run posse` roda as provas da posse fora do `validate`.
 
-  `validate` verde em 01/10: 13 guardas, 68 sintéticas, zero links quebrados, tipos, lint,
-  formato, 471 testes, passeio e macaco (60 ações, semente 7, zero achados).
+  `validate` verde em 01/10: 14 guardas, 74 sintéticas, zero links quebrados, tipos, lint,
+  formato, 471 testes, passeio e macaco. O passeio cai com a CPU ocupada (achado 69).
 
-- **Ordem dele em 01/10, a posse:** o foco é só a versão nova, e ela pode ser refeita do zero.
-  Cai a regra de 30/09 de preservar a tela do Claude linha por linha. Ele vê falta de polimento
-  depois do F5. Medido em 01/10: uma frase da criação aparece inteira aos 130 ms, antes da
-  animação; o brilho de fundo termina numa borda em y = 800, porque a tela tem 1280×800 fixos;
-  as fontes vêm do Google Fonts com troca tardia; com a CPU 4 vezes mais lenta, a montagem trava
-  158 ms e a animação, 55 ms; 49 erros de template no console. Ele escolheu refazer: [ciclo 34](cycles/34-the-posse-rebuilt.md).
-- **testar a posse:** `npm run serve` e <http://127.0.0.1:5173/tmp/build/posse.html>.
-- **direção (25/09):** sandbox ideológico com regras reais; realismo acima de tudo. Os documentos
-  de design, do mais geral ao mais concreto: [especificação mestra](spec/master-spec.md) 1.1
-  (autoridade) → [jogo em uma página](archive/game-in-one-page-2026-09-25.md) (promessa e loop) →
-  [gramática das regras](spec/rules-grammar.md) (como toda regra real vira peça) →
-  [corte vertical](spec/vertical-slice-energy.md) (a abertura e a estatal) →
-  [mapa de migração](spec/migration-map.md) (o plano). Os fatos estão na
-  [pesquisa 14](research/14-the-state-energy-company.md) e na
-  [pesquisa 15](research/15-forming-the-government.md); as 40 ações do cargo, no
-  [checklist do Presidente](spec/presidential-checklist.md); a interface nova, no
-  [mapa das telas](archive/interface-map-2026-09-25.md). Em conflito, vale o mais recente;
+- **a posse:** ele escolheu refazê-la dentro do jogo, com o save 22
+  ([ciclo 34](cycles/34-the-posse-rebuilt.md)). Medido em 01/10 no protótipo: uma frase da
+  criação aparece inteira aos 130 ms, antes da animação; o brilho de fundo termina em y = 800
+  (tela fixa de 1280×800); as fontes do Google trocam tarde; com a CPU 4 vezes mais lenta, a
+  montagem trava 158 ms e a animação, 55 ms; 49 erros de template no console. Testar o protótipo:
+  `npm run serve` e <http://127.0.0.1:5173/tmp/build/posse.html>.
+- **a direção:** a [visão](vision.md) manda (rascunho de 01/10, espera a aprovação dele); abaixo
+  dela, as [especificações](spec/README.md) e o plano em vigor, o [ciclo 33](cycles/33-the-whole-game.md).
 - **o modelo da base está no motor (26/09):** 16 partidos, save na versão 21, a lealdade é a
   chance do partido, um líder por bloco (15 arquétipos) e as provas de `tests/suites/base.mjs`.
   Desenho em [o modelo da base](spec/the-base-model.md) §7; achados 86 e 87 abertos.
@@ -67,8 +54,9 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
   pesa no modelo (achado 77).
 - **VONTADE:** lotes A1, A1.1, A1.2 e A2a commitados (`98c1abc`, `a690248`, `5ba154c`); o mundo
   vivo, lotes 1 e 2, decide por ela todo mês ([o mundo vivo](spec/the-living-world.md)). O A2b espera.
-- **Autoridade de design:** a [especificação mestra](spec/master-spec.md) 1.1; o
-  [mapa de migração](spec/migration-map.md) liga cada subsistema à especificação.
+- **Autoridade de design:** a [visão](vision.md) e, abaixo dela, a
+  [especificação mestra](spec/master-spec.md) 1.1; o [mapa de migração](spec/migration-map.md)
+  (referência) guarda os lotes e as consultas que ainda leem o oculto (§5.6).
 - **Ciclo 29 (simplificar):** itens 2 e 3 feitos; a meta de prosa (até 20% no jogo, 25% por
   arquivo) segue aberta, com o domínio perto de 41% na última medida.
 - **Revisão externa:** 2 dos 3 ultrareviews grátis gastos; 9 achados, os 9 reproduzidos e 7
@@ -81,21 +69,16 @@ As seções longas de antes de 01/10 estão inteiras em [handoff arquivado](arch
 ## Fila, em ordem
 
 **Agora (01/10): limpeza e organização**, ordem dele ("o principal problema é a desorganização,
-despadronização, desarmonia"). Fases, cada uma com commit:
+despadronização, desarmonia"). As fases 1 a 4 estão feitas (journal 125). Falta:
 
-1. **Um contrato só para os agentes** — feito em 01/10: `AGENTS.md` com leis, fluxo, agentes e
-   mapa do código; `CLAUDE.md` e `GEMINI.md` só o importam; saíram o guia do agente, as regras de
-   co-desenvolvimento e a pasta do Codex; o verificador de retratos virou `tests/browser/review-portraits.mjs`.
-2. **Uma autoridade por assunto:** cabeçalho de situação em cada especificação; quatro superadas
-   para o arquivo; ciclos 01–31 para o arquivo dos ciclos; ciclos 32–34 atualizados; índice das
-   pesquisas; journal por mês; handoff curto.
-3. **Um padrão de escrita** nos documentos: cabeçalho por tipo, acentos, "o Diretor" para ele.
-4. **Acentos no código:** comentários e textos de prova, provado por `prose-only`, com guarda nova.
-5. **Raiz e disco.**
-6. **Elenco inspirado na vida real:** nomes inventados, papel, trajetória, temperamento público e
+1. **Acentos que dependem de contexto** (`e`/`é`, `esta`/`está`, `a`/`à`, `tem`/`têm`): lote do
+   Gemini por pasta, conferido por `node tools/accent-only.mjs` (só diacrítico; código e string
+   idênticos) e por `check`, `types` e `test`;
+2. **Raiz e disco.**
+3. **Elenco inspirado na vida real:** nomes inventados, papel, trajetória, temperamento público e
    ideologia inspirados em figuras reais (por exemplo, quem faz no STF o papel de Alexandre de
    Moraes); ADR 0003 revisto; pesquisa de quem entra.
-7. **As partidas Xi e Lee escritas** como se ele jogasse (estilo Geopolitical Simulator, Democracy
+4. **As partidas Xi e Lee escritas** como se ele jogasse (estilo Geopolitical Simulator, Democracy
    4, Football Manager), no jogo pronto, com desfecho realista mesmo que fracassem; servem de
    régua, leitura e roteiro de teste.
 
@@ -115,7 +98,7 @@ Depois disso: o [ciclo 34](cycles/34-the-posse-rebuilt.md), reescrito para a pos
    [ciclo 33](cycles/33-the-whole-game.md) foi conferido pelo Claude e aprovado por ele em 26/09
    (decisões 1, 5 e 9 tomadas; a 10, retratos, aberta: serão imagens que ele gera no ChatGPT);
 5. **achado 81**, antes de fechar o E0; não bloqueia o E1;
-6. **achado 69** — investigar a oscilação da prova de voo interrompido;
+6. **achado 69** — três provas do passeio caem com a CPU ocupada: provar a causa e consertar;
 7. **carta do arquivamento** (achado 66), adiada para o lote F (mapa §10);
 8. **prosa de `src/domain`** (referência anterior: 41%; meta ≤ 20%);
 9. **3º ultra: `src/ui` inteira**, depois de fechar o ciclo 29;
@@ -251,11 +234,13 @@ Um achado que fecha sai daqui para o journal. Número com data: remeça antes de
 - **74. O canal tributário está morto (24/09).** `turn.mjs:1451-1452` passa a mesma carga como
   `taxLoad` e `baseTaxLoad`; `taxDelta` é sempre zero. Liga com o item B4 do ciclo 30;
 
-- **69. Prova de voo interrompido oscilou (23/09).** Em `npm.cmd run validate`, a pasta mediu
-  719px no corte e 569px dois quadros depois: diferença de 150px, acima do limite de 20%.
-  A prova e o código do voo não foram alterados; a prova roda antes das dez asserções novas.
-  O passeio inicial e a repetição completa passaram. Causa ainda não isolada; nenhum limite
-  foi afrouxado. Evidência: `docs/evidence/gate/validate-flight-failure-2026-09-23.log`; rodada final verde em
+- **69. Três provas do passeio caem com a CPU ocupada (23/09; reproduzido em 01/10).** Com 12
+  processos ocupando os 12 núcleos durante `npm run walk`, o HEAD `dd27945` caiu 2 de 2 vezes nas
+  mesmas três asserções: o voo interrompido do Gabinete (724px no corte, 569px e 570px dois quadros
+  depois), a pílula da coluna (4,5px e 13,6px fora do item) e o centro da pasta no recomeçar. Sem
+  carga, 3 de 3 verdes. As três medem posição alguns quadros depois de um gesto; hipótese a provar:
+  a prova conta quadros e a mola anda por tempo, então quadro longo vira "salto". Nenhum limite foi
+  afrouxado. Em 23/09, a pasta mediu 719px no corte e 569px dois quadros depois. Evidência: `docs/evidence/gate/validate-flight-failure-2026-09-23.log`; rodada final verde em
   `docs/evidence/gate/validate-final-2026-09-23.log`;
 - **66. A carta do arquivamento não existe (21/09).** Ver fila 4;
 - **65. `--paper` é cor nos tokens e largura na folha (18/09).** `00-tokens.css` declara
@@ -362,7 +347,7 @@ e CASCATA saíram em 24/09 e voltam quando tiverem código.
 `ledger` → `situationOf` → `playMonth`) · `public/` (fachada; `boundaries` prova) ·
 `simulate.mjs` (nove sondas).
 
-**Verificação de 01/10:** 13 guardas · 68 sintéticas · 531 provas · passeio dentro do `validate`
+**Verificação de 01/10:** 14 guardas · 74 sintéticas · 531 provas · passeio dentro do `validate`
 (geometria, recorte, contraste no pixel, 1440×980 e 1440×900).
 
 ## O que ainda não existe

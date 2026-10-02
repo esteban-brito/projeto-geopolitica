@@ -1,10 +1,10 @@
-/* CALDEIRA — a pressao que se acumula e, passado o limite, estoura.
-   ⚠ E a mesma forma que SONDA usa para satisfacao, e pela mesma razao: reputacao se
-   perde mais rapido do que se recupera. Simetrica, a caldeira seria um pendulo, e
+/* CALDEIRA — a pressão que se acumula e, passado o limite, estoura.
+   ⚠ E a mesma forma que SONDA usa para satisfação, e pela mesma razão: reputação se
+   perde mais rapido do que se recupera. Simétrica, a caldeira seria um pendulo, e
    bastaria alternar quem se agrada para nunca esquentar nada.
-   Nao sorteia. Nao sabe de onde vem o descontentamento — quem lê LASTRO, ECLUSA e
-   MALHA e a camada de aplicacao, porque motor nenhum chama outro motor. E nao decide
-   a queda: ele diz que as tres rupturas estao abertas, e QUEM DERRUBA e o plenario,
+   Não sorteia. Não sabe de onde vem o descontentamento — quem lê LASTRO, ECLUSA e
+   MALHA e a camada de aplicação, porque motor nenhum chama outro motor. E não decide
+   a queda: ele diz que as três rupturas estão abertas, e QUEM DERRUBA e o plenario,
    com `vote`, como tudo o mais neste jogo. */
 
 /**
@@ -27,7 +27,7 @@ function clamp100(value) {
 }
 
 /**
- * A PRESSAO DO MES SEGUINTE, grupo a grupo.
+ * A PRESSÃO DO MÊS SEGUINTE, grupo a grupo.
  *
  * @param {object} input
  * @param {Record<string, number>} input.pressure - o estoque de cada grupo, 0 a 100
@@ -42,7 +42,7 @@ export function heat({ pressure, grievance, parameters }) {
   for (const [id, want] of Object.entries(grievance)) {
     const now = pressure[id] ?? 0;
     const target = clamp100(want * 100);
-    /* ⚠ A INERCIA E ASSIMETRICA — ver a prosa do topo. */
+    /* ⚠ A INÉRCIA E ASSIMÉTRICA — ver a prosa do topo. */
     const speed = target > now ? parameters.rise : parameters.cool;
     next[id] = clamp100(now + (target - now) * speed);
   }
@@ -51,7 +51,7 @@ export function heat({ pressure, grievance, parameters }) {
 }
 
 /**
- * QUANTO CADA GRUPO PESA NA RUPTURA ECONOMICA, ja normalizado, de 0 a 1.
+ * QUANTO CADA GRUPO PESA NA RUPTURA ECONÔMICA, já normalizado, de 0 a 1.
  *
  * @param {ReadonlyArray<{ id: string, weight: number }>} lobbies
  * @returns {Record<string, number>}
@@ -71,7 +71,7 @@ export function capitalShares(lobbies) {
 }
 
 /**
- * AS TRES RUPTURAS — e o processo so abre com as tres ao mesmo tempo.
+ * AS TRÊS RUPTURAS — e o processo só abre com as três ao mesmo tempo.
  *
  * @param {object} input
  * @param {Record<string, number>} input.pressure
@@ -91,8 +91,8 @@ export function rupture({ pressure, lobbies, standing, broker, parameters }) {
   }
   const economic = abandoned >= 0.5;
 
-  /* ⚠ A RUPTURA POLITICA TEM LIMIAR PROPRIO, e ele e MAIS ALTO que o dos outros: o
-     fisiologismo e o ultimo a virar, porque ele ganha dinheiro sustentando. */
+  /* ⚠ A RUPTURA POLITICA TEM LIMIAR PRÓPRIO, e ele e MAIS ALTO que o dos outros: o
+     fisiologismo e o último a virar, porque ele ganha dinheiro sustentando. */
   const political = (pressure[broker] ?? 0) >= parameters.brokerBoil;
 
   return { social, economic, political, open: social && economic && political };

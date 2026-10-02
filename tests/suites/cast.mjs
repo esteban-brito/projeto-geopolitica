@@ -1,7 +1,7 @@
 /* SUITE · O ELENCO — a republica ganha gente, e a gente lembra.
-   O que esta suite cobra nao e "os nomes saem bonitos": e que gerar gente da semente nao
+   O que esta suite cobra não e "os nomes saem bonitos": e que gerar gente da semente não
    quebre nenhuma das quatro coisas que o projeto inteiro se apoia — o plenario fechar, o
-   mandato se refazer, o motor nao sortear por fora e o catalogo mandar no que se gera. */
+   mandato se refazer, o motor não sortear por fora e o catálogo mandar no que se gera. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -28,7 +28,7 @@ const castOf = seed =>
     genderOf: GENDER_OF,
   });
 
-/* MUITAS SEMENTES, e nao uma. */
+/* MUITAS SEMENTES, e não uma. */
 const anySeed = fc.integer({ min: 0, max: 4294967295 });
 
 test("O PLENARIO FECHA, em qualquer semente", () => {
@@ -55,7 +55,7 @@ test("O PLENARIO FECHA, em qualquer semente", () => {
   );
 });
 
-test("SOBRA BLOCO EM TODA SEMENTE: o Congresso nao vira sete individuos", () => {
+test("SOBRA BLOCO EM TODA SEMENTE: o Congresso não vira sete individuos", () => {
   /* O teto de alcance existe para o bloco continuar existindo. */
   fc.assert(
     fc.property(anySeed, seed => {
@@ -75,10 +75,10 @@ test("SOBRA BLOCO EM TODA SEMENTE: o Congresso nao vira sete individuos", () => 
   );
 });
 
-test("EXISTE CENTRO PARA GOVERNAR, e ninguem tem maioria sozinho", () => {
+test("EXISTE CENTRO PARA GOVERNAR, e ninguém tem maioria sozinho", () => {
   /* A propriedade que a auditoria externa pediu por outro caminho, e que responde ao risco R4
-     sem precisar de distribuicao normal nenhuma: para TODA semente, nenhuma bancada isolada
-     decide o plenario, e ha centro suficiente para montar uma maioria. */
+     sem precisar de distribuição normal nenhuma: para TODA semente, nenhuma bancada isolada
+     decide o plenario, e há centro suficiente para montar uma maioria. */
   fc.assert(
     fc.property(anySeed, seed => {
       const { benches: chamber } = benches({
@@ -96,7 +96,7 @@ test("EXISTE CENTRO PARA GOVERNAR, e ninguem tem maioria sozinho", () => {
         );
       }
 
-      /* O TETO DE 45 SAIU DE MEDICAO, e nao de gosto: em 400 sementes a janela mais estreita
+      /* O TETO DE 45 SAIU DE MEDIÇÃO, e não de gosto: em 400 sementes a janela mais estreita
          ficou entre 15,6 e 31,8 pontos, contra 72 de distancia entre a esquerda e a direita
          liberal. */
       const sorted = [...chamber].sort((a, b) => a.economic - b.economic);
@@ -126,7 +126,7 @@ test("EXISTE CENTRO PARA GOVERNAR, e ninguem tem maioria sozinho", () => {
   );
 });
 
-test("A MESMA SEMENTE DA A MESMA GENTE, e sementes diferentes dao gente diferente", () => {
+test("A MESMA SEMENTE DA A MESMA GENTE, e sementes diferentes dão gente diferente", () => {
   /* A regra que sustenta save, simulador e calibragem. */
   assert.deepEqual(castOf(DEFAULT_SEED), castOf(DEFAULT_SEED));
 
@@ -141,10 +141,10 @@ test("A MESMA SEMENTE DA A MESMA GENTE, e sementes diferentes dao gente diferent
   assert.ok(names.size >= 7, `oito sementes produziram so ${names.size} elencos distintos`);
 });
 
-test("NINGUEM E HOMONIMO na mesma partida, NEM DE PRIMEIRO NOME, NEM DE SOBRENOME", () => {
-  /* Dois sujeitos com o mesmo nome num elenco deste tamanho nao e sabor local: e um
+test("NINGUÉM E HOMÔNIMO na mesma partida, NEM DE PRIMEIRO NOME, NEM DE SOBRENOME", () => {
+  /* Dois sujeitos com o mesmo nome num elenco deste tamanho não e sabor local: e um
      defeito que o jogador lê como bug, e que a identidade por `id` esconderia do motor mas
-     nao dos olhos. */
+     não dos olhos. */
   fc.assert(
     fc.property(anySeed, seed => {
       const names = castOf(seed).map(person => person.name);
@@ -163,8 +163,8 @@ test("NINGUEM E HOMONIMO na mesma partida, NEM DE PRIMEIRO NOME, NEM DE SOBRENOM
   );
 });
 
-test("A PESSOA NASCE ONDE O BLOCO ESTA, e nao num ponto qualquer do plano", () => {
-  /* O que a mantem reconhecivel. */
+test("A PESSOA NASCE ONDE O BLOCO ESTA, e não num ponto qualquer do plano", () => {
+  /* O que a mantem reconhecível. */
   fc.assert(
     fc.property(anySeed, seed => {
       for (const person of castOf(seed)) {
@@ -185,11 +185,11 @@ test("A PESSOA NASCE ONDE O BLOCO ESTA, e nao num ponto qualquer do plano", () =
   );
 });
 
-/* ═══ A MEMORIA ══════════════════════════════════════════════════════════════ */
+/* ═══ A MEMÓRIA ══════════════════════════════════════════════════════════════ */
 
-test("A TRAICAO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
-  /* Sem ela o jogo ensinaria que da para queimar alguem e comprar de volta pelo mesmo preco —
-     e ai a memoria seria um numero que anda, e nao uma relacao. */
+test("A TRAIÇÃO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
+  /* Sem ela o jogo ensinaria que da para queimar alguém e comprar de volta pelo mesmo preço —
+     e ai a memória seria um número que anda, e não uma relação. */
   const people = castOf(DEFAULT_SEED);
   const blocs = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
   const nothing = Object.fromEntries(PARTIES.map(party => [party.id, 0]));
@@ -209,7 +209,7 @@ test("A TRAICAO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
     parameters: CATALOG.cast,
   });
 
-  /* ⚠ SO QUEM ARRASTA BANCADA ENTRA NA CONTA, e a exclusao e o modelo e nao uma folga. */
+  /* ⚠ SÓ QUEM ARRASTA BANCADA ENTRA NA CONTA, e a exclusão e o modelo e não uma folga. */
   const bench = people.filter(person => person.reach > 0);
   assert.ok(bench.length > 0, "nenhuma pessoa arrasta bancada");
 
@@ -225,9 +225,9 @@ test("A TRAICAO PESA MAIS QUE O FAVOR, e e a mesma assimetria de SONDA", () => {
   }
 });
 
-test("A MEMORIA NAO ESTOURA O TETO, em nenhum dos dois lados", () => {
-  /* Ela e um estoque com limite, e o limite existe para o credito nao virar uma segunda moeda
-     infinita: sem teto, dois anos de verba cheia comprariam qualquer votacao para sempre, e a
+test("A MEMÓRIA NÃO ESTOURA O TETO, em nenhum dos dois lados", () => {
+  /* Ela e um estoque com limite, e o limite existe para o crédito não virar uma segunda moeda
+     infinita: sem teto, dois anos de verba cheia comprariam qualquer votação para sempre, e a
      barganha do quinto ano deixaria de existir. */
   const people = castOf(DEFAULT_SEED);
   const full = Object.fromEntries(PARTIES.map(party => [party.id, 1]));
@@ -260,8 +260,8 @@ test("A MEMORIA NAO ESTOURA O TETO, em nenhum dos dois lados", () => {
   }
 });
 
-/* UMA PESSOA DE PROVA — so o que `offered` lê. Gerar gente da semente daria uma amostra em
-   que a ambicao que se quer medir pode nao existir. */
+/* UMA PESSOA DE PROVA — só o que `offered` lê. Gerar gente da semente daria uma amostra em
+   que a ambição que se quer medir pode não existir. */
 /** @param {string} ambition @param {string} portfolio */
 const someone = (ambition, portfolio = "health") => ({
   id: ambition,
@@ -293,9 +293,9 @@ const tableOf = world =>
     ...world,
   });
 
-test("A RUA MOVE QUEM QUER CONTINUAR ONDE ESTA, e nao move mais ninguem", () => {
+test("A RUA MOVE QUEM QUER CONTINUAR ONDE ESTA, e não move mais ninguém", () => {
   /* O baixo clero que segue a popularidade — e a prova cobra os DOIS lados: se a rua passasse
-     a mover todo mundo, ela viraria um segundo `standing`, que ECLUSA ja aplica. */
+     a mover todo mundo, ela viraria um segundo `standing`, que ECLUSA já aplica. */
   const calm = tableOf({ street: 0 });
   const loved = tableOf({ street: 0.25 });
   const hated = tableOf({ street: -0.25 });
@@ -309,7 +309,7 @@ test("A RUA MOVE QUEM QUER CONTINUAR ONDE ESTA, e nao move mais ninguem", () => 
   }
 });
 
-test("A PASTA ATENDIDA BARATEIA QUEM A QUER, e so a pasta DELE conta", () => {
+test("A PASTA ATENDIDA BARATEIA QUEM A QUER, e só a pasta DELE conta", () => {
   const dry = tableOf({});
   const fed = tableOf({ byArea: { health: 0.4 } });
   const other = tableOf({ byArea: { defense: 0.4 } });
@@ -324,7 +324,7 @@ test("A PASTA ATENDIDA BARATEIA QUEM A QUER, e so a pasta DELE conta", () => {
 });
 
 test("A MESMA EMENDA VALE COISAS DIFERENTES, e a bancada e o ponto zero", () => {
-  /* ⚠ A BANCADA E A REFERENCIA, e nao um numero escrito na prova: ela nao tem ambicao, entao
+  /* ⚠ A BANCADA E A REFERENCIA, e não um número escrito na prova: ela não tem ambição, então
      o que ela reconhece e exatamente o que foi oferecido. */
   const table = tableOf({});
   const bench = table[BLOC] ?? 0;
@@ -339,9 +339,9 @@ test("A MESMA EMENDA VALE COISAS DIFERENTES, e a bancada e o ponto zero", () => 
   );
 });
 
-test("A PASTA SAI DE CHAVE PROPRIA — o elenco de uma partida salva nao mudou", () => {
+test("A PASTA SAI DE CHAVE PRÓPRIA — o elenco de uma partida salva não mudou", () => {
   /* ⚠ ESTA E A PROVA QUE PROTEGE O SAVE. O elenco se refaz da semente a cada abertura: se a
-     pasta tivesse entrado no mesmo sorteio da ambicao, toda partida em andamento acordaria
+     pasta tivesse entrado no mesmo sorteio da ambição, toda partida em andamento acordaria
      com outras pessoas — e nenhuma tela denunciaria. */
   fc.assert(
     fc.property(anySeed, seed => {
@@ -371,8 +371,8 @@ test("A PASTA SAI DE CHAVE PROPRIA — o elenco de uma partida salva nao mudou",
   );
 });
 
-test("A MEMORIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
-  /* O credito chega a ECLUSA como dinheiro ja pago — e por isso o motor de votacao continua
+test("A MEMÓRIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
+  /* O crédito chega a ECLUSA como dinheiro já pago — e por isso o motor de votação continua
      sem saber que o elenco existe. */
   const people = castOf(DEFAULT_SEED);
   const funding = Object.fromEntries(PARTIES.map(party => [party.id, 0.5]));
@@ -399,8 +399,8 @@ test("A MEMORIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
     );
 
     const rival = person.ambition === "succession";
-    /* ⚠ O PAR NAO PODE SER A TOGA: `courtDrag` desconta MAIS que `successionDrag`, e comparar
-       com ela mediria a ordem dos dois descontos, e nao o desconto da sucessao. */
+    /* ⚠ O PAR NÃO PODE SER A TOGA: `courtDrag` desconta MAIS que `successionDrag`, e comparar
+       com ela mediria a ordem dos dois descontos, e não o desconto da sucessão. */
     const same = people.find(
       other =>
         other.bloc === person.bloc &&
@@ -418,7 +418,7 @@ test("A MEMORIA VIRA VERBA, e quem quer o Planalto cobra a mais", () => {
 });
 
 test("O TURNO E A TELA VEEM A MESMA CAMARA", () => {
-  /* A regra central do projeto, aplicada ao elenco: a previsao da tela e o plenario do turno
+  /* A regra central do projeto, aplicada ao elenco: a previsão da tela e o plenario do turno
      tem de sair da MESMA montagem. */
   const state = createState(7);
   const orders = { funding: Object.fromEntries(PARTIES.map(party => [party.id, 0.3])) };
@@ -434,8 +434,8 @@ test("O TURNO E A TELA VEEM A MESMA CAMARA", () => {
   );
 });
 
-test("TRAIR O PROPRIO PARTIDO CUSTA O DOBRO, e honrar vale o mesmo", () => {
-  /* A assimetria e o item inteiro: quem e da casa acha que a verba ja era dele. */
+test("TRAIR O PRÓPRIO PARTIDO CUSTA O DOBRO, e honrar vale o mesmo", () => {
+  /* A assimetria e o item inteiro: quem e da casa acha que a verba já era dele. */
   const people = castOf(DEFAULT_SEED);
   const meu = people[0]?.bloc ?? "";
   const prometido = Object.fromEntries(PARTIES.map(party => [party.id, 1]));

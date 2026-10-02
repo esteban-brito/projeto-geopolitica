@@ -1,4 +1,4 @@
-/* O RAIL — a navegacao primaria, a esquerda e sempre presente. */
+/* O RAIL — a navegação primária, a esquerda e sempre presente. */
 
 import { LEVELS, RECIPE, fresnelFor, glaze, scaleRamp, skin } from "./glass.mjs";
 import { spring } from "./spring.mjs";
@@ -9,8 +9,8 @@ import { DEFAULT_TREATMENT, UI, titleOf } from "../strings.mjs";
 /** @typedef {import("../../data/areas.mjs").Area} Area */
 
 /**
- * ⚠ `ready` SAIU JUNTO COM AS DUAS ENTRADAS CINZAS, e ele era a metade de codigo do defeito:
- * um parametro que so recebe `true` e uma porta aberta esperando alguem passar por ela.
+ * ⚠ `ready` SAIU JUNTO COM AS DUAS ENTRADAS CINZAS, e ele era a metade de código do defeito:
+ * um parâmetro que só recebe `true` e uma porta aberta esperando alguém passar por ela.
  * Quando A Rua e Bastidor existirem, elas entram como as outras — com uma linha.
  *
  * @param {object} section
@@ -36,8 +36,8 @@ function itemHtml({ key, label, alert }, current) {
     `<li><button ${attributes}>` +
     iconHtml(key, "rail__icon") +
     `<span class="rail__label">${escapeHtml(label)}</span>` +
-    /* ⚠ O PONTO NAO E A LEITURA, e por isso ele leva rotulo proprio: a cor sozinha diz
-       "algo errado aqui" a quem a enxerga, e nada a quem nao enxerga. */
+    /* ⚠ O PONTO NÃO E A LEITURA, e por isso ele leva rótulo próprio: a cor sozinha diz
+       "algo errado aqui" a quem a enxerga, e nada a quem não enxerga. */
     (alert ? `<span class="rail__alert" title="${escapeHtml(UI.nav[alert])}"></span>` : "") +
     `</button></li>`
   );
@@ -67,8 +67,8 @@ export function railGovHtml({ president, stance, treatment = DEFAULT_TREATMENT }
 }
 
 /**
- * ⚠ `alerts` CHEGA DE FORA, e a tela nao o calcula: a escala de queda e regra da MALHA, e
- * refeita aqui ela divergiria da faixa de areas no dia em que um limiar mudasse.
+ * ⚠ `alerts` CHEGA DE FORA, e a tela não o calcula: a escala de queda e regra da MALHA, e
+ * refeita aqui ela divergiria da faixa de áreas no dia em que um limiar mudasse.
  *
  * @param {string} current chave da secao aberta
  * @param {ReadonlyArray<Area>} areas
@@ -77,17 +77,17 @@ export function railGovHtml({ president, stance, treatment = DEFAULT_TREATMENT }
  */
 export function railNavHtml(current, areas, alerts = {}) {
   const cabinet = itemHtml({ key: "cabinet", label: UI.nav.cabinet }, current);
-  /* ⚠ O EMAIL VEM LOGO DEPOIS DO GABINETE, e nao no fim: as duas eram a MESMA tela ate a
-     separacao, e o jogador que abre o jogo no painel vai para a caixa em seguida. */
+  /* ⚠ O EMAIL VEM LOGO DEPOIS DO GABINETE, e não no fim: as duas eram a MESMA tela até a
+     separação, e o jogador que abre o jogo no painel vai para a caixa em seguida. */
   const email = itemHtml({ key: "email", label: UI.nav.email }, current);
   const congress = itemHtml({ key: "congress", label: UI.nav.congress }, current);
   const finance = itemHtml({ key: "finance", label: UI.nav.finance }, current);
 
-  /* ⚠ A FAZENDA CONTINUA SENDO UMA AREA, e nao um item de primeiro nivel como o plano de tela
+  /* ⚠ A FAZENDA CONTINUA SENDO UMA ÁREA, e não um item de primeiro nível como o plano de tela
      sugeria. */
-  /* No dock (Gabinete, `40-shell.css`) a legenda vira BOTAO e os oito moram numa gaveta: 13
-     icones sem rotulo e demais. No rail vertical o botao nao aparece e a legenda fica. A gaveta
-     e o proprio dock em outro estado — os seis saem e os oito entram —, e nao um painel
+  /* No dock (Gabinete, `40-shell.css`) a legenda vira BOTÃO e os oito moram numa gaveta: 13
+     ícones sem rótulo e demais. No rail vertical o botão não aparece e a legenda fica. A gaveta
+     e o próprio dock em outro estado — os seis saem e os oito entram —, e não um painel
      flutuante: um segundo vidro e um segundo material, que a guarda `material` recusa. */
   const inside = areas.some(area => area.id === current);
   const ministries =
@@ -100,8 +100,8 @@ export function railNavHtml(current, areas, alerts = {}) {
     `<p class="rail__legend">${escapeHtml(UI.nav.ministries)}</p>` +
     `<ul class="rail__sub">` +
     areas
-      /* ⚠ O NOME CURTO MANDA AQUI, e a coluna e a razao: o rail tem 109px de rotulo, e o unico
-         nome que nao cabe cortava com reticencia. Ausente, `short` cai no `label`. */
+      /* ⚠ O NOME CURTO MANDA AQUI, e a coluna e a razão: o rail tem 109px de rótulo, e o único
+         nome que não cabe cortava com reticência. Ausente, `short` cai no `label`. */
       .map(area =>
         itemHtml(
           { key: area.id, label: area.short ?? area.label, alert: alerts[area.id] },
@@ -114,27 +114,27 @@ export function railNavHtml(current, areas, alerts = {}) {
 
   const estado = itemHtml({ key: "estado", label: UI.nav.estado }, current);
 
-  /* ⚠ A RUA E BASTIDOR SAIRAM DO MENU, por decisao dele. Elas viviam aqui desligadas, cinzas,
-     com um `title` prometendo que viriam — e uma promessa cinza e pior que a ausencia: ela
+  /* ⚠ A RUA E BASTIDOR SAÍRAM DO MENU, por decisão dele. Elas viviam aqui desligadas, cinzas,
+     com um `title` prometendo que viriam — e uma promessa cinza e pior que a ausência: ela
      ocupa duas das treze entradas do menu para dizer que o jogo tem menos do que parece.
-     ELAS VOLTAM COM DONO: A Rua e a opiniao publica com rosto, e depende da imprensa e das
+     ELAS VOLTAM COM DONO: A Rua e a opinião publica com rosto, e depende da imprensa e das
      pessoas agindo sozinhas; Bastidor e a coalizao, e depende de nomear ministro. */
   const rule = '<li class="rail__rule" aria-hidden="true"></li>';
 
   return cabinet + email + congress + finance + rule + ministries + rule + estado;
 }
 
-/* ⛔ O MENU DIZIA "ESTOU NO GABINETE" 29 VEZES NO CSS e tinha duas implementacoes. Agora a peca
-   declara a ORIENTACAO e o CSS pergunta so isso; o limiar mora aqui, num lugar so. */
+/* ⛔ O MENU DIZIA "ESTOU NO GABINETE" 29 VEZES NO CSS e tinha duas implementações. Agora a peça
+   declara a ORIENTAÇÃO e o CSS pergunta só isso; o limiar mora aqui, num lugar só. */
 const DEITADO = "(min-width: 1181px)";
 
-/* A GOTA: a cabeca da pilula corre na mola rapida e a cauda na lenta; o vao entre as duas vira
-   corpo. `STRETCH` e quanto do vao vira corpo; `STRETCH_MAX` e o teto, em fracao da peca. */
+/* A GOTA: a cabeça da pílula corre na mola rápida e a cauda na lenta; o vão entre as duas vira
+   corpo. `STRETCH` e quanto do vão vira corpo; `STRETCH_MAX` e o teto, em fração da peça. */
 const HEAD = { duration: 0.34, bounce: 0.2 };
 const TAIL = { duration: 0.46, bounce: 0.1 };
 const STRETCH = 0.5;
 const STRETCH_MAX = 0.3;
-/* O corpo da pilula e a cor do que se pressiona, rasa; a tinta sai do token. */
+/* O corpo da pílula e a cor do que se pressiona, rasa; a tinta sai do token. */
 /** @type {import("./glass.mjs").Ramp} */
 const PILL_BODY = [
   [0, 0.22],
@@ -144,10 +144,10 @@ const PILL_BODY = [
 const PILL_EDGE = 0.7;
 const PILL_GLEAM = 0.16;
 
-/* O MORPH DA GAVETA: a capsula muda de largura na mola. Quem sai apaga em `--dur-touch` ANTES
-   da troca de layout; quem entra nasce conforme a capsula anda (`BORN_*`), nao por relogio.
-   `LANDED`: a mola so declara repouso a 0,003px, e num curso de 57px isso leva 800ms com a
-   capsula parada ha 400; abaixo de 0,05px nada pinta. */
+/* O MORPH DA GAVETA: a cápsula muda de largura na mola. Quem sai apaga em `--dur-touch` ANTES
+   da troca de layout; quem entra nasce conforme a cápsula anda (`BORN_*`), não por relógio.
+   `LANDED`: a mola só declara repouso a 0,003px, e num curso de 57px isso leva 800ms com a
+   cápsula parada há 400; abaixo de 0,05px nada pinta. */
 const MORPH = { duration: 0.42, bounce: 0.12 };
 const BORN_AT = 0.15;
 const BORN_STEP = 0.05;
@@ -155,8 +155,8 @@ const BORN_SPAN = 0.4;
 const LANDED = 0.05;
 
 /**
- * O ESTADO DO MENU, um objeto so. `gen` mata mola velha: recriada a cada troca de eixo ou
- * morph, a anterior ainda tinha um quadro pendente e escrevia por cima (a pilula nascia 53px
+ * O ESTADO DO MENU, um objeto só. `gen` mata mola velha: recriada a cada troca de eixo ou
+ * morph, a anterior ainda tinha um quadro pendente e escrevia por cima (a pílula nascia 53px
  * fora do rail).
  *
  * @typedef {object} Menu
@@ -181,7 +181,7 @@ let menu = null;
 
 /**
  * ARMA O MENU — uma vez, no `<ul>` que sobrevive as pinturas. O estado da gaveta mora no
- * `<ul>` (`data-drawer`) porque o CSS le dali; quem a fecha e a escolha de uma secao, o Esc, ou
+ * `<ul>` (`data-drawer`) porque o CSS lê dali; quem a fecha e a escolha de uma seção, o Esc, ou
  * um clique fora.
  *
  * @param {HTMLElement} nav o `ul#railNav`
@@ -222,9 +222,9 @@ export function armRail(nav) {
 }
 
 /**
- * PINTA O MENU depois de a lista estar no lugar: orientacao, vidro e pilula, na mesma volta.
- * ⛔ Na mesma volta e nao no quadro seguinte: entre a escrita e o proximo quadro cabe uma
- * pintura, e a capsula aparecia com a caixa velha.
+ * PINTA O MENU depois de a lista estar no lugar: orientação, vidro e pílula, na mesma volta.
+ * ⛔ Na mesma volta e não no quadro seguinte: entre a escrita e o próximo quadro cabe uma
+ * pintura, e a cápsula aparecia com a caixa velha.
  *
  * @param {string} screen
  */
@@ -236,10 +236,10 @@ export function paintRail(screen) {
   movePill();
 }
 
-/* ⛔ A LENTE SO ENTRA NO DOCK: a coluna tem 162 mil px e passa do teto de area de `glaze`.
-   ⛔ E NAO ENTRA DURANTE A TROCA DE TELA: `20-material.css` apaga `--glaze` no rail enquanto a
+/* ⛔ A LENTE SÓ ENTRA NO DOCK: a coluna tem 162 mil px e passa do teto de área de `glaze`.
+   ⛔ E NÃO ENTRA DURANTE A TROCA DE TELA: `20-material.css` apaga `--glaze` no rail enquanto a
    View Transition dura, mas o inline de `glaze()` vence a regra — medido, 9 de 10 quadros da
-   troca com a lente acesa. Aqui a peca fica sem inline ate a troca pousar, e `dressRail`
+   troca com a lente acesa. Aqui a peça fica sem inline até a troca pousar, e `dressRail`
    a reveste. */
 function dress() {
   if (!menu) return;
@@ -255,12 +255,12 @@ export function dressRail() {
   dress();
 }
 
-/* ── A PILULA ───────────────────────────────────────────────────────────────────────────── */
+/* ── A PÍLULA ───────────────────────────────────────────────────────────────────────────── */
 
 /**
- * A CAIXA DE LAYOUT do item, contra a caixa de padding do rail (a que a pilula usa).
- * ⛔ NAO E `getBoundingClientRect`: com o ponteiro sobre o item o `:hover` o escala em 1,02 e a
- * caixa vinha 173x36 em vez de 169x35 — a pilula lia "outra peca" e saltava.
+ * A CAIXA DE LAYOUT do item, contra a caixa de padding do rail (a que a pílula usa).
+ * ⛔ NÃO E `getBoundingClientRect`: com o ponteiro sobre o item o `:hover` o escala em 1,02 e a
+ * caixa vinha 173x36 em vez de 169x35 — a pílula lia "outra peça" e saltava.
  *
  * @param {HTMLElement} item @param {HTMLElement} rail
  * @returns {{ x: number, y: number, w: number, h: number }}
@@ -284,7 +284,7 @@ function layoutBox(item, rail) {
   return { x, y, w: item.offsetWidth, h: item.offsetHeight };
 }
 
-/** O quadro da pilula so toca transformacao: volume conservado, o que alonga afina por `1/√`. */
+/** O quadro da pílula só toca transformação: volume conservado, o que alonga afina por `1/√`. */
 function drawPill() {
   if (!menu?.pill) return;
   const { axis, w, h, at, pill } = menu;
@@ -305,7 +305,7 @@ function drawPill() {
 }
 
 /**
- * As tres molas da pilula, de uma geracao.
+ * As três molas da pílula, de uma geração.
  * @param {Menu} m @param {number} main0 @param {number} cross0
  */
 function pillSprings(m, main0, cross0) {
@@ -355,10 +355,10 @@ function dressPill(m) {
 }
 
 /**
- * A PILULA CORRE ATE O ITEM CORRENTE: desliza em vez de apagar aqui e acender ali.
- * ⛔ NO DOCK NAO HA PILULA — ordem dele: o dock so existe no Gabinete, o corrente e sempre o
- * mesmo, e quem marca ali e o ponto. ⛔ O ativo VISIVEL: numa area o botao da gaveta tambem e
- * ativo e vem antes; escondido, media zero e a pilula apagava nas oito areas.
+ * A PÍLULA CORRE ATÉ O ITEM CORRENTE: desliza em vez de apagar aqui e acender ali.
+ * ⛔ NO DOCK NÃO HÁ PÍLULA — ordem dele: o dock só existe no Gabinete, o corrente e sempre o
+ * mesmo, e quem marca ali e o ponto. ⛔ O ativo VISÍVEL: numa área o botão da gaveta também e
+ * ativo e vem antes; escondido, media zero e a pílula apagava nas oito áreas.
  */
 export function movePill() {
   const m = menu;
@@ -375,8 +375,8 @@ export function movePill() {
   const main1 = eixo === "x" ? to.x + to.w / 2 : to.y + to.h / 2;
   const cross1 = eixo === "x" ? to.y + to.h / 2 : to.x + to.w / 2;
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  /* Nasceu agora, mudou de eixo ou de forma: a mola recomeca onde a pilula deve estar. Entre
-     dock e coluna nao ha viagem, e outra peca. */
+  /* Nasceu agora, mudou de eixo ou de forma: a mola recomeça onde a pílula deve estar. Entre
+     dock e coluna não há viagem, e outra peça. */
   const snap = m.pill.style.opacity !== "1" || eixo !== m.axis || to.w !== m.w || to.h !== m.h;
   if (snap || still || !m.molas) {
     m.axis = eixo;
@@ -438,9 +438,9 @@ function land() {
 
 /**
  * A troca de layout e o morph a partir dela. ⛔ A LENTE E DO TAMANHO DA CAIXA: instalada no
- * tamanho MAIOR antes de a largura andar (a mascara cobre a caixa o tempo todo) e refeita no
- * final; por quadro nao e opcao — o navegador nao re-resolve `url(#id)` a tempo.
- * ⚠ A largura de partida se mede ANTES da troca: depois ela ja e a de chegada.
+ * tamanho MAIOR antes de a largura andar (a máscara cobre a caixa o tempo todo) e refeita no
+ * final; por quadro não e opção — o navegador não re-resolve `url(#id)` a tempo.
+ * ⚠ A largura de partida se mede ANTES da troca: depois ela já e a de chegada.
  *
  * @param {boolean} open
  */
@@ -500,7 +500,7 @@ function swap(open) {
 }
 
 /**
- * Abre ou fecha a gaveta: quem sai apaga primeiro, e so entao o layout troca.
+ * Abre ou fecha a gaveta: quem sai apaga primeiro, e só então o layout troca.
  * @param {boolean} open
  */
 function toggle(open) {

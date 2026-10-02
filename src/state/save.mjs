@@ -1,6 +1,6 @@
-/* SAVE — o estado inteiro vira texto, e volta identico.
-   O cabecalho de `state.mjs` promete isto desde o primeiro dia: "SAVE e serializar o estado.
-   Nao existe campo que ficou de fora". */
+/* SAVE — o estado inteiro vira texto, e volta idêntico.
+   O cabeçalho de `state.mjs` promete isto desde o primeiro dia: "SAVE e serializar o estado.
+   Não existe campo que ficou de fora". */
 
 import { SCHEMA_VERSION, deepFreeze } from "./state.mjs";
 
@@ -48,10 +48,10 @@ export function deserialize(text) {
     };
   }
 
-  /* Sem `levels` o jogo nao sabe quanto o pais gasta; sem `norms` ele nao sabe o que a lei
-     manda gastar — e a segunda ausencia e pior que a primeira, porque ausencia de norma e
-     ausencia de restricao: o save abriria com a Constituicao inteira revogada, que e um pais
-     valido e portanto indistinguivel de um save quebrado. */
+  /* Sem `levels` o jogo não sabe quanto o país gasta; sem `norms` ele não sabe o que a lei
+     manda gastar — e a segunda ausência e pior que a primeira, porque ausência de norma e
+     ausência de restrição: o save abriria com a Constituicao inteira revogada, que e um país
+     valido e portanto indistinguível de um save quebrado. */
   const required = [
     "seed",
     "platform",
@@ -80,7 +80,7 @@ export function deserialize(text) {
     }
   }
 
-  /* ⚅ CHECAGEM DE FORMA — presenca nao e formato. Um save corrompido com `"fiscal": 42`
+  /* ⚅ CHECAGEM DE FORMA — presença não e formato. Um save corrompido com `"fiscal": 42`
      passaria acima e quebraria em runtime com mensagem incompreensivel. */
   const asObj = (/** @type {unknown} */ v) =>
     v !== null && typeof v === "object" && !Array.isArray(v);
@@ -88,7 +88,7 @@ export function deserialize(text) {
   const asNum = (/** @type {unknown} */ v) => typeof v === "number" && Number.isFinite(v);
   const asMonth = (/** @type {unknown} */ v) => v === null || asNum(v);
 
-  /* Os 18 campos, e nao so os 9 de estrutura: `"mood": null` passava e quebrava no primeiro
+  /* Os 18 campos, e não só os 9 de estrutura: `"mood": null` passava e quebrava no primeiro
      `pollFrom`. */
   const shape = [
     ["seed", asNum, "numero"],
@@ -111,12 +111,12 @@ export function deserialize(text) {
     ["impeachment", asMonth, "numero ou null"],
     ["fallen", asMonth, "numero ou null"],
   ];
-  /* Fora dos obrigatorios, como o partido: um save anterior ao decreto abre sem ele. */
+  /* Fora dos obrigatórios, como o partido: um save anterior ao decreto abre sem ele. */
   if (candidate["decree"] !== undefined && !asArr(candidate["decree"])) {
     return { ok: false, reason: `"decree" deveria ser array` };
   }
 
-  /* Fora dos obrigatorios, como o decreto: um save anterior ao gabinete abre vazio. */
+  /* Fora dos obrigatórios, como o decreto: um save anterior ao gabinete abre vazio. */
   const cabinet = candidate["cabinet"];
   const named = (/** @type {unknown} */ seat) => {
     if (!asObj(seat)) return false;

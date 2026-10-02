@@ -173,7 +173,7 @@ function modes(start, percepts, ticks, over) {
   return seen;
 }
 
-test("MESMA ENTRADA, MESMA DECISAO E MESMO TRACE — e a entrada nao muda", () => {
+test("MESMA ENTRADA, MESMA DECISÃO E MESMO TRACE — e a entrada não muda", () => {
   const actor = deepFreeze(minister());
   const percepts = deepFreeze(news(0.8));
   const first = run(actor, percepts);
@@ -182,7 +182,7 @@ test("MESMA ENTRADA, MESMA DECISAO E MESMO TRACE — e a entrada nao muda", () =
   assert.ok(first.action, "a ministra com verba abaixo da meta devia agir");
 });
 
-test("A CRENCA SAI DA PERCEPCAO, e o ator nunca le o mundo", () => {
+test("A CRENÇA SAI DA PERCEPÇÃO, e o ator nunca lê o mundo", () => {
   /** @type {string[][]} */
   const seen = [];
   /** @type {Appraise} */
@@ -202,7 +202,7 @@ test("A CRENCA SAI DA PERCEPCAO, e o ator nunca le o mundo", () => {
   for (const keys of seen) assert.deepEqual(keys, ["beliefs", "core", "goals", "intention"]);
 });
 
-test("ENTRADA ESTRAGADA E RECUSADA, e a avaliacao nao altera o ator", () => {
+test("ENTRADA ESTRAGADA E RECUSADA, e a avaliação não altera o ator", () => {
   assert.throws(() => run(minister(), [{ ...heard("verba", 70), quality: NaN }]), /verba/);
   assert.throws(() => run(minister(), [heard("verba", Infinity)]), /verba/);
 
@@ -216,13 +216,13 @@ test("ENTRADA ESTRAGADA E RECUSADA, e a avaliacao nao altera o ator", () => {
   assert.equal(actor.goals[0]?.target, 100);
 });
 
-test("OBJETIVO SEM CRENCA NAO VIRA PRIORIDADE — a ausencia fica declarada", () => {
+test("OBJETIVO SEM CRENÇA NÃO VIRA PRIORIDADE — a ausência fica declarada", () => {
   const { action, trace } = run(minister(), []);
   assert.equal(action, null);
   assert.deepEqual(trace.goals, [{ id: "mais-verba", priority: 0, known: false }]);
 });
 
-test("PRIORIDADE SEM NUMERO CONGELADO: mais longe pesa mais, e crenca nova reordena", () => {
+test("PRIORIDADE SEM NÚMERO CONGELADO: mais longe pesa mais, e crença nova reordena", () => {
   /** @param {Decision} decision */
   const order = decision =>
     [...decision.trace.goals].sort((a, b) => b.priority - a.priority).map(goal => goal.id);
@@ -232,7 +232,7 @@ test("PRIORIDADE SEM NUMERO CONGELADO: mais longe pesa mais, e crenca nova reord
   assert.deepEqual(order(moved), ["mais-verba", "base-fiel"]);
 });
 
-test("A AVALIACAO DESCREVE O MUNDO, NUNCA O VALOR: termo sem unidade e recusado", () => {
+test("A AVALIAÇÃO DESCREVE O MUNDO, NUNCA O VALOR: termo sem unidade e recusado", () => {
   /** @param {unknown} bad */
   const tries = bad => () =>
     run(minister(), news(0.8), 0, { appraise: () => /** @type {any} */ (bad) });
@@ -245,7 +245,7 @@ test("A AVALIACAO DESCREVE O MUNDO, NUNCA O VALOR: termo sem unidade e recusado"
   assert.throws(() => run(flat, news(0.8)), /mais-verba/);
 });
 
-test("O EFEITO SO VIRA VALOR PELO OBJETIVO DO ATOR: trocar a unidade de um sujeito nao muda nada", () => {
+test("O EFEITO SÓ VIRA VALOR PELO OBJETIVO DO ATOR: trocar a unidade de um sujeito não muda nada", () => {
   const thousand = 1000;
   /** @param {number} unit */
   const play = unit => {
@@ -282,7 +282,7 @@ test("O EFEITO SO VIRA VALOR PELO OBJETIVO DO ATOR: trocar a unidade de um sujei
   }
 });
 
-test("O PLANO PERSISTE diante de variacao pequena", () => {
+test("O PLANO PERSISTE diante de variação pequena", () => {
   const start = run(minister(), news(0.8, 60), 0);
   assert.equal(start.actor.intention?.plan, "negociar");
 
@@ -292,7 +292,7 @@ test("O PLANO PERSISTE diante de variacao pequena", () => {
   assert.equal(next.action?.kind, "propor-acordo", "o segundo passo do mesmo plano");
 });
 
-test("O CHOQUE FORCA RECONSIDERACAO, e a intencao muda", () => {
+test("O CHOQUE FORCA RECONSIDERAÇÃO, e a intenção muda", () => {
   const start = run(minister(), news(0.8), 0);
   const shock = run(start.actor, news(0.1), 1);
   assert.equal(shock.trace.mode, "deliberative");
@@ -300,7 +300,7 @@ test("O CHOQUE FORCA RECONSIDERACAO, e a intencao muda", () => {
   assert.equal(shock.actor.intention?.plan, "pressionar");
 });
 
-test("PERTO DE ZERO, POUCO CONTINUA POUCO: a mudanca se mede na escala do sujeito", () => {
+test("PERTO DE ZERO, POUCO CONTINUA POUCO: a mudança se mede na escala do sujeito", () => {
   /** @type {Appraise} */
   const odds = (plan, view) => ({
     ...appraise(plan, view),
@@ -338,14 +338,14 @@ test("O MESMO DELTA PESA DIFERENTE EM ESCALAS DIFERENTES, e sujeito sem escala e
   assert.throws(() => run(minister(), news(0.8), 0, { appraise: blind }), /sem-escala/);
 });
 
-test("INFORMACAO DIFERENTE, DECISAO DIFERENTE", () => {
+test("INFORMACAO DIFERENTE, DECISÃO DIFERENTE", () => {
   const confiante = run(minister(), news(0.9));
   const desconfiada = run(minister(), news(0.1));
   assert.equal(confiante.action?.kind, "pedir-reuniao");
   assert.equal(desconfiada.action?.kind, "declarar-em-publico");
 });
 
-test("A PERSONALIDADE MUDA A DECISAO, e nao so o texto", () => {
+test("A PERSONALIDADE MUDA A DECISÃO, e não só o texto", () => {
   /* Boa vontade baixa: pressionar rende um pouco mais e arrisca mais. */
   const ousada = run(minister({ core: { riskAversion: 0, persistence: 1 } }), news(0.4));
   const cautelosa = run(minister({ core: { riskAversion: 2, persistence: 1 } }), news(0.4));
@@ -359,7 +359,7 @@ test("A PERSONALIDADE MUDA A DECISAO, e nao so o texto", () => {
   assert.equal(voluvel.trace.mode, "deliberative");
 });
 
-test("OBJETIVO NAO E INTENCAO: mesmo objetivo e crenca alterada dao outro plano", () => {
+test("OBJETIVO NÃO E INTENÇÃO: mesmo objetivo e crença alterada dão outro plano", () => {
   const a = run(minister(), news(0.9));
   const b = run(minister(), news(0.1));
   assert.equal(a.actor.intention?.goal, "mais-verba");
@@ -367,7 +367,7 @@ test("OBJETIVO NAO E INTENCAO: mesmo objetivo e crenca alterada dao outro plano"
   assert.notEqual(a.actor.intention?.plan, b.actor.intention?.plan);
 });
 
-test("OBJETIVO NAO E INTENCAO: mesma percepcao e objetivo diferente dao outra decisao", () => {
+test("OBJETIVO NÃO E INTENÇÃO: mesma percepção e objetivo diferente dão outra decisão", () => {
   const verba = run(minister(), news(0.8));
   const base = run(minister({ goals: [LOYAL_BASE] }), [...news(0.8), heard("apoio", 50)]);
   assert.equal(verba.action?.kind, "pedir-reuniao");
@@ -397,7 +397,7 @@ test("O MODO SAI DAS ENTRADAS, e cada gatilho fica no trace", () => {
   assert.ok(split.trace.triggers.some(t => t.kind === "conflict"));
 });
 
-test("CONFLITO PARADO NAO REABRE A ESCOLHA; conflito que surge reabre uma vez", () => {
+test("CONFLITO PARADO NÃO REABRE A ESCOLHA; conflito que surge reabre uma vez", () => {
   const same = [...news(0.8), heard("apoio", 48)];
   assert.deepEqual(modes(torn(), same, 4), ["deliberative", "heuristic", "heuristic", "heuristic"]);
 
@@ -412,7 +412,7 @@ test("CONFLITO PARADO NAO REABRE A ESCOLHA; conflito que surge reabre uma vez", 
   assert.equal(run(tight.actor, [heard("apoio", 48)], 2, over).trace.mode, "heuristic");
 });
 
-test("RISCO JA PESADO NA ESCOLHA NAO REABRE A CADA PASSO", () => {
+test("RISCO JÁ PESADO NA ESCOLHA NÃO REABRE A CADA PASSO", () => {
   /** @type {Plan[]} */
   const plans = [
     { id: "longo", actions: ["a", "b", "c", "d"].map(kind => ({ kind, target: null })) },
@@ -428,7 +428,7 @@ test("RISCO JA PESADO NA ESCOLHA NAO REABRE A CADA PASSO", () => {
   ]);
 });
 
-test("ESPERAR E UMA INTENCAO: sem plano que valha a pena, o ator espera e nao reotimiza", () => {
+test("ESPERAR E UMA INTENÇÃO: sem plano que valha a pena, o ator espera e não reotimiza", () => {
   /** @type {Appraise} */
   const bleak = () => ({ effects: { verba: 1 }, risk: 1 });
   const first = run(minister(), news(0.5), 0, { appraise: bleak });
@@ -438,7 +438,7 @@ test("ESPERAR E UMA INTENCAO: sem plano que valha a pena, o ator espera e nao re
   assert.equal(next.trace.mode, "heuristic");
 });
 
-test("O PLANO CONCLUIDO AGUARDA EFEITO, e nao se repete sem informacao nova", () => {
+test("O PLANO CONCLUÍDO AGUARDA EFEITO, e não se repete sem informacao nova", () => {
   const plans = [{ id: "pressionar", actions: [{ kind: "declarar-em-publico", target: null }] }];
   const first = run(minister(), news(0.1), 0, { plans });
   assert.equal(first.action?.kind, "declarar-em-publico");
@@ -447,7 +447,7 @@ test("O PLANO CONCLUIDO AGUARDA EFEITO, e nao se repete sem informacao nova", ()
   assert.equal(after.trace.mode, "heuristic");
 });
 
-test("O EMPATE NAO DEPENDE DA ORDEM do repertorio", () => {
+test("O EMPATE NÃO DEPENDE DA ORDEM do repertório", () => {
   /** @type {Appraise} */
   const flat = () => ({ effects: { verba: 10 } });
   const forward = run(minister(), news(0.5), 0, { appraise: flat });
@@ -456,7 +456,7 @@ test("O EMPATE NAO DEPENDE DA ORDEM do repertorio", () => {
   assert.equal(backward.actor.intention?.plan, "mobilizar-base");
 });
 
-test("TRES ATORES, QUATRO RODADAS: o cenario se refaz igual e cada um decide pelo que busca", () => {
+test("TRÊS ATORES, QUATRO RODADAS: o cenario se refaz igual e cada um decide pelo que busca", () => {
   const cast = [
     minister(),
     minister({ id: "lider", goals: [LOYAL_BASE] }),
@@ -520,7 +520,7 @@ function partsOf(effects) {
   return candidate?.parts ?? {};
 }
 
-test("OBJETIVO CUMPRIDO NAO COBRA O QUE FICA DENTRO DO ALVO, e cobra o que sai dele", () => {
+test("OBJETIVO CUMPRIDO NÃO COBRA O QUE FICA DENTRO DO ALVO, e cobra o que sai dele", () => {
   assert.equal(partsOf({ inflacao: 1 })["goal:teto-da-inflacao"], undefined, "3 -> 4, teto 5");
   assert.ok((partsOf({ inflacao: 5 })["goal:teto-da-inflacao"] ?? 0) < 0, "3 -> 8, teto 5");
   assert.equal(partsOf({ reserva: -5 })["goal:reserva-minima"], undefined, "120 -> 115, piso 100");
@@ -571,7 +571,7 @@ function cut(quality, expects = 100) {
   });
 }
 
-test("EVIDENCIA FRACA NAO E FORTE: o mesmo valor com quality 0,05 e 0,95 muda o plano", () => {
+test("EVIDÊNCIA FRACA NÃO E FORTE: o mesmo valor com quality 0,05 e 0,95 muda o plano", () => {
   const weak = cut(0.05);
   const strong = cut(0.95);
   assert.ok((weak.actor.beliefs["verba"]?.estimate ?? 0) > 90, "o boato quase nao move o prior");
@@ -580,7 +580,7 @@ test("EVIDENCIA FRACA NAO E FORTE: o mesmo valor com quality 0,05 e 0,95 muda o 
   assert.equal(strong.actor.intention?.plan, "pedir-muito");
 });
 
-test("PRIORS DIFERENTES, A MESMA EVIDENCIA FRACA, DECISOES DIFERENTES", () => {
+test("PRIORS DIFERENTES, A MESMA EVIDÊNCIA FRACA, DECISÕES DIFERENTES", () => {
   const calm = cut(0.2, 100);
   const alarmed = cut(0.2, 20);
   const estimate = (/** @type {Decision} */ decision) =>
@@ -589,7 +589,7 @@ test("PRIORS DIFERENTES, A MESMA EVIDENCIA FRACA, DECISOES DIFERENTES", () => {
   assert.notEqual(calm.actor.intention?.plan, alarmed.actor.intention?.plan);
 });
 
-test("O PRIOR NAO CRIA CONHECIMENTO: sem evidencia valida, o objetivo continua desconhecido", () => {
+test("O PRIOR NÃO CRIA CONHECIMENTO: sem evidência valida, o objetivo continua desconhecido", () => {
   const empty = run(minister(), [{ subject: "verba", value: 999, quality: 0, source: "ruido" }]);
   assert.equal(empty.actor.beliefs["verba"], undefined);
   assert.deepEqual(empty.trace.goals, [{ id: "mais-verba", priority: 0, known: false }]);

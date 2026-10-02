@@ -8,8 +8,8 @@ import { FISCAL } from "../../src/data/fiscal.mjs";
 
 /** @typedef {import("../../src/domain/budget/index.mjs").BudgetInput} BudgetInput */
 
-/* Entradas VALIDAS: um exercicio plausivel, com o PIB variando numa faixa larga o bastante
-   para conter recessao e expansao. */
+/* Entradas VÁLIDAS: um exercício plausível, com o PIB variando numa faixa larga o bastante
+   para conter recessão e expansão. */
 const anyInput = fc
   .record({
     gdp: fc.double({ min: 6000, max: 16000, noNaN: true }),
@@ -21,7 +21,7 @@ const anyInput = fc
   })
   .map(base => /** @type {BudgetInput} */ ({ ...base, parameters: FISCAL }));
 
-test("a obrigatoria NUNCA encolhe", () => {
+test("a obrigatória NUNCA encolhe", () => {
   /* Se ela pudesse encolher, o jogador resolveria o aperto esperando. */
   fc.assert(
     fc.property(anyInput, input => {
@@ -30,8 +30,8 @@ test("a obrigatoria NUNCA encolhe", () => {
   );
 });
 
-test("doze meses de crescimento vegetativo dao exatamente a taxa anual", () => {
-  /* A raiz de indice doze e nao a taxa dividida por doze. */
+test("doze meses de crescimento vegetativo dão exatamente a taxa anual", () => {
+  /* A raiz de índice doze e não a taxa dividida por doze. */
   fc.assert(
     fc.property(fc.double({ min: 0.001, max: 0.15, noNaN: true }), rate => {
       let value = 1000;
@@ -41,7 +41,7 @@ test("doze meses de crescimento vegetativo dao exatamente a taxa anual", () => {
   );
 });
 
-test("caixa e sempre receita menos obrigatoria, e a conta fecha", () => {
+test("caixa e sempre receita menos obrigatória, e a conta fecha", () => {
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
@@ -51,8 +51,8 @@ test("caixa e sempre receita menos obrigatoria, e a conta fecha", () => {
   );
 });
 
-test("o que se pode empenhar nunca passa do TETO — e o caixa NAO manda", () => {
-  /* ⚠ ESTA PROVA MUDOU DE LADO EM, e a versao antiga estava CODIFICANDO UM DEFEITO. */
+test("o que se pode empenhar nunca passa do TETO — e o caixa NÃO manda", () => {
+  /* ⚠ ESTA PROVA MUDOU DE LADO EM, e a versão antiga estava CODIFICANDO UM DEFEITO. */
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
@@ -62,15 +62,15 @@ test("o que se pode empenhar nunca passa do TETO — e o caixa NAO manda", () =>
   );
 });
 
-test("GASTAR ACIMA DO CAIXA E POSSIVEL, e produz deficit — o muro caiu", () => {
+test("GASTAR ACIMA DO CAIXA E POSSÍVEL, e produz déficit — o muro caiu", () => {
   /* A prova que o conserto exigia, e ela e o inverso exato da que existia aqui. */
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
       if (out.blocked) return;
 
-      /* Empenhando tudo o que o teto autoriza, o saldo do mes e o caixa menos isso — e ele e
-         NEGATIVO sempre que o teto abre mais espaco do que o caixa tem. */
+      /* Empenhando tudo o que o teto autoriza, o saldo do mês e o caixa menos isso — e ele e
+         NEGATIVO sempre que o teto abre mais espaço do que o caixa tem. */
       const full = step({ ...input, spent: out.allowance / 12 });
       if (out.allowance > Math.max(0, out.cash)) {
         assert.ok(
@@ -83,7 +83,7 @@ test("GASTAR ACIMA DO CAIXA E POSSIVEL, e produz deficit — o muro caiu", () =>
   );
 });
 
-test("contingenciamento zera o discricionario, sempre", () => {
+test("contingenciamento zera o discricionário, sempre", () => {
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
@@ -92,10 +92,10 @@ test("contingenciamento zera o discricionario, sempre", () => {
   );
 });
 
-test("A ARMADILHA EXISTE: ha entradas validas que disparam o contingenciamento", () => {
-  /* Um motor em que o aperto e impossivel passaria em todas as provas acima e nao serviria
-     para o jogo — foi exatamente esse o defeito da formula original, que definia a
-     obrigatoria como fracao da receita. */
+test("A ARMADILHA EXISTE: há entradas válidas que disparam o contingenciamento", () => {
+  /* Um motor em que o aperto e impossível passaria em todas as provas acima e não serviria
+     para o jogo — foi exatamente esse o defeito da fórmula original, que definia a
+     obrigatória como fração da receita. */
   let squeezed = 0;
   fc.assert(
     fc.property(anyInput, input => {
@@ -106,9 +106,9 @@ test("A ARMADILHA EXISTE: ha entradas validas que disparam o contingenciamento",
   assert.ok(squeezed > 0, "nenhuma entrada apertou — a armadilha nao existe");
 });
 
-test("PROVA SINTETICA: o PISO segura o teto na recessao, e a OBRIGATORIA ainda o fura", () => {
-  /* O caso do dossie, montado a mao: o PIB decepciona, a receita cai abaixo da ancora, o teto
-     do arcabouco ENCOLHE, e a obrigatoria — que cresceu no mesmo mes — passa por cima dele. */
+test("PROVA SINTÉTICA: o PISO segura o teto na recessão, e a OBRIGATÓRIA ainda o fura", () => {
+  /* O caso do dossiê, montado a mão: o PIB decepciona, a receita cai abaixo da ancora, o teto
+     do arcabouço ENCOLHE, e a obrigatória — que cresceu no mesmo mês — passa por cima dele. */
   const base = {
     gdp: 12000,
     mandatory: 2140,
@@ -125,31 +125,31 @@ test("PROVA SINTETICA: o PISO segura o teto na recessao, e a OBRIGATORIA ainda o
 
   /* Mesma partida, PIB 15% menor. */
   /* Com o piso de 0,6% ao ano da LC 200/2023 ela deixa de ser: o piso existe justamente para
-     o teto ser corrigido num exercicio de receita ruim, e sem ele dois anos fracos seguidos
-     derrubam o Estado em termos reais sem ninguem decidir nada. */
+     o teto ser corrigido num exercício de receita ruim, e sem ele dois anos fracos seguidos
+     derrubam o Estado em termos reais sem ninguém decidir nada. */
   const recessao = step({ ...base, gdp: base.gdp * 0.85 });
   assert.ok(recessao.revenue < calmo.revenue, "a receita tinha de cair");
 
-  /* 1 — O PISO SEGURA. A recessao nao encolhe o teto abaixo do que a lei garante. */
+  /* 1 — O PISO SEGURA. A recessão não encolhe o teto abaixo do que a lei garante. */
   assert.ok(
     recessao.ceiling >= base.anchorExpense,
     `o teto caiu para ${recessao.ceiling} numa recessao — o piso da banda nao segurou`,
   );
   assert.equal(recessao.blocked, false, "com o piso valendo, esta recessao nao aperta");
 
-  /* 2 — E O GATILHO CONTINUA ALCANCAVEL, que e a outra metade e a mais importante: um
-     contingenciamento que nunca dispara e um instrumento morto, e este projeto ja pagou por
+  /* 2 — E O GATILHO CONTINUA ALCANÇÁVEL, que e a outra metade e a mais importante: um
+     contingenciamento que nunca dispara e um instrumento morto, e este projeto já pagou por
      isso uma vez (achado 3). */
   const pesada = step({ ...base, gdp: base.gdp * 0.85, mandatory: 2320 });
   assert.equal(pesada.blocked, true, "a obrigatoria acima do teto tinha de apertar");
   assert.equal(pesada.allowance, 0);
 });
 
-test("a divida sobe quando o saldo do mes e negativo, e so por isso", () => {
+test("a dívida sobe quando o saldo do mês e negativo, e só por isso", () => {
   fc.assert(
     fc.property(anyInput, input => {
       const out = step(input);
-      /* Sem juros: a divida se move pelo saldo primario e por nada mais.
+      /* Sem juros: a dívida se move pelo saldo primário e por nada mais.
          CORRENTE existir, esta propriedade muda junto — e e para isso que ela
          esta escrita assim, apertada. */
       assert.ok(Math.abs(out.debt - (input.debt - out.balance)) < 1e-9);
@@ -170,7 +170,7 @@ test("nenhuma entrada valida produz NaN ou infinito", () => {
   );
 });
 
-test("ancora de receita zerada nao vira divisao por zero", () => {
+test("ancora de receita zerada não vira divisão por zero", () => {
   const out = step({
     gdp: 11000,
     mandatory: 3270,
@@ -191,7 +191,7 @@ test("o teto acompanha o sinal do crescimento da receita", () => {
   assert.equal(ceilingOf(anchor, 3000, 3000, 0.7), anchor, "receita parada nao mexe");
 });
 
-test("GDP zero nao produz NaN ou infinito", () => {
+test("GDP zero não produz NaN ou infinito", () => {
   const zero = step({
     gdp: 0,
     mandatory: 3270,
@@ -206,11 +206,11 @@ test("GDP zero nao produz NaN ou infinito", () => {
   assert.ok(Number.isFinite(zero.ceiling), "teto com PIB=0 deve ser finito");
 });
 
-/* ⛔ ELA REINTRODUZ A MENTIRA QUE A TELA CONTAVA: um primario POSITIVO abaixo da banda da meta
-   e uma meta PERDIDA, e a linha de Financas o pintava de verde por ser maior que zero. Medido
-   na partida padrao: o mes 35 fecha em +0,17% do PIB contra um piso de banda de 0,25%. */
-test("O PRIMARIO E JULGADO PELA META, e nao pelo sinal", () => {
-  /* Um mes que fecha POSITIVO, e ainda assim abaixo da banda. */
+/* ⛔ ELA REINTRODUZ A MENTIRA QUE A TELA CONTAVA: um primário POSITIVO abaixo da banda da meta
+   e uma meta PERDIDA, e a linha de Finanças o pintava de verde por ser maior que zero. Medido
+   na partida padrão: o mês 35 fecha em +0,17% do PIB contra um piso de banda de 0,25%. */
+test("O PRIMÁRIO E JULGADO PELA META, e não pelo sinal", () => {
+  /* Um mês que fecha POSITIVO, e ainda assim abaixo da banda. */
   const base = {
     gdp: 12000,
     mandatory: 2139,
@@ -223,9 +223,9 @@ test("O PRIMARIO E JULGADO PELA META, e nao pelo sinal", () => {
   const alvo = FISCAL.primaryTarget - FISCAL.primaryBand;
   assert.ok(alvo > 0, "a banda da LDO tem piso positivo, e e isso que torna a prova possivel");
 
-  /* O EMPENHO E DERIVADO E NAO CHUTADO: parte-se do mes sem gasto nenhum e desconta-se o
-     saldo que se quer. Um numero escrito a mao aqui viraria falso negativo na primeira
-     recalibragem da carga tributaria. */
+  /* O EMPENHO E DERIVADO E NÃO CHUTADO: parte-se do mês sem gasto nenhum e desconta-se o
+     saldo que se quer. Um número escrito a mão aqui viraria falso negativo na primeira
+     recalibragem da carga tributária. */
   const seco = step({ ...base, spent: 0 });
   /** @param {number} share o primario desejado, em fracao do PIB */
   const gastando = share => step({ ...base, spent: seco.balance - (share * base.gdp) / 12 });
@@ -241,9 +241,9 @@ test("O PRIMARIO E JULGADO PELA META, e nao pelo sinal", () => {
   assert.equal(gordo.atRisk, false, "acima da banda nao ha contingenciamento");
 });
 
-/* ⚠ OS DOIS INSTRUMENTOS SAO INDEPENDENTES, e confundi-los era o defeito: o BLOQUEIO nasce do
-   teto do arcabouco e o CONTINGENCIAMENTO da meta. Um mes pode ter um sem o outro. */
-test("BLOQUEIO E CONTINGENCIAMENTO NAO SAO A MESMA COISA", () => {
+/* ⚠ OS DOIS INSTRUMENTOS SÃO INDEPENDENTES, e confundi-los era o defeito: o BLOQUEIO nasce do
+   teto do arcabouço e o CONTINGENCIAMENTO da meta. Um mês pode ter um sem o outro. */
+test("BLOQUEIO E CONTINGENCIAMENTO NÃO SÃO A MESMA COISA", () => {
   const folgado = step({
     gdp: 12000,
     mandatory: 2139,

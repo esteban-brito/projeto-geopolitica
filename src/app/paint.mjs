@@ -1,4 +1,4 @@
-/* A PINTURA — `paint` redesenha, `refresh` so troca numero derivado, `transition` troca de tela. */
+/* A PINTURA — `paint` redesenha, `refresh` só troca número derivado, `transition` troca de tela. */
 
 import {
   CATALOG,
@@ -72,7 +72,7 @@ export const el = {
   swearMadam: must("swearMadam"),
   swearOk: must("swearOk"),
   swearCancel: must("swearCancel"),
-  /* O dialogo carrega apenas avisos operacionais. */
+  /* O diálogo carrega apenas avisos operacionais. */
   dialog: /** @type {HTMLDialogElement} */ (must("noticeDialog")),
   noticeSlot: must("noticeSlot"),
   noticeClose: must("noticeClose"),
@@ -128,7 +128,7 @@ export function paint() {
   const term = termOf(session.state, CATALOG);
   endLabel(term);
 
-  /* Navegacao reflete alertas da capacidade de cada ministerio. */
+  /* Navegação reflete alertas da capacidade de cada ministério. */
   el.railNav.innerHTML = railNavHtml(
     session.screen,
     CATALOG.areas,
@@ -190,13 +190,13 @@ function paintBoard(term) {
     });
     el.main.dataset["screen"] = "congress";
   } else if (term.over) {
-    /* Fechamento ocupa o endereco do Gabinete no termino. */
+    /* Fechamento ocupa o endereço do Gabinete no término. */
     el.main.innerHTML = closingHtml(term, governmentOf(session.state, CATALOG).treatment);
     el.main.dataset["screen"] = "closing";
   } else if (session.screen === "email") {
     el.main.innerHTML = emailHtml(emailInput());
     el.main.dataset["screen"] = "email";
-    /* Marca leitura e poda cartas mortas apos a renderizacao (evita acumulo em 48 meses). */
+    /* Marca leitura e poda cartas mortas apos a renderização (evita acúmulo em 48 meses). */
     rememberRead();
   } else {
     el.main.innerHTML = cabinetHtml(cabinetInput());
@@ -251,14 +251,14 @@ function paintTopbar(term, current) {
     document.documentElement.style.setProperty("--situation-tint", `var(--${current.level})`);
   }
 
-  /* Cerco entra por aresta na moldura (evita conflito com o matiz da situacao). */
+  /* Cerco entra por aresta na moldura (evita conflito com o matiz da situação). */
   const siege = session.state.impeachment !== null && session.state.fallen === null ? "true" : "";
   if (el.shell.dataset["siege"] !== siege) el.shell.dataset["siege"] = siege;
 }
 
 /** @param {string | null} focused */
 function restoreFocus(focused) {
-  /* Restaura foco sem rolagem forcada. */
+  /* Restaura foco sem rolagem forçada. */
   if (focused) {
     const back = document.querySelector(focused);
     if (back instanceof HTMLElement && back !== document.activeElement) {
@@ -283,7 +283,7 @@ export function rememberRead() {
   const rows = /** @type {HTMLElement[]} */ ([...el.main.querySelectorAll(".tray__row")]);
   if (rows.length === 0) return;
 
-  /* Compara conteudo ordenado; tamanho sozinho atrasava gravacao por 4 meses e 6 de 7 cartas. */
+  /* Compara conteúdo ordenado; tamanho sozinho atrasava gravação por 4 meses e 6 de 7 cartas. */
   const before = [...session.readMail].sort().join("|");
 
   const alive = new Set(rows.map(row => row.dataset["dispatch"] ?? ""));
@@ -295,8 +295,8 @@ export function rememberRead() {
   const id = current?.dataset["dispatch"];
   if (id) session.readMail.add(id);
 
-  /* Rola se a linha estiver fora da visao (medido: 68px abaixo da area visivel). Abaixo de
-     940px quem rola e a pagina: list.scrollTop fica em 0 e o ramo nunca dispara — a carta
+  /* Rola se a linha estiver fora da visão (medido: 68px abaixo da área visível). Abaixo de
+     940px quem rola e a página: list.scrollTop fica em 0 e o ramo nunca dispara — a carta
      clicada fica a vista pelo foco. */
   const list = el.main.querySelector(".tray__list");
   if (current && list instanceof HTMLElement) {
@@ -305,11 +305,11 @@ export function rememberRead() {
     if (acima || abaixo) current.scrollIntoView({ block: "nearest" });
   }
 
-  /* Persiste apenas quando houver alteracao real no conjunto. */
+  /* Persiste apenas quando houver alteração real no conjunto. */
   if ([...session.readMail].sort().join("|") !== before) persistSeen();
 }
 
-/** So os numeros derivados, para o arrasto sobreviver. */
+/** Só os números derivados, para o arrasto sobreviver. */
 export function refresh() {
   if (el.main.dataset["screen"] === "congress") {
     const input = mesaInput();
@@ -332,7 +332,7 @@ export function refresh() {
   }
 
   if (el.main.dataset["screen"] === "estado") {
-    /* Consulta a lei uma unica vez fora do laco. */
+    /* Consulta a lei uma única vez fora do laço. */
     const law = lawNow();
 
     for (const rule of CATALOG.rules) {
@@ -352,7 +352,7 @@ export function refresh() {
   if (!area) return;
   const input = areaInput(area);
 
-  /* Consulta a lei fora do laco para preservar desempenho durante arrasto. */
+  /* Consulta a lei fora do laço para preservar desempenho durante arrasto. */
   const law = lawNow();
 
   for (const program of input.programs) {
@@ -380,7 +380,7 @@ export function refresh() {
     }
   }
 
-  /* Rito atualizado por atributo para nao destruir o elemento em foco. */
+  /* Rito atualizado por atributo para não destruir o elemento em foco. */
   for (const program of input.programs) {
     const dial = el.main.querySelector(`.dial:has([data-program="${program.id}"])`);
     if (dial instanceof HTMLElement) {
@@ -397,7 +397,7 @@ export function refresh() {
   const outlook = document.getElementById("areaOutlook");
   if (outlook) outlook.innerHTML = outlookHtml(input);
 
-  /* Projecao e corrente sincronizadas com o arrasto da verba. */
+  /* Projeção e corrente sincronizadas com o arrasto da verba. */
   const chain = document.getElementById("areaChain");
   if (chain && input.chain) chain.innerHTML = chainHtml({ chain: input.chain, areas: input.areas });
 }
@@ -405,7 +405,7 @@ export function refresh() {
 /* ── OS GESTOS ────────────────────────────────────────────────────────────── */
 
 /**
- * Troca de tela com View Transition e fallback direto; callback roda apos termino.
+ * Troca de tela com View Transition e fallback direto; callback roda apos término.
  *
  * @param {() => void} [depois]
  */
@@ -419,10 +419,10 @@ export function transition(depois) {
 
   const view = start(paint);
 
-  /* Trata rejeicao em navegacao rapida (48 trocas produziram 46 rejeicoes). */
+  /* Trata rejeicao em navegação rápida (48 trocas produziram 46 rejeicoes). */
   view.ready?.catch(() => {});
 
-  /* Garante execucao do callback mesmo em caso de erro na transicao. */
+  /* Garante execução do callback mesmo em caso de erro na transicao. */
   view.finished
     .catch(() => {})
     .then(() => {
@@ -431,7 +431,7 @@ export function transition(depois) {
     });
 }
 
-/* Veste dialogo apos abertura; fechado mede zero e glaze recusa peca menor que 9px. */
+/* Veste diálogo apos abertura; fechado mede zero e glaze recusa peça menor que 9px. */
 export function dressActions() {
   for (const card of document.querySelectorAll("dialog .glass-stage")) {
     if (card instanceof HTMLElement) glaze(card, LEVELS.regular);
@@ -447,7 +447,7 @@ export function dressActions() {
  * @param {string} hint
  */
 export function label(node, text, hint) {
-  /* Preserva elementos internos (.go__label, etc.) do botao de avancar. */
+  /* Preserva elementos internos (.go__label, etc.) do botão de avançar. */
   const own = node.querySelector(".go__label, .action__label");
   if (own) {
     own.textContent = text;
@@ -469,10 +469,10 @@ export function label(node, text, hint) {
   node.append(small);
 }
 
-/* Rotulo e preco no botao de avancar; silences conta perguntas urgentes sem travar. */
+/* Rótulo e preço no botão de avançar; silences conta perguntas urgentes sem travar. */
 export function endLabel(/** @type {ReturnType<typeof termOf> | null} */ term_ = null) {
   const term = term_ ?? termOf(session.state, CATALOG);
-  /* Trava durante resolving; sem isso a 200ms 3 cliques produziam 1 mes. */
+  /* Trava durante resolving; sem isso a 200ms 3 cliques produziam 1 mês. */
   el.advance.disabled = term.over || session.resolving;
 
   const quiet = term.over
@@ -487,12 +487,12 @@ export function endLabel(/** @type {ReturnType<typeof termOf> | null} */ term_ =
   label(
     el.advance,
     term.over ? UI.actions.ended : UI.actions.advance,
-    /* Rotulo do fim em 166px dispensa legenda (que pedia 194px). */
+    /* Rótulo do fim em 166px dispensa legenda (que pedia 194px). */
     term.over
       ? ""
       : quiet.length === 0
         ? `${Math.max(0, MONTHS_PER_TERM - session.state.month)} ${UI.closing.monthsLeft}`
-        : /* Conta e nao nomeia a carta (nomear pedia 366px numa coluna de 185px). */
+        : /* Conta e não nomeia a carta (nomear pedia 366px numa coluna de 185px). */
           `${quiet.length} ${quiet.length === 1 ? UI.actions.silenceOne : UI.actions.silenceMany}`,
   );
 }

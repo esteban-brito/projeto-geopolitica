@@ -1,8 +1,8 @@
 /* O SIMULADOR DE MANDATO — o jogo rodando sem tela nenhuma.
-   Nenhuma delas quer ser um jogador competente: elas sao SONDAS, cada uma
+   Nenhuma delas quer ser um jogador competente: elas são SONDAS, cada uma
    exagerando um comportamento para isolar um efeito. `parado` mede a queda
-   natural; `promessa` mede a traicao; a distancia entre `agenda` e `promessa` e o
-   preco da imprudencia fiscal, em meses de base. */
+   natural; `promessa` mede a traição; a distancia entre `agenda` e `promessa` e o
+   preço da imprudencia fiscal, em meses de base. */
 
 import { parseArgs } from "node:util";
 import { costOf, discretionaryRoom, forecast, playMonth } from "../src/application/turn.mjs";
@@ -16,18 +16,18 @@ import { DEFAULT_SEED, createState, monthLabel, reduce } from "../src/state/stat
  * @typedef {import("../src/application/turn.mjs").Report} Report
  */
 
-/* ── AS POLITICAS ─────────────────────────────────────────────────────────── */
+/* ── AS POLÍTICAS ─────────────────────────────────────────────────────────── */
 
-/* Quanto de verba, por mes, apenas EMPATA o decaimento da lealdade. */
+/* Quanto de verba, por mês, apenas EMPATA o decaimento da lealdade. */
 const UPKEEP = 1.5 / 12;
 
-/** Todo programa no piso: o minimo que a lei permite sem pedir voto a ninguem. */
+/** Todo programa no piso: o minimo que a lei permite sem pedir voto a ninguém. */
 function atFloor() {
   return Object.fromEntries(CATALOG.programs.map(program => [program.id, program.floor]));
 }
 
 /**
- * A configuracao vigente com a parte DISCRICIONARIA encolhida por um fator.
+ * A configuração vigente com a parte DISCRICIONÁRIA encolhida por um fator.
  *
  * @param {GameState} state
  * @param {number} share de 0 (tudo no piso) a 1 (mantem como esta)
@@ -81,7 +81,7 @@ function everyone(level) {
 }
 
 /**
- * O maior nivel UNIFORME que o mes consegue pagar de verdade.
+ * O maior nível UNIFORME que o mês consegue pagar de verdade.
  *
  * @param {GameState} state
  */
@@ -93,10 +93,10 @@ function affordableLevel(state) {
 
 /**
  * E exatamente a camara fantasma que foi arrancada da fachada em 15/08 por inverter 27,2% dos
- * vereditos anunciados: o turno vota com as ONZE ⚠ E AQUI O PRECO FOI MAIOR QUE NA TELA,
+ * vereditos anunciados: o turno vota com as ONZE ⚠ E AQUI O PREÇO FOI MAIOR QUE NA TELA,
  * porque quem errava era o INSTRUMENTO DE CALIBRAGEM.
  *
- * bancadas do ELENCO, com a verba ja creditada de memoria e com `standing` dentro.
+ * bancadas do ELENCO, com a verba já creditada de memória e com `standing` dentro.
  * @param {GameState} state
  * @param {Record<string, number>} requested o orcamento que este texto pede
  * @returns {number | null} nulo quando nem verba cheia aprova
@@ -106,7 +106,7 @@ function priceOfPassage(state, requested) {
     const funding = everyone(Math.min(1, level));
     const seen = forecast(state, { levels: requested, funding }, CATALOG);
 
-    /* SEM PAUTA NAO HA PRECO, e zero e a resposta certa: um orcamento que nao move nada nao
+    /* SEM PAUTA NÃO HÁ PREÇO, e zero e a resposta certa: um orcamento que não move nada não
        precisa de voto nenhum. */
     if (!seen.agenda.proposal || seen.agenda.quorum <= 0) return 0;
     if (seen.whip && seen.whip.votes >= seen.agenda.quorum) return Math.min(1, level);
@@ -115,7 +115,7 @@ function priceOfPassage(state, requested) {
 }
 
 /**
- * A PROXIMA REFORMA DA FILA — o programa cujo piso ainda nao foi furado.
+ * A PRÓXIMA REFORMA DA FILA — o programa cujo piso ainda não foi furado.
  *
  * @param {Memory} memory
  */
@@ -141,7 +141,7 @@ const POLICIES = {
   /* O CORTE TOTAL. */
   piso: () => ({ levels: atFloor(), funding: everyone(0) }),
 
-  /* SO A MANUTENCAO. */
+  /* SÓ A MANUTENCAO. */
   base: state => {
     const reserve = costOf(everyone(UPKEEP), CATALOG.parties, CATALOG.fiscal.seatPrice);
     return {
@@ -188,9 +188,9 @@ const POLICIES = {
   }),
 
   /* ── AS DUAS SONDAS DA ESCOLHA ─────────────────────────────────────────────── ⚠ ELAS
-     NASCERAM DO ACHADO MAIS CONSTRANGEDOR DA CALIBRAGEM, e ele e sobre o INSTRUMENTO e nao
-     sobre o jogo: as seis politicas que existiam **espalham tudo por igual**, nos dois eixos
-     — verba dividida entre as oito areas e emenda oferecida a cada bloco do catalogo na
+     NASCERAM DO ACHADO MAIS CONSTRANGEDOR DA CALIBRAGEM, e ele e sobre o INSTRUMENTO e não
+     sobre o jogo: as seis políticas que existiam **espalham tudo por igual**, nos dois eixos
+     — verba dividida entre as oito áreas e emenda oferecida a cada bloco do catálogo na
      mesma medida. */
 
   /* O CONCENTRADOR. */
@@ -215,8 +215,8 @@ const POLICIES = {
     };
   },
 
-  /* Medido a mao, fora do simulador: uma lei MODESTA — baixar um piso em cinco pontos —
-     atravessa a tramitacao inteira em quatro meses, gaveta → Mesa → relator → plenario →
+  /* Medido a mão, fora do simulador: uma lei MODESTA — baixar um piso em cinco pontos —
+     atravessa a tramitação inteira em quatro meses, gaveta → Mesa → relator → plenario →
      norma. */
   legislador: (state, memory) => {
     const program = CATALOG.programs.find(
@@ -224,8 +224,8 @@ const POLICIES = {
     );
     if (!program) return { levels: { ...state.levels }, funding: everyone(UPKEEP) };
 
-    /* CINCO PONTOS DE PISO, e o numero e pequeno de proposito: o que se mede aqui e se o
-       CAMINHO existe, e nao qual o maior texto que passa. */
+    /* CINCO PONTOS DE PISO, e o número e pequeno de propósito: o que se mede aqui e se o
+       CAMINHO existe, e não qual o maior texto que passa. */
     return {
       levels: { ...state.levels },
       bands: { [program.id]: { floor: Math.max(0, program.floor - 5), ceiling: 100 } },
@@ -268,8 +268,8 @@ if (!policy) {
   process.exit(1);
 }
 
-/* ⚠ SEM ELE O INSTRUMENTO NAO VE A JOGADA MAIS PESADA DO JOGO: medido no catalogo de 9, o maior
-   partido fechava 30 de 43 votacoes e a Camara sem partido 26 — e a serie foi lida como "nao moveu" quando o
+/* ⚠ SEM ELE O INSTRUMENTO NÃO VÊ A JOGADA MAIS PESADA DO JOGO: medido no catálogo de 9, o maior
+   partido fechava 30 de 43 votações e a Camara sem partido 26 — e a série foi lida como "não moveu" quando o
    simulador nunca escolhia bancada. */
 const party = values.party ?? null;
 
@@ -284,7 +284,7 @@ if (party !== null && !CATALOG.parties.some(item => item.id === party)) {
 const seed = Number(values.seed);
 const months = Number(values.months);
 /* ⚠ O CRESCIMENTO DO PIB DEIXOU DE SER PREMISSA.
-   Ele era um argumento porque nao havia motor macro: quem simulava declarava "suponha 2% ao
+   Ele era um argumento porque não havia motor macro: quem simulava declarava "suponha 2% ao
    ano" e o turno obedecia. */
 const shock = Number(values.shock);
 
@@ -299,7 +299,7 @@ for (const [label, value] of [
   }
 }
 
-/* ── FORMATACAO ───────────────────────────────────────────────────────────── */
+/* ── FORMATAÇÃO ───────────────────────────────────────────────────────────── */
 
 /**
  * @param {number} value
@@ -333,7 +333,7 @@ function averageLoyalty(loyalty) {
 }
 
 /**
- * O que o mes tem de anormal, dito em uma coluna.
+ * O que o mês tem de anormal, dito em uma coluna.
  *
  * @param {Report} report
  */
@@ -402,7 +402,7 @@ for (let i = 0; i < months; i++) {
   const orders = policy(state, memory);
   const played = playMonth(state, orders, { shock });
 
-  /* Nao era — o instrumento e que estava cego, que e o defeito mais caro que uma ferramenta
+  /* Não era — o instrumento e que estava cego, que e o defeito mais caro que uma ferramenta
      de calibragem pode ter, porque ele parece resultado. */
   if (played.report.enacted) {
     for (const move of played.report.agenda.moves) memory.passed.add(move.program.id);
@@ -415,7 +415,7 @@ for (let i = 0; i < months; i++) {
   }
 }
 
-/* ── A SAIDA ──────────────────────────────────────────────────────────────── */
+/* ── A SAÍDA ──────────────────────────────────────────────────────────────── */
 
 const out = process.stdout;
 
@@ -473,12 +473,12 @@ const promisedTotal = history.reduce((sum, report) => sum + report.promisedCost,
 const paidTotal = history.reduce((sum, report) => sum + report.paidCost, 0);
 const last = history.at(-1);
 
-/* E o resultado nao foi um numero um pouco errado — foi o COMPLEMENTO EXATO da verdade:
+/* E o resultado não foi um número um pouco errado — foi o COMPLEMENTO EXATO da verdade:
    politica  o filtro dizia  a verdade (`ratio < 1`) herdado      41         7 piso       44
    0   (44 = os 48 meses menos os 4 contingenciados) agenda      48         0 base       48
-   1 promessa     48        48   (esta acertou por coincidencia) No `herdado`, nos sete meses
-   em que o corte de fato acontece, `pago + alocado` da EXATAMENTE `room` — entao nenhuma das
-   duas clausulas dispara, e o filtro contava os 41 meses em que nada foi cortado. */
+   1 promessa     48        48   (esta acertou por coincidência) No `herdado`, nos sete meses
+   em que o corte de fato acontece, `pago + alocado` da EXATAMENTE `room` — então nenhuma das
+   duas cláusulas dispara, e o filtro contava os 41 meses em que nada foi cortado. */
 const rationed = history.filter(report => report.ratio < 1 - 1e-9);
 
 out.write("RESUMO\n");
@@ -544,7 +544,7 @@ const gone = deedList
 if (gone.length > 0) out.write(`    saíram da base: ${gone.join(", ")}\n`);
 
 out.write(`  o pais ao fim\n`);
-/* A COLUNA SE MEDE PELO NOME MAIS LONGO DO CATALOGO, e nao por uma largura digitada. */
+/* A COLUNA SE MEDE PELO NOME MAIS LONGO DO CATÁLOGO, e não por uma largura digitada. */
 const AREA_COLUMN = Math.max(...CATALOG.areas.map(area => area.label.length)) + 2;
 for (const area of CATALOG.areas) {
   const before = area.initial;

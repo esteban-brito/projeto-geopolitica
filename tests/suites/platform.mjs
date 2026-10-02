@@ -30,9 +30,9 @@ function withPlatform(platform, extra = {}) {
   };
 }
 
-test("AS PRIORIDADES SAO AS AREAS QUE O PAIS ENTREGA PIORES — e a lista e derivada", () => {
-  /* ⚠ TRES IDS DIGITADOS SERIAM UMA SEGUNDA VERDADE sobre onde o pais esta pior, e ela
-     mentiria no dia em que uma abertura do catalogo mudasse. */
+test("AS PRIORIDADES SÃO AS ÁREAS QUE O PAÍS ENTREGA PIORES — e a lista e derivada", () => {
+  /* ⚠ TRÊS IDS DIGITADOS SERIAM UMA SEGUNDA VERDADE sobre onde o país esta pior, e ela
+     mentiria no dia em que uma abertura do catálogo mudasse. */
   const { priority } = pledgesOf();
   assert.equal(priority.length, PRIORITY_COUNT);
 
@@ -47,7 +47,7 @@ test("AS PRIORIDADES SAO AS AREAS QUE O PAIS ENTREGA PIORES — e a lista e deri
   );
 });
 
-test("A PROMESSA DE INDICE E MEDIDA CONTRA A POSSE, e nao contra um numero escolhido", () => {
+test("A PROMESSA DE ÍNDICE E MEDIDA CONTRA A POSSE, e não contra um número escolhido", () => {
   const area = CATALOG.areas.find(one => one.id === "security");
   assert.ok(area !== undefined);
 
@@ -67,7 +67,7 @@ test("A PROMESSA DE INDICE E MEDIDA CONTRA A POSSE, e nao contra um numero escol
   assert.equal(cumprida?.kept, true);
 });
 
-test("A META DA DIVIDA E A DIVIDA HERDADA, e o sinal nao esta invertido", () => {
+test("A META DA DÍVIDA E A DÍVIDA HERDADA, e o sinal não esta invertido", () => {
   const base = createState();
   const herdada = CATALOG.fiscal.initialDebtRatio;
 
@@ -84,25 +84,25 @@ test("A META DA DIVIDA E A DIVIDA HERDADA, e o sinal nao esta invertido", () => 
   assert.equal(platformOf(melhor)[0]?.kept, true, "desendividar-se nao contou como entrega");
 });
 
-test("O PRIMARIO E O DO ULTIMO ANO, e sem mes fechado ele NAO julga", () => {
+test("O PRIMÁRIO E O DO ÚLTIMO ANO, e sem mês fechado ele NÃO julga", () => {
   const base = createState();
   const vazio = withPlatform({ fiscal: "primary" });
   assert.equal(platformOf(vazio)[0]?.kept, null, "um governo de um dia nao quebrou nada ainda");
 
-  /* ⚠ SO OS ULTIMOS DOZE ENTRAM: um ano inteiro no vermelho seguido de doze meses no azul e uma
-     promessa CUMPRIDA — e a soma da serie inteira diria o contrario. */
+  /* ⚠ SÓ OS ÚLTIMOS DOZE ENTRAM: um ano inteiro no vermelho seguido de doze meses no azul e uma
+     promessa CUMPRIDA — e a soma da série inteira diria o contrário. */
   const serie = [...Array(MONTHS_PER_YEAR).fill(-30), ...Array(MONTHS_PER_YEAR).fill(10)];
   const azul = withPlatform({ fiscal: "primary" }, { series: { ...base.series, primary: serie } });
   assert.equal(platformOf(azul)[0]?.kept, true);
   assert.equal(platformOf(azul)[0]?.to, 10 * MONTHS_PER_YEAR);
 });
 
-test("A REFORMA SO QUEBRA NO FIM, e a promessa de NAO mexer quebra por ACAO", () => {
+test("A REFORMA SÓ QUEBRA NO FIM, e a promessa de NÃO mexer quebra por AÇÃO", () => {
   const base = createState();
-  /* Enquanto nada passou, prometer aprovar uma lei fica em aberto — cobrar no mes 3 seria
-     acusar o presidente de nao ter feito o que ele tem 45 meses para fazer. */
+  /* Enquanto nada passou, prometer aprovar uma lei fica em aberto — cobrar no mês 3 seria
+     acusar o presidente de não ter feito o que ele tem 45 meses para fazer. */
   assert.equal(platformOf(withPlatform({ reform: "law" }))[0]?.kept, null);
-  /* E a promessa de nao mexer na Constituicao nasce CUMPRIDA, e e a unica assim. */
+  /* E a promessa de não mexer na Constituicao nasce CUMPRIDA, e e a única assim. */
   assert.equal(platformOf(withPlatform({ reform: "keep" }))[0]?.kept, true);
 
   /** @type {import("../../src/domain/norms/index.mjs").Norm} */
@@ -120,16 +120,16 @@ test("A REFORMA SO QUEBRA NO FIM, e a promessa de NAO mexer quebra por ACAO", ()
     true,
   );
 
-  /* ⚠ A HERDADA NAO CONTA, e o criterio nao e desta suite: `enactedAt = 0` e a lei que o
+  /* ⚠ A HERDADA NÃO CONTA, e o critério não e desta suite: `enactedAt = 0` e a lei que o
      presidente encontrou em vigor. Sem isso, toda promessa de reforma nasceria cumprida. */
   const herdadas = base.norms.filter(norm => norm.guard === "constitution");
   assert.ok(herdadas.length > 0, "o catalogo devia trazer normas constitucionais herdadas");
   assert.equal(platformOf(withPlatform({ reform: "amendment" }))[0]?.kept, null);
 });
 
-test("TODO NUMERO DO VEREDITO DIZ A PROPRIA GRANDEZA — a divida nao e ponto de indice", () => {
-  /* ⚠ A CAPTURA PEGOU `1 → 1` NO FECHO: a divida foi de 78% a 90% e saiu arredondada como se
-     fosse ponto de indice, porque o veredito nao dizia a unidade. */
+test("TODO NÚMERO DO VEREDITO DIZ A PRÓPRIA GRANDEZA — a dívida não e ponto de índice", () => {
+  /* ⚠ A CAPTURA PEGOU `1 → 1` NO FECHO: a dívida foi de 78% a 90% e saiu arredondada como se
+     fosse ponto de índice, porque o veredito não dizia a unidade. */
   const base = createState();
   const cheia = {
     priority: "security",
@@ -151,7 +151,7 @@ test("TODO NUMERO DO VEREDITO DIZ A PROPRIA GRANDEZA — a divida nao e ponto de
   assert.equal(divida?.unit, "ratio", "a divida deixou de ser fracao");
 });
 
-test("QUEM NAO PROMETEU NADA NAO DEVE NADA — e a fracao quebrada e do que foi dito", () => {
+test("QUEM NÃO PROMETEU NADA NÃO DEVE NADA — e a fração quebrada e do que foi dito", () => {
   assert.equal(breachOf(createState()), 0, "a rua cobrou uma promessa que ninguem fez");
 
   const area = CATALOG.areas.find(one => one.id === "security");
@@ -164,7 +164,7 @@ test("QUEM NAO PROMETEU NADA NAO DEVE NADA — e a fracao quebrada e do que foi 
   assert.equal(breachOf(meio), 0.5);
 });
 
-test("A PLATAFORMA SE ESCREVE UMA VEZ SO — o mes 30 nao reescreve a posse", () => {
+test("A PLATAFORMA SE ESCREVE UMA VEZ SÓ — o mês 30 não reescreve a posse", () => {
   const posse = playMonth(createState(), { platform: { priority: "security", fiscal: "debt" } });
   assert.equal(posse.state.platform.priority, "security");
   assert.equal(posse.state.platform.fiscal, "debt");
@@ -176,19 +176,19 @@ test("A PLATAFORMA SE ESCREVE UMA VEZ SO — o mes 30 nao reescreve a posse", ()
   assert.equal(depois.state.platform.reform, null, "um eixo novo entrou fora da posse");
 });
 
-test("ID QUE NAO EXISTE NAO ENTRA NO ESTADO — nem pela tela, nem por um save editado", () => {
+test("ID QUE NÃO EXISTE NÃO ENTRA NO ESTADO — nem pela tela, nem por um save editado", () => {
   assert.deepEqual(chosenOf({ priority: "atlantida", fiscal: "debt", reform: "" }), {
     priority: null,
     fiscal: "debt",
     reform: null,
   });
-  /* ⚠ E A AREA TEM DE ESTAR NA LISTA DA POSSE: a Fazenda existe no catalogo e NAO e oferecida,
-     porque a lista sao as tres mais fracas. Aceita-la poria no estado uma promessa que a carta
+  /* ⚠ E A ÁREA TEM DE ESTAR NA LISTA DA POSSE: a Fazenda existe no catálogo e NÃO e oferecida,
+     porque a lista são as três mais fracas. Aceita-la poria no estado uma promessa que a carta
      nunca ofereceu. */
   assert.equal(chosenOf({ priority: "treasury" }).priority, null);
 });
 
-test("A PLATAFORMA ATRAVESSA O SAVE, e a versao 19 nao abre mais", () => {
+test("A PLATAFORMA ATRAVESSA O SAVE, e a versão 19 não abre mais", () => {
   const state = playMonth(createState(), {
     platform: { priority: "education", fiscal: "primary", reform: "keep" },
   }).state;
@@ -203,9 +203,9 @@ test("A PLATAFORMA ATRAVESSA O SAVE, e a versao 19 nao abre mais", () => {
   assert.equal(recusado.ok, false, "um save sem plataforma foi aceito");
 });
 
-test("A TRAICAO DA RUA PASSA A OLHAR A PLATAFORMA, e ela nao empilha", () => {
-  /* ⚠ O MAIOR DOS DOIS, e nao a soma — ver a prosa em `turn.mjs`. A prova cobra o efeito: um
-     governo que quebrou a plataforma tem a rua mais insatisfeita que um que nao prometeu. */
+test("A TRAIÇÃO DA RUA PASSA A OLHAR A PLATAFORMA, e ela não empilha", () => {
+  /* ⚠ O MAIOR DOS DOIS, e não a soma — ver a prosa em `turn.mjs`. A prova cobra o efeito: um
+     governo que quebrou a plataforma tem a rua mais insatisfeita que um que não prometeu. */
   fc.assert(
     fc.property(fc.integer({ min: 1, max: 6 }), months => {
       let mudo = createState();
@@ -218,8 +218,8 @@ test("A TRAICAO DA RUA PASSA A OLHAR A PLATAFORMA, e ela nao empilha", () => {
 
       const area = CATALOG.areas.find(one => one.id === "security");
       assert.ok(area !== undefined);
-      /* Sem verba nenhuma a Seguranca cai, entao a promessa esta quebrada nos dois mundos — e
-         so um deles a fez. */
+      /* Sem verba nenhuma a Segurança cai, então a promessa esta quebrada nos dois mundos — e
+         só um deles a fez. */
       assert.ok((promissor.capacity.index["security"] ?? 0) < area.initial);
       assert.equal(breachOf(promissor), 1);
       assert.equal(breachOf(mudo), 0);

@@ -1,6 +1,6 @@
 /* SUITE · A CORRENTE — e ela nasceu tarde demais.
-   ⚠ ESTE MOTOR RODOU DUAS SESSOES SEM PROVA PROPRIA.
-   Todos os outros tem suite; a economia tinha as quatro equacoes, o carrego da divida e nada
+   ⚠ ESTE MOTOR RODOU DUAS SESSÕES SEM PROVA PRÓPRIA.
+   Todos os outros tem suite; a economia tinha as quatro equações, o carrego da dívida e nada
    cobrando nenhum dos dois. */
 
 import assert from "node:assert/strict";
@@ -13,13 +13,13 @@ import { FISCAL } from "../../src/data/fiscal.mjs";
 const TOLERANCE = FISCAL.initialDebtRatio;
 const SLOPE = MACRO.riskPremium;
 
-/* Razoes de divida que um mandato de verdade alcanca, e as duas pontas entram: um pais que se
+/* Razões de dívida que um mandato de verdade alcanca, e as duas pontas entram: um país que se
    desendivida e um em beira de crise. */
 const anyRatio = fc.double({ min: 0.2, max: 2, noNaN: true });
 
-test("O MERCADO NAO COBRA PELA DIVIDA HERDADA, e cobra por tudo acima dela", () => {
-  /* ⚠ A TOLERANCIA E A DIVIDA DE ABERTURA, e nao um numero escolhido: o mercado JA precificou
-     o pais que o presidente recebeu, e o que ele cobra e a DETERIORACAO. */
+test("O MERCADO NÃO COBRA PELA DÍVIDA HERDADA, e cobra por tudo acima dela", () => {
+  /* ⚠ A TOLERÂNCIA E A DÍVIDA DE ABERTURA, e não um número escolhido: o mercado JÁ precificou
+     o país que o presidente recebeu, e o que ele cobra e a DETERIORAÇÃO. */
   assert.equal(premiumOf({ debtRatio: TOLERANCE, tolerance: TOLERANCE, slope: SLOPE }), 0);
 
   fc.assert(
@@ -35,8 +35,8 @@ test("O MERCADO NAO COBRA PELA DIVIDA HERDADA, e cobra por tudo acima dela", () 
   );
 });
 
-test("O PREMIO E CONVEXO: o vigesimo ponto de divida custa mais que o primeiro", () => {
-  /* ⚠ A FORMA E A MECANICA, e nao enfeite. */
+test("O PRÊMIO E CONVEXO: o vigesimo ponto de dívida custa mais que o primeiro", () => {
+  /* ⚠ A FORMA E A MECÂNICA, e não enfeite. */
   const at = (/** @type {number} */ ratio) =>
     premiumOf({ debtRatio: ratio, tolerance: TOLERANCE, slope: SLOPE });
 
@@ -54,8 +54,8 @@ test("O PREMIO E CONVEXO: o vigesimo ponto de divida custa mais que o primeiro",
   );
 });
 
-test("O PREMIO ENCARECE A DIVIDA, e incide sobre o ESTOQUE INTEIRO", () => {
-  /* ⚠ E NAO SO SOBRE A PARTE POS-FIXADA. */
+test("O PRÊMIO ENCARECE A DÍVIDA, e incide sobre o ESTOQUE INTEIRO", () => {
+  /* ⚠ E NÃO SÓ SOBRE A PARTE POS-FIXADA. */
   fc.assert(
     fc.property(
       fc.double({ min: 1000, max: 30000, noNaN: true }),
@@ -67,7 +67,7 @@ test("O PREMIO ENCARECE A DIVIDA, e incide sobre o ESTOQUE INTEIRO", () => {
 
         assert.ok(caro > limpo, "o premio nao encareceu a divida");
 
-        /* Se ele incidisse so sobre a fatia flutuante, ela seria 45% disto. */
+        /* Se ele incidisse só sobre a fatia flutuante, ela seria 45% disto. */
         const esperado = (debt * premium) / 12;
         assert.ok(
           Math.abs(caro - limpo - esperado) < 1e-9,
@@ -79,9 +79,9 @@ test("O PREMIO ENCARECE A DIVIDA, e incide sobre o ESTOQUE INTEIRO", () => {
   );
 });
 
-test("SEM PREMIO, O CARREGO E EXATAMENTE O QUE ERA — a migracao e inerte", () => {
-  /* A prova que permite mudar a assinatura de `carry` sem medo: o argumento novo tem padrao
-     ZERO, e com ele a conta e a de antes, digito por digito. */
+test("SEM PRÊMIO, O CARREGO E EXATAMENTE O QUE ERA — a migração e inerte", () => {
+  /* A prova que permite mudar a assinatura de `carry` sem medo: o argumento novo tem padrão
+     ZERO, e com ele a conta e a de antes, dígito por dígito. */
   fc.assert(
     fc.property(
       fc.double({ min: 1000, max: 30000, noNaN: true }),

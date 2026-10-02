@@ -1,7 +1,7 @@
-/* AS ALAVANCAS DE REGRA — politica que nao se mede em reais.
-   Ninguem escreveu "armadilha da privatizacao". E aritmetica do LASTRO. */
+/* AS ALAVANCAS DE REGRA — politica que não se mede em reais.
+   Ninguém escreveu "armadilha da privatizacao". E aritmética do LASTRO. */
 
-/* AS DUAS FAMILIAS DE REGRA, e o esquema as COBRA — ver `values` em `schema.mjs`. */
+/* AS DUAS FAMÍLIAS DE REGRA, e o esquema as COBRA — ver `values` em `schema.mjs`. */
 const FAMILIES = /** @type {const} */ (["property", "power"]);
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
@@ -25,7 +25,7 @@ export const RULE_SCHEMA = {
   sale: { kind: "number", min: 0, max: 5 },
 };
 
-/** As familias. `property` tem canal fiscal; `power` mexe no rito. */
+/** As famílias. `property` tem canal fiscal; `power` mexe no rito. */
 
 /**
  * @typedef {object} Rule
@@ -57,7 +57,7 @@ export const RULES = [
     unit: "participação da União no setor",
     economic: 26,
     liberty: 48,
-    /* AMEACA ALTA: a maior estatal do pais e o maior loteamento de diretoria que existe. */
+    /* AMEAÇA ALTA: a maior estatal do país e o maior loteamento de diretoria que existe. */
     threat: 0.4,
     reach: 620,
     initial: 62,
@@ -95,8 +95,8 @@ export const RULES = [
     liberty: 50,
     threat: 0.25,
     reach: 340,
-    /* JA MAJORITARIAMENTE PRIVADO na abertura, e isso e afirmacao sobre o mundo: o setor foi
-       desestatizado antes desta partida comecar. */
+    /* JÁ MAJORITARIAMENTE PRIVADO na abertura, e isso e afirmação sobre o mundo: o setor foi
+       desestatizado antes desta partida começar. */
     initial: 28,
     floor: 0,
     ceiling: 100,
@@ -142,7 +142,7 @@ export const RULES = [
   },
 
   /* ── PODER ───────────────────────────────────────────────────────────────── Uma alavanca
-     so, e ela e a mais perigosa do jogo. */
+     só, e ela e a mais perigosa do jogo. */
   {
     id: "poder-do-executivo",
     family: "power",
@@ -151,12 +151,12 @@ export const RULES = [
     /* NEUTRA EM ECONOMIA e no chao em liberdades. */
     economic: 50,
     liberty: 3,
-    /* A MAIOR AMEACA DO CATALOGO INTEIRO, e por definicao: esta pauta tira poder exatamente
+    /* A MAIOR AMEAÇA DO CATÁLOGO INTEIRO, e por definição: esta pauta tira poder exatamente
        de quem a vota. */
     threat: 0.95,
     reach: 900,
     initial: 30,
-    /* ⚠ A FAIXA E UM PONTO, e nao um intervalo — e essa e a diferenca entre esta alavanca e
+    /* ⚠ A FAIXA E UM PONTO, e não um intervalo — e essa e a diferença entre esta alavanca e
        todas as outras. */
     floor: 30,
     ceiling: 30,
@@ -168,7 +168,7 @@ export const RULES = [
 ];
 
 /* ── O QUE O PODER FAZ COM O RITO ─────────────────────────────────────────── Cada degrau
-   derruba UMA exigencia: emenda vira lei, lei vira caneta. */
+   derruba UMA exigência: emenda vira lei, lei vira caneta. */
 export const POWER_STEPS = [
   { at: 60, drops: 1 },
   { at: 85, drops: 2 },

@@ -14,7 +14,7 @@ const STATE = rehearsal(7);
 const ORDERS = { levels: STATE.levels, funding: upkeepOf(STATE), protect: [] };
 const BIG = ["industry", "welfare", "security", "defense"];
 
-test("O ENSAIO CHEGA AO RELATORIO DO MES 21 COM CORTE, pelas regras do jogo", () => {
+test("O ENSAIO CHEGA AO RELATÓRIO DO MÊS 21 COM CORTE, pelas regras do jogo", () => {
   assert.equal(STATE.month, 21);
   assert.ok(calendarOf(STATE.month).now.some(landmark => landmark.id === "bimestral"));
   const brief = briefingOf(STATE, ORDERS);
@@ -22,7 +22,7 @@ test("O ENSAIO CHEGA AO RELATORIO DO MES 21 COM CORTE, pelas regras do jogo", ()
   assert.deepEqual(rehearsal(7), STATE, "mesma semente, mesma partida");
 });
 
-test("O PARECER E O SETTLEMENT, lido por area: oito areas e nenhuma conta paralela", () => {
+test("O PARECER E O SETTLEMENT, lido por área: oito áreas e nenhuma conta paralela", () => {
   const orders = { ...ORDERS, protect: ["industry"] };
   const brief = briefingOf(STATE, orders);
   const share = settlement(STATE, orders);
@@ -33,7 +33,7 @@ test("O PARECER E O SETTLEMENT, lido por area: oito areas e nenhuma conta parale
   assert.ok(brief.areas.find(area => area.id === "industry")?.spared);
 });
 
-test("NAO DA PARA PROTEGER TODO MUNDO sem estourar o espaco: a emenda nao vira lixeira", () => {
+test("NÃO DA PARA PROTEGER TODO MUNDO sem estourar o espaço: a emenda não vira lixeira", () => {
   const all = briefingOf(STATE, { ...ORDERS, protect: CATALOG.areas.map(area => area.id) });
   assert.ok(all.overflow > 0, "protegidas as oito, o corte nao tem onde cair");
   const four = briefingOf(STATE, { ...ORDERS, protect: BIG });
@@ -43,7 +43,7 @@ test("NAO DA PARA PROTEGER TODO MUNDO sem estourar o espaco: a emenda nao vira l
   assert.ok(rest.every(area => area.cut > even));
 });
 
-test("OS MINISTROS SAO PESSOAS DA SEMENTE, e o cargo manda no que defendem", () => {
+test("OS MINISTROS SÃO PESSOAS DA SEMENTE, e o cargo manda no que defendem", () => {
   assert.deepEqual(cabinetOf(STATE), cabinetOf(STATE));
   const other = cabinetOf(rehearsal(8, 1));
   assert.notDeepEqual(
@@ -60,7 +60,7 @@ test("OS MINISTROS SAO PESSOAS DA SEMENTE, e o cargo manda no que defendem", () 
   }
 });
 
-test("A POSICAO SAI DO DECIDE: quem ainda perde pede, e quem foi protegido se da por satisfeito", () => {
+test("A POSIÇÃO SAI DO DECIDE: quem ainda perde pede, e quem foi protegido se da por satisfeito", () => {
   const open = momentOf(STATE, ORDERS, []);
   for (const stance of open.stances) {
     const decision = open.decisions.get(stance.minister);
@@ -72,7 +72,7 @@ test("A POSICAO SAI DO DECIDE: quem ainda perde pede, e quem foi protegido se da
   assert.equal(spared.stances.find(s => s.area === "industry")?.kind, "satisfied");
 });
 
-test("O RASCUNHO MUDA A SITUACAO: mudanca material reabre, mudanca miuda nao", () => {
+test("O RASCUNHO MUDA A SITUAÇÃO: mudança material reabre, mudança miúda não", () => {
   /** @type {Step[]} */
   const tiny = [{ kind: "draft", protect: ["health"] }];
   const calm = momentOf(STATE, ORDERS, tiny);
@@ -86,7 +86,7 @@ test("O RASCUNHO MUDA A SITUACAO: mudanca material reabre, mudanca miuda nao", (
   assert.equal(still, 0, "proteger a Saude, que pede pouco, nao move os outros");
 });
 
-test("PEDIR ALTERNATIVA: o cauteloso cede, o ousado insiste, e ninguem obedece por regra", () => {
+test("PEDIR ALTERNATIVA: o cauteloso cede, o ousado insiste, e ninguém obedece por regra", () => {
   const base = cabinetOf(STATE).map(m => ({ ...m, hope: 0.9 }));
   const bold = base.map(m => ({ ...m, riskAversion: 0.4 }));
   const shy = base.map(m => ({ ...m, riskAversion: 1.6 }));
@@ -105,7 +105,7 @@ test("PEDIR ALTERNATIVA: o cauteloso cede, o ousado insiste, e ninguem obedece p
   assert.notEqual(yields?.plan, "protect");
 });
 
-test("A RECUSA SO CHEGA A QUEM FOI RECUSADO", () => {
+test("A RECUSA SÓ CHEGA A QUEM FOI RECUSADO", () => {
   const minister = cabinetOf(STATE).find(m => m.area === "defense")?.id ?? "";
   const after = momentOf(STATE, ORDERS, [{ kind: "refuse", minister, plan: "protect" }]);
   for (const [id, decision] of after.decisions) {

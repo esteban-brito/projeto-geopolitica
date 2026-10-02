@@ -250,7 +250,7 @@ O índice não tem URL. Para verificação, localizar as peças pelo assunto, ve
 | Lockdown de Xangai                                          | Guardian                            |                                    31/05/2022 |
 | Saída do Covid zero e balanço oficial                       | AP                                  |           2023; data específica **VERIFICAR** |
 | Lei de Segurança Nacional de Hong Kong                      | NPC Observer                        |                                    30/06/2020 |
-| Lei do Artigo 23 de Hong Kong                               | Le Monde                            |                                    21/03/2024 |
+| Lei do Artigo 23 de Hong Kong                               | Lê Monde                            |                                    21/03/2024 |
 | Livro branco oficial sobre Xinjiang/direitos                | SCIO                                |                                    02/06/2017 |
 | Contestação chinesa das críticas a Xinjiang                 | Representação diplomática chinesa   |                                    12/12/2019 |
 | Especialistas da ONU e trabalho forçado; resposta de Pequim | Reuters                             |                                    23/01/2026 |

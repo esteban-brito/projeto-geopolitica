@@ -1,14 +1,14 @@
-/* A TRAMITACAO — o texto deixa de ser instantaneo.
-   recebe  os textos protocolados, a camara, o mes e o catalogo devolve os textos um estagio
-   adiante, e o que deles chegou ao plenario Este arquivo nao e um motor e nao tem codinome —
-   ele COMPOE, como `agenda.mjs` e `turn.mjs`. */
+/* A TRAMITAÇÃO — o texto deixa de ser instantâneo.
+   recebe  os textos protocolados, a camara, o mês e o catálogo devolve os textos um estágio
+   adiante, e o que deles chegou ao plenario Este arquivo não e um motor e não tem codinome —
+   ele COMPÕE, como `agenda.mjs` e `turn.mjs`. */
 
 import { whipCount } from "../domain/congress/index.mjs";
 import { compose } from "./agenda.mjs";
 
-/* ⚠ O CAMINHO E UMA LISTA ORDENADA, e nao tres literais soltos: a tela precisa saber QUANTOS
+/* ⚠ O CAMINHO E UMA LISTA ORDENADA, e não três literais soltos: a tela precisa saber QUANTOS
    passos existem e em que ordem para desenhar onde o texto esta. Escrever a ordem la seria um
-   segundo lugar para ela — e o dia em que um quarto estagio entrasse, a tela nao saberia. */
+   segundo lugar para ela — e o dia em que um quarto estágio entrasse, a tela não saberia. */
 export const STAGES = /** @type {const} */ (["drawer", "rapporteur", "floor"]);
 
 /**
@@ -24,22 +24,22 @@ export const STAGES = /** @type {const} */ (["drawer", "rapporteur", "floor"]);
  * @property {string} label - o assunto, como a tela o chama
  * @property {Record<string, Band>} bands - as faixas que ele pede
  * @property {Record<string, number>} levels - os niveis que ele pede, e so os que
- * dependem de voto: o que e execucao orcamentaria nunca entra num texto
+ * dependem de voto: o que e execução orçamentária nunca entra num texto
  * @property {string[]} except - o que o relator salvou; vazio ate a relatoria
  * @property {string} [saved] - o rotulo do que foi salvo, para a tela dizer
  */
 
 /* ⚠ QUANTO DA BANCADA DO PRESIDENTE DA CAMARA BASTA PARA ELE PAUTAR.
-   e primeiro chute declarado, como o PIVOT de ECLUSA — o que NAO e chute e a
-   desigualdade: este limiar tem de ser menor que o de aprovar, senao a Mesa vira um
-   segundo veto pelo mesmo preco. */
+   e primeiro chute declarado, como o PIVOT de ECLUSA — o que NÃO e chute e a
+   desigualdade: este limiar tem de ser menor que o de aprovar, senão a Mesa vira um
+   segundo veto pelo mesmo preço. */
 const TABLE = 0.38;
 
 /* QUANTOS MESES UM TEXTO SOBREVIVE NA GAVETA. */
 const DRAWER_LIFE = 6;
 
 /**
- * O TEXTO COMO PROPOSTA — recomposto contra o pais de HOJE, e nao o de ontem.
+ * O TEXTO COMO PROPOSTA — recomposto contra o país de HOJE, e não o de ontem.
  *
  * @param {Bill} bill
  * @param {object} world
@@ -49,7 +49,7 @@ const DRAWER_LIFE = 6;
  * @param {import("../data/catalog.mjs").CATALOG} world.catalog
  */
 export function proposalOf(bill, { levels, bands, power, catalog }) {
-  /* A EXCECAO DO RELATOR SAI AQUI, e nao no momento de aplicar: ela muda o que o texto PEDE,
+  /* A EXCEÇÃO DO RELATOR SAI AQUI, e não no momento de aplicar: ela muda o que o texto PEDE,
      e portanto muda quem ele incomoda e quanto ele custa. */
   const spared = new Set(bill.except);
 
@@ -77,7 +77,7 @@ export function proposalOf(bill, { levels, bands, power, catalog }) {
 }
 
 /**
- * A MESA DECIDE — e ela decide com a mesma formula do voto dela.
+ * A MESA DECIDE — e ela decide com a mesma fórmula do voto dela.
  *
  * @param {object} input
  * @param {import("./agenda.mjs").Proposal} input.proposal
@@ -92,7 +92,7 @@ export function proposalOf(bill, { levels, bands, power, catalog }) {
 export function tables({ proposal, speaker, benches, funding, loyalty, standing, ruling }) {
   const seat = speaker ? benches.find(bench => bench.id === speaker.id) : undefined;
 
-  /* ⚠ SEM PRESIDENTE DA CAMARA, A GAVETA NAO EXISTE — e o texto passa direto. */
+  /* ⚠ SEM PRESIDENTE DA CAMARA, A GAVETA NÃO EXISTE — e o texto passa direto. */
   if (!seat) return { tabled: true, share: 1 };
 
   const forecast = whipCount({
@@ -111,8 +111,8 @@ export function tables({ proposal, speaker, benches, funding, loyalty, standing,
 /**
  * O RELATOR ESCREVE O JABUTI — e ele protege quem esta mais perto dele.
  *
- * favor do proprio lado. A distancia e a mesma que ECLUSA usa para decidir voto —
- * nenhuma formula nova, outro interesse.
+ * favor do próprio lado. A distancia e a mesma que ECLUSA usa para decidir voto —
+ * nenhuma fórmula nova, outro interesse.
  * @param {object} input
  * @param {Person | null} input.rapporteur
  * @param {import("./agenda.mjs").Agenda} input.agenda a proposta recomposta
@@ -133,7 +133,7 @@ export function reports({ rapporteur, agenda, catalog }) {
     const lever = levers.get(move.program.id);
     if (!lever) continue;
 
-    /* ⚠ SO O QUE O TEXTO MACHUCA ENTRA NA ESCOLHA. */
+    /* ⚠ SÓ O QUE O TEXTO MACHUCA ENTRA NA ESCOLHA. */
     if (move.delta >= 0) continue;
     hurt++;
 
@@ -146,16 +146,16 @@ export function reports({ rapporteur, agenda, catalog }) {
     }
   }
 
-  /* ⚠ O RELATOR NAO PODE ESVAZIAR O TEXTO, e esta linha e a correcao de um defeito medido no
-     dia em que a tramitacao nasceu: um texto que movia UMA alavanca so chegava ao plenario
-     vazio, porque o relator tinha salvado exatamente aquela — e um texto vazio nao vai a
+  /* ⚠ O RELATOR NÃO PODE ESVAZIAR O TEXTO, e esta linha e a correção de um defeito medido no
+     dia em que a tramitação nasceu: um texto que movia UMA alavanca só chegava ao plenario
+     vazio, porque o relator tinha salvado exatamente aquela — e um texto vazio não vai a
      voto, ele morre. */
   if (!closest || hurt < 2) return { except: [], saved: undefined };
   return { except: [closest.id], saved: closest.label };
 }
 
 /**
- * QUANTO TEMPO UM TEXTO JA ESPERA NA GAVETA.
+ * QUANTO TEMPO UM TEXTO JÁ ESPERA NA GAVETA.
  *
  * @param {Bill} bill
  * @param {number} month

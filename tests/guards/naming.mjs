@@ -1,36 +1,37 @@
-/* GUARDA · NOMES — uma forma de nomear, e so uma.
+/* GUARDA · NOMES — uma forma de nomear, e só uma.
    ══════════════════════════════════════════════════════════════════════════════
 
    O QUE ELA COBRE, e por que cada item:
 
-     · EXTENSAO `.mjs` em todo modulo. O projeto anterior convive com 48 modulos
+     · EXTENSÃO `.mjs` em todo módulo. O projeto anterior convive com 48 módulos
        ES e 63 arquivos CommonJS, e unificar virou escopo recusado por ser grande
-       demais. Nascer com um formato so custa esta linha;
-     · `kebab-case` sem acento e sem maiuscula. Nome que difere so por caixa
+       demais. Nascer com um formato só custa esta linha;
+     · `kebab-case` sem acento e sem maiuscula. Nome que difere só por caixa
        funciona no Windows e some no CI Linux — a classe inteira de defeito
-       desaparece com minusculas em toda parte;
+       desaparece com minúsculas em toda parte;
      · nada de CommonJS.
 
-   O QUE ELA NAO COBRE, e isto esta escrito de proposito: o IDIOMA dos
-   identificadores. A convencao e ingles para mecanismo e portugues para dado,
-   mas nao existe casador honesto para isso — um que tentasse acusaria `selic` e
-   `ipca`, que sao nomes proprios e ficam no original por decisao. Fingir
-   cobertura aqui seria pior que nao ter: a proxima sessao confiaria nela.
+   O QUE ELA NÃO COBRE, e isto esta escrito de propósito: o IDIOMA dos
+   identificadores. A convenção e inglês para mecanismo e português para dado,
+   mas não existe casador honesto para isso — um que tentasse acusaria `selic` e
+   `ipca`, que são nomes próprios e ficam no original por decisão. Fingir
+   cobertura aqui seria pior que não ter: a próxima sessão confiaria nela.
    O que da para provar objetivamente e ACENTO em identificador, e isso e
    cobrado. */
 
+import { tokenizer } from "acorn";
 import { collect, isGuardSource, stripJsComments } from "../lib/project.mjs";
 
 export const name = "naming";
 
 const CODE_DIRS = ["src/", "tests/", "tools/"];
 
-/* ARQUIVOS CUJO FORMATO E IMPOSTO POR UMA FERRAMENTA, e nao escolhido por nos.
+/* ARQUIVOS CUJO FORMATO E IMPOSTO POR UMA FERRAMENTA, e não escolhido por nos.
    O flat config do ESLint EXIGE `export default` — a guarda acusou isto na
-   primeira execucao, e ela estava certa em acusar: a convencao vale, e a
-   excecao precisa ser declarada em vez de silenciada com um comentario de
-   desativacao. Se um dia a lista crescer alem de configuracao de ferramenta, e
-   sinal de que a convencao virou ficcao. */
+   primeira execução, e ela estava certa em acusar: a convenção vale, e a
+   exceção precisa ser declarada em vez de silenciada com um comentário de
+   desativacao. Se um dia a lista crescer além de configuração de ferramenta, e
+   sinal de que a convenção virou ficção. */
 const TOOL_CONTRACT = new Set(["eslint.config.mjs"]);
 
 /**
@@ -52,14 +53,14 @@ export function audit(files) {
       add(`${path} foge do kebab-case minusculo`);
     }
 
-    /* O NOME acima vale para todo arquivo; o CONTEUDO abaixo pula os arquivos de
-       guarda, que carregam estes defeitos como dado nas provas sinteticas. */
+    /* O NOME acima vale para todo arquivo; o CONTEÚDO abaixo pula os arquivos de
+       guarda, que carregam estes defeitos como dado nas provas sintéticas. */
     if (!path.endsWith(".mjs") || isGuardSource(path)) continue;
 
-    /* Comentario fora ANTES de tudo: prosa que descreve um defeito nao e o
+    /* Comentário fora ANTES de tudo: prosa que descreve um defeito não e o
        defeito, e este arquivo mesmo explica CommonJS em texto.
-       As strings tambem saem, porque texto de UI e portugues acentuado por
-       decisao — acusa-lo seria falso positivo. */
+       As strings também saem, porque texto de UI e português acentuado por
+       decisão — acusa-lo seria falso positivo. */
     const code = stripJsComments(source).replace(
       /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`(\\.|[^`\\])*`/g,
       '""',
@@ -73,13 +74,33 @@ export function audit(files) {
         `${path} tem export default — a convencao e export nomeado, que renomeia sem ambiguidade`,
       );
     }
-    const accented = code.match(/[A-Za-z_$][A-Za-z0-9_$]*[áàâãéêíóôõúüçÁÀÂÃÉÊÍÓÔÕÚÜÇ][^\s(){};,]*/);
+    const accented = accentedIdentifier(source, code);
     if (accented) {
-      add(`${path} tem o identificador acentuado "${accented[0]}"`);
+      add(`${path} tem o identificador acentuado "${accented}"`);
     }
   }
 
   return list;
+}
+
+/* Pelo tokenizador, não por regex: a regex que tirava as strings saía de fase numa regex
+   literal com aspas (tests/suites/screens.mjs) e acusava nome de teste como identificador.
+   Fonte que não parseia cai no casador antigo. */
+/** @param {string} source @param {string} code @returns {string | null} */
+function accentedIdentifier(source, code) {
+  try {
+    for (const token of tokenizer(source, { ecmaVersion: "latest", sourceType: "module" })) {
+      if (token.type.label === "name" || token.type.label === "privateId") {
+        const text = source.slice(token.start, token.end);
+        if (/[^\x00-\x7F]/.test(text)) return text;
+      }
+    }
+    return null;
+  } catch {
+    return (
+      code.match(/[A-Za-z_$][A-Za-z0-9_$]*[áàâãéêíóôõúüçÁÀÂÃÉÊÍÓÔÕÚÜÇ][^\s(){};,]*/)?.[0] ?? null
+    );
+  }
 }
 
 export const synthetic = [
@@ -102,5 +123,13 @@ export const synthetic = [
   {
     label: "identificador acentuado",
     files: new Map([["src/state/state.mjs", "export const orçamento = 1;"]]),
+  },
+  {
+    label: "identificador que começa com acento",
+    files: new Map([["src/state/state.mjs", "export const índice = 1;"]]),
+  },
+  {
+    label: "chave acentuada depois de uma regex literal com aspas",
+    files: new Map([["src/state/state.mjs", 'const r = /"/;\nexport const a = { quórum: 1 };']]),
   },
 ];

@@ -29,7 +29,7 @@ import { INFLATION_CEILING, lawNow, session, opening } from "./session.mjs";
 /* ── O QUE A TELA PRECISA SABER, derivado e nunca guardado ────────────────── */
 
 /**
- * Previsao delegada a forecast (camara manual invertia 275 de 1.012 votacoes, 27,2%, ate 35 votos).
+ * Previsão delegada a forecast (camara manual invertia 275 de 1.012 votações, 27,2%, até 35 votos).
  */
 export function mesaInput() {
   const seen = forecast(session.state, session.orders, CATALOG);
@@ -74,7 +74,7 @@ export function financeInput() {
     ceiling: INFLATION_CEILING,
     areas: CATALOG.areas,
     index: session.state.capacity.index,
-    /* Serie historica longa para exibicao (diferente do buffer de atraso da malha). */
+    /* Série histórica longa para exibição (diferente do buffer de atraso da malha). */
     history: session.state.series.areas,
   };
 }
@@ -115,7 +115,7 @@ export function emailInput() {
       open: session.openDispatch,
       seen: [...session.readMail],
       dispatches: [
-        /* Relatorios de meses fechados preservados no historico e ordenados na bandeja. */
+        /* Relatorios de meses fechados preservados no histórico e ordenados na bandeja. */
         ...session.state.months.map(
           (/** @type {import("../state/state.mjs").MonthCard} */ fechado) =>
             describeMonth({ report: fechado, adviser: gov.adviser }),
@@ -127,7 +127,7 @@ export function emailInput() {
 }
 
 /**
- * Grupo mais proximo do proprio limiar relativo (pressure / boil).
+ * Grupo mais próximo do próprio limiar relativo (pressure / boil).
  *
  * @param {ReadonlyArray<{ label: string, pressure: number, boil: number }>} lobbies
  */
@@ -141,7 +141,7 @@ export function closestToBreak(lobbies) {
 }
 
 /**
- * Cartas na mesa (do mes fechado e vencendo), com urgentes no topo.
+ * Cartas na mesa (do mês fechado e vencendo), com urgentes no topo.
  * @param {number} closed
  * @param {Set<string>} dying
  */
@@ -191,7 +191,7 @@ export function cabinetInput() {
   });
   const dying = new Set(quiet.map(letter => letter.id));
 
-  /* O mes fechado vem do ultimo relatorio (evita subtracao na tela em 48 meses). */
+  /* O mês fechado vem do último relatório (evita subtração na tela em 48 meses). */
   const closed = session.state.months[0]?.month ?? session.state.month;
 
   return {
@@ -213,14 +213,14 @@ export function cabinetInput() {
       majority: SIMPLE_MAJORITY,
       worst: closestToBreak(boiler.lobbies),
       standing: street.good,
-      /* Referencia anterior preservada em framed para comparacao. */
+      /* Referencia anterior preservada em framed para comparação. */
       was:
         session.framed === null
           ? null
           : pollFrom(session.framed.mood, CATALOG.segments, CATALOG.opinion).good,
       impeachment: boiler.impeachment,
     },
-    /* Mesa exibe correspondencias recentes e urgentes (ate 25 cartas no mandato, 36 dos 48 meses). */
+    /* Mesa exibe correspondencias recentes e urgentes (até 25 cartas no mandato, 36 dos 48 meses). */
     letters: onDesk(closed, dying),
     /* Quantidade de despachos pendentes de resposta. */
     sheets: session.state.mail.filter(letter => letter.due !== null && letter.answer === null)
@@ -237,7 +237,7 @@ export function areaInput(area) {
   const share = settlement(session.state, session.orders, CATALOG);
   const spent = share.asked[area.id] ?? 0;
 
-  /* Projecao delegada ao motor com gasto cheio rateado (Previdencia: R$ 2,4 bi contra R$ 126,7 bi; errava 5 de 8 areas). */
+  /* Projeção delegada ao motor com gasto cheio rateado (Previdência: R$ 2,4 bi contra R$ 126,7 bi; errava 5 de 8 áreas). */
   const ahead = outlook(session.state, session.orders, CATALOG);
   const curve = trajectory(session.state, session.orders, CATALOG);
 
@@ -252,13 +252,13 @@ export function areaInput(area) {
     committed: share.demand - spent,
     projected: ahead.index[area.id] ?? value,
     idle: ahead.idle[area.id] ?? value,
-    /* Horizonte evita leitura inerte a 1 mes (area anda 0,40 por mes; leitura saia 61 → 61). */
+    /* Horizonte evita leitura inerte a 1 mês (área anda 0,40 por mês; leitura saia 61 → 61). */
     horizon: HORIZON,
     ahead: curve.index[area.id]?.at(-1) ?? value,
     aheadIdle: curve.idle[area.id]?.at(-1) ?? value,
     bands: lawNow(),
     requestedBands: session.orders.bands,
-    /* Corrente calculada sobre funded cheio (evita anunciar +0,02 onde motor lanca +1,22). */
+    /* Corrente calculada sobre funded cheio (evita anunciar +0,02 onde motor lança +1,22). */
     chain: chainOf(session.state, area.id, share.funded[area.id] ?? 0),
     ratio: share.ratio,
     areas: CATALOG.areas,

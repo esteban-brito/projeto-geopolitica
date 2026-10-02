@@ -1,4 +1,4 @@
-/* CUSTO DA TELA — o fps do material, medido contra um braco de controle. */
+/* CUSTO DA TELA — o fps do material, medido contra um braço de controle. */
 
 import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -12,7 +12,7 @@ const OUT = join(ROOT, "captures", "cost");
 
 const VIEWPORTS = [{ name: "desktop", width: 1440, height: 900 }];
 
-/* E o unico jeito de o delta medido ser do FILTRO e nao de outra coisa. */
+/* E o único jeito de o delta medido ser do FILTRO e não de outra coisa. */
 const CONTROL_ARM = `
   .glass-stage::after, .glass-action, .glass-support {
     backdrop-filter: none !important;
@@ -104,7 +104,7 @@ try {
     await page.screenshot({ path: join(OUT, `${viewport.name}.png`) });
 
     if (viewport.name === "desktop") {
-      /* MEDIDA ALTERNADA, e nao uma de cada. */
+      /* MEDIDA ALTERNADA, e não uma de cada. */
       const glass = [];
       const control = [];
       for (let round = 0; round < 3; round++) {

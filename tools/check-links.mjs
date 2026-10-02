@@ -1,5 +1,5 @@
-/* VERIFICADOR DE REFERENCIAS — todo caminho citado num arquivo versionado tem de existir.
-   Le links Markdown relativos e caminhos entre crases que comecem por uma pasta do projeto.
+/* VERIFICADOR DE REFERÊNCIAS — todo caminho citado num arquivo versionado tem de existir.
+   Lê links Markdown relativos e caminhos entre crases que comecem por uma pasta do projeto.
    uso: node tools/check-links.mjs [--list]   sai 1 se houver referencia quebrada. */
 
 import { execFileSync } from "node:child_process";
@@ -11,8 +11,8 @@ const TEXT = /\.(md|mjs|css|html|json|yml)$/;
 const ROOTS =
   /^(src|docs|tests|tools|prototypes|styles|assets|vendor|captures|\.agents|\.claude|\.github)\//;
 const IGNORED_DIRS = /^(tmp|captures|docs\/evidence)\//;
-/* Registro historico cita arquivos pelo nome que tinham na epoca, e prova sintetica de guarda
-   cita caminho inventado de proposito: nos dois, so os links sao cobrados. */
+/* Registro histórico cita arquivos pelo nome que tinham na época, e prova sintética de guarda
+   cita caminho inventado de propósito: nos dois, só os links são cobrados. */
 const HISTORY = /^(docs\/(journal\.md|cycles\/|research\/|archive\/)|tests\/guards\/)/;
 
 const tracked = execFileSync("git", ["ls-files"], { cwd: ROOT, encoding: "utf8" })

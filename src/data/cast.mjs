@@ -1,20 +1,20 @@
-/* O ELENCO — o vocabulario com que a republica ganha gente. */
+/* O ELENCO — o vocabulário com que a republica ganha gente. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
-/* ⚠ ELAS TINHAM UM ANDAR SOCIAL SO, E ISSO ERA UM DEFEITO DE MATERIA-PRIMA. */
+/* ⚠ ELAS TINHAM UM ANDAR SOCIAL SÓ, E ISSO ERA UM DEFEITO DE MATERIA-PRIMA. */
 
-/* ⚠ O GENERO MORA NA MESMA LINHA DO NOME, e nao numa segunda lista: o sinete precisa dele
+/* ⚠ O GÊNERO MORA NA MESMA LINHA DO NOME, e não numa segunda lista: o sinete precisa dele
    para escolher a silhueta, e duas listas paralelas seriam duas fontes da mesma verdade —
-   divergiriam no dia em que alguem acrescentasse um nome so numa delas.
-   A ORDEM E A MESMA DE ANTES, e isso importa: o gerador sorteia por indice a partir da
-   semente, entao reordenar trocaria o elenco inteiro de toda partida ja salva. */
+   divergiriam no dia em que alguém acrescentasse um nome só numa delas.
+   A ORDEM E A MESMA DE ANTES, e isso importa: o gerador sorteia por índice a partir da
+   semente, então reordenar trocaria o elenco inteiro de toda partida já salva. */
 
 /** @typedef {{ name: string, gender: "f" | "m" }} Given */
 
 /** @type {ReadonlyArray<Given>} */
 const GIVEN_NAMES = [
-  /* A geracao que ja estava aqui — e ela FICA. */
+  /* A geração que já estava aqui — e ela FICA. */
   { name: "Adalberto", gender: "m" },
   { name: "Belarmino", gender: "m" },
   { name: "Custódio", gender: "m" },
@@ -33,7 +33,7 @@ const GIVEN_NAMES = [
   { name: "Ubirajara", gender: "m" },
   { name: "Valdomiro", gender: "m" },
   { name: "Zulmira", gender: "f" },
-  /* A GERACAO DO MEIO — quem se elegeu pela primeira vez nos anos 90 e hoje preside comissao. */
+  /* A GERAÇÃO DO MEIO — quem se elegeu pela primeira vez nos anos 90 e hoje preside comissão. */
   { name: "Adriano", gender: "m" },
   { name: "Beatriz", gender: "f" },
   { name: "Cláudio", gender: "m" },
@@ -48,7 +48,7 @@ const GIVEN_NAMES = [
   { name: "Sérgio", gender: "m" },
   { name: "Vera", gender: "f" },
   { name: "Wagner", gender: "m" },
-  /* A GERACAO NOVA — o primeiro mandato. */
+  /* A GERAÇÃO NOVA — o primeiro mandato. */
   { name: "Bruno", gender: "m" },
   { name: "Camila", gender: "f" },
   { name: "Diego", gender: "m" },
@@ -64,12 +64,12 @@ const GIVEN_NAMES = [
 /** @type {ReadonlyArray<string>} */
 export const FIRST_NAMES = GIVEN_NAMES.map(given => given.name);
 
-/** ⚠ Ele nasce da MESMA lista, entao nao ha o que divergir. */
+/** ⚠ Ele nasce da MESMA lista, então não há o que divergir. */
 export const GENDER_OF = new Map(GIVEN_NAMES.map(given => [given.name, given.gender]));
 
 /** @type {ReadonlyArray<string>} */
 export const SURNAMES = [
-  /* SIMPLES — e agora eles sao a MAIORIA, que e a proporcao do pais. */
+  /* SIMPLES — e agora eles são a MAIORIA, que e a proporção do país. */
   "Alencastro",
   "Bonfim",
   "Camargo",
@@ -92,7 +92,7 @@ export const SURNAMES = [
   "Veloso",
   "Xavier",
   "Zamith",
-  /* COMPOSTOS — minoria de proposito. */
+  /* COMPOSTOS — minoria de propósito. */
   "Arruda Bezerra",
   "Bastos Quirino",
   "Caldeira Nunes",
@@ -107,16 +107,16 @@ export const SURNAMES = [
 /** @type {ReadonlyArray<string>} */
 const OFFICES = ["speaker", "senate", "rapporteur", "leader", "chief"];
 
-/* ── AS AMBICOES ───────────────────────────────────────────────────────────── O que a pessoa
+/* ── AS AMBIÇÕES ───────────────────────────────────────────────────────────── O que a pessoa
    QUER, e e isso que a distingue de uma bancada. */
 
 /** @type {ReadonlyArray<string>} */
 export const AMBITIONS = [
   /* Quer o Planalto em 2030, e por isso ganha com o governo fraco. */
   "succession",
-  /* Quer um ministerio. */
+  /* Quer um ministério. */
   "cabinet",
-  /* Quer o governo do proprio estado. */
+  /* Quer o governo do próprio estado. */
   "state",
   /* Quer uma vaga no tribunal. */
   "court",
@@ -129,7 +129,7 @@ export const ARCHETYPE_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
   bloc: { kind: "id" },
-  /* ⚠ E ESTE E O DEFEITO QUE `standards.md` JA NOMEIA — "lista declarada e nao cobrada" —,
+  /* ⚠ E ESTE E O DEFEITO QUE `standards.md` JÁ NOMEIA — "lista declarada e não cobrada" —,
      com `CHANNELS` e `FAMILIES` citadas por nome. */
   office: { kind: "text", values: OFFICES },
   economicShift: { kind: "number", min: -40, max: 40 },
@@ -152,15 +152,15 @@ export const ARCHETYPE_SCHEMA = {
  * @property {number} reachMax - fracao maxima
  */
 
-/* ── OS ARQUETIPOS ───────────────────────────────────────────────────────────
-   Um por cargo da onda 1, mais um lider por bloco. O `reach` impede a pessoa de virar a
-   bancada inteira: o lider arrasta uma parte, e a que ele NAO arrasta continua votando
+/* ── OS ARQUÉTIPOS ───────────────────────────────────────────────────────────
+   Um por cargo da onda 1, mais um líder por bloco. O `reach` impede a pessoa de virar a
+   bancada inteira: o líder arrasta uma parte, e a que ele NÃO arrasta continua votando
    pela ideologia do bloco — e e isso que faz compra-lo ser barato e insuficiente ao mesmo
    tempo.
 
-   ⚠ AS FAIXAS SAO PRIMEIRO CHUTE, declarado como o de ECLUSA e o da MALHA. O que NAO e
-   chute e a RAZAO entre elas: o presidente da Camara arrasta mais que qualquer lider,
-   porque o poder dele vem da mesa e nao da bancada. */
+   ⚠ AS FAIXAS SÃO PRIMEIRO CHUTE, declarado como o de ECLUSA e o da MALHA. O que NÃO e
+   chute e a RAZÃO entre elas: o presidente da Camara arrasta mais que qualquer líder,
+   porque o poder dele vem da mesa e não da bancada. */
 
 /** @type {ReadonlyArray<Archetype>} */
 export const ARCHETYPES = [
@@ -169,11 +169,11 @@ export const ARCHETYPES = [
     label: "cacique da Mesa",
     bloc: "pcn",
     office: "speaker",
-    /* Ele nao e o centro do proprio bloco: quem chega a presidencia da Camara chega
+    /* Ele não e o centro do próprio bloco: quem chega a presidencia da Camara chega
        negociando com todos, e isso o puxa para o meio do plenario. */
     economicShift: -8,
     libertyShift: 4,
-    /* MAIS VENAL QUE O PROPRIO CENTRAO, e nao e cinismo do catalogo: o cargo se conquista
+    /* MAIS VENAL QUE O PRÓPRIO CENTRAO, e não e cinismo do catálogo: o cargo se conquista
        distribuindo, e quem o conquistou deve favores a todos. */
     venalityShift: 0.03,
     reachMin: 0.5,
@@ -195,8 +195,8 @@ export const ARCHETYPES = [
     label: "relator de orçamento",
     bloc: "fbr",
     office: "rapporteur",
-    /* O relator e o cargo mais tecnico e o mais caro: ele nao entrega votos, ele entrega
-       TEXTO — e por isso o alcance dele e baixo e o preco nao. */
+    /* O relator e o cargo mais técnico e o mais caro: ele não entrega votos, ele entrega
+       TEXTO — e por isso o alcance dele e baixo e o preço não. */
     economicShift: 2,
     libertyShift: -2,
     venalityShift: 0.02,
@@ -210,8 +210,8 @@ export const ARCHETYPES = [
     office: "leader",
     economicShift: -6,
     libertyShift: 5,
-    /* Menos venal que o proprio bloco: quem lidera a esquerda lidera por disciplina, e
-       disciplina nao se compra sem custo publico. */
+    /* Menos venal que o próprio bloco: quem lidera a esquerda lidera por disciplina, e
+       disciplina não se compra sem custo público. */
     venalityShift: -0.06,
     reachMin: 0.55,
     reachMax: 0.8,
@@ -365,16 +365,16 @@ export const CAST_SCHEMA = {
  * @property {number} successionDrag - o quanto quem quer 2030 resiste a mais
  * @property {number} courtDrag - o quanto quem quer o tribunal desconta da verba
  * @property {number} stateLift - o quanto a emenda vale a mais para quem quer o governo do
- * proprio estado
+ * próprio estado
  * @property {number} seatStreet - o quanto a rua desloca o que o candidato a reeleicao
- * reconhece, por ponto cheio de aprovacao
+ * reconhece, por ponto cheio de aprovação
  * @property {number} cabinetLift - o quanto a pasta atendida vale para quem quer ministerio
  */
 
-/* E A TRAICAO PESA MAIS QUE O FAVOR, pela mesma razao que a satisfacao de SONDA
-   cai tres vezes mais rapido do que sobe: e o achado mais consistente que existe
-   sobre reciprocidade, e sem ele o jogo ensinaria que da para queimar alguem e
-   comprar de volta pelo mesmo preco. */
+/* E A TRAIÇÃO PESA MAIS QUE O FAVOR, pela mesma razão que a satisfação de SONDA
+   cai três vezes mais rapido do que sobe: e o achado mais consistente que existe
+   sobre reciprocidade, e sem ele o jogo ensinaria que da para queimar alguém e
+   comprar de volta pelo mesmo preço. */
 
 /** @type {CastParameters} */
 export const CAST = {
@@ -385,13 +385,13 @@ export const CAST = {
   /* Quem quer o Planalto em 2030 ganha com o governo fraco, e por isso resiste a mais mesmo
      pago. */
   successionDrag: 0.35,
-  /* ⚠ AS QUATRO SAO PRIMEIRO CHUTE, como as faixas dos arquetipos — o que nao e chute e a
-     RAZAO entre elas, e ela e a mesma em todas: nenhuma chega ao peso da emenda cheia, entao
-     nenhuma ambicao decide uma votacao sozinha. */
+  /* ⚠ AS QUATRO SÃO PRIMEIRO CHUTE, como as faixas dos arquétipos — o que não e chute e a
+     RAZÃO entre elas, e ela e a mesma em todas: nenhuma chega ao peso da emenda cheia, então
+     nenhuma ambição decide uma votação sozinha. */
   /* Dinheiro move pouco quem quer uma toga: metade do que move os outros. Falta o outro lado
-     — a indicacao —, e ele nao existe no jogo ainda. */
+     — a indicação —, e ele não existe no jogo ainda. */
   courtDrag: 0.5,
-  /* Quem vai disputar o proprio estado precisa levar obra para casa, e emenda e o unico
+  /* Quem vai disputar o próprio estado precisa levar obra para casa, e emenda e o único
      dinheiro do jogo que ele carimba. */
   stateLift: 0.3,
   /* Governo popular compra mais barato o baixo clero, e governo impopular o perde: com 60% de

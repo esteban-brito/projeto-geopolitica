@@ -1,4 +1,4 @@
-/* LASTRO — receita do PIB, despesa obrigatoria, teto e gatilhos de aperto.
+/* LASTRO — receita do PIB, despesa obrigatória, teto e gatilhos de aperto.
    O motor tratava bloqueio (teto) e contingenciamento (meta) como o mesmo conceito. */
 
 const MONTHS_PER_YEAR = 12;
@@ -14,8 +14,8 @@ const MONTHS_PER_YEAR = 12;
  * @property {number} spent - discricionario efetivamente empenhado NO MES
  * @property {number} [inflation] - ao ano; e ela que indexa a despesa obrigatoria
  * @property {number} [elapsed] - quanto do exercicio ja correu, de 0 a 1; a banda
- * do arcabouco e ANUAL e o turno e mensal, e sem isto o piso dela entrega o
- * crescimento de um ano inteiro no primeiro mes
+ * do arcabouço e ANUAL e o turno e mensal, e sem isto o piso dela entrega o
+ * crescimento de um ano inteiro no primeiro mês
  * @property {FiscalParameters} parameters
  * @property {number} [revenueFactor] - o quanto a maquina de arrecadar rende hoje
  * @property {number} [mandatoryFactor] - o quanto o servico publico encarece a obrigatoria
@@ -46,7 +46,7 @@ export function revenueOf(gdp, taxLoad) {
 }
 
 /**
- * A inflacao indexa a despesa obrigatoria: sua ausencia distorcia o modelo.
+ * A inflação indexa a despesa obrigatória: sua ausência distorcia o modelo.
  * @param {number} mandatory
  * @param {number} annualRate crescimento REAL ao ano
  * @param {number} [inflation] ao ano, em fracao; zero reproduz o comportamento antigo
@@ -77,7 +77,7 @@ export function ceilingOf(
   inflation = 0,
   elapsed = 1,
 ) {
-  /* Ancora zerada geraria Infinity sem lancar erro, gerando teto absurdo na tela. */
+  /* Ancora zerada geraria Infinity sem lançar erro, gerando teto absurdo na tela. */
   if (anchorRevenue <= 0) return anchorExpense;
   const growth = (revenue - anchorRevenue) / anchorRevenue;
 
@@ -97,7 +97,7 @@ export function ceilingOf(
 export function step(input) {
   const { parameters } = input;
 
-  /* A base e devolvida separada: a simulacao pegou divida explodindo em 1066% do PIB. */
+  /* A base e devolvida separada: a simulação pegou dívida explodindo em 1066% do PIB. */
   const revenueBase = revenueOf(input.gdp, parameters.taxLoad);
   const mandatoryBase = growMandatory(
     input.mandatory,
@@ -124,13 +124,13 @@ export function step(input) {
 
   const blocked = room < 0;
 
-  /* Medido em 48 meses: programas no maximo fechavam o mes com o mesmo saldo de nao fazer nada. */
+  /* Medido em 48 meses: programas no máximo fechavam o mês com o mesmo saldo de não fazer nada. */
   const allowance = blocked ? 0 : Math.max(0, room);
 
   const balance = cash / MONTHS_PER_YEAR - input.spent;
   const debt = input.debt - balance;
 
-  /* O resultado primario do mes e anualizado para comparacao direta com a meta da LDO. */
+  /* O resultado primário do mês e anualizado para comparação direta com a meta da LDO. */
   const primary = input.gdp > 0 ? (balance * MONTHS_PER_YEAR) / input.gdp : 0;
   const primaryFloor = parameters.primaryTarget - parameters.primaryBand;
 

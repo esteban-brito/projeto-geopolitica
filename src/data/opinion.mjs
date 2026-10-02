@@ -1,7 +1,7 @@
-/* OS SEGMENTOS E OS PARAMETROS DA OPINIAO — o que SONDA consome.
-   ⚠ AS FATIAS DE POPULACAO SAO REAIS E DATADAS, como o resto do catalogo ; os PESOS de cada
-   segmento sao julgamento declarado, porque nenhuma fonte publica mede "quanto a classe C
-   liga para seguranca". */
+/* OS SEGMENTOS E OS PARÂMETROS DA OPINIÃO — o que SONDA consome.
+   ⚠ AS FATIAS DE POPULACAO SÃO REAIS E DATADAS, como o resto do catálogo ; os PESOS de cada
+   segmento são julgamento declarado, porque nenhuma fonte publica mede "quanto a classe C
+   liga para segurança". */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -31,9 +31,9 @@ export const SEGMENT_SCHEMA = {
  * @property {number} economy - peso da economia em geral (PIB e juro)
  */
 
-/* AS FATIAS SAO AS FAIXAS DE RENDA DOMICILIAR do IBGE, arredondadas: a base da piramide
+/* AS FATIAS SÃO AS FAIXAS DE RENDA DOMICILIAR do IBGE, arredondadas: a base da piramide
    brasileira e larga, e e por isso que agradar a classe D/E é a jogada de maior retorno
-   eleitoral — e a mais cara, porque ela depende de servico publico e de comida barata ao
+   eleitoral — e a mais cara, porque ela depende de servico público e de comida barata ao
    mesmo tempo. */
 /** @type {ReadonlyArray<Segment>} */
 export const SEGMENTS = [
@@ -41,17 +41,17 @@ export const SEGMENTS = [
     id: "baixa",
     label: "Baixa renda",
     share: 0.42,
-    /* ⚠ A LUA DE MEL E REAL, e a primeira calibragem a esqueceu: com 38 de satisfacao a
-       partida abria com 14% de otimo/bom, que e numero de governo em fim de mandato ruim — e
-       nao de governo que acabou de ganhar a eleicao. */
+    /* ⚠ A LUA DE MEL E REAL, e a primeira calibragem a esqueceu: com 38 de satisfação a
+       partida abria com 14% de otimo/bom, que e número de governo em fim de mandato ruim — e
+       não de governo que acabou de ganhar a eleição. */
     initial: 70,
-    /* Quem gasta 30% da renda com comida sente a inflacao antes de qualquer estatistica sair. */
+    /* Quem gasta 30% da renda com comida sente a inflação antes de qualquer estatística sair. */
     prices: 0.4,
     jobs: 0.25,
     services: 0.25,
     safety: 0.1,
-    /* PIB NAO SIGNIFICA NADA para quem nao tem aplicacao nem emprego formal, e zero aqui e
-       afirmacao: crescimento que nao vira emprego nao e sentido. */
+    /* PIB NÃO SIGNIFICA NADA para quem não tem aplicação nem emprego formal, e zero aqui e
+       afirmação: crescimento que não vira emprego não e sentido. */
     economy: 0,
   },
   {
@@ -70,13 +70,13 @@ export const SEGMENTS = [
     id: "alta",
     label: "Alta renda",
     share: 0.2,
-    /* A MENOS SATISFEITA NA ABERTURA, e nao por gosto: ela paga a maior parte do imposto e
-       usa a menor parte do servico publico, entao a conta que ela faz do governo comeca mais
+    /* A MENOS SATISFEITA NA ABERTURA, e não por gosto: ela paga a maior parte do imposto e
+       usa a menor parte do servico público, então a conta que ela faz do governo começa mais
        fria — inclusive na lua de mel. */
     initial: 52,
     prices: 0.15,
     jobs: 0.1,
-    /* SERVICO PUBLICO QUASE NAO CONTA: quem tem plano de saude e escola privada nao sente a
+    /* SERVICO PÚBLICO QUASE NÃO CONTA: quem tem plano de saude e escola privada não sente a
        fila. */
     services: 0.05,
     safety: 0.3,
@@ -121,17 +121,17 @@ export const OPINION_SCHEMA = {
 
 /** @type {OpinionParameters} */
 export const OPINION = {
-  /* ⚠ O PRESIDENTE NAO SABE O MES EM QUE ESTA. */
+  /* ⚠ O PRESIDENTE NÃO SABE O MÊS EM QUE ESTA. */
   release: 2,
 
-  /* OPINIAO NAO PULA. */
+  /* OPINIÃO NÃO PULA. */
   inertia: 0.88,
-  /* ⚠ E ELA CAI TRES VEZES MAIS RAPIDO DO QUE SOBE, que e o achado empirico mais consistente
-     da literatura de opiniao publica e a razao de governos gastarem tanto para evitar uma
+  /* ⚠ E ELA CAI TRÊS VEZES MAIS RAPIDO DO QUE SOBE, que e o achado empírico mais consistente
+     da literatura de opinião publica e a razão de governos gastarem tanto para evitar uma
      crise pequena. */
   fallSpeed: 3,
 
-  /* Com a carestia neutra em 6% ao ano, o pais de abertura — inflacao em 4,2% e desemprego em
+  /* Com a carestia neutra em 6% ao ano, o país de abertura — inflação em 4,2% e desemprego em
      6,8% — dava nota alta em tudo, e a rua ficava satisfeita com o governo por herança. */
   priceAnchor: 0.035,
   priceSpan: 0.06,
@@ -140,16 +140,16 @@ export const OPINION = {
   growthAnchor: 0.025,
   growthSpan: 0.04,
 
-  /* PROMESSA QUEBRADA TAMBEM CHEGA A RUA, e nao so ao Congresso. */
+  /* PROMESSA QUEBRADA TAMBÉM CHEGA A RUA, e não só ao Congresso. */
   broken: 12,
 
-  /* Sem ele a aprovacao subia de 35 para 54 em 48 meses com o jogador nao fazendo NADA —
-     porque o pais de abertura tem inflacao e desemprego dentro das ancoras, e a conta parava
+  /* Sem ele a aprovação subia de 35 para 54 em 48 meses com o jogador não fazendo NADA —
+     porque o país de abertura tem inflação e desemprego dentro das âncoras, e a conta parava
      de pé sozinha. */
   wearRate: 0.25,
 
-  /* ⚠ A 1,35 a primeira captura mostrou 23/19/58, e o meio de 19% denunciava o numero:
-     pesquisa nenhuma tem tao pouca gente em cima do muro. */
+  /* ⚠ A 1,35 a primeira captura mostrou 23/19/58, e o meio de 19% denunciava o número:
+     pesquisa nenhuma tem tão pouca gente em cima do muro. */
   goodSlope: 1.8,
   poorSlope: 1.8,
 };

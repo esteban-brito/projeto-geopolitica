@@ -1,4 +1,4 @@
-/* O RELATORIO DO MES — o que o turno FEZ. */
+/* O RELATÓRIO DO MÊS — o que o turno FEZ. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed } from "../shared/format.mjs";
@@ -12,9 +12,9 @@ import { monthLabel } from "../../state/state.mjs";
  */
 
 /**
- * Recusar em silencio e comecar uma partida nova sem dizer nada seria a pior forma de tratar
- * o caso: o jogador veria o mandato dele desaparecer e nao teria como saber se foi defeito,
- * engano dele ou decisao do jogo.
+ * Recusar em silêncio e começar uma partida nova sem dizer nada seria a pior forma de tratar
+ * o caso: o jogador veria o mandato dele desaparecer e não teria como saber se foi defeito,
+ * engano dele ou decisão do jogo.
  *
  * @param {object} input
  * @param {string} input.title
@@ -29,16 +29,16 @@ export function noticeHtml({ title, body }) {
 }
 
 /**
- * O RELATORIO COMO PAINEL DA MESA, e nao mais como cartao que interrompe.
+ * O RELATÓRIO COMO PAINEL DA MESA, e não mais como cartão que interrompe.
  *
  * @param {Parameters<typeof reportHtml>[0] | null} input o ultimo mes, ou nada
  * @returns {string}
  */
 export function reportPanelHtml(input) {
-  /* PARTIDA NOVA — E TAMBEM PARTIDA RETOMADA. */
+  /* PARTIDA NOVA — E TAMBÉM PARTIDA RETOMADA. */
   if (!input) {
     return (
-      /* Aqui o peso e o DISCRETO: nenhum mes resolvido nao e um problema a resolver, e uma
+      /* Aqui o peso e o DISCRETO: nenhum mês resolvido não e um problema a resolver, e uma
          chamada centrada daria a um fato o peso de um defeito. */
       `<div class="report empty empty--quiet">` +
       `<p class="empty__note">${escapeHtml(UI.report.waiting)}</p>` +
@@ -50,7 +50,7 @@ export function reportPanelHtml(input) {
 }
 
 /**
- * O QUE O MES DEIXOU.
+ * O QUE O MÊS DEIXOU.
  *
  * @param {object} input
  * @param {Report} input.report
@@ -65,8 +65,8 @@ function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore
   const { tally } = report;
   const bill = report.agenda.proposal;
 
-  /* O TITULO E O MES, e ele nao carrega mais `id` de dialogo: o relatorio deixou de ser um
-     cartao que interrompe e virou painel da Mesa. */
+  /* O TÍTULO E O MÊS, e ele não carrega mais `id` de diálogo: o relatório deixou de ser um
+     cartão que interrompe e virou painel da Mesa. */
   const head =
     `<h2 class="report__month">` +
     `${escapeHtml(monthLabel(report.month))}</h2>` +
@@ -88,7 +88,7 @@ function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore
 }
 
 /**
- * O PLACAR, e o confronto com a previsao.
+ * O PLACAR, e o confronto com a previsão.
  *
  * @param {object} input
  * @param {Report} input.report
@@ -98,7 +98,7 @@ function reportHtml({ report, quorum, parties, areas, loyaltyBefore, indexBefore
 function verdictBlock({ report, quorum, tally }) {
   if (!report.agenda.proposal) return "";
 
-  /* A CANETA NAO TEM PLACAR, e nao e um placar de zero: ela nao foi a plenario. */
+  /* A CANETA NÃO TEM PLACAR, e não e um placar de zero: ela não foi a plenario. */
   if (!tally) {
     return (
       `<p class="report__verdict" data-passed="true">${escapeHtml(UI.report.decreed)}</p>` +
@@ -141,8 +141,8 @@ function benchBlock({ report, tally, parties, loyaltyBefore }) {
         `<th scope="row">${escapeHtml(party.label)}</th>` +
         `<td data-numeric>${percent(report.paid[party.id] ?? 0)}</td>` +
         `<td data-numeric>${line ? seats(line.votes) : "—"}</td>` +
-        /* A DERIVA E O DIA, e ela merece coluna propria: uma bancada que entregou menos do
-           que prometia nao e a mesma coisa que uma que entregou pouco. */
+        /* A DERIVA E O DIA, e ela merece coluna própria: uma bancada que entregou menos do
+           que prometia não e a mesma coisa que uma que entregou pouco. */
         `<td data-numeric>${line ? signed(line.drift) : "—"}</td>` +
         `<td class="report__mood" data-direction="${moved > 0 ? "up" : moved < 0 ? "down" : "flat"}"` +
         ` data-numeric>${seats(after)} <small>${signed(moved, 1)}</small></td>` +
@@ -176,7 +176,7 @@ function moneyBlock(report) {
   const paid = report.paidCost + report.allocatedTotal;
   const cut = demand > 0 ? 1 - paid / demand : 0;
 
-  /* O CORTE SO APARECE QUANDO EXISTE. */
+  /* O CORTE SÓ APARECE QUANDO EXISTE. */
   const shortfall =
     cut > 1e-9
       ? `<p class="report__line" data-alert="true">${escapeHtml(UI.report.cut)} ` +
@@ -199,7 +199,7 @@ function moneyBlock(report) {
 }
 
 /**
- * O PAIS: os indices que a alocacao e as aprovacoes moveram.
+ * O PAÍS: os índices que a alocação e as aprovações moveram.
  *
  * @param {object} input
  * @param {Report} input.report

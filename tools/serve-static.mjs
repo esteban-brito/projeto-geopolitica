@@ -1,6 +1,6 @@
-/* Servidor estatico de desenvolvimento.
-   Existe porque modulos ES nao carregam por `file://` — o jogo publicado continua sendo
-   arquivos estaticos servidos por qualquer coisa. */
+/* Servidor estático de desenvolvimento.
+   Existe porque módulos ES não carregam por `file://` — o jogo publicado continua sendo
+   arquivos estáticos servidos por qualquer coisa. */
 
 import { networkInterfaces } from "node:os";
 import { createServer } from "node:http";
@@ -27,7 +27,7 @@ const server = createServer(async (req, res) => {
   const relative = normalize(decodeURIComponent(url.pathname)).replace(/^([/\\])+/, "");
   const path = join(ROOT, relative === "" ? "index.html" : relative);
 
-  /* Nenhuma requisicao sai da raiz do projeto, mesmo com `..` no caminho. */
+  /* Nenhuma requisição sai da raiz do projeto, mesmo com `..` no caminho. */
   if (!path.startsWith(ROOT)) {
     res.writeHead(403).end("fora da raiz");
     return;
@@ -45,8 +45,8 @@ const server = createServer(async (req, res) => {
   }
 });
 
-/* ⚠ SO A MAQUINA ALCANCA, por padrao. `HOST=0.0.0.0` abre para a rede local — e o unico jeito de
-   o telefone dele abrir o jogo —, e nesse caso a saida imprime o endereco de cada placa. */
+/* ⚠ SÓ A MÁQUINA ALCANCA, por padrão. `HOST=0.0.0.0` abre para a rede local — e o único jeito de
+   o telefone dele abrir o jogo —, e nesse caso a saída imprime o endereço de cada placa. */
 const HOST = process.env["HOST"] ?? "127.0.0.1";
 
 server.listen(PORT, HOST, () => {

@@ -1,5 +1,5 @@
 /* Leitura do projeto, e o contrato que todas as guardas seguem.
-   TODA GUARDA E UMA FUNCAO PURA: recebe um mapa `caminho -> conteudo` e devolve uma lista de
+   TODA GUARDA E UMA FUNÇÃO PURA: recebe um mapa `caminho -> conteudo` e devolve uma lista de
    achados. */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -7,8 +7,8 @@ import { join, relative, resolve, sep } from "node:path";
 
 export const ROOT = resolve(import.meta.dirname, "..", "..");
 
-/* ⚠ `.claude` E CONFIGURACAO DO AGENTE, e nao fonte do jogo: o script que sobe o servidor no
-   inicio da sessao mora la, e sem esta linha ele entrava na contagem de arquivos do portao e
+/* ⚠ `.claude` E CONFIGURAÇÃO DO AGENTE, e não fonte do jogo: o script que sobe o servidor no
+   início da sessão mora la, e sem esta linha ele entrava na contagem de arquivos do portão e
    era lintado com os globais do jogo. */
 const IGNORED = new Set([
   "node_modules",
@@ -28,8 +28,8 @@ const IGNORED = new Set([
  */
 
 /**
- * As sete guardas repetiam as mesmas tres linhas para montar a lista — e repeticao entre
- * pecas que fazem a mesma coisa e como um padrao comeca a divergir, que e literalmente o que
+ * As sete guardas repetiam as mesmas três linhas para montar a lista — e repetição entre
+ * peças que fazem a mesma coisa e como um padrão começa a divergir, que e literalmente o que
  * este projeto guarda.
  *
  * @param {string} guard
@@ -78,12 +78,12 @@ export function isGuardSource(path) {
 }
 
 /**
- * Prosa que descreve um defeito nao e o defeito.
+ * Prosa que descreve um defeito não e o defeito.
  *
  * @param {string} source
  * @returns {string}
  */
-/* Esta aqui apagava o comentario INTEIRO, quebras e tudo, e o preco era invisivel porque
+/* Esta aqui apagava o comentário INTEIRO, quebras e tudo, e o preço era invisível porque
    quase nenhuma guarda reporta linha. */
 export function stripJsComments(source) {
   const blank = (/** @type {string} */ text) => text.replace(/[^\n]/g, " ");
@@ -93,8 +93,8 @@ export function stripJsComments(source) {
 }
 
 /**
- * Isto nao e detalhe: as folhas deste projeto explicam cada decisao em prosa, e um casador
- * que leia comentario acusa defeito onde ha justificativa.
+ * Isto não e detalhe: as folhas deste projeto explicam cada decisão em prosa, e um casador
+ * que leia comentário acusa defeito onde há justificativa.
  *
  * @param {string} css
  * @returns {string}

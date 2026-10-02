@@ -1,4 +1,4 @@
-/* Estado imutavel com reducer puro. */
+/* Estado imutável com reducer puro. */
 
 import { CATALOG } from "../data/catalog.mjs";
 import { waivedOf } from "../data/programs.mjs";
@@ -122,7 +122,7 @@ import { streamFrom } from "./random.mjs";
  * @property {Streams} streams
  */
 
-/* Recusa versao diferente para nao converter save sem inversa util. */
+/* Recusa versão diferente para não converter save sem inversa útil. */
 export const SCHEMA_VERSION = 21;
 
 /* Posse em 1º de janeiro: valor 2 iniciava em marco com 46 dos 48 meses. */
@@ -168,7 +168,7 @@ export function createState(
     macro: economyOpening(fiscal.initialGdp, macro),
     fiscal: {
       mandatory: fiscal.initialMandatory,
-      /* Receita liquida da renuncia: bruta gerava crescimento negativo no ano 1. */
+      /* Receita líquida da renúncia: bruta gerava crescimento negativo no ano 1. */
       anchorRevenue:
         fiscal.initialGdp * fiscal.taxLoad -
         waivedOf(

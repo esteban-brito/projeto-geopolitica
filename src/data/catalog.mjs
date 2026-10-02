@@ -1,4 +1,4 @@
-/* O CATALOGO — o indice de todo dado do projeto. */
+/* O CATÁLOGO — o índice de todo dado do projeto. */
 
 import { AGENCY, AGENCY_SCHEMA, DRIVES, DRIVE_SCHEMA } from "./agency.mjs";
 import { AREAS, AREA_SCHEMA } from "./areas.mjs";
@@ -55,8 +55,8 @@ export const CATALOG = {
 };
 
 /**
- * Ele NAO roda sozinho na carga do modulo, e isso e decisao: validacao que dispara no
- * `import` quebra a tela no navegador por causa de um numero errado no catalogo, e o lugar de
+ * Ele NÃO roda sozinho na carga do módulo, e isso e decisão: validação que dispara no
+ * `import` quebra a tela no navegador por causa de um número errado no catálogo, e o lugar de
  * descobrir isso e a suite, antes de publicar.
  *
  * @returns {string[]} lista vazia quando o catalogo esta integro
@@ -87,26 +87,26 @@ export function catalogViolations() {
     ...violations(PRESSURE_SCHEMA, PRESSURE, "pressure"),
     /* REFERENCIA CRUZADA, que nenhum esquema sozinho consegue ver. */
     ...danglingAreas(),
-    /* PROGRAMA APONTANDO PARA AREA QUE NAO EXISTE tem sintoma pior que o da lei: a lei some
-       da tela, o programa some do ORCAMENTO — e o pais passa a gastar menos do que gasta sem
-       ninguem ter decidido nada. */
+    /* PROGRAMA APONTANDO PARA ÁREA QUE NÃO EXISTE tem sintoma pior que o da lei: a lei some
+       da tela, o programa some do ORCAMENTO — e o país passa a gastar menos do que gasta sem
+       ninguém ter decidido nada. */
     ...danglingPrograms(),
-    /* GUARDA DESCONHECIDA e o defeito silencioso deste catalogo: quem compoe a pauta cai no
-       padrao "lei" para uma guarda que ninguem reconhece, e um piso constitucional digitado
+    /* GUARDA DESCONHECIDA e o defeito silencioso deste catálogo: quem compõe a pauta cai no
+       padrão "lei" para uma guarda que ninguém reconhece, e um piso constitucional digitado
        errado passaria a custar 257 votos em vez de 308. */
     ...unknownGuards(),
     /* As bancadas somam cadeiras e o regime declara quantas existem; se os dois divergirem,
-       toda maioria do jogo passa a ser medida contra um plenario que nao existe — e nenhuma
+       toda maioria do jogo passa a ser medida contra um plenario que não existe — e nenhuma
        tela denuncia, porque cada lado esta certo sozinho. */
     ...chamberMismatch(),
     /* A POPULACAO TEM DE FECHAR. */
     ...populationMismatch(),
-    /* ARQUETIPO APONTANDO PARA BLOCO QUE NAO EXISTE some do elenco em silencio: a pessoa
-       simplesmente nao nasce, e o sintoma e um Congresso com um lider a menos — que e um
-       estado de jogo valido e portanto indistinguivel de um defeito. */
+    /* ARQUÉTIPO APONTANDO PARA BLOCO QUE NÃO EXISTE some do elenco em silêncio: a pessoa
+       simplesmente não nasce, e o sintoma e um Congresso com um líder a menos — que e um
+       estado de jogo valido e portanto indistinguível de um defeito. */
     ...danglingArchetypes(),
-    /* NOME REPETIDO NO VOCABULARIO nao quebra nada e estreita o elenco em silencio: duas
-       entradas iguais viram uma, e o gerador passa a ter menos combinacoes do que o catalogo
+    /* NOME REPETIDO NO VOCABULÁRIO não quebra nada e estreita o elenco em silêncio: duas
+       entradas iguais viram uma, e o gerador passa a ter menos combinações do que o catálogo
        aparenta oferecer. */
     ...duplicateNames(),
   ];

@@ -1,19 +1,19 @@
 /* SUITE · O FLUXO DE ALEATORIEDADE.
-   Duas famílias de propriedade, e as duas importam por razoes diferentes: DETERMINISMO —
-   mesma semente, mesma sequencia. */
+   Duas famílias de propriedade, e as duas importam por razões diferentes: DETERMINISMO —
+   mesma semente, mesma sequência. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
 import fc from "fast-check";
-/* A SEMENTE PADRAO VEM DO ESTADO, e nao repetida a mao: ela e a mesma que abre uma partida
-   sem semente escolhida, e dois lugares com o mesmo numero e um lugar que vai divergir na
-   primeira vez que alguem trocar o padrao. */
+/* A SEMENTE PADRÃO VEM DO ESTADO, e não repetida a mão: ela e a mesma que abre uma partida
+   sem semente escolhida, e dois lugares com o mesmo número e um lugar que vai divergir na
+   primeira vez que alguém trocar o padrão. */
 import { DEFAULT_SEED } from "../../src/state/state.mjs";
 import { hash, integer, mix, streamFrom, take, unit } from "../../src/state/random.mjs";
 
 const anySeed = fc.integer({ min: 0, max: 4294967295 });
 
-test("mesma semente e mesmo indice dao sempre o mesmo numero", () => {
+test("mesma semente e mesmo índice dão sempre o mesmo número", () => {
   fc.assert(
     fc.property(anySeed, fc.nat({ max: 100000 }), (seed, index) => {
       assert.equal(mix(seed, index), mix(seed, index));
@@ -21,21 +21,21 @@ test("mesma semente e mesmo indice dao sempre o mesmo numero", () => {
   );
 });
 
-test("o fluxo e funcao pura de (semente, saques): reconstruir da o mesmo futuro", () => {
+test("o fluxo e função pura de (semente, saques): reconstruir da o mesmo futuro", () => {
   /* A propriedade que justifica o gerador CONTADO. */
   fc.assert(
     fc.property(anySeed, fc.nat({ max: 500 }), (seed, steps) => {
       let live = streamFrom(seed, "congress");
       for (let i = 0; i < steps; i++) live = unit(live).stream;
 
-      /* Reconstruido a partir so dos dois numeros que o save guarda. */
+      /* Reconstruído a partir só dos dois números que o save guarda. */
       const restored = { seed: live.seed, draws: live.draws };
       assert.equal(unit(live).value, unit(restored).value);
     }),
   );
 });
 
-test("sacar NAO muta o fluxo recebido", () => {
+test("sacar NÃO muta o fluxo recebido", () => {
   fc.assert(
     fc.property(anySeed, seed => {
       const before = streamFrom(seed, "events");
@@ -48,7 +48,7 @@ test("sacar NAO muta o fluxo recebido", () => {
   );
 });
 
-test("cada saque avanca o contador em exatamente um", () => {
+test("cada saque avança o contador em exatamente um", () => {
   fc.assert(
     fc.property(anySeed, seed => {
       const start = streamFrom(seed, "events");
@@ -59,15 +59,15 @@ test("cada saque avanca o contador em exatamente um", () => {
   );
 });
 
-test("os fluxos dos dois motores sao INDEPENDENTES", () => {
-  /* A razao de existirem dois. */
+test("os fluxos dos dois motores são INDEPENDENTES", () => {
+  /* A razão de existirem dois. */
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 1, max: 50 }), (seed, extra) => {
       const congress = streamFrom(seed, "congress");
       const events = streamFrom(seed, "events");
       assert.notEqual(congress.seed, events.seed, "os dois fluxos nasceram iguais");
 
-      /* Sacar do fluxo de eventos nao pode mexer no de votacao. */
+      /* Sacar do fluxo de eventos não pode mexer no de votação. */
       let drained = events;
       for (let i = 0; i < extra; i++) drained = unit(drained).stream;
       assert.equal(unit(congress).value, unit(streamFrom(seed, "congress")).value);
@@ -75,7 +75,7 @@ test("os fluxos dos dois motores sao INDEPENDENTES", () => {
   );
 });
 
-test("sementes diferentes dao partidas diferentes", () => {
+test("sementes diferentes dão partidas diferentes", () => {
   fc.assert(
     fc.property(anySeed, anySeed, (a, b) => {
       fc.pre(a !== b);
@@ -86,7 +86,7 @@ test("sementes diferentes dao partidas diferentes", () => {
   );
 });
 
-test("take equivale a encadear a mao, e existe para nao errar o encadeamento", () => {
+test("take equivale a encadear a mão, e existe para não errar o encadeamento", () => {
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 0, max: 30 }), (seed, count) => {
       const start = streamFrom(seed, "congress");
@@ -108,7 +108,7 @@ test("take equivale a encadear a mao, e existe para nao errar o encadeamento", (
 
 test("o valor fica em [0, 1) e NUNCA chega a 1", () => {
   /* O 1,0 estoura toda faixa escrita como `[min, max)`, e o defeito aparece uma vez em quatro
-     bilhoes — ou seja, nunca em teste e sempre em producao. */
+     bilhoes — ou seja, nunca em teste e sempre em produção. */
   fc.assert(
     fc.property(anySeed, fc.nat({ max: 2000 }), (seed, steps) => {
       const values = take({ seed, draws: steps }, 40).values;
@@ -119,7 +119,7 @@ test("o valor fica em [0, 1) e NUNCA chega a 1", () => {
   );
 });
 
-test("o inteiro respeita a faixa, com os dois extremos incluidos", () => {
+test("o inteiro respeita a faixa, com os dois extremos incluídos", () => {
   fc.assert(
     fc.property(
       anySeed,
@@ -141,16 +141,16 @@ test("o inteiro respeita a faixa, com os dois extremos incluidos", () => {
   );
 });
 
-test("faixa invertida nao produz numero fora dela", () => {
+test("faixa invertida não produz número fora dela", () => {
   const drawn = integer(streamFrom(7, "congress"), 10, 3);
   assert.equal(drawn.value, 10);
 });
 
 /* ── QUALIDADE DO MISTURADOR ──────────────────────────────────────────────── Determinismo
-   sozinho nao prova nada sobre a mistura: um gerador que devolvesse 0,5 sempre passaria em
+   sozinho não prova nada sobre a mistura: um gerador que devolvesse 0,5 sempre passaria em
    todas as provas acima. */
 
-test("a distribuicao e plana: a media de dez mil saques fica perto de 0,5", () => {
+test("a distribuição e plana: a media de dez mil saques fica perto de 0,5", () => {
   const { values } = take(streamFrom(DEFAULT_SEED, "congress"), 10000);
   const mean = values.reduce((a, b) => a + b, 0) / values.length;
   assert.ok(Math.abs(mean - 0.5) < 0.02, `media ${mean.toFixed(4)}`);
@@ -163,8 +163,8 @@ test("a distribuicao e plana: a media de dez mil saques fica perto de 0,5", () =
   }
 });
 
-test("indices VIZINHOS nao produzem numeros vizinhos", () => {
-  /* Sem ela, o saque da bancada 1 e o da bancada 2 andariam juntos e a dissidencia inteira
+test("índices VIZINHOS não produzem números vizinhos", () => {
+  /* Sem ela, o saque da bancada 1 e o da bancada 2 andariam juntos e a dissidência inteira
      ficaria correlacionada — todas as bancadas traindo no mesmo turno, o que parece evento e
      e defeito. */
   const seed = 987654321;

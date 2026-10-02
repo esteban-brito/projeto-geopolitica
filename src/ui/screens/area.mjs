@@ -1,4 +1,4 @@
-/* Tela de area ministerial: indicadores, alavancas orcamentarias, leis e projecoes. */
+/* Tela de área ministerial: indicadores, alavancas orçamentárias, leis e projeções. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { attr, money, num, seats, signed, sparkline } from "../shared/format.mjs";
@@ -60,7 +60,7 @@ export function programReadHtml({ program, level, band = bandOf(program) }) {
 function programHtml({ program, level, band = bandOf(program) }) {
   const rite = riteFor({ ...program, ...band }, level);
 
-  /* Sem data-guard no controle de verba a severidade da vinculacao sumia no trilho. */
+  /* Sem data-guard no controle de verba a severidade da vinculação sumia no trilho. */
   return (
     `<div class="dial" data-rite="${escapeHtml(rite)}" ` +
     `data-guard="${escapeHtml(program.guard)}" ` +
@@ -169,7 +169,7 @@ function strandHtml(strand, side, nameOf) {
     who:
       strand.kind === "decay" ? UI.chain.decay : nameOf(side === "into" ? strand.from : strand.to),
     aside,
-    /* Uma casa decimal imprimia 0,0 ao lado de rendimento de 0,03 por bilhao, negando a legenda. */
+    /* Uma casa decimal imprimia 0,0 ao lado de rendimento de 0,03 por bilhão, negando a legenda. */
     value: strand.unit === "factor" ? `${signed(strand.now * 100, 1)}%` : signed(strand.now, 2),
   });
 }
@@ -359,7 +359,7 @@ export function poolHtml({ room, committed, spent }) {
  * @returns {string}
  */
 export function outlookHtml({ value, projected, idle, ahead, aheadIdle, horizon }) {
-  /* Passo mensal de 0,40 imprimia 61 -> 61 escondendo a decisao; o horizonte mostra o acumulado. */
+  /* Passo mensal de 0,40 imprimia 61 -> 61 escondendo a decisão; o horizonte mostra o acumulado. */
   if (ahead === undefined || horizon === undefined) {
     return (
       `${seats(value)} → ${seats(projected)}` +
@@ -371,7 +371,7 @@ export function outlookHtml({ value, projected, idle, ahead, aheadIdle, horizon 
     `${seats(value)} → ${seats(ahead)}` +
     `<small>${escapeHtml(UI.area.inMonths(horizon))} · ` +
     `${escapeHtml(UI.area.holding)}: ${seats(aheadIdle ?? value)}</small>` +
-    /* Projetar com votacao inventaria voto nao ocorrido; a projecao congela o plenario. */
+    /* Projetar com votação inventaria voto não ocorrido; a projeção congela o plenario. */
     `<small>${escapeHtml(UI.area.frozen)}</small>`
   );
 }

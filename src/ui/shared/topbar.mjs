@@ -1,22 +1,22 @@
-/* O VIDRO DA BARRA — quem veste as tres pecas, e quem move o botao.
+/* O VIDRO DA BARRA — quem veste as três peças, e quem move o botão.
 
-   ⭐ AS TRES SAO A MESMA PECA. A lente, a quina, a aresta e a sombra saem daqui para as
-   tres; o que muda entre elas e a tinta do corpo — vidro escuro nos dois blocos, branco no
-   botao. Mexer numa parada muda as tres, e e isso que as mantem uma familia. */
+   ⭐ AS TRÊS SÃO A MESMA PEÇA. A lente, a quina, a aresta e a sombra saem daqui para as
+   três; o que muda entre elas e a tinta do corpo — vidro escuro nos dois blocos, branco no
+   botão. Mexer numa parada muda as três, e e isso que as mantem uma família. */
 
 import { FRESNEL, LEVELS, RECIPE, glaze, scaleRamp, skin } from "./glass.mjs";
 import { between, spring } from "./spring.mjs";
 
-/* A lente, a quina, o desfoque, a tinta e a aresta sao a ESCALA de `glass.mjs` (ciclo 28): a
-   barra so escolhe o NIVEL de densidade. */
+/* A lente, a quina, o desfoque, a tinta e a aresta são a ESCALA de `glass.mjs` (ciclo 28): a
+   barra só escolhe o NÍVEL de densidade. */
 
 /** @typedef {import("./glass.mjs").Ramp} Ramp */
 
 const EDGE = FRESNEL;
 
-/* ⛔ O UNICO CORPO PROPRIO DO JOGO, e ele nao e um segundo material: e a peca CHEIA do sistema,
-   o botao primario. BRANCO TRANSLUCIDO SOBRE PRETO NAO DA BRANCO — DA CINZA: em 0,50 o corpo
-   compunha `rgb(116,118,127)` e o botao ficava escuro. */
+/* ⛔ O ÚNICO CORPO PRÓPRIO DO JOGO, e ele não e um segundo material: e a peça CHEIA do sistema,
+   o botão primário. BRANCO TRANSLÚCIDO SOBRE PRETO NÃO DA BRANCO — DA CINZA: em 0,50 o corpo
+   compunha `rgb(116,118,127)` e o botão ficava escuro. */
 /** @type {Ramp} */
 const WHITE_BODY = [
   [0, 0.93],
@@ -30,16 +30,16 @@ const HOVER_EDGE = scaleRamp(EDGE, 1.9);
    de um quinto e a letra deixa de ler como condensada e passa a ler como espremida. */
 const FLOOR = 0.78;
 
-/* A sangria lateral da peca, para descontar da largura util. */
+/* A sangria lateral da peça, para descontar da largura útil. */
 const PAD = 10;
 
 /**
- * AS DUAS LINHAS DO BLOCO SAO JUSTIFICADAS AO MESMO EIXO — o M do mes e o M da nota saem do
- * mesmo pixel, e o ultimo digito do ano e a ultima letra da nota terminam no mesmo.
+ * AS DUAS LINHAS DO BLOCO SÃO JUSTIFICADAS AO MESMO EIXO — o M do mês e o M da nota saem do
+ * mesmo pixel, e o último dígito do ano e a última letra da nota terminam no mesmo.
  *
- * ⛔ TRES DEFEITOS TRAVARAM ISTO, e nenhum aparece na caixa: a medida tem de ser do DESENHO
- * e nao da caixa, que carrega o rastreio de sobra; a largura tem de ser travada antes da
- * escala, senao a margem da primeira linha estreita o bloco e a segunda mede outra coisa; e
+ * ⛔ TRÊS DEFEITOS TRAVARAM ISTO, e nenhum aparece na caixa: a medida tem de ser do DESENHO
+ * e não da caixa, que carrega o rastreio de sobra; a largura tem de ser travada antes da
+ * escala, senão a margem da primeira linha estreita o bloco e a segunda mede outra coisa; e
  * nada pode ser medido antes de a fonte chegar.
  *
  * @param {HTMLElement} block
@@ -54,28 +54,28 @@ function justify(block, squeeze) {
   for (const line of lines) {
     if (!(line instanceof HTMLElement)) continue;
     line.style.cssText = "";
-    /* Fora de um flex a regua vertical perde a largura, e ela e item de flex. */
+    /* Fora de um flex a régua vertical perde a largura, e ela e item de flex. */
     line.style.display = "inline-flex";
     line.style.transformOrigin = "left center";
-    /* ⛔ LIMPAR O ESTILO INLINE DEVOLVE A REGRA DA FOLHA, e ela ja comprime: sem zerar aqui, a
+    /* ⛔ LIMPAR O ESTILO INLINE DEVOLVE A REGRA DA FOLHA, e ela já comprime: sem zerar aqui, a
        largura "natural" vinha com a escala dentro e a conta a aplicava duas vezes — a nota
-       saia 8% mais larga que a peca e encostava na aresta. */
+       saia 8% mais larga que a peça e encostava na aresta. */
     line.style.transform = "none";
   }
-  /* ⛔ A MEDIDA E DA CAIXA E NAO DA TINTA, e a diferenca custou uma rodada: quem a escala
-     transforma e a caixa, e ela carrega os vaos do flex que a tinta nao ve. Medindo a tinta,
-     a nota fechava 141 onde a conta previa 132,5 e encostava na aresta da peca.
-     ⚠ E so pode ser assim porque o rastreio daqui e 0,01em: com os 0,16em dos rotulos a
-     caixa levaria um vao inteiro depois da ultima letra. */
+  /* ⛔ A MEDIDA E DA CAIXA E NÃO DA TINTA, e a diferença custou uma rodada: quem a escala
+     transforma e a caixa, e ela carrega os vãos do flex que a tinta não vê. Medindo a tinta,
+     a nota fechava 141 onde a conta previa 132,5 e encostava na aresta da peça.
+     ⚠ E só pode ser assim porque o rastreio daqui e 0,01em: com os 0,16em dos rótulos a
+     caixa levaria um vão inteiro depois da última letra. */
   const inked = lines.map(line =>
     line instanceof HTMLElement ? line.getBoundingClientRect().width : 0,
   );
-  /* ⭐ O ALVO E A LARGURA DA PECA, e nao a linha de cima. A peca e fixa — dimensionada no
-     conteudo mais largo do catalogo —, entao nada aqui muda de tamanho de um mes para o
-     outro: e isso que faz a barra ler como MENU e nao como tela que se refaz.
-     ⚠ E NINGUEM ESTICA: a compressao tem teto no valor escolhido por ele e piso em 0,78,
+  /* ⭐ O ALVO E A LARGURA DA PEÇA, e não a linha de cima. A peça e fixa — dimensionada no
+     conteúdo mais largo do catálogo —, então nada aqui muda de tamanho de um mês para o
+     outro: e isso que faz a barra ler como MENU e não como tela que se refaz.
+     ⚠ E NINGUÉM ESTICA: a compressão tem teto no valor escolhido por ele e piso em 0,78,
      abaixo do qual a letra deixa de ser condensada e passa a ser esmagada. A linha que sobra
-     curta fica centrada, e nao puxada ate a aresta. */
+     curta fica centrada, e não puxada até a aresta. */
   const target = block.clientWidth - PAD * 2;
   if (target <= 0) return;
   for (const [i, line] of lines.entries()) {
@@ -88,22 +88,22 @@ function justify(block, squeeze) {
   }
 }
 
-/* ⛔ A FONTE PODE CHEGAR DEPOIS DA PRIMEIRA MEDIDA, e ai a largura fica PRESA na metrica
+/* ⛔ A FONTE PODE CHEGAR DEPOIS DA PRIMEIRA MEDIDA, e ai a largura fica PRESA na métrica
    errada: `justify` grava `width` em pixel e o `said` recusa a segunda passada, porque texto e
-   compressao continuam os mesmos. Medido com a fonte atrasada em 300ms: as duas linhas do bloco
-   do mes vazam 5px, e nada as devolve.
-   ⛔ E `document.fonts.status` NAO SERVE DE MARCADOR: ele diz "loaded" enquanto ninguem pediu
-   face nenhuma, entao a barra que pinta antes do primeiro pedido gravava "loaded" com a metrica
+   compressão continuam os mesmos. Medido com a fonte atrasada em 300ms: as duas linhas do bloco
+   do mês vazam 5px, e nada as devolve.
+   ⛔ E `document.fonts.status` NÃO SERVE DE MARCADOR: ele diz "loaded" enquanto ninguém pediu
+   face nenhuma, então a barra que pinta antes do primeiro pedido gravava "loaded" com a métrica
    de reserva e recusava a remedida. Medido: verde abrindo no Gabinete, 5px de vazamento abrindo
    no Congresso, no mesmo commit. */
 let awaited = false;
 
-/* Ele so vira true DEPOIS de `fonts.ready` resolver, e e a unica coisa que o `said` aceita
+/* Ele só vira true DEPOIS de `fonts.ready` resolver, e e a única coisa que o `said` aceita
    como prova de que a medida vale. */
 let settled = false;
 
 /**
- * VESTE A BARRA — a cada pintura, porque toda peca aqui depende do proprio tamanho.
+ * VESTE A BARRA — a cada pintura, porque toda peça aqui depende do próprio tamanho.
  *
  * @param {ParentNode} root
  * @returns {void}
@@ -156,8 +156,8 @@ export function dressTopbar(root) {
   }
 }
 
-/* ⚠ PRESSIONAR E SOLTAR NAO USAM A MESMA MOLA: descer e INFORMACAO — imediato e sem quique —,
-   e voltar e MATERIA. E a gota volta tremendo mais que o toque de proposito: a viagem e de
+/* ⚠ PRESSIONAR E SOLTAR NÃO USAM A MESMA MOLA: descer e INFORMACAO — imediato e sem quique —,
+   e voltar e MATÉRIA. E a gota volta tremendo mais que o toque de propósito: a viagem e de
    6,6px na largura, e a 0,55 ela ultrapassa 1,4px; com o quique do toque daria 0,45px, e a
    gota voltaria por decreto. */
 const SQUASH = { duration: 0.14, bounce: 0 };
@@ -166,9 +166,9 @@ const SQUASH_X = 1.045;
 const SQUASH_Y = 0.915;
 
 /**
- * O GESTO DO BOTAO — a mola por quadro, e o liquido que conserva volume.
+ * O GESTO DO BOTÃO — a mola por quadro, e o líquido que conserva volume.
  *
- * ⛔ O QUADRO SO TOCA TRANSFORMACAO E OPACIDADE, e e a regra inteira: as duas o compositor
+ * ⛔ O QUADRO SÓ TOCA TRANSFORMAÇÃO E OPACIDADE, e e a regra inteira: as duas o compositor
  * resolve sozinho. Reescrever a sombra ou regerar a imagem da aresta por quadro REPINTA, e
  * foi isso que travava na volta.
  *
@@ -197,28 +197,28 @@ export function bindAdvance(button) {
 
   let lift = 0;
   let liquid = 0;
-  /* ⚠ O ROTULO TEM MOLA PROPRIA, mais lenta: dentro de um fluido o que esta suspenso nao
-     acompanha a parede do copo, e e o atraso que faz a materia parecer viscosa. */
+  /* ⚠ O RÓTULO TEM MOLA PRÓPRIA, mais lenta: dentro de um fluido o que esta suspenso não
+     acompanha a parede do copo, e e o atraso que faz a matéria parecer viscosa. */
   let drag = 0;
 
   const draw = () => {
     floatBox.style.transform = `translate3d(0,${between(0, -3, lift).toFixed(3)}px,0)`;
-    /* A DEFORMACAO CONSERVA VOLUME: o que a largura ganha, a altura perde. */
+    /* A DEFORMAÇÃO CONSERVA VOLUME: o que a largura ganha, a altura perde. */
     button.style.transform =
       `scale3d(${between(1, SQUASH_X, liquid).toFixed(4)},` +
       `${between(1, SQUASH_Y, liquid).toFixed(4)},1)`;
     high.style.opacity = lift.toFixed(3);
     warm.style.opacity = between(0, 0.8, lift).toFixed(3);
 
-    /* O rotulo resiste a deformacao — ele nao e o fluido, esta DENTRO dele. E ele nao responde
-       ao hover: quem entra na peca e a leitura, e a palavra que ja estava la nao se mexe para
-       dar lugar a uma que ainda nao existe. */
+    /* O rótulo resiste a deformação — ele não e o fluido, esta DENTRO dele. E ele não responde
+       ao hover: quem entra na peça e a leitura, e a palavra que já estava la não se mexe para
+       dar lugar a uma que ainda não existe. */
     stack.style.transform =
       `scale3d(${between(1, 1 / SQUASH_X, drag).toFixed(4)},` +
       `${between(1, 1 / SQUASH_Y, drag).toFixed(4)},1)`;
 
-    /* ⚠ O ATRASO E DO MOVIMENTO e nao de um relogio: a leitura so comeca depois de um quinto
-       do caminho, entao ela acompanha a interrupcao. E a rampa tem ombro — com um corte reto
+    /* ⚠ O ATRASO E DO MOVIMENTO e não de um relógio: a leitura só começa depois de um quinto
+       do caminho, então ela acompanha a interrupção. E a rampa tem ombro — com um corte reto
        ela sumia de uma vez enquanto todo o resto continuava suavizando. */
     const raw = Math.max(0, Math.min(1, (lift - 0.2) / 0.8));
     const t = raw * raw * (3 - 2 * raw);
@@ -246,9 +246,9 @@ export function bindAdvance(button) {
     { duration: 0.42, bounce: 0.2 },
   );
 
-  /* ⛔ BOTAO MORTO NAO SE ACENDE: quem escuta e o envoltorio, que nunca desabilita, entao
-     no fim do mandato a peca erguia, clareava e abria a leitura de um botao que nao faz
-     nada. A saida continua livre, que e o que impede o hover preso. */
+  /* ⛔ BOTÃO MORTO NÃO SE ACENDE: quem escuta e o envoltório, que nunca desabilita, então
+     no fim do mandato a peça erguia, clareava e abria a leitura de um botão que não faz
+     nada. A saída continua livre, que e o que impede o hover preso. */
   const enter = () => {
     if (button.disabled) return;
     open(1);
@@ -259,11 +259,11 @@ export function bindAdvance(button) {
     trail(0, POUR);
   };
 
-  /* ⛔ QUEM ESCUTA E O ENVOLTORIO E NAO O BOTAO, e o defeito so aparece depois do clique:
-     botao desabilitado nao recebe evento de ponteiro, e ele desabilita durante a virada do
-     mes. Se o mouse saisse nesse intervalo o `pointerleave` nunca chegava, e a peca ficava
-     presa no hover — erguida, com a leitura acesa, ate o proximo gesto.
-     ⭐ E o envoltorio nunca desabilita: ele fica parado e so escuta. */
+  /* ⛔ QUEM ESCUTA E O ENVOLTÓRIO E NÃO O BOTÃO, e o defeito só aparece depois do clique:
+     botão desabilitado não recebe evento de ponteiro, e ele desabilita durante a virada do
+     mês. Se o mouse saísse nesse intervalo o `pointerleave` nunca chegava, e a peça ficava
+     presa no hover — erguida, com a leitura acesa, até o próximo gesto.
+     ⭐ E o envoltório nunca desabilita: ele fica parado e só escuta. */
   const wrap = /** @type {HTMLElement} */ (env ?? button);
   wrap.addEventListener("pointerenter", enter);
   wrap.addEventListener("pointerleave", leave);

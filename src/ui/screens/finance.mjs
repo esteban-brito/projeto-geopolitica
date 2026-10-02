@@ -1,7 +1,7 @@
-/* FINANCAS — o placar do pais.
-   View PURA, e a unica tela sem um controle.
-   ── A AUSENCIA DE CONTROLE E A INFORMACAO PRINCIPAL Toda outra tela deste jogo pede uma
-   decisao. */
+/* FINANÇAS — o placar do país.
+   View PURA, e a única tela sem um controle.
+   ── A AUSÊNCIA DE CONTROLE E A INFORMACAO PRINCIPAL Toda outra tela deste jogo pede uma
+   decisão. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, num, percent, seats, signed, sparkline } from "../shared/format.mjs";
@@ -15,7 +15,7 @@ import { UI } from "../strings.mjs";
  */
 
 /**
- * UMA LINHA DO PAINEL: rotulo, valor, e a curva do que ele vem fazendo.
+ * UMA LINHA DO PAINEL: rótulo, valor, e a curva do que ele vem fazendo.
  *
  * @param {object} input
  * @param {string} input.label
@@ -32,8 +32,8 @@ function lineHtml({ label, value, past, range, note, tone }) {
     `<span class="ledger__label">${escapeHtml(label)}</span>` +
     `<span class="ledger__value" data-numeric>${value}</span>` +
     `<span class="ledger__spark" aria-hidden="true">` +
-    /* Medido num mandato passivo de 20 meses, em unidades de traco (de 20 possiveis): o PIB
-       sobe de 2,8 para 6,0 so por olhar mais para tras. */
+    /* Medido num mandato passivo de 20 meses, em unidades de traço (de 20 possíveis): o PIB
+       sobe de 2,8 para 6,0 só por olhar mais para trás. */
     (past && past.length > 1 ? sparkline([...past], WINDOW, range) : "") +
     `</span>` +
     `<span class="ledger__note">${note ? escapeHtml(note) : ""}</span>` +
@@ -59,7 +59,7 @@ function blockHtml({ title, rows }) {
 /**
  * O painel inteiro.
  *
- * ⚠ ELE MOSTRA O MES CORRENTE COMO ELE VAI FECHAR, e nao a foto do mes passado.
+ * ⚠ ELE MOSTRA O MÊS CORRENTE COMO ELE VAI FECHAR, e não a foto do mês passado.
  * @param {object} input
  * @param {import("../../domain/economy/index.mjs").MacroState} input.macro
  * @param {import("../../domain/budget/index.mjs").BudgetOutput} input.budget
@@ -89,7 +89,7 @@ export function financeHtml({
   index,
   history,
 }) {
-  /* DUAS CONTAS SAO FEITAS AQUI, e as duas sao divisoes de uma linha. */
+  /* DUAS CONTAS SÃO FEITAS AQUI, e as duas são divisões de uma linha. */
   const perCapita = macro.population > 0 ? macro.gdp / macro.population : 0;
   const gap = macro.potential > 0 ? (macro.gdp - macro.potential) / macro.potential : 0;
 
@@ -100,13 +100,13 @@ export function financeHtml({
         label: UI.finance.gdp,
         value: money(macro.gdp),
         past: series.gdp,
-        /* O PIB NOMINAL NAO TEM TETO NATURAL, entao a regua dele e a propria largada. */
+        /* O PIB NOMINAL NÃO TEM TETO NATURAL, então a régua dele e a própria largada. */
         range: gdpRange(series.gdp, macro.gdp),
         note: UI.finance.perYear,
       }) +
       lineHtml({
         label: UI.finance.perCapita,
-        /* Em mil reais: bilhoes divididos por milhoes dao mil por pessoa. */
+        /* Em mil reais: bilhoes divididos por milhoes dão mil por pessoa. */
         value: `R$ ${num(perCapita)} mil`,
       }) +
       lineHtml({
@@ -115,7 +115,7 @@ export function financeHtml({
         past: series.inflation,
         range: SCALE.inflation,
         note: `${UI.finance.target} ${percent(target, 0)}`,
-        /* O alvo e o CENTRO da banda e nao um teto, e por isso quem julga e o teto dela. */
+        /* O alvo e o CENTRO da banda e não um teto, e por isso quem julga e o teto dela. */
         tone: macro.inflation > ceiling ? "down" : "flat",
       }) +
       lineHtml({
@@ -124,7 +124,7 @@ export function financeHtml({
         past: series.rate,
         range: SCALE.rate,
         note: UI.finance.central,
-        /* Selic de 12% com inflacao de 10% e dinheiro barato; a mesma Selic com inflacao de
+        /* Selic de 12% com inflação de 10% e dinheiro barato; a mesma Selic com inflação de
            3% e um freio. */
         tone: macro.rate - macro.inflation > 0.07 ? "down" : "flat",
       }) +
@@ -163,10 +163,10 @@ export function financeHtml({
         value: money(budget.allowance),
         note: UI.finance.perYear,
       }) +
-      /* O PRIMARIO NAO GANHA ESCADA, e a ausencia e escolha.
-         ⛔ E O SINAL NAO E O TOM, e essa era a mentira: um primario de +0,1% do PIB com meta
+      /* O PRIMÁRIO NÃO GANHA ESCADA, e a ausência e escolha.
+         ⛔ E O SINAL NÃO E O TOM, e essa era a mentira: um primário de +0,1% do PIB com meta
          de +0,5% e uma meta PERDIDA, e a linha o pintava de verde por ser positivo. Quem
-         julga e o LASTRO, que compara com a banda da LDO — a tela nao refaz a conta. */
+         julga e o LASTRO, que compara com a banda da LDO — a tela não refaz a conta. */
       lineHtml({
         label: UI.finance.primary,
         value: money(budget.balance),
@@ -176,7 +176,7 @@ export function financeHtml({
           (budget.atRisk ? ` · ${UI.finance.missing}` : ""),
         tone: budget.atRisk ? "down" : "up",
       }) +
-      /* O SERVICO DA DIVIDA FICA NESTE BLOCO E FORA DO PRIMARIO, exatamente como o arcabouco
+      /* O SERVICO DA DÍVIDA FICA NESTE BLOCO E FORA DO PRIMÁRIO, exatamente como o arcabouço
          o trata. */
       lineHtml({
         label: UI.finance.interest,
@@ -228,11 +228,11 @@ export function financeHtml({
         const past = history[area.id] ?? [];
 
         /* O resultado era uma coluna que punha 24 meses de Educacao, 12 de Defesa, 6 de
-           Industria e 3 de Saude uma embaixo da outra, todas sem rotulo, lidas como
-           comparaveis. */
+           Indústria e 3 de Saude uma embaixo da outra, todas sem rótulo, lidas como
+           comparáveis. */
         const moved = trendOf(value, past);
 
-        /* O TOM LE O NUMERO ARREDONDADO, e nao o valor cheio. */
+        /* O TOM LÊ O NÚMERO ARREDONDADO, e não o valor cheio. */
         const shift = Number((moved?.delta ?? 0).toFixed(0));
 
         return lineHtml({

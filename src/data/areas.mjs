@@ -1,25 +1,25 @@
-/* AS AREAS DE GOVERNO — onde o presidente pensa que esta mexendo. */
+/* AS ÁREAS DE GOVERNO — onde o presidente pensa que esta mexendo. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
-/* Tres canais, e nenhuma area usa dois — se usasse, o efeito de uma alocacao ficaria
-   impossivel de atribuir, que e exatamente o defeito que o motor de propagacao existe para
-   nao ter. */
+/* Três canais, e nenhuma área usa dois — se usasse, o efeito de uma alocação ficaria
+   impossível de atribuir, que e exatamente o defeito que o motor de propagação existe para
+   não ter. */
 const CHANNELS = /** @type {const} */ (["revenue", "mandatory", "capacity"]);
 
 /** @type {Schema} */
 export const AREA_SCHEMA = {
   id: { kind: "id" },
   label: { kind: "text" },
-  /* ⚠ O NOME CURTO E OPCIONAL, e a ausencia significa "use o `label`" — declarar os oito
-     poria sete copias do nome cheio no catalogo, e a copia so doi quando alguem renomeia uma
-     das duas. E o precedente e `sigla`, que existe em `parties` pela mesma razao medida. */
+  /* ⚠ O NOME CURTO E OPCIONAL, e a ausência significa "use o `label`" — declarar os oito
+     poria sete cópias do nome cheio no catálogo, e a copia só dói quando alguém renomeia uma
+     das duas. E o precedente e `sigla`, que existe em `parties` pela mesma razão medida. */
   short: { kind: "text", optional: true },
   index: { kind: "text" },
   initial: { kind: "number", min: 0, max: 100 },
-  /* FRACAO DO ESTOQUE POR MES, e nao pontos por mes — ver a prosa de `decay`
-     abaixo e o cabecalho da MALHA. O teto de 1 e a natureza da coisa: uma area que
-     perdesse mais que 100% do que tem por mes nao e uma area, e um erro de digitacao. */
+  /* FRAÇÃO DO ESTOQUE POR MÊS, e não pontos por mês — ver a prosa de `decay`
+     abaixo e o cabeçalho da MALHA. O teto de 1 e a natureza da coisa: uma área que
+     perdesse mais que 100% do que tem por mês não e uma área, e um erro de digitacao. */
   decay: { kind: "number", min: 0, max: 1 },
   yield: { kind: "number", min: 0, max: 5 },
   feeds: { kind: "text", values: CHANNELS },
@@ -31,7 +31,7 @@ export const AREA_SCHEMA = {
 export const NEUTRAL = 50;
 
 /**
- * ⚠ ELE MUDOU DE NATUREZA EM, e a mudanca e o achado 31 — o defeito mais fundo ja medido
+ * ⚠ ELE MUDOU DE NATUREZA EM, e a mudança e o achado 31 — o defeito mais fundo já medido
  * aqui.
  *
  * @typedef {object} Area
@@ -47,16 +47,16 @@ export const NEUTRAL = 50;
  * @property {number} lag - meses ate o efeito chegar ao canal
  */
 
-/* O SINAL DE `force` CARREGA A DIRECAO, e sem ele o molde nao fecharia. */
+/* O SINAL DE `force` CARREGA A DIREÇÃO, e sem ele o molde não fecharia. */
 
-/* A MEIA-VIDA DE CADA AREA sem verba nenhuma, em meses, e ela sai da identidade do `decay`
-   acima e nao de uma escolha: industria 12 · seguranca 16 · previdencia 40 · treasury 55 ·
+/* A MEIA-VIDA DE CADA ÁREA sem verba nenhuma, em meses, e ela sai da identidade do `decay`
+   acima e não de uma escolha: indústria 12 · segurança 16 · previdência 40 · treasury 55 ·
    agricultura 61 · saude 63 · defesa 78 · educacao 79.
 
    ⚠ SEIS DAS OITO LEVAM MAIS QUE UM MANDATO, que tem 48. E uma tese sobre o Brasil —
-   defensavel — e ninguem a escolheu: ela e consequencia aritmetica do custo por ponto de
-   cada area. E SEGURANCA e a alavanca populista com a razao explicita: R$ 0,07 bi por
-   ponto, o mais barato do catalogo. */
+   defensável — e ninguém a escolheu: ela e consequência aritmética do custo por ponto de
+   cada área. E SEGURANÇA e a alavanca populista com a razão explicita: R$ 0,07 bi por
+   ponto, o mais barato do catálogo. */
 /** @type {ReadonlyArray<Area>} */
 export const AREAS = [
   {
@@ -75,8 +75,8 @@ export const AREAS = [
     label: "Agricultura",
     index: "safra",
     initial: 63,
-    /* DECAI DEVAGAR: a lavoura nao desaba no mes em que o crédito atrasa, e o ciclo dela e
-       anual e nao mensal. */
+    /* DECAI DEVAGAR: a lavoura não desaba no mês em que o crédito atrasa, e o ciclo dela e
+       anual e não mensal. */
     decay: 0.01138,
     yield: 0.3054,
     feeds: "revenue",
@@ -86,8 +86,8 @@ export const AREAS = [
   {
     id: "industry",
     label: "Indústria e Infraestrutura",
-    /* ⚠ A UNICA DAS OITO QUE NAO CABE: medido, o nome cheio pede 164px no rail de 109 e 202px
-       na faixa de 117, e as duas cortavam com reticencia em "Indústria e Infr…". */
+    /* ⚠ A ÚNICA DAS OITO QUE NÃO CABE: medido, o nome cheio pede 164px no rail de 109 e 202px
+       na faixa de 117, e as duas cortavam com reticência em "Indústria e Infr…". */
     short: "Indústria",
     index: "capacidade",
     initial: 48,
@@ -95,7 +95,7 @@ export const AREAS = [
     yield: 0.358,
     feeds: "revenue",
     force: 0.12,
-    /* Obra nao vira PIB no mes em que o cheque e assinado. */
+    /* Obra não vira PIB no mês em que o cheque e assinado. */
     lag: 6,
   },
   {
@@ -129,8 +129,8 @@ export const AREAS = [
     yield: 0.0356,
     feeds: "capacity",
     force: 6,
-    /* O numero e o desenho: um mandato tem 48 meses, entao investir em educacao no segundo
-       ano so paga no quarto, e investir no terceiro nao paga nunca — para quem investiu. */
+    /* O número e o desenho: um mandato tem 48 meses, então investir em educacao no segundo
+       ano só paga no quarto, e investir no terceiro não paga nunca — para quem investiu. */
     lag: 24,
   },
   {
@@ -144,8 +144,8 @@ export const AREAS = [
     force: -0.14,
     lag: 3,
   },
-  /* Prontidao alta encarece a obrigatoria — 78% do orcamento militar e folha e inativo, e
-     cuidar dela cobra, exatamente como a previdencia. */
+  /* Prontidão alta encarece a obrigatória — 78% do orcamento militar e folha e inativo, e
+     cuidar dela cobra, exatamente como a previdência. */
   {
     id: "defense",
     label: "Defesa",

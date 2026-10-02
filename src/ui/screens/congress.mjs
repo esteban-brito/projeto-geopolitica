@@ -1,4 +1,4 @@
-/* A MESA — onde o mes se resolve. */
+/* A MESA — onde o mês se resolve. */
 
 import { escapeHtml } from "../shared/html.mjs";
 import { money, percent, seats, signed, sparkline } from "../shared/format.mjs";
@@ -28,7 +28,7 @@ function moodOf(loyalty, thresholds) {
 }
 
 /**
- * A FAIXA DE INDICES — seis medidores, uma linha, sempre visivel.
+ * A FAIXA DE ÍNDICES — seis medidores, uma linha, sempre visível.
  *
  * @param {object} input
  * @param {ReadonlyArray<Area>} input.areas
@@ -44,26 +44,26 @@ export function capacityStripHtml({ areas, index, history, alerts = {} }) {
       const past = history[area.id] ?? [];
       /* A JANELA E A MESMA DAS OUTRAS DUAS TELAS — ver `WINDOW`, em `shared/trend.mjs`. */
       const trend = sparkline(past.length > 0 ? past : [value], WINDOW);
-      /* ⚠ A DIRECAO E A MESMA CONTA DAS OUTRAS DUAS TELAS, e ela vem de `trendOf`: refeita
-         aqui, a faisca discordaria da seta do Gabinete no primeiro mes de empate. */
+      /* ⚠ A DIREÇÃO E A MESMA CONTA DAS OUTRAS DUAS TELAS, e ela vem de `trendOf`: refeita
+         aqui, a faísca discordaria da seta do Gabinete no primeiro mês de empate. */
       const moved = trendOf(value, past);
       const direction = moved === null ? null : directionOf(value, value - moved.delta, 1);
-      /* ⚠ A COR E DO MANDATO, E NAO DO NIVEL: Seguranca abre em 38, e pintar por nivel
-         acusaria o jogador de um pais que ele herdou. `alertsOf` mede a distancia de
-         `initial`, e e o MESMO motor que o rail le. */
+      /* ⚠ A COR E DO MANDATO, E NÃO DO NÍVEL: Segurança abre em 38, e pintar por nível
+         acusaria o jogador de um país que ele herdou. `alertsOf` mede a distancia de
+         `initial`, e e o MESMO motor que o rail lê. */
       const alert = alerts[area.id];
 
       return (
         `<button class="capacity" type="button" data-section="${escapeHtml(area.id)}"` +
         (alert ? ` data-alert="${alert}"` : "") +
         `>` +
-        /* O NOME CURTO, pela mesma razao do rail: a faixa da 117px por area. */
+        /* O NOME CURTO, pela mesma razão do rail: a faixa da 117px por área. */
         `<span class="capacity__label">` +
         iconHtml(area.id, "capacity__icon") +
         `<span class="capacity__name">${escapeHtml(area.short ?? area.label)}</span>` +
         `</span>` +
-        /* ⚠ O QUE A AREA MEDE ESTAVA NO CATALOGO E NAO NA TELA: oito blocos diziam so o nome
-           do ministerio, e o numero grande ao lado nao dizia numero DE QUE. */
+        /* ⚠ O QUE A ÁREA MEDE ESTAVA NO CATÁLOGO E NÃO NA TELA: oito blocos diziam só o nome
+           do ministério, e o número grande ao lado não dizia número DE QUE. */
         `<span class="capacity__index">${escapeHtml(area.index)}</span>` +
         `<span class="capacity__read">` +
         `<span class="capacity__value" data-numeric>${seats(value)}</span>` +
@@ -78,16 +78,16 @@ export function capacityStripHtml({ areas, index, history, alerts = {} }) {
     .join("");
 
   /* Ela era `glass-support` porque morava solta no tabuleiro, ao lado da mesa; agora ela e um
-     BLOCO dentro da lamina do Congresso, e vidro dentro de vidro e o defeito que o sistema
+     BLOCO dentro da lâmina do Congresso, e vidro dentro de vidro e o defeito que o sistema
      visual inteiro existe para impedir. */
   return `<div class="capacities">${gauges}</div>`;
 }
 
-/* ONDE A MEMORIA DEIXA DE SER RUIDO. */
+/* ONDE A MEMÓRIA DEIXA DE SER RUÍDO. */
 const MEMORY_FLOOR = 0.08;
 
 /**
- * UMA PESSOA DA BANCADA — e ela e a peca que faltava na tela inteira.
+ * UMA PESSOA DA BANCADA — e ela e a peça que faltava na tela inteira.
  *
  * @param {object} input
  * @param {{ id: string, name: string, office: string, role: string, ambition: string,
@@ -107,8 +107,8 @@ function personHtml({ person, voting }) {
         ? { tone: "poor", text: UI.congress.memoryBad }
         : null;
 
-  /* A PASTA VEM NOMEADA DO MOTOR, e o generico e o que sobra quando ela nao veio: a tela nao
-     escolhe ministerio, ela imprime o que o sorteio deu. */
+  /* A PASTA VEM NOMEADA DO MOTOR, e o genérico e o que sobra quando ela não veio: a tela não
+     escolhe ministério, ela imprime o que o sorteio deu. */
   const ambition = person.portfolio
     ? `${UI.congress.cabinetOf} ${person.portfolio}`
     : labelOf(UI.congress.ambition, person.ambition);
@@ -171,18 +171,18 @@ function benchHtml({
 }) {
   const mood = moodOf(loyalty, thresholds);
 
-  /* O CONTROLE FICA FORA DA PARTE QUE SE REPINTA, e isso e requisito de gesto e nao de
-     organizacao: trocar o HTML de um `<input type=range>` no meio de um arrasto ARRANCA o
+  /* O CONTROLE FICA FORA DA PARTE QUE SE REPINTA, e isso e requisito de gesto e não de
+     organização: trocar o HTML de um `<input type=range>` no meio de um arrasto ARRANCA o
      elemento que o ponteiro esta segurando, e o arrasto morre no primeiro pixel. */
   return (
     `<div class="bench" data-mood="${mood}" data-party="${escapeHtml(party.id)}"` +
     (own ? ` data-own="true"` : "") +
     `>` +
-    /* "Partido Social Municipalista" numa coluna de 96px quebra em tres linhas e empurra a
+    /* "Partido Social Municipalista" numa coluna de 96px quebra em três linhas e empurra a
        linha inteira; a sigla cabe sempre e e como um Congresso de verdade se cita. */
     `<span class="bench__name"><b>${escapeHtml(party.sigla)}</b>` +
-    /* ⚠ A MARCA SUBSTITUI O NOME LONGO, e nao se soma a ele: a coluna tem 96px, e "Partido
-       Social Municipalista · o seu partido" nao cabe em duas linhas. */
+    /* ⚠ A MARCA SUBSTITUI O NOME LONGO, e não se soma a ele: a coluna tem 96px, e "Partido
+       Social Municipalista · o seu partido" não cabe em duas linhas. */
     `<small>${escapeHtml(own ? UI.mesa.ownParty : party.label)}</small></span>` +
     `<span class="bench__mood" data-numeric title="${escapeHtml(UI.mood[mood])}">` +
     `${seats(loyalty)}<i aria-hidden="true"></i></span>` +
@@ -192,7 +192,7 @@ function benchHtml({
     `<span class="bench__read" data-read="${escapeHtml(party.id)}">` +
     benchReadHtml({ party, funding, votes, seatPrice, voting }) +
     `</span>` +
-    /* ── A GENTE MORA DENTRO DO BLOCO, e a aninhagem e a mecanica ────────────── Voce paga o
+    /* ── A GENTE MORA DENTRO DO BLOCO, e a aninhagem e a mecânica ────────────── Voce paga o
        BLOCO; o bloco e feito de gente; a gente entrega diferente. */
     (people.length > 0
       ? `<div class="bench__people">` +
@@ -240,7 +240,7 @@ export function benchReadHtml({ party, funding, votes, seatPrice, voting }) {
  * @param {Record<string, number>} input.byBloc votos que cada BLOCO entrega, ja somados
  * @param {ReadonlyArray<{ id: string,
  * people: ReadonlyArray<Parameters<typeof personHtml>[0]["person"]> }>} input.blocs
- * os blocos com a GENTE dentro, montados pela camada de aplicacao
+ * os blocos com a GENTE dentro, montados pela camada de aplicação
  * @param {number} input.band
  * @param {number} input.seatPrice
  * @param {number} input.room o discricionario que cabe no mes
@@ -269,12 +269,12 @@ export function mesaHtml(input) {
       `<button class="mesa__swap" type="button" data-section="${escapeHtml(bill.area)}">` +
       `${escapeHtml(UI.mesa.swap)}</button>` +
       `</p>`
-    : /* O VAZIO USA A PECA DE VAZIO, e nao um paragrafo com outro nome. Ele era
-         `mesa__eyebrow` + `mesa__meta` — as mesmas classes do TITULO de uma pauta
-         real —, entao "Nada em pauta" saia com o peso de um assunto em discussao. O
-         Gabinete ja tinha a forma certa para isto: chamada centrada respondendo
+    : /* O VAZIO USA A PEÇA DE VAZIO, e não um parágrafo com outro nome. Ele era
+         `mesa__eyebrow` + `mesa__meta` — as mesmas classes do TÍTULO de uma pauta
+         real —, então "Nada em pauta" saia com o peso de um assunto em discussão. O
+         Gabinete já tinha a forma certa para isto: chamada centrada respondendo
          "isto esta quebrado?", e a prosa embaixo respondendo "por que?". Uma forma
-         so para os dois estados vazios do jogo. */
+         só para os dois estados vazios do jogo. */
       `<div class="empty">` +
       `<p class="empty__lead">${escapeHtml(UI.mesa.empty)}</p>` +
       `<p class="empty__note">${escapeHtml(UI.mesa.emptyHint)}</p>` +
@@ -299,8 +299,8 @@ export function mesaHtml(input) {
     )
     .join("");
 
-  /* O RESUMO E UMA REGIAO VIVA, e por uma razao de teclado: quem move o controle com as setas
-     nao ve o placar mudar de canto de olho — ele precisa ouvir. */
+  /* O RESUMO E UMA REGIÃO VIVA, e por uma razão de teclado: quem move o controle com as setas
+     não vê o placar mudar de canto de olho — ele precisa ouvir. */
   return (
     `<section class="mesa">` +
     `<div class="mesa__head">${head}</div>` +
@@ -311,7 +311,7 @@ export function mesaHtml(input) {
 }
 
 /**
- * A GAVETA — o que esta andando, e ha quanto tempo.
+ * A GAVETA — o que esta andando, e há quanto tempo.
  *
  * @param {ReadonlyArray<{ id: string, label: string, stage: string, waiting: number,
  * expires: number | null, instrument: string, quorum: number, saved: string | null }>} bills
@@ -336,9 +336,9 @@ export function passageHtml(bills, stages = []) {
             `<b data-numeric>${seats(bill.expires)}</b></span>`
           : "";
 
-      /* ⚠ O ESTAGIO ERA UMA PALAVRA, e uma palavra nao diz que ha um CAMINHO: o jogador lia
-         "na gaveta" sem saber que faltam dois passos nem quanto ja andou. Os degraus vem do
-         motor em ordem, entao um quarto estagio aparece aqui sozinho. */
+      /* ⚠ O ESTÁGIO ERA UMA PALAVRA, e uma palavra não diz que há um CAMINHO: o jogador lia
+         "na gaveta" sem saber que faltam dois passos nem quanto já andou. Os degraus vem do
+         motor em ordem, então um quarto estágio aparece aqui sozinho. */
       const at = stages.indexOf(bill.stage);
       const path = stages
         .map((step, index) => {
@@ -381,7 +381,7 @@ export function passageHtml(bills, stages = []) {
  * @param {string} input.passage
  */
 export function congressHtml({ gauges, mesa, report, passage }) {
-  /* A MESMA CASCA DE BLOCO DE FINANCAS E DA AREA, e nao uma terceira: legenda em versalete e
+  /* A MESMA CASCA DE BLOCO DE FINANÇAS E DA ÁREA, e não uma terceira: legenda em versalete e
      o corpo embaixo. */
   const block = (/** @type {string} */ legend, /** @type {string} */ body) =>
     `<section class="area__block">` +
@@ -415,7 +415,7 @@ export function congressHtml({ gauges, mesa, report, passage }) {
 export function tallyHtml({ bill, quorum, forecast, band, room, demand }) {
   const voting = quorum > 0 && forecast !== null;
 
-  /* SEM VOTACAO NAO HA PLACAR, e entao nao ha linha de placar. */
+  /* SEM VOTAÇÃO NÃO HÁ PLACAR, e então não há linha de placar. */
   /* ⚠ O PLACAR MUDOU DE TEMPO, E A TELA TEM DE DIZER ISSO. */
   const call = voting
     ? `<p class="tally__forecast" data-numeric>` +
@@ -425,13 +425,13 @@ export function tallyHtml({ bill, quorum, forecast, band, room, demand }) {
       `${escapeHtml(forecast.votes >= quorum ? UI.mesa.above : UI.mesa.below)}</p>` +
       `<p class="tally__when">${escapeHtml(UI.congress.willFile)} · ` +
       `${escapeHtml(UI.congress.forecastLater)}</p>`
-    : /* ⚠ SEM PAUTA, O PLACAR NAO REPETE O ESTADO VAZIO. Esta linha imprimia
+    : /* ⚠ SEM PAUTA, O PLACAR NÃO REPETE O ESTADO VAZIO. Esta linha imprimia
          `UI.mesa.emptyHint` — "escolha uma ação numa das áreas" —, que e
-         EXATAMENTE a frase que o vazio do bloco acima ja diz, e a captura do
+         EXATAMENTE a frase que o vazio do bloco acima já diz, e a captura do
          celular pegou as duas na mesma tela, com pesos diferentes. E o segundo
-         defeito desta familia no mesmo dia: quem nomeia uma ausencia e o lugar
-         onde ela acontece, e uma vez so.
-         O DECRETO CONTINUA SENDO DITO, porque ali ha pauta e nao ha votacao — e
+         defeito desta família no mesmo dia: quem nomeia uma ausência e o lugar
+         onde ela acontece, e uma vez só.
+         O DECRETO CONTINUA SENDO DITO, porque ali há pauta e não há votação — e
          "vale sem passar pelo plenario" e informacao que nenhum outro lugar da. */
       bill
       ? `<p class="tally__verdict">${escapeHtml(UI.mesa.decree)}</p>`

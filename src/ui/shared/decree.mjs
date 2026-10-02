@@ -1,15 +1,15 @@
-/* O DECRETO — o ato do mes, na pasta de despachos.
+/* O DECRETO — o ato do mês, na pasta de despachos.
 
-   ⭐ A FORMA E DO GOVERNO E A ESCRITA E DO JOGO, e a decisao foi dele. O que NAO se
-   simplifica e o que todo brasileiro reconhece: "entra em vigor na data de sua publicacao" e
-   reconhecimento, e nao juridiques.
+   ⭐ A FORMA E DO GOVERNO E A ESCRITA E DO JOGO, e a decisão foi dele. O que NÃO se
+   simplifica e o que todo brasileiro reconhece: "entra em vigor na data de sua publicação" e
+   reconhecimento, e não juridiquês.
 
-   ⛔ ELE NAO CALCULA NADA. A bolsa e o rateio chegam prontos de `settlement`, que e a mesma
-   funcao que o turno executa — a tela pergunta ao motor e nao refaz a conta.
+   ⛔ ELE NÃO CALCULA NADA. A bolsa e o rateio chegam prontos de `settlement`, que e a mesma
+   função que o turno executa — a tela pergunta ao motor e não refaz a conta.
 
-   ⭐ E AS OITO PASTAS SAO MARCADAS NO PROPRIO PAPEL: o Art. 2 diz "as pastas marcadas ficam
-   fora do corte", entao elas moram na frase que fala delas. Um presidente rabisca a minuta;
-   ele nao opera um painel ao lado dela. */
+   ⭐ E AS OITO PASTAS SÃO MARCADAS NO PRÓPRIO PAPEL: o Art. 2 diz "as pastas marcadas ficam
+   fora do corte", então elas moram na frase que fala delas. Um presidente rabisca a minuta;
+   ele não opera um painel ao lado dela. */
 
 import { escapeHtml } from "./html.mjs";
 import { money, percent } from "./format.mjs";
@@ -18,21 +18,21 @@ import { monthParts } from "../../state/state.mjs";
 import { protocolOf } from "./protocol.mjs";
 
 /* 📗 A conta do fecho, conferida contra o Decreto no 664/1992, que saiu como
-   "171o da Independencia e 104o da Republica". */
+   "171o da Independência e 104o da Republica". */
 const INDEPENDENCE = 1822;
 const REPUBLIC = 1889;
-/* 📗 O DECRETO E NUMERADO, e a serie e a real: o Planalto passou de 12.000 em 2024. O primeiro do
-   mandato leva o numero seguinte; e um rotulo do documento, e nao um valor do jogo. */
+/* 📗 O DECRETO E NUMERADO, e a série e a real: o Planalto passou de 12.000 em 2024. O primeiro do
+   mandato leva o número seguinte; e um rótulo do documento, e não um valor do jogo. */
 const FIRST_DECREE = 12_600;
 
-/* A rubrica: um traco so, desenhado para ser percorrido pelo `stroke-dashoffset`. */
+/* A rubrica: um traço só, desenhado para ser percorrido pelo `stroke-dashoffset`. */
 const SIGN_PATH =
   `<svg viewBox="0 0 420 46" preserveAspectRatio="none" aria-hidden="true">` +
   `<path d="M8 33 C 44 6, 66 41, 96 21 S 146 3, 174 27 C 196 45, 214 11, 242 25` +
   ` S 292 41, 318 19 C 336 5, 356 31, 380 23 L 412 27"/></svg>`;
 
 /**
- * O ATO DO MES.
+ * O ATO DO MÊS.
  *
  * @param {object} input
  * @param {number} input.room o discricionario que cabe no mes
@@ -55,10 +55,10 @@ export function decreeHtml({
   protect,
   moment = null,
 }) {
-  /* 📗 §5.1.3: mes em MINUSCULA, sem a sigla da UF e sem zero a esquerda no dia. O dia 5 e o
-     do fecho do mes anterior, e nao uma escolha. */
+  /* 📗 §5.1.3: mês em MINÚSCULA, sem a sigla da UF e sem zero a esquerda no dia. O dia 5 e o
+     do fecho do mês anterior, e não uma escolha. */
   /* ⛔ E O ANO SAI DO MOTOR: ele estava teclado aqui, no parecer e em `monthParts`, e o
-     catalogo ja o guardava em `REGIME.firstYear`. A tela pergunta. */
+     catálogo já o guardava em `REGIME.firstYear`. A tela pergunta. */
   const { year } = monthParts(month);
   const date = `5 de ${MONTHS[month % MONTHS.length]} de ${year}`;
   const number = (FIRST_DECREE + month).toLocaleString("pt-BR");
@@ -95,8 +95,8 @@ export function decreeHtml({
     `<p>${escapeHtml(UI.decree.preamble)}</p>` +
     `<p class="act__enacts">${escapeHtml(UI.decree.enacts)}</p>` +
     `<p>${escapeHtml(UI.decree.first(money(room), percent(ratio)))}</p>` +
-    /* ⚠ AS OITO ENTRAM NA FRASE QUE FALA DELAS, e nao num bloco embaixo: o artigo diz "as
-       pastas marcadas", e elas sao as marcas. */
+    /* ⚠ AS OITO ENTRAM NA FRASE QUE FALA DELAS, e não num bloco embaixo: o artigo diz "as
+       pastas marcadas", e elas são as marcas. */
     `<p>${escapeHtml(UI.decree.second)}<span class="act__folders">${folders}</span></p>` +
     `<p>${escapeHtml(UI.decree.third)}</p>` +
     `</div>` +
@@ -110,9 +110,9 @@ export function decreeHtml({
 }
 
 /**
- * ARMA A RUBRICA — o traco so corre se o comprimento dele for medido no DOM.
+ * ARMA A RUBRICA — o traço só corre se o comprimento dele for medido no DOM.
  *
- * ⚠ `getTotalLength` so existe depois de o `<path>` estar na pagina, e por isso ela e uma
+ * ⚠ `getTotalLength` só existe depois de o `<path>` estar na página, e por isso ela e uma
  * chamada a parte em vez de sair pronta do HTML.
  *
  * @param {Element | null} sheet

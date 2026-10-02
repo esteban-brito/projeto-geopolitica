@@ -1,17 +1,17 @@
-/* OS GRUPOS DE PRESSAO — quem consegue derrubar um presidente.
+/* OS GRUPOS DE PRESSÃO — quem consegue derrubar um presidente.
 
    A SONDA responde QUEM APROVA o governo; estes respondem QUEM CONSEGUE DERRUBA-LO. A rua
-   nao esta na lista: ela ja e medida pela SONDA, e entra na queda como CONDICAO — a
-   ruptura social — e nao como ator.
+   não esta na lista: ela já e medida pela SONDA, e entra na queda como CONDIÇÃO — a
+   ruptura social — e não como ator.
 
-   ⚠ A PRESSAO SOBE POR AUSENCIA DE ENTREGA, medida contra um PONTO DE SATISFACAO. Se
-   subisse so por acao contraria, o jogador aprenderia que parar e seguro.
+   ⚠ A PRESSÃO SOBE POR AUSÊNCIA DE ENTREGA, medida contra um PONTO DE SATISFAÇÃO. Se
+   subisse só por ação contraria, o jogador aprenderia que parar e seguro.
 
-   ⚠ CADA LOBBY LE UM LUGAR, E NENHUM LE O MESMO QUE OUTRO: o mercado le o LASTRO (a divida
-   acima da herdada), o fisiologismo le a ECLUSA (quanto da promessa o caixa honrou), o
-   setor produtivo le agricultura e industria na MALHA, e as forcas de ordem leem seguranca
-   e defesa. Os dois ultimos leem o mesmo MOTOR e nao o mesmo NUMERO: uma safra ruim nao
-   move a prontidao militar. */
+   ⚠ CADA LOBBY LÊ UM LUGAR, E NENHUM LÊ O MESMO QUE OUTRO: o mercado lê o LASTRO (a dívida
+   acima da herdada), o fisiologismo lê a ECLUSA (quanto da promessa o caixa honrou), o
+   setor produtivo lê agricultura e indústria na MALHA, e as forças de ordem leem segurança
+   e defesa. Os dois últimos leem o mesmo MOTOR e não o mesmo NÚMERO: uma safra ruim não
+   move a prontidão militar. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -21,14 +21,14 @@ export const LOBBY_SCHEMA = {
   label: { kind: "text" },
   /* O QUE ELE COBRA, em uma linha, e ela vai para a tela. */
   wants: { kind: "text" },
-  /* A POSICAO NO PLANO, como bloco e pessoa ja tem. */
+  /* A POSIÇÃO NO PLANO, como bloco e pessoa já tem. */
   economic: { kind: "number", min: 0, max: 100 },
   liberty: { kind: "number", min: 0, max: 100 },
   /* O CANAL: qual motor produz o descontentamento dele. */
   reads: { kind: "text", values: ["debt", "share", "capacity"] },
-  /* AS AREAS QUE ELE REPRESENTA, e so para quem lê `capacity`. Vazio nos outros. */
+  /* AS ÁREAS QUE ELE REPRESENTA, e só para quem lê `capacity`. Vazio nos outros. */
   areas: { kind: "text", optional: true },
-  /* QUANTO ELE PESA na ruptura economica da queda, de 0 a 1. */
+  /* QUANTO ELE PESA na ruptura econômica da queda, de 0 a 1. */
   weight: { kind: "number", min: 0, max: 1 },
 };
 
@@ -49,11 +49,11 @@ export const LOBBIES = [
   {
     id: "mercado",
     label: "Mercado financeiro",
-    /* ELE NAO PEDE LEI, EXIGE SUPERAVIT — e essa e a diferenca dele para os outros tres: nao
-       ha o que assinar para agrada-lo, so o que deixar de gastar. */
+    /* ELE NÃO PEDE LEI, EXIGE SUPERÁVIT — e essa e a diferença dele para os outros três: não
+       há o que assinar para agrada-lo, só o que deixar de gastar. */
     wants: "que a dívida pare de crescer",
-    /* No extremo liberal do eixo economico, e indiferente no de liberdades: o credor da
-       divida nao tem opiniao sobre costumes. */
+    /* No extremo liberal do eixo econômico, e indiferente no de liberdades: o credor da
+       dívida não tem opinião sobre costumes. */
     economic: 88,
     liberty: 55,
     reads: "debt",
@@ -62,7 +62,7 @@ export const LOBBIES = [
   {
     id: "fisiologismo",
     label: "Parlamentares",
-    /* ⚠ FOME DE EXECUCAO, E NAO IDEOLOGIA. */
+    /* ⚠ FOME DE EXECUÇÃO, E NÃO IDEOLOGIA. */
     wants: "que a torneira das emendas fique aberta",
     economic: 50,
     liberty: 50,
@@ -82,9 +82,9 @@ export const LOBBIES = [
   {
     id: "ordem",
     label: "Militares e polícia",
-    /* O unico dos quatro que se move no eixo das LIBERDADES, e e por isso que ele existe
+    /* O único dos quatro que se move no eixo das LIBERDADES, e e por isso que ele existe
        separado: um governo pode agradar o mercado e o produtivo ao mesmo tempo e ter este
-       contra, porque o que ele cobra nao e dinheiro. */
+       contra, porque o que ele cobra não e dinheiro. */
     wants: "prontidão, efetivo e a folha protegida",
     economic: 62,
     liberty: 22,
@@ -106,26 +106,26 @@ export const PRESSURE_SCHEMA = {
 };
 
 /* A CALIBRAGEM DA CALDEIRA E PRIMEIRO CHUTE DECLARADO — como o PIVOT de ECLUSA, o TABLE da
-   Mesa e o ANSWER_TIME da carta. O que NAO e chute sao duas desigualdades:
-   ⚠ `cool` MENOR que `rise`, porque reputacao se perde mais rapido do que se recupera: a
-   0,18 contra 0,06, um mes de descaso custa tres meses de atencao para desfazer, e uma
-   caldeira simetrica seria um pendulo — bastaria alternar quem se agrada para nunca
+   Mesa e o ANSWER_TIME da carta. O que NÃO e chute são duas desigualdades:
+   ⚠ `cool` MENOR que `rise`, porque reputação se perde mais rapido do que se recupera: a
+   0,18 contra 0,06, um mês de descaso custa três meses de atenção para desfazer, e uma
+   caldeira simétrica seria um pendulo — bastaria alternar quem se agrada para nunca
    esquentar nada;
-   ⚠ `brokerBoil` MAIOR que `boil`, porque o fisiologismo e o ultimo a virar: ele ganha
+   ⚠ `brokerBoil` MAIOR que `boil`, porque o fisiologismo e o último a virar: ele ganha
    dinheiro sustentando, e enquanto houver torneira ele fica. */
-/* ⚠ O GOVERNO PASSIVO SOBREVIVER E UM RESULTADO, e nao um defeito de calibragem: nao
+/* ⚠ O GOVERNO PASSIVO SOBREVIVER E UM RESULTADO, e não um defeito de calibragem: não
    gastar AGRADA o mercado, e o capital o abriga. Ele perde o baixo clero e perde a rua —
-   mas nao cai. A CALDEIRA torna a passividade perigosa e nao a torna fatal, e forcar
-   numeros ate ela ser fatal seria calibrar para obter a conclusao desejada. */
-/* ⚠ Comecei em 35, sem razao nenhuma alem de gosto, e a medicao mostrou o preco de um chute:
-   DUAS exigencias em 48 meses, as duas depois do mes 45 — instrumento que nunca dispara e o
+   mas não cai. A CALDEIRA torna a passividade perigosa e não a torna fatal, e forçar
+   números até ela ser fatal seria calibrar para obter a conclusão desejada. */
+/* ⚠ Comecei em 35, sem razão nenhuma além de gosto, e a medição mostrou o preço de um chute:
+   DUAS exigências em 48 meses, as duas depois do mês 45 — instrumento que nunca dispara e o
    achado 3 deste projeto se repetindo. */
 export const PRESSURE = {
   rise: 0.18,
   cool: 0.06,
   /* ⚠ O QUE ELES CONSERTAM ESTA MEDIDO: com a Camara de nove legendas, um governo de
-     MANUTENCAO — que aperta o orcamento ate caber no teto e paga so a base — via a ruptura
-     politica abrir no mes 12 e caia no mes 50, no ultimo mes do mandato. */
+     MANUTENCAO — que aperta o orcamento até caber no teto e paga só a base — via a ruptura
+     politica abrir no mês 12 e caia no mês 50, no último mês do mandato. */
   boil: 68,
   streetFloor: 16,
   brokerBoil: 86,

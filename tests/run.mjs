@@ -1,8 +1,8 @@
 /* O RUNNER DAS GUARDAS, e ele faz DUAS coisas em cada uma — a segunda e a que importa:
    1. AUDITA o projeto real e imprime os achados;
-   2. roda as PROVAS SINTETICAS — versoes fabricadas do projeto que contem o defeito de
-      proposito — e exige que a guarda acuse cada uma.
-   Sem (2), uma guarda verde nao distingue "o projeto esta certo" de "o casador nao casa". */
+   2. roda as PROVAS SINTÉTICAS — versões fabricadas do projeto que contem o defeito de
+      propósito — e exige que a guarda acuse cada uma.
+   Sem (2), uma guarda verde não distingue "o projeto esta certo" de "o casador não casa". */
 
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -10,6 +10,7 @@ import { pathToFileURL } from "node:url";
 import { ROOT, readProject } from "./lib/project.mjs";
 
 const EXPECTED = [
+  "accents",
   "annexes",
   "boundaries",
   "cascade",
@@ -58,7 +59,7 @@ for (const guardName of found) {
   }
   failures += findings.length;
 
-  /* Cada prova sintetica reintroduz um defeito e exige acusacao. */
+  /* Cada prova sintética reintroduz um defeito e exige acusação. */
   for (const probe of guard.synthetic ?? []) {
     syntheticCount++;
     const caught = guard.audit(probe.files);

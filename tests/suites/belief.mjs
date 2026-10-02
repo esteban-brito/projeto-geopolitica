@@ -38,7 +38,7 @@ function once(evidence, spec = NOW) {
   return belief;
 }
 
-test("A MESMA LINHAGEM N VEZES E UMA EVIDENCIA SO, junta ou em ticks separados", () => {
+test("A MESMA LINHAGEM N VEZES E UMA EVIDÊNCIA SÓ, junta ou em ticks separados", () => {
   const one = once([said("x:0:0", "x", 40)]);
   assert.deepEqual(once([1, 2, 3, 4, 5].map(() => said("x:0:0", "x", 40))), one);
   const again = revise(one, [said("x:0:0", "x", 40)], NOW, PRIOR, 1);
@@ -53,7 +53,7 @@ test("A MESMA FONTE COM DUAS AMOSTRAS NO MESMO INSTANTE conta as duas", () => {
   assert.ok(pair.confidence > single.confidence);
 });
 
-test("ESTADO ATUAL: a mais nova da mesma fonte supera a antiga, e mudanca nao e contradicao", () => {
+test("ESTADO ATUAL: a mais nova da mesma fonte supera a antiga, e mudança não e contradição", () => {
   const january = said("x:1:0", "x", 40, 0.5, 1);
   const february = said("x:2:0", "x", 50, 0.5, 2);
   const now = once([january, february]);
@@ -64,7 +64,7 @@ test("ESTADO ATUAL: a mais nova da mesma fonte supera a antiga, e mudanca nao e 
   assert.deepEqual(now, once([february]));
 });
 
-test("FATOS INDEPENDENTES: sem supersessao, as linhagens da mesma fonte coexistem", () => {
+test("FATOS INDEPENDENTES: sem supersessão, as linhagens da mesma fonte coexistem", () => {
   const january = said("x:1:0", "x", 40, 0.5, 1);
   const february = said("x:2:0", "x", 50, 0.5, 2);
   const facts = once([january, february], FACTS);
@@ -72,7 +72,7 @@ test("FATOS INDEPENDENTES: sem supersessao, as linhagens da mesma fonte coexiste
   assert.ok(facts.confidence < once([january, february]).confidence);
 });
 
-test("ORDEM E AGRUPAMENTO EM TICKS NAO MUDAM A CRENCA", () => {
+test("ORDEM E AGRUPAMENTO EM TICKS NÃO MUDAM A CRENÇA", () => {
   const all = [
     said("a:0:0", "a", 40, 0.3),
     said("b:0:0", "b", 55, 0.7),
@@ -88,20 +88,20 @@ test("ORDEM E AGRUPAMENTO EM TICKS NAO MUDAM A CRENCA", () => {
   assert.deepEqual({ ...stepwise, updatedAt: 0 }, together);
 });
 
-test("FONTES INDEPENDENTES QUE DISCORDAM BAIXAM A CONFIANCA", () => {
+test("FONTES INDEPENDENTES QUE DISCORDAM BAIXAM A CONFIANÇA", () => {
   const agree = once([said("a:0:0", "a", 45), said("b:0:0", "b", 46)]);
   const clash = once([said("a:0:0", "a", 30), said("b:0:0", "b", 70)]);
   assert.ok(clash.confidence < agree.confidence);
 });
 
-test("EVIDENCIA FRACA PESA POUCO: a estimativa fica perto do prior", () => {
+test("EVIDÊNCIA FRACA PESA POUCO: a estimativa fica perto do prior", () => {
   const weak = once([said("a:0:0", "a", 10, 0.05)]);
   const strong = once([said("a:0:0", "a", 10, 0.95)]);
   assert.ok(weak.estimate > 45);
   assert.ok(strong.estimate < 15);
 });
 
-test("QUALITY 0 E NULA: sozinha nao cria crenca, junto de outra nao muda nada", () => {
+test("QUALITY 0 E NULA: sozinha não cria crença, junto de outra não muda nada", () => {
   assert.equal(revise(undefined, [said("a:0:0", "a", 999, 0)], NOW, PRIOR, 0), undefined);
   assert.deepEqual(
     once([said("a:0:0", "a", 999, 0), said("b:0:0", "b", 40)]),
@@ -109,7 +109,7 @@ test("QUALITY 0 E NULA: sozinha nao cria crenca, junto de outra nao muda nada", 
   );
 });
 
-test("QUALITY 1 E CERTEZA: uma, concordantes e contraditorias, sem infinito", () => {
+test("QUALITY 1 E CERTEZA: uma, concordantes e contraditórias, sem infinito", () => {
   const single = once([said("a:0:0", "a", 40, 1)]);
   assert.equal(single.estimate, 40);
   assert.equal(single.confidence, 1);
@@ -127,8 +127,8 @@ test("QUALITY 1 E CERTEZA: uma, concordantes e contraditorias, sem infinito", ()
   assert.ok(Number.isFinite(clash.confidence) && clash.confidence > 0 && clash.confidence < 1);
 });
 
-test("CRENCA ERRADA COM CONFIANCA ALTA: o motor nao sabe a verdade", () => {
-  /* No mundo do cenario a aprovacao e 50; tres fontes independentes dizem 20. */
+test("CRENÇA ERRADA COM CONFIANÇA ALTA: o motor não sabe a verdade", () => {
+  /* No mundo do cenario a aprovação e 50; três fontes independentes dizem 20. */
   const wrong = once([
     said("a:0:0", "a", 20, 0.9),
     said("b:0:0", "b", 20, 0.9),
@@ -138,34 +138,34 @@ test("CRENCA ERRADA COM CONFIANCA ALTA: o motor nao sabe a verdade", () => {
   assert.ok(wrong.confidence > 0.9);
 });
 
-test("EVIDENCIA VELHA NAO SUPERA A NOVA: quem decide e o asOf, nao o tick da recepcao", () => {
+test("EVIDÊNCIA VELHA NÃO SUPERA A NOVA: quem decide e o asOf, não o tick da recepcao", () => {
   const fresh = revise(undefined, [said("x:2:0", "x", 50, 0.5, 2)], NOW, PRIOR, 1);
   const late = revise(fresh, [said("x:1:0", "x", 40, 0.5, 1)], NOW, PRIOR, 5);
   assert.deepEqual(late?.entries, fresh?.entries);
   assert.equal(late?.estimate, fresh?.estimate);
 });
 
-test("PRIORS DIFERENTES, A MESMA EVIDENCIA FRACA, CRENCAS DIFERENTES", () => {
+test("PRIORS DIFERENTES, A MESMA EVIDÊNCIA FRACA, CRENÇAS DIFERENTES", () => {
   const weak = [said("a:0:0", "a", 40, 0.2)];
   const hopeful = revise(undefined, weak, NOW, { value: 70, weight: 1 }, 0);
   const wary = revise(undefined, weak, NOW, { value: 30, weight: 1 }, 0);
   assert.ok((hopeful?.estimate ?? 0) > (wary?.estimate ?? 0));
 });
 
-test("A MESMA LINHAGEM COM CONTEUDOS DIFERENTES E ERRO; copia repetida fica com a melhor", () => {
+test("A MESMA LINHAGEM COM CONTEÚDOS DIFERENTES E ERRO; copia repetida fica com a melhor", () => {
   assert.throws(() => once([said("a:0:0", "a", 40), said("a:0:0", "a", 41)]), /a:0:0/);
   const better = once([said("a:0:0", "a", 40, 0.3), said("a:0:0", "a", 40, 0.8)]);
   assert.equal(better.entries[0]?.quality, 0.8);
 });
 
-test("A MESMA LINHAGEM COM ASOF DIFERENTE E ERRO, mesmo onde a supersessao a esconderia", () => {
+test("A MESMA LINHAGEM COM ASOF DIFERENTE E ERRO, mesmo onde a supersessão a esconderia", () => {
   const january = said("L", "x", 10, 0.5, 1);
   const february = said("L", "x", 10, 0.5, 2);
   assert.throws(() => once([january, february]), /"L"/);
   assert.throws(() => revise(once([january]), [february], NOW, PRIOR, 1), /"L"/);
 });
 
-test("DESCRICAO, PRIOR E EVIDENCIA INVALIDOS SAO RECUSADOS, sem valor padrao", () => {
+test("DESCRIÇÃO, PRIOR E EVIDÊNCIA INVALIDOS SÃO RECUSADOS, sem valor padrão", () => {
   const valid = [said("a:0:0", "a", 40)];
   const policy = /** @type {SubjectSpec} */ (
     /** @type {unknown} */ ({ ...NOW, supersede: "latest" })

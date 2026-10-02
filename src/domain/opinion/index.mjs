@@ -1,4 +1,4 @@
-/* SONDA — opiniao publica por segmento a partir de macroeconomia e servicos. */
+/* SONDA — opinião publica por segmento a partir de macroeconomia e serviços. */
 
 /**
  * @typedef {import("../../data/opinion.mjs").Segment} Segment
@@ -28,7 +28,7 @@
  * @property {number} betrayal - quanto a promessa quebrada tirou de todo mundo
  * @property {number} wear - quanto o desgaste do cargo tirou de todo mundo
  * @property {Record<string, Record<string, number>>} weighed - cada nota JA PESADA, por
- * segmento. ⚠ E ela e pesada AQUI e nao na view: multiplicar nota por peso do lado de
+ * segmento. ⚠ E ela e pesada AQUI e não na view: multiplicar nota por peso do lado de
  * la daria dois lugares fazendo a mesma conta, e o segundo divergiria do primeiro no
  * dia em que um peso mudasse — que e o dia em que o anexo precisa estar certo
  */
@@ -123,7 +123,7 @@ export function step(input) {
     shareTotal += segment.share;
   }
 
-  /* Divisao pela soma real das fatias evita aprovacao menor quando o catalogo nao soma 1. */
+  /* Divisão pela soma real das fatias evita aprovação menor quando o catálogo não soma 1. */
   const national = shareTotal > 0 ? weighted / shareTotal : 0;
 
   return { mood, approval: pollOf(national, p), bySegment, notes, betrayal, wear, weighed };
@@ -140,7 +140,7 @@ function pollOf(mood, p) {
   const good = 100 * share ** p.goodSlope;
   const poor = 100 * (1 - share) ** p.poorSlope;
 
-  /* Soma das tres fatias fecha em 100 para manter invariante visual da barra de aprovacao. */
+  /* Soma das três fatias fecha em 100 para manter invariante visual da barra de aprovação. */
   const fair = Math.max(0, 100 - good - poor);
   const total = good + poor + fair;
 

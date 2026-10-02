@@ -6,7 +6,7 @@ import fc from "fast-check";
 import { OPINION, SEGMENTS } from "../../src/data/opinion.mjs";
 import { opening, pollFrom, step } from "../../src/domain/opinion/index.mjs";
 
-/** Um mes qualquer, com o pais em qualquer estado. */
+/** Um mês qualquer, com o país em qualquer estado. */
 const anyMonth = fc.record({
   released: fc.record({
     inflation: fc.double({ min: -0.05, max: 0.6, noNaN: true }),
@@ -34,7 +34,7 @@ function run(month, mood) {
   return step({ ...month, mood, segments: SEGMENTS, parameters: OPINION });
 }
 
-/* Um mes bom e um mes ruim, para as provas de direcao. */
+/* Um mês bom e um mês ruim, para as provas de direção. */
 const GOOD = {
   released: { inflation: 0.02, unemployment: 0.05, growth: 0.05 },
   services: 90,
@@ -48,9 +48,9 @@ const BAD = {
   betrayal: 1,
 };
 
-test("A PESQUISA SEMPRE FECHA EM 100, em qualquer estado do pais", () => {
-  /* O invariante que a tela inteira presume: o medidor de tres partes desenha as fatias como
-     fracoes de uma barra, e uma soma de 99 aparece como um vao branco que ninguem consegue
+test("A PESQUISA SEMPRE FECHA EM 100, em qualquer estado do país", () => {
+  /* O invariante que a tela inteira presume: o medidor de três partes desenha as fatias como
+     frações de uma barra, e uma soma de 99 aparece como um vão branco que ninguém consegue
      explicar. */
   fc.assert(
     fc.property(anyMonth, anyMood, (month, mood) => {
@@ -70,7 +70,7 @@ test("A PESQUISA SEMPRE FECHA EM 100, em qualquer estado do pais", () => {
   );
 });
 
-test("A SATISFACAO NUNCA SAI DA FAIXA, nem com o pais no chao ou no ceu", () => {
+test("A SATISFAÇÃO NUNCA SAI DA FAIXA, nem com o país no chao ou no ceu", () => {
   fc.assert(
     fc.property(anyMonth, anyMood, (month, mood) => {
       for (const value of Object.values(run(month, mood).mood)) {
@@ -80,9 +80,9 @@ test("A SATISFACAO NUNCA SAI DA FAIXA, nem com o pais no chao ou no ceu", () => 
   );
 });
 
-test("A OPINIAO NAO PULA: um mes nunca leva a satisfacao ao alvo", () => {
-  /* Sem ela, um mes de inflacao ruim derrubaria o governo e o mes seguinte o devolveria — e a
-     serie de 48 meses deixaria de contar qualquer coisa. */
+test("A OPINIÃO NÃO PULA: um mês nunca leva a satisfação ao alvo", () => {
+  /* Sem ela, um mês de inflação ruim derrubaria o governo e o mês seguinte o devolveria — e a
+     série de 48 meses deixaria de contar qualquer coisa. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
   const after = run(GOOD, flat).mood;
 
@@ -94,7 +94,7 @@ test("A OPINIAO NAO PULA: um mes nunca leva a satisfacao ao alvo", () => {
 });
 
 test("ELA CAI MAIS RAPIDO DO QUE SOBE, e a assimetria e do mesmo tamanho declarado", () => {
-  /* O achado empirico mais consistente da literatura de opiniao publica, e a razao de
+  /* O achado empírico mais consistente da literatura de opinião publica, e a razão de
      governos gastarem tanto para evitar crise pequena. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
 
@@ -108,8 +108,8 @@ test("ELA CAI MAIS RAPIDO DO QUE SOBE, e a assimetria e do mesmo tamanho declara
   );
 });
 
-test("AS CLASSES NAO SENTEM A MESMA COISA: cortar servico publico separa o pais", () => {
-  /* A razao de existir dos segmentos. */
+test("AS CLASSES NÃO SENTEM A MESMA COISA: cortar servico público separa o país", () => {
+  /* A razão de existir dos segmentos. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
   const base = { ...GOOD, services: 80 };
   const cut = { ...GOOD, services: 10 };
@@ -124,7 +124,7 @@ test("AS CLASSES NAO SENTEM A MESMA COISA: cortar servico publico separa o pais"
   );
 });
 
-test("A INFLACAO DOI MAIS EMBAIXO, e o PIB so e sentido em cima", () => {
+test("A INFLAÇÃO DÓI MAIS EMBAIXO, e o PIB só e sentido em cima", () => {
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
 
   const calm = { ...GOOD, released: { ...GOOD.released, inflation: 0.03 } };
@@ -140,8 +140,8 @@ test("A INFLACAO DOI MAIS EMBAIXO, e o PIB so e sentido em cima", () => {
   assert.ok(highGdp > 0, "a classe A/B deveria sentir a recessao");
 });
 
-test("PROMESSA QUEBRADA CUSTA RUA, e nao so base no Congresso", () => {
-  /* O outro lado de uma conta que ja existia. */
+test("PROMESSA QUEBRADA CUSTA RUA, e não só base no Congresso", () => {
+  /* O outro lado de uma conta que já existia. */
   const flat = Object.fromEntries(SEGMENTS.map(s => [s.id, 50]));
   const kept = run({ ...GOOD, betrayal: 0 }, flat).approval.good;
   const broke = run({ ...GOOD, betrayal: 1 }, flat).approval.good;
@@ -149,8 +149,8 @@ test("PROMESSA QUEBRADA CUSTA RUA, e nao so base no Congresso", () => {
   assert.ok(broke < kept, `quebrar promessa nao custou nada: ${kept} contra ${broke}`);
 });
 
-test("A NACIONAL E A MEDIA PONDERADA, e nao a media simples", () => {
-  /* Um governo adorado pela classe A/B e odiado pela D/E nao tem 50% — ele tem o que a
+test("A NACIONAL E A MEDIA PONDERADA, e não a media simples", () => {
+  /* Um governo adorado pela classe A/B e odiado pela D/E não tem 50% — ele tem o que a
      populacao pesa. */
   const skewed = { baixa: 0, media: 0, alta: 100 };
   const poll = pollFrom(skewed, SEGMENTS, OPINION);
@@ -163,12 +163,12 @@ test("A NACIONAL E A MEDIA PONDERADA, e nao a media simples", () => {
   );
 });
 
-test("a abertura sai do catalogo, e o pais comeca dividido", () => {
+test("a abertura sai do catálogo, e o país começa dividido", () => {
   const start = opening(SEGMENTS);
   assert.equal(Object.keys(start).length, SEGMENTS.length);
 
-  /* A afirmacao do catalogo: quem acabou de eleger o governo comeca mais satisfeito, e quem
-     paga a conta comeca menos. */
+  /* A afirmação do catálogo: quem acabou de eleger o governo começa mais satisfeito, e quem
+     paga a conta começa menos. */
   assert.ok(
     (start["baixa"] ?? 0) > (start["alta"] ?? 0),
     "a base da piramide deveria abrir mais satisfeita que o topo",

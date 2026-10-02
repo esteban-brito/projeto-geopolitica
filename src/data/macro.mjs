@@ -1,4 +1,4 @@
-/* PARAMETROS MACROECONOMICOS — as constantes que CORRENTE consome. */
+/* PARÂMETROS MACROECONÔMICOS — as constantes que CORRENTE consome. */
 
 /** @typedef {import("./schema.mjs").Schema} Schema */
 
@@ -49,7 +49,7 @@ export const MACRO_SCHEMA = {
  * @property {number} floatingDebt - fracao da divida atrelada a taxa basica
  * @property {number} legacyRate - o custo medio do estoque que NAO acompanha a taxa
  * @property {number} riskPremium - a inclinacao do premio de risco, por ponto ao
- * quadrado de divida acima da herdada
+ * quadrado de dívida acima da herdada
  * @property {number} initialInflation
  * @property {number} initialRate
  * @property {number} initialUnemployment
@@ -61,33 +61,33 @@ export const MACRO_SCHEMA = {
 export const MACRO = {
   /* Fonte: consenso de estimativas de PIB potencial, na faixa de 1,5% a 2,5%. */
   potentialGrowth: 0.02,
-  /* A 0,03, um pais com todos os indices no teto cresce ~5% em vez de 2% — que e a distancia
-     entre o Brasil e um pais que resolveu seus gargalos. */
+  /* A 0,03, um país com todos os índices no teto cresce ~5% em vez de 2% — que e a distancia
+     entre o Brasil e um país que resolveu seus gargalos. */
   capacityLift: 0.03,
   /* A 0,35, subir a carga em 1 ponto do PIB tira 0,35 ponto de crescimento — na faixa das
-     estimativas de multiplicador tributario para o Brasil, que ficam entre 0,2 e 0,6
+     estimativas de multiplicador tributário para o Brasil, que ficam entre 0,2 e 0,6
      dependendo do tributo. */
   taxDrag: 0.35,
   /* Juro real freia. */
   rateDrag: 0.25,
-  /* Gasto publico estimula, e MENOS do que ele custa: multiplicador abaixo de 1 e o consenso
+  /* Gasto público estimula, e MENOS do que ele custa: multiplicador abaixo de 1 e o consenso
      para gasto corrente em economia com juro alto. */
   fiscalMultiplier: 0.6,
 
-  /* Meta de inflacao continua, 3%. Fonte: CMN. */
+  /* Meta de inflação continua, 3%. Fonte: CMN. */
   inflationTarget: 0.03,
-  /* A banda de tolerancia do regime, 1,5 ponto para cada lado. Fonte: CMN.
-     ⚠ ELA MORA AQUI E NAO NA TELA: duas telas liam a mesma pergunta com reguas
-     diferentes — Financas acusava a partir de 4,5% e a barra so a partir de 7,5%. */
+  /* A banda de tolerância do regime, 1,5 ponto para cada lado. Fonte: CMN.
+     ⚠ ELA MORA AQUI E NÃO NA TELA: duas telas liam a mesma pergunta com réguas
+     diferentes — Finanças acusava a partir de 4,5% e a barra só a partir de 7,5%. */
   inflationTolerance: 0.015,
-  /* A 0,6, a expectativa e 60% meta e 40% inflacao passada — um pais com credibilidade
+  /* A 0,6, a expectativa e 60% meta e 40% inflação passada — um país com credibilidade
      imperfeita, que e o caso. */
   anchoring: 0.6,
   phillips: 0.35,
 
   /* Juro real neutro. Fonte: estimativas do BCB, faixa de 4,5% a 5,5%. */
   neutralRate: 0.05,
-  /* Taylor: o BC reage mais a inflacao do que a hiato, e alisa o movimento. */
+  /* Taylor: o BC reage mais a inflação do que a hiato, e alisa o movimento. */
   taylorInflation: 1.5,
   taylorGap: 0.5,
   rateSmoothing: 0.7,
@@ -96,19 +96,19 @@ export const MACRO = {
   naturalUnemployment: 0.08,
   okun: 0.4,
 
-  /* ⚠ A FRACAO DA DIVIDA QUE ACOMPANHA A SELIC, e ela e a peca que faz juro alto virar
+  /* ⚠ A FRAÇÃO DA DÍVIDA QUE ACOMPANHA A SELIC, e ela e a peça que faz juro alto virar
      crise fiscal. A ancora e publica: cada 1 p.p. de Selic custa cerca de R$ 40 bi ao ano,
-     e com divida bruta perto de R$ 9,4 tri isso da 45% do estoque atrelado a taxa basica. */
+     e com dívida bruta perto de R$ 9,4 tri isso da 45% do estoque atrelado a taxa básica. */
   floatingDebt: 0.45,
-  /* ⚠ O RESTO DO ESTOQUE TAMBEM PAGA JURO, e esquecer isso foi o defeito que a simulacao
+  /* ⚠ O RESTO DO ESTOQUE TAMBÉM PAGA JURO, e esquecer isso foi o defeito que a simulação
      pegou. */
   legacyRate: 0.09,
 
-  /* A INCLINACAO DO PREMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT de
-     ECLUSA e o TABLE da Mesa. O que NAO e chute e a forma: convexa, porque o mercado
-     tolera e depois foge. Em cima da divida herdada de 78%, +10 p.p. custam 0,5 ponto de
-     juro a mais e incomodam; +20 p.p. custam 2,0 e doem; +50 p.p. custam 12,5 e sao crise.
-     Um premio LINEAR ensinaria que "mais um pouco" custa igual no comeco e na beira do
+  /* A INCLINAÇÃO DO PRÊMIO DE RISCO, e ela e PRIMEIRO CHUTE DECLARADO — como o PIVOT de
+     ECLUSA e o TABLE da Mesa. O que NÃO e chute e a forma: convexa, porque o mercado
+     tolera e depois foge. Em cima da dívida herdada de 78%, +10 p.p. custam 0,5 ponto de
+     juro a mais e incomodam; +20 p.p. custam 2,0 e doem; +50 p.p. custam 12,5 e são crise.
+     Um prêmio LINEAR ensinaria que "mais um pouco" custa igual no começo e na beira do
      abismo. Ver `premiumOf` em `src/domain/economy/`. */
   riskPremium: 0.5,
 
@@ -116,7 +116,7 @@ export const MACRO = {
   initialRate: 0.105,
   initialUnemployment: 0.068,
   /* Populacao em milhoes, e o crescimento que o IBGE projeta — desacelerando, e e por isso
-     que o bonus demografico acabou e a previdencia aperta. */
+     que o bônus demografico acabou e a previdência aperta. */
   initialPopulation: 213,
   populationGrowth: 0.004,
 };

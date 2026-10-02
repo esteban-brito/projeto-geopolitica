@@ -1,5 +1,5 @@
-/* MALHA — os indices por area: decaimento, rendimento da alocacao, e a pressao que
-   os indices devolvem a receita e a despesa. */
+/* MALHA — os índices por área: decaimento, rendimento da alocação, e a pressão que
+   os índices devolvem a receita e a despesa. */
 
 /**
  * @typedef {import("../../data/areas.mjs").Area} Area
@@ -13,8 +13,8 @@
  * @property {Pressure} pressure
  */
 
-/* O ponto neutro chega por parametro em vez de ser importado do catalogo: o dominio recebe o
-   que precisa, e um motor que alcanca dado direto e um motor que nao da para testar com outra
+/* O ponto neutro chega por parâmetro em vez de ser importado do catálogo: o dominio recebe o
+   que precisa, e um motor que alcanca dado direto e um motor que não da para testar com outra
    tabela. */
 
 /**
@@ -27,7 +27,7 @@ function clamp(value, min, max) {
 }
 
 /**
- * O valor que o modelo consome AGORA: o indice de `lag` meses atras.
+ * O valor que o modelo consome AGORA: o índice de `lag` meses atrás.
  *
  * @param {number[] | undefined} past
  * @param {number} fallback
@@ -39,11 +39,11 @@ function delayed(past, fallback, lag) {
 }
 
 /**
- * A FORCA QUE UMA AREA FAZ NO CANAL DELA, hoje, e ela e a ARESTA que o DELTA descreve.
+ * A FORCA QUE UMA ÁREA FAZ NO CANAL DELA, hoje, e ela e a ARESTA que o DELTA descreve.
  *
- * ⚠ ELA MEDE CONTRA `initial` — o que o modelo cobra e o DESVIO da abertura, e nao o nivel.
- * A troca conserta um defeito medido, e ele era o segundo termo do achado numero um do
- * handoff — o pais que se desendivida sozinho.
+ * ⚠ ELA MEDE CONTRA `initial` — o que o modelo cobra e o DESVIO da abertura, e não o nível.
+ * A troca conserta um defeito medido, e ele era o segundo termo do achado número um do
+ * handoff — o país que se desendivida sozinho.
  *
  * @param {Area} area
  * @param {Record<string, number[]>} history
@@ -54,8 +54,8 @@ export function pushOf(area, history) {
 }
 
 /**
- * O canal `capacity` mede contra `neutral`, e nao contra a abertura: uma Educacao de 44
- * ABAIXA a producao, e e isso que a tese do modelo diz. Sao duas bases porque sao duas
+ * O canal `capacity` mede contra `neutral`, e não contra a abertura: uma Educacao de 44
+ * ABAIXA a produção, e e isso que a tese do modelo diz. São duas bases porque são duas
  * perguntas — quanto MUDOU, e onde ESTA.
  *
  * @param {Area} area
@@ -68,7 +68,7 @@ function liftAt(area, value, neutral) {
 }
 
 /**
- * O MESMO CANAL, PERGUNTADO DE FORA — quanto esta area entrega hoje a area alvo.
+ * O MESMO CANAL, PERGUNTADO DE FORA — quanto esta área entrega hoje a área alvo.
  *
  * @param {Area} area
  * @param {Record<string, number[]>} history
@@ -80,7 +80,7 @@ export function liftOf(area, history, neutral) {
 }
 
 /**
- * Calculado depois, a educacao alimentaria a producao no mesmo mes em que ela propria mudou,
+ * Calculado depois, a educacao alimentaria a produção no mesmo mês em que ela própria mudou,
  * e o `lag` de 24 meses viraria enfeite.
  *
  * @param {object} input
@@ -94,21 +94,21 @@ export function liftOf(area, history, neutral) {
  * @returns {Outcome}
  */
 export function step({ areas, index, history, allocation, impacts = {}, neutral, capacityTarget }) {
-  /* 1 — O QUE CHEGOU, com o atraso de cada area ja aplicado. */
+  /* 1 — O QUE CHEGOU, com o atraso de cada área já aplicado. */
   /** @type {Record<string, number>} */
   const incoming = {};
   for (const area of areas) {
     incoming[area.id] = delayed(history[area.id], area.initial, area.lag);
   }
 
-  /* 2 — O CANAL `capacity`, que e o unico que uma area exerce sobre outra. */
+  /* 2 — O CANAL `capacity`, que e o único que uma área exerce sobre outra. */
   let bonus = 0;
   for (const area of areas) {
     if (area.feeds !== "capacity") continue;
     bonus += liftAt(area, incoming[area.id] ?? area.initial, neutral);
   }
 
-  /* 3 — O INDICE NOVO. */
+  /* 3 — O ÍNDICE NOVO. */
   /** @type {Record<string, number>} */
   const next = {};
   /** @type {Record<string, number[]>} */
@@ -120,19 +120,19 @@ export function step({ areas, index, history, allocation, impacts = {}, neutral,
     const jump = impacts[area.id] ?? 0;
     const inherited = area.id === capacityTarget ? bonus : 0;
 
-    /* ⚠ PROPORCIONAL, E NAO SUBTRAIDO — ver o cabecalho. */
+    /* ⚠ PROPORCIONAL, E NÃO SUBTRAIDO — ver o cabeçalho. */
     next[area.id] = clamp(
       before * (1 - area.decay) + area.yield * spent + jump + inherited,
       0,
       100,
     );
 
-    /* O historico guarda `lag + 1` valores: o de hoje e os `lag` anteriores. */
+    /* O histórico guarda `lag + 1` valores: o de hoje e os `lag` anteriores. */
     const kept = [...(history[area.id] ?? []), next[area.id] ?? area.initial];
     nextHistory[area.id] = kept.slice(-(area.lag + 1));
   }
 
-  /* 4 — O QUE O MODELO VAI CONSUMIR, ja com o valor novo no historico. */
+  /* 4 — O QUE O MODELO VAI CONSUMIR, já com o valor novo no histórico. */
   /** @type {Record<string, number>} */
   const effective = {};
   for (const area of areas) {
@@ -148,7 +148,7 @@ export function step({ areas, index, history, allocation, impacts = {}, neutral,
 }
 
 /**
- * A PRESSAO QUE OS INDICES FAZEM NO MODELO, lida de um historico sem avanca-lo.
+ * A PRESSÃO QUE OS ÍNDICES FAZEM NO MODELO, lida de um histórico sem avança-lo.
  *
  * @param {object} input
  * @param {ReadonlyArray<Area>} input.areas
@@ -165,13 +165,13 @@ export function pressureOf({ areas, history }) {
     if (area.feeds === "mandatory") mandatory += push;
   }
 
-  /* Multiplicador nunca fica negativo nem zera: receita negativa e despesa obrigatoria zerada
-     nao sao estados de jogo, sao aritmetica escapando. */
+  /* Multiplicador nunca fica negativo nem zera: receita negativa e despesa obrigatória zerada
+     não são estados de jogo, são aritmética escapando. */
   return { revenue: Math.max(0.25, revenue), mandatory: Math.max(0.25, mandatory) };
 }
 
 /**
- * O indice de abertura de cada area, e o historico vazio que o acompanha.
+ * O índice de abertura de cada área, e o histórico vazio que o acompanha.
  *
  * @param {ReadonlyArray<Area>} areas
  * @returns {{ index: Record<string, number>, history: Record<string, number[]> }}
@@ -188,21 +188,21 @@ export function opening(areas) {
   return { index, history };
 }
 
-/* MEDIDO EM 72 CELULAS — nove politicas-sonda a 48 meses, oito areas cada. A distribuicao tem
-   um VAO real entre -9 e -12, e o agrupamento denso do colapso comeca em -20: 49 celulas ficam
-   acima de -10, 9 caem na faixa do meio e 14 passam de -20. Os dois limiares saem dai, e nao
+/* MEDIDO EM 72 CÉLULAS — nove politicas-sonda a 48 meses, oito áreas cada. A distribuição tem
+   um VÃO real entre -9 e -12, e o agrupamento denso do colapso começa em -20: 49 células ficam
+   acima de -10, 9 caem na faixa do meio e 14 passam de -20. Os dois limiares saem daí, e não
    de escolha. */
 const WATCH = 10;
 const ALERT = 20;
 
 /**
- * QUANTO CADA AREA CAIU DESDE A ABERTURA, dito em estado.
+ * QUANTO CADA ÁREA CAIU DESDE A ABERTURA, dito em estado.
  *
- * ⚠ A DISTANCIA E DE `initial`, E NAO DO NIVEL. Um limiar absoluto acusaria o jogador de uma
- * Seguranca 38 que ele HERDOU — ela abre em 38. O que e noticia e a queda, e so ela.
+ * ⚠ A DISTANCIA E DE `initial`, E NÃO DO NÍVEL. Um limiar absoluto acusaria o jogador de uma
+ * Segurança 38 que ele HERDOU — ela abre em 38. O que e noticia e a queda, e só ela.
  *
- * A ausencia de uma area no resultado significa que ela esta quieta, e e ausencia DECLARADA:
- * quem pinta le `alerts[id]` e nao encontra nada para pintar.
+ * A ausência de uma área no resultado significa que ela esta quieta, e e ausência DECLARADA:
+ * quem pinta lê `alerts[id]` e não encontra nada para pintar.
  *
  * @param {ReadonlyArray<Area>} areas
  * @param {Record<string, number>} index - o indice de cada area, hoje

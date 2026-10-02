@@ -1,4 +1,4 @@
-/* SUITE · A VOTACAO — a previsao, o dia, e o termo que salva o Congresso de si. */
+/* SUITE · A VOTAÇÃO — a previsão, o dia, e o termo que salva o Congresso de si. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -27,7 +27,7 @@ function everyone(level) {
   return Object.fromEntries(PARTIES.map(party => [party.id, level]));
 }
 
-/* O limiar vem do motor: redigita-lo aqui seria a prova passar a testar o numero que ela
+/* O limiar vem do motor: redigita-lo aqui seria a prova passar a testar o número que ela
    mesma escreveu. */
 const RUPTURE_EDGE = THRESHOLDS.rupture;
 
@@ -57,7 +57,7 @@ const anyLoyalty = fc
 
 const anyBill = fc.constantFrom(...BILLS);
 
-test("a PREVISAO e deterministica: nenhum sorteio entra nela", () => {
+test("a PREVISÃO e determinística: nenhum sorteio entra nela", () => {
   fc.assert(
     fc.property(anyBill, anyFunding, anyLoyalty, (bill, funding, loyalty) => {
       const first = whipCount({ bill, parties: PARTIES, funding, loyalty });
@@ -67,8 +67,8 @@ test("a PREVISAO e deterministica: nenhum sorteio entra nela", () => {
   );
 });
 
-test("o DIA muda com a semente, e a previsao nao", () => {
-  /* A separacao inteira em uma prova: mesma entrada, mesma tendencia, placares diferentes. */
+test("o DIA muda com a semente, e a previsão não", () => {
+  /* A separação inteira em uma prova: mesma entrada, mesma tendência, placares diferentes. */
   const bill = billOf("reforma-administrativa");
   const base = { bill, parties: PARTIES, funding: everyone(0.5), loyalty: LOYAL };
   const forecast = whipCount(base);
@@ -86,7 +86,7 @@ test("o DIA muda com a semente, e a previsao nao", () => {
   assert.ok(tallies.size > 1, "quarenta sementes deram o mesmo placar — nao ha dissidencia");
 });
 
-test("mesma semente e mesma entrada dao o mesmo placar", () => {
+test("mesma semente e mesma entrada dão o mesmo placar", () => {
   fc.assert(
     fc.property(anyBill, anyFunding, fc.integer({ min: 0, max: 100000 }), (bill, funding, seed) => {
       const run = () =>
@@ -103,8 +103,8 @@ test("mesma semente e mesma entrada dao o mesmo placar", () => {
   );
 });
 
-test("a votacao consome um saque POR BANCADA", () => {
-  /* Um saque unico faria as quatro traírem juntas, o que parece evento e e defeito de
+test("a votação consome um saque POR BANCADA", () => {
+  /* Um saque único faria as quatro traírem juntas, o que parece evento e e defeito de
      modelagem. */
   const start = streamFrom(1, "congress");
   const result = vote({
@@ -135,8 +135,8 @@ test("verba NUNCA reduz a adesao, e em geral aumenta", () => {
   );
 });
 
-test("O PRECO DEPENDE DO ASSUNTO: a mesma verba compra bancadas diferentes", () => {
-  /* A razao de a venalidade ser uma por eixo. */
+test("O PREÇO DEPENDE DO ASSUNTO: a mesma verba compra bancadas diferentes", () => {
+  /* A razão de a venalidade ser uma por eixo. */
   const bill = billOf("abertura-comercial");
   const dry = whipCount({ bill, parties: PARTIES, funding: NO_MONEY, loyalty: LOYAL });
   const paid = whipCount({ bill, parties: PARTIES, funding: everyone(1), loyalty: LOYAL });
@@ -167,10 +167,10 @@ test("lealdade no chao derruba a entrega, e a ruptura joga contra", () => {
   assert.ok(sour.votes > broken.votes, "a ruptura tinha de ser pior que o descontentamento");
 });
 
-/* ── O TERMO DE AMEACA ────────────────────────────────────────────────────── O centro desta
+/* ── O TERMO DE AMEAÇA ────────────────────────────────────────────────────── O centro desta
    fatia. */
 
-test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem vive dela", () => {
+test("A MÁQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem vive dela", () => {
   const threatening = billOf("fim-do-foro-privilegiado");
   const harmless = billOf("pec-seguranca-publica");
   const funding = everyone(1);
@@ -185,8 +185,8 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
     return found;
   };
 
-  /* O bloco mais fisiologico tem de sofrer MAIS com a ameaca que o menos fisiologico — e a
-     inversao da relacao habitual entre venalidade e resistencia. */
+  /* O bloco mais fisiológico tem de sofrer MAIS com a ameaça que o menos fisiológico — e a
+     inversão da relação habitual entre venalidade e resistência. */
   const centraoPenalty = of(onThreat, "fbr").resistance - of(onHarmless, "fbr").resistance;
   const liberalPenalty =
     of(onThreat, "vanguarda").resistance - of(onHarmless, "vanguarda").resistance;
@@ -197,7 +197,7 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
       `${liberalPenalty.toFixed(1)})`,
   );
 
-  /* E verba cheia NAO compra esse termo. */
+  /* E verba cheia NÃO compra esse termo. */
   const bought = of(
     whipCount({ bill: threatening, parties: PARTIES, funding: everyone(1), loyalty: LOYAL }),
     "fbr",
@@ -205,8 +205,8 @@ test("A MAQUINA SE DEFENDE: a pauta que a ataca fica cara justamente para quem v
   assert.ok(bought.adherence < 0.5, `o centrao entregou ${(bought.adherence * 100).toFixed(0)}%`);
 });
 
-test("NENHUMA PAUTA E INVOTAVEL: toda acao PASSA no PROPRIO quorum", () => {
-  /* A prova mais importante do arquivo, e ela ja foi fraca duas vezes. */
+test("NENHUMA PAUTA E INVOTAVEL: toda ação PASSA no PRÓPRIO quórum", () => {
+  /* A prova mais importante do arquivo, e ela já foi fraca duas vezes. */
   const generous = everyone(1);
   const devoted = everyone(100);
 
@@ -226,7 +226,7 @@ test("NENHUMA PAUTA E INVOTAVEL: toda acao PASSA no PROPRIO quorum", () => {
   }
 });
 
-test("mas o caminho facil NAO existe: nenhuma acao passa de graca e sem base", () => {
+test("mas o caminho facil NÃO existe: nenhuma ação passa de graça e sem base", () => {
   /* O contrapeso da prova acima. */
   const broke = everyone(0);
   const cold = everyone(30);
@@ -238,8 +238,8 @@ test("mas o caminho facil NAO existe: nenhuma acao passa de graca e sem base", (
   assert.equal(easy.length, 0, `passaram de graca: ${easy.map(bill => bill.id).join(", ")}`);
 });
 
-test("A EMENDA E OUTRO JOGO: duas bancadas nao ENTREGAM tres quintos", () => {
-  /* A afirmacao verdadeira e sobre ENTREGA, e nao sobre assento: adesao nunca e 100%, entao a
+test("A EMENDA E OUTRO JOGO: duas bancadas não ENTREGAM três quintos", () => {
+  /* A afirmação verdadeira e sobre ENTREGA, e não sobre assento: adesao nunca e 100%, então a
      dupla que soma 313 no papel entrega bem menos no plenario. */
   const generous = everyone(1);
   const devoted = everyone(100);
@@ -264,7 +264,7 @@ test("A EMENDA E OUTRO JOGO: duas bancadas nao ENTREGAM tres quintos", () => {
   assert.equal(enough.length, 0, `duplas que fecham 308 sozinhas:\n  ${enough.join("\n  ")}`);
 });
 
-test("o quorum sai do instrumento, e nao de um numero digitado por acao", () => {
+test("o quórum sai do instrumento, e não de um número digitado por ação", () => {
   for (const bill of BILLS) {
     const expected =
       bill.instrument === "amendment"
@@ -292,7 +292,7 @@ test("a adesao fica sempre entre 0 e 1, e os votos dentro da bancada", () => {
   );
 });
 
-test("o placar do dia tambem respeita o tamanho das bancadas", () => {
+test("o placar do dia também respeita o tamanho das bancadas", () => {
   fc.assert(
     fc.property(
       anyBill,
@@ -323,12 +323,12 @@ test("o placar do dia tambem respeita o tamanho das bancadas", () => {
 });
 
 /* ── A BANDA ───────────────────────────────────────────────────────────────── `dispersion` e
-   a unica funcao deste motor que descreve o sorteio SEM sacar dele, e e por isso que ela
-   precisa de prova propria: ela e uma afirmacao sobre o comportamento de `vote`, escrita em
+   a única função deste motor que descreve o sorteio SEM sacar dele, e e por isso que ela
+   precisa de prova própria: ela e uma afirmação sobre o comportamento de `vote`, escrita em
    outro lugar. */
 
 test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
-  /* Seiscentas votacoes com semente declarada. */
+  /* Seiscentas votações com semente declarada. */
   const bill = billOf("abertura-comercial");
 
   for (const level of [20, 50, 70, 95]) {
@@ -353,7 +353,7 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
       drifts.reduce((sum, value) => sum + (value - mean) ** 2, 0) / drifts.length,
     );
 
-    /* 25% de folga cobre o arredondamento em cadeiras (a banda e inteira, o desvio nao) e o
+    /* 25% de folga cobre o arredondamento em cadeiras (a banda e inteira, o desvio não) e o
        corte da adesao em 0 e 1. */
     assert.ok(
       Math.abs(sigma - band) <= band * 0.25,
@@ -362,8 +362,8 @@ test("A BANDA MEDE O SORTEIO: o desvio observado bate com o previsto", () => {
   }
 });
 
-test("A BANDA NAO E O PIOR CASO: erros independentes somam em QUADRATURA", () => {
-  /* Quatro bancadas iguais, cada uma sacando do proprio fluxo; a maior, para a banda passar de
+test("A BANDA NÃO E O PIOR CASO: erros independentes somam em QUADRATURA", () => {
+  /* Quatro bancadas iguais, cada uma sacando do próprio fluxo; a maior, para a banda passar de
      uma cadeira. */
   const one = [...PARTIES].sort((a, b) => b.seats - a.seats)[0];
   assert.ok(one);
@@ -398,11 +398,11 @@ test("base insatisfeita e base IMPREVISIVEL: menos lealdade nunca estreita a ban
   );
 });
 
-/* Ela existe para a tela nao ter de inventar essa conta — e o valor dela depende inteiramente
-   de nao divergir da votacao. */
+/* Ela existe para a tela não ter de inventar essa conta — e o valor dela depende inteiramente
+   de não divergir da votação. */
 
 test("MAIS LEALDADE NUNCA ENTREGA MENOS, em pauta nenhuma", () => {
-  /* A base e a votacao comum; a pauta que a bancada defende pode passar dela, e por isso a
+  /* A base e a votação comum; a pauta que a bancada defende pode passar dela, e por isso a
      propriedade antiga (voto nunca acima da base) saiu com o modelo da base. */
   fc.assert(
     fc.property(anyBill, anyFunding, anyLoyalty, (bill, funding, loyalty) => {
@@ -445,8 +445,8 @@ test("A BASE E A SOMA DAS CHANCES, sem degrau escondido", () => {
   }
 });
 
-test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
-  /* ⚠ E ESTA E A RAZAO DE SONDA EXISTIR PARA O MODELO, e nao so para a tela. */
+test("A RUA PESA NA VOTAÇÃO: governo popular compra voto mais barato", () => {
+  /* ⚠ E ESTA E A RAZÃO DE SONDA EXISTIR PARA O MODELO, e não só para a tela. */
   const bill = BILLS.find(item => item.instrument === "law" && item.threat < 0.3);
   assert.ok(bill, "o catalogo perdeu a lei mansa que esta prova usa");
 
@@ -462,14 +462,14 @@ test("A RUA PESA NA VOTACAO: governo popular compra voto mais barato", () => {
   assert.ok(loved > neutral, `governo amado nao ganhou nada: ${neutral} → ${loved}`);
   assert.ok(hated < neutral, `governo odiado nao perdeu nada: ${neutral} → ${hated}`);
 
-  /* O TAMANHO: a diferenca entre o extremo amado e o extremo odiado nao pode ser maior que o
-     plenario inteiro nem tao pequena que nunca mude uma votacao. */
+  /* O TAMANHO: a diferença entre o extremo amado e o extremo odiado não pode ser maior que o
+     plenario inteiro nem tão pequena que nunca mude uma votação. */
   const swing = loved - hated;
   assert.ok(swing > 20, `a rua mudou so ${swing} votos entre os extremos — ela nao importa`);
   assert.ok(swing < 250, `a rua mudou ${swing} votos — ela virou o botao de aprovar tudo`);
 });
 
-test("SEM A RUA, O MOTOR CONTINUA O MESMO: o padrao e neutro e nao zero", () => {
+test("SEM A RUA, O MOTOR CONTINUA O MESMO: o padrão e neutro e não zero", () => {
   /* O contrato que mantem a suite antiga descrevendo a verdade. */
   const bill = BILLS[0];
   assert.ok(bill);
@@ -478,7 +478,7 @@ test("SEM A RUA, O MOTOR CONTINUA O MESMO: o padrao e neutro e nao zero", () => 
   assert.equal(whipCount(input).votes, whipCount({ ...input, standing: 35 }).votes);
 });
 
-test("A BASE PARTE EM DUAS E A SOMA E A PROPRIA BASE — conviccao mais aluguel", () => {
+test("A BASE PARTE EM DUAS E A SOMA E A PRÓPRIA BASE — convicção mais aluguel", () => {
   fc.assert(
     fc.property(
       fc.dictionary(fc.constantFrom(...PARTIES.map(p => p.id)), fc.integer({ min: 0, max: 100 })),
@@ -487,12 +487,12 @@ test("A BASE PARTE EM DUAS E A SOMA E A PROPRIA BASE — conviccao mais aluguel"
         const total = baseCount({ parties: PARTIES, loyalty });
 
         /* ⚠ A SOMA E CONFERIDA ANTES DO ARREDONDAMENTO, como manda a prosa de `baseSplit`:
-           repartir inteiro faria as partes divergirem do total em ate uma cadeira.
-           ⛔ E A COMPARACAO E POR TOLERANCIA, e nao por igualdade de inteiro: `baseCount`
-           acumula as cadeiras numa soma so e `baseVenality` em duas, e as duas ordens de
+           repartir inteiro faria as partes divergirem do total em até uma cadeira.
+           ⛔ E A COMPARAÇÃO E POR TOLERÂNCIA, e não por igualdade de inteiro: `baseCount`
+           acumula as cadeiras numa soma só e `baseVenality` em duas, e as duas ordens de
            ponto flutuante divergem em ~1e-13. Numa carga que caia exatamente no meio, os
-           dois `Math.round` iam para lados opostos — o portao ficava vermelho em cerca de
-           uma rodada em cinco, sem defeito nenhum atras. */
+           dois `Math.round` iam para lados opostos — o portão ficava vermelho em cerca de
+           uma rodada em cinco, sem defeito nenhum atrás. */
         assert.ok(
           Math.abs(split.bought + split.convinced - total) <= 0.5 + 1e-9,
           "as duas metades nao fecham a base",
@@ -503,8 +503,8 @@ test("A BASE PARTE EM DUAS E A SOMA E A PROPRIA BASE — conviccao mais aluguel"
   );
 });
 
-test("O CORTE E POR PRECO, e nao por humor — a base cheia parte 384 contra 129", () => {
-  /* Com todo mundo leal a base e a Camara inteira, e ai a divisao e a do catalogo puro. */
+test("O CORTE E POR PREÇO, e não por humor — a base cheia parte 384 contra 129", () => {
+  /* Com todo mundo leal a base e a Camara inteira, e ai a divisão e a do catálogo puro. */
   const loyal = Object.fromEntries(PARTIES.map(party => [party.id, 100]));
   const split = baseVenality({ parties: PARTIES, loyalty: loyal });
 
@@ -512,11 +512,11 @@ test("O CORTE E POR PRECO, e nao por humor — a base cheia parte 384 contra 129
   assert.equal(Math.round(split.convinced), 129, "as cadeiras de conviccao nao batem");
 });
 
-/* ── O PARTIDO DO PRESIDENTE ────────────────────────────────────────────────── ⚠ ELE NAO E
-   UM BONUS, e as tres provas abaixo cobram os TRES lados: o que ele da, o que ele tira, e o
-   que ele nao mexe. */
+/* ── O PARTIDO DO PRESIDENTE ────────────────────────────────────────────────── ⚠ ELE NÃO E
+   UM BÔNUS, e as três provas abaixo cobram os TRÊS lados: o que ele da, o que ele tira, e o
+   que ele não mexe. */
 
-test("O SEU PARTIDO NAO SE COMPRA — a emenda para de mover a bancada que te elegeu", () => {
+test("O SEU PARTIDO NÃO SE COMPRA — a emenda para de mover a bancada que te elegeu", () => {
   const bill = VOTABLE[0];
   const meu = PARTIES[0];
   if (!bill || !meu) throw new Error("catalogo vazio");
@@ -540,7 +540,7 @@ test("O SEU PARTIDO NAO SE COMPRA — a emenda para de mover a bancada que te el
   assert.equal(meuPobre?.adherence, pobre?.adherence, "sem verba, a regra mudou alguma coisa");
 });
 
-test("E ELA SO VALE PARA A SUA — as outras oito continuam a venda", () => {
+test("E ELA SÓ VALE PARA A SUA — as outras oito continuam a venda", () => {
   const bill = VOTABLE[0];
   const meu = PARTIES[0];
   if (!bill || !meu) throw new Error("catalogo vazio");
@@ -566,9 +566,9 @@ test("E ELA SO VALE PARA A SUA — as outras oito continuam a venda", () => {
 });
 
 test("SEM PARTIDO, O PLENARIO E O DE ANTES — em qualquer pauta", () => {
-  /* ⚠ ESTA E A PROVA QUE PROTEGE A SERIE. O simulador roda sem partido, e as seis politicas
-     da tabela de calibragem sao a linha de base do projeto inteiro: se `ruling` ausente
-     mudasse um voto, toda ela estaria vencida sem ninguem ter escolhido isso. */
+  /* ⚠ ESTA E A PROVA QUE PROTEGE A SÉRIE. O simulador roda sem partido, e as seis políticas
+     da tabela de calibragem são a linha de base do projeto inteiro: se `ruling` ausente
+     mudasse um voto, toda ela estaria vencida sem ninguém ter escolhido isso. */
   fc.assert(
     fc.property(fc.nat({ max: VOTABLE.length - 1 }), fc.nat({ max: 100 }), (indice, nivel) => {
       const bill = VOTABLE[indice];

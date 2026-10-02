@@ -38,7 +38,7 @@ const anyAllocation = fc
   .map(values => Object.fromEntries(AREAS.map((area, i) => [area.id, values[i] ?? 0])));
 
 /**
- * Um historico JA CHEIO, com o mesmo valor em todos os meses de cada area.
+ * Um histórico JÁ CHEIO, com o mesmo valor em todos os meses de cada área.
  *
  * @param {(area: Area) => number} pick
  * @returns {Record<string, number[]>}
@@ -47,13 +47,13 @@ function settled(pick) {
   return Object.fromEntries(AREAS.map(area => [area.id, Array(area.lag + 1).fill(pick(area))]));
 }
 
-test("SEM VERBA O PAIS PIORA, na taxa que o catalogo declara", () => {
-  /* O decaimento e o que impede o jogo de ter um estado final em que tudo esta em 100 e nao
-     ha mais o que decidir. */
+test("SEM VERBA O PAÍS PIORA, na taxa que o catálogo declara", () => {
+  /* O decaimento e o que impede o jogo de ter um estado final em que tudo esta em 100 e não
+     há mais o que decidir. */
   const first = step(run({}));
 
   for (const area of AREAS) {
-    /* A area alvo do canal de capacidade recebe um empurrao extra, entao a igualdade exata so
+    /* A área alvo do canal de capacidade recebe um empurrão extra, então a igualdade exata só
        vale para as outras. */
     if (area.id === CAPACITY_TARGET) continue;
     assert.equal(
@@ -64,18 +64,18 @@ test("SEM VERBA O PAIS PIORA, na taxa que o catalogo declara", () => {
   }
 });
 
-test("O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO — a identidade do achado 31", () => {
-  /* Sem ela, os oito numeros de `decay` viram oito literais que ninguem sabe de onde vieram —
-     e a proxima sessao que mexer num `cost` de programa quebra a identidade em silencio,
-     porque nada liga o catalogo de programas ao de areas. */
+test("O ORCAMENTO HERDADO E O PONTO DE EQUILÍBRIO — a identidade do achado 31", () => {
+  /* Sem ela, os oito números de `decay` viram oito literais que ninguém sabe de onde vieram —
+     e a próxima sessão que mexer num `cost` de programa quebra a identidade em silêncio,
+     porque nada liga o catálogo de programas ao de áreas. */
   const state = createState();
   const inherited = spendOf({ programs: PROGRAMS, levels: state.levels }).fullByArea;
 
   for (const area of AREAS) {
     const spend = inherited[area.id] ?? 0;
 
-    /* A IDENTIDADE, escrita como ela e: o empurrao do gasto herdado empata com o vazamento do
-       indice herdado. */
+    /* A IDENTIDADE, escrita como ela e: o empurrão do gasto herdado empata com o vazamento do
+       índice herdado. */
     assert.ok(
       Math.abs(area.yield * spend - area.decay * area.initial) < 1e-3,
       `${area.id}: o gasto herdado empurra ${(area.yield * spend).toFixed(4)} contra um ` +
@@ -83,7 +83,7 @@ test("O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO — a identidade do achado 31"
     );
   }
 
-  /* E O EQUILIBRIO E DE FATO ESTAVEL: um mes com o gasto herdado devolve o indice herdado. */
+  /* E O EQUILÍBRIO E DE FATO ESTÁVEL: um mês com o gasto herdado devolve o índice herdado. */
   const held = step(run({ allocation: inherited }));
   for (const area of AREAS) {
     if (area.id === CAPACITY_TARGET) continue;
@@ -94,7 +94,7 @@ test("O ORCAMENTO HERDADO E O PONTO DE EQUILIBRIO — a identidade do achado 31"
   }
 });
 
-test("o indice NUNCA sai de 0 a 100, por mais verba ou abandono que haja", () => {
+test("o índice NUNCA sai de 0 a 100, por mais verba ou abandono que haja", () => {
   fc.assert(
     fc.property(anyAllocation, fc.integer({ min: 1, max: 60 }), (allocation, months) => {
       let carried = opening(AREAS);
@@ -125,7 +125,7 @@ test("verba levanta, e mais verba nunca levanta menos", () => {
   );
 });
 
-test("reforma da um SALTO, e o salto nao depende de verba nenhuma", () => {
+test("reforma da um SALTO, e o salto não depende de verba nenhuma", () => {
   const reform = step(run({ impacts: { health: 12 } }));
   const quiet = step(run({}));
   const health = AREAS.find(area => area.id === "health");
@@ -137,7 +137,7 @@ test("reforma da um SALTO, e o salto nao depende de verba nenhuma", () => {
   );
 });
 
-test("O ATRASO E ATRASO: o modelo consome o indice de `lag` meses atras", () => {
+test("O ATRASO E ATRASO: o modelo consome o índice de `lag` meses atrás", () => {
   /* A prova central. */
   const slow = AREAS.find(area => area.lag > 0 && area.id !== CAPACITY_TARGET);
   assert.ok(slow, "o catalogo perdeu toda area com atraso");
@@ -146,14 +146,14 @@ test("O ATRASO E ATRASO: o modelo consome o indice de `lag` meses atras", () => 
   /** @type {number[]} */
   const seen = [];
 
-  /* Um salto enorme no primeiro mes, e nada depois. */
+  /* Um salto enorme no primeiro mês, e nada depois. */
   for (let month = 0; month < slow.lag + 3; month++) {
     const outcome = step(run({ ...carried, impacts: month === 0 ? { [slow.id]: 30 } : {} }));
     carried = { index: outcome.index, history: outcome.history };
     seen.push(outcome.effective[slow.id] ?? 0);
   }
 
-  /* Nos primeiros `lag` meses o efetivo ainda e o de abertura — o salto nao chegou. */
+  /* Nos primeiros `lag` meses o efetivo ainda e o de abertura — o salto não chegou. */
   assert.equal(seen[0], slow.initial, "o salto chegou ao modelo no mesmo mes");
   assert.ok((seen[slow.lag] ?? 0) > slow.initial, `o salto nao chegou depois de ${slow.lag} meses`);
 });
@@ -168,9 +168,9 @@ test("sem atraso, o efetivo E o corrente", () => {
   }
 });
 
-test("A PRESSAO TEM O SINAL DO CATALOGO, e o mesmo canal aceita os dois", () => {
-  /* Duas areas em `mandatory` empurram para lados opostos de proposito: servico de saude bom
-     REDUZ a obrigatoria, cobertura previdenciaria boa a AUMENTA. */
+test("A PRESSÃO TEM O SINAL DO CATÁLOGO, e o mesmo canal aceita os dois", () => {
+  /* Duas áreas em `mandatory` empurram para lados opostos de propósito: servico de saude bom
+     REDUZ a obrigatória, cobertura previdenciária boa a AUMENTA. */
   const health = AREAS.find(area => area.id === "health");
   const welfare = AREAS.find(area => area.id === "welfare");
   assert.ok(health && welfare);
@@ -181,10 +181,10 @@ test("A PRESSAO TEM O SINAL DO CATALOGO, e o mesmo canal aceita os dois", () => 
   const only = (id, value) =>
     pressureOf({
       areas: AREAS,
-      /* AS OUTRAS AREAS FICAM NA ABERTURA, e nao no ponto neutro: desde que a regua da
-         pressao passou a ser o indice DE ABERTURA de cada area, deixa-las em 50 nao as
-         neutraliza — poe todas elas fora do lugar de uma vez, e a prova mediria o catalogo
-         inteiro em vez da area sob teste. */
+      /* AS OUTRAS ÁREAS FICAM NA ABERTURA, e não no ponto neutro: desde que a régua da
+         pressão passou a ser o índice DE ABERTURA de cada área, deixa-las em 50 não as
+         neutraliza — põe todas elas fora do lugar de uma vez, e a prova mediria o catálogo
+         inteiro em vez da área sob teste. */
       history: settled(area => (area.id === id ? value : area.initial)),
     });
 
@@ -195,7 +195,7 @@ test("A PRESSAO TEM O SINAL DO CATALOGO, e o mesmo canal aceita os dois", () => 
   );
 });
 
-test("a pressao nunca vira multiplicador absurdo", () => {
+test("a pressão nunca vira multiplicador absurdo", () => {
   fc.assert(
     fc.property(
       fc
@@ -213,11 +213,11 @@ test("a pressao nunca vira multiplicador absurdo", () => {
   );
 });
 
-test("o canal `capacity` alimenta UMA area, e so ela", () => {
+test("o canal `capacity` alimenta UMA área, e só ela", () => {
   const source = AREAS.find(area => area.feeds === "capacity");
   assert.ok(source, "o catalogo perdeu o canal de capacidade");
 
-  /* So o alvo pode divergir. */
+  /* Só o alvo pode divergir. */
   const base = opening(AREAS);
   const low = step(run({ ...base, history: settled(a => (a.id === source.id ? 0 : a.initial)) }));
   const high = step(
@@ -236,7 +236,7 @@ test("o canal `capacity` alimenta UMA area, e so ela", () => {
   }
 });
 
-test("um mes de capacidade e deterministico", () => {
+test("um mês de capacidade e determinístico", () => {
   fc.assert(
     fc.property(anyAllocation, allocation => {
       assert.deepEqual(step(run({ allocation })), step(run({ allocation })));
@@ -244,8 +244,8 @@ test("um mes de capacidade e deterministico", () => {
   );
 });
 
-test("o historico nao cresce sem fim", () => {
-  /* Um buffer que cresce um item por mes seria um save que cresce para sempre, e o defeito so
+test("o histórico não cresce sem fim", () => {
+  /* Um buffer que cresce um item por mês seria um save que cresce para sempre, e o defeito só
      apareceria numa partida longa. */
   let carried = opening(AREAS);
   for (let month = 0; month < 200; month++) {
@@ -261,8 +261,8 @@ test("o historico nao cresce sem fim", () => {
   }
 });
 
-test("O ALERTA MEDE A QUEDA, e nao o nivel — a Seguranca herdada nao acusa ninguem", () => {
-  /* Seguranca abre em 38, o menor indice do catalogo. Um limiar absoluto a acusaria no mes 1,
+test("O ALERTA MEDE A QUEDA, e não o nível — a Segurança herdada não acusa ninguém", () => {
+  /* Segurança abre em 38, o menor índice do catálogo. Um limiar absoluto a acusaria no mês 1,
      antes de o jogador tocar em nada. */
   const quiet = alertsOf(AREAS, Object.fromEntries(AREAS.map(area => [area.id, area.initial])));
   assert.deepEqual(quiet, {}, "a abertura nao tem alerta nenhum");
@@ -286,7 +286,7 @@ test("O ALERTA MEDE A QUEDA, e nao o nivel — a Seguranca herdada nao acusa nin
   }
 });
 
-test("O ALERTA E UMA LEITURA DA MALHA, e nenhuma area sobe para dentro dele", () => {
+test("O ALERTA E UMA LEITURA DA MALHA, e nenhuma área sobe para dentro dele", () => {
   fc.assert(
     fc.property(
       fc.dictionary(

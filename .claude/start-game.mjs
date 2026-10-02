@@ -1,6 +1,6 @@
-/* SOBE O JOGO NO INICIO DA SESSAO, e so se ele ainda nao estiver de pe.
-   ⚠ ELE NAO E O SERVIDOR DO PASSEIO: `walk` sobe o proprio em 5201, entao os dois convivem.
-   Sem a sonda, cada sessao deixaria um processo orfao segurando a porta. */
+/* SOBE O JOGO NO INÍCIO DA SESSÃO, e só se ele ainda não estiver de pé.
+   ⚠ ELE NÃO E O SERVIDOR DO PASSEIO: `walk` sobe o próprio em 5201, então os dois convivem.
+   Sem a sonda, cada sessão deixaria um processo órfão segurando a porta. */
 
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -41,7 +41,7 @@ const filho = spawn(process.execPath, [join(ROOT, "tools", "serve-static.mjs")],
 });
 filho.unref();
 
-/* DEZ TENTATIVAS DE 300ms: o servidor e estatico e sobe em uma, mas a primeira sonda dispara
+/* DEZ TENTATIVAS DE 300ms: o servidor e estático e sobe em uma, mas a primeira sonda dispara
    antes de o `listen` fechar. */
 for (let tentativa = 0; tentativa < 10; tentativa += 1) {
   await espera(300);

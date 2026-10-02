@@ -1,7 +1,7 @@
-/* PROVA DE QUE SO A PROSA MUDOU: o arquivo sem comentarios tem de ser identico antes e depois.
+/* PROVA DE QUE SÓ A PROSA MUDOU: o arquivo sem comentários tem de ser idêntico antes e depois.
    uso: node tools/prose-only.mjs <arquivo-antes> <arquivo-depois>
-   Para .mjs o TypeScript reemite o codigo sem comentarios (tokenizador de verdade, nao regex);
-   para .css tira-se os blocos e normaliza-se o espaco. Sai 0 se identico, 1 se o codigo mudou. */
+   Para .mjs o TypeScript reemite o código sem comentários (tokenizador de verdade, não regex);
+   para .css tira-se os blocos e normaliza-se o espaço. Sai 0 se idêntico, 1 se o código mudou. */
 import { readFileSync } from "node:fs";
 import ts from "typescript";
 

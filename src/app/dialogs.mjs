@@ -1,4 +1,4 @@
-/* OS DIALOGOS — o aviso e a posse. */
+/* OS DIÁLOGOS — o aviso e a posse. */
 
 import { noticeHtml } from "../ui/screens/report.mjs";
 import { DEFAULT_TREATMENT, UI } from "../ui/strings.mjs";
@@ -7,12 +7,12 @@ import { session } from "./session.mjs";
 import { dressActions, el } from "./paint.mjs";
 
 /**
- * O AVISO — a unica coisa que ainda interrompe.
+ * O AVISO — a única coisa que ainda interrompe.
  *
- * `showModal()` entrega foco, inercia do fundo, Escape e camada superior; a versao
- * manual disso custou, no projeto anterior, uma sessao inteira de correcao de
- * acessibilidade e tres regras permanentes de documentacao. O relatorio saiu daqui de
- * proposito: informacao que se consulta nao trava o fundo, e um aviso trava porque
+ * `showModal()` entrega foco, inércia do fundo, Escape e camada superior; a versão
+ * manual disso custou, no projeto anterior, uma sessão inteira de correção de
+ * acessibilidade e três regras permanentes de documentação. O relatório saiu daqui de
+ * propósito: informacao que se consulta não trava o fundo, e um aviso trava porque
  * algo deu errado.
  *
  * @param {string} title
@@ -28,11 +28,11 @@ export function openNotice(title, body) {
 
 export function openSwear() {
   el.swearName.value = session.state.president?.name ?? "";
-  /* AS OPCOES SAO MONTADAS AQUI, e nao no HTML: a lista de bancadas mora no catalogo, e
-     escrever nove `<option>` a mao seria uma segunda verdade sobre quantas o jogo tem. */
-  /* ⚠ NENHUMA VEM MARCADA, e a vaga na frente e o item: com a lista crua, quem so clica em
-     "tomar posse" leva a PRIMEIRA do catalogo — a menor bancada da Camara, escolhida por
-     ordem de arquivo e nao por ele. A escolha e obrigatoria na lei e passa a ser na tela. */
+  /* AS OPÇÕES SÃO MONTADAS AQUI, e não no HTML: a lista de bancadas mora no catálogo, e
+     escrever nove `<option>` a mão seria uma segunda verdade sobre quantas o jogo tem. */
+  /* ⚠ NENHUMA VEM MARCADA, e a vaga na frente e o item: com a lista crua, quem só clica em
+     "tomar posse" leva a PRIMEIRA do catálogo — a menor bancada da Camara, escolhida por
+     ordem de arquivo e não por ele. A escolha e obrigatória na lei e passa a ser na tela. */
   const vazia = document.createElement("option");
   vazia.value = "";
   vazia.textContent = UI.actions.swearPartyEmpty;

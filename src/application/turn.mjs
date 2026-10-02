@@ -96,7 +96,7 @@ import { OPENING_MONTH, reduce } from "../state/state.mjs";
  * @property {ReadonlyArray<import("../domain/cast/index.mjs").Person>} people o elenco do mandato
  * @property {Record<string, number>} memory o que cada pessoa passou a lembrar
  * @property {ReadonlyArray<{ kind: string, label: string, detail: string | null }>} events
- * o que a tramitacao fez no mes: engavetou, pautou, relatou, aprovou ou derrubou
+ * o que a tramitação fez no mês: engavetou, pautou, relatou, aprovou ou derrubou
  */
 
 /**
@@ -187,7 +187,7 @@ export function bandsOf(state, catalog = CATALOG) {
  * @param {number} input.delivered - a verba que de fato CHEGOU as bancadas, 0 a 1
  * @param {Record<string, number>} input.index - o indice de cada area
  * @param {ReadonlyArray<string>} [input.spurned] - os lobbies cuja exigencia foi
- * recusada ou deixada vencer NESTE mes
+ * recusada ou deixada vencer NESTE mês
  * @param {typeof CATALOG} input.catalog
  * @returns {Record<string, number>} de 0 (satisfeito) a 1 (fervendo)
  */
@@ -197,19 +197,19 @@ function grievanceOf({ debtRatio, delivered, index, spurned = [], catalog }) {
 
   for (const lobby of catalog.lobbies) {
     if (lobby.reads === "debt") {
-      /* Mesma tolerancia do premio de risco (initialDebtRatio). */
+      /* Mesma tolerância do prêmio de risco (initialDebtRatio). */
       const excess = debtRatio - catalog.fiscal.initialDebtRatio;
       want[lobby.id] = clamp(excess / DEBT_SPAN, 0, 1);
       continue;
     }
 
     if (lobby.reads === "share") {
-      /* Ler ratio dava 100% honrado com zero promessa (pressao zero em 48 meses). */
+      /* Ler ratio dava 100% honrado com zero promessa (pressão zero em 48 meses). */
       want[lobby.id] = clamp(1 - delivered, 0, 1);
       continue;
     }
 
-    /* Indice das areas contra o ponto neutro. */
+    /* Índice das áreas contra o ponto neutro. */
     const ids = (lobby.areas ?? "").split(" ").filter(Boolean);
     if (ids.length === 0) {
       want[lobby.id] = 0;
@@ -219,7 +219,7 @@ function grievanceOf({ debtRatio, delivered, index, spurned = [], catalog }) {
     want[lobby.id] = clamp((NEUTRAL - mean) / NEUTRAL, 0, 1);
   }
 
-  /* Silencio conta como recusa; soma direto na pressao que ja tem inercia. */
+  /* Silêncio conta como recusa; soma direto na pressão que já tem inércia. */
   for (const id of spurned) {
     want[id] = clamp((want[id] ?? 0) + catalog.pressure.spite, 0, 1);
   }
@@ -234,7 +234,7 @@ function grievanceOf({ debtRatio, delivered, index, spurned = [], catalog }) {
 function premiumNow(state, catalog) {
   return premiumOf({
     debtRatio: state.macro.gdp > 0 ? state.fiscal.debt / state.macro.gdp : 0,
-    /* Tolerancia e a divida herdada inicial. */
+    /* Tolerância e a dívida herdada inicial. */
     tolerance: catalog.fiscal.initialDebtRatio,
     slope: catalog.macro.riskPremium,
   });
@@ -273,7 +273,7 @@ export function lockedBy(state, catalog = CATALOG, top = 3) {
         id: program.id,
         label: program.label,
         area: program.area,
-        /* Em bilhoes por mes. */
+        /* Em bilhoes por mês. */
         spend: (Math.max(0, floor) / 100) * program.cost * (1 / MONTHS_PER_YEAR),
         guard: program.guard,
         norm: governs[program.id] ?? "",
@@ -304,17 +304,17 @@ function positionOf(state, catalog) {
   const opening = Object.fromEntries(catalog.rules.map(rule => [rule.id, rule.initial]));
   const dividends = dividendOf(state.levels) - dividendOf(opening);
 
-  /* Lida em delta, o primario de abertura saltaria de −51,2 para −31,4. */
+  /* Lida em delta, o primário de abertura saltaria de −51,2 para −31,4. */
   const waived = waivedOf(catalog.programs, state.levels);
 
   return {
     gdp: state.macro.gdp,
-    /* Inflacao indexa a despesa obrigatoria. */
+    /* Inflação indexa a despesa obrigatória. */
     inflation: state.macro.inflation,
     mandatory: state.fiscal.mandatory,
     anchorRevenue: state.fiscal.anchorRevenue,
     anchorExpense: state.fiscal.anchorExpense,
-    /* Fracao mensal: sem ela, o teto abria com R$ 107 bi a mais sobre 176 de discricionario. */
+    /* Fração mensal: sem ela, o teto abria com R$ 107 bi a mais sobre 176 de discricionário. */
     elapsed:
       ((state.month < MONTHS_PER_YEAR
         ? state.month - OPENING_MONTH
@@ -338,7 +338,7 @@ function saleOf(rules, before, after) {
   let total = 0;
   for (const rule of rules) {
     const sold = (before[rule.id] ?? rule.initial) - (after[rule.id] ?? rule.initial);
-    /* So a venda de estatais arrecada no mes. */
+    /* Só a venda de estatais arrecada no mês. */
     if (sold > 0) total += (rule.reach * rule.sale * sold) / 100;
   }
   return total;
@@ -378,7 +378,7 @@ export function situationOf(state, catalog = CATALOG) {
   const base = baseCount({ parties, loyalty: state.loyalty });
 
   const mood = (/** @type {Party} */ party) => state.loyalty[party.id] ?? 0;
-  /* Ruptura e obstrucao contam a coalizao: o PML em 12% nao e crise do governo. */
+  /* Ruptura e obstrução contam a coalizao: o PML em 12% não e crise do governo. */
   const coalition = new Set([
     state.party,
     ...Object.values(state.cabinet ?? {}).map(item => item.party),
@@ -387,7 +387,7 @@ export function situationOf(state, catalog = CATALOG) {
   const ruptured = allies.some(party => mood(party) < THRESHOLDS.rupture);
   const obstructing = allies.some(party => mood(party) < THRESHOLDS.obstruction);
 
-  /* Teto fechado vem primeiro: sem discricionario nao ha emenda para manter a base. */
+  /* Teto fechado vem primeiro: sem discricionário não há emenda para manter a base. */
   if (budget.blocked) return { level: "crisis", reason: "blocked", base };
   if (ruptured) return { level: "crisis", reason: "rupture", base };
   if (base < SIMPLE_MAJORITY) return { level: "crisis", reason: "minority", base };
@@ -428,7 +428,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     promised[party.id] = clamp(orders.funding?.[party.id] ?? 0, 0, 1);
   }
 
-  /* O gasto usa a lei vigente; a proposta pode demorar ate 3 meses na tramitacao. */
+  /* O gasto usa a lei vigente; a proposta pode demorar até 3 meses na tramitação. */
   const requestedBands = { ...bands, ...(orders.bands ?? {}) };
 
   const agenda = compose({
@@ -458,7 +458,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
 
   const room = discretionaryRoom(state, catalog);
 
-  /* ID protegido peneirado contra areas validas do catalogo. */
+  /* ID protegido peneirado contra áreas válidas do catálogo. */
   const protect = new Set(
     (orders.protect ?? []).filter((/** @type {string} */ id) =>
       catalog.areas.some(area => area.id === id),
@@ -470,7 +470,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   const promisedCost = costOf(promised, parties, seatPrice);
   const demand = promisedCost + askedTotal;
 
-  /* Protegido sai dos dois lados da razao: blindar tudo estoura a meta primaria. */
+  /* Protegido sai dos dois lados da razão: blindar tudo estoura a meta primária. */
   const shielded = [...protect].reduce((sum, id) => sum + (asked[id] ?? 0), 0);
   const cuttable = demand - shielded;
   const pooled = demand <= room ? 1 : cuttable <= 0 ? 0 : clamp((room - shielded) / cuttable, 0, 1);
@@ -497,10 +497,10 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
   const honoured = spendOf({ programs, levels, bands });
   const allocated = honoured.byArea;
 
-  /* Capacidade consome o gasto total da area; ler so discricionario fazia desregulamentar sem custo. */
+  /* Capacidade consome o gasto total da área; ler só discricionário fazia desregulamentar sem custo. */
   const funded = honoured.fullByArea;
 
-  /* Elenco deterministico gerado por hash da semente para tela e turno usarem a mesma camara. */
+  /* Elenco determinístico gerado por hash da semente para tela e turno usarem a mesma camara. */
   const people = cast({
     seed: state.seed,
     parties,
@@ -519,12 +519,12 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     parameters: catalog.cast,
   });
 
-  /* Sem esta linha o lider nasceria com lealdade zero (bancada em ruptura no mes 1). */
+  /* Sem esta linha o líder nasceria com lealdade zero (bancada em ruptura no mês 1). */
   /** @type {Record<string, number>} */
   const chamberLoyalty = { ...state.loyalty };
   for (const person of people) chamberLoyalty[person.id] = state.loyalty[person.bloc] ?? 0;
 
-  /* Ambicao medida contra a posse para evitar preco oscilar com rateio mensal. */
+  /* Ambição medida contra a posse para evitar preço oscilar com rateio mensal. */
   const wasSpent = spendOf({
     programs,
     levels: Object.fromEntries(programs.map(program => [program.id, program.initial])),
@@ -536,11 +536,11 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     byArea[id] = was > 0 ? clamp((funded[id] ?? 0) / was - 1, -1, 1) : 0;
   }
 
-  /* Ponto neutro de aprovacao unico no jogo inteiro. */
+  /* Ponto neutro de aprovação único no jogo inteiro. */
   const street =
     (pollFrom(state.mood, catalog.segments, catalog.opinion).good - STANDING_NEUTRAL) / 100;
 
-  /* Bloco do presidente dividido entre lideres com bancadas proprias. */
+  /* Bloco do presidente dividido entre líderes com bancadas próprias. */
   const ruling =
     state.party === null || state.party === undefined
       ? null
@@ -586,7 +586,7 @@ export function settlement(state, orders = {}, catalog = CATALOG) {
     protect,
     shielded,
     paidCost: promisedCost * amended,
-    /* Empenho sai do rateio efetivo: proporcional e por area dao o mesmo numero ate contingenciar. */
+    /* Empenho sai do rateio efetivo: proporcional e por área dão o mesmo número até contingenciar. */
     allocatedTotal: honoured.total,
   };
 }
@@ -626,7 +626,7 @@ function demandsOf(state, pressure, catalog) {
  * @returns {import("../data/programs.mjs").Program | null}
  */
 function leverOf(state, lobby, catalog) {
-  /* Mercado olha o orcamento inteiro em vez de area isolada. */
+  /* Mercado olha o orcamento inteiro em vez de área isolada. */
   const areas = new Set((lobby.areas ?? "").split(" ").filter(Boolean));
   const wantsCut = lobby.reads === "debt";
 
@@ -650,7 +650,7 @@ function leverOf(state, lobby, catalog) {
 }
 
 /**
- * Capacidade le funded (gasto total); asked na Previdencia era 2,4 bi contra 126,7 bi (2%).
+ * Capacidade lê funded (gasto total); asked na Previdência era 2,4 bi contra 126,7 bi (2%).
  * @param {GameState} state
  * @param {Orders} [orders]
  * @param {typeof CATALOG} [catalog]
@@ -673,11 +673,11 @@ export function outlook(state, orders = {}, catalog = CATALOG) {
   return { index: project(orders), idle: project({}) };
 }
 
-/* Horizonte de 24 meses: 6 das 8 areas levam mais de um mandato para mover. */
+/* Horizonte de 24 meses: 6 das 8 áreas levam mais de um mandato para mover. */
 export const HORIZON = 24;
 
 /**
- * Projecao mantendo a alocacao atual com plenario congelado (evita votos estocasticos).
+ * Projeção mantendo a alocação atual com plenario congelado (evita votos estocasticos).
  * @param {GameState} state
  * @param {Orders} [orders]
  * @param {typeof CATALOG} [catalog]
@@ -810,15 +810,15 @@ function stanceOf(state, catalog = CATALOG) {
     levels: inherited,
     requested: state.levels,
     power: state.levels["poder-do-executivo"] ?? 0,
-    /* A FAIXA NAO IMPORTA AQUI, e passar a vigente seria pior que nao passar: o que se mede e
-       para onde o gasto andou, e nao que rito isso exigiria. */
+    /* A FAIXA NÃO IMPORTA AQUI, e passar a vigente seria pior que não passar: o que se mede e
+       para onde o gasto andou, e não que rito isso exigiria. */
     bands: {},
     requestedBands: {},
   });
 
   if (!walked.proposal) return null;
 
-  /* Menor distancia euclidiana no plano economico e de costumes. */
+  /* Menor distancia euclidiana no plano econômico e de costumes. */
   let near = "";
   let article = "";
   let best = Infinity;
@@ -843,7 +843,7 @@ function stanceOf(state, catalog = CATALOG) {
 }
 
 /**
- * Previsao de votacao usando a mesma camara, empenho e rua do turno.
+ * Previsão de votação usando a mesma camara, empenho e rua do turno.
  * @param {GameState} state
  * @param {Orders} [orders]
  * @param {typeof CATALOG} [catalog]
@@ -924,7 +924,7 @@ function blocsOf(state, share, whip, byBloc, catalog) {
 
         portfolio: person.ambition === "cabinet" ? (areaLabel.get(person.portfolio) ?? "") : "",
         seats: seatsOf.get(person.id) ?? 0,
-        /* Alcances normalizados para nao estourar a Camara (evita defeito de 730 cadeiras). */
+        /* Alcances normalizados para não estourar a Camara (evita defeito de 730 cadeiras). */
         reach: party.seats > 0 ? (seatsOf.get(person.id) ?? 0) / party.seats : 0,
         votes: votesOf.get(person.id) ?? 0,
 
@@ -1039,17 +1039,17 @@ function alarmsOf(state, now, impeachment, catalog, after) {
     written.push(alarm({ kind: "rupture", id, subject: id, month: state.month }));
   }
 
-  /* Cerco le impeachment aberto e so termina no plenario. */
+  /* Cerco lê impeachment aberto e só termina no plenario. */
   if (state.impeachment === null && impeachment !== null) {
     written.push(alarm({ kind: "siege", id: "siege", subject: "siege", month: state.month }));
   }
 
-  /* Aviso antecipado de teto fechado no proximo mes (fechava em 12 dos 48 meses da politica piso). */
+  /* Aviso antecipado de teto fechado no próximo mês (fechava em 12 dos 48 meses da politica piso). */
   if (!after.blocked && after.blockedNext) {
     written.push(alarm({ kind: "ceiling", id: "ceiling", subject: "ceiling", month: state.month }));
   }
 
-  /* Relatorio bimestral avisado um mes antes; id com mes para nao colidir entregas no ano. */
+  /* Relatório bimestral avisado um mês antes; id com mês para não colidir entregas no ano. */
   if (calendarOf(state.month + 1).now.some(landmark => landmark.id === "bimestral")) {
     written.push(
       alarm({
@@ -1101,7 +1101,7 @@ function alarmsOf(state, now, impeachment, catalog, after) {
   return written.filter(letter => !held.has(letter.id));
 }
 
-/* Limiares minimos de variacao para disparar relatorio do mes. */
+/* Limiares mínimos de variação para disparar relatório do mês. */
 const MOVED = { street: 3, seats: 8, vault: 2 };
 
 /**
@@ -1138,7 +1138,7 @@ function balanceOf(state, after, catalog) {
  * @param {number} after.seats
  * @param {number} after.room
  * @param {Record<string, Record<string, number>>} [after.attach] os ANEXOS, um por
- * dominio e com a chave sendo a propria especie da carta.
+ * dominio e com a chave sendo a própria espécie da carta.
  * @param {Balance} balance o antes e o depois das tres leituras, ja medido uma vez.
  * @returns {import("../state/state.mjs").Letter[]}
  */
@@ -1200,7 +1200,7 @@ function notices(events, month) {
  * @param {number} world.standing
  * @param {typeof CATALOG} world.catalog
  * @param {ReadonlyArray<import("../state/state.mjs").Letter>} world.resolved as
- * perguntas que FECHARAM neste mes, respondidas ou vencidas
+ * perguntas que FECHARAM neste mês, respondidas ou vencidas
  * @param {ReadonlyArray<import("../state/state.mjs").Letter>} world.mail a caixa JA
  * fechada — ver a nota sobre `pending`, abaixo
  */
@@ -1265,7 +1265,7 @@ function advanceBills(state, { share, standing, catalog, resolved, mail }) {
     }
 
     if (bill.stage === "rapporteur") {
-      /* Usa a caixa ja fechada para nao travar em cartas respondidas neste mes. */
+      /* Usa a caixa já fechada para não travar em cartas respondidas neste mês. */
       const open = pending(mail, bill.id);
       if (open) {
         bills.push(bill);
@@ -1384,10 +1384,10 @@ export function playMonth(state, orders = {}, options = {}) {
     requestedBands,
   } = settlement(state, orders, catalog);
 
-  /* Rua da votacao e a apurada no mes anterior. */
+  /* Rua da votação e a apurada no mês anterior. */
   const standing = pollFrom(state.mood, catalog.segments, catalog.opinion).good;
 
-  /* Textos antigos avancam antes do protocolo do mes; cartas fecham antes dos textos. */
+  /* Textos antigos avancam antes do protocolo do mês; cartas fecham antes dos textos. */
   const post = settleMail({ mail: state.mail, orders: orders.mail ?? {}, month: state.month });
 
   /* Concedido move a alavanca no orcamento; recusado sobe a queixa do lobby. */
@@ -1525,7 +1525,7 @@ export function playMonth(state, orders = {}, options = {}) {
     capacityTarget: CAPACITY_TARGET,
   });
 
-  /* Venda abate empenho liquido no lastro. */
+  /* Venda abate empenho líquido no lastro. */
   const proceeds = saleOf(catalog.rules, state.levels, settled);
   const budget = budgetStep({ ...position, spent: paidCost + allocatedTotal - proceeds });
 
@@ -1544,7 +1544,7 @@ export function playMonth(state, orders = {}, options = {}) {
     shock: options.shock ?? 0,
   });
 
-  /* Juros sobre o estoque da divida ao preco do dia anterior a decisao da Selic. */
+  /* Juros sobre o estoque da dívida ao preço do dia anterior a decisão da Selic. */
   const interest = carry({
     debt: state.fiscal.debt,
     rate: state.macro.rate,
@@ -1569,7 +1569,7 @@ export function playMonth(state, orders = {}, options = {}) {
     released,
     services: mean([capacity.index["health"], capacity.index["education"]]),
     safety: capacity.index["security"] ?? 50,
-    /* Traicao e o maior entre emenda nao paga e quebra da posse (evita dupla punicao na rua). */
+    /* Traição e o maior entre emenda não paga e quebra da posse (evita dupla punição na rua). */
     betrayal: Math.max(
       promisedCost > 0 ? 1 - paidCost / promisedCost : 0,
       breachOf(state, catalog),
@@ -1607,7 +1607,7 @@ export function playMonth(state, orders = {}, options = {}) {
 
   const seat = stanceOf(state, catalog);
   const survivors =
-    /* Plenario de afastamento vota no mes seguinte a abertura do processo. */
+    /* Plenario de afastamento vota no mês seguinte a abertura do processo. */
     impeachment !== null && impeachment < state.month && state.fallen === null
       ? vote({
           bill: { economic: seat?.economic ?? 50, liberty: seat?.liberty ?? 50, threat: 0 },
@@ -1617,20 +1617,20 @@ export function playMonth(state, orders = {}, options = {}) {
           stream: passage.stream,
           majority: SEATS - REMOVAL_MAJORITY + 1,
           standing,
-          /* No afastamento nao ha emenda; lealdade partidaria nasce 20 pontos acima. */
+          /* No afastamento não há emenda; lealdade partidaria nasce 20 pontos acima. */
           ruling,
         })
       : null;
 
   const fallen = state.fallen ?? (survivors && !survivors.passed ? state.month : null);
-  /* SOBREVIVEU: o processo se arquiva, e a cadeira volta ao preco. Sem isto o plenario votava
-     todo mes ate o fim do mandato. Se as tres rupturas coincidirem de novo, outro abre. */
+  /* SOBREVIVEU: o processo se arquiva, e a cadeira volta ao preço. Sem isto o plenario votava
+     todo mês até o fim do mandato. Se as três rupturas coincidirem de novo, outro abre. */
   const siege = survivors?.passed ? null : impeachment;
 
   const nextFiscal = nextPosition(state, budget, settled, catalog, interest, bands, appliedBands);
 
-  /* A POSICAO COM QUE O MES SEGUINTE ABRE, a mesma que `ledger` vai ler nele. Medida so com
-     `fiscal` trocado, a previsao do teto dava -1,0 de folga onde o mes real deu +6,9. */
+  /* A POSIÇÃO COM QUE O MÊS SEGUINTE ABRE, a mesma que `ledger` vai ler nele. Medida só com
+     `fiscal` trocado, a previsão do teto dava -1,0 de folga onde o mês real deu +6,9. */
   const opening = {
     ...state,
     month: state.month + 1,
@@ -1675,10 +1675,10 @@ export function playMonth(state, orders = {}, options = {}) {
       ),
       capacity: { index: capacity.index, history: capacity.history },
       levels: settled,
-      /* Plataforma imutavel apos a posse. */
+      /* Plataforma imutável apos a posse. */
       platform: spoken(state.platform) ? state.platform : chosenOf(orders.platform, catalog),
       norms: appliedNorms,
-      /* Texto entra apos avanco: protocolo antes reduziria tramitacao de 3 meses para 2. */
+      /* Texto entra apos avanço: protocolo antes reduziria tramitação de 3 meses para 2. */
       bills: protocolled ? [...passage.bills, protocolled] : passage.bills,
 
       mail: [
@@ -1694,8 +1694,8 @@ export function playMonth(state, orders = {}, options = {}) {
         ...passage.asked,
         ...demandsOf(state, pressure, catalog),
         ...notices(passage.events, state.month),
-        /* ⚠ O RELATORIO VEM POR ULTIMO NA ORDEM, e a razao e a mesma da bandeja inteira: o
-           que exige leitura antes da proxima decisao fica no alto. */
+        /* ⚠ O RELATÓRIO VEM POR ÚLTIMO NA ORDEM, e a razão e a mesma da bandeja inteira: o
+           que exige leitura antes da próxima decisão fica no alto. */
         ...reportsOf(
           state,
           {
@@ -1711,7 +1711,7 @@ export function playMonth(state, orders = {}, options = {}) {
                 betrayal: opinion.betrayal,
                 wear: opinion.wear,
               },
-              /* Caixa: receita menos obrigatoria contra teto de gastos. */
+              /* Caixa: receita menos obrigatória contra teto de gastos. */
               vault: {
                 revenue: budget.revenue,
                 mandatory: budget.mandatory,
@@ -1737,10 +1737,10 @@ export function playMonth(state, orders = {}, options = {}) {
       fallen,
       memory,
 
-      /* O plenario do afastamento tambem saca do fluxo: gravar so `passage.stream` fazia a
-         votacao de projeto do mes seguinte sacar os mesmos numeros que ele. */
+      /* O plenario do afastamento também saca do fluxo: gravar só `passage.stream` fazia a
+         votação de projeto do mês seguinte sacar os mesmos números que ele. */
       stream: survivors?.stream ?? passage.stream,
-      /* Mes fechado guarda os 7 valores da carta (evita 24 campos x 24 meses no save). */
+      /* Mês fechado guarda os 7 valores da carta (evita 24 campos x 24 meses no save). */
       months: [
         {
           month: state.month,
@@ -1800,7 +1800,7 @@ export function playMonth(state, orders = {}, options = {}) {
 
 const SERIES_LENGTH = 48;
 
-/* Divida abrindo em 78% ferve perto de 108%. */
+/* Dívida abrindo em 78% ferve perto de 108%. */
 const DEBT_SPAN = 0.15;
 
 const BROKER = "fisiologismo";
@@ -1856,7 +1856,7 @@ function nextPosition(state, budget, applied, catalog, interest, bands, appliedB
       0,
     );
 
-  /* Folha de estatais entra no alivio obrigatorio permanente. */
+  /* Folha de estatais entra no alívio obrigatório permanente. */
   const payrollOf = (/** @type {Record<string, number>} */ levels) =>
     catalog.rules.reduce(
       (sum, rule) => sum + (rule.reach * rule.payroll * (levels[rule.id] ?? rule.initial)) / 100,
@@ -1882,7 +1882,7 @@ function nextPosition(state, budget, applied, catalog, interest, bands, appliedB
 }
 
 /**
- * Indicador divulgado ha release meses; fallback no corrente evita zero no inicio.
+ * Indicador divulgado há release meses; fallback no corrente evita zero no início.
  * @param {ReadonlyArray<number>} series
  * @param {number} release
  * @param {number} fallback
@@ -1931,7 +1931,7 @@ export function boilerOf(state, catalog = CATALOG) {
       fall: lobby.id === BROKER ? catalog.pressure.brokerBoil : null,
     })),
     rupture: broke,
-    /* Rupturas: social le rua, economica le ponderada dos lobbies e politica le fiador. */
+    /* Rupturas: social lê rua, econômica lê ponderada dos lobbies e politica lê fiador. */
     ruptures: [
       {
         id: "social",
@@ -1982,7 +1982,7 @@ function weightedAbandon(state, catalog) {
   return total > 0 ? (abandoned / total) * 100 : 0;
 }
 
-/* Fecho unificado do mandato: queda antecipada (ex: mes 47) ou 48 meses completos. */
+/* Fecho unificado do mandato: queda antecipada (ex: mês 47) ou 48 meses completos. */
 
 /**
  * @typedef {object} TermArea uma area, do dia da posse ao ultimo mes
@@ -2051,7 +2051,7 @@ export function termOf(state, catalog = CATALOG) {
         guard: norm.guard,
         month: norm.enactedAt,
       })),
-    /* Promessas em aberto ao fim do mandato sao julgadas como nao cumpridas. */
+    /* Promessas em aberto ao fim do mandato são julgadas como não cumpridas. */
     pledges: platformOf(state, catalog).map(verdict => ({
       ...verdict,
       kept: (removed || served) && verdict.kept === null ? false : verdict.kept,

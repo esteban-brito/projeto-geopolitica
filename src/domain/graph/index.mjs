@@ -1,9 +1,9 @@
-/* DELTA — catalogo de ligacoes, estado e deltas viram nos e arestas com peso e sinal. */
+/* DELTA — catálogo de ligações, estado e deltas viram nos e arestas com peso e sinal. */
 
-/* ⚠ AS LIGACOES SAO LIDAS DO CATALOGO, e nao escritas aqui: `yield`, `decay`, `feeds`,
-   `force` e `lag` ja dizem quem alimenta quem, com que peso e com que atraso. Uma segunda
+/* ⚠ AS LIGAÇÕES SÃO LIDAS DO CATÁLOGO, e não escritas aqui: `yield`, `decay`, `feeds`,
+   `force` e `lag` já dizem quem alimenta quem, com que peso e com que atraso. Uma segunda
    lista declarando as mesmas arestas divergiria da MALHA no primeiro ajuste de calibragem —
-   e a corrente passaria a explicar um jogo que nao e o que roda. */
+   e a corrente passaria a explicar um jogo que não e o que roda. */
 
 /**
  * @typedef {import("../../data/areas.mjs").Area} Area
@@ -17,8 +17,8 @@
  * @property {number} [half] - a meia-vida, em meses; so no desgaste
  */
 
-/* O CANAL `capacity` NAO E UM DESTINO, e sim um caminho: ele desemboca numa area, e a area
-   e que alimenta o proprio canal dela. Por isso `to` traz o alvo e nao a palavra. */
+/* O CANAL `capacity` NÃO E UM DESTINO, e sim um caminho: ele desemboca numa área, e a área
+   e que alimenta o próprio canal dela. Por isso `to` traz o alvo e não a palavra. */
 const CHANNEL_UNIT = /** @type {const} */ ({
   revenue: "factor",
   mandatory: "factor",
@@ -26,9 +26,9 @@ const CHANNEL_UNIT = /** @type {const} */ ({
 });
 
 /**
- * A MEIA-VIDA DE UM ESTOQUE QUE VAZA POR FRACAO, em meses.
+ * A MEIA-VIDA DE UM ESTOQUE QUE VAZA POR FRAÇÃO, em meses.
  *
- * ⚠ ELA E A LEITURA DE `decay` EM LINGUAGEM DE JOGADOR: "perde 4,2% ao mes" nao diz quanto
+ * ⚠ ELA E A LEITURA DE `decay` EM LINGUAGEM DE JOGADOR: "perde 4,2% ao mês" não diz quanto
  * tempo o jogador tem, e "metade em 16 meses" diz. A identidade e a mesma dos dois lados.
  *
  * @param {number} decay - a fracao do estoque que vaza por mes
@@ -41,7 +41,7 @@ export function halfLifeOf(decay) {
 }
 
 /**
- * A CORRENTE DE UMA AREA — o que a alimenta, e o que ela alimenta.
+ * A CORRENTE DE UMA ÁREA — o que a alimenta, e o que ela alimenta.
  *
  * @param {object} input
  * @param {ReadonlyArray<Area>} input.areas
@@ -67,8 +67,8 @@ export function linksOf({ areas, id, target }) {
     },
   ];
 
-  /* A AREA ALVO E A UNICA QUE RECEBE DE OUTRA, e o catalogo diz quais entram: o canal
-     `capacity` e o unico que uma area exerce sobre outra. */
+  /* A ÁREA ALVO E A ÚNICA QUE RECEBE DE OUTRA, e o catálogo diz quais entram: o canal
+     `capacity` e o único que uma área exerce sobre outra. */
   if (id === target) {
     for (const other of areas) {
       if (other.feeds !== "capacity") continue;
@@ -83,8 +83,8 @@ export function linksOf({ areas, id, target }) {
     }
   }
 
-  /* ⚠ UM CANAL POR AREA, e o catalogo o garante — "nenhuma area usa dois". A saida e uma
-     aresta so, e nao uma lista que finge escolha. */
+  /* ⚠ UM CANAL POR ÁREA, e o catálogo o garante — "nenhuma área usa dois". A saída e uma
+     aresta só, e não uma lista que finge escolha. */
   const feeds = /** @type {keyof typeof CHANNEL_UNIT} */ (area.feeds);
   /** @type {Link[]} */
   const out = [

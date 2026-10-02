@@ -1,10 +1,10 @@
 /* A PLATAFORMA — o que foi prometido na posse, e o que o mandato entregou.
-   ⚠ ELA NAO E UM MOTOR NOVO: cada compromisso e uma pergunta que o estado ja responde — o
-   indice da MALHA, a divida do LASTRO, a serie do primario, a norma promulgada. O que esta
-   camada faz e cruzar o prometido com o entregue, que e o unico lugar onde os dois se
+   ⚠ ELA NÃO E UM MOTOR NOVO: cada compromisso e uma pergunta que o estado já responde — o
+   índice da MALHA, a dívida do LASTRO, a série do primário, a norma promulgada. O que esta
+   camada faz e cruzar o prometido com o entregue, que e o único lugar onde os dois se
    encontram.
-   ⚠ E NADA AQUI E MURO: quebrar promessa e caro, e nao proibido. Quem cobra e a rua, por
-   `betrayal`, que ja existia e so olhava o orcamento. */
+   ⚠ E NADA AQUI E MURO: quebrar promessa e caro, e não proibido. Quem cobra e a rua, por
+   `betrayal`, que já existia e só olhava o orcamento. */
 
 import { betrayalCost } from "../domain/opinion/index.mjs";
 import { PLEDGES, PRIORITY_COUNT } from "../data/platform.mjs";
@@ -27,15 +27,15 @@ import { MONTHS_PER_YEAR } from "../data/regime.mjs";
  * a 90%, porque arredondou uma fracao como se fosse ponto de indice
  */
 
-/* A PLATAFORMA VAZIA, e ela e o estado de quem nao respondeu a carta da posse. */
+/* A PLATAFORMA VAZIA, e ela e o estado de quem não respondeu a carta da posse. */
 export const NO_PLATFORM = /** @type {const} */ ({ priority: null, fiscal: null, reform: null });
 
 /**
- * AS OPCOES DE CADA EIXO — a lista que a carta da posse oferece.
+ * AS OPÇÕES DE CADA EIXO — a lista que a carta da posse oferece.
  *
- * ⚠ AS DE PRIORIDADE SAO DERIVADAS, e nao digitadas: as `PRIORITY_COUNT` areas com a pior
- * abertura. E a lista muda sozinha se o catalogo mudar, que e o ponto — quem escreve os tres
- * ids a mao escreve uma segunda verdade sobre onde o pais esta pior.
+ * ⚠ AS DE PRIORIDADE SÃO DERIVADAS, e não digitadas: as `PRIORITY_COUNT` áreas com a pior
+ * abertura. E a lista muda sozinha se o catálogo mudar, que e o ponto — quem escreve os três
+ * ids a mão escreve uma segunda verdade sobre onde o país esta pior.
  *
  * @param {typeof CATALOG} [catalog]
  * @returns {{ priority: Pledge[], fiscal: Pledge[], reform: Pledge[] }}
@@ -48,8 +48,8 @@ export function pledgesOf(catalog = CATALOG) {
       id: area.id,
       axis: "priority",
       label: `entregar ${area.index} acima do que recebi`,
-      /* O NOME DA AREA E O ROTULO CURTO, e ele ja tem glifo no rail: a carta mostra QUAL, e o
-         eixo acima dela ja disse que e a prioridade. */
+      /* O NOME DA ÁREA E O RÓTULO CURTO, e ele já tem glifo no rail: a carta mostra QUAL, e o
+         eixo acima dela já disse que e a prioridade. */
       short: area.short ?? area.label,
       judged: `o índice de ${area.label}, contra os ${area.initial} da posse`,
     }));
@@ -62,7 +62,7 @@ export function pledgesOf(catalog = CATALOG) {
 }
 
 /**
- * A SOMA DO PRIMARIO DOS ULTIMOS DOZE MESES, em bilhoes.
+ * A SOMA DO PRIMÁRIO DOS ÚLTIMOS DOZE MESES, em bilhoes.
  *
  * @param {ReadonlyArray<number>} primary
  */
@@ -73,8 +73,8 @@ function lastYear(primary) {
 /**
  * SE UMA NORMA DAQUELA NATUREZA PASSOU NESTE MANDATO.
  *
- * ⚠ `enactedAt > 0` E O QUE SEPARA A LEI DO JOGADOR DA HERDADA, e o criterio nao e desta
- * funcao: `enact` grava o mes, e a posse grava zero. O fecho ja usa o mesmo.
+ * ⚠ `enactedAt > 0` E O QUE SEPARA A LEI DO JOGADOR DA HERDADA, e o critério não e desta
+ * função: `enact` grava o mês, e a posse grava zero. O fecho já usa o mesmo.
  *
  * @param {GameState} state
  * @param {string} guard
@@ -86,10 +86,10 @@ function enacted(state, guard) {
 /**
  * O JULGAMENTO DE UM COMPROMISSO — e `null` quer dizer "ainda da tempo".
  *
- * ⚠ OS DOIS EIXOS SE COBRAM DIFERENTE, e a diferenca e o mundo: a promessa de indice e a
- * fiscal sao ESTADO — ou o numero esta acima hoje, ou nao esta —, e a de reforma e EVENTO: ela
- * so pode ser dada por quebrada quando o mandato acaba. Cobrar a reforma no mes 3 seria acusar
- * o presidente de nao ter aprovado ainda o que ele tem 45 meses para aprovar.
+ * ⚠ OS DOIS EIXOS SE COBRAM DIFERENTE, e a diferença e o mundo: a promessa de índice e a
+ * fiscal são ESTADO — ou o número esta acima hoje, ou não esta —, e a de reforma e EVENTO: ela
+ * só pode ser dada por quebrada quando o mandato acaba. Cobrar a reforma no mês 3 seria acusar
+ * o presidente de não ter aprovado ainda o que ele tem 45 meses para aprovar.
  *
  * @param {GameState} state
  * @param {Pledge} pledge
@@ -113,8 +113,8 @@ function judge(state, pledge, catalog) {
   }
 
   if (pledge.id === "primary") {
-    /* Sem mes nenhum fechado nao ha ano para julgar, e zero nao e resposta: seria dizer que
-       um governo de um dia ja quebrou a promessa de um ano. */
+    /* Sem mês nenhum fechado não há ano para julgar, e zero não e resposta: seria dizer que
+       um governo de um dia já quebrou a promessa de um ano. */
     if (state.series.primary.length === 0) return { ...base, kept: null };
     const to = lastYear(state.series.primary);
     return { ...base, kept: to > 0, from: 0, to, unit: "money" };
@@ -127,12 +127,12 @@ function judge(state, pledge, catalog) {
 }
 
 /**
- * O QUE O JOGADOR MARCOU, LIMPO — ids que nao existem no catalogo caem fora.
+ * O QUE O JOGADOR MARCOU, LIMPO — ids que não existem no catálogo caem fora.
  *
- * ⚠ A VALIDACAO E AQUI E NAO NA TELA, e a razao e a de sempre: a tela e uma das entradas, e um
- * save editado a mao ou uma ordem antiga com o id de uma area que saiu do catalogo poriam no
- * estado uma promessa que ninguem sabe julgar — e ela ficaria la para sempre, `null` em
- * silencio.
+ * ⚠ A VALIDAÇÃO E AQUI E NÃO NA TELA, e a razão e a de sempre: a tela e uma das entradas, e um
+ * save editado a mão ou uma ordem antiga com o id de uma área que saiu do catálogo poriam no
+ * estado uma promessa que ninguém sabe julgar — e ela ficaria la para sempre, `null` em
+ * silêncio.
  *
  * @param {Partial<Record<string, string | null>>} [asked] o que veio das ordens
  * @param {typeof CATALOG} [catalog]
@@ -149,7 +149,7 @@ export function chosenOf(asked = {}, catalog = CATALOG) {
 }
 
 /**
- * SE O DISCURSO DE POSSE JA FOI FEITO — e um eixo marcado basta.
+ * SE O DISCURSO DE POSSE JÁ FOI FEITO — e um eixo marcado basta.
  *
  * @param {{ priority: string | null, fiscal: string | null, reform: string | null }} platform
  * @returns {boolean}
@@ -183,9 +183,9 @@ export function platformOf(state, catalog = CATALOG) {
 /**
  * QUANTO DA PLATAFORMA ESTA QUEBRADA HOJE, de 0 a 1.
  *
- * ⚠ O DENOMINADOR E O QUE FOI PROMETIDO, e nao os tres eixos: quem assumiu um compromisso e o
- * quebrou quebrou a plataforma inteira. E quem nao prometeu nada nao deve nada — a rua nao
- * cobra o que nao foi dito, e o preco de nao prometer aparece no fecho, que fica sem criterio.
+ * ⚠ O DENOMINADOR E O QUE FOI PROMETIDO, e não os três eixos: quem assumiu um compromisso e o
+ * quebrou quebrou a plataforma inteira. E quem não prometeu nada não deve nada — a rua não
+ * cobra o que não foi dito, e o preço de não prometer aparece no fecho, que fica sem critério.
  *
  * @param {GameState} state
  * @param {typeof CATALOG} [catalog]
@@ -198,11 +198,11 @@ export function breachOf(state, catalog = CATALOG) {
 }
 
 /**
- * QUANTO A PLATAFORMA QUEBRADA COBRA DE HUMOR POR MES.
+ * QUANTO A PLATAFORMA QUEBRADA COBRA DE HUMOR POR MÊS.
  *
- * ⚠ ELA COMPOE AQUI, e nao na tela: `breachOf` da a fracao e `betrayalCost` da o preco, e o
- * turno ja usa os dois exatamente nesta ordem. Somados na view, seriam dois lugares montando
- * a mesma pergunta — e a divergencia so apareceria no mes em que `broken` mudasse.
+ * ⚠ ELA COMPÕE AQUI, e não na tela: `breachOf` da a fração e `betrayalCost` da o preço, e o
+ * turno já usa os dois exatamente nesta ordem. Somados na view, seriam dois lugares montando
+ * a mesma pergunta — e a divergência só apareceria no mês em que `broken` mudasse.
  *
  * @param {GameState} state
  * @param {typeof CATALOG} [catalog]

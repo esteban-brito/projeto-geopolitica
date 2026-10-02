@@ -1,7 +1,7 @@
 /* MOVIMENTO — a rede que faz `prefers-reduced-motion` valer para telas que ainda nem foram
    escritas.
-   Defeito que nao aparece em captura nem em prova funcional: ele so existe para quem tem a
-   preferencia ligada. */
+   Defeito que não aparece em captura nem em prova funcional: ele só existe para quem tem a
+   preferência ligada. */
 
 @layer motion {
   @media (prefers-reduced-motion: reduce) {
@@ -14,7 +14,7 @@
       scroll-behavior: auto;
     }
 
-    /* Os pseudo-elementos de View Transition vivem no `:root` e NAO sao alcancados por `*`,
+    /* Os pseudo-elementos de View Transition vivem no `:root` e NÃO são alcancados por `*`,
        `*::before` ou `*::after` — eles precisam ser nomeados. */
     ::view-transition-group(*),
     ::view-transition-old(*),

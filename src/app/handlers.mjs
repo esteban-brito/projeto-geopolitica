@@ -1,4 +1,4 @@
-/* OS GESTOS — o que o jogador clica, arrasta e avanca. */
+/* OS GESTOS — o que o jogador clica, arrasta e avança. */
 
 import { createState } from "../state/state.mjs";
 import { CATALOG, governmentOf, playMonth, termOf } from "../public/index.mjs";
@@ -13,8 +13,8 @@ export function armHandlers() {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
 
-    /* Resposta a carta e ordem no rascunho, e vem antes da navegacao do botao. */
-    /* Discurso de posse grava escolhas no rascunho do mes sem mutar o estado. */
+    /* Resposta a carta e ordem no rascunho, e vem antes da navegação do botão. */
+    /* Discurso de posse grava escolhas no rascunho do mês sem mutar o estado. */
     const pledge = target.closest("[data-pledge]");
     if (pledge instanceof HTMLElement && pledge.dataset["pledge"] && pledge.dataset["choice"]) {
       const axis = pledge.dataset["pledge"];
@@ -29,7 +29,7 @@ export function armHandlers() {
     const choice = target.closest("[data-letter]");
     if (choice instanceof HTMLElement && choice.dataset["letter"] && choice.dataset["answer"]) {
       const id = choice.dataset["letter"];
-      /* Clicar novamente na mesma saida desfaz a escolha da carta. */
+      /* Clicar novamente na mesma saída desfaz a escolha da carta. */
       session.orders.mail[id] =
         session.orders.mail[id] === choice.dataset["answer"] ? "" : choice.dataset["answer"];
       persistDraft();
@@ -37,7 +37,7 @@ export function armHandlers() {
       return;
     }
 
-    /* Selecao usa data-dispatch para evitar colisao com data-open de ruptura. */
+    /* Seleção usa data-dispatch para evitar colisão com data-open de ruptura. */
     const dispatch = target.closest("[data-dispatch]");
     if (dispatch instanceof HTMLElement && dispatch.dataset["dispatch"]) {
       session.openDispatch = dispatch.dataset["dispatch"];
@@ -66,7 +66,7 @@ export function armHandlers() {
       return;
     }
 
-    /* Decreto protege ou solta a area e repinta projecoes de todas as pastas. */
+    /* Decreto protege ou solta a área e repinta projeções de todas as pastas. */
     const decree = target.closest("[data-protect]");
     if (decree instanceof HTMLElement && decree.dataset["protect"]) {
       if (session.orders.moment.closed) return;
@@ -100,7 +100,7 @@ export function armHandlers() {
       return;
     }
 
-    /* Controle de programa nao trava em piso: arrastar abaixo da lei muda o rito. */
+    /* Controle de programa não trava em piso: arrastar abaixo da lei muda o rito. */
     const program = target.dataset["program"];
     if (program) {
       session.orders.levels[program] = Number(target.value);
@@ -109,7 +109,7 @@ export function armHandlers() {
       return;
     }
 
-    /* Bandas nao travam piso no teto: faixas invertidas sao derrotadas no plenario. */
+    /* Bandas não travam piso no teto: faixas invertidas são derrotadas no plenario. */
     const band = target.dataset["band"];
     const side = target.dataset["side"];
     if (band && (side === "floor" || side === "ceiling")) {
@@ -120,17 +120,17 @@ export function armHandlers() {
     }
   });
 
-  /* Flag resolving impede que multiplos cliques resolvam dois meses no mesmo estado. */
+  /* Flag resolving impede que múltiplos cliques resolvam dois meses no mesmo estado. */
   el.advance.addEventListener("click", () => {
     if (session.resolving) return;
-    /* Mandato encerrado por prazo ou queda bloqueia avanco; reinicio exige nova partida. */
+    /* Mandato encerrado por prazo ou queda bloqueia avanço; reinício exige nova partida. */
     if (termOf(session.state, CATALOG).over) return;
     session.resolving = true;
     el.advance.disabled = true;
 
     const before = session.state;
 
-    /* Try/catch restaura resolving e advance.disabled em caso de excecao no turno. */
+    /* Try/catch restaura resolving e advance.disabled em caso de exceção no turno. */
     try {
       const played = playMonth(session.state, session.orders, { catalog: CATALOG });
       session.state = played.state;
@@ -143,15 +143,15 @@ export function armHandlers() {
         adviser: governmentOf(before, CATALOG).adviser,
       };
 
-      /* Carta aberta preserva selecao entre meses; rotulo do botao le silences do motor. */
-      /* Rascunho reinicia a cada mes para nao pagar verba anterior sem decisao nova. */
+      /* Carta aberta preserva seleção entre meses; rótulo do botão lê silences do motor. */
+      /* Rascunho reinicia a cada mês para não pagar verba anterior sem decisão nova. */
       session.orders = blankOrders();
       persistDraft();
       persist();
-      /* Fecho assume a tela no mes em que o mandato encerra. */
+      /* Fecho assume a tela no mês em que o mandato encerra. */
       if (termOf(session.state, CATALOG).over) session.screen = "cabinet";
 
-      /* Virada de mes pinta direto sem View Transition para evitar piscar de backdrop-filter. */
+      /* Virada de mês pinta direto sem View Transition para evitar piscar de backdrop-filter. */
       paint();
       session.resolving = false;
       endLabel();
@@ -164,7 +164,7 @@ export function armHandlers() {
 
   el.noticeClose.addEventListener("click", () => el.dialog.close());
 
-  /* Botao de reinicio em dois passos com confirmacao que expira apos 5000ms. */
+  /* Botão de reinício em dois passos com confirmação que expira apos 5000ms. */
   let arming = 0;
 
   function disarm() {
@@ -184,7 +184,7 @@ export function armHandlers() {
     window.clearTimeout(arming);
     arming = 0;
     disarm();
-    /* Partida e criada no fechamento do formulario de posse. */
+    /* Partida e criada no fechamento do formulário de posse. */
     openSwear();
   });
 
@@ -197,7 +197,7 @@ export function armHandlers() {
     );
     const treatment = escolha?.value === "senhora" ? "senhora" : DEFAULT_TREATMENT;
 
-    /* Nome vazio reverte ao sorteado; partido invalido aceita null como estado do motor. */
+    /* Nome vazio reverte ao sorteado; partido inválido aceita null como estado do motor. */
     const partido = CATALOG.parties.some(party => party.id === el.swearParty.value)
       ? el.swearParty.value
       : null;

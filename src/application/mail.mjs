@@ -1,7 +1,7 @@
-/* A CORRESPONDENCIA — o unico lugar do jogo que espera uma resposta.
-   recebe  as cartas guardadas, o que o mes produziu, as ordens e o mes devolve as cartas do
-   mes seguinte, e o que venceu no caminho Este arquivo NAO E UM MOTOR e nao tem codinome,
-   pela mesma razao de `passage.mjs`: nada aqui inventa preco. */
+/* A CORRESPONDÊNCIA — o único lugar do jogo que espera uma resposta.
+   recebe  as cartas guardadas, o que o mês produziu, as ordens e o mês devolve as cartas do
+   mês seguinte, e o que venceu no caminho Este arquivo NÃO E UM MOTOR e não tem codinome,
+   pela mesma razão de `passage.mjs`: nada aqui inventa preço. */
 
 /**
  * @typedef {import("../state/state.mjs").Letter} Letter
@@ -11,16 +11,16 @@
 /* QUANTOS MESES UMA PERGUNTA FICA ABERTA. */
 export const ANSWER_TIME = 2;
 
-/* QUANTOS MESES UMA CARTA JA FECHADA CONTINUA NA BANDEJA. */
+/* QUANTOS MESES UMA CARTA JÁ FECHADA CONTINUA NA BANDEJA. */
 export const KEEP = 24;
 
-/* Com um mes de retencao, o freio era o relogio; com vinte e quatro, a bandeja acumula de
-   verdade — e um mandato de 48 meses com tres relatorios por mes chegaria a 144 papeis no
-   save se ninguem contasse. */
+/* Com um mês de retenção, o freio era o relógio; com vinte e quatro, a bandeja acumula de
+   verdade — e um mandato de 48 meses com três relatorios por mês chegaria a 144 papéis no
+   save se ninguém contasse. */
 export const CARRY = 24;
 
 /**
- * A CARTA DA EMENDA — a unica pergunta que o jogo faz hoje.
+ * A CARTA DA EMENDA — a única pergunta que o jogo faz hoje.
  *
  * @param {object} input
  * @param {Bill} input.bill
@@ -51,10 +51,10 @@ export function amendment({ bill, month, except, saved }) {
 
 /**
  * A CHANTAGEM — a segunda pergunta que o jogo faz, e a primeira que vem de FORA da
- * tramitacao.
+ * tramitação.
  *
- * ⚠ ELA EXISTE PORQUE QUATRO GRUPOS TINHAM PRESSAO E NENHUMA VOZ. A CALDEIRA nasceu no
- * ciclo 10 com posicao no plano, memoria e um instrumento declarado em prosa —
+ * ⚠ ELA EXISTE PORQUE QUATRO GRUPOS TINHAM PRESSÃO E NENHUMA VOZ. A CALDEIRA nasceu no
+ * ciclo 10 com posição no plano, memória e um instrumento declarado em prosa —
  * @param {object} input
  * @param {{ id: string }} input.lobby
  * @param {{ id: string, label: string }} input.program
@@ -64,7 +64,7 @@ export function amendment({ bill, month, except, saved }) {
  */
 export function demand({ lobby, program, level, month }) {
   return {
-    /* O ID AMARRA GRUPO E ALAVANCA, e nao o mes: o mesmo grupo nao abre duas exigencias sobre
+    /* O ID AMARRA GRUPO E ALAVANCA, e não o mês: o mesmo grupo não abre duas exigências sobre
        o mesmo programa. */
     id: `demand:${lobby.id}:${program.id}:${month}`,
     kind: "demand",
@@ -85,7 +85,7 @@ export function demand({ lobby, program, level, month }) {
 }
 
 /**
- * UM AVISO — o que aconteceu, e nao ha o que responder.
+ * UM AVISO — o que aconteceu, e não há o que responder.
  *
  * @param {object} input
  * @param {"tabled" | "forgotten" | "passed" | "rejected"} input.kind
@@ -109,8 +109,8 @@ export function notice({ kind, id, subject, month }) {
     level: null,
     was: null,
     now: null,
-    /* O AVISO JA CHEGA FECHADO: nao ha o que responder, e por isso ele envelhece a partir do
-       mes em que chegou. */
+    /* O AVISO JÁ CHEGA FECHADO: não há o que responder, e por isso ele envelhece a partir do
+       mês em que chegou. */
     answer: null,
     closedAt: month,
   };
@@ -143,19 +143,19 @@ export function alarm({ kind, id, subject, month, from = null, was = null, now =
     from,
     lever: null,
     level: null,
-    /* ⚠ O NUMERO VIAJA COM A CARTA, e antes a tela o lia do estado DE HOJE: medido, um alarme
-       de fervura do mes 6 mostrava 70 e no mes 7 mostrava 75, e o de minoria ia de 229 para
-       227. Carta que muda depois de chegar nao e carta. */
+    /* ⚠ O NÚMERO VIAJA COM A CARTA, e antes a tela o lia do estado DE HOJE: medido, um alarme
+       de fervura do mês 6 mostrava 70 e no mês 7 mostrava 75, e o de minoria ia de 229 para
+       227. Carta que muda depois de chegar não e carta. */
     was,
     now,
     answer: null,
-    /* JA CHEGA FECHADO, como todo aviso: nao ha o que responder aqui. */
+    /* JÁ CHEGA FECHADO, como todo aviso: não há o que responder aqui. */
     closedAt: month,
   };
 }
 
 /**
- * O RELATORIO DE UM DOMINIO — o mundo dizendo, todo mes, o que se mexeu nele.
+ * O RELATÓRIO DE UM DOMINIO — o mundo dizendo, todo mês, o que se mexeu nele.
  *
  * @param {object} input
  * @param {"street" | "seats" | "vault"} input.kind qual dominio escreve
@@ -167,8 +167,8 @@ export function alarm({ kind, id, subject, month, from = null, was = null, now =
  */
 export function report({ kind, month, was, now, attach }) {
   return {
-    /* O ID CARREGA O MES, ao contrario do alarme: o relatorio de marco e o de abril sao duas
-       noticias, e nao a mesma ferida reaberta. */
+    /* O ID CARREGA O MÊS, ao contrário do alarme: o relatório de marco e o de abril são duas
+       noticias, e não a mesma ferida reaberta. */
     id: `${kind}:${month}`,
     kind,
     month,
@@ -184,7 +184,7 @@ export function report({ kind, month, was, now, attach }) {
     now,
     attach: attach ?? null,
     answer: null,
-    /* JA CHEGA FECHADO: nao ha o que responder a um relatorio. */
+    /* JÁ CHEGA FECHADO: não há o que responder a um relatório. */
     closedAt: month,
   };
 }
@@ -201,8 +201,8 @@ export function pending(mail, bill) {
 }
 
 /**
- * O jogador que responde no ultimo mes respondeu — e o contrario faria o relogio ganhar de
- * uma decisao tomada a tempo, que e o defeito que faz um jogador desconfiar da interface para
+ * O jogador que responde no último mês respondeu — e o contrário faria o relógio ganhar de
+ * uma decisão tomada a tempo, que e o defeito que faz um jogador desconfiar da interface para
  * sempre.
  *
  * @param {object} input
@@ -219,8 +219,8 @@ export function settle({ mail, orders, month }) {
 
   for (const letter of mail) {
     if (letter.due === null || letter.answer !== null) {
-      /* ⚠ O QUE JA ESTA FECHADO ENVELHECE E SAI — ver `KEEP`, e ele envelhece pelo FIM e nao
-         pelo comeco (ver `closedAt` em `state.mjs`). */
+      /* ⚠ O QUE JÁ ESTA FECHADO ENVELHECE E SAI — ver `KEEP`, e ele envelhece pelo FIM e não
+         pelo começo (ver `closedAt` em `state.mjs`). */
       if (month - (letter.closedAt ?? letter.month) <= KEEP) next.push(letter);
       continue;
     }
@@ -234,7 +234,7 @@ export function settle({ mail, orders, month }) {
     }
 
     if (month >= letter.due) {
-      /* O SILENCIO ACEITA — ver a prosa do topo. */
+      /* O SILÊNCIO ACEITA — ver a prosa do topo. */
       const closed = /** @type {Letter} */ ({ ...letter, answer: "silence", closedAt: month });
       next.push(closed);
       resolved.push(closed);
@@ -244,18 +244,18 @@ export function settle({ mail, orders, month }) {
     next.push(letter);
   }
 
-  /* Cortar sem separar apagaria uma pergunta com prazo correndo no mes em que a bandeja
-     enchesse — e a tela cobraria o preco de um silencio que o jogador nunca teve chance de
+  /* Cortar sem separar apagaria uma pergunta com prazo correndo no mês em que a bandeja
+     enchesse — e a tela cobraria o preço de um silêncio que o jogador nunca teve chance de
      quebrar. */
   const asking = next.filter(letter => letter.due !== null && letter.answer === null);
   const closed = next.filter(letter => !asking.includes(letter));
-  /* ⚠ CORTA PELO FIM, E NAO PELO COMECO, e a direcao e o defeito inteiro: o turno monta a
-     caixa com as NOVAS na frente, entao um `slice` negativo guardava o bloco congelado de
-     vinte meses atras e apagava o que tinha acabado de chegar. Medido em 48 meses: 101 cartas
-     destruidas com 1 a 3 meses de idade, e a caixa do mes 30 com um buraco de doze meses.
-     ⚠ E ELE CONSERTA UM SEGUNDO DEFEITO DE GRACA: `slice(-0)` devolve o array INTEIRO, entao
+  /* ⚠ CORTA PELO FIM, E NÃO PELO COMEÇO, e a direção e o defeito inteiro: o turno monta a
+     caixa com as NOVAS na frente, então um `slice` negativo guardava o bloco congelado de
+     vinte meses atrás e apagava o que tinha acabado de chegar. Medido em 48 meses: 101 cartas
+     destruídas com 1 a 3 meses de idade, e a caixa do mês 30 com um buraco de doze meses.
+     ⚠ E ELE CONSERTA UM SEGUNDO DEFEITO DE GRAÇA: `slice(-0)` devolve o array INTEIRO, então
      com a bandeja cheia de perguntas o teto sumia em vez de fechar. `slice(0, 0)` devolve o
-     que a aritmetica pede. */
+     que a aritmética pede. */
   const kept = closed.slice(0, Math.max(0, CARRY - asking.length));
 
   return {
@@ -266,7 +266,7 @@ export function settle({ mail, orders, month }) {
 
 /**
  * Recalcular isso na view seria a conta do motor refeita por fora, que e o defeito recorrente
- * numero um deste projeto.
+ * número um deste projeto.
  *
  * @param {Letter} letter
  * @param {number} month
@@ -278,10 +278,10 @@ export function left(letter, month) {
 }
 
 /**
- * ── POR QUE ELA NAO CONTA NADA POR FORA ───────────────────────────────────── ⚠ A TENTACAO
- * ERA ESCREVER `left(letter) <= 0` NA TELA, e ela e exatamente a familia de defeito mais cara
- * deste projeto, com sete ocorrencias medidas: a view refaz a conta do motor, as duas
- * concordam hoje e divergem no dia da primeira mudanca.
+ * ── POR QUE ELA NÃO CONTA NADA POR FORA ───────────────────────────────────── ⚠ A TENTAÇÃO
+ * ERA ESCREVER `left(letter) <= 0` NA TELA, e ela e exatamente a família de defeito mais cara
+ * deste projeto, com sete ocorrências medidas: a view refaz a conta do motor, as duas
+ * concordam hoje e divergem no dia da primeira mudança.
  *
  * @param {object} input
  * @param {ReadonlyArray<Letter>} input.mail

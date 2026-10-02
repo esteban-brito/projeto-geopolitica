@@ -1,67 +1,67 @@
-/* GUARDA · VOCABULARIO — nenhuma frase escrita duas vezes, e nenhuma escrita e nunca dita.
+/* GUARDA · VOCABULÁRIO — nenhuma frase escrita duas vezes, e nenhuma escrita e nunca dita.
    ══════════════════════════════════════════════════════════════════════════════
 
    ── ELA TEM DOIS TRABALHOS, e o segundo nasceu em 21/08/2026 ────────────────
    O primeiro e a DUPLICATA: a mesma frase teclada em dois lugares. O segundo e a
-   ORFA: uma frase declarada em `strings.mjs` que nenhum arquivo alcanca.
+   ÓRFÃ: uma frase declarada em `strings.mjs` que nenhum arquivo alcanca.
 
-   ⚠ A SEGUNDA NASCEU DE UMA CONTAGEM, e o numero e 49. A varredura de 21/08 achou
-   quarenta e nove frases que nenhum arquivo le — entre elas `approvalParts`, que era a
-   CHAVE das tres cores do termometro da rua: o Gabinete desenhava verde, azul e vermelho
+   ⚠ A SEGUNDA NASCEU DE UMA CONTAGEM, e o número e 49. A varredura de 21/08 achou
+   quarenta e nove frases que nenhum arquivo lê — entre elas `approvalParts`, que era a
+   CHAVE das três cores do termômetro da rua: o Gabinete desenhava verde, azul e vermelho
    sem legenda nenhuma, e a legenda existia, escrita, a um caminho de distancia. **A
-   ausencia na tela e a presenca no arquivo estavam as duas erradas ao mesmo tempo**, e
+   ausência na tela e a presença no arquivo estavam as duas erradas ao mesmo tempo**, e
    nada podia acusar isso.
 
-   ⚠ E O RESTO DAS 49 E ARQUEOLOGIA DE PECA MORTA: `cabinet.archLoyal` e as duas irmas
+   ⚠ E O RESTO DAS 49 E ARQUEOLOGIA DE PEÇA MORTA: `cabinet.archLoyal` e as duas irmãs
    sobreviveram ao arco que morreu em 15/08; `cabinet.inbox`, `cabinet.congress` e
-   `cabinet.vault` sobreviveram as cinco legendas que sairam em 20/08; `area.propose`
-   sobreviveu ao orcamento granular — e a prosa ao lado dela JA DIZIA que ela tinha saido.
-   **Prosa que registra a morte nao apaga a chave**, e a chave morta e o que faz a proxima
-   sessao achar que a peca ainda existe.
+   `cabinet.vault` sobreviveram as cinco legendas que saíram em 20/08; `area.propose`
+   sobreviveu ao orcamento granular — e a prosa ao lado dela JÁ DIZIA que ela tinha saído.
+   **Prosa que registra a morte não apaga a chave**, e a chave morta e o que faz a próxima
+   sessão achar que a peça ainda existe.
 
-   ⚠ E O PROJETO JA COBRAVA ISSO NOS OUTROS EIXOS: `tokens` acusa token sem consumidor,
+   ⚠ E O PROJETO JÁ COBRAVA ISSO NOS OUTROS EIXOS: `tokens` acusa token sem consumidor,
    `orphans` acusa folha de estilo sem produtor, e a doutrina escrita diz que "`export`
-   sem quem importe e uma porta aberta". A frase da interface era o unico eixo sem a mesma
-   cobranca — e foi o unico em que cinquenta pecas mortas se acumularam.
+   sem quem importe e uma porta aberta". A frase da interface era o único eixo sem a mesma
+   cobrança — e foi o único em que cinquenta peças mortas se acumularam.
 
    ── AS DUAS AUDITORIAS PEDEM COISAS DIFERENTES DO `files` ───────────────────
-   ⚠ A DUPLICATA precisa so de `strings.mjs`; a ORFA precisa do PROJETO INTEIRO, porque o
-   consumidor mora fora. Por isso a segunda so roda quando o entrypoint esta no mapa — e
-   isso NAO e conveniencia: sem a condicao, as provas sinteticas da duplicata (que entregam
-   so o arquivo de frases) passariam a ser acusadas de orfandade, e ai elas ficariam verdes
-   mesmo se a deteccao de duplicata quebrasse. **Uma prova que passa pela razao errada e
-   uma prova que nao prova nada.**
+   ⚠ A DUPLICATA precisa só de `strings.mjs`; a ÓRFÃ precisa do PROJETO INTEIRO, porque o
+   consumidor mora fora. Por isso a segunda só roda quando o entrypoint esta no mapa — e
+   isso NÃO e conveniência: sem a condição, as provas sintéticas da duplicata (que entregam
+   só o arquivo de frases) passariam a ser acusadas de orfandade, e ai elas ficariam verdes
+   mesmo se a detecção de duplicata quebrasse. **Uma prova que passa pela razão errada e
+   uma prova que não prova nada.**
 
-   ⚠ ELA NASCEU DE UMA CONTAGEM, em 18/08/2026: **vinte e tres frases estavam
+   ⚠ ELA NASCEU DE UMA CONTAGEM, em 18/08/2026: **vinte e três frases estavam
    duplicadas** em `src/ui/strings.mjs`, e uma delas — "Opinião pública" — aparecia
    duas vezes DENTRO DO MESMO OBJETO, em `cabinet.ruptureSocial` e em
    `cabinet.trinity.social`. O nome de cada tela estava escrito duas vezes (no menu e
-   no titulo dela), o carimbo do afastamento duas vezes, "PIB" duas vezes.
+   no título dela), o carimbo do afastamento duas vezes, "PIB" duas vezes.
 
-   ── POR QUE COPIA DUPLICADA E CARA, e a razao nao e ruido ───────────────────
-   Ela nao quebra nada enquanto ninguem mexe. O defeito nasce na PRIMEIRA vez que
-   alguem ajusta uma das duas — e a partir dali o menu chama a tela de um nome e a
+   ── POR QUE COPIA DUPLICADA E CARA, e a razão não e ruído ───────────────────
+   Ela não quebra nada enquanto ninguém mexe. O defeito nasce na PRIMEIRA vez que
+   alguém ajusta uma das duas — e a partir dali o menu chama a tela de um nome e a
    tela se chama de outro, sem nada falhar e sem nada acusar.
 
-   ⚠ E O PROJETO JA TINHA UM CASO CONSUMADO quando esta guarda nasceu: o estado de
+   ⚠ E O PROJETO JÁ TINHA UM CASO CONSUMADO quando esta guarda nasceu: o estado de
    uma bancada rompida era **"rompida"** em `mood.broken` e **"em ruptura"** em
    `cabinet.archRuptured`. Mesmo estado, mesmo motor, duas palavras — e um jogador
-   procurando a diferenca entre as duas nao ia achar, porque ela nao existia.
+   procurando a diferença entre as duas não ia achar, porque ela não existia.
 
    ── O QUE ELA MEDE, E POR QUE E O LITERAL ───────────────────────────────────
-   Ela conta LITERAIS de string no arquivo, e nao os valores resolvidos. A diferenca
+   Ela conta LITERAIS de string no arquivo, e não os valores resolvidos. A diferença
    e o conserto inteiro: depois que `nav.cabinet` e `cabinet.title` passam a apontar
    para `TERMOS.cabinet`, os dois VALORES continuam sendo "Gabinete" — e devem
-   continuar. O que nao pode voltar e a palavra estar TECLADA duas vezes.
+   continuar. O que não pode voltar e a palavra estar TECLADA duas vezes.
 
-   ⚠ COMENTARIO NAO CONTA. Este arquivo e o mais comentado do projeto, e a prosa dele
-   cita as proprias frases o tempo todo — contar comentario faria a guarda acusar
-   justamente a explicacao de por que a frase e aquela.
+   ⚠ COMENTÁRIO NÃO CONTA. Este arquivo e o mais comentado do projeto, e a prosa dele
+   cita as próprias frases o tempo todo — contar comentário faria a guarda acusar
+   justamente a explicação de por que a frase e aquela.
 
-   ── AS EXCECOES SAO POR VALOR, E CADA UMA TEM RAZAO ─────────────────────────
-   Ver `PERMITIDAS`. Entra ali o que coincide HOJE e pode divergir amanha por
-   decisao: se as duas nao mudassem juntas obrigatoriamente, elas nao sao a mesma
-   frase — sao duas frases com a mesma palavra. */
+   ── AS EXCEÇÕES SÃO POR VALOR, E CADA UMA TEM RAZÃO ─────────────────────────
+   Ver `PERMITIDAS`. Entra ali o que coincide HOJE e pode divergir amanhã por
+   decisão: se as duas não mudassem juntas obrigatoriamente, elas não são a mesma
+   frase — são duas frases com a mesma palavra. */
 
 import { collect, stripJsComments } from "../lib/project.mjs";
 
@@ -79,17 +79,17 @@ const STRINGS_FILE = "src/ui/strings.mjs";
              esta lista guarda o par acima e mais nada. */
 const PERMITIDAS = new Set(["Mês"]);
 
-/* ABAIXO DE QUE TAMANHO NAO VALE A PENA. Uma palavra de uma letra repetida nao e
-   vocabulario divergindo — e o simbolo de uma unidade, um separador, um travessao. */
+/* ABAIXO DE QUE TAMANHO NÃO VALE A PENA. Uma palavra de uma letra repetida não e
+   vocabulário divergindo — e o símbolo de uma unidade, um separador, um travessao. */
 const MINIMO = 2;
 
 /**
  * OS LITERAIS DE STRING DO ARQUIVO, com a linha de cada um.
  *
- * ⚠ SO ASPAS DUPLAS, e e o suficiente: `prettier` normaliza o projeto inteiro para
- * elas, e um literal em aspas simples nao passaria pelo `format` que o `validate`
- * cobra. Template literal fica de fora de proposito — frase com interpolacao dentro
- * nao e a mesma frase em dois lugares, e sim duas montagens.
+ * ⚠ SÓ ASPAS DUPLAS, e e o suficiente: `prettier` normaliza o projeto inteiro para
+ * elas, e um literal em aspas simples não passaria pelo `format` que o `validate`
+ * cobra. Template literal fica de fora de propósito — frase com interpolação dentro
+ * não e a mesma frase em dois lugares, e sim duas montagens.
  *
  * @param {string} code ja sem comentarios
  * @returns {Array<[string, number]>}
@@ -114,18 +114,18 @@ function literals(code) {
 }
 
 /* O ENTRYPOINT E O SINAL DE QUE O PROJETO INTEIRO ESTA NO MAPA. Ver a prosa do
-   cabecalho: a auditoria de orfandade so pode rodar com os consumidores presentes. */
+   cabeçalho: a auditoria de orfandade só pode rodar com os consumidores presentes. */
 const ENTRY = "app.mjs";
 
 /**
  * AS FOLHAS DECLARADAS EM `export const UI`, com a linha de cada uma.
  *
- * ⚠ ELA LE O TEXTO E NAO IMPORTA O MODULO, e a razao e a mesma que faz a duplicata contar
- * LITERAL: a guarda precisa rodar sobre o arquivo FALSO de uma prova sintetica, e um
- * `import` so alcanca o arquivo de verdade.
+ * ⚠ ELA LÊ O TEXTO E NÃO IMPORTA O MÓDULO, e a razão e a mesma que faz a duplicata contar
+ * LITERAL: a guarda precisa rodar sobre o arquivo FALSO de uma prova sintética, e um
+ * `import` só alcanca o arquivo de verdade.
  *
  * ⚠ E ELA PULA A STRING ANTES DE CONTAR CHAVE. Sem isso, uma frase com dois-pontos dentro
- * — "vence em: 2 meses" — viraria uma chave, e a guarda acusaria uma orfa que nao existe.
+ * — "vence em: 2 meses" — viraria uma chave, e a guarda acusaria uma órfã que não existe.
  *
  * @param {string} code ja sem comentarios
  * @returns {Array<[string, number]>} o caminho de cada folha, e a linha dela
@@ -213,10 +213,10 @@ function leaves(code) {
 /**
  * TODO CAMINHO `UI.a.b` ESCRITO FORA DO ARQUIVO DE FRASES.
  *
- * ⚠ UM CAMINHO ALCANCADO COBRE TUDO ABAIXO DELE, e essa e a regra inteira: quem escreve
- * `labelOf(UI.inbox.why, letter.kind)` passa a TABELA, e as nove frases dentro dela sao
- * alcancadas sem que nenhuma apareca em codigo. Exigir a folha ali faria a guarda acusar
- * exatamente o padrao que este projeto usa para nao ter nove `case`.
+ * ⚠ UM CAMINHO ALCANÇADO COBRE TUDO ABAIXO DELE, e essa e a regra inteira: quem escreve
+ * `labelOf(UI.inbox.why, letter.kind)` passa a TABELA, e as nove frases dentro dela são
+ * alcançadas sem que nenhuma apareça em código. Exigir a folha ali faria a guarda acusar
+ * exatamente o padrão que este projeto usa para não ter nove `case`.
  *
  * @param {Map<string, string>} files
  * @returns {Set<string>}
@@ -259,8 +259,8 @@ export function audit(files) {
     );
   }
 
-  /* ── A ORFA ────────────────────────────────────────────────────────────────
-     So com o projeto inteiro no mapa. Ver a prosa do cabecalho. */
+  /* ── A ÓRFÃ ────────────────────────────────────────────────────────────────
+     Só com o projeto inteiro no mapa. Ver a prosa do cabeçalho. */
   if (files.has(ENTRY)) {
     const paths = reached(files);
     const covered = (/** @type {string} */ leaf) => {
@@ -281,8 +281,8 @@ export function audit(files) {
   return list;
 }
 
-/* ── AS PROVAS SINTETICAS ────────────────────────────────────────────────────
-   Cada uma reintroduz um defeito real que o projeto ja pagou. */
+/* ── AS PROVAS SINTÉTICAS ────────────────────────────────────────────────────
+   Cada uma reintroduz um defeito real que o projeto já pagou. */
 export const synthetic = [
   {
     label: "o nome da tela escrito no menu E no titulo dela",
@@ -314,10 +314,10 @@ export const synthetic = [
     ]),
   },
   {
-    /* ⚠ QUE COMENTARIO NAO CONTA nao ganha prova sintetica propria, e a razao e que
-       ele ja tem uma melhor: o arquivo REAL passa verde, e ele e o mais comentado do
-       projeto — a prosa dele cita as proprias frases o tempo todo. Uma guarda que
-       contasse comentario nao chegaria ao fim daquele arquivo. */
+    /* ⚠ QUE COMENTÁRIO NÃO CONTA não ganha prova sintética própria, e a razão e que
+       ele já tem uma melhor: o arquivo REAL passa verde, e ele e o mais comentado do
+       projeto — a prosa dele cita as próprias frases o tempo todo. Uma guarda que
+       contasse comentário não chegaria ao fim daquele arquivo. */
     label: "a unidade repetida em dois blocos",
     files: new Map([
       [
@@ -326,16 +326,16 @@ export const synthetic = [
       ],
     ]),
   },
-  /* ── AS PROVAS DA ORFA ────────────────────────────────────────────────────
+  /* ── AS PROVAS DA ÓRFÃ ────────────────────────────────────────────────────
      ⚠ AS DUAS ENTREGAM O ENTRYPOINT, e sem ele a segunda auditoria nem roda — ver a prosa
-     do cabecalho. E o `app.mjs` de cada uma consome UMA das duas chaves, porque a prova
-     precisa mostrar que a guarda separa a viva da morta, e nao que ela acusa tudo.
+     do cabeçalho. E o `app.mjs` de cada uma consome UMA das duas chaves, porque a prova
+     precisa mostrar que a guarda separa a viva da morta, e não que ela acusa tudo.
 
-     ⚠ E QUE A TABELA PASSADA INTEIRA NAO E ORFA nao ganha prova sintetica propria, pela
-     mesma razao que "comentario nao conta" nao ganha: ela ja tem uma melhor, e e o arquivo
-     REAL. `UI.inbox.why` tem nove frases e nenhuma delas aparece em codigo — quem escreve
+     ⚠ E QUE A TABELA PASSADA INTEIRA NÃO E ÓRFÃ não ganha prova sintética própria, pela
+     mesma razão que "comentário não conta" não ganha: ela já tem uma melhor, e e o arquivo
+     REAL. `UI.inbox.why` tem nove frases e nenhuma delas aparece em código — quem escreve
      e `labelOf(UI.inbox.why, letter.kind)`. Se a guarda exigisse a folha, ela acusaria
-     nove frases vivas no primeiro `npm run check`, e o arquivo real e quem prova que nao. */
+     nove frases vivas no primeiro `npm run check`, e o arquivo real e quem prova que não. */
   {
     label: "a chave que sobreviveu a peca que a usava",
     files: new Map([
@@ -348,7 +348,7 @@ export const synthetic = [
   },
   {
     /* ⚠ ESTA E A QUE IMPORTA, e ela e o caso medido de 21/08: `approvalParts` era a CHAVE
-       das tres cores do termometro da rua — escrita, correta, e nunca lida. O defeito nao
+       das três cores do termômetro da rua — escrita, correta, e nunca lida. O defeito não
        era uma linha a mais no arquivo: era a tela desenhar verde, azul e vermelho sem
        legenda nenhuma tendo a legenda pronta ao lado. */
     label: "a chave de um grafico, escrita e nunca dita",

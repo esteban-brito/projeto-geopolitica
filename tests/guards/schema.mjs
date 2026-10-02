@@ -1,7 +1,7 @@
-/* GUARDA · ESQUEMA — todo dado editavel passa por uma fronteira, e por UMA so.
-   O catalogo vai virar editavel (a aba de nome e logo e decisao fechada), e dado editavel sem
-   fronteira produz o pior tipo de defeito: ele nao quebra onde foi digitado, quebra tres
-   motores adiante, num calculo que parece errado sem motivo aparente. */
+/* GUARDA · ESQUEMA — todo dado editável passa por uma fronteira, e por UMA só.
+   O catálogo vai virar editável (a aba de nome e logo e decisão fechada), e dado editável sem
+   fronteira produz o pior tipo de defeito: ele não quebra onde foi digitado, quebra três
+   motores adiante, num cálculo que parece errado sem motivo aparente. */
 
 import { collect, isGuardSource, stripJsComments } from "../lib/project.mjs";
 
@@ -10,8 +10,8 @@ export const name = "schema";
 const DATA_DIR = "src/data/";
 const INDEX = "src/data/catalog.mjs";
 
-/* Os dois modulos que sao INFRAESTRUTURA do catalogo, e nao assunto dele: um define o
-   validador, o outro reune. */
+/* Os dois módulos que são INFRAESTRUTURA do catálogo, e não assunto dele: um define o
+   validador, o outro reúne. */
 const PLUMBING = new Set(["src/data/schema.mjs", INDEX]);
 
 const SCHEMA_NAME = /\b([A-Z][A-Z0-9_]*_SCHEMA)\b/g;
@@ -32,7 +32,7 @@ export function audit(files) {
     const source = stripJsComments(raw);
     const inData = path.startsWith(DATA_DIR);
 
-    /* 3 — a fronteira e um lugar so. */
+    /* 3 — a fronteira e um lugar só. */
     if (!inData) {
       for (const hit of source.matchAll(/export\s+const\s+([A-Z][A-Z0-9_]*_SCHEMA)\b/g)) {
         add(
@@ -46,7 +46,7 @@ export function audit(files) {
     if (PLUMBING.has(path)) continue;
     sawDataModule = true;
 
-    /* 1 — todo modulo de assunto descreve o que declara. */
+    /* 1 — todo módulo de assunto descreve o que declara. */
     const own = [...source.matchAll(/export\s+const\s+([A-Z][A-Z0-9_]*_SCHEMA)\b/g)];
     if (own.length === 0) {
       add(
@@ -57,7 +57,7 @@ export function audit(files) {
     for (const hit of own) declared.add(hit[1] ?? "");
   }
 
-  /* 2 — nenhum esquema fica sem validacao. */
+  /* 2 — nenhum esquema fica sem validação. */
   const index = stripJsComments(files.get(INDEX) ?? "");
   if (index === "" && sawDataModule) {
     add(`${INDEX} nao existe — e ele que reune o catalogo e confere todo esquema declarado`);

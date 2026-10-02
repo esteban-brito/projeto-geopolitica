@@ -7,16 +7,16 @@ import { SCHEMA_VERSION, createState } from "../../src/state/state.mjs";
 import { deserialize, serialize } from "../../src/state/save.mjs";
 import { playMonth } from "../../src/application/turn.mjs";
 
-/* O TURNO DE VERDADE, e nao mais a acao de andaime. */
+/* O TURNO DE VERDADE, e não mais a ação de andaime. */
 
 /** @param {import("../../src/state/state.mjs").GameState} state */
 const idle = state => playMonth(state).state;
 
 const anySeed = fc.integer({ min: 0, max: 4294967295 });
 
-test("MESMA SEMENTE E MESMAS ACOES DAO O MESMO ESTADO, byte a byte", () => {
-  /* Ela e escrita sobre o TEXTO do save e nao sobre o objeto: igualdade profunda perdoaria
-     uma diferenca de ordem de chave que quebraria a comparacao de dois saves no disco. */
+test("MESMA SEMENTE E MESMAS AÇÕES DÃO O MESMO ESTADO, byte a byte", () => {
+  /* Ela e escrita sobre o TEXTO do save e não sobre o objeto: igualdade profunda perdoaria
+     uma diferença de ordem de chave que quebraria a comparação de dois saves no disco. */
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 0, max: 60 }), (seed, turns) => {
       const play = () => {
@@ -36,7 +36,7 @@ test("sementes diferentes produzem partidas com fluxos diferentes", () => {
       const first = createState(a);
       const second = createState(b);
       assert.notDeepEqual(first.streams, second.streams);
-      /* Mas o resto do estado de abertura e o MESMO: a semente escolhe o futuro, e nao o
+      /* Mas o resto do estado de abertura e o MESMO: a semente escolhe o futuro, e não o
          ponto de partida. */
       assert.deepEqual(first.mood, second.mood);
       assert.equal(first.month, second.month);
@@ -44,7 +44,7 @@ test("sementes diferentes produzem partidas com fluxos diferentes", () => {
   );
 });
 
-test("salvar e carregar devolve o estado identico", () => {
+test("salvar e carregar devolve o estado idêntico", () => {
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 0, max: 60 }), (seed, turns) => {
       let state = createState(seed);
@@ -58,7 +58,7 @@ test("salvar e carregar devolve o estado identico", () => {
 });
 
 test("a partida CONTINUA do save exatamente como continuaria sem ele", () => {
-  /* Se os contadores de fluxo nao sobrevivessem, esta prova quebraria e a de igualdade acima
+  /* Se os contadores de fluxo não sobrevivessem, esta prova quebraria e a de igualdade acima
      passaria. */
   fc.assert(
     fc.property(anySeed, fc.integer({ min: 1, max: 24 }), (seed, turns) => {
@@ -80,7 +80,7 @@ test("a partida CONTINUA do save exatamente como continuaria sem ele", () => {
 });
 
 test("nenhum campo do estado fica de fora do save", () => {
-  /* A promessa literal do cabecalho de `state.mjs`. */
+  /* A promessa literal do cabeçalho de `state.mjs`. */
   const state = createState(7);
   const written = JSON.parse(serialize(state));
   assert.deepEqual(Object.keys(written).sort(), Object.keys(state).sort());
@@ -90,7 +90,7 @@ test("nenhum campo do estado fica de fora do save", () => {
 /* ── AS RECUSAS ───────────────────────────────────────────────────────────── Carregar
    arquivo escolhido por outra pessoa falha por rotina. */
 
-test("PROVA SINTETICA: save de outra versao e recusado", () => {
+test("PROVA SINTÉTICA: save de outra versão e recusado", () => {
   const state = JSON.parse(serialize(createState(1)));
   state.schemaVersion = SCHEMA_VERSION - 1;
   const loaded = deserialize(JSON.stringify(state));
@@ -98,7 +98,7 @@ test("PROVA SINTETICA: save de outra versao e recusado", () => {
   assert.match(loaded.ok ? "" : loaded.reason, /versao/);
 });
 
-test("PROVA SINTETICA: save sem os fluxos e recusado", () => {
+test("PROVA SINTÉTICA: save sem os fluxos e recusado", () => {
   const state = JSON.parse(serialize(createState(1)));
   delete state.streams;
   const loaded = deserialize(JSON.stringify(state));
@@ -106,7 +106,7 @@ test("PROVA SINTETICA: save sem os fluxos e recusado", () => {
   assert.match(loaded.ok ? "" : loaded.reason, /streams/);
 });
 
-test("texto que nao e save nao derruba o carregamento", () => {
+test("texto que não e save não derruba o carregamento", () => {
   for (const junk of ["", "{", "null", "42", '"texto"', "[]"]) {
     const loaded = deserialize(junk);
     assert.equal(loaded.ok, false, `"${junk}" foi aceito`);
@@ -114,17 +114,17 @@ test("texto que nao e save nao derruba o carregamento", () => {
   }
 });
 
-test("qualquer texto e recusado sem lancar", () => {
+test("qualquer texto e recusado sem lançar", () => {
   fc.assert(
     fc.property(fc.string(), text => {
       const loaded = deserialize(text);
-      /* Um texto aleatorio nunca deveria virar partida valida. */
+      /* Um texto aleatório nunca deveria virar partida valida. */
       assert.equal(loaded.ok, false);
     }),
   );
 });
 
-test("save com impeachment e round-trip identico", () => {
+test("save com impeachment e round-trip idêntico", () => {
   let state = createState(42);
   for (let i = 0; i < 20; i++) state = idle(state);
   /* Forca um impeachment — o campo e number | null. */
@@ -152,13 +152,13 @@ test("save com campo corrupto e recusado", () => {
   }
 });
 
-/* ── O CODIGO MORTO SAIU SEM BUMP, e a razao e medida ──────────────────────── ⚠ A PREMISSA
-   REGISTRADA ERA QUE `weight` E `streams.events` PEDIAM UM BUMP DE ESQUEMA, e ela nao se
-   sustenta: `deserialize` confere a PRESENCA de 18 campos de topo e a FORMA de 8 deles, e nao
-   olha dentro de uma carta. Campo a mais num save antigo e campo ignorado — e foi so por isso
+/* ── O CÓDIGO MORTO SAIU SEM BUMP, e a razão e medida ──────────────────────── ⚠ A PREMISSA
+   REGISTRADA ERA QUE `weight` E `streams.events` PEDIAM UM BUMP DE ESQUEMA, e ela não se
+   sustenta: `deserialize` confere a PRESENÇA de 18 campos de topo e a FORMA de 8 deles, e não
+   olha dentro de uma carta. Campo a mais num save antigo e campo ignorado — e foi só por isso
    que os dois puderam sair sem custar a partida em andamento. */
 
-test("O SAVE DA VERSAO CORRENTE COM OS DOIS CAMPOS MORTOS CONTINUA CARREGANDO", () => {
+test("O SAVE DA VERSÃO CORRENTE COM OS DOIS CAMPOS MORTOS CONTINUA CARREGANDO", () => {
   const state = idle(idle(createState(7)));
   const salvo = JSON.parse(serialize(state));
 
@@ -170,7 +170,7 @@ test("O SAVE DA VERSAO CORRENTE COM OS DOIS CAMPOS MORTOS CONTINUA CARREGANDO", 
   assert.ok(lido.ok, `o save de antes da limpeza foi recusado: ${lido.ok ? "" : lido.reason}`);
 });
 
-test("NENHUMA CARTA GRAVA UM PESO QUE NINGUEM LE, e nenhum fluxo fica sem consumidor", () => {
+test("NENHUMA CARTA GRAVA UM PESO QUE NINGUÉM LÊ, e nenhum fluxo fica sem consumidor", () => {
   let state = createState(7);
   for (let month = 0; month < 12; month++) state = idle(state);
 
@@ -183,11 +183,11 @@ test("NENHUMA CARTA GRAVA UM PESO QUE NINGUEM LE, e nenhum fluxo fica sem consum
   assert.deepEqual(fluxos, ["congress"], `o save carrega fluxos sem consumidor: ${fluxos}`);
 });
 
-test("O SAVE DA VERSAO ANTERIOR ABRE SEM PARTIDO, e a versao nao subiu", () => {
+test("O SAVE DA VERSÃO ANTERIOR ABRE SEM PARTIDO, e a versão não subiu", () => {
   /* ⚠ ESTA E A PROVA QUE POUPOU A PARTIDA EM ANDAMENTO. O campo `party` entrou sem bump de
-     esquema porque ele nao esta na lista de obrigatorios do validador — e um save gravado
-     antes dele abre com o campo ausente, que todo consumidor lê como `null`. Se alguem o
-     puser entre os obrigatorios, esta prova quebra e a decisao volta a ser tomada. */
+     esquema porque ele não esta na lista de obrigatórios do validador — e um save gravado
+     antes dele abre com o campo ausente, que todo consumidor lê como `null`. Se alguém o
+     puser entre os obrigatórios, esta prova quebra e a decisão volta a ser tomada. */
   const antigo = JSON.parse(serialize(createState(7)));
   delete antigo["party"];
 
@@ -196,7 +196,7 @@ test("O SAVE DA VERSAO ANTERIOR ABRE SEM PARTIDO, e a versao nao subiu", () => {
   assert.equal(lido.ok ? lido.state.party : "nao abriu", undefined);
   assert.equal(antigo["schemaVersion"], SCHEMA_VERSION);
 
-  /* E ele JOGA: um mes inteiro roda com o campo ausente. */
+  /* E ele JOGA: um mês inteiro roda com o campo ausente. */
   if (lido.ok) assert.equal(playMonth(lido.state).state.month, lido.state.month + 1);
 });
 
@@ -218,8 +218,8 @@ test("O PARTIDO ATRAVESSA O SAVE, e o mandato inteiro se refaz com ele", () => {
 });
 
 test("O SAVE SEM DECRETO ABRE, e o decreto em vigor e nenhum", () => {
-  /* O decreto entrou como o partido: fora dos obrigatorios, para nao recusar a partida em
-     andamento. Um save anterior a ele abre, joga, e o mes seguinte ja grava o decreto. */
+  /* O decreto entrou como o partido: fora dos obrigatórios, para não recusar a partida em
+     andamento. Um save anterior a ele abre, joga, e o mês seguinte já grava o decreto. */
   const antigo = JSON.parse(serialize(createState(7)));
   delete antigo["decree"];
   const lido = deserialize(JSON.stringify(antigo));

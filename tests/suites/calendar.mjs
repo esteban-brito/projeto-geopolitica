@@ -1,4 +1,4 @@
-/* SUITE · O CALENDARIO — a forma do ano fiscal, e ela nao depende de relogio. */
+/* SUITE · O CALENDÁRIO — a forma do ano fiscal, e ela não depende de relógio. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -8,8 +8,8 @@ import { CALENDAR, REPEATS } from "../../src/data/calendar.mjs";
 import { MONTHS_PER_TERM } from "../../src/data/regime.mjs";
 import { monthLabel } from "../../src/state/state.mjs";
 
-test("O CALENDARIO E FUNCAO PURA DE `month` — nenhum relogio entra nele", () => {
-  /* ⚠ ELA E A RESTRICAO DECLARADA DO ITEM, e sem prova ela seria so uma frase: um `Date.now`
+test("O CALENDÁRIO E FUNÇÃO PURA DE `month` — nenhum relógio entra nele", () => {
+  /* ⚠ ELA E A RESTRIÇÃO DECLARADA DO ITEM, e sem prova ela seria só uma frase: um `Date.now`
      escondido faria a mesma partida mostrar prazos diferentes conforme o dia. */
   fc.assert(
     fc.property(fc.integer({ min: 0, max: 600 }), month => {
@@ -18,9 +18,9 @@ test("O CALENDARIO E FUNCAO PURA DE `month` — nenhum relogio entra nele", () =
   );
 });
 
-test("O MES DO CALENDARIO E O MESMO QUE A TELA IMPRIME — e ha uma conta so", () => {
-  /* Se o marco de abril cair no mes que a faixa chama de "mai", o jogo passa a ter dois
-     calendarios: o do relogio da tela e o dos prazos. */
+test("O MÊS DO CALENDÁRIO E O MESMO QUE A TELA IMPRIME — e há uma conta só", () => {
+  /* Se o marco de abril cair no mês que a faixa chama de "mai", o jogo passa a ter dois
+     calendarios: o do relógio da tela e o dos prazos. */
   const nomes = [
     "jan",
     "fev",
@@ -39,9 +39,9 @@ test("O MES DO CALENDARIO E O MESMO QUE A TELA IMPRIME — e ha uma conta so", (
   for (let month = 0; month < MONTHS_PER_TERM; month++) {
     const impresso = monthLabel(month).split(" · ")[0] ?? "";
     for (const marco of calendarOf(month).now) {
-      /* ⚠ O QUE SE CONFERE E A CONGRUENCIA, e nao a igualdade: o bimestral repete de dois em
-         dois meses, entao ele cai em fev, abr, jun — e so o anual casa com o mes do catalogo.
-         A primeira versao desta prova exigia igualdade e reprovou o codigo CERTO. */
+      /* ⚠ O QUE SE CONFERE E A CONGRUENCIA, e não a igualdade: o bimestral repete de dois em
+         dois meses, então ele cai em fev, abr, jun — e só o anual casa com o mês do catálogo.
+         A primeira versão desta prova exigia igualdade e reprovou o código CERTO. */
       const periodo = REPEATS[marco.id] ?? 12;
       const impressoIndice = nomes.indexOf(impresso);
       assert.equal(
@@ -67,7 +67,7 @@ test("TODO MARCO ANUAL VENCE UMA VEZ POR ANO, e o bimestral seis", () => {
   }
 });
 
-test("O TRIMESTRE NAO REPETE O QUE JA VENCE AGORA, e ele e ordenado por urgencia", () => {
+test("O TRIMESTRE NÃO REPETE O QUE JÁ VENCE AGORA, e ele e ordenado por urgência", () => {
   for (let month = 0; month < MONTHS_PER_TERM; month++) {
     const { now, soon } = calendarOf(month);
     const agora = new Set(now.map(marco => marco.id));
@@ -85,8 +85,8 @@ test("O TRIMESTRE NAO REPETE O QUE JA VENCE AGORA, e ele e ordenado por urgencia
   }
 });
 
-test("O MANDATO DEIXA DE TER 48 MESES IGUAIS — e ha mes sem cobranca nenhuma", () => {
-  /* Se todo mes cobrar alguma coisa, o calendario nao da pulso: ele vira ruido de fundo. */
+test("O MANDATO DEIXA DE TER 48 MESES IGUAIS — e há mês sem cobrança nenhuma", () => {
+  /* Se todo mês cobrar alguma coisa, o calendário não da pulso: ele vira ruído de fundo. */
   let comCobranca = 0;
   for (let month = 0; month < MONTHS_PER_TERM; month++) {
     if (calendarOf(month).now.length > 0) comCobranca += 1;

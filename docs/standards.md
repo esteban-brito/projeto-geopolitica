@@ -9,24 +9,25 @@ nenhuma, porque a próxima sessão confia nela.
 
 Para cada eixo existe **uma** forma, e a segunda é recusada por guarda.
 
-| eixo                | a forma única                                        | proibido                               | cobrado por                 |
-| ------------------- | ---------------------------------------------------- | -------------------------------------- | --------------------------- |
-| módulos             | ESM, `.mjs`, exports nomeados                        | CommonJS, `export default`             | `naming`                    |
-| nome de arquivo     | `kebab-case` minúsculo, sem acento                   | `camelCase`, `PascalCase`              | `naming`                    |
-| idioma              | inglês em código e caminhos; português em prosa e UI | identificador acentuado                | `naming` (parcial — ver §6) |
-| cor                 | token no arquivo de tokens, no par `--x` + `--x-rgb` | literal fora dos tokens; `color-mix()` | `tokens`                    |
-| superfície          | uma das três lâminas                                 | `backdrop-filter` fora do material     | `material`                  |
-| véu                 | `--veil-thin` · `--veil` · `--glass-edge`            | literal de branco em aresta ou fundo   | revisão (ver §7)            |
-| raio, espaço, corpo | valor da escala, derivado de um número raiz          | número cru numa regra                  | revisão                     |
-| comentário          | lição medida, até 10 linhas por bloco                | diário: data, citação, histórico       | `prose`                     |
-| cascata             | camadas declaradas por `@layer`                      | regra fora de camada; `!important`     | `cascade`                   |
-| movimento           | tokens de duração e curva + rede global              | `animation: none`; animação inline     | `motion`                    |
-| aleatoriedade       | fluxo injetado, próprio de cada motor que sorteia    | `Math.random` no domínio               | `boundaries`                |
-| posição de RNG      | quem saca devolve a posição, e o mês a grava         | posição de um saque descartada         | suite `pressure` + revisão  |
-| estado de tela      | id do dado (`data-id`) sobrevive à repintura         | índice na lista repintada              | revisão (ver §7)            |
-| ouvinte global      | `document`/`window` armados uma vez por módulo       | `addEventListener` a cada pintura      | revisão (ver §7)            |
-| identidade          | separada dos atributos; motor compara por `id`       | comparação por nome                    | `identity`                  |
-| dado editável       | esquema ao lado da coleção, validado por `catalog`   | esquema fora de `src/data/`            | `schema` + suite            |
+| eixo                | a forma única                                        | proibido                               | cobrado por                   |
+| ------------------- | ---------------------------------------------------- | -------------------------------------- | ----------------------------- |
+| módulos             | ESM, `.mjs`, exports nomeados                        | CommonJS, `export default`             | `naming`                      |
+| nome de arquivo     | `kebab-case` minúsculo, sem acento                   | `camelCase`, `PascalCase`              | `naming`                      |
+| idioma              | inglês em código e caminhos; português em prosa e UI | identificador acentuado                | `naming` (parcial — ver §6)   |
+| acento              | português correto em comentário e documento ativo    | palavra do dicionário sem acento       | `accents` (parcial — ver §10) |
+| cor                 | token no arquivo de tokens, no par `--x` + `--x-rgb` | literal fora dos tokens; `color-mix()` | `tokens`                      |
+| superfície          | uma das três lâminas                                 | `backdrop-filter` fora do material     | `material`                    |
+| véu                 | `--veil-thin` · `--veil` · `--glass-edge`            | literal de branco em aresta ou fundo   | revisão (ver §7)              |
+| raio, espaço, corpo | valor da escala, derivado de um número raiz          | número cru numa regra                  | revisão                       |
+| comentário          | lição medida, até 10 linhas por bloco                | diário: data, citação, histórico       | `prose`                       |
+| cascata             | camadas declaradas por `@layer`                      | regra fora de camada; `!important`     | `cascade`                     |
+| movimento           | tokens de duração e curva + rede global              | `animation: none`; animação inline     | `motion`                      |
+| aleatoriedade       | fluxo injetado, próprio de cada motor que sorteia    | `Math.random` no domínio               | `boundaries`                  |
+| posição de RNG      | quem saca devolve a posição, e o mês a grava         | posição de um saque descartada         | suite `pressure` + revisão    |
+| estado de tela      | id do dado (`data-id`) sobrevive à repintura         | índice na lista repintada              | revisão (ver §7)              |
+| ouvinte global      | `document`/`window` armados uma vez por módulo       | `addEventListener` a cada pintura      | revisão (ver §7)              |
+| identidade          | separada dos atributos; motor compara por `id`       | comparação por nome                    | `identity`                    |
+| dado editável       | esquema ao lado da coleção, validado por `catalog`   | esquema fora de `src/data/`            | `schema` + suite              |
 
 ## 2. Estrutura
 
@@ -313,6 +314,7 @@ número ao lado dela.
 | `motion`     | rede incompleta; `animation: none`; falta de alcance a pseudo-elementos e View Transitions; animação inline                                                                                               |
 | `boundaries` | entrypoint alcançando o domínio; domínio com DOM, relógio ou RNG ambiente; motor de domínio importando outro; dependência de teste vazando                                                                |
 | `naming`     | `.js`; nome fora do padrão; CommonJS; `export default`; identificador acentuado                                                                                                                           |
+| `accents`    | palavra sem acento em comentário de `.mjs` e `.css` e em documento fora de `docs/archive/`                                                                                                                |
 | `codenames`  | motor sem codinome, codinome sem motor, codinome no código                                                                                                                                                |
 | `identity`   | coleção com rótulo e sem `id`; `id` repetido; motor comparando por nome                                                                                                                                   |
 | `schema`     | módulo de dado sem esquema; esquema que o catálogo nunca valida; esquema fora de `src/data/`                                                                                                              |
@@ -520,3 +522,27 @@ células de 512, zoom de 1,1 e uma posição aprovada por rosto. Para uma folha 
    divergente ou dois rostos parecidos;
 4. aceita a folha, guardar o PNG original em `tmp/asset-sources/portraits/`, com hash e posições
    no JSON, antes de usar no jogo.
+
+## 10. A escrita dos documentos
+
+**Tipos e cabeçalho.** Cada documento ativo tem um tipo, e o tipo diz o cabeçalho:
+
+| tipo          | onde              | nome do arquivo        | cabeçalho                                                         |
+| ------------- | ----------------- | ---------------------- | ----------------------------------------------------------------- |
+| especificação | `docs/spec/`      | `kebab-case` em inglês | título e `> **Situação:** vigente` ou `referência`, com o assunto |
+| ciclo         | `docs/cycles/`    | `NN-kebab-case`        | título `Ciclo NN — nome` e `> **Situação:**` com data             |
+| pesquisa      | `docs/research/`  | `NN-kebab-case`        | título; a situação mora no índice da pasta                        |
+| decisão       | `docs/adr/`       | `NNNN-kebab-case`      | o formato de ADR da pasta                                         |
+| registro      | `docs/journal.md` | um arquivo             | `### N · título — dd/mm/aaaa`, da mais velha para a mais nova     |
+
+Cada pasta tem um `README.md` com o índice e a situação de cada documento. Documento superado
+vai para `docs/archive/` com a data no nome e não se edita mais, salvo link que quebrar.
+
+**Língua.** Português com acento correto em todo comentário e documento ativo. Data em
+`dd/mm/aaaa` (ou `dd/mm` dentro do mesmo ano). O dono do jogo é **o Diretor**; o jogador é quem
+joga a partida. Nome de motor em caixa alta (`ECLUSA`); nome de arquivo e de função entre crases.
+
+**A guarda `accents`** acusa a palavra que só existe com acento (`nao`, `funcao`, `orcamento`;
+678 no dicionário de `tests/lib/accents.mjs`). Ela não vê a ambígua (`e`/`é`, `esta`/`está`,
+`a`/`à`, `tem`/`têm`) nem a que também é verbo (`divida`, `renuncia`); essas pedem leitura.
+Lote de acento se confere assim: tirados os diacríticos, o arquivo sai idêntico ao original.

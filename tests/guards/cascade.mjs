@@ -1,4 +1,4 @@
-/* GUARDA · CASCATA — a precedencia e declarada, nunca emergente. */
+/* GUARDA · CASCATA — a precedência e declarada, nunca emergente. */
 
 import { collect, stripCssComments } from "../lib/project.mjs";
 
@@ -13,7 +13,7 @@ const LAYER_ORDER = ["tokens", "base", "material", "components", "screens", "mot
 export function audit(files) {
   const { list, add } = collect(name);
 
-  /* 1 — A DECLARACAO DE ORDEM VIVE NO PRIMEIRO ARQUIVO CARREGADO. */
+  /* 1 — A DECLARAÇÃO DE ORDEM VIVE NO PRIMEIRO ARQUIVO CARREGADO. */
   const html = files.get("index.html") ?? "";
   const links = [...html.matchAll(/<link[^>]+href="(styles\/[^"]+)"/g)].map(m => m[1] ?? "");
 
@@ -123,8 +123,8 @@ function outsideLayers(css) {
   return null;
 }
 
-/* O defeito nao esta em nenhuma das duas regras — esta no PAR, e so quem le as duas juntas o
-   ve. */
+/* O defeito não esta em nenhuma das duas regras — esta no PAR, e só quem lê as duas juntas o
+   vê. */
 
 /**
  * OS BLOCOS DE REGRA, com contexto, seletor, propriedades e linha.
@@ -154,7 +154,7 @@ function rules(css) {
 
       if (selector.startsWith("@")) {
         /* ⚠ `@media` e `@layer` ENTRAM NA CHAVE, e nao sao ignorados: a mesma regra dentro e
-           fora de uma media query e o padrao normal de sobreposicao, e acusar isso faria a
+           fora de uma media query e o padrão normal de sobreposição, e acusar isso faria a
            guarda brigar com a forma como todo CSS responsivo se escreve. */
         stack.push(selector);
         i++;
@@ -200,8 +200,8 @@ function matchBrace(text, open) {
 
 export const synthetic = [
   {
-    /* ⚠ ESTA E A DE, e ela reintroduz o defeito EXATO que a criou: o corpo do oficio subia um
-       degrau e uma segunda declaracao, dez linhas abaixo, o devolvia. */
+    /* ⚠ ESTA E A DE, e ela reintroduz o defeito EXATO que a criou: o corpo do ofício subia um
+       degrau e uma segunda declaração, dez linhas abaixo, o devolvia. */
     label: "a mesma propriedade declarada duas vezes no mesmo seletor",
     files: new Map([
       ["index.html", '<link href="styles/00-tokens.css">'],
@@ -215,10 +215,10 @@ export const synthetic = [
     ]),
   },
   {
-    /* ⚠ E ESTA COBRA O CONTRARIO, e sem ela o conserto obvio da acusacao falsa seria afrouxar
+    /* ⚠ E ESTA COBRA O CONTRÁRIO, e sem ela o conserto óbvio da acusação falsa seria afrouxar
        a guarda: o mesmo seletor escrito duas vezes com propriedades DIFERENTES e autoria
-       legitima, e este projeto a usa de proposito — a regra do `position: relative` mora ao
-       lado do ponto de nao lido porque ela existe para ele. */
+       legítima, e este projeto a usa de propósito — a regra do `position: relative` mora ao
+       lado do ponto de não lido porque ela existe para ele. */
     label: "regra fora de qualquer camada",
     files: new Map([
       ["index.html", '<link href="styles/00-tokens.css">'],

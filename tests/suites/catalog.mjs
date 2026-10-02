@@ -1,4 +1,4 @@
-/* SUITE · O CATALOGO — o dado de verdade, conferido valor a valor. */
+/* SUITE · O CATÁLOGO — o dado de verdade, conferido valor a valor. */
 
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -10,12 +10,12 @@ import { PARTIES, PARTY_SCHEMA } from "../../src/data/parties.mjs";
 import { SEATS, SIMPLE_MAJORITY } from "../../src/data/regime.mjs";
 import { collectionViolations, violations } from "../../src/data/schema.mjs";
 
-test("o catalogo do projeto esta integro", () => {
+test("o catálogo do projeto esta íntegro", () => {
   assert.deepEqual(catalogViolations(), []);
 });
 
 test("as cadeiras das bancadas somam a Camara inteira", () => {
-  /* Soma que nao fecha nao e erro de digitacao inofensivo: e uma votacao cujo quorum nunca
+  /* Soma que não fecha não e erro de digitacao inofensivo: e uma votação cujo quórum nunca
      bate, e o defeito apareceria como "a lei nunca passa". */
   const total = PARTIES.reduce((sum, party) => sum + party.seats, 0);
   assert.equal(total, SEATS, `as bancadas somam ${total} e a Camara tem ${SEATS}`);
@@ -23,7 +23,7 @@ test("as cadeiras das bancadas somam a Camara inteira", () => {
 });
 
 test("nenhuma bancada sozinha tem maioria simples", () => {
-  /* Se uma tivesse, o resto do motor de votacao seria decoracao — bastaria comprar uma
+  /* Se uma tivesse, o resto do motor de votação seria decoração — bastaria comprar uma
      bancada e nenhuma barganha existiria. */
   for (const party of PARTIES) {
     assert.ok(
@@ -33,7 +33,7 @@ test("nenhuma bancada sozinha tem maioria simples", () => {
   }
 });
 
-test("A VENALIDADE POR EIXO FAZ ALGUMA COISA: ao menos um bloco e assimetrico", () => {
+test("A VENALIDADE POR EIXO FAZ ALGUMA COISA: ao menos um bloco e assimétrico", () => {
   /* Como a propriedade da armadilha em LASTRO, esta exige que algo POSSA acontecer. */
   const asymmetric = PARTIES.filter(
     party => Math.abs(party.venalityEconomic - party.venalityLiberty) >= 0.2,
@@ -44,9 +44,9 @@ test("A VENALIDADE POR EIXO FAZ ALGUMA COISA: ao menos um bloco e assimetrico", 
   );
 });
 
-test("o preco depende do assunto, e em sentidos opostos", () => {
-  /* O caso que motivou a mudanca: a bancada liberal nao entrega a pauta economica e negocia
-     costumes; o centrao faz o contrario. */
+test("o preço depende do assunto, e em sentidos opostos", () => {
+  /* O caso que motivou a mudança: a bancada liberal não entrega a pauta econômica e negocia
+     costumes; o centrao faz o contrário. */
   const liberal = PARTIES.find(party => party.id === "vanguarda");
   const centrao = PARTIES.find(party => party.id === "fbr");
   assert.ok(liberal && centrao);
@@ -62,22 +62,22 @@ test("o preco depende do assunto, e em sentidos opostos", () => {
 
 test("nenhum bloco esta inteiramente a venda", () => {
   /* Venalidade 1 significa que dinheiro anula a ideologia por completo, e ai a bancada deixa
-     de ter posicao — vira uma funcao do orcamento. */
+     de ter posição — vira uma função do orcamento. */
   for (const party of PARTIES) {
     assert.ok(party.venalityEconomic < 1, `${party.id} se vende por inteiro em economia`);
     assert.ok(party.venalityLiberty < 1, `${party.id} se vende por inteiro em costumes`);
   }
 });
 
-test("o catalogo expoe as bancadas e os parametros fiscais", () => {
+test("o catálogo expõe as bancadas e os parâmetros fiscais", () => {
   assert.equal(CATALOG.parties, PARTIES);
   assert.ok(CATALOG.fiscal.taxLoad > 0);
 });
 
-/* Cada prova abaixo reintroduz um defeito e exige acusacao, que e a mesma exigencia das
+/* Cada prova abaixo reintroduz um defeito e exige acusação, que e a mesma exigência das
    guardas. */
 
-test("PROVA SINTETICA: campo faltando e acusado", () => {
+test("PROVA SINTÉTICA: campo faltando e acusado", () => {
   /* Um registro real MENOS um campo: assim a prova mede a falta e nada mais. */
   const complete = PARTIES[0];
   assert.ok(complete);
@@ -89,26 +89,26 @@ test("PROVA SINTETICA: campo faltando e acusado", () => {
   assert.match(found[0] ?? "", /seats/);
 });
 
-test("PROVA SINTETICA: campo a mais e acusado", () => {
+test("PROVA SINTÉTICA: campo a mais e acusado", () => {
   const broken = { ...(PARTIES[0] ?? {}), sobrando: 1 };
   const found = violations(PARTY_SCHEMA, broken, "teste");
   assert.match(found.join(" "), /sobrando/);
 });
 
-test("PROVA SINTETICA: id fora do kebab-case e acusado", () => {
+test("PROVA SINTÉTICA: id fora do kebab-case e acusado", () => {
   const broken = { ...(PARTIES[0] ?? {}), id: "Centrão Puro" };
   assert.match(violations(PARTY_SCHEMA, broken, "teste").join(" "), /kebab-case/);
 });
 
-test("PROVA SINTETICA: id repetido e acusado", () => {
+test("PROVA SINTÉTICA: id repetido e acusado", () => {
   const first = PARTIES[0];
   assert.ok(first);
   const found = collectionViolations(PARTY_SCHEMA, [first, first], "teste");
   assert.match(found.join(" "), /mais de uma vez/);
 });
 
-test("todo numero fora da faixa declarada e acusado", () => {
-  /* Propriedade e nao exemplo: o que precisa ser provado nao e que 1.5 de venalidade e
+test("todo número fora da faixa declarada e acusado", () => {
+  /* Propriedade e não exemplo: o que precisa ser provado não e que 1.5 de venalidade e
      recusado, e que NENHUM valor fora da faixa passa. */
   fc.assert(
     fc.property(
@@ -125,7 +125,7 @@ test("todo numero fora da faixa declarada e acusado", () => {
   );
 });
 
-test("o validador nao conserta nem preenche, so relata", () => {
+test("o validador não conserta nem preenche, só relata", () => {
   /* Validador que conserta esconde o erro em vez de mostrar. */
   const record = { ...(PARTIES[0] ?? {}), venalityEconomic: 9 };
   const before = JSON.stringify(record);
@@ -133,16 +133,16 @@ test("o validador nao conserta nem preenche, so relata", () => {
   assert.equal(JSON.stringify(record), before);
 });
 
-/* ── O HANDOFF CONTA O CATALOGO QUE EXISTE ─────────────────────────────────── ⚠ ELA NASCE DE
-   UM DEFEITO MEDIDO, e ele e a familia que `standards.md` §7 declara SEM GUARDA: prosa que
-   continua gramatical e para de ser verdade. O handoff afirmou por sessoes um Congresso de
-   "onze bancadas" e um elenco de "sete pessoas" enquanto o catalogo tinha nove blocos e oito
-   arquetipos — e nada podia acusar, porque toda guarda deste projeto le TEXTO e nenhuma sabe
-   contar o catalogo.
+/* ── O HANDOFF CONTA O CATÁLOGO QUE EXISTE ─────────────────────────────────── ⚠ ELA NASCE DE
+   UM DEFEITO MEDIDO, e ele e a família que `standards.md` §7 declara SEM GUARDA: prosa que
+   continua gramatical e para de ser verdade. O handoff afirmou por sessões um Congresso de
+   "onze bancadas" e um elenco de "sete pessoas" enquanto o catálogo tinha nove blocos e oito
+   arquétipos — e nada podia acusar, porque toda guarda deste projeto lê TEXTO e nenhuma sabe
+   contar o catálogo.
 
-   ⚠ E O ALCANCE E DECLARADO: ela cobre so o `handoff.md`, que promete no proprio cabecalho
-   que ali "so entra o que e verificavel hoje". `journal.md` e `cycles/` sao historico datado
-   e ficam de fora de proposito — corrigir um numero la seria reescrever o que foi medido. */
+   ⚠ E O ALCANCE E DECLARADO: ela cobre só o `handoff.md`, que promete no próprio cabeçalho
+   que ali "só entra o que e verificável hoje". `journal.md` e `cycles/` são histórico datado
+   e ficam de fora de propósito — corrigir um número la seria reescrever o que foi medido. */
 const CONTAGENS = new Map([
   ["blocos partidários", () => CATALOG.parties.length],
   ["cadeiras", () => SEATS],
@@ -154,11 +154,11 @@ const CONTAGENS = new Map([
   ["arquétipos", () => CATALOG.archetypes.length],
 ]);
 
-test("O HANDOFF CONTA O CATALOGO QUE EXISTE, e nao o de uma sessao passada", () => {
+test("O HANDOFF CONTA O CATÁLOGO QUE EXISTE, e não o de uma sessão passada", () => {
   const handoff = readFileSync(join(import.meta.dirname, "..", "..", "docs", "handoff.md"), "utf8");
 
-  /* TODA LINHA DE DUAS COLUNAS, e nao uma tabela ancorada por titulo: o rotulo e a chave, e
-     assim a contagem pode morar em qualquer secao do arquivo sem a prova ter de saber onde. */
+  /* TODA LINHA DE DUAS COLUNAS, e não uma tabela ancorada por título: o rótulo e a chave, e
+     assim a contagem pode morar em qualquer seção do arquivo sem a prova ter de saber onde. */
   const rows = [...handoff.matchAll(/^\|\s*([^|]+?)\s*\|\s*(\d+)\s*\|\s*$/gm)];
 
   /** @type {string[]} */
@@ -175,7 +175,7 @@ test("O HANDOFF CONTA O CATALOGO QUE EXISTE, e nao o de uma sessao passada", () 
     );
   }
 
-  /* ⚠ A PROVA TEM DE FALHAR QUANDO A TABELA SUMIR, senao apagar as linhas a deixa verde para
+  /* ⚠ A PROVA TEM DE FALHAR QUANDO A TABELA SUMIR, senão apagar as linhas a deixa verde para
      sempre — que e a forma mais silenciosa de uma prova morrer. */
   assert.deepEqual(
     [...CONTAGENS.keys()].filter(label => !checked.includes(label)),

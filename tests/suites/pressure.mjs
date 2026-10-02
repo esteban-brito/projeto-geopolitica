@@ -1,5 +1,5 @@
 /* SUITE · A CALDEIRA — o que ela cobra e que a INACAO esquente.
-   ⚠ A PROVA MAIS IMPORTANTE E A PRIMEIRA, e ela existe por um risco de desenho, e nao por um
+   ⚠ A PROVA MAIS IMPORTANTE E A PRIMEIRA, e ela existe por um risco de desenho, e não por um
    defeito medido. */
 
 import assert from "node:assert/strict";
@@ -17,9 +17,9 @@ import { spendOf } from "../../src/application/agenda.mjs";
 const cold = Object.fromEntries(LOBBIES.map(l => [l.id, 0]));
 const idle = Object.fromEntries(LOBBIES.map(l => [l.id, 0.6]));
 
-test("A INACAO ESQUENTA — e esta e a razao de este motor existir", () => {
-  /* Descontentamento constante e o que um governo parado produz: ninguem recebeu nada, e
-     ninguem esquece. */
+test("A INACAO ESQUENTA — e esta e a razão de este motor existir", () => {
+  /* Descontentamento constante e o que um governo parado produz: ninguém recebeu nada, e
+     ninguém esquece. */
   let pressure = cold;
   for (let month = 0; month < 12; month++) {
     pressure = heat({ pressure, grievance: idle, parameters: PRESSURE });
@@ -33,8 +33,8 @@ test("A INACAO ESQUENTA — e esta e a razao de este motor existir", () => {
   }
 });
 
-test("ELA SOBE MAIS RAPIDO DO QUE DESCE, e a assimetria e a mecanica", () => {
-  /* ⚠ Simetrica, a caldeira seria um pendulo: bastaria alternar quem se agrada para nunca
+test("ELA SOBE MAIS RAPIDO DO QUE DESCE, e a assimetria e a mecânica", () => {
+  /* ⚠ Simétrica, a caldeira seria um pendulo: bastaria alternar quem se agrada para nunca
      esquentar nada. */
   const um = LOBBIES[0];
   assert.ok(um);
@@ -55,11 +55,11 @@ test("ELA SOBE MAIS RAPIDO DO QUE DESCE, e a assimetria e a mecanica", () => {
   assert.ok(ganho > perda, `subiu ${ganho.toFixed(2)} e desceu ${perda.toFixed(2)}`);
 });
 
-test("O PROCESSO SO ABRE COM AS TRES RUPTURAS JUNTAS", () => {
-  /* ⚠ PRESIDENTES NAO CAEM POR UM FATOR SO. */
+test("O PROCESSO SÓ ABRE COM AS TRÊS RUPTURAS JUNTAS", () => {
+  /* ⚠ PRESIDENTES NÃO CAEM POR UM FATOR SÓ. */
   const fervendo = Object.fromEntries(LOBBIES.map(l => [l.id, 100]));
 
-  /* As tres juntas: abre. */
+  /* As três juntas: abre. */
   const tudo = rupture({
     pressure: fervendo,
     lobbies: LOBBIES,
@@ -69,7 +69,7 @@ test("O PROCESSO SO ABRE COM AS TRES RUPTURAS JUNTAS", () => {
   });
   assert.ok(tudo.open, "as tres rupturas abertas e o processo nao abriu");
 
-  /* A rua de pe segura tudo, por pior que esteja o resto. */
+  /* A rua de pé segura tudo, por pior que esteja o resto. */
   const comRua = rupture({
     pressure: fervendo,
     lobbies: LOBBIES,
@@ -80,7 +80,7 @@ test("O PROCESSO SO ABRE COM AS TRES RUPTURAS JUNTAS", () => {
   assert.ok(!comRua.open, "o processo abriu com a rua sustentando o governo");
   assert.ok(comRua.economic, "o capital fervia e a ruptura economica nao acusou");
 
-  /* E quem sustenta segura tudo tambem: enquanto houver torneira, ele fica. */
+  /* E quem sustenta segura tudo também: enquanto houver torneira, ele fica. */
   const comBroker = rupture({
     pressure: { ...fervendo, fisiologismo: 0 },
     lobbies: LOBBIES,
@@ -91,7 +91,7 @@ test("O PROCESSO SO ABRE COM AS TRES RUPTURAS JUNTAS", () => {
   assert.ok(!comBroker.open, "o processo abriu sem quem sustenta ter virado");
 });
 
-test("QUEM NAO PESA NAO ABANDONA O CAPITAL, por mais que ferva", () => {
+test("QUEM NÃO PESA NÃO ABANDONA O CAPITAL, por mais que ferva", () => {
   const soOrdem = Object.fromEntries(LOBBIES.map(l => [l.id, l.weight > 0 ? 0 : 100]));
   const nada = rupture({
     pressure: soOrdem,
@@ -103,7 +103,7 @@ test("QUEM NAO PESA NAO ABANDONA O CAPITAL, por mais que ferva", () => {
   assert.ok(!nada.economic, "um grupo sem peso abriu a ruptura economica sozinho");
 });
 
-test("A PRESSAO FICA ENTRE 0 E 100, com qualquer descontentamento", () => {
+test("A PRESSÃO FICA ENTRE 0 E 100, com qualquer descontentamento", () => {
   fc.assert(
     fc.property(
       fc.double({ min: 0, max: 100, noNaN: true }),
@@ -124,8 +124,8 @@ test("A PRESSAO FICA ENTRE 0 E 100, com qualquer descontentamento", () => {
   );
 });
 
-test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
-  /* ⚠ A PROVA QUE FECHA A MECANICA. */
+test("A QUEDA ACONTECE, e ela NÃO acontece com um governo que entrega", () => {
+  /* ⚠ A PROVA QUE FECHA A MECÂNICA. */
   const anos = (/** @type {number} */ pay) => {
     let state = createState();
     for (let month = 0; month < 60; month++) {
@@ -144,8 +144,8 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
     return null;
   };
 
-  /* ── O GOVERNO MEDIANO, e ele e a outra ponta do criterio ─────────────────── Ele nao e
-     bom: aperta o orcamento ate caber no teto e paga so a manutencao da base — o minimo para
+  /* ── O GOVERNO MEDIANO, e ele e a outra ponta do critério ─────────────────── Ele não e
+     bom: aperta o orcamento até caber no teto e paga só a manutencao da base — o minimo para
      continuar governando. */
   const UPKEEP = 1.5 / 12;
   const manutencao = () => {
@@ -193,24 +193,24 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
     return null;
   };
 
-  /* Promete verba cheia a todo mundo e o caixa nao honra: a base derrete, a rua desaba, e o
+  /* Promete verba cheia a todo mundo e o caixa não honra: a base derrete, a rua desaba, e o
      processo se abre. */
   const caiu = anos(1);
   assert.ok(caiu !== null, "um governo que promete tudo e nao paga atravessou o mandato");
 
-  /* O que mudou nao foi a CALDEIRA, foi o pais deixar de se consertar sozinho. Com o
-     decaimento por identidade, quem nao alimenta as areas ve os indices cairem, a rua
-     cansar e o mercado ver a divida subir — e as tres rupturas passam a se abrir
-     juntas. O achado 29 morreu por consequencia, e nao por calibragem: era exatamente
+  /* O que mudou não foi a CALDEIRA, foi o país deixar de se consertar sozinho. Com o
+     decaimento por identidade, quem não alimenta as áreas vê os índices caírem, a rua
+     cansar e o mercado ver a dívida subir — e as três rupturas passam a se abrir
+     juntas. O achado 29 morreu por consequência, e não por calibragem: era exatamente
      o que a retomada previa ao mandar consertar o 31 antes dele. */
   const passivo = anos(0);
   assert.ok(passivo !== null, "o governo passivo atravessou 60 meses sem consequencia");
 
-  /* ⚠ O LIMITE E O DO MOTOR, e nao um mes a mais: `termOf` encerra o mandato em
-     `month >= MONTHS_PER_TERM`, entao o ultimo mes que o jogador resolve e o 47 e nada depois
-     dele acontece numa partida. A versao anterior cobrava `> MONTHS_PER_TERM + OPENING_MONTH`
-     — o mes 50 —, e media dois meses que este laco de 60 joga e o jogo nao.
-     O CRITERIO NAO MUDOU e continua sendo o mesmo: um governo mediano nao cai DURANTE o
+  /* ⚠ O LIMITE E O DO MOTOR, e não um mês a mais: `termOf` encerra o mandato em
+     `month >= MONTHS_PER_TERM`, então o último mês que o jogador resolve e o 47 e nada depois
+     dele acontece numa partida. A versão anterior cobrava `> MONTHS_PER_TERM + OPENING_MONTH`
+     — o mês 50 —, e media dois meses que este laço de 60 joga e o jogo não.
+     O CRITÉRIO NÃO MUDOU e continua sendo o mesmo: um governo mediano não cai DURANTE o
      mandato. O que mudou e a data em que o mandato acaba deixar de ser chutada aqui. */
   const mediano = manutencao();
   assert.ok(
@@ -220,8 +220,8 @@ test("A QUEDA ACONTECE, e ela NAO acontece com um governo que entrega", () => {
 });
 
 test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {
-  /* Medido na primeira versao: aberto no mes 47, caido no mes 47 — o que abriu o processo foi
-     a base ja destruida, entao os votos para sustentar nao existiam, e o leilao nunca
+  /* Medido na primeira versão: aberto no mês 47, caído no mês 47 — o que abriu o processo foi
+     a base já destruída, então os votos para sustentar não existiam, e o leilao nunca
      acontecia. */
   let state = createState();
   let opened = null;
@@ -249,10 +249,10 @@ test("O PROCESSO DA UM TURNO DE LEILAO antes de o plenario votar", () => {
 });
 
 /* ── SOBREVIVER AO PLENARIO ARQUIVA O PROCESSO ──────────────────────────────── ⚠ O ACHADO E
-   DE REVISAO EXTERNA: `impeachment` nunca voltava a null, e o plenario votava TODO MES ate o fim
-   do mandato, com a cadeira a x3. A carta do cerco ja dizia "quem o encerra e o plenario". */
-test("SOBREVIVER AO PLENARIO ARQUIVA O PROCESSO, e sem ruptura ele nao reabre", () => {
-  /* Um governo saudavel no mes 3, com um processo aberto a forca no mes 2. */
+   DE REVISÃO EXTERNA: `impeachment` nunca voltava a null, e o plenario votava TODO MÊS até o fim
+   do mandato, com a cadeira a x3. A carta do cerco já dizia "quem o encerra e o plenario". */
+test("SOBREVIVER AO PLENARIO ARQUIVA O PROCESSO, e sem ruptura ele não reabre", () => {
+  /* Um governo saudável no mês 3, com um processo aberto a forca no mês 2. */
   let state = createState(7);
   for (let month = 0; month < 3; month++) state = playMonth(state, {}, {}).state;
   state = { ...state, impeachment: 2 };
@@ -261,14 +261,14 @@ test("SOBREVIVER AO PLENARIO ARQUIVA O PROCESSO, e sem ruptura ele nao reabre", 
   assert.equal(votado.fallen, null, "um governo saudavel caiu no plenario");
   assert.equal(votado.impeachment, null, "o presidente sobreviveu e o processo continuou aberto");
 
-  /* E O MES SEGUINTE NAO REABRE, porque as tres rupturas nao estao abertas. */
+  /* E O MÊS SEGUINTE NÃO REABRE, porque as três rupturas não estão abertas. */
   const seguinte = playMonth(votado, {}, {}).state;
   assert.equal(seguinte.impeachment, null, "o processo reabriu sem ruptura");
 });
 
-/* O PLENARIO DO AFASTAMENTO SACA DO FLUXO, e a posicao gasta tem de ficar gravada: gravar so
-   a posicao dos projetos fazia a votacao do mes seguinte sacar os MESMOS numeros do plenario. */
-test("O PLENARIO DO AFASTAMENTO GASTA FLUXO — o mes com plenario grava outra posicao", () => {
+/* O PLENARIO DO AFASTAMENTO SACA DO FLUXO, e a posição gasta tem de ficar gravada: gravar só
+   a posição dos projetos fazia a votação do mês seguinte sacar os MESMOS números do plenario. */
+test("O PLENARIO DO AFASTAMENTO GASTA FLUXO — o mês com plenario grava outra posição", () => {
   let state = createState(7);
   for (let month = 0; month < 3; month++) state = playMonth(state, {}, {}).state;
 
@@ -281,10 +281,10 @@ test("O PLENARIO DO AFASTAMENTO GASTA FLUXO — o mes com plenario grava outra p
   );
 });
 
-test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigencia tem SENTIDO", () => {
-  /* E o defeito nao falha em lugar nenhum — a carta sai inteira, com numero e botao. */
+test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigência tem SENTIDO", () => {
+  /* E o defeito não falha em lugar nenhum — a carta sai inteira, com número e botão. */
 
-  /** UM GOVERNO GASTADOR: sobe tudo o que a lei permite, todo mes. */
+  /** UM GOVERNO GASTADOR: sobe tudo o que a lei permite, todo mês. */
   const gastador = () => {
     let state = createState();
     for (let month = 0; month < 40; month++) {
@@ -312,8 +312,8 @@ test("O MERCADO PEDE CORTE, e os de capacidade pedem verba — a exigencia tem S
   const programa = PROGRAMS.find(p => p.id === carta.lever);
   assert.ok(programa, `o mercado exigiu a alavanca ${carta.lever}, que nao e um programa`);
 
-  /* ⚠ O NIVEL EXIGIDO E O DA POSSE, e ele tem de ser MENOR que o de hoje: e isso que faz a
-     exigencia ser um CORTE. */
+  /* ⚠ O NÍVEL EXIGIDO E O DA POSSE, e ele tem de ser MENOR que o de hoje: e isso que faz a
+     exigência ser um CORTE. */
   assert.equal(carta.level, programa.initial, "o mercado nao pediu o nivel da posse");
   assert.ok(
     (carta.level ?? 0) < (state.levels[programa.id] ?? programa.initial),

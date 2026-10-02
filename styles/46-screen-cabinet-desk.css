@@ -1,12 +1,12 @@
-/* A MESA DO GABINETE — o tampo, a pasta de despachos e a correspondencia do mes.
-   Posicoes em % e pecas em px (a 1648x842 as cartas caiam 67px atras da pasta). */
+/* A MESA DO GABINETE — o tampo, a pasta de despachos e a correspondência do mês.
+   Posições em % e peças em px (a 1648x842 as cartas caíam 67px atrás da pasta). */
 
 @layer screens {
-  /* Sem arvore 3D: em projecao a foto e reamostrada e a parte de cima encolhia 8%. */
+  /* Sem árvore 3D: em projeção a foto e reamostrada e a parte de cima encolhia 8%. */
   .board[data-screen="cabinet"] > .area.cabinet {
     display: grid;
     place-items: center;
-    /* O place-content centra a celula no container (1916px numa area de 1197px). */
+    /* O place-content centra a célula no container (1916px numa área de 1197px). */
     place-content: center;
     flex: 1;
     min-height: 0;
@@ -27,7 +27,7 @@
     z-index: 3;
   }
 
-  /* A folha da esquerda gira sobre a lombada (origem calc(100% + 59px) com vao de 118px). */
+  /* A folha da esquerda gira sobre a lombada (origem calc(100% + 59px) com vão de 118px). */
   .folder__leaf {
     position: relative;
     display: flex;
@@ -65,7 +65,7 @@
     position: absolute;
     pointer-events: auto;
     transform: rotateY(180deg);
-    /* Inset de -6.7% -7.81% compensa padding de 68px e razao de aspecto sem deformar couro. */
+    /* Inset de -6.7% -7.81% compensa padding de 68px e razão de aspecto sem deformar couro. */
     inset: -6.7% -7.81%;
     background: url("/assets/folder-closed.webp") center / auto 100% no-repeat;
     /* Sombra projetada sobre a madeira (escala 0,4277). */
@@ -73,7 +73,7 @@
       drop-shadow(calc(var(--cast-dx) * 18.7px) 18.7px 28px rgba(0, 0, 0, 0.6));
   }
 
-  /* Projecao angular calculada por elemento. */
+  /* Projeção angular calculada por elemento. */
   .folder,
   .folder *,
   .phone,
@@ -94,7 +94,7 @@
     z-index: 3;
     display: flex;
     align-items: stretch;
-    /* Lombada a 7,3% e moldura a 4% com vao de 118px (40 + 118 + 40 = 68 + 62 + 68). */
+    /* Lombada a 7,3% e moldura a 4% com vão de 118px (40 + 118 + 40 = 68 + 62 + 68). */
     gap: 118px;
     padding: 68px 40px;
     border-radius: 6px;
@@ -164,7 +164,7 @@
       calc(var(--cast-dx) * 1px) 1px 2px rgba(0, 0, 0, 0.4);
   }
 
-  /* A FOLHA A4 — proporcao 21 / 29.7, largura base de 720px. */
+  /* A FOLHA A4 — proporção 21 / 29.7, largura base de 720px. */
   .sheet {
     --paper: 720px;
     --sheet-gap-s: calc(var(--paper) * 0.022);
@@ -177,7 +177,7 @@
     isolation: isolate;
     /* A propriedade will-change evita rasterizar fibra em cada quadro (32 fps sem GPU, 116 com). */
     will-change: transform;
-    /* Margens simetricas de 2,25cm preservam area de 565,7px sem defasar texto em 25px. */
+    /* Margens simétricas de 2,25cm preservam área de 565,7px sem defasar texto em 25px. */
     padding: calc(var(--paper) * 0.0673) calc(var(--paper) * 0.1071);
 
     user-select: none;
@@ -372,7 +372,7 @@
     text-decoration: none;
   }
 
-  /* Circulo envolvente com margens externas para nao cruzar versais e cedilhas. */
+  /* Círculo envolvente com margens externas para não cruzar versais e cedilhas. */
   .act__folders .decree[aria-pressed="true"]::after {
     content: "";
     position: absolute;
@@ -479,7 +479,7 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* O TELEFONE — largura de 420px posicionada no vao da mesa. */
+  /* O TELEFONE — largura de 420px posicionada no vão da mesa. */
   .phone {
     position: absolute;
     left: calc(var(--phone-x) - 32px);
@@ -564,7 +564,7 @@
     }
   }
 
-  /* A CANETA — 210px inclinada a -78deg (ocupa 66px no vao de 186px da cena). */
+  /* A CANETA — 210px inclinada a -78deg (ocupa 66px no vão de 186px da cena). */
   .pen {
     position: absolute;
     left: 32.4%;
@@ -745,10 +745,10 @@
     z-index: 2;
   }
 
-  /* O ENVELOPE — razao 1.529 baseada na imagem da foto (1297x848). */
+  /* O ENVELOPE — razão 1.529 baseada na imagem da foto (1297x848). */
   .envelope {
     position: absolute;
-    /* Afastamento de 40px fecha o leque em 217px com 11px de folga ate a pasta. */
+    /* Afastamento de 40px fecha o leque em 217px com 11px de folga até a pasta. */
     left: calc(var(--ex) * 40px);
     top: calc(var(--ey) * 62px);
     width: var(--envelope-size);

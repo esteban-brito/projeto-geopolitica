@@ -1,4 +1,4 @@
-/* TELA · AREA — um molde, seis instancias. */
+/* TELA · ÁREA — um molde, seis instâncias. */
 
 @layer screens {
   .area {
@@ -7,7 +7,7 @@
     padding: clamp(20px, 3vw, 28px);
   }
 
-  /* ── A CABECA, E ELA E A MESMA NAS CINCO TELAS ────────────────────────────── A esquerda,
+  /* ── A CABEÇA, E ELA E A MESMA NAS CINCO TELAS ────────────────────────────── A esquerda,
      QUEM E A TELA: categoria em versalete e o nome embaixo. */
   .area__head {
     display: flex;
@@ -17,8 +17,8 @@
     gap: var(--space-4);
   }
 
-  /* Duas classes para o mesmo lugar sao como uma paleta comeca a divergir: a que ficar de
-     fora do proximo ajuste vira o desenho errado. */
+  /* Duas classes para o mesmo lugar são como uma paleta começa a divergir: a que ficar de
+     fora do próximo ajuste vira o desenho errado. */
   .head__reading {
     display: grid;
     justify-items: end;
@@ -35,7 +35,7 @@
     color: var(--ink-dim);
   }
 
-  /* O INDICE DA AREA. */
+  /* O ÍNDICE DA ÁREA. */
   .head__value {
     display: flex;
     align-items: baseline;
@@ -58,12 +58,12 @@
     color: var(--ink);
   }
 
-  /* A ESCADA E PEQUENA DE PROPOSITO.
-     Em 0,26em ela media 19px de altura e os blocos, que sao retangulos solidos e se
-     ladrilham, colavam num tarjao unico ao lado do indice — uma serie estavel virava o que
+  /* A ESCADA E PEQUENA DE PROPÓSITO.
+     Em 0,26em ela media 19px de altura e os blocos, que são retângulos solidos e se
+     ladrilham, colavam num tarjao único ao lado do índice — uma série estável virava o que
      parece um retangulo de carregamento. */
-  /* Um corpo em `em` sobre um numero grande dava um glifo de ~4px, que e o caso extremo do
-     defeito que matou a escada: a esta altura, o degrau 1 nao tem pixel nenhum para desenhar. */
+  /* Um corpo em `em` sobre um número grande dava um glifo de ~4px, que e o caso extremo do
+     defeito que matou a escada: a esta altura, o degrau 1 não tem pixel nenhum para desenhar. */
   .area__spark {
     color: var(--ink-dim);
   }
@@ -73,18 +73,18 @@
     height: 0.8rem;
   }
 
-  /* A VARIACAO herda cor e sinal da peca `.trend`; daqui sai so o tamanho. */
+  /* A VARIAÇÃO herda cor e sinal da peça `.trend`; daqui sai só o tamanho. */
   .area__delta {
     font-size: var(--text-title);
     line-height: 1.2;
   }
 
   /* Era 0,5em sobre `--text-title` — 12,8px, a 0,32px de `--text-note`, que e uma
-     diferenca que ninguem enxerga. Em versal, 10px e o degrau certo, e e o mesmo do
+     diferença que ninguém enxerga. Em versal, 10px e o degrau certo, e e o mesmo do
      `head__label` que fica logo ao lado. */
   .area__delta small {
     font-size: var(--text-label);
-    /* 700 e o peso de rotulo a 10px, e 42 pecas o usam; 600 aqui era o unico. */
+    /* 700 e o peso de rótulo a 10px, e 42 peças o usam; 600 aqui era o único. */
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -97,7 +97,7 @@
     gap: var(--space-3);
   }
 
-  /* ⚠ O FIO METALICO SOB A LEGENDA, e o que ele entrega nao e a linha: e a REPETICAO dela. */
+  /* ⚠ O FIO METÁLICO SOB A LEGENDA, e o que ele entrega não e a linha: e a REPETIÇÃO dela. */
   .block__legend {
     padding-bottom: var(--space-1);
     display: flex;
@@ -114,9 +114,9 @@
     color: var(--ink-dim);
   }
 
-  /* ── O ORCAMENTO GRANULAR — E ELE E UMA PECA, E NAO UM PAINEL ─────────────── Um controle
-     por programa, e cada linha carrega quatro coisas: o que e, o que o numero significa no
-     mundo, onde ele esta, e quanto custa no mes. */
+  /* ── O ORCAMENTO GRANULAR — E ELE E UMA PEÇA, E NÃO UM PAINEL ─────────────── Um controle
+     por programa, e cada linha carrega quatro coisas: o que e, o que o número significa no
+     mundo, onde ele esta, e quanto custa no mês. */
   .dials {
     display: grid;
   }
@@ -127,12 +127,12 @@
     align-items: center;
     gap: var(--space-2) var(--space-3);
     /* O PADDING VERTICAL SEGURA A LINHA, e o horizontal recuou para dar lugar a marca de
-       rito: numa peca o texto comeca na margem, e nao dentro de uma caixa. */
+       rito: numa peça o texto começa na margem, e não dentro de uma caixa. */
     padding: var(--space-2) 0 var(--space-2) var(--space-3);
-    /* ⚠ O FIO E A PECA, E NAO A LINHA. */
+    /* ⚠ O FIO E A PEÇA, E NÃO A LINHA. */
     border-bottom: 1px solid var(--veil-thin);
     /* A MARCA DO RITO MORA NA BORDA ESQUERDA, e ela e transparente enquanto o movimento e
-       caneta: uma linha que nao custa nada nao tem o que anunciar. */
+       caneta: uma linha que não custa nada não tem o que anunciar. */
     border-left: var(--rule) solid transparent;
     transition: border-color var(--dur-piece) linear;
   }
@@ -178,7 +178,7 @@
     width: 100%;
   }
 
-  /* ⚠ AS TRES COLUNAS SAO FIXAS, e e isso que faz a peca ler como peca. */
+  /* ⚠ AS TRÊS COLUNAS SÃO FIXAS, e e isso que faz a peça ler como peça. */
   .dial__read {
     display: grid;
     grid-template-columns: 3ch 9ch 84px;
@@ -205,17 +205,17 @@
 
   /* NO CELULAR A LINHA VIRA FILEIRAS.
      Trinta controles num aparelho de 390px com o slider espremido em 60px poriam o passo de
-     um ponto fora do alcance do polegar — e o passo e a decisao. */
+     um ponto fora do alcance do polegar — e o passo e a decisão. */
   /* ⚠ E O QUE ELE DESTRAVOU VALE O REGISTRO: enquanto uma janela de 390px era um caso a
      atender, o Gabinete não podia ser um canvas de altura fixa — num telefone, tudo tem de
      rolar.
-     O breakpoint efetivo e 720px (territorio de telefone). 640px e o limiar conceptual
-     onde o layout completamente colapsa, mas nao ha regra CSS separada para la. */
+     O breakpoint efetivo e 720px (território de telefone). 640px e o limiar conceptual
+     onde o layout completamente colapsa, mas não há regra CSS separada para la. */
 
-  /* ── AS LEIS DA AREA ──────────────────────────────────────────────────────── Mesma
-     pastilha do controle de orcamento, e de proposito: mudar quanto se gasta e mudar quanto a
-     lei OBRIGA a gastar sao o mesmo gesto com precos diferentes, e uma forma diferente aqui
-     sugeriria que sao naturezas diferentes de coisa. */
+  /* ── AS LEIS DA ÁREA ──────────────────────────────────────────────────────── Mesma
+     pastilha do controle de orcamento, e de propósito: mudar quanto se gasta e mudar quanto a
+     lei OBRIGA a gastar são o mesmo gesto com precos diferentes, e uma forma diferente aqui
+     sugeriria que são naturezas diferentes de coisa. */
   .laws {
     display: grid;
     gap: var(--space-2);
@@ -234,7 +234,7 @@
   }
 
   .law[data-moved="true"] {
-    /* A TINTA DO RASCUNHO ENTRA COMO CAMADA, e nao como cor misturada: `color-mix` diverge de
+    /* A TINTA DO RASCUNHO ENTRA COMO CAMADA, e não como cor misturada: `color-mix` diverge de
        `rgba` em 1/255 na tela, e a guarda de tokens cobra isso. */
     background-image: linear-gradient(rgba(var(--brand-rgb), 0.16), rgba(var(--brand-rgb), 0.16));
     box-shadow: inset 2px 0 0 var(--brand);
@@ -251,8 +251,8 @@
     white-space: nowrap;
   }
 
-  /* OS DOIS CONTROLES EMPILHADOS, e nao lado a lado: um piso e um teto sao os dois extremos
-     da MESMA faixa, e ve-los um sobre o outro deixa a distancia entre eles legivel de
+  /* OS DOIS CONTROLES EMPILHADOS, e não lado a lado: um piso e um teto são os dois extremos
+     da MESMA faixa, e vê-los um sobre o outro deixa a distancia entre eles legível de
      relance. */
   .law__band {
     display: grid;
@@ -282,8 +282,8 @@
     color: rgba(var(--sheet-ink-rgb), 0.58);
   }
 
-  /* QUEM PROTEGE A FAIXA nao e uma etiqueta de acao — e uma propriedade da norma, e por isso
-     ela nao usa a pastilha de instrumento.
+  /* QUEM PROTEGE A FAIXA não e uma etiqueta de ação — e uma propriedade da norma, e por isso
+     ela não usa a pastilha de instrumento.
      ⚠ ELA ERA DUAS REGRAS, E A SEGUNDA APAGAVA A TINTA DE PAPEL DA PRIMEIRA — medido e
      consertado . */
   .law__guard {
@@ -296,8 +296,8 @@
   }
 
   /* ── ALOCAR ───────────────────────────────────────────────────────────────── Controle a
-     esquerda, leitura a direita, e a leitura NAO fica embaixo do controle: quem arrasta cobre
-     com a mao o que estiver abaixo do dedo, e o numero que muda e justamente o que ele esta
+     esquerda, leitura a direita, e a leitura NÃO fica embaixo do controle: quem arrasta cobre
+     com a mão o que estiver abaixo do dedo, e o número que muda e justamente o que ele esta
      tentando ler. */
 
   /* `61 → 63` em cima e `parado: 60` embaixo. */
@@ -310,18 +310,18 @@
   }
 
   /* ⚠ UM DEGRAU DA ESCALA, e ele era 0,82em — 11,152px, entre `--text-label` e
-     `--text-note` e em nenhum dos dois. E FRASE em caixa baixa, e o projeto ja recusou
+     `--text-note` e em nenhum dos dois. E FRASE em caixa baixa, e o projeto já recusou
      frase a 10px uma vez: a legenda do limiar subiu de `--text-label` para `--text-note`
-     porque "a 10px em caixa de frase a legenda ficava dificil de ler". */
+     porque "a 10px em caixa de frase a legenda ficava difícil de ler". */
   .allot__projection small {
     font-size: var(--text-note);
     color: var(--ink-dim);
   }
 
-  /* A LINHA QUE FAZ A TELA VIRAR DECISAO: o que sobra no mes e o que ja foi prometido as
-     outras areas. */
-  /* ── A BOLSA, E ELA E A FRASE MAIS IMPORTANTE DA TELA ─────────────────────── "do mes R$
-     9,5 bi disponiveis · R$ 13,5 bi ja comprometidos nas outras areas" e o cobertor curto do
+  /* A LINHA QUE FAZ A TELA VIRAR DECISÃO: o que sobra no mês e o que já foi prometido as
+     outras áreas. */
+  /* ── A BOLSA, E ELA E A FRASE MAIS IMPORTANTE DA TELA ─────────────────────── "do mês R$
+     9,5 bi disponíveis · R$ 13,5 bi já comprometidos nas outras áreas" e o cobertor curto do
      orcamento inteiro dito em uma linha. */
   .allot__pool {
     padding: var(--space-2) var(--space-3);
@@ -339,8 +339,8 @@
   }
 
   /* ── PAUTAR E VIGENTE ─────────────────────────────────────────────────────── A mesma linha
-     nas duas listas, com uma diferenca de tinta: o que ja esta em vigor nao se pressiona,
-     entao ele perde o botao e recua um tom. */
+     nas duas listas, com uma diferença de tinta: o que já esta em vigor não se pressiona,
+     então ele perde o botão e recua um tom. */
 
   /* ── A CORRENTE ───────────────────────────────────────────────────────────── As duas
      metades emparelham porque elas se LEEM JUNTAS: o que entra a esquerda, o que sai a
@@ -361,8 +361,8 @@
     padding-bottom: var(--space-1);
   }
 
-  /* ⚠ A LINHA E A PECA DAS OUTRAS TELAS, e aqui ela nao ganha barra: pontos de indice e
-     fracao de multiplicador nao dividem escala, e uma regua comum entre eles compararia
+  /* ⚠ A LINHA E A PEÇA DAS OUTRAS TELAS, e aqui ela não ganha barra: pontos de índice e
+     fração de multiplicador não dividem escala, e uma régua comum entre eles compararia
      duas grandezas diferentes no mesmo desenho. */
   .chain .annex__line {
     grid-template-columns: minmax(0, 1fr) 5rem;

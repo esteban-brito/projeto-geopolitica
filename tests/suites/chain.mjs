@@ -1,4 +1,4 @@
-/* SUITE · A CORRENTE — o que a tela mostra e o que o turno executa sao a MESMA conta. */
+/* SUITE · A CORRENTE — o que a tela mostra e o que o turno executa são a MESMA conta. */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -10,8 +10,8 @@ import { AREAS, CAPACITY_TARGET, NEUTRAL } from "../../src/data/areas.mjs";
 import { createState } from "../../src/state/state.mjs";
 
 /**
- * Um estado com os indices ja andados, para a corrente ter o que medir: com o historico vazio
- * toda aresta de canal vale zero, e uma prova sobre zeros nao prova nada.
+ * Um estado com os índices já andados, para a corrente ter o que medir: com o histórico vazio
+ * toda aresta de canal vale zero, e uma prova sobre zeros não prova nada.
  *
  * @param {Record<string, number>} allocation
  * @param {number} months
@@ -38,10 +38,10 @@ function played(allocation, months = 30) {
 
 const NOTHING = Object.fromEntries(AREAS.map(area => [area.id, 0]));
 
-test("A CORRENTE E A PRESSAO SAO A MESMA CONTA — a soma das arestas fecha o multiplicador", () => {
-  /* ⚠ E ESTA E A PROVA QUE MORDE, e a familia de defeito que ela fecha e a numero 1 do
+test("A CORRENTE E A PRESSÃO SÃO A MESMA CONTA — a soma das arestas fecha o multiplicador", () => {
+  /* ⚠ E ESTA E A PROVA QUE MORDE, e a família de defeito que ela fecha e a número 1 do
      projeto: uma tela que refizesse `((valor - abertura) / 100) * force` por fora divergiria
-     do turno no primeiro ajuste de calibragem, e explicaria um jogo que nao roda. */
+     do turno no primeiro ajuste de calibragem, e explicaria um jogo que não roda. */
   fc.assert(
     fc.property(
       fc
@@ -63,8 +63,8 @@ test("A CORRENTE E A PRESSAO SAO A MESMA CONTA — a soma das arestas fecha o mu
           if (saida.to === "mandatory") mandatory += saida.now;
         }
 
-        /* O piso de 0,25 e da MALHA e nao da corrente: comparar abaixo dele seria cobrar da
-           soma um limite que ela nao aplica. */
+        /* O piso de 0,25 e da MALHA e não da corrente: comparar abaixo dele seria cobrar da
+           soma um limite que ela não aplica. */
         assert.ok(
           Math.abs(Math.max(0.25, revenue) - esperado.revenue) < 1e-9,
           `receita: ${revenue} contra ${esperado.revenue}`,
@@ -78,7 +78,7 @@ test("A CORRENTE E A PRESSAO SAO A MESMA CONTA — a soma das arestas fecha o mu
   );
 });
 
-test("O QUE A EDUCACAO ENTREGA E O QUE A INDUSTRIA RECEBE — e o atraso e o do catalogo", () => {
+test("O QUE A EDUCACAO ENTREGA E O QUE A INDÚSTRIA RECEBE — e o atraso e o do catálogo", () => {
   const state = played({ ...NOTHING, education: 25 });
   const { into } = chainOf(state, CAPACITY_TARGET, 0);
   const vinda = into.find(strand => strand.from === "education");
@@ -87,8 +87,8 @@ test("O QUE A EDUCACAO ENTREGA E O QUE A INDUSTRIA RECEBE — e o atraso e o do 
   assert.equal(vinda.lag, 24, "o atraso da educacao saiu diferente do catalogo");
   assert.equal(vinda.unit, "points");
 
-  /* ⚠ O NUMERO E CONFERIDO CONTRA A MALHA RODANDO, e nao contra a formula redigitada aqui: a
-     prova tem de reprovar se o motor mudar de conta, e nao acompanha-lo. */
+  /* ⚠ O NÚMERO E CONFERIDO CONTRA A MALHA RODANDO, e não contra a fórmula redigitada aqui: a
+     prova tem de reprovar se o motor mudar de conta, e não acompanha-lo. */
   const semAjuda = step({
     areas: AREAS.map(area => (area.feeds === "capacity" ? { ...area, force: 0 } : area)),
     index: state.capacity.index,
@@ -113,7 +113,7 @@ test("O QUE A EDUCACAO ENTREGA E O QUE A INDUSTRIA RECEBE — e o atraso e o do 
   );
 });
 
-test("A VERBA MOSTRA O QUE ELA POE NO MES, e nao o que poria por bilhao", () => {
+test("A VERBA MOSTRA O QUE ELA PÕE NO MÊS, e não o que poria por bilhão", () => {
   const state = played(NOTHING);
   const { into } = chainOf(state, "security", 10);
   const verba = into.find(strand => strand.kind === "spend");
@@ -127,9 +127,9 @@ test("A VERBA MOSTRA O QUE ELA POE NO MES, e nao o que poria por bilhao", () => 
   );
 });
 
-test("O SINAL DIZ O LADO — subir a Saude ALIVIA a despesa obrigatoria", () => {
+test("O SINAL DIZ O LADO — subir a Saude ALIVIA a despesa obrigatória", () => {
   /* Saude alimenta `mandatory` com `force` negativo: quanto melhor o atendimento, menos a
-     despesa obrigatoria cobra. Um sinal trocado aqui pintaria de vermelho um acerto. */
+     despesa obrigatória cobra. Um sinal trocado aqui pintaria de vermelho um acerto. */
   const alta = played({ ...NOTHING, health: 30 });
   const parada = played(NOTHING);
 
@@ -149,7 +149,7 @@ test("A MEIA-VIDA E A LEITURA DE `decay`, e ela fecha a identidade", () => {
   fc.assert(
     fc.property(fc.double({ min: 0.001, max: 0.5, noNaN: true }), decay => {
       const meses = halfLifeOf(decay);
-      /* Depois de uma meia-vida, o estoque que so vaza tem de valer metade. */
+      /* Depois de uma meia-vida, o estoque que só vaza tem de valer metade. */
       assert.ok(Math.abs((1 - decay) ** meses - 0.5) < 1e-9, `${decay} deu ${meses} meses`);
     }),
   );
@@ -157,10 +157,10 @@ test("A MEIA-VIDA E A LEITURA DE `decay`, e ela fecha a identidade", () => {
   assert.equal(halfLifeOf(0), Infinity, "o que nao vaza nao tem meia-vida");
 });
 
-test("TODA AREA TEM UMA SAIDA SO, e o catalogo e quem diz qual", () => {
-  /* ⚠ O CATALOGO GARANTE "nenhuma area usa dois canais", e a corrente depende disso: com dois,
-     o efeito de uma alocacao ficaria impossivel de atribuir — que e o defeito que o motor de
-     propagacao existe para nao ter. */
+test("TODA ÁREA TEM UMA SAÍDA SÓ, e o catálogo e quem diz qual", () => {
+  /* ⚠ O CATÁLOGO GARANTE "nenhuma área usa dois canais", e a corrente depende disso: com dois,
+     o efeito de uma alocação ficaria impossível de atribuir — que e o defeito que o motor de
+     propagação existe para não ter. */
   for (const area of AREAS) {
     const { out } = linksOf({ areas: AREAS, id: area.id, target: CAPACITY_TARGET });
     assert.equal(out.length, 1, `${area.id} tem ${out.length} saidas`);
@@ -172,7 +172,7 @@ test("TODA AREA TEM UMA SAIDA SO, e o catalogo e quem diz qual", () => {
   }
 });
 
-test("AREA QUE NAO EXISTE NAO TEM CORRENTE — e a ausencia e vazia, e nao inventada", () => {
+test("ÁREA QUE NÃO EXISTE NÃO TEM CORRENTE — e a ausência e vazia, e não inventada", () => {
   const { into, out } = linksOf({ areas: AREAS, id: "sem-tal-area", target: CAPACITY_TARGET });
   assert.deepEqual(into, []);
   assert.deepEqual(out, []);

@@ -52,7 +52,7 @@ export function audit(files) {
     );
   }
 
-  /* Animacao injetada por estilo INLINE vence qualquer camada: e a unica forma de furar a
+  /* Animação injetada por estilo INLINE vence qualquer camada: e a única forma de furar a
      rede sem escrever CSS. */
   for (const [path, source] of files) {
     if (!/\.mjs$/.test(path) || path.startsWith("tests/")) continue;

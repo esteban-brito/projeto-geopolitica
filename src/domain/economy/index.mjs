@@ -1,9 +1,9 @@
 /* CORRENTE — hiato, Phillips, Taylor, Okun e populacao; e o `carry`, que faz gasto
-   virar divida e divida virar juro. */
+   virar dívida e dívida virar juro. */
 
-/* ── O ESTOQUE DA DIVIDA E O CANAL QUE FECHA O CIRCUITO ────────────────────── Juro alto nao
-   so freia o PIB: ele cobra do orcamento, porque 45% da divida brasileira acompanha a taxa
-   basica. */
+/* ── O ESTOQUE DA DÍVIDA E O CANAL QUE FECHA O CIRCUITO ────────────────────── Juro alto não
+   só freia o PIB: ele cobra do orcamento, porque 45% da dívida brasileira acompanha a taxa
+   básica. */
 
 /**
  * @typedef {import("../../data/macro.mjs").MacroParameters} MacroParameters
@@ -32,7 +32,7 @@
 const MONTHS_PER_YEAR = 12;
 
 /**
- * Converte uma taxa anual no fator de UM mes, compondo — nunca dividindo.
+ * Converte uma taxa anual no fator de UM mês, compondo — nunca dividindo.
  *
  * @param {number} annual
  */
@@ -41,9 +41,9 @@ function monthly(annual) {
 }
 
 /**
- * Um mes de economia.
+ * Um mês de economia.
  *
- * O choque exogeno entra por parametro (`shock`): um sorteio feito aqui dentro
+ * O choque exógeno entra por parâmetro (`shock`): um sorteio feito aqui dentro
  * tornaria o mandato irreproduzivel.
  * @param {EconomyInput} input
  * @returns {EconomyOutput}
@@ -51,13 +51,13 @@ function monthly(annual) {
 export function step(input) {
   const { macro, parameters: p } = input;
 
-  /* E o unico lugar do jogo em que investir em educacao aparece como numero — e aparece 24
+  /* E o único lugar do jogo em que investir em educacao aparece como número — e aparece 24
      meses depois, porque o atraso mora na
-     MALHA e chega aqui ja defasado. */
+     MALHA e chega aqui já defasado. */
   const potentialRate = p.potentialGrowth + p.capacityLift * input.capacity;
   const potentialReal = macro.potential * monthly(potentialRate);
 
-  /* ⚠ A CARGA E MEDIDA CONTRA A DE ABERTURA, e nao contra zero. */
+  /* ⚠ A CARGA E MEDIDA CONTRA A DE ABERTURA, e não contra zero. */
   const realRate = macro.rate - macro.inflation;
   const taxDelta = input.taxLoad - input.baseTaxLoad;
 
@@ -69,16 +69,16 @@ export function step(input) {
 
   const gdpReal = macro.gdp * monthly(demand);
 
-  /* O hiato passava a medir inflacao acumulada em vez de aquecimento, e o resultado era uma
-     economia que fugia sozinha: hiato de 1% no mes 6 virava 7,6% no mes 24, com o juro
-     perseguindo em 20% ao ano e ninguem tendo feito nada. */
+  /* O hiato passava a medir inflação acumulada em vez de aquecimento, e o resultado era uma
+     economia que fugia sozinha: hiato de 1% no mês 6 virava 7,6% no mês 24, com o juro
+     perseguindo em 20% ao ano e ninguém tendo feito nada. */
   const gap = potentialReal > 0 ? (gdpReal - potentialReal) / potentialReal : 0;
 
   /* 3 — PHILLIPS. */
   const expectation = p.anchoring * p.inflationTarget + (1 - p.anchoring) * macro.inflation;
   const inflation = Math.max(-0.05, expectation + p.phillips * gap + (input.shock ?? 0));
 
-  /* 4 — TAYLOR, com suavizacao. */
+  /* 4 — TAYLOR, com suavização. */
   const target =
     p.neutralRate +
     inflation +
@@ -89,8 +89,8 @@ export function step(input) {
   /* 5 — OKUN. */
   const unemployment = Math.min(0.4, Math.max(0.01, p.naturalUnemployment - p.okun * gap));
 
-  /* O PIB NOMINAL carrega a inflacao junto, porque toda a contabilidade do jogo e nominal:
-     receita e fracao do PIB, e divida e razao sobre ele. */
+  /* O PIB NOMINAL carrega a inflação junto, porque toda a contabilidade do jogo e nominal:
+     receita e fração do PIB, e dívida e razão sobre ele. */
   const price = monthly(inflation);
   const gdp = gdpReal * price;
 
@@ -112,8 +112,8 @@ export function step(input) {
 }
 
 /**
- * E por isso a tolerancia entra por parametro em vez de morar no catalogo macro: ela ja
- * existe, em `fiscal.initialDebtRatio`, e dois lugares com o mesmo numero e um lugar que vai
+ * E por isso a tolerância entra por parâmetro em vez de morar no catálogo macro: ela já
+ * existe, em `fiscal.initialDebtRatio`, e dois lugares com o mesmo número e um lugar que vai
  * divergir.
  *
  * @param {object} input
@@ -129,13 +129,13 @@ export function premiumOf({ debtRatio, tolerance, slope }) {
 }
 
 /**
- * O QUE A DIVIDA CUSTA NUM MES, em bilhoes.
+ * O QUE A DÍVIDA CUSTA NUM MÊS, em bilhoes.
  *
- * Separado de `step` porque o estoque da divida mora no LASTRO e nao aqui, e
- * motor nenhum chama outro motor: quem tem os dois na mao e a camada de
- * aplicacao, que passa o estoque e recebe a conta.
- * ⚠ A ANCORA E PUBLICA: cada 1 p.p. de taxa basica custa cerca de R$ 40 bi ao ano ao
- * Tesouro, e com divida perto de R$ 9,4 tri isso da os 45% que `floatingDebt` declara.
+ * Separado de `step` porque o estoque da dívida mora no LASTRO e não aqui, e
+ * motor nenhum chama outro motor: quem tem os dois na mão e a camada de
+ * aplicação, que passa o estoque e recebe a conta.
+ * ⚠ A ANCORA E PUBLICA: cada 1 p.p. de taxa básica custa cerca de R$ 40 bi ao ano ao
+ * Tesouro, e com dívida perto de R$ 9,4 tri isso da os 45% que `floatingDebt` declara.
  * @param {object} input
  * @param {number} input.debt - o estoque bruto
  * @param {number} input.rate - a taxa basica nominal ao ano
@@ -150,7 +150,7 @@ export function carry({ debt, rate, premium = 0, parameters }) {
 }
 
 /**
- * A posicao macro de abertura, montada do catalogo.
+ * A posição macro de abertura, montada do catálogo.
  *
  * @param {number} gdp
  * @param {MacroParameters} parameters
