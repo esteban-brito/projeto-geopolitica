@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Liquid Glass Bench</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/src/lab/styles.css" />
+    <style>
+      .bench {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 420px;
+        height: 100dvh;
+      }
+      .bench .stage {
+        position: relative;
+      }
+      .bench aside {
+        overflow: auto;
+        padding: 18px;
+        background: var(--panel);
+        border-left: 1px solid var(--line);
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+      .bench table {
+        width: 100%;
+        border-collapse: collapse;
+        font: 12px var(--mono);
+      }
+      .bench th,
+      .bench td {
+        padding: 4px 6px;
+        text-align: right;
+        border-bottom: 1px solid var(--line);
+      }
+      .bench th:first-child,
+      .bench td:first-child {
+        text-align: left;
+      }
+      .bench textarea {
+        width: 100%;
+        min-height: 180px;
+        background: var(--panel-raised);
+        color: var(--text);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        font: 11px var(--mono);
+      }
+      @media (max-width: 860px) {
+        .bench {
+          grid-template-columns: 1fr;
+          grid-template-rows: 55dvh auto;
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bench">
+      <main class="stage"><canvas id="stage"></canvas></main>
+      <aside>
+        <div>
+          <strong>Bench</strong>
+          <p class="hint">
+            Deixe a janela maximizada e em primeiro plano. Para tempo de GPU sem o arredondamento de 100 µs, ligue
+            <strong>chrome://flags/#enable-webgpu-developer-features</strong>. O resultado é JSON para colar de volta.
+          </p>
+        </div>
+        <div class="segmented" id="suite"></div>
+        <button class="button" id="run" type="button">Rodar</button>
+        <p class="hint" id="status">Pronto.</p>
+        <table id="table"></table>
+        <textarea id="json" readonly spellcheck="false"></textarea>
+        <button class="button" id="copy" type="button">Copiar JSON</button>
+      </aside>
+    </div>
+    <script type="module" src="/src/bench/bench.ts"></script>
+  </body>
+</html>

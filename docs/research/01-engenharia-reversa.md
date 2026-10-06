@@ -254,10 +254,15 @@ uv = p + o₁ + o₂
   efeitos coerentes.
 - **Reflexão interna total na base** (k < 0) não vira "deslocamento 0", como em todos os projetos:
   amostra a reflexão. É a **faixa escura interna** da double edge, com causa física.
-- **Invariante de injetividade:** quando os parâmetros mudam, a CPU amostra o deslocamento em 256
-  pontos e calcula um fator de escala por superfície que mantém |∂o/∂d| ≤ 0,88 no canal mais
-  desviado. O shader continua analítico (o morph não regera nada), e a dobra fica impossível por
-  construção.
+- **Invariante de injetividade** — ⚠ **corrigido na implementação do V0.** A proposta acima
+  (fator de escala uniforme por superfície) foi **refutada pela medição**: com o material padrão
+  (T = 14, G = 8, bisel 22, n = 1,5), a física dobra a imagem só nos ~9 px externos, mas a
+  escala uniforme precisava cair para **2,5%** da refração para eliminar a dobra — o vidro deixava
+  de refratar. **Decisão em vigor:** tabela radial por superfície (64 amostras, densas na borda),
+  calculada na CPU, com **envelope monótono** de dentro para fora. Ele mantém a física onde ela já
+  é injetiva e transforma a dobra na compressão máxima permitida (0,88). A GPU lê a tabela
+  (`storage buffer`). Testado por readback: sem o envelope a amostra anda ≥ 3 px para trás; com
+  ele, nunca.
 - Pior caso: ~30 ALU + 3 amostras com dispersão. O custo real está na amostra de textura, não na
   conta.
 

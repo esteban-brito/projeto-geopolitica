@@ -1,0 +1,539 @@
+import { srgbViewOf, type GpuContext } from "../gpu/device.ts";
+import { PROFILE_INDEX, type GlassMaterial } from "../glass/material.ts";
+import { buildRadialTable, deviceGeometry, EDGE_START_PX, TABLE_SAMPLES, TABLE_STRIDE, type GuardStats } from "../glass/optics.ts";
+import { clampedRadius, type Shape } from "../glass/shape.ts";
+import { onShaderChange, shaderSources, type ShaderSources } from "../shaders/index.ts";
+import type { BackgroundSource } from "../sources/source.ts";
+import { FrameGraph, type FrameContext, type Pass } from "./frame-graph.ts";
+import { TexturePool } from "./pool.ts";
+import { effectivePixelRatio, type QualityTier } from "./quality.ts";
+import { GpuTimer, Series } from "./timer.ts";
+
+export interface GlassSurface {
+  shape: Shape;
+  material: GlassMaterial;
+}
+
+export const DEBUG_VIEWS = [
+  { id: 0, label: "Final" },
+  { id: 1, label: "SDF" },
+  { id: 2, label: "Normal" },
+  { id: 3, label: "Deslocamento" },
+  { id: 4, label: "Injetividade" },
+  { id: 5, label: "Transmissão" },
+  { id: 6, label: "Espessura" },
+  { id: 7, label: "Posição da amostra" },
+] as const;
+
+export interface RendererOptions {
+  /** Allow `capture()` to read frames back. */
+  readback?: boolean;
+  /**
+   * Render into an offscreen texture of `size` instead of the canvas. Headless Chromium on
+   * SwiftShader loses the GPU process when a canvas swapchain is drawn; offscreen targets work, so
+   * tests and captures use this. The lab itself always draws to the canvas.
+   */
+  offscreen?: { width: number; height: number };
+}
+
+export interface Pixels {
+  width: number;
+  height: number;
+  /** RGBA8, row-major, top row first. */
+  data: Uint8Array;
+}
+
+const SURFACE_FLOATS = 24;
+const TABLE_FLOATS = TABLE_SAMPLES * TABLE_STRIDE;
+const GLOBALS_BYTES = 32;
+
+/**
+ * The one renderer of the lab: one device, one canvas, one loop, every glass surface in one
+ * instanced draw. It owns the content behind the glass through a BackgroundSource.
+ */
+export class LiquidGlassRenderer {
+  quality: QualityTier = "high";
+  debugView = 0;
+  /** Render every frame (for measuring) instead of only when something changed. */
+  continuous = false;
+  /** Tests switch the injectivity guard off to prove it is what keeps the mapping one-to-one. */
+  guardEnabled = true;
+
+  readonly cpu = new Series();
+  readonly interval = new Series();
+  readonly timer: GpuTimer | null;
+  onShaderError: ((message: string | null) => void) | null = null;
+  onLost: ((info: GPUDeviceLostInfo) => void) | null = null;
+  onFrame: (() => void) | null = null;
+
+  private readonly device: GPUDevice;
+  private readonly context: GPUCanvasContext | null;
+  private readonly offscreen: { width: number; height: number } | null;
+  private frameTexture: GPUTexture | null = null;
+  private readonly viewFormat: GPUTextureFormat;
+  private readonly pool: TexturePool;
+  private readonly graph = new FrameGraph();
+  private readonly globals: GPUBuffer;
+  private readonly sampler: GPUSampler;
+  private readonly bgLayout: GPUBindGroupLayout;
+  private readonly glassLayout: GPUBindGroupLayout;
+  private bgPipeline: GPURenderPipeline | null = null;
+  private glassPipeline: GPURenderPipeline | null = null;
+  private bgBindGroup: GPUBindGroup | null = null;
+  private glassBindGroup: GPUBindGroup | null = null;
+  private surfaceBuffer: GPUBuffer | null = null;
+  private surfaceCapacity = 0;
+  private background: GPUTexture | null = null;
+
+  private source: BackgroundSource | null = null;
+  private surfaces: GlassSurface[] = [];
+  private tables: { key: string; data: Float32Array<ArrayBuffer>; stats: GuardStats }[] = [];
+  private tableBuffer: GPUBuffer | null = null;
+  private surfacesDirty = true;
+  private sizeDirty = true;
+  private sourceChanged = true;
+  private dpr = 1;
+  private width = 1;
+  private height = 1;
+  private raf = 0;
+  private lastTick = 0;
+  private destroyed = false;
+  private readonly unsubscribe: () => void;
+  private readonly resizeObserver: ResizeObserver;
+  private pendingReadback: ((pixels: Pixels) => void) | null = null;
+
+  readonly canvas: HTMLCanvasElement;
+  readonly gpu: GpuContext;
+  private readonly readback: boolean;
+
+  constructor(canvas: HTMLCanvasElement, gpu: GpuContext, options: RendererOptions = {}) {
+    this.canvas = canvas;
+    this.gpu = gpu;
+    this.readback = options.readback ?? false;
+    this.offscreen = options.offscreen ?? null;
+    this.device = gpu.device;
+    this.timer = gpu.info.timestamps ? new GpuTimer(this.device) : null;
+    this.pool = new TexturePool(this.device);
+    if (this.offscreen) {
+      this.context = null;
+      this.viewFormat = "rgba8unorm-srgb";
+    } else {
+      const context = canvas.getContext("webgpu");
+      if (!context) throw new Error("canvas sem contexto webgpu");
+      this.context = context;
+      this.viewFormat = srgbViewOf(gpu.canvasFormat);
+    }
+
+    this.globals = this.device.createBuffer({
+      size: GLOBALS_BYTES,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+      label: "lab.globals",
+    });
+    this.sampler = this.device.createSampler({
+      magFilter: "linear",
+      minFilter: "linear",
+      mipmapFilter: "linear",
+      addressModeU: "clamp-to-edge",
+      addressModeV: "clamp-to-edge",
+      label: "lab.linear",
+    });
+    this.bgLayout = this.device.createBindGroupLayout({
+      label: "lab.background.layout",
+      entries: [{ binding: 0, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: "float" } }],
+    });
+    this.glassLayout = this.device.createBindGroupLayout({
+      label: "lab.glass.layout",
+      entries: [
+        { binding: 0, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: "uniform" } },
+        { binding: 1, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
+        { binding: 2, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: "float" } },
+        { binding: 3, visibility: GPUShaderStage.FRAGMENT, sampler: { type: "filtering" } },
+        { binding: 4, visibility: GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
+      ],
+    });
+
+    this.graph.add(this.backgroundPass()).add(this.glassPass());
+
+    this.device.lost.then((info) => {
+      if (this.destroyed) return;
+      this.destroyed = true;
+      cancelAnimationFrame(this.raf);
+      this.onLost?.(info);
+    });
+    this.unsubscribe = onShaderChange((sources) => void this.reloadShaders(sources));
+    this.resizeObserver = new ResizeObserver(() => {
+      this.sizeDirty = true;
+      this.requestFrame();
+    });
+    this.resizeObserver.observe(canvas);
+  }
+
+  /** Compiles the shaders; resolves to an error message or null. */
+  async init(): Promise<string | null> {
+    return this.reloadShaders(shaderSources());
+  }
+
+  get devicePixelRatio(): number {
+    return this.dpr;
+  }
+
+  get resolution(): { width: number; height: number } {
+    return { width: this.width, height: this.height };
+  }
+
+  get surfaceCount(): number {
+    return this.surfaces.length;
+  }
+
+  get guardStats(): readonly GuardStats[] {
+    return this.tables.map((t) => t.stats);
+  }
+
+  get gpuBytes(): number {
+    return this.pool.bytes + this.surfaceCapacity * (SURFACE_FLOATS + TABLE_FLOATS) * 4 + GLOBALS_BYTES;
+  }
+
+  setSource(source: BackgroundSource): void {
+    this.source?.dispose();
+    this.source = source;
+    this.sourceChanged = true;
+    this.requestFrame();
+  }
+
+  /** The source repainted itself (new image, new scene parameters). */
+  invalidateSource(): void {
+    this.sourceChanged = true;
+    this.requestFrame();
+  }
+
+  setSurfaces(surfaces: GlassSurface[]): void {
+    this.surfaces = surfaces;
+    this.surfacesDirty = true;
+    this.requestFrame();
+  }
+
+  /** Call after mutating a surface in place (drag, slider). */
+  surfacesChanged(): void {
+    this.surfacesDirty = true;
+    this.requestFrame();
+  }
+
+  setQuality(tier: QualityTier): void {
+    this.quality = tier;
+    this.sizeDirty = true;
+    this.requestFrame();
+  }
+
+  requestFrame(): void {
+    if (this.destroyed || this.raf) return;
+    this.raf = requestAnimationFrame(this.tick);
+  }
+
+  /** Render the next frame and read it back (tests). Requires `readback` at construction. */
+  capture(): Promise<Pixels> {
+    if (!this.readback) return Promise.reject(new Error("renderer criado sem readback"));
+    return new Promise((resolve) => {
+      this.pendingReadback = resolve;
+      this.requestFrame();
+    });
+  }
+
+  destroy(): void {
+    this.destroyed = true;
+    cancelAnimationFrame(this.raf);
+    this.unsubscribe();
+    this.resizeObserver.disconnect();
+    this.source?.dispose();
+    this.pool.destroy();
+    this.timer?.destroy();
+    this.globals.destroy();
+    this.surfaceBuffer?.destroy();
+    this.tableBuffer?.destroy();
+    this.context?.unconfigure();
+  }
+
+  private readonly tick = (now: number): void => {
+    this.raf = 0;
+    if (this.destroyed) return;
+    if (this.continuous && this.lastTick > 0) this.interval.push(now - this.lastTick);
+    this.lastTick = this.continuous ? now : 0;
+    const start = performance.now();
+    void this.renderFrame(now);
+    this.cpu.push(performance.now() - start);
+    this.onFrame?.();
+    if (this.continuous) this.requestFrame();
+  };
+
+  private renderFrame(now: number): Promise<void> | null {
+    if (!this.bgPipeline || !this.glassPipeline || !this.source) return null;
+    if (this.sizeDirty) this.resize();
+    if (!this.background) return null;
+
+    const sizeChanged = this.sourceChanged;
+    this.sourceChanged = false;
+    this.source.update(this.device, this.background, sizeChanged);
+    if (this.surfacesDirty) this.uploadSurfaces();
+
+    const g = new ArrayBuffer(GLOBALS_BYTES);
+    const f = new Float32Array(g);
+    const u = new Uint32Array(g);
+    f[0] = this.width;
+    f[1] = this.height;
+    f[2] = 1 / this.width;
+    f[3] = 1 / this.height;
+    f[4] = this.dpr;
+    f[5] = now / 1000;
+    u[6] = this.debugView;
+    f[7] = EDGE_START_PX;
+    this.device.queue.writeBuffer(this.globals, 0, g);
+
+    const texture = this.context ? this.context.getCurrentTexture() : this.frameTexture;
+    if (!texture) return null;
+    this.graph.run(this.device, texture.createView({ format: this.viewFormat }), this.timer);
+
+    const resolve = this.pendingReadback;
+    if (!resolve) return null;
+    this.pendingReadback = null;
+    return this.readPixels(texture).then(resolve);
+  }
+
+  private resize(): void {
+    this.sizeDirty = false;
+    const cssWidth = this.offscreen?.width ?? this.canvas.clientWidth;
+    const cssHeight = this.offscreen?.height ?? this.canvas.clientHeight;
+    this.dpr = this.offscreen ? 1 : effectivePixelRatio(cssWidth, cssHeight, this.quality, this.gpu.info.maxTexture);
+    const width = Math.max(1, Math.round(cssWidth * this.dpr));
+    const height = Math.max(1, Math.round(cssHeight * this.dpr));
+    this.width = width;
+    this.height = height;
+    if (this.context) {
+      if (this.canvas.width !== width || this.canvas.height !== height) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+      }
+      this.context.configure({
+        device: this.device,
+        format: this.gpu.canvasFormat,
+        viewFormats: [this.viewFormat],
+        alphaMode: "opaque",
+        usage: GPUTextureUsage.RENDER_ATTACHMENT | (this.readback ? GPUTextureUsage.COPY_SRC : 0),
+      });
+    } else {
+      this.frameTexture = this.pool.get("frame", {
+        width,
+        height,
+        format: "rgba8unorm-srgb",
+        usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
+        label: "lab.frame",
+      }).texture;
+    }
+    const { texture, created } = this.pool.get("background", {
+      width,
+      height,
+      format: "rgba8unorm-srgb",
+      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
+      label: "lab.background",
+    });
+    if (created) {
+      this.background = texture;
+      this.sourceChanged = true;
+      this.bgBindGroup = null;
+      this.glassBindGroup = null;
+    }
+    this.surfacesDirty = true;
+  }
+
+  private uploadSurfaces(): void {
+    this.surfacesDirty = false;
+    const count = this.surfaces.length;
+    if (count > this.surfaceCapacity || !this.surfaceBuffer || !this.tableBuffer) {
+      this.surfaceBuffer?.destroy();
+      this.tableBuffer?.destroy();
+      this.surfaceCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(count, 1))));
+      this.surfaceBuffer = this.device.createBuffer({
+        size: this.surfaceCapacity * SURFACE_FLOATS * 4,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        label: "lab.surfaces",
+      });
+      this.tableBuffer = this.device.createBuffer({
+        size: this.surfaceCapacity * TABLE_FLOATS * 4,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        label: "lab.radial-tables",
+      });
+      this.glassBindGroup = null;
+      this.tables = [];
+    }
+    const data = new Float32Array(Math.max(count, 1) * SURFACE_FLOATS);
+    const dpr = this.dpr;
+    this.tables.length = count;
+    this.surfaces.forEach(({ shape, material }, i) => {
+      const key = tableKey(shape, material, dpr, this.guardEnabled);
+      if (this.tables[i]?.key !== key) {
+        const table = buildRadialTable(material, shape, dpr, this.guardEnabled);
+        this.tables[i] = { key, ...table };
+        this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
+      }
+      const { bevel } = deviceGeometry(material, shape, dpr);
+      data.set(
+        [
+          shape.cx * dpr, shape.cy * dpr, shape.halfWidth * dpr, shape.halfHeight * dpr,
+          clampedRadius(shape) * dpr, shape.exponent, Math.cos(shape.rotation), Math.sin(shape.rotation),
+          bevel, material.thickness * dpr, material.gap * dpr, material.ior,
+          0, PROFILE_INDEX[material.profile], 0, 0,
+        ],
+        i * SURFACE_FLOATS,
+      );
+    });
+    this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
+  }
+
+  private backgroundPass(): Pass {
+    return {
+      name: "fundo",
+      enabled: () => true,
+      encode: (ctx: FrameContext, timestampWrites) => {
+        if (!this.bgPipeline || !this.background) return;
+        this.bgBindGroup ??= this.device.createBindGroup({
+          layout: this.bgLayout,
+          entries: [{ binding: 0, resource: this.background.createView() }],
+          label: "lab.background.bind",
+        });
+        const pass = ctx.encoder.beginRenderPass({
+          label: "fundo",
+          colorAttachments: [{ view: ctx.target, loadOp: "clear", storeOp: "store", clearValue: [0, 0, 0, 1] }],
+          ...(timestampWrites ? { timestampWrites } : {}),
+        });
+        pass.setPipeline(this.bgPipeline);
+        pass.setBindGroup(0, this.bgBindGroup);
+        pass.draw(3);
+        pass.end();
+      },
+    };
+  }
+
+  private glassPass(): Pass {
+    return {
+      name: "vidro",
+      enabled: () => this.surfaces.length > 0,
+      encode: (ctx: FrameContext, timestampWrites) => {
+        if (!this.glassPipeline || !this.background || !this.surfaceBuffer || !this.tableBuffer) return;
+        this.glassBindGroup ??= this.device.createBindGroup({
+          layout: this.glassLayout,
+          entries: [
+            { binding: 0, resource: { buffer: this.globals } },
+            { binding: 1, resource: { buffer: this.surfaceBuffer } },
+            { binding: 2, resource: this.background.createView() },
+            { binding: 3, resource: this.sampler },
+            { binding: 4, resource: { buffer: this.tableBuffer } },
+          ],
+          label: "lab.glass.bind",
+        });
+        const pass = ctx.encoder.beginRenderPass({
+          label: "vidro",
+          colorAttachments: [{ view: ctx.target, loadOp: "load", storeOp: "store" }],
+          ...(timestampWrites ? { timestampWrites } : {}),
+        });
+        pass.setPipeline(this.glassPipeline);
+        pass.setBindGroup(0, this.glassBindGroup);
+        pass.draw(6, this.surfaces.length);
+        pass.end();
+      },
+    };
+  }
+
+  private async reloadShaders(sources: ShaderSources): Promise<string | null> {
+    const device = this.device;
+    device.pushErrorScope("validation");
+    const bgModule = device.createShaderModule({ code: sources.background, label: "background.wgsl" });
+    const glassModule = device.createShaderModule({ code: sources.glass, label: "glass.wgsl" });
+    const messages: string[] = [];
+    for (const [name, module] of [
+      ["background.wgsl", bgModule],
+      ["glass.wgsl", glassModule],
+    ] as const) {
+      const info = await module.getCompilationInfo();
+      for (const m of info.messages) {
+        if (m.type === "error") messages.push(`${name}:${m.lineNum}:${m.linePos} ${m.message}`);
+      }
+    }
+    if (messages.length > 0) {
+      await device.popErrorScope();
+      const text = messages.join("\n");
+      this.onShaderError?.(text);
+      return text;
+    }
+    const target: GPUColorTargetState = { format: this.viewFormat };
+    const bg = device.createRenderPipeline({
+      label: "background",
+      layout: device.createPipelineLayout({ bindGroupLayouts: [this.bgLayout] }),
+      vertex: { module: bgModule, entryPoint: "vs_main" },
+      fragment: { module: bgModule, entryPoint: "fs_main", targets: [target] },
+      primitive: { topology: "triangle-list" },
+    });
+    const glass = device.createRenderPipeline({
+      label: "glass",
+      layout: device.createPipelineLayout({ bindGroupLayouts: [this.glassLayout] }),
+      vertex: { module: glassModule, entryPoint: "vs_main" },
+      fragment: {
+        module: glassModule,
+        entryPoint: "fs_main",
+        targets: [
+          {
+            format: this.viewFormat,
+            blend: {
+              color: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
+              alpha: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
+            },
+          },
+        ],
+      },
+      primitive: { topology: "triangle-list" },
+    });
+    const error = await device.popErrorScope();
+    if (error) {
+      this.onShaderError?.(error.message);
+      return error.message;
+    }
+    this.bgPipeline = bg;
+    this.glassPipeline = glass;
+    this.onShaderError?.(null);
+    this.requestFrame();
+    return null;
+  }
+
+  private async readPixels(texture: GPUTexture): Promise<Pixels> {
+    const { width, height } = texture;
+    const bytesPerRow = Math.ceil((width * 4) / 256) * 256;
+    const buffer = this.device.createBuffer({
+      size: bytesPerRow * height,
+      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+      label: "lab.readback",
+    });
+    const encoder = this.device.createCommandEncoder({ label: "lab.readback" });
+    encoder.copyTextureToBuffer({ texture }, { buffer, bytesPerRow }, [width, height]);
+    this.device.queue.submit([encoder.finish()]);
+    await buffer.mapAsync(GPUMapMode.READ);
+    const raw = new Uint8Array(buffer.getMappedRange());
+    const data = new Uint8Array(width * height * 4);
+    const bgra = texture.format.startsWith("bgra");
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const s = y * bytesPerRow + x * 4;
+        const d = (y * width + x) * 4;
+        data[d] = raw[s + (bgra ? 2 : 0)]!;
+        data[d + 1] = raw[s + 1]!;
+        data[d + 2] = raw[s + (bgra ? 0 : 2)]!;
+        data[d + 3] = raw[s + 3]!;
+      }
+    }
+    buffer.unmap();
+    buffer.destroy();
+    return { width, height, data };
+  }
+}
+
+function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): string {
+  const radius = clampedRadius(shape);
+  const minHalf = Math.min(shape.halfWidth, shape.halfHeight);
+  return [radius, minHalf, m.ior, m.thickness, m.gap, m.bevel, m.profile, dpr, guard].join("|");
+}

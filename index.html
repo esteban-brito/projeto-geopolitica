@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Liquid Glass Lab</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/src/lab/styles.css" />
+  </head>
+  <body>
+    <div class="lab">
+      <main class="stage">
+        <canvas id="stage" aria-label="Superfície de vidro sobre a cena de teste"></canvas>
+        <header class="brand">
+          <span class="brand__name">Liquid Glass Lab</span>
+          <span class="brand__tag">V0 · fundação</span>
+        </header>
+        <div class="notice" id="notice" hidden></div>
+        <pre class="shader-error" id="shader-error" hidden></pre>
+      </main>
+      <aside class="panel" id="panel" aria-label="Controles"></aside>
+      <footer class="metrics" id="metrics" aria-live="off"></footer>
+    </div>
+    <script type="module" src="/src/lab/main.ts"></script>
+  </body>
+</html>
