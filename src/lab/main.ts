@@ -1,8 +1,9 @@
 import { acquireGpu, GpuUnavailableError, type GpuContext } from "../gpu/device.ts";
 import { ABBE_OFF, cloneMaterial, DEFAULT_MATERIAL, PRESETS, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
 import { shapeDistance, shapeOf, type Shape, type ShapeKind } from "../glass/shape.ts";
+import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
-import { DEBUG_VIEWS, LiquidGlassRenderer } from "../renderer/renderer.ts";
+import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassSurface } from "../renderer/renderer.ts";
 import { NativeSource } from "../sources/native.ts";
 import { PAINTERS, paintBitmap, SCENES, type SceneId } from "../sources/scenes.ts";
 import { button, color, group, hint, segmented, select, slider, toggle, type Control } from "./controls.ts";
@@ -41,6 +42,11 @@ const state = {
   bitmap: null as ImageBitmap | null,
 };
 
+/** Rest shape lives in state.shape (the panel edits it); the body animates what is drawn. */
+const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...DEFAULT_TUNING.deform }, deformation: DEFAULT_TUNING.deformation };
+let body = new GlassBody(state.shape, tuning);
+const drawn: GlassSurface = { shape: state.shape, material: state.material };
+
 /** A device that keeps dying (driver bug, headless SwiftShader presenting) must not loop forever. */
 const MAX_RESTARTS = 2;
 let restarts = 0;
@@ -53,17 +59,38 @@ const guardHint = hint(guardText);
 function centerShape(): void {
   state.shape.cx = canvas.clientWidth / 2;
   state.shape.cy = canvas.clientHeight / 2;
+  body.place(state.shape.cx, state.shape.cy);
 }
 
 function surfacesChanged(): void {
+  drawn.shape = body.shape();
+  drawn.material = body.material(state.material);
   renderer?.surfacesChanged();
+}
+
+let animating = 0;
+let lastStep = 0;
+
+/** Steps the body while it moves; stops by itself, so an idle lab costs nothing. */
+function animate(): void {
+  if (animating) return;
+  lastStep = performance.now();
+  const tick = (now: number) => {
+    const dt = (now - lastStep) / 1000;
+    lastStep = now;
+    const moving = body.step(dt);
+    surfacesChanged();
+    animating = moving ? requestAnimationFrame(tick) : 0;
+  };
+  animating = requestAnimationFrame(tick);
 }
 
 function setShapeKind(kind: ShapeKind): void {
   const { cx, cy, rotation } = state.shape;
   state.shapeKind = kind;
   state.shape = { ...shapeOf(kind, cx, cy), rotation };
-  renderer?.setSurfaces([{ shape: state.shape, material: state.material }]);
+  body = new GlassBody(state.shape, tuning);
+  surfacesChanged();
   refreshControls();
 }
 
@@ -142,6 +169,13 @@ function buildPanel(): void {
       slider({ label: "Ambiente refletido", min: 0, max: 2, step: 0.01, get: () => m().environment, set: (v) => edit(() => (m().environment = v)), format: (v) => v.toFixed(2) }),
       slider({ label: "Sombra", min: 0, max: 1, step: 0.01, get: () => m().shadow, set: (v) => edit(() => (m().shadow = v)), format: (v) => v.toFixed(2) }),
     ]),
+    group("Física", false, [
+      slider({ label: "Resposta ao arrasto", min: 0.04, max: 0.5, step: 0.01, get: () => tuning.follow.response, set: (v) => (tuning.follow.response = v), format: (v) => `${(v * 1000).toFixed(0)} ms` }),
+      slider({ label: "Amortecimento", min: 0.3, max: 1.2, step: 0.01, get: () => tuning.follow.dampingRatio, set: (v) => (tuning.follow.dampingRatio = v), format: (v) => `ζ = ${v.toFixed(2)}` }),
+      slider({ label: "Deformação", min: 0, max: 0.00015, step: 0.000001, get: () => tuning.deformation, set: (v) => (tuning.deformation = v), format: (v) => `${(v * 100000).toFixed(1)}% a 1000 px/s` }),
+      slider({ label: "Amortecimento da deformação", min: 0.3, max: 1.2, step: 0.01, get: () => tuning.deform.dampingRatio, set: (v) => (tuning.deform.dampingRatio = v), format: (v) => `ζ = ${v.toFixed(2)}` }),
+      hint(() => "Sem slider de massa: numa mola só a razão rigidez/massa importa. Resposta e amortecimento são os dois graus de liberdade."),
+    ]),
     group("Desempenho", false, [
       segmented({ label: "Qualidade", options: QUALITY_TIERS.map((t) => ({ id: t, label: TIER_LABEL[t] })), get: () => state.quality, set: (v) => ((state.quality = v), renderer?.setQuality(v)) }),
       toggle({ label: "Renderizar todo quadro (medir)", get: () => state.continuous, set: (v) => setContinuous(v) }),
@@ -166,7 +200,7 @@ function edit(change: () => void): void {
 function applyPreset(id: PresetId): void {
   state.preset = id;
   state.material = cloneMaterial(PRESETS[id].material);
-  renderer?.setSurfaces([{ shape: state.shape, material: state.material }]);
+  surfacesChanged();
   refreshControls();
 }
 
@@ -226,8 +260,6 @@ function renderMetrics(): void {
 
 function installDrag(): void {
   let dragging = false;
-  let grabX = 0;
-  let grabY = 0;
   const local = (e: PointerEvent) => {
     const rect = canvas.getBoundingClientRect();
     return [e.clientX - rect.left, e.clientY - rect.top] as const;
@@ -236,12 +268,12 @@ function installDrag(): void {
     "pointerdown",
     (e) => {
       const [x, y] = local(e);
-      if (shapeDistance(state.shape, x, y) > 0) return;
+      if (shapeDistance(body.shape(), x, y) > 0) return;
       dragging = true;
-      grabX = x - state.shape.cx;
-      grabY = y - state.shape.cy;
+      body.grab(x, y);
       canvas.setPointerCapture(e.pointerId);
       canvas.classList.add("is-grabbing");
+      animate();
     },
     { passive: true },
   );
@@ -250,18 +282,20 @@ function installDrag(): void {
     (e) => {
       const [x, y] = local(e);
       if (!dragging) {
-        canvas.classList.toggle("is-grab", shapeDistance(state.shape, x, y) <= 0);
+        canvas.classList.toggle("is-grab", shapeDistance(body.shape(), x, y) <= 0);
         return;
       }
-      state.shape.cx = x - grabX;
-      state.shape.cy = y - grabY;
-      surfacesChanged();
+      body.drag(x, y);
+      animate();
     },
     { passive: true },
   );
   const end = () => {
+    if (!dragging) return;
     dragging = false;
+    body.release();
     canvas.classList.remove("is-grabbing");
+    animate();
   };
   canvas.addEventListener("pointerup", end, { passive: true });
   canvas.addEventListener("pointercancel", end, { passive: true });
@@ -308,7 +342,8 @@ async function start(): Promise<void> {
   r.onFrame = () => guardHint.refresh();
   source = new NativeSource("cena", state.bitmap ? paintBitmap(state.bitmap) : PAINTERS[state.scene], () => r.devicePixelRatio);
   r.setSource(source);
-  r.setSurfaces([{ shape: state.shape, material: state.material }]);
+  surfacesChanged();
+  r.setSurfaces([drawn]);
   const error = await r.init();
   if (error) console.warn(error);
   refreshControls();
@@ -331,6 +366,7 @@ window.lab = {
   renderer: () => renderer,
   setShape: (patch) => {
     Object.assign(state.shape, patch);
+    body.place(state.shape.cx, state.shape.cy);
     surfacesChanged();
   },
 };

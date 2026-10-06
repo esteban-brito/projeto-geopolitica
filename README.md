@@ -28,7 +28,7 @@ nada. **O SwiftShader headless perde o processo de GPU ao desenhar no swapchain 
 por isso testes e capturas renderizam fora da tela (`offscreen` no renderer). O laboratório e o
 bench sempre desenham no canvas, então só rodam numa máquina com GPU de verdade.
 
-## Estado: V1 — vidro óptico (sobre a fundação do V0)
+## Estado: V2 — física (sobre o vidro óptico do V1 e a fundação do V0)
 
 | peça | onde | situação |
 | --- | --- | --- |
@@ -52,9 +52,13 @@ bench sempre desenham no canvas, então só rodam numa máquina com GPU de verda
 | hot reload de WGSL com overlay de erro | `src/shaders/index.ts` | pronto |
 | testes: 8 de óptica + 8 de aceite do material (borda escura, realce por N·L, largura variável, sombra, fosco, tint) | `tests/` | pronto |
 | bench com JSON | `bench.html`, `src/bench/` | pronto, **não medido** (sem GPU aqui) |
+| **molas** (resposta + amortecimento, subpasso ≤ 1/240 s, param sozinhas) | `src/physics/spring.ts` | pronto |
+| **corpo do vidro**: segue o ponteiro com inércia, estica ao longo da velocidade preservando a área (teto 12%), press anima o material, bounce contido ao soltar | `src/physics/body.ts` | pronto |
+| SDF sob transformação afim (rotação · press · estiramento), distância corrigida por \|M⁻ᵀ∇\| | `glass.wgsl`, `shape.ts` | pronto |
+| testes de física (7): overshoot teórico, 30 Hz = 240 Hz, ângulo do estiramento, área, assentamento, bounce | `tests/physics.test.mjs` | pronto |
 
-**Próximo:** V2, física (molas de posição/escala, deformação pela velocidade, press que anima o
-material), e a primeira rodada do bench numa GPU real.
+**Próximo:** rodar o laboratório e o bench numa GPU real (RX 6600) e trazer o JSON e as impressões;
+depois V3 (várias superfícies, smooth union C², morph).
 
 ## Decisões que valem lembrar
 

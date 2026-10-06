@@ -1,7 +1,7 @@
 import { srgbViewOf, type GpuContext } from "../gpu/device.ts";
 import { REFERENCE_PATH, type GlassMaterial } from "../glass/material.ts";
 import { buildRadialTable, deviceGeometry, EDGE_START_PX, TABLE_SAMPLES, TABLE_STRIDE, type GuardStats } from "../glass/optics.ts";
-import { clampedRadius, type Shape } from "../glass/shape.ts";
+import { clampedRadius, invert, shapeMatrix, type Shape } from "../glass/shape.ts";
 import { onShaderChange, shaderSources, type ShaderSources } from "../shaders/index.ts";
 import type { BackgroundSource } from "../sources/source.ts";
 import { FrameGraph, type FrameContext, type Pass } from "./frame-graph.ts";
@@ -50,7 +50,7 @@ export interface Pixels {
   data: Uint8Array;
 }
 
-const SURFACE_FLOATS = 24;
+const SURFACE_FLOATS = 28;
 const TABLE_FLOATS = TABLE_SAMPLES * TABLE_STRIDE;
 const GLOBALS_BYTES = 32;
 
@@ -614,7 +614,7 @@ function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): 
 }
 
 /**
- * Device-pixel record of one surface (6 × vec4, see `Surface` in glass.wgsl). Derived values are
+ * Device-pixel record of one surface (7 × vec4, see `Surface` in glass.wgsl). Derived values are
  * computed here once: absorption from tint and density, blur radius from roughness and the glass's
  * height, the key light direction, F0 from the ior.
  */
@@ -624,12 +624,14 @@ function packSurface(shape: Shape, m: GlassMaterial, dpr: number): number[] {
   const blur = 1.6 * (m.thickness + m.gap + m.bevel * 0.5) * m.roughness ** 1.5 * dpr;
   const angle = (m.lightAngle * Math.PI) / 180;
   const f0 = ((m.ior - 1) / (m.ior + 1)) ** 2;
+  const inv = invert(shapeMatrix(shape));
   return [
     shape.cx * dpr, shape.cy * dpr, shape.halfWidth * dpr, shape.halfHeight * dpr,
-    clampedRadius(shape) * dpr, shape.exponent, Math.cos(shape.rotation), Math.sin(shape.rotation),
+    clampedRadius(shape) * dpr, shape.exponent, 0, 0,
     bevel, m.thickness * dpr, m.gap * dpr, m.ior,
     m.roughness, m.edge, m.shadow, m.environment,
     absorb[0]!, absorb[1]!, absorb[2]!, m.light,
     Math.cos(angle), -Math.sin(angle), blur, f0,
+    inv[0], inv[1], inv[2], inv[3],
   ];
 }

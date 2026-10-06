@@ -17,11 +17,12 @@ struct Globals {
 
 struct Surface {
   geom: vec4f,     // centre.xy, half extents.xy
-  corner: vec4f,   // radius, superellipse exponent, cos(rotation), sin(rotation)
+  corner: vec4f,   // radius, superellipse exponent, -, -
   optics: vec4f,   // bevel, thickness T, gap G, ior
   shading: vec4f,  // roughness, edge contrast, shadow strength, environment
   medium: vec4f,   // absorption per device px (r, g, b), key light
   light: vec4f,    // direction the key light comes from (screen xy), blur radius px, F0
+  xform: vec4f,    // inverse of the shape matrix (rotation · press scale · stretch), row-major 2×2
 }
 
 @group(0) @binding(0) var<uniform> globals: Globals;
@@ -72,12 +73,14 @@ fn shadow_shape(s: Surface) -> ShadowShape {
 @vertex
 fn vs_main(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> VOut {
   let s = surfaces[ii];
-  let c = abs(s.corner.z);
-  let sn = abs(s.corner.w);
+  let inv = s.xform;
+  let det = inv.x * inv.w - inv.y * inv.z;
+  let fwd = vec4f(inv.w, -inv.y, -inv.z, inv.x) / det;
   let half = s.geom.zw;
   let sh = shadow_shape(s);
   let shadowReach = select(0.0, length(sh.offset) + sh.sigma * 3.0, s.shading.z > 0.0);
-  let extent = vec2f(c * half.x + sn * half.y, sn * half.x + c * half.y) + BOUNDS_MARGIN + shadowReach;
+  let extent = vec2f(abs(fwd.x) * half.x + abs(fwd.y) * half.y, abs(fwd.z) * half.x + abs(fwd.w) * half.y)
+    + BOUNDS_MARGIN + shadowReach;
   var corners = array<vec2f, 6>(
     vec2f(-1.0, -1.0), vec2f(1.0, -1.0), vec2f(-1.0, 1.0),
     vec2f(-1.0, 1.0), vec2f(1.0, -1.0), vec2f(1.0, 1.0),
@@ -95,15 +98,15 @@ struct SdfSample {
   grad: vec2f, // outward unit normal of the iso-line, screen space
 }
 
-// Rectangle with superellipse corners. The p-norm field has iso-lines that are shrunken
-// superellipses, so its gradient stays smooth while depth < radius; d / |grad| restores Euclidean
-// distance to first order. Keeping bevel <= radius therefore leaves no crease on the diagonal.
+// Rectangle with superellipse corners, under an affine map (rotation, press scale, stretch). The
+// p-norm field has iso-lines that are shrunken superellipses, so its gradient stays smooth while
+// depth < radius; dividing by |M⁻ᵀ ∇| restores screen-space Euclidean distance to first order, which
+// also undoes the stretch. Keeping bevel <= radius therefore leaves no crease on the diagonal.
 // CPU mirror: shapeDistance in src/glass/shape.ts.
 fn shape_sdf(s: Surface, pix: vec2f) -> SdfSample {
-  let c = s.corner.z;
-  let sn = s.corner.w;
+  let inv = s.xform;
   let rel = pix - s.geom.xy;
-  let local = vec2f(c * rel.x + sn * rel.y, -sn * rel.x + c * rel.y);
+  let local = vec2f(inv.x * rel.x + inv.y * rel.y, inv.z * rel.x + inv.w * rel.y);
   let sgn = select(vec2f(-1.0), vec2f(1.0), local >= vec2f(0.0));
   let p = abs(local);
   let half = s.geom.zw;
@@ -128,7 +131,9 @@ fn shape_sdf(s: Surface, pix: vec2f) -> SdfSample {
     g = gp / gl;
   }
   let gs = g * sgn;
-  return SdfSample(d, vec2f(c * gs.x - sn * gs.y, sn * gs.x + c * gs.y));
+  let gw = vec2f(inv.x * gs.x + inv.z * gs.y, inv.y * gs.x + inv.w * gs.y);
+  let gwl = max(length(gw), 1e-6);
+  return SdfSample(d / gwl, gw / gwl);
 }
 
 struct Radial {
