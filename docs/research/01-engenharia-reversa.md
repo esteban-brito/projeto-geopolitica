@@ -630,7 +630,52 @@ físico; o pedido aceita isso e recusa 80.
 
 ---
 
-## 11. Pedidos para o pesquisador (ChatGPT)
+## 11. Revisão após a pesquisa externa (ChatGPT, 06/10/2026)
+
+Cada afirmação foi conferida antes de entrar. Entrou o que foi confirmado ou o que custa pouco e
+melhora o projeto.
+
+| afirmação | conferência | decisão |
+| --- | --- | --- |
+| Kube usa **uma** refração, sem gap; derivada numérica | bate com o código do refractive (§ notas 05); o relatório já tratava o modelo de duas interfaces como extensão nossa (§2, §6.3) | registrado: **Kube = referência matemática; duas interfaces + gap = extensão nossa** |
+| iOS/macOS 27: mais difusão de conteúdo complexo, **borda escurecida**, **especular mais forte**, slider global de intensidade | **confirmado** (MacRumors, 10/06/2026). Também confirmado: o especular giroscópico dos ícones saiu e o realce fica em cima e embaixo | **alvo visual passa a ser o Liquid Glass 27**; reforça luz fixa e vertical e a recusa do especular animado (§3) |
+| Chrome em ciclo de 2 semanas (153 em 08/09, 154 em 22/09) | **confirmado** | API do HIC muda mais rápido: o adaptador é obrigatório |
+| OT do HTML-in-Canvas vai até o Chrome 160 | **não confirmado**: a página do OT no Edge indica expiração em 20/10/2026 | sem efeito no laboratório (usamos o flag local); só importa para publicar |
+| Vidro maior simula material mais espesso: sombra mais funda, lente mais forte, espalhamento mais suave (WWDC25) | plausível (sessão "Meet Liquid Glass"); é regra de design, não física | **entra**: resposta ao tamanho calculada na CPU (§11.1) |
+| HIG: por padrão o vidro **não tem cor própria** | plausível, coerente com a HIG; não confirmado palavra por palavra | **entra**: tint intrínseco neutro por padrão |
+| `environmentColorPickup` como conceito separado | a cor do ambiente **já é** a luz refratada e borrada; um botão para isso seria um parâmetro falso | **recusado**. O que a Apple faz além disso é vibração (saturação da luz transmitida): vira política do Regular, derivada, sem slider |
+| Regular × Clear como **políticas**, não presets | confirmado: Clear não tem comportamento adaptativo e pede camada de escurecimento sobre conteúdo claro (o "35%" não foi confirmado no texto) | **entra**: `variant` no material (§11.1) |
+| slider de "clareza" coordenando 7 propriedades | útil se não inventar física | **entra como interpolação** entre dois materiais completos (Clear ↔ Tinted): um número, nenhum caso especial no shader |
+| bounce curto ao clicar, sem wobble contínuo | coerente com §6.6 e com a recusa do wobble do Liquefy | regra de interação |
+| iluminação de referência vertical, de cima | coerente com o Glass-HQ (`abs(n.y)`) e com o iOS 27 (realce em cima e embaixo) | preset `APPLE_REFERENCE` de luz |
+
+### 11.1 Mudanças no material (§7.3)
+
+```
+GlassMaterial
+  variant:  regular | clear            — política: regular adapta luminância, difusão e
+                                         vibração ao fundo (V4); clear não adapta e aceita
+                                         escurecimento local
+  medium:   intrinsicTint = neutro por padrão · density σ
+  …resto como em §7.3
+sizeResponse (CPU, padrão ligado, sobrescrevível):
+  menor lado da forma → T, bevel, G e rugosidade por uma curva monotônica;
+  recalcula a guarda de injetividade quando a forma assenta
+appearance (0..1): interpolação entre o material Clear e o Tinted da variante
+```
+
+### 11.2 Critério de aceite do V1, medido por readback (não por opinião)
+
+- borda escurecida **legível sobre fundo claro e sobre fundo escuro**: contraste da faixa interna
+  medido nas duas cenas, acima de um limiar fixado na primeira rodada;
+- realce especular com intensidade que **varia com N·L**: o pico fica no lado da luz e cai ao girar
+  a luz;
+- **nenhuma linha branca de largura constante**: a largura do realce varia ao longo do contorno;
+- sem dobra: o debug de injetividade fica vazio em todas as cenas.
+
+---
+
+## 12. Pedidos para o pesquisador (ChatGPT)
 
 O que faltou e vale buscar, pela ordem:
 
