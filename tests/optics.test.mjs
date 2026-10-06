@@ -44,8 +44,8 @@ test("o centro plano não desloca a luz", async () => {
   assert.ok(Math.abs(sx - 128) <= 1 && Math.abs(sy - 128) <= 1, `centro amostrou (${sx},${sy})`);
 });
 
-test("fora da forma (além do antialias) o fundo fica intacto", async () => {
-  const img = await render({ surfaces: [{ shape: CAPSULE }] });
+test("fora da forma (além do antialias) e sem sombra, o fundo fica intacto", async () => {
+  const img = await render({ surfaces: [{ shape: CAPSULE, material: { shadow: 0 } }] });
   const [r, g] = img.at(128 + 100 + 3, 128);
   assert.ok(Math.abs(r - 231) <= 1 && Math.abs(g - 128) <= 1, `pixel externo virou (${r},${g})`);
 });

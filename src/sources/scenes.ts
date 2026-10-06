@@ -181,6 +181,14 @@ export function paintBitmap(bitmap: ImageBitmap): ScenePainter {
   };
 }
 
+/** Uniform colour, for measuring what the glass alone does to a pixel. */
+export function paintSolid(color: string): ScenePainter {
+  return (ctx, w, h) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, w, h);
+  };
+}
+
 /** Test pattern: R encodes x, G encodes y. Readback tests invert it to find where light came from. */
 export const paintCoordinates: ScenePainter = (ctx, w, h) => {
   const image = ctx.createImageData(w, h);

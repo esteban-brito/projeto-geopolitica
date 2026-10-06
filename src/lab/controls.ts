@@ -160,3 +160,27 @@ export function hint(render: () => string): Control {
   refresh();
   return { element: p, refresh };
 }
+
+/** Colour picker over a linear-RGB triple (the material stores linear light). */
+export function color(opts: { label: string; get: () => [number, number, number]; set: (v: [number, number, number]) => void }): Control {
+  const field = document.createElement("label");
+  field.className = "toggle";
+  const name = document.createElement("span");
+  name.textContent = opts.label;
+  const input = document.createElement("input");
+  input.type = "color";
+  const toLinear = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  const toSrgb = (c: number) => (c <= 0.0031308 ? c * 12.92 : 1.055 * c ** (1 / 2.4) - 0.055);
+  const hex = (v: [number, number, number]) =>
+    `#${v.map((c) => Math.round(Math.max(0, Math.min(1, toSrgb(c))) * 255).toString(16).padStart(2, "0")).join("")}`;
+  input.addEventListener("input", () => {
+    const n = parseInt(input.value.slice(1), 16);
+    opts.set([toLinear(((n >> 16) & 255) / 255), toLinear(((n >> 8) & 255) / 255), toLinear((n & 255) / 255)]);
+  });
+  field.append(name, input);
+  const refresh = () => {
+    input.value = hex(opts.get());
+  };
+  refresh();
+  return { element: field, refresh };
+}

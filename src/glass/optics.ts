@@ -1,4 +1,4 @@
-import type { GlassMaterial, Profile } from "./material.ts";
+import { channelIors, type GlassMaterial, type Profile } from "./material.ts";
 import { clampedRadius, type Shape } from "./shape.ts";
 
 /** Maximum compression the refraction may apply: below 1 keeps the sample mapping one-to-one. */
@@ -41,12 +41,14 @@ export interface RadialSample {
   offset: number;
   /** Fraction of light that crosses both faces (Fresnel). */
   transmission: number;
+  /** Length of the ray inside the glass, device px (Beer–Lambert). */
+  path: number;
 }
 
 /**
- * Two-interface refraction along one radial section. Mirrors `refract_offset` in glass.wgsl with the
- * outward normal fixed to +x: view ray straight down, refract into the glass, cross to the flat
- * base, refract back into air, cross the gap.
+ * Two-interface refraction along one radial section. View ray straight down, refract into the
+ * glass at the curved top, cross to the flat base, refract back into air, cross the gap. Kube stops
+ * at the base with no gap; the second interface and the gap are this lab's extension.
  */
 export function radialSample(slope: number, height: number, thickness: number, gap: number, ior: number): RadialSample {
   const nLen = Math.hypot(slope, 1);
@@ -58,18 +60,19 @@ export function radialSample(slope: number, height: number, thickness: number, g
   const a = eta * -cosIn + Math.sqrt(k1);
   const tx = -a * nx;
   const tz = -eta - a * nz;
-  const o1 = tx * ((height + thickness) / Math.max(-tz, 1e-4));
+  const path = (height + thickness) / Math.max(-tz, 1e-4);
+  const o1 = tx * path;
 
   const f0 = ((ior - 1) / (ior + 1)) ** 2;
   const transIn = 1 - schlick(f0, cosIn);
   const cosG = -tz;
   const k2 = 1 - ior * ior * (1 - cosG * cosG);
-  if (k2 <= 0) return { offset: o1, transmission: 0 };
+  if (k2 <= 0) return { offset: o1, transmission: 0, path };
   const exitCos = Math.sqrt(k2);
   const ax = ior * tx;
   const tan = Math.min(Math.abs(ax) / exitCos, MAX_EXIT_TAN);
   const o2 = Math.sign(ax) * tan * gap;
-  return { offset: o1 + o2, transmission: transIn * (1 - schlick(f0, exitCos)) };
+  return { offset: o1 + o2, transmission: transIn * (1 - schlick(f0, exitCos)), path };
 }
 
 function schlick(f0: number, cos: number): number {
@@ -79,8 +82,11 @@ function schlick(f0: number, cos: number): number {
 
 /** Samples per surface in the radial table; denser near the border (depth ∝ u²). */
 export const TABLE_SAMPLES = 64;
-/** Floats per sample: offset along the outward normal, transmission, profile slope, height. */
-export const TABLE_STRIDE = 4;
+/**
+ * Floats per sample: [offset G, transmission, profile slope, height, offset R, offset B, path, -].
+ * Offsets are along the outward normal, device px; each channel has its own ior and its own guard.
+ */
+export const TABLE_STRIDE = 8;
 
 export interface GuardStats {
   /** Steepest |d offset / d depth| of the raw physics, among samples that carry light. */
@@ -117,71 +123,85 @@ export function buildRadialTable(material: GlassMaterial, shape: Shape, dpr: num
   const data = new Float32Array(TABLE_SAMPLES * TABLE_STRIDE);
   const { bevel, radius } = deviceGeometry(material, shape, dpr);
   const stats: GuardStats = { rawSlope: 0, compressedBand: 0, cornerBound: false };
+  const iors = channelIors(material.ior, material.abbe);
+  const T = material.thickness * dpr;
+  const G = material.gap * dpr;
   if (bevel <= EDGE_START_PX + 1e-3) {
-    const flat = radialSample(0, 0, material.thickness * dpr, material.gap * dpr, material.ior);
-    for (let i = 0; i < TABLE_SAMPLES; i++) data.set([0, flat.transmission, 0, 0], i * TABLE_STRIDE);
+    const flat = radialSample(0, 0, T, G, iors[1]);
+    for (let i = 0; i < TABLE_SAMPLES; i++) data.set([0, flat.transmission, 0, 0, 0, 0, flat.path, 0], i * TABLE_STRIDE);
     return { data, stats };
   }
 
   const depth: number[] = [];
-  const reach: number[] = [];
+  const offsets: number[][] = [[], [], []];
   for (let i = 0; i < TABLE_SAMPLES; i++) {
     const s = tableDepth(i, bevel);
     const [f, fp] = profileEval(material.profile, s / bevel);
-    const r = radialSample(fp, f * bevel, material.thickness * dpr, material.gap * dpr, material.ior);
+    const h = f * bevel;
+    const rgb = iors.map((n) => radialSample(fp, h, T, G, n));
+    const g = rgb[1]!;
     depth.push(s);
-    reach.push(s - r.offset);
-    data.set([r.offset, r.transmission, fp, f * bevel], i * TABLE_STRIDE);
+    rgb.forEach((r, c) => offsets[c]!.push(r.offset));
+    data.set([g.offset, g.transmission, fp, h, rgb[0]!.offset, rgb[2]!.offset, g.path, 0], i * TABLE_STRIDE);
     if (i > 0) {
       const tPrev = data[(i - 1) * TABLE_STRIDE + 1]!;
-      if (Math.min(tPrev, r.transmission) >= 0.05) {
-        const prev = data[(i - 1) * TABLE_STRIDE]!;
-        stats.rawSlope = Math.max(stats.rawSlope, Math.abs((r.offset - prev) / (s - depth[i - 1]!)));
+      if (Math.min(tPrev, g.transmission) >= 0.05) {
+        const prev = offsets[1]![i - 1]!;
+        stats.rawSlope = Math.max(stats.rawSlope, Math.abs((g.offset - prev) / (s - depth[i - 1]!)));
       }
     }
   }
   if (!guard) return { data, stats };
 
+  const slots = [4, 0, 5];
+  for (let c = 0; c < 3; c++) {
+    const guarded = envelope(depth, offsets[c]!, radius, stats, c === 1);
+    guarded.forEach((o, i) => (data[i * TABLE_STRIDE + slots[c]!] = o));
+  }
+  return { data, stats };
+}
+
+/** Injectivity guard on one channel: see buildRadialTable. Returns guarded offsets. */
+function envelope(depth: number[], offset: number[], radius: number, stats: GuardStats, record: boolean): number[] {
   const minRise = 1 - MAX_COMPRESSION;
-  for (let i = TABLE_SAMPLES - 1; i >= 0; i--) {
+  const reach = depth.map((s, i) => s - offset[i]!);
+  for (let i = depth.length - 1; i >= 0; i--) {
     const s = depth[i]!;
     let S = reach[i]!;
     if (radius > 0 && s < radius) {
       const cap = s + MAX_COMPRESSION * (radius - s);
       if (S > cap) {
         S = cap;
-        stats.cornerBound = true;
+        if (record) stats.cornerBound = true;
       }
     }
-    if (i < TABLE_SAMPLES - 1) {
+    if (i < depth.length - 1) {
       const limit = reach[i + 1]! - minRise * (depth[i + 1]! - s);
       if (S > limit) {
         S = limit;
-        stats.compressedBand = Math.max(stats.compressedBand, s);
+        if (record) stats.compressedBand = Math.max(stats.compressedBand, s);
       }
     }
     reach[i] = S;
-    data[i * TABLE_STRIDE] = s - S;
   }
-  return { data, stats };
+  return depth.map((s, i) => s - reach[i]!);
 }
 
-/** Linear lookup in a table, mirroring `table_lookup` in glass.wgsl. */
-export function tableLookup(table: Float32Array<ArrayBuffer>, bevel: number, depth: number): [number, number, number, number] {
-  if (bevel <= EDGE_START_PX + 1e-3 || depth >= bevel) {
-    const last = (TABLE_SAMPLES - 1) * TABLE_STRIDE;
-    return depth >= bevel && bevel > EDGE_START_PX + 1e-3
-      ? [0, table[last + 1]!, 0, table[last + 3]!]
-      : [table[0]!, table[1]!, table[2]!, table[3]!];
+/** Linear lookup in a table, mirroring `table_lookup` in glass.wgsl. Returns TABLE_STRIDE floats. */
+export function tableLookup(table: Float32Array<ArrayBuffer>, bevel: number, depth: number): number[] {
+  const at = (i: number) => Array.from(table.subarray(i * TABLE_STRIDE, (i + 1) * TABLE_STRIDE));
+  if (bevel <= EDGE_START_PX + 1e-3) return at(0);
+  if (depth >= bevel) {
+    const last = at(TABLE_SAMPLES - 1);
+    return [0, last[1]!, 0, last[3]!, 0, 0, last[6]!, 0];
   }
   const u = Math.sqrt(Math.max(0, (depth - EDGE_START_PX) / (bevel - EDGE_START_PX)));
   const x = u * (TABLE_SAMPLES - 1);
   const i0 = Math.min(TABLE_SAMPLES - 2, Math.floor(x));
   const t = x - i0;
-  const a = i0 * TABLE_STRIDE;
-  const b = a + TABLE_STRIDE;
-  const lerp = (k: number) => table[a + k]! * (1 - t) + table[b + k]! * t;
-  return [lerp(0), lerp(1), lerp(2), lerp(3)];
+  const a = at(i0);
+  const b = at(i0 + 1);
+  return a.map((v, k) => v * (1 - t) + b[k]! * t);
 }
 
 /** Device-pixel bevel and corner radius exactly as the shader will see them. */

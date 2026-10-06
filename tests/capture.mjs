@@ -62,11 +62,18 @@ mkdirSync(OUT, { recursive: true });
 const lab = await openLab("/probe.html");
 await lab.page.waitForFunction(() => window.probe !== undefined);
 
+const PRESETS = process.argv.includes("--presets");
 const jobs = [];
-for (const scene of ["grid", "text", "image", "color"]) {
-  for (const shape of Object.keys(SHAPES)) jobs.push({ scene, shape, debugView: 0 });
+if (PRESETS) {
+  for (const preset of ["clear", "regular", "frost", "crystal", "smoke"]) {
+    for (const scene of ["image", "text", "solid-light", "solid-dark"]) jobs.push({ scene, shape: "capsule", preset, debugView: 0 });
+  }
+} else {
+  for (const scene of ["grid", "text", "image", "color"]) {
+    for (const shape of Object.keys(SHAPES)) jobs.push({ scene, shape, debugView: 0 });
+  }
+  for (const debugView of [1, 2, 3, 4, 5, 8, 9, 10, 11]) jobs.push({ scene: "grid", shape: "panel", debugView });
 }
-for (const debugView of [1, 2, 3, 4, 5]) jobs.push({ scene: "grid", shape: "panel", debugView });
 
 let current = "";
 for (const job of jobs) {
@@ -74,12 +81,13 @@ for (const job of jobs) {
     await lab.page.evaluate(([w, h, s]) => window.probe.init(w, h, s), [W, H, job.scene]);
     current = job.scene;
   }
+  const material = job.preset ? await lab.page.evaluate((p) => window.probe.preset(p), job.preset) : undefined;
   const out = await lab.page.evaluate((r) => window.probe.render(r), {
-    surfaces: [{ shape: SHAPES[job.shape] }],
+    surfaces: [{ shape: SHAPES[job.shape], material }],
     debugView: job.debugView,
   });
   const img = image(out);
-  const name = `${job.scene}-${job.shape}${job.debugView ? `-debug${job.debugView}` : ""}.png`;
+  const name = `${job.preset ? `${job.preset}-` : ""}${job.scene}-${job.shape}${job.debugView ? `-debug${job.debugView}` : ""}.png`;
   writeFileSync(new URL(name, OUT), png(img.width, img.height, Buffer.from(out.rgba, "base64")));
   console.log(name);
 }

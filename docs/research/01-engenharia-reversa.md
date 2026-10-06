@@ -307,6 +307,19 @@ O resto da decisão:
 
 - **Segunda opção:** Blinn-Phong com expoente da rugosidade (diferença visual mínima; GGX custa ~10
   ALU a mais, irrelevante).
+- ⚠ **Corrigido na implementação do V1, por medição:**
+  - **GGX com lobo estreito** dava um realce de **1 px** sobre o bisel squircle: a linha branca de
+    CSS que o pedido recusa.
+  - **GGX alargado** até a largura certa vazava a cauda para o topo plano: no fundo escuro, o
+    interior subia de 0,12 para 0,34.
+  - **Decisão em vigor:** a luz principal é uma **luz de área em disco** (raio angular 0,22 rad, borda
+    suave, alargada pela rugosidade), vezes Fresnel(v·h), com radiância HDR 18× a do conteúdo. O
+    realce vira uma faixa que segue o bisel e fica em zero no plano.
+  - **O ambiente refletido é o próprio conteúdo:** o mip mais alto da pirâmide, que escurece para o
+    horizonte. Assim o reflexo pega a cor do que está atrás, como a HIG descreve.
+  - **Contraste de borda** (pedido no documento original como "edge intensity" e reforçado pelo
+    Liquid Glass 27): a luz transmitida escurece com 0,7·edge·√(1 − N·V). É derivado da inclinação,
+    então não tem largura fixa e some no plano.
 - **Fica de fora:** reflexão da própria página (SSR plano, Canvas UI) como fonte principal, porque o
   vidro vira espelho do que está atrás. Fica como termo fraco opcional.
 - **Fallback:** borda de 1 px por CSS.

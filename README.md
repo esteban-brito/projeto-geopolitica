@@ -28,26 +28,33 @@ nada. **O SwiftShader headless perde o processo de GPU ao desenhar no swapchain 
 por isso testes e capturas renderizam fora da tela (`offscreen` no renderer). O laboratório e o
 bench sempre desenham no canvas, então só rodam numa máquina com GPU de verdade.
 
-## Estado: V0 — fundação
+## Estado: V1 — vidro óptico (sobre a fundação do V0)
 
 | peça | onde | situação |
 | --- | --- | --- |
 | device único, perda de device com recriação limitada | `src/gpu/device.ts`, `src/lab/main.ts` | pronto |
 | renderer único, frame graph, um submit por quadro, laço sob demanda | `src/renderer/` | pronto |
-| tempo de GPU por passe (timestamp-query em anel, sem travar o laço) | `src/renderer/timer.ts` | pronto |
-| pool de texturas (nada criado por quadro) e DPR efetivo com teto | `src/renderer/pool.ts`, `quality.ts` | pronto |
+| tempo de GPU por passe (timestamp-query em anel) | `src/renderer/timer.ts` | pronto |
+| pool de texturas (nada criado por quadro), DPR efetivo com teto | `src/renderer/pool.ts`, `quality.ts` | pronto |
 | fonte de fundo abstrata + cenas nativas (cor, texto, imagem, grade, foto do usuário) | `src/sources/` | pronto |
-| superfícies num storage buffer, um draw instanciado com AABB | `renderer.ts`, `glass.wgsl` | pronto |
-| SDF de retângulo com cantos superelípticos, distância euclidiana de 1ª ordem | `glass.wgsl`, `shape.ts` | pronto |
-| refração de Snell em duas interfaces + gap, transmissão de Fresnel | `src/glass/optics.ts` | pronto |
-| guarda de injetividade (envelope monótono + canto) | `optics.ts`, `buildRadialTable` | pronto |
-| debug: SDF, normal, deslocamento, injetividade, transmissão, espessura, amostra | `glass.wgsl` | pronto |
+| superfícies num storage buffer, um draw instanciado com AABB (inclui a sombra) | `renderer.ts`, `glass.wgsl` | pronto |
+| SDF de cantos superelípticos | `glass.wgsl`, `shape.ts` | pronto |
+| Snell em duas interfaces + gap, **por canal** (dispersão por Abbe/Cauchy), Fresnel, caminho óptico | `src/glass/optics.ts` | pronto |
+| guarda de injetividade (envelope monótono por canal + canto) | `buildRadialTable` | pronto |
+| **pirâmide de mips** (downsample de 13 taps, só quando o conteúdo muda) | `pyramid.wgsl` | pronto |
+| **rugosidade**: LOD por rugosidade e pela pegada da amostra, leitura bicúbica | `glass.wgsl` | pronto |
+| **luz**: luz de área em disco (cima) + contraluz (baixo) × Fresnel; ambiente = o próprio conteúdo | `glass.wgsl` | pronto |
+| **contraste de borda** derivado da inclinação (borda escurecida do Liquid Glass 27) | `glass.wgsl` | pronto |
+| **tint** como absorção de Beer–Lambert, neutro por padrão | `material.ts`, `glass.wgsl` | pronto |
+| **sombra** analítica pelo SDF, deslocamento e suavidade derivados da altura de flutuação | `glass.wgsl` | pronto |
+| presets Clear, Regular, Frost, Crystal, Smoke; variante Regular/Clear guardada (política no V4) | `material.ts` | pronto |
+| debug: SDF, normal, deslocamento, injetividade, transmissão, espessura, amostra, Fresnel, LOD, especular, dispersão | `glass.wgsl` | pronto |
 | hot reload de WGSL com overlay de erro | `src/shaders/index.ts` | pronto |
-| testes por readback (8) e capturas | `tests/` | pronto |
+| testes: 8 de óptica + 8 de aceite do material (borda escura, realce por N·L, largura variável, sombra, fosco, tint) | `tests/` | pronto |
 | bench com JSON | `bench.html`, `src/bench/` | pronto, **não medido** (sem GPU aqui) |
 
-O vidro do V0 só **transmite**: sem a reflexão do ambiente (V1), ele fica um pouco mais escuro
-que o fundo (92% de transmissão no centro). É física, não defeito.
+**Próximo:** V2, física (molas de posição/escala, deformação pela velocidade, press que anima o
+material), e a primeira rodada do bench numa GPU real.
 
 ## Decisões que valem lembrar
 

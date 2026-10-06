@@ -1,11 +1,11 @@
 import { acquireGpu, GpuUnavailableError, type GpuContext } from "../gpu/device.ts";
-import { DEFAULT_MATERIAL, type GlassMaterial, type Profile } from "../glass/material.ts";
+import { ABBE_OFF, cloneMaterial, DEFAULT_MATERIAL, PRESETS, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
 import { shapeDistance, shapeOf, type Shape, type ShapeKind } from "../glass/shape.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
 import { DEBUG_VIEWS, LiquidGlassRenderer } from "../renderer/renderer.ts";
 import { NativeSource } from "../sources/native.ts";
 import { PAINTERS, paintBitmap, SCENES, type SceneId } from "../sources/scenes.ts";
-import { button, group, hint, segmented, select, slider, toggle, type Control } from "./controls.ts";
+import { button, color, group, hint, segmented, select, slider, toggle, type Control } from "./controls.ts";
 
 const SHAPES: readonly { id: ShapeKind; label: string }[] = [
   { id: "circle", label: "Círculo" },
@@ -33,7 +33,8 @@ const state = {
   scene: "image" as SceneId,
   shapeKind: "capsule" as ShapeKind,
   shape: shapeOf("capsule", 0, 0),
-  material: { ...DEFAULT_MATERIAL } as GlassMaterial,
+  material: cloneMaterial(DEFAULT_MATERIAL) as GlassMaterial,
+  preset: "regular" as PresetId | "custom",
   quality: "high" as QualityTier,
   debugView: 0,
   continuous: false,
@@ -109,13 +110,37 @@ function buildPanel(): void {
       slider({ label: "Suavização do canto", min: 2, max: 6, step: 0.05, get: () => s().exponent, set: (v) => ((s().exponent = v), surfacesChanged()), format: (v) => `n = ${v.toFixed(2)}` }),
       slider({ label: "Rotação", min: -90, max: 90, step: 1, get: () => (s().rotation * 180) / Math.PI, set: (v) => ((s().rotation = (v * Math.PI) / 180), surfacesChanged()), format: (v) => `${v}°` }),
     ]),
+    group("Material", true, [
+      segmented({
+        options: (Object.keys(PRESETS) as PresetId[]).map((id) => ({ id, label: PRESETS[id].label })),
+        get: () => (state.preset === "custom" ? ("" as PresetId) : state.preset),
+        set: (id) => applyPreset(id),
+      }),
+      hint(() => (state.preset === "custom" ? "Material ajustado à mão." : `Preset <strong>${PRESETS[state.preset].label}</strong> (variante ${m().variant === "clear" ? "Clear" : "Regular"}).`)),
+    ]),
     group("Óptica", true, [
-      slider({ label: "Índice de refração", min: 1, max: 2, step: 0.01, get: () => m().ior, set: (v) => ((m().ior = v), surfacesChanged()), format: (v) => v.toFixed(2) }),
-      slider({ label: "Espessura", min: 0, max: 60, step: 1, get: () => m().thickness, set: (v) => ((m().thickness = v), surfacesChanged()), format: (v) => `${v} px` }),
-      slider({ label: "Altura de flutuação", min: 0, max: 60, step: 1, get: () => m().gap, set: (v) => ((m().gap = v), surfacesChanged()), format: (v) => `${v} px` }),
-      slider({ label: "Bisel", min: 0, max: 80, step: 1, get: () => m().bevel, set: (v) => ((m().bevel = v), surfacesChanged()), format: (v) => `${v} px` }),
-      select({ label: "Perfil", options: PROFILES, get: () => m().profile, set: (v) => ((m().profile = v), surfacesChanged()) }),
+      slider({ label: "Índice de refração", min: 1, max: 2, step: 0.01, get: () => m().ior, set: (v) => edit(() => (m().ior = v)), format: (v) => v.toFixed(2) }),
+      slider({ label: "Dispersão (número de Abbe)", min: 20, max: ABBE_OFF, step: 1, get: () => m().abbe, set: (v) => edit(() => (m().abbe = v)), format: (v) => (v >= ABBE_OFF ? "desligada" : `V = ${v}`) }),
+      slider({ label: "Espessura", min: 0, max: 60, step: 1, get: () => m().thickness, set: (v) => edit(() => (m().thickness = v)), format: (v) => `${v} px` }),
+      slider({ label: "Altura de flutuação", min: 0, max: 60, step: 1, get: () => m().gap, set: (v) => edit(() => (m().gap = v)), format: (v) => `${v} px` }),
       guardHint,
+    ]),
+    group("Superfície", true, [
+      slider({ label: "Bisel", min: 0, max: 80, step: 1, get: () => m().bevel, set: (v) => edit(() => (m().bevel = v)), format: (v) => `${v} px` }),
+      select({ label: "Perfil", options: PROFILES, get: () => m().profile, set: (v) => edit(() => (m().profile = v)) }),
+      slider({ label: "Rugosidade", min: 0, max: 1, step: 0.01, get: () => m().roughness, set: (v) => edit(() => (m().roughness = v)), format: (v) => v.toFixed(2) }),
+      slider({ label: "Contraste de borda", min: 0, max: 1, step: 0.01, get: () => m().edge, set: (v) => edit(() => (m().edge = v)), format: (v) => v.toFixed(2) }),
+    ]),
+    group("Cor", false, [
+      color({ label: "Tint intrínseco", get: () => m().tint, set: (v) => edit(() => (m().tint = v)) }),
+      slider({ label: "Densidade", min: 0, max: 1, step: 0.01, get: () => m().density, set: (v) => edit(() => (m().density = v)), format: (v) => v.toFixed(2) }),
+      hint(() => "O vidro não tem cor própria por padrão: a cor vem do que está atrás. O tint é absorção (Beer–Lambert) e escurece mais onde o caminho dentro do vidro é maior."),
+    ]),
+    group("Luz", false, [
+      slider({ label: "Luz principal", min: 0, max: 2, step: 0.01, get: () => m().light, set: (v) => edit(() => (m().light = v)), format: (v) => v.toFixed(2) }),
+      slider({ label: "Direção da luz", min: 0, max: 180, step: 1, get: () => m().lightAngle, set: (v) => edit(() => (m().lightAngle = v)), format: (v) => `${v}°` }),
+      slider({ label: "Ambiente refletido", min: 0, max: 2, step: 0.01, get: () => m().environment, set: (v) => edit(() => (m().environment = v)), format: (v) => v.toFixed(2) }),
+      slider({ label: "Sombra", min: 0, max: 1, step: 0.01, get: () => m().shadow, set: (v) => edit(() => (m().shadow = v)), format: (v) => v.toFixed(2) }),
     ]),
     group("Desempenho", false, [
       segmented({ label: "Qualidade", options: QUALITY_TIERS.map((t) => ({ id: t, label: TIER_LABEL[t] })), get: () => state.quality, set: (v) => ((state.quality = v), renderer?.setQuality(v)) }),
@@ -128,6 +153,21 @@ function buildPanel(): void {
     ]),
   );
   for (const c of controls) panel.append(c.element);
+}
+
+/** Any manual change leaves the preset: the panel says so instead of pretending. */
+function edit(change: () => void): void {
+  change();
+  state.preset = "custom";
+  surfacesChanged();
+  refreshControls();
+}
+
+function applyPreset(id: PresetId): void {
+  state.preset = id;
+  state.material = cloneMaterial(PRESETS[id].material);
+  renderer?.setSurfaces([{ shape: state.shape, material: state.material }]);
+  refreshControls();
 }
 
 function guardText(): string {

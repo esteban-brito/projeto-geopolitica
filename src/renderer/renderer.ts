@@ -1,5 +1,5 @@
 import { srgbViewOf, type GpuContext } from "../gpu/device.ts";
-import { PROFILE_INDEX, type GlassMaterial } from "../glass/material.ts";
+import { REFERENCE_PATH, type GlassMaterial } from "../glass/material.ts";
 import { buildRadialTable, deviceGeometry, EDGE_START_PX, TABLE_SAMPLES, TABLE_STRIDE, type GuardStats } from "../glass/optics.ts";
 import { clampedRadius, type Shape } from "../glass/shape.ts";
 import { onShaderChange, shaderSources, type ShaderSources } from "../shaders/index.ts";
@@ -23,7 +23,14 @@ export const DEBUG_VIEWS = [
   { id: 5, label: "Transmissão" },
   { id: 6, label: "Espessura" },
   { id: 7, label: "Posição da amostra" },
+  { id: 8, label: "Fresnel" },
+  { id: 9, label: "Nível de blur (LOD)" },
+  { id: 10, label: "Especular" },
+  { id: 11, label: "Dispersão" },
 ] as const;
+
+/** Mip levels of the background pyramid; beyond 2^8 px of blur the material has no use. */
+const PYRAMID_LEVELS = 9;
 
 export interface RendererOptions {
   /** Allow `capture()` to read frames back. */
@@ -78,6 +85,10 @@ export class LiquidGlassRenderer {
   private readonly bgLayout: GPUBindGroupLayout;
   private readonly glassLayout: GPUBindGroupLayout;
   private bgPipeline: GPURenderPipeline | null = null;
+  private pyramidPipeline: GPURenderPipeline | null = null;
+  private readonly pyramidLayout: GPUBindGroupLayout;
+  private pyramidBindGroups: GPUBindGroup[] = [];
+  private pyramidDirty = true;
   private glassPipeline: GPURenderPipeline | null = null;
   private bgBindGroup: GPUBindGroup | null = null;
   private glassBindGroup: GPUBindGroup | null = null;
@@ -141,6 +152,13 @@ export class LiquidGlassRenderer {
       label: "lab.background.layout",
       entries: [{ binding: 0, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: "float" } }],
     });
+    this.pyramidLayout = this.device.createBindGroupLayout({
+      label: "lab.pyramid.layout",
+      entries: [
+        { binding: 0, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: "float" } },
+        { binding: 1, visibility: GPUShaderStage.FRAGMENT, sampler: { type: "filtering" } },
+      ],
+    });
     this.glassLayout = this.device.createBindGroupLayout({
       label: "lab.glass.layout",
       entries: [
@@ -152,7 +170,7 @@ export class LiquidGlassRenderer {
       ],
     });
 
-    this.graph.add(this.backgroundPass()).add(this.glassPass());
+    this.graph.add(this.pyramidPass()).add(this.backgroundPass()).add(this.glassPass());
 
     this.device.lost.then((info) => {
       if (this.destroyed) return;
@@ -271,7 +289,7 @@ export class LiquidGlassRenderer {
 
     const sizeChanged = this.sourceChanged;
     this.sourceChanged = false;
-    this.source.update(this.device, this.background, sizeChanged);
+    if (this.source.update(this.device, this.background, sizeChanged)) this.pyramidDirty = true;
     if (this.surfacesDirty) this.uploadSurfaces();
 
     const g = new ArrayBuffer(GLOBALS_BYTES);
@@ -327,18 +345,22 @@ export class LiquidGlassRenderer {
         label: "lab.frame",
       }).texture;
     }
+    const mipLevelCount = Math.min(PYRAMID_LEVELS, Math.floor(Math.log2(Math.max(width, height))) + 1);
     const { texture, created } = this.pool.get("background", {
       width,
       height,
       format: "rgba8unorm-srgb",
       usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
+      mipLevelCount,
       label: "lab.background",
     });
     if (created) {
       this.background = texture;
       this.sourceChanged = true;
+      this.pyramidDirty = true;
       this.bgBindGroup = null;
       this.glassBindGroup = null;
+      this.pyramidBindGroups = [];
     }
     this.surfacesDirty = true;
   }
@@ -373,18 +395,60 @@ export class LiquidGlassRenderer {
         this.tables[i] = { key, ...table };
         this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
       }
-      const { bevel } = deviceGeometry(material, shape, dpr);
-      data.set(
-        [
-          shape.cx * dpr, shape.cy * dpr, shape.halfWidth * dpr, shape.halfHeight * dpr,
-          clampedRadius(shape) * dpr, shape.exponent, Math.cos(shape.rotation), Math.sin(shape.rotation),
-          bevel, material.thickness * dpr, material.gap * dpr, material.ior,
-          0, PROFILE_INDEX[material.profile], 0, 0,
-        ],
-        i * SURFACE_FLOATS,
-      );
+      data.set(packSurface(shape, material, dpr), i * SURFACE_FLOATS);
     });
     this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
+  }
+
+  /** Rebuilds the mip chain of the content, only when the content changed. */
+  private pyramidPass(): Pass {
+    return {
+      name: "pirâmide",
+      enabled: () => this.pyramidDirty && this.background !== null && this.background.mipLevelCount > 1,
+      encode: (ctx: FrameContext, timestampWrites) => {
+        const texture = this.background;
+        if (!this.pyramidPipeline || !texture) return;
+        this.pyramidDirty = false;
+        const levels = texture.mipLevelCount;
+        if (this.pyramidBindGroups.length !== levels - 1) {
+          this.pyramidBindGroups = Array.from({ length: levels - 1 }, (_, i) =>
+            this.device.createBindGroup({
+              layout: this.pyramidLayout,
+              entries: [
+                { binding: 0, resource: texture.createView({ baseMipLevel: i, mipLevelCount: 1 }) },
+                { binding: 1, resource: this.sampler },
+              ],
+              label: `lab.pyramid.${i + 1}`,
+            }),
+          );
+        }
+        for (let level = 1; level < levels; level++) {
+          const first = level === 1;
+          const last = level === levels - 1;
+          const writes: GPURenderPassTimestampWrites | undefined = timestampWrites && {
+            querySet: timestampWrites.querySet,
+            ...(first ? { beginningOfPassWriteIndex: timestampWrites.beginningOfPassWriteIndex } : {}),
+            ...(last ? { endOfPassWriteIndex: timestampWrites.endOfPassWriteIndex } : {}),
+          };
+          const pass = ctx.encoder.beginRenderPass({
+            label: `pirâmide ${level}`,
+            colorAttachments: [
+              {
+                view: texture.createView({ baseMipLevel: level, mipLevelCount: 1 }),
+                loadOp: "clear",
+                storeOp: "store",
+                clearValue: [0, 0, 0, 1],
+              },
+            ],
+            ...(writes && (first || last) ? { timestampWrites: writes } : {}),
+          });
+          pass.setPipeline(this.pyramidPipeline);
+          pass.setBindGroup(0, this.pyramidBindGroups[level - 1]!);
+          pass.draw(3);
+          pass.end();
+        }
+      },
+    };
   }
 
   private backgroundPass(): Pass {
@@ -395,7 +459,7 @@ export class LiquidGlassRenderer {
         if (!this.bgPipeline || !this.background) return;
         this.bgBindGroup ??= this.device.createBindGroup({
           layout: this.bgLayout,
-          entries: [{ binding: 0, resource: this.background.createView() }],
+          entries: [{ binding: 0, resource: this.background.createView({ baseMipLevel: 0, mipLevelCount: 1 }) }],
           label: "lab.background.bind",
         });
         const pass = ctx.encoder.beginRenderPass({
@@ -446,10 +510,12 @@ export class LiquidGlassRenderer {
     device.pushErrorScope("validation");
     const bgModule = device.createShaderModule({ code: sources.background, label: "background.wgsl" });
     const glassModule = device.createShaderModule({ code: sources.glass, label: "glass.wgsl" });
+    const pyramidModule = device.createShaderModule({ code: sources.pyramid, label: "pyramid.wgsl" });
     const messages: string[] = [];
     for (const [name, module] of [
       ["background.wgsl", bgModule],
       ["glass.wgsl", glassModule],
+      ["pyramid.wgsl", pyramidModule],
     ] as const) {
       const info = await module.getCompilationInfo();
       for (const m of info.messages) {
@@ -489,6 +555,13 @@ export class LiquidGlassRenderer {
       },
       primitive: { topology: "triangle-list" },
     });
+    const pyramid = device.createRenderPipeline({
+      label: "pyramid",
+      layout: device.createPipelineLayout({ bindGroupLayouts: [this.pyramidLayout] }),
+      vertex: { module: pyramidModule, entryPoint: "vs_main" },
+      fragment: { module: pyramidModule, entryPoint: "fs_main", targets: [{ format: "rgba8unorm-srgb" }] },
+      primitive: { topology: "triangle-list" },
+    });
     const error = await device.popErrorScope();
     if (error) {
       this.onShaderError?.(error.message);
@@ -496,6 +569,8 @@ export class LiquidGlassRenderer {
     }
     this.bgPipeline = bg;
     this.glassPipeline = glass;
+    this.pyramidPipeline = pyramid;
+    this.pyramidDirty = true;
     this.onShaderError?.(null);
     this.requestFrame();
     return null;
@@ -535,5 +610,26 @@ export class LiquidGlassRenderer {
 function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): string {
   const radius = clampedRadius(shape);
   const minHalf = Math.min(shape.halfWidth, shape.halfHeight);
-  return [radius, minHalf, m.ior, m.thickness, m.gap, m.bevel, m.profile, dpr, guard].join("|");
+  return [radius, minHalf, m.ior, m.abbe, m.thickness, m.gap, m.bevel, m.profile, dpr, guard].join("|");
+}
+
+/**
+ * Device-pixel record of one surface (6 × vec4, see `Surface` in glass.wgsl). Derived values are
+ * computed here once: absorption from tint and density, blur radius from roughness and the glass's
+ * height, the key light direction, F0 from the ior.
+ */
+function packSurface(shape: Shape, m: GlassMaterial, dpr: number): number[] {
+  const { bevel } = deviceGeometry(m, shape, dpr);
+  const absorb = m.tint.map((c) => (m.density * -Math.log(Math.max(c, 1e-3))) / (REFERENCE_PATH * dpr));
+  const blur = 1.6 * (m.thickness + m.gap + m.bevel * 0.5) * m.roughness ** 1.5 * dpr;
+  const angle = (m.lightAngle * Math.PI) / 180;
+  const f0 = ((m.ior - 1) / (m.ior + 1)) ** 2;
+  return [
+    shape.cx * dpr, shape.cy * dpr, shape.halfWidth * dpr, shape.halfHeight * dpr,
+    clampedRadius(shape) * dpr, shape.exponent, Math.cos(shape.rotation), Math.sin(shape.rotation),
+    bevel, m.thickness * dpr, m.gap * dpr, m.ior,
+    m.roughness, m.edge, m.shadow, m.environment,
+    absorb[0]!, absorb[1]!, absorb[2]!, m.light,
+    Math.cos(angle), -Math.sin(angle), blur, f0,
+  ];
 }
