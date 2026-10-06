@@ -10,6 +10,8 @@ interface Scenario {
   scene: SceneId;
   surfaces: number;
   tier: QualityTier;
+  /** Rebuild the pyramid every frame, as a live background would. */
+  dynamic: boolean;
 }
 
 interface Result extends Scenario {
@@ -24,15 +26,21 @@ interface Result extends Scenario {
 
 const SUITES: Record<string, { label: string; scenarios: () => Scenario[] }> = {
   quick: {
-    label: "Rápido (~30 s)",
-    scenarios: () =>
-      (["high", "low"] as const).flatMap((tier) => [1, 10, 20, 50, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier }))),
+    label: "Rápido (~45 s)",
+    scenarios: () => [
+      ...(["high", "low"] as const).flatMap((tier) =>
+        [1, 10, 20, 50, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier, dynamic: false })),
+      ),
+      ...[1, 10, 50, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: true })),
+    ],
   },
   full: {
-    label: "Completo (~4 min)",
+    label: "Completo (~5 min)",
     scenarios: () =>
       (["ultra", "high", "medium", "low"] as const).flatMap((tier) =>
-        (["image", "text", "grid", "color"] as const).flatMap((scene) => [1, 10, 20, 50, 100].map((n) => ({ scene, surfaces: n, tier }))),
+        (["image", "text", "grid", "color"] as const).flatMap((scene) =>
+          [false, true].flatMap((dynamic) => [1, 10, 20, 50, 100].map((n) => ({ scene, surfaces: n, tier, dynamic }))),
+        ),
       ),
   },
 };
@@ -85,6 +93,7 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   renderer.invalidateSource();
   const surfaces = layout(s.surfaces, canvas.clientWidth, canvas.clientHeight);
   renderer.setSurfaces(surfaces);
+  renderer.forcePyramid = s.dynamic;
   renderer.continuous = true;
   renderer.requestFrame();
   await wait(WARMUP_MS);
@@ -93,8 +102,11 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   renderer.timer?.reset();
   await wait(MEASURE_MS);
   renderer.continuous = false;
+  renderer.forcePyramid = false;
   const gpuMs: Result["gpuMs"] = {};
-  for (const [name, series] of renderer.timer?.series ?? []) gpuMs[name] = { mean: series.mean, p95: series.percentile(0.95) };
+  for (const [name, series] of renderer.timer?.series ?? []) {
+    if (series.count > 0) gpuMs[name] = { mean: series.mean, p95: series.percentile(0.95) };
+  }
   const { width, height } = renderer.resolution;
   return {
     ...s,
@@ -110,20 +122,20 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
 
 function render(results: Result[], gpu: GpuContext): void {
   const passes = [...new Set(results.flatMap((r) => Object.keys(r.gpuMs)))];
-  const head = ["cena", "N", "nível", "cobert.", "fps", "CPU", ...passes.map((p) => `GPU ${p}`)];
+  const head = ["cena", "N", "nível", "fundo", "cobert.", "fps", "CPU", ...passes.map((p) => `GPU ${p}`)];
   table.innerHTML =
     `<tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr>` +
     results
       .map(
         (r) =>
-          `<tr><td>${r.scene}</td><td>${r.surfaces}</td><td>${r.tier}</td><td>${(r.coverage * 100).toFixed(0)}%</td><td>${r.fps.toFixed(0)}</td><td>${r.cpuMs.toFixed(2)}</td>${passes
+          `<tr><td>${r.scene}</td><td>${r.surfaces}</td><td>${r.tier}</td><td>${r.dynamic ? "vivo" : "fixo"}</td><td>${(r.coverage * 100).toFixed(0)}%</td><td>${r.fps.toFixed(0)}</td><td>${r.cpuMs.toFixed(2)}</td>${passes
             .map((p) => `<td>${r.gpuMs[p]?.mean.toFixed(3) ?? "—"}</td>`)
             .join("")}</tr>`,
       )
       .join("");
   json.value = JSON.stringify(
     {
-      lab: "liquid-glass-lab V0",
+      lab: "liquid-glass-lab V2",
       date: new Date().toISOString(),
       userAgent: navigator.userAgent,
       adapter: gpu.info,
@@ -137,6 +149,10 @@ function render(results: Result[], gpu: GpuContext): void {
 }
 
 async function run(): Promise<void> {
+  if (canvas.clientWidth < 320 || canvas.clientHeight < 240) {
+    status.textContent = `A área de desenho tem ${canvas.clientWidth}×${canvas.clientHeight} px: maximize a janela e rode de novo.`;
+    return;
+  }
   const gpu = await acquireGpu();
   if (!gpu.info.timestamps) status.textContent = "Este adaptador não expõe timestamp-query: só fps e CPU.";
   const renderer = new LiquidGlassRenderer(canvas, gpu);

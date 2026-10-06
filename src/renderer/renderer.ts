@@ -63,6 +63,8 @@ export class LiquidGlassRenderer {
   debugView = 0;
   /** Render every frame (for measuring) instead of only when something changed. */
   continuous = false;
+  /** Rebuild the pyramid every frame, as a live background (video, HTML-in-Canvas) would. Bench only. */
+  forcePyramid = false;
   /** Tests switch the injectivity guard off to prove it is what keeps the mapping one-to-one. */
   guardEnabled = true;
 
@@ -404,7 +406,7 @@ export class LiquidGlassRenderer {
   private pyramidPass(): Pass {
     return {
       name: "pirâmide",
-      enabled: () => this.pyramidDirty && this.background !== null && this.background.mipLevelCount > 1,
+      enabled: () => (this.pyramidDirty || this.forcePyramid) && this.background !== null && this.background.mipLevelCount > 1,
       encode: (ctx: FrameContext, timestampWrites) => {
         const texture = this.background;
         if (!this.pyramidPipeline || !texture) return;

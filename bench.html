@@ -10,10 +10,16 @@
       .bench {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 420px;
+        grid-template-rows: 100dvh;
         height: 100dvh;
       }
+      /* .stage carries grid-area: stage from the lab's stylesheet; this grid has no such area, and
+         the stage collapsed to 0 px wide — the first bench measured a 1 px canvas. */
       .bench .stage {
+        grid-area: auto;
         position: relative;
+        min-width: 0;
+        min-height: 0;
       }
       .bench aside {
         overflow: auto;
