@@ -51,14 +51,18 @@ bench sempre desenham no canvas, então só rodam numa máquina com GPU de verda
 | debug: SDF, normal, deslocamento, injetividade, transmissão, espessura, amostra, Fresnel, LOD, especular, dispersão | `glass.wgsl` | pronto |
 | hot reload de WGSL com overlay de erro | `src/shaders/index.ts` | pronto |
 | testes: 8 de óptica + 8 de aceite do material (borda escura, realce por N·L, largura variável, sombra, fosco, tint) | `tests/` | pronto |
-| bench com JSON | `bench.html`, `src/bench/` | pronto, **não medido** (sem GPU aqui) |
+| bench com JSON | `bench.html`, `src/bench/` | pronto; medido na RX 6600 ([`docs/bench/v2-rx6600.json`](docs/bench/v2-rx6600.json)) |
 | **molas** (resposta + amortecimento, subpasso ≤ 1/240 s, param sozinhas) | `src/physics/spring.ts` | pronto |
 | **corpo do vidro**: segue o ponteiro com inércia, estica ao longo da velocidade preservando a área (teto 12%), press anima o material, bounce contido ao soltar | `src/physics/body.ts` | pronto |
 | SDF sob transformação afim (rotação · press · estiramento), distância corrigida por \|M⁻ᵀ∇\| | `glass.wgsl`, `shape.ts` | pronto |
 | testes de física (7): overshoot teórico, 30 Hz = 240 Hz, ângulo do estiramento, área, assentamento, bounce | `tests/physics.test.mjs` | pronto |
 
-**Próximo:** rodar o laboratório e o bench numa GPU real (RX 6600) e trazer o JSON e as impressões;
-depois V3 (várias superfícies, smooth union C², morph).
+**Medido (RX 6600, Chrome 154, 1500×1080, DPR 1):** o vidro custa ~0,84 ms por tela cheia coberta
+(linear na área, sem custo fixo por superfície): 100 cápsulas cobrindo 36% = 0,30 ms. Fundo 0,022 ms,
+pirâmide refeita por quadro 0,064 ms, CPU < 0,1 ms. Pior caso 0,39 ms de 4,17 ms (240 Hz). Os níveis
+de qualidade ainda só mudam o teto de DPR, então em DPR 1 `high` = `low`.
+
+**Próximo:** impressões do laboratório; depois V3 (várias superfícies, smooth union C², morph).
 
 ## Decisões que valem lembrar
 
