@@ -1159,3 +1159,25 @@ numérica, 1,6 µs) e o empacotamento por arrays, 27,6 µs (agora escrita direta
 O A/B no headless não resolve ~50 µs (o SwiftShader divide a CPU, ±0,1 ms entre rodadas); a
 próxima rodada na RX 6600 mostra o efeito. As 25 capturas e os 74 testes não mudaram.
 
+### 16.4 Segunda rodada e o upload sem alocação ([`docs/bench/v5.1-rx6600-rapido.json`](../bench/v5.1-rx6600-rapido.json))
+
+Com isolamento de origem, a CPU sai com resolução real: 0,045–0,055 ms por quadro nos cenários
+fixos. A GPU repetiu a primeira rodada com variação abaixo de 0,5% (100 vidros 0,2350 → 0,2351 ms;
+barras fundidas 0,6706 → 0,6709): o bench agora distingue diferenças de 1–2%. A chave numérica e o
+empacotamento direto tiraram ~20–25 µs por quadro das camadas (0,247 → 0,221 ms com o popover se
+movendo; 0,261 → 0,244 ms com as barras se movendo), metade do que o Node previa.
+
+Um perfil de CPU da página (CDP, tempo próprio por função) no cenário de camadas mostrou o resto:
+o coletor de lixo levava ~40% do upload — uns dez arrays novos por quadro (registros, superfícies,
+símbolos, a assinatura da camada de baixo, os globais, uma string-chave). O upload passou a não
+alocar em regime (`src/renderer/stage.ts`): cópias na CPU em dois lados que se alternam, a camada 0
+comparada com o quadro anterior no lugar, registros e símbolos escritos direto, globais reusados.
+No mesmo perfil (headless, 4 s): coletor 21,7 → 6,2 ms; JavaScript do upload mais coletor ~88 →
+~35 ms. O que sobra no topo são chamadas do WebGPU (`submit`, `beginRenderPass`).
+
+O teste de cache pegou um defeito da reescrita antes do commit: um `||` em curto-circuito pulava a
+comparação no quadro em que a tabela óptica era construída, e o quadro seguinte refazia a camada de
+baixo sem motivo. Agora a comparação roda sempre; teste em Node da comparação (`tests/stage.test.mjs`)
+e as duas mutações (sempre "mudou", sempre "igual") derrubam os testes certos. 77 testes; capturas
+idênticas.
+

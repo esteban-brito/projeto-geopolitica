@@ -17,6 +17,7 @@ import { FrameGraph, type FrameContext, type Pass } from "./frame-graph.ts";
 import { TexturePool } from "./pool.ts";
 import type { AdaptiveQuality } from "./adaptive.ts";
 import { effectivePixelRatio, TIER_FEATURES, type QualityTier } from "./quality.ts";
+import { CONTENT_FLOATS, GROUP_FLOATS, SURFACE_FLOATS, UploadStage } from "./stage.ts";
 import { buildSymbolAtlas, SYMBOL_CELL, SYMBOL_LEVELS, type SymbolAtlas } from "./symbols.ts";
 import { GpuTimer, Series } from "./timer.ts";
 
@@ -102,14 +103,14 @@ export interface Pixels {
   data: Uint8Array;
 }
 
-const SURFACE_FLOATS = 32;
-const CONTENT_FLOATS = 12;
+
 /** Backdrop metrics read back to the CPU: a ring, so mapping never stalls a frame. */
 const METRICS_RING = 3;
-const GROUP_FLOATS = 8;
 const TABLE_FLOATS = TABLE_SAMPLES * TABLE_STRIDE;
 /** Globals (see glass.wgsl): 48 bytes, then up to MAX_TOUCH_LIGHTS vec4 touch lights. */
 const GLOBALS_BYTES = 48 + MAX_TOUCH_LIGHTS * 16;
+/** The words of the globals the composite under layer 1 depends on: debug view, features, touch count and lights. */
+const LOWER_GLOBALS = [6, 8, 9, ...Array.from({ length: MAX_TOUCH_LIGHTS * 4 }, (_, i) => 12 + i)];
 /** Antialiasing band around the bounds of a group, device px. */
 const BOUNDS_MARGIN = 2;
 
@@ -132,7 +133,6 @@ interface LayerRecords {
   unions: number;
 }
 
-const NO_RECORDS: LayerRecords = { singleStart: 0, singles: 0, unionStart: 0, unions: 0 };
 
 /**
  * The one renderer of the lab: one device, one canvas, one loop, every glass surface in one
@@ -217,7 +217,12 @@ export class LiquidGlassRenderer {
   private atlas: SymbolAtlas | null = null;
   private atlasRequest = 0;
   /** Group-buffer ranges per layer. */
-  private layerRecords: LayerRecords[] = [NO_RECORDS, NO_RECORDS];
+  // Two objects, mutated in place by every upload (never one shared constant).
+  private readonly layerRecords: LayerRecords[] = [
+    { singleStart: 0, singles: 0, unionStart: 0, unions: 0 },
+    { singleStart: 0, singles: 0, unionStart: 0, unions: 0 },
+  ];
+  private readonly stage = new UploadStage();
   /** Something floats on layer 1 over something on layer 0 (a lone upper layer is drawn as layer 0). */
   private layered = false;
   /**
@@ -228,9 +233,12 @@ export class LiquidGlassRenderer {
   private lowerStale = true;
   private lowerDirty = true;
   private lowerPyramidDirty = true;
-  /** What layer 0 looked like when the composite was made: packed surfaces, records, content. */
-  private lowerSignature: Float32Array | null = null;
-  private lowerKey = "";
+  /** The globals this frame, reused (written in place every frame). */
+  private readonly globalsData = new ArrayBuffer(GLOBALS_BYTES);
+  private readonly globalsF32 = new Float32Array(this.globalsData);
+  private readonly globalsU32 = new Uint32Array(this.globalsData);
+  /** LOWER_GLOBALS as they were when the composite under layer 1 was last checked. */
+  private readonly lowerGlobals = new Uint32Array(GLOBALS_BYTES / 4).fill(0xffffffff);
   /** How many times the composite under layer 1 was rendered (tests: moving the upper glass alone reuses it). */
   lowerRenders = 0;
   /** Per source of the full-screen copy: the content, or the composite under layer 1. */
@@ -553,18 +561,9 @@ export class LiquidGlassRenderer {
     if (this.forcePyramid) this.metricsDirty = this.lowerDirty = true;
     if (this.surfacesDirty) this.uploadSurfaces();
     if (this.lowerStale) this.ensureLower();
-    // What the shaders draw differently also changes the composite under layer 1 (a glow lights
-    // the glasses there too).
-    const touches = this.touchLights.slice(0, MAX_TOUCH_LIGHTS);
-    const lowerKey = `${this.debugView}|${TIER_FEATURES[this.quality]}|${touches.map((t) => `${t.x},${t.y},${t.radius},${t.intensity}`).join(";")}`;
-    if (lowerKey !== this.lowerKey) {
-      this.lowerKey = lowerKey;
-      this.lowerDirty = true;
-    }
 
-    const g = new ArrayBuffer(GLOBALS_BYTES);
-    const f = new Float32Array(g);
-    const u = new Uint32Array(g);
+    const f = this.globalsF32;
+    const u = this.globalsU32;
     f[0] = this.width;
     f[1] = this.height;
     f[2] = 1 / this.width;
@@ -574,9 +573,27 @@ export class LiquidGlassRenderer {
     u[6] = this.debugView;
     f[7] = EDGE_START_PX;
     u[8] = TIER_FEATURES[this.quality];
-    u[9] = touches.length;
-    touches.forEach((t, i) => f.set([t.x * this.dpr, t.y * this.dpr, Math.max(t.radius * this.dpr, 1e-3), t.intensity], 12 + i * 4));
-    this.device.queue.writeBuffer(this.globals, 0, g);
+    const touches = Math.min(this.touchLights.length, MAX_TOUCH_LIGHTS);
+    u[9] = touches;
+    for (let i = 0; i < MAX_TOUCH_LIGHTS; i++) {
+      const t = this.touchLights[i];
+      const o = 12 + i * 4;
+      // Unused slots are zeroed, so comparing the words below is comparing what is drawn.
+      f[o] = i < touches && t ? t.x * this.dpr : 0;
+      f[o + 1] = i < touches && t ? t.y * this.dpr : 0;
+      f[o + 2] = i < touches && t ? Math.max(t.radius * this.dpr, 1e-3) : 0;
+      f[o + 3] = i < touches && t ? t.intensity : 0;
+    }
+    this.device.queue.writeBuffer(this.globals, 0, this.globalsData);
+    // What the shaders draw differently also redraws the composite under layer 1: the inspector
+    // view, the tier's features, the touch lights (a glow lights the glasses there too). Not the
+    // time, which changes every frame and draws nothing different.
+    for (const k of LOWER_GLOBALS) {
+      if (u[k] !== this.lowerGlobals[k]) {
+        this.lowerGlobals[k] = u[k]!;
+        this.lowerDirty = true;
+      }
+    }
 
     const texture = this.context ? this.context.getCurrentTexture() : this.frameTexture;
     if (!texture) return null;
@@ -691,204 +708,239 @@ export class LiquidGlassRenderer {
     }
   }
 
+  /**
+   * Packs surfaces, draw records and symbols and uploads them. Runs every frame something moves,
+   * so in steady state it allocates nothing: the CPU-side copies are reused, in two alternating
+   * sides so this frame's layer 0 can be compared with the last one's in place (the composite
+   * under layer 1 is reused while they match).
+   */
   private uploadSurfaces(): void {
     this.surfacesDirty = false;
-    // A lone upper layer has nothing under it to refract: it is drawn as layer 0, for free.
-    const groups = this.groups.filter((g) => g.surfaces.length > 0);
-    const layered = new Set(groups.map((g) => g.layer ?? 0)).size > 1;
-    const layerOf = (g: GlassGroup): 0 | 1 => (layered ? (g.layer ?? 0) : 0);
-    const flat = groups.flatMap((g) => g.surfaces);
-    const flatLayer = groups.flatMap((g) => g.surfaces.map(() => layerOf(g)));
-    const count = flat.length;
-    if (count > this.surfaceCapacity || !this.surfaceBuffer || !this.tableBuffer) {
-      this.surfaceBuffer?.destroy();
-      this.tableBuffer?.destroy();
-      this.surfaceCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(count, 1))));
-      this.surfaceBuffer = this.device.createBuffer({
-        size: this.surfaceCapacity * SURFACE_FLOATS * 4,
-        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-        label: "lab.surfaces",
-      });
-      this.tableBuffer = this.device.createBuffer({
-        size: this.surfaceCapacity * TABLE_FLOATS * 4,
-        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-        label: "lab.radial-tables",
-      });
-      this.metricsBuffer?.destroy();
-      for (const slot of this.metricsSlots) slot.buffer.destroy();
-      this.metricsBuffer = this.device.createBuffer({
-        size: this.surfaceCapacity * 16,
-        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
-        label: "lab.backdrop",
-      });
-      this.metricsSlots = Array.from({ length: METRICS_RING }, (_, i) => ({
-        buffer: this.device.createBuffer({
-          size: this.surfaceCapacity * 16,
-          usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
-          label: `lab.backdrop.read${i}`,
-        }),
-        busy: false,
-        count: 0,
-      }));
-      this.metricsBindGroups = [null, null];
-      this.glassBindGroups = [null, null];
-      this.tables = [];
-    }
-    const data = new Float32Array(Math.max(count, 1) * SURFACE_FLOATS);
     const dpr = this.dpr;
+    // A lone upper layer has nothing under it to refract: it is drawn as layer 0, for free.
+    let has0 = false;
+    let has1 = false;
+    let count = 0;
+    for (const g of this.groups) {
+      if (g.surfaces.length === 0) continue;
+      if ((g.layer ?? 0) === 1) has1 = true;
+      else has0 = true;
+      count += g.surfaces.length;
+    }
+    const layered = has0 && has1;
+    const layerOf = (g: GlassGroup): 0 | 1 => (layered ? (g.layer ?? 0) : 0);
+    if (count > this.surfaceCapacity || !this.surfaceBuffer || !this.tableBuffer) this.growSurfaces(count);
+    const stage = this.stage.flip();
+    const data = stage.surfaces;
+    const layers = stage.layers;
+
     let lowerTables = false;
     this.tables.length = count;
-    flat.forEach(({ shape, material, appearance, content }, i) => {
-      const cached = this.tables[i];
-      if (!cached || tableInputsChanged(cached.inputs, shape, material, dpr, this.guardEnabled)) {
-        const table = buildRadialTable(material, shape, dpr, this.guardEnabled);
-        const inputs = cached?.inputs ?? new Float64Array(TABLE_INPUTS).fill(NaN);
-        if (!cached) tableInputsChanged(inputs, shape, material, dpr, this.guardEnabled);
-        this.tables[i] = { inputs, ...table };
-        this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
-        if (flatLayer[i] === 0) lowerTables = true;
+    let i = 0;
+    for (const g of this.groups) {
+      const layer = layerOf(g);
+      for (const { shape, material, appearance, content } of g.surfaces) {
+        const cached = this.tables[i];
+        if (!cached || tableInputsChanged(cached.inputs, shape, material, dpr, this.guardEnabled)) {
+          const table = buildRadialTable(material, shape, dpr, this.guardEnabled);
+          const inputs = cached?.inputs ?? new Float64Array(TABLE_INPUTS);
+          if (!cached) tableInputsChanged(inputs, shape, material, dpr, this.guardEnabled);
+          this.tables[i] = { inputs, ...table };
+          this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
+          if (layer === 0) lowerTables = true;
+        }
+        // Clear under a symbol gets its dimming layer (CLEAR_DIM); nothing else is dimmed.
+        const dim = material.variant === "clear" && content && content.color[3] > 0 ? CLEAR_DIM : 0;
+        packSurface(data, i * SURFACE_FLOATS, shape, material, dpr, appearance, layer, dim);
+        layers[i] = layer;
+        i++;
       }
-      // Clear under a symbol gets its dimming layer (CLEAR_DIM); nothing else is dimmed.
-      const dim = material.variant === "clear" && content && content.color[3] > 0 ? CLEAR_DIM : 0;
-      packSurface(data, i * SURFACE_FLOATS, shape, material, dpr, appearance, flatLayer[i]!, dim);
-    });
+    }
     this.metricsDirty = true;
-    this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
+    this.device.queue.writeBuffer(this.surfaceBuffer!, 0, data, 0, Math.max(count, 1) * SURFACE_FLOATS);
 
     // Records per layer, layer 0's first; within a layer, groups that cannot merge (one member, or
     // spacing 0) are drawn as lone surfaces by the lean pipeline, then the merge groups.
-    interface DrawRecord {
-      start: number;
-      members: GlassSurface[];
-      k: number;
-    }
-    const perLayer: { singles: DrawRecord[]; unions: DrawRecord[] }[] = [
-      { singles: [], unions: [] },
-      { singles: [], unions: [] },
-    ];
-    let start = 0;
-    for (const group of groups) {
-      const n = group.surfaces.length;
-      const { singles, unions } = perLayer[layerOf(group)]!;
-      if (n > 1 && group.spacing > 0) unions.push({ start, members: group.surfaces, k: (group.spacing / 2) * dpr });
-      else group.surfaces.forEach((surface, j) => singles.push({ start: start + j, members: [surface], k: 0 }));
-      start += n;
-    }
-    const records: DrawRecord[] = [];
-    this.layerRecords = perLayer.map(({ singles, unions }) => {
-      const singleStart = records.length;
-      records.push(...singles);
-      const unionStart = records.length;
-      records.push(...unions);
-      return { singleStart, singles: singles.length, unionStart, unions: unions.length };
-    });
-    if (records.length > this.groupCapacity || !this.groupBuffer) {
-      this.groupBuffer?.destroy();
-      this.groupCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(records.length, 1))));
-      this.groupBuffer = this.device.createBuffer({
-        size: this.groupCapacity * GROUP_FLOATS * 4,
-        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-        label: "lab.groups",
-      });
-      this.glassBindGroups = [null, null];
-    }
-    const groupData = new ArrayBuffer(Math.max(records.length, 1) * GROUP_FLOATS * 4);
-    const gf = new Float32Array(groupData);
-    const gu = new Uint32Array(groupData);
-    records.forEach(({ start, members, k }, i) => {
-      // The union sinks up to k below the nearest member where two meet, 2k where three do — and
-      // only between members, so the margin is per merge, not per member.
-      let shadowReach = 0;
-      for (const { material } of members) {
-        const shadow = shadowGeometry(material.gap * dpr, dpr);
-        if (material.shadow > 0) shadowReach = Math.max(shadowReach, shadow.offsetY + shadow.sigma * 3);
+    const merges = (g: GlassGroup) => g.surfaces.length > 1 && g.spacing > 0;
+    let records = 0;
+    for (const g of this.groups) records += merges(g) ? 1 : g.surfaces.length;
+    if (records > this.groupCapacity || !this.groupBuffer) this.growGroups(records);
+    const groupStage = this.stage.groups(records);
+    let r = 0;
+    for (const layer of [0, 1] as const) {
+      const ranges = this.layerRecords[layer]!;
+      ranges.singleStart = r;
+      let start = 0;
+      for (const g of this.groups) {
+        if (layerOf(g) === layer && g.surfaces.length > 0 && !merges(g)) {
+          for (let j = 0; j < g.surfaces.length; j++) this.packRecord(groupStage, r++, start + j, g.surfaces, j, 1, 0);
+        }
+        start += g.surfaces.length;
       }
-      // `reach` is tested against a lower bound of the union, which already includes the sink;
-      // the rectangle is drawn around the boxes, so it needs the sink as margin too.
-      const reach = BOUNDS_MARGIN + shadowReach;
-      const margin = reach + k * Math.min(members.length - 1, 2);
-      const bounds = [Infinity, Infinity, -Infinity, -Infinity];
-      for (const { shape } of members) {
-        const [ex, ey] = shapeExtent(shape);
-        bounds[0] = Math.min(bounds[0]!, (shape.cx - ex) * dpr - margin);
-        bounds[1] = Math.min(bounds[1]!, (shape.cy - ey) * dpr - margin);
-        bounds[2] = Math.max(bounds[2]!, (shape.cx + ex) * dpr + margin);
-        bounds[3] = Math.max(bounds[3]!, (shape.cy + ey) * dpr + margin);
+      ranges.singles = r - ranges.singleStart;
+      ranges.unionStart = r;
+      start = 0;
+      for (const g of this.groups) {
+        if (layerOf(g) === layer && merges(g)) this.packRecord(groupStage, r++, start, g.surfaces, 0, g.surfaces.length, (g.spacing / 2) * dpr);
+        start += g.surfaces.length;
       }
-      const o = i * GROUP_FLOATS;
-      gf.set(bounds, o);
-      gu[o + 4] = start;
-      gu[o + 5] = members.length;
-      gf[o + 6] = k;
-      gf[o + 7] = reach;
-    });
-    this.device.queue.writeBuffer(this.groupBuffer, 0, groupData);
+      ranges.unions = r - ranges.unionStart;
+    }
+    this.device.queue.writeBuffer(this.groupBuffer!, 0, groupStage.f32, 0, Math.max(records, 1) * GROUP_FLOATS);
 
-    const contents = this.uploadContent(flat, flatLayer);
+    this.uploadContent(layerOf);
 
-    // The composite under layer 1 is reused until something in layer 0 changes: compare what
-    // layer 0 uploads now with what it uploaded when the composite was made.
+    // The composite under layer 1 is reused until something in layer 0 changes: what layer 0
+    // uploaded now against what it uploaded last frame, compared in place.
     if (layered !== this.layered) {
       this.layered = layered;
       this.lowerStale = true;
       this.lowerDirty = true;
     }
     if (layered) {
-      const lower = this.layerRecords[0]!;
-      const recordFloats = (lower.unionStart + lower.unions) * GROUP_FLOATS;
-      const [contentStart, contentCount] = this.contentRanges[0]!;
-      const parts = [
-        ...flat.flatMap((_, i) => (flatLayer[i] === 0 ? [data.subarray(i * SURFACE_FLOATS, (i + 1) * SURFACE_FLOATS)] : [])),
-        gf.subarray(0, recordFloats),
-        contents.subarray(contentStart * CONTENT_FLOATS, (contentStart + contentCount) * CONTENT_FLOATS),
-      ];
-      const signature = new Float32Array(parts.reduce((n, p) => n + p.length, 0));
-      let o = 0;
-      for (const p of parts) {
-        signature.set(p, o);
-        o += p.length;
-      }
-      if (lowerTables || !sameFloats(signature, this.lowerSignature)) this.lowerDirty = true;
-      this.lowerSignature = signature;
-    } else {
-      this.lowerSignature = null;
+      // Always compared, never short-circuited: the comparison also records this frame for the next.
+      const changed = this.stage.lowerChanged(count, this.layerRecords[0]!, this.contentRanges[0]![1]);
+      if (changed || lowerTables) this.lowerDirty = true;
     }
+  }
+
+  private growSurfaces(count: number): void {
+    this.surfaceBuffer?.destroy();
+    this.tableBuffer?.destroy();
+    this.surfaceCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(count, 1))));
+    this.surfaceBuffer = this.device.createBuffer({
+      size: this.surfaceCapacity * SURFACE_FLOATS * 4,
+      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+      label: "lab.surfaces",
+    });
+    this.tableBuffer = this.device.createBuffer({
+      size: this.surfaceCapacity * TABLE_FLOATS * 4,
+      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+      label: "lab.radial-tables",
+    });
+    this.metricsBuffer?.destroy();
+    for (const slot of this.metricsSlots) slot.buffer.destroy();
+    this.metricsBuffer = this.device.createBuffer({
+      size: this.surfaceCapacity * 16,
+      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
+      label: "lab.backdrop",
+    });
+    this.metricsSlots = Array.from({ length: METRICS_RING }, (_, i) => ({
+      buffer: this.device.createBuffer({
+        size: this.surfaceCapacity * 16,
+        usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+        label: `lab.backdrop.read${i}`,
+      }),
+      busy: false,
+      count: 0,
+    }));
+    this.metricsBindGroups = [null, null];
+    this.glassBindGroups = [null, null];
+    this.tables = [];
+    this.stage.reserveSurfaces(this.surfaceCapacity);
+  }
+
+  private growGroups(records: number): void {
+    this.groupBuffer?.destroy();
+    this.groupCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(records, 1))));
+    this.groupBuffer = this.device.createBuffer({
+      size: this.groupCapacity * GROUP_FLOATS * 4,
+      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+      label: "lab.groups",
+    });
+    this.glassBindGroups = [null, null];
+  }
+
+  /** Draw record `index`: members [from, from + n) of `surfaces`, the first at flat index `start`. */
+  private packRecord(stage: { f32: Float32Array; u32: Uint32Array }, index: number, start: number, surfaces: GlassSurface[], from: number, n: number, k: number): void {
+    const dpr = this.dpr;
+    // The union sinks up to k below the nearest member where two meet, 2k where three do — and
+    // only between members, so the margin is per merge, not per member.
+    let shadowReach = 0;
+    for (let m = from; m < from + n; m++) {
+      const { material } = surfaces[m]!;
+      if (material.shadow > 0) {
+        const shadow = shadowGeometry(material.gap * dpr, dpr);
+        shadowReach = Math.max(shadowReach, shadow.offsetY + shadow.sigma * 3);
+      }
+    }
+    // `reach` is tested against a lower bound of the union, which already includes the sink;
+    // the rectangle is drawn around the boxes, so it needs the sink as margin too.
+    const reach = BOUNDS_MARGIN + shadowReach;
+    const margin = reach + k * Math.min(n - 1, 2);
+    let x0 = Infinity;
+    let y0 = Infinity;
+    let x1 = -Infinity;
+    let y1 = -Infinity;
+    for (let m = from; m < from + n; m++) {
+      const { shape } = surfaces[m]!;
+      const [ex, ey] = shapeExtent(shape);
+      x0 = Math.min(x0, (shape.cx - ex) * dpr - margin);
+      y0 = Math.min(y0, (shape.cy - ey) * dpr - margin);
+      x1 = Math.max(x1, (shape.cx + ex) * dpr + margin);
+      y1 = Math.max(y1, (shape.cy + ey) * dpr + margin);
+    }
+    const o = index * GROUP_FLOATS;
+    const { f32, u32 } = stage;
+    f32[o] = x0;
+    f32[o + 1] = y0;
+    f32[o + 2] = x1;
+    f32[o + 3] = y1;
+    u32[o + 4] = start;
+    u32[o + 5] = n;
+    f32[o + 6] = k;
+    f32[o + 7] = reach;
   }
 
   /**
    * Symbols on the glasses, layer 0's first. Placed from the shape: centre, rotation and press
-   * scale (not the stretch: what sits on a glass does not smear with it). Returns the records.
+   * scale (not the stretch: what sits on a glass does not smear with it).
    */
-  private uploadContent(flat: GlassSurface[], flatLayer: (0 | 1)[]): Float32Array {
+  private uploadContent(layerOf: (g: GlassGroup) => 0 | 1): void {
     const atlas = this.atlas;
     const dpr = this.dpr;
-    const byLayer: number[][] = [[], []];
+    let total = 0;
+    if (atlas) for (const g of this.groups) for (const s of g.surfaces) if (drawable(s.content, atlas)) total++;
+    const out = this.stage.content(total);
+    let n = 0;
+    const counts = [0, 0];
     if (atlas) {
-      flat.forEach(({ shape, content }, i) => {
-        if (!content || content.symbol < 0 || content.symbol >= atlas.cells || content.size <= 0 || content.color[3] <= 0) return;
-        const half = (content.size * (shape.scale ?? 1) * dpr) / 2;
-        // A slight bias toward the larger raster keeps strokes crisp between two levels.
-        const lod = Math.min(Math.max(Math.log2(SYMBOL_CELL / (2 * half)) - 0.25, 0), SYMBOL_LEVELS - 1);
-        const [r, g, b, a] = content.color;
-        byLayer[flatLayer[i]!]!.push(
-          shape.cx * dpr, shape.cy * dpr, half, lod,
-          Math.cos(shape.rotation), Math.sin(shape.rotation), content.symbol, atlas.cells,
-          srgbToLinear(r), srgbToLinear(g), srgbToLinear(b), a,
-        );
-      });
+      for (const layer of [0, 1] as const) {
+        for (const g of this.groups) {
+          if (layerOf(g) !== layer) continue;
+          for (const { shape, content } of g.surfaces) {
+            if (!content || !drawable(content, atlas)) continue;
+            const half = (content.size * (shape.scale ?? 1) * dpr) / 2;
+            const o = n * CONTENT_FLOATS;
+            out[o] = shape.cx * dpr;
+            out[o + 1] = shape.cy * dpr;
+            out[o + 2] = half;
+            // A slight bias toward the larger raster keeps strokes crisp between two levels.
+            out[o + 3] = Math.min(Math.max(Math.log2(SYMBOL_CELL / (2 * half)) - 0.25, 0), SYMBOL_LEVELS - 1);
+            out[o + 4] = Math.cos(shape.rotation);
+            out[o + 5] = Math.sin(shape.rotation);
+            out[o + 6] = content.symbol;
+            out[o + 7] = atlas.cells;
+            out[o + 8] = srgbToLinear(content.color[0]);
+            out[o + 9] = srgbToLinear(content.color[1]);
+            out[o + 10] = srgbToLinear(content.color[2]);
+            out[o + 11] = content.color[3];
+            n++;
+            counts[layer]!++;
+          }
+        }
+      }
     }
-    const n0 = byLayer[0]!.length / CONTENT_FLOATS;
-    const n1 = byLayer[1]!.length / CONTENT_FLOATS;
-    this.contentRanges = [
-      [0, n0],
-      [n0, n1],
-    ];
-    const data = new Float32Array([...byLayer[0]!, ...byLayer[1]!]);
-    if (data.length === 0) return data;
-    const count = n0 + n1;
-    if (count > this.contentCapacity || !this.contentBuffer) {
+    const r0 = this.contentRanges[0]!;
+    const r1 = this.contentRanges[1]!;
+    r0[0] = 0;
+    r0[1] = counts[0]!;
+    r1[0] = counts[0]!;
+    r1[1] = counts[1]!;
+    if (n === 0) return;
+    if (n > this.contentCapacity || !this.contentBuffer) {
       this.contentBuffer?.destroy();
-      this.contentCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(count)));
+      this.contentCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(n)));
       this.contentBuffer = this.device.createBuffer({
         size: this.contentCapacity * CONTENT_FLOATS * 4,
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
@@ -896,8 +948,7 @@ export class LiquidGlassRenderer {
       });
       this.contentBindGroup = null;
     }
-    this.device.queue.writeBuffer(this.contentBuffer, 0, data);
-    return data;
+    this.device.queue.writeBuffer(this.contentBuffer, 0, out, 0, n * CONTENT_FLOATS);
   }
 
   /** Rebuilds the mip chain of the content, only when the content changed. */
@@ -1344,13 +1395,13 @@ function packSurface(
   out[o + 31] = dim;
 }
 
+/** A symbol the atlas can draw. */
+function drawable(content: GlassContent | undefined, atlas: SymbolAtlas): boolean {
+  return !!content && content.symbol >= 0 && content.symbol < atlas.cells && content.size > 0 && content.color[3] > 0;
+}
+
 /** sRGB transfer, decoded: the frame is lit and blended in linear light. */
 function srgbToLinear(c: number): number {
   return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
 }
 
-function sameFloats(a: Float32Array, b: Float32Array | null): boolean {
-  if (!b || a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
-  return true;
-}
