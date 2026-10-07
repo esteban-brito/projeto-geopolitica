@@ -798,3 +798,35 @@ cobria o vidro e engolia o arrasto (o teste passava sem testar), e um elemento o
 zero e "não sobrepõe" nada. Cada teste foi conferido contra o código antigo: falha nele e passa no
 novo.
 
+### 13.7 Bench do V3 na RX 6600 e o conserto ([`docs/bench/v3-rx6600.json`](../bench/v3-rx6600.json))
+
+| caso (1500×945, DPR 1) | V2 | V3 |
+| --- | --- | --- |
+| vidro solto, por pixel coberto | 0,52 ns | **0,88 ns** (+70%) |
+| 100 soltos, 38% da tela | — | 0,47 ms |
+| 20 em grupos de 4 / os mesmos soltos | — | **1,52 ms** / 0,16 ms |
+| 100 em grupos de 4 / os mesmos soltos | — | **2,61 ms** / 0,47 ms |
+| Baixa × Alta (100 soltos) | — | 0,44 × 0,47 ms |
+| em movimento, 50 vidros: CPU | — | 0,12 ms |
+| pirâmide refeita por quadro | 0,064 ms | 0,061 ms |
+
+Duas regressões, e as duas eram do shader, não da física:
+
+1. **O vidro solto pagava pela fusão.** Um só ponto de entrada servia os dois casos, e o orçamento
+   de registradores de um shader é o do seu caminho mais pesado (a mistura de até 4 membros, com
+   vetores indexados em tempo de execução, que podem ir para memória de rascunho). Conserto: **dois
+   pipelines** do mesmo módulo — `fs_single` (o caminho enxuto do V2) e `fs_union`. Um grupo que
+   não pode fundir (um membro ou espaçamento 0) é desenhado pelo enxuto; os registros soltos vêm
+   primeiro, os grupos depois (`firstInstance`).
+2. **O grupo desenhava área demais.** A margem do retângulo era k·(n−1) em volta do grupo inteiro,
+   e cada pixel avaliava 4 membros × 3 vezes (forma, sombra fora, sombra vista através) antes de
+   ser descartado. No bench os retângulos cobriam ~2× a tela. Conserto: **margem k·min(n−1, 2)**
+   (a união afunda até k onde dois membros se encontram, 2k onde três; só entre membros) e
+   **descarte antecipado**: a distância à caixa de cada membro é um limite inferior da distância;
+   longe de todas, o pixel sai antes da união. Os laços da mistura passaram a ter tamanho fixo,
+   escritos por máscara de faixa (sem índice dinâmico).
+
+As capturas de fusão e de vidro solto ficaram **idênticas pixel a pixel** às de antes do conserto.
+O bench também mudou: os grupos de 4 quebravam de uma linha para a outra (um retângulo de duas
+linhas, caso irreal); agora são barras dentro da linha. A confirmação do ganho é o próximo bench.
+

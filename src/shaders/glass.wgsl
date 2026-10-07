@@ -1,6 +1,9 @@
-// Glass surfaces: one instanced draw, one quad per merge group around its members, their merge
-// reach and their shadow. Units are device pixels; z points at the viewer. Light math is linear
-// (sRGB texture + sRGB view).
+// Glass surfaces: one quad per record around its members, their merge reach and their shadow.
+// Two entry points share everything after the geometry: fs_single for a surface on its own (most
+// of them), fs_union for a merge group. They are separate pipelines because a shader's register
+// budget is set by its heaviest path: with one entry point, every lone glass paid for the union's
+// bookkeeping (+70% per pixel on an RX 6600). Units are device pixels; z points at the viewer.
+// Light math is linear (sRGB texture + sRGB view).
 //
 // The radial optics (two-interface refraction per colour channel, Fresnel transmission, optical
 // path, injectivity guard) are computed on the CPU per surface — src/glass/optics.ts,
@@ -29,12 +32,13 @@ struct Surface {
 }
 
 // Members [start, start + count) of the surface array merge with each other and with nothing else.
+// A lone surface is a record with count 1.
 struct Group {
-  bounds: vec4f,   // min.xy, max.xy: members + merge reach + shadow, computed on the CPU
+  bounds: vec4f,   // min.xy, max.xy: members + reach, computed on the CPU
   start: u32,
   count: u32,
   k: f32,          // smooth-union depth; the gap at which two members touch is 2k. 0 = no merging
-  pad: f32,
+  reach: f32,      // farthest a pixel can be from every member's box and still be glass or shadow
 }
 
 @group(0) @binding(0) var<uniform> globals: Globals;
@@ -235,29 +239,52 @@ struct Blend {
   light: vec4f,
 }
 
-struct Union {
-  d: f32,        // union value: negative inside; depth for the radial table
-  grad: vec2f,   // exact gradient of the union, |grad| <= 1 (0 on the ridge of a neck)
-  mat: Blend,
-  count: u32,    // members whose tables this pixel blends
-  index: array<u32, 4>,
-  weight: array<f32, 4>,
+fn blend_of(s: Surface) -> Blend {
+  return Blend(s.corner, s.optics, s.shading, s.medium, s.light);
 }
 
-// Final weight of each entry of a mix chain: its own t times (1 − t) of every later entry.
-fn chain_weights(count: u32, t: array<f32, 4>) -> array<f32, 4> {
-  var w = array<f32, 4>(0.0, 0.0, 0.0, 0.0);
-  var carry = 1.0;
-  for (var e = i32(count) - 1; e >= 0; e--) {
-    w[e] = t[e] * carry;
-    carry *= 1.0 - t[e];
+// Up to MAX_BLEND members whose tables a pixel mixes. Kept in vec4s and written through lane masks:
+// an array indexed by a runtime value lands in scratch memory on some GPUs.
+struct Union {
+  d: f32,              // union value: negative inside; depth for the radial table
+  grad: vec2f,         // exact gradient of the union, |grad| <= 1 (0 on the ridge of a neck)
+  mat: Blend,
+  count: u32,
+  index: vec4<u32>,
+  weight: vec4f,       // t of each entry while folding, final weights after; 0 past `count`
+}
+
+const LANES = vec4<u32>(0u, 1u, 2u, 3u);
+
+// Final weight of each entry of a mix chain: its own t times (1 − t) of every later entry. Empty
+// entries have t = 0 and leave the product alone.
+fn chain_weights(t: vec4f) -> vec4f {
+  let c3 = 1.0 - t.w;
+  let c2 = c3 * (1.0 - t.z);
+  let c1 = c2 * (1.0 - t.y);
+  return vec4f(t.x * c1, t.y * c2, t.z * c3, t.w);
+}
+
+// First lane holding the smallest value (the TS mirror's indexOf(min)).
+fn weakest(w: vec4f) -> u32 {
+  var e = 0u;
+  var v = w.x;
+  if (w.y < v) {
+    e = 1u;
+    v = w.y;
   }
-  return w;
+  if (w.z < v) {
+    e = 2u;
+    v = w.z;
+  }
+  if (w.w < v) {
+    e = 3u;
+  }
+  return e;
 }
 
 fn union_field(g: Group, p: vec2f) -> Union {
   var u: Union;
-  u.count = 0u;
   for (var j = 0u; j < g.count; j++) {
     let i = g.start + j;
     let s = surfaces[i];
@@ -281,33 +308,22 @@ fn union_field(g: Group, p: vec2f) -> Union {
     u.mat.light = mix(u.mat.light, s.light, t);
     if (t >= 1.0) {
       u.count = 0u;
+      u.weight = vec4f(0.0);
     }
     if (u.count == MAX_BLEND) {
-      let w = chain_weights(u.count, u.weight);
-      var weakest = 0u;
-      for (var e = 1u; e < MAX_BLEND; e++) {
-        if (w[e] < w[weakest]) {
-          weakest = e;
-        }
-      }
-      for (var e = weakest; e + 1u < MAX_BLEND; e++) {
-        u.index[e] = u.index[e + 1u];
-        u.weight[e] = u.weight[e + 1u];
-      }
+      // Drop the weakest entry: every lane from it on takes the next one.
+      let shift = LANES >= vec4<u32>(weakest(chain_weights(u.weight)));
+      u.weight = select(u.weight, vec4f(u.weight.yzw, 0.0), shift);
+      u.index = select(u.index, vec4<u32>(u.index.yzw, 0u), shift);
       u.count = MAX_BLEND - 1u;
     }
-    u.index[u.count] = i;
-    u.weight[u.count] = t;
+    let slot = LANES == vec4<u32>(u.count);
+    u.index = select(u.index, vec4<u32>(i), slot);
+    u.weight = select(u.weight, vec4f(t), slot);
     u.count += 1u;
   }
-  let w = chain_weights(u.count, u.weight);
-  var sum = 0.0;
-  for (var e = 0u; e < u.count; e++) {
-    sum += w[e];
-  }
-  for (var e = 0u; e < u.count; e++) {
-    u.weight[e] = w[e] / max(sum, 1e-6);
-  }
+  let w = chain_weights(u.weight);
+  u.weight = w / max(w.x + w.y + w.z + w.w, 1e-6);
   return u;
 }
 
@@ -321,21 +337,33 @@ fn union_distance(g: Group, p: vec2f) -> f32 {
   return d;
 }
 
+// Distance from p to the member's bounding box: a lower bound of its distance, for the early out.
+fn box_distance(s: Surface, p: vec2f) -> f32 {
+  let inv = s.xform;
+  let fwd = vec4f(inv.w, -inv.y, -inv.z, inv.x) / (inv.x * inv.w - inv.y * inv.z);
+  let half = s.geom.zw;
+  let extent = vec2f(abs(fwd.x) * half.x + abs(fwd.y) * half.y, abs(fwd.z) * half.x + abs(fwd.w) * half.y);
+  return length(max(abs(p - s.geom.xy) - extent, vec2f(0.0)));
+}
+
+fn radial_add(r: Radial, i: u32, w: f32, depth: f32) -> Radial {
+  if (w <= 0.0) {
+    return r;
+  }
+  let x = table_lookup(i, surfaces[i].optics.x, depth);
+  return Radial(
+    r.offsetG + w * x.offsetG, r.transmission + w * x.transmission, r.slope + w * x.slope, r.height + w * x.height,
+    r.offsetR + w * x.offsetR, r.offsetB + w * x.offsetB, r.path + w * x.path,
+  );
+}
+
 // The radial optics of the pixel: each member's own table at the union's depth, mixed by weight.
 fn blended_radial(u: Union, depth: f32) -> Radial {
   var r = Radial(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-  for (var e = 0u; e < u.count; e++) {
-    let i = u.index[e];
-    let w = u.weight[e];
-    let x = table_lookup(i, surfaces[i].optics.x, depth);
-    r.offsetG += w * x.offsetG;
-    r.transmission += w * x.transmission;
-    r.slope += w * x.slope;
-    r.height += w * x.height;
-    r.offsetR += w * x.offsetR;
-    r.offsetB += w * x.offsetB;
-    r.path += w * x.path;
-  }
+  r = radial_add(r, u.index.x, u.weight.x, depth);
+  r = radial_add(r, u.index.y, u.weight.y, depth);
+  r = radial_add(r, u.index.z, u.weight.z, depth);
+  r = radial_add(r, u.index.w, u.weight.w, depth);
   return r;
 }
 
@@ -384,17 +412,28 @@ fn lighting(m: Blend, normal: vec3f, roughness: f32, surround: vec3f) -> Lightin
 }
 
 // Gaussian ring at the shifted outline plus a soft outer tail: a transparent slab casts most of
-// its shadow where its edge bends light away, not under its flat centre. Offset and softness come
-// from the gap (shadowGeometry in optics.ts).
-fn shadow_at(g: Group, m: Blend, px: vec2f) -> f32 {
-  if (m.shading.z <= 0.0) {
-    return 0.0;
-  }
+// its shadow where its edge bends light away, not under its flat centre. `d` is the distance of
+// the point shifted by the shadow offset; offset and softness come from the gap (shadowGeometry
+// in optics.ts).
+fn shadow_value(m: Blend, d: f32) -> f32 {
   let sigma = m.corner.w;
-  let d = union_distance(g, px - vec2f(0.0, m.corner.z));
   let ring = exp(-(d * d) / (2.0 * sigma * sigma));
   let tail = select(1.0, exp(-d / (sigma * 2.0)), d > 0.0) * 0.35;
   return m.shading.z * clamp(max(ring, tail), 0.0, 1.0) * 0.5;
+}
+
+fn shadow_single(s: Surface, m: Blend, px: vec2f) -> f32 {
+  if (m.shading.z <= 0.0) {
+    return 0.0;
+  }
+  return shadow_value(m, shape_sdf(s, px - vec2f(0.0, m.corner.z)).d);
+}
+
+fn shadow_union(g: Group, m: Blend, px: vec2f) -> f32 {
+  if (m.shading.z <= 0.0) {
+    return 0.0;
+  }
+  return shadow_value(m, union_distance(g, px - vec2f(0.0, m.corner.z)));
 }
 
 // Inverse of the sRGB encode the attachment applies, so a debug value v lands in the byte as v·255.
@@ -415,36 +454,29 @@ fn member_hue(i: u32) -> vec3f {
   return palette[i % 6u];
 }
 
-@fragment
-fn fs_main(in: VOut) -> @location(0) vec4f {
-  let g = groups[in.instance];
-  let pix = in.pos.xy;
-  let u = union_field(g, pix);
-  let m = u.mat;
-  // Where two members pull against each other |grad| < 1: renormalise for the antialiased edge.
-  let gradLen = length(u.grad);
-  let edgeDistance = u.d / max(gradLen, 0.3);
-  let coverage = clamp(0.5 - edgeDistance, 0.0, 1.0);
-  let outsideShadow = shadow_at(g, m, pix);
-  if (coverage <= 0.0) {
-    if (outsideShadow <= 0.002) {
-      discard;
-    }
-    return vec4f(0.0, 0.0, 0.0, outsideShadow);
-  }
+// ---- Shading, shared by both entry points ------------------------------------------------------
 
-  let depth = max(-u.d, 0.0);
-  let r = blended_radial(u, depth);
+struct Pixel {
+  pix: vec2f,
+  edge: f32,     // signed distance to the outline, px (antialiasing, SDF view)
+  depth: f32,    // radial table depth
+  grad: vec2f,   // outward gradient: unit for one surface, the union's own for a group
+  gradLen: f32,
+}
+
+// Everything after the geometry: refraction, blur, absorption, light, debug views. `r` and
+// `inward` are the radial optics at the pixel and one pixel inward; `shade` is the glass's own
+// shadow on the content seen through it.
+fn shade(p: Pixel, m: Blend, r: Radial, inward: Radial, shadow: f32) -> vec3f {
   let roughness = m.shading.x;
-  let posG = pix + r.offsetG * u.grad;
-  let posR = pix + r.offsetR * u.grad;
-  let posB = pix + r.offsetB * u.grad;
+  let posG = p.pix + r.offsetG * p.grad;
+  let posR = p.pix + r.offsetR * p.grad;
+  let posB = p.pix + r.offsetB * p.grad;
 
   // Blur: frost from the roughness, plus the footprint of the refracted sample along the normal so
-  // a minified border is filtered instead of shimmering. One pixel inward the union moves by
-  // |grad|; read the table there (not dpdx: derivatives are not allowed after the early return).
-  let inward = blended_radial(u, depth + gradLen);
-  let footprint = abs(1.0 - (inward.offsetG - r.offsetG) * gradLen);
+  // a minified border is filtered instead of shimmering. Read from the table one pixel inward, not
+  // dpdx: derivatives are not allowed after the early returns.
+  let footprint = abs(1.0 - (inward.offsetG - r.offsetG) * p.gradLen);
   let maxLod = f32(textureNumLevels(bgTex) - 1u);
   let lod = clamp(max(log2(max(m.light.z, 1.0)), log2(max(footprint, 1.0))), 0.0, maxLod);
 
@@ -455,35 +487,35 @@ fn fs_main(in: VOut) -> @location(0) vec4f {
   } else {
     content = sample_content(posG, lod);
   }
-  content *= 1.0 - shadow_at(g, m, posG);
+  content *= 1.0 - shadow;
 
   let absorption = exp(-m.medium.xyz * r.path);
   let transmitted = content * r.transmission * absorption;
 
-  let normal = normalize(vec3f(r.slope * u.grad, 1.0));
+  let normal = normalize(vec3f(r.slope * p.grad, 1.0));
   let fresnel = schlick(m.light.w, normal.z);
-  let surround = textureSampleLevel(bgTex, bgSampler, pix * globals.invViewport, maxLod).rgb;
+  let surround = textureSampleLevel(bgTex, bgSampler, p.pix * globals.invViewport, maxLod).rgb;
   let light = lighting(m, normal, roughness, surround);
   let edgeShade = 1.0 - m.shading.y * 0.7 * sqrt(1.0 - normal.z);
   var color = transmitted * edgeShade + fresnel * light.reflected + vec3f(light.specular);
 
   switch globals.debugView {
     case DEBUG_SDF: {
-      let bands = 0.5 + 0.5 * cos(edgeDistance * 0.7853982);
-      color = mix(vec3f(0.05, 0.12, 0.35), vec3f(0.35, 0.65, 1.0), bands) * (0.4 + 0.6 * exp(edgeDistance / 60.0));
+      let bands = 0.5 + 0.5 * cos(p.edge * 0.7853982);
+      color = mix(vec3f(0.05, 0.12, 0.35), vec3f(0.35, 0.65, 1.0), bands) * (0.4 + 0.6 * exp(p.edge / 60.0));
     }
     case DEBUG_NORMAL: {
       color = normal * 0.5 + 0.5;
     }
     case DEBUG_OFFSET: {
       let reach = max(m.optics.x + m.optics.y + m.optics.z, 1.0);
-      color = vec3f(0.5 + 0.5 * (posG - pix) / reach, 0.5);
+      color = vec3f(0.5 + 0.5 * (posG - p.pix) / reach, 0.5);
     }
     case DEBUG_INJECTIVITY: {
       // |d offset / d px| along the normal; red past MAX_COMPRESSION. Black where Fresnel
       // leaves under 5% of the light (the position of a dark pixel does not read).
       let carries = select(0.0, 1.0, min(r.transmission, inward.transmission) >= 0.05);
-      color = mix(vec3f(0.08), heat(abs(inward.offsetG - r.offsetG) * gradLen / MAX_COMPRESSION), carries);
+      color = mix(vec3f(0.08), heat(abs(inward.offsetG - r.offsetG) * p.gradLen / MAX_COMPRESSION), carries);
     }
     case DEBUG_TRANSMISSION: {
       color = select(vec3f(r.transmission), vec3f(1.0, 0.1, 0.1), r.transmission <= 0.0);
@@ -508,16 +540,83 @@ fn fs_main(in: VOut) -> @location(0) vec4f {
     case DEBUG_DISPERSION: {
       color = vec3f(0.5) + vec3f(r.offsetR - r.offsetG, 0.0, r.offsetB - r.offsetG) * 0.25;
     }
-    case DEBUG_UNION: {
-      // Each member in its colour, mixed by weight; dark where the gradient shrinks (the neck).
-      var hue = vec3f(0.0);
-      for (var e = 0u; e < u.count; e++) {
-        hue += u.weight[e] * member_hue(u.index[e] - g.start);
-      }
-      color = hue * (0.25 + 0.75 * gradLen);
-    }
     default: {}
   }
-  let alpha = coverage + (1.0 - coverage) * outsideShadow;
-  return vec4f(color * coverage, alpha);
+  return color;
+}
+
+fn composite(color: vec3f, coverage: f32, outsideShadow: f32) -> vec4f {
+  return vec4f(color * coverage, coverage + (1.0 - coverage) * outsideShadow);
+}
+
+// A surface on its own: one SDF, one table, no union bookkeeping.
+@fragment
+fn fs_single(in: VOut) -> @location(0) vec4f {
+  let i = groups[in.instance].start;
+  let s = surfaces[i];
+  let m = blend_of(s);
+  let pix = in.pos.xy;
+  let sd = shape_sdf(s, pix);
+  let coverage = clamp(0.5 - sd.d, 0.0, 1.0);
+  let outsideShadow = shadow_single(s, m, pix);
+  if (coverage <= 0.0) {
+    if (outsideShadow <= 0.002) {
+      discard;
+    }
+    return vec4f(0.0, 0.0, 0.0, outsideShadow);
+  }
+  let depth = max(-sd.d, 0.0);
+  let r = table_lookup(i, s.optics.x, depth);
+  let inward = table_lookup(i, s.optics.x, depth + 1.0);
+  let shadow = shadow_single(s, m, pix + r.offsetG * sd.grad);
+  var color = shade(Pixel(pix, sd.d, depth, sd.grad, 1.0), m, r, inward, shadow);
+  if (globals.debugView == DEBUG_UNION) {
+    color = member_hue(0u);
+  }
+  return composite(color, coverage, outsideShadow);
+}
+
+// A merge group: the members' smooth union, their tables and materials mixed by weight.
+@fragment
+fn fs_union(in: VOut) -> @location(0) vec4f {
+  let g = groups[in.instance];
+  let pix = in.pos.xy;
+  // Early out: far from every member's box, no member can cover, bridge or shade this pixel. The
+  // bounds are a rectangle around the whole group; most of it is empty between and around members.
+  var near = 1e9;
+  for (var j = 0u; j < g.count; j++) {
+    near = min(near, box_distance(surfaces[g.start + j], pix));
+  }
+  if (near > g.reach) {
+    discard;
+  }
+
+  let u = union_field(g, pix);
+  let m = u.mat;
+  // Where two members pull against each other |grad| < 1: renormalise for the antialiased edge.
+  let gradLen = length(u.grad);
+  let edge = u.d / max(gradLen, 0.3);
+  let coverage = clamp(0.5 - edge, 0.0, 1.0);
+  let outsideShadow = shadow_union(g, m, pix);
+  if (coverage <= 0.0) {
+    if (outsideShadow <= 0.002) {
+      discard;
+    }
+    return vec4f(0.0, 0.0, 0.0, outsideShadow);
+  }
+  let depth = max(-u.d, 0.0);
+  let r = blended_radial(u, depth);
+  // One pixel inward the union moves by |grad|.
+  let inward = blended_radial(u, depth + gradLen);
+  let shadow = shadow_union(g, m, pix + r.offsetG * u.grad);
+  var color = shade(Pixel(pix, edge, depth, u.grad, gradLen), m, r, inward, shadow);
+  if (globals.debugView == DEBUG_UNION) {
+    // Each member in its colour, mixed by weight; dark where the gradient shrinks (the neck).
+    var hue = vec3f(0.0);
+    for (var e = 0u; e < MAX_BLEND; e++) {
+      hue += u.weight[e] * member_hue(u.index[e] - g.start);
+    }
+    color = hue * (0.25 + 0.75 * gradLen);
+  }
+  return composite(color, coverage, outsideShadow);
 }

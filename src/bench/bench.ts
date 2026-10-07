@@ -62,7 +62,7 @@ const json = document.querySelector<HTMLTextAreaElement>("#json")!;
 let suite = "quick";
 
 /** N capsules on a grid inside the stage; all the same size so cost scales with N. */
-function layout(n: number, width: number, height: number): { surfaces: GlassSurface[]; gap: number } {
+function layout(n: number, width: number, height: number): { surfaces: GlassSurface[]; gap: number; cols: number } {
   const cols = Math.ceil(Math.sqrt(n * (width / height)));
   const rows = Math.ceil(n / cols);
   const cellW = width / cols;
@@ -81,13 +81,19 @@ function layout(n: number, width: number, height: number): { surfaces: GlassSurf
     };
     return { shape, material: { ...DEFAULT_MATERIAL, bevel: Math.min(DEFAULT_MATERIAL.bevel, halfHeight) } };
   });
-  return { surfaces, gap: cellW - 2 * halfWidth };
+  return { surfaces, gap: cellW - 2 * halfWidth, cols };
 }
 
-/** Consecutive surfaces in groups of `size`; the spacing makes row neighbours merge. */
-function grouped(surfaces: GlassSurface[], size: number, gap: number): GlassGroup[] {
+/**
+ * Row neighbours in groups of `size`, like toolbars; a group never wraps to the next row. The
+ * spacing makes neighbours merge.
+ */
+function grouped(surfaces: GlassSurface[], size: number, gap: number, cols: number): GlassGroup[] {
   const groups: GlassGroup[] = [];
-  for (let i = 0; i < surfaces.length; i += size) groups.push({ spacing: size > 1 ? gap + 8 : 0, surfaces: surfaces.slice(i, i + size) });
+  for (let row = 0; row < surfaces.length; row += cols) {
+    const line = surfaces.slice(row, row + cols);
+    for (let i = 0; i < line.length; i += size) groups.push({ spacing: size > 1 ? gap + 8 : 0, surfaces: line.slice(i, i + size) });
+  }
   return groups;
 }
 
@@ -106,8 +112,8 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   renderer.setQuality(s.tier);
   source.setPainter(PAINTERS[s.scene]);
   renderer.invalidateSource();
-  const { surfaces, gap } = layout(s.surfaces, canvas.clientWidth, canvas.clientHeight);
-  renderer.setGroups(grouped(surfaces, s.group ?? 1, gap));
+  const { surfaces, gap, cols } = layout(s.surfaces, canvas.clientWidth, canvas.clientHeight);
+  renderer.setGroups(grouped(surfaces, s.group ?? 1, gap, cols));
   renderer.forcePyramid = s.dynamic;
   renderer.continuous = true;
   // Motion: every surface orbits its cell a little each frame, so the CPU re-packs and uploads

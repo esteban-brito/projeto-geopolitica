@@ -122,6 +122,10 @@ export class LiquidGlassRenderer {
   private pyramidBindGroups: GPUBindGroup[] = [];
   private pyramidDirty = true;
   private glassPipeline: GPURenderPipeline | null = null;
+  private unionPipeline: GPURenderPipeline | null = null;
+  /** Records in the group buffer: lone surfaces first (fs_single), then merge groups (fs_union). */
+  private singleRecords = 0;
+  private unionRecords = 0;
   private bgBindGroup: GPUBindGroup | null = null;
   private glassBindGroup: GPUBindGroup | null = null;
   private surfaceBuffer: GPUBuffer | null = null;
@@ -454,16 +458,6 @@ export class LiquidGlassRenderer {
       this.glassBindGroup = null;
       this.tables = [];
     }
-    if (this.groups.length > this.groupCapacity || !this.groupBuffer) {
-      this.groupBuffer?.destroy();
-      this.groupCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(this.groups.length, 1))));
-      this.groupBuffer = this.device.createBuffer({
-        size: this.groupCapacity * GROUP_FLOATS * 4,
-        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-        label: "lab.groups",
-      });
-      this.glassBindGroup = null;
-    }
     const data = new Float32Array(Math.max(count, 1) * SURFACE_FLOATS);
     const dpr = this.dpr;
     this.tables.length = count;
@@ -478,31 +472,61 @@ export class LiquidGlassRenderer {
     });
     this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
 
-    const groupData = new ArrayBuffer(Math.max(this.groups.length, 1) * GROUP_FLOATS * 4);
+    // A group that cannot merge (one member, or spacing 0) is drawn as lone surfaces by the lean
+    // pipeline. Records keep the flat surface order inside each group.
+    interface DrawRecord {
+      start: number;
+      members: GlassSurface[];
+      k: number;
+    }
+    const singles: DrawRecord[] = [];
+    const unions: DrawRecord[] = [];
+    let start = 0;
+    for (const group of this.groups) {
+      const n = group.surfaces.length;
+      if (n > 1 && group.spacing > 0) unions.push({ start, members: group.surfaces, k: (group.spacing / 2) * dpr });
+      else group.surfaces.forEach((surface, j) => singles.push({ start: start + j, members: [surface], k: 0 }));
+      start += n;
+    }
+    const records = [...singles, ...unions];
+    this.singleRecords = singles.length;
+    this.unionRecords = unions.length;
+    if (records.length > this.groupCapacity || !this.groupBuffer) {
+      this.groupBuffer?.destroy();
+      this.groupCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(records.length, 1))));
+      this.groupBuffer = this.device.createBuffer({
+        size: this.groupCapacity * GROUP_FLOATS * 4,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        label: "lab.groups",
+      });
+      this.glassBindGroup = null;
+    }
+    const groupData = new ArrayBuffer(Math.max(records.length, 1) * GROUP_FLOATS * 4);
     const gf = new Float32Array(groupData);
     const gu = new Uint32Array(groupData);
-    let start = 0;
-    this.groups.forEach((group, i) => {
-      const k = (group.spacing / 2) * dpr;
-      const n = group.surfaces.length;
-      // The union sinks at most k per merge below the nearest member, and only between members.
-      const reach = BOUNDS_MARGIN + k * Math.max(n - 1, 0);
-      const bounds = [Infinity, Infinity, -Infinity, -Infinity];
-      for (const { shape, material } of group.surfaces) {
-        const [ex, ey] = shapeExtent(shape);
+    records.forEach(({ start, members, k }, i) => {
+      // The union sinks up to k below the nearest member where two meet, 2k where three do — and
+      // only between members, so the margin is per merge, not per member.
+      let shadowReach = 0;
+      for (const { material } of members) {
         const shadow = shadowGeometry(material.gap * dpr, dpr);
-        const margin = reach + (material.shadow > 0 ? shadow.offsetY + shadow.sigma * 3 : 0);
-        bounds[0] = Math.min(bounds[0]!, (shape.cx - ex) * dpr - margin);
-        bounds[1] = Math.min(bounds[1]!, (shape.cy - ey) * dpr - margin);
-        bounds[2] = Math.max(bounds[2]!, (shape.cx + ex) * dpr + margin);
-        bounds[3] = Math.max(bounds[3]!, (shape.cy + ey) * dpr + margin);
+        if (material.shadow > 0) shadowReach = Math.max(shadowReach, shadow.offsetY + shadow.sigma * 3);
+      }
+      const reach = BOUNDS_MARGIN + k * Math.min(members.length - 1, 2) + shadowReach;
+      const bounds = [Infinity, Infinity, -Infinity, -Infinity];
+      for (const { shape } of members) {
+        const [ex, ey] = shapeExtent(shape);
+        bounds[0] = Math.min(bounds[0]!, (shape.cx - ex) * dpr - reach);
+        bounds[1] = Math.min(bounds[1]!, (shape.cy - ey) * dpr - reach);
+        bounds[2] = Math.max(bounds[2]!, (shape.cx + ex) * dpr + reach);
+        bounds[3] = Math.max(bounds[3]!, (shape.cy + ey) * dpr + reach);
       }
       const o = i * GROUP_FLOATS;
-      gf.set(n > 0 ? bounds : [0, 0, 0, 0], o);
+      gf.set(bounds, o);
       gu[o + 4] = start;
-      gu[o + 5] = n;
-      gf[o + 6] = n > 1 ? k : 0;
-      start += n;
+      gu[o + 5] = members.length;
+      gf[o + 6] = k;
+      gf[o + 7] = reach;
     });
     this.device.queue.writeBuffer(this.groupBuffer, 0, groupData);
   }
@@ -605,9 +629,15 @@ export class LiquidGlassRenderer {
           colorAttachments: [{ view: ctx.target, loadOp: "load", storeOp: "store" }],
           ...(timestampWrites ? { timestampWrites } : {}),
         });
-        pass.setPipeline(this.glassPipeline);
         pass.setBindGroup(0, this.glassBindGroup);
-        pass.draw(6, this.groups.length);
+        if (this.singleRecords > 0) {
+          pass.setPipeline(this.glassPipeline);
+          pass.draw(6, this.singleRecords);
+        }
+        if (this.unionRecords > 0 && this.unionPipeline) {
+          pass.setPipeline(this.unionPipeline);
+          pass.draw(6, this.unionRecords, 0, this.singleRecords);
+        }
         pass.end();
       },
     };
@@ -644,25 +674,29 @@ export class LiquidGlassRenderer {
       fragment: { module: bgModule, entryPoint: "fs_main", targets: [target] },
       primitive: { topology: "triangle-list" },
     });
-    const glass = device.createRenderPipeline({
-      label: "glass",
-      layout: device.createPipelineLayout({ bindGroupLayouts: [this.glassLayout] }),
-      vertex: { module: glassModule, entryPoint: "vs_main" },
-      fragment: {
-        module: glassModule,
-        entryPoint: "fs_main",
-        targets: [
-          {
-            format: this.viewFormat,
-            blend: {
-              color: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
-              alpha: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
+    const glassLayout = device.createPipelineLayout({ bindGroupLayouts: [this.glassLayout] });
+    const glassPipeline = (entryPoint: string) =>
+      device.createRenderPipeline({
+        label: `glass.${entryPoint}`,
+        layout: glassLayout,
+        vertex: { module: glassModule, entryPoint: "vs_main" },
+        fragment: {
+          module: glassModule,
+          entryPoint,
+          targets: [
+            {
+              format: this.viewFormat,
+              blend: {
+                color: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
+                alpha: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
+              },
             },
-          },
-        ],
-      },
-      primitive: { topology: "triangle-list" },
-    });
+          ],
+        },
+        primitive: { topology: "triangle-list" },
+      });
+    const glass = glassPipeline("fs_single");
+    const union = glassPipeline("fs_union");
     const pyramid = device.createRenderPipeline({
       label: "pyramid",
       layout: device.createPipelineLayout({ bindGroupLayouts: [this.pyramidLayout] }),
@@ -677,6 +711,7 @@ export class LiquidGlassRenderer {
     }
     this.bgPipeline = bg;
     this.glassPipeline = glass;
+    this.unionPipeline = union;
     this.pyramidPipeline = pyramid;
     this.pyramidDirty = true;
     this.onShaderError?.(null);
