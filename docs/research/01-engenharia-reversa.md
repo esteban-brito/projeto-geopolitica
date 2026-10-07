@@ -837,3 +837,29 @@ empatam em DPR 1, como esperado. As quatro cenas dão o mesmo tempo (diferença 
 não depende do conteúdo atrás do vidro. A suíte completa não tinha os cenários de fusão e de
 movimento; agora tem, por nível, e deixou de variar a cena.
 
+### 13.8 A fusão ainda cara, e três lições ([`docs/bench/v3.1-rx6600-rapido.json`](../bench/v3.1-rx6600-rapido.json))
+
+Depois do conserto do §13.7, grupos de 4: 20 vidros 1,52 → **0,75 ms**, 100 vidros 2,61 →
+**1,49 ms** (soltos: 0,096 e 0,28 ms). Melhor, ainda 5–8× o vidro solto.
+
+1. **`discard` em WGSL não encerra o pixel.** É *demote to helper*, e o Tint o implementa com uma
+   flag enquanto o shader segue até o fim. O descarte antecipado do §13.7 não economizava nada:
+   todo pixel do retângulo do grupo rodava a união e o sombreamento. Os caminhos vazios agora
+   devolvem `vec4(0)`, que sob a mistura pré-multiplicada não muda o alvo — e o `return` encerra.
+2. **A ordem fixa da cadeia anula o pulo de membros.** Um pixel dentro do quarto membro avaliava
+   os três anteriores, porque a cadeia começa no primeiro. Agora há um **caminho solo** exato:
+   se a cadeia das caixas dos membros antes do mais próximo fica ≥ d + 6k (ele zera a cadeia,
+   t = 1) e os de depois também (t = 0), a união *é* o membro mais próximo, com pesos e tudo; o
+   pixel é sombreado como vidro solto. Só pescoços e arredores pagam a união.
+3. **O SwiftShader não serve de proxy para desvios.** Com o `fs_union` devolvendo cor fixa na
+   primeira linha ele ainda custa o mesmo: executa o shader inteiro com as faixas mascaradas. Mede
+   tamanho de código, não saídas antecipadas. A razão 5,3× que bateu com a RX 6600 foi
+   coincidência; só a GPU de verdade julga estas otimizações.
+
+Também: sombra fora calculada só onde a cobertura é parcial; sombra vista através do vidro pulada
+onde é provadamente a constante do interior (a união e o SDF variam no máximo 1 por pixel);
+membro pulado quando a caixa prova contribuição zero; canto circular (expoente 2) sem `pow`; o
+rabo da sombra desce a zero em 3σ em vez de ser cortado (era um degrau de ~1,3%). Capturas: no
+máximo 2 níveis de diferença, só nesse rabo. O bench ganhou um cenário realista (18 barras de 4
+botões, 10 px entre eles, espaçamento 24) ao lado do de estresse.
+

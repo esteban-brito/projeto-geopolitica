@@ -38,7 +38,7 @@ struct Group {
   start: u32,
   count: u32,
   k: f32,          // smooth-union depth; the gap at which two members touch is 2k. 0 = no merging
-  reach: f32,      // farthest a pixel can be from every member's box and still be glass or shadow
+  reach: f32,      // past this (a lower bound of the union) a pixel is neither glass nor shadow
 }
 
 @group(0) @binding(0) var<uniform> globals: Globals;
@@ -123,6 +123,11 @@ fn shape_sdf(s: Surface, pix: vec2f) -> SdfSample {
   if (peak <= 0.0) {
     d = max(q.x, q.y) - r;
     g = select(vec2f(0.0, 1.0), vec2f(1.0, 0.0), q.x > q.y);
+  } else if (s.corner.y == 2.0) {
+    // Circular corner, the common case: the p-norm is the Euclidean length (same values, no pow).
+    let norm = length(m);
+    d = norm - r;
+    g = m / norm;
   } else {
     let n = s.corner.y;
     let a = max(m / peak, vec2f(1e-6));
@@ -288,6 +293,11 @@ fn union_field(g: Group, p: vec2f) -> Union {
   for (var j = 0u; j < g.count; j++) {
     let i = g.start + j;
     let s = surfaces[i];
+    // A member 6k farther than the union so far contributes exactly nothing (t = 0); its box
+    // distance, a lower bound of its distance, proves it without evaluating the shape.
+    if (j > 0u && box_distance(s, p) >= u.d + 6.0 * g.k) {
+      continue;
+    }
     let f = shape_sdf(s, p);
     var t = 1.0;
     if (j == 0u) {
@@ -331,10 +341,44 @@ fn union_field(g: Group, p: vec2f) -> Union {
 fn union_distance(g: Group, p: vec2f) -> f32 {
   var d = 0.0;
   for (var j = 0u; j < g.count; j++) {
-    let dj = shape_sdf(surfaces[g.start + j], p).d;
+    let s = surfaces[g.start + j];
+    if (j > 0u && box_distance(s, p) >= d + 6.0 * g.k) {
+      continue;
+    }
+    let dj = shape_sdf(s, p).d;
     d = select(smin_cubic(d, dj, g.k).x, dj, j == 0u);
   }
   return d;
+}
+
+// One pass over the members' boxes (box distance: a lower bound of each member's distance).
+struct Nearest {
+  index: u32,   // member with the nearest box
+  bound: f32,   // the union's chain over the box distances: smin only grows with its arguments,
+                // so this is a lower bound of the union — far from all the glass, an early out
+  others: f32,  // lower bound of what the members other than `index` can bring, see fs_union
+}
+
+fn nearest_member(g: Group, p: vec2f) -> Nearest {
+  var chain = 0.0;
+  var best = 1e9;
+  var index = 0u;
+  var before = 1e9;
+  var after = 1e9;
+  for (var j = 0u; j < g.count; j++) {
+    let b = box_distance(surfaces[g.start + j], p);
+    if (b < best) {
+      // The chain so far bounds the union of the members before this one from below.
+      before = select(chain, 1e9, j == 0u);
+      after = 1e9;
+      best = b;
+      index = j;
+    } else {
+      after = min(after, b);
+    }
+    chain = select(smin_cubic(chain, b, g.k).x, b, j == 0u);
+  }
+  return Nearest(index, chain, min(before, after));
 }
 
 // Distance from p to the member's bounding box: a lower bound of its distance, for the early out.
@@ -419,8 +463,21 @@ fn shadow_value(m: Blend, d: f32) -> f32 {
   let sigma = m.corner.w;
   let ring = exp(-(d * d) / (2.0 * sigma * sigma));
   let tail = select(1.0, exp(-d / (sigma * 2.0)), d > 0.0) * 0.35;
-  return m.shading.z * clamp(max(ring, tail), 0.0, 1.0) * 0.5;
+  // Fade to exactly zero at 3σ, where the quad and the early out stop drawing: the tail used to be
+  // cut there at ~1.3% darkening, a faint step on smooth backgrounds.
+  let fade = 1.0 - smoothstep(2.0 * sigma, 3.0 * sigma, d);
+  return m.shading.z * clamp(max(ring, tail), 0.0, 1.0) * 0.5 * fade;
 }
+
+// Under the glass, deeper than ~1.5σ, the shadow is the constant tail (the ring has fallen below
+// it). The union and the SDF change by at most 1 per pixel, so if the pixel's own depth minus how
+// far the shadow lookup moves (refraction + shadow offset) is still deeper than 1.8σ, the answer is
+// that constant and the shape need not be evaluated again.
+fn shadow_is_flat(m: Blend, d: f32, moved: f32) -> bool {
+  return d + moved + m.corner.z <= -1.8 * m.corner.w;
+}
+
+const FLAT_SHADOW: f32 = 0.35 * 0.5;
 
 fn shadow_single(s: Surface, m: Blend, px: vec2f) -> f32 {
   if (m.shading.z <= 0.0) {
@@ -545,6 +602,12 @@ fn shade(p: Pixel, m: Blend, r: Radial, inward: Radial, shadow: f32) -> vec3f {
   return color;
 }
 
+// What an empty pixel returns. Not `discard`: WGSL's discard demotes the invocation to a helper,
+// and Tint implements that with a flag while the shader keeps running to the end — an early out
+// by discard saved nothing. Under premultiplied blending (one, one − src alpha) a zero output
+// leaves the target as it was, and the return really ends the work.
+const NOTHING = vec4f(0.0);
+
 fn composite(color: vec3f, coverage: f32, outsideShadow: f32) -> vec4f {
   return vec4f(color * coverage, coverage + (1.0 - coverage) * outsideShadow);
 }
@@ -558,17 +621,24 @@ fn fs_single(in: VOut) -> @location(0) vec4f {
   let pix = in.pos.xy;
   let sd = shape_sdf(s, pix);
   let coverage = clamp(0.5 - sd.d, 0.0, 1.0);
-  let outsideShadow = shadow_single(s, m, pix);
+  // The shadow outside only shows where coverage is partial: skip it inside.
+  var outsideShadow = 0.0;
+  if (coverage < 1.0) {
+    outsideShadow = shadow_single(s, m, pix);
+  }
   if (coverage <= 0.0) {
     if (outsideShadow <= 0.002) {
-      discard;
+      return NOTHING;
     }
     return vec4f(0.0, 0.0, 0.0, outsideShadow);
   }
   let depth = max(-sd.d, 0.0);
   let r = table_lookup(i, s.optics.x, depth);
   let inward = table_lookup(i, s.optics.x, depth + 1.0);
-  let shadow = shadow_single(s, m, pix + r.offsetG * sd.grad);
+  var shadow = m.shading.z * FLAT_SHADOW;
+  if (!shadow_is_flat(m, sd.d, abs(r.offsetG))) {
+    shadow = shadow_single(s, m, pix + r.offsetG * sd.grad);
+  }
   var color = shade(Pixel(pix, sd.d, depth, sd.grad, 1.0), m, r, inward, shadow);
   if (globals.debugView == DEBUG_UNION) {
     color = member_hue(0u);
@@ -581,14 +651,58 @@ fn fs_single(in: VOut) -> @location(0) vec4f {
 fn fs_union(in: VOut) -> @location(0) vec4f {
   let g = groups[in.instance];
   let pix = in.pos.xy;
-  // Early out: far from every member's box, no member can cover, bridge or shade this pixel. The
-  // bounds are a rectangle around the whole group; most of it is empty between and around members.
-  var near = 1e9;
-  for (var j = 0u; j < g.count; j++) {
-    near = min(near, box_distance(surfaces[g.start + j], pix));
+  // Early out: the bounds are a rectangle around the whole group, and most of it is empty between
+  // and around members.
+  let near = nearest_member(g, pix);
+  if (near.bound > g.reach) {
+    return NOTHING;
   }
-  if (near > g.reach) {
-    discard;
+
+  // Alone: if the members before the nearest one cannot come within 6k of it (their chain stays
+  // ≥ d + 6k, so the nearest one resets the chain, t = 1) and the ones after are ≥ d + 6k (t = 0),
+  // the union IS the nearest member — exactly, weights and all. Most pixels of a group are like
+  // this; they are shaded as a lone surface, and only necks and their surroundings pay the union.
+  let i = g.start + near.index;
+  let s = surfaces[i];
+  let sd = shape_sdf(s, pix);
+  let clearance = near.others - (sd.d + 6.0 * g.k);
+  if (clearance >= 0.0) {
+    let m = blend_of(s);
+    let coverage = clamp(0.5 - sd.d, 0.0, 1.0);
+    // A shadow looked up `moved` px away stays alone if the clearance covers the move twice (the
+    // member's distance and the others' bounds both change by at most 1 per px).
+    var outsideShadow = 0.0;
+    if (coverage < 1.0) {
+      // An if, not select(): select evaluates both arguments.
+      if (clearance >= 2.0 * m.corner.z) {
+        outsideShadow = shadow_single(s, m, pix);
+      } else {
+        outsideShadow = shadow_union(g, m, pix);
+      }
+    }
+    if (coverage <= 0.0) {
+      if (outsideShadow <= 0.002) {
+        return NOTHING;
+      }
+      return vec4f(0.0, 0.0, 0.0, outsideShadow);
+    }
+    let depth = max(-sd.d, 0.0);
+    let r = table_lookup(i, s.optics.x, depth);
+    let inward = table_lookup(i, s.optics.x, depth + 1.0);
+    var shadow = m.shading.z * FLAT_SHADOW;
+    if (!shadow_is_flat(m, sd.d, abs(r.offsetG))) {
+      let at = pix + r.offsetG * sd.grad;
+      if (clearance >= 2.0 * (abs(r.offsetG) + m.corner.z)) {
+        shadow = shadow_single(s, m, at);
+      } else {
+        shadow = shadow_union(g, m, at);
+      }
+    }
+    var color = shade(Pixel(pix, sd.d, depth, sd.grad, 1.0), m, r, inward, shadow);
+    if (globals.debugView == DEBUG_UNION) {
+      color = member_hue(near.index);
+    }
+    return composite(color, coverage, outsideShadow);
   }
 
   let u = union_field(g, pix);
@@ -597,10 +711,13 @@ fn fs_union(in: VOut) -> @location(0) vec4f {
   let gradLen = length(u.grad);
   let edge = u.d / max(gradLen, 0.3);
   let coverage = clamp(0.5 - edge, 0.0, 1.0);
-  let outsideShadow = shadow_union(g, m, pix);
+  var outsideShadow = 0.0;
+  if (coverage < 1.0) {
+    outsideShadow = shadow_union(g, m, pix);
+  }
   if (coverage <= 0.0) {
     if (outsideShadow <= 0.002) {
-      discard;
+      return NOTHING;
     }
     return vec4f(0.0, 0.0, 0.0, outsideShadow);
   }
@@ -608,7 +725,10 @@ fn fs_union(in: VOut) -> @location(0) vec4f {
   let r = blended_radial(u, depth);
   // One pixel inward the union moves by |grad|.
   let inward = blended_radial(u, depth + gradLen);
-  let shadow = shadow_union(g, m, pix + r.offsetG * u.grad);
+  var shadow = m.shading.z * FLAT_SHADOW;
+  if (!shadow_is_flat(m, u.d, abs(r.offsetG) * gradLen)) {
+    shadow = shadow_union(g, m, pix + r.offsetG * u.grad);
+  }
   var color = shade(Pixel(pix, edge, depth, u.grad, gradLen), m, r, inward, shadow);
   if (globals.debugView == DEBUG_UNION) {
     // Each member in its colour, mixed by weight; dark where the gradient shrinks (the neck).

@@ -16,6 +16,11 @@ interface Scenario {
   motion?: boolean;
   /** Members per merge group, neighbours touching; 1 or absent = no merging. */
   group?: number;
+  /**
+   * "toolbars": 18 bars of 4 buttons with 10 px gaps, `surfaces` ignored — a realistic merge
+   * (spacing 24 when group > 1). Default: the stress grid, where every neighbour merges.
+   */
+  layout?: "toolbars";
 }
 
 interface Result extends Scenario {
@@ -37,6 +42,7 @@ function tierScenarios(tier: QualityTier): Scenario[] {
     ...[1, 10, 50, 100].map((n) => ({ scene, surfaces: n, tier, dynamic: true })),
     ...[10, 50].map((n) => ({ scene, surfaces: n, tier, dynamic: false, motion: true })),
     ...[2, 4].flatMap((group) => [20, 100].map((n) => ({ scene, surfaces: n, tier, dynamic: false, group }))),
+    ...[1, 4].map((group) => ({ scene, surfaces: 72, tier, dynamic: false, group, layout: "toolbars" as const })),
   ];
 }
 
@@ -50,6 +56,7 @@ const SUITES: Record<string, { label: string; scenarios: () => Scenario[] }> = {
       ...[1, 10, 50, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: true })),
       ...[10, 50].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: false, motion: true })),
       ...[20, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: false, group: 4 })),
+      ...[1, 4].map((group) => ({ scene: "image" as const, surfaces: 72, tier: "high" as const, dynamic: false, group, layout: "toolbars" as const })),
     ],
   },
   // The scene does not change the cost (four scenes within 0.2% on the RX 6600, v3.1 JSON), so the
@@ -92,6 +99,25 @@ function layout(n: number, width: number, height: number): { surfaces: GlassSurf
   return { surfaces, gap: cellW - 2 * halfWidth, cols };
 }
 
+/** 6 rows × 3 bars of 4 capsules (110×44, 10 px apart), scaled to the stage. Each bar is a group. */
+function toolbars(width: number, height: number, merge: boolean): { surfaces: GlassSurface[]; groups: GlassGroup[] } {
+  const k = Math.min(width / 1500, height / 945);
+  const groups: GlassGroup[] = [];
+  for (let row = 0; row < 6; row++) {
+    for (let col = 0; col < 3; col++) {
+      const x0 = (40 + col * 490) * k;
+      const y = (80 + row * 150) * k;
+      const members = Array.from({ length: 4 }, (_, i) => {
+        const shape: Shape = { cx: x0 + (55 + i * 120) * k, cy: y, halfWidth: 55 * k, halfHeight: 22 * k, radius: 22 * k, exponent: 2, rotation: 0 };
+        return { shape, material: { ...DEFAULT_MATERIAL, bevel: Math.min(DEFAULT_MATERIAL.bevel, 22 * k) } };
+      });
+      if (merge) groups.push({ spacing: 24, surfaces: members });
+      else for (const m of members) groups.push({ spacing: 0, surfaces: [m] });
+    }
+  }
+  return { surfaces: groups.flatMap((g) => g.surfaces), groups };
+}
+
 /**
  * Row neighbours in groups of `size`, like toolbars; a group never wraps to the next row. The
  * spacing makes neighbours merge.
@@ -120,8 +146,16 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   renderer.setQuality(s.tier);
   source.setPainter(PAINTERS[s.scene]);
   renderer.invalidateSource();
-  const { surfaces, gap, cols } = layout(s.surfaces, canvas.clientWidth, canvas.clientHeight);
-  renderer.setGroups(grouped(surfaces, s.group ?? 1, gap, cols));
+  let surfaces: GlassSurface[];
+  if (s.layout === "toolbars") {
+    const bars = toolbars(canvas.clientWidth, canvas.clientHeight, (s.group ?? 1) > 1);
+    surfaces = bars.surfaces;
+    renderer.setGroups(bars.groups);
+  } else {
+    const grid = layout(s.surfaces, canvas.clientWidth, canvas.clientHeight);
+    surfaces = grid.surfaces;
+    renderer.setGroups(grouped(surfaces, s.group ?? 1, grid.gap, grid.cols));
+  }
   renderer.forcePyramid = s.dynamic;
   renderer.continuous = true;
   // Motion: every surface orbits its cell a little each frame, so the CPU re-packs and uploads
@@ -166,7 +200,18 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
 function render(results: Result[], gpu: GpuContext): void {
   const passes = [...new Set(results.flatMap((r) => Object.keys(r.gpuMs)))];
   const head = ["cena", "N", "nível", "caso", "cobert.", "fps", "CPU", ...passes.map((p) => `GPU ${p}`)];
-  const kind = (r: Result) => (r.motion ? "mover" : r.group && r.group > 1 ? `fusão ×${r.group}` : r.dynamic ? "vivo" : "fixo");
+  const kind = (r: Result) =>
+    r.layout === "toolbars"
+      ? r.group && r.group > 1
+        ? "barras fundidas"
+        : "barras soltas"
+      : r.motion
+        ? "mover"
+        : r.group && r.group > 1
+          ? `fusão ×${r.group}`
+          : r.dynamic
+            ? "vivo"
+            : "fixo";
   table.innerHTML =
     `<tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr>` +
     results

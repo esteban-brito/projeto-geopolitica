@@ -512,14 +512,17 @@ export class LiquidGlassRenderer {
         const shadow = shadowGeometry(material.gap * dpr, dpr);
         if (material.shadow > 0) shadowReach = Math.max(shadowReach, shadow.offsetY + shadow.sigma * 3);
       }
-      const reach = BOUNDS_MARGIN + k * Math.min(members.length - 1, 2) + shadowReach;
+      // `reach` is tested against a lower bound of the union, which already includes the sink;
+      // the rectangle is drawn around the boxes, so it needs the sink as margin too.
+      const reach = BOUNDS_MARGIN + shadowReach;
+      const margin = reach + k * Math.min(members.length - 1, 2);
       const bounds = [Infinity, Infinity, -Infinity, -Infinity];
       for (const { shape } of members) {
         const [ex, ey] = shapeExtent(shape);
-        bounds[0] = Math.min(bounds[0]!, (shape.cx - ex) * dpr - reach);
-        bounds[1] = Math.min(bounds[1]!, (shape.cy - ey) * dpr - reach);
-        bounds[2] = Math.max(bounds[2]!, (shape.cx + ex) * dpr + reach);
-        bounds[3] = Math.max(bounds[3]!, (shape.cy + ey) * dpr + reach);
+        bounds[0] = Math.min(bounds[0]!, (shape.cx - ex) * dpr - margin);
+        bounds[1] = Math.min(bounds[1]!, (shape.cy - ey) * dpr - margin);
+        bounds[2] = Math.max(bounds[2]!, (shape.cx + ex) * dpr + margin);
+        bounds[3] = Math.max(bounds[3]!, (shape.cy + ey) * dpr + margin);
       }
       const o = i * GROUP_FLOATS;
       gf.set(bounds, o);
