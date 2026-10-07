@@ -309,8 +309,9 @@ export class LiquidGlassRenderer {
   }
 
   setSource(source: BackgroundSource): void {
-    this.source?.dispose();
+    if (this.source !== source) this.source?.dispose();
     this.source = source;
+    source.onInvalidate = () => this.invalidateSource();
     this.sourceChanged = true;
     this.requestFrame();
   }

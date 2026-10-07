@@ -30,7 +30,14 @@ node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, gaveta, 
   Ajustes.
 - **Ajustes** (gaveta): Vidro, Forma, Luz e cor, Fusão e movimento, Avançado (perfil, qualidade,
   medir desempenho, inspecionar o shader).
-- A pílula no canto superior direito mostra fps e tempo de GPU; um clique abre o detalhe.
+- A pílula no canto superior direito mostra fps e tempo de GPU; um clique abre o detalhe (inclui
+  o brilho medido sob o vidro selecionado e o modo que ele escolheu).
+- **Regular** se adapta: arraste um vidro entre o céu e a cidade e veja o modo claro/escuro trocar,
+  com o símbolo em cima mudando de cor. **Claro** não se adapta.
+- **Página HTML** (último fundo antes do upload): DOM vivo sob o vidro via HTML-in-Canvas. No
+  Chrome, ligue `chrome://flags/#canvas-draw-element` (e, se preciso,
+  `#enable-experimental-web-platform-features`) e recarregue; sem a API, o laboratório avisa e
+  mostra a cena de texto.
 
 Requisitos: um navegador com WebGPU (Chrome/Edge 113+, Safari 26+, Firefox 141+ no Windows /
 145+ no macOS). Para medir tempo de GPU sem o arredondamento de 100 µs do Chrome, ligue
@@ -42,7 +49,7 @@ nada. **O SwiftShader headless perde o processo de GPU ao desenhar no swapchain 
 por isso testes e capturas renderizam fora da tela (`offscreen` no renderer). O laboratório e o
 bench sempre desenham no canvas, então só rodam numa máquina com GPU de verdade.
 
-## Estado: V3 — várias superfícies, fusão e morph (sobre a física do V2, o vidro do V1 e o V0)
+## Estado: V4 — o vidro lê o fundo: Regular adaptativo, qualidade automática, HTML-in-Canvas (sobre o V3)
 
 | peça | onde | situação |
 | --- | --- | --- |
@@ -86,8 +93,16 @@ de qualidade ainda só mudam o teto de DPR, então em DPR 1 `high` = `low`.
 Decisões do V3, com o que foi medido e rejeitado (dispersão espectral), em
 [`docs/research/01-engenharia-reversa.md` §13](docs/research/01-engenharia-reversa.md).
 
-**Próximo:** bench do V3 na RX 6600 (movimento e fusão) e impressões; depois V4 (HTML-in-Canvas,
-políticas Regular/Clear, métricas de fundo, qualidade adaptativa, camadas).
+| **métricas do fundo** por vidro (compute: L* média, p10, p90 de 8×8 amostras da pirâmide), leitura assíncrona | `glass.wgsl` (`cs_metrics`), `renderer.ts` | pronto |
+| **Regular adaptativo**: modo claro/escuro com histerese (L* 42–58) e animação; remapeia e satura a luz que passa; Claro não adapta | `src/glass/policy.ts`, `glass.wgsl` | pronto |
+| **qualidade automática** pelo tempo de GPU (desce >75% do quadro por 0,5 s, sobe <35% por 3 s, espera 2 s) | `src/renderer/adaptive.ts` | pronto |
+| **HTML-in-Canvas** atrás de `BackgroundSource`: nomes sondados em tempo de execução, ponte 2D e caminho direto, cliques no vidro não vazam para a página | `src/sources/html-in-canvas.ts` | pronto; **sucesso só verificável no seu Chrome** (o Chromium 141 daqui marca o canvas como de outra origem — o adaptador detecta e recua) |
+| testes do V4: política (7), qualidade automática (4), HTML-in-Canvas (1, os dois desfechos) | `tests/` | pronto |
+
+Decisões do V4 em [§14 do relatório](docs/research/01-engenharia-reversa.md).
+
+**Próximo:** sua impressão do Regular adaptativo e o teste do HTML-in-Canvas no Chrome 154;
+depois camadas (vidro sobre vidro) e o V5.
 
 ## Decisões que valem lembrar
 

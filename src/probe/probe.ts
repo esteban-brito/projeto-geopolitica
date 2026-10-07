@@ -5,6 +5,7 @@ import type { Shape } from "../glass/shape.ts";
 import { unionField } from "../glass/union.ts";
 import type { QualityTier } from "../renderer/quality.ts";
 import { LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
+import { HtmlInCanvasSource, htmlInCanvasAvailable, htmlInCanvasSupport } from "../sources/html-in-canvas.ts";
 import { NativeSource, type ScenePainter } from "../sources/native.ts";
 import { PAINTERS, paintCoordinates, paintSolid, type SceneId } from "../sources/scenes.ts";
 
@@ -14,7 +15,7 @@ import { PAINTERS, paintCoordinates, paintSolid, type SceneId } from "../sources
  */
 const canvas = document.querySelector<HTMLCanvasElement>("#probe")!;
 let renderer: LiquidGlassRenderer | null = null;
-let source: NativeSource | null = null;
+let source: NativeSource | HtmlInCanvasSource | null = null;
 
 interface SurfaceRequest {
   shape: Shape;
@@ -32,12 +33,27 @@ interface RenderRequest {
   quality?: QualityTier;
 }
 
-type ProbeScene = SceneId | "coordinates" | "solid-light" | "solid-dark" | "split";
+type ProbeScene = SceneId | "coordinates" | "solid-light" | "solid-dark" | "split" | "html";
 
-async function init(width: number, height: number, scene: ProbeScene): Promise<{ adapter: string; fallback: boolean }> {
+async function init(width: number, height: number, scene: ProbeScene): Promise<{ adapter: string; fallback: boolean; path?: string }> {
   renderer?.destroy();
   const gpu = await acquireGpu();
   renderer = new LiquidGlassRenderer(canvas, gpu, { readback: true, offscreen: { width, height } });
+  if (scene === "html") {
+    // A known page: white, a red square at (40, 40) of 60 px, a line of black text.
+    const support = htmlInCanvasSupport(gpu.device);
+    if (!htmlInCanvasAvailable(support)) throw new Error("HTML-in-Canvas indisponível");
+    const page = document.createElement("div");
+    page.style.cssText = `width:${width}px;height:${height}px;background:#fff;position:relative;font:16px sans-serif;color:#000`;
+    page.innerHTML = '<div style="position:absolute;left:40px;top:40px;width:60px;height:60px;background:#f00"></div><p style="position:absolute;left:140px;top:30px;margin:0">texto do DOM</p>';
+    const html = new HtmlInCanvasSource("html", document.body, page, support, () => 1);
+    html.host.style.cssText = `position:absolute;left:0;top:0;width:${width}px;height:${height}px`;
+    source = html;
+    renderer.setSource(html);
+    const error = await renderer.init();
+    if (error) throw new Error(error);
+    return { adapter: `${gpu.info.vendor} ${gpu.info.architecture}`, fallback: gpu.info.isFallback };
+  }
   // Offscreen targets are always dpr 1; the tier only selects shader features here.
   renderer.quality = "high";
   const painter =
@@ -129,6 +145,15 @@ const paintSplit: ScenePainter = (ctx, w, h) => {
   ctx.fillRect(w / 2, 0, w - w / 2, h);
 };
 
+/** Which path the HTML-in-Canvas source took on its last draw, and why none did. */
+function htmlPath(): string {
+  return source instanceof HtmlInCanvasSource ? source.path : "";
+}
+
+function htmlFailure(): string | null {
+  return source instanceof HtmlInCanvasSource ? source.failure : null;
+}
+
 /** Backdrop statistics of the surfaces of the last render: [mean L*, p10, p90, coverage] each. */
 async function backdrop(): Promise<number[][]> {
   if (!renderer) throw new Error("probe.init primeiro");
@@ -146,6 +171,8 @@ declare global {
       preset: typeof preset;
       predictUnion: typeof predictUnion;
       backdrop: typeof backdrop;
+      htmlPath: typeof htmlPath;
+      htmlFailure: typeof htmlFailure;
     };
   }
 }
@@ -154,4 +181,4 @@ function preset(id: PresetId): GlassMaterial {
   return cloneMaterial(PRESETS[id].material);
 }
 
-window.probe = { init, render, guard, predictOffset, preset, predictUnion, backdrop };
+window.probe = { init, render, guard, predictOffset, preset, predictUnion, backdrop, htmlPath, htmlFailure };

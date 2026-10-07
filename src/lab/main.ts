@@ -8,9 +8,12 @@ import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
 import { AdaptiveQuality, measureRefresh } from "../renderer/adaptive.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
 import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
+import { HtmlInCanvasSource, htmlInCanvasAvailable, htmlInCanvasSupport } from "../sources/html-in-canvas.ts";
 import { NativeSource } from "../sources/native.ts";
+import type { BackgroundSource } from "../sources/source.ts";
 import { PAINTERS, paintBitmap, SCENES, type SceneId } from "../sources/scenes.ts";
 import { color, hint, section, segmented, select, slider, toggle, type Control } from "./controls.ts";
+import { buildHtmlPage } from "./html-page.ts";
 import { ICONS, SYMBOLS } from "./icons.ts";
 
 const SHAPES: readonly { id: ShapeKind; label: string }[] = [
@@ -74,7 +77,8 @@ interface Glass {
 const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...DEFAULT_TUNING.deform }, deformation: DEFAULT_TUNING.deformation };
 
 const state = {
-  scene: "image" as SceneId,
+  /** "html": a live page through HTML-in-Canvas. */
+  scene: "image" as SceneId | "html",
   bitmap: null as ImageBitmap | null,
   /** "auto": AdaptiveQuality picks the tier from the measured GPU time. */
   quality: "auto" as QualityTier | "auto",
@@ -92,7 +96,7 @@ const MAX_RESTARTS = 2;
 let restarts = 0;
 let renderer: LiquidGlassRenderer | null = null;
 let currentGpu: GpuContext | null = null;
-let source: NativeSource | null = null;
+let source: BackgroundSource | null = null;
 const controls: Control[] = [];
 const guardHint = hint(guardText);
 
@@ -281,11 +285,50 @@ function removeGlass(): void {
   selectGlass(Math.min(state.selected, state.glasses.length - 1), false);
 }
 
-function setScene(scene: SceneId): void {
+/** The background for the current scene: a native painter, or the live page when the browser has HTML-in-Canvas. */
+function makeSource(r: LiquidGlassRenderer): BackgroundSource {
+  lab.classList.remove("has-html");
+  if (state.scene === "html") {
+    const support = htmlInCanvasSupport(r.gpu.device);
+    if (htmlInCanvasAvailable(support)) {
+      lab.classList.add("has-html");
+      const html = new HtmlInCanvasSource("página", lab, buildHtmlPage(), support, () => r.devicePixelRatio);
+      // The API exists but cannot reach the GPU here: say why and fall back (after this frame).
+      html.onFail = (reason) => {
+        queueMicrotask(() => {
+          const message = `<strong>HTML-in-Canvas</strong> existe neste navegador, mas não funciona aqui: ${reason}. Mostrando a cena de texto no lugar.`;
+          showNotice(message);
+          setTimeout(() => notice.innerHTML === message && showNotice(null), 8000);
+          setScene("text");
+        });
+      };
+      return html;
+    }
+    const message =
+      "Este navegador não expõe <strong>HTML-in-Canvas</strong>. No Chrome, ligue <strong>chrome://flags/#canvas-draw-element</strong> e recarregue. Mostrando a cena de texto no lugar.";
+    showNotice(message);
+    setTimeout(() => notice.innerHTML === message && showNotice(null), 6000);
+    state.scene = "text";
+  }
+  return new NativeSource("cena", state.bitmap ? paintBitmap(state.bitmap) : PAINTERS[state.scene as SceneId], () => r.devicePixelRatio);
+}
+
+function useSource(): void {
+  if (!renderer) return;
+  if (source instanceof HtmlInCanvasSource) source.page.dispatchEvent(new Event("hic:dispose"));
+  source = makeSource(renderer);
+  renderer.setSource(source);
+}
+
+function setScene(scene: SceneId | "html"): void {
+  const wasHtml = state.scene === "html";
   state.scene = scene;
   state.bitmap = null;
-  source?.setPainter(PAINTERS[scene]);
-  renderer?.invalidateSource();
+  if (scene === "html" || wasHtml || !(source instanceof NativeSource)) useSource();
+  else {
+    source.setPainter(PAINTERS[scene]);
+    renderer?.invalidateSource();
+  }
   refreshAll();
 }
 
@@ -305,8 +348,11 @@ function loadImage(): void {
       setTimeout(() => notice.innerHTML === message && showNotice(null), 4000);
       return;
     }
-    source?.setPainter(paintBitmap(state.bitmap));
-    renderer?.invalidateSource();
+    if (state.scene === "html") state.scene = "image";
+    if (source instanceof NativeSource) {
+      source.setPainter(paintBitmap(state.bitmap));
+      renderer?.invalidateSource();
+    } else useSource();
     refreshAll();
   });
   input.click();
@@ -401,12 +447,43 @@ function thumbnail(scene: SceneId): HTMLCanvasElement {
   return c;
 }
 
+/** A sketch of a web page for the HTML swatch. */
+function pageThumbnail(): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = 76;
+  c.height = 60;
+  const ctx = c.getContext("2d");
+  if (!ctx) return c;
+  const g = ctx.createLinearGradient(0, 0, 76, 60);
+  g.addColorStop(0, "#f6f1e7");
+  g.addColorStop(1, "#e9eef8");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 76, 60);
+  ctx.fillStyle = "#17181c";
+  ctx.fillRect(8, 9, 40, 6);
+  ctx.fillStyle = "#8a8c94";
+  for (let y = 21; y < 40; y += 5) ctx.fillRect(8, y, 58 - (y % 3) * 6, 2);
+  ctx.fillStyle = "#1f6feb";
+  ctx.fillRect(8, 45, 20, 8);
+  ctx.fillStyle = "#e8590c";
+  ctx.fillRect(31, 45, 20, 8);
+  return c;
+}
+
 function buildDock(): void {
   const scenes = SCENES.map((s) => {
     const b = chip({ html: "", label: `Fundo: ${s.label}`, className: "swatch", onClick: () => setScene(s.id), pressed: () => !state.bitmap && state.scene === s.id });
     b.append(thumbnail(s.id));
     return b;
   });
+  const page = chip({
+    html: "",
+    label: "Fundo: página HTML viva (HTML-in-Canvas, experimental)",
+    className: "swatch",
+    onClick: () => setScene("html"),
+    pressed: () => state.scene === "html",
+  });
+  page.append(pageThumbnail());
   const upload = chip({ html: ICONS.upload, label: "Usar uma foto sua como fundo", className: "chip--icon", onClick: loadImage, pressed: () => state.bitmap !== null });
   const shapes = SHAPES.map((s) =>
     chip({ html: ICONS[s.id], label: `Forma: ${s.label}`, className: "chip--icon", onClick: () => setShapeKind(s.id), pressed: () => selected().kind === s.id }),
@@ -426,7 +503,7 @@ function buildDock(): void {
   ];
   const tune = chip({ html: ICONS.tune, label: "Ajustes finos", className: "chip--icon", onClick: () => openDrawer(drawer.hidden), pressed: () => !drawer.hidden });
   dock.append(
-    dockGroup("Fundo", [...scenes, upload]),
+    dockGroup("Fundo", [...scenes, page, upload]),
     divider(),
     dockGroup("Forma", shapes),
     divider(),
@@ -615,34 +692,50 @@ function hit(x: number, y: number): number {
   return u.blend.reduce((best, e) => (e.weight > best.weight ? e : best)).index;
 }
 
+/**
+ * Pointer handling lives on the stage container, in the capture phase, so it works whether the
+ * stage canvas takes the pointer itself or lets it through to a live HTML page underneath
+ * (HTML-in-Canvas). A press on a glass is the glass's: it never reaches the page (no click, no
+ * focus, no text selection). Anywhere else the page gets the event untouched.
+ */
 function installDrag(): void {
   let dragging: Glass | null = null;
+  let swallowClick = false;
   const local = (e: MouseEvent) => {
     const rect = canvas.getBoundingClientRect();
     return [e.clientX - rect.left, e.clientY - rect.top] as const;
   };
-  canvas.addEventListener(
+  /** Events from the interface (dock, drawer, cards) are not the stage's. */
+  const onStage = (e: Event) => {
+    const t = e.target as Element | null;
+    return t === canvas || t === lab || !!t?.closest(".hic-host");
+  };
+  lab.addEventListener(
     "pointerdown",
     (e) => {
+      if (!onStage(e)) return;
       const [x, y] = local(e);
       const index = hit(x, y);
       if (index < 0) return;
+      e.stopPropagation();
+      e.preventDefault();
+      swallowClick = true;
       if (index !== state.selected) selectGlass(index);
       dragging = state.glasses[index]!;
       dragging.body.grab(x, y);
-      canvas.setPointerCapture(e.pointerId);
-      canvas.classList.add("is-grabbing");
+      lab.setPointerCapture(e.pointerId);
+      lab.classList.add("is-grabbing");
       coach.classList.add("is-done");
       animate();
     },
-    { passive: true },
+    { capture: true },
   );
-  canvas.addEventListener(
+  lab.addEventListener(
     "pointermove",
     (e) => {
       const [x, y] = local(e);
       if (!dragging) {
-        canvas.classList.toggle("is-grab", hit(x, y) >= 0);
+        lab.classList.toggle("is-grab", onStage(e) && hit(x, y) >= 0);
         return;
       }
       dragging.body.drag(x, y);
@@ -656,17 +749,35 @@ function installDrag(): void {
     if (!dragging) return;
     dragging.body.release();
     dragging = null;
-    canvas.classList.remove("is-grabbing");
+    lab.classList.remove("is-grabbing");
     animate();
   };
-  canvas.addEventListener("pointerup", end, { passive: true });
-  canvas.addEventListener("pointercancel", end, { passive: true });
+  lab.addEventListener("pointerup", end, { passive: true });
+  lab.addEventListener("pointercancel", end, { passive: true });
   // Alt-tab, a system gesture or a dialog can take the pointer without a pointerup.
-  canvas.addEventListener("lostpointercapture", end, { passive: true });
-  canvas.addEventListener("dblclick", (e) => {
-    const [x, y] = local(e);
-    if (hit(x, y) >= 0) openDrawer(true);
-  });
+  lab.addEventListener("lostpointercapture", end, { passive: true });
+  lab.addEventListener(
+    "click",
+    (e) => {
+      if (!swallowClick) return;
+      swallowClick = false;
+      e.stopPropagation();
+      e.preventDefault();
+    },
+    { capture: true },
+  );
+  lab.addEventListener(
+    "dblclick",
+    (e) => {
+      if (!onStage(e)) return;
+      const [x, y] = local(e);
+      if (hit(x, y) < 0) return;
+      e.stopPropagation();
+      e.preventDefault();
+      openDrawer(true);
+    },
+    { capture: true },
+  );
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !drawer.hidden) openDrawer(false);
   });
@@ -701,6 +812,7 @@ function renderMetrics(): void {
     ["DPR", `${r.devicePixelRatio.toFixed(2)} de ${(window.devicePixelRatio || 1).toFixed(2)}`],
     ["qualidade", `${TIER_LABEL[r.quality]}${state.quality === "auto" ? ` (auto, quadro de ${refreshMs.toFixed(1)} ms)` : ""}`],
     ["vidros", `${r.surfaceCount} em ${r.groupCount} grupo${r.groupCount === 1 ? "" : "s"}`],
+    ["fundo", source instanceof HtmlInCanvasSource ? `HTML-in-Canvas · ${source.path}` : "cena nativa (Canvas 2D)"],
     ["fundo sob o vidro", backdropText()],
     ["memória", `${(r.gpuBytes / 1048576).toFixed(1)} MB`],
     ["adaptador", `${gpu.info.vendor} ${gpu.info.architecture}`.trim(), gpu.info.isFallback],
@@ -766,7 +878,7 @@ async function start(): Promise<void> {
   r.onFrame = () => {
     if (!drawer.hidden) guardHint.refresh();
   };
-  source = new NativeSource("cena", state.bitmap ? paintBitmap(state.bitmap) : PAINTERS[state.scene], () => r.devicePixelRatio);
+  source = makeSource(r);
   r.setSource(source);
   surfacesChanged();
   r.setGroups([group]);

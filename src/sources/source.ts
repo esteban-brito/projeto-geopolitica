@@ -10,5 +10,7 @@ export interface BackgroundSource {
    * pyramid and anything derived from the content can be rebuilt only then.
    */
   update(device: GPUDevice, target: GPUTexture, sizeChanged: boolean): boolean;
+  /** Set by the renderer: a live source (HTML-in-Canvas, video) calls it when its pixels changed. */
+  onInvalidate?: (() => void) | null;
   dispose(): void;
 }

@@ -19,7 +19,8 @@ export async function openLab(path, { webgpu = true, viewport = { width: 1280, h
   // interface is tested here, where presenting a WebGPU canvas loses the GPU process.
   const browser = await chromium.launch({
     executablePath: process.env.LAB_CHROMIUM || undefined,
-    args: webgpu ? ["--enable-unsafe-webgpu"] : [],
+    // CanvasDrawElement: HTML-in-Canvas as this Chromium build names it (layoutsubtree + drawElement).
+    args: [...(webgpu ? ["--enable-unsafe-webgpu"] : []), "--enable-blink-features=CanvasDrawElement"],
   });
   const page = await browser.newPage({ deviceScaleFactor: 1, viewport });
   const errors = [];

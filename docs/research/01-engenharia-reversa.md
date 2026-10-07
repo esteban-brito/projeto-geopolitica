@@ -879,3 +879,61 @@ de 4,17 ms a 240 Hz. **Decisão: encerrado.** Se um dia o celular pedir, os cami
 normalização de alcance menor (muda o visual, pede captura lado a lado) ou ladrilhos em compute
 (V5).
 
+---
+
+## 14. V4: o vidro lê o fundo (07/10/2026)
+
+### 14.1 Métricas do fundo
+
+Um compute (`cs_metrics`) roda na mesma passada do quadro, entre a pirâmide e o vidro, só quando o
+conteúdo ou as superfícies mudam. Um grupo de trabalho por vidro: 8×8 amostras no retângulo da
+forma, cada uma lida no nível da pirâmide cujo texel ≈ uma célula (a amostra é a média da célula),
+as de fora da forma descartadas. Sai L* média, p10 e p90 (histograma de 16 baldes, interpolado no
+balde) e a cobertura. O shader do vidro lê o resultado **no mesmo quadro**; a CPU recebe por
+leitura assíncrona em anel (sem travar o quadro). Espelho em TS (`backdropStats`, `lightness`) e
+teste de paridade em fundos lisos e divididos.
+
+### 14.2 Regular × Claro
+
+- **Regular** escolhe um **modo**: claro sobre conteúdo claro (o que fica em cima é escuro),
+  escuro sobre conteúdo escuro. Histerese em L*: vira escuro abaixo de 42, volta a claro acima de
+  58; a troca anima numa mola (0,4 s, sem overshoot). Os símbolos do laboratório seguem o modo.
+- O que o Regular faz com a luz que passa (`adapt_light`): remapeia o intervalo para o lado legível
+  — modo claro leva o preto a 0,3 (luz linear), modo escuro leva o branco a 0,2 — na proporção
+  `adapt` (padrão 0,5), e satura um pouco (vibração, +35% × `adapt`). É política de legibilidade,
+  não física, e está declarada assim; a física do vidro continua a mesma.
+- **Claro** não adapta.
+- Sem aparência dada (testes, bench), o shader decide pela medida do mesmo quadro, sem memória.
+- Recusado de novo, como na §11: `environmentColorPickup` separado. A cor do ambiente já é a luz
+  refratada e borrada.
+
+### 14.3 Qualidade automática
+
+`AdaptiveQuality` olha o tempo de GPU (média da janela de quadros) contra o intervalo de
+atualização do monitor, medido: desce um nível acima de 75% por 0,5 s; sobe abaixo de 35% por 3 s;
+espera 2 s depois de cada troca e recomeça as médias. Um pico isolado não muda nada. É o padrão do
+laboratório. Sem `timestamp-query` não adapta (fica em Alta).
+
+### 14.4 HTML-in-Canvas
+
+O adaptador sonda nomes, nunca versões: `layoutsubtree` e `content="drawable"` no canvas,
+`drawable` no filho; `drawElementImage`, `drawElement` ou `drawHTMLElement` no 2D;
+`drawElementImageToTexture` ou as duas assinaturas de `copyElementImageToTexture` no WebGPU. A
+página fica dentro de um canvas sob o palco, então mantém foco, rolagem, digitação e a árvore de
+acessibilidade. O palco deixa o ponteiro passar e o arrasto do vidro mudou para o contêiner, na
+fase de captura: o que cai num vidro é do vidro (nem clique nem foco vazam para a página).
+
+**Medido aqui:** o Chromium 141 do contêiner, com `CanvasDrawElement`, expõe `layoutSubtree` e
+`drawElement` — e o `drawElement` dessa versão **marca o canvas como de outra origem**: a imagem
+não pode ir para a GPU. A API atual pinta só o que é seguro ler e deixa o canvas limpo. O adaptador
+detecta o `SecurityError`, não lança, diz o motivo e o laboratório volta à cena de texto. O caminho
+de sucesso está implementado e coberto pelo mesmo teste (que aceita os dois desfechos), mas **só o
+Chrome 154 do usuário diz se funciona**.
+
+### 14.5 O que ficou para depois
+
+- **Camadas (vidro sobre vidro)**: exigem recompor o fundo da camada de baixo e regerar a pirâmide
+  da região. A Apple desaconselha; fica para o próximo passo.
+- **sizeResponse** (§11.1: vidro maior = material mais espesso) e o controle único de "clareza"
+  (Claro ↔ Tingido) continuam no plano.
+
