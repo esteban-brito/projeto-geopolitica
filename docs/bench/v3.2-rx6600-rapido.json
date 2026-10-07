@@ -1,0 +1,481 @@
+{
+  "lab": "liquid-glass-lab V3",
+  "date": "2026-10-07T05:37:03.462Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+  "adapter": {
+    "vendor": "amd",
+    "architecture": "rdna-2",
+    "description": "AMD Radeon RX 6600",
+    "isFallback": false,
+    "timestamps": true,
+    "maxTexture": 8192
+  },
+  "devicePixelRatio": 1,
+  "note": "GPU ms são médias de janela; sem o flag de desenvolvedor do Chrome, cada medida é arredondada a 0,1 ms.",
+  "results": [
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.007506871871094143,
+      "samples": 120,
+      "fps": 239.9520095980802,
+      "cpuMs": 0.05416666716337204,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.01925733333333334,
+          "p95": 0.0196
+        },
+        "vidro": {
+          "mean": 0.005732333333333333,
+          "p95": 0.00624
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.07506871871094145,
+      "samples": 120,
+      "fps": 239.9520095980802,
+      "cpuMs": 0.056666666610787314,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.01920833333333334,
+          "p95": 0.01948
+        },
+        "vidro": {
+          "mean": 0.036453333333333324,
+          "p95": 0.03704
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.15013743742188285,
+      "samples": 120,
+      "fps": 239.9520095980802,
+      "cpuMs": 0.055833332954595485,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019170333333333338,
+          "p95": 0.01952
+        },
+        "vidro": {
+          "mean": 0.07053766666666667,
+          "p95": 0.0712
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.28504376992155,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.04666666683430473,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019238,
+          "p95": 0.01956
+        },
+        "vidro": {
+          "mean": 0.13833233333333336,
+          "p95": 0.13876
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.3755956120178393,
+      "samples": 120,
+      "fps": 239.9520095980802,
+      "cpuMs": 0.05500000026077032,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.01919933333333334,
+          "p95": 0.01956
+        },
+        "vidro": {
+          "mean": 0.2070133333333334,
+          "p95": 0.20768
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.007506871871094143,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.056666666517655055,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.01929733333333333,
+          "p95": 0.01956
+        },
+        "vidro": {
+          "mean": 0.004386,
+          "p95": 0.00492
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.07506871871094145,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.054166666604578494,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.01917733333333333,
+          "p95": 0.01948
+        },
+        "vidro": {
+          "mean": 0.031083666666666666,
+          "p95": 0.03156
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.15013743742188285,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05166666709507505,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.01929333333333334,
+          "p95": 0.0196
+        },
+        "vidro": {
+          "mean": 0.06047966666666663,
+          "p95": 0.06096
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.28504376992155,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.0649999998199443,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019223999999999998,
+          "p95": 0.0196
+        },
+        "vidro": {
+          "mean": 0.11972133333333333,
+          "p95": 0.1202
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.3755956120178393,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.061666666592160864,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019249333333333334,
+          "p95": 0.0196
+        },
+        "vidro": {
+          "mean": 0.18147733333333335,
+          "p95": 0.18212
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.007506871871094143,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.09500000001862645,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.060869333333333324,
+          "p95": 0.0616
+        },
+        "fundo": {
+          "mean": 0.018931333333333335,
+          "p95": 0.01924
+        },
+        "vidro": {
+          "mean": 0.006679000000000001,
+          "p95": 0.00692
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.07506871871094145,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.09583333311602474,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06055433333333335,
+          "p95": 0.06156
+        },
+        "fundo": {
+          "mean": 0.018903333333333334,
+          "p95": 0.01924
+        },
+        "vidro": {
+          "mean": 0.037729666666666654,
+          "p95": 0.03808
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.28504376992155,
+      "samples": 120,
+      "fps": 239.90403838464405,
+      "cpuMs": 0.09583333333333334,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06086666666666667,
+          "p95": 0.06152
+        },
+        "fundo": {
+          "mean": 0.018949000000000004,
+          "p95": 0.0194
+        },
+        "vidro": {
+          "mean": 0.1396276666666666,
+          "p95": 0.13992
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.3755956120178393,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.09333333373069763,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.060675999999999994,
+          "p95": 0.06152
+        },
+        "fundo": {
+          "mean": 0.018957333333333333,
+          "p95": 0.01928
+        },
+        "vidro": {
+          "mean": 0.20843200000000003,
+          "p95": 0.20888
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": false,
+      "motion": true,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.07506871871094145,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.09583333330228924,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019224666666666664,
+          "p95": 0.01968
+        },
+        "vidro": {
+          "mean": 0.036599666666666676,
+          "p95": 0.03728
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": false,
+      "motion": true,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.28504376992155,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.14249999976406494,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019204333333333323,
+          "p95": 0.01952
+        },
+        "vidro": {
+          "mean": 0.13862366666666662,
+          "p95": 0.13924
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": false,
+      "group": 4,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.15013743742188285,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.06500000000620881,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019117,
+          "p95": 0.0194
+        },
+        "vidro": {
+          "mean": 0.432140666666667,
+          "p95": 0.4342
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": false,
+      "group": 4,
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.3755956120178393,
+      "samples": 120,
+      "fps": 239.90403838464755,
+      "cpuMs": 0.06083333358789484,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019189333333333343,
+          "p95": 0.01956
+        },
+        "vidro": {
+          "mean": 0.9223730000000002,
+          "p95": 0.92368
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 72,
+      "tier": "high",
+      "dynamic": false,
+      "group": 1,
+      "layout": "toolbars",
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.2247380746330138,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.06749999973302086,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019147333333333336,
+          "p95": 0.01948
+        },
+        "vidro": {
+          "mean": 0.13171399999999997,
+          "p95": 0.13228
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 72,
+      "tier": "high",
+      "dynamic": false,
+      "group": 4,
+      "layout": "toolbars",
+      "resolution": "1500×945",
+      "dpr": 1,
+      "coverage": 0.2247380746330138,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.0658333332898716,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.019164999999999998,
+          "p95": 0.01948
+        },
+        "vidro": {
+          "mean": 0.6405029999999997,
+          "p95": 0.64244
+        }
+      }
+    }
+  ]
+}

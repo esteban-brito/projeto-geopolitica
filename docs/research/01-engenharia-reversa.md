@@ -863,3 +863,19 @@ rabo da sombra desce a zero em 3σ em vez de ser cortado (era um degrau de ~1,3%
 máximo 2 níveis de diferença, só nesse rabo. O bench ganhou um cenário realista (18 barras de 4
 botões, 10 px entre eles, espaçamento 24) ao lado do de estresse.
 
+### 13.9 Fechamento do desempenho do V3 ([`docs/bench/v3.2-rx6600-rapido.json`](../bench/v3.2-rx6600-rapido.json))
+
+| caso (1500×945, DPR 1) | V2 | V3 primeiro | V3 final |
+| --- | --- | --- | --- |
+| vidro solto, por pixel coberto | 0,52 ns | 0,88 ns | **0,34 ns** |
+| 100 em grupos de 4 (estresse: todo vizinho funde) | — | 2,61 ms | **0,92 ms** |
+| 72 botões em 18 barras fundidas (realista) | — | — | **0,64 ms** (soltos: 0,13 ms) |
+
+O vidro solto ficou 35% mais barato que no V2 (sombra só onde aparece, canto circular sem `pow`,
+saída antecipada de verdade). A fusão custa ~5× o vidro solto **onde ela age**, e isso é da smin
+cúbica, não do código: a influência de um membro alcança 6k (72 px com espaçamento 24), então num
+botão de 110 px quase todo pixel sente o vizinho e paga a união. Pior caso realista medido: 0,64 ms
+de 4,17 ms a 240 Hz. **Decisão: encerrado.** Se um dia o celular pedir, os caminhos são uma
+normalização de alcance menor (muda o visual, pede captura lado a lado) ou ladrilhos em compute
+(V5).
+
