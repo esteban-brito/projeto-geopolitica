@@ -2,6 +2,7 @@ import { acquireGpu, type GpuContext } from "../gpu/device.ts";
 import { DEFAULT_MATERIAL } from "../glass/material.ts";
 import type { Shape } from "../glass/shape.ts";
 import type { QualityTier } from "../renderer/quality.ts";
+import { SYMBOLS } from "../lab/icons.ts";
 import { LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
 import { NativeSource } from "../sources/native.ts";
 import { PAINTERS, type SceneId } from "../sources/scenes.ts";
@@ -21,6 +22,12 @@ interface Scenario {
    * (spacing 24 when group > 1). Default: the stress grid, where every neighbour merges.
    */
   layout?: "toolbars";
+  /**
+   * Glass over glass: the merged toolbars, each button with its symbol, on layer 0 and a popover
+   * (520×340) over them on layer 1. "upper": the popover moves (the composite below is reused);
+   * "lower": every toolbar button moves under it (composite and its pyramid redone every frame).
+   */
+  layers?: "upper" | "lower";
 }
 
 interface Result extends Scenario {
@@ -43,6 +50,7 @@ function tierScenarios(tier: QualityTier): Scenario[] {
     ...[10, 50].map((n) => ({ scene, surfaces: n, tier, dynamic: false, motion: true })),
     ...[2, 4].flatMap((group) => [20, 100].map((n) => ({ scene, surfaces: n, tier, dynamic: false, group }))),
     ...[1, 4].map((group) => ({ scene, surfaces: 72, tier, dynamic: false, group, layout: "toolbars" as const })),
+    ...(["upper", "lower"] as const).map((layers) => ({ scene, surfaces: 73, tier, dynamic: false, motion: true, layers })),
   ];
 }
 
@@ -57,6 +65,7 @@ const SUITES: Record<string, { label: string; scenarios: () => Scenario[] }> = {
       ...[10, 50].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: false, motion: true })),
       ...[20, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: false, group: 4 })),
       ...[1, 4].map((group) => ({ scene: "image" as const, surfaces: 72, tier: "high" as const, dynamic: false, group, layout: "toolbars" as const })),
+      ...(["upper", "lower"] as const).map((layers) => ({ scene: "image" as const, surfaces: 73, tier: "high" as const, dynamic: false, motion: true, layers })),
     ],
   },
   // The scene does not change the cost (four scenes within 0.2% on the RX 6600, v3.1 JSON), so the
@@ -118,6 +127,18 @@ function toolbars(width: number, height: number, merge: boolean): { surfaces: Gl
   return { surfaces: groups.flatMap((g) => g.surfaces), groups };
 }
 
+/** The merged toolbars with a symbol on every button (layer 0) and a popover over them (layer 1). */
+function popover(width: number, height: number): { lower: GlassSurface[]; upper: GlassSurface; groups: GlassGroup[] } {
+  const bars = toolbars(width, height, true);
+  bars.surfaces.forEach((surface, i) => {
+    surface.content = { symbol: i % SYMBOLS.length, size: 22, color: [0.1, 0.1, 0.12, 0.9] };
+  });
+  const k = Math.min(width / 1500, height / 945);
+  const shape: Shape = { cx: width / 2, cy: height / 2, halfWidth: 260 * k, halfHeight: 170 * k, radius: 28 * k, exponent: 2, rotation: 0 };
+  const upper: GlassSurface = { shape, material: { ...DEFAULT_MATERIAL, bevel: Math.min(DEFAULT_MATERIAL.bevel, 28 * k) } };
+  return { lower: bars.surfaces, upper, groups: [...bars.groups, { spacing: 0, surfaces: [upper], layer: 1 }] };
+}
+
 /**
  * Row neighbours in groups of `size`, like toolbars; a group never wraps to the next row. The
  * spacing makes neighbours merge.
@@ -147,7 +168,13 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   source.setPainter(PAINTERS[s.scene]);
   renderer.invalidateSource();
   let surfaces: GlassSurface[];
-  if (s.layout === "toolbars") {
+  let moving: GlassSurface[] | null = null;
+  if (s.layers) {
+    const scene = popover(canvas.clientWidth, canvas.clientHeight);
+    surfaces = [...scene.lower, scene.upper];
+    moving = s.layers === "upper" ? [scene.upper] : scene.lower;
+    renderer.setGroups(scene.groups);
+  } else if (s.layout === "toolbars") {
     const bars = toolbars(canvas.clientWidth, canvas.clientHeight, (s.group ?? 1) > 1);
     surfaces = bars.surfaces;
     renderer.setGroups(bars.groups);
@@ -160,11 +187,12 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   renderer.continuous = true;
   // Motion: every surface orbits its cell a little each frame, so the CPU re-packs and uploads
   // every record (the radial tables stay cached: moving does not change the optics).
-  const home = surfaces.map((x) => [x.shape.cx, x.shape.cy] as const);
+  const movers = moving ?? surfaces;
+  const home = movers.map((x) => [x.shape.cx, x.shape.cy] as const);
   renderer.onFrame = s.motion
     ? () => {
         const t = performance.now() / 1000;
-        surfaces.forEach((x, i) => {
+        movers.forEach((x, i) => {
           x.shape.cx = home[i]![0] + Math.cos(t * 2 + i) * 6;
           x.shape.cy = home[i]![1] + Math.sin(t * 2 + i) * 6;
         });
@@ -201,7 +229,9 @@ function render(results: Result[], gpu: GpuContext): void {
   const passes = [...new Set(results.flatMap((r) => Object.keys(r.gpuMs)))];
   const head = ["cena", "N", "nível", "caso", "cobert.", "fps", "CPU", ...passes.map((p) => `GPU ${p}`)];
   const kind = (r: Result) =>
-    r.layout === "toolbars"
+    r.layers
+      ? `camadas: ${r.layers === "upper" ? "a de cima" : "a de baixo"} move`
+      : r.layout === "toolbars"
       ? r.group && r.group > 1
         ? "barras fundidas"
         : "barras soltas"
@@ -224,7 +254,7 @@ function render(results: Result[], gpu: GpuContext): void {
       .join("");
   json.value = JSON.stringify(
     {
-      lab: "liquid-glass-lab V3",
+      lab: "liquid-glass-lab V4.1",
       date: new Date().toISOString(),
       userAgent: navigator.userAgent,
       adapter: gpu.info,
@@ -247,6 +277,7 @@ async function run(): Promise<void> {
   const renderer = new LiquidGlassRenderer(canvas, gpu);
   const source = new NativeSource("bench", PAINTERS.image, () => renderer.devicePixelRatio);
   renderer.setSource(source);
+  await renderer.setSymbols(SYMBOLS);
   const error = await renderer.init();
   if (error) {
     status.textContent = error;

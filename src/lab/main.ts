@@ -7,7 +7,7 @@ import { unionField } from "../glass/union.ts";
 import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
 import { AdaptiveQuality, measureRefresh } from "../renderer/adaptive.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
-import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
+import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassContent, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
 import { HtmlInCanvasSource, htmlInCanvasAvailable, htmlInCanvasSupport } from "../sources/html-in-canvas.ts";
 import { NativeSource } from "../sources/native.ts";
 import type { BackgroundSource } from "../sources/source.ts";
@@ -54,7 +54,6 @@ const statsButton = document.querySelector<HTMLButtonElement>("#stats")!;
 const statsCard = document.querySelector<HTMLElement>("#stats-card")!;
 const coach = document.querySelector<HTMLElement>("#coach")!;
 const selectionRing = document.querySelector<HTMLElement>("#selection")!;
-const labels = document.querySelector<HTMLElement>("#labels")!;
 const notice = document.querySelector<HTMLElement>("#notice")!;
 const shaderError = document.querySelector<HTMLElement>("#shader-error")!;
 
@@ -70,8 +69,10 @@ interface Glass {
   surface: GlassSurface;
   /** Regular's light/dark appearance over what is behind this glass. */
   policy: AppearancePolicy;
-  /** The symbol sitting on the glass, coloured by the appearance. */
-  label: HTMLElement;
+  /** The symbol sitting on the glass (SYMBOLS), drawn by the renderer in the glass's layer. */
+  symbol: number;
+  /** 1 floats over the others and refracts them; glasses of different layers never merge. */
+  layer: 0 | 1;
 }
 
 const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...DEFAULT_TUNING.deform }, deformation: DEFAULT_TUNING.deformation };
@@ -89,8 +90,11 @@ const state = {
   labels: true,
 };
 
-/** All glasses share one merge group: they flow together when they come within `spacing`. */
+/** The glasses of each layer share one merge group: they flow together within `spacing`. */
 const group: GlassGroup = { spacing: DEFAULT_SPACING, surfaces: [] };
+const upperGroup: GlassGroup = { spacing: DEFAULT_SPACING, surfaces: [], layer: 1 };
+/** The glasses in the renderer's order (layer 0, then layer 1): backdrop statistics come in it. */
+let flatOrder: Glass[] = [];
 
 const MAX_RESTARTS = 2;
 let restarts = 0;
@@ -104,30 +108,36 @@ const selected = (): Glass => state.glasses[state.selected]!;
 
 let symbolCounter = 0;
 
-function createGlass(kind: ShapeKind, cx: number, cy: number, preset: PresetId): Glass {
+function createGlass(kind: ShapeKind, cx: number, cy: number, preset: PresetId, layer: 0 | 1 = 0): Glass {
   const body = new GlassBody(shapeOf(kind, cx, cy), tuning);
   const material = cloneMaterial(PRESETS[preset].material);
-  const label = document.createElement("div");
-  label.className = "glass-label";
-  label.innerHTML = SYMBOLS[symbolCounter++ % SYMBOLS.length]!;
-  labels.append(label);
-  return { kind, body, material, preset, edited: false, surface: { shape: body.shape(), material }, policy: new AppearancePolicy(), label };
+  const symbol = symbolCounter++ % SYMBOLS.length;
+  return { kind, body, material, preset, edited: false, surface: { shape: body.shape(), material }, policy: new AppearancePolicy(), symbol, layer };
 }
 
-/** The symbol follows its glass (position, rotation, press) and takes the appearance's colour. */
-function placeLabel(g: Glass): void {
+/** The symbols as the renderer rasterizes them: the stroke a little heavier than the dock's. */
+const GLASS_SYMBOLS = SYMBOLS.map((svg) => svg.replace('stroke-width="1.5"', 'stroke-width="1.7"'));
+
+/**
+ * The symbol on a glass: sized by the glass, dark while the glass is in its light appearance and
+ * light in its dark one. The renderer moves it with the glass (centre, rotation, press).
+ */
+function contentOf(g: Glass): GlassContent {
   const s = g.surface.shape;
-  const size = Math.min(Math.max(Math.min(s.halfWidth, s.halfHeight) * 0.8, 14), 34) * (s.scale ?? 1);
   const a = g.policy.value;
-  const mix = (x: number, y: number) => Math.round(x + (y - x) * a);
-  g.label.style.width = g.label.style.height = `${size}px`;
-  g.label.style.transform = `translate(${s.cx - size / 2}px, ${s.cy - size / 2}px) rotate(${s.rotation}rad)`;
-  g.label.style.color = `rgb(${mix(28, 255)} ${mix(28, 255)} ${mix(32, 255)} / ${0.86 + 0.1 * a})`;
+  const mix = (x: number, y: number) => (x + (y - x) * a) / 255;
+  return { symbol: g.symbol, size: Math.min(Math.max(Math.min(s.halfWidth, s.halfHeight) * 0.8, 14), 34), color: [mix(28, 255), mix(28, 255), mix(32, 255), 0.86 + 0.1 * a] };
 }
 
-function rebuildGroup(): void {
-  group.surfaces = state.glasses.map((g) => g.surface);
-  renderer?.setGroups([group]);
+/** One merge group per layer; a glass on layer 1 floats over layer 0 and never merges with it. */
+function rebuildGroups(): void {
+  const base = state.glasses.filter((g) => g.layer === 0);
+  const top = state.glasses.filter((g) => g.layer === 1);
+  group.surfaces = base.map((g) => g.surface);
+  upperGroup.surfaces = top.map((g) => g.surface);
+  upperGroup.spacing = group.spacing;
+  flatOrder = [...base, ...top];
+  renderer?.setGroups([group, upperGroup]);
 }
 
 function surfacesChanged(): void {
@@ -136,7 +146,7 @@ function surfacesChanged(): void {
     g.surface.material = g.body.material(g.material);
     // Until the first measurement arrives the shader decides by itself (stateless).
     if (g.policy.ready) g.surface.appearance = g.policy.value;
-    if (state.labels) placeLabel(g);
+    g.surface.content = state.labels ? contentOf(g) : undefined;
   }
   renderer?.surfacesChanged();
 }
@@ -144,7 +154,7 @@ function surfacesChanged(): void {
 /** Backdrop measurements arrived (a frame or two late): feed each glass's policy. */
 function onBackdrop(stats: Float32Array): void {
   let animating = false;
-  state.glasses.forEach((g, i) => {
+  flatOrder.forEach((g, i) => {
     if (i * 4 + 3 >= stats.length) return;
     const first = !g.policy.ready;
     g.policy.update({ mean: stats[i * 4]!, p10: stats[i * 4 + 1]!, p90: stats[i * 4 + 2]!, coverage: stats[i * 4 + 3]! });
@@ -267,22 +277,30 @@ function addGlass(): void {
   const [minX, minY, maxX, maxY] = stageBounds();
   cx = Math.min(Math.max(cx, minX), maxX);
   cy = Math.min(Math.max(cy, minY), maxY);
-  const glass = createGlass("circle", cx, cy, from.preset);
+  const glass = createGlass("circle", cx, cy, from.preset, from.layer);
   glass.material = cloneMaterial(from.material);
   glass.edited = from.edited;
   state.glasses.push(glass);
-  rebuildGroup();
+  rebuildGroups();
   surfacesChanged();
   selectGlass(state.glasses.length - 1);
 }
 
 function removeGlass(): void {
   if (state.glasses.length <= 1) return;
-  const [gone] = state.glasses.splice(state.selected, 1);
-  gone?.label.remove();
-  rebuildGroup();
+  state.glasses.splice(state.selected, 1);
+  rebuildGroups();
   surfacesChanged();
   selectGlass(Math.min(state.selected, state.glasses.length - 1), false);
+}
+
+/** The selected glass goes over the others (or back among them). */
+function toggleLayer(): void {
+  const g = selected();
+  g.layer = g.layer === 1 ? 0 : 1;
+  rebuildGroups();
+  surfacesChanged();
+  refreshAll();
 }
 
 /** The background for the current scene: a native painter, or the live page when the browser has HTML-in-Canvas. */
@@ -500,6 +518,13 @@ function buildDock(): void {
   const glasses = [
     chip({ html: ICONS.add, label: "Adicionar um vidro", className: "chip--icon", onClick: addGlass, disabled: () => state.glasses.length >= MAX_GLASSES }),
     chip({ html: ICONS.remove, label: "Remover o vidro selecionado", className: "chip--icon", onClick: removeGlass, disabled: () => state.glasses.length <= 1 }),
+    chip({
+      html: ICONS.layers,
+      label: "Pôr o vidro selecionado por cima dos outros (ele refrata o que fica embaixo)",
+      className: "chip--icon",
+      onClick: toggleLayer,
+      pressed: () => selected().layer === 1,
+    }),
   ];
   const tune = chip({ html: ICONS.tune, label: "Ajustes finos", className: "chip--icon", onClick: () => openDrawer(drawer.hidden), pressed: () => !drawer.hidden });
   dock.append(
@@ -594,7 +619,10 @@ function buildDrawer(): void {
         max: 80,
         step: 1,
         get: () => group.spacing,
-        set: (v) => ((group.spacing = v), surfacesChanged()),
+        set: (v) => {
+          group.spacing = upperGroup.spacing = v;
+          surfacesChanged();
+        },
         format: (v) => (v <= 0 ? "desligada" : px(v)),
       }),
       slider({ label: "Resposta", hint: "Tempo que o vidro leva para alcançar o dedo.", min: 0.04, max: 0.5, step: 0.01, get: () => tuning.follow.response, set: (v) => (tuning.follow.response = v), format: (v) => `${Math.round(v * 1000)} ms` }),
@@ -618,7 +646,6 @@ function buildDrawer(): void {
         get: () => state.labels,
         set: (v) => {
           state.labels = v;
-          labels.hidden = !v;
           surfacesChanged();
         },
       }),
@@ -644,7 +671,7 @@ function refreshSubject(): void {
   const g = selected();
   const n = state.glasses.length;
   const name = n > 1 ? `Vidro ${state.selected + 1} de ${n}` : "Vidro";
-  drawerSubject.textContent = `${name} · ${PRESETS[g.preset].label}${g.edited ? " (ajustado)" : ""}`;
+  drawerSubject.textContent = `${name} · ${PRESETS[g.preset].label}${g.edited ? " (ajustado)" : ""}${g.layer === 1 ? " · por cima" : ""}`;
   if (g.edited) {
     const reset = document.createElement("button");
     reset.type = "button";
@@ -684,12 +711,25 @@ function flashSelection(): void {
   flashTimer = window.setTimeout(() => selectionRing.classList.remove("is-visible"), 700);
 }
 
-/** The glass under the pointer, including the neck between two merged glasses (its main member). */
+/**
+ * The glass under the pointer, including the neck between two merged glasses (its main member).
+ * The upper layer is on top: it takes the pointer first.
+ */
 function hit(x: number, y: number): number {
-  const shapes = state.glasses.map((g) => g.surface.shape);
-  const u = unionField(shapes, state.glasses.length > 1 ? group.spacing / 2 : 0, x, y);
-  if (u.d > 0) return -1;
-  return u.blend.reduce((best, e) => (e.weight > best.weight ? e : best)).index;
+  for (const layer of [1, 0] as const) {
+    const members = state.glasses.filter((g) => g.layer === layer);
+    if (members.length === 0) continue;
+    const u = unionField(
+      members.map((g) => g.surface.shape),
+      members.length > 1 ? group.spacing / 2 : 0,
+      x,
+      y,
+    );
+    if (u.d > 0) continue;
+    const main = u.blend.reduce((best, e) => (e.weight > best.weight ? e : best)).index;
+    return state.glasses.indexOf(members[main]!);
+  }
+  return -1;
 }
 
 /**
@@ -803,7 +843,9 @@ function renderMetrics(): void {
   if (statsCard.hidden) return;
   const rows: [string, string, boolean?][] = [
     ["quadros", fps],
-    ["CPU", ms(r.cpu.mean)],
+    // The median: a frame that repaints the scene (a resize, a new tier) costs milliseconds and
+    // would dominate an average of the few frames an idle lab draws.
+    ["CPU (mediana)", ms(r.cpu.percentile(0.5))],
   ];
   if (r.timer) for (const [name, s] of r.timer.series) rows.push([`GPU ${name}`, ms(s.mean)]);
   else rows.push(["GPU", "sem timestamp-query"]);
@@ -811,7 +853,7 @@ function renderMetrics(): void {
     ["resolução", `${r.resolution.width}×${r.resolution.height}`],
     ["DPR", `${r.devicePixelRatio.toFixed(2)} de ${(window.devicePixelRatio || 1).toFixed(2)}`],
     ["qualidade", `${TIER_LABEL[r.quality]}${state.quality === "auto" ? ` (auto, quadro de ${refreshMs.toFixed(1)} ms)` : ""}`],
-    ["vidros", `${r.surfaceCount} em ${r.groupCount} grupo${r.groupCount === 1 ? "" : "s"}`],
+    ["vidros", `${r.surfaceCount}${r.layerCount > 1 ? " em 2 camadas" : ""}`],
     ["fundo", source instanceof HtmlInCanvasSource ? `HTML-in-Canvas · ${source.path}` : "cena nativa (Canvas 2D)"],
     ["fundo sob o vidro", backdropText()],
     ["memória", `${(r.gpuBytes / 1048576).toFixed(1)} MB`],
@@ -874,6 +916,7 @@ async function start(): Promise<void> {
   };
   r.onBeforeFrame = stepBodies;
   r.onBackdrop = onBackdrop;
+  void r.setSymbols(GLASS_SYMBOLS);
   // The guard's numbers exist only after the frame built the tables.
   r.onFrame = () => {
     if (!drawer.hidden) guardHint.refresh();
@@ -881,7 +924,7 @@ async function start(): Promise<void> {
   source = makeSource(r);
   r.setSource(source);
   surfacesChanged();
-  r.setGroups([group]);
+  rebuildGroups();
   const error = await r.init();
   if (error) console.warn(error);
   refreshAll();
@@ -911,7 +954,7 @@ function initialGlasses(): void {
       createGlass("circle", w / 2, top + capsule.halfHeight * 2 + gap + circle.halfHeight, "regular"),
     ];
   }
-  rebuildGroup();
+  rebuildGroups();
 }
 
 initialGlasses();
@@ -931,6 +974,8 @@ declare global {
     lab?: {
       state: typeof state;
       group: GlassGroup;
+      /** What the renderer is given, as plain data (ui-shot renders it in the probe). */
+      groups: () => GlassGroup[];
       renderer: () => LiquidGlassRenderer | null;
       select: (i: number) => void;
       /** Feed backdrop statistics measured elsewhere (ui-shot renders the glass in the probe). */
@@ -938,4 +983,11 @@ declare global {
     };
   }
 }
-window.lab = { state, group, renderer: () => renderer, select: (i) => selectGlass(i), backdrop: (stats) => onBackdrop(new Float32Array(stats)) };
+window.lab = {
+  state,
+  group,
+  groups: () => {
+    surfacesChanged();
+    return [group, upperGroup];
+  },
+  renderer: () => renderer, select: (i) => selectGlass(i), backdrop: (stats) => onBackdrop(new Float32Array(stats)) };

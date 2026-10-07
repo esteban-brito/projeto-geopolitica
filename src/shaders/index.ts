@@ -1,4 +1,5 @@
 import background from "./background.wgsl?raw";
+import content from "./content.wgsl?raw";
 import glass from "./glass.wgsl?raw";
 import pyramid from "./pyramid.wgsl?raw";
 
@@ -6,11 +7,12 @@ export interface ShaderSources {
   background: string;
   glass: string;
   pyramid: string;
+  content: string;
 }
 
 type Listener = (sources: ShaderSources) => void;
 
-let current: ShaderSources = { background, glass, pyramid };
+let current: ShaderSources = { background, glass, pyramid, content };
 const listeners = new Set<Listener>();
 
 export function shaderSources(): ShaderSources {
@@ -24,12 +26,13 @@ export function onShaderChange(listener: Listener): () => void {
 }
 
 if (import.meta.hot) {
-  import.meta.hot.accept(["./background.wgsl?raw", "./glass.wgsl?raw", "./pyramid.wgsl?raw"], ([bg, gl, py]) => {
+  import.meta.hot.accept(["./background.wgsl?raw", "./glass.wgsl?raw", "./pyramid.wgsl?raw", "./content.wgsl?raw"], ([bg, gl, py, co]) => {
     const text = (m: unknown) => (m as { default?: string } | undefined)?.default;
     current = {
       background: text(bg) ?? current.background,
       glass: text(gl) ?? current.glass,
       pyramid: text(py) ?? current.pyramid,
+      content: text(co) ?? current.content,
     };
     for (const listener of listeners) listener(current);
   });

@@ -127,3 +127,29 @@ test("duplo clique num vidro abre os ajustes", async () => {
   await page.mouse.dblclick(x, y);
   assert.equal(await page.isVisible("#drawer"), true);
 });
+
+test("camadas: o vidro posto por cima não se funde com os de baixo e pega o toque primeiro", async () => {
+  await page.keyboard.press("Escape");
+  const layerChip = page.locator('button[aria-label^="Pôr o vidro selecionado por cima"]');
+  const [[x0, y0], [x1, y1]] = await centres();
+  await page.mouse.click(x0, y0);
+  await layerChip.click();
+  assert.equal(await layerChip.getAttribute("aria-pressed"), "true");
+  // Glass 0 onto glass 1: on one layer they would merge; across layers the upper one floats over.
+  await dragTo(0, x1, y1);
+  await settle();
+  const groups = await page.evaluate(() => {
+    const surfaces = window.lab.state.glasses.map((g) => g.surface);
+    return window.lab.groups().map((g) => ({ layer: g.layer ?? 0, members: g.surfaces.map((s) => surfaces.indexOf(s)) }));
+  });
+  const upper = groups.find((g) => g.layer === 1);
+  const base = groups.find((g) => g.layer === 0);
+  assert.deepEqual(upper.members, [0], "só o vidro 0 está por cima");
+  assert.ok(!base.members.includes(0) && base.members.includes(1), "e não entra no grupo de fusão dos outros");
+  // Where both overlap, the press is the upper glass's.
+  await page.mouse.click(x0 + 300, y0 + 200);
+  await page.mouse.click(x1, y1);
+  assert.equal(await page.evaluate(() => window.lab.state.selected), 0, "o toque na sobreposição seleciona o de cima");
+  await page.mouse.dblclick(x1, y1);
+  assert.match(await page.textContent("#drawer-subject"), /por cima/);
+});

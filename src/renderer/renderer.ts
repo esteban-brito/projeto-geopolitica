@@ -16,6 +16,7 @@ import { FrameGraph, type FrameContext, type Pass } from "./frame-graph.ts";
 import { TexturePool } from "./pool.ts";
 import type { AdaptiveQuality } from "./adaptive.ts";
 import { effectivePixelRatio, TIER_FEATURES, type QualityTier } from "./quality.ts";
+import { buildSymbolAtlas, SYMBOL_CELL, SYMBOL_LEVELS, type SymbolAtlas } from "./symbols.ts";
 import { GpuTimer, Series } from "./timer.ts";
 
 export interface GlassSurface {
@@ -26,6 +27,22 @@ export interface GlassSurface {
    * the shader derives it from this frame's backdrop metrics, without memory.
    */
   appearance?: number;
+  /** A symbol sitting on the glass, drawn in the glass's layer (see GlassContent). */
+  content?: GlassContent;
+}
+
+/**
+ * What sits on a glass — a toolbar's symbol. It follows the glass's centre, rotation and press,
+ * not its stretch, and it is drawn right after the glasses of its layer, so a glass of the layer
+ * above refracts it like anything else below.
+ */
+export interface GlassContent {
+  /** Index in the symbol set given to setSymbols(). */
+  symbol: number;
+  /** Side of the symbol's square, CSS px, before the press. */
+  size: number;
+  /** sRGB colour 0..1 and opacity. */
+  color: readonly [number, number, number, number];
 }
 
 /**
@@ -38,6 +55,13 @@ export interface GlassGroup {
   /** Gap, CSS px, at which two members touch. 0 keeps them apart. */
   spacing: number;
   surfaces: GlassSurface[];
+  /**
+   * 0 (default) sits on the content; 1 floats above layer 0 and refracts it — its glasses, their
+   * symbols and their shadows — the way a popover refracts the toolbar under it. Groups of
+   * different layers never merge. Layer 1 costs a composite of what lies below and its pyramid,
+   * redone only when something below changes; with nothing on layer 1 it costs nothing.
+   */
+  layer?: 0 | 1;
 }
 
 export const DEBUG_VIEWS = [
@@ -78,6 +102,7 @@ export interface Pixels {
 }
 
 const SURFACE_FLOATS = 32;
+const CONTENT_FLOATS = 12;
 /** Backdrop metrics read back to the CPU: a ring, so mapping never stalls a frame. */
 const METRICS_RING = 3;
 const GROUP_FLOATS = 8;
@@ -85,6 +110,27 @@ const TABLE_FLOATS = TABLE_SAMPLES * TABLE_STRIDE;
 const GLOBALS_BYTES = 48;
 /** Antialiasing band around the bounds of a group, device px. */
 const BOUNDS_MARGIN = 2;
+
+/** A mip chain with what it takes to rebuild it, made once per texture (never per frame). */
+interface Pyramid {
+  texture: GPUTexture;
+  /** One view per level, to render into. */
+  levels: GPUTextureView[];
+  /** Level i − 1 bound as the source of level i, at index i − 1. */
+  sources: GPUBindGroup[];
+  /** Every level, to sample. */
+  view: GPUTextureView;
+}
+
+/** Where a layer's records sit in the group buffer: lone surfaces (fs_single), then merge groups (fs_union). */
+interface LayerRecords {
+  singleStart: number;
+  singles: number;
+  unionStart: number;
+  unions: number;
+}
+
+const NO_RECORDS: LayerRecords = { singleStart: 0, singles: 0, unionStart: 0, unions: 0 };
 
 /**
  * The one renderer of the lab: one device, one canvas, one loop, every glass surface in one
@@ -128,7 +174,9 @@ export class LiquidGlassRenderer {
   private readonly glassLayout: GPUBindGroupLayout;
   private readonly metricsLayout: GPUBindGroupLayout;
   private metricsPipeline: GPUComputePipeline | null = null;
-  private metricsBindGroup: GPUBindGroup | null = null;
+  /** Per layer: the layer's pyramid and which layer the dispatch measures. */
+  private metricsBindGroups: (GPUBindGroup | null)[] = [null, null];
+  private readonly layerUniforms: GPUBuffer[];
   private metricsBuffer: GPUBuffer | null = null;
   private metricsSlots: { buffer: GPUBuffer; busy: boolean; count: number }[] = [];
   private metricsSlot: { buffer: GPUBuffer; busy: boolean; count: number } | null = null;
@@ -142,16 +190,46 @@ export class LiquidGlassRenderer {
   onBackdrop: ((stats: Float32Array) => void) | null = null;
   private bgPipeline: GPURenderPipeline | null = null;
   private pyramidPipeline: GPURenderPipeline | null = null;
+  /** The same downsample writing the canvas's format, for the composite under layer 1. */
+  private lowerPyramidPipeline: GPURenderPipeline | null = null;
   private readonly pyramidLayout: GPUBindGroupLayout;
-  private pyramidBindGroups: GPUBindGroup[] = [];
+  private bgPyramid: Pyramid | null = null;
   private pyramidDirty = true;
   private glassPipeline: GPURenderPipeline | null = null;
   private unionPipeline: GPURenderPipeline | null = null;
-  /** Records in the group buffer: lone surfaces first (fs_single), then merge groups (fs_union). */
-  private singleRecords = 0;
-  private unionRecords = 0;
-  private bgBindGroup: GPUBindGroup | null = null;
-  private glassBindGroup: GPUBindGroup | null = null;
+  private contentPipeline: GPURenderPipeline | null = null;
+  private readonly contentLayout: GPUBindGroupLayout;
+  private contentBindGroup: GPUBindGroup | null = null;
+  private contentBuffer: GPUBuffer | null = null;
+  private contentCapacity = 0;
+  /** Content records per layer, [start, count]: layer 0's first. */
+  private contentRanges: [number, number][] = [
+    [0, 0],
+    [0, 0],
+  ];
+  private atlas: SymbolAtlas | null = null;
+  private atlasRequest = 0;
+  /** Group-buffer ranges per layer. */
+  private layerRecords: LayerRecords[] = [NO_RECORDS, NO_RECORDS];
+  /** Something floats on layer 1 over something on layer 0 (a lone upper layer is drawn as layer 0). */
+  private layered = false;
+  /**
+   * The frame under layer 1: content, layer-0 glasses and their symbols, with its own pyramid. It
+   * is redone only when something in it changes, so an upper glass moving alone costs its own pass.
+   */
+  private lower: Pyramid | null = null;
+  private lowerStale = true;
+  private lowerDirty = true;
+  private lowerPyramidDirty = true;
+  /** What layer 0 looked like when the composite was made: packed surfaces, records, content. */
+  private lowerSignature: Float32Array | null = null;
+  private lowerKey = "";
+  /** How many times the composite under layer 1 was rendered (tests: moving the upper glass alone reuses it). */
+  lowerRenders = 0;
+  /** Per source of the full-screen copy: the content, or the composite under layer 1. */
+  private bgBindGroups: (GPUBindGroup | null)[] = [null, null];
+  /** Per layer: the glass pass sampling that layer's backdrop pyramid. */
+  private glassBindGroups: (GPUBindGroup | null)[] = [null, null];
   private surfaceBuffer: GPUBuffer | null = null;
   private surfaceCapacity = 0;
   private groupBuffer: GPUBuffer | null = null;
@@ -250,10 +328,33 @@ export class LiquidGlassRenderer {
         { binding: 2, visibility: GPUShaderStage.COMPUTE, texture: { sampleType: "float" } },
         { binding: 3, visibility: GPUShaderStage.COMPUTE, sampler: { type: "filtering" } },
         { binding: 7, visibility: GPUShaderStage.COMPUTE, buffer: { type: "storage" } },
+        { binding: 8, visibility: GPUShaderStage.COMPUTE, buffer: { type: "uniform" } },
       ],
     });
+    this.contentLayout = this.device.createBindGroupLayout({
+      label: "lab.content.layout",
+      entries: [
+        { binding: 0, visibility: GPUShaderStage.VERTEX, buffer: { type: "uniform" } },
+        { binding: 1, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
+        { binding: 2, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: "float" } },
+        { binding: 3, visibility: GPUShaderStage.FRAGMENT, sampler: { type: "filtering" } },
+      ],
+    });
+    this.layerUniforms = [0, 1].map((layer) => {
+      const buffer = this.device.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM, mappedAtCreation: true, label: `lab.layer${layer}` });
+      new Uint32Array(buffer.getMappedRange()).set([layer, 0, 0, 0]);
+      buffer.unmap();
+      return buffer;
+    });
 
-    this.graph.add(this.pyramidPass()).add(this.metricsPass()).add(this.backgroundPass()).add(this.glassPass());
+    this.graph
+      .add(this.pyramidPass())
+      .add(this.metricsPass(0))
+      .add(this.lowerPass())
+      .add(this.lowerPyramidPass())
+      .add(this.metricsPass(1))
+      .add(this.backgroundPass())
+      .add(this.glassPass());
 
     this.device.lost.then((info) => {
       if (this.destroyed) return;
@@ -298,13 +399,23 @@ export class LiquidGlassRenderer {
     return this.groups.length;
   }
 
+  /** Layers drawn: 2 when something floats over something else. */
+  get layerCount(): number {
+    return this.layered ? 2 : 1;
+  }
+
   get guardStats(): readonly GuardStats[] {
     return this.tables.map((t) => t.stats);
   }
 
   get gpuBytes(): number {
     return (
-      this.pool.bytes + this.surfaceCapacity * (SURFACE_FLOATS + TABLE_FLOATS) * 4 + this.groupCapacity * GROUP_FLOATS * 4 + GLOBALS_BYTES
+      this.pool.bytes +
+      this.surfaceCapacity * (SURFACE_FLOATS + TABLE_FLOATS) * 4 +
+      this.groupCapacity * GROUP_FLOATS * 4 +
+      this.contentCapacity * CONTENT_FLOATS * 4 +
+      (this.atlas ? (this.atlas.texture.width * this.atlas.texture.height * 4 * 4) / 3 : 0) +
+      GLOBALS_BYTES
     );
   }
 
@@ -331,6 +442,24 @@ export class LiquidGlassRenderer {
     this.groups = groups;
     this.surfacesDirty = true;
     this.requestFrame();
+  }
+
+  /**
+   * The symbols surfaces may carry (GlassContent.symbol indexes this list), as SVG markup drawn in
+   * currentColor. Rasterized once into an atlas; content shows up when it is ready.
+   */
+  setSymbols(svgs: readonly string[]): Promise<void> {
+    const request = ++this.atlasRequest;
+    return buildSymbolAtlas(this.device, svgs).then((atlas) => {
+      if (this.destroyed || request !== this.atlasRequest) {
+        atlas.texture.destroy();
+        return;
+      }
+      this.atlas?.texture.destroy();
+      this.atlas = atlas;
+      this.contentBindGroup = null;
+      this.surfacesChanged();
+    });
   }
 
   /** Call after mutating a surface or a group in place (drag, slider, a member added). */
@@ -373,6 +502,9 @@ export class LiquidGlassRenderer {
     this.surfaceBuffer?.destroy();
     this.tableBuffer?.destroy();
     this.groupBuffer?.destroy();
+    this.contentBuffer?.destroy();
+    this.atlas?.texture.destroy();
+    for (const u of this.layerUniforms) u.destroy();
     this.metricsBuffer?.destroy();
     for (const slot of this.metricsSlots) slot.buffer.destroy();
     this.context?.unconfigure();
@@ -409,9 +541,17 @@ export class LiquidGlassRenderer {
     if (this.source.update(this.device, this.background, sizeChanged)) {
       this.pyramidDirty = true;
       this.metricsDirty = true;
+      this.lowerDirty = true;
     }
-    if (this.forcePyramid) this.metricsDirty = true;
+    if (this.forcePyramid) this.metricsDirty = this.lowerDirty = true;
     if (this.surfacesDirty) this.uploadSurfaces();
+    if (this.lowerStale) this.ensureLower();
+    // What the shaders draw differently also changes the composite under layer 1.
+    const lowerKey = `${this.debugView}|${TIER_FEATURES[this.quality]}`;
+    if (lowerKey !== this.lowerKey) {
+      this.lowerKey = lowerKey;
+      this.lowerDirty = true;
+    }
 
     const g = new ArrayBuffer(GLOBALS_BYTES);
     const f = new Float32Array(g);
@@ -479,18 +619,75 @@ export class LiquidGlassRenderer {
     });
     if (created) {
       this.background = texture;
+      this.bgPyramid = this.makePyramid(texture, "background");
       this.sourceChanged = true;
       this.pyramidDirty = true;
-      this.bgBindGroup = null;
-      this.glassBindGroup = null;
-      this.pyramidBindGroups = [];
+      this.bgBindGroups[0] = null;
+      this.glassBindGroups[0] = null;
+      this.metricsBindGroups[0] = null;
     }
     this.surfacesDirty = true;
+    this.lowerStale = true;
+  }
+
+  /** Views of every level and the bind groups that downsample each from the one above. */
+  private makePyramid(texture: GPUTexture, label: string): Pyramid {
+    const levels = Array.from({ length: texture.mipLevelCount }, (_, i) => texture.createView({ baseMipLevel: i, mipLevelCount: 1, label: `lab.${label}.${i}` }));
+    return {
+      texture,
+      levels,
+      sources: levels.slice(0, -1).map((view, i) =>
+        this.device.createBindGroup({
+          layout: this.pyramidLayout,
+          entries: [
+            { binding: 0, resource: view },
+            { binding: 1, resource: this.sampler },
+          ],
+          label: `lab.${label}.pyramid.${i + 1}`,
+        }),
+      ),
+      view: texture.createView({ label: `lab.${label}` }),
+    };
+  }
+
+  /** The composite under layer 1 exists exactly while something floats over something else. */
+  private ensureLower(): void {
+    this.lowerStale = false;
+    const drop = () => {
+      this.bgBindGroups[1] = this.glassBindGroups[1] = this.metricsBindGroups[1] = null;
+      this.lowerDirty = true;
+    };
+    if (!this.layered || !this.background) {
+      if (this.lower) {
+        this.pool.release("lower");
+        this.lower = null;
+        drop();
+      }
+      return;
+    }
+    const { texture, created } = this.pool.get("lower", {
+      width: this.width,
+      height: this.height,
+      // The canvas's own format, so the background and glass pipelines draw into it unchanged.
+      format: this.viewFormat,
+      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT,
+      mipLevelCount: this.background.mipLevelCount,
+      label: "lab.lower",
+    });
+    if (created || !this.lower) {
+      this.lower = this.makePyramid(texture, "lower");
+      drop();
+    }
   }
 
   private uploadSurfaces(): void {
     this.surfacesDirty = false;
-    const flat = this.groups.flatMap((g) => g.surfaces);
+    // A lone upper layer has nothing under it to refract: it is drawn as layer 0, for free.
+    const groups = this.groups.filter((g) => g.surfaces.length > 0);
+    const layered = new Set(groups.map((g) => g.layer ?? 0)).size > 1;
+    const layerOf = (g: GlassGroup): 0 | 1 => (layered ? (g.layer ?? 0) : 0);
+    const flat = groups.flatMap((g) => g.surfaces);
+    const flatLayer = groups.flatMap((g) => g.surfaces.map(() => layerOf(g)));
     const count = flat.length;
     if (count > this.surfaceCapacity || !this.surfaceBuffer || !this.tableBuffer) {
       this.surfaceBuffer?.destroy();
@@ -522,44 +719,54 @@ export class LiquidGlassRenderer {
         busy: false,
         count: 0,
       }));
-      this.metricsBindGroup = null;
-      this.glassBindGroup = null;
+      this.metricsBindGroups = [null, null];
+      this.glassBindGroups = [null, null];
       this.tables = [];
     }
     const data = new Float32Array(Math.max(count, 1) * SURFACE_FLOATS);
     const dpr = this.dpr;
+    let lowerTables = false;
     this.tables.length = count;
-    flat.forEach(({ shape, material }, i) => {
+    flat.forEach(({ shape, material, appearance }, i) => {
       const key = tableKey(shape, material, dpr, this.guardEnabled);
       if (this.tables[i]?.key !== key) {
         const table = buildRadialTable(material, shape, dpr, this.guardEnabled);
         this.tables[i] = { key, ...table };
         this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
+        if (flatLayer[i] === 0) lowerTables = true;
       }
-      data.set(packSurface(shape, material, dpr, flat[i]!.appearance), i * SURFACE_FLOATS);
+      data.set(packSurface(shape, material, dpr, appearance, flatLayer[i]!), i * SURFACE_FLOATS);
     });
     this.metricsDirty = true;
     this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
 
-    // A group that cannot merge (one member, or spacing 0) is drawn as lone surfaces by the lean
-    // pipeline. Records keep the flat surface order inside each group.
+    // Records per layer, layer 0's first; within a layer, groups that cannot merge (one member, or
+    // spacing 0) are drawn as lone surfaces by the lean pipeline, then the merge groups.
     interface DrawRecord {
       start: number;
       members: GlassSurface[];
       k: number;
     }
-    const singles: DrawRecord[] = [];
-    const unions: DrawRecord[] = [];
+    const perLayer: { singles: DrawRecord[]; unions: DrawRecord[] }[] = [
+      { singles: [], unions: [] },
+      { singles: [], unions: [] },
+    ];
     let start = 0;
-    for (const group of this.groups) {
+    for (const group of groups) {
       const n = group.surfaces.length;
+      const { singles, unions } = perLayer[layerOf(group)]!;
       if (n > 1 && group.spacing > 0) unions.push({ start, members: group.surfaces, k: (group.spacing / 2) * dpr });
       else group.surfaces.forEach((surface, j) => singles.push({ start: start + j, members: [surface], k: 0 }));
       start += n;
     }
-    const records = [...singles, ...unions];
-    this.singleRecords = singles.length;
-    this.unionRecords = unions.length;
+    const records: DrawRecord[] = [];
+    this.layerRecords = perLayer.map(({ singles, unions }) => {
+      const singleStart = records.length;
+      records.push(...singles);
+      const unionStart = records.length;
+      records.push(...unions);
+      return { singleStart, singles: singles.length, unionStart, unions: unions.length };
+    });
     if (records.length > this.groupCapacity || !this.groupBuffer) {
       this.groupBuffer?.destroy();
       this.groupCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(records.length, 1))));
@@ -568,7 +775,7 @@ export class LiquidGlassRenderer {
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
         label: "lab.groups",
       });
-      this.glassBindGroup = null;
+      this.glassBindGroups = [null, null];
     }
     const groupData = new ArrayBuffer(Math.max(records.length, 1) * GROUP_FLOATS * 4);
     const gf = new Float32Array(groupData);
@@ -601,84 +808,151 @@ export class LiquidGlassRenderer {
       gf[o + 7] = reach;
     });
     this.device.queue.writeBuffer(this.groupBuffer, 0, groupData);
+
+    const contents = this.uploadContent(flat, flatLayer);
+
+    // The composite under layer 1 is reused until something in layer 0 changes: compare what
+    // layer 0 uploads now with what it uploaded when the composite was made.
+    if (layered !== this.layered) {
+      this.layered = layered;
+      this.lowerStale = true;
+      this.lowerDirty = true;
+    }
+    if (layered) {
+      const lower = this.layerRecords[0]!;
+      const recordFloats = (lower.unionStart + lower.unions) * GROUP_FLOATS;
+      const [contentStart, contentCount] = this.contentRanges[0]!;
+      const parts = [
+        ...flat.flatMap((_, i) => (flatLayer[i] === 0 ? [data.subarray(i * SURFACE_FLOATS, (i + 1) * SURFACE_FLOATS)] : [])),
+        gf.subarray(0, recordFloats),
+        contents.subarray(contentStart * CONTENT_FLOATS, (contentStart + contentCount) * CONTENT_FLOATS),
+      ];
+      const signature = new Float32Array(parts.reduce((n, p) => n + p.length, 0));
+      let o = 0;
+      for (const p of parts) {
+        signature.set(p, o);
+        o += p.length;
+      }
+      if (lowerTables || !sameFloats(signature, this.lowerSignature)) this.lowerDirty = true;
+      this.lowerSignature = signature;
+    } else {
+      this.lowerSignature = null;
+    }
+  }
+
+  /**
+   * Symbols on the glasses, layer 0's first. Placed from the shape: centre, rotation and press
+   * scale (not the stretch: what sits on a glass does not smear with it). Returns the records.
+   */
+  private uploadContent(flat: GlassSurface[], flatLayer: (0 | 1)[]): Float32Array {
+    const atlas = this.atlas;
+    const dpr = this.dpr;
+    const byLayer: number[][] = [[], []];
+    if (atlas) {
+      flat.forEach(({ shape, content }, i) => {
+        if (!content || content.symbol < 0 || content.symbol >= atlas.cells || content.size <= 0 || content.color[3] <= 0) return;
+        const half = (content.size * (shape.scale ?? 1) * dpr) / 2;
+        // A slight bias toward the larger raster keeps strokes crisp between two levels.
+        const lod = Math.min(Math.max(Math.log2(SYMBOL_CELL / (2 * half)) - 0.25, 0), SYMBOL_LEVELS - 1);
+        const [r, g, b, a] = content.color;
+        byLayer[flatLayer[i]!]!.push(
+          shape.cx * dpr, shape.cy * dpr, half, lod,
+          Math.cos(shape.rotation), Math.sin(shape.rotation), content.symbol, atlas.cells,
+          srgbToLinear(r), srgbToLinear(g), srgbToLinear(b), a,
+        );
+      });
+    }
+    const n0 = byLayer[0]!.length / CONTENT_FLOATS;
+    const n1 = byLayer[1]!.length / CONTENT_FLOATS;
+    this.contentRanges = [
+      [0, n0],
+      [n0, n1],
+    ];
+    const data = new Float32Array([...byLayer[0]!, ...byLayer[1]!]);
+    if (data.length === 0) return data;
+    const count = n0 + n1;
+    if (count > this.contentCapacity || !this.contentBuffer) {
+      this.contentBuffer?.destroy();
+      this.contentCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(count)));
+      this.contentBuffer = this.device.createBuffer({
+        size: this.contentCapacity * CONTENT_FLOATS * 4,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        label: "lab.content",
+      });
+      this.contentBindGroup = null;
+    }
+    this.device.queue.writeBuffer(this.contentBuffer, 0, data);
+    return data;
   }
 
   /** Rebuilds the mip chain of the content, only when the content changed. */
   private pyramidPass(): Pass {
     return {
       name: "pirâmide",
-      enabled: () => (this.pyramidDirty || this.forcePyramid) && this.background !== null && this.background.mipLevelCount > 1,
+      enabled: () => (this.pyramidDirty || this.forcePyramid) && this.bgPyramid !== null && this.bgPyramid.levels.length > 1,
       encode: (ctx: FrameContext, timestampWrites) => {
-        const texture = this.background;
-        if (!this.pyramidPipeline || !texture) return;
+        if (!this.pyramidPipeline || !this.bgPyramid) return;
         this.pyramidDirty = false;
-        const levels = texture.mipLevelCount;
-        if (this.pyramidBindGroups.length !== levels - 1) {
-          this.pyramidBindGroups = Array.from({ length: levels - 1 }, (_, i) =>
-            this.device.createBindGroup({
-              layout: this.pyramidLayout,
-              entries: [
-                { binding: 0, resource: texture.createView({ baseMipLevel: i, mipLevelCount: 1 }) },
-                { binding: 1, resource: this.sampler },
-              ],
-              label: `lab.pyramid.${i + 1}`,
-            }),
-          );
-        }
-        for (let level = 1; level < levels; level++) {
-          const first = level === 1;
-          const last = level === levels - 1;
-          const writes: GPURenderPassTimestampWrites | undefined = timestampWrites && {
-            querySet: timestampWrites.querySet,
-            ...(first ? { beginningOfPassWriteIndex: timestampWrites.beginningOfPassWriteIndex } : {}),
-            ...(last ? { endOfPassWriteIndex: timestampWrites.endOfPassWriteIndex } : {}),
-          };
-          const pass = ctx.encoder.beginRenderPass({
-            label: `pirâmide ${level}`,
-            colorAttachments: [
-              {
-                view: texture.createView({ baseMipLevel: level, mipLevelCount: 1 }),
-                loadOp: "clear",
-                storeOp: "store",
-                clearValue: [0, 0, 0, 1],
-              },
-            ],
-            ...(writes && (first || last) ? { timestampWrites: writes } : {}),
-          });
-          pass.setPipeline(this.pyramidPipeline);
-          pass.setBindGroup(0, this.pyramidBindGroups[level - 1]!);
-          pass.draw(3);
-          pass.end();
-        }
+        this.encodePyramid(ctx, this.bgPyramid, this.pyramidPipeline, timestampWrites);
       },
     };
   }
 
-  /** Backdrop statistics under every surface, from the fresh pyramid; only when something changed. */
-  private metricsPass(): Pass {
+  /** Each level from the one above; the span covers the whole chain. */
+  private encodePyramid(ctx: FrameContext, pyramid: Pyramid, pipeline: GPURenderPipeline, timestampWrites: GPURenderPassTimestampWrites | undefined): void {
+    const levels = pyramid.levels.length;
+    for (let level = 1; level < levels; level++) {
+      const first = level === 1;
+      const last = level === levels - 1;
+      const writes: GPURenderPassTimestampWrites | undefined = timestampWrites && {
+        querySet: timestampWrites.querySet,
+        ...(first ? { beginningOfPassWriteIndex: timestampWrites.beginningOfPassWriteIndex } : {}),
+        ...(last ? { endOfPassWriteIndex: timestampWrites.endOfPassWriteIndex } : {}),
+      };
+      const pass = ctx.encoder.beginRenderPass({
+        label: `pirâmide ${level}`,
+        colorAttachments: [{ view: pyramid.levels[level]!, loadOp: "clear", storeOp: "store", clearValue: [0, 0, 0, 1] }],
+        ...(writes && (first || last) ? { timestampWrites: writes } : {}),
+      });
+      pass.setPipeline(pipeline);
+      pass.setBindGroup(0, pyramid.sources[level - 1]!);
+      pass.draw(3);
+      pass.end();
+    }
+  }
+
+  /**
+   * Backdrop statistics under every surface of `layer`, from that layer's fresh pyramid (the
+   * content for layer 0, the composite below for layer 1); only when something changed. The last
+   * layer's dispatch copies the results out for the CPU.
+   */
+  private metricsPass(layer: 0 | 1): Pass {
     return {
-      name: "métricas",
-      enabled: () => this.metricsDirty && this.surfaceCount > 0 && this.metricsPipeline !== null && this.background !== null,
+      name: layer === 0 ? "métricas" : "métricas da camada",
+      enabled: () => this.metricsDirty && (layer === 0 || this.lower !== null) && this.surfaceCount > 0 && this.metricsPipeline !== null && this.background !== null,
       encode: (ctx: FrameContext, timestampWrites) => {
-        if (!this.metricsPipeline || !this.background || !this.surfaceBuffer || !this.metricsBuffer) return;
-        this.metricsDirty = false;
-        this.metricsBindGroup ??= this.device.createBindGroup({
+        const backdrop = layer === 0 ? this.bgPyramid : this.lower;
+        if (!this.metricsPipeline || !backdrop || !this.surfaceBuffer || !this.metricsBuffer) return;
+        const bind = (this.metricsBindGroups[layer] ??= this.device.createBindGroup({
           layout: this.metricsLayout,
           entries: [
             { binding: 0, resource: { buffer: this.globals } },
             { binding: 1, resource: { buffer: this.surfaceBuffer } },
-            { binding: 2, resource: this.background.createView() },
+            { binding: 2, resource: backdrop.view },
             { binding: 3, resource: this.sampler },
             { binding: 7, resource: { buffer: this.metricsBuffer } },
+            { binding: 8, resource: { buffer: this.layerUniforms[layer]! } },
           ],
-          label: "lab.metrics.bind",
-        });
+          label: `lab.metrics.bind${layer}`,
+        }));
         const count = this.surfaceCount;
         const pass = ctx.encoder.beginComputePass({ label: "métricas", ...(timestampWrites ? { timestampWrites } : {}) });
         pass.setPipeline(this.metricsPipeline);
-        pass.setBindGroup(0, this.metricsBindGroup);
+        pass.setBindGroup(0, bind);
         pass.dispatchWorkgroups(count);
         pass.end();
+        if (layer === 0 && this.lower) return;
+        this.metricsDirty = false;
         const slot = this.metricsSlots.find((x) => !x.busy) ?? null;
         if (slot) {
           ctx.encoder.copyBufferToBuffer(this.metricsBuffer, 0, slot.buffer, 0, count * 16);
@@ -691,6 +965,100 @@ export class LiquidGlassRenderer {
         }
       },
     };
+  }
+
+  /** The frame under layer 1: content, layer-0 glasses, their symbols. Only when one of them changed. */
+  private lowerPass(): Pass {
+    return {
+      name: "camada de baixo",
+      enabled: () => this.lower !== null && this.lowerDirty,
+      encode: (ctx: FrameContext, timestampWrites) => {
+        const lower = this.lower;
+        if (!lower) return;
+        this.lowerDirty = false;
+        this.lowerPyramidDirty = true;
+        this.lowerRenders++;
+        const pass = ctx.encoder.beginRenderPass({
+          label: "camada de baixo",
+          colorAttachments: [{ view: lower.levels[0]!, loadOp: "clear", storeOp: "store", clearValue: [0, 0, 0, 1] }],
+          ...(timestampWrites ? { timestampWrites } : {}),
+        });
+        this.drawCopy(pass, 0);
+        this.drawLayer(pass, 0);
+        pass.end();
+      },
+    };
+  }
+
+  private lowerPyramidPass(): Pass {
+    return {
+      name: "pirâmide da camada",
+      enabled: () => this.lower !== null && this.lowerPyramidDirty && this.lower.levels.length > 1,
+      encode: (ctx: FrameContext, timestampWrites) => {
+        if (!this.lower || !this.lowerPyramidPipeline) return;
+        this.lowerPyramidDirty = false;
+        this.encodePyramid(ctx, this.lower, this.lowerPyramidPipeline, timestampWrites);
+      },
+    };
+  }
+
+  /** Full-screen copy of the content (source 0) or of the composite under layer 1 (source 1). */
+  private drawCopy(pass: GPURenderPassEncoder, from: 0 | 1): void {
+    const pyramid = from === 0 ? this.bgPyramid : this.lower;
+    if (!this.bgPipeline || !pyramid) return;
+    const bind = (this.bgBindGroups[from] ??= this.device.createBindGroup({
+      layout: this.bgLayout,
+      entries: [{ binding: 0, resource: pyramid.levels[0]! }],
+      label: `lab.background.bind${from}`,
+    }));
+    pass.setPipeline(this.bgPipeline);
+    pass.setBindGroup(0, bind);
+    pass.draw(3);
+  }
+
+  /** The glasses of one layer, sampling that layer's backdrop, then the symbols on them. */
+  private drawLayer(pass: GPURenderPassEncoder, layer: 0 | 1): void {
+    const backdrop = layer === 0 ? this.bgPyramid : this.lower;
+    if (!this.glassPipeline || !backdrop || !this.surfaceBuffer || !this.tableBuffer || !this.groupBuffer || !this.metricsBuffer) return;
+    const records = this.layerRecords[layer]!;
+    const bind = (this.glassBindGroups[layer] ??= this.device.createBindGroup({
+      layout: this.glassLayout,
+      entries: [
+        { binding: 0, resource: { buffer: this.globals } },
+        { binding: 1, resource: { buffer: this.surfaceBuffer } },
+        { binding: 2, resource: backdrop.view },
+        { binding: 3, resource: this.sampler },
+        { binding: 4, resource: { buffer: this.tableBuffer } },
+        { binding: 5, resource: { buffer: this.groupBuffer } },
+        { binding: 6, resource: { buffer: this.metricsBuffer } },
+      ],
+      label: `lab.glass.bind${layer}`,
+    }));
+    pass.setBindGroup(0, bind);
+    if (records.singles > 0) {
+      pass.setPipeline(this.glassPipeline);
+      pass.draw(6, records.singles, 0, records.singleStart);
+    }
+    if (records.unions > 0 && this.unionPipeline) {
+      pass.setPipeline(this.unionPipeline);
+      pass.draw(6, records.unions, 0, records.unionStart);
+    }
+    // An inspector view shows a quantity of the glass; a symbol over it would hide it.
+    const [start, count] = this.contentRanges[layer]!;
+    if (count === 0 || this.debugView !== 0 || !this.contentPipeline || !this.contentBuffer || !this.atlas) return;
+    const content = (this.contentBindGroup ??= this.device.createBindGroup({
+      layout: this.contentLayout,
+      entries: [
+        { binding: 0, resource: { buffer: this.globals } },
+        { binding: 1, resource: { buffer: this.contentBuffer } },
+        { binding: 2, resource: this.atlas.texture.createView() },
+        { binding: 3, resource: this.sampler },
+      ],
+      label: "lab.content.bind",
+    }));
+    pass.setPipeline(this.contentPipeline);
+    pass.setBindGroup(0, content);
+    pass.draw(6, count, 0, start);
   }
 
   /** After submit: map the metrics copied this frame, if any. */
@@ -729,58 +1097,29 @@ export class LiquidGlassRenderer {
       name: "fundo",
       enabled: () => true,
       encode: (ctx: FrameContext, timestampWrites) => {
-        if (!this.bgPipeline || !this.background) return;
-        this.bgBindGroup ??= this.device.createBindGroup({
-          layout: this.bgLayout,
-          entries: [{ binding: 0, resource: this.background.createView({ baseMipLevel: 0, mipLevelCount: 1 }) }],
-          label: "lab.background.bind",
-        });
         const pass = ctx.encoder.beginRenderPass({
           label: "fundo",
           colorAttachments: [{ view: ctx.target, loadOp: "clear", storeOp: "store", clearValue: [0, 0, 0, 1] }],
           ...(timestampWrites ? { timestampWrites } : {}),
         });
-        pass.setPipeline(this.bgPipeline);
-        pass.setBindGroup(0, this.bgBindGroup);
-        pass.draw(3);
+        this.drawCopy(pass, this.lower ? 1 : 0);
         pass.end();
       },
     };
   }
 
+  /** The top layer's glasses and symbols (the only layer, unless something floats). */
   private glassPass(): Pass {
     return {
       name: "vidro",
       enabled: () => this.groups.length > 0,
       encode: (ctx: FrameContext, timestampWrites) => {
-        if (!this.glassPipeline || !this.background || !this.surfaceBuffer || !this.tableBuffer || !this.groupBuffer) return;
-        this.glassBindGroup ??= this.device.createBindGroup({
-          layout: this.glassLayout,
-          entries: [
-            { binding: 0, resource: { buffer: this.globals } },
-            { binding: 1, resource: { buffer: this.surfaceBuffer } },
-            { binding: 2, resource: this.background.createView() },
-            { binding: 3, resource: this.sampler },
-            { binding: 4, resource: { buffer: this.tableBuffer } },
-            { binding: 5, resource: { buffer: this.groupBuffer } },
-            { binding: 6, resource: { buffer: this.metricsBuffer! } },
-          ],
-          label: "lab.glass.bind",
-        });
         const pass = ctx.encoder.beginRenderPass({
           label: "vidro",
           colorAttachments: [{ view: ctx.target, loadOp: "load", storeOp: "store" }],
           ...(timestampWrites ? { timestampWrites } : {}),
         });
-        pass.setBindGroup(0, this.glassBindGroup);
-        if (this.singleRecords > 0) {
-          pass.setPipeline(this.glassPipeline);
-          pass.draw(6, this.singleRecords);
-        }
-        if (this.unionRecords > 0 && this.unionPipeline) {
-          pass.setPipeline(this.unionPipeline);
-          pass.draw(6, this.unionRecords, 0, this.singleRecords);
-        }
+        this.drawLayer(pass, this.lower ? 1 : 0);
         pass.end();
       },
     };
@@ -792,11 +1131,13 @@ export class LiquidGlassRenderer {
     const bgModule = device.createShaderModule({ code: sources.background, label: "background.wgsl" });
     const glassModule = device.createShaderModule({ code: sources.glass, label: "glass.wgsl" });
     const pyramidModule = device.createShaderModule({ code: sources.pyramid, label: "pyramid.wgsl" });
+    const contentModule = device.createShaderModule({ code: sources.content, label: "content.wgsl" });
     const messages: string[] = [];
     for (const [name, module] of [
       ["background.wgsl", bgModule],
       ["glass.wgsl", glassModule],
       ["pyramid.wgsl", pyramidModule],
+      ["content.wgsl", contentModule],
     ] as const) {
       const info = await module.getCompilationInfo();
       for (const m of info.messages) {
@@ -817,25 +1158,20 @@ export class LiquidGlassRenderer {
       fragment: { module: bgModule, entryPoint: "fs_main", targets: [target] },
       primitive: { topology: "triangle-list" },
     });
+    const premultiplied: GPUColorTargetState = {
+      format: this.viewFormat,
+      blend: {
+        color: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
+        alpha: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
+      },
+    };
     const glassLayout = device.createPipelineLayout({ bindGroupLayouts: [this.glassLayout] });
     const glassPipeline = (entryPoint: string) =>
       device.createRenderPipeline({
         label: `glass.${entryPoint}`,
         layout: glassLayout,
         vertex: { module: glassModule, entryPoint: "vs_main" },
-        fragment: {
-          module: glassModule,
-          entryPoint,
-          targets: [
-            {
-              format: this.viewFormat,
-              blend: {
-                color: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
-                alpha: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" },
-              },
-            },
-          ],
-        },
+        fragment: { module: glassModule, entryPoint, targets: [premultiplied] },
         primitive: { topology: "triangle-list" },
       });
     const glass = glassPipeline("fs_single");
@@ -845,11 +1181,22 @@ export class LiquidGlassRenderer {
       layout: device.createPipelineLayout({ bindGroupLayouts: [this.metricsLayout] }),
       compute: { module: glassModule, entryPoint: "cs_metrics" },
     });
-    const pyramid = device.createRenderPipeline({
-      label: "pyramid",
-      layout: device.createPipelineLayout({ bindGroupLayouts: [this.pyramidLayout] }),
-      vertex: { module: pyramidModule, entryPoint: "vs_main" },
-      fragment: { module: pyramidModule, entryPoint: "fs_main", targets: [{ format: "rgba8unorm-srgb" }] },
+    const pyramidLayout = device.createPipelineLayout({ bindGroupLayouts: [this.pyramidLayout] });
+    const pyramidFor = (format: GPUTextureFormat) =>
+      device.createRenderPipeline({
+        label: `pyramid.${format}`,
+        layout: pyramidLayout,
+        vertex: { module: pyramidModule, entryPoint: "vs_main" },
+        fragment: { module: pyramidModule, entryPoint: "fs_main", targets: [{ format }] },
+        primitive: { topology: "triangle-list" },
+      });
+    const pyramid = pyramidFor("rgba8unorm-srgb");
+    const lowerPyramid = this.viewFormat === "rgba8unorm-srgb" ? pyramid : pyramidFor(this.viewFormat);
+    const content = device.createRenderPipeline({
+      label: "content",
+      layout: device.createPipelineLayout({ bindGroupLayouts: [this.contentLayout] }),
+      vertex: { module: contentModule, entryPoint: "vs_main" },
+      fragment: { module: contentModule, entryPoint: "fs_main", targets: [premultiplied] },
       primitive: { topology: "triangle-list" },
     });
     const error = await device.popErrorScope();
@@ -863,7 +1210,10 @@ export class LiquidGlassRenderer {
     this.metricsPipeline = metrics;
     this.metricsDirty = true;
     this.pyramidPipeline = pyramid;
+    this.lowerPyramidPipeline = lowerPyramid;
+    this.contentPipeline = content;
     this.pyramidDirty = true;
+    this.lowerDirty = true;
     this.onShaderError?.(null);
     this.requestFrame();
     return null;
@@ -911,7 +1261,7 @@ function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): 
  * computed here once: absorption from tint and density, blur radius from roughness and the glass's
  * height, the key light direction, F0 from the ior, the shadow's offset and softness from the gap.
  */
-function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: number | undefined): number[] {
+function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: number | undefined, layer: 0 | 1): number[] {
   const { bevel } = deviceGeometry(m, shape, dpr);
   const absorb = m.tint.map((c) => (m.density * -Math.log(Math.max(c, 1e-3))) / (REFERENCE_PATH * dpr));
   const blur = 1.6 * (m.thickness + m.gap + m.bevel * 0.5) * m.roughness ** 1.5 * dpr;
@@ -927,6 +1277,17 @@ function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: nu
     absorb[0]!, absorb[1]!, absorb[2]!, m.light,
     Math.cos(angle), -Math.sin(angle), blur, f0,
     inv[0], inv[1], inv[2], inv[3],
-    m.variant === "regular" ? m.adapt : 0, appearance ?? -1, 0, 0,
+    m.variant === "regular" ? m.adapt : 0, appearance ?? -1, layer, 0,
   ];
+}
+
+/** sRGB transfer, decoded: the frame is lit and blended in linear light. */
+function srgbToLinear(c: number): number {
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+}
+
+function sameFloats(a: Float32Array, b: Float32Array | null): boolean {
+  if (!b || a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
 }

@@ -49,6 +49,12 @@ export class TexturePool {
     return { texture, created: true };
   }
 
+  /** Frees a role nobody uses any more (the composite of a lower layer when the upper one goes). */
+  release(role: string): void {
+    this.entries.get(role)?.texture.destroy();
+    this.entries.delete(role);
+  }
+
   get bytes(): number {
     let total = 0;
     for (const entry of this.entries.values()) total += entry.bytes;

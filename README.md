@@ -17,7 +17,7 @@ npm run check      # tipos
 npm test           # óptica, material, fusão e física (readback de GPU + Node)
 node tests/capture.mjs            # PNGs das cenas em captures/, para revisão visual
 node tests/capture.mjs --union    # fusão: aproximação, pescoço, sobreposição, vistas de debug
-node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, gaveta, celular)
+node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, camadas, gaveta, celular)
 ```
 
 ## Usar o laboratório
@@ -26,8 +26,11 @@ node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, gaveta, 
 - **Toque** num vidro para selecioná-lo: o dock e a gaveta passam a valer para ele. **Duplo clique**
   abre os ajustes. Um vidro nunca sai do palco: arrastado para fora ou com a janela menor, ele
   desliza de volta.
-- **Dock:** Fundo (ou uma foto sua), Forma (anima de uma para outra), Material, Vidros (+ / −),
-  Ajustes.
+- **Dock:** Fundo (ou uma foto sua), Forma (anima de uma para outra), Material, Vidros (+ / − /
+  **por cima**), Ajustes.
+- **Vidro sobre vidro:** selecione um vidro e aperte o botão de camadas (último em Vidros). Ele
+  passa a flutuar por cima dos outros e refrata o que está embaixo: os vidros, os símbolos e as
+  sombras deles. Vidros de camadas diferentes não se fundem; o de cima recebe o toque primeiro.
 - **Ajustes** (gaveta): Vidro, Forma, Luz e cor, Fusão e movimento, Avançado (perfil, qualidade,
   medir desempenho, inspecionar o shader).
 - A pílula no canto superior direito mostra fps e tempo de GPU; um clique abre o detalhe (inclui
@@ -49,7 +52,7 @@ nada. **O SwiftShader headless perde o processo de GPU ao desenhar no swapchain 
 por isso testes e capturas renderizam fora da tela (`offscreen` no renderer). O laboratório e o
 bench sempre desenham no canvas, então só rodam numa máquina com GPU de verdade.
 
-## Estado: V4 — o vidro lê o fundo: Regular adaptativo, qualidade automática, HTML-in-Canvas (sobre o V3)
+## Estado: V4.1 — vidro sobre vidro e conteúdo no quadro (sobre o V4: o vidro lê o fundo)
 
 | peça | onde | situação |
 | --- | --- | --- |
@@ -93,6 +96,8 @@ de qualidade ainda só mudam o teto de DPR, então em DPR 1 `high` = `low`.
 Decisões do V3, com o que foi medido e rejeitado (dispersão espectral), em
 [`docs/research/01-engenharia-reversa.md` §13](docs/research/01-engenharia-reversa.md).
 
+| peça | onde | situação |
+| --- | --- | --- |
 | **métricas do fundo** por vidro (compute: L* média, p10, p90 de 8×8 amostras da pirâmide), leitura assíncrona | `glass.wgsl` (`cs_metrics`), `renderer.ts` | pronto |
 | **Regular adaptativo**: modo claro/escuro com histerese (L* 42–58) e animação; remapeia e satura a luz que passa; Claro não adapta | `src/glass/policy.ts`, `glass.wgsl` | pronto |
 | **qualidade automática** pelo tempo de GPU (desce >75% do quadro por 0,5 s, sobe <35% por 3 s, espera 2 s) | `src/renderer/adaptive.ts` | pronto |
@@ -101,8 +106,16 @@ Decisões do V3, com o que foi medido e rejeitado (dispersão espectral), em
 
 Decisões do V4 em [§14 do relatório](docs/research/01-engenharia-reversa.md).
 
-**Próximo:** sua impressão do Regular adaptativo e o teste do HTML-in-Canvas no Chrome 154;
-depois camadas (vidro sobre vidro) e o V5.
+| peça | onde | situação |
+| --- | --- | --- |
+| **camadas**: um grupo na camada 1 refrata a camada 0 já composta (vidros, símbolos, sombras); a composição e a pirâmide dela são reaproveitadas enquanto nada embaixo muda; uma camada de cima sozinha custa zero | `renderer.ts` | pronto; custo na RX 6600 pelos cenários de camadas do bench |
+| **conteúdo sobre o vidro**: os símbolos saíram do DOM e são desenhados pelo renderer na camada do vidro, de um atlas com cada mip rasterizado do SVG naquele tamanho | `content.wgsl`, `src/renderer/symbols.ts` | pronto |
+| testes de camadas (6) e da interface com camadas (1), cada um conferido contra um defeito plantado | `tests/layers.test.mjs`, `tests/lab-ui.test.mjs` | pronto |
+
+Decisões do V4.1 em [§15 do relatório](docs/research/01-engenharia-reversa.md).
+
+**Próximo:** o bench rápido na RX 6600 (traz os dois cenários de camadas) e o teste do
+HTML-in-Canvas no Chrome 154; depois o V5.
 
 ## Decisões que valem lembrar
 

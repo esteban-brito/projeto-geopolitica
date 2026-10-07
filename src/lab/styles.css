@@ -91,33 +91,6 @@ button {
   height: 100%;
 }
 
-/* What sits on each glass. Its colour follows the glass's appearance (light: dark symbol; dark:
-   light symbol), set per frame from the Regular policy. */
-.labels {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.labels[hidden] {
-  display: none;
-}
-
-.glass-label {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: grid;
-  place-items: center;
-  will-change: transform;
-}
-
-.glass-label svg {
-  width: 100%;
-  height: 100%;
-  stroke-width: 1.7;
-}
-
 /* Shown for a moment when the edited glass changes, then gone: the glass is the interface. */
 .selection {
   position: absolute;
@@ -633,7 +606,7 @@ select,
   white-space: pre-wrap;
 }
 
-/* Phone: the dock wraps into three rows — background; shape and glasses; material. */
+/* Phone: the dock wraps into three rows — background; shape and glasses; material and settings. */
 @media (max-width: 760px) {
   .dock {
     left: 8px;
@@ -650,15 +623,18 @@ select,
     display: none;
   }
 
-  /* Forma, Vidros and Ajustes share the second row; Material takes the third. */
+  /* Forma and Vidros share the second row; Material and Ajustes, last as on the desktop, the third. */
   .dock__group:nth-of-type(2),
-  .dock__group:nth-of-type(4),
-  .dock__group:nth-of-type(5) {
+  .dock__group:nth-of-type(4) {
     order: 1;
   }
 
   .dock__group:nth-of-type(3) {
     order: 2;
+  }
+
+  .dock__group:nth-of-type(5) {
+    order: 3;
   }
 
   .chip {

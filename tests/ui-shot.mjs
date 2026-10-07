@@ -48,6 +48,17 @@ const VIEWS = [
       await page.waitForTimeout(1200);
     },
   },
+  {
+    // The circle goes over the capsule: it refracts the capsule, its symbol and its shadow.
+    name: "ui-layers",
+    width: 1440,
+    height: 900,
+    act: async (page) => {
+      await page.evaluate(() => window.lab.select(1));
+      await page.click('button[aria-label^="Pôr o vidro selecionado por cima"]');
+      await drag(page, 1, -190, 26);
+    },
+  },
   { name: "ui-drawer", width: 1440, height: 900, click: ['button[aria-label="Ajustes finos"]'] },
   { name: "ui-stats", width: 1440, height: 900, click: ["#stats"] },
   { name: "ui-drawer-stats", width: 1440, height: 900, click: ['button[aria-label="Ajustes finos"]', "#stats"] },
@@ -62,28 +73,32 @@ for (const view of VIEWS) {
   for (const selector of view.click ?? []) await page.click(selector);
   if (view.act) await view.act(page);
   await page.waitForTimeout(400);
-  const scene = await page.evaluate(() => {
-    const { state, group } = window.lab;
-    return {
-      scene: state.scene,
-      group: { spacing: group.spacing, surfaces: state.glasses.map((g) => ({ shape: g.surface.shape, material: g.surface.material })) },
-    };
-  });
   const w = view.width * (view.scale ?? 1);
   const h = view.height * (view.scale ?? 1);
   // The probe renders at dpr 1: scale the CSS-pixel scene to the screenshot's device pixels.
   const k = view.scale ?? 1;
-  const surfaces = scene.group.surfaces.map(({ shape, material }) => ({
-    shape: { ...shape, cx: shape.cx * k, cy: shape.cy * k, halfWidth: shape.halfWidth * k, halfHeight: shape.halfHeight * k, radius: shape.radius * k },
-    material: { ...material, thickness: material.thickness * k, gap: material.gap * k, bevel: material.bevel * k },
-  }));
-  await probe.page.evaluate(([pw, ph, s]) => window.probe.init(pw, ph, s), [w, h, scene.scene]);
-  const out = await probe.page.evaluate((r) => window.probe.render(r), { groups: [{ spacing: scene.group.spacing * k, surfaces }] });
-  const glass = png(out.width, out.height, Buffer.from(out.rgba, "base64"));
-  // The symbols take their colour from what the probe measured under each glass.
+  const toProbe = (groups) =>
+    groups
+      .filter((g) => g.surfaces.length > 0)
+      .map((g) => ({
+        spacing: g.spacing * k,
+        layer: g.layer ?? 0,
+        surfaces: g.surfaces.map(({ shape, material, appearance, content }) => ({
+          shape: { ...shape, cx: shape.cx * k, cy: shape.cy * k, halfWidth: shape.halfWidth * k, halfHeight: shape.halfHeight * k, radius: shape.radius * k },
+          material: { ...material, thickness: material.thickness * k, gap: material.gap * k, bevel: material.bevel * k },
+          ...(appearance !== undefined ? { appearance } : {}),
+          ...(content ? { content: { ...content, size: content.size * k } } : {}),
+        })),
+      }));
+  await probe.page.evaluate(([pw, ph, s]) => window.probe.init(pw, ph, s), [w, h, await page.evaluate(() => window.lab.state.scene)]);
+  // A first frame measures what lies under each glass; the lab's policies take the measurement,
+  // and the appearances and symbol colours they settle on are what the second frame draws.
+  await probe.page.evaluate((r) => window.probe.render(r), { groups: toProbe(await page.evaluate(() => window.lab.groups())) });
   const stats = (await probe.page.evaluate(() => window.probe.backdrop())).flat();
   await page.evaluate((st) => window.lab.backdrop(st), stats);
   await page.waitForTimeout(100);
+  const out = await probe.page.evaluate((r) => window.probe.render(r), { groups: toProbe(await page.evaluate(() => window.lab.groups())) });
+  const glass = png(out.width, out.height, Buffer.from(out.rgba, "base64"));
 
   await page.addStyleTag({ content: "html, body, .lab, #stage { background: transparent !important } #stage, #notice { visibility: hidden }" });
   const ui = await page.screenshot({ omitBackground: true });

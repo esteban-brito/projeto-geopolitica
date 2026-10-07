@@ -937,3 +937,79 @@ Chrome 154 do usuário diz se funciona**.
 - **sizeResponse** (§11.1: vidro maior = material mais espesso) e o controle único de "clareza"
   (Claro ↔ Tingido) continuam no plano.
 
+## 15. V4.1: vidro sobre vidro (07/10/2026)
+
+### 15.1 Camadas
+
+Um `GlassGroup` ganhou `layer: 0 | 1`. O quadro passa a ter, só quando existe vidro na camada 1
+sobre vidro na camada 0:
+
+1. **camada de baixo**: cópia do fundo + vidros da camada 0 + símbolos deles, numa textura no
+   formato do canvas (os mesmos pipelines desenham nela);
+2. **pirâmide da camada**: a mesma descida de 13 taps sobre essa composição;
+3. **métricas da camada**: os vidros da camada 1 medem a composição (um vidro sobre um fumê escuro
+   vai para o modo escuro), os da camada 0 continuam medindo o fundo;
+4. o quadro final copia a composição e desenha a camada 1 por cima.
+
+**Reaproveitamento.** A composição só é refeita quando algo nela muda: o fundo, a resolução, o
+nível de qualidade, a vista de inspeção, ou o que a camada 0 envia à GPU (registros das
+superfícies, dos grupos e dos símbolos, comparados com o envio anterior). Mover só o vidro de cima
+custa o mesmo que sem camadas. O teste compara o quadro reaproveitado com um quadro feito do zero:
+diferença 0.
+
+**Uma camada de cima sozinha** (nada embaixo para refratar) é desenhada como camada 0: mesmos
+pixels, nenhuma composição.
+
+**Pirâmide regional: recusada pela análise.** O termo de ambiente lê o topo da pirâmide, e o topo
+depende do quadro inteiro; refazer só a região sob o vidro de cima deixaria os níveis fundos
+velhos, e o teste de cache acusaria. Copiar a pirâmide do fundo e corrigir só perto dos vidros de
+baixo move mais bytes do que recalcular, e os formatos nem coincidem. Fica a pirâmide inteira,
+paga só quando a camada de baixo muda (a do fundo custa 0,064 ms na RX 6600 a 1500×1080).
+
+**Fora daqui:** vidros de camadas diferentes não se fundem (como na Apple); dois vidros da mesma
+camada que se sobrepõem sem fundir continuam sem ordem entre si.
+
+### 15.2 Conteúdo sobre o vidro
+
+Os símbolos dos vidros eram elementos DOM sobre o canvas. Com camadas, o símbolo do vidro de baixo
+apareceria **por cima** do vidro de cima, em vez de refratado por ele. Agora o renderer desenha o
+conteúdo logo depois dos vidros da camada (`content.wgsl`): o vidro de cima refrata o símbolo de
+baixo e a sombra dele cai sobre o símbolo. O símbolo acompanha centro, rotação e press do vidro,
+não o estiramento. Some nas vistas de inspeção.
+
+O atlas tem uma célula de 128 px por símbolo, e **cada mip é rasterizado do SVG naquele tamanho**
+(128, 64, 32, 16), não filtrado do nível de cima: um traço de 2 px filtrado até 28 px fica cinza e
+mole. Criado uma vez; nada por quadro. Efeito colateral bom: o laboratório deixou de escrever
+estilo no DOM a cada quadro do arrasto.
+
+### 15.3 Testes, e a prova de que não são vazios
+
+`tests/layers.test.mjs` (6): camada de cima sozinha = camada 0; longe da camada de baixo, o vidro
+de cima é o mesmo vidro (≤ 1/255 no quadro inteiro); através dele aparecem a cor do vidro tingido e
+o símbolo de baixo; o cache (reaproveitado = do zero, e mover o de baixo refaz); as métricas por
+camada; o símbolo centrado, girando com o vidro e ausente na inspeção. Mais um teste de interface:
+o vidro posto por cima não entra no grupo de fusão e pega o toque na sobreposição.
+
+Cada um foi conferido contra um defeito plantado, e cada defeito derrubou o teste certo: o de
+cima lendo a pirâmide do fundo (falha "vê o de baixo"); a composição refeita sempre (falha o
+cache); nunca refeita (falham cache e "vê o de baixo"); métricas da camada 1 lendo o fundo (falham
+as métricas); símbolo sem rotação (falha o conteúdo); o toque testando a camada de baixo primeiro
+(falha o teste de interface). As 25 capturas padrão saíram idênticas, pixel a pixel, às do commit
+anterior: o caminho sem camadas não mudou.
+
+### 15.4 O print do V4 na RX 6600
+
+- Regular funcionando: L* 41 sob o vidro → modo escuro (o limiar é 42). GPU total 0,13 ms.
+- "Alta (auto)" não é defeito: em DPR 1, Alta e Ultra são o mesmo quadro (mesmo DPR, mesmos
+  recursos); o Auto sobe depois de 3 s de amostras leves, e a simulação com amostras esparsas do
+  modo sob demanda confirma que sobe.
+- CPU 1,00 ms era a **média** de uma janela com poucos quadros, onde um quadro que repinta a cena
+  (5–150 ms medidos aqui, Canvas 2D) pesa muito. O painel passou a mostrar a **mediana**; o bench,
+  que mede em regime, continua com a média.
+
+### 15.5 Bench
+
+Dois cenários novos (rápido e completo): as 72 barras fundidas com símbolo em cada botão na camada
+0 e um popover de 520×340 na camada 1. "A de cima move" mede o caso reaproveitado; "a de baixo
+move" mede o pior caso, com composição e pirâmide refeitas todo quadro.
+

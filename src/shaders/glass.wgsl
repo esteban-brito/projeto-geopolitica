@@ -29,7 +29,7 @@ struct Surface {
   medium: vec4f,   // absorption per device px (r, g, b), key light
   light: vec4f,    // direction the key light comes from (screen xy), blur radius px, F0
   xform: vec4f,    // inverse of the shape matrix (rotation · press scale · stretch), row-major 2×2
-  policy: vec4f,   // Regular adaptation strength (0 = Clear), appearance 0 light..1 dark (< 0: from metrics), -, -
+  policy: vec4f,   // Regular adaptation strength (0 = Clear), appearance 0 light..1 dark (< 0: from metrics), layer, -
 }
 
 // Members [start, start + count) of the surface array merge with each other and with nothing else.
@@ -784,6 +784,9 @@ fn fs_union(in: VOut) -> @location(0) vec4f {
 // ---- Backdrop metrics (compute; CPU mirror: backdropStats in src/glass/policy.ts) --------------
 
 @group(0) @binding(7) var<storage, read_write> backdropOut: array<vec4f>;
+// The layer this dispatch measures: bgTex is that layer's backdrop (the content for layer 0, the
+// composite of everything below for layer 1). Surfaces of the other layer keep their results.
+@group(0) @binding(8) var<uniform> metricsLayer: vec4u;
 
 var<workgroup> histogram: array<atomic<u32>, 16>;
 var<workgroup> lightSum: atomic<u32>;
@@ -802,6 +805,9 @@ fn lightness(y: f32) -> f32 {
 @compute @workgroup_size(64)
 fn cs_metrics(@builtin(workgroup_id) wg: vec3u, @builtin(local_invocation_index) li: u32) {
   let s = surfaces[wg.x];
+  if (u32(s.policy.z) != metricsLayer.x) {
+    return;
+  }
   if (li < 16u) {
     atomicStore(&histogram[li], 0u);
   }

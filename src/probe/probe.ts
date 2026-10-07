@@ -4,7 +4,8 @@ import { buildRadialTable, deviceGeometry, tableLookup } from "../glass/optics.t
 import type { Shape } from "../glass/shape.ts";
 import { unionField } from "../glass/union.ts";
 import type { QualityTier } from "../renderer/quality.ts";
-import { LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
+import { SYMBOLS } from "../lab/icons.ts";
+import { LiquidGlassRenderer, type GlassContent, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
 import { HtmlInCanvasSource, htmlInCanvasAvailable, htmlInCanvasSupport } from "../sources/html-in-canvas.ts";
 import { NativeSource, type ScenePainter } from "../sources/native.ts";
 import { PAINTERS, paintCoordinates, paintSolid, type SceneId } from "../sources/scenes.ts";
@@ -16,18 +17,21 @@ import { PAINTERS, paintCoordinates, paintSolid, type SceneId } from "../sources
 const canvas = document.querySelector<HTMLCanvasElement>("#probe")!;
 let renderer: LiquidGlassRenderer | null = null;
 let source: NativeSource | HtmlInCanvasSource | null = null;
+let symbolsReady: Promise<void> = Promise.resolve();
 
 interface SurfaceRequest {
   shape: Shape;
   material?: Partial<GlassMaterial>;
   appearance?: number;
+  /** A symbol from the lab's set (src/lab/icons.ts SYMBOLS). */
+  content?: GlassContent;
 }
 
 interface RenderRequest {
   /** Each on its own (nothing merges). */
   surfaces?: SurfaceRequest[];
-  /** Merge groups; drawn after `surfaces`. */
-  groups?: { spacing: number; surfaces: SurfaceRequest[] }[];
+  /** Merge groups; drawn after `surfaces`. Layer 1 floats over layer 0 and refracts it. */
+  groups?: { spacing: number; surfaces: SurfaceRequest[]; layer?: 0 | 1 }[];
   debugView?: number;
   guard?: boolean;
   quality?: QualityTier;
@@ -39,6 +43,7 @@ async function init(width: number, height: number, scene: ProbeScene): Promise<{
   renderer?.destroy();
   const gpu = await acquireGpu();
   renderer = new LiquidGlassRenderer(canvas, gpu, { readback: true, offscreen: { width, height } });
+  symbolsReady = renderer.setSymbols(SYMBOLS);
   if (scene === "html") {
     // A known page: white, a red square at (40, 40) of 60 px, a line of black text.
     const support = htmlInCanvasSupport(gpu.device);
@@ -79,11 +84,13 @@ async function render(req: RenderRequest): Promise<{ width: number; height: numb
     shape: s.shape,
     material: { ...cloneMaterial(DEFAULT_MATERIAL), ...s.material },
     ...(s.appearance !== undefined ? { appearance: s.appearance } : {}),
+    ...(s.content ? { content: s.content } : {}),
   });
   const groups: GlassGroup[] = [
     ...(req.surfaces ?? []).map((s) => ({ spacing: 0, surfaces: [surface(s)] })),
-    ...(req.groups ?? []).map((g) => ({ spacing: g.spacing, surfaces: g.surfaces.map(surface) })),
+    ...(req.groups ?? []).map((g) => ({ spacing: g.spacing, surfaces: g.surfaces.map(surface), ...(g.layer ? { layer: g.layer } : {}) })),
   ];
+  if (groups.some((g) => g.surfaces.some((s) => s.content))) await symbolsReady;
   renderer.debugView = req.debugView ?? 0;
   renderer.guardEnabled = req.guard ?? true;
   renderer.quality = req.quality ?? "high";
@@ -154,6 +161,11 @@ function htmlFailure(): string | null {
   return source instanceof HtmlInCanvasSource ? source.failure : null;
 }
 
+/** How many times the composite under layer 1 has been drawn (it should be reused when only layer 1 moves). */
+function lowerRenders(): number {
+  return renderer?.lowerRenders ?? 0;
+}
+
 /** Backdrop statistics of the surfaces of the last render: [mean L*, p10, p90, coverage] each. */
 async function backdrop(): Promise<number[][]> {
   if (!renderer) throw new Error("probe.init primeiro");
@@ -173,6 +185,7 @@ declare global {
       backdrop: typeof backdrop;
       htmlPath: typeof htmlPath;
       htmlFailure: typeof htmlFailure;
+      lowerRenders: typeof lowerRenders;
     };
   }
 }
@@ -181,4 +194,4 @@ function preset(id: PresetId): GlassMaterial {
   return cloneMaterial(PRESETS[id].material);
 }
 
-window.probe = { init, render, guard, predictOffset, preset, predictUnion, backdrop, htmlPath, htmlFailure };
+window.probe = { init, render, guard, predictOffset, preset, predictUnion, backdrop, htmlPath, htmlFailure, lowerRenders };
