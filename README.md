@@ -128,7 +128,12 @@ Decisões do V4.1 em [§15 do relatório](docs/research/01-engenharia-reversa.md
 Plano e decisões do V5 (o que entrou, o que foi recusado e por quê) em
 [§16 do relatório](docs/research/01-engenharia-reversa.md).
 
-**Próximo:** o bench rápido na RX 6600 (traz os cenários de camadas) e o teste do HTML-in-Canvas
+**Medido no V5 (RX 6600, 1500×1080):** 100 vidros soltos 0,26 ms; pior caso (100 em grupos de 4)
+1,12 ms, 27% do quadro a 240 Hz; popover movendo sobre 72 botões fundidos 0,065 ms (camada de baixo
+reaproveitada); símbolos +0,001 ms; 4 luzes de toque +0,014 ms
+([JSON](docs/bench/v5-rx6600-rapido.json), §16.3).
+
+**Próximo:** uma rodada do bench para ver a CPU com resolução de 5 µs, e o teste do HTML-in-Canvas
 no Chrome 154. Adiados com motivo: HDR (precisa de tela HDR para comparar) e ladrilhos em compute
 (nenhum grupo passa de 32 membros).
 

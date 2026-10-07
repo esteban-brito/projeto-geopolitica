@@ -399,6 +399,8 @@ function render(results: Result[], gpu: GpuContext): void {
       userAgent: navigator.userAgent,
       adapter: gpu.info,
       devicePixelRatio: window.devicePixelRatio,
+      // Isolated, performance.now() resolves 5 µs; otherwise 100 µs and the CPU median is 0 or 0.1.
+      crossOriginIsolated: window.crossOriginIsolated,
       note:
         "Estatísticas sobre todos os quadros da medida (2 s). gpuTotalMs: soma dos passes de cada quadro. glassNsPerPx: passe do vidro por pixel coberto. " +
         (quantized ? "ATENÇÃO: tempos de GPU arredondados a 0,1 ms (flag de desenvolvedor desligado)." : "Tempos de GPU sem arredondamento."),

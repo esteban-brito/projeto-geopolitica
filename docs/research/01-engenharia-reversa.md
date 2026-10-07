@@ -1126,3 +1126,36 @@ de cada medida era descartado. E a coluna fps marcava 240 em tudo (preso ao moni
 - `tests/bench.test.mjs`: a suíte "fumaça" roda fora da tela e confere a estrutura, a contagem de
   quadros acima de 120 e a memória da camada de baixo.
 
+### 16.3 Bench do V5 na RX 6600 ([`docs/bench/v5-rx6600-rapido.json`](../bench/v5-rx6600-rapido.json))
+
+Primeira rodada com o bench revisto: 481 quadros por cenário (antes, 120), praticamente todos
+cronometrados, sem arredondamento, todos válidos. 1500×1080, DPR 1, 238 Hz.
+
+| caso | GPU total | o que diz |
+| --- | --- | --- |
+| 100 vidros soltos | 0,257 ms | 0,40 ns/px; 6% do quadro |
+| 100 em grupos de 4 (pior caso) | 1,119 ms | 27% do quadro |
+| 72 botões em barras fundidas | 0,693 ms | — |
+| + símbolos em todos | 0,694 ms | **símbolos: +0,001 ms** |
+| + 4 luzes de toque | 0,708 ms | **toque: +0,014 ms (+2%)** |
+| popover movendo sobre as barras (camadas) | **0,065 ms** | a camada de baixo reaproveitada: 10× menos que redesenhar as barras |
+| barras movendo sob o popover (pior caso de camadas) | 0,836 ms | camada de baixo 0,709 + pirâmide dela 0,063 + cópia 0,022: **+0,09 ms (+12%)** pela composição |
+| pirâmide refeita por quadro | 0,064 ms | igual ao V3 |
+
+Memória: 9,0 MB; 17,3 MB com camadas (+8,2 MB da composição com mips).
+
+**Contra o V3.2, por pixel coberto:** o vidro ficou 3–9% mais caro (barras de geometria idêntica:
++4,7% fundidas, +6,9% soltas). O V4.1 e o V5 não custam nada inativos (capturas idênticas, ramos
+uniformes que não rodam); o que entrou no caminho de todo pixel desde o V3.2 foi a adaptação do
+Regular (V4: `adapt_light`, e no bench a aparência sem memória, que lê a métrica por pixel). É o
+preço medido de um recurso, não um defeito; fica registrado.
+
+**CPU.** A mediana saía 0 ou 0,1 ms: o Chrome arredonda `performance.now` a 100 µs fora de
+isolamento de origem. O servidor do Vite passou a mandar COOP/COEP (o laboratório não carrega nada
+de outra origem): resolução de 5 µs, e o JSON registra `crossOriginIsolated`. O maior custo de CPU
+era o das camadas com 73 vidros em movimento (0,25 ms por quadro, média). Medido em Node, por
+quadro e 73 vidros: a chave da tabela radial montada como string custava 32 µs (agora comparação
+numérica, 1,6 µs) e o empacotamento por arrays, 27,6 µs (agora escrita direta no buffer, 9,5 µs).
+O A/B no headless não resolve ~50 µs (o SwiftShader divide a CPU, ±0,1 ms entre rodadas); a
+próxima rodada na RX 6600 mostra o efeito. As 25 capturas e os 74 testes não mudaram.
+

@@ -1,5 +1,5 @@
 import { srgbViewOf, type GpuContext } from "../gpu/device.ts";
-import { CLEAR_DIM, REFERENCE_PATH, type GlassMaterial } from "../glass/material.ts";
+import { CLEAR_DIM, PROFILE_INDEX, REFERENCE_PATH, type GlassMaterial } from "../glass/material.ts";
 import {
   buildRadialTable,
   deviceGeometry,
@@ -245,7 +245,7 @@ export class LiquidGlassRenderer {
 
   private source: BackgroundSource | null = null;
   private groups: GlassGroup[] = [];
-  private tables: { key: string; data: Float32Array<ArrayBuffer>; stats: GuardStats }[] = [];
+  private tables: { inputs: Float64Array; data: Float32Array<ArrayBuffer>; stats: GuardStats }[] = [];
   private tableBuffer: GPUBuffer | null = null;
   private surfacesDirty = true;
   private sizeDirty = true;
@@ -739,16 +739,18 @@ export class LiquidGlassRenderer {
     let lowerTables = false;
     this.tables.length = count;
     flat.forEach(({ shape, material, appearance, content }, i) => {
-      const key = tableKey(shape, material, dpr, this.guardEnabled);
-      if (this.tables[i]?.key !== key) {
+      const cached = this.tables[i];
+      if (!cached || tableInputsChanged(cached.inputs, shape, material, dpr, this.guardEnabled)) {
         const table = buildRadialTable(material, shape, dpr, this.guardEnabled);
-        this.tables[i] = { key, ...table };
+        const inputs = cached?.inputs ?? new Float64Array(TABLE_INPUTS).fill(NaN);
+        if (!cached) tableInputsChanged(inputs, shape, material, dpr, this.guardEnabled);
+        this.tables[i] = { inputs, ...table };
         this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
         if (flatLayer[i] === 0) lowerTables = true;
       }
       // Clear under a symbol gets its dimming layer (CLEAR_DIM); nothing else is dimmed.
       const dim = material.variant === "clear" && content && content.color[3] > 0 ? CLEAR_DIM : 0;
-      data.set(packSurface(shape, material, dpr, appearance, flatLayer[i]!, dim), i * SURFACE_FLOATS);
+      packSurface(data, i * SURFACE_FLOATS, shape, material, dpr, appearance, flatLayer[i]!, dim);
     });
     this.metricsDirty = true;
     this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
@@ -1263,35 +1265,83 @@ export class LiquidGlassRenderer {
   }
 }
 
-function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): string {
+/** What a radial table depends on; compared as numbers every upload (a string key cost 20× more). */
+const TABLE_INPUTS = 10;
+
+/** Whether the table stored for `inputs` is stale; refreshes `inputs` when it is. */
+function tableInputsChanged(inputs: Float64Array, shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): boolean {
   const radius = clampedRadius(shape);
   const minHalf = Math.min(shape.halfWidth, shape.halfHeight);
-  return [radius, minHalf, m.ior, m.abbe, m.thickness, m.gap, m.bevel, m.profile, dpr, guard].join("|");
+  const profile = PROFILE_INDEX[m.profile];
+  const g = guard ? 1 : 0;
+  if (
+    inputs[0] === radius &&
+    inputs[1] === minHalf &&
+    inputs[2] === m.ior &&
+    inputs[3] === m.abbe &&
+    inputs[4] === m.thickness &&
+    inputs[5] === m.gap &&
+    inputs[6] === m.bevel &&
+    inputs[7] === profile &&
+    inputs[8] === dpr &&
+    inputs[9] === g
+  ) {
+    return false;
+  }
+  inputs.set([radius, minHalf, m.ior, m.abbe, m.thickness, m.gap, m.bevel, profile, dpr, g]);
+  return true;
 }
 
 /**
- * Device-pixel record of one surface (7 × vec4, see `Surface` in glass.wgsl). Derived values are
+ * Device-pixel record of one surface (8 × vec4, see `Surface` in glass.wgsl). Derived values are
  * computed here once: absorption from tint and density, blur radius from roughness and the glass's
  * height, the key light direction, F0 from the ior, the shadow's offset and softness from the gap.
  */
-function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: number | undefined, layer: 0 | 1, dim: number): number[] {
+function packSurface(
+  out: Float32Array,
+  o: number,
+  shape: Shape,
+  m: GlassMaterial,
+  dpr: number,
+  appearance: number | undefined,
+  layer: 0 | 1,
+  dim: number,
+): void {
+  // Written in place: building a 32-number array per surface per frame cost 3× as much.
   const { bevel } = deviceGeometry(m, shape, dpr);
-  const absorb = m.tint.map((c) => (m.density * -Math.log(Math.max(c, 1e-3))) / (REFERENCE_PATH * dpr));
-  const blur = 1.6 * (m.thickness + m.gap + m.bevel * 0.5) * m.roughness ** 1.5 * dpr;
   const angle = (m.lightAngle * Math.PI) / 180;
-  const f0 = ((m.ior - 1) / (m.ior + 1)) ** 2;
   const inv = invert(shapeMatrix(shape));
   const shadow = shadowGeometry(m.gap * dpr, dpr);
-  return [
-    shape.cx * dpr, shape.cy * dpr, shape.halfWidth * dpr, shape.halfHeight * dpr,
-    clampedRadius(shape) * dpr, shape.exponent, shadow.offsetY, shadow.sigma,
-    bevel, m.thickness * dpr, m.gap * dpr, m.ior,
-    m.roughness, m.edge, m.shadow, m.environment,
-    absorb[0]!, absorb[1]!, absorb[2]!, m.light,
-    Math.cos(angle), -Math.sin(angle), blur, f0,
-    inv[0], inv[1], inv[2], inv[3],
-    m.variant === "regular" ? m.adapt : 0, appearance ?? -1, layer, dim,
-  ];
+  out[o] = shape.cx * dpr;
+  out[o + 1] = shape.cy * dpr;
+  out[o + 2] = shape.halfWidth * dpr;
+  out[o + 3] = shape.halfHeight * dpr;
+  out[o + 4] = clampedRadius(shape) * dpr;
+  out[o + 5] = shape.exponent;
+  out[o + 6] = shadow.offsetY;
+  out[o + 7] = shadow.sigma;
+  out[o + 8] = bevel;
+  out[o + 9] = m.thickness * dpr;
+  out[o + 10] = m.gap * dpr;
+  out[o + 11] = m.ior;
+  out[o + 12] = m.roughness;
+  out[o + 13] = m.edge;
+  out[o + 14] = m.shadow;
+  out[o + 15] = m.environment;
+  for (let c = 0; c < 3; c++) out[o + 16 + c] = (m.density * -Math.log(Math.max(m.tint[c]!, 1e-3))) / (REFERENCE_PATH * dpr);
+  out[o + 19] = m.light;
+  out[o + 20] = Math.cos(angle);
+  out[o + 21] = -Math.sin(angle);
+  out[o + 22] = 1.6 * (m.thickness + m.gap + m.bevel * 0.5) * m.roughness ** 1.5 * dpr;
+  out[o + 23] = ((m.ior - 1) / (m.ior + 1)) ** 2;
+  out[o + 24] = inv[0];
+  out[o + 25] = inv[1];
+  out[o + 26] = inv[2];
+  out[o + 27] = inv[3];
+  out[o + 28] = m.variant === "regular" ? m.adapt : 0;
+  out[o + 29] = appearance ?? -1;
+  out[o + 30] = layer;
+  out[o + 31] = dim;
 }
 
 /** sRGB transfer, decoded: the frame is lit and blended in linear light. */
