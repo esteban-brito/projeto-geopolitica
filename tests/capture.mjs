@@ -4,8 +4,10 @@
  *   node tests/capture.mjs            all scenes × shapes
  *   node tests/capture.mjs --presets  materials on four backgrounds
  *   node tests/capture.mjs --union    merge groups: approach, neck, overlap, debug views
+ *   node tests/capture.mjs --touch    the light of a touch over time, onto the glass nearby
  */
 import { mkdirSync, writeFileSync } from "node:fs";
+import { TouchGlow } from "../src/physics/touch.ts";
 import { image, openLab } from "./harness.mjs";
 import { png } from "./png.mjs";
 
@@ -26,6 +28,7 @@ await lab.page.waitForFunction(() => window.probe !== undefined);
 
 const PRESETS = process.argv.includes("--presets");
 const UNION = process.argv.includes("--union");
+const TOUCH = process.argv.includes("--touch");
 const circle = (cx, cy, r) => ({ cx, cy, halfWidth: r, halfHeight: r, radius: r, exponent: 2, rotation: 0 });
 /** Two circles of radius 90 whose gap is `gap` px (negative overlaps), merging below `spacing`. */
 const pair = (gap, spacing = 48) => ({
@@ -47,8 +50,36 @@ const UNIONS = {
     ],
   },
 };
+/**
+ * A Regular capsule and circle 60 px apart, the capsule pressed near its right end: the light at
+ * moments of the same physics the lab runs (held for 1 s, then released).
+ */
+function touchJobs(scene) {
+  const capsule = { cx: 330, cy: 300, halfWidth: 150, halfHeight: 44, radius: 44, exponent: 2, rotation: 0 };
+  const round = circle(628, 300, 88);
+  const glow = new TouchGlow();
+  glow.press(110, -6);
+  const out = [];
+  let t = 0;
+  const advance = (to) => {
+    for (; t < to - 1e-9; t += 1 / 240) glow.step(1 / 240);
+  };
+  for (const [label, at, release] of [["0.05s", 0.05], ["0.3s", 0.3], ["1s", 1], ["solto+0.4s", 1.4, 1]]) {
+    if (release !== undefined) {
+      advance(release);
+      glow.release();
+    }
+    advance(at);
+    const light = glow.light(capsule.cx, capsule.cy, capsule.halfWidth);
+    out.push({ scene, label, touches: light ? [light] : [], surfaces: [{ shape: capsule }, { shape: round }] });
+  }
+  return out;
+}
+
 const jobs = [];
-if (UNION) {
+if (TOUCH) {
+  for (const scene of ["image", "solid-dark", "text"]) jobs.push(...touchJobs(scene));
+} else if (UNION) {
   for (const scene of ["grid", "image", "text"]) {
     for (const union of Object.keys(UNIONS)) jobs.push({ scene, union, debugView: 0 });
   }
@@ -71,6 +102,17 @@ for (const job of jobs) {
   if (job.scene !== current) {
     await lab.page.evaluate(([w, h, s]) => window.probe.init(w, h, s), [W, H, job.scene]);
     current = job.scene;
+  }
+  if (job.touches) {
+    const regular = await lab.page.evaluate(() => window.probe.preset("regular"));
+    const out = await lab.page.evaluate((r) => window.probe.render(r), {
+      surfaces: job.surfaces.map((x) => ({ ...x, material: regular })),
+      touches: job.touches,
+    });
+    const name = `touch-${job.scene}-${job.label}.png`;
+    writeFileSync(new URL(name, OUT), png(out.width, out.height, Buffer.from(out.rgba, "base64")));
+    console.log(name);
+    continue;
   }
   const material = job.preset ? await lab.page.evaluate((p) => window.probe.preset(p), job.preset) : undefined;
   const request = job.union

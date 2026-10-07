@@ -120,3 +120,42 @@ export const CHANNEL_NM = [610, 550, 465] as const;
 export function channelIors(ior: number, abbe: number): [number, number, number] {
   return [iorAt(ior, abbe, CHANNEL_NM[0]), iorAt(ior, abbe, CHANNEL_NM[1]), iorAt(ior, abbe, CHANNEL_NM[2])];
 }
+
+/** Shortest side, CSS px, at which sizeResponse changes nothing: the lab's capsule (88 px tall). */
+export const SIZE_REFERENCE = 88;
+
+/**
+ * Bigger glass reads as thicker material (WWDC25 "Meet Liquid Glass": larger, it "casts deeper,
+ * richer shadows, has more pronounced lensing and refraction effects, and a softer scattering of
+ * light"). A design rule, not optics, so it lives here as a function of the shape that the app
+ * applies, and the renderer stays exact for the material it is given.
+ *
+ * On the shortest side, in octaves around SIZE_REFERENCE: a 44 px button is one octave down, a
+ * 352 px sheet two up (the clamp). Per octave: thickness ±30% (lensing), bevel ±25% (a wider lens
+ * band, still capped by the corner), gap ±35% (refraction and a deeper, softer shadow, since the
+ * shadow comes from the gap), shadow strength ±25%. The scattering follows by itself: the blur
+ * radius grows with thickness + gap + bevel (~1.5× two octaves up). Raising the roughness too was
+ * tried and rejected by capture: the sheet went from glass to frost (blur ×2.7).
+ */
+export function sizeResponse(m: GlassMaterial, halfWidth: number, halfHeight: number): GlassMaterial {
+  const side = 2 * Math.min(halfWidth, halfHeight);
+  const f = Math.min(Math.max(Math.log2(Math.max(side, 1) / SIZE_REFERENCE), -1), 2);
+  if (Math.abs(f) < 1e-6) return m;
+  return {
+    ...m,
+    thickness: m.thickness * (1 + 0.3 * f),
+    bevel: m.bevel * (1 + 0.25 * f),
+    gap: m.gap * (1 + 0.35 * f),
+    shadow: Math.min(1, m.shadow * (1 + 0.25 * f)),
+  };
+}
+
+/**
+ * Clear "needs a dimming layer to darken the underlying content" to keep symbols on it legible
+ * (WWDC25 "Meet Liquid Glass"); Apple gives no amount. Chosen for legibility: a white symbol keeps
+ * 3:1 (WCAG non-text contrast) over the dimmed glass up to content of luminance ≈ 0.46 (L* ≈ 73),
+ * with the glass's ~0.92 transmission: (1 + 0.05) / (0.46 · 0.92 · 0.65 + 0.05) ≈ 3.2. Applied
+ * only while something sits on the glass; Regular has its own policy and is never dimmed.
+ */
+export const CLEAR_DIM = 0.35;
+

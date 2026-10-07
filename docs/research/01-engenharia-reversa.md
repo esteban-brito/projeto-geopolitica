@@ -1048,3 +1048,61 @@ Os 63 testes passam sem mudança de critério. Lado a lado em `captures/borda-an
 `captures/borda-zoom.png`. Falta o gabarito definitivo: uma captura de um vidro real do iOS 27
 sobre fundo parecido.
 
+
+## 16. V5: o vidro responde (plano, 07/10/2026)
+
+O plano antigo do V5 (§10) era técnica: campo de altura, cáusticas, HDR, temporal. Antes de
+começar, cada item foi posto contra o que a Apple descreve na sessão "Meet Liquid Glass" (WWDC25,
+transcrição oficial em developer.apple.com/videos/play/wwdc2025/219) e contra o critério da casa
+(diferença visível lado a lado, custo dentro do orçamento).
+
+**Entra** — três comportamentos descritos pela Apple, que o laboratório ainda não tem:
+
+| item | o que a Apple diz | como entra | custo esperado |
+| --- | --- | --- | --- |
+| **V5a luz do toque** | "o material se ilumina por dentro… começando embaixo do dedo, o brilho se espalha pelo elemento e pelos vidros próximos" | uma luz no ponto do toque, que nasce pequena e se espalha (molas na CPU); no shader, uma soma de até 4 gaussianas em espaço de tela, então alcança os vizinhos sem caso especial; a borda, onde a luz presa na placa escapa, brilha mais. Espelho em TS + paridade | ~20 ALU por pixel de vidro, só enquanto alguma luz está acesa |
+| **V5b resposta ao tamanho** | "ao crescer… simula um material mais espesso: sombras mais fundas, lente e refração mais pronunciadas, espalhamento mais suave" | função na CPU (`sizeResponse`): pelo menor lado da forma, em escala log em torno de 88 px (a cápsula do laboratório fica igual), ajusta espessura, elevação (e com ela a sombra), força da sombra e rugosidade | zero na GPU; a tabela radial é refeita só enquanto o tamanho muda (já era assim no morph) |
+| **V5c escurecimento do Claro** | "o Claro… precisa de uma camada de escurecimento… para dar legibilidade a símbolos" | no Claro com conteúdo em cima, a luz que atravessa é escurecida por um fator fixo; símbolo claro | uma multiplicação |
+
+**Fica de fora, com o motivo:**
+
+- **Campo de altura / equação de onda ("gel")**: a Apple fala em flexibilidade de gel do elemento
+  inteiro — o que as molas já fazem (estiramento, press, bounce). Ondulação na superfície não
+  aparece em nada da Apple e é o "geleca" que o §6.6 temia. Recusado.
+- **Cáusticas**: a luz concentrada pela lente vira um anel claro ao lado da sombra. A Apple descreve
+  sombras mais fundas, não anéis de luz, e o anel branco acabou de ser removido da borda (§15.6).
+  Recusado.
+- **Técnicas temporais (TAA)**: nada no laboratório é estocástico (sem ruído, sem amostragem
+  aleatória); não há o que acumular. Recusado.
+- **Tile binning em compute**: só se um grupo de fusão passar de ~32 membros (§6.7); nenhum passa.
+  Adiado.
+- **HDR (especular acima do branco)**: depende de tela HDR e de `toneMapping: "extended"`; a Apple
+  não diz se o realce do vidro usa EDR. Adiado até haver uma tela HDR para comparar.
+
+### 16.1 Feito e medido
+
+**V5a, luz do toque.** `src/physics/touch.ts` (a vida da luz) e `src/glass/glow.ts` (a conta, espelho
+do shader). A luz nasce do tamanho de um dedo (16 px) onde ele pousou, acende em ~0,15 s, se
+espalha pelo vidro e 56 px além dele (alcança o vizinho), dá o pico e assenta em 45% enquanto o
+dedo fica (retorno, não lâmpada acesa) e apaga em ~1 s depois de soltar. Ao se espalhar, o pico
+cai com (r₀/r)^0,6: a mesma luz numa área maior. No shader, até 4 gaussianas em espaço de tela,
+somadas a todo pixel de vidro; a borda brilha mais (a luz presa na placa escapa onde a superfície
+curva). O conteúdo entre dois vidros nunca acende. Laço uniforme que não roda sem luz. Paridade GPU
+× espelho no topo plano < 0,004 (linear); com a radiância 12% errada, o teste acusa 0,018.
+Sequência em `node tests/capture.mjs --touch`.
+
+**V5b, resposta ao tamanho.** `sizeResponse` em `material.ts`, aplicada pelo app (o renderer
+continua exato para o material que recebe). Por oitava do menor lado em torno de 88 px:
+espessura ±30%, bisel ±25%, elevação ±35% (a sombra vem dela), força da sombra ±25%; de −1 a +2
+oitavas. **Rugosidade fora, recusada pela captura:** somada à geometria, o painel grande virou
+fosco (borrão ×2,7); sem ela o espalhamento cresce só pela geometria (~1,5×). A cápsula inicial é a
+referência e não muda; o círculo inicial (176 px) fica uma oitava mais espesso. Chave em Avançado.
+
+**V5c, escurecimento do Claro.** Com símbolo em cima, o Claro escurece a luz que atravessa em 35%
+(`CLEAR_DIM`, derivado de 3:1 para símbolo branco sobre conteúdo até L* ≈ 73; a Apple não dá
+número). Sem símbolo, ou no Regular, nada muda (teste). O símbolo no Claro é sempre claro. Passa
+pela política misturada da fusão, então atravessa um pescoço sem degrau.
+
+**Sem regressão:** 72 testes; as 25 capturas padrão saíram idênticas, pixel a pixel, às do commit
+anterior (sem toque, sem símbolo e na cápsula de referência, o V5 não muda nada).
+

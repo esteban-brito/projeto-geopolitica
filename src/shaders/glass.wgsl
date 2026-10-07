@@ -19,6 +19,8 @@ struct Globals {
   debugView: u32,
   edgeStart: f32,
   features: u32,
+  touchCount: u32,
+  touches: array<vec4f, 4>, // x, y, radius (device px), intensity — src/glass/glow.ts
 }
 
 struct Surface {
@@ -29,7 +31,7 @@ struct Surface {
   medium: vec4f,   // absorption per device px (r, g, b), key light
   light: vec4f,    // direction the key light comes from (screen xy), blur radius px, F0
   xform: vec4f,    // inverse of the shape matrix (rotation · press scale · stretch), row-major 2×2
-  policy: vec4f,   // Regular adaptation strength (0 = Clear), appearance 0 light..1 dark (< 0: from metrics), layer, -
+  policy: vec4f,   // Regular adaptation strength (0 = Clear), appearance 0 light..1 dark (< 0: from metrics), layer, dimming
 }
 
 // Members [start, start + count) of the surface array merge with each other and with nothing else.
@@ -74,6 +76,10 @@ const LIGHT_RADIUS: f32 = 0.14;
 // (the "white ring"); below the plane it ate the dark outline on light content.
 const LIGHT_HEIGHT: f32 = 0.1;
 const LIGHT_RADIANCE: f32 = 21.0;
+
+// Light from a touch, inside the glass (mirror: src/glass/glow.ts).
+const GLOW_RADIANCE: f32 = 0.32;
+const GLOW_FLAT: f32 = 0.55;
 
 const DEBUG_SDF: u32 = 1u;
 const DEBUG_NORMAL: u32 = 2u;
@@ -568,6 +574,18 @@ struct Pixel {
   gradLen: f32,
 }
 
+// Σ intensity · exp(−(d / radius)²) over the touch lights. In screen space, so a glow reaches the
+// glasses next to the one touched; the loop count is uniform and 0 when nothing is lit.
+fn touch_glow(px: vec2f) -> f32 {
+  var sum = 0.0;
+  for (var i = 0u; i < globals.touchCount; i++) {
+    let t = globals.touches[i];
+    let q = (px - t.xy) / t.z;
+    sum += t.w * exp(-dot(q, q));
+  }
+  return sum;
+}
+
 // Everything after the geometry: refraction, blur, absorption, light, debug views. `r` and
 // `inward` are the radial optics at the pixel and one pixel inward; `shade` is the glass's own
 // shadow on the content seen through it.
@@ -594,6 +612,8 @@ fn shade(p: Pixel, m: Blend, r: Radial, inward: Radial, shadow: f32) -> vec3f {
   if (m.policy.x > 0.0) {
     content = adapt_light(content, m.policy.x, m.policy.y);
   }
+  // Clear's dimming layer, while a symbol sits on it (CLEAR_DIM in src/glass/material.ts).
+  content *= 1.0 - m.policy.w;
   content *= 1.0 - shadow;
 
   let absorption = exp(-m.medium.xyz * r.path);
@@ -605,6 +625,12 @@ fn shade(p: Pixel, m: Blend, r: Radial, inward: Radial, shadow: f32) -> vec3f {
   let light = lighting(m, normal, roughness, surround);
   let edgeShade = 1.0 - m.shading.y * 0.7 * sqrt(1.0 - normal.z);
   var color = transmitted * edgeShade + fresnel * light.reflected + vec3f(light.specular);
+  if (globals.touchCount > 0u) {
+    // Scattered inside the slab; trapped by total internal reflection, it escapes where the
+    // surface bends, so the rim glows more than the flat top.
+    let rim = sqrt(max(0.0, 1.0 - normal.z));
+    color += vec3f(GLOW_RADIANCE * touch_glow(p.pix) * (GLOW_FLAT + (1.0 - GLOW_FLAT) * rim));
+  }
 
   switch globals.debugView {
     case DEBUG_SDF: {

@@ -17,6 +17,7 @@ npm run check      # tipos
 npm test           # óptica, material, fusão e física (readback de GPU + Node)
 node tests/capture.mjs            # PNGs das cenas em captures/, para revisão visual
 node tests/capture.mjs --union    # fusão: aproximação, pescoço, sobreposição, vistas de debug
+node tests/capture.mjs --touch    # a luz do toque ao longo do tempo, chegando ao vidro vizinho
 node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, camadas, gaveta, celular)
 ```
 
@@ -28,6 +29,9 @@ node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, camadas,
   desliza de volta.
 - **Dock:** Fundo (ou uma foto sua), Forma (anima de uma para outra), Material, Vidros (+ / − /
   **por cima**), Ajustes.
+- **Toque:** o vidro se ilumina por dentro a partir do dedo, e o brilho se espalha pelo vidro e
+  pelos vizinhos (mais visível sobre fundo escuro). Vidro maior parece mais espesso (Ajustes →
+  Avançado → Resposta ao tamanho). O Claro com símbolo ganha a camada de escurecimento da Apple.
 - **Vidro sobre vidro:** selecione um vidro e aperte o botão de camadas (último em Vidros). Ele
   passa a flutuar por cima dos outros e refrata o que está embaixo: os vidros, os símbolos e as
   sombras deles. Vidros de camadas diferentes não se fundem; o de cima recebe o toque primeiro.
@@ -52,7 +56,7 @@ nada. **O SwiftShader headless perde o processo de GPU ao desenhar no swapchain 
 por isso testes e capturas renderizam fora da tela (`offscreen` no renderer). O laboratório e o
 bench sempre desenham no canvas, então só rodam numa máquina com GPU de verdade.
 
-## Estado: V4.1 — vidro sobre vidro e conteúdo no quadro (sobre o V4: o vidro lê o fundo)
+## Estado: V5 — o vidro responde: luz do toque, resposta ao tamanho, escurecimento do Claro (sobre o V4.1)
 
 | peça | onde | situação |
 | --- | --- | --- |
@@ -114,8 +118,19 @@ Decisões do V4 em [§14 do relatório](docs/research/01-engenharia-reversa.md).
 
 Decisões do V4.1 em [§15 do relatório](docs/research/01-engenharia-reversa.md).
 
-**Próximo:** o bench rápido na RX 6600 (traz os dois cenários de camadas) e o teste do
-HTML-in-Canvas no Chrome 154; depois o V5.
+| peça | onde | situação |
+| --- | --- | --- |
+| **luz do toque**: nasce no dedo, se espalha pelo vidro e pelos vizinhos, assenta e apaga (molas); até 4 luzes no shader, com espelho e paridade | `src/physics/touch.ts`, `src/glass/glow.ts`, `glass.wgsl` | pronto |
+| **resposta ao tamanho**: vidro maior = mais espesso, lente mais larga, sombra mais funda | `sizeResponse` em `material.ts` | pronto |
+| **escurecimento do Claro** sob símbolos (35%, derivado de 3:1) | `CLEAR_DIM`, `glass.wgsl` | pronto |
+| testes do V5: toque (4), tamanho (3), Claro (2) | `tests/` | pronto |
+
+Plano e decisões do V5 (o que entrou, o que foi recusado e por quê) em
+[§16 do relatório](docs/research/01-engenharia-reversa.md).
+
+**Próximo:** o bench rápido na RX 6600 (traz os cenários de camadas) e o teste do HTML-in-Canvas
+no Chrome 154. Adiados com motivo: HDR (precisa de tela HDR para comparar) e ladrilhos em compute
+(nenhum grupo passa de 32 membros).
 
 ## Decisões que valem lembrar
 

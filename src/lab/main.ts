@@ -1,10 +1,12 @@
 import { acquireGpu, GpuUnavailableError, type GpuContext } from "../gpu/device.ts";
-import { ABBE_OFF, cloneMaterial, PRESETS, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
+import { ABBE_OFF, cloneMaterial, PRESETS, sizeResponse, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
 import { deviceGeometry } from "../glass/optics.ts";
 import { clampedRadius, shapeOf, type Shape, type ShapeKind } from "../glass/shape.ts";
 import { AppearancePolicy } from "../glass/policy.ts";
 import { unionField } from "../glass/union.ts";
+import { MAX_TOUCH_LIGHTS, type TouchLight } from "../glass/glow.ts";
 import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
+import { TouchGlow } from "../physics/touch.ts";
 import { AdaptiveQuality, measureRefresh } from "../renderer/adaptive.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
 import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassContent, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
@@ -73,6 +75,8 @@ interface Glass {
   symbol: number;
   /** 1 floats over the others and refracts them; glasses of different layers never merge. */
   layer: 0 | 1;
+  /** The light a touch leaves in the glass. */
+  glow: TouchGlow;
 }
 
 const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...DEFAULT_TUNING.deform }, deformation: DEFAULT_TUNING.deformation };
@@ -88,6 +92,8 @@ const state = {
   glasses: [] as Glass[],
   selected: 0,
   labels: true,
+  /** Bigger glass reads as thicker material (sizeResponse). */
+  sizeResponse: true,
 };
 
 /** The glasses of each layer share one merge group: they flow together within `spacing`. */
@@ -112,7 +118,18 @@ function createGlass(kind: ShapeKind, cx: number, cy: number, preset: PresetId, 
   const body = new GlassBody(shapeOf(kind, cx, cy), tuning);
   const material = cloneMaterial(PRESETS[preset].material);
   const symbol = symbolCounter++ % SYMBOLS.length;
-  return { kind, body, material, preset, edited: false, surface: { shape: body.shape(), material }, policy: new AppearancePolicy(), symbol, layer };
+  return {
+    kind,
+    body,
+    material,
+    preset,
+    edited: false,
+    surface: { shape: body.shape(), material },
+    policy: new AppearancePolicy(),
+    symbol,
+    layer,
+    glow: new TouchGlow(),
+  };
 }
 
 /** The symbols as the renderer rasterizes them: the stroke a little heavier than the dock's. */
@@ -120,11 +137,13 @@ const GLASS_SYMBOLS = SYMBOLS.map((svg) => svg.replace('stroke-width="1.5"', 'st
 
 /**
  * The symbol on a glass: sized by the glass, dark while the glass is in its light appearance and
- * light in its dark one. The renderer moves it with the glass (centre, rotation, press).
+ * light in its dark one (always light on Clear). The renderer moves it with the glass (centre,
+ * rotation, press).
  */
 function contentOf(g: Glass): GlassContent {
   const s = g.surface.shape;
-  const a = g.policy.value;
+  // Clear does not adapt: its content is bright, over the dimming layer the renderer adds.
+  const a = g.material.variant === "clear" ? 1 : g.policy.value;
   const mix = (x: number, y: number) => (x + (y - x) * a) / 255;
   return { symbol: g.symbol, size: Math.min(Math.max(Math.min(s.halfWidth, s.halfHeight) * 0.8, 14), 34), color: [mix(28, 255), mix(28, 255), mix(32, 255), 0.86 + 0.1 * a] };
 }
@@ -142,13 +161,25 @@ function rebuildGroups(): void {
 
 function surfacesChanged(): void {
   for (const g of state.glasses) {
-    g.surface.shape = g.body.shape();
-    g.surface.material = g.body.material(g.material);
+    const shape = g.body.shape();
+    g.surface.shape = shape;
+    // The form's size, not the stretch or the press: dragging does not change the material.
+    const base = state.sizeResponse ? sizeResponse(g.material, shape.halfWidth, shape.halfHeight) : g.material;
+    g.surface.material = g.body.material(base);
     // Until the first measurement arrives the shader decides by itself (stateless).
     if (g.policy.ready) g.surface.appearance = g.policy.value;
     g.surface.content = state.labels ? contentOf(g) : undefined;
   }
-  renderer?.surfacesChanged();
+  if (renderer) {
+    const lights: TouchLight[] = [];
+    for (const g of state.glasses) {
+      const s = g.surface.shape;
+      const light = g.glow.light(s.cx, s.cy, Math.max(s.halfWidth, s.halfHeight));
+      if (light) lights.push(light);
+    }
+    renderer.touchLights = lights.slice(-MAX_TOUCH_LIGHTS);
+    renderer.surfacesChanged();
+  }
 }
 
 /** Backdrop measurements arrived (a frame or two late): feed each glass's policy. */
@@ -191,6 +222,7 @@ function stepBodies(now: number): void {
   for (const g of state.glasses) {
     moving = g.body.step(dt) || moving;
     moving = g.policy.step(dt) || moving;
+    moving = g.glow.step(dt) || moving;
   }
   surfacesChanged();
   stepping = moving;
@@ -649,6 +681,15 @@ function buildDrawer(): void {
           surfacesChanged();
         },
       }),
+      toggle({
+        label: "Resposta ao tamanho",
+        hint: "Como na Apple: vidro maior parece mais espesso (lente mais forte, sombra mais funda, um pouco mais de espalhamento); menor, mais fino. A cápsula inicial é a referência.",
+        get: () => state.sizeResponse,
+        set: (v) => {
+          state.sizeResponse = v;
+          surfacesChanged();
+        },
+      }),
       toggle({ label: "Medir desempenho", hint: "Desenha todo quadro para medir fps e tempo de GPU. Desligado, só desenha quando algo muda.", get: () => state.continuous, set: setContinuous }),
       select({ label: "Inspecionar", hint: "Mostra uma grandeza do shader no lugar da imagem final.", options: DEBUG_VIEWS.map((d) => ({ id: d.id, label: d.label })), get: () => state.debugView, set: setDebug }),
       guardHint,
@@ -763,6 +804,8 @@ function installDrag(): void {
       if (index !== state.selected) selectGlass(index);
       dragging = state.glasses[index]!;
       dragging.body.grab(x, y);
+      const s = dragging.surface.shape;
+      dragging.glow.press(x - s.cx, y - s.cy);
       lab.setPointerCapture(e.pointerId);
       lab.classList.add("is-grabbing");
       coach.classList.add("is-done");
@@ -788,6 +831,7 @@ function installDrag(): void {
   const end = () => {
     if (!dragging) return;
     dragging.body.release();
+    dragging.glow.release();
     dragging = null;
     lab.classList.remove("is-grabbing");
     animate();

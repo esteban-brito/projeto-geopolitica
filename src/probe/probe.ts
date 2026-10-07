@@ -1,5 +1,6 @@
 import { acquireGpu } from "../gpu/device.ts";
 import { cloneMaterial, DEFAULT_MATERIAL, PRESETS, type GlassMaterial, type PresetId } from "../glass/material.ts";
+import type { TouchLight } from "../glass/glow.ts";
 import { buildRadialTable, deviceGeometry, tableLookup } from "../glass/optics.ts";
 import type { Shape } from "../glass/shape.ts";
 import { unionField } from "../glass/union.ts";
@@ -35,6 +36,8 @@ interface RenderRequest {
   debugView?: number;
   guard?: boolean;
   quality?: QualityTier;
+  /** Lights from touches, CSS px (= device px here). */
+  touches?: TouchLight[];
 }
 
 type ProbeScene = SceneId | "coordinates" | "solid-light" | "solid-dark" | "split" | "html";
@@ -94,6 +97,7 @@ async function render(req: RenderRequest): Promise<{ width: number; height: numb
   renderer.debugView = req.debugView ?? 0;
   renderer.guardEnabled = req.guard ?? true;
   renderer.quality = req.quality ?? "high";
+  renderer.touchLights = req.touches ?? [];
   renderer.setGroups(groups);
   const pixels = await renderer.capture();
   let binary = "";

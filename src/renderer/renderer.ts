@@ -1,5 +1,5 @@
 import { srgbViewOf, type GpuContext } from "../gpu/device.ts";
-import { REFERENCE_PATH, type GlassMaterial } from "../glass/material.ts";
+import { CLEAR_DIM, REFERENCE_PATH, type GlassMaterial } from "../glass/material.ts";
 import {
   buildRadialTable,
   deviceGeometry,
@@ -9,6 +9,7 @@ import {
   TABLE_STRIDE,
   type GuardStats,
 } from "../glass/optics.ts";
+import { MAX_TOUCH_LIGHTS, type TouchLight } from "../glass/glow.ts";
 import { clampedRadius, invert, shapeExtent, shapeMatrix, type Shape } from "../glass/shape.ts";
 import { onShaderChange, shaderSources, type ShaderSources } from "../shaders/index.ts";
 import type { BackgroundSource } from "../sources/source.ts";
@@ -107,7 +108,8 @@ const CONTENT_FLOATS = 12;
 const METRICS_RING = 3;
 const GROUP_FLOATS = 8;
 const TABLE_FLOATS = TABLE_SAMPLES * TABLE_STRIDE;
-const GLOBALS_BYTES = 48;
+/** Globals (see glass.wgsl): 48 bytes, then up to MAX_TOUCH_LIGHTS vec4 touch lights. */
+const GLOBALS_BYTES = 48 + MAX_TOUCH_LIGHTS * 16;
 /** Antialiasing band around the bounds of a group, device px. */
 const BOUNDS_MARGIN = 2;
 
@@ -145,6 +147,11 @@ export class LiquidGlassRenderer {
   forcePyramid = false;
   /** Tests switch the injectivity guard off to prove it is what keeps the mapping one-to-one. */
   guardEnabled = true;
+  /**
+   * Lights from touches inside the glass, CSS px (src/glass/glow.ts); the first MAX_TOUCH_LIGHTS
+   * are drawn. Read every frame: set it, then request a frame.
+   */
+  touchLights: readonly TouchLight[] = [];
   /** When set, picks `quality` from the measured GPU time after every frame. */
   adaptive: AdaptiveQuality | null = null;
 
@@ -546,8 +553,10 @@ export class LiquidGlassRenderer {
     if (this.forcePyramid) this.metricsDirty = this.lowerDirty = true;
     if (this.surfacesDirty) this.uploadSurfaces();
     if (this.lowerStale) this.ensureLower();
-    // What the shaders draw differently also changes the composite under layer 1.
-    const lowerKey = `${this.debugView}|${TIER_FEATURES[this.quality]}`;
+    // What the shaders draw differently also changes the composite under layer 1 (a glow lights
+    // the glasses there too).
+    const touches = this.touchLights.slice(0, MAX_TOUCH_LIGHTS);
+    const lowerKey = `${this.debugView}|${TIER_FEATURES[this.quality]}|${touches.map((t) => `${t.x},${t.y},${t.radius},${t.intensity}`).join(";")}`;
     if (lowerKey !== this.lowerKey) {
       this.lowerKey = lowerKey;
       this.lowerDirty = true;
@@ -565,6 +574,8 @@ export class LiquidGlassRenderer {
     u[6] = this.debugView;
     f[7] = EDGE_START_PX;
     u[8] = TIER_FEATURES[this.quality];
+    u[9] = touches.length;
+    touches.forEach((t, i) => f.set([t.x * this.dpr, t.y * this.dpr, Math.max(t.radius * this.dpr, 1e-3), t.intensity], 12 + i * 4));
     this.device.queue.writeBuffer(this.globals, 0, g);
 
     const texture = this.context ? this.context.getCurrentTexture() : this.frameTexture;
@@ -727,7 +738,7 @@ export class LiquidGlassRenderer {
     const dpr = this.dpr;
     let lowerTables = false;
     this.tables.length = count;
-    flat.forEach(({ shape, material, appearance }, i) => {
+    flat.forEach(({ shape, material, appearance, content }, i) => {
       const key = tableKey(shape, material, dpr, this.guardEnabled);
       if (this.tables[i]?.key !== key) {
         const table = buildRadialTable(material, shape, dpr, this.guardEnabled);
@@ -735,7 +746,9 @@ export class LiquidGlassRenderer {
         this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
         if (flatLayer[i] === 0) lowerTables = true;
       }
-      data.set(packSurface(shape, material, dpr, appearance, flatLayer[i]!), i * SURFACE_FLOATS);
+      // Clear under a symbol gets its dimming layer (CLEAR_DIM); nothing else is dimmed.
+      const dim = material.variant === "clear" && content && content.color[3] > 0 ? CLEAR_DIM : 0;
+      data.set(packSurface(shape, material, dpr, appearance, flatLayer[i]!, dim), i * SURFACE_FLOATS);
     });
     this.metricsDirty = true;
     this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
@@ -1261,7 +1274,7 @@ function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): 
  * computed here once: absorption from tint and density, blur radius from roughness and the glass's
  * height, the key light direction, F0 from the ior, the shadow's offset and softness from the gap.
  */
-function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: number | undefined, layer: 0 | 1): number[] {
+function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: number | undefined, layer: 0 | 1, dim: number): number[] {
   const { bevel } = deviceGeometry(m, shape, dpr);
   const absorb = m.tint.map((c) => (m.density * -Math.log(Math.max(c, 1e-3))) / (REFERENCE_PATH * dpr));
   const blur = 1.6 * (m.thickness + m.gap + m.bevel * 0.5) * m.roughness ** 1.5 * dpr;
@@ -1277,7 +1290,7 @@ function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: nu
     absorb[0]!, absorb[1]!, absorb[2]!, m.light,
     Math.cos(angle), -Math.sin(angle), blur, f0,
     inv[0], inv[1], inv[2], inv[3],
-    m.variant === "regular" ? m.adapt : 0, appearance ?? -1, layer, 0,
+    m.variant === "regular" ? m.adapt : 0, appearance ?? -1, layer, dim,
   ];
 }
 

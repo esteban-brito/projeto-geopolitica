@@ -254,7 +254,7 @@ function render(results: Result[], gpu: GpuContext): void {
       .join("");
   json.value = JSON.stringify(
     {
-      lab: "liquid-glass-lab V4.1",
+      lab: "liquid-glass-lab V5",
       date: new Date().toISOString(),
       userAgent: navigator.userAgent,
       adapter: gpu.info,
