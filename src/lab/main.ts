@@ -1,12 +1,14 @@
 import { acquireGpu, GpuUnavailableError, type GpuContext } from "../gpu/device.ts";
-import { ABBE_OFF, cloneMaterial, DEFAULT_MATERIAL, PRESETS, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
-import { shapeDistance, shapeOf, type Shape, type ShapeKind } from "../glass/shape.ts";
+import { ABBE_OFF, cloneMaterial, PRESETS, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
+import { clampedRadius, shapeOf, type Shape, type ShapeKind } from "../glass/shape.ts";
+import { unionField } from "../glass/union.ts";
 import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
-import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassSurface } from "../renderer/renderer.ts";
+import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
 import { NativeSource } from "../sources/native.ts";
 import { PAINTERS, paintBitmap, SCENES, type SceneId } from "../sources/scenes.ts";
-import { button, color, group, hint, segmented, select, slider, toggle, type Control } from "./controls.ts";
+import { color, hint, section, segmented, select, slider, toggle, type Control } from "./controls.ts";
+import { ICONS } from "./icons.ts";
 
 const SHAPES: readonly { id: ShapeKind; label: string }[] = [
   { id: "circle", label: "Círculo" },
@@ -22,32 +24,57 @@ const PROFILES: readonly { id: Profile; label: string }[] = [
   { id: "lip", label: "Lip (borda elevada)" },
 ];
 
-const TIER_LABEL: Record<QualityTier, string> = { ultra: "Ultra", high: "High", medium: "Medium", low: "Low" };
+const PRESET_HINT: Record<PresetId, string> = {
+  clear: "Claro: transparente, sem fosco (o Clear da Apple)",
+  regular: "Regular: um pouco fosco, legível sobre qualquer fundo",
+  frost: "Fosco: difunde bem o que está atrás",
+  crystal: "Cristal: denso e polido, com cor nas bordas",
+  smoke: "Fumê: absorve luz, escurece o fundo",
+};
+
+const TIER_LABEL: Record<QualityTier, string> = { ultra: "Ultra", high: "Alta", medium: "Média", low: "Baixa" };
+const MAX_GLASSES = 6;
+const DEFAULT_SPACING = 28;
 
 const canvas = document.querySelector<HTMLCanvasElement>("#stage")!;
-const panel = document.querySelector<HTMLElement>("#panel")!;
-const metrics = document.querySelector<HTMLElement>("#metrics")!;
+const lab = document.querySelector<HTMLElement>(".lab")!;
+const dock = document.querySelector<HTMLElement>("#dock")!;
+const drawer = document.querySelector<HTMLElement>("#drawer")!;
+const drawerBody = document.querySelector<HTMLElement>("#drawer-body")!;
+const drawerSubject = document.querySelector<HTMLElement>("#drawer-subject")!;
+const statsButton = document.querySelector<HTMLButtonElement>("#stats")!;
+const statsCard = document.querySelector<HTMLElement>("#stats-card")!;
+const coach = document.querySelector<HTMLElement>("#coach")!;
+const selectionRing = document.querySelector<HTMLElement>("#selection")!;
 const notice = document.querySelector<HTMLElement>("#notice")!;
 const shaderError = document.querySelector<HTMLElement>("#shader-error")!;
 
+/** One glass on the stage: its physics, its material, and the record the renderer draws. */
+interface Glass {
+  kind: ShapeKind;
+  body: GlassBody;
+  material: GlassMaterial;
+  /** The preset it came from; `edited` once a slider moved it away. */
+  preset: PresetId;
+  edited: boolean;
+  surface: GlassSurface;
+}
+
+const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...DEFAULT_TUNING.deform }, deformation: DEFAULT_TUNING.deformation };
+
 const state = {
   scene: "image" as SceneId,
-  shapeKind: "capsule" as ShapeKind,
-  shape: shapeOf("capsule", 0, 0),
-  material: cloneMaterial(DEFAULT_MATERIAL) as GlassMaterial,
-  preset: "regular" as PresetId | "custom",
+  bitmap: null as ImageBitmap | null,
   quality: "high" as QualityTier,
   debugView: 0,
   continuous: false,
-  bitmap: null as ImageBitmap | null,
+  glasses: [] as Glass[],
+  selected: 0,
 };
 
-/** Rest shape lives in state.shape (the panel edits it); the body animates what is drawn. */
-const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...DEFAULT_TUNING.deform }, deformation: DEFAULT_TUNING.deformation };
-let body = new GlassBody(state.shape, tuning);
-const drawn: GlassSurface = { shape: state.shape, material: state.material };
+/** All glasses share one merge group: they flow together when they come within `spacing`. */
+const group: GlassGroup = { spacing: DEFAULT_SPACING, surfaces: [] };
 
-/** A device that keeps dying (driver bug, headless SwiftShader presenting) must not loop forever. */
 const MAX_RESTARTS = 2;
 let restarts = 0;
 let renderer: LiquidGlassRenderer | null = null;
@@ -56,42 +83,116 @@ let source: NativeSource | null = null;
 const controls: Control[] = [];
 const guardHint = hint(guardText);
 
-function centerShape(): void {
-  state.shape.cx = canvas.clientWidth / 2;
-  state.shape.cy = canvas.clientHeight / 2;
-  body.place(state.shape.cx, state.shape.cy);
+const selected = (): Glass => state.glasses[state.selected]!;
+
+function createGlass(kind: ShapeKind, cx: number, cy: number, preset: PresetId): Glass {
+  const body = new GlassBody(shapeOf(kind, cx, cy), tuning);
+  const material = cloneMaterial(PRESETS[preset].material);
+  const glass: Glass = { kind, body, material, preset, edited: false, surface: { shape: body.shape(), material } };
+  return glass;
+}
+
+function rebuildGroup(): void {
+  group.surfaces = state.glasses.map((g) => g.surface);
+  renderer?.setGroups([group]);
 }
 
 function surfacesChanged(): void {
-  drawn.shape = body.shape();
-  drawn.material = body.material(state.material);
+  for (const g of state.glasses) {
+    g.surface.shape = g.body.shape();
+    g.surface.material = g.body.material(g.material);
+  }
   renderer?.surfacesChanged();
 }
 
 let animating = 0;
 let lastStep = 0;
 
-/** Steps the body while it moves; stops by itself, so an idle lab costs nothing. */
+/** Steps the bodies while any moves; stops by itself, so an idle lab costs nothing. */
 function animate(): void {
   if (animating) return;
   lastStep = performance.now();
   const tick = (now: number) => {
     const dt = (now - lastStep) / 1000;
     lastStep = now;
-    const moving = body.step(dt);
+    let moving = false;
+    for (const g of state.glasses) moving = g.body.step(dt) || moving;
     surfacesChanged();
     animating = moving ? requestAnimationFrame(tick) : 0;
   };
   animating = requestAnimationFrame(tick);
 }
 
+// ---- Actions ------------------------------------------------------------------------------
+
+function selectGlass(index: number, flash = true): void {
+  state.selected = Math.max(0, Math.min(index, state.glasses.length - 1));
+  refreshAll();
+  if (flash) flashSelection();
+}
+
 function setShapeKind(kind: ShapeKind): void {
-  const { cx, cy, rotation } = state.shape;
-  state.shapeKind = kind;
-  state.shape = { ...shapeOf(kind, cx, cy), rotation };
-  body = new GlassBody(state.shape, tuning);
+  const g = selected();
+  const { rotation } = g.body.rest;
+  g.kind = kind;
+  g.body.morph({ ...shapeOf(kind, 0, 0), rotation });
+  animate();
+  refreshAll();
+}
+
+function applyPreset(id: PresetId): void {
+  const g = selected();
+  g.preset = id;
+  g.edited = false;
+  g.material = cloneMaterial(PRESETS[id].material);
   surfacesChanged();
-  refreshControls();
+  refreshAll();
+}
+
+/** Any manual change leaves the preset: the drawer says so instead of pretending. */
+function editMaterial(change: (m: GlassMaterial) => void): void {
+  const g = selected();
+  change(g.material);
+  g.edited = true;
+  surfacesChanged();
+  refreshSubject();
+}
+
+function editShape(change: (s: Shape) => void): void {
+  const g = selected();
+  change(g.body.rest);
+  g.body.snap();
+  surfacesChanged();
+}
+
+function addGlass(): void {
+  if (state.glasses.length >= MAX_GLASSES) return;
+  const from = selected();
+  const s = from.body.shape();
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  // Beside the selected glass, past its merge reach, wrapping inside the stage.
+  let cx = s.cx + s.halfWidth + 140;
+  let cy = s.cy;
+  if (cx > w - 100) {
+    cx = Math.max(100, s.cx - s.halfWidth - 140);
+    cy = s.cy + (s.cy < h / 2 ? 150 : -150);
+  }
+  const glass = createGlass("circle", cx, cy, from.preset);
+  glass.material = cloneMaterial(from.material);
+  glass.edited = from.edited;
+  state.glasses.push(glass);
+  rebuildGroup();
+  surfacesChanged();
+  selectGlass(state.glasses.length - 1);
+}
+
+function removeGlass(): void {
+  if (state.glasses.length <= 1) return;
+  state.glasses.splice(state.selected, 1);
+  rebuildGroup();
+  surfacesChanged();
+  selectGlass(Math.min(state.selected, state.glasses.length - 1), false);
 }
 
 function setScene(scene: SceneId): void {
@@ -99,9 +200,10 @@ function setScene(scene: SceneId): void {
   state.bitmap = null;
   source?.setPainter(PAINTERS[scene]);
   renderer?.invalidateSource();
+  refreshAll();
 }
 
-async function loadImage(): Promise<void> {
+function loadImage(): void {
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "image/*";
@@ -109,109 +211,11 @@ async function loadImage(): Promise<void> {
     const file = input.files?.[0];
     if (!file) return;
     state.bitmap = await createImageBitmap(file);
-    state.scene = "image";
     source?.setPainter(paintBitmap(state.bitmap));
     renderer?.invalidateSource();
-    refreshControls();
+    refreshAll();
   });
   input.click();
-}
-
-function refreshControls(): void {
-  for (const c of controls) c.refresh();
-}
-
-function buildPanel(): void {
-  const s = () => state.shape;
-  const m = () => state.material;
-  controls.push(
-    group("Cena", true, [
-      segmented({ options: SCENES, get: () => state.scene, set: setScene }),
-      button("Carregar imagem…", () => void loadImage()),
-    ]),
-    group("Forma", true, [
-      segmented({ options: SHAPES, get: () => state.shapeKind, set: setShapeKind }),
-      slider({ label: "Largura", min: 20, max: 420, step: 1, get: () => s().halfWidth * 2, set: (v) => ((s().halfWidth = v / 2), surfacesChanged()), format: (v) => `${v} px` }),
-      slider({ label: "Altura", min: 20, max: 420, step: 1, get: () => s().halfHeight * 2, set: (v) => ((s().halfHeight = v / 2), surfacesChanged()), format: (v) => `${v} px` }),
-      slider({ label: "Raio do canto", min: 0, max: 210, step: 1, get: () => s().radius, set: (v) => ((s().radius = v), surfacesChanged()), format: (v) => `${v} px` }),
-      slider({ label: "Suavização do canto", min: 2, max: 6, step: 0.05, get: () => s().exponent, set: (v) => ((s().exponent = v), surfacesChanged()), format: (v) => `n = ${v.toFixed(2)}` }),
-      slider({ label: "Rotação", min: -90, max: 90, step: 1, get: () => (s().rotation * 180) / Math.PI, set: (v) => ((s().rotation = (v * Math.PI) / 180), surfacesChanged()), format: (v) => `${v}°` }),
-    ]),
-    group("Material", true, [
-      segmented({
-        options: (Object.keys(PRESETS) as PresetId[]).map((id) => ({ id, label: PRESETS[id].label })),
-        get: () => (state.preset === "custom" ? ("" as PresetId) : state.preset),
-        set: (id) => applyPreset(id),
-      }),
-      hint(() => (state.preset === "custom" ? "Material ajustado à mão." : `Preset <strong>${PRESETS[state.preset].label}</strong> (variante ${m().variant === "clear" ? "Clear" : "Regular"}).`)),
-    ]),
-    group("Óptica", true, [
-      slider({ label: "Índice de refração", min: 1, max: 2, step: 0.01, get: () => m().ior, set: (v) => edit(() => (m().ior = v)), format: (v) => v.toFixed(2) }),
-      slider({ label: "Dispersão (número de Abbe)", min: 20, max: ABBE_OFF, step: 1, get: () => m().abbe, set: (v) => edit(() => (m().abbe = v)), format: (v) => (v >= ABBE_OFF ? "desligada" : `V = ${v}`) }),
-      slider({ label: "Espessura", min: 0, max: 60, step: 1, get: () => m().thickness, set: (v) => edit(() => (m().thickness = v)), format: (v) => `${v} px` }),
-      slider({ label: "Altura de flutuação", min: 0, max: 60, step: 1, get: () => m().gap, set: (v) => edit(() => (m().gap = v)), format: (v) => `${v} px` }),
-      guardHint,
-    ]),
-    group("Superfície", true, [
-      slider({ label: "Bisel", min: 0, max: 80, step: 1, get: () => m().bevel, set: (v) => edit(() => (m().bevel = v)), format: (v) => `${v} px` }),
-      select({ label: "Perfil", options: PROFILES, get: () => m().profile, set: (v) => edit(() => (m().profile = v)) }),
-      slider({ label: "Rugosidade", min: 0, max: 1, step: 0.01, get: () => m().roughness, set: (v) => edit(() => (m().roughness = v)), format: (v) => v.toFixed(2) }),
-      slider({ label: "Contraste de borda", min: 0, max: 1, step: 0.01, get: () => m().edge, set: (v) => edit(() => (m().edge = v)), format: (v) => v.toFixed(2) }),
-    ]),
-    group("Cor", false, [
-      color({ label: "Tint intrínseco", get: () => m().tint, set: (v) => edit(() => (m().tint = v)) }),
-      slider({ label: "Densidade", min: 0, max: 1, step: 0.01, get: () => m().density, set: (v) => edit(() => (m().density = v)), format: (v) => v.toFixed(2) }),
-      hint(() => "O vidro não tem cor própria por padrão: a cor vem do que está atrás. O tint é absorção (Beer–Lambert) e escurece mais onde o caminho dentro do vidro é maior."),
-    ]),
-    group("Luz", false, [
-      slider({ label: "Luz principal", min: 0, max: 2, step: 0.01, get: () => m().light, set: (v) => edit(() => (m().light = v)), format: (v) => v.toFixed(2) }),
-      slider({ label: "Direção da luz", min: 0, max: 180, step: 1, get: () => m().lightAngle, set: (v) => edit(() => (m().lightAngle = v)), format: (v) => `${v}°` }),
-      slider({ label: "Ambiente refletido", min: 0, max: 2, step: 0.01, get: () => m().environment, set: (v) => edit(() => (m().environment = v)), format: (v) => v.toFixed(2) }),
-      slider({ label: "Sombra", min: 0, max: 1, step: 0.01, get: () => m().shadow, set: (v) => edit(() => (m().shadow = v)), format: (v) => v.toFixed(2) }),
-    ]),
-    group("Física", false, [
-      slider({ label: "Resposta ao arrasto", min: 0.04, max: 0.5, step: 0.01, get: () => tuning.follow.response, set: (v) => (tuning.follow.response = v), format: (v) => `${(v * 1000).toFixed(0)} ms` }),
-      slider({ label: "Amortecimento", min: 0.3, max: 1.2, step: 0.01, get: () => tuning.follow.dampingRatio, set: (v) => (tuning.follow.dampingRatio = v), format: (v) => `ζ = ${v.toFixed(2)}` }),
-      slider({ label: "Deformação", min: 0, max: 0.00015, step: 0.000001, get: () => tuning.deformation, set: (v) => (tuning.deformation = v), format: (v) => `${(v * 100000).toFixed(1)}% a 1000 px/s` }),
-      slider({ label: "Amortecimento da deformação", min: 0.3, max: 1.2, step: 0.01, get: () => tuning.deform.dampingRatio, set: (v) => (tuning.deform.dampingRatio = v), format: (v) => `ζ = ${v.toFixed(2)}` }),
-      hint(() => "Sem slider de massa: numa mola só a razão rigidez/massa importa. Resposta e amortecimento são os dois graus de liberdade."),
-    ]),
-    group("Desempenho", false, [
-      segmented({ label: "Qualidade", options: QUALITY_TIERS.map((t) => ({ id: t, label: TIER_LABEL[t] })), get: () => state.quality, set: (v) => ((state.quality = v), renderer?.setQuality(v)) }),
-      toggle({ label: "Renderizar todo quadro (medir)", get: () => state.continuous, set: (v) => setContinuous(v) }),
-      hint(() => "Sem medir, o laboratório só desenha quando algo muda. Para tempo de GPU sem arredondamento: <strong>chrome://flags/#enable-webgpu-developer-features</strong>."),
-    ]),
-    group("Debug", false, [
-      select({ label: "Visualização", options: DEBUG_VIEWS.map((d) => ({ id: d.id, label: d.label })), get: () => state.debugView, set: (v) => setDebug(v) }),
-      hint(() => "<strong>Injetividade</strong>: verde é folga, vermelho passa do limite de compressão 0,88."),
-    ]),
-  );
-  for (const c of controls) panel.append(c.element);
-}
-
-/** Any manual change leaves the preset: the panel says so instead of pretending. */
-function edit(change: () => void): void {
-  change();
-  state.preset = "custom";
-  surfacesChanged();
-  refreshControls();
-}
-
-function applyPreset(id: PresetId): void {
-  state.preset = id;
-  state.material = cloneMaterial(PRESETS[id].material);
-  surfacesChanged();
-  refreshControls();
-}
-
-function guardText(): string {
-  const g = renderer?.guardStats[0];
-  if (!g) return "Guarda de injetividade: —";
-  const dpr = renderer?.devicePixelRatio ?? 1;
-  if (g.compressedBand <= 0 && !g.cornerBound) return "Guarda de injetividade: a física já é injetiva, nada foi alterado.";
-  const band = (g.compressedBand / dpr).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
-  const corner = g.cornerBound ? " e limitada no canto" : "";
-  return `Guarda de injetividade: a dobra dos <strong>${band} px</strong> mais externos virou compressão${corner}.`;
 }
 
 function setContinuous(v: boolean): void {
@@ -230,36 +234,237 @@ function setDebug(v: number): void {
   renderer.requestFrame();
 }
 
-function metric(label: string, value: string, warn = false): string {
-  return `<span class="metric${warn ? " metric--warn" : ""}">${label} <b>${value}</b></span>`;
+function openDrawer(open: boolean): void {
+  drawer.hidden = !open;
+  lab.classList.toggle("has-drawer", open);
+  if (open) toggleStats(false);
+  refreshAll();
 }
 
-function renderMetrics(): void {
-  const r = renderer;
-  const gpu = currentGpu;
-  if (!r || !gpu) return;
-  const parts: string[] = [];
-  const fps = r.interval.count > 0 ? 1000 / r.interval.mean : 0;
-  parts.push(metric("FPS", state.continuous ? fps.toFixed(0) : "sob demanda"));
-  parts.push(metric("CPU", `${r.cpu.mean.toFixed(2)} ms`));
-  if (r.timer) {
-    const passes = [...r.timer.series.entries()].map(([name, s]) => `${name} ${s.mean.toFixed(2)}`).join(" · ");
-    parts.push(metric("GPU", passes ? `${r.timer.total.toFixed(2)} ms (${passes})` : "—"));
-  } else {
-    parts.push(metric("GPU", "sem timestamp-query"));
+// ---- Dock ---------------------------------------------------------------------------------
+
+interface DockButton {
+  element: HTMLButtonElement;
+  pressed?: () => boolean;
+  disabled?: () => boolean;
+}
+const dockButtons: DockButton[] = [];
+
+function chip(opts: { html: string; label: string; onClick: () => void; pressed?: () => boolean; disabled?: () => boolean; className?: string }): HTMLButtonElement {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = `chip ${opts.className ?? ""}`.trim();
+  b.innerHTML = opts.html;
+  b.title = opts.label;
+  b.setAttribute("aria-label", opts.label);
+  b.addEventListener("click", opts.onClick);
+  dockButtons.push({ element: b, ...(opts.pressed ? { pressed: opts.pressed } : {}), ...(opts.disabled ? { disabled: opts.disabled } : {}) });
+  return b;
+}
+
+function dockGroup(caption: string, buttons: HTMLElement[]): HTMLElement {
+  const g = document.createElement("div");
+  g.className = "dock__group";
+  const c = document.createElement("span");
+  c.className = "dock__caption";
+  c.textContent = caption;
+  const row = document.createElement("div");
+  row.className = "dock__row";
+  row.setAttribute("role", "group");
+  row.setAttribute("aria-label", caption);
+  row.append(...buttons);
+  g.append(c, row);
+  return g;
+}
+
+const divider = () => Object.assign(document.createElement("span"), { className: "dock__divider" });
+
+/** A small live picture of the scene, painted by the same painter the stage uses. */
+function thumbnail(scene: SceneId): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = 76;
+  c.height = 60;
+  const ctx = c.getContext("2d");
+  if (ctx) PAINTERS[scene](ctx, c.width, c.height, 0.22);
+  return c;
+}
+
+function buildDock(): void {
+  const scenes = SCENES.map((s) => {
+    const b = chip({ html: "", label: `Fundo: ${s.label}`, className: "swatch", onClick: () => setScene(s.id), pressed: () => !state.bitmap && state.scene === s.id });
+    b.append(thumbnail(s.id));
+    return b;
+  });
+  const upload = chip({ html: ICONS.upload, label: "Usar uma foto sua como fundo", className: "chip--icon", onClick: loadImage, pressed: () => state.bitmap !== null });
+  const shapes = SHAPES.map((s) =>
+    chip({ html: ICONS[s.id], label: `Forma: ${s.label}`, className: "chip--icon", onClick: () => setShapeKind(s.id), pressed: () => selected().kind === s.id }),
+  );
+  const materials = (Object.keys(PRESETS) as PresetId[]).map((id) =>
+    chip({
+      html: PRESETS[id].label,
+      label: PRESET_HINT[id],
+      className: "material-chip",
+      onClick: () => applyPreset(id),
+      pressed: () => !selected().edited && selected().preset === id,
+    }),
+  );
+  const glasses = [
+    chip({ html: ICONS.add, label: "Adicionar um vidro", className: "chip--icon", onClick: addGlass, disabled: () => state.glasses.length >= MAX_GLASSES }),
+    chip({ html: ICONS.remove, label: "Remover o vidro selecionado", className: "chip--icon", onClick: removeGlass, disabled: () => state.glasses.length <= 1 }),
+  ];
+  const tune = chip({ html: ICONS.tune, label: "Ajustes finos", className: "chip--icon", onClick: () => openDrawer(drawer.hidden), pressed: () => !drawer.hidden });
+  dock.append(
+    dockGroup("Fundo", [...scenes, upload]),
+    divider(),
+    dockGroup("Forma", shapes),
+    divider(),
+    dockGroup("Material", materials),
+    divider(),
+    dockGroup("Vidros", glasses),
+    dockGroup("Ajustes", [tune]),
+  );
+}
+
+// ---- Drawer -------------------------------------------------------------------------------
+
+const px = (v: number) => `${Math.round(v)} px`;
+const dispersionAmount = (abbe: number) => (abbe >= ABBE_OFF ? 0 : (ABBE_OFF - abbe) / (ABBE_OFF - 20));
+
+function buildDrawer(): void {
+  const m = () => selected().material;
+  const s = () => selected().body.rest;
+  controls.push(
+    section("Vidro", "O vidro selecionado. A física é real: Snell nas duas faces, Fresnel e absorção.", true, [
+      slider({ label: "Refração", hint: "Índice de refração: quanto a borda curva desvia a imagem. Vidro comum ≈ 1,5.", min: 1, max: 2, step: 0.01, get: () => m().ior, set: (v) => editMaterial((x) => (x.ior = v)), format: (v) => `n ${v.toFixed(2)}` }),
+      slider({ label: "Espessura", hint: "Quanto o raio anda dentro do vidro: mais espesso, mais deslocamento na borda.", min: 0, max: 60, step: 1, get: () => m().thickness, set: (v) => editMaterial((x) => (x.thickness = v)), format: px }),
+      slider({ label: "Borda curva", hint: "Largura da faixa curva junto à borda (bisel). Limitada pelo raio do canto.", min: 0, max: 80, step: 1, get: () => m().bevel, set: (v) => editMaterial((x) => (x.bevel = v)), format: px }),
+      slider({ label: "Fosco", hint: "Rugosidade da superfície: borra o que está atrás.", min: 0, max: 1, step: 0.01, get: () => m().roughness, set: (v) => editMaterial((x) => (x.roughness = v)), format: (v) => `${Math.round(v * 100)}%` }),
+      slider({
+        label: "Cor nas bordas",
+        hint: "Dispersão: cada cor refrata um pouco diferente (número de Abbe). Zero desliga.",
+        min: 0,
+        max: 1,
+        step: 0.01,
+        get: () => dispersionAmount(m().abbe),
+        set: (v) => editMaterial((x) => (x.abbe = v <= 0 ? ABBE_OFF : Math.round(ABBE_OFF - v * (ABBE_OFF - 20)))),
+        format: (v) => (v <= 0 ? "desligada" : `V ${Math.round(ABBE_OFF - v * (ABBE_OFF - 20))}`),
+      }),
+      slider({ label: "Altura", hint: "Quanto o vidro flutua acima do conteúdo: desloca a imagem e afasta a sombra.", min: 0, max: 60, step: 1, get: () => m().gap, set: (v) => editMaterial((x) => (x.gap = v)), format: px }),
+    ]),
+    section("Forma", "Os botões de forma no dock animam; aqui o ajuste é direto.", false, [
+      slider({ label: "Largura", min: 20, max: 520, step: 1, get: () => s().halfWidth * 2, set: (v) => editShape((x) => (x.halfWidth = v / 2)), format: px }),
+      slider({ label: "Altura", min: 20, max: 420, step: 1, get: () => s().halfHeight * 2, set: (v) => editShape((x) => (x.halfHeight = v / 2)), format: px }),
+      slider({ label: "Cantos", hint: "Raio do canto. No máximo, metade do lado menor (vira cápsula).", min: 0, max: 210, step: 1, get: () => s().radius, set: (v) => editShape((x) => (x.radius = v)), format: px }),
+      slider({ label: "Suavidade do canto", hint: "2 é arco de círculo; perto de 4 é o squircle dos ícones da Apple.", min: 2, max: 6, step: 0.05, get: () => s().exponent, set: (v) => editShape((x) => (x.exponent = v)), format: (v) => `n ${v.toFixed(2)}` }),
+      slider({ label: "Rotação", min: -90, max: 90, step: 1, get: () => (s().rotation * 180) / Math.PI, set: (v) => editShape((x) => (x.rotation = (v * Math.PI) / 180)), format: (v) => `${Math.round(v)}°` }),
+    ]),
+    section("Luz e cor", "O vidro não tem cor própria: reflete o ambiente e tinge só se você pedir.", false, [
+      slider({ label: "Brilho", hint: "Luz principal, que vem de cima, mais uma contraluz fraca por baixo.", min: 0, max: 2, step: 0.01, get: () => m().light, set: (v) => editMaterial((x) => (x.light = v)), format: (v) => `${Math.round(v * 100)}%` }),
+      slider({ label: "Direção da luz", hint: "90° = de cima.", min: 0, max: 180, step: 1, get: () => m().lightAngle, set: (v) => editMaterial((x) => (x.lightAngle = v)), format: (v) => `${Math.round(v)}°` }),
+      slider({ label: "Reflexo", hint: "Quanto do ambiente (a cor média do fundo) o vidro reflete, pelo Fresnel.", min: 0, max: 2, step: 0.01, get: () => m().environment, set: (v) => editMaterial((x) => (x.environment = v)), format: (v) => `${Math.round(v * 100)}%` }),
+      slider({ label: "Borda escura", hint: "Escurece a borda conforme a inclinação, para o vidro se destacar em fundo claro.", min: 0, max: 1, step: 0.01, get: () => m().edge, set: (v) => editMaterial((x) => (x.edge = v)), format: (v) => `${Math.round(v * 100)}%` }),
+      slider({ label: "Sombra", min: 0, max: 1, step: 0.01, get: () => m().shadow, set: (v) => editMaterial((x) => (x.shadow = v)), format: (v) => `${Math.round(v * 100)}%` }),
+      color({ label: "Cor do vidro", hint: "Tinge por absorção (Beer–Lambert): mais forte onde o vidro é mais grosso.", get: () => m().tint, set: (v) => editMaterial((x) => (x.tint = v)) }),
+      slider({ label: "Intensidade da cor", min: 0, max: 1, step: 0.01, get: () => m().density, set: (v) => editMaterial((x) => (x.density = v)), format: (v) => `${Math.round(v * 100)}%` }),
+    ]),
+    section("Fusão e movimento", "Vale para todos os vidros.", false, [
+      slider({
+        label: "Distância de fusão",
+        hint: "Dois vidros começam a se unir quando o vão entre eles fica abaixo deste valor. Zero desliga.",
+        min: 0,
+        max: 80,
+        step: 1,
+        get: () => group.spacing,
+        set: (v) => ((group.spacing = v), surfacesChanged()),
+        format: (v) => (v <= 0 ? "desligada" : px(v)),
+      }),
+      slider({ label: "Resposta", hint: "Tempo que o vidro leva para alcançar o dedo.", min: 0.04, max: 0.5, step: 0.01, get: () => tuning.follow.response, set: (v) => (tuning.follow.response = v), format: (v) => `${Math.round(v * 1000)} ms` }),
+      slider({ label: "Amortecimento", hint: "1 chega sem passar do ponto; abaixo de 1 balança um pouco.", min: 0.3, max: 1.2, step: 0.01, get: () => tuning.follow.dampingRatio, set: (v) => (tuning.follow.dampingRatio = v), format: (v) => `ζ ${v.toFixed(2)}` }),
+      slider({ label: "Esticar", hint: "Quanto o vidro estica na direção do movimento (preserva a área, teto de 12%).", min: 0, max: 0.00015, step: 0.000001, get: () => tuning.deformation, set: (v) => (tuning.deformation = v), format: (v) => `${(v * 100000).toFixed(1)}% a 1000 px/s` }),
+    ]),
+    section("Avançado", "", false, [
+      select({ label: "Perfil da borda", options: PROFILES, get: () => m().profile, set: (v) => editMaterial((x) => (x.profile = v)) }),
+      segmented({
+        label: "Qualidade",
+        options: QUALITY_TIERS.map((t) => ({ id: t, label: TIER_LABEL[t] })),
+        get: () => state.quality,
+        set: (v) => {
+          state.quality = v;
+          renderer?.setQuality(v);
+        },
+      }),
+      toggle({ label: "Medir desempenho", hint: "Desenha todo quadro para medir fps e tempo de GPU. Desligado, só desenha quando algo muda.", get: () => state.continuous, set: setContinuous }),
+      select({ label: "Inspecionar", hint: "Mostra uma grandeza do shader no lugar da imagem final.", options: DEBUG_VIEWS.map((d) => ({ id: d.id, label: d.label })), get: () => state.debugView, set: setDebug }),
+      guardHint,
+    ]),
+  );
+  for (const c of controls) drawerBody.append(c.element);
+}
+
+function guardText(): string {
+  const stats = renderer?.guardStats[state.selected];
+  if (!stats) return "";
+  const dpr = renderer?.devicePixelRatio ?? 1;
+  if (stats.compressedBand <= 0 && !stats.cornerBound) return "Guarda de injetividade: a física já é injetiva, nada foi alterado.";
+  const band = (stats.compressedBand / dpr).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+  const corner = stats.cornerBound ? " e limitada no canto" : "";
+  return `Guarda de injetividade: nos <strong>${band} px</strong> da borda a dobra da imagem virou compressão${corner}.`;
+}
+
+function refreshSubject(): void {
+  const g = selected();
+  const n = state.glasses.length;
+  const name = n > 1 ? `Vidro ${state.selected + 1} de ${n}` : "Vidro";
+  drawerSubject.textContent = `${name} · ${PRESETS[g.preset].label}${g.edited ? " (ajustado)" : ""}`;
+  if (g.edited) {
+    const reset = document.createElement("button");
+    reset.type = "button";
+    reset.textContent = "restaurar";
+    reset.addEventListener("click", () => applyPreset(g.preset));
+    drawerSubject.append(reset);
   }
-  parts.push(metric("DPR", `${r.devicePixelRatio.toFixed(2)} de ${(window.devicePixelRatio || 1).toFixed(2)}`));
-  parts.push(metric("Resolução", `${r.resolution.width}×${r.resolution.height}`));
-  parts.push(metric("Fundo", "WebGPU · cena nativa"));
-  parts.push(metric("Adaptador", `${gpu.info.vendor} ${gpu.info.architecture}`.trim(), gpu.info.isFallback));
-  parts.push(metric("Superfícies", String(r.surfaceCount)));
-  parts.push(metric("Qualidade", TIER_LABEL[state.quality]));
-  parts.push(metric("Memória", `${(r.gpuBytes / 1048576).toFixed(1)} MB`));
-  metrics.innerHTML = parts.join("");
+  for (const b of dockButtons) {
+    if (b.pressed) b.element.setAttribute("aria-pressed", String(b.pressed()));
+    if (b.disabled) b.element.disabled = b.disabled();
+  }
+}
+
+function refreshAll(): void {
+  for (const c of controls) c.refresh();
+  refreshSubject();
+}
+
+// ---- Selection, drag, coach ---------------------------------------------------------------
+
+let flashTimer = 0;
+
+function flashSelection(): void {
+  if (state.glasses.length < 2) return;
+  const g = selected();
+  const s = g.body.shape();
+  const pad = 7;
+  const r = clampedRadius(s);
+  Object.assign(selectionRing.style, {
+    width: `${s.halfWidth * 2 + pad * 2}px`,
+    height: `${s.halfHeight * 2 + pad * 2}px`,
+    borderRadius: `${r + pad}px`,
+    transform: `translate(${s.cx - s.halfWidth - pad}px, ${s.cy - s.halfHeight - pad}px) rotate(${s.rotation}rad)`,
+  });
+  selectionRing.classList.add("is-visible");
+  clearTimeout(flashTimer);
+  flashTimer = window.setTimeout(() => selectionRing.classList.remove("is-visible"), 700);
+}
+
+/** The glass under the pointer, including the neck between two merged glasses (its main member). */
+function hit(x: number, y: number): number {
+  const shapes = state.glasses.map((g) => g.surface.shape);
+  const u = unionField(shapes, state.glasses.length > 1 ? group.spacing / 2 : 0, x, y);
+  if (u.d > 0) return -1;
+  return u.blend.reduce((best, e) => (e.weight > best.weight ? e : best)).index;
 }
 
 function installDrag(): void {
-  let dragging = false;
+  let dragging: Glass | null = null;
   const local = (e: PointerEvent) => {
     const rect = canvas.getBoundingClientRect();
     return [e.clientX - rect.left, e.clientY - rect.top] as const;
@@ -268,11 +473,14 @@ function installDrag(): void {
     "pointerdown",
     (e) => {
       const [x, y] = local(e);
-      if (shapeDistance(body.shape(), x, y) > 0) return;
-      dragging = true;
-      body.grab(x, y);
+      const index = hit(x, y);
+      if (index < 0) return;
+      if (index !== state.selected) selectGlass(index);
+      dragging = state.glasses[index]!;
+      dragging.body.grab(x, y);
       canvas.setPointerCapture(e.pointerId);
       canvas.classList.add("is-grabbing");
+      coach.classList.add("is-done");
       animate();
     },
     { passive: true },
@@ -282,24 +490,66 @@ function installDrag(): void {
     (e) => {
       const [x, y] = local(e);
       if (!dragging) {
-        canvas.classList.toggle("is-grab", shapeDistance(body.shape(), x, y) <= 0);
+        canvas.classList.toggle("is-grab", hit(x, y) >= 0);
         return;
       }
-      body.drag(x, y);
+      dragging.body.drag(x, y);
       animate();
     },
     { passive: true },
   );
   const end = () => {
     if (!dragging) return;
-    dragging = false;
-    body.release();
+    dragging.body.release();
+    dragging = null;
     canvas.classList.remove("is-grabbing");
     animate();
   };
   canvas.addEventListener("pointerup", end, { passive: true });
   canvas.addEventListener("pointercancel", end, { passive: true });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !drawer.hidden) openDrawer(false);
+  });
 }
+
+// ---- Metrics ------------------------------------------------------------------------------
+
+function toggleStats(open = statsCard.hidden): void {
+  statsCard.hidden = !open;
+  statsButton.setAttribute("aria-expanded", String(open));
+  renderMetrics();
+}
+
+const ms = (v: number) => `${v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ms`;
+
+function renderMetrics(): void {
+  const r = renderer;
+  const gpu = currentGpu;
+  if (!r || !gpu) return;
+  const fps = state.continuous && r.interval.count > 0 ? `${Math.round(1000 / r.interval.mean)} fps` : "sob demanda";
+  const gpuTotal = r.timer && r.timer.total > 0 ? `GPU ${ms(r.timer.total)}` : "GPU —";
+  statsButton.textContent = `${fps} · ${gpuTotal}`;
+  if (statsCard.hidden) return;
+  const rows: [string, string, boolean?][] = [
+    ["quadros", fps],
+    ["CPU", ms(r.cpu.mean)],
+  ];
+  if (r.timer) for (const [name, s] of r.timer.series) rows.push([`GPU ${name}`, ms(s.mean)]);
+  else rows.push(["GPU", "sem timestamp-query"]);
+  rows.push(
+    ["resolução", `${r.resolution.width}×${r.resolution.height}`],
+    ["DPR", `${r.devicePixelRatio.toFixed(2)} de ${(window.devicePixelRatio || 1).toFixed(2)}`],
+    ["qualidade", TIER_LABEL[state.quality]],
+    ["vidros", `${r.surfaceCount} em ${r.groupCount} grupo${r.groupCount === 1 ? "" : "s"}`],
+    ["memória", `${(r.gpuBytes / 1048576).toFixed(1)} MB`],
+    ["adaptador", `${gpu.info.vendor} ${gpu.info.architecture}`.trim(), gpu.info.isFallback],
+  );
+  statsCard.innerHTML =
+    `<dl>${rows.map(([k, v, warn]) => `<dt>${k}</dt><dd${warn ? ' class="warn"' : ""}>${v}</dd>`).join("")}</dl>` +
+    `<p class="hint" style="margin-top:8px">Liga “Medir desempenho” em Ajustes → Avançado para fps. Tempo de GPU sem arredondamento: <strong>chrome://flags/#enable-webgpu-developer-features</strong>.</p>`;
+}
+
+// ---- Start --------------------------------------------------------------------------------
 
 function showNotice(html: string | null): void {
   notice.hidden = html === null;
@@ -339,34 +589,60 @@ async function start(): Promise<void> {
     showNotice(`GPU perdida (${info.reason || "sem motivo informado"}): recriando o renderer…`);
     void start().then(() => showNotice(null));
   };
-  r.onFrame = () => guardHint.refresh();
+  // The guard's numbers exist only after the frame built the tables.
+  r.onFrame = () => {
+    if (!drawer.hidden) guardHint.refresh();
+  };
   source = new NativeSource("cena", state.bitmap ? paintBitmap(state.bitmap) : PAINTERS[state.scene], () => r.devicePixelRatio);
   r.setSource(source);
   surfacesChanged();
-  r.setSurfaces([drawn]);
+  r.setGroups([group]);
   const error = await r.init();
   if (error) console.warn(error);
-  refreshControls();
+  refreshAll();
   renderMetrics();
 }
 
-centerShape();
-buildPanel();
+/** A capsule and a circle well apart: the first thing to try is pushing one into the other. */
+function initialGlasses(): void {
+  const w = canvas.clientWidth || 960;
+  const h = canvas.clientHeight || 600;
+  const capsule = shapeOf("capsule", 0, 0);
+  const circle = shapeOf("circle", 0, 0);
+  const gap = 110;
+  const span = capsule.halfWidth * 2 + gap + circle.halfWidth * 2;
+  if (span + 32 <= w) {
+    const left = w / 2 - span / 2;
+    const cy = h * 0.44;
+    state.glasses = [
+      createGlass("capsule", left + capsule.halfWidth, cy, "regular"),
+      createGlass("circle", left + capsule.halfWidth * 2 + gap + circle.halfWidth, cy, "regular"),
+    ];
+  } else {
+    // A phone: one above the other.
+    const top = h * 0.36 - (capsule.halfHeight * 2 + gap + circle.halfHeight * 2) / 2;
+    state.glasses = [
+      createGlass("capsule", w / 2, top + capsule.halfHeight, "regular"),
+      createGlass("circle", w / 2, top + capsule.halfHeight * 2 + gap + circle.halfHeight, "regular"),
+    ];
+  }
+  rebuildGroup();
+}
+
+initialGlasses();
+buildDock();
+buildDrawer();
+document.querySelector("#drawer-close")!.innerHTML = ICONS.close;
+document.querySelector("#drawer-close")!.addEventListener("click", () => openDrawer(false));
+statsButton.addEventListener("click", () => toggleStats());
 installDrag();
+refreshAll();
 setInterval(renderMetrics, 500);
 void start();
 
 declare global {
   interface Window {
-    lab?: { state: typeof state; renderer: () => LiquidGlassRenderer | null; setShape: (s: Partial<Shape>) => void };
+    lab?: { state: typeof state; group: GlassGroup; renderer: () => LiquidGlassRenderer | null; select: (i: number) => void };
   }
 }
-window.lab = {
-  state,
-  renderer: () => renderer,
-  setShape: (patch) => {
-    Object.assign(state.shape, patch);
-    body.place(state.shape.cx, state.shape.cy);
-    surfacesChanged();
-  },
-};
+window.lab = { state, group, renderer: () => renderer, select: (i) => selectGlass(i) };

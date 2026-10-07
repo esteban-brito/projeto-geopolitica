@@ -70,11 +70,19 @@ export function clampedRadius(shape: Shape): number {
   return Math.max(0, Math.min(shape.radius, shape.halfWidth, shape.halfHeight));
 }
 
+export interface ShapeField {
+  /** Signed distance, Euclidean to first order; negative inside. */
+  d: number;
+  /** Outward unit normal of the iso-line, screen space. */
+  gx: number;
+  gy: number;
+}
+
 /**
- * CPU mirror of `shape_sdf` in glass.wgsl (Euclidean-corrected superellipse rectangle), used for
- * hit testing. Returns the signed distance in the same units as the shape.
+ * CPU mirror of `shape_sdf` in glass.wgsl (Euclidean-corrected superellipse rectangle under the
+ * shape's affine map). Same units as the shape.
  */
-export function shapeDistance(shape: Shape, x: number, y: number): number {
+export function shapeField(shape: Shape, x: number, y: number): ShapeField {
   const inv = invert(shapeMatrix(shape));
   const dx = x - shape.cx;
   const dy = y - shape.cy;
@@ -113,5 +121,20 @@ export function shapeDistance(shape: Shape, x: number, y: number): number {
   gy *= sgy;
   const wx = inv[0] * gx + inv[2] * gy;
   const wy = inv[1] * gx + inv[3] * gy;
-  return d / Math.max(Math.hypot(wx, wy), 1e-6);
+  const wl = Math.max(Math.hypot(wx, wy), 1e-6);
+  return { d: d / wl, gx: wx / wl, gy: wy / wl };
+}
+
+/** Signed distance only (hit testing). */
+export function shapeDistance(shape: Shape, x: number, y: number): number {
+  return shapeField(shape, x, y).d;
+}
+
+/** Half extents of the axis-aligned box around the drawn shape (rotation, press, stretch). */
+export function shapeExtent(shape: Shape): [number, number] {
+  const m = shapeMatrix(shape);
+  return [
+    Math.abs(m[0]) * shape.halfWidth + Math.abs(m[1]) * shape.halfHeight,
+    Math.abs(m[2]) * shape.halfWidth + Math.abs(m[3]) * shape.halfHeight,
+  ];
 }

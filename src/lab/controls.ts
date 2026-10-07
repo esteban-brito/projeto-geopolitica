@@ -1,26 +1,34 @@
-/** Minimal DOM builders for the panel. Each control reads its value from a getter so presets and
- * drags can refresh it with `refresh()`. */
+/** Small DOM builders for the settings drawer. Each control reads its value from a getter, so a
+ * preset, a selection change or a drag can bring it up to date with `refresh()`. */
 
 export interface Control {
   element: HTMLElement;
   refresh(): void;
 }
 
-export function group(title: string, open: boolean, controls: Control[]): Control {
+export function section(title: string, intro: string, open: boolean, controls: Control[]): Control {
   const details = document.createElement("details");
-  details.className = "group";
+  details.className = "section";
   details.open = open;
   const summary = document.createElement("summary");
   summary.textContent = title;
   const body = document.createElement("div");
-  body.className = "group__body";
+  body.className = "section__body";
+  if (intro) {
+    const p = document.createElement("p");
+    p.className = "section__intro";
+    p.textContent = intro;
+    body.append(p);
+  }
   for (const c of controls) body.append(c.element);
   details.append(summary, body);
   return { element: details, refresh: () => controls.forEach((c) => c.refresh()) };
 }
 
+/** A slider in plain words: `label` says what it does, `hint` (tooltip) says how. */
 export function slider(opts: {
   label: string;
+  hint?: string;
   min: number;
   max: number;
   step: number;
@@ -30,10 +38,10 @@ export function slider(opts: {
 }): Control {
   const field = document.createElement("label");
   field.className = "field";
+  if (opts.hint) field.title = opts.hint;
   const head = document.createElement("span");
   head.className = "field__head";
   const name = document.createElement("span");
-  name.className = "field__label";
   name.textContent = opts.label;
   const value = document.createElement("span");
   value.className = "field__value";
@@ -43,6 +51,8 @@ export function slider(opts: {
   input.min = String(opts.min);
   input.max = String(opts.max);
   input.step = String(opts.step);
+  input.setAttribute("aria-label", opts.label);
+  if (opts.hint) input.setAttribute("aria-description", opts.hint);
   const fmt = opts.format ?? ((v: number) => v.toFixed(opts.step < 1 ? 2 : 0));
   const refresh = () => {
     const v = opts.get();
@@ -60,7 +70,7 @@ export function slider(opts: {
 
 export function segmented<T extends string>(opts: {
   label?: string;
-  options: readonly { id: T; label: string }[];
+  options: readonly { id: T; label: string; title?: string }[];
   get: () => T;
   set: (v: T) => void;
 }): Control {
@@ -68,17 +78,19 @@ export function segmented<T extends string>(opts: {
   field.className = "field";
   if (opts.label) {
     const name = document.createElement("span");
-    name.className = "field__label";
+    name.className = "field__head";
     name.textContent = opts.label;
     field.append(name);
   }
   const bar = document.createElement("div");
   bar.className = "segmented";
   bar.setAttribute("role", "group");
+  if (opts.label) bar.setAttribute("aria-label", opts.label);
   const buttons = opts.options.map((o) => {
     const b = document.createElement("button");
     b.type = "button";
     b.textContent = o.label;
+    if (o.title) b.title = o.title;
     b.addEventListener("click", () => {
       opts.set(o.id);
       refresh();
@@ -97,14 +109,16 @@ export function segmented<T extends string>(opts: {
 
 export function select<T extends string | number>(opts: {
   label: string;
+  hint?: string;
   options: readonly { id: T; label: string }[];
   get: () => T;
   set: (v: T) => void;
 }): Control {
   const field = document.createElement("label");
   field.className = "field";
+  if (opts.hint) field.title = opts.hint;
   const name = document.createElement("span");
-  name.className = "field__label";
+  name.className = "field__head";
   name.textContent = opts.label;
   const el = document.createElement("select");
   for (const o of opts.options) {
@@ -125,13 +139,15 @@ export function select<T extends string | number>(opts: {
   return { element: field, refresh };
 }
 
-export function toggle(opts: { label: string; get: () => boolean; set: (v: boolean) => void }): Control {
+export function toggle(opts: { label: string; hint?: string; get: () => boolean; set: (v: boolean) => void }): Control {
   const field = document.createElement("label");
   field.className = "toggle";
+  if (opts.hint) field.title = opts.hint;
   const name = document.createElement("span");
   name.textContent = opts.label;
   const input = document.createElement("input");
   input.type = "checkbox";
+  input.setAttribute("role", "switch");
   input.addEventListener("change", () => opts.set(input.checked));
   field.append(name, input);
   const refresh = () => {
@@ -141,19 +157,9 @@ export function toggle(opts: { label: string; get: () => boolean; set: (v: boole
   return { element: field, refresh };
 }
 
-export function button(label: string, onClick: () => void): Control {
-  const b = document.createElement("button");
-  b.type = "button";
-  b.className = "button";
-  b.textContent = label;
-  b.addEventListener("click", onClick);
-  return { element: b, refresh: () => {} };
-}
-
 export function hint(render: () => string): Control {
   const p = document.createElement("p");
   p.className = "hint";
-  p.style.margin = "0";
   const refresh = () => {
     p.innerHTML = render();
   };
@@ -162,9 +168,10 @@ export function hint(render: () => string): Control {
 }
 
 /** Colour picker over a linear-RGB triple (the material stores linear light). */
-export function color(opts: { label: string; get: () => [number, number, number]; set: (v: [number, number, number]) => void }): Control {
+export function color(opts: { label: string; hint?: string; get: () => [number, number, number]; set: (v: [number, number, number]) => void }): Control {
   const field = document.createElement("label");
   field.className = "toggle";
+  if (opts.hint) field.title = opts.hint;
   const name = document.createElement("span");
   name.textContent = opts.label;
   const input = document.createElement("input");

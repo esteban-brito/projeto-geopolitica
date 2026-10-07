@@ -8,19 +8,33 @@
     <link rel="stylesheet" href="/src/lab/styles.css" />
   </head>
   <body>
-    <div class="lab">
-      <main class="stage">
-        <canvas id="stage" aria-label="Superfície de vidro sobre a cena de teste"></canvas>
-        <header class="brand">
-          <span class="brand__name">Liquid Glass Lab</span>
-          <span class="brand__tag">V0 · fundação</span>
+    <main class="lab">
+      <canvas id="stage" aria-label="Vidros sobre a cena de teste. Arraste para mover."></canvas>
+      <div class="selection" id="selection" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <span class="brand">Liquid Glass Lab <span class="brand__tag">V3</span></span>
+        <button class="pill" id="stats" type="button" aria-expanded="false" aria-controls="stats-card">—</button>
+      </header>
+      <section class="card stats-card" id="stats-card" hidden aria-label="Desempenho"></section>
+
+      <p class="coach" id="coach">Arraste um vidro · solte perto do outro para fundir · toque num vidro para editá-lo</p>
+      <nav class="dock" id="dock" aria-label="Cena, forma e material"></nav>
+
+      <aside class="drawer" id="drawer" hidden aria-label="Ajustes">
+        <header class="drawer__head">
+          <div>
+            <strong>Ajustes</strong>
+            <span class="drawer__subject" id="drawer-subject"></span>
+          </div>
+          <button class="icon-button" id="drawer-close" type="button" aria-label="Fechar ajustes"></button>
         </header>
-        <div class="notice" id="notice" hidden></div>
-        <pre class="shader-error" id="shader-error" hidden></pre>
-      </main>
-      <aside class="panel" id="panel" aria-label="Controles"></aside>
-      <footer class="metrics" id="metrics" aria-live="off"></footer>
-    </div>
+        <div class="drawer__body" id="drawer-body"></div>
+      </aside>
+
+      <div class="card notice" id="notice" hidden></div>
+      <pre class="shader-error" id="shader-error" hidden></pre>
+    </main>
     <script type="module" src="/src/lab/main.ts"></script>
   </body>
 </html>

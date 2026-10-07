@@ -72,20 +72,20 @@ export type PresetId = "clear" | "regular" | "frost" | "crystal" | "smoke";
 
 export const PRESETS: Record<PresetId, { label: string; material: GlassMaterial }> = {
   clear: {
-    label: "Clear",
+    label: "Claro",
     material: { ...BASE, variant: "clear", roughness: 0, thickness: 10, gap: 6, bevel: 18, abbe: 60, environment: 0.85, edge: 0.45, shadow: 0.25 },
   },
   regular: { label: "Regular", material: { ...BASE } },
   frost: {
-    label: "Frost",
+    label: "Fosco",
     material: { ...BASE, roughness: 0.62, thickness: 16, gap: 10, bevel: 24, abbe: ABBE_OFF, light: 0.8 },
   },
   crystal: {
-    label: "Crystal",
+    label: "Cristal",
     material: { ...BASE, roughness: 0, ior: 1.72, abbe: 28, thickness: 22, gap: 10, bevel: 28, light: 1.25, environment: 1.1 },
   },
   smoke: {
-    label: "Smoke",
+    label: "Fumê",
     material: { ...BASE, roughness: 0.3, tint: [0.42, 0.43, 0.46], density: 0.85, light: 0.9 },
   },
 };
@@ -97,14 +97,19 @@ export function cloneMaterial(m: GlassMaterial): GlassMaterial {
 }
 
 /**
- * Cauchy fit through n_d with the dispersion n_F − n_C = (n_d − 1) / V, evaluated at the
- * wavelengths the lab assigns to R, G and B.
+ * Cauchy fit through n_d with the dispersion n_F − n_C = (n_d − 1) / V, evaluated at `nm`.
  */
-export function channelIors(ior: number, abbe: number): [number, number, number] {
-  if (abbe >= ABBE_OFF) return [ior, ior, ior];
-  const um = (nm: number) => (nm / 1000) ** 2;
+export function iorAt(ior: number, abbe: number, nm: number): number {
+  if (abbe >= ABBE_OFF) return ior;
+  const um = (x: number) => (x / 1000) ** 2;
   const b = (ior - 1) / abbe / (1 / um(486.1) - 1 / um(656.3));
   const a = ior - b / um(587.6);
-  const at = (nm: number) => a + b / um(nm);
-  return [at(610), at(550), at(465)];
+  return a + b / um(nm);
+}
+
+/** The wavelengths the lab assigns to R, G and B (three-sample dispersion). */
+export const CHANNEL_NM = [610, 550, 465] as const;
+
+export function channelIors(ior: number, abbe: number): [number, number, number] {
+  return [iorAt(ior, abbe, CHANNEL_NM[0]), iorAt(ior, abbe, CHANNEL_NM[1]), iorAt(ior, abbe, CHANNEL_NM[2])];
 }

@@ -1,17 +1,37 @@
 import { srgbViewOf, type GpuContext } from "../gpu/device.ts";
 import { REFERENCE_PATH, type GlassMaterial } from "../glass/material.ts";
-import { buildRadialTable, deviceGeometry, EDGE_START_PX, TABLE_SAMPLES, TABLE_STRIDE, type GuardStats } from "../glass/optics.ts";
-import { clampedRadius, invert, shapeMatrix, type Shape } from "../glass/shape.ts";
+import {
+  buildRadialTable,
+  deviceGeometry,
+  EDGE_START_PX,
+  shadowGeometry,
+  TABLE_SAMPLES,
+  TABLE_STRIDE,
+  type GuardStats,
+} from "../glass/optics.ts";
+import { clampedRadius, invert, shapeExtent, shapeMatrix, type Shape } from "../glass/shape.ts";
 import { onShaderChange, shaderSources, type ShaderSources } from "../shaders/index.ts";
 import type { BackgroundSource } from "../sources/source.ts";
 import { FrameGraph, type FrameContext, type Pass } from "./frame-graph.ts";
 import { TexturePool } from "./pool.ts";
-import { effectivePixelRatio, type QualityTier } from "./quality.ts";
+import { effectivePixelRatio, TIER_FEATURES, type QualityTier } from "./quality.ts";
 import { GpuTimer, Series } from "./timer.ts";
 
 export interface GlassSurface {
   shape: Shape;
   material: GlassMaterial;
+}
+
+/**
+ * Surfaces that may merge, like a SwiftUI GlassEffectContainer: members whose gap drops below
+ * `spacing` flow into one piece of glass (smooth union); surfaces in different groups never do.
+ * A group is one instance of the draw, and its fragments walk only its own members, so keep groups
+ * small and local — a toolbar, not the whole screen.
+ */
+export interface GlassGroup {
+  /** Gap, CSS px, at which two members touch. 0 keeps them apart. */
+  spacing: number;
+  surfaces: GlassSurface[];
 }
 
 export const DEBUG_VIEWS = [
@@ -27,6 +47,7 @@ export const DEBUG_VIEWS = [
   { id: 9, label: "Nível de blur (LOD)" },
   { id: 10, label: "Especular" },
   { id: 11, label: "Dispersão" },
+  { id: 12, label: "Fusão (peso de cada vidro)" },
 ] as const;
 
 /** Mip levels of the background pyramid; beyond 2^8 px of blur the material has no use. */
@@ -51,8 +72,11 @@ export interface Pixels {
 }
 
 const SURFACE_FLOATS = 28;
+const GROUP_FLOATS = 8;
 const TABLE_FLOATS = TABLE_SAMPLES * TABLE_STRIDE;
-const GLOBALS_BYTES = 32;
+const GLOBALS_BYTES = 48;
+/** Antialiasing band around the bounds of a group, device px. */
+const BOUNDS_MARGIN = 2;
 
 /**
  * The one renderer of the lab: one device, one canvas, one loop, every glass surface in one
@@ -96,10 +120,12 @@ export class LiquidGlassRenderer {
   private glassBindGroup: GPUBindGroup | null = null;
   private surfaceBuffer: GPUBuffer | null = null;
   private surfaceCapacity = 0;
+  private groupBuffer: GPUBuffer | null = null;
+  private groupCapacity = 0;
   private background: GPUTexture | null = null;
 
   private source: BackgroundSource | null = null;
-  private surfaces: GlassSurface[] = [];
+  private groups: GlassGroup[] = [];
   private tables: { key: string; data: Float32Array<ArrayBuffer>; stats: GuardStats }[] = [];
   private tableBuffer: GPUBuffer | null = null;
   private surfacesDirty = true;
@@ -169,6 +195,7 @@ export class LiquidGlassRenderer {
         { binding: 2, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: "float" } },
         { binding: 3, visibility: GPUShaderStage.FRAGMENT, sampler: { type: "filtering" } },
         { binding: 4, visibility: GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
+        { binding: 5, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
       ],
     });
 
@@ -202,7 +229,11 @@ export class LiquidGlassRenderer {
   }
 
   get surfaceCount(): number {
-    return this.surfaces.length;
+    return this.groups.reduce((n, g) => n + g.surfaces.length, 0);
+  }
+
+  get groupCount(): number {
+    return this.groups.length;
   }
 
   get guardStats(): readonly GuardStats[] {
@@ -210,7 +241,9 @@ export class LiquidGlassRenderer {
   }
 
   get gpuBytes(): number {
-    return this.pool.bytes + this.surfaceCapacity * (SURFACE_FLOATS + TABLE_FLOATS) * 4 + GLOBALS_BYTES;
+    return (
+      this.pool.bytes + this.surfaceCapacity * (SURFACE_FLOATS + TABLE_FLOATS) * 4 + this.groupCapacity * GROUP_FLOATS * 4 + GLOBALS_BYTES
+    );
   }
 
   setSource(source: BackgroundSource): void {
@@ -226,13 +259,18 @@ export class LiquidGlassRenderer {
     this.requestFrame();
   }
 
+  /** Each surface on its own: nothing merges. */
   setSurfaces(surfaces: GlassSurface[]): void {
-    this.surfaces = surfaces;
+    this.setGroups(surfaces.map((surface) => ({ spacing: 0, surfaces: [surface] })));
+  }
+
+  setGroups(groups: GlassGroup[]): void {
+    this.groups = groups;
     this.surfacesDirty = true;
     this.requestFrame();
   }
 
-  /** Call after mutating a surface in place (drag, slider). */
+  /** Call after mutating a surface or a group in place (drag, slider, a member added). */
   surfacesChanged(): void {
     this.surfacesDirty = true;
     this.requestFrame();
@@ -269,6 +307,7 @@ export class LiquidGlassRenderer {
     this.globals.destroy();
     this.surfaceBuffer?.destroy();
     this.tableBuffer?.destroy();
+    this.groupBuffer?.destroy();
     this.context?.unconfigure();
   }
 
@@ -305,6 +344,7 @@ export class LiquidGlassRenderer {
     f[5] = now / 1000;
     u[6] = this.debugView;
     f[7] = EDGE_START_PX;
+    u[8] = TIER_FEATURES[this.quality];
     this.device.queue.writeBuffer(this.globals, 0, g);
 
     const texture = this.context ? this.context.getCurrentTexture() : this.frameTexture;
@@ -369,7 +409,8 @@ export class LiquidGlassRenderer {
 
   private uploadSurfaces(): void {
     this.surfacesDirty = false;
-    const count = this.surfaces.length;
+    const flat = this.groups.flatMap((g) => g.surfaces);
+    const count = flat.length;
     if (count > this.surfaceCapacity || !this.surfaceBuffer || !this.tableBuffer) {
       this.surfaceBuffer?.destroy();
       this.tableBuffer?.destroy();
@@ -387,10 +428,20 @@ export class LiquidGlassRenderer {
       this.glassBindGroup = null;
       this.tables = [];
     }
+    if (this.groups.length > this.groupCapacity || !this.groupBuffer) {
+      this.groupBuffer?.destroy();
+      this.groupCapacity = Math.max(4, 2 ** Math.ceil(Math.log2(Math.max(this.groups.length, 1))));
+      this.groupBuffer = this.device.createBuffer({
+        size: this.groupCapacity * GROUP_FLOATS * 4,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        label: "lab.groups",
+      });
+      this.glassBindGroup = null;
+    }
     const data = new Float32Array(Math.max(count, 1) * SURFACE_FLOATS);
     const dpr = this.dpr;
     this.tables.length = count;
-    this.surfaces.forEach(({ shape, material }, i) => {
+    flat.forEach(({ shape, material }, i) => {
       const key = tableKey(shape, material, dpr, this.guardEnabled);
       if (this.tables[i]?.key !== key) {
         const table = buildRadialTable(material, shape, dpr, this.guardEnabled);
@@ -400,6 +451,34 @@ export class LiquidGlassRenderer {
       data.set(packSurface(shape, material, dpr), i * SURFACE_FLOATS);
     });
     this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
+
+    const groupData = new ArrayBuffer(Math.max(this.groups.length, 1) * GROUP_FLOATS * 4);
+    const gf = new Float32Array(groupData);
+    const gu = new Uint32Array(groupData);
+    let start = 0;
+    this.groups.forEach((group, i) => {
+      const k = (group.spacing / 2) * dpr;
+      const n = group.surfaces.length;
+      // The union sinks at most k per merge below the nearest member, and only between members.
+      const reach = BOUNDS_MARGIN + k * Math.max(n - 1, 0);
+      const bounds = [Infinity, Infinity, -Infinity, -Infinity];
+      for (const { shape, material } of group.surfaces) {
+        const [ex, ey] = shapeExtent(shape);
+        const shadow = shadowGeometry(material.gap * dpr, dpr);
+        const margin = reach + (material.shadow > 0 ? shadow.offsetY + shadow.sigma * 3 : 0);
+        bounds[0] = Math.min(bounds[0]!, (shape.cx - ex) * dpr - margin);
+        bounds[1] = Math.min(bounds[1]!, (shape.cy - ey) * dpr - margin);
+        bounds[2] = Math.max(bounds[2]!, (shape.cx + ex) * dpr + margin);
+        bounds[3] = Math.max(bounds[3]!, (shape.cy + ey) * dpr + margin);
+      }
+      const o = i * GROUP_FLOATS;
+      gf.set(n > 0 ? bounds : [0, 0, 0, 0], o);
+      gu[o + 4] = start;
+      gu[o + 5] = n;
+      gf[o + 6] = n > 1 ? k : 0;
+      start += n;
+    });
+    this.device.queue.writeBuffer(this.groupBuffer, 0, groupData);
   }
 
   /** Rebuilds the mip chain of the content, only when the content changed. */
@@ -480,9 +559,9 @@ export class LiquidGlassRenderer {
   private glassPass(): Pass {
     return {
       name: "vidro",
-      enabled: () => this.surfaces.length > 0,
+      enabled: () => this.groups.length > 0,
       encode: (ctx: FrameContext, timestampWrites) => {
-        if (!this.glassPipeline || !this.background || !this.surfaceBuffer || !this.tableBuffer) return;
+        if (!this.glassPipeline || !this.background || !this.surfaceBuffer || !this.tableBuffer || !this.groupBuffer) return;
         this.glassBindGroup ??= this.device.createBindGroup({
           layout: this.glassLayout,
           entries: [
@@ -491,6 +570,7 @@ export class LiquidGlassRenderer {
             { binding: 2, resource: this.background.createView() },
             { binding: 3, resource: this.sampler },
             { binding: 4, resource: { buffer: this.tableBuffer } },
+            { binding: 5, resource: { buffer: this.groupBuffer } },
           ],
           label: "lab.glass.bind",
         });
@@ -501,7 +581,7 @@ export class LiquidGlassRenderer {
         });
         pass.setPipeline(this.glassPipeline);
         pass.setBindGroup(0, this.glassBindGroup);
-        pass.draw(6, this.surfaces.length);
+        pass.draw(6, this.groups.length);
         pass.end();
       },
     };
@@ -618,7 +698,7 @@ function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): 
 /**
  * Device-pixel record of one surface (7 × vec4, see `Surface` in glass.wgsl). Derived values are
  * computed here once: absorption from tint and density, blur radius from roughness and the glass's
- * height, the key light direction, F0 from the ior.
+ * height, the key light direction, F0 from the ior, the shadow's offset and softness from the gap.
  */
 function packSurface(shape: Shape, m: GlassMaterial, dpr: number): number[] {
   const { bevel } = deviceGeometry(m, shape, dpr);
@@ -627,9 +707,10 @@ function packSurface(shape: Shape, m: GlassMaterial, dpr: number): number[] {
   const angle = (m.lightAngle * Math.PI) / 180;
   const f0 = ((m.ior - 1) / (m.ior + 1)) ** 2;
   const inv = invert(shapeMatrix(shape));
+  const shadow = shadowGeometry(m.gap * dpr, dpr);
   return [
     shape.cx * dpr, shape.cy * dpr, shape.halfWidth * dpr, shape.halfHeight * dpr,
-    clampedRadius(shape) * dpr, shape.exponent, 0, 0,
+    clampedRadius(shape) * dpr, shape.exponent, shadow.offsetY, shadow.sigma,
     bevel, m.thickness * dpr, m.gap * dpr, m.ior,
     m.roughness, m.edge, m.shadow, m.environment,
     absorb[0]!, absorb[1]!, absorb[2]!, m.light,

@@ -91,3 +91,27 @@ test("o bounce de soltar é contido: no máximo 1% abaixo do tamanho de repouso"
   assert.ok(min < 1, "tem de haver um bounce");
   assert.ok(min > 0.99, `escala mínima ${min.toFixed(4)}`);
 });
+
+test("morph: círculo vira cápsula passando por formas intermediárias e para no alvo", () => {
+  const circle = { cx: 0, cy: 0, halfWidth: 88, halfHeight: 88, radius: 88, exponent: 2, rotation: 0 };
+  const capsule = { cx: 0, cy: 0, halfWidth: 150, halfHeight: 44, radius: 44, exponent: 2, rotation: 0 };
+  const body = new GlassBody({ ...circle });
+  body.morph(capsule);
+  const widths = [];
+  for (let i = 0; i < 240 && body.step(1 / 120); i++) widths.push(body.shape().halfWidth);
+  assert.ok(!body.moving, "o morph termina sozinho");
+  const final = body.shape();
+  for (const f of ["halfWidth", "halfHeight", "radius", "exponent"]) assert.equal(final[f], capsule[f], f);
+  assert.ok(widths.some((w) => w > 95 && w < 145), "passa por larguras intermediárias");
+  const overshoot = Math.max(...widths) - capsule.halfWidth;
+  assert.ok(overshoot > 0 && overshoot < 0.12 * (capsule.halfWidth - circle.halfWidth), `overshoot ${overshoot.toFixed(1)} px`);
+  for (let i = 1; i < widths.length; i++) assert.ok(Math.abs(widths[i] - widths[i - 1]) < 6, "sem saltos entre quadros a 120 Hz");
+});
+
+test("snap segue o painel na hora, sem animação", () => {
+  const body = new GlassBody({ cx: 0, cy: 0, halfWidth: 100, halfHeight: 40, radius: 40, exponent: 2, rotation: 0 });
+  body.rest.halfWidth = 180;
+  body.snap();
+  assert.equal(body.shape().halfWidth, 180);
+  assert.ok(!body.moving);
+});

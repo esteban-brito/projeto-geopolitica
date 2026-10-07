@@ -28,6 +28,7 @@ daqui para lá sem pedido explícito.
 npm run check      # tipos
 npm test           # óptica por readback; tem de ficar verde
 node tests/capture.mjs   # olhe os PNGs em captures/ — o teste não sabe olhar
+node tests/ui-shot.mjs   # mexeu na interface? a interface sobre o vidro, desktop e celular
 ```
 
 Mexeu em material ou shader? Gere as capturas e **abra** as imagens antes de dizer que está

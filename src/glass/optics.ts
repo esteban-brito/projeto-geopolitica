@@ -85,6 +85,8 @@ export const TABLE_SAMPLES = 64;
 /**
  * Floats per sample: [offset G, transmission, profile slope, height, offset R, offset B, path, -].
  * Offsets are along the outward normal, device px; each channel has its own ior and its own guard.
+ * Six spectral samples instead of three channels were tried for Ultra and rejected: against R, G,
+ * B they changed at most 5 of 255 levels on Crystal (docs/research §13).
  */
 export const TABLE_STRIDE = 8;
 
@@ -132,17 +134,25 @@ export function buildRadialTable(material: GlassMaterial, shape: Shape, dpr: num
     return { data, stats };
   }
 
+  // Channels R, G, B, each written to its own slot.
+  const channels = iors;
+  const slots = [4, 0, 5];
   const depth: number[] = [];
-  const offsets: number[][] = [[], [], []];
+  const offsets: number[][] = channels.map(() => []);
   for (let i = 0; i < TABLE_SAMPLES; i++) {
     const s = tableDepth(i, bevel);
     const [f, fp] = profileEval(material.profile, s / bevel);
     const h = f * bevel;
-    const rgb = iors.map((n) => radialSample(fp, h, T, G, n));
-    const g = rgb[1]!;
+    const samples = channels.map((n) => radialSample(fp, h, T, G, n));
+    const g = samples[1]!;
     depth.push(s);
-    rgb.forEach((r, c) => offsets[c]!.push(r.offset));
-    data.set([g.offset, g.transmission, fp, h, rgb[0]!.offset, rgb[2]!.offset, g.path, 0], i * TABLE_STRIDE);
+    const o = i * TABLE_STRIDE;
+    data.set([g.offset, g.transmission, fp, h], o);
+    data[o + 6] = g.path;
+    samples.forEach((r, c) => {
+      offsets[c]!.push(r.offset);
+      data[o + slots[c]!] = r.offset;
+    });
     if (i > 0) {
       const tPrev = data[(i - 1) * TABLE_STRIDE + 1]!;
       if (Math.min(tPrev, g.transmission) >= 0.05) {
@@ -153,8 +163,7 @@ export function buildRadialTable(material: GlassMaterial, shape: Shape, dpr: num
   }
   if (!guard) return { data, stats };
 
-  const slots = [4, 0, 5];
-  for (let c = 0; c < 3; c++) {
+  for (let c = 0; c < channels.length; c++) {
     const guarded = envelope(depth, offsets[c]!, radius, stats, c === 1);
     guarded.forEach((o, i) => (data[i * TABLE_STRIDE + slots[c]!] = o));
   }
@@ -192,8 +201,9 @@ export function tableLookup(table: Float32Array<ArrayBuffer>, bevel: number, dep
   const at = (i: number) => Array.from(table.subarray(i * TABLE_STRIDE, (i + 1) * TABLE_STRIDE));
   if (bevel <= EDGE_START_PX + 1e-3) return at(0);
   if (depth >= bevel) {
+    // The flat top: no slope, no offset on any channel.
     const last = at(TABLE_SAMPLES - 1);
-    return [0, last[1]!, 0, last[3]!, 0, 0, last[6]!, 0];
+    return last.map((v, k) => (k === 1 || k === 3 || k === 6 ? v : 0));
   }
   const u = Math.sqrt(Math.max(0, (depth - EDGE_START_PX) / (bevel - EDGE_START_PX)));
   const x = u * (TABLE_SAMPLES - 1);
@@ -210,4 +220,12 @@ export function deviceGeometry(material: GlassMaterial, shape: Shape, dpr: numbe
   const minHalf = Math.min(shape.halfWidth, shape.halfHeight) * dpr;
   const bevel = Math.max(0, Math.min(material.bevel * dpr, radius > 0 ? radius : minHalf, minHalf));
   return { bevel, radius };
+}
+
+/**
+ * Shadow of a surface floating `gap` device px above the content: it falls further down and
+ * softens as the glass rises. Device px.
+ */
+export function shadowGeometry(gap: number, dpr: number): { offsetY: number; sigma: number } {
+  return { offsetY: 1 + gap * 0.55, sigma: 1.5 * dpr + gap * 0.85 };
 }

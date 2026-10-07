@@ -116,3 +116,28 @@ test("tint é absorção: densidade zero não muda cor, densidade alta tinge", a
   assert.ok(Math.abs(nr - nb) <= 3, `sem densidade o centro é neutro (${nr}, ${nb})`);
   assert.ok(tb - tr > 40, `com densidade o centro puxa para o azul (${tr}, ${tb})`);
 });
+
+test("o nível Baixa troca só a borda (sem dispersão, leitura bilinear); o centro fica igual", async () => {
+  await lab.page.evaluate(([w, h, s]) => window.probe.init(w, h, s), [W, H, "text"]);
+  const crystal = await lab.page.evaluate(() => window.probe.preset("crystal"));
+  const render = (quality) =>
+    lab.page.evaluate((r) => window.probe.render(r), { surfaces: [{ shape: CAPSULE, material: { ...crystal, shadow: 0 } }], quality }).then(image);
+  const high = await render("high");
+  const low = await render("low");
+  let border = 0;
+  let centre = 0;
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const a = high.at(x, y);
+      const b = low.at(x, y);
+      if (Math.max(...a.map((v, i) => Math.abs(v - b[i]))) <= 4) continue;
+      // Depth inside the capsule (positive inside), from its straight sides and round caps.
+      const dx = Math.max(Math.abs(x + 0.5 - 160) - (120 - 48), 0);
+      const depth = 48 - Math.hypot(dx, y + 0.5 - 100);
+      if (depth > crystal.bevel + 2) centre++;
+      else border++;
+    }
+  }
+  assert.equal(centre, 0, `${centre} pixels do centro mudaram`);
+  assert.ok(border > 50, `só ${border} pixels da borda mudaram`);
+});

@@ -2,7 +2,7 @@ import { acquireGpu, type GpuContext } from "../gpu/device.ts";
 import { DEFAULT_MATERIAL } from "../glass/material.ts";
 import type { Shape } from "../glass/shape.ts";
 import type { QualityTier } from "../renderer/quality.ts";
-import { LiquidGlassRenderer, type GlassSurface } from "../renderer/renderer.ts";
+import { LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
 import { NativeSource } from "../sources/native.ts";
 import { PAINTERS, type SceneId } from "../sources/scenes.ts";
 
@@ -12,13 +12,18 @@ interface Scenario {
   tier: QualityTier;
   /** Rebuild the pyramid every frame, as a live background would. */
   dynamic: boolean;
+  /** Move every surface every frame (physics + upload on the CPU). */
+  motion?: boolean;
+  /** Members per merge group, neighbours touching; 1 or absent = no merging. */
+  group?: number;
 }
 
 interface Result extends Scenario {
   resolution: string;
   dpr: number;
   coverage: number;
-  frames: number;
+  /** Frame intervals in the averaging window (capped at 120), not a frame count. */
+  samples: number;
   fps: number;
   cpuMs: number;
   gpuMs: Record<string, { mean: number; p95: number }>;
@@ -26,12 +31,14 @@ interface Result extends Scenario {
 
 const SUITES: Record<string, { label: string; scenarios: () => Scenario[] }> = {
   quick: {
-    label: "Rápido (~45 s)",
+    label: "Rápido (~1 min)",
     scenarios: () => [
       ...(["high", "low"] as const).flatMap((tier) =>
         [1, 10, 20, 50, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier, dynamic: false })),
       ),
       ...[1, 10, 50, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: true })),
+      ...[10, 50].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: false, motion: true })),
+      ...[20, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: false, group: 4 })),
     ],
   },
   full: {
@@ -55,14 +62,14 @@ const json = document.querySelector<HTMLTextAreaElement>("#json")!;
 let suite = "quick";
 
 /** N capsules on a grid inside the stage; all the same size so cost scales with N. */
-function layout(n: number, width: number, height: number): GlassSurface[] {
+function layout(n: number, width: number, height: number): { surfaces: GlassSurface[]; gap: number } {
   const cols = Math.ceil(Math.sqrt(n * (width / height)));
   const rows = Math.ceil(n / cols);
   const cellW = width / cols;
   const cellH = height / rows;
   const halfWidth = Math.min(90, cellW * 0.42);
   const halfHeight = Math.min(32, cellH * 0.4);
-  return Array.from({ length: n }, (_, i) => {
+  const surfaces = Array.from({ length: n }, (_, i) => {
     const shape: Shape = {
       cx: (i % cols) * cellW + cellW / 2,
       cy: Math.floor(i / cols) * cellH + cellH / 2,
@@ -74,6 +81,14 @@ function layout(n: number, width: number, height: number): GlassSurface[] {
     };
     return { shape, material: { ...DEFAULT_MATERIAL, bevel: Math.min(DEFAULT_MATERIAL.bevel, halfHeight) } };
   });
+  return { surfaces, gap: cellW - 2 * halfWidth };
+}
+
+/** Consecutive surfaces in groups of `size`; the spacing makes row neighbours merge. */
+function grouped(surfaces: GlassSurface[], size: number, gap: number): GlassGroup[] {
+  const groups: GlassGroup[] = [];
+  for (let i = 0; i < surfaces.length; i += size) groups.push({ spacing: size > 1 ? gap + 8 : 0, surfaces: surfaces.slice(i, i + size) });
+  return groups;
 }
 
 function coverage(surfaces: GlassSurface[], width: number, height: number): number {
@@ -91,10 +106,23 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   renderer.setQuality(s.tier);
   source.setPainter(PAINTERS[s.scene]);
   renderer.invalidateSource();
-  const surfaces = layout(s.surfaces, canvas.clientWidth, canvas.clientHeight);
-  renderer.setSurfaces(surfaces);
+  const { surfaces, gap } = layout(s.surfaces, canvas.clientWidth, canvas.clientHeight);
+  renderer.setGroups(grouped(surfaces, s.group ?? 1, gap));
   renderer.forcePyramid = s.dynamic;
   renderer.continuous = true;
+  // Motion: every surface orbits its cell a little each frame, so the CPU re-packs and uploads
+  // every record (the radial tables stay cached: moving does not change the optics).
+  const home = surfaces.map((x) => [x.shape.cx, x.shape.cy] as const);
+  renderer.onFrame = s.motion
+    ? () => {
+        const t = performance.now() / 1000;
+        surfaces.forEach((x, i) => {
+          x.shape.cx = home[i]![0] + Math.cos(t * 2 + i) * 6;
+          x.shape.cy = home[i]![1] + Math.sin(t * 2 + i) * 6;
+        });
+        renderer.surfacesChanged();
+      }
+    : null;
   renderer.requestFrame();
   await wait(WARMUP_MS);
   renderer.cpu.clear();
@@ -103,6 +131,7 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
   await wait(MEASURE_MS);
   renderer.continuous = false;
   renderer.forcePyramid = false;
+  renderer.onFrame = null;
   const gpuMs: Result["gpuMs"] = {};
   for (const [name, series] of renderer.timer?.series ?? []) {
     if (series.count > 0) gpuMs[name] = { mean: series.mean, p95: series.percentile(0.95) };
@@ -113,7 +142,7 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
     resolution: `${width}×${height}`,
     dpr: renderer.devicePixelRatio,
     coverage: coverage(surfaces, canvas.clientWidth, canvas.clientHeight),
-    frames: renderer.interval.count,
+    samples: renderer.interval.count,
     fps: renderer.interval.count ? 1000 / renderer.interval.mean : 0,
     cpuMs: renderer.cpu.mean,
     gpuMs,
@@ -122,20 +151,21 @@ async function measure(renderer: LiquidGlassRenderer, source: NativeSource, s: S
 
 function render(results: Result[], gpu: GpuContext): void {
   const passes = [...new Set(results.flatMap((r) => Object.keys(r.gpuMs)))];
-  const head = ["cena", "N", "nível", "fundo", "cobert.", "fps", "CPU", ...passes.map((p) => `GPU ${p}`)];
+  const head = ["cena", "N", "nível", "caso", "cobert.", "fps", "CPU", ...passes.map((p) => `GPU ${p}`)];
+  const kind = (r: Result) => (r.motion ? "mover" : r.group && r.group > 1 ? `fusão ×${r.group}` : r.dynamic ? "vivo" : "fixo");
   table.innerHTML =
     `<tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr>` +
     results
       .map(
         (r) =>
-          `<tr><td>${r.scene}</td><td>${r.surfaces}</td><td>${r.tier}</td><td>${r.dynamic ? "vivo" : "fixo"}</td><td>${(r.coverage * 100).toFixed(0)}%</td><td>${r.fps.toFixed(0)}</td><td>${r.cpuMs.toFixed(2)}</td>${passes
+          `<tr><td>${r.scene}</td><td>${r.surfaces}</td><td>${r.tier}</td><td>${kind(r)}</td><td>${(r.coverage * 100).toFixed(0)}%</td><td>${r.fps.toFixed(0)}</td><td>${r.cpuMs.toFixed(2)}</td>${passes
             .map((p) => `<td>${r.gpuMs[p]?.mean.toFixed(3) ?? "—"}</td>`)
             .join("")}</tr>`,
       )
       .join("");
   json.value = JSON.stringify(
     {
-      lab: "liquid-glass-lab V2",
+      lab: "liquid-glass-lab V3",
       date: new Date().toISOString(),
       userAgent: navigator.userAgent,
       adapter: gpu.info,

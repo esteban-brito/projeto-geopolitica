@@ -704,3 +704,75 @@ O que faltou e vale buscar, pela ordem:
 4. **Apple HIG / WWDC 2025** sobre Liquid Glass: regras de luz, contraluz, vidro sobre vidro,
    adaptação ao fundo — para virar critério de revisão visual;
 5. **capturas do vidro real** (iOS 26 / macOS Tahoe) sobre fundos de grid e texto, como gabarito.
+
+---
+
+## 13. V3: o que foi medido e decidido (07/10/2026)
+
+### 13.1 Bench do V2 na RX 6600 ([`docs/bench/v2-rx6600.json`](../bench/v2-rx6600.json))
+
+- O vidro custa **~0,84 ms por tela cheia coberta** (1500×1080, DPR 1), linear na área. Não há
+  custo fixo por superfície: 1 cápsula a 0,7% da tela dá a mesma taxa por pixel que 100 a 36%.
+- Fundo 0,022 ms; pirâmide refeita todo quadro 0,064 ms; CPU < 0,1 ms. Pior caso 0,39 ms contra
+  4,17 ms do quadro a 240 Hz.
+- `high` = `low` porque os níveis só mudavam o teto de DPR e o monitor é DPR 1. Corrigido em §13.4.
+
+### 13.2 Grupos de fusão (§6.7 e §6.8 implementados)
+
+- **Um grupo = uma instância** do draw, com faixa de índices; o fragment percorre só os membros do
+  grupo. Superfícies soltas são grupos de um membro, com o mesmo custo de antes (testado: grupo com
+  espaçamento 0 é idêntico, pixel a pixel, a superfícies soltas).
+- **smin cúbica (C²)** na normalização em que `k` é o quanto a união afunda em a = b: dois vidros
+  se tocam quando o vão fica abaixo de 2k, e a interface expõe esse vão ("distância de fusão").
+- **Gradiente exato**, sem diferença finita: d smin/db = t, e o gradiente da união é a mistura
+  corrente dos gradientes por t. Os mesmos pesos misturam o material (um vidro tingido que se
+  funde com um claro tinge o pescoço) e as **tabelas radiais de cada membro**, lidas na
+  profundidade da união — a física continua na CPU, por superfície.
+- **O comprimento do gradiente não é renormalizado** na óptica. A superfície do vidro fundido é
+  h(−união), cuja inclinação é h′·|∇união|; o deslocamento da tabela escala por |∇|, exato em
+  primeira ordem. No cume de um pescoço |∇| → 0 e o deslocamento some de forma contínua. Com o
+  gradiente normalizado, o deslocamento troca de sinal no cume: o teste "sem vinco" mede 9 níveis
+  de salto entre pixels vizinhos com ele e ≤ 4 sem ele. Só a cobertura (antialias) usa d/|∇|.
+- Espelho TS em `src/glass/union.ts`; paridade GPU × CPU por readback dentro do pescoço e na
+  zona de mistura (tolerância de 2,5 px, a largura de um byte da vista de amostra).
+- Até 4 membros por pixel misturam óptica (`MAX_BLEND`); acima disso o mais fraco sai e os pesos
+  são renormalizados. Na prática 4 vidros a menos de 6k uns dos outros num mesmo pixel é raro.
+- Limite conhecido: a guarda de injetividade é radial, por superfície. Na concavidade de um
+  pescoço fino não há guarda geométrica; as capturas e o teste de saltos não mostraram dobra.
+
+### 13.3 Morph
+
+Cada campo do descritor de forma (meia-largura, meia-altura, raio, expoente, rotação) é uma mola
+(resposta 0,42 s, ζ = 0,74). Trocar a forma no dock anima; os sliders de forma seguem na hora
+(`snap`). Durante o morph a tabela radial da superfície é refeita a cada quadro (microssegundos).
+
+### 13.4 Níveis de qualidade
+
+| nível | DPR máx. | dispersão | leitura do borrado |
+| --- | --- | --- | --- |
+| Ultra | 3 | 3 amostras (R, G, B) | bicúbica |
+| Alta | 2 | 3 amostras | bicúbica |
+| Média | 1,5 | 3 amostras | bicúbica |
+| Baixa | 1 | 1 amostra | bilinear |
+
+Medido lado a lado (Cristal, 560×300): **Alta × Baixa** muda 10–20 de 255 níveis em centenas de
+pixels, só na borda (teste). **Dispersão espectral** (6 comprimentos de onda, cada um com sua
+própria refração e guarda na CPU, pesos do observador CIE 1931 levados a sRGB linear) foi
+implementada para o Ultra e **rejeitada**: contra R, G, B mudou no máximo 2–5 níveis no Cristal e
+10 níveis num vidro exagerado (n = 1,9, V = 20). Não aparece na captura; não vale 3 amostras a
+mais. Com isso Ultra só difere de Alta em telas de DPR > 2.
+
+### 13.5 Interface
+
+Pedido: mais minimalista e mais fácil de entender. O palco ocupa a tela inteira; o vidro é a
+interface.
+
+- **Dock** embaixo com quatro perguntas rotuladas: Fundo (miniaturas pintadas pelas próprias
+  cenas), Forma (ícones), Material (cinco nomes), Vidros (adicionar, remover).
+- **Ajustes** numa gaveta, em linguagem comum ("Refração", "Borda curva", "Fosco", "Cor nas
+  bordas"), com o termo técnico no valor (n 1,50, V 55) e a explicação no tooltip.
+- **Métricas** recolhidas numa pílula (fps · GPU ms) que abre o detalhe.
+- Uma dica de uma linha ("arraste… solte perto do outro para fundir") que some no primeiro arrasto.
+- Começa com dois vidros afastados, para que a primeira coisa a fazer seja juntá-los.
+- `tests/ui-shot.mjs` fotografa a interface sobre o vidro renderizado fora da tela (o canvas do
+  laboratório não apresenta neste contêiner).

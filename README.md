@@ -14,9 +14,21 @@ npm install
 npm run dev        # http://127.0.0.1:5180/        laboratório
                    # http://127.0.0.1:5180/bench.html   benchmark (JSON para colar de volta)
 npm run check      # tipos
-npm test           # testes de óptica por readback de GPU (Playwright + Chromium headless)
-node tests/capture.mjs   # PNGs das cenas em captures/, para revisão visual
+npm test           # óptica, material, fusão e física (readback de GPU + Node)
+node tests/capture.mjs            # PNGs das cenas em captures/, para revisão visual
+node tests/capture.mjs --union    # fusão: aproximação, pescoço, sobreposição, vistas de debug
+node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, gaveta, celular)
 ```
+
+## Usar o laboratório
+
+- **Arraste** um vidro. Solte perto do outro e eles se fundem.
+- **Toque** num vidro para editá-lo: o dock e a gaveta passam a valer para ele.
+- **Dock:** Fundo (ou uma foto sua), Forma (anima de uma para outra), Material, Vidros (+ / −),
+  Ajustes.
+- **Ajustes** (gaveta): Vidro, Forma, Luz e cor, Fusão e movimento, Avançado (perfil, qualidade,
+  medir desempenho, inspecionar o shader).
+- A pílula no canto superior direito mostra fps e tempo de GPU; um clique abre o detalhe.
 
 Requisitos: um navegador com WebGPU (Chrome/Edge 113+, Safari 26+, Firefox 141+ no Windows /
 145+ no macOS). Para medir tempo de GPU sem o arredondamento de 100 µs do Chrome, ligue
@@ -28,7 +40,7 @@ nada. **O SwiftShader headless perde o processo de GPU ao desenhar no swapchain 
 por isso testes e capturas renderizam fora da tela (`offscreen` no renderer). O laboratório e o
 bench sempre desenham no canvas, então só rodam numa máquina com GPU de verdade.
 
-## Estado: V2 — física (sobre o vidro óptico do V1 e a fundação do V0)
+## Estado: V3 — várias superfícies, fusão e morph (sobre a física do V2, o vidro do V1 e o V0)
 
 | peça | onde | situação |
 | --- | --- | --- |
@@ -50,19 +62,28 @@ bench sempre desenham no canvas, então só rodam numa máquina com GPU de verda
 | presets Clear, Regular, Frost, Crystal, Smoke; variante Regular/Clear guardada (política no V4) | `material.ts` | pronto |
 | debug: SDF, normal, deslocamento, injetividade, transmissão, espessura, amostra, Fresnel, LOD, especular, dispersão | `glass.wgsl` | pronto |
 | hot reload de WGSL com overlay de erro | `src/shaders/index.ts` | pronto |
-| testes: 8 de óptica + 8 de aceite do material (borda escura, realce por N·L, largura variável, sombra, fosco, tint) | `tests/` | pronto |
-| bench com JSON | `bench.html`, `src/bench/` | pronto; medido na RX 6600 ([`docs/bench/v2-rx6600.json`](docs/bench/v2-rx6600.json)) |
+| testes: 8 de óptica + 9 de aceite do material (borda escura, realce por N·L, largura variável, sombra, fosco, tint, nível Baixa) | `tests/` | pronto |
+| bench com JSON (+ vidro em movimento e grupos de fusão no V3) | `bench.html`, `src/bench/` | pronto; V2 medido na RX 6600 ([`docs/bench/v2-rx6600.json`](docs/bench/v2-rx6600.json)) |
 | **molas** (resposta + amortecimento, subpasso ≤ 1/240 s, param sozinhas) | `src/physics/spring.ts` | pronto |
 | **corpo do vidro**: segue o ponteiro com inércia, estica ao longo da velocidade preservando a área (teto 12%), press anima o material, bounce contido ao soltar | `src/physics/body.ts` | pronto |
 | SDF sob transformação afim (rotação · press · estiramento), distância corrigida por \|M⁻ᵀ∇\| | `glass.wgsl`, `shape.ts` | pronto |
-| testes de física (7): overshoot teórico, 30 Hz = 240 Hz, ângulo do estiramento, área, assentamento, bounce | `tests/physics.test.mjs` | pronto |
+| testes de física (9): overshoot teórico, 30 Hz = 240 Hz, ângulo do estiramento, área, assentamento, bounce, morph | `tests/physics.test.mjs` | pronto |
+| **grupos de fusão**: um grupo = uma instância; smin cúbica C², gradiente exato, material e tabelas misturados pelos mesmos pesos | `glass.wgsl`, `src/glass/union.ts` | pronto |
+| **morph**: uma mola por campo da forma (círculo → cápsula → squircle → painel) | `src/physics/body.ts` | pronto |
+| **níveis de qualidade** com diferença real: Baixa = 1 amostra e leitura bilinear; Ultra = DPR até 3 | `src/renderer/quality.ts` | pronto |
+| testes de fusão (8): smin (valor, derivada, C²), pesos, limiar de toque, paridade GPU × CPU no pescoço, sem vinco, espaçamento 0 = soltos | `tests/union.test.mjs` | pronto |
+| interface minimalista: palco inteiro, dock rotulado, gaveta em linguagem comum, métricas recolhidas | `src/lab/` | pronto |
 
 **Medido (RX 6600, Chrome 154, 1500×1080, DPR 1):** o vidro custa ~0,84 ms por tela cheia coberta
 (linear na área, sem custo fixo por superfície): 100 cápsulas cobrindo 36% = 0,30 ms. Fundo 0,022 ms,
 pirâmide refeita por quadro 0,064 ms, CPU < 0,1 ms. Pior caso 0,39 ms de 4,17 ms (240 Hz). Os níveis
 de qualidade ainda só mudam o teto de DPR, então em DPR 1 `high` = `low`.
 
-**Próximo:** impressões do laboratório; depois V3 (várias superfícies, smooth union C², morph).
+Decisões do V3, com o que foi medido e rejeitado (dispersão espectral), em
+[`docs/research/01-engenharia-reversa.md` §13](docs/research/01-engenharia-reversa.md).
+
+**Próximo:** bench do V3 na RX 6600 (movimento e fusão) e impressões; depois V4 (HTML-in-Canvas,
+políticas Regular/Clear, métricas de fundo, qualidade adaptativa, camadas).
 
 ## Decisões que valem lembrar
 
