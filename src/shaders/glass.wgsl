@@ -29,6 +29,7 @@ struct Surface {
   medium: vec4f,   // absorption per device px (r, g, b), key light
   light: vec4f,    // direction the key light comes from (screen xy), blur radius px, F0
   xform: vec4f,    // inverse of the shape matrix (rotation · press scale · stretch), row-major 2×2
+  policy: vec4f,   // Regular adaptation strength (0 = Clear), appearance 0 light..1 dark (< 0: from metrics), -, -
 }
 
 // Members [start, start + count) of the surface array merge with each other and with nothing else.
@@ -47,6 +48,8 @@ struct Group {
 @group(0) @binding(3) var bgSampler: sampler;
 @group(0) @binding(4) var<storage, read> tables: array<vec4f>;
 @group(0) @binding(5) var<storage, read> groups: array<Group>;
+// Backdrop statistics per surface (cs_metrics, earlier in the same frame): mean L*, p10, p90, coverage.
+@group(0) @binding(6) var<storage, read> backdrop: array<vec4f>;
 
 // Quality features (src/renderer/quality.ts).
 const FEATURE_DISPERSION: u32 = 1u;
@@ -242,10 +245,43 @@ struct Blend {
   shading: vec4f,
   medium: vec4f,
   light: vec4f,
+  policy: vec4f,
 }
 
-fn blend_of(s: Surface) -> Blend {
-  return Blend(s.corner, s.optics, s.shading, s.medium, s.light);
+// ---- Regular's legibility policy (CPU mirror: src/glass/policy.ts) ---------------------------
+
+const DARK_BELOW: f32 = 42.0;
+const LIGHT_ABOVE: f32 = 58.0;
+const LIGHT_RANGE = vec2f(0.3, 1.0);
+const DARK_RANGE = vec2f(0.0, 0.2);
+const VIBRANCY: f32 = 0.35;
+const LUMA = vec3f(0.2126, 0.7152, 0.0722);
+
+// Appearance nobody animates (tests, bench): from the measured mean lightness, no memory.
+fn stateless_appearance(meanL: f32) -> f32 {
+  return 1.0 - smoothstep(DARK_BELOW, LIGHT_ABOVE, meanL);
+}
+
+// A surface's policy with the appearance resolved: the app's animated value, or the measurement.
+fn resolved_policy(i: u32, s: Surface) -> vec4f {
+  var p = s.policy;
+  if (p.y < 0.0) {
+    p.y = stateless_appearance(backdrop[i].x);
+  }
+  return p;
+}
+
+// What Regular lets through: the content's range remapped toward the legible side (light
+// appearance lifts the darks, dark appearance pulls the lights down), then saturated a little.
+fn adapt_light(c: vec3f, adapt: f32, appearance: f32) -> vec3f {
+  let range = mix(LIGHT_RANGE, DARK_RANGE, appearance);
+  let c1 = mix(c, range.x + (range.y - range.x) * c, adapt);
+  let luma = dot(c1, LUMA);
+  return max(vec3f(0.0), luma + (c1 - luma) * (1.0 + VIBRANCY * adapt));
+}
+
+fn blend_of(i: u32, s: Surface) -> Blend {
+  return Blend(s.corner, s.optics, s.shading, s.medium, s.light, resolved_policy(i, s));
 }
 
 // Up to MAX_BLEND members whose tables a pixel mixes. Kept in vec4s and written through lane masks:
@@ -316,6 +352,7 @@ fn union_field(g: Group, p: vec2f) -> Union {
     u.mat.shading = mix(u.mat.shading, s.shading, t);
     u.mat.medium = mix(u.mat.medium, s.medium, t);
     u.mat.light = mix(u.mat.light, s.light, t);
+    u.mat.policy = mix(u.mat.policy, resolved_policy(i, s), t);
     if (t >= 1.0) {
       u.count = 0u;
       u.weight = vec4f(0.0);
@@ -544,6 +581,9 @@ fn shade(p: Pixel, m: Blend, r: Radial, inward: Radial, shadow: f32) -> vec3f {
   } else {
     content = sample_content(posG, lod);
   }
+  if (m.policy.x > 0.0) {
+    content = adapt_light(content, m.policy.x, m.policy.y);
+  }
   content *= 1.0 - shadow;
 
   let absorption = exp(-m.medium.xyz * r.path);
@@ -617,7 +657,7 @@ fn composite(color: vec3f, coverage: f32, outsideShadow: f32) -> vec4f {
 fn fs_single(in: VOut) -> @location(0) vec4f {
   let i = groups[in.instance].start;
   let s = surfaces[i];
-  let m = blend_of(s);
+  let m = blend_of(i, s);
   let pix = in.pos.xy;
   let sd = shape_sdf(s, pix);
   let coverage = clamp(0.5 - sd.d, 0.0, 1.0);
@@ -667,7 +707,7 @@ fn fs_union(in: VOut) -> @location(0) vec4f {
   let sd = shape_sdf(s, pix);
   let clearance = near.others - (sd.d + 6.0 * g.k);
   if (clearance >= 0.0) {
-    let m = blend_of(s);
+    let m = blend_of(i, s);
     let coverage = clamp(0.5 - sd.d, 0.0, 1.0);
     // A shadow looked up `moved` px away stays alone if the clearance covers the move twice (the
     // member's distance and the others' bounds both change by at most 1 per px).
@@ -740,3 +780,80 @@ fn fs_union(in: VOut) -> @location(0) vec4f {
   }
   return composite(color, coverage, outsideShadow);
 }
+
+// ---- Backdrop metrics (compute; CPU mirror: backdropStats in src/glass/policy.ts) --------------
+
+@group(0) @binding(7) var<storage, read_write> backdropOut: array<vec4f>;
+
+var<workgroup> histogram: array<atomic<u32>, 16>;
+var<workgroup> lightSum: atomic<u32>;
+var<workgroup> validCount: atomic<u32>;
+
+// CIE L*, 0..100.
+fn lightness(y: f32) -> f32 {
+  let f = select(7.787 * y + 16.0 / 116.0, pow(max(y, 0.0), 1.0 / 3.0), y > 0.008856);
+  return 116.0 * f - 16.0;
+}
+
+// One workgroup per surface: 8×8 samples over its rectangle, mapped to the screen by the shape
+// matrix, each read from the pyramid level whose texel is about one grid cell (so a sample is the
+// average of its cell); the ones outside the shape are dropped. Writes mean L*, p10, p90 and the
+// fraction of samples inside.
+@compute @workgroup_size(64)
+fn cs_metrics(@builtin(workgroup_id) wg: vec3u, @builtin(local_invocation_index) li: u32) {
+  let s = surfaces[wg.x];
+  if (li < 16u) {
+    atomicStore(&histogram[li], 0u);
+  }
+  if (li == 0u) {
+    atomicStore(&lightSum, 0u);
+    atomicStore(&validCount, 0u);
+  }
+  workgroupBarrier();
+
+  let inv = s.xform;
+  let fwd = vec4f(inv.w, -inv.y, -inv.z, inv.x) / (inv.x * inv.w - inv.y * inv.z);
+  let cell = vec2f(f32(li % 8u), f32(li / 8u));
+  let local = ((cell + 0.5) / 8.0 * 2.0 - 1.0) * s.geom.zw;
+  let px = s.geom.xy + vec2f(fwd.x * local.x + fwd.y * local.y, fwd.z * local.x + fwd.w * local.y);
+  let spacing = 2.0 * max(s.geom.z, s.geom.w) / 8.0;
+  let lod = clamp(log2(max(spacing, 1.0)), 0.0, f32(textureNumLevels(bgTex) - 1u));
+  let rgb = textureSampleLevel(bgTex, bgSampler, px * globals.invViewport, lod).rgb;
+  let l = clamp(lightness(dot(rgb, LUMA)), 0.0, 100.0);
+  if (shape_sdf(s, px).d < 0.0) {
+    atomicAdd(&validCount, 1u);
+    atomicAdd(&lightSum, u32(l * 64.0));
+    atomicAdd(&histogram[min(u32(l / 100.0 * 16.0), 15u)], 1u);
+  }
+  workgroupBarrier();
+
+  if (li == 0u) {
+    let n = atomicLoad(&validCount);
+    if (n == 0u) {
+      backdropOut[wg.x] = vec4f(0.0);
+      return;
+    }
+    let total = f32(n);
+    var below = 0.0;
+    var p10 = 100.0;
+    var p90 = 100.0;
+    var found10 = false;
+    var found90 = false;
+    for (var b = 0u; b < 16u; b++) {
+      let count = f32(atomicLoad(&histogram[b]));
+      if (count > 0.0) {
+        if (!found10 && below + count >= 0.1 * total) {
+          p10 = (f32(b) + (0.1 * total - below) / count) * 100.0 / 16.0;
+          found10 = true;
+        }
+        if (!found90 && below + count >= 0.9 * total) {
+          p90 = (f32(b) + (0.9 * total - below) / count) * 100.0 / 16.0;
+          found90 = true;
+        }
+      }
+      below += count;
+    }
+    backdropOut[wg.x] = vec4f(f32(atomicLoad(&lightSum)) / 64.0 / total, p10, p90, total / 64.0);
+  }
+}
+

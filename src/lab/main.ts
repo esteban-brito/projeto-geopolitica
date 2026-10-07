@@ -2,6 +2,7 @@ import { acquireGpu, GpuUnavailableError, type GpuContext } from "../gpu/device.
 import { ABBE_OFF, cloneMaterial, PRESETS, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
 import { deviceGeometry } from "../glass/optics.ts";
 import { clampedRadius, shapeOf, type Shape, type ShapeKind } from "../glass/shape.ts";
+import { AppearancePolicy } from "../glass/policy.ts";
 import { unionField } from "../glass/union.ts";
 import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
@@ -9,7 +10,7 @@ import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassGroup, type GlassSurface } 
 import { NativeSource } from "../sources/native.ts";
 import { PAINTERS, paintBitmap, SCENES, type SceneId } from "../sources/scenes.ts";
 import { color, hint, section, segmented, select, slider, toggle, type Control } from "./controls.ts";
-import { ICONS } from "./icons.ts";
+import { ICONS, SYMBOLS } from "./icons.ts";
 
 const SHAPES: readonly { id: ShapeKind; label: string }[] = [
   { id: "circle", label: "Círculo" },
@@ -49,6 +50,7 @@ const statsButton = document.querySelector<HTMLButtonElement>("#stats")!;
 const statsCard = document.querySelector<HTMLElement>("#stats-card")!;
 const coach = document.querySelector<HTMLElement>("#coach")!;
 const selectionRing = document.querySelector<HTMLElement>("#selection")!;
+const labels = document.querySelector<HTMLElement>("#labels")!;
 const notice = document.querySelector<HTMLElement>("#notice")!;
 const shaderError = document.querySelector<HTMLElement>("#shader-error")!;
 
@@ -62,6 +64,10 @@ interface Glass {
   preset: PresetId;
   edited: boolean;
   surface: GlassSurface;
+  /** Regular's light/dark appearance over what is behind this glass. */
+  policy: AppearancePolicy;
+  /** The symbol sitting on the glass, coloured by the appearance. */
+  label: HTMLElement;
 }
 
 const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...DEFAULT_TUNING.deform }, deformation: DEFAULT_TUNING.deformation };
@@ -74,6 +80,7 @@ const state = {
   continuous: false,
   glasses: [] as Glass[],
   selected: 0,
+  labels: true,
 };
 
 /** All glasses share one merge group: they flow together when they come within `spacing`. */
@@ -89,11 +96,27 @@ const guardHint = hint(guardText);
 
 const selected = (): Glass => state.glasses[state.selected]!;
 
+let symbolCounter = 0;
+
 function createGlass(kind: ShapeKind, cx: number, cy: number, preset: PresetId): Glass {
   const body = new GlassBody(shapeOf(kind, cx, cy), tuning);
   const material = cloneMaterial(PRESETS[preset].material);
-  const glass: Glass = { kind, body, material, preset, edited: false, surface: { shape: body.shape(), material } };
-  return glass;
+  const label = document.createElement("div");
+  label.className = "glass-label";
+  label.innerHTML = SYMBOLS[symbolCounter++ % SYMBOLS.length]!;
+  labels.append(label);
+  return { kind, body, material, preset, edited: false, surface: { shape: body.shape(), material }, policy: new AppearancePolicy(), label };
+}
+
+/** The symbol follows its glass (position, rotation, press) and takes the appearance's colour. */
+function placeLabel(g: Glass): void {
+  const s = g.surface.shape;
+  const size = Math.min(Math.max(Math.min(s.halfWidth, s.halfHeight) * 0.8, 14), 34) * (s.scale ?? 1);
+  const a = g.policy.value;
+  const mix = (x: number, y: number) => Math.round(x + (y - x) * a);
+  g.label.style.width = g.label.style.height = `${size}px`;
+  g.label.style.transform = `translate(${s.cx - size / 2}px, ${s.cy - size / 2}px) rotate(${s.rotation}rad)`;
+  g.label.style.color = `rgb(${mix(28, 255)} ${mix(28, 255)} ${mix(32, 255)} / ${0.86 + 0.1 * a})`;
 }
 
 function rebuildGroup(): void {
@@ -105,8 +128,24 @@ function surfacesChanged(): void {
   for (const g of state.glasses) {
     g.surface.shape = g.body.shape();
     g.surface.material = g.body.material(g.material);
+    // Until the first measurement arrives the shader decides by itself (stateless).
+    if (g.policy.ready) g.surface.appearance = g.policy.value;
+    if (state.labels) placeLabel(g);
   }
   renderer?.surfacesChanged();
+}
+
+/** Backdrop measurements arrived (a frame or two late): feed each glass's policy. */
+function onBackdrop(stats: Float32Array): void {
+  let animating = false;
+  state.glasses.forEach((g, i) => {
+    if (i * 4 + 3 >= stats.length) return;
+    const first = !g.policy.ready;
+    g.policy.update({ mean: stats[i * 4]!, p10: stats[i * 4 + 1]!, p90: stats[i * 4 + 2]!, coverage: stats[i * 4 + 3]! });
+    // A flip animates; the very first measurement only needs one frame to reach the surface.
+    animating ||= g.policy.moving || (first && g.policy.ready);
+  });
+  if (animating) animate();
 }
 
 let stepping = false;
@@ -133,7 +172,10 @@ function stepBodies(now: number): void {
   const dt = Math.max(0, now - lastStep) / 1000;
   lastStep = now;
   let moving = false;
-  for (const g of state.glasses) moving = g.body.step(dt) || moving;
+  for (const g of state.glasses) {
+    moving = g.body.step(dt) || moving;
+    moving = g.policy.step(dt) || moving;
+  }
   surfacesChanged();
   stepping = moving;
 }
@@ -230,7 +272,8 @@ function addGlass(): void {
 
 function removeGlass(): void {
   if (state.glasses.length <= 1) return;
-  state.glasses.splice(state.selected, 1);
+  const [gone] = state.glasses.splice(state.selected, 1);
+  gone?.label.remove();
   rebuildGroup();
   surfacesChanged();
   selectGlass(Math.min(state.selected, state.glasses.length - 1), false);
@@ -430,6 +473,16 @@ function buildDrawer(): void {
       slider({ label: "Brilho", hint: "Luz principal, que vem de cima, mais uma contraluz fraca por baixo.", min: 0, max: 2, step: 0.01, get: () => m().light, set: (v) => editMaterial((x) => (x.light = v)), format: (v) => `${Math.round(v * 100)}%` }),
       slider({ label: "Direção da luz", hint: "90° = de cima.", min: 0, max: 180, step: 1, get: () => m().lightAngle, set: (v) => editMaterial((x) => (x.lightAngle = v)), format: (v) => `${Math.round(v)}°` }),
       slider({ label: "Reflexo", hint: "Quanto do ambiente (a cor média do fundo) o vidro reflete, pelo Fresnel.", min: 0, max: 2, step: 0.01, get: () => m().environment, set: (v) => editMaterial((x) => (x.environment = v)), format: (v) => `${Math.round(v * 100)}%` }),
+      slider({
+        label: "Adaptação ao fundo",
+        hint: "Só no Regular: sobre fundo claro clareia o que está atrás, sobre fundo escuro escurece, para o que fica em cima do vidro continuar legível. Troca de lado com animação.",
+        min: 0,
+        max: 1,
+        step: 0.01,
+        get: () => m().adapt,
+        set: (v) => editMaterial((x) => (x.adapt = v)),
+        format: (v) => (m().variant === "clear" ? "o Claro não se adapta" : `${Math.round(v * 100)}%`),
+      }),
       slider({ label: "Borda escura", hint: "Escurece a borda conforme a inclinação, para o vidro se destacar em fundo claro.", min: 0, max: 1, step: 0.01, get: () => m().edge, set: (v) => editMaterial((x) => (x.edge = v)), format: (v) => `${Math.round(v * 100)}%` }),
       slider({ label: "Sombra", min: 0, max: 1, step: 0.01, get: () => m().shadow, set: (v) => editMaterial((x) => (x.shadow = v)), format: (v) => `${Math.round(v * 100)}%` }),
       color({ label: "Cor do vidro", hint: "Tinge por absorção (Beer–Lambert): mais forte onde o vidro é mais grosso.", get: () => m().tint, set: (v) => editMaterial((x) => (x.tint = v)) }),
@@ -459,6 +512,16 @@ function buildDrawer(): void {
         set: (v) => {
           state.quality = v;
           renderer?.setQuality(v);
+        },
+      }),
+      toggle({
+        label: "Ícones sobre o vidro",
+        hint: "Um símbolo em cada vidro, escuro quando o vidro está no modo claro e claro no modo escuro.",
+        get: () => state.labels,
+        set: (v) => {
+          state.labels = v;
+          labels.hidden = !v;
+          surfacesChanged();
         },
       }),
       toggle({ label: "Medir desempenho", hint: "Desenha todo quadro para medir fps e tempo de GPU. Desligado, só desenha quando algo muda.", get: () => state.continuous, set: setContinuous }),
@@ -617,12 +680,22 @@ function renderMetrics(): void {
     ["DPR", `${r.devicePixelRatio.toFixed(2)} de ${(window.devicePixelRatio || 1).toFixed(2)}`],
     ["qualidade", TIER_LABEL[state.quality]],
     ["vidros", `${r.surfaceCount} em ${r.groupCount} grupo${r.groupCount === 1 ? "" : "s"}`],
+    ["fundo sob o vidro", backdropText()],
     ["memória", `${(r.gpuBytes / 1048576).toFixed(1)} MB`],
     ["adaptador", `${gpu.info.vendor} ${gpu.info.architecture}`.trim(), gpu.info.isFallback],
   );
   statsCard.innerHTML =
     `<dl>${rows.map(([k, v, warn]) => `<dt>${k}</dt><dd${warn ? ' class="warn"' : ""}>${v}</dd>`).join("")}</dl>` +
     `<p class="hint" style="margin-top:8px">Liga “Medir desempenho” em Ajustes → Avançado para fps. Tempo de GPU sem arredondamento: <strong>chrome://flags/#enable-webgpu-developer-features</strong>.</p>`;
+}
+
+/** Lightness under the selected glass and the side its appearance took. */
+function backdropText(): string {
+  const stats = renderer?.backdrop;
+  const i = state.selected;
+  if (!stats || stats.length < (i + 1) * 4) return "—";
+  const side = selected().material.variant === "clear" ? "Claro, não adapta" : selected().policy.dark ? "modo escuro" : "modo claro";
+  return `L* ${Math.round(stats[i * 4]!)} (${Math.round(stats[i * 4 + 1]!)}–${Math.round(stats[i * 4 + 2]!)}) · ${side}`;
 }
 
 // ---- Start --------------------------------------------------------------------------------
@@ -666,6 +739,7 @@ async function start(): Promise<void> {
     void start().then(() => showNotice(null));
   };
   r.onBeforeFrame = stepBodies;
+  r.onBackdrop = onBackdrop;
   // The guard's numbers exist only after the frame built the tables.
   r.onFrame = () => {
     if (!drawer.hidden) guardHint.refresh();
@@ -720,7 +794,14 @@ void start();
 
 declare global {
   interface Window {
-    lab?: { state: typeof state; group: GlassGroup; renderer: () => LiquidGlassRenderer | null; select: (i: number) => void };
+    lab?: {
+      state: typeof state;
+      group: GlassGroup;
+      renderer: () => LiquidGlassRenderer | null;
+      select: (i: number) => void;
+      /** Feed backdrop statistics measured elsewhere (ui-shot renders the glass in the probe). */
+      backdrop: (stats: number[]) => void;
+    };
   }
 }
-window.lab = { state, group, renderer: () => renderer, select: (i) => selectGlass(i) };
+window.lab = { state, group, renderer: () => renderer, select: (i) => selectGlass(i), backdrop: (stats) => onBackdrop(new Float32Array(stats)) };

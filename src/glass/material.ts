@@ -2,7 +2,7 @@ export type Profile = "squircle" | "circle" | "lip";
 
 export const PROFILE_INDEX: Record<Profile, number> = { squircle: 0, circle: 1, lip: 2 };
 
-/** Regular adapts to the content behind it (V4); Clear stays transparent and never adapts. */
+/** Regular adapts to the content behind it; Clear stays transparent and never adapts. */
 export type GlassVariant = "regular" | "clear";
 
 /** Above this Abbe number the lab treats the glass as dispersion-free (one sample, not three). */
@@ -45,6 +45,12 @@ export interface GlassMaterial {
   edge: number;
   /** Shadow cast on the content; its offset and softness follow `gap`. */
   shadow: number;
+  /**
+   * Regular only, 0..1: how far the glass compresses the light behind it toward the side that
+   * keeps content on top legible — lighter over light content (dark labels), darker over dark
+   * content (light labels) — and how much it saturates it (vibrancy). Clear ignores it.
+   */
+  adapt: number;
 }
 
 /** Path length (CSS px) at which the glass reaches `tint` when density = 1. */
@@ -66,6 +72,7 @@ const BASE: GlassMaterial = {
   environment: 1,
   edge: 0.6,
   shadow: 0.35,
+  adapt: 0.5,
 };
 
 export type PresetId = "clear" | "regular" | "frost" | "crystal" | "smoke";

@@ -20,6 +20,11 @@ import { GpuTimer, Series } from "./timer.ts";
 export interface GlassSurface {
   shape: Shape;
   material: GlassMaterial;
+  /**
+   * Regular's appearance, 0 light .. 1 dark, as the app animates it (AppearancePolicy). Absent:
+   * the shader derives it from this frame's backdrop metrics, without memory.
+   */
+  appearance?: number;
 }
 
 /**
@@ -71,7 +76,9 @@ export interface Pixels {
   data: Uint8Array;
 }
 
-const SURFACE_FLOATS = 28;
+const SURFACE_FLOATS = 32;
+/** Backdrop metrics read back to the CPU: a ring, so mapping never stalls a frame. */
+const METRICS_RING = 3;
 const GROUP_FLOATS = 8;
 const TABLE_FLOATS = TABLE_SAMPLES * TABLE_STRIDE;
 const GLOBALS_BYTES = 48;
@@ -116,6 +123,20 @@ export class LiquidGlassRenderer {
   private readonly sampler: GPUSampler;
   private readonly bgLayout: GPUBindGroupLayout;
   private readonly glassLayout: GPUBindGroupLayout;
+  private readonly metricsLayout: GPUBindGroupLayout;
+  private metricsPipeline: GPUComputePipeline | null = null;
+  private metricsBindGroup: GPUBindGroup | null = null;
+  private metricsBuffer: GPUBuffer | null = null;
+  private metricsSlots: { buffer: GPUBuffer; busy: boolean; count: number }[] = [];
+  private metricsSlot: { buffer: GPUBuffer; busy: boolean; count: number } | null = null;
+  private metricsDirty = true;
+  private metricsWaiters: ((stats: Float32Array) => void)[] = [];
+  /**
+   * Latest backdrop statistics per surface (flat order): mean L*, p10, p90, coverage. They arrive a
+   * frame or two after the frame that measured them.
+   */
+  backdrop = new Float32Array(0);
+  onBackdrop: ((stats: Float32Array) => void) | null = null;
   private bgPipeline: GPURenderPipeline | null = null;
   private pyramidPipeline: GPURenderPipeline | null = null;
   private readonly pyramidLayout: GPUBindGroupLayout;
@@ -215,10 +236,21 @@ export class LiquidGlassRenderer {
         { binding: 3, visibility: GPUShaderStage.FRAGMENT, sampler: { type: "filtering" } },
         { binding: 4, visibility: GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
         { binding: 5, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
+        { binding: 6, visibility: GPUShaderStage.FRAGMENT, buffer: { type: "read-only-storage" } },
+      ],
+    });
+    this.metricsLayout = this.device.createBindGroupLayout({
+      label: "lab.metrics.layout",
+      entries: [
+        { binding: 0, visibility: GPUShaderStage.COMPUTE, buffer: { type: "uniform" } },
+        { binding: 1, visibility: GPUShaderStage.COMPUTE, buffer: { type: "read-only-storage" } },
+        { binding: 2, visibility: GPUShaderStage.COMPUTE, texture: { sampleType: "float" } },
+        { binding: 3, visibility: GPUShaderStage.COMPUTE, sampler: { type: "filtering" } },
+        { binding: 7, visibility: GPUShaderStage.COMPUTE, buffer: { type: "storage" } },
       ],
     });
 
-    this.graph.add(this.pyramidPass()).add(this.backgroundPass()).add(this.glassPass());
+    this.graph.add(this.pyramidPass()).add(this.metricsPass()).add(this.backgroundPass()).add(this.glassPass());
 
     this.device.lost.then((info) => {
       if (this.destroyed) return;
@@ -337,6 +369,8 @@ export class LiquidGlassRenderer {
     this.surfaceBuffer?.destroy();
     this.tableBuffer?.destroy();
     this.groupBuffer?.destroy();
+    this.metricsBuffer?.destroy();
+    for (const slot of this.metricsSlots) slot.buffer.destroy();
     this.context?.unconfigure();
   }
 
@@ -360,7 +394,11 @@ export class LiquidGlassRenderer {
 
     const sizeChanged = this.sourceChanged;
     this.sourceChanged = false;
-    if (this.source.update(this.device, this.background, sizeChanged)) this.pyramidDirty = true;
+    if (this.source.update(this.device, this.background, sizeChanged)) {
+      this.pyramidDirty = true;
+      this.metricsDirty = true;
+    }
+    if (this.forcePyramid) this.metricsDirty = true;
     if (this.surfacesDirty) this.uploadSurfaces();
 
     const g = new ArrayBuffer(GLOBALS_BYTES);
@@ -380,6 +418,7 @@ export class LiquidGlassRenderer {
     const texture = this.context ? this.context.getCurrentTexture() : this.frameTexture;
     if (!texture) return null;
     this.graph.run(this.device, texture.createView({ format: this.viewFormat }), this.timer);
+    this.collectMetrics();
 
     const resolve = this.pendingReadback;
     if (!resolve) return null;
@@ -455,6 +494,23 @@ export class LiquidGlassRenderer {
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
         label: "lab.radial-tables",
       });
+      this.metricsBuffer?.destroy();
+      for (const slot of this.metricsSlots) slot.buffer.destroy();
+      this.metricsBuffer = this.device.createBuffer({
+        size: this.surfaceCapacity * 16,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
+        label: "lab.backdrop",
+      });
+      this.metricsSlots = Array.from({ length: METRICS_RING }, (_, i) => ({
+        buffer: this.device.createBuffer({
+          size: this.surfaceCapacity * 16,
+          usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+          label: `lab.backdrop.read${i}`,
+        }),
+        busy: false,
+        count: 0,
+      }));
+      this.metricsBindGroup = null;
       this.glassBindGroup = null;
       this.tables = [];
     }
@@ -468,8 +524,9 @@ export class LiquidGlassRenderer {
         this.tables[i] = { key, ...table };
         this.device.queue.writeBuffer(this.tableBuffer!, i * TABLE_FLOATS * 4, table.data);
       }
-      data.set(packSurface(shape, material, dpr), i * SURFACE_FLOATS);
+      data.set(packSurface(shape, material, dpr, flat[i]!.appearance), i * SURFACE_FLOATS);
     });
+    this.metricsDirty = true;
     this.device.queue.writeBuffer(this.surfaceBuffer, 0, data);
 
     // A group that cannot merge (one member, or spacing 0) is drawn as lone surfaces by the lean
@@ -585,6 +642,76 @@ export class LiquidGlassRenderer {
     };
   }
 
+  /** Backdrop statistics under every surface, from the fresh pyramid; only when something changed. */
+  private metricsPass(): Pass {
+    return {
+      name: "métricas",
+      enabled: () => this.metricsDirty && this.surfaceCount > 0 && this.metricsPipeline !== null && this.background !== null,
+      encode: (ctx: FrameContext, timestampWrites) => {
+        if (!this.metricsPipeline || !this.background || !this.surfaceBuffer || !this.metricsBuffer) return;
+        this.metricsDirty = false;
+        this.metricsBindGroup ??= this.device.createBindGroup({
+          layout: this.metricsLayout,
+          entries: [
+            { binding: 0, resource: { buffer: this.globals } },
+            { binding: 1, resource: { buffer: this.surfaceBuffer } },
+            { binding: 2, resource: this.background.createView() },
+            { binding: 3, resource: this.sampler },
+            { binding: 7, resource: { buffer: this.metricsBuffer } },
+          ],
+          label: "lab.metrics.bind",
+        });
+        const count = this.surfaceCount;
+        const pass = ctx.encoder.beginComputePass({ label: "métricas", ...(timestampWrites ? { timestampWrites } : {}) });
+        pass.setPipeline(this.metricsPipeline);
+        pass.setBindGroup(0, this.metricsBindGroup);
+        pass.dispatchWorkgroups(count);
+        pass.end();
+        const slot = this.metricsSlots.find((x) => !x.busy) ?? null;
+        if (slot) {
+          ctx.encoder.copyBufferToBuffer(this.metricsBuffer, 0, slot.buffer, 0, count * 16);
+          slot.busy = true;
+          slot.count = count;
+          this.metricsSlot = slot;
+        } else {
+          // Every readback buffer is in flight: measure again next frame.
+          this.metricsDirty = true;
+        }
+      },
+    };
+  }
+
+  /** After submit: map the metrics copied this frame, if any. */
+  private collectMetrics(): void {
+    const slot = this.metricsSlot;
+    this.metricsSlot = null;
+    if (!slot) return;
+    slot.buffer
+      .mapAsync(GPUMapMode.READ, 0, slot.count * 16)
+      .then(() => {
+        const stats = new Float32Array(slot.buffer.getMappedRange(0, slot.count * 16).slice(0));
+        slot.buffer.unmap();
+        slot.busy = false;
+        this.backdrop = stats;
+        this.onBackdrop?.(stats);
+        const waiters = this.metricsWaiters;
+        this.metricsWaiters = [];
+        for (const w of waiters) w(stats);
+      })
+      .catch(() => {
+        slot.busy = false;
+      });
+  }
+
+  /** Measure the backdrop of the current surfaces and resolve with the statistics (tests). */
+  readBackdrop(): Promise<Float32Array> {
+    return new Promise((resolve) => {
+      this.metricsWaiters.push(resolve);
+      this.metricsDirty = true;
+      this.requestFrame();
+    });
+  }
+
   private backgroundPass(): Pass {
     return {
       name: "fundo",
@@ -624,6 +751,7 @@ export class LiquidGlassRenderer {
             { binding: 3, resource: this.sampler },
             { binding: 4, resource: { buffer: this.tableBuffer } },
             { binding: 5, resource: { buffer: this.groupBuffer } },
+            { binding: 6, resource: { buffer: this.metricsBuffer! } },
           ],
           label: "lab.glass.bind",
         });
@@ -700,6 +828,11 @@ export class LiquidGlassRenderer {
       });
     const glass = glassPipeline("fs_single");
     const union = glassPipeline("fs_union");
+    const metrics = device.createComputePipeline({
+      label: "glass.cs_metrics",
+      layout: device.createPipelineLayout({ bindGroupLayouts: [this.metricsLayout] }),
+      compute: { module: glassModule, entryPoint: "cs_metrics" },
+    });
     const pyramid = device.createRenderPipeline({
       label: "pyramid",
       layout: device.createPipelineLayout({ bindGroupLayouts: [this.pyramidLayout] }),
@@ -715,6 +848,8 @@ export class LiquidGlassRenderer {
     this.bgPipeline = bg;
     this.glassPipeline = glass;
     this.unionPipeline = union;
+    this.metricsPipeline = metrics;
+    this.metricsDirty = true;
     this.pyramidPipeline = pyramid;
     this.pyramidDirty = true;
     this.onShaderError?.(null);
@@ -764,7 +899,7 @@ function tableKey(shape: Shape, m: GlassMaterial, dpr: number, guard: boolean): 
  * computed here once: absorption from tint and density, blur radius from roughness and the glass's
  * height, the key light direction, F0 from the ior, the shadow's offset and softness from the gap.
  */
-function packSurface(shape: Shape, m: GlassMaterial, dpr: number): number[] {
+function packSurface(shape: Shape, m: GlassMaterial, dpr: number, appearance: number | undefined): number[] {
   const { bevel } = deviceGeometry(m, shape, dpr);
   const absorb = m.tint.map((c) => (m.density * -Math.log(Math.max(c, 1e-3))) / (REFERENCE_PATH * dpr));
   const blur = 1.6 * (m.thickness + m.gap + m.bevel * 0.5) * m.roughness ** 1.5 * dpr;
@@ -780,5 +915,6 @@ function packSurface(shape: Shape, m: GlassMaterial, dpr: number): number[] {
     absorb[0]!, absorb[1]!, absorb[2]!, m.light,
     Math.cos(angle), -Math.sin(angle), blur, f0,
     inv[0], inv[1], inv[2], inv[3],
+    m.variant === "regular" ? m.adapt : 0, appearance ?? -1, 0, 0,
   ];
 }

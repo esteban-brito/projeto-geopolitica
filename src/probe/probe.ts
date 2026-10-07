@@ -5,7 +5,7 @@ import type { Shape } from "../glass/shape.ts";
 import { unionField } from "../glass/union.ts";
 import type { QualityTier } from "../renderer/quality.ts";
 import { LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
-import { NativeSource } from "../sources/native.ts";
+import { NativeSource, type ScenePainter } from "../sources/native.ts";
 import { PAINTERS, paintCoordinates, paintSolid, type SceneId } from "../sources/scenes.ts";
 
 /**
@@ -19,6 +19,7 @@ let source: NativeSource | null = null;
 interface SurfaceRequest {
   shape: Shape;
   material?: Partial<GlassMaterial>;
+  appearance?: number;
 }
 
 interface RenderRequest {
@@ -31,7 +32,7 @@ interface RenderRequest {
   quality?: QualityTier;
 }
 
-type ProbeScene = SceneId | "coordinates" | "solid-light" | "solid-dark";
+type ProbeScene = SceneId | "coordinates" | "solid-light" | "solid-dark" | "split";
 
 async function init(width: number, height: number, scene: ProbeScene): Promise<{ adapter: string; fallback: boolean }> {
   renderer?.destroy();
@@ -46,7 +47,9 @@ async function init(width: number, height: number, scene: ProbeScene): Promise<{
         ? paintSolid("#e9e9e6")
         : scene === "solid-dark"
           ? paintSolid("#1d1e22")
-          : PAINTERS[scene];
+          : scene === "split"
+            ? paintSplit
+            : PAINTERS[scene];
   source = new NativeSource(scene, painter, () => renderer?.devicePixelRatio ?? 1);
   renderer.setSource(source);
   const error = await renderer.init();
@@ -56,7 +59,11 @@ async function init(width: number, height: number, scene: ProbeScene): Promise<{
 
 async function render(req: RenderRequest): Promise<{ width: number; height: number; rgba: string }> {
   if (!renderer) throw new Error("probe.init primeiro");
-  const surface = (s: SurfaceRequest): GlassSurface => ({ shape: s.shape, material: { ...cloneMaterial(DEFAULT_MATERIAL), ...s.material } });
+  const surface = (s: SurfaceRequest): GlassSurface => ({
+    shape: s.shape,
+    material: { ...cloneMaterial(DEFAULT_MATERIAL), ...s.material },
+    ...(s.appearance !== undefined ? { appearance: s.appearance } : {}),
+  });
   const groups: GlassGroup[] = [
     ...(req.surfaces ?? []).map((s) => ({ spacing: 0, surfaces: [surface(s)] })),
     ...(req.groups ?? []).map((g) => ({ spacing: g.spacing, surfaces: g.surfaces.map(surface) })),
@@ -114,6 +121,21 @@ function predictUnion(group: { spacing: number; surfaces: SurfaceRequest[] }, x:
   return { d: u.d, gradLength: Math.hypot(u.gx, u.gy), x: px + offset * u.gx, y: py + offset * u.gy, transmission, blend: u.blend };
 }
 
+/** Left half black, right half white: a backdrop with known extremes. */
+const paintSplit: ScenePainter = (ctx, w, h) => {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, w / 2, h);
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(w / 2, 0, w - w / 2, h);
+};
+
+/** Backdrop statistics of the surfaces of the last render: [mean L*, p10, p90, coverage] each. */
+async function backdrop(): Promise<number[][]> {
+  if (!renderer) throw new Error("probe.init primeiro");
+  const stats = await renderer.readBackdrop();
+  return Array.from({ length: stats.length / 4 }, (_, i) => Array.from(stats.subarray(i * 4, i * 4 + 4)));
+}
+
 declare global {
   interface Window {
     probe?: {
@@ -123,6 +145,7 @@ declare global {
       predictOffset: typeof predictOffset;
       preset: typeof preset;
       predictUnion: typeof predictUnion;
+      backdrop: typeof backdrop;
     };
   }
 }
@@ -131,4 +154,4 @@ function preset(id: PresetId): GlassMaterial {
   return cloneMaterial(PRESETS[id].material);
 }
 
-window.probe = { init, render, guard, predictOffset, preset, predictUnion };
+window.probe = { init, render, guard, predictOffset, preset, predictUnion, backdrop };

@@ -69,10 +69,6 @@ for (const view of VIEWS) {
       group: { spacing: group.spacing, surfaces: state.glasses.map((g) => ({ shape: g.surface.shape, material: g.surface.material })) },
     };
   });
-  await page.addStyleTag({ content: "html, body, .lab, #stage { background: transparent !important } #stage, #notice { visibility: hidden }" });
-  const ui = await page.screenshot({ omitBackground: true });
-  await page.close();
-
   const w = view.width * (view.scale ?? 1);
   const h = view.height * (view.scale ?? 1);
   // The probe renders at dpr 1: scale the CSS-pixel scene to the screenshot's device pixels.
@@ -84,6 +80,14 @@ for (const view of VIEWS) {
   await probe.page.evaluate(([pw, ph, s]) => window.probe.init(pw, ph, s), [w, h, scene.scene]);
   const out = await probe.page.evaluate((r) => window.probe.render(r), { groups: [{ spacing: scene.group.spacing * k, surfaces }] });
   const glass = png(out.width, out.height, Buffer.from(out.rgba, "base64"));
+  // The symbols take their colour from what the probe measured under each glass.
+  const stats = (await probe.page.evaluate(() => window.probe.backdrop())).flat();
+  await page.evaluate((st) => window.lab.backdrop(st), stats);
+  await page.waitForTimeout(100);
+
+  await page.addStyleTag({ content: "html, body, .lab, #stage { background: transparent !important } #stage, #notice { visibility: hidden }" });
+  const ui = await page.screenshot({ omitBackground: true });
+  await page.close();
 
   const compose = await plain.newPage({ viewport: { width: w, height: h } });
   await compose.setContent(

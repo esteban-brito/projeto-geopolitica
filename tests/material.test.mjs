@@ -121,7 +121,8 @@ test("o nível Baixa troca só a borda (sem dispersão, leitura bilinear); o cen
   await lab.page.evaluate(([w, h, s]) => window.probe.init(w, h, s), [W, H, "text"]);
   const crystal = await lab.page.evaluate(() => window.probe.preset("crystal"));
   const render = (quality) =>
-    lab.page.evaluate((r) => window.probe.render(r), { surfaces: [{ shape: CAPSULE, material: { ...crystal, shadow: 0 } }], quality }).then(image);
+    // adapt 0: the Regular policy compresses contrast and would hide what the tier changes.
+    lab.page.evaluate((r) => window.probe.render(r), { surfaces: [{ shape: CAPSULE, material: { ...crystal, shadow: 0, adapt: 0 } }], quality }).then(image);
   const high = await render("high");
   const low = await render("low");
   let border = 0;
