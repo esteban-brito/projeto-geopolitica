@@ -830,3 +830,10 @@ As capturas de fusão e de vidro solto ficaram **idênticas pixel a pixel** às 
 O bench também mudou: os grupos de 4 quebravam de uma linha para a outra (um retângulo de duas
 linhas, caso irreal); agora são barras dentro da linha. A confirmação do ganho é o próximo bench.
 
+**Confirmado no bench completo** ([`docs/bench/v3.1-rx6600-completo.json`](../bench/v3.1-rx6600-completo.json),
+1500×1080): o vidro solto voltou a **0,51 ns por pixel coberto** (100 vidros a 36% da tela =
+0,298 ms; o V2 media 0,302 ms). Baixa sai 9% mais barato (0,271 ms). Ultra, Alta e Média
+empatam em DPR 1, como esperado. As quatro cenas dão o mesmo tempo (diferença < 0,2%): o custo
+não depende do conteúdo atrás do vidro. A suíte completa não tinha os cenários de fusão e de
+movimento; agora tem, por nível, e deixou de variar a cena.
+

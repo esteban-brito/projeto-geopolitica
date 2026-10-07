@@ -1,0 +1,3857 @@
+{
+  "lab": "liquid-glass-lab V3",
+  "date": "2026-10-07T05:07:19.756Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+  "adapter": {
+    "vendor": "amd",
+    "architecture": "rdna-2",
+    "description": "AMD Radeon RX 6600",
+    "isFallback": false,
+    "timestamps": true,
+    "maxTexture": 8192
+  },
+  "devicePixelRatio": 1,
+  "note": "GPU ms são médias de janela; sem o flag de desenvolvedor do Chrome, cada medida é arredondada a 0,1 ms.",
+  "results": [
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.9520095980802,
+      "cpuMs": 0.05916666627551118,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022299,
+          "p95": 0.02316
+        },
+        "vidro": {
+          "mean": 0.006248333333333334,
+          "p95": 0.00696
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.04583333305393656,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02233066666666667,
+          "p95": 0.02332
+        },
+        "vidro": {
+          "mean": 0.047339000000000006,
+          "p95": 0.04812
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.9520095980802,
+      "cpuMs": 0.05166666697089871,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02221433333333333,
+          "p95": 0.02288
+        },
+        "vidro": {
+          "mean": 0.09593800000000006,
+          "p95": 0.09672
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.06083333346371849,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022256333333333326,
+          "p95": 0.02312
+        },
+        "vidro": {
+          "mean": 0.18656733333333334,
+          "p95": 0.1874
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.90403838464755,
+      "cpuMs": 0.050833332880089684,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02234733333333333,
+          "p95": 0.02352
+        },
+        "vidro": {
+          "mean": 0.2980750000000001,
+          "p95": 0.299
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.12833333341404796,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06398633333333328,
+          "p95": 0.06468
+        },
+        "fundo": {
+          "mean": 0.021932666666666666,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.008010333333333336,
+          "p95": 0.00848
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959807934,
+      "cpuMs": 0.0791666668218871,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.064398,
+          "p95": 0.06804
+        },
+        "fundo": {
+          "mean": 0.02183533333333333,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.049359666666666684,
+          "p95": 0.04992
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08916666625688473,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06400233333333331,
+          "p95": 0.0648
+        },
+        "fundo": {
+          "mean": 0.021867666666666667,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.09793700000000001,
+          "p95": 0.0986
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.10250000000620882,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06462999999999999,
+          "p95": 0.06596
+        },
+        "fundo": {
+          "mean": 0.021833,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.1884583333333333,
+          "p95": 0.18892
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08083333366860947,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06414300000000002,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.021828,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.30018633333333344,
+          "p95": 0.30084
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.04083333338300387,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022162666666666667,
+          "p95": 0.02252
+        },
+        "vidro": {
+          "mean": 0.006316333333333333,
+          "p95": 0.00696
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.05999999952812989,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022246333333333326,
+          "p95": 0.02284
+        },
+        "vidro": {
+          "mean": 0.04734266666666666,
+          "p95": 0.04808
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.05583333351338903,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022208000000000006,
+          "p95": 0.02308
+        },
+        "vidro": {
+          "mean": 0.09598900000000003,
+          "p95": 0.09668
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.045000000235935055,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022190666666666668,
+          "p95": 0.02276
+        },
+        "vidro": {
+          "mean": 0.18671633333333337,
+          "p95": 0.18728
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.060833333308498064,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022256,
+          "p95": 0.02304
+        },
+        "vidro": {
+          "mean": 0.29827499999999996,
+          "p95": 0.29904
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.07916666635622581,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06384800000000003,
+          "p95": 0.06448
+        },
+        "fundo": {
+          "mean": 0.021897999999999987,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.007965333333333335,
+          "p95": 0.00848
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.10000000018626451,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06410999999999997,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.021847333333333326,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.04933266666666666,
+          "p95": 0.04984
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.09749999983857076,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06391000000000004,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.02171566666666667,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.09790299999999999,
+          "p95": 0.0986
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959808108,
+      "cpuMs": 0.09583333333333334,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06409100000000002,
+          "p95": 0.06456
+        },
+        "fundo": {
+          "mean": 0.02185599999999999,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.188387,
+          "p95": 0.18892
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.10166666703298688,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06385933333333339,
+          "p95": 0.06472
+        },
+        "fundo": {
+          "mean": 0.021658666666666663,
+          "p95": 0.0222
+        },
+        "vidro": {
+          "mean": 0.30019499999999993,
+          "p95": 0.30204
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.04666666692743699,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02228966666666667,
+          "p95": 0.0228
+        },
+        "vidro": {
+          "mean": 0.006344333333333332,
+          "p95": 0.00712
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.06083333281179269,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022244000000000017,
+          "p95": 0.02304
+        },
+        "vidro": {
+          "mean": 0.04734233333333331,
+          "p95": 0.04804
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.05333333319673936,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02221966666666667,
+          "p95": 0.023
+        },
+        "vidro": {
+          "mean": 0.09591966666666667,
+          "p95": 0.09652
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.04833333371207118,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022351000000000003,
+          "p95": 0.02352
+        },
+        "vidro": {
+          "mean": 0.18665933333333334,
+          "p95": 0.1874
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05666666695227226,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022301666666666664,
+          "p95": 0.023
+        },
+        "vidro": {
+          "mean": 0.29843100000000006,
+          "p95": 0.29908
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.09249999970197678,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06412866666666668,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.022036666666666666,
+          "p95": 0.02244
+        },
+        "vidro": {
+          "mean": 0.007961333333333336,
+          "p95": 0.00836
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.09000000031664968,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06401366666666668,
+          "p95": 0.06512
+        },
+        "fundo": {
+          "mean": 0.021812666666666664,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.04937933333333332,
+          "p95": 0.04996
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.90403838464755,
+      "cpuMs": 0.09666666671012838,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06406233333333335,
+          "p95": 0.06468
+        },
+        "fundo": {
+          "mean": 0.021869000000000003,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.09791066666666666,
+          "p95": 0.0984
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.07583333300426602,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06390200000000003,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.021908,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.18844299999999992,
+          "p95": 0.18904
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.07249999983857075,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06397300000000002,
+          "p95": 0.06452
+        },
+        "fundo": {
+          "mean": 0.021915333333333332,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.3001310000000001,
+          "p95": 0.30072
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.04333333366860946,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022283666666666663,
+          "p95": 0.02264
+        },
+        "vidro": {
+          "mean": 0.006414000000000001,
+          "p95": 0.0072
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.051666666908810534,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022233333333333345,
+          "p95": 0.02244
+        },
+        "vidro": {
+          "mean": 0.04742566666666665,
+          "p95": 0.04796
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.06249999953433871,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02227433333333334,
+          "p95": 0.02272
+        },
+        "vidro": {
+          "mean": 0.09602599999999996,
+          "p95": 0.0968
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.053333333755532904,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022273666666666685,
+          "p95": 0.02316
+        },
+        "vidro": {
+          "mean": 0.18683033333333338,
+          "p95": 0.18964
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.90403838464755,
+      "cpuMs": 0.05250000031664968,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022308666666666668,
+          "p95": 0.0234
+        },
+        "vidro": {
+          "mean": 0.2982726666666668,
+          "p95": 0.2996
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.09249999970197678,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06428666666666666,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.021962333333333337,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.007944333333333333,
+          "p95": 0.00852
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.08833333331470689,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06412466666666666,
+          "p95": 0.065
+        },
+        "fundo": {
+          "mean": 0.021973999999999994,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.04941966666666668,
+          "p95": 0.05004
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.0791666668218871,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06400200000000002,
+          "p95": 0.065
+        },
+        "fundo": {
+          "mean": 0.021827333333333327,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.09791366666666665,
+          "p95": 0.09848
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.08583333324640989,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06407999999999998,
+          "p95": 0.06496
+        },
+        "fundo": {
+          "mean": 0.021856333333333332,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.18843899999999994,
+          "p95": 0.189
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "ultra",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.90403838464755,
+      "cpuMs": 0.08333333280558387,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06405066666666667,
+          "p95": 0.06496
+        },
+        "fundo": {
+          "mean": 0.02192666666666666,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.3000883333333332,
+          "p95": 0.30064
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.04750000030423204,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022228333333333346,
+          "p95": 0.02272
+        },
+        "vidro": {
+          "mean": 0.006280999999999998,
+          "p95": 0.00696
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.050000000093132255,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022226666666666672,
+          "p95": 0.0226
+        },
+        "vidro": {
+          "mean": 0.04738133333333331,
+          "p95": 0.048
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959808454,
+      "cpuMs": 0.04666666643073161,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022236666666666672,
+          "p95": 0.02296
+        },
+        "vidro": {
+          "mean": 0.09602366666666672,
+          "p95": 0.09668
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.06083333337058624,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022246666666666675,
+          "p95": 0.0228
+        },
+        "vidro": {
+          "mean": 0.18666233333333337,
+          "p95": 0.18732
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.05166666697089871,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02221266666666667,
+          "p95": 0.02324
+        },
+        "vidro": {
+          "mean": 0.2981323333333333,
+          "p95": 0.29916
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.09083333294838666,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06402466666666665,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.021829666666666667,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.007951000000000001,
+          "p95": 0.00844
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.09083333313465118,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06407566666666668,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.02184500000000001,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.04936533333333335,
+          "p95": 0.04984
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.09416666710749269,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06465133333333332,
+          "p95": 0.066
+        },
+        "fundo": {
+          "mean": 0.02187466666666667,
+          "p95": 0.02252
+        },
+        "vidro": {
+          "mean": 0.09791899999999999,
+          "p95": 0.09848
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.90403838464053,
+      "cpuMs": 0.08583333312223355,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06410600000000002,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.02178866666666666,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.188449,
+          "p95": 0.189
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08999999975785614,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.063995,
+          "p95": 0.0648
+        },
+        "fundo": {
+          "mean": 0.021805999999999985,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.3001603333333333,
+          "p95": 0.30072
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.055833333358168605,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022208000000000002,
+          "p95": 0.0226
+        },
+        "vidro": {
+          "mean": 0.006288333333333331,
+          "p95": 0.00692
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.050833333656191824,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022195000000000003,
+          "p95": 0.02244
+        },
+        "vidro": {
+          "mean": 0.047394666666666675,
+          "p95": 0.04804
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.06166666680946946,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022230666666666666,
+          "p95": 0.023
+        },
+        "vidro": {
+          "mean": 0.09596666666666667,
+          "p95": 0.09676
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.04249999960884452,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022188666666666655,
+          "p95": 0.02268
+        },
+        "vidro": {
+          "mean": 0.18672500000000009,
+          "p95": 0.1874
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.048333333401630325,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022231666666666667,
+          "p95": 0.0228
+        },
+        "vidro": {
+          "mean": 0.29837833333333336,
+          "p95": 0.2992
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08583333355685076,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06387999999999999,
+          "p95": 0.06476
+        },
+        "fundo": {
+          "mean": 0.02194466666666667,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.008015666666666666,
+          "p95": 0.00852
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.09499999964609743,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06377499999999998,
+          "p95": 0.06456
+        },
+        "fundo": {
+          "mean": 0.02178866666666666,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.0493583333333333,
+          "p95": 0.04992
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.08583333355685076,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06393599999999999,
+          "p95": 0.0648
+        },
+        "fundo": {
+          "mean": 0.021841666666666672,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.09790566666666664,
+          "p95": 0.09856
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.08583333364998301,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06379666666666667,
+          "p95": 0.06468
+        },
+        "fundo": {
+          "mean": 0.02185866666666668,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.18841966666666668,
+          "p95": 0.189
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.08999999957159162,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06392800000000001,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.02190133333333333,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.30010133333333333,
+          "p95": 0.30084
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05416666607682904,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022291333333333326,
+          "p95": 0.02292
+        },
+        "vidro": {
+          "mean": 0.006318000000000001,
+          "p95": 0.007
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05333333347613613,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02224,
+          "p95": 0.02252
+        },
+        "vidro": {
+          "mean": 0.04745800000000003,
+          "p95": 0.04824
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.05166666650523742,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02217866666666668,
+          "p95": 0.0226
+        },
+        "vidro": {
+          "mean": 0.09586566666666665,
+          "p95": 0.0966
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.052499999695767956,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022310666666666663,
+          "p95": 0.0232
+        },
+        "vidro": {
+          "mean": 0.18660100000000002,
+          "p95": 0.18744
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.045833333674818275,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022358999999999997,
+          "p95": 0.02368
+        },
+        "vidro": {
+          "mean": 0.29814833333333335,
+          "p95": 0.29904
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.90403838465448,
+      "cpuMs": 0.0808333335754772,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06391700000000002,
+          "p95": 0.06476
+        },
+        "fundo": {
+          "mean": 0.021932000000000007,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.007956,
+          "p95": 0.00856
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.09166666638726989,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06435166666666667,
+          "p95": 0.06588
+        },
+        "fundo": {
+          "mean": 0.021887666666666677,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.049386666666666676,
+          "p95": 0.04988
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.0824999998944501,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06400033333333337,
+          "p95": 0.065
+        },
+        "fundo": {
+          "mean": 0.021873666666666666,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.09791466666666668,
+          "p95": 0.0984
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.09333333369965355,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06399366666666666,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.021903,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.18842466666666657,
+          "p95": 0.18892
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.07416666646798452,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06406966666666668,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.021966999999999997,
+          "p95": 0.02248
+        },
+        "vidro": {
+          "mean": 0.30008333333333337,
+          "p95": 0.3006
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.05249999954054753,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022242666666666678,
+          "p95": 0.0226
+        },
+        "vidro": {
+          "mean": 0.006409000000000001,
+          "p95": 0.00712
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.04833333374311526,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022281000000000006,
+          "p95": 0.0232
+        },
+        "vidro": {
+          "mean": 0.04724499999999999,
+          "p95": 0.04784
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.050000000310440856,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022250000000000006,
+          "p95": 0.02292
+        },
+        "vidro": {
+          "mean": 0.09596033333333334,
+          "p95": 0.09656
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.058333332929760215,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022264333333333337,
+          "p95": 0.02308
+        },
+        "vidro": {
+          "mean": 0.18661733333333336,
+          "p95": 0.18744
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.047500000117967525,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022184666666666675,
+          "p95": 0.023
+        },
+        "vidro": {
+          "mean": 0.2983843333333334,
+          "p95": 0.3002
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08250000008071462,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06401433333333331,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.021837999999999993,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.00794033333333333,
+          "p95": 0.00832
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.07916666641831398,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06395766666666668,
+          "p95": 0.06496
+        },
+        "fundo": {
+          "mean": 0.02190733333333333,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.04936599999999999,
+          "p95": 0.05
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.07916666623204946,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06406300000000001,
+          "p95": 0.06496
+        },
+        "fundo": {
+          "mean": 0.021891000000000008,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.097951,
+          "p95": 0.09872
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.08416666692743699,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06400633333333336,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.021937666666666664,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.1884653333333334,
+          "p95": 0.18912
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "high",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.08999999988203247,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06410333333333332,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.02182533333333333,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.30013133333333336,
+          "p95": 0.30084
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.05583333279937506,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02225266666666666,
+          "p95": 0.02324
+        },
+        "vidro": {
+          "mean": 0.006169000000000005,
+          "p95": 0.007
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05749999983236194,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022269000000000008,
+          "p95": 0.02288
+        },
+        "vidro": {
+          "mean": 0.04743733333333333,
+          "p95": 0.048
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.05416666679084301,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022254,
+          "p95": 0.02312
+        },
+        "vidro": {
+          "mean": 0.0958286666666667,
+          "p95": 0.09664
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.9520095980776,
+      "cpuMs": 0.05499999954675635,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022222666666666675,
+          "p95": 0.02284
+        },
+        "vidro": {
+          "mean": 0.18670366666666668,
+          "p95": 0.1874
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.06000000008692344,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022235000000000008,
+          "p95": 0.02316
+        },
+        "vidro": {
+          "mean": 0.298358,
+          "p95": 0.29916
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08083333369965355,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06422233333333333,
+          "p95": 0.0648
+        },
+        "fundo": {
+          "mean": 0.021882,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.007979000000000007,
+          "p95": 0.00852
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.09416666626930237,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.065219,
+          "p95": 0.066
+        },
+        "fundo": {
+          "mean": 0.021881333333333326,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.04941400000000003,
+          "p95": 0.05008
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.0849999997454385,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06412033333333332,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.021723333333333324,
+          "p95": 0.0222
+        },
+        "vidro": {
+          "mean": 0.09794366666666666,
+          "p95": 0.09868
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08333333373690645,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06434866666666668,
+          "p95": 0.06784
+        },
+        "fundo": {
+          "mean": 0.02189033333333333,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.188479,
+          "p95": 0.18904
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08916666706403097,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06414300000000002,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.02183766666666666,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.30010799999999993,
+          "p95": 0.30064
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.051666666536281505,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022241333333333335,
+          "p95": 0.0232
+        },
+        "vidro": {
+          "mean": 0.0063306666666666685,
+          "p95": 0.007
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.05250000034769376,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022093999999999996,
+          "p95": 0.02268
+        },
+        "vidro": {
+          "mean": 0.04722499999999998,
+          "p95": 0.04788
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.05500000035390258,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022111333333333334,
+          "p95": 0.02256
+        },
+        "vidro": {
+          "mean": 0.09595366666666666,
+          "p95": 0.09672
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.05583333351338903,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02222233333333334,
+          "p95": 0.0226
+        },
+        "vidro": {
+          "mean": 0.18672066666666673,
+          "p95": 0.18752
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.90403838464053,
+      "cpuMs": 0.050833332880089684,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022267000000000002,
+          "p95": 0.02328
+        },
+        "vidro": {
+          "mean": 0.29826800000000003,
+          "p95": 0.29904
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.07416666696468989,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06420000000000002,
+          "p95": 0.06528
+        },
+        "fundo": {
+          "mean": 0.021820000000000003,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.007934666666666666,
+          "p95": 0.0084
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.08333333283662796,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06384033333333336,
+          "p95": 0.06456
+        },
+        "fundo": {
+          "mean": 0.02180199999999999,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.04943466666666666,
+          "p95": 0.05004
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.07333333284283677,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06514333333333337,
+          "p95": 0.06572
+        },
+        "fundo": {
+          "mean": 0.021766666666666674,
+          "p95": 0.02208
+        },
+        "vidro": {
+          "mean": 0.09792566666666665,
+          "p95": 0.09852
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.09000000022351742,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06377866666666668,
+          "p95": 0.06464
+        },
+        "fundo": {
+          "mean": 0.021907999999999993,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.18842966666666666,
+          "p95": 0.18908
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.08333333376795053,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.065199,
+          "p95": 0.06572
+        },
+        "fundo": {
+          "mean": 0.021686999999999988,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.30002166666666663,
+          "p95": 0.30056
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.06166666634380817,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022263333333333343,
+          "p95": 0.02292
+        },
+        "vidro": {
+          "mean": 0.006246666666666668,
+          "p95": 0.0072
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.056666666517655055,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022262333333333335,
+          "p95": 0.02252
+        },
+        "vidro": {
+          "mean": 0.04741466666666667,
+          "p95": 0.04804
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.05000000015522043,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022228000000000015,
+          "p95": 0.0226
+        },
+        "vidro": {
+          "mean": 0.0961013333333333,
+          "p95": 0.0968
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.03666666684051355,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022383666666666673,
+          "p95": 0.02352
+        },
+        "vidro": {
+          "mean": 0.1867580000000001,
+          "p95": 0.1876
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.04999999987582366,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02233166666666667,
+          "p95": 0.02328
+        },
+        "vidro": {
+          "mean": 0.2981116666666665,
+          "p95": 0.29884
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.08416666714474559,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06426899999999997,
+          "p95": 0.06548
+        },
+        "fundo": {
+          "mean": 0.021952333333333348,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.007946666666666664,
+          "p95": 0.00848
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.07916666679084301,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06393833333333333,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.021801999999999995,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.04936100000000001,
+          "p95": 0.05008
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.08499999940395356,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06403833333333334,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.021894666666666663,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.09788799999999995,
+          "p95": 0.09848
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08500000042840838,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06404166666666664,
+          "p95": 0.0648
+        },
+        "fundo": {
+          "mean": 0.021837333333333327,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.18850300000000003,
+          "p95": 0.18912
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.08666666677842537,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06397100000000003,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.021859666666666666,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.300069,
+          "p95": 0.30072
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.045833333022892477,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02223000000000001,
+          "p95": 0.02292
+        },
+        "vidro": {
+          "mean": 0.006257000000000001,
+          "p95": 0.00692
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.06083333327745398,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022227333333333342,
+          "p95": 0.02288
+        },
+        "vidro": {
+          "mean": 0.04724366666666667,
+          "p95": 0.04784
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.90403838464053,
+      "cpuMs": 0.0525000002545615,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022233999999999997,
+          "p95": 0.02252
+        },
+        "vidro": {
+          "mean": 0.09601933333333336,
+          "p95": 0.09672
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.050000000124176346,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02219433333333335,
+          "p95": 0.02288
+        },
+        "vidro": {
+          "mean": 0.18665666666666675,
+          "p95": 0.18728
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.05166666641210516,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022267,
+          "p95": 0.02304
+        },
+        "vidro": {
+          "mean": 0.2981803333333335,
+          "p95": 0.2988
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.07416666699573397,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06441333333333334,
+          "p95": 0.06504
+        },
+        "fundo": {
+          "mean": 0.02181199999999999,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.007914333333333329,
+          "p95": 0.00828
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.08666666699573397,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06409399999999997,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.021894333333333342,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.04944133333333335,
+          "p95": 0.04988
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08916666622584064,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.0641186666666667,
+          "p95": 0.06552
+        },
+        "fundo": {
+          "mean": 0.021975666666666675,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.09790833333333326,
+          "p95": 0.09848
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.0883333332526187,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06403666666666664,
+          "p95": 0.06484
+        },
+        "fundo": {
+          "mean": 0.02186433333333333,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.18842533333333336,
+          "p95": 0.189
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "medium",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.07666666712611914,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06398400000000004,
+          "p95": 0.065
+        },
+        "fundo": {
+          "mean": 0.021979333333333333,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.3000456666666667,
+          "p95": 0.30076
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.055833333265036346,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022226666666666662,
+          "p95": 0.02256
+        },
+        "vidro": {
+          "mean": 0.005575666666666668,
+          "p95": 0.0062
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.0458333329608043,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022272000000000007,
+          "p95": 0.02272
+        },
+        "vidro": {
+          "mean": 0.042668000000000005,
+          "p95": 0.0432
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.057500000360111395,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022240666666666683,
+          "p95": 0.0228
+        },
+        "vidro": {
+          "mean": 0.08634766666666664,
+          "p95": 0.08692
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.055833333358168605,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022228666666666678,
+          "p95": 0.02284
+        },
+        "vidro": {
+          "mean": 0.16868266666666656,
+          "p95": 0.16916
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.05749999961505334,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022191666666666682,
+          "p95": 0.023
+        },
+        "vidro": {
+          "mean": 0.2712316666666666,
+          "p95": 0.27204
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08250000039115549,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06413200000000004,
+          "p95": 0.06496
+        },
+        "fundo": {
+          "mean": 0.021788999999999985,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.007243333333333332,
+          "p95": 0.00768
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.07916666666666666,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.0641713333333333,
+          "p95": 0.06496
+        },
+        "fundo": {
+          "mean": 0.021800000000000003,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.04473400000000001,
+          "p95": 0.0452
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.07916666613891721,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06413466666666666,
+          "p95": 0.06496
+        },
+        "fundo": {
+          "mean": 0.02174366666666667,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.0883753333333333,
+          "p95": 0.08892
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08000000026077032,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06412633333333331,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.021760666666666657,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.17082133333333333,
+          "p95": 0.17352
+        }
+      }
+    },
+    {
+      "scene": "image",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.07583333368723591,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06441533333333332,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.021871333333333336,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.27303133333333335,
+          "p95": 0.2736
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05666666657974322,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022326000000000006,
+          "p95": 0.02384
+        },
+        "vidro": {
+          "mean": 0.005515666666666668,
+          "p95": 0.00612
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.04916666668529312,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02219866666666666,
+          "p95": 0.02292
+        },
+        "vidro": {
+          "mean": 0.04258766666666668,
+          "p95": 0.04312
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.054166667101283865,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022196999999999998,
+          "p95": 0.02312
+        },
+        "vidro": {
+          "mean": 0.08626,
+          "p95": 0.08688
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.05250000013038516,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022253999999999993,
+          "p95": 0.02268
+        },
+        "vidro": {
+          "mean": 0.168831,
+          "p95": 0.16932
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05333333294838667,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022170000000000002,
+          "p95": 0.0224
+        },
+        "vidro": {
+          "mean": 0.2713526666666667,
+          "p95": 0.27196
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.07500000015522043,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06377699999999996,
+          "p95": 0.06448
+        },
+        "fundo": {
+          "mean": 0.021897666666666673,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.007274000000000003,
+          "p95": 0.00768
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.07416666715095441,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06379800000000001,
+          "p95": 0.0644
+        },
+        "fundo": {
+          "mean": 0.021842999999999998,
+          "p95": 0.0222
+        },
+        "vidro": {
+          "mean": 0.04473699999999999,
+          "p95": 0.04516
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.07333333284283677,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06379633333333332,
+          "p95": 0.06456
+        },
+        "fundo": {
+          "mean": 0.021827999999999997,
+          "p95": 0.02228
+        },
+        "vidro": {
+          "mean": 0.08839933333333333,
+          "p95": 0.08892
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08583333327745397,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06381033333333333,
+          "p95": 0.06456
+        },
+        "fundo": {
+          "mean": 0.021524333333333326,
+          "p95": 0.02212
+        },
+        "vidro": {
+          "mean": 0.17059466666666673,
+          "p95": 0.17112
+        }
+      }
+    },
+    {
+      "scene": "text",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.08166666720062495,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06422299999999999,
+          "p95": 0.0652
+        },
+        "fundo": {
+          "mean": 0.021905333333333325,
+          "p95": 0.02224
+        },
+        "vidro": {
+          "mean": 0.2730910000000002,
+          "p95": 0.27364
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.05916666636864344,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022248000000000004,
+          "p95": 0.02292
+        },
+        "vidro": {
+          "mean": 0.005413666666666667,
+          "p95": 0.00608
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.054999999484668174,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022217000000000004,
+          "p95": 0.02252
+        },
+        "vidro": {
+          "mean": 0.04271100000000001,
+          "p95": 0.0432
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.05416666700815161,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022260333333333333,
+          "p95": 0.023
+        },
+        "vidro": {
+          "mean": 0.08628100000000002,
+          "p95": 0.08684
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.053333333569268386,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022182333333333335,
+          "p95": 0.02272
+        },
+        "vidro": {
+          "mean": 0.1688023333333333,
+          "p95": 0.16924
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.05749999980131785,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02223633333333334,
+          "p95": 0.02292
+        },
+        "vidro": {
+          "mean": 0.27108699999999974,
+          "p95": 0.2718
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.90403838464053,
+      "cpuMs": 0.11416666712611914,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06421466666666668,
+          "p95": 0.06476
+        },
+        "fundo": {
+          "mean": 0.021858999999999996,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.007244999999999997,
+          "p95": 0.00764
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.10833333333333334,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06403833333333328,
+          "p95": 0.0648
+        },
+        "fundo": {
+          "mean": 0.021912000000000004,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.044718666666666684,
+          "p95": 0.04508
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.09583333314706882,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06425733333333332,
+          "p95": 0.0656
+        },
+        "fundo": {
+          "mean": 0.021771,
+          "p95": 0.0222
+        },
+        "vidro": {
+          "mean": 0.08834533333333337,
+          "p95": 0.0888
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.07916666672875484,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06412499999999997,
+          "p95": 0.06488
+        },
+        "fundo": {
+          "mean": 0.021848333333333334,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.17056966666666665,
+          "p95": 0.171
+        }
+      }
+    },
+    {
+      "scene": "grid",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.90403838464053,
+      "cpuMs": 0.08916666697089871,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06392399999999997,
+          "p95": 0.0646
+        },
+        "fundo": {
+          "mean": 0.02183499999999999,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.2730206666666667,
+          "p95": 0.27344
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.05333333285525441,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02222900000000001,
+          "p95": 0.02304
+        },
+        "vidro": {
+          "mean": 0.005416666666666666,
+          "p95": 0.00604
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.053333333289871616,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022276,
+          "p95": 0.0232
+        },
+        "vidro": {
+          "mean": 0.042573333333333345,
+          "p95": 0.04312
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.054166667101283865,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022304999999999995,
+          "p95": 0.0234
+        },
+        "vidro": {
+          "mean": 0.08624166666666667,
+          "p95": 0.08692
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.048333333401630325,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.02223566666666667,
+          "p95": 0.02284
+        },
+        "vidro": {
+          "mean": 0.1687216666666666,
+          "p95": 0.16928
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": false,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.04833333321536581,
+      "gpuMs": {
+        "fundo": {
+          "mean": 0.022291000000000002,
+          "p95": 0.02316
+        },
+        "vidro": {
+          "mean": 0.2712306666666667,
+          "p95": 0.272
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 1,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.006568512887207376,
+      "samples": 120,
+      "fps": 239.95200959809156,
+      "cpuMs": 0.0850000001800557,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06437400000000001,
+          "p95": 0.06512
+        },
+        "fundo": {
+          "mean": 0.021879333333333324,
+          "p95": 0.02236
+        },
+        "vidro": {
+          "mean": 0.007239333333333333,
+          "p95": 0.00756
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 10,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.06568512887207377,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.06833333354443312,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06412266666666668,
+          "p95": 0.065
+        },
+        "fundo": {
+          "mean": 0.02194133333333333,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.04471800000000001,
+          "p95": 0.04524
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 20,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.13137025774414748,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.08666666618858775,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06425399999999999,
+          "p95": 0.06808
+        },
+        "fundo": {
+          "mean": 0.02200066666666667,
+          "p95": 0.02248
+        },
+        "vidro": {
+          "mean": 0.08833400000000001,
+          "p95": 0.0888
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 50,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.24941329868135623,
+      "samples": 120,
+      "fps": 239.99999999999997,
+      "cpuMs": 0.08250000008071462,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06408333333333335,
+          "p95": 0.06524
+        },
+        "fundo": {
+          "mean": 0.021888666666666674,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.17054233333333324,
+          "p95": 0.17112
+        }
+      }
+    },
+    {
+      "scene": "color",
+      "surfaces": 100,
+      "tier": "low",
+      "dynamic": true,
+      "resolution": "1500×1080",
+      "dpr": 1,
+      "coverage": 0.3605549924244408,
+      "samples": 120,
+      "fps": 239.95200959806363,
+      "cpuMs": 0.08333333308498064,
+      "gpuMs": {
+        "pirâmide": {
+          "mean": 0.06393700000000005,
+          "p95": 0.06492
+        },
+        "fundo": {
+          "mean": 0.021795333333333333,
+          "p95": 0.02232
+        },
+        "vidro": {
+          "mean": 0.27304766666666674,
+          "p95": 0.27352
+        }
+      }
+    }
+  ]
+}

@@ -29,6 +29,17 @@ interface Result extends Scenario {
   gpuMs: Record<string, { mean: number; p95: number }>;
 }
 
+/** Static, live background, moving, and merge groups of 2 and 4, at one tier. */
+function tierScenarios(tier: QualityTier): Scenario[] {
+  const scene = "image" as const;
+  return [
+    ...[1, 10, 20, 50, 100].map((n) => ({ scene, surfaces: n, tier, dynamic: false })),
+    ...[1, 10, 50, 100].map((n) => ({ scene, surfaces: n, tier, dynamic: true })),
+    ...[10, 50].map((n) => ({ scene, surfaces: n, tier, dynamic: false, motion: true })),
+    ...[2, 4].flatMap((group) => [20, 100].map((n) => ({ scene, surfaces: n, tier, dynamic: false, group }))),
+  ];
+}
+
 const SUITES: Record<string, { label: string; scenarios: () => Scenario[] }> = {
   quick: {
     label: "Rápido (~1 min)",
@@ -41,14 +52,11 @@ const SUITES: Record<string, { label: string; scenarios: () => Scenario[] }> = {
       ...[20, 100].map((n) => ({ scene: "image" as const, surfaces: n, tier: "high" as const, dynamic: false, group: 4 })),
     ],
   },
+  // The scene does not change the cost (four scenes within 0.2% on the RX 6600, v3.1 JSON), so the
+  // full suite spends its time on tiers, motion and merge groups instead.
   full: {
-    label: "Completo (~5 min)",
-    scenarios: () =>
-      (["ultra", "high", "medium", "low"] as const).flatMap((tier) =>
-        (["image", "text", "grid", "color"] as const).flatMap((scene) =>
-          [false, true].flatMap((dynamic) => [1, 10, 20, 50, 100].map((n) => ({ scene, surfaces: n, tier, dynamic }))),
-        ),
-      ),
+    label: "Completo (~3 min)",
+    scenarios: () => (["ultra", "high", "medium", "low"] as const).flatMap(tierScenarios),
   },
 };
 

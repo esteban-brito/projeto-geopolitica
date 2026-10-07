@@ -66,7 +66,7 @@ bench sempre desenham no canvas, então só rodam numa máquina com GPU de verda
 | hot reload de WGSL com overlay de erro | `src/shaders/index.ts` | pronto |
 | testes: 8 de óptica + 9 de aceite do material (borda escura, realce por N·L, largura variável, sombra, fosco, tint, nível Baixa) | `tests/` | pronto |
 | bench com JSON (+ vidro em movimento e grupos de fusão no V3) | `bench.html`, `src/bench/` | pronto; medido na RX 6600: [V2](docs/bench/v2-rx6600.json), [V3](docs/bench/v3-rx6600.json) (§13.7) |
-| dois pipelines: `fs_single` para vidro solto, `fs_union` com descarte antecipado para grupos | `glass.wgsl`, `renderer.ts` | pronto, **ganho a confirmar** no próximo bench |
+| dois pipelines: `fs_single` para vidro solto, `fs_union` com descarte antecipado para grupos | `glass.wgsl`, `renderer.ts` | vidro solto **confirmado** de volta a 0,51 ns/px ([JSON](docs/bench/v3.1-rx6600-completo.json)); grupos a medir |
 | **molas** (resposta + amortecimento, subpasso ≤ 1/240 s, param sozinhas) | `src/physics/spring.ts` | pronto |
 | **corpo do vidro**: segue o ponteiro com inércia, estica ao longo da velocidade preservando a área (teto 12%), press anima o material, bounce contido ao soltar | `src/physics/body.ts` | pronto |
 | SDF sob transformação afim (rotação · press · estiramento), distância corrigida por \|M⁻ᵀ∇\| | `glass.wgsl`, `shape.ts` | pronto |
