@@ -58,13 +58,22 @@ const FEATURE_BICUBIC: u32 = 2u;
 const TABLE_SAMPLES: u32 = 64u;
 const MAX_COMPRESSION: f32 = 0.88;
 const MAX_BLEND: u32 = 4u;
-const BACK_LIGHT: f32 = 0.38;
+// The back light is the key light reflected inside the slab off its far face: weak. At 0.38 the
+// bottom rim reached 60% of the top and the two read as a white ring; Liquid Glass 27 keeps the
+// highlight on the top edge with a faint one below (33% of the top, measured on the Regular).
+const BACK_LIGHT: f32 = 0.15;
 // The key light is a soft box of angular radius LIGHT_RADIUS: its reflection is the set of normals
 // within that angle of the half vector — a band that follows the bevel, zero on the flat top. A GGX
 // lobe widened to the same size was tried first: its tail lit the whole flat top (0.12 → 0.34 on a
 // dark background). LIGHT_RADIANCE is the source's brightness relative to the content (HDR).
-const LIGHT_RADIUS: f32 = 0.22;
-const LIGHT_RADIANCE: f32 = 18.0;
+const LIGHT_RADIUS: f32 = 0.14;
+// Height of the key and back lights over the glass plane (z of their direction before
+// normalising): grazing, 6° above it. The half vector tilts ~42°, so the highlight lands on the
+// steep outer part of the bevel, where the normal turns fast — a thin line (5 px on the Regular)
+// just inside the 2 px dark outline. At 20° above the plane it was an 8 px band set into the bevel
+// (the "white ring"); below the plane it ate the dark outline on light content.
+const LIGHT_HEIGHT: f32 = 0.1;
+const LIGHT_RADIANCE: f32 = 21.0;
 
 const DEBUG_SDF: u32 = 1u;
 const DEBUG_NORMAL: u32 = 2u;
@@ -473,16 +482,17 @@ struct Lighting {
 
 // Studio environment: what the glass reflects is the light around it — the content's own average
 // colour (top of the pyramid) — dimming toward the horizon, which grazing reflections at the rim
-// see. Plus a key light from `light.xy` and a weaker back light from the opposite side (light
-// reflected inside the slab off its far face). Highlights therefore sit at top and bottom.
+// see. Plus a key light from `light.xy`, grazing the rim from just above the glass plane, and a
+// weak back light from the opposite side (light reflected inside the slab off its far face).
+// Highlights therefore sit on the top edge, with a faint one on the bottom edge.
 fn lighting(m: Blend, normal: vec3f, roughness: f32, surround: vec3f) -> Lighting {
   let view = vec3f(0.0, 0.0, 1.0);
   let r = reflect(-view, normal);
   let up = clamp(r.z, 0.0, 1.0);
   let ambient = surround * mix(0.3, 1.0, up * up) * m.shading.w;
 
-  let key = normalize(vec3f(m.light.xy * 0.94, 0.34));
-  let back = normalize(vec3f(-m.light.xy * 0.94, 0.34));
+  let key = normalize(vec3f(m.light.xy * 0.94, LIGHT_HEIGHT));
+  let back = normalize(vec3f(-m.light.xy * 0.94, LIGHT_HEIGHT));
   let hk = normalize(key + view);
   let hb = normalize(back + view);
   let fk = schlick(m.light.w, dot(view, hk));

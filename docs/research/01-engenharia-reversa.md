@@ -315,6 +315,9 @@ O resto da decisão:
   - **Decisão em vigor:** a luz principal é uma **luz de área em disco** (raio angular 0,22 rad, borda
     suave, alargada pela rugosidade), vezes Fresnel(v·h), com radiância HDR 18× a do conteúdo. O
     realce vira uma faixa que segue o bisel e fica em zero no plano.
+  - ⚠ **Corrigido no V4.1 (§15.6):** a luz principal desceu para 6° acima do plano (era 20°), o
+    disco estreitou de 0,22 para 0,14 rad e a contraluz caiu de 0,38 para 0,15: o realce virou uma
+    linha de 5 px colada na borda, e a base, 33% do topo.
   - **O ambiente refletido é o próprio conteúdo:** o mip mais alto da pirâmide, que escurece para o
     horizonte. Assim o reflexo pega a cor do que está atrás, como a HIG descreve.
   - **Contraste de borda** (pedido no documento original como "edge intensity" e reforçado pelo
@@ -1012,4 +1015,36 @@ anterior: o caminho sem camadas não mudou.
 Dois cenários novos (rápido e completo): as 72 barras fundidas com símbolo em cada botão na camada
 0 e um popover de 520×340 na camada 1. "A de cima move" mede o caso reaproveitado; "a de baixo
 move" mede o pior caso, com composição e pirâmide refeitas todo quadro.
+
+### 15.6 A borda branca: coerência com o Liquid Glass 27
+
+O usuário estranhou a "borda branca". Conferido (MacRumors, 10 e 16/06/2026; issue #118 do
+AndroidLiquidGlass): o iOS 27 escureceu a borda dos elementos de vidro (uma linha escura sutil no
+contorno, que separa o vidro do fundo claro), reforçou o especular, e nos ícones o realce fica em
+cima e embaixo, fixo (sem giroscópio). A **posição** do nosso já batia (topo e base acesos,
+laterais apagadas, linha escura de 2 px no contorno); a **forma**, não.
+
+Perfil medido atravessando a borda da cápsula Regular da tela inicial (fundo escuro):
+
+| | antes | depois |
+| --- | --- | --- |
+| realce do topo | +139, meia-altura **8 px**, faixa embutida no bisel | +128, **5 px**, colado na borda |
+| base / topo | **60%** (lia como anel) | **33%** |
+| linha escura do contorno | 2 px | 2 px |
+
+O que mudou e por quê:
+
+- **Luz principal rasante, 6° acima do plano** (era 20°): o meio-vetor inclina ~42°, e o realce cai
+  na parte íngreme do bisel, onde a normal gira rápido — uma linha fina. Abaixo do plano (testado
+  de −0,6 a −0,1) o realce fica ainda mais colado, mas **come a linha escura** sobre fundo claro (2 →
+  1 px): o teste de aceite da borda escura acusou, e a decisão foi não afrouxá-lo.
+- **Disco de 0,14 rad** (era 0,22); a borda suave de 0,14 continua, então o realce não para seco no
+  pescoço da fusão (captura conferida). Radiância 18 → 21, para o pico não perder brilho ao
+  estreitar.
+- **Contraluz 0,15** (era 0,38). 0,12 dava 28%, mas o realce de baixo quase some, e o iOS 27 mantém
+  os dois.
+
+Os 63 testes passam sem mudança de critério. Lado a lado em `captures/borda-antes-depois.png` e
+`captures/borda-zoom.png`. Falta o gabarito definitivo: uma captura de um vidro real do iOS 27
+sobre fundo parecido.
 
