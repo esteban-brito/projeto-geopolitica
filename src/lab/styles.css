@@ -35,6 +35,16 @@ button {
   color: inherit;
 }
 
+/* Controls are not text: a double click or a drag must not select their labels. */
+.topbar,
+.dock,
+.drawer,
+.coach,
+.stats-card {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -139,9 +149,15 @@ button {
   position: absolute;
   top: 54px;
   right: 16px;
+  z-index: 2;
   width: min(320px, calc(100% - 32px));
   padding: 12px 14px;
   font: 12px/1.7 var(--mono);
+}
+
+/* Beside the drawer, not over its header. */
+.lab.has-drawer .stats-card {
+  right: 348px;
 }
 
 .stats-card dl {
@@ -234,6 +250,7 @@ button {
 .chip {
   display: grid;
   place-items: center;
+  transition: background-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
   min-width: 36px;
   height: 36px;
   padding: 0 9px;
@@ -305,6 +322,17 @@ button {
 
 .drawer[hidden] {
   display: none;
+}
+
+.drawer:not([hidden]) {
+  animation: drawer-in 0.18s ease-out;
+}
+
+@keyframes drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
 }
 
 .drawer__head {
@@ -422,10 +450,68 @@ button {
   color: var(--text);
 }
 
+/* A thin track filled up to the thumb (--fill is set by the slider control). */
 input[type="range"] {
+  --fill: 50%;
   width: 100%;
+  height: 18px;
   margin: 0;
-  accent-color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--accent) var(--fill), var(--pressed) var(--fill));
+}
+
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--pressed);
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border: 0;
+  border-radius: 50%;
+  background: #f4f6fb;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.5);
+  -webkit-appearance: none;
+  appearance: none;
+  transition: transform 0.1s ease;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #f4f6fb;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.5);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+input[type="range"]:focus-visible {
+  outline: none;
+}
+
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgb(159 195 255 / 0.5);
 }
 
 .segmented {
@@ -559,12 +645,31 @@ select,
     max-height: 62dvh;
     z-index: 1;
   }
+
+  .drawer:not([hidden]) {
+    animation-name: sheet-in;
+  }
+
+  .lab.has-drawer .stats-card {
+    right: 16px;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .selection,
   .coach,
-  .dock {
+  .chip {
     transition: none;
+  }
+
+  .drawer:not([hidden]) {
+    animation: none;
   }
 }

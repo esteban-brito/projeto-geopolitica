@@ -6,7 +6,7 @@ import { createServer } from "vite";
  * adapter is SwiftShader: correct pixels, meaningless timings. LAB_CHROMIUM points at a specific
  * browser binary when Playwright's own is not installed.
  */
-export async function openLab(path) {
+export async function openLab(path, { webgpu = true, viewport = { width: 1280, height: 800 } } = {}) {
   const server = await createServer({
     logLevel: "error",
     server: { host: "127.0.0.1", port: 0, strictPort: false, hmr: false, watch: null },
@@ -15,11 +15,13 @@ export async function openLab(path) {
   await server.listen();
   const address = server.httpServer?.address();
   const port = typeof address === "object" && address ? address.port : 5180;
+  // Without WebGPU the lab still runs its interface (the glass is not drawn): that is how the
+  // interface is tested here, where presenting a WebGPU canvas loses the GPU process.
   const browser = await chromium.launch({
     executablePath: process.env.LAB_CHROMIUM || undefined,
-    args: ["--enable-unsafe-webgpu"],
+    args: webgpu ? ["--enable-unsafe-webgpu"] : [],
   });
-  const page = await browser.newPage({ deviceScaleFactor: 1, viewport: { width: 1280, height: 800 } });
+  const page = await browser.newPage({ deviceScaleFactor: 1, viewport });
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
   page.on("console", (m) => {

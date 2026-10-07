@@ -776,3 +776,25 @@ interface.
 - Começa com dois vidros afastados, para que a primeira coisa a fazer seja juntá-los.
 - `tests/ui-shot.mjs` fotografa a interface sobre o vidro renderizado fora da tela (o canvas do
   laboratório não apresenta neste contêiner).
+
+### 13.6 Polimento e bugs (auditoria depois do V3)
+
+| defeito | correção | teste |
+| --- | --- | --- |
+| vidro arrastado para fora da tela (ou para baixo do dock) se perdia | o centro fica dentro do palco e acima do dock; volta na mola | `lab-ui`, `physics` |
+| janela menor deixava vidros fora | `ResizeObserver` do laboratório reaplica o limite | `lab-ui` |
+| canvas não acompanhava troca de monitor (DPR) nem zoom de pinça | `matchMedia(resolution)` re-armado e `visualViewport` | — (precisa de dois monitores) |
+| a física desenhava um quadro atrasada (dois laços de `requestAnimationFrame`) | o passo da física roda dentro do quadro do renderer (`onBeforeFrame`) | — |
+| alt-tab no meio do arrasto deixava o vidro "apertado" | `lostpointercapture` encerra o arrasto | — |
+| métricas abriam por cima da gaveta | ficam ao lado dela | `lab-ui` |
+| "Altura" significava duas coisas (forma e flutuação) | a flutuação virou "Elevação" | `lab-ui` (nomes únicos) |
+| slider acima do limite da geometria não fazia nada, calado | o valor mostra o efetivo e o porquê ("30 px · limite do canto") | `lab-ui` |
+| forma do dock continuava marcada depois de ajustar a forma à mão | ajuste manual desmarca | `lab-ui` |
+| foto num formato que o navegador não lê (HEIC) quebrava calada | aviso de 4 s, cena atual mantida | — |
+| realce terminava seco onde a borda se afasta da luz (pescoço da fusão) | borda do disco de luz 0,06 → 0,14 rad; o topo plano continua apagado (testes de aceite) | `material` |
+
+O teste da interface roda sem WebGPU. Duas lições do próprio teste: o aviso "WebGPU indisponível"
+cobria o vidro e engolia o arrasto (o teste passava sem testar), e um elemento oculto tem retângulo
+zero e "não sobrepõe" nada. Cada teste foi conferido contra o código antigo: falha nele e passa no
+novo.
+

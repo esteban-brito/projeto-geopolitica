@@ -54,14 +54,18 @@ export function slider(opts: {
   input.setAttribute("aria-label", opts.label);
   if (opts.hint) input.setAttribute("aria-description", opts.hint);
   const fmt = opts.format ?? ((v: number) => v.toFixed(opts.step < 1 ? 2 : 0));
+  const show = (v: number) => {
+    value.textContent = fmt(v);
+    input.style.setProperty("--fill", `${((v - opts.min) / (opts.max - opts.min)) * 100}%`);
+  };
   const refresh = () => {
     const v = opts.get();
     input.value = String(v);
-    value.textContent = fmt(v);
+    show(Number(input.value));
   };
   input.addEventListener("input", () => {
     opts.set(Number(input.value));
-    value.textContent = fmt(Number(input.value));
+    show(Number(input.value));
   });
   field.append(head, input);
   refresh();

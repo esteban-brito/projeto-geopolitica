@@ -109,6 +109,19 @@ export class GlassBody {
     this.position.setTarget(this.rest.cx, this.rest.cy);
   }
 
+  /**
+   * Keep the centre inside a rectangle (the visible stage), so a glass can never be dragged or
+   * resized out of reach. It glides back on its spring instead of jumping.
+   */
+  keepInside(minX: number, minY: number, maxX: number, maxY: number): void {
+    const cx = Math.min(Math.max(this.rest.cx, minX), Math.max(minX, maxX));
+    const cy = Math.min(Math.max(this.rest.cy, minY), Math.max(minY, maxY));
+    if (cx === this.rest.cx && cy === this.rest.cy) return;
+    this.rest.cx = cx;
+    this.rest.cy = cy;
+    this.position.setTarget(cx, cy);
+  }
+
   release(): void {
     this.dragging = false;
     this.press.target = 0;

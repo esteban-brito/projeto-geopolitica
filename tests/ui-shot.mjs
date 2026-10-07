@@ -50,6 +50,7 @@ const VIEWS = [
   },
   { name: "ui-drawer", width: 1440, height: 900, click: ['button[aria-label="Ajustes finos"]'] },
   { name: "ui-stats", width: 1440, height: 900, click: ["#stats"] },
+  { name: "ui-drawer-stats", width: 1440, height: 900, click: ['button[aria-label="Ajustes finos"]', "#stats"] },
   { name: "ui-mobile", width: 390, height: 844, scale: 2 },
   { name: "ui-mobile-drawer", width: 390, height: 844, scale: 2, click: ['button[aria-label="Ajustes finos"]'] },
 ];

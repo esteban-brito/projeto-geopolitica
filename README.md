@@ -23,7 +23,9 @@ node tests/ui-shot.mjs            # a interface sobre o vidro (desktop, gaveta, 
 ## Usar o laboratório
 
 - **Arraste** um vidro. Solte perto do outro e eles se fundem.
-- **Toque** num vidro para editá-lo: o dock e a gaveta passam a valer para ele.
+- **Toque** num vidro para selecioná-lo: o dock e a gaveta passam a valer para ele. **Duplo clique**
+  abre os ajustes. Um vidro nunca sai do palco: arrastado para fora ou com a janela menor, ele
+  desliza de volta.
 - **Dock:** Fundo (ou uma foto sua), Forma (anima de uma para outra), Material, Vidros (+ / −),
   Ajustes.
 - **Ajustes** (gaveta): Vidro, Forma, Luz e cor, Fusão e movimento, Avançado (perfil, qualidade,
@@ -73,6 +75,7 @@ bench sempre desenham no canvas, então só rodam numa máquina com GPU de verda
 | **níveis de qualidade** com diferença real: Baixa = 1 amostra e leitura bilinear; Ultra = DPR até 3 | `src/renderer/quality.ts` | pronto |
 | testes de fusão (8): smin (valor, derivada, C²), pesos, limiar de toque, paridade GPU × CPU no pescoço, sem vinco, espaçamento 0 = soltos | `tests/union.test.mjs` | pronto |
 | interface minimalista: palco inteiro, dock rotulado, gaveta em linguagem comum, métricas recolhidas | `src/lab/` | pronto |
+| teste da interface (9), sem WebGPU, com ponteiro de verdade: vidro não sai do palco (arrasto, janela menor, novos vidros), seleção, gaveta × métricas, nomes únicos, limites ditos, forma do dock, duplo clique | `tests/lab-ui.test.mjs` | pronto |
 
 **Medido (RX 6600, Chrome 154, 1500×1080, DPR 1):** o vidro custa ~0,84 ms por tela cheia coberta
 (linear na área, sem custo fixo por superfície): 100 cápsulas cobrindo 36% = 0,30 ms. Fundo 0,022 ms,

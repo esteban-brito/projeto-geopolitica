@@ -115,3 +115,15 @@ test("snap segue o painel na hora, sem animação", () => {
   assert.equal(body.shape().halfWidth, 180);
   assert.ok(!body.moving);
 });
+
+test("keepInside: arrastado para fora, o vidro desliza de volta para dentro e não se perde", () => {
+  const body = new GlassBody({ cx: 100, cy: 100, halfWidth: 50, halfHeight: 20, radius: 20, exponent: 2, rotation: 0 });
+  body.grab(100, 100);
+  body.drag(-400, 900);
+  body.keepInside(32, 32, 768, 568);
+  for (let i = 0; i < 240 && body.step(1 / 120); i++);
+  body.release();
+  for (let i = 0; i < 480 && body.step(1 / 120); i++);
+  const s = body.shape();
+  assert.ok(Math.abs(s.cx - 32) < 0.05 && Math.abs(s.cy - 568) < 0.05, `centro em (${s.cx.toFixed(2)}, ${s.cy.toFixed(2)})`);
+});

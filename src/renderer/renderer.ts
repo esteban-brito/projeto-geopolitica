@@ -97,6 +97,12 @@ export class LiquidGlassRenderer {
   readonly timer: GpuTimer | null;
   onShaderError: ((message: string | null) => void) | null = null;
   onLost: ((info: GPUDeviceLostInfo) => void) | null = null;
+  /**
+   * Called at the start of a frame, before anything is encoded: the place to step physics, so what
+   * is drawn is this frame's state and not the previous one's. Call requestFrame() from it to keep
+   * animating.
+   */
+  onBeforeFrame: ((now: number) => void) | null = null;
   onFrame: (() => void) | null = null;
 
   private readonly device: GPUDevice;
@@ -139,6 +145,15 @@ export class LiquidGlassRenderer {
   private destroyed = false;
   private readonly unsubscribe: () => void;
   private readonly resizeObserver: ResizeObserver;
+  private dprQuery: MediaQueryList | null = null;
+  private readonly onDprChange = (): void => {
+    this.watchDpr();
+    this.markResized();
+  };
+  private readonly markResized = (): void => {
+    this.sizeDirty = true;
+    this.requestFrame();
+  };
   private pendingReadback: ((pixels: Pixels) => void) | null = null;
 
   readonly canvas: HTMLCanvasElement;
@@ -208,11 +223,19 @@ export class LiquidGlassRenderer {
       this.onLost?.(info);
     });
     this.unsubscribe = onShaderChange((sources) => void this.reloadShaders(sources));
-    this.resizeObserver = new ResizeObserver(() => {
-      this.sizeDirty = true;
-      this.requestFrame();
-    });
+    this.resizeObserver = new ResizeObserver(this.markResized);
     this.resizeObserver.observe(canvas);
+    // The CSS size does not change when the window moves to a screen of another pixel ratio, nor
+    // on pinch zoom: watch both, or the canvas stays at the old resolution (blurry or oversized).
+    this.watchDpr();
+    window.visualViewport?.addEventListener("resize", this.markResized);
+  }
+
+  /** A media query matches one ratio; re-arm it for the new one after each change. */
+  private watchDpr(): void {
+    this.dprQuery?.removeEventListener("change", this.onDprChange);
+    this.dprQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+    this.dprQuery.addEventListener("change", this.onDprChange);
   }
 
   /** Compiles the shaders; resolves to an error message or null. */
@@ -301,6 +324,8 @@ export class LiquidGlassRenderer {
     cancelAnimationFrame(this.raf);
     this.unsubscribe();
     this.resizeObserver.disconnect();
+    this.dprQuery?.removeEventListener("change", this.onDprChange);
+    window.visualViewport?.removeEventListener("resize", this.markResized);
     this.source?.dispose();
     this.pool.destroy();
     this.timer?.destroy();
@@ -314,6 +339,7 @@ export class LiquidGlassRenderer {
   private readonly tick = (now: number): void => {
     this.raf = 0;
     if (this.destroyed) return;
+    this.onBeforeFrame?.(now);
     if (this.continuous && this.lastTick > 0) this.interval.push(now - this.lastTick);
     this.lastTick = this.continuous ? now : 0;
     const start = performance.now();

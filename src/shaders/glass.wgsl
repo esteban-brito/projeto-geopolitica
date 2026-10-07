@@ -348,10 +348,11 @@ fn schlick(f0: f32, cosine: f32) -> f32 {
 }
 
 // Reflection of a disc light: 1 inside its angular radius, soft edge, widened by roughness and
-// dimmed by the same factor so the energy stays put.
+// dimmed by the same factor so the energy stays put. The edge is wide (0.14 rad): with 0.06 the
+// highlight stopped dead where a rim curves away from the light — at a merge neck, a blunt end.
 fn disc_light(nh: f32, roughness: f32) -> f32 {
   let radius = LIGHT_RADIUS + roughness * 0.45;
-  let feather = 0.06 + roughness * 0.3;
+  let feather = 0.14 + roughness * 0.3;
   let lobe = smoothstep(cos(radius + feather), cos(max(radius - feather, 0.0)), nh);
   return lobe * (LIGHT_RADIUS * LIGHT_RADIUS) / (radius * radius);
 }

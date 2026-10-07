@@ -1,5 +1,6 @@
 import { acquireGpu, GpuUnavailableError, type GpuContext } from "../gpu/device.ts";
 import { ABBE_OFF, cloneMaterial, PRESETS, type GlassMaterial, type PresetId, type Profile } from "../glass/material.ts";
+import { deviceGeometry } from "../glass/optics.ts";
 import { clampedRadius, shapeOf, type Shape, type ShapeKind } from "../glass/shape.ts";
 import { unionField } from "../glass/union.ts";
 import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
@@ -35,6 +36,8 @@ const PRESET_HINT: Record<PresetId, string> = {
 const TIER_LABEL: Record<QualityTier, string> = { ultra: "Ultra", high: "Alta", medium: "Média", low: "Baixa" };
 const MAX_GLASSES = 6;
 const DEFAULT_SPACING = 28;
+/** A glass's centre stays this far inside the visible stage, so there is always some to grab. */
+const STAGE_MARGIN = 28;
 
 const canvas = document.querySelector<HTMLCanvasElement>("#stage")!;
 const lab = document.querySelector<HTMLElement>(".lab")!;
@@ -51,7 +54,8 @@ const shaderError = document.querySelector<HTMLElement>("#shader-error")!;
 
 /** One glass on the stage: its physics, its material, and the record the renderer draws. */
 interface Glass {
-  kind: ShapeKind;
+  /** The dock shape it was given; null once the Forma sliders moved it away. */
+  kind: ShapeKind | null;
   body: GlassBody;
   material: GlassMaterial;
   /** The preset it came from; `edited` once a slider moved it away. */
@@ -105,22 +109,53 @@ function surfacesChanged(): void {
   renderer?.surfacesChanged();
 }
 
-let animating = 0;
+let stepping = false;
 let lastStep = 0;
+let fallbackFrame = 0;
 
-/** Steps the bodies while any moves; stops by itself, so an idle lab costs nothing. */
+/**
+ * Steps the bodies while any moves; stops by itself, so an idle lab costs nothing. The step runs
+ * inside the renderer's frame (onBeforeFrame), so the frame shows this frame's physics — a
+ * separate requestAnimationFrame drew one frame late. Without a renderer (no WebGPU) it keeps its
+ * own loop, so the interface still works.
+ */
 function animate(): void {
-  if (animating) return;
-  lastStep = performance.now();
-  const tick = (now: number) => {
-    const dt = (now - lastStep) / 1000;
-    lastStep = now;
-    let moving = false;
-    for (const g of state.glasses) moving = g.body.step(dt) || moving;
-    surfacesChanged();
-    animating = moving ? requestAnimationFrame(tick) : 0;
-  };
-  animating = requestAnimationFrame(tick);
+  if (!stepping) {
+    stepping = true;
+    lastStep = performance.now();
+  }
+  if (renderer) renderer.requestFrame();
+  else if (!fallbackFrame) fallbackFrame = requestAnimationFrame(fallbackTick);
+}
+
+function stepBodies(now: number): void {
+  if (!stepping) return;
+  const dt = Math.max(0, now - lastStep) / 1000;
+  lastStep = now;
+  let moving = false;
+  for (const g of state.glasses) moving = g.body.step(dt) || moving;
+  surfacesChanged();
+  stepping = moving;
+}
+
+function fallbackTick(now: number): void {
+  fallbackFrame = 0;
+  stepBodies(now);
+  if (stepping && !renderer) fallbackFrame = requestAnimationFrame(fallbackTick);
+}
+
+/** The part of the canvas a glass centre may occupy: inside the stage, above the dock. */
+function stageBounds(): [number, number, number, number] {
+  const rect = canvas.getBoundingClientRect();
+  const dockTop = dock.getBoundingClientRect().top - rect.top;
+  const bottom = Math.min(rect.height, dockTop > 0 ? dockTop : rect.height) - STAGE_MARGIN;
+  return [STAGE_MARGIN, STAGE_MARGIN + 24, rect.width - STAGE_MARGIN, bottom];
+}
+
+function keepInStage(): void {
+  const [minX, minY, maxX, maxY] = stageBounds();
+  for (const g of state.glasses) g.body.keepInside(minX, minY, maxX, maxY);
+  animate();
 }
 
 // ---- Actions ------------------------------------------------------------------------------
@@ -132,6 +167,7 @@ function selectGlass(index: number, flash = true): void {
 }
 
 function setShapeKind(kind: ShapeKind): void {
+  if (selected().kind === kind) return;
   const g = selected();
   const { rotation } = g.body.rest;
   g.kind = kind;
@@ -162,7 +198,9 @@ function editShape(change: (s: Shape) => void): void {
   const g = selected();
   change(g.body.rest);
   g.body.snap();
+  g.kind = null;
   surfacesChanged();
+  refreshSubject();
 }
 
 function addGlass(): void {
@@ -178,6 +216,9 @@ function addGlass(): void {
     cx = Math.max(100, s.cx - s.halfWidth - 140);
     cy = s.cy + (s.cy < h / 2 ? 150 : -150);
   }
+  const [minX, minY, maxX, maxY] = stageBounds();
+  cx = Math.min(Math.max(cx, minX), maxX);
+  cy = Math.min(Math.max(cy, minY), maxY);
   const glass = createGlass("circle", cx, cy, from.preset);
   glass.material = cloneMaterial(from.material);
   glass.edited = from.edited;
@@ -210,7 +251,15 @@ function loadImage(): void {
   input.addEventListener("change", async () => {
     const file = input.files?.[0];
     if (!file) return;
-    state.bitmap = await createImageBitmap(file);
+    try {
+      state.bitmap = await createImageBitmap(file);
+    } catch {
+      // HEIC and other formats the browser cannot decode: say so and keep the current scene.
+      const message = `Não consegui abrir <strong>${file.name.replace(/[<>&]/g, "")}</strong>: o navegador não decodifica esse formato. Tente JPEG, PNG ou WebP.`;
+      showNotice(message);
+      setTimeout(() => notice.innerHTML === message && showNotice(null), 4000);
+      return;
+    }
     source?.setPainter(paintBitmap(state.bitmap));
     renderer?.invalidateSource();
     refreshAll();
@@ -237,7 +286,6 @@ function setDebug(v: number): void {
 function openDrawer(open: boolean): void {
   drawer.hidden = !open;
   lab.classList.toggle("has-drawer", open);
-  if (open) toggleStats(false);
   refreshAll();
 }
 
@@ -328,6 +376,8 @@ function buildDock(): void {
 // ---- Drawer -------------------------------------------------------------------------------
 
 const px = (v: number) => `${Math.round(v)} px`;
+/** A value the geometry caps: say so, instead of a slider that silently stops doing anything. */
+const capped = (v: number, effective: number, why: string) => (effective < v - 0.5 ? `${Math.round(effective)} px · ${why}` : px(v));
 const dispersionAmount = (abbe: number) => (abbe >= ABBE_OFF ? 0 : (ABBE_OFF - abbe) / (ABBE_OFF - 20));
 
 function buildDrawer(): void {
@@ -337,7 +387,16 @@ function buildDrawer(): void {
     section("Vidro", "O vidro selecionado. A física é real: Snell nas duas faces, Fresnel e absorção.", true, [
       slider({ label: "Refração", hint: "Índice de refração: quanto a borda curva desvia a imagem. Vidro comum ≈ 1,5.", min: 1, max: 2, step: 0.01, get: () => m().ior, set: (v) => editMaterial((x) => (x.ior = v)), format: (v) => `n ${v.toFixed(2)}` }),
       slider({ label: "Espessura", hint: "Quanto o raio anda dentro do vidro: mais espesso, mais deslocamento na borda.", min: 0, max: 60, step: 1, get: () => m().thickness, set: (v) => editMaterial((x) => (x.thickness = v)), format: px }),
-      slider({ label: "Borda curva", hint: "Largura da faixa curva junto à borda (bisel). Limitada pelo raio do canto.", min: 0, max: 80, step: 1, get: () => m().bevel, set: (v) => editMaterial((x) => (x.bevel = v)), format: px }),
+      slider({
+        label: "Borda curva",
+        hint: "Largura da faixa curva junto à borda (bisel). Não passa do raio do canto.",
+        min: 0,
+        max: 80,
+        step: 1,
+        get: () => m().bevel,
+        set: (v) => editMaterial((x) => (x.bevel = v)),
+        format: (v) => capped(v, deviceGeometry({ ...m(), bevel: v }, s(), 1).bevel, "limite do canto"),
+      }),
       slider({ label: "Fosco", hint: "Rugosidade da superfície: borra o que está atrás.", min: 0, max: 1, step: 0.01, get: () => m().roughness, set: (v) => editMaterial((x) => (x.roughness = v)), format: (v) => `${Math.round(v * 100)}%` }),
       slider({
         label: "Cor nas bordas",
@@ -349,12 +408,21 @@ function buildDrawer(): void {
         set: (v) => editMaterial((x) => (x.abbe = v <= 0 ? ABBE_OFF : Math.round(ABBE_OFF - v * (ABBE_OFF - 20)))),
         format: (v) => (v <= 0 ? "desligada" : `V ${Math.round(ABBE_OFF - v * (ABBE_OFF - 20))}`),
       }),
-      slider({ label: "Altura", hint: "Quanto o vidro flutua acima do conteúdo: desloca a imagem e afasta a sombra.", min: 0, max: 60, step: 1, get: () => m().gap, set: (v) => editMaterial((x) => (x.gap = v)), format: px }),
+      slider({ label: "Elevação", hint: "Quanto o vidro flutua acima do conteúdo: desloca a imagem e afasta a sombra.", min: 0, max: 60, step: 1, get: () => m().gap, set: (v) => editMaterial((x) => (x.gap = v)), format: px }),
     ]),
     section("Forma", "Os botões de forma no dock animam; aqui o ajuste é direto.", false, [
       slider({ label: "Largura", min: 20, max: 520, step: 1, get: () => s().halfWidth * 2, set: (v) => editShape((x) => (x.halfWidth = v / 2)), format: px }),
       slider({ label: "Altura", min: 20, max: 420, step: 1, get: () => s().halfHeight * 2, set: (v) => editShape((x) => (x.halfHeight = v / 2)), format: px }),
-      slider({ label: "Cantos", hint: "Raio do canto. No máximo, metade do lado menor (vira cápsula).", min: 0, max: 210, step: 1, get: () => s().radius, set: (v) => editShape((x) => (x.radius = v)), format: px }),
+      slider({
+        label: "Cantos",
+        hint: "Raio do canto. No máximo, metade do lado menor (vira cápsula).",
+        min: 0,
+        max: 210,
+        step: 1,
+        get: () => s().radius,
+        set: (v) => editShape((x) => (x.radius = v)),
+        format: (v) => capped(v, clampedRadius({ ...s(), radius: v }), "máximo"),
+      }),
       slider({ label: "Suavidade do canto", hint: "2 é arco de círculo; perto de 4 é o squircle dos ícones da Apple.", min: 2, max: 6, step: 0.05, get: () => s().exponent, set: (v) => editShape((x) => (x.exponent = v)), format: (v) => `n ${v.toFixed(2)}` }),
       slider({ label: "Rotação", min: -90, max: 90, step: 1, get: () => (s().rotation * 180) / Math.PI, set: (v) => editShape((x) => (x.rotation = (v * Math.PI) / 180)), format: (v) => `${Math.round(v)}°` }),
     ]),
@@ -465,7 +533,7 @@ function hit(x: number, y: number): number {
 
 function installDrag(): void {
   let dragging: Glass | null = null;
-  const local = (e: PointerEvent) => {
+  const local = (e: MouseEvent) => {
     const rect = canvas.getBoundingClientRect();
     return [e.clientX - rect.left, e.clientY - rect.top] as const;
   };
@@ -494,6 +562,8 @@ function installDrag(): void {
         return;
       }
       dragging.body.drag(x, y);
+      const [minX, minY, maxX, maxY] = stageBounds();
+      dragging.body.keepInside(minX, minY, maxX, maxY);
       animate();
     },
     { passive: true },
@@ -507,6 +577,12 @@ function installDrag(): void {
   };
   canvas.addEventListener("pointerup", end, { passive: true });
   canvas.addEventListener("pointercancel", end, { passive: true });
+  // Alt-tab, a system gesture or a dialog can take the pointer without a pointerup.
+  canvas.addEventListener("lostpointercapture", end, { passive: true });
+  canvas.addEventListener("dblclick", (e) => {
+    const [x, y] = local(e);
+    if (hit(x, y) >= 0) openDrawer(true);
+  });
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !drawer.hidden) openDrawer(false);
   });
@@ -589,6 +665,7 @@ async function start(): Promise<void> {
     showNotice(`GPU perdida (${info.reason || "sem motivo informado"}): recriando o renderer…`);
     void start().then(() => showNotice(null));
   };
+  r.onBeforeFrame = stepBodies;
   // The guard's numbers exist only after the frame built the tables.
   r.onFrame = () => {
     if (!drawer.hidden) guardHint.refresh();
@@ -636,6 +713,7 @@ document.querySelector("#drawer-close")!.innerHTML = ICONS.close;
 document.querySelector("#drawer-close")!.addEventListener("click", () => openDrawer(false));
 statsButton.addEventListener("click", () => toggleStats());
 installDrag();
+new ResizeObserver(keepInStage).observe(canvas);
 refreshAll();
 setInterval(renderMetrics, 500);
 void start();
