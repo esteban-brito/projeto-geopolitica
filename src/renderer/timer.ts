@@ -1,14 +1,34 @@
 const MAX_SPANS = 8;
 const RING = 4;
-const WINDOW = 120;
+/** Samples the panel averages: half a second at 240 Hz, responsive enough to watch. */
+export const WINDOW = 120;
 
-/** Rolling window of samples (ms). */
+/** Rolling window of samples (ms). The bench widens it to keep every frame it measures. */
 export class Series {
-  private readonly values: number[] = [];
+  private values: number[] = [];
+  private limit: number;
+
+  constructor(capacity = WINDOW) {
+    this.limit = capacity;
+  }
+
+  get capacity(): number {
+    return this.limit;
+  }
+
+  set capacity(n: number) {
+    this.limit = Math.max(1, n);
+    if (this.values.length > this.limit) this.values = this.values.slice(-this.limit);
+  }
 
   push(value: number): void {
     this.values.push(value);
-    if (this.values.length > WINDOW) this.values.shift();
+    if (this.values.length > this.limit) this.values.shift();
+  }
+
+  /** A copy of the samples, oldest first. */
+  samples(): number[] {
+    return [...this.values];
   }
 
   get count(): number {
@@ -46,6 +66,9 @@ interface Slot {
  */
 export class GpuTimer {
   readonly series = new Map<string, Series>();
+  /** Every pass of one frame summed, per frame (only frames that were timed). */
+  readonly frameTotal = new Series();
+  private window = WINDOW;
   private readonly querySet: GPUQuerySet;
   private readonly resolve: GPUBuffer;
   private readonly slots: Slot[] = [];
@@ -109,14 +132,18 @@ export class GpuTimer {
       .then(() => {
         const ticks = new BigInt64Array(slot.buffer.getMappedRange().slice(0));
         slot.buffer.unmap();
+        let total = 0;
         slot.names.forEach((name, i) => {
           const begin = ticks[i * 2] ?? 0n;
           const end = ticks[i * 2 + 1] ?? 0n;
           if (end <= begin) return;
           let series = this.series.get(name);
-          if (!series) this.series.set(name, (series = new Series()));
-          series.push(Number(end - begin) / 1e6);
+          if (!series) this.series.set(name, (series = new Series(this.window)));
+          const ms = Number(end - begin) / 1e6;
+          series.push(ms);
+          total += ms;
         });
+        if (total > 0) this.frameTotal.push(total);
         slot.busy = false;
       })
       .catch(() => {
@@ -132,6 +159,14 @@ export class GpuTimer {
 
   reset(): void {
     for (const s of this.series.values()) s.clear();
+    this.frameTotal.clear();
+  }
+
+  /** Samples kept per pass (and for the frame total). */
+  set capacity(n: number) {
+    this.window = n;
+    this.frameTotal.capacity = n;
+    for (const s of this.series.values()) s.capacity = n;
   }
 
   destroy(): void {

@@ -1106,3 +1106,23 @@ pela política misturada da fusão, então atravessa um pescoço sem degrau.
 **Sem regressão:** 72 testes; as 25 capturas padrão saíram idênticas, pixel a pixel, às do commit
 anterior (sem toque, sem símbolo e na cápsula de referência, o V5 não muda nada).
 
+### 16.2 O bench, revisto antes da rodada do V5
+
+O JSON do V3.2 mostrou o defeito: **todos os cenários com exatamente 120 amostras**. O bench mede
+2 s, mas a janela das médias (a do painel, 120 quadros) guardava só os últimos 0,5 s a 240 Hz; 75%
+de cada medida era descartado. E a coluna fps marcava 240 em tudo (preso ao monitor).
+
+- A janela é configurável (`Series.capacity`, `GpuTimer.capacity`); o bench a alarga durante a
+  medida e lê tudo **antes** de devolvê-la ao tamanho do painel (o teste de fumaça pegou a ordem
+  invertida, que cortava de novo).
+- Por cenário: total de GPU **por quadro** (soma dos passes do mesmo quadro) com média, mediana e
+  p95; a fração do quadro do monitor que o p95 ocupa (no lugar do fps); CPU com mediana e p95;
+  quadros medidos e quadros cronometrados; ns por pixel coberto no passe do vidro; memória.
+- Aviso quando os tempos vêm arredondados a 0,1 ms (flag de desenvolvedor desligado).
+- Uma medida feita com a aba oculta ou fora de foco é repetida uma vez; se falhar de novo, sai em
+  vermelho e marcada no JSON.
+- Cenários do V5 sobre as barras fundidas: com símbolos, e com símbolos e 4 luzes de toque.
+- JSON com 4 casas decimais, para caber colado na conversa.
+- `tests/bench.test.mjs`: a suíte "fumaça" roda fora da tela e confere a estrutura, a contagem de
+  quadros acima de 120 e a memória da camada de baixo.
+

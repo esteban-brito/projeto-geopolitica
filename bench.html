@@ -29,8 +29,11 @@
         gap: 14px;
         align-content: start;
       }
+      /* Up to 17 columns in the side panel: the table scrolls sideways instead of squeezing. */
       .bench table {
-        width: 100%;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
         border-collapse: collapse;
         font: 12px var(--mono);
       }
@@ -53,6 +56,12 @@
         border-radius: 8px;
         font: 11px var(--mono);
       }
+      .bench tr.invalid td {
+        color: #ff8a80;
+      }
+      .bench .warn {
+        color: #ffcf70;
+      }
       @media (max-width: 860px) {
         .bench {
           grid-template-columns: 1fr;
@@ -69,13 +78,18 @@
         <div>
           <strong>Bench</strong>
           <p class="hint">
-            Deixe a janela maximizada e em primeiro plano. Para tempo de GPU sem o arredondamento de 100 µs, ligue
-            <strong>chrome://flags/#enable-webgpu-developer-features</strong>. O resultado é JSON para colar de volta.
+            Deixe a janela maximizada e em primeiro plano até o fim (uma medida feita fora de foco é repetida). Para
+            tempo de GPU sem o arredondamento de 100 µs, ligue <strong>chrome://flags/#enable-webgpu-developer-features</strong>.
+            "do quadro" é o p95 do tempo de GPU contra o intervalo do monitor. O resultado é JSON para colar de volta.
           </p>
         </div>
         <div class="segmented" id="suite"></div>
         <button class="button" id="run" type="button">Rodar</button>
         <p class="hint" id="status">Pronto.</p>
+        <p class="hint warn" id="warning" hidden>
+          Os tempos de GPU estão arredondados a 0,1 ms: ligue
+          <strong>chrome://flags/#enable-webgpu-developer-features</strong>, reinicie o Chrome e rode de novo.
+        </p>
         <table id="table"></table>
         <textarea id="json" readonly spellcheck="false"></textarea>
         <button class="button" id="copy" type="button">Copiar JSON</button>
