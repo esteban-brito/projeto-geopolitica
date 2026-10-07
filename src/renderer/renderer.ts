@@ -14,6 +14,7 @@ import { onShaderChange, shaderSources, type ShaderSources } from "../shaders/in
 import type { BackgroundSource } from "../sources/source.ts";
 import { FrameGraph, type FrameContext, type Pass } from "./frame-graph.ts";
 import { TexturePool } from "./pool.ts";
+import type { AdaptiveQuality } from "./adaptive.ts";
 import { effectivePixelRatio, TIER_FEATURES, type QualityTier } from "./quality.ts";
 import { GpuTimer, Series } from "./timer.ts";
 
@@ -98,6 +99,8 @@ export class LiquidGlassRenderer {
   forcePyramid = false;
   /** Tests switch the injectivity guard off to prove it is what keeps the mapping one-to-one. */
   guardEnabled = true;
+  /** When set, picks `quality` from the measured GPU time after every frame. */
+  adaptive: AdaptiveQuality | null = null;
 
   readonly cpu = new Series();
   readonly interval = new Series();
@@ -383,6 +386,14 @@ export class LiquidGlassRenderer {
     const start = performance.now();
     void this.renderFrame(now);
     this.cpu.push(performance.now() - start);
+    if (this.adaptive && this.timer) {
+      const tier = this.adaptive.sample(this.timer.total, now);
+      if (tier !== this.quality) {
+        this.setQuality(tier);
+        // The window still holds the old tier's frames: start the averages over.
+        this.timer.reset();
+      }
+    }
     this.onFrame?.();
     if (this.continuous) this.requestFrame();
   };

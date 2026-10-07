@@ -5,6 +5,7 @@ import { clampedRadius, shapeOf, type Shape, type ShapeKind } from "../glass/sha
 import { AppearancePolicy } from "../glass/policy.ts";
 import { unionField } from "../glass/union.ts";
 import { DEFAULT_TUNING, GlassBody, type BodyTuning } from "../physics/body.ts";
+import { AdaptiveQuality, measureRefresh } from "../renderer/adaptive.ts";
 import { QUALITY_TIERS, type QualityTier } from "../renderer/quality.ts";
 import { DEBUG_VIEWS, LiquidGlassRenderer, type GlassGroup, type GlassSurface } from "../renderer/renderer.ts";
 import { NativeSource } from "../sources/native.ts";
@@ -75,7 +76,8 @@ const tuning: BodyTuning = { follow: { ...DEFAULT_TUNING.follow }, deform: { ...
 const state = {
   scene: "image" as SceneId,
   bitmap: null as ImageBitmap | null,
-  quality: "high" as QualityTier,
+  /** "auto": AdaptiveQuality picks the tier from the measured GPU time. */
+  quality: "auto" as QualityTier | "auto",
   debugView: 0,
   continuous: false,
   glasses: [] as Glass[],
@@ -310,6 +312,25 @@ function loadImage(): void {
   input.click();
 }
 
+/** Frame budget for the automatic quality: the display's refresh interval, measured once. */
+let refreshMs = 1000 / 60;
+void measureRefresh().then((ms) => {
+  refreshMs = ms;
+  if (renderer?.adaptive) renderer.adaptive.budgetMs = ms;
+});
+
+function setQuality(v: QualityTier | "auto"): void {
+  state.quality = v;
+  if (!renderer) return;
+  if (v === "auto") {
+    renderer.adaptive = new AdaptiveQuality(renderer.quality, refreshMs);
+  } else {
+    renderer.adaptive = null;
+    renderer.setQuality(v);
+  }
+  refreshAll();
+}
+
 function setContinuous(v: boolean): void {
   state.continuous = v;
   if (!renderer) return;
@@ -507,12 +528,12 @@ function buildDrawer(): void {
       select({ label: "Perfil da borda", options: PROFILES, get: () => m().profile, set: (v) => editMaterial((x) => (x.profile = v)) }),
       segmented({
         label: "Qualidade",
-        options: QUALITY_TIERS.map((t) => ({ id: t, label: TIER_LABEL[t] })),
+        options: [
+          { id: "auto" as const, label: "Auto", title: "Escolhe o nível pelo tempo de GPU medido: desce se passar de 75% do quadro, sobe se ficar abaixo de 35%." },
+          ...QUALITY_TIERS.map((t) => ({ id: t, label: TIER_LABEL[t] })),
+        ],
         get: () => state.quality,
-        set: (v) => {
-          state.quality = v;
-          renderer?.setQuality(v);
-        },
+        set: (v) => setQuality(v),
       }),
       toggle({
         label: "Ícones sobre o vidro",
@@ -678,7 +699,7 @@ function renderMetrics(): void {
   rows.push(
     ["resolução", `${r.resolution.width}×${r.resolution.height}`],
     ["DPR", `${r.devicePixelRatio.toFixed(2)} de ${(window.devicePixelRatio || 1).toFixed(2)}`],
-    ["qualidade", TIER_LABEL[state.quality]],
+    ["qualidade", `${TIER_LABEL[r.quality]}${state.quality === "auto" ? ` (auto, quadro de ${refreshMs.toFixed(1)} ms)` : ""}`],
     ["vidros", `${r.surfaceCount} em ${r.groupCount} grupo${r.groupCount === 1 ? "" : "s"}`],
     ["fundo sob o vidro", backdropText()],
     ["memória", `${(r.gpuBytes / 1048576).toFixed(1)} MB`],
@@ -720,7 +741,8 @@ async function start(): Promise<void> {
   currentGpu = gpu;
   const r = new LiquidGlassRenderer(canvas, gpu);
   renderer = r;
-  r.quality = state.quality;
+  r.quality = state.quality === "auto" ? "high" : state.quality;
+  if (state.quality === "auto") r.adaptive = new AdaptiveQuality(r.quality, refreshMs);
   r.debugView = state.debugView;
   r.continuous = state.continuous;
   r.onShaderError = (message) => {
